@@ -384,9 +384,10 @@ private class SpecMaintenanceSearchQtDataModel extends
 	/* ***25692#95 - end */
 
 	/**
-	 * The method  used to get the specificationMaintenance edit details.
-	 * @param ScQt scQt.
-	 * @param Boolean true/false.
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
 	 */
 	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable) {
 		// 25037 - start - note 510
@@ -395,6 +396,13 @@ private class SpecMaintenanceSearchQtDataModel extends
 	}
 
 	// 25037 - start - note 510
+	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 * @param popup
+	 */
 	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
 		editSpecificationMaintenance(scQt, isEditable, true, false, null);
 		
@@ -511,18 +519,22 @@ private class SpecMaintenanceSearchQtDataModel extends
 		if (null != scQt_.getFulfilmentType()) {
 			this.getManagedBean().setFulfilmentType(scQt_.getFulfilmentType().getParameterCode());
 		}
-
-		specBB.retriveTechnicalCheckList(); // #11104, #1873
-
-		List<ScQtCheckList> technicalChekclist = this.getManagedBean().getScQtCheckSt2techProposal();
-
-		if (null != technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)) {
+		specBB.retriveTechnicalCheckList();// #11104, #1873
+		//11104_start
+		List<ScQtCheckList> technicalChekclist = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		boolean isSampleWip = specBB
+				.checkSampleRadioShowHideInSpecPrepareAndMaintenance();
+		if (null != technicalChekclist
+				&& CollectionUtils.isNotEmpty(technicalChekclist)) {
 			for (ScQtCheckList checkList : technicalChekclist) {
-
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checkList.getDefinationType().getParameterCode())) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())) {
 					scQt_.setSampleReq(Boolean.TRUE);
-
+					checkList.setSampleWip(isSampleWip);
 					break;
+
 				}
 			}
 		}
@@ -586,7 +598,9 @@ private class SpecMaintenanceSearchQtDataModel extends
 		if (redirect|| checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
-
+		// 11104_Start
+		this.getManagedBean().setSampleShowHide(isSampleWip);
+		// 11104_end
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, renderPage);
 		// 29464-end
 	}
@@ -667,11 +681,11 @@ private class SpecMaintenanceSearchQtDataModel extends
 	}
 
 	private boolean checkStatus(Long statusId) {
-		// 25037-start
+		// 25037 - start
 		if (QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)) {
 			return false;
 		}
-		// #25037-end
+		// 25037 - end
 		return isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
 				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
 

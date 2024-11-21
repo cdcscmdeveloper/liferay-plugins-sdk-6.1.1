@@ -295,89 +295,89 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		
-		for(VFlDocument docsearchResult:searchResultList){
-			if(isTrackingDiarySearch()) {
+		for (VFlDocument docsearchResult : searchResultList) {
+			if (isTrackingDiarySearch()) {
 				docsearchResult.setViewAction(true);
-				FLOrderInfo orderInfo=null;
-				orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-				if(orderInfo.isCoGSTR()){
+				FLOrderInfo orderInfo = null;
+				orderInfo = getStatusInfo(docsearchResult.getDocId(), docsearchResult.getDocType());
+				if (orderInfo.isCoGSTR()) {
 					docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
 					docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
 				}
 				continue;
 			}
-				docsearchResult.setUpdateAction(false);
-				docsearchResult.setViewAction(false);
-				docsearchResult.setCancelAction(false);
-				if(null == docsearchResult.getStatusId() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
-					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatusId())){
-					docsearchResult.setViewAction(true);
-				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())){
-					docsearchResult.setViewAction(true);
-				}else{
-					docsearchResult.setViewAction(true);
-					boolean isUpdate=false;
-					boolean isCancel=false;
-					boolean isStopFulfilment=false;
-					boolean isRemoveFactoring=false;
-					FLOrderInfo orderInfo=null;
-					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
-						if(null != orderInfo){	
-							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId());
-							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(),docsearchResult.getDocId(),orderInfo.getRole(),orderInfo.getOrderId(),reqDTO.getUserId());
-							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
-								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
-							}	
-							if(isUpdate || isCancel) {
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									reqDTO.setFulfilmentNoteId(docsearchResult.getDocId());
-									resDTO = fulfilmentOrderSO.isSelectedAcknowledgeOfficerForOrder(reqDTO);
-								}
+			docsearchResult.setUpdateAction(false);
+			docsearchResult.setViewAction(false);
+			docsearchResult.setCancelAction(false);
+			if (null == docsearchResult.getStatusId() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())) {
+				docsearchResult.setViewAction(true);
+			} else if (ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatusId())) {
+				docsearchResult.setViewAction(true);
+			} else if (ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())) {
+				docsearchResult.setViewAction(true);
+			} else {
+				docsearchResult.setViewAction(true);
+				boolean isUpdate = false;
+				boolean isCancel = false;
+				boolean isStopFulfilment = false;
+				boolean isRemoveFactoring = false;
+				FLOrderInfo orderInfo = null;
+				orderInfo = getStatusInfo(docsearchResult.getDocId(), docsearchResult.getDocType());
+				if (null != orderInfo) {
+					isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
+					isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getDeliveryOrderId(), orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(), reqDTO.getUserId()); //36361
+					isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(), docsearchResult.getDocId(), orderInfo.getRole(), orderInfo.getOrderId(), reqDTO.getUserId());
+					if (docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)) {
+						isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatusId(), docsearchResult.getDocId(), orderInfo.getRole(), orderInfo.isFactored());
+					}
+					if (isUpdate || isCancel) {
+						if (docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+							reqDTO.setFulfilmentNoteId(docsearchResult.getDocId());
+							resDTO = fulfilmentOrderSO.isSelectedAcknowledgeOfficerForOrder(reqDTO);
+						}
+					}
+					if (isUpdate) {
+						docsearchResult.setUpdateAction(true);
+						docsearchResult.setViewAction(true);
+						if (docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+							if (!resDTO.isFlag()) {
+								docsearchResult.setUpdateAction(false);
 							}
-							if(isUpdate){
-								docsearchResult.setUpdateAction(true);
-								docsearchResult.setViewAction(true);
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									if(!resDTO.isFlag()) {
-										docsearchResult.setUpdateAction(false);
-									}
-								}
+						}
+					}
+					if (isCancel) {
+						docsearchResult.setCancelAction(true);
+						docsearchResult.setViewAction(true);
+						if (docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+							if (!resDTO.isFlag()) {
+								docsearchResult.setCancelAction(false);
 							}
-							if(isCancel){
-								docsearchResult.setCancelAction(true);
-								docsearchResult.setViewAction(true);
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
-									if(!resDTO.isFlag()) {
-										docsearchResult.setCancelAction(false);
-									}
-								}
-								if(docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)) {
-									// Check respective FRN is it Awaiting 1GFMAS or Pending Cancellation Submission
-									if(flDocumentSO.isRelatedDocumentInProgress(docsearchResult.getDocType(), docsearchResult.getDocId())) {
-										docsearchResult.setCancelAction(false);
-									}
-								}
+						}
+						if (docsearchResult.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)) {
+							// Check respective FRN is it Awaiting 1GFMAS or Pending Cancellation Submission
+							if (flDocumentSO.isRelatedDocumentInProgress(docsearchResult.getDocType(), docsearchResult.getDocId())) {
+								docsearchResult.setCancelAction(false);
 							}
-							if(isStopFulfilment){
-								docsearchResult.setStopFulfilmentAction(true);
-								docsearchResult.setViewAction(true);
-							}
-							if(isRemoveFactoring){
-								docsearchResult.setRemoveFactoringAction(true);
-								docsearchResult.setViewAction(true);
-							}
-							if(orderInfo.isCoGSTR()){
-								docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
-								docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
-							}
-							if(orderInfo.isTaxable()){
-								docsearchResult.setTaxable(orderInfo.isTaxable);
-							}
-					  }
-			     }
-		 }		
+						}
+					}
+					if (isStopFulfilment) {
+						docsearchResult.setStopFulfilmentAction(true);
+						docsearchResult.setViewAction(true);
+					}
+					if (isRemoveFactoring) {
+						docsearchResult.setRemoveFactoringAction(true);
+						docsearchResult.setViewAction(true);
+					}
+					if (orderInfo.isCoGSTR()) {
+						docsearchResult.setCoGSTR(orderInfo.isCoGSTR);
+						docsearchResult.setCoGSTRNo(orderInfo.getCoGSTRNo());
+					}
+					if (orderInfo.isTaxable()) {
+						docsearchResult.setTaxable(orderInfo.isTaxable);
+					}
+				}
+			}
+		}		
 	}
 
 	/**
@@ -396,135 +396,136 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		
-		if(null != docId && null != docType){
-			if(ParameterConst.DOCTYPE_FULFILMENT_NOTE.equalsIgnoreCase(docType)){
+		if (null != docId && null != docType) {
+			if (ParameterConst.DOCTYPE_FULFILMENT_NOTE.equalsIgnoreCase(docType)) {
 				reqDTO.setFulfilmentNoteId(Long.valueOf(docId));
-				receivedNoteSO  = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+				receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
 				resDTO = receivedNoteSO.getReceivedNoteById(reqDTO);
-				if(null != resDTO.getFulfilmentNote()){
-					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
+				if (null != resDTO.getFulfilmentNote()) {
+					orderInfo.setDeliveryOrderId(resDTO.getFlDeliveryOrder().getDeliveryOrderId());//36361
+					if (null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()) {
 						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 						orderInfo.setOrderId(reqDTO.getFlOrderId());
-						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
-							if(null != resDTO.getFlOrder()){
-								if(null != resDTO.getFlOrder().getStatus()){
-									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentRecevingOfficer()) {
-											orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
-										} else if(isAcknowledgeOfficer()) {
-											orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
-										}
+						if (null != resDTO.getFlOrder()) {
+							if (null != resDTO.getFlOrder().getStatus()) {
+								if (null != resDTO.getFlOrder().getStatus().getStatusId()) {
+									orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+									if (isFlFulfilmentRecevingOfficer()) {
+										orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
+									} else if (isAcknowledgeOfficer()) {
+										orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
 									}
 								}
 							}
+						}
 					}
 				}
-			}else if(ParameterConst.DOCTYPE_DELIVERY_ORDER.equalsIgnoreCase(docType)){
-				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+			} else if (ParameterConst.DOCTYPE_DELIVERY_ORDER.equalsIgnoreCase(docType)) {
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				reqDTO.setDeliveryOrderId(Long.valueOf(docId));
 				resDTO = deliveryOrderSO.getDeliveryOrderById(reqDTO);
-				if(null != resDTO.getFlDeliveryOrder()){
-					if(null != resDTO.getFlDeliveryOrder().getFlFulfilmentOrder()){
+				if (null != resDTO.getFlDeliveryOrder()) {
+					if (null != resDTO.getFlDeliveryOrder().getFlFulfilmentOrder()) {
 						reqDTO.setFlOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
 						orderInfo.setOrderId(reqDTO.getFlOrderId());
-						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
-							if(null != resDTO.getFlOrder()){
-								if(null != resDTO.getFlOrder().getStatus()){
-									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(getSearchFunctionType() != null){
-											if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
-												orderInfo.setRole(null);
-											}else if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)){
-												if(isFlFulfilmentSupplier()) {
-													orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-												}
+						if (null != resDTO.getFlOrder()) {
+							if (null != resDTO.getFlOrder().getStatus()) {
+								if (null != resDTO.getFlOrder().getStatus().getStatusId()) {
+									orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+									if (getSearchFunctionType() != null) {
+										if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+											orderInfo.setRole(null);
+										} else if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)) {
+											if (isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
 											}
-										}else{
-											if(isFlFulfilmentSupplier()) {
-												orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-											}
+										}
+									} else {
+										if (isFlFulfilmentSupplier()) {
+											orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
 										}
 									}
 								}
 							}
+						}
 					}
 				}
-				
-			}else if(ParameterConst.DOCTYPE_INVOICE.equalsIgnoreCase(docType)){
-				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+
+			} else if (ParameterConst.DOCTYPE_INVOICE.equalsIgnoreCase(docType)) {
+				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 				reqDTO.setInvoiceId(Long.valueOf(docId));
 				resDTO = invoiceSO.getInvoiceById(reqDTO);
-				if(null != resDTO.getInvoice()){
-					if(null != resDTO.getInvoice().getFlFulfilmentOrder()){
+				if (null != resDTO.getInvoice()) {
+					if (null != resDTO.getInvoice().getFlFulfilmentOrder()) {
 						reqDTO.setFlOrderId(resDTO.getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
 						orderInfo.setOrderId(reqDTO.getFlOrderId());
-						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 						resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
-							if(null != resDTO.getFlOrder()){
-								if(null != resDTO.getFlOrder().getStatus()){
-									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(getSearchFunctionType() != null){
-											if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
-												orderInfo.setRole(null);
-											}else if(getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)){
-												if(isFlFulfilmentSupplier()) {
-													orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-												}
+						if (null != resDTO.getFlOrder()) {
+							if (null != resDTO.getFlOrder().getStatus()) {
+								if (null != resDTO.getFlOrder().getStatus().getStatusId()) {
+									orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+									if (getSearchFunctionType() != null) {
+										if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+											orderInfo.setRole(null);
+										} else if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)) {
+											if (isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
 											}
-										}else{
-											if(isFlFulfilmentSupplier()) {
-												orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
-											}
+										}
+									} else {
+										if (isFlFulfilmentSupplier()) {
+											orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
 										}
 									}
 								}
 							}
+						}
 					}
 				}
 				resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
-				if(resDTO.isTaxable()){
+				if (resDTO.isTaxable()) {
 					orderInfo.setTaxable(true);
 				}
-			}else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)){
-				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			} else if (ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)) {
+				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 				reqDTO.setFlOrderId(Long.valueOf(docId));
 				orderInfo.setOrderId(reqDTO.getFlOrderId());
-		        resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);			
-		        if(null != resDTO.getFlOrder()){
-		        	if(null != resDTO.getFlOrder().getStatus()){
-		        		if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
-		        			orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-		        			if(isFlFulfilmentApprover() && getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)){
-		        				orderInfo.setRole(RoleCode.FL_APPROVER.value());
-		        			}else if(isFlFulfilmentSupplier()){
-		        				orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
-		        			}
-		        			if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
-		        				orderInfo.setFactored(resDTO.getFlOrder().isFactored());
-		        			}
-		        		}
-		        	}
-		        	
-		        	IReliefOrderSO reliefOrderSO = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
-		        	reqDTO.setFulfilmentOrderId(resDTO.getFlOrder().getFulfilmentOrderId());
-		        	resDTO = reliefOrderSO.retrieveReliefOrderByOrderId(reqDTO);
-		        	if(resDTO.getReliefOrder() != null){
-		        		if(isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer() || isAuditor()) {
-		        			orderInfo.setCoGSTR(true);
-		        			orderInfo.setCoGSTRNo(resDTO.getReliefOrder().getReliefOrderNo());
-		        		}
-		        	}
-		        }
-			} 
-			if(orderInfo.getRole()==null) {
-				if(isFlFulfilmentApprover()){
+				resDTO = fulfilmentOrderSO.getFulfilmentOrderById(reqDTO);
+				if (null != resDTO.getFlOrder()) {
+					if (null != resDTO.getFlOrder().getStatus()) {
+						if (null != resDTO.getFlOrder().getStatus().getStatusId()) {
+							orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+							if (isFlFulfilmentApprover() && getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+								orderInfo.setRole(RoleCode.FL_APPROVER.value());
+							} else if (isFlFulfilmentSupplier()) {
+								orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+							}
+							if (ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)) {
+								orderInfo.setFactored(resDTO.getFlOrder().isFactored());
+							}
+						}
+					}
+
+					IReliefOrderSO reliefOrderSO = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReliefOrderSO.class);
+					reqDTO.setFulfilmentOrderId(resDTO.getFlOrder().getFulfilmentOrderId());
+					resDTO = reliefOrderSO.retrieveReliefOrderByOrderId(reqDTO);
+					if (resDTO.getReliefOrder() != null) {
+						if (isFlFulfilmentApprover() || isFlFulfilmentSupplier() || isAcknowledgeOfficer() || isAuditor()) {
+							orderInfo.setCoGSTR(true);
+							orderInfo.setCoGSTRNo(resDTO.getReliefOrder().getReliefOrderNo());
+						}
+					}
+				}
+			}
+			if (orderInfo.getRole() == null) {
+				if (isFlFulfilmentApprover()) {
 					orderInfo.setRole(RoleCode.FL_APPROVER.value());
-				} else if(isFlFulfilmentSupplier()){
+				} else if (isFlFulfilmentSupplier()) {
 					orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
 				}
 			}
@@ -774,6 +775,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		private boolean isTaxable=false;
 		
 		private String coGSTRNo;
+		
+		private Long deliveryOrderId;//36361
 
 		/**
 		 * Gets the role.
@@ -883,8 +886,21 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			this.coGSTRNo = coGSTRNo;
 		}
 
-		
-		
+		//36361-Start
+		/**
+		 * @return the deliveryOrderId
+		 */
+		public Long getDeliveryOrderId() {
+			return deliveryOrderId;
+		}
+
+		/**
+		 * @param deliveryOrderId the deliveryOrderId to set
+		 */
+		public void setDeliveryOrderId(Long deliveryOrderId) {
+			this.deliveryOrderId = deliveryOrderId;
+		}
+		//36361-End		
 	}
 
 	/**

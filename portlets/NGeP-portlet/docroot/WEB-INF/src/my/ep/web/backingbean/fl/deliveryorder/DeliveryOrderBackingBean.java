@@ -124,6 +124,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	private String className="@(.myDoClassName)";
+	private static final int SUPPLIER_DO_REF_LENGTH  = 30; //36247
 	
 	/**
 	 * @return the className
@@ -826,13 +827,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setGstAmtChanged(false);
 		}
 		
-		//28855 - Start
-		if(getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+		// 28855 - Start
+		if (getManagedBean().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 			getManagedBean().setContractFlag(true);
 		} else {
 			getManagedBean().setContractFlag(false);
 		}
-		//28855 - End
+		// 28855 - End
 	}
 
 	/**
@@ -1055,6 +1056,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 				//29234 end
+				
+				validateSupplierDoRefLength(getManagedBean().getFlDeliveryOrder().getSupplierDoRef()); //36247
+				
 				IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 				supplierDoNoList = new ArrayList<String>();
 				supplierDoNoList.add(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());
@@ -1127,6 +1131,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				// 36247-Start
+				if (flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef() != null) {
+					validateSupplierDoRefLength(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+				}
+				// 36247-End
+
 				if(supplierDoNoList.contains(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef())){
 					throw new EpException(MessageConst.ERROR_740042, new String[]{flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef(),getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getSupplierName()});
 				}else{
@@ -1214,6 +1224,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
 			}
 			//#26191-end
+			// 36361-Start
+			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				validateDelQtySaved();
+			}
+			// 36361-End
 		}
 		return createDeliveryOrder(getManagedBean().getButtonAction());
 	}
@@ -1608,6 +1623,62 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		getManagedBean().setSubmittedDoList(submittedDoList);
 	}
 	
+	// 36247-Start
+	/**
+	 * 
+	 * Validation for Supplier Do Reference length Maximum length is 30
+	 * 
+	 * @param supplierDoRef
+	 */
+	private void validateSupplierDoRefLength(String supplierDoRef) {
+		if (supplierDoRef.length() > SUPPLIER_DO_REF_LENGTH ) {
+			String label = ResourceBundleUtils.getMessage("lbl.fl.do.supp.do.no",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new EpException(MessageConst.ERROR_721114,
+					new String[] { label, String.valueOf(SUPPLIER_DO_REF_LENGTH ) });
+		}
+	}
+	// 36247-End
+	
+	// 36361-Start
+	/**
+	 * Validate that the delivered quantity does not exceed the remaining
+	 * quantity. Validate also if there are duplicate SupplierDoNo references
+	 * 
+	 * @throws EpException
+	 *             if the delivered quantity is greater than the remaining
+	 *             quantity
+	 */
+	private void validateDelQtySaved() {
+		BigDecimal remainingQty;
+		BigDecimal sumDeliveredQty;
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+
+		for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+				reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
+				reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
+
+				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
+				sumDeliveredQty = resDTO.getTotalDelOrderQty();
+
+				remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
+				if (itemAddr.getDeliveredQty() == null) {
+					itemAddr.setDeliveredQty(new BigDecimal(0));
+				}
+
+				if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
+					throw new EpException(MessageConst.ERROR_740071);
+				}
+			}
+		}
+	}
+	// 36361-End
+	
 	//26279 - start
 	public void viewDisciplinaryAction() {
 		List<DisciplinaryActionVO> disciplinaryActionVOs = retrieveDisciplinaryActions(getManagedBean().getSmDisciplinaryAction());
@@ -1617,77 +1688,75 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	}
 	//26279 - end
 	
-	//28855 - start
+	// 28855 - start
+	/**
+	 * Populates item information and specifications based on the provided
+	 * fulfilment item address.
+	 * 
+	 * @param flItemAddr
+	 *            The fulfilment item address containing the item details.
+	 */
 	public void doItemInfoList(FlFulfilmentItemAddr flItemAddr) {
-		 IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
-		
+		IRequestItemSO requestItemSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
-		
-		getManagedBean().setSpecificationList(requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
-		
+
+		getManagedBean().setSpecificationList(
+				requestItemSO.retrieveNewOfferSpec(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+
 		if (!getManagedBean().getSpecificationList().isEmpty()) {
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
-				for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
-					if (specification.getSupplierOffer()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
-							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
-						getManagedBean().setSupplierOffer(specification.getSupplierOffer());
-					}
-					if (specification.getNewOfferSpec()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
-							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
-						getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
-					}
-					if (specification.getItemSpec()!= null && specification.getSupplierId().getSupplierId()
-							.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId()) &&
-							specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
-						getManagedBean().setItemSpecification(specification.getItemSpec());	
-						getManagedBean().getItemSpecList().add(specification);
-					}					
+			for (ScRequestItemSpecOffer specification : getManagedBean().getSpecificationList()) {
+				if (specification.getSupplierOffer() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					getManagedBean().setSupplierOffer(specification.getSupplierOffer());
 				}
-			
-			} else {
+				if (specification.getNewOfferSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+					getManagedBean().setNewOfferedSpec(specification.getNewOfferSpec());
+				}
+				if (specification.getItemSpec() != null
+						&& specification.getSupplierId().getSupplierId()
+								.equals(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())
+						&& specification.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
+					getManagedBean().setItemSpecification(specification.getItemSpec());
+					getManagedBean().getItemSpecList().add(specification);
+				}
+			}
+
+		} else {
 			getManagedBean().setSupplierOffer(null);
 			getManagedBean().setNewOfferedSpec(null);
 			getManagedBean().setItemSpecification(null);
 			getManagedBean().setItemSpecList(new ArrayList<ScRequestItemSpecOffer>());
-			}
-			
-		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract()!=null?getManagedBean().getFulfilmentRequest().getCtContract().getContractId() : null;
-		IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+		}
+
+		Long contractId = getManagedBean().getFulfilmentRequest().getCtContract() != null ? getManagedBean()
+				.getFulfilmentRequest().getCtContract().getContractId() : null;
+		IFulfilmentRequestSO fulfilmentRequestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqFDTO = new FulfilmentReqDTO();
 		reqFDTO.setContractId(contractId);
-		String  loaDocType=  fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
-		
-		/*IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
-		ContractReqDTO cireqDTO = new ContractReqDTO();
-		cireqDTO.setContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
-		ContractResDTO ciResDTO = contractSO.retrieveContract(cireqDTO);
-		
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		AwardSupplierReqDTO reqLoaDTO = new AwardSupplierReqDTO();
-		if (ciResDTO.getContract().getLoa() != null) {
-		reqLoaDTO.setLoaId(ciResDTO.getContract().getLoa().getLoaId());
-		AwardSupplierResDTO resLoaDTO = qtAwardSO.retrieveLOADtlByLoaId(reqLoaDTO);*/
+		String loaDocType = fulfilmentRequestSO.getLoaDocType(reqFDTO).getDocType();
 
-			if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
-				getManagedBean().setDpFlag(true);
-				String supplierOffer = getManagedBean().getSupplierOffer();
-				if(supplierOffer !=null && supplierOffer.length() > 0) {
-					String trimWipDpZone = supplierOffer.replace("<br/>", "");
-					getManagedBean().setSupplierOffer(trimWipDpZone);
-				}
-			} else {
-				getManagedBean().setDpFlag(false);
-				if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
-					getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
-				}
+		if (loaDocType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
+			getManagedBean().setDpFlag(true);
+			String supplierOffer = getManagedBean().getSupplierOffer();
+			if (supplierOffer != null && supplierOffer.length() > 0) {
+				String trimWipDpZone = supplierOffer.replace("<br/>", "");
+				getManagedBean().setSupplierOffer(trimWipDpZone);
 			}
-		//}
-
+		} else {
+			getManagedBean().setDpFlag(false);
+			if (getManagedBean().getItemSpecList().isEmpty() && !getManagedBean().getSpecificationList().isEmpty()) {
+				getManagedBean().getItemSpecList().add(getManagedBean().getSpecificationList().get(0));
+			}
+		}
 	}
-	//28855 - end
+	// 28855 - end
 }
