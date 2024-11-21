@@ -541,39 +541,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (null != this.getManagedBean().getScLoa()
 				&& !this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
 						.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)
-				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa()
-						.getScLoiLoaItems())) {
-			if(this.getManagedBean().getScLoa().getScQt()!=null && this.getManagedBean().getScLoa().getScQt().isZonal()){
-				Collections.sort(this.getManagedBean().getScLoa()
-						.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
-					@Override
-					public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-						if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
-								&& null != s1.getTplSpecZoneDtl() && null != s2.getTplSpecZoneDtl()) {
-							return new CompareToBuilder().append(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId())
-									.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
-						} else {
-							return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(),
-									s2.getTplSpecZoneDtl().getSpecZoneId());
-						}
-					}
-				});
-			}else{
-				Collections.sort(this.getManagedBean().getScLoa()
-						.getScLoiLoaItems(), new Comparator<ScLoiLoaItem>() {
-					@Override
-					public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-						if (null != s1.getTplSpecTierQty() && null != s2.getTplSpecTierQty()
-								&& null != s1.getScRequestItem() && null != s2.getScRequestItem()) {
-							return new CompareToBuilder().append(s1.getScRequestItem().getRequestNoteItemId(), s2.getScRequestItem().getRequestNoteItemId())
-									.append(s1.getTplSpecTierQty().getSpecTierQtyId(), s2.getTplSpecTierQty().getSpecTierQtyId()).toComparison();
-						} else {
-							return Long.compare(s1.getScRequestItem().getRequestNoteItemId(),
-									s2.getScRequestItem().getRequestNoteItemId());
-						}
-					}
-				});
-			}
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
+			sortLoiLoaItems(this.getManagedBean().getScLoa().getScLoiLoaItems(), this.getManagedBean().getScLoa()
+					.getScQt().isZonal());
 		}
 		// #34915 idham @01/08/2023 - End
 		removeUnwantedLampiranA3Report(1); //#29006 - note 650
@@ -11291,22 +11261,70 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	private List<ScLoiLoaItem> sortLoiLoaItems(List<ScLoiLoaItem> loiLoaItems, boolean isZonal){
 		
-		if(isZonal){
-			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+		if (isZonal) {
+			Comparator<ScLoiLoaItem> zonalComparator = new Comparator<ScLoiLoaItem>() {
 				@Override
 				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(), 
-							s2.getTplSpecZoneDtl().getSpecZoneId());
+					if (s1 == null || s2 == null) {
+						return 0;
+					}
+
+					long zoneId1 = (s1.getTplSpecZoneDtl() != null) ? s1.getTplSpecZoneDtl().getSpecZoneId()
+							: Long.MIN_VALUE;
+					long zoneId2 = (s2.getTplSpecZoneDtl() != null) ? s2.getTplSpecZoneDtl().getSpecZoneId()
+							: Long.MIN_VALUE;
+
+					int zoneCompare = Long.compare(zoneId1, zoneId2);
+					if (zoneCompare != 0) {
+						return zoneCompare;
+					}
+
+					if (s1.getTplSpecTierQty() != null && s2.getTplSpecTierQty() != null) {
+
+						int tierCompare = Long.compare(s1.getTplSpecTierQty().getSpecTierQtyId(), s2
+								.getTplSpecTierQty().getSpecTierQtyId());
+						if (tierCompare != 0) {
+							return tierCompare;
+						}
+					}
+
+					long requestNoteItemId1 = (s1.getScRequestItem() != null) ? s1.getScRequestItem()
+							.getRequestNoteItemId() : Long.MIN_VALUE;
+					long requestNoteItemId2 = (s2.getScRequestItem() != null) ? s2.getScRequestItem()
+							.getRequestNoteItemId() : Long.MIN_VALUE;
+
+					return Long.compare(requestNoteItemId1, requestNoteItemId2);
 				}
-			});
-		}else{
-			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+			};
+
+			Collections.sort(loiLoaItems, zonalComparator);
+		} else {
+			Comparator<ScLoiLoaItem> nonZonalComparator = new Comparator<ScLoiLoaItem>() {
 				@Override
 				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-					return Long.compare(s1.getLoiLoaItemId(), 
-							s2.getLoiLoaItemId());
+					if (s1 == null || s2 == null) {
+						return 0;
+					}
+
+					long requestNoteItemId1 = (s1.getScRequestItem() != null) ? s1.getScRequestItem()
+							.getRequestNoteItemId() : Long.MIN_VALUE;
+					long requestNoteItemId2 = (s2.getScRequestItem() != null) ? s2.getScRequestItem()
+							.getRequestNoteItemId() : Long.MIN_VALUE;
+
+					if (s1.getTplSpecTierQty() != null && s2.getTplSpecTierQty() != null) {
+
+						int tierCompare = Long.compare(s1.getTplSpecTierQty().getSpecTierQtyId(), s2
+								.getTplSpecTierQty().getSpecTierQtyId());
+						if (tierCompare != 0) {
+							return tierCompare;
+						}
+					}
+
+					return Long.compare(requestNoteItemId1, requestNoteItemId2);
 				}
-			});
+			};
+
+			Collections.sort(loiLoaItems, nonZonalComparator);
 		}
 		
 		return loiLoaItems;
