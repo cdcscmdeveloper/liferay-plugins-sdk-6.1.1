@@ -1,11 +1,11 @@
-<u class="txtBold">Tool/Equipment for Maintenance and Overhaul</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.equipment.maintnce.ovrhl')</u>
 <br /><br />
 <table class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%">No</th>
-			<th width="65%">Equipment Type</th>
-			<th width="15%">Available</th>
-			<th width="15%">Quantity/Set</th>
+			<th width="65%">$smVmUtil.getDescByLabel('lbl.sm.machine.equiType')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.availableLbl')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.qty.set')</th>
 		</tr>
 		
 	#if($equipmentMaintenance != $null && $equipmentMaintenance.size() > 0)
@@ -13,7 +13,8 @@
 		<tr>
 			<td>$velocityCount</td>
 			<td class="txtBold">$!equipMaint.pmMachine.machineDesc</td>
-			<td align="center">#if($review) #if($equipMaint.equipmentAvailable)Yes #else No #end #else <br />#end</td>
+			<td align="center">#if($review) #if($equipMaint.equipmentAvailable)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+							#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #else <br />#end</td>
 			<td align="center">#if($review) #if($equipMaint.equipmentQty != $null) $equipMaint.equipmentQty #end #else <br />#end</td>
 		</tr>
 		#end
@@ -21,14 +22,14 @@
 </table>
 <br /><br /><br />
 
-<u class="txtBold">Equipment for Panel Beating and Spray Painting</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.equipment.pnl.beat.spray.paint')</u>
 <br /><br />
 <table class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%">No</th>
-			<th width="65%">Equipment Type</th>
-			<th width="15%">Available</th>
-			<th width="15%">Quantity/Set</th>
+			<th width="65%">$smVmUtil.getDescByLabel('lbl.sm.machine.equiType')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.availableLbl')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.qty.set')</th>
 		</tr>
 	
 	#if($equipmentBeating != $null && $equipmentBeating.size() > 0)
@@ -36,7 +37,8 @@
 		<tr>
 			<td>$velocityCount</td>
 			<td class="txtBold">$!equipBeating.pmMachine.machineDesc</td>
-			<td align="center">#if($review) #if($equipBeating.equipmentAvailable)Yes #else No #end #else <br />#end</td>
+			<td align="center">#if($review) #if($equipBeating.equipmentAvailable) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+							#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end #else <br />#end</td>
 			<td align="center">#if($review) #if($equipBeating.equipmentQty != $null) $equipBeating.equipmentQty #end #else <br />#end</td>
 		</tr>
 		#end
