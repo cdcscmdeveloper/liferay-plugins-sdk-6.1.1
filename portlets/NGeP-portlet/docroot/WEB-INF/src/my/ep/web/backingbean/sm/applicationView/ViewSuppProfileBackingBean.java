@@ -80,9 +80,9 @@ public class ViewSuppProfileBackingBean extends
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String isAudit = originalServletRequest.getParameter("isAudit");
-		if(SmCommonUtil.md5("true").equals(isAudit)){
+		if (SmCommonUtil.md5("true").equals(isAudit)) {
 			this.getManagedBean().setAuditAccess(true);
-		} else if(SmCommonUtil.md5("false").equals(isAudit)) {
+		} else if (SmCommonUtil.md5("false").equals(isAudit)) {
 			this.getManagedBean().setAuditAccess(false);
 		}
 		// #28895_35501 End
