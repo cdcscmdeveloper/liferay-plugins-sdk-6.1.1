@@ -5728,7 +5728,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * 
 	 * @return String
 	 */
-	public String setRenewalTnc() {
+	public String setMofRegTnc() {
 		int renewalPeriod = SmServiceLookup.getSmRuleSO()
 				.retrieveRenewalPeriodForAppl(
 						ParameterConst.NEW_SM_APPLN_FOR_RENEW);

@@ -18025,28 +18025,20 @@ public class SmApplicationBackingBean extends
 	 * 
 	 * @return String
 	 */
-	public String setRenewalTnc(){
+	public String setRenewalTnc(String applicationType){
 		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		
 		String word = NumberWordUtil.changeNumberToWord(renewalPeriod);
+		String label = "";
+		
+		if(applicationType.equalsIgnoreCase("R")){
+			label = "lbl.sm.renewMof.descData";
+		}else if(applicationType.equalsIgnoreCase("N")){
+			label = "lbl.sm.upgradeMof.descData";
+		}
 		
 		return ResourceBundleUtils.getMessage(
-				"lbl.sm.renewMof.descData", new String[] {word , String.valueOf(renewalPeriod)},
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
-	}
-	
-	/**
-	 * Set terms and condition message with parameter.
-	 * 
-	 * @return String
-	 */
-	public String setUpgradeMofTnc(){
-		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
-		
-		String word = NumberWordUtil.changeNumberToWord(renewalPeriod);
-		
-		return ResourceBundleUtils.getMessage(
-				"lbl.sm.upgradeMof.descData", new String[] {word , String.valueOf(renewalPeriod)},
+				label, new String[] {word , String.valueOf(renewalPeriod)},
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
 	}
 	//#36594 - End
