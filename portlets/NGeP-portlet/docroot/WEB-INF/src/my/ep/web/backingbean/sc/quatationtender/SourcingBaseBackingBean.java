@@ -83,6 +83,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -7037,4 +7038,56 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End
+
+	// 25791-start
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @param contractStatus
+	 * @return Effective, Terminated, Expired, Inactive
+	 */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
+	}
+	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * The method used to retrieve the status completion of the contract.
+	 * 
+	 * @param contractNo
+	 * @param status
+	 * @return complete or incomplete
+	 */
+	public String chkContractStatusType(String contractNo, int status) {
+		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
+			if (status == ContractConst.STATUS_COMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_INCOMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+		}
+
+		return "";
+	}
+	// 25791-End
 }

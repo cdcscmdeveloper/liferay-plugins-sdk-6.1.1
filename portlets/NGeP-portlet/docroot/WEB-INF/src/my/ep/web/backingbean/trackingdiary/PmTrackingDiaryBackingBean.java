@@ -62,6 +62,7 @@ import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -355,14 +356,26 @@ public class PmTrackingDiaryBackingBean extends
 		}
 		//END- #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 	}
-	
-	public void redirectToMainPage(){
+
+	/**
+	 * 
+	 * Redirect to mainPage.
+	 */
+	public void redirectToMainPage() {
 		log.info(".....redirectToMainPage.....");
-		log.info("............this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
+		log.info("............this.getManagedBean().getBackURL()" + this.getManagedBean().getBackURL());
+
+		// 25791 -start-
+		if (this.getManagedBean().isBiddingUrl()) {
+			this.getManagedBean().setBackURL(QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
+			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
+		}
+		// 25791 -end-
+
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
+
 	/**
 	 * Get Role description by role code and language.
 	 * 
