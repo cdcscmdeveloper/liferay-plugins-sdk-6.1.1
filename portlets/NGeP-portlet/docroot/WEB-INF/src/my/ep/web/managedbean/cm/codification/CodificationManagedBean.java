@@ -12,7 +12,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
@@ -1501,7 +1500,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-
+   
+	//[#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1533,6 +1533,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
+	//[#26282] disciplinary action - End
 
 	/*[#27625] begin*/
 	public String getTypeName() {

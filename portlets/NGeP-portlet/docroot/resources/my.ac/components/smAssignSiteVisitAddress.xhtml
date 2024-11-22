@@ -73,8 +73,9 @@
 
 					</p:panel><br />
 
+					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}"
-						toggleable="true" rendered="#{tableVar.l3.facilityType ne 'B'}">
+						toggleable="true" rendered="false">
 
 						<p:dataTable var="assocVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -103,8 +104,9 @@
 
 					</p:panel><br />
 
+					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 					<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" 
-						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">
+						rendered="false" toggleable="true">
 
 						<p:dataTable var="brVar"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
