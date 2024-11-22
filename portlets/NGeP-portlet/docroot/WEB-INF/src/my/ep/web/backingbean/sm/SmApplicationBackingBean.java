@@ -18034,5 +18034,20 @@ public class SmApplicationBackingBean extends
 				"lbl.sm.renewMof.descData", new String[] {word , String.valueOf(renewalPeriod)},
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
 	}
+	
+	/**
+	 * Set terms and condition message with parameter.
+	 * 
+	 * @return String
+	 */
+	public String setUpgradeMofTnc(){
+		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod);
+		
+		return ResourceBundleUtils.getMessage(
+				"lbl.sm.upgradeMof.descData", new String[] {word , String.valueOf(renewalPeriod)},
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
+	}
 	//#36594 - End
 }
