@@ -394,12 +394,8 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
 	// Bug #35688@Syazani 10/07/2024 -- End
-	
-	// 36671 - start
-	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
-	// 36671 - end
- 
- // 25791 -start-
+
+	// 25791-start
 	public static final String QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";
 	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
 	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
@@ -414,5 +410,10 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
-	// 25791 -end-
+	// 25791-End
+
+	// 36671 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671 - end
+
 }
