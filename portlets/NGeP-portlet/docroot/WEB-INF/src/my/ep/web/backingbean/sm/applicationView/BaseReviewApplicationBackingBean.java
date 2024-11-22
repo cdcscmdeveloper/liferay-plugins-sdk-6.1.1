@@ -3265,8 +3265,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Redirect to Supplier Profile or Supplier History Page
 	 */
 	public void redirectToSupplierProfileOrHistoryPage() {
-		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
-				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
+		// #28895_35501 Start - AUDIT TRAIL SM
+		String isAudit;
+		if (this.getManagedBean().isAuditAccess()) {
+			isAudit = SmCommonUtil.md5("true");
+		} else {
+			isAudit = SmCommonUtil.md5("false");
+		}
+		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl() + "?supplierId=" + getManagedBean().getSupplierIdParam() + "&isAudit="
+				+ isAudit);
+		// #28895_35501 End
 	}
 
 	/**
@@ -5125,11 +5133,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Check if user have access to Audit Trail page
 	 */
 	public void checkAuditAccess() {
-		this.getManagedBean().setAuditAccess(false);
-		if (checkFromAudit()) {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		if (PortalUtil.getCurrentURL(request).contains(SupplierManagementConst.SUPPLIER_APPL_SEARCH_URL)) {
 			FacesScopes facesScopes = new FacesScopes();
 			String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
-					RoleCode.SYS_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
+					RoleCode.EP_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
 			for (String role : roles) {
 				if (facesScopes.hasRoleUser(role)) {
 					this.getManagedBean().setAuditAccess(true);
@@ -5137,10 +5145,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				}
 			}
 		}
-	}
-
-	private boolean checkFromAudit() {
-		return true;
 	}
 	
 	/**
