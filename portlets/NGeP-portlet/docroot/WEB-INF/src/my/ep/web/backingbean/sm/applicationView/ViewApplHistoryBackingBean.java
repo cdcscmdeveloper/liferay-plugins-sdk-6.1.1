@@ -112,10 +112,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
-//#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
-import javax.servlet.http.HttpServletRequest;
-//#28895_35501 End
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 //#29759 - Searching application status supporting doc loading
