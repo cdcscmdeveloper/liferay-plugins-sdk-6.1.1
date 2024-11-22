@@ -68,6 +68,18 @@ public class SLALogConstant {
 	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	// 25037 - end
+	
+	// 25791-start
+	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
+	public static final String QT_RETRIVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLoa";
+	public static final String QT_VIEW_LOA_CONTRACT_PAGING_MODEL = "ViewLoaContractPagingDataModel";
+	public static final String QT_VIEW_CONTRACT_PAGING_MODEL = "ViewContractPagingDataModel";
+	public static final String QT_VIEW_NORMAL_LOA_TRACKING_DTLS_PAGE = "viewNormalLoaTrackingDetailsPage";
+	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLoaContractDetailsPage";
+	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
+	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
+	// 25791-end
+	
 	private SLALogConstant(){
 		
 	}	
