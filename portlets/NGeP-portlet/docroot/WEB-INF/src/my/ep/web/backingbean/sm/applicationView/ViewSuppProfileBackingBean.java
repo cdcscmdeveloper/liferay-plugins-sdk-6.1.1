@@ -46,8 +46,10 @@ import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 //#28175 ReOpen
 import my.ep.web.constant.sm.SupplierManagementConst;
 //#28175 end
-//#28895_35501 - AUDIT TRAIL SM
-import java.util.Map;
+//#28895_35501 Start - AUDIT TRAIL SM
+import javax.servlet.http.HttpServletRequest;
+import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -75,11 +77,14 @@ public class ViewSuppProfileBackingBean extends
 		renewSesionObject();
 		initLogin();
 		// #28895_35501 Start - AUDIT TRAIL SM
-		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-		log.info(map.keySet());
-		if(map.containsKey("auditAccess")){
-			boolean auditAccess = (boolean) map.get("auditAccess");
-			this.getManagedBean().setAuditAccess(auditAccess);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String isAudit = originalServletRequest.getParameter("isAudit");
+		if(SmCommonUtil.md5("true").equals(isAudit)){
+			this.getManagedBean().setAuditAccess(true);
+		} else if(SmCommonUtil.md5("false").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(false);
+			
 		}
 		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
