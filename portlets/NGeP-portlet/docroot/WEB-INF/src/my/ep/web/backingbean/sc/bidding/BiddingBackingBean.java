@@ -1243,16 +1243,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		
 		return pmOrgProfile;
 	}
-
-	// #-17376-144 start
-	/**
-	 * 25791-Based on QTDetails Rendering Bidding Details Screen.
-	 * 
-	 * @param bid
-	 * @param previousPageUrl
-	 * @return Bidding screen.
-	 */
+//#-17376-144 start
 	public String bidManagementQuotationTenderAction(ScBidSchedule bid, String previousPageUrl) {
+		//renewSesionObject();
+
 		getManagedBean().setScheduledBid(bid);
 
 		IBiddingSO biddingSO = null;
@@ -1319,8 +1313,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
         this.getManagedBean().setPreviousPageUrl(previousPageUrl);
 		getManagedBean().setRendered(false);	
-
-		return QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW; //25791
+		return "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true"; 
 
 	}
 	
