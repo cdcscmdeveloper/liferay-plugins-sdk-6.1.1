@@ -1,9 +1,6 @@
 package my.ep.web.backingbean.sc.audit;
 
 import java.io.Serializable;
-
-import org.apache.log4j.Logger;
-
 import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.audit.AuDPRequestNoteDTO;
@@ -13,6 +10,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import org.apache.log4j.Logger;
 
 /**
  * The Class AuditDPRequestNoteBackingBeanTemplate. #28895_35492
@@ -33,6 +31,8 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 	}
 
 	/**
+	 * The void auditSaveData.
+	 * 
 	 * @param managebean
 	 * @param userId
 	 */
@@ -62,11 +62,10 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 		try {
 			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-
-			new LogKey(getUserIdSessionFromLoginId());
-
+			
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
+			
 		} catch (Exception ex) {
 			log.info("Catch Exception from TEMPLATE Send TO SO : " + ex);
 		}

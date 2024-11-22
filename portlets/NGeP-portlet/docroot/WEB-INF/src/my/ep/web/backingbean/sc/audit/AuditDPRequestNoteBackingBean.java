@@ -33,7 +33,8 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 			data = new AuDPRequestNoteDetailSPDTO();
 			data.setSubDocId(BigInteger.valueOf(ri.getRequestItem().getRequestNoteItemId()));
 			data.setSubDocNo(ri.getRequestItem().getItemName());
-			data.setPurchaseRequestId(BigInteger.valueOf(ri.getPurchaseRequest().getPurchaseRequestId()));
+			data.setPurchaseRequestId(BigInteger.valueOf(ri.getPurchaseRequest().getPurchaseRequestId()));// #35492#58
+			data.setCreatedBy(userId);// #35492#58
 			auDPRequestnoteDetailSPDTOList.add(data);
 		}
 		auObj.setAuDPRequestNoteDetailSPDTOList(auDPRequestnoteDetailSPDTOList);
@@ -47,6 +48,7 @@ public class AuditDPRequestNoteBackingBean extends AuditDPRequestNoteBackingBean
 		auDPRequestNoteSPDTO.setDpFieldLabelId(AuditDPRequestNoteConst.SC_DP_AU_RN_FIELDLABELID);
 		auDPRequestNoteSPDTO.setNewValue(null);
 		auDPRequestNoteSPDTO.setOldValue(null);
+		auDPRequestNoteSPDTO.setCreatedBy(userId);// #35492#58
 
 		auDPRequestnoteSPDTOList.add(auDPRequestNoteSPDTO);
 		auObj.setAuDPRequestNoteSPDTOList(auDPRequestnoteSPDTOList);
