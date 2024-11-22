@@ -14,10 +14,11 @@
 				<table style="width: 100%;">
 					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175 -->
 						    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 					<tr>
