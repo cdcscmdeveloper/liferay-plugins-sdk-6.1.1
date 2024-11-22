@@ -15,10 +15,20 @@
 		<ui:repeat var="dockyardCatVar" value="#{viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} (#{dockyardCatVar.categoryName})" />
+					<td>
+					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
+				<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+						<p:outputLabel value="#{viewSmApplBackingBean.getCategoryCodeOtherDesc(dockyardCatVar)}" 
+							style="text-indent: 10px;"/>
+						</td>
+					</tr>
+				<!-- 29380 - Site Visit Grouping Enhancement -28775 - end -->
 			</table>
 			<br />
 			
