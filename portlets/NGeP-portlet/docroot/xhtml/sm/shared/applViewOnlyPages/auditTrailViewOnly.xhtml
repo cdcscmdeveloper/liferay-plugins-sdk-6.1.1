@@ -16,7 +16,8 @@
 					<div align="right" style="vertical-align: top; width: 100%">
 						<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
 							ajax="false">
-							<!-- 								<p:fileDownload value="" /> -->
+							<p:fileDownload
+								value="#{auditSupplierManagementDocumentBackingBean.generateRptPdfForAuditTrailDetailsAll(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
@@ -39,7 +40,7 @@
 							<c:when
 								test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_BASIC}">
 								<p:tab id="#{SupplierManagementConst.auTabIdBankInfo}"
-									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
+									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
@@ -48,7 +49,7 @@
 							<c:when
 								test="#{AuditSupplierManagementViewBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
 								<p:tab id="#{SupplierManagementConst.auTabIdBankInfo}"
-									title="#{lbl['lbl.audit.tab.approve.category.codes']}" />
+									title="#{lbl['lbl.audit.tab.approve.bank.information']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdUserInfo}"
 									title="#{lbl['lbl.audit.tab.user.profile']}" />
 								<p:tab id="#{SupplierManagementConst.auTabIdAdminInfo}"
@@ -81,7 +82,8 @@
 				<td>
 					<div align="right" style="width: 100%">
 						<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
-							<!-- 								<p:fileDownload value="" /> -->
+							<p:fileDownload
+								value="#{auditSupplierManagementDocumentBackingBean.generateRptPdfForAuditTrailDetails(AuditSupplierManagementViewBackingBean.managedBean.auSmSearchBean)}" />
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
@@ -94,53 +96,53 @@
 			</tr>
 			<tr>
 				<td><p:dataTable id="searchAuSmId" var="obj" rows="10"
-						width="100%"
+						width="100%" tableStyle="width:auto"
 						value="#{AuditSupplierManagementViewBackingBean.managedBean.searchAuSm}"
 						rowIndexVar="index" lazy="true"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 						<ac:paginator for="searchAuSmId"></ac:paginator>
 						<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
-							style="white-space: normal!important;" width="5%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.actionDate}">
 								<f:convertDateTime
 									pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
 							</h:outputText>
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
-							style="white-space: normal!important;" width="5%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.actionType}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
-							style="white-space: normal!important;" width="5%">
-							<h:outputText value="#{obj.actionBy}" escape="false" />
+							style="white-space: normal!important;">
+							<h:outputText value="#{obj.actionBy}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
-							style="white-space: normal!important;" width="10%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.org}" escape="false" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.role']}"
-							style="white-space: normal!important;" width="5%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.role}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.docType']}"
-							style="white-space: normal!important;" width="5%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.docType}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
-							style="white-space: normal!important;" width="10%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.docNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
-							style="white-space: normal!important;" width="5%">
+							style="white-space: normal!important;">
 							<h:outputText value="#{obj.fieldName}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-							style="white-space: normal!important;" width="5%">
-							<h:outputText value="#{obj.oldValue}" escape="false" />
+							style="white-space: pre-wrap!important;">
+							<h:outputText value="#{obj.oldValue}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-							style="white-space: normal!important;" width="5%">
-							<h:outputText value="#{obj.newValue}" escape="false" />
+							style="white-space: pre-wrap!important;">
+							<h:outputText value="#{obj.newValue}" />
 						</p:column>
 					</p:dataTable></td>
 			</tr>
