@@ -84,7 +84,6 @@ public class ViewSuppProfileBackingBean extends
 			this.getManagedBean().setAuditAccess(true);
 		} else if(SmCommonUtil.md5("false").equals(isAudit)) {
 			this.getManagedBean().setAuditAccess(false);
-			
 		}
 		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
