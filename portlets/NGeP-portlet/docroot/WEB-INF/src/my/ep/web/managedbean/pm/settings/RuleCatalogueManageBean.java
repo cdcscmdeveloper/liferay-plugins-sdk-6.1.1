@@ -144,16 +144,30 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Long selectedZoneId;
 	private FeeExemptionResDTO resDTO;
 	private FeeExemptionResDTO resDTOOld;
-	private List<PmPtjSpecialApproval> auditEffDateMainPtjSpecialApprovalList;
-	private List<PmPtjSpecialApproval> auditEffDateCloneMainPtjSpecialApprovalList;
-	private List<PmPtjSpecialApproval> auditExpDateMainPtjSpecialApprovalList;
-	private List<PmPtjSpecialApproval> auditExpDateCloneMainPtjSpecialApprovalList;
-	private List<PmPtjSpecialApproval> auditAmtMainPtjSpecialApprovalList;
+
 	private List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalListNewVal;
 	private List<PmPtjSpecialApproval> auditDeletedMainPtjSpecialApprovalList;
 	private List<PmPtjSpecialApproval> auditMainPtjSpecialApprovalList;
-	private List<PmPtjSpecialApproval> auditCloneMainPtjSpecialApprovalList;
+	private List<PmPtjSpecialApproval> auditUpdateMainPtjSpecialApprovalList;
 	private PtjSpecialApprovalResDTO qtValuesResDTO;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForOrgType;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgType;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForOrgType;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgTypeOld;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForOrgItem;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgItem;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForOrgItem;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgItemOld;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForContract;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForContract;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForContract;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgContractOld;
+	private List<PmFeeExemption> auditDeletedFeeExemptionsForComodity;
+	private List<PmFeeExemption> auditUpdatedFeeExemptionsForComodity;
+	private List<PmFeeExemption> auditAddedFeeExemptionsForComodity;
+	private List<PmFeeExemption> auditFeeExemptionsForOrgComodityOld;
+	private String auditLevelCode;
+	private String auditFeeExemptionType;
 	/* 27827 - END */
 	// #34397, #34398
 	private List<PmZone> mainZones;
@@ -1580,66 +1594,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.resDTOOld = resDTOOld;
 	}
 
-	public List<PmPtjSpecialApproval> getAuditEffDateMainPtjSpecialApprovalList() {
-		if (auditEffDateMainPtjSpecialApprovalList == null) {
-			auditEffDateMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return auditEffDateMainPtjSpecialApprovalList;
-	}
-
-	public void setAuditEffDateMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditEffDateMainPtjSpecialApprovalList) {
-		this.auditEffDateMainPtjSpecialApprovalList = auditEffDateMainPtjSpecialApprovalList;
-	}
-
-	public List<PmPtjSpecialApproval> getAuditEffDateCloneMainPtjSpecialApprovalList() {
-		if (auditEffDateCloneMainPtjSpecialApprovalList == null) {
-			auditEffDateCloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return auditEffDateCloneMainPtjSpecialApprovalList;
-	}
-
-	public void setAuditEffDateCloneMainPtjSpecialApprovalList(
-			List<PmPtjSpecialApproval> auditEffDateCloneMainPtjSpecialApprovalList) {
-		this.auditEffDateCloneMainPtjSpecialApprovalList = auditEffDateCloneMainPtjSpecialApprovalList;
-	}
-
-	public List<PmPtjSpecialApproval> getAuditExpDateMainPtjSpecialApprovalList() {
-		if (auditExpDateMainPtjSpecialApprovalList == null) {
-			auditExpDateMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return auditExpDateMainPtjSpecialApprovalList;
-	}
-
-	public void setAuditExpDateMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditExpDateMainPtjSpecialApprovalList) {
-		this.auditExpDateMainPtjSpecialApprovalList = auditExpDateMainPtjSpecialApprovalList;
-	}
-
-	public List<PmPtjSpecialApproval> getAuditExpDateCloneMainPtjSpecialApprovalList() {
-		if (auditExpDateCloneMainPtjSpecialApprovalList == null) {
-			auditExpDateCloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return auditExpDateCloneMainPtjSpecialApprovalList;
-	}
-
-	public void setAuditExpDateCloneMainPtjSpecialApprovalList(
-			List<PmPtjSpecialApproval> auditExpDateCloneMainPtjSpecialApprovalList) {
-		this.auditExpDateCloneMainPtjSpecialApprovalList = auditExpDateCloneMainPtjSpecialApprovalList;
-	}
-
-	public List<PmPtjSpecialApproval> getAuditAmtMainPtjSpecialApprovalList() {
-		if (auditAmtMainPtjSpecialApprovalList == null) {
-			auditAmtMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return auditAmtMainPtjSpecialApprovalList;
-	}
-
-	public void setAuditAmtMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditAmtMainPtjSpecialApprovalList) {
-		this.auditAmtMainPtjSpecialApprovalList = auditAmtMainPtjSpecialApprovalList;
-	}
-
 	public List<PmPtjSpecialApproval> getAuditDeletedMainPtjSpecialApprovalList() {
 		if (auditDeletedMainPtjSpecialApprovalList == null) {
-			auditDeletedMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+			auditDeletedMainPtjSpecialApprovalList = new ArrayList<>();
 		}
 		return auditDeletedMainPtjSpecialApprovalList;
 	}
@@ -1658,7 +1615,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public List<PmPtjSpecialApproval> getAuditMainPtjSpecialApprovalList() {
 		if (auditMainPtjSpecialApprovalList == null) {
-			auditMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
+			auditMainPtjSpecialApprovalList = new ArrayList<>();
 		}
 		return auditMainPtjSpecialApprovalList;
 	}
@@ -1667,20 +1624,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.auditMainPtjSpecialApprovalList = auditMainPtjSpecialApprovalList;
 	}
 
-	public List<PmPtjSpecialApproval> getAuditCloneMainPtjSpecialApprovalList() {
-		if (auditCloneMainPtjSpecialApprovalList == null) {
-			auditCloneMainPtjSpecialApprovalList = new ArrayList<PmPtjSpecialApproval>();
-		}
-		return auditCloneMainPtjSpecialApprovalList;
-	}
-
-	public void setAuditCloneMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditCloneMainPtjSpecialApprovalList) {
-		this.auditCloneMainPtjSpecialApprovalList = auditCloneMainPtjSpecialApprovalList;
-	}
-
 	public List<PmPtjSpecialApproval> getAuditMainPtjSpecialApprovalListNewVal() {
 		if (auditMainPtjSpecialApprovalListNewVal == null) {
-			auditMainPtjSpecialApprovalListNewVal = new ArrayList<PmPtjSpecialApproval>();
+			auditMainPtjSpecialApprovalListNewVal = new ArrayList<>();
 		}
 		return auditMainPtjSpecialApprovalListNewVal;
 	}
@@ -1689,4 +1635,206 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.auditMainPtjSpecialApprovalListNewVal = auditMainPtjSpecialApprovalListNewVal;
 	}
 
+	public List<PmPtjSpecialApproval> getAuditUpdateMainPtjSpecialApprovalList() {
+		if (auditUpdateMainPtjSpecialApprovalList == null) {
+			auditUpdateMainPtjSpecialApprovalList = new ArrayList<>();
+		}
+		return auditUpdateMainPtjSpecialApprovalList;
+	}
+
+	public void setAuditUpdateMainPtjSpecialApprovalList(List<PmPtjSpecialApproval> auditUpdateMainPtjSpecialApprovalList) {
+		this.auditUpdateMainPtjSpecialApprovalList = auditUpdateMainPtjSpecialApprovalList;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForOrgType() {
+		if (auditDeletedFeeExemptionsForOrgType == null) {
+			auditDeletedFeeExemptionsForOrgType = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForOrgType;
+	}
+
+	public void setAuditDeletedFeeExemptionsForOrgType(List<PmFeeExemption> auditDeletedFeeExemptionsForOrgType) {
+		this.auditDeletedFeeExemptionsForOrgType = auditDeletedFeeExemptionsForOrgType;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForOrgType() {
+		if (auditUpdatedFeeExemptionsForOrgType == null) {
+			auditUpdatedFeeExemptionsForOrgType = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForOrgType;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForOrgType(List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgType) {
+		this.auditUpdatedFeeExemptionsForOrgType = auditUpdatedFeeExemptionsForOrgType;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForOrgType() {
+		if (auditAddedFeeExemptionsForOrgType == null) {
+			auditAddedFeeExemptionsForOrgType = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForOrgType;
+	}
+
+	public void setAuditAddedFeeExemptionsForOrgType(List<PmFeeExemption> auditAddedFeeExemptionsForOrgType) {
+		this.auditAddedFeeExemptionsForOrgType = auditAddedFeeExemptionsForOrgType;
+	}
+
+	public String getAuditLevelCode() {
+		return auditLevelCode;
+	}
+
+	public void setAuditLevelCode(String auditLevelCode) {
+		this.auditLevelCode = auditLevelCode;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgTypeOld() {
+		if (auditFeeExemptionsForOrgTypeOld == null) {
+			auditFeeExemptionsForOrgTypeOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgTypeOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgTypeOld(List<PmFeeExemption> auditFeeExemptionsForOrgTypeOld) {
+		this.auditFeeExemptionsForOrgTypeOld = auditFeeExemptionsForOrgTypeOld;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForOrgItem() {
+		if (auditDeletedFeeExemptionsForOrgItem == null) {
+			auditDeletedFeeExemptionsForOrgItem = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForOrgItem;
+	}
+
+	public void setAuditDeletedFeeExemptionsForOrgItem(List<PmFeeExemption> auditDeletedFeeExemptionsForOrgItem) {
+		this.auditDeletedFeeExemptionsForOrgItem = auditDeletedFeeExemptionsForOrgItem;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForOrgItem() {
+		if (auditUpdatedFeeExemptionsForOrgItem == null) {
+			auditUpdatedFeeExemptionsForOrgItem = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForOrgItem;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForOrgItem(List<PmFeeExemption> auditUpdatedFeeExemptionsForOrgItem) {
+		this.auditUpdatedFeeExemptionsForOrgItem = auditUpdatedFeeExemptionsForOrgItem;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForOrgItem() {
+		if (auditAddedFeeExemptionsForOrgItem == null) {
+			auditAddedFeeExemptionsForOrgItem = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForOrgItem;
+	}
+
+	public void setAuditAddedFeeExemptionsForOrgItem(List<PmFeeExemption> auditAddedFeeExemptionsForOrgItem) {
+		this.auditAddedFeeExemptionsForOrgItem = auditAddedFeeExemptionsForOrgItem;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgItemOld() {
+		if (auditFeeExemptionsForOrgItemOld == null) {
+			auditFeeExemptionsForOrgItemOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgItemOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgItemOld(List<PmFeeExemption> auditFeeExemptionsForOrgItemOld) {
+		this.auditFeeExemptionsForOrgItemOld = auditFeeExemptionsForOrgItemOld;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForContract() {
+		if (auditDeletedFeeExemptionsForContract == null) {
+			auditDeletedFeeExemptionsForContract = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForContract;
+	}
+
+	public void setAuditDeletedFeeExemptionsForContract(List<PmFeeExemption> auditDeletedFeeExemptionsForContract) {
+		this.auditDeletedFeeExemptionsForContract = auditDeletedFeeExemptionsForContract;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForContract() {
+		if (auditUpdatedFeeExemptionsForContract == null) {
+			auditUpdatedFeeExemptionsForContract = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForContract;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForContract(List<PmFeeExemption> auditUpdatedFeeExemptionsForContract) {
+		this.auditUpdatedFeeExemptionsForContract = auditUpdatedFeeExemptionsForContract;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForContract() {
+		if (auditAddedFeeExemptionsForContract == null) {
+			auditAddedFeeExemptionsForContract = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForContract;
+	}
+
+	public void setAuditAddedFeeExemptionsForContract(List<PmFeeExemption> auditAddedFeeExemptionsForContract) {
+		this.auditAddedFeeExemptionsForContract = auditAddedFeeExemptionsForContract;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgContractOld() {
+		if (auditFeeExemptionsForOrgContractOld == null) {
+			auditFeeExemptionsForOrgContractOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgContractOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgContractOld(List<PmFeeExemption> auditFeeExemptionsForOrgContractOld) {
+		this.auditFeeExemptionsForOrgContractOld = auditFeeExemptionsForOrgContractOld;
+	}
+
+	public List<PmFeeExemption> getAuditDeletedFeeExemptionsForComodity() {
+		if (auditDeletedFeeExemptionsForComodity == null) {
+			auditDeletedFeeExemptionsForComodity = new ArrayList<>();
+		}
+		return auditDeletedFeeExemptionsForComodity;
+	}
+
+	public void setAuditDeletedFeeExemptionsForComodity(List<PmFeeExemption> auditDeletedFeeExemptionsForComodity) {
+		this.auditDeletedFeeExemptionsForComodity = auditDeletedFeeExemptionsForComodity;
+	}
+
+	public List<PmFeeExemption> getAuditUpdatedFeeExemptionsForComodity() {
+		if (auditUpdatedFeeExemptionsForComodity == null) {
+			auditUpdatedFeeExemptionsForComodity = new ArrayList<>();
+		}
+		return auditUpdatedFeeExemptionsForComodity;
+	}
+
+	public void setAuditUpdatedFeeExemptionsForComodity(List<PmFeeExemption> auditUpdatedFeeExemptionsForComodity) {
+		this.auditUpdatedFeeExemptionsForComodity = auditUpdatedFeeExemptionsForComodity;
+	}
+
+	public List<PmFeeExemption> getAuditAddedFeeExemptionsForComodity() {
+		if (auditAddedFeeExemptionsForComodity == null) {
+			auditAddedFeeExemptionsForComodity = new ArrayList<>();
+		}
+		return auditAddedFeeExemptionsForComodity;
+	}
+
+	public void setAuditAddedFeeExemptionsForComodity(List<PmFeeExemption> auditAddedFeeExemptionsForComodity) {
+		this.auditAddedFeeExemptionsForComodity = auditAddedFeeExemptionsForComodity;
+	}
+
+	public List<PmFeeExemption> getAuditFeeExemptionsForOrgComodityOld() {
+		if (auditFeeExemptionsForOrgComodityOld == null) {
+			auditFeeExemptionsForOrgComodityOld = new ArrayList<>();
+		}
+		return auditFeeExemptionsForOrgComodityOld;
+	}
+
+	public void setAuditFeeExemptionsForOrgComodityOld(List<PmFeeExemption> auditFeeExemptionsForOrgComodityOld) {
+		this.auditFeeExemptionsForOrgComodityOld = auditFeeExemptionsForOrgComodityOld;
+	}
+
+	public String getAuditFeeExemptionType() {
+		return auditFeeExemptionType;
+	}
+
+	public void setAuditFeeExemptionType(String auditFeeExemptionType) {
+		this.auditFeeExemptionType = auditFeeExemptionType;
+	}
 }

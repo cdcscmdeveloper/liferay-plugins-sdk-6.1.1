@@ -164,6 +164,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	private String inactiveFeeContPopUpMsg = "";
 
 	private String dupplicateOrgTypeName;
+	private boolean updte = false;
 
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
@@ -1399,8 +1400,8 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			if (exemption1.getFeeExemptionId() == null) {// set ExemptionType
 
 				exemption1.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE);
-
 			}
+			this.getManagedBean().setAuditFeeExemptionType(exemption1.getFeeExemptionType());
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
 			for (PmFeeExemption ex : exemptionList) {
@@ -1439,7 +1440,20 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 						PmCommonUtil.assignTrackingDairyForFeeExemption(fee, getActionDesc(messageId, msgParam), fee
 								.getRecordStatusFlg().longValue()));
 			}
+			// Audit Get deleted value for orgType
+			if (fee.isDeleted() && fee.getFeeExemptionId() != null) {
+				this.getManagedBean().getAuditDeletedFeeExemptionsForOrgType().add(fee);
+			}
 
+			// Audit Get New Added value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() == null && fee.isBrandNew()) {
+				this.getManagedBean().getAuditAddedFeeExemptionsForOrgType().add(fee);
+			}
+
+			// Audit Get Updated value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() != null && !fee.isBrandNew()) {
+				this.getManagedBean().getAuditUpdatedFeeExemptionsForOrgType().add(fee);
+			}
 		}
 		statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
@@ -1452,6 +1466,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
+			// getOLD value before save new value for audit update comparison
+			this.getManagedBean().getAuditFeeExemptionsForOrgTypeOld()
+					.addAll(exemptionSO.getFeeExemptionsForOrgType(reqDTO).getFeeExemptions());
 			FeeExemptionResDTO resDTO = exemptionSO.updateFeeExemptionList(reqDTO);
 			// retrive
 			this.getManagedBean().getFeeExemptionsForOrgType().clear();
@@ -1461,15 +1478,45 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			this.getManagedBean().setFeeExemptionsForOrgType(resDTO.getFeeExemptions());
 
 			if (resDTO.isSuccessful()) {
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getAuditAddedFeeExemptionsForOrgType())) {
+					getAuditAddedData(this.getManagedBean().getFeeExemptionsForOrgType(), this.getManagedBean()
+							.getAuditAddedFeeExemptionsForOrgType());
+				}
+
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_770010,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
+					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPFEE);
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
+				}
 			}
 		} catch (Exception e) {
+			clearAllAuditBeanVal(getManagedBean());
 			log.error(e);
+		}
+	}
+
+	void getAuditAddedData(List<PmFeeExemption> feeExemptionsForOrgType, List<PmFeeExemption> auditAddedFeeExemptionsForOrgType) {
+		for (PmFeeExemption saveVal : feeExemptionsForOrgType) {
+			for (PmFeeExemption updateVal : auditAddedFeeExemptionsForOrgType) {
+				if (updateVal.getFeeExemptionId() == null) {
+					getAuditAddedDataDetail(saveVal, updateVal);
+				}
+			}
+		}
+	}
+
+	void getAuditAddedDataDetail(PmFeeExemption saveVal, PmFeeExemption updateVal) {
+		if (updateVal.isBrandNew() && saveVal.getEffDate().equals(updateVal.getEffDate())
+				&& saveVal.getFeeExemptionType().equals(updateVal.getFeeExemptionType())) {
+			updateVal.setFeeExemptionId(saveVal.getFeeExemptionId());
 		}
 	}
 
@@ -1501,7 +1548,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					&& exemption.getItemId() != null) {
 				// update exemptionType if Item is selected
 				exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_ITEM);
+
 			}
+			this.getManagedBean().setAuditFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER);
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
 			for (PmFeeExemption ex : exemptionList) {
@@ -1550,6 +1599,21 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 								.getRecordStatusFlg().longValue()));
 			}
 
+			// Audit Get deleted value for orgType
+			if (fee.isDeleted() && fee.getFeeExemptionId() != null) {
+				this.getManagedBean().getAuditDeletedFeeExemptionsForOrgItem().add(fee);
+			}
+
+			// Audit Get New Added value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() == null && fee.isBrandNew()) {
+				this.getManagedBean().getAuditAddedFeeExemptionsForOrgItem().add(fee);
+			}
+
+			// Audit Get Updated value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() != null && !fee.isBrandNew()) {
+				this.getManagedBean().getAuditUpdatedFeeExemptionsForOrgItem().add(fee);
+			}
+
 		}
 		statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
@@ -1562,7 +1626,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
-
+			// getOLD value before save new value for audit update comparison
+			this.getManagedBean().getAuditFeeExemptionsForOrgItemOld()
+					.addAll(exemptionSO.getFeeExemptionsForOrgAndItem(reqDTO).getFeeExemptions());
 			FeeExemptionResDTO resDTO = exemptionSO.updateFeeExemptionList(reqDTO);
 			// retrieve
 			this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
@@ -1576,14 +1642,27 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				this.getManagedBean().getFeeExemptionsForOrgAndItem().add(exemption);
 			}
 			if (resDTO.isSuccessful()) {
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getAuditAddedFeeExemptionsForOrgItem())) {
+					getAuditAddedData(this.getManagedBean().getFeeExemptionsForOrgAndItem(), this.getManagedBean()
+							.getAuditAddedFeeExemptionsForOrgItem());
+				}
+
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_770010,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
+					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPFEE);
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
+				} // /itemId/extensionCode,itemId,ItemName
 			}
 		} catch (Exception e) {
+			clearAllAuditBeanVal(getManagedBean());
 			log.error(e);
 		}
 	}
@@ -1711,6 +1790,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				// update exemptionType if requestedItem is selected
 				exemption.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT_AND_CONTRACTED_ITEM);
 			}
+			this.getManagedBean().setAuditFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT);
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
 			for (PmFeeExemption ex : exemptionList) {
@@ -1757,6 +1837,21 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 								.getRecordStatusFlg().longValue()));
 			}
 
+			// Audit Get deleted value for orgType
+			if (fee.isDeleted() && fee.getFeeExemptionId() != null) {
+				this.getManagedBean().getAuditDeletedFeeExemptionsForContract().add(fee);
+			}
+
+			// Audit Get New Added value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() == null && fee.isBrandNew()) {
+				this.getManagedBean().getAuditAddedFeeExemptionsForContract().add(fee);
+			}
+
+			// Audit Get Updated value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() != null && !fee.isBrandNew()) {
+				this.getManagedBean().getAuditUpdatedFeeExemptionsForContract().add(fee);
+			}
+
 		}
 		statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
@@ -1770,6 +1865,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
+			// getOLD value before save new value for audit update comparison
+			this.getManagedBean().getAuditFeeExemptionsForOrgContractOld()
+					.addAll(exemptionSO.getFeeExemptionsForContractAndReqItem(reqDTO).getFeeExemptions());
 			FeeExemptionResDTO resDTO = exemptionSO.updateFeeExemptionList(reqDTO);
 			// retrieve
 			this.getManagedBean().getFeeExemptionsForContract().clear();
@@ -1784,14 +1882,26 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				this.getManagedBean().getFeeExemptionsForContract().add(exemption);
 			}
 			if (resDTO.isSuccessful()) {
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getAuditAddedFeeExemptionsForContract())) {
+					getAuditAddedData(this.getManagedBean().getFeeExemptionsForContract(), this.getManagedBean()
+							.getAuditAddedFeeExemptionsForContract());
+				}
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_770010,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
+					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPFEE);
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
+				}
 			}
 		} catch (Exception e) {
+			clearAllAuditBeanVal(getManagedBean());
 			log.error(e);
 		}
 	}
@@ -1843,6 +1953,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				// update exemptionType if Type is selected
 				exemption1.setFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY);
 			}
+			this.getManagedBean().setAuditFeeExemptionType(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY);
 		}
 		if (isDateOverlappedForExemptionType(exemptionList)) {
 			for (PmFeeExemption ex : exemptionList) {
@@ -1885,6 +1996,21 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 								.getRecordStatusFlg().longValue()));
 			}
 
+			// Audit Get deleted value for orgType
+			if (fee.isDeleted() && fee.getFeeExemptionId() != null) {
+				this.getManagedBean().getAuditDeletedFeeExemptionsForComodity().add(fee);
+			}
+
+			// Audit Get New Added value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() == null && fee.isBrandNew()) {
+				this.getManagedBean().getAuditAddedFeeExemptionsForComodity().add(fee);
+			}
+
+			// Audit Get Updated value for orgType
+			if (!fee.isDeleted() && fee.getFeeExemptionId() != null && !fee.isBrandNew()) {
+				this.getManagedBean().getAuditUpdatedFeeExemptionsForComodity().add(fee);
+			}
+
 		}
 		statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setStatusId(Long.valueOf(DbValueConst.RECORD_STATUS_ACTIVE));// 1
@@ -1898,6 +2024,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 					IFeeExemptionSO.class);
 
 			reqDTO.setFeeExemptionList(exemptionList);
+			// getOLD value before save new value for audit update comparison
+			this.getManagedBean().getAuditFeeExemptionsForOrgComodityOld()
+					.addAll(exemptionSO.getFeeExemptionsForComodity(reqDTO).getFeeExemptions());
 			FeeExemptionResDTO resDTO = exemptionSO.updateFeeExemptionList(reqDTO);
 			// retrive
 			this.getManagedBean().getFeeExemptionsForComodity().clear();
@@ -1929,14 +2058,26 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				this.getManagedBean().getFeeExemptionsForComodity().add(exemption);
 			}
 			if (resDTO.isSuccessful()) {
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getAuditAddedFeeExemptionsForComodity())) {
+					getAuditAddedData(this.getManagedBean().getFeeExemptionsForComodity(), this.getManagedBean()
+							.getAuditAddedFeeExemptionsForComodity());
+				}
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_770010,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
+					getManagedBean().setAuditLevelCode(AuditConst.PM_LVL_CODE_2_SPFEE);
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
+				}
 			}
 		} catch (Exception e) {
+			clearAllAuditBeanVal(getManagedBean());
 			log.error(e);
 		}
 	}
@@ -3552,7 +3693,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			this.getManagedBean().getMainPtjSpecialApprovalList().clear();
 			this.getManagedBean().getCloneMainPtjSpecialApprovalList().clear();
 			this.getManagedBean().getPtjSpecialApprovalList().clear();
-			System.out.println("BEFORE ADD NEW  :::: " + this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal().size());
+
 			ptjSpecialApprovalSO = (IPtjSpecialApprovalSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IPtjSpecialApprovalSO.class);
 			PtjSpecialApprovalReqDTO reqDTO = new PtjSpecialApprovalReqDTO();
@@ -3563,9 +3704,9 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				for (PmPtjSpecialApproval approval : resDTO.getPtjSpecialApprovalList()) {
 					clone = (PmPtjSpecialApproval) approval.cloneEntity();
 					this.getManagedBean().getCloneMainPtjSpecialApprovalList().add(clone);
-					if (CollectionUtils.isNotEmpty(getManagedBean().getAuditCloneMainPtjSpecialApprovalList())) {
+					if (CollectionUtils.isNotEmpty(getManagedBean().getAuditUpdateMainPtjSpecialApprovalList())) {
 						PmPtjSpecialApproval matchingApproval = findMatchingQtValues(getManagedBean()
-								.getAuditCloneMainPtjSpecialApprovalList(), clone);
+								.getAuditUpdateMainPtjSpecialApprovalList(), clone);
 						if (matchingApproval != null
 								&& matchingApproval.getPtjSpecialApprovalId().equals(clone.getPtjSpecialApprovalId())) {
 							getManagedBean().getAuditMainPtjSpecialApprovalList().add(clone);
@@ -3575,13 +3716,11 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 
 				this.getManagedBean().setMainPtjSpecialApprovalList(resDTO.getPtjSpecialApprovalList());
 				this.getManagedBean().setPtjSpecialApprovalList(resDTO.getPtjSpecialApprovalList());
-				this.getManagedBean().getAuditMainPtjSpecialApprovalList();
-				this.getManagedBean().getAuditCloneMainPtjSpecialApprovalList();
 
 				if (CollectionUtils.isNotEmpty(this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal())) {
 					List<PmPtjSpecialApproval> list1 = this.getManagedBean().getMainPtjSpecialApprovalList();
 					List<PmPtjSpecialApproval> list2 = this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal();
-					newAddedQtValues(list1, list2);
+					updatedQtValues(list1, list2);
 				}
 			}
 		} catch (Exception e) {
@@ -3593,7 +3732,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	 * @param list1
 	 * @param list2
 	 */
-	public void newAddedQtValues(List<PmPtjSpecialApproval> list1, List<PmPtjSpecialApproval> list2) {
+	public void updatedQtValues(List<PmPtjSpecialApproval> list1, List<PmPtjSpecialApproval> list2) {
 		for (PmPtjSpecialApproval item1 : list1) {
 			for (PmPtjSpecialApproval item2 : list2) { // new added Element
 				if (item2.getPtjSpecialApprovalId() == null
@@ -3601,12 +3740,10 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 								.equals(item2.getPmOrgProfile().getOrgValidity().getOrgCode())
 						&& item1.getEffDate().equals(item2.getEffDate())) {
 					item2.setPtjSpecialApprovalId(item1.getPtjSpecialApprovalId());
-					// this.getManagedBean().getAuditMainPtjSpecialApprovalList().add(item2);
 					break;
 				}
 			}
 		}
-		System.out.println("results2 SIZE ::: " + this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal().size());
 	}
 
 	/**
@@ -3644,7 +3781,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 
 				this.getManagedBean().getAuditMainPtjSpecialApprovalList().remove(deletedSpecialApproval);
 
-				this.getManagedBean().getAuditCloneMainPtjSpecialApprovalList().remove(deletedSpecialApproval);
+				this.getManagedBean().getAuditUpdateMainPtjSpecialApprovalList().remove(deletedSpecialApproval);
 
 				this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal().remove(deletedSpecialApproval);
 			}
@@ -3655,16 +3792,14 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	 * @param itr
 	 */
 	public void deletedNullPkId(List<PmPtjSpecialApproval> deletedList) {
-		for (PmPtjSpecialApproval del : deletedList) {
-			if (del.getPtjSpecialApprovalId() == null) {
-				deletedList.remove(del);
-			}
-			if (CollectionUtils.isNotEmpty(deletedList)) {
-				this.getManagedBean().getAuditDeletedMainPtjSpecialApprovalList().addAll(deletedList);
+		if (CollectionUtils.isNotEmpty(deletedList)) {
+			for (PmPtjSpecialApproval del : deletedList) {
+				if (del.getPtjSpecialApprovalId() == null) {
+					deletedList.remove(del);
+				}
+				break;
 			}
 		}
-		System.out
-				.println("Deleted results SIZE ::: " + this.getManagedBean().getAuditDeletedMainPtjSpecialApprovalList().size());
 	}
 
 	public void selectPtjAction(List<PmOrgProfile> orgProfileList) {
@@ -3855,7 +3990,6 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 
 		this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal()
 				.addAll(this.getManagedBean().getNewPtjSpecialApprovalList());
-		System.out.println("BEFORE ADD NEW  :::: " + this.getManagedBean().getAuditMainPtjSpecialApprovalListNewVal().size());
 
 		IPtjSpecialApprovalSO approvalSO = null;
 		try {
@@ -3880,7 +4014,6 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 						IAuditPMSO.class);
 				AuditPMBackingBeanTemplate auTemplate = new AuditPMSysParamBackingBean();
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SYSTEMPARAMETERS)) {
-					// getManagedBean().setQtValuesResDTO(resDTO);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SYSPARAMETER);
 				}
 			}
@@ -3947,6 +4080,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 											clone.getEffDate()) : "-",
 									approval.getEffDate() != null ? DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,
 											approval.getEffDate()) : "-" };
+							auditMatchedIdUpdateList(clone, 1);
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);
 						}
 						// #29166 - CR 27827: Static Code Analysis Start - This
@@ -3962,6 +4096,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 											clone.getExpDate()) : "-",
 									approval.getExpDate() != null ? DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,
 											approval.getExpDate()) : "-" };
+							auditMatchedIdUpdateList(clone, 2);
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);
 						}
 						/*
@@ -3991,13 +4126,11 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 									approval.getPmOrgProfile().getPmOrgValidity().getOrgName(),
 									clone.getProcureAmt() != null ? nf.format(clone.getProcureAmt()) : "-",
 									approval.getProcureAmt() != null ? nf.format(approval.getProcureAmt()) : "-" };
+							auditMatchedIdUpdateList(clone, 3);
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);
 						}
-						getManagedBean().getAuditCloneMainPtjSpecialApprovalList().add(clone);
-						// getManagedBean().getAuditMainPtjSpecialApprovalList().add(approval);
 					}
 				}
-
 			}
 		}
 
@@ -4007,10 +4140,50 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				messageId = MessageConst.TD_80220;
 				params = new String[] { deleted.getPmOrgProfile().getPmOrgValidity().getOrgCode(),
 						deleted.getPmOrgProfile().getPmOrgValidity().getOrgName() };
-				// getManagedBean().getAuditDeletedMainPtjSpecialApprovalList().add(deleted);
+				getManagedBean().getAuditDeletedMainPtjSpecialApprovalList().add(deleted);
 				addTrackingDiaryIntoList(messageId, params, deleted, reqDTO);
 			}
 		}
+	}
+
+	private void auditMatchedIdUpdateList(PmPtjSpecialApproval updateVal, int paramVal) {
+		if (CollectionUtils.isEmpty(getManagedBean().getAuditUpdateMainPtjSpecialApprovalList())) {
+			getManagedBean().getAuditUpdateMainPtjSpecialApprovalList().add(updateVal);
+		}
+		for (PmPtjSpecialApproval approval : getManagedBean().getAuditUpdateMainPtjSpecialApprovalList()) {
+			if (updateVal.getPtjSpecialApprovalId().equals(approval.getPtjSpecialApprovalId())) {
+				insertUpdateVal(approval, updateVal, paramVal);
+			} else {
+				updte = true;
+			}
+		}
+		if (Boolean.valueOf(updte)) {
+			getManagedBean().getAuditUpdateMainPtjSpecialApprovalList().add(updateVal);
+			newUpdatePK(updateVal, paramVal);
+		}
+	}
+
+	private void newUpdatePK(PmPtjSpecialApproval updateVal, int paramVal) {
+		for (PmPtjSpecialApproval approval : getManagedBean().getAuditUpdateMainPtjSpecialApprovalList()) {
+			if (updateVal.getPtjSpecialApprovalId().equals(approval.getPtjSpecialApprovalId())) {
+				insertUpdateVal(approval, updateVal, paramVal);
+			}
+		}
+	}
+
+	private void insertUpdateVal(PmPtjSpecialApproval approval, PmPtjSpecialApproval updateVal, int paramVal) {
+		if (updateVal.getPtjSpecialApprovalId().equals(approval.getPtjSpecialApprovalId())) {
+			if (paramVal == 1) {
+				approval.setEffDate(updateVal.getEffDate());
+			}
+			if (paramVal == 2) {
+				approval.setExpDate(updateVal.getExpDate());
+			}
+			if (paramVal == 3) {
+				approval.setProcureAmt(updateVal.getProcureAmt());
+			}
+		}
+		updte = false;
 	}
 
 	public String getLanguage() {
@@ -4515,7 +4688,37 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				getManagedBean().getZoneList(), "zoneId");
 		return zone != null ? zone.getZoneName() : "";
 	}
+
 	// #34397, #34398 - end
 
 	// #30672, #29669 - 29/01/2023 - Remove this code
+
+	void clearAllAuditBeanVal(RuleCatalogueManageBean managedBeans) {
+		managedBeans.getResDTO().setFeeExemptions(null);
+		managedBeans.getResDTOOld().setFeeExemptions(null);
+		managedBeans.setAuditMainPtjSpecialApprovalList(null);
+		managedBeans.setAuditUpdateMainPtjSpecialApprovalList(null);
+		managedBeans.setAuditDeletedMainPtjSpecialApprovalList(null);
+		managedBeans.setAuditMainPtjSpecialApprovalListNewVal(null);
+
+		managedBeans.setAuditDeletedFeeExemptionsForOrgType(null);
+		managedBeans.setAuditAddedFeeExemptionsForOrgType(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForOrgType(null);
+		managedBeans.setAuditFeeExemptionsForOrgTypeOld(null);
+
+		managedBeans.setAuditFeeExemptionsForOrgItemOld(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForOrgItem(null);
+		managedBeans.setAuditDeletedFeeExemptionsForOrgItem(null);
+		managedBeans.setAuditAddedFeeExemptionsForOrgItem(null);
+
+		managedBeans.setAuditFeeExemptionsForOrgContractOld(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForContract(null);
+		managedBeans.setAuditDeletedFeeExemptionsForContract(null);
+		managedBeans.setAuditAddedFeeExemptionsForContract(null);
+
+		managedBeans.setAuditFeeExemptionsForOrgComodityOld(null);
+		managedBeans.setAuditUpdatedFeeExemptionsForComodity(null);
+		managedBeans.setAuditDeletedFeeExemptionsForComodity(null);
+		managedBeans.setAuditAddedFeeExemptionsForComodity(null);
+	}
 }
