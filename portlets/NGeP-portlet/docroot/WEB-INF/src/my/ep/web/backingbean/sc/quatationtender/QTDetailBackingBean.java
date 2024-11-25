@@ -13629,7 +13629,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	// 25791 -start-
 	/**
 	 * This method is used to view the original QT maintenance or audit search
-	 * screens.�
+	 * screens.
 	 */
 	public void backToPreviousQtAuditORMaintenance() {
 		FacesContext fc = FacesContext.getCurrentInstance();
