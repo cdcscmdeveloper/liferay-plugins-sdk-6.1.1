@@ -15746,10 +15746,13 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes().getUserLocale()) });
 							}
+							
 							//20210205@haziq- Bug #30046 - End
-							totalSpecEstimatedAmount = totalSpecEstimatedAmount
-									.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
-							//20201217@haziq- Bug #29806 - Start
+							if (null != estimatedCost) {
+								totalSpecEstimatedAmount = totalSpecEstimatedAmount
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
+							}
+							//20201217@haziq- Bug #29806 - End
 						}
 					}
 				}
@@ -15775,7 +15778,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					// 32477, 25138, 32134, 25729 -end-
 				}
 				//Bug #29808
-				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
 			
 			// Check Intended Price
@@ -15814,7 +15817,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 					}
 
-					newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+					newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 
 					if (newTotalSpecEstimatedAmount.compareTo(indPriceThreshold) > 0) {
 						throw new EpException(MessageConst.ERROR_760504,

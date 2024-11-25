@@ -3,6 +3,8 @@
  */
 package my.ep.web.constant.sc;
 
+import java.math.RoundingMode;	//Bug #35600@Syazani 19/09/2024
+
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -306,4 +308,6 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
 	// Bug #35688@Syazani 10/07/2024 -- End
+	
+	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
 }
