@@ -299,6 +299,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public String determineIcon(CtAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String fileExtension = "";
+		
+		// #25956 - Start
+		// Handle null attachment
+		if (attachment == null) {
+			return imageFileName;
+		}
+		// #25956 - End
 
 		String fileName = attachment.getFileName();
 
@@ -3854,18 +3861,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
 		// Start of method implementation
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
-		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IRequestItemSO.class);
+		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IRequestItemSO.class);
+
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
-		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode()
-				.getParameterCode();
+		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			handleDirectPurchaseMode(requestItemSO, requestItemId);
+			handleDirectPurchaseMode(itemSpecOfferList);
 		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-			handleQuotationTenderOrDirectNegoMode(requestItemSO, requestItemId);
+			handleQuotationTenderOrDirectNegoMode(itemSpecOfferList);
 		}
 
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
@@ -3880,9 +3888,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
+	private void handleDirectPurchaseMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
 		List<String> itemSpecList = new ArrayList<>();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
 		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
 			String questionType = itemSpecOffer.getQuestionType();
@@ -3890,7 +3897,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-				itemSpecList.add(itemSpecOffer.getItemSpec());
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 			}
 		}
 		getManagedBean().setItemSpecification(itemSpecList);
@@ -3906,23 +3913,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
-		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-		Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
+	private void handleQuotationTenderOrDirectNegoMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
 
-		while (iterator.hasNext()) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOfferList.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
-			if (itemSpecOffer.getNewOfferSpec() != null) {
-				itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-			}
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
 			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
 				iterator.remove();
 			}
 		}
 
-		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOfferList);
 	}
-
 	// #28854 - End
 	
 	// 21533 - start

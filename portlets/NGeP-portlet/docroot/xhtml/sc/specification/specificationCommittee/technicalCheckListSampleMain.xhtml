@@ -20,13 +20,25 @@
 		<p:messages id="technicalChecklistSamplemain" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"
 			severity="error, info"></p:messages>
-		<table width="100%" class="BtnSpacing">
+
+		<ui:remove> #11104 - start </ui:remove>
+		<ui:param name="isReadOnlyOrSpecMain"
+			value="#{!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
+		<ui:remove> #11104 - end </ui:remove>
+		<ui:remove> #11104 - start </ui:remove>
+		<table style="width: 100%;" class="BtnSpacing">
 			<tr>
-				<td align="right"><p:commandButton process="@this" partialSubmit="true"
-						value="#{lbl['lbl.btn.back']}" style="float:left;"
-						immediate="true"
-						action="#{specificationBackingBean.committeeBackAction}" /> 
-					</td>
+				<td align="right"><p:commandButton process="@this"
+						partialSubmit="true" value="#{lbl['lbl.btn.back']}"
+						style="float:left;" immediate="true"
+						action="#{specificationBackingBean.committeeBackAction}" /> <ui:remove> #11104 - start </ui:remove>
+					<p:commandButton value="#{lbl['lbl.btn.complete']}" process="@this"
+						partialSubmit="true"
+						rendered="#{((!specificationBackingBean.managedBean.readOnly and specificationBackingBean.isQTStatusChecklistScoring()) or (!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.isQTStatusChecklistScoringRevision()) or isReadOnlyOrSpecMain)}"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
+						action="#{specificationBackingBean.completeSampleTemplateSpecDetails()}" />
+					<ui:remove> #11104 - end </ui:remove></td>
 			</tr>
 		</table>
 		<p:spacer height="5"></p:spacer>

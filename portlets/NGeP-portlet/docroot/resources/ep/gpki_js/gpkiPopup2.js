@@ -143,7 +143,6 @@ function parseTxResultRequestOTP(msg) {
         const response = jQuery.parseJSON(obj.response);
         gpkiNonce = response.nonce;
         saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
-        alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
       } else {
     	disableOtpTimeout();
         showError(obj.status, obj.message);
