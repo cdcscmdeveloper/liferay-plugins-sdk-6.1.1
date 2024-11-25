@@ -9173,7 +9173,7 @@ private void retriveCommitteeRemarksList(){
 		
 		StringBuilder fileName = new StringBuilder(
 				getManagedBean().getReportDownloadFileName());
-		fileName.append(".zip");
+		fileName.append(".pdf");
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
 		generateEvaluationPdf(
