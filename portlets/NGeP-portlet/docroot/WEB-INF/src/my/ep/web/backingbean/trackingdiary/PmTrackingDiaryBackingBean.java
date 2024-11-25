@@ -350,6 +350,13 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		// Start Fix - #36608
+		if(getManagedBean().getSelectedDocNo() != null){
+			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getSelectedDocNo());
+		}else{
+			paramMap.put(ReportConst.PARAM_DOC_NO, ReportConst.EMPTY_VAL);
+		}
+		// End Fix - #36608
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 		String reportName = getTrackingDiaryReportName(docType,docId);
@@ -378,6 +385,11 @@ public class PmTrackingDiaryBackingBean extends
 					QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
 			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
 		}// 25791-end
+		// Start Fix - #36608
+		if (getManagedBean().getSelectedDocNo() != null) {
+			getManagedBean().setSelectedDocNo(null);
+		}
+		// End Fix - #36608
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, this.getManagedBean().getBackURL());

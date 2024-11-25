@@ -10411,8 +10411,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	 * Populate and initialize data for update committee screen.
 	 */
 	public void prepareUpdateCommitteeMember() {
-		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType()))
+		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType())) {
 			return;
+		}
+
 		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
 		meetingBB.renewSesionObject();
 		this.getManagedBean().setMeetingBB(meetingBB);
