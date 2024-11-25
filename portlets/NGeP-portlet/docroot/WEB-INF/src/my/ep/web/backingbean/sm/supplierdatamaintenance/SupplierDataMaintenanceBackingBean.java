@@ -525,6 +525,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		//reset value
 		getManagedBean().setHasRegStatusChanged(false);
 		getManagedBean().setHasMofExpiryDateChanged(false);
+		getManagedBean().setEditDisciplinaryActionCheckBox(false);
 		
 		// Check if got active application for this supplier
 		SmAppl activeAppl = SmCommonUtil
@@ -1792,25 +1793,29 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setDisableDeleteButtonAprrovedCategoryCodePanel(false);
 			// 27815 - add disable button delete if edit DA - End
 			getManagedBean().setBlacklistOwnerOrDirector(disc.isBlacklistOwner());
-			getManagedBean().setBlacklistOwnerOrDirectorExist(disc.isBlacklistOwner());
+			getManagedBean().setBlacklistOwnerOrDirectorExist(true);
 			
 			getManagedBean().setCancelCategoryCode(disc.isCancelCategory());
-			getManagedBean().setCancelCategoryCodeExist(disc.isCancelCategory());
+			getManagedBean().setCancelCategoryCodeExist(true);
 			
 			getManagedBean().setSuspendRegistration(disc.isSuspendRegistration());
-			getManagedBean().setSuspendRegistrationExist(disc.isSuspendRegistration());
+			getManagedBean().setSuspendRegistrationExist(true);
 			
 			getManagedBean().setWarning(disc.isWarning());
-			getManagedBean().setWarningExist(disc.isWarning());
+			if(getManagedBean().isEditDisciplinaryActionCheckBox()){ 
+				getManagedBean().setWarningExist(false);
+			} else {
+				getManagedBean().setWarningExist(true);
+			}
 			
 			getManagedBean().setCancelRegistration(disc.isCancelRegistration());
-			getManagedBean().setCancelRegistrationExist(disc.isCancelRegistration());
+			getManagedBean().setCancelRegistrationExist(true);
 			
 			getManagedBean().setBumiputeraStatusCancel(disc.isBumiputeraCancel());
-			getManagedBean().setBumiputeraStatusCancelExist(disc.isBumiputeraCancel());
+			getManagedBean().setBumiputeraStatusCancelExist(true);
 			
 			getManagedBean().setManufacturerStatusCancel(disc.isManufacturerCancel());
-			getManagedBean().setManufacturerStatusCancelExist(disc.isManufacturerCancel());
+			getManagedBean().setManufacturerStatusCancelExist(true);
 		}else{
 			// 27815 - add disable button delete if edit DA - Start
 			if(disc.isCancelCategory() || disc.isBumiputeraCancel() || disc.isManufacturerCancel()){
@@ -2642,6 +2647,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setCancelRegistrationExist(false);
 		getManagedBean().setBlacklistOwnerOrDirectorExist(false);
 		getManagedBean().setBumiputeraStatusCancelExist(false);
+		getManagedBean().setCancelCategoryCodeExist(false);
+		getManagedBean().setManufacturerStatusCancelExist(false);
 	}
 	//27857: Disciplinary Action - end - 26238
 	
