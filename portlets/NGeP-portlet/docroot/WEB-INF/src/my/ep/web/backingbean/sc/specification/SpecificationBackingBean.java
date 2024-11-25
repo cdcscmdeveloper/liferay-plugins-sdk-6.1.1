@@ -12548,6 +12548,16 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 // #29732 End - reOpen Fix
+		
+//		#36678 related to #35061 start
+		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
+
+		if (!this.getManagedBean().getQt().isPanel() && intendedPrice.compareTo(indPriceThreshold) <= 0 
+				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt().getJustificationProcValue().isEmpty())) {
+				throw new EpException(MessageConst.ERROR_760560);
+		}
+//		#36678 related to #35061 end
 		FacesScopes facesScopes = new FacesScopes();
 
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -23843,5 +23853,30 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			qt.setSampleReq(sample);
 		}
 	}
+	
+	//#36678 related to #35061 start
+	public boolean checkIndPriceBecomeBelow() {
+		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
+		if (!this.getManagedBean().getQt().isPanel()
+				&& intendedPrice.compareTo(indPriceThreshold) <= 0
+				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt()
+						.getJustificationProcValue().isEmpty())) {
+			return true;
+		}
+		return false;
+	}
+
+	public String redirectSpecComMainYes() {
+		this.getManagedBean().setFieldProcurementJustification(true);
+		return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	}
+
+	public String redirectSpecComMainNo() {
+		this.getManagedBean().setFieldProcurementJustification(false);
+		return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	}
+	//#36678 related to #35061 end
+	
 }
