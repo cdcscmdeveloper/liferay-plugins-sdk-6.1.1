@@ -4,7 +4,7 @@
  * 
  * Release 1.00    
  *    
- * Copyright � 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
  */
