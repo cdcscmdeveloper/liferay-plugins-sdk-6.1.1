@@ -17797,7 +17797,6 @@ public class SpecificationBackingBean extends
 		retrieveStatusByTypeAndId(scQt);
 		// Bug #33661@Syazani 06/10/2022 -- End
 		
-		Long statusId = scQt != null ? scQt.getQtStatus().getStatusId():null;//#29732(#232)
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
 		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
@@ -18464,7 +18463,7 @@ public class SpecificationBackingBean extends
 							//20210205@haziq- Bug #30046 - End
 							if (null != estimatedCost) {
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
-										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 							}
 							//20201217@haziq- Bug #29806 - End
 							/*}*/
@@ -18516,7 +18515,7 @@ public class SpecificationBackingBean extends
 					}//32134-End
 				}
 				//Bug #29808
-				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
 			// Check Intended Price
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
@@ -18561,7 +18560,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				
-				newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+				newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 				if (newTotalSpecEstimatedAmount
 								.compareTo(indPriceThreshold) > 0) {
 					throw new EpException(MessageConst.ERROR_760504,
@@ -19742,8 +19741,10 @@ public class SpecificationBackingBean extends
 
 		if (null == st2technicalproposalList ||  this.getManagedBean().getScQtCheckSt2techProposal()
 				.isEmpty()) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
-			//retriveTechnicalCheckList();
+			// 11104 -start-
+			st2technicalproposalList = new ArrayList<>();
+			// 11104 -end-
+			
 
 		}
 		IParameterSO parameterSo = null;
@@ -19884,33 +19885,6 @@ public class SpecificationBackingBean extends
 		}
 		return null;
 	}
-/****11104-start
- * display scoresetting dropdown values in sample screen.
- * @param scoreTyp
- * @return( SelectItem[])
- */
-public SelectItem[] getDropDownSampleScoreType(String scoreTyp){	
-	List<String> ScoreTypes = new ArrayList<String>();
-	ScoreTypes.add(ParameterConst.ANSWER_TYPE_TEXT);
-	SelectItem[] items = null;
-	try {
-		items = new SelectItem[ScoreTypes.size()];
-		int i = 0;
-		for (String scoreType : ScoreTypes) {
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.ANSWER_TYPE);
-			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterCode()
-						.equals(scoreType)) {
-					items[i++] = new SelectItem(paramDesc.getPmParameter()
-							.getParameterId(), paramDesc.getCodeName());
-				}
-			}
-		}
-	} finally {
-
-	}
-	return items;
-}
 /***11104-start
  * sample required checkbox selection for sample item.
  * @param specQuestion
@@ -19947,21 +19921,24 @@ public void sampleRequiredChange(TplSpecQuestion specQuestion){
  * @param specQuestion
  */
 public void scoringPopUpAction(TplSpecQuestion specQuestion){
-List<TplSpecQuestion> specSampleQuestionList=	this.getManagedBean().getSampleCheckList().getScQtDoc()
-	.getTplSpecMaster().getTplSpecQuestions();
-BigDecimal sampleScore = BigDecimal.valueOf(0);
-for(TplSpecQuestion samplespecQuestion: specSampleQuestionList){
-	//if(samplespecQuestion.isSampleReq()){
-		log.info("samplespecQuestion"+samplespecQuestion.getClItem());
-		if(samplespecQuestion.isSampleReq() && null!=samplespecQuestion.getSampleScore()){
-			sampleScore = sampleScore.add(samplespecQuestion.getSampleScore());	
+	List<TplSpecQuestion> specSampleQuestionList = this.getManagedBean()
+			.getSampleCheckList().getScQtDoc().getTplSpecMaster()
+			.getTplSpecQuestions();
+	BigDecimal sampleScore = BigDecimal.valueOf(0);
+	for (TplSpecQuestion samplespecQuestion : specSampleQuestionList) {
+		log.info("samplespecQuestion" + samplespecQuestion.getClItem());
+		if (samplespecQuestion.isSampleReq()
+				&& null != samplespecQuestion.getSampleScore()) {
+			sampleScore = sampleScore.add(samplespecQuestion
+					.getSampleScore());
 		}
-	//}
-}
-this.getManagedBean().setSampleTotalScore(sampleScore.intValue());
-if(null!=specQuestion){
-	RequestContext.getCurrentInstance().execute("samplescoringSetPopup.hide()");
-}
+
+	}
+	this.getManagedBean().setSampleTotalScore(sampleScore.intValue());
+	if (null != specQuestion) {
+		RequestContext.getCurrentInstance().execute(
+				"samplescoringSetPopup.hide()");
+	}
 }
 /**** 11104-start
  * sample items save and complete action for sample itmes.

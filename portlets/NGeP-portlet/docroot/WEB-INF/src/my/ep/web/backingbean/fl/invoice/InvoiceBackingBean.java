@@ -438,6 +438,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					if(resDTO.getInvoice().getAp59Status()==null || 
 							(resDTO.getInvoice().getAp59Status()!=null && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)) {
 						reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
+						reqDTO.setAdjustment(resDTO.getAdjustment());//36519
 						invoiceSO.sendCANNotification(reqDTO);
 					}
 				}
@@ -2652,6 +2653,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		Long statusId;
 		String orgName;
 		String auditActionType;
+		String roleCode;
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 			// audit fl supplier
@@ -2659,6 +2661,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			orgProfileId = flinv.getFlRequest().getSmSupplier().getSupplierId();
 			orgName = flinv.getFlRequest().getSmSupplier().getCompanyName();
 			statusId = FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL;
+			roleCode = getUserRole();
 		} else {
 			// audit fl approver
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2672,11 +2675,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			orgProfileId = pmOrgAudit.getOrgProfileId();
 			orgName = pmOrgAudit.getOrgName();
 			statusId = FulfilmentStatusConst.IN_SUBMITTED;
+			roleCode = RoleCode.FL_APPROVER.value();
 		}
 		// insert for DO
 		FlAuditTrail auFlAuditTrail = new FlAuditTrail();
 		auFlAuditTrail.setDocType(ParameterConst.DOCTYPE_INVOICE);
-		auFlAuditTrail.setRoleCode(getUserRole());
+		auFlAuditTrail.setRoleCode(roleCode);
 		auFlAuditTrail.setOrgProfileId(orgProfileId);
 		auFlAuditTrail.setOrgName(orgName);
 		auFlAuditTrail.setDocId(flinv.getInvoiceId());

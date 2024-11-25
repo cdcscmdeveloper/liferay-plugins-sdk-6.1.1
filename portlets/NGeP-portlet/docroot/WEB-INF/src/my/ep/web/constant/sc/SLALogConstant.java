@@ -59,6 +59,7 @@ public class SLALogConstant {
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
 	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
+	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION= "createLampiranA3forQTVerification";
 	// 25037 - start
 	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
 	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
