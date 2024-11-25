@@ -1,4 +1,4 @@
-<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevist.svo.category.applicable')</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.section.d')</u>
 <br /><br />
 <table class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
