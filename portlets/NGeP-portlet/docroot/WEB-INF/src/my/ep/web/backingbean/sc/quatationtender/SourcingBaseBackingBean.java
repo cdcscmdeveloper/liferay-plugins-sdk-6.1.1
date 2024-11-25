@@ -991,14 +991,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try {
+//			if (!isDirectDownload) {
+//				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
+//				res.setHeader("Content-Transfer-Encoding", "binary");
+//				//res.setContentType("application/octet-stream");
+//				res.setContentType("text/rtf");
+//				res.flushBuffer();
+//				out = res.getOutputStream();
+//			}
+			
+			//36715 START
+			log.info("-----------after set header hatta ----------");
+			log.info(" isDirectDownload "+isDirectDownload);
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				//res.setContentType("application/octet-stream");
-				res.setContentType("text/rtf");
+				res.setContentType("application/pdf");
 				res.flushBuffer();
 				out = res.getOutputStream();
-			}
+	     	}
+		
+			log.info("-----------after set header hatta ----------");
+			//36715 END
 
 			File localFile = new File(getActualFilePath(attachment));
 
