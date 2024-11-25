@@ -1006,7 +1006,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				res.setContentType("application/pdf");
+				res.setContentType("application/zip");
 				res.flushBuffer();
 				out = res.getOutputStream();
 	     	}
