@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -17580,7 +17581,7 @@ private void retriveCommitteeRemarksList(){
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug
 			}
 			//#28784 add weightage to calculation - end
 			divNum = divNum.add(totalScore);
@@ -17619,7 +17620,7 @@ private void retriveCommitteeRemarksList(){
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug//#28784 sonarqube
 			}
 			divNum = divNum.add(totalScore);
 			//#28784 add weightage to calculation - end
@@ -17679,7 +17680,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setOtherchecklistScore(String.valueOf(totalNum.toPlainString()));
 			totalTechScore = String.valueOf(resDTO.getTechScore());
 			this.getManagedBean().setItemTsPercentage(resDTO.getTechScore().multiply(this.getManagedBean().getMaxItemTsPercentage())
-					.divide(this.getManagedBean().getMaxItemTsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+					.divide(this.getManagedBean().getMaxItemTsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			if (resDTO.isGenerateSuppliers()) {
 				presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
 						this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
@@ -17690,7 +17691,7 @@ private void retriveCommitteeRemarksList(){
 						new FacesScopes()
 						.getUserLocale()));
 				this.getManagedBean().setItemAllOtherElementsPercentage(totalNum.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
-						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			}
 		} finally {
 			evaluationSO = null;
@@ -17715,7 +17716,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setItemAllOtherElementsPercentage((new BigDecimal(this.getManagedBean().getOtherchecklistScore())
 			.add(new BigDecimal(this.getManagedBean().getDemoScore())))
 			.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
-			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 		}
 		finally {
 
