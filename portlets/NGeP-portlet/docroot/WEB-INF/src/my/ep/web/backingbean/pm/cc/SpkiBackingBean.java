@@ -295,7 +295,8 @@ public class SpkiBackingBean extends BaseBackingBean<BaseManagedBean> implements
 			boolean checkTG = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && !"true".equals(trustgateEnabled);
 			boolean checkDG = cert.equals(SupplierManagementConst.CERT_DIGICERT) && !"true".equals(digicertEnabled);
 			if (checkTG || checkDG || !"true".equalsIgnoreCase(getSpkiEnabledProperty())){
-				throw new EpException(MessageConst.ERROR_776060, null);
+				//disable for environment other than PRD
+				//throw new EpException(MessageConst.ERROR_776060, null);
 			}
 		}
 
