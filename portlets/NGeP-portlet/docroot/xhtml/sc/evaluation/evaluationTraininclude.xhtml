@@ -40,7 +40,6 @@
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" />
 								<ui:remove>25037 -end-</ui:remove>
 							</li>
-
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or(evaluationBackingBean.managedBean.committeeType eq 'TEC') or (evaluationBackingBean.managedBean.committeeType eq 'FEC'))}">
@@ -88,7 +87,6 @@
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" />
 								<ui:remove>25037 -end-</ui:remove>
 							</li>
-
 						</ui:fragment>
 
 
@@ -106,7 +104,6 @@
 									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" />
 								<ui:remove>25037 -end-</ui:remove>
 							</li>
-
 						</ui:fragment>
 
 
@@ -122,15 +119,11 @@
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" />
 							<ui:remove>25037 -end-</ui:remove>
 						</li>
-
-
-
 						<li><h:outputText
 								value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 5}" />
 							<ui:remove>25037 note 568 add disabled on comm update</ui:remove>
-							<p:commandLink
-								value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
+							<p:commandLink value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								actionListener="#{evaluationBackingBean.evaluationMaintainPreviousNextTabIndex(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}"
@@ -168,18 +161,11 @@
 								class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 3 ? 'space green-dot':'space black-dot')}" />
 						</ui:fragment>
 
-						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
-							<li
-								class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 3 ? 'space green-dot':'space black-dot')}" />
+						<ui:fragment rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'}">
+							<li class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 3 ? 'space green-dot':'space black-dot')}" />
 						</ui:fragment>
-
-						<li
-							class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 4 ? 'space green-dot':'space black-dot')}" />
-
-
-						<li
-							class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 5 ? 'green-dot':'black-dot')}" />
+						<li class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 4 ? 'space green-dot':'space black-dot')}" />
+						<li class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5 ? 'red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 5 ? 'green-dot':'black-dot')}" />
 
 					</ul>
 				</div></td>

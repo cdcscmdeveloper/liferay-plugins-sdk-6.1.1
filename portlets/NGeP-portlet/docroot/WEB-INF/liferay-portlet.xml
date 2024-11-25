@@ -3441,6 +3441,17 @@
 		</css-class-wrapper>
 	</portlet>
 	<!-- Enhancement 25627-end- -->
+	
+	<portlet>	<!-- #36451 -->
+		<portlet-name>testSpki</portlet-name>
+		<icon>/icon.png</icon>
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/css/ep/ep.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>icon-portlet</css-class-wrapper>
+	</portlet>
 		
 	<!-- 25037 - start -->
 	<portlet>
@@ -3480,7 +3491,7 @@
 		<css-class-wrapper>
 			cataloguemaintenancetemp-portlet
 		</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
