@@ -54,10 +54,10 @@
 							  <p:inputTextarea
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									label="#{lbl['lbl.sc.direct.purchase.title']}" maxlength="100"
-									disabled="#{!isEditable}" required="true" id="title" rows="3"
+									disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.trackingDairyView}" required="true" id="title" rows="3"
 									style="margin-bottom: 5px; width: 690px;">
 									<p:ajax event="blur" partialSubmit="true" process="@this" />
-								</p:inputTextarea> <p:message id="titleMsg" for="title" display="icon" /></td>
+								</p:inputTextarea> <p:message id="titleMsg" for="title" display="icon" /></td><ui:remove>25790</ui:remove>
 						</tr>
 					</table>
 				</td>
@@ -68,13 +68,13 @@
 				<td colspan="3">				
 					<ac:scSingleFileUploadButton id="sqUploadBtn" popupWidgetVar="sqUploadDlg"
 							attachment="#{simpleQuoteBackingBean.managedBean.scQuote.scQuoteAttachment}"
-							readonly="#{!isEditable}" />
+							readonly="#{!isEditable or simpleQuoteBackingBean.managedBean.trackingDairyView}" />
 						<ac:scSingleFileUploadPopup widgetVar="sqUploadDlg"
 							fileUploadListener="simpleQuoteBackingBean.handleFileUpload"
 							update="@([id$=sqUploadBtn])"
 							readonly="#{!isEditable}" 
 							autoUpdateValue="#{simpleQuoteBackingBean.managedBean.autoUpdate}"/>
-					</td>
+					</td><ui:remove>25790</ui:remove>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -85,7 +85,7 @@
 						<tr>
 							<td><p:selectOneMenu id="procTypeCategory"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
-									disabled="#{!isEditable}"
+									disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.trackingDairyView}"
 									style="width:240px;margin-bottom: 5px;margin-top: 5px;"
 									required="#{param['submitBtnPressed']=='1'}"
 									label="#{lbl['lbl.sc.procurment.type.category']}">
@@ -98,7 +98,7 @@
 										itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 										<p:ajax event="change" update="procTypeCategory" process="@this" />
 								</p:selectOneMenu> <p:message id="procTypeCategoryMsg" for="procTypeCategory"
-									display="icon" /></td>
+									display="icon" /></td><ui:remove>25790</ui:remove>
 						</tr>
 					</table>
 				</td>
@@ -204,25 +204,25 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><ac:dateTime id="startDate"
 						mindate="#{simpleQuoteBackingBean.managedBean.today}"
-						required="#{param['submitBtnPressed']=='1'}" disabled="#{!isEditable}"
+						required="#{param['submitBtnPressed']=='1'}" disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.trackingDairyView}"
 						label="#{lbl['lbl.sc.start.date']}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 						postUpdateListener="simpleQuoteBackingBean.dateListenerDefault"
 						modVal="15"
 						update="@([id$=sqinfoId])">
-					</ac:dateTime></td>
+					</ac:dateTime></td><ui:remove>25790</ui:remove>
 				<td><p:outputLabel value="#{lbl['lbl.sc.end.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
 				<td><ac:dateTime id="endDate" label="#{lbl['lbl.sc.end.date']}"
 						mindate="#{!empty simpleQuoteBackingBean.managedBean.scQuote.startDate ? simpleQuoteBackingBean.managedBean.scQuote.startDate : simpleQuoteBackingBean.managedBean.today}"
-						required="#{param['submitBtnPressed']=='1'}" disabled="#{!isEditable}"
+						required="#{param['submitBtnPressed']=='1'}" disabled="#{!isEditable or simpleQuoteBackingBean.managedBean.trackingDairyView}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
 						postUpdateListener="simpleQuoteBackingBean.dateListener"
 						modVal="15"
 						maxdate="#{simpleQuoteBackingBean.managedBean.maxDate}"
 						update="@([id$=durationId])">
-					</ac:dateTime></td>
+					</ac:dateTime></td><ui:remove>25790</ui:remove>
 			</tr>
 			<tr>
 		
