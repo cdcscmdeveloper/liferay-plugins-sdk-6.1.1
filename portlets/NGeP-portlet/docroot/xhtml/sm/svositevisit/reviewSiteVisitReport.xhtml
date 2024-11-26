@@ -55,10 +55,9 @@
 		</p:column>
 	</p:dataTable>
 	
-	<!-- #24964 -->
-	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1500" id="poReportDlgId" resizable="false" >
+	<!-- #24964, 28775 - Site Visit Grouping Enhancement - 28775 -->
+	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1200" id="poReportDlgId" resizable="false" >
 		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}" >
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start-->
 			<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
 				<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
 			</c:if>
