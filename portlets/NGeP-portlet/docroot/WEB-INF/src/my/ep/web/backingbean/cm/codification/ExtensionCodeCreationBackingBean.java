@@ -20,7 +20,6 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.exception.EpException;
@@ -58,6 +57,7 @@ import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.cm.AuditCMConst;
 import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBean;
 import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBeanTemplate;
+import my.ep.constant.ModuleCodeConst;
 // 35503 End
 
 @ManagedBean(name = "extensionCodeCreationBackingBean")

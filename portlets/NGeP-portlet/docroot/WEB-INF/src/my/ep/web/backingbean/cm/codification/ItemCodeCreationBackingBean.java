@@ -55,7 +55,7 @@ public class ItemCodeCreationBackingBean extends BaseBackingBean<UnspscCodeManag
 				ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
-		AuditCodificationManagementDTO auditDTO = new AuditCodificationManagementDTO();
+		AuditCodificationManagementDTO auditDTO = new AuditCodificationManagementDTO(); //35503
 
 		log.info("***this.getManagedBean().isNewSegment()" + this.getManagedBean().isNewSegment());
 

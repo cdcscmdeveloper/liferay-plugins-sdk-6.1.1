@@ -1462,7 +1462,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				}
 				// 35503 Start - Fix as-is bug
 				reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
-				// 35503 Start - Fix as-is bug
+				// 35503 End - Fix as-is bug
 			}
 
 			log.info("------ start to update color ------");
@@ -1473,7 +1473,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 			// 35503 Start - Fix as-is bug
 			resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
-			// 35503 Start - Fix as-is bug
+			// 35503 End - Fix as-is bug
 		}
 
 		// 35503 Start - for audit trail required

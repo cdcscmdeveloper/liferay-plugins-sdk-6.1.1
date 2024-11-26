@@ -1237,7 +1237,6 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	public void setAuditRequestExtList(List<CmRequestCode> auditRequestExtList) {
 		this.auditRequestExtList = auditRequestExtList;
 	}
-
 	// 35503 End
 
 	/*[#27625] begin*/
