@@ -7,7 +7,7 @@
 	
 	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}" toggleable="true">
 		<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="dtlTemplate"
-		value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" var="svTask">
+		value="#{Arrays.asList(svoSiteVisitBackingBean.managedBean.smSvTask)}" var="svTask">
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 				#{svoSiteVisitBackingBean.getParameterDesc(svTask.smSvTemplate.pmParameter)}
 			</p:column>
