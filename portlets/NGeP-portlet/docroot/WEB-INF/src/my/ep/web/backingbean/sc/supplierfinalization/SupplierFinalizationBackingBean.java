@@ -8622,7 +8622,7 @@ public class SupplierFinalizationBackingBean extends
 		paramMap.put("flowType", "tasklist");
 		// #18685 - End
 		
-		generatePdfFromOracle(reportName, paramMap, attachment, false);
+		generateRtfFromOracle(reportName, paramMap, attachment, false);
 	}
 	// #18685 - End
 	

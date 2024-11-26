@@ -537,8 +537,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			//response.setContentType(getMimeType(finalFileName)); // asal
-			response.setContentType("application/pdf"); //najmi test
+			response.setContentType(getMimeType(finalFileName)); // asal
+			//response.setContentType("application/pdf"); //najmi test
 			
 			response.flushBuffer();
 
@@ -582,11 +582,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			response = PortalUtil.getHttpServletResponse(portalresponse);
 //			response.setContentType("Content-type: text/zip");
-			
+			String finalFileName = zipFileName + ".zip";
 			//START:test by syazwan
 			//response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
-			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+			//response.setContentType("application/zip");
 			//response.setHeader("Content-Transfer-Encoding", "application/octet-stream");
 			log.info("-----------after set header----------");
 			//END:Test by syazwan
@@ -965,6 +966,91 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				parameterType, searchBean);
 
 	}
+	
+	//36715 START
+	/**
+	 * To get report from orcle reports only for .rtf format file
+	 * 
+	 * @param reportName
+	 * @param paramMap
+	 * @param attachment
+	 * @param isDirectDownload
+	 * @return File instance
+	 * @throws IOException
+	 */
+	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment, boolean isDirectDownload)
+			throws IOException {
+
+		String reportUrl = generateReportURL(reportName, paramMap);
+		log.info("reportUrl: " + reportUrl);
+
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		OutputStream out = null;
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		InputStream input = null;
+		FileOutputStream fos = null;
+		try {
+			
+			log.info("-----------after set header hatta .rtf only ----------");
+			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName() + ".rtf"; 
+			if (!isDirectDownload) {
+				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
+				res.setHeader("Content-Transfer-Encoding", "binary");
+				res.setContentType(getMimeType(finalFileName)); // asal
+				res.flushBuffer();
+				out = res.getOutputStream();
+	     	}
+		
+			log.info("-----------after set header hatta .rtf only ----------");
+
+			File localFile = new File(getActualFilePath(attachment));
+
+			if (reportUrl.toString() != null) {
+				try {
+					URL obj = new URL(reportUrl.toString());
+					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (ConnectException e) {
+					throw new EpException(MessageConst.ERROR_100058);
+				}
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] buf = new byte[1024];
+				try {
+					for (int readNum; (readNum = input.read(buf)) != -1;) {
+						bos.write(buf, 0, readNum);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				byte[] bytes = bos.toByteArray();
+				fos = new FileOutputStream(localFile);
+				fos.write(bytes);
+				fos.flush();
+			}
+			if (!isDirectDownload) {
+				out.flush();
+
+			}
+			return localFile;
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+			if (input != null) {
+				input.close();
+			}
+			if (out != null) {
+				out.close();
+			}
+		}
+
+	}
+	//36715 END
 
 	/**
 	 * To get report from orcle reports
@@ -1003,10 +1089,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//36715 START
 			log.info("-----------after set header hatta ----------");
 			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName() + ".zip"; 
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				res.setContentType("application/pdf");
+				//res.setContentType("application/pdf");
+				res.setContentType(getMimeType(finalFileName)); // asal
 				res.flushBuffer();
 				out = res.getOutputStream();
 	     	}
