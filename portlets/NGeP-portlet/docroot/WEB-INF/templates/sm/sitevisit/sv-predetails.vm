@@ -1,3 +1,4 @@
+
 #parse("templates/sm/sitevisit/shared/header.vm")
 
 	<table width='100%'>
@@ -148,8 +149,8 @@
 		    	<tr>
 		    	<td>
 		    		$codeL1$codeL2$codeL3 : $tmp.suppCategory.pmCategoryL3.categoryName
-		    		#if ($tmp.suppCategory.otherDesc != "")
-		    			($tmp.suppCategory.otherDesc)
+		    		#if($!tmp.suppCategory.otherDesc && $!tmp.suppCategory.otherDesc != "")
+		    			($!tmp.suppCategory.otherDesc)
 		    		#end
 		    	</td>
 		    	<td></td></tr>

@@ -2430,7 +2430,6 @@ public class EvaluationMeetingBackingBean extends
 			
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 
-			auditResDTO.setOrganizationProfileId(this.getManagedBean().getQt().getOrgProfileId());
 			auditResDTO.setDocTypeId(this.getManagedBean().getQt().getProcurementMode().getParameterId());
 			auditResDTO.setDocId(this.getManagedBean().getQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
