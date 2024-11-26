@@ -23860,7 +23860,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
 		if (!this.getManagedBean().getQt().isPanel()
-				&& intendedPrice.compareTo(indPriceThreshold) <= 0
+				&& indPriceThreshold != null && intendedPrice != null && intendedPrice.compareTo(indPriceThreshold) <= 0
 				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt()
 						.getJustificationProcValue().isEmpty())) {
 			return true;
