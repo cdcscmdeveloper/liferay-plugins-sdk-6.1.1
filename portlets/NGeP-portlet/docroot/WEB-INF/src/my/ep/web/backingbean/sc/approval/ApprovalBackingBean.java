@@ -84,6 +84,7 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
@@ -2782,4 +2783,204 @@ return scQt;
 		return list.contains(memberRole);
 	}
 	// 25037 - end
+
+	// 36671, 25037 - start
+	private void prepareCommitteApprovalRequest(Long qtId) {
+
+		ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, qtId);
+		Long currentCmtStatus = wfStatus == null ? 0L : wfStatus.getPmStatus().getStatusId();
+		boolean isCommitteeUpdateFlow = Arrays.asList(
+				new Long[] { QTStatusConst.CMT_PENDING_REAPPROVAL,
+						QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION_APPROVAL }).contains(currentCmtStatus);
+
+		this.getManagedBean().setCommitteeUpdateFlow(isCommitteeUpdateFlow);
+
+		String approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
+		List<String> paramTypes = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);
+		List<ScQtApprovalRequest> approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
+				ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
+
+		this.getManagedBean().setApprovalType(approvalCategoryCode);
+
+		ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		ISearchBean<ScQtCommittee> commSearchBean = new SearchBean<>();
+
+		commSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scQt.qtId", SearchOperator.OPERATOR_EQUALS.value(), qtId));
+		commSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scCommittee.approvalReq", SearchOperator.OPERATOR_EQUALS.value(), true));
+		commSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scCommittee.committeeType.parameterCode", SearchOperator.OPERATOR_IN.value(),
+						paramTypes));
+		commSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("scCommittee.committeStatus.statusId", SearchOperator.OPERATOR_NOT_IN.value(),
+						Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_COMPLETED,
+								QTStatusConst.CMT_PENDING_REVISION)));
+
+		committeReqDTO.setCommSearchBean(commSearchBean);
+
+		CommitteResDTO resDTO = committeSO.retriveQtCommitteDtls(committeReqDTO);
+		ISearchResultBean<ScQtCommittee> qtcomSearchBean = resDTO.getQtCommitteResultBean();
+
+		this.getManagedBean().setQtCommittes(qtcomSearchBean);
+
+		List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean.getResultList(), qtId);
+
+		this.getManagedBean().getQt().setScQtCommittees(qtcomSearchBean.getResultList());
+		this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
+		this.getManagedBean().setParamTypes(paramTypes);
+		this.getManagedBean().setToBeDelCommitteMemebers(new ArrayList<ScCommitteeMember>());
+
+		if (CollectionUtils.isNotEmpty(tabBeans)) {
+			getManagedBean().setSelectedTabBean(tabBeans.get(0));
+
+			List<QtCommitteeMemberBean> historyList = getMemberHistoryList(getManagedBean().getSelectedTabBean()
+					.getScQtCommittee().getScCommittee());
+
+			this.getManagedBean().setMemberHistoryList(historyList);
+		}
+
+		prepareEvalCommiteeApproval(approvalRequests);
+
+		ScWorkFlowStatus currentStatus = getManagedBean().getQt().getCurrentWorkFlowStatus();
+
+		initializeRemarks(this.getManagedBean().getScQtApproval(), currentStatus, getManagedBean().getScQtApproval()
+				.getScQtApprovalRemarks(), ScQtApprovalRemark.class);
+
+		this.getManagedBean().setScQtApprovalRequestList(approvalRequests);
+
+	}
+	// 36671, 25037 - end
+
+	// 36671, 25037 - start
+	private void loadQtDetails() {
+		QTDetailBackingBean qtDetailBB = new QTDetailBackingBean();
+		qtDetailBB.editQuationTenderDetails(getManagedBean().getQt(), false);
+		qtDetailBB.getManagedBean().setAdditionalPages(null);
+		qtDetailBB.getManagedBean().setUserTasks(null);
+
+		ScQt scQt = qtDetailBB.getManagedBean().getQt();
+
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getScCommitteeMemberTabList())) {
+			List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
+			String committeeType = tabs.get(this.getManagedBean().getSelectedCommitteeTabIndex()).getTabType();
+
+			getManagedBean().setRoleFilterList(
+					getRoleFilterListForCommitteeMaintenance(this.getManagedBean().getQt(), committeeType));
+		}
+
+		if (this.getManagedBean().isCommitteeReviseFlow()) {
+			getManagedBean().setRoleFilterList(new String[] { ParameterConst.COMMITTEE_ROLE_SECRETARY });
+		}
+
+		List<ScQtCommittee> qtCommittees = this.getManagedBean().getQt().getScQtCommittees();
+
+		boolean isEvalCommittee = false;
+
+		for (ScQtCommittee qtCommittee : qtCommittees) {
+			if (CommitteeTypeIsEcOcTecFec(qtCommittee.getScCommittee())) {
+				isEvalCommittee = true;
+				break;
+			}
+		}
+
+		boolean isFullTablist = false;
+		ScWorkFlowStatus workFlowStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, scQt.getQtId());
+
+		if (null != workFlowStatus) {
+			PmStatus status = workFlowStatus.getPmStatus();
+
+			scQt.setQtStatus(status);
+
+			Long qtStatusId = status.getStatusId();
+			isFullTablist = qtDetailBB.isQTStatusGreaterThanOrEquals(qtStatusId,
+					QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT);
+
+			qtDetailBB.getManagedBean().setCurrentStatusId(qtStatusId);
+
+			this.getManagedBean().setSubStatusId(qtStatusId);
+		}
+
+		if (isEvalCommittee || isFullTablist) {
+			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApprovalEcOcTecFec.toString(),
+					QTConstants.QT_CMT_APPROVER_PANEL);
+			qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApprovalEcOcTecFec);
+		} else {
+			qtDetailBB.getManagedBean().addAdditionalPages(UserTasks.CommitteeAppointmentApproval.toString(),
+					QTConstants.QT_CMT_APPROVER_PANEL);
+			qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApproval);
+		}
+
+		qtDetailBB.getManagedBean().setActiveIndex(this.getManagedBean().getActiveIndex());
+		qtDetailBB.getManagedBean().setApprovalType(this.getManagedBean().getApprovalType());
+		qtDetailBB.getManagedBean().setAutoUpdate(this.getManagedBean().isAutoUpdate());
+		qtDetailBB.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		qtDetailBB.getManagedBean().setOutComes(this.getManagedBean().getOutComes());
+
+		scQt.setScQtCommittees(this.getManagedBean().getQt().getScQtCommittees());
+		scQt.setNewPublishDate(this.getManagedBean().getQt().getNewPublishDate());
+
+		qtDetailBB.getManagedBean().setQtCommitteeRemarks(this.getManagedBean().getQtCommitteeRemarks());
+		qtDetailBB.getManagedBean().setQtSupplierList(this.getManagedBean().getQtSupplierList());
+		qtDetailBB.getManagedBean().setScCommitteeMemberTabList(this.getManagedBean().getScCommitteeMemberTabList());
+		qtDetailBB.getManagedBean().setScQtApproval(this.getManagedBean().getScQtApproval());
+		qtDetailBB.getManagedBean().setScQtApprovalRequestList(this.getManagedBean().getScQtApprovalRequestList());
+		qtDetailBB.getManagedBean().setSelectedTabBean(this.getManagedBean().getSelectedTabBean());
+		qtDetailBB.getManagedBean().setSelectedCommitteeTabIndex(this.getManagedBean().getSelectedApprovalTabIndex());
+		qtDetailBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
+		qtDetailBB.getManagedBean().setApprovalEditableSection(true);
+		qtDetailBB.getManagedBean().setApprovalScreen(true);
+
+		boolean readOnly = qtDetailBB.getManagedBean().isReadOnly();
+
+		this.getManagedBean().copyBPMTaskDetails(qtDetailBB.getManagedBean());
+
+		qtDetailBB.getManagedBean().setReadOnly(readOnly);
+	}
+	// 36671, 25037 - end
+
+	// 36671, 25037 - start
+	/**
+	 * Save method for when committee approver approve committee
+	 */
+	public void saveQtCAApproval() {
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		ScQt scQt = this.getManagedBean().getQt();
+		ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
+
+		List<TabBean> scQtCommittees = this.getManagedBean().getScCommitteeMemberTabList();
+
+		for (TabBean tabBean : scQtCommittees) {
+			scQt.setScQtCommittees(new ArrayList<ScQtCommittee>());
+			scQt.getScQtCommittees().add(tabBean.getScQtCommittee());
+		}
+
+		scQtApproval.setScQtApprovalDtls(this.getManagedBean().getScQtApprovalRequestList());
+
+		scQt.setScQtApprovals(new ArrayList<ScQtApproval>());
+		scQt.getScQtApprovals().add(scQtApproval);
+
+		finalizeRemarks(scQtApproval.getScQtApprovalRemarks());
+
+		reqDTO.setScQt(scQt);
+		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
+		reqDTO.setQtCommittee(scQt.getScQtCommittees());
+		reqDTO.setToBeDeletedMembers(this.getManagedBean().getToBeDelCommitteMemebers());
+
+		CommitteResDTO resDTO = committeSO.saveCommitteeDetails(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			prepareCommitteApprovalRequest(scQt.getQtId());
+
+			loadQtDetails();
+
+			successMessage(MessageConst.INFO_700090, ParameterTypeConst.DOCUMENT_TYPES,
+					ParameterConst.DOCTYPE_QUOTATION, scQt.getQtNo(), false);
+		}
+	}
+	// 36671, 25037 - end
 }
