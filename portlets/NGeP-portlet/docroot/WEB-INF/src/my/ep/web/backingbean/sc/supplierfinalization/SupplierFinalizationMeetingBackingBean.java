@@ -2397,7 +2397,7 @@ if (CollectionUtils.isNotEmpty(
 		for (ScCommitteeMember committeeMember : committeeMembers) {
 			auditResDTO.setActionType(type);
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
-			auditResDTO.setRoleCode(RoleCode.QCA_SECRETARY.value());
+			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_NAME);
 			auditResDTO.setNewValue(committeeMember.getMemberName());
 			AuditTrailReqDTO auditReqDTOName = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
@@ -2415,5 +2415,40 @@ if (CollectionUtils.isNotEmpty(
 
 		}
 		return auditReqList;
+	}
+	
+	
+	/**
+	 * Method to check the session user's role
+	 * #288895 - 35500
+	 * @return
+	 */
+	public String checkRolesForAuditTrail() {
+		FacesScopes facesScopes = new FacesScopes();
+		String role = RoleCode.QCA_SECRETARY.value();
+		try {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			userReqDTO.setLoginId(facesScopes.getUserSessionBean().getLoginId().toLowerCase());
+			userReqDTO.setRoleRequired(true);
+			resDTO = userSO.isUserExist(userReqDTO);
+			List<String> pmRoles = resDTO.getPmRoleNames();
+
+			if (pmRoles.contains(RoleCode.QCB_SECRETARY.value())) {
+				role = RoleCode.QCB_SECRETARY.value();
+			} else if (pmRoles.contains(RoleCode.PBB_SECRETARY.value())) {
+				role = RoleCode.PBB_SECRETARY.value();
+			} else if (pmRoles.contains(RoleCode.FPB_SECRETARY.value())) {
+				role = RoleCode.FPB_SECRETARY.value();
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					"SupplierFinalizationMeetingBackingBean.checkRolesForAuditTrail", getUserIdSessionFromLoginId(), e);
+		}
+		return role;
 	}
 }
