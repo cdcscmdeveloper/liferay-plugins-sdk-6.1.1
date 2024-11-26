@@ -12,12 +12,12 @@
 
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.spec.sample.instruction']}" escape="false" />
-		<!-- #29187 Start Vinod -->
+		<ui:remove>#29187 Start Vinod</ui:remove>
 		<br />
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction.spec.prepare']}"
 			escape="false" />
-		<!-- #29187 End Vinod -->
+		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:spacer height="10"></p:spacer>
 		<table>
 			<tr>
@@ -54,10 +54,10 @@
 		</table>
 		<p:spacer height="10"></p:spacer>
 
-		<!-- #29187 Added Vinod -start- -->
+		<ui:remove>#29187 Start Vinod</ui:remove>
 		<ui:param name="isManSpec"
 			value="#{specificationBackingBean.renderManSpec(specificationBackingBean.managedBean.sampleCheckList.scQtDoc.tplSpecMaster.tplSpecQuestions)}" />
-		<!-- #29187 Added Vinod -end- -->
+		<ui:remove>#29187 End Vinod</ui:remove>
 
 		<p:dataTable var="technicalSampleQuestion"
 			id="technicalSampleTemplateQuestionsTableId" rows="50"
@@ -93,11 +93,11 @@
 						headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
 						style="width:10%; text-align:center;" />
 
-					<!-- #29187 Added Vinod -start- -->
+					<ui:remove>#29187 Added Vinod -start-</ui:remove>
 					<p:column rowspan="2" rendered="#{isManSpec}"
 						headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}"
 						style="width:10%; text-align:center;" />
-					<!-- #29187 Added Vinod -end- -->
+					<ui:remove>#29187 Added Vinod -end-</ui:remove>
 				</p:row>
 				<p:row>
 
@@ -198,7 +198,7 @@
 				</h:panelGroup>
 			</p:column>
 
-			<!-- #29187 Start Vinod -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
 			<p:column rendered="#{isManSpec}">
 				<h:panelGroup>
 					<h:selectOneMenu id="manSpec"
@@ -213,7 +213,7 @@
 						value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.tooltip']}" />
 				</h:panelGroup>
 			</p:column>
-			<!-- #29187 End Vinod -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
