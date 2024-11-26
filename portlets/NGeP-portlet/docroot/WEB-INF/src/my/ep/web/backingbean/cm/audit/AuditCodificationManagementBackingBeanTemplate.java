@@ -16,7 +16,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * 35503 The backing bean template for the Codification Management audit trail
+ * New file introduced for Audit Trail Codification Management (#28895 - #35503) 
+ * The backing bean template for the Codification Management audit trail
  * 
  * @author Irfan
  * @since 10.09.2024
@@ -138,7 +139,7 @@ public abstract class AuditCodificationManagementBackingBeanTemplate extends Bas
 	}
 
 	/**
-	 * The void ppAuditSO. To pass object to SP
+	 * The void cmAuditSO. To pass object to SP
 	 * 
 	 * @param auCmDTO
 	 */
@@ -148,7 +149,7 @@ public abstract class AuditCodificationManagementBackingBeanTemplate extends Bas
 					ModuleCodeConst.CATALOGUE_MANAGEMENT, IAuditCodificationManagementSO.class);
 			auditCMSO.insertCmAudit(auCmDTO.getListAuditSP());
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(AuditCMConst.AUDIT_CODIFICATION_MANAGEMENT, "ppAuditSO", null,
+			SLAUtils.getInstance().logSLAError(AuditCMConst.AUDIT_CODIFICATION_MANAGEMENT, "cmAuditSO", null,
 					"AuditCodificationManagementBackingBeanTemplate", null, ex);
 		}
 	}

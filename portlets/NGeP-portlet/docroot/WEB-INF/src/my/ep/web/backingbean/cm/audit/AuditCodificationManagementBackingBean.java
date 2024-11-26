@@ -25,7 +25,8 @@ import my.ep.web.backingbean.cm.codification.ItemCodeCreationBackingBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * 35503 The backing bean for the Codification Management audit trail
+ * New file introduced for Audit Trail Codification Management (#28895 - #35503)
+ * The backing bean for the Codification Management audit trail
  * 
  * @author Irfan
  * @since 10.09.2024
@@ -56,7 +57,7 @@ public class AuditCodificationManagementBackingBean extends AuditCodificationMan
 	}
 
 	/**
-	 * To set data SP for Item Code Creation
+	 * To insert data SP for Item Code Creation
 	 */
 	@Override
 	public AuditCodificationManagementDTO insertItemCodeCreation(String roleCode, Long orgProfileId) {
@@ -72,7 +73,7 @@ public class AuditCodificationManagementBackingBean extends AuditCodificationMan
 	}
 
 	/**
-	 * To set data SP for Extension Code Creation
+	 * To insert data SP for Extension Code Creation
 	 */
 	@Override
 	public AuditCodificationManagementDTO insertExtensionCodeCreation(String roleCode, Long orgProfileId) {
@@ -131,7 +132,7 @@ public class AuditCodificationManagementBackingBean extends AuditCodificationMan
 	}
 
 	/**
-	 * To set data SP for Item Code Maintenance
+	 * To insert data SP for Item Code Maintenance
 	 */
 	@Override
 	public AuditCodificationManagementDTO insertItemCodeMaintenance(String roleCode, Long orgProfileId) {
@@ -147,7 +148,7 @@ public class AuditCodificationManagementBackingBean extends AuditCodificationMan
 	}
 
 	/**
-	 * To set data SP for Extension Code Maintenance
+	 * To insert data SP for Extension Code Maintenance
 	 */
 	@Override
 	public AuditCodificationManagementDTO insertExtensionCodeMaintenance(String roleCode, Long orgProfileId) {
