@@ -700,7 +700,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.getManagedBean().setCommodityTitle("");
 		this.getManagedBean().setCommodityTitleEng("");
 
-		// 35503 Start
+		// 35503 Start - To set null for all list
 		this.getManagedBean().setAuditTypeExtList(null);
 		this.getManagedBean().setAuditBrandExtList(null);
 		this.getManagedBean().setAuditMeasurementExtList(null);
@@ -732,7 +732,7 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 			this.getManagedBean().setSegmentTitleEng(
 					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
 
-			// 35503 Start
+			// 35503 Start - To get code and title for all code
 			this.getManagedBean().setAuditCommodityCode(commodity.getUnspscCode());
 			this.getManagedBean().setAuditCommodityTitle(commodity.getUnspscTitle());
 			this.getManagedBean().setAuditCommodityTitleEng(commodity.getUnspscTitleEng());
