@@ -537,8 +537,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			//response.setContentType(getMimeType(finalFileName)); // asal
-			response.setContentType("application/pdf"); //najmi test
+			response.setContentType(getMimeType(finalFileName)); // asal
+			//response.setContentType("application/pdf"); //najmi test
 			
 			response.flushBuffer();
 
@@ -582,11 +582,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			response = PortalUtil.getHttpServletResponse(portalresponse);
 //			response.setContentType("Content-type: text/zip");
-			
+			String finalFileName = zipFileName + ".zip";
 			//START:test by syazwan
 			//response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
-			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+			//response.setContentType("application/zip");
 			//response.setHeader("Content-Transfer-Encoding", "application/octet-stream");
 			log.info("-----------after set header----------");
 			//END:Test by syazwan
@@ -1003,10 +1004,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			//36715 START
 			log.info("-----------after set header hatta ----------");
 			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName() + ".zip"; 
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				res.setContentType("application/zip");
+				//res.setContentType("application/pdf");
+				res.setContentType(getMimeType(finalFileName)); // asal
 				res.flushBuffer();
 				out = res.getOutputStream();
 	     	}
