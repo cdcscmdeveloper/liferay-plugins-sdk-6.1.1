@@ -26,7 +26,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
  * New file introduced for Audit Trail Codification Management (#28895 - #35503)
- * The backing bean for the Codification Management audit trail
+ * The backing bean for Audit Trail Codification Management
  * 
  * @author Irfan
  * @since 10.09.2024
