@@ -1176,7 +1176,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) { // #36467
+				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { //#36467 & #36362
 					// 36362 - start
 					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
 					// 36362 - end
@@ -3885,6 +3885,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							rnReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
 							rnReqDTO.setSupplierId(getManagedBean().getSupplierId());
 							requestNoteSO.cancelCodifyPRFromDPMaintenance(rnReqDTO);
+							
+							//tracking diary
+							ScRequestNote requestNote = getManagedBean().getRequestNote();
+							rnReqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+							rnReqDTO.setPmUser(facesScopes.getUserSessionBean());
+							rnReqDTO.setOutcome(BpmOutcomeConst.BPM_COMPLETE);
+							rnReqDTO.setUserLocale(facesScopes.getUserLocale());
+							requestNote.setRequestNoteDtls(rndtls);
+							rnReqDTO.setRequestNote(requestNote);
+							rnReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+							getRequestNoteSO().prepareTrackingDiaryDPM(rnReqDTO, getManagedBean().getSelectedPrDtls());
 						}				
 					}
 					//#36119 - end
@@ -6232,17 +6243,76 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNoteDtl
 	 */
 	private void validateTierQuantityExceedMaxQuantity(ScRequestNoteDtl requestNoteDtl) {
-		if ((requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_TIER_STANDARD) || requestNoteDtl
-				.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_ZONAL_TIER_STANDARD))
-				&& requestNoteDtl.getRequestItem().getQuantity()
-						.compareTo(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClQuantity()) > 0) {
+		if (requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_TIER_STANDARD)
+				|| requestNoteDtl.getPriceType().getParameterId().equals(DPConstants.PRICE_TYPE_ZONAL_TIER_STANDARD)) {
+
+			if (requestNoteDtl.getRequestItem().getTplSpecQuestion() != null) {
+				validateFromSQ(requestNoteDtl);
+			} else {
+				validateFromCatalogue(requestNoteDtl);
+			}
+		}
+	}
+
+	/**
+	 * To validate tier quantity change during RN Creation from SQ
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateFromSQ(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getRequestItem().getQuantity()
+				.compareTo(requestNoteDtl.getRequestItem().getTplSpecQuestion().getClQuantity()) > 0) {
 			// Note for 29557, need to change this error message when merge.
 			// Dev -> MessageConst.ERROR_760527
 			// Prod -> MessageConst.ERROR_760399
 			throw new EpException(MessageConst.ERROR_760527, new String[] { requestNoteDtl.getRequestItem()
 					.getItemName() });
+		}
+	}
+
+	/**
+	 * To validate tier quantity change during RN Creation from Catalogue
+	 * 
+	 * @param requestNoteDtl
+	 */
+	private void validateFromCatalogue(ScRequestNoteDtl requestNoteDtl) {
+		if (requestNoteDtl.getScRequestSupplierItem().getCmSupplierItem() != null
+				&& requestNoteDtl.getScRequestSupplierItem().getCmSupplierItem().getCmPricings() != null) {
+			// from catalogue
+			List<CmPricing> cmPricings = requestNoteDtl.getScRequestSupplierItem().getCmSupplierItem().getCmPricings();
+
+			if (cmPricings != null && !cmPricings.isEmpty()) {
+				// Get the last element directly
+				sortTierToQtyValueAscending(cmPricings);
+				CmPricing lastCmPricing = cmPricings.get(cmPricings.size() - 1);
+				BigDecimal lastToQty = new BigDecimal(lastCmPricing.getToQty());
+
+				if (requestNoteDtl.getRequestItem().getQuantity().compareTo(lastToQty) > 0) {
+					throw new EpException(MessageConst.ERROR_760527, new String[] { requestNoteDtl.getRequestItem()
+							.getItemName() });
+				}
+			}
 
 		}
 	}
+
+	/**
+	 * Sort toQty value from CmPricing to make sure the last value toQty is the
+	 * largest.
+	 * 
+	 * @param cmPricings
+	 */
+	private void sortTierToQtyValueAscending(List<CmPricing> cmPricings) {
+		Collections.sort(cmPricings, new Comparator<CmPricing>() {
+			@Override
+			public int compare(CmPricing p1, CmPricing p2) {
+				// Convert to BigDecimal for proper comparison
+				BigDecimal toQty1 = (p1.getToQty() != null) ? new BigDecimal(p1.getToQty()) : BigDecimal.ZERO;
+				BigDecimal toQty2 = (p2.getToQty() != null) ? new BigDecimal(p2.getToQty()) : BigDecimal.ZERO;
+				return toQty1.compareTo(toQty2);
+			}
+		});
+	}
+
 	// 36362 - end
 }

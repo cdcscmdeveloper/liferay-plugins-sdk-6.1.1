@@ -25,6 +25,12 @@ public class SLALogConstant {
 	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
 	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "SpecificationBackingBean";
 	// #29187 End Vinod
+	
+	// 25037 - start
+	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
+	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
+	// 25037 - end
+	
 	/*
 	 * METHOD_NAME
 	 */
@@ -53,8 +59,15 @@ public class SLALogConstant {
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	public static final String QT_GET_RADIOBUTTONCODEVALUES_SEARCHBEAN = "getRadioButtonCodeValuesBySearchBean";
 	public static final String QT_GET_DROPDOWNVALUES_SEARCHBEAN_FOR_PARTIAL= "getDropdownValuesBySearchBeanForPartial";
-
-	
+	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION= "createLampiranA3forQTVerification";
+	// 25037 - start
+	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";
+	public static final String QT_UPDATE_GENERIC_APPROVAL_TASK = "updateGenericApprovalTask";
+	public static final String QT_PRESUBMIT_GENERIC_APPROVAL_TASK = "preSubmitGenericApprovalTask";
+	public static final String QT_PREPARE_COMMITTEE_HISTORY = "prepareCommitteeHistory";
+	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
+	public static final String QT_SLA_DOT_SEPARATOR = ".";
+	// 25037 - end
 	private SLALogConstant(){
 		
 	}	

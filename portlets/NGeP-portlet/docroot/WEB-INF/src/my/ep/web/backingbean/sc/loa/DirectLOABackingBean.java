@@ -4556,7 +4556,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							.equals(docDefinitionKey)) {
 						//#29007 Start Vinod
 						if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
-							filename.append(".pdf");
+							filename.append(QTConstants.LAMPIRAN_A3_FILE_EXTENSION_PDF);
 							scLoaReportAttachment.setFileName(filename.toString().replaceAll("/",""));
 							log.info("filename--->    "+scLoaReportAttachment.getFileName());
 							generateLampiranA3PdfFromVelocity(scLoaReportAttachment, scLoa);
@@ -10342,61 +10342,84 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		this.lampiranA3SubStr = lampiranA3SubStr;
 	}
 	
+	/**
+	 * This method calls when user click on reset all button in new offered
+	 * specification screen.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
 	public void onResetSupplierCriteria() {
 		setItemNameSearchCriteria(null);
 	}
+
+	/**
+	 * This method will be triggered when user click on back and complete button
+	 * in new offered specification screen.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
 	public void onBackToZoneItemDetailsTab() {
 		getManagedBean().setSelectedTabIndex(2);
 		this.getManagedBean().setSpecKeyword(null);//29007
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
 	}
+
+	/**
+	 * This method will be triggered when user click reset on the particular
+	 * specification in new offered specification screen.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
 	public void resetSpecKeyword(){
 		this.getManagedBean().setSpecKeyword(null);
 	}
+
+	/**
+	 * This method will be triggered when user click edit icon on the item in
+	 * zone/item screen to retrive specifications based on item name.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
 	public void searchSupplierItemByName(){
 		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			TplSpecMaster tplSpecMaster = new TplSpecMaster();
-			boolean isProduct = true;//29007
-			boolean isService = true;//29007
 			
-			
-			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
-					.isBrandNew()) {//29007
-				reqDTO.setTplSpecMaster(this.getManagedBean().getProdscQtDoc().getTplSpecMaster());//29007
+			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster().isBrandNew()) {// 29007
+				reqDTO.setTplSpecMaster(this.getManagedBean().getProdscQtDoc().getTplSpecMaster());// 29007
 				reqDTO.setItemName(this.getItemNameSearchCriteria());
-				AwardSupplierResDTO resDTO  = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
-				
+				AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
+
 				TemplateSpecBean bean = this.getManagedBean().getTemplateSpecBean();
-				if(isProduct){
-					bean.setSpecMaster(resDTO.getTplSpecMaster());
-					bean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
-					bean.setSelectedSpecQuestion(null);
-					bean.setSpecAnswersToDelete(null);
-					this.getManagedBean().setSearchItemForDL(true);
-					bean.setWordBreakForQT(true);//#29007 Added Vinod
-					this.getManagedBean().setProdTemplateSpecBean(bean);
-				}
-			}//29007
-			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
-					.isBrandNew()) {//29007
+				bean.setSpecMaster(resDTO.getTplSpecMaster());
+				bean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
+				bean.setSelectedSpecQuestion(null);
+				bean.setSpecAnswersToDelete(null);
+				this.getManagedBean().setSearchItemForDL(true);
+				bean.setWordBreakForQT(true);// #29007 Added Vinod
+				this.getManagedBean().setProdTemplateSpecBean(bean);
+			}// 29007
+			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster().isBrandNew()) {// 29007
 				reqDTO.setTplSpecMaster(this.getManagedBean().getServicescQtDoc().getTplSpecMaster());
 				reqDTO.setItemName(this.getItemNameSearchCriteria());
-				AwardSupplierResDTO resDTO  = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
-				TemplateSpecBean serviceBean = new TemplateSpecBean(
-						TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
-				if(isService){
-					serviceBean.setSpecMaster(resDTO.getTplSpecMaster());
-					serviceBean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
-					serviceBean.setSelectedSpecQuestion(null);
-					serviceBean.setSpecAnswersToDelete(null);
-					this.getManagedBean().setSearchItemForDL(true);
-					serviceBean.setWordBreakForQT(true);//#29007 Added Vinod
-					this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
-				}
+				AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
+				TemplateSpecBean serviceBean = new TemplateSpecBean(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+				serviceBean.setSpecMaster(resDTO.getTplSpecMaster());
+				serviceBean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
+				serviceBean.setSelectedSpecQuestion(null);
+				serviceBean.setSpecAnswersToDelete(null);
+				this.getManagedBean().setSearchItemForDL(true);
+				serviceBean.setWordBreakForQT(true);// #29007 Added Vinod
+				this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 			}
-			//}
 		}else{
 			this.getManagedBean().setSearchItemForDL(false);//29007
 			TemplateSpecBean bean = new TemplateSpecBean(
@@ -10413,7 +10436,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 					.isBrandNew()) {
 
-				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 				//Reopen #25726 note 220 - issue 2,3
 				this.getManagedBean()
 						.getProdscQtDoc()
@@ -10429,6 +10451,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
 					.getSmSupplier());
+			serviceBean.setWordBreakForQT(true);//#29007 Added Vinod
 			this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 			this.getManagedBean().setServFirst(0);
 
@@ -10446,6 +10469,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
+
+	/**
+	 * This method will be triggered when user click on search button in new
+	 * offered specification screen to search specific specifications.
+	 * 
+	 * @param tplSpecQuestion1
+	 * @param mainSearch
+	 * 
+	 * @return
+	 */
 	public void searchSupplierSpecification(TplSpecQuestion tplSpecQuestion1,boolean mainSearch){
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
@@ -10459,10 +10492,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		log.info("==========searchSupplierSpecificationspecQuestionId========="+specQuestionId);
 		log.info("==========searchSupplierSpecificationrequestItemQuestionName========="+requestItemQuestionName);
 		log.info("==========searchSupplierSpecificationspecQuestionName========="+specQuestionName);//29007-End
-			if(scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId().equals(tplSpecQuestion1.getSpecQuestionId()) || scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId()==tplSpecQuestion1.getSpecQuestionId() || scloiloaitem.getScRequestItem().getTplSpecQuestion().getClItem().trim()
-					.replaceAll("\\s", "").equals(tplSpecQuestion1.getClItem().trim()
-							.replaceAll("\\s", ""))){//29007&31423&31638
-				loiLoaItem=scloiloaitem;				break;
+			if (scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId()
+					.equals(tplSpecQuestion1.getSpecQuestionId())
+					|| scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId() == tplSpecQuestion1
+							.getSpecQuestionId()
+					|| scloiloaitem.getScRequestItem().getTplSpecQuestion().getClItem().trim().replaceAll("\\s", "")
+							.equals(tplSpecQuestion1.getClItem().trim().replaceAll("\\s", ""))) {// 29007&31423&31638
+				loiLoaItem = scloiloaitem;
+				break;
 			}
 		}
 			this.getManagedBean().setItemNamePopup(loiLoaItem.getScRequestItem().getItemName());
@@ -10486,19 +10523,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			specReqDto.setSpecSearchForApp(true);
 			boolean qtMaint = isQTMaintenanceScreen();
 			if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
 				&& !qtMaint) {
-				getManagedBean().setSupPropSpecDisable(false);
-			}else if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-					&& !qtMaint) {
 				getManagedBean().setSupPropSpecDisable(false);
 			}else{
 				getManagedBean().setSupPropSpecDisable(true);
-				TemplateSpecResDTO templateSpecResDTO  = new TemplateSpecResDTO();
-				templateSpecResDTO =templateSpecSO.searchSupplierSpecification(specReqDto);
+				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
 				
 				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
 					specReqDto.setCheckingForWIP(true);
-					templateSpecResDTO =templateSpecSO.searchSupplierSpecification(specReqDto);
+					templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 				}
 				if(templateSpecResDTO.getSpecAnswerList().isEmpty()){
 					DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
@@ -10512,7 +10546,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 			
 			TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
-			List<TplSpecAnswer> afterTireCheckAnswerList = new ArrayList<>();
+			List<TplSpecAnswer> afterTierCheckAnswerList = new ArrayList<>();
 			
 			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
 				int contains=0;
@@ -10520,7 +10554,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 					tplSpecAnswer.setRenderNewSpec(true);
 				}
-				for(TplSpecAnswer answer :afterTireCheckAnswerList){
+				for(TplSpecAnswer answer :afterTierCheckAnswerList){
 					if(answer.getTplSpecQuestion()!=null
 						&& tplSpecAnswer.getTplSpecQuestion()!=null
 						&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()){
@@ -10528,15 +10562,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						break;
 					}
 				}
-				if((qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-					&& !qtMaint))
-					&& afterTireCheckAnswerList.isEmpty()){
-					afterTireCheckAnswerList.add(tplSpecAnswer);
-				} else if((qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-						   && !qtMaint))
-						   && !afterTireCheckAnswerList.isEmpty()
-						   && contains==0){
-						   afterTireCheckAnswerList.add(tplSpecAnswer);
+				boolean qtMaintCheck = qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+						&& !qtMaint);
+				if(qtMaintCheck
+					&& (afterTierCheckAnswerList.isEmpty()
+							|| !afterTierCheckAnswerList.isEmpty()
+							   && contains==0)){
+					afterTierCheckAnswerList.add(tplSpecAnswer);
 				} else {
 					continue;
 				}
@@ -10544,7 +10576,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			if(qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
 					&& !qtMaint)){
-				this.getManagedBean().setTplSpecAnswerList(afterTireCheckAnswerList);
+				this.getManagedBean().setTplSpecAnswerList(afterTierCheckAnswerList);
 			}else{
 				this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
 			}
@@ -10553,12 +10585,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setTplSpecQuestion(tplSpecQuestion1);
 				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext()
 												.getSession(false);
-				portletSession.setAttribute("selectedScLoiLoaItem", loiLoaItem);
+				portletSession.setAttribute(QTConstants.PORTLET_ATTRIBUTE_NEW_OFFERED_SPECIFICATION, loiLoaItem);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "/xhtml/sc/loa/directnego/directLoaSuppliersProposalSpecificationUpdatePopup.xhtml");
+					.handleNavigation(fc, null, QTConstants.REDIRECT_URL_NEW_OFFERED_SPECIFICATION);
 			}
 	}
+
+	/**
+	 * This method will be triggered when user click save or complete button in
+	 * new offered specification screen to save the changes.
+	 * 
+	 * @param isComplete
+	 * 
+	 * @return
+	 */
 	public void saveSupplierSpecification(boolean isComplete){
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(
@@ -10599,7 +10640,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scLoiLoaItem.setComplete(isComplete);
 			if(isComplete){//29007-start
 			if(null==this.getManagedBean().getNewSupplierJustification() || StringUtils.isBlank(this.getManagedBean().getNewSupplierJustification())|| StringUtils.isEmpty(this.getManagedBean().getNewSupplierJustification())){
-				String errorMessage=	ResourceBundleUtils.getMessage("lbl.sc.justification",
+				String errorMessage=	ResourceBundleUtils.getMessage(QTConstants.LBL_SC_JUSTIFICATION,
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						new FacesScopes().getUserLocale());	
 				throw new EpException(MessageConst.ERROR_775185,
@@ -10724,18 +10765,16 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						tplSpecAnswer.setRenderNewSpec(true);
 					}
 				}
-				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.loiloa.supplier.specification.save"), "", Boolean.FALSE);
+				successMessage(MessageConst.INFO_700004, getMessageCommon(QTConstants.LBL_SC_LOILOA_SUPPLIER_SPECIFICATION_SAVE), "", Boolean.FALSE);
 			}
 			}
 		}
 	}
 	public String populateLabelLampiranA3(String dateOfUpdate, String deskOfficerName) {
-		String labelLampiranA3 = StringUtils.EMPTY;
 		FacesScopes facesScopes = new FacesScopes();
-		labelLampiranA3 = ResourceBundleUtils.getMessage(QTConstants.LAMPIRAN_A3_LBL, new String[] {
+		return ResourceBundleUtils.getMessage(QTConstants.LAMPIRAN_A3_LBL, new String[] {
 				dateOfUpdate, deskOfficerName }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				facesScopes.getUserLocale()); 
-		return labelLampiranA3;
 	}
 	private void createLampiranA3forQT(boolean isComplete){
 		AwardSupplierReqDTO awardReqDTO = new AwardSupplierReqDTO();
@@ -10838,19 +10877,19 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null; 
-		String dafaltValue = "T/B";
+		String dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
 		FacesScopes facesScopes = new FacesScopes();
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 		if (ReportConst.ENG_LANGUAGE_CODE.equals(pmUser.getPreferredLanguage())) {
-			dafaltValue = "T/B";//29007
+			dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;//29007
 		}
 		if(!scLoa.getScLoiLoaItems().isEmpty()){
 			scLoiLoaItemsList = new ArrayList<>();
 			for(ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()){
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");//29007
+				DateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT);//29007
 				String date = df.format(scLoiLoaItem.getChangedDate());
 				StringBuilder finalMsg = new StringBuilder();//29007
 				if(this.getManagedBean().getScQt().isZonal()){//29007-start
@@ -10891,20 +10930,19 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 				specReqDto.setSpecSearchForApp(false);
 				
 				TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.searchSupplierSpecification(specReqDto);
+				List<Long> replacedQuestionIds = new ArrayList<>();
 				if (this.getManagedBean().getScQt().isZonal()) {// 29007&31423-start
 					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();
 					boolean newOfferedSpecification = false;// 29007
-					List<Long> replacedQuestionIds = new ArrayList<>();
 					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
 									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
-											.getSpecQuestionId()) ? true : false;
+											.getSpecQuestionId());
 							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem()) ? true
-									: false;
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
 							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
 								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
 										specAnswer.getTplSpecQuestion().getClItem());
@@ -10970,14 +11008,18 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 
-							if (specAnswer.getTplSpecQuestion() != null
-									&& specAnswer.getTplSpecQuestion().getClItem() != null
+							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+											.getSpecQuestionId());
+							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem())) {// 29007-start
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
+							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {// 29007-start
 								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
 										specAnswer.getTplSpecQuestion().getClItem());
 								specAnswer.getTplSpecQuestion().setClItem(
-										VmUtil.getInstance().addLineBreaks(itemName, 20));
+										VmUtil.getInstance().addLineBreaks(itemName, 30));
+								replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 							}
 
 							if (null != scLoiLoaItem.getTplSpecTierQty()) {
@@ -11035,10 +11077,10 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 		sortLoiLoaItemsBasedOnQuestionOrder(scLoiLoaItemsList);
 		
-		context.put("serviceScope", dafaltValue);
-		context.put("itemsList", scLoiLoaItemsList); 
-		context.put("isZonal", scLoa.getScLoiLoa().isZonal());
-		context.put("bean", this);
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_SERVICE_SCOPE, dafaltValue);
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_ITEMS_LIST, scLoiLoaItemsList); 
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_IS_ZONAL, scLoa.getScLoiLoa().isZonal());
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_BEAN, this);
 		
 		FileOutputStream fos = null;
 
@@ -11094,6 +11136,15 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		scLoiLoaItemsList.addAll(productItemsList);//Add all product list after sorting
 		scLoiLoaItemsList.addAll(serviceItemsList);//Add all service list after sorting
 	}
+
+	/**
+	 * This method will be clled when user click on verify button and do the
+	 * validations for LampiranA3.
+	 * 
+	 * @param bpmAction
+	 * 
+	 * @return
+	 */
 	public void verifyConformationForLampiranA3(String bpmAction) {
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
@@ -11125,29 +11176,35 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 								.getRequestNoteItemId()))) {
 					itemIds.add(loiLoaItem.getScRequestItem().getRequestNoteItemId());
 					itemCount++;
-					itemsList.append(itemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName()).append(" <p></p> ");
+					itemsList.append(itemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName())
+							.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
 				} else if (addItem
 						&& isZonal
 						&& (itemZoneMap.isEmpty() || checkItemAndZoneAdded(itemZoneMap, loiLoaItem.getScRequestItem()
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))) {
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
-					Long zoneIdAdded=null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
-					Long zoneIdNew=null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()) : null;
+					Long zoneIdAdded = null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl()
+							.getSpecZoneId()) : null;
+					Long zoneIdNew = null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())
+							: null;
 					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
 					if (addZoneName) {
 						zoneloiLoaItem = loiLoaItem;
-						itemsList.append(" <p></p> ").append(loiLoaItem.getTplSpecZoneDtl().getZoneName()).append(" <p></p> ");
+						itemsList.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE)
+								.append(loiLoaItem.getTplSpecZoneDtl().getZoneName())
+								.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
 						zoneitemCount = 0;
 					}
 					zoneitemCount++;
-					itemsList.append(zoneitemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName()).append(" <p></p> ");
+					itemsList.append(zoneitemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName())
+							.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
 					itemCount++;
 				}
 			}
 		}
 		if (itemCount > 0) {
-			itemsList.append(" <p></p> ");
+			itemsList.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
 			throw new EpException(MessageConst.ERROR_776000, new String[] { itemsList.toString() });
 		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getScLoa().getScLoaReports())) {
@@ -11207,6 +11264,15 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 		return true;
 	}
+
+	/**
+	 * This method will be clled when user click on no for verification popup
+	 * and close the popup.
+	 * 
+	 * @param 
+	 * 
+	 * @return
+	 */
 	public void resetLoaBpmVerify(){
 		this.getManagedBean().setLoaBpmVerify(null);
 		RequestContext.getCurrentInstance().execute("verifyConfirmPopUp.hide()");
@@ -11220,6 +11286,14 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		return QTConstants.PORTLET_NAME_CT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) || QTConstants.PORTLET_NAME_CT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());		
 	}
 	//#32119 - end
+	/**
+	 * This method will be clled when user click on add button in new offered
+	 * spec screen to edit new offered specification.
+	 * 
+	 * @param spec
+	 * 
+	 * @return
+	 */
 	public void addNewOfferedSpec(TplSpecAnswer spec){
 		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
 		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
@@ -11228,6 +11302,14 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			}
 		}
 	}
+	/**
+	 * This method will be clled when user click on refresh button in new offered
+	 * spec screen to clear and hide new offered specification.
+	 * 
+	 * @param spec
+	 * 
+	 * @return
+	 */
 	public void refreshNewOfferedSpec(TplSpecAnswer spec){
 		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
 		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
@@ -11237,9 +11319,27 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			}
 		}
 	}
+
+	/**
+	 * This method will be clled when user click on resetall button this method
+	 * will show the conformation.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
 	public void resetAllNewOfferedSpecification(){
 		RequestContext.getCurrentInstance().execute("resetAllConfirmPopUp.show()");
 	}
+
+	/**
+	 * This method will be clled when user click on yes this method will proceed
+	 * to reset.
+	 * 
+	 * @param
+	 * 
+	 * @return
+	 */
 	public void resetAllNewOfferedSpecificationSubmit(){
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
 		if(this.getManagedBean().getSpecKeyword() != null){
@@ -11260,16 +11360,20 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		this.getManagedBean().setNewSupplierJustification(null);
 		saveSupplierSpecification(false);
 	}
+
 	/**
 	 * replace all special characters and next line characters to html codes.
+	 * 
 	 * @param str
 	 * @return updatedStr
 	 */
 	public String replaceAllSpecialCharactersAndNewline(String str) {
 		String updatedStr = str.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
 		updatedStr = updatedStr.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		return updatedStr;
 	}
 	/*#29007 End Vinod*/
@@ -11305,6 +11409,9 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		});
 	}
 	//29007 End
+	
+
+
 	/**
 	 * 29007-start
 	 * Get Parameter description by parameter for report.
@@ -11313,6 +11420,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 *            the PmParameter instance.
 	 * @return parameter description
 	 */
+	@Override
 	public String getParameterDescForReport(PmParameter parameter) {
 		if (parameter != null
 				&& StringUtils.isNotBlank(parameter.getParameterType())) {
@@ -11323,6 +11431,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 			return null;
 		}
 	} 
+
 	/**
 	 * this method to display N/A or T/B based on language for Supplier remark.
 	 * 
@@ -11330,16 +11439,16 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 * @return updated string
 	 */
 	public String supplierRemarks(String supplierRemarks) {
-		String remarks = "T/B";
+		String remarks = QTConstants.LAMPIRAN_A3_TEXT_TB;
 		if (null != supplierRemarks && StringUtils.isNotBlank(supplierRemarks)
 				&& StringUtils.isNotEmpty(supplierRemarks)) {
 			return this.replaceAllSpecialCharactersAndNewline(supplierRemarks);
 		}
-		if ("en".equals(new FacesScopes().getUserLocale().getLanguage())) {
-			remarks = "N/A";
+		if (ReportConst.ENG_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage())) {
+			remarks = QTConstants.LAMPIRAN_A3_TEXT_NA;
 		}
 		return remarks;
-	}//29007-End
+	}// 29007-End
 	
 
 	//#26770 - start
@@ -11355,23 +11464,6 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 	//26770 - end
 	
-		/*29007 Start
-		 * sorting LoiItems
-		 */
-		private void checkItemSortingLatest(List<ScLoiLoaItem> loiLoaItem) {
-			Collections.sort(loiLoaItem, new Comparator<ScLoiLoaItem>() {
-				public int compare(ScLoiLoaItem loiItem1,
-						ScLoiLoaItem loiItem2) {
-
-					return new CompareToBuilder()
-							.append(loiItem1.getLatestChangedDate(),
-									loiItem2.getLatestChangedDate())
-							.toComparison();
-				}
-			});
-		}
-		//29007 End	
-		
 		// #25726 START
 		private boolean over500K(ScLoa loa) {
 

@@ -13,7 +13,6 @@ package my.ep.web.managedbean.sc.quationtender;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -1654,8 +1653,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> paramTypes = null;
 	//#25692-End
 	
-	public boolean proposalValidityChangeValue; //#21692
+	//#21692 - Start
+	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
+	private ScQtEpvSupplierResponse suppResp;
+	private boolean chmnFinalizationRejectEPV;
+	private boolean proposalValidityRevised;
+	private boolean nullEPVRemark;
+	//#21692 - End
 	
 	// #29468 Vinod Start
 	private TreeNode rootCategoryTree;
@@ -1698,21 +1703,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
-	//#25037-START
+	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
 	private String currentCommitteeDesc;
 	private ScCommitteeMemberHistory selectedCommitteeHistory;
 	private Paginator selectedHistoryMember;
 	private boolean committeeReviseFlow;
-	private List<QtCommitteeMemberBean>memberHistoryList;
+	private List<QtCommitteeMemberBean> memberHistoryList;
 	private ScQtApprovalRequest scQtApprovalRequest;
 	private boolean specUpdateInProgress;
 	private ScQtApprovalRequest doaaRequest;
 	private boolean doaRequestEditable;
 	private List<ScQtContactPerson> newDoaList;
 	private List<ScQtContactPerson> prevDoaList;
-	private List<PmUser> deskOfficerAssistantList; 
+	private List<PmUser> deskOfficerAssistantList;
 	private ScQtRequestContent requestContent;
 	private boolean reapproval;
 	private String prevDOAs;
@@ -1722,7 +1727,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeUpdateFlow;
 	private List<String> mainTaskNames;
 
-	//#25037-END
+	// 25037 - end
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
@@ -1855,7 +1860,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
-	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
 	//Bug #35061 - asyrafhaziq 
@@ -11741,39 +11745,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isFromSpecEndorse = isFromSpecEndorse;
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
-	
-	// #21692 - start
-	/**
-	 * @return the proposalValidityChangeValue
-	 */
-	public boolean isProposalValidityChangeValue() {
-		return proposalValidityChangeValue;
-	}
-
-	/**
-	 * @param proposalValidityChangeValue
-	 *            the proposalValidityChangeValue to set
-	 */
-	public void setProposalValidityChangeValue(boolean proposalValidityChangeValue) {
-		this.proposalValidityChangeValue = proposalValidityChangeValue;
-	}
-	// #21692 - end
-
-	public ScQtEpvSupplierResponse getSuppResp() {
-		return suppResp;
-	}
-
-	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
-		this.suppResp = suppResp;
-	}
-
-	public String getEpvAttachmentValue() {
-		return epvAttachmentValue;
-	}
-
-	public void setEpvAttachmentValue(String epvAttachmentValue) {
-		this.epvAttachmentValue = epvAttachmentValue;
-	}
 
 	public String getMsgConfirmBelowIndi() {
 		return msgConfirmBelowIndi;
@@ -11869,13 +11840,70 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public boolean isSampleShowHide() {
 		return isSampleShowHide;
 	}
-
+	
 	/**
 	 * @param isSampleShowHide the isSampleShowHide to set
 	 */
 	public void setSampleShowHide(boolean isSampleShowHide) {
 		this.isSampleShowHide = isSampleShowHide;
 	}//11104-End
+
+	//#21692 - Start
+	public boolean isChmnFinalizationRejectEPV() {
+		return chmnFinalizationRejectEPV;
+	}
+
+	public void setChmnFinalizationRejectEPV(boolean chmnFinalizationRejectEPV) {
+		this.chmnFinalizationRejectEPV = chmnFinalizationRejectEPV;
+	}
+
+	public boolean isProposalValidityRevised() {
+		return proposalValidityRevised;
+	}
+
+	public void setProposalValidityRevised(boolean proposalValidityRevised) {
+		this.proposalValidityRevised = proposalValidityRevised;
+	}
+	
+	/**
+	 * @return the proposalValidityChangeValue
+	 */
+	public boolean isProposalValidityChangeValue() {
+		return proposalValidityChangeValue;
+	}
+
+	/**
+	 * @param proposalValidityChangeValue
+	 *            the proposalValidityChangeValue to set
+	 */
+	public void setProposalValidityChangeValue(boolean proposalValidityChangeValue) {
+		this.proposalValidityChangeValue = proposalValidityChangeValue;
+	}
+
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+
+	public String getEpvAttachmentValue() {
+		return epvAttachmentValue;
+	}
+
+	public void setEpvAttachmentValue(String epvAttachmentValue) {
+		this.epvAttachmentValue = epvAttachmentValue;
+	}
+
+	public boolean isNullEPVRemark() {
+		return nullEPVRemark;
+	}
+
+	public void setNullEPVRemark(boolean nullEPVRemark) {
+		this.nullEPVRemark = nullEPVRemark;
+	}
+	//#21692 - End
 }
 
 // ***25201

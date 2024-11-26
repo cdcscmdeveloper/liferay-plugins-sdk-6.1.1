@@ -17,20 +17,20 @@
 	
 
 		<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
-			<!-- #28175 - start -->
-			<c:choose>
-			<c:when test="#{not svoSiteVisitBackingBean.managedBean.smAppl.activeAppl}">
-				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-				value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-				#{svoSiteVisitBackingBean.getSmCategoryL3(svTask.pmCategoryL3.categoryL3Id, svoSiteVisitBackingBean.managedBean.smAppl.applId)}"/>
-			</c:when>
-			<c:otherwise>
-				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-				value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-				#{svTask.pmCategoryL3.categoryName}"/>
-			</c:otherwise>
-			</c:choose>
-			<!-- #28175 - end -->
+			<!-- #28175, 28775 - Site Visit Grouping Enhancement - 28775 - start -->
+			<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
+				value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svTask.smSvTemplate)}" />
+			<h:outputText rendered="#{svTask.smSvTemplate.suppCategory.otherDesc != null}" 
+				value=" (#{svTask.smSvTemplate.suppCategory.otherDesc})"/>
+			
+			<ui:repeat var="svGroup" value="#{svTask.smSvTaskGroups}">
+				<br/>
+				<h:outputText rendered="#{!svGroup.redundant}"
+					value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svGroup.smSvTemplate)}"/>
+				<h:outputText rendered="#{!svGroup.redundant and svGroup.smSvTemplate.suppCategory.otherDesc != null}"
+					value=" (#{svGroup.smSvTemplate.suppCategory.otherDesc})"/>
+			</ui:repeat>
+			<!-- #28175, 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 		</p:column>
 		
 		<p:column headerText="#{lbl['lbl.sm.address']}" style="white-space: pre;" >
@@ -55,10 +55,16 @@
 		</p:column>
 	</p:dataTable>
 	
-	<!-- #24964 -->
-	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1500" id="poReportDlgId" resizable="false" >
-		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}">
-			<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml"></ui:include>
+	<!-- #24964, 28775 - Site Visit Grouping Enhancement - 28775 -->
+	<p:dialog widgetVar="poReportDlg" modal="true" height="600" width="1200" id="poReportDlgId" resizable="false" >
+		<p:outputPanel id="reportPanel" rendered="#{!empty svoSiteVisitBackingBean.managedBean.smSvTask}" >
+			<c:if test="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/group/siteVisitReportPOReview.xhtml" />
+			</c:if>
+			<c:if test="#{!svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.siteVisitGroup}">
+				<ui:include src="/xhtml/sm/shared/sitevisit/siteVisitReportPOReview.xhtml" />
+			</c:if>
+			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end-->
 		</p:outputPanel>
 	</p:dialog>
 

@@ -3,7 +3,7 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
+import java.math.RoundingMode;	//Bug #35600@Syazani 19/09/2024
 
 /**
  * QTConstants for constants for sourcing.
@@ -274,9 +274,10 @@ public interface QTConstants {
 	
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	
-	//25037 QT Bpm Composite Version Validity ID
+	// 25037 - start
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
 
 	//#11104
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
@@ -306,14 +307,30 @@ public interface QTConstants {
 	
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
 	
-	//#29007 Start Vinod
+	// #29007 Start Vinod
 	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
 	public static final String LAMPIRAN_A3_UPDATE = "Updated";
 	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
 	public static final String LAMPIRAN_A3_JUSTIFICATION = "Dikemas kini atas sebab ";
-	//#29007 End Vinod
+	public static final String LAMPIRAN_A3_FILE_EXTENSION_PDF = ".pdf";
+	public static final String PORTLET_ATTRIBUTE_NEW_OFFERED_SPECIFICATION = "selectedScLoiLoaItem";
+	public static final String REDIRECT_URL_NEW_OFFERED_SPECIFICATION = "/xhtml/sc/loa/directnego/directLoaSuppliersProposalSpecificationUpdatePopup.xhtml";
+	public static final String REDIRECT_URL_NEW_OFFERED_SPECIFICATION_LOA = "/xhtml/sc/loa/loarequest/loaSuppliersProposalSpecificationUpdatePopup.xhtml";
+	public static final String LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE = "lbl.sc.loiloa.suppliers.proposal.specification.update";
+	public static final String LBL_SC_JUSTIFICATION = "lbl.sc.justification";
+	public static final String LBL_SC_LOILOA_SUPPLIER_SPECIFICATION_SAVE = "lbl.sc.loiloa.supplier.specification.save";
+	public static final String LAMPIRAN_A3_TEXT_TB = "T/B";
+	public static final String LAMPIRAN_A3_TEXT_NA = "N/A";
+	public static final String LAMPIRAN_A3_TEXT_SERVICE_SCOPE = "serviceScope";
+	public static final String LAMPIRAN_A3_TEXT_ITEMS_LIST = "itemsList";
+	public static final String LAMPIRAN_A3_TEXT_IS_ZONAL = "isZonal";
+	public static final String LAMPIRAN_A3_TEXT_BEAN = "bean";
+	public static final String LAMPIRAN_A3_TEXT_YA = "Ya";
+	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
+	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
+	// #29007 End Vinod
 	// #29007 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
@@ -379,4 +396,11 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
 	// Bug #35688@Syazani 10/07/2024 -- End
+	
+	// 36671 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671 - end
+	
+	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+ 
 }
