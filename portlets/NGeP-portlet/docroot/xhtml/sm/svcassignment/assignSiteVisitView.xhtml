@@ -114,10 +114,12 @@
 					#{catCode}
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.category.description']}">
-					<!-- #28175 - start, 28775 - Site Visit Grouping Enhancement - 28775 -->
+				<!-- #28175 - start, 28775 - Site Visit Grouping Enhancement - 28775 -->
+				<p:column headerText="#{lbl['lbl.sm.category.description']}"
+					style="white-space: normal; width: 88%;">
 					<h:outputText value="#{svcSiteAssignBackingBean.getSupplierCategoryName(catApp, 
-										svcSiteAssignBackingBean.managedBean.smAppl)}"/>
+										svcSiteAssignBackingBean.managedBean.smAppl)}"
+								style="white-space: pre-wrap; word-wrap: break-word;"/>
 					<br />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{catApp.otherDesc}" 
 						rendered="#{catApp.otherDesc != null}" />
