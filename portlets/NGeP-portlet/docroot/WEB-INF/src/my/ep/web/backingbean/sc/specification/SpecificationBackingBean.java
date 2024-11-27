@@ -14915,9 +14915,28 @@ if (null != checklist && !checklist.isEmpty()) {
 			if(issample && SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)){// 11104-Reendose794
 				sampleDetailsPendingTemplateSpec();
 			}// 11104-Reendose794
-			return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+			
+			//#36678 start
+			boolean isPanel = scQt.isPanel();
+    		BigDecimal currentIndPrice = this.getManagedBean().getQt().getEstimatedAmount();
+    		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+			if ((!isPanel) && currentIndPrice != null && indPriceThreshold != null
+					&& (currentIndPrice.compareTo(indPriceThreshold) <= 0)) {
+				// BugBug #35061 - asyrafhaziq
+				// set message
+				String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE, new String[] { String
+						.valueOf(indPriceThreshold).trim() });
+				// SONARQUBE QT 2023 - haziq
+				this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
+
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+
+			} else {
+				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}
-			return null;
+			//#36678 end
+		}
+		return null;
 			// Sqube QT Master Bug G85 - Issues 20@Syazani 30/11/2023
 	}
 	
