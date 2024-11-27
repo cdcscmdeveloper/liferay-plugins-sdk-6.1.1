@@ -124,8 +124,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String supplierRole;
 	//end - #25396
 	
-	private String docNo;
-	
 	private String selectedDocNo;//Fix - #36608
 
 	public String getBackURL() {
