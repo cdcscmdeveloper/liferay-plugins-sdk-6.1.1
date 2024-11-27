@@ -130,6 +130,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	// 25791 -start-
 	private boolean isBiddingUrl = Boolean.FALSE;
 	// 25791 -end-
+	
+	private String selectedDocNo;//Fix - #36608
 
 	public String getBackURL() {
 		return backURL;
@@ -1046,6 +1048,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			SearchFilterBean searchFilterBean4 = new SearchFilterBean(
 					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
+			
+			//Start Fix - #36608
+			SearchFilterBean searchFilterBean5 = new SearchFilterBean("docNo", 
+					SearchOperator.OPERATOR_EQUALS.value(), getSelectedDocNo(), SearchCondition.CONDITION_AND.value());
 		
 			BaseSearchFilterBean searchFilterBeanAnd1 = new SearchMultiFilterBean(
 					searchFilterBean1, searchFilterBean2);
@@ -1055,6 +1061,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
+			if(getSelectedDocNo() != null){
+				searchBean.getDataFilterBeans().add(searchFilterBean5);
+			}
+			//End Fix - #36608
 
 			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 
@@ -1267,5 +1277,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.isBiddingUrl = isBiddingUrl;
 	}
 	// 25791-end
+	//Start Fix - #36608
+	public String getSelectedDocNo() {
+		return selectedDocNo;
+	}
 
+	public void setSelectedDocNo(String selectedDocNo) {
+		this.selectedDocNo = selectedDocNo;
+	}
+	//End Fix - #36608
 }
