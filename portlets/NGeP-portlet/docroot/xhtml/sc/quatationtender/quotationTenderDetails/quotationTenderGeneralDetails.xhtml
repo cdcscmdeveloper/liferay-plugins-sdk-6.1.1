@@ -286,12 +286,13 @@
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
 											<ui:remove>9019 -end</ui:remove>
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
 											<!-- 25729 -start- -->
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											<!-- 25729 -end- -->
 											</p:ajax>
-
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"
@@ -970,11 +971,13 @@
 	</p:dialog>
 
 	<!-- #25729 #174 START -->
+	<ui:remove>Bug 35061 - change message value -start-</ui:remove>
 	<p:confirmDialog id="proceedBelowQtValueId"
 		widgetVar="proceedBelowQtValueDlgs"
 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
 		resizable="false" closable="false">
+		<ui:remove>Bug 35061 - change message value -end-</ui:remove>
 		<div align="right">
 			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"
 				action="#{createQtBB.enableJustificationProValue(true)}"

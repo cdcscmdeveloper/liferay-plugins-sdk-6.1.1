@@ -53,6 +53,10 @@ import org.primefaces.event.UnselectEvent;
 public class SmDeleteCategoryCodeBackingBean extends
 		BaseBackingBean<SmDeleteCategoryCodeManagedBean> implements Cloneable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger
 			.getLogger(SmDeleteCategoryCodeBackingBean.class);
 
@@ -296,9 +300,10 @@ public class SmDeleteCategoryCodeBackingBean extends
 					selCat.setChangedBy(loginSessionUserId);
 					log.info("**** User ID for ChangedBy (Delete Category Code) After *************"+loginSessionUserId);
 					/*#28404 - End*/
-					//#34209 - START
+
+					//#30766 & #34209 - START
 					updateDelCodesInAllRejApplNewerThanLatestAppl();
-					//#34209 - END
+					//#30766 & #34209 - END
 				}
 				//this.getManagedBean().getSmAppl().setQuestionnaire(false);
 				this.getManagedBean().setSmAppl(updateSmAppl(this.getManagedBean().getSmAppl()));
@@ -542,8 +547,8 @@ public class SmDeleteCategoryCodeBackingBean extends
 			throw new EpException(MessageConst.ERROR_722542);
 		}
 	}
-	
-	//#34209 - START
+
+	//#30766 & #34209 - START
 	public void updateDelCodesInAllRejApplNewerThanLatestAppl(){
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
 		ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierCategorySO.class);
@@ -582,5 +587,5 @@ public class SmDeleteCategoryCodeBackingBean extends
 			mofRegistrationSO.updateSmAppl(mofRegistrationReqDTO);
 		}
 	}
-	//#34209 - END
+	//#30766 & #34209 - END
 }

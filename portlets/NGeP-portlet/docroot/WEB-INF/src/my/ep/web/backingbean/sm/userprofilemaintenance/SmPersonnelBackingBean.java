@@ -2015,14 +2015,16 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		//32515 END
+
+		//Start 13320
 		// Start - 35178
 		if (!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()) {
 			// Start 13320
 			for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
 				// #33592-start
 				if ((per.getSmAddress() != null)
-					&& (per.getSmAddress().getPmState().getStateCode() != null
-					&& !per.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))) {
+						&& (per.getSmAddress().getPmState().getStateCode() != null && !per.getSmAddress().getPmState()
+								.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))) {
 					per.getSmAddress().setPmDivision(null);
 				}// #33592-end
 			}

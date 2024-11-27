@@ -231,7 +231,7 @@
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 18% !important;" rendered="#{inquiryHistoryOnlineMandatoryTable.pmDocument.mandatory}">
-								<!-- #34392 - Start -->
+									<!-- #34392 - Start -->
 									<h:inputTextarea
 										value="#{inquiryHistoryOnlineMandatoryTable.sdoRemarks}"
 										style="float: left;white-space: normal; width:100% !important;"
@@ -242,7 +242,7 @@
 										style="float: left;white-space: normal; width:100% !important;"
 										disabled="true"
 										rendered="#{not empty inquiryHistoryOnlineMandatoryTable.poRemarks}" />
-								<!-- #34392 - End -->
+									<!-- #34392 - End -->
 								</p:column>
 							</p:dataTable>
 							<p:dataTable var="emptyMandatory" value="" id="mandatoryEmptyForApplStatus" 
@@ -302,7 +302,7 @@
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 18% !important;" rendered="#{!inquiryHistoryOnlineNonMandatoryTable.pmDocument.mandatory}">
-								<!-- #34392 - Start -->
+									<!-- #34392 - Start -->
 									<h:inputTextarea
 										value="#{inquiryHistoryOnlineNonMandatoryTable.sdoRemarks}"
 										style="float:left; white-space:normal; width:100% !important;"
@@ -313,7 +313,7 @@
 										style="float:left; white-space:normal; width:100% !important;"
 										disabled="true"
 										rendered="#{not empty inquiryHistoryOnlineNonMandatoryTable.poRemarks}" />
-								<!-- #34392 - End -->
+									<!-- #34392 - End -->
 								</p:column>
 							</p:dataTable>
 							<p:dataTable var="emptyNonMandatory" value="" id="nonMandatoryEmptyForApplHistory" 

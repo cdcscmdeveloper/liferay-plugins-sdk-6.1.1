@@ -22,7 +22,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<p:messages id="messages" showDetail="true" autoUpdate="true"  closable="true" showSummary="false"  />
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!backingBean.managedBean.claimTask}"/><br />
 		<table style="width: 100%">
 			<tr>
@@ -54,69 +54,7 @@
 			</table>
 			<p:spacer height="10px" />
 			<!-- #34392 - Start -->
-			<!-- <p:dataTable var="table" id="onSdList"
-				value="#{backingBean.managedBean.mandatoryDocs}">				
-				<ac:paginator for="onSdList" />
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
-					style="width : 60%;">
-					<h:outputText value="#{table.pmDocument.docName}" 
-						style="float: left;white-space: normal;" 
-						rendered="#{table.verifiedFlg != 1}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sm.sectionPoRmrk']}"
-					style="width : 20%;">
-					<h:outputText value="#{table.poRemarks}" 
-						style="float: left;white-space: normal;" 
-						rendered="#{table.verifiedFlg != 1}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.btn.download']}"
-					style="width : 10%;text-align: center  !important;">
-					<h:outputText rendered="#{table.pmDocument.hardCopyReq}"
-						value="#{lbl['lbl.sm.suppDoc.document.hdrCpyOnly']}"
-						style="float: left;white-space: normal;" />
-
-					<p:commandLink rendered="#{table.pmDocument.download}"
-						action="#{backingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
-						update=":form" ajax="false">
-						<p:fileDownload value="#{backingBean.file}" />
-						<p:graphicImage value="/css/images/design/download.png"
-							style="margin-right:2px;" />
-					</p:commandLink>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
-					style="width : 10%;">
-					<p:commandLink oncomplete="attachDlg1.show();return false;"
-						process="@this" partialSubmit="true" disabled="#{!backingBean.managedBean.claimTask}"
-						action="#{backingBean.assignSelectedSupportDoc(table)}"
-						rendered="#{table.verifiedFlg != 1}">
-						<p:graphicImage value="/css/images/design/upload.png"
-							style="margin-right:2px;" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"
-					style="width : 10%;">
-					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-						rendered="#{table.verifiedFlg != 1}"
-						style="float: left;white-space: normal;" />
-					<ui:repeat var="applDocsFile" value="#{table.smApplDocFiles}">
-						<ui:remove>
-							<p:commandLink value="#{applDocsFile.fileName}"
-								rendered="#{not empty table.smApplDocFiles}" ajax="false"
-								action="#{backingBean.downloadSuppDoc(applDocsFile.fileName,applDocsFile.filePath)}">
-								<p:fileDownload value="#{backingBean.file}" />
-							</p:commandLink>
-						</ui:remove>
-						<h:panelGroup rendered="#{not empty table.smApplDocFiles}">
-							<a href="#{DocumentRepositoryUtils.baseRepo}#{applDocsFile.filePath}#{applDocsFile.fileName}">#{backingBean.getShortFileName(applDocsFile.fileName)}</a>
-						</h:panelGroup>
-						<br />
-					</ui:repeat>
-				</p:column>
-			</p:dataTable> -->
-			<!-- datatable for mandatory support doc with record to display -->
+			<!-- dataTable for mandatory support doc with record to display -->
 			<p:dataTable var="table" value="#{backingBean.managedBean.missinDocsMandatory}" id="InquiriesMandatoryList" rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -206,7 +144,7 @@
 					</ui:repeat>
 				</p:column>
 			</p:dataTable>
-			<!-- datatable for mandatory support doc with no record to display(fix bug in primeface) -->
+			<!-- dataTable for mandatory support doc with no record to display(fix bug in primeface) -->
 			<p:dataTable var="" value="" id="mandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -235,7 +173,7 @@
 	                </p:row>
 				</p:columnGroup>
 			</p:dataTable>
-			<!-- datatable for non-mandatory support doc with record to display -->
+			<!-- dataTable for non-mandatory support doc with record to display -->
 			<p:dataTable var="table" value="#{backingBean.managedBean.missinDocsNonMandatory}" id="InquiriesNonMandatoryList" rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -309,7 +247,7 @@
 				</ui:repeat>
 				</p:column>
 			</p:dataTable>
-			<!-- datatable for non-mandatory support doc with record to display(to fix bug in primeface version) -->
+			<!-- dataTable for non-mandatory support doc with record to display(to fix bug in primeface version) -->
 			<p:dataTable var="" value="" id="nonMandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -339,6 +277,7 @@
 	                </p:row>
 				</p:columnGroup>
 			</p:dataTable>
+
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="onlineInquiryPanelId" 

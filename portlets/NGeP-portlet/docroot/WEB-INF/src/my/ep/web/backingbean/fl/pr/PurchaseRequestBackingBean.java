@@ -3833,17 +3833,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		// 36560-Start
-		Map<String, BigDecimal> extensionCodeCache = new HashMap<>();
-		double thresoldAmt;
-
-		FlItemSummaryReqDTO paidPaReq = new FlItemSummaryReqDTO();
-		List<Long> flFulfilmentRequestList;
-		paidPaReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		paidPaReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-		flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(paidPaReq);
-		// 36560-end
-		
+		double thresoldAmt = 0;
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -3851,21 +3841,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			
-			// 36560-Start
-			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
-			summReq.setExtensionCode(extensionCode);
-
-			BigDecimal sumAmt;
-
-			if (extensionCodeCache.containsKey(extensionCode)) {
-				sumAmt = extensionCodeCache.get(extensionCode);
-			} else {
-				sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
-				extensionCodeCache.put(extensionCode, sumAmt);
-			}
-			// 36560-End
-		    sumAmt = map.getValue().add(sumAmt);
+			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
+			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
+			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
 				RuleReqDTO ruleReqDTO = new RuleReqDTO();
 				//#26047 -- start

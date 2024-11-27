@@ -33,6 +33,11 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 		extends BaseReviewApplicationBackingBean<T> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public void setTabValue(int outputTab, String outputPageType) {
 		super.setTabValue(outputTab, outputPageType);
 
@@ -319,7 +324,7 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 					.getSupplierApplicationSO().retrieveEighthTab(reqDTO)
 					.getSmSupplierCategories();
 			
-			//#32809 - start - #30766
+			//#30766 & #34209 - START
 			getManagedBean()
 					.setDockYardFacilitiesVOList(
 							getCategoryFacilityVO(
@@ -340,7 +345,8 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY,
 									getManagedBean().getSmAppl(), facilities));
-			//#32809 - end - #30766
+			//#30766 & #34209 - END
+
 			getManagedBean().setLoadFacilityInfo(true);
 		}
 	}

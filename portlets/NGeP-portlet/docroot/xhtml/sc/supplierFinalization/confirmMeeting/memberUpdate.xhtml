@@ -1,0 +1,217 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="confirmMeeting" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error, info" />
+		<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
+		<c:choose>
+			<c:when
+				test="#{suppFinalMeetingBackingBean.managedBean.finalBB != null}">
+				<ui:param name="evalBB"
+					value="#{suppFinalMeetingBackingBean.managedBean.finalBB}"></ui:param>
+				<ui:param name="meetingBB"
+					value="#{suppFinalMeetingBackingBean.managedBean.finalBB.managedBean.meetingBB}"></ui:param>
+			</c:when>
+			<c:when
+				test="#{suppFinalMeetingBackingBean.managedBean.finalBiddingBB != null}">
+				<ui:param name="evalBB"
+					value="#{suppFinalMeetingBackingBean.managedBean.finalBiddingBB}"></ui:param>
+				<ui:param name="meetingBB"
+					value="#{suppFinalMeetingBackingBean.managedBean.finalBiddingBB.managedBean.meetingBB}"></ui:param>
+			</c:when>
+			<c:otherwise>
+				<ui:param name="meetingBB" value="#{suppFinalMeetingBackingBean}"></ui:param>
+			</c:otherwise>
+		</c:choose>
+		<ui:param name="taskName" value="#{meetingBB.managedBean.taskName}" />
+		<ui:param name="isCommitteeUpdatable"
+			value="#{meetingBB.isCommitteeEditable(taskName)}" />
+		<table width="100%" class="BtnSpacing">
+			<tr>
+				<td align="right"><p:commandButton widgetVar="backUpdate"
+						value="#{lbl['lbl.btn.back']}" process="@this"
+						onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+						style="float:left;"
+						action="#{meetingBB.navigateToUpdateMember('back')}" /> <p:commandButton
+						style="float: right" process="@this" widgetVar="confirmUpdate"
+						oncomplete="blockWidget.hide()" onclick="blockWidget.show()"
+						value="#{lbl['lbl.btn.update']}"
+						disabled="#{!isCommitteeUpdatable}"
+						action="#{meetingBB.navigateToUpdateMember('confirm')}" /></td>
+			</tr>
+		</table>
+		<div align="left" class="header-info header-spacing">
+			<ui:param name="scQt" value="#{meetingBB.managedBean.scQt}" />
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%;"><h:outputLabel
+							value="#{lbl['lbl.sc.qtn.no']}" /></td>
+					<td style="width: 27%;" class="header-info-text"><p:commandLink
+							process="@this" partialSubmit="true"
+							action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
+							<h:outputText value="#{scQt.qtNo}" escape="false" />
+						</p:commandLink></td>
+					<td style="width: 5%;"><h:outputLabel
+							value="#{lbl['lbl.sc.ptj']}" /></td>
+					<td style="width: 32%;" class="header-info-text">
+						#{meetingBB.retrievePTJByOrgProfileId (scQt.ownerOrgProfileId,
+						meetingBB.isQTStatusPublished(meetingBB.managedBean.currentStatusId)?scQt.publishDate
+						: scQt.createdDate)}</td>
+					<td style="width: 5%;"><h:outputLabel
+							value="#{lbl['lbl.sc.status']}" /></td>
+					<td style="width: 32%;" class="header-info-text">
+						#{(meetingBB.managedBean.scQtCommittee.recordStatusFlg==1)?lbl['lbl.txt.active']
+						: lbl['lbl.txt.inactive']}</td>
+				</tr>
+			</table>
+		</div>
+		<p:panel id="committeeHistoryId"
+			header="#{lbl['lbl.sc.header.committeelist']}" toggleable="true">
+			<ac:committeeHistoryPanel
+				historyPaginator="#{meetingBB.managedBean.historyPaginator}"
+				selectedHistory="#{meetingBB.managedBean.selectedCommitteeHistory}"
+				memberHistoryPaginator="#{meetingBB.managedBean.memberHistoryPaginator}"
+				onSelectHistory="onSelectHistory"
+				committeeName="#{meetingBB.managedBean.currentCommitteeType}"
+				backingBean="#{meetingBB}" isSFCommittee="true" />
+			<ui:remove>25037 note 670, isSFCommittee true</ui:remove>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.sc.header.update.committee']}"
+			styleClass="header-spacing" id="memberListPanel" toggleable="true">
+			<p:dataTable id="memberListTbl" var="committeeMember"
+				widgetVar="committeeMemberWidVar"
+				value="#{meetingBB.managedBean.committeeMembersList}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				rowKey="#{committeeMember}" update="@this" selectionMode="single"
+				rowIndexVar="index">
+				<ac:paginator for="memberListTbl" />
+				<p:column styleClass="td-check-box-spacing"
+					rendered="#{isCommitteeUpdatable}">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllMemChk"
+							value="#{meetingBB.managedBean.selectAllMembers}" disabled="true">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=memberListPanel])"
+								listener="#{meetingBB.selectAll(meetingBB.managedBean.selectAllMembers,meetingBB.managedBean.committeeMembersList)}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox id="selectMember"
+						value="#{committeeMember.selected}"
+						disabled="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=memberListPanel])" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.name']}"
+					style="white-space:normal;">
+					<h:outputText value="#{committeeMember.memberName}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+					<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.designation']}"
+					style="white-space:normal;">
+					<h:outputText value="#{committeeMember.designation}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					<h:outputText value="#{committeeMember.email}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
+					<h:outputText value="#{committeeMember.grade}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+						<ac:iconTooltip id="pnpTT#{index}"
+							value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.role']}">
+					<ui:fragment
+						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
+						<h:outputText
+							value="#{meetingBB.getFCMemberRole(committeeMember.memberRole)}" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary}">
+						<ui:param name="filteredRoles" value="#{fn:split('S',',')}" /> 
+						<p:selectOneMenu id="meetingRoleId" required="true"
+							label="#{lbl['lbl.sc.role']}"
+							value="#{committeeMember.memberRoleId}"
+							style="width: 110px;margin-bottom: 5px;"
+							disabled="#{!isCommitteeUpdatable}">
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{meetingBB.getRoleTypeDropdownValuesBasedOnPTJ(committeeMember.PNP,meetingBB.managedBean.scQt,committeeMember.pmUser, filteredRoles)}"
+								itemLabel="#{role.codeName}"
+								itemValue="#{role.pmParameter.parameterId}" />
+							<p:ajax event="change" update="memberListTbl" process="@this"
+								partialSubmit="true"
+								listener="#{meetingBB.changeMemberRole(index,meetingBB.managedBean.committeeMembersList)}"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+					</ui:fragment>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+					<p:selectOneMenu value="#{committeeMember.representativeTypeId}"
+						label="#{lbl['lbl.sc.representative.type']}"
+						style="width: 100%; margin-bottom: 5px; white-space:normal"
+						rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}"
+						disabled="#{!isCommitteeUpdatable}">
+						<f:selectItems
+							value="#{meetingBB.getRepresentativeTypeDropdownValues(meetingBB.managedBean.committeeType)}" />
+						<p:ajax event="change"
+							listener="#{meetingBB.representiveTypeChangedListener(committeeMember)}"
+							process="@this" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:dataTable>
+			<ui:fragment rendered="#{isCommitteeUpdatable}">
+				<div align="right" class="BtnSpacing">
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+						actionListener="#{meetingBB.addPopupAction}"
+						update="@([id$=memberDialogId])"
+						oncomplete="memberWidgetVar.show();" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						oncomplete="dlgPerformDel.show();" process="@this,memberListTbl"
+						partialSubmit="true"
+						update="@([id$=#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}])"
+						disabled="#{meetingBB.deleteselectedList(meetingBB.managedBean.committeeMembersList)}" />
+				</div>
+			</ui:fragment>
+			<ui:param
+				name="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"
+				value="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"></ui:param>
+			<ac:confirmationPopup
+				id="#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}"
+				widget="dlgPerformDel" loadingWidget="blockWidget"
+				okAction="meetingBB.committeeDeleteAction"
+				title="#{lbl['lbl.sc.committee.member.list']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=memberListPanel])" />
+		</p:panel>
+		<ac:scRemarkAndAttachment
+			remarkList="#{meetingBB.managedBean.cmtAppointmentApprovalRemarks}"
+			showAttachment="false" readonly="#{!isCommitteeUpdatable}" />
+		<ui:include src="addExistingCommittee.xhtml" />
+	</ui:define>
+</ui:composition>

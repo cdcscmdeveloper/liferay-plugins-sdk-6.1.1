@@ -9,6 +9,12 @@
 	
 	<ui:param name="isQTStatusPendingQtSubmission" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_QT_SUBMISSION}" />
 	<ui:param name="isQTStatusPendingScheduleAndBefore" value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
+	<!-- 25037 Start -->
+	<ui:param name="isQTStatusPendingSpecCommitteeApprovalAndBefore"
+		value="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL)}" />
+	<ui:param name="isQTStatusPendingScoringEndorsement"
+		value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT}" />
+	<!-- 25037 End -->
 	<ui:remove>#13344 Start</ui:remove>
 	<ui:param name="isCommitteeApprovalTask" value="#{qTDetailBB.isCommitteeApprovalTask(qTDetailBB.managedBean.taskName)}" />
 	<ui:remove>#13344 End</ui:remove>
@@ -109,17 +115,19 @@
 				<ui:remove>9019 end</ui:remove>
 				
 				<c:if test="#{!qTDetailBB.managedBean.readOnly}">
-				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
-					onclick="blockWidget.show();"
-					oncomplete="blockWidget.hide();"
-					update="@form"
-					rendered="#{isQTStatusPendingScheduleAndBefore or !qTDetailBB.managedBean.maintanceFlow}" 
-					disabled="#{!qTDetailBB.managedBean.ptjPresent}">
-					<ui:remove>9019 -start</ui:remove>
-					<f:param name="skipvalidation" value="0" />
-				</p:commandButton>
-				<ui:remove>9019 -end</ui:remove>
+					<!-- 25037 Start -->
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
+						action="#{qTDetailBB.saveQtDetailsAction}" process="@form"
+						partialSubmit="true" onclick="blockWidget.show();"
+						oncomplete="blockWidget.hide();" update="@form"
+						rendered="#{isQTStatusPendingSpecCommitteeApprovalAndBefore or !qTDetailBB.managedBean.maintanceFlow}"
+						disabled="#{!qTDetailBB.managedBean.ptjPresent}">
+						<!-- 25037 End -->
+						<ui:remove>9019 -start</ui:remove>
+						<f:param name="skipvalidation" value="0" />
+					</p:commandButton>
+					<ui:remove>9019 -end</ui:remove>
+
 
 				<c:choose>
 					<c:when test="#{qTDetailBB.managedBean.taskId ne null}">
@@ -160,17 +168,19 @@
 						</p:commandButton>
 							<ui:remove>9019 -end</ui:remove>
 					</c:when>
-					<c:otherwise>
+						<c:otherwise>
+							<!-- 25037 Start -->
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
-								action="#{qTDetailBB.submitQtDetailsFormMaintanace}"
+								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_PB_APPROVAL, QTStatusConst.QT_PENDING_LOA)}"
-								disabled="#{qTDetailBB.isQTStatusPublished(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
+								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
+								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
 								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
+							<!-- 25037 End -->								
 						</c:otherwise>
-				</c:choose>
+					</c:choose>
 
 					<!-- 26095@hatta - start -->
 					<c:if test="#{iscloseQTIfValidityPeriodExpiredAndStatusRelated}">
@@ -323,4 +333,11 @@
 		</p:dialog>
 	</c:if>
 	<!-- 25077, 32376 - End -->
+	<!-- 25037 Start -->
+	<ac:confirmationPopup id="confirmReendorseOnReassignmentId"
+		widget="confirmReendorseOnReassignmentPopup"
+		loadingWidget="blockWidget" title="#{lbl['lbl.sc.confirmation']}"
+		okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
+		content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
+	<!-- 25037 End -->
 </ui:composition>

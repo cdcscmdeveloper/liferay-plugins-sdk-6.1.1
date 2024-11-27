@@ -17,6 +17,7 @@ import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.common.ScRemark;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -36,6 +37,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -242,6 +244,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean ktReportGenerated;
 	private boolean disableJustifications;
 	// 28834 end
+	
+	// 25037 - start
+	private List<ScCommitteeMember> deletedMemberList;
+	private SupplierFinalizationMeetingBackingBean meetingBB;
+	// 25037 - end
 
 	/**
 	 * @return the activeIndex
@@ -2168,4 +2175,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableJustifications = disableJustifications;
 	}
 	// 28834 end
+	
+	// 25037 - start
+	public List<ScCommitteeMember> getDeletedMemberList() {
+		return deletedMemberList;
+	}
+
+	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
+		this.deletedMemberList = deletedMemberList;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	// 25037 - end
 }

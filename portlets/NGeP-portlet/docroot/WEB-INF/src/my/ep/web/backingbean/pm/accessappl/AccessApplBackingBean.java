@@ -802,6 +802,35 @@ public class AccessApplBackingBean extends
 		}
 		// #35584 - End
 		
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				log.error("cannot retrieve created dated ", e);
+				throw e;
+			}
+		}
+		// #35584 - End
+		
 		if(accessAppl.isBrandNew()){
 			IAccessApplSO accessApplSO = null;
 			try{

@@ -10,6 +10,7 @@
 */
 package my.ep.web.backingbean.sc.committee;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.persistence.criteria.JoinType;
 
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -61,6 +63,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
@@ -72,6 +75,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -79,12 +83,14 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.committee.CommitteManagedBean;
@@ -683,7 +689,8 @@ public class CommitteBackingBean extends
 		committeReqDTO.setScQtCommittee(scQtCommittee);
 		committeReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 		committeReqDTO.setRoleCode(getCommitteeRoleCode());
-		
+		committeReqDTO.setMaintanceFlow(StringUtils.isEmpty(this.getManagedBean().getTaskName()));// 25037
+
 		ScQt scQt = getManagedBean().getQt();
 		String qtNo = scQt.getQtNo();
 		String committeeTypeDesc = ParameterHelper.getInstance().getParameterDesc(
@@ -710,7 +717,7 @@ public class CommitteBackingBean extends
 					getManagedBean().setToBeDelCommitteMemebers(null);
 				}
 				//201123@asyrafhaziq_29316 - End				
-				if (StringUtils.isNotBlank(outCome)) {
+				if (StringUtils.equals(BpmOutcomeConst.BPM_SUBMIT, committeReqDTO.getOutcome())) {// 25037
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1086,37 +1093,15 @@ public class CommitteBackingBean extends
 	 */
 	public String viewHistoryAction(ScQtCommittee scQtCommittee) {
 		debugLogger("viewHistoryAction");
-		ScCommittee scCommittee = scQtCommittee.getScCommittee();
-		String committeeType = scCommittee.getCommitteeType().getParameterCode();
-		log.debug("Committee Type : " + committeeType);
-		
-		ICommitteSO committeSO;
-		try {
-			committeSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			
-			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			reqDTO.setCommitteeType(committeeType);
-			
-			PmUser fcSecretaryUser = null;
-			for (ScCommitteeMember scCommitteeMember : scCommittee.getScCommitteeMembers()) {
-				if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(scCommitteeMember.getMemberRole().getParameterCode())) {
-					fcSecretaryUser = scCommitteeMember.getPmUser();
-				}
-			}
-			reqDTO.setFcSecretaryUser(fcSecretaryUser);
-			
-			CommitteResDTO resDTO = committeSO.retrieveFCCommitteHistoryDetails(reqDTO);
-			if (resDTO.isSuccessful()) {
-				this.getManagedBean().setHistoryCommittees(resDTO.getCommittes());
-				this.getManagedBean().setSelectedHistoryCommittee(null);
-			}			
-
-		} finally {
-			committeSO = null;
-		}
-		
-		return NAV_TO_VIEW_HISTORY + "?faces-redirect=true";
+		// 25037 - start
+		List<ScCommitteeMemberHistory> histories = this.getCommitteeSO().getMergedHistory(scQtCommittee, false);
+		this.getManagedBean().setSelectedCommitteeHistory(null);
+		this.getManagedBean().setMemberHistoryPaginator(new Paginator(new ArrayList<QtCommitteeMemberBean>()));
+		this.getManagedBean().setCurrentCommitteeType(
+				this.getParameterDesc(scQtCommittee.getScCommittee().getCommitteeType()));
+		this.getManagedBean().setHistoryPaginator(new Paginator(histories));
+		// 25037 - end
+		return NAV_TO_VIEW_HISTORY;
 	}
 	
 	/**
@@ -2427,6 +2412,13 @@ public class CommitteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	}
 
+	// 25037 - start
+	private ICommitteSO getCommitteeSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+	}
+
+	// 25037 - end
+
 	/**
 	 * Gets the parameter so.
 	 *
@@ -2494,4 +2486,47 @@ public class CommitteBackingBean extends
 		return publishDate;
 		
 	}
+	// 25037 - start
+	/**
+	 * Populate selected history and display the currently selected member
+	 * history.
+	 * 
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public void onSelectHistory() throws IOException {
+		ScCommitteeMemberHistory history = this.getManagedBean().getSelectedCommitteeHistory();
+		List<QtCommitteeMemberBean> list = (List<QtCommitteeMemberBean>) (Object) history.deserializeList(history
+				.getCommitteeMembers());
+		CustomUtils.sortQtCommitteeMemberRole(list);
+		this.getManagedBean().setMemberHistoryPaginator(new Paginator(list));
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setScCommitteeId(history.getScCommittee().getCommitteeId());
+		CommitteResDTO resDTO = this.getCommitteeSO().retrieveCommitteDetailsByCommitteeId(reqDTO);
+		history.setScCommittee(resDTO.getCommittee());
+	}
+	// 25037 - end
+
+	// 25037 - start
+	/**
+	 * Evaluate active flag for scCommittee
+	 * 
+	 * @param committee
+	 * @return boolean isCommitteeRecordStatusActive
+	 */
+	public boolean isCommitteeRecordStatusActive(ScCommittee committee) {
+		if (null == committee) {
+			return false;
+		}
+		String committeeType = committee.getCommitteeType().getParameterCode();
+		List<ScQtCommittee> qtCommittees = committee.getScQtCommittees();
+		if (Arrays.asList(SourcingConstants.COMMITTEES_ORDER).contains(committeeType) && null != qtCommittees
+				&& qtCommittees.size() <= 1) {
+			return true;
+		}
+
+		return committee.isRecordStatus();
+	}
+	// 25037 - end
+
 }
