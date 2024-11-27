@@ -2277,6 +2277,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				getManagedBean().setFromReport(true);
 				retrieveSiteVisitInfo("");
 				getManagedBean().setFromReport(false);
+				changeActiveIndex(getManagedBean().getActiveIndex(), getManagedBean().getSelectedSvTemplate());
 				//9608 - Site Visit Grouping Enhancement - 28775 - end, 30550
 			} else {
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
@@ -3142,10 +3143,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param categoryL3Id
 	 */
 	public void setMachineList(SmSvTemplate template, long categoryL3Id){
-		if(!EntityHelper.isCollectionEmpty(template.getSmSvMachines())){
+		if(EntityHelper.isCollectionEmpty(template.getSmSvMachines())){
 			List<SmMachineCategory> machineCategoryLs = retrieveMachineDtlByApplIdAndCategoryL3Id(
 					getManagedBean().getSmSvTask().getSmAppl().getApplId(), categoryL3Id);
-			
+			template.setSmSvMachines(new ArrayList<SmSvMachine>());
 			if(!machineCategoryLs.isEmpty()){
 				for(SmMachineCategory machineCat : machineCategoryLs){
 					SmSvMachine svMachine = new SmSvMachine();
@@ -3464,7 +3465,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			for(SmSvWorker worker : template.getSmSvWorkers()){
 				String idNo = worker.getIdentificationNo();
-				if(worker.getIdentificationTypeId() == typeId && idNo.length() != SupplierManagementConst.IC_NO_LENGTH){
+				if(worker.getIdentificationTypeId() != null && worker.getIdentificationTypeId() == typeId 
+						&& idNo.length() != SupplierManagementConst.IC_NO_LENGTH){
 					throw new EpException(MessageConst.ERROR_722532, new String[] {idNo});
 				}
 			}
