@@ -122,7 +122,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private boolean viewAsPTJ;
 	private boolean viewAsSupplier;
 	private String supplierRole;
-	//end - #25396	
+	//end - #25396
+	
+	private String selectedDocNo;//Fix - #36608
 
 	public String getBackURL() {
 		return backURL;
@@ -1023,7 +1025,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				log.info(String.format("PM tracking diary search filter empty[%s=%s][%s=%s]", "docType", getSelectedDocType(), "docId", getSelectedDocId()));
 				return new SearchResultBean<PmTrackingDiary>();
 			}
-			
+
 			SearchFilterBean searchFilterBean1 = new SearchFilterBean(
 					"docType", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocType());
@@ -1039,18 +1041,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			SearchFilterBean searchFilterBean4 = new SearchFilterBean(
 					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
-		
+			
+			//Start Fix - #36608
+			SearchFilterBean searchFilterBean5 = new SearchFilterBean("docNo", 
+					SearchOperator.OPERATOR_EQUALS.value(), getSelectedDocNo(), SearchCondition.CONDITION_AND.value());
+					
 			BaseSearchFilterBean searchFilterBeanAnd1 = new SearchMultiFilterBean(
 					searchFilterBean1, searchFilterBean2);
 			BaseSearchFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(
 					searchFilterBean3, searchFilterBean4);
+			if(getSelectedDocNo() != null){
+				searchBean.getDataFilterBeans().add(searchFilterBean5);
+			}
+			//End Fix - #36608
 
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
- 
 			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
-			
+
 			if (isSearchBeanEmpty) {
 				
 				if (isFilterBySupplier()) {
@@ -1100,12 +1109,12 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						}
 					}
 					// #25396 - end
-
+					
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 				return resDTO.getResultBean();
 			} else {
 				return new SearchResultBean<PmTrackingDiary>();
@@ -1222,6 +1231,16 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setSupplierRole(String supplierRole) {
 		this.supplierRole = supplierRole;
 	}
+
+	//Start Fix - #36608
+	public String getSelectedDocNo() {
+		return selectedDocNo;
+	}
+
+	public void setSelectedDocNo(String selectedDocNo) {
+		this.selectedDocNo = selectedDocNo;
+	}
+	//End Fix - #36608
 	
 	//end - #25396
 }
