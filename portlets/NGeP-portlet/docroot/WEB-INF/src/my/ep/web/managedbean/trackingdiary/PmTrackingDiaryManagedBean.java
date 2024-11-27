@@ -128,14 +128,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	
 	private String selectedDocNo;//Fix - #36608
 
-	public String getDocNo() {
-		return docNo;
-	}
-
-	public void setDocNo(String docNo) {
-		this.docNo = docNo;
-	}
-
 	public String getBackURL() {
 		return backURL;
 	}
@@ -1068,9 +1060,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
-			if(getDocNo() != null){
-				searchBean.getDataFilterBeans().add(searchFilterBean5);
-			}		
 			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 
 			if (isSearchBeanEmpty) {
@@ -1127,9 +1116,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				if(getDocNo() != null){
-					setDocNo(null);
 				}
 				return resDTO.getResultBean();
 			} else {
