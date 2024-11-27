@@ -2367,7 +2367,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setRoleCode(checkRolesForAuditTrail(this.getManagedBean().getScQt().getQtId()));
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
-					||auditResDTO.getRoleCode().equals(RoleCode.PBB_SECRETARY.value())){
+					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
 				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
 			}
 			
@@ -2449,11 +2449,11 @@ if (CollectionUtils.isNotEmpty(
 				if (null != committeeResDTO ){
 					role = RoleCode.QCB_SECRETARY.value();
 				}				
-			} else if (pmRoles.contains(RoleCode.PBB_SECRETARY.value())) {
+			} else if (pmRoles.contains(RoleCode.PPB_SECRETARY.value())) {
 				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD);
 				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
 				if (null != committeeResDTO ){
-					role = RoleCode.PBB_SECRETARY.value();
+					role = RoleCode.PPB_SECRETARY.value();
 				}
 			} else if (pmRoles.contains(RoleCode.FPB_SECRETARY.value())) {
 				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
