@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -187,6 +188,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -5236,8 +5238,9 @@ public void saveComplianceSample() {
 				//#25138-Ahmaa-End
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				//#29187 Start Vinod
-				for(TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-					if(answer.getUserScore()!=null && answer.getCompliance()!=null && answer.getUserScore().intValue()!=0 && !answer.getCompliance()){
+				for (TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+					if (answer.getUserScore() != null && answer.getCompliance() != null
+							&& answer.getUserScore().intValue() != 0 && !answer.getCompliance()) {
 						answer.setUserScore(new BigDecimal(0));
 					}
 				}
@@ -10164,15 +10167,13 @@ private void retriveCommitteeRemarksList(){
 				log.info("============displayitemsamplerequired===");
 			List<ScQtSampleItem> sampleItemlist=this.getManagedBean().getSampleItemList();
 			for(ScQtSampleItem item:sampleItemlist){
-				/*#29187 Start Vinod*/
-				if(item.getCompliance()!=null  
-					&& item.getCompliance().equals(Boolean.FALSE)){
-					if(item.getRemark().equals(null)
-							|| item.getRemark().equals("")
-							|| item.getRemark().equals(" "))
+					/* #29187 Start Vinod */
+					String remark = item.getRemark();
+					boolean isCompliance = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
+					if (isCompliance && StringUtils.isEmpty(remark)) {
 						throw new EpException(MessageConst.ERROR_775180);
-				}
-				/*#29187 End Vinod*/
+					}
+					/* #29187 End Vinod */
 			}
 			reqDtO.setSampleComplianceList(sampleItemlist);
 			}//#11104-End
@@ -10597,16 +10598,15 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
-					//#29187 Start Vinod
-					if(QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
-						&& tplSpecAnswer.getCompliance()!=null  
-						&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE)){
-						if(tplSpecAnswer.getUserRemark()==null
-								|| tplSpecAnswer.getUserRemark().equals("")
-								|| tplSpecAnswer.getUserRemark().equals(" "))
+					// #29187 Start Vinod
+					boolean isCompliance = tplSpecAnswer.getCompliance() != null
+							&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+					String remark = tplSpecAnswer.getUserRemark();
+					if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
+							&& isCompliance && StringUtils.isEmpty(remark)) {
 						throw new EpException(MessageConst.ERROR_775180);
 					}
-					//#29187 End Vinod
+					// #29187 End Vinod
 				}
 			}
 			//#29187 Start Vinod
@@ -17580,7 +17580,7 @@ private void retriveCommitteeRemarksList(){
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug
 			}
 			//#28784 add weightage to calculation - end
 			divNum = divNum.add(totalScore);
@@ -17619,7 +17619,7 @@ private void retriveCommitteeRemarksList(){
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug//#28784 sonarqube
 			}
 			divNum = divNum.add(totalScore);
 			//#28784 add weightage to calculation - end
@@ -17679,7 +17679,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setOtherchecklistScore(String.valueOf(totalNum.toPlainString()));
 			totalTechScore = String.valueOf(resDTO.getTechScore());
 			this.getManagedBean().setItemTsPercentage(resDTO.getTechScore().multiply(this.getManagedBean().getMaxItemTsPercentage())
-					.divide(this.getManagedBean().getMaxItemTsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+					.divide(this.getManagedBean().getMaxItemTsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			if (resDTO.isGenerateSuppliers()) {
 				presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
 						this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
@@ -17690,7 +17690,7 @@ private void retriveCommitteeRemarksList(){
 						new FacesScopes()
 						.getUserLocale()));
 				this.getManagedBean().setItemAllOtherElementsPercentage(totalNum.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
-						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			}
 		} finally {
 			evaluationSO = null;
@@ -17715,7 +17715,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setItemAllOtherElementsPercentage((new BigDecimal(this.getManagedBean().getOtherchecklistScore())
 			.add(new BigDecimal(this.getManagedBean().getDemoScore())))
 			.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
-			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 		}
 		finally {
 
@@ -18842,16 +18842,18 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public boolean checkUOMandQuantityRender() {
 		boolean render = true;
+		Long statusId = null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus() ? this.getManagedBean().getScQt()
+				.getQtStatus().getStatusId() : Long.MIN_VALUE;
 
-		if (null != this.getManagedBean().getScQt()
-				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
-						this.getManagedBean().getScQt().getQtStatus().getStatusId())) {
+		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(statusId)) {
 			render = false;
 		}
 		return render;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to display Mandatory spec and compliance
 	 * column.
@@ -18861,13 +18863,14 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public boolean displayMandatorySpecAndComplianceColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if (null != this.getManagedBean().getScQt()
-				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
-						this.getManagedBean().getScQt().getQtStatus().getStatusId())) {
+		Long statusId = null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus() ? this.getManagedBean().getScQt()
+				.getQtStatus().getStatusId() : Long.MIN_VALUE;
+		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(statusId)) {
 			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(tplSpecAnswer.getTplSpecQuestion()
-						.getQuestionType()) && tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(questionType) && isMandatorySpec) {
 					manSpec = true;
 					break;
 				}
@@ -18876,6 +18879,8 @@ private void retriveCommitteeRemarksList(){
 		return manSpec;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to show conformation popup.
 	 * 
@@ -18886,7 +18891,9 @@ private void retriveCommitteeRemarksList(){
 		boolean isCompliance = false;
 		try {
 			for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
-				if (answer.getCompliance() != null && Boolean.FALSE.equals(answer.getCompliance())) {
+				boolean isNotCompliance = answer.getCompliance() != null
+						&& Boolean.FALSE.equals(answer.getCompliance());
+				if (isNotCompliance) {
 					isCompliance = true;
 					break;
 				}
@@ -18905,6 +18912,8 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to display Zone.
 	 * 
@@ -18912,17 +18921,20 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderZoneForFinancial() {
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES)
-				.contains(this.getManagedBean()
-				.getScQt().getQtStatus().getStatusId())
-				&& (QTConstants.FINANCIAL_EVALUATION
-						.equalsIgnoreCase(getManagedBean().getCheckListType()) || QTConstants.TECHNICAL_EVALUATION
-						.equalsIgnoreCase(getManagedBean().getCheckListType()))) {
+		Long statusId = null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus() ? this.getManagedBean().getScQt()
+				.getQtStatus().getStatusId() : Long.MIN_VALUE;
+		String checklistType = getManagedBean().getCheckListType();
+		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(statusId)
+				&& (QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(checklistType) || QTConstants.TECHNICAL_EVALUATION
+						.equalsIgnoreCase(checklistType))) {
 			return false;
 		}
 		return true;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to get dropdown values for Compliance.
 	 * 
@@ -18947,6 +18959,8 @@ private void retriveCommitteeRemarksList(){
 		return selectItems;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to popup confirmation if the item compliance is false.
 	 * 
@@ -18957,7 +18971,9 @@ private void retriveCommitteeRemarksList(){
 		boolean isCompliance = false;
 		try {
 			for (ScQtSampleItem sampleItem : this.getManagedBean().getSampleItemList()) {
-				if (sampleItem.getCompliance() != null && Boolean.FALSE.equals(sampleItem.getCompliance())) {
+				boolean isNotCompliance = sampleItem.getCompliance() != null
+						&& Boolean.FALSE.equals(sampleItem.getCompliance());
+				if (isNotCompliance) {
 					isCompliance = true;
 					break;
 				}
@@ -18976,6 +18992,8 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to render disqualified or not.
 	 * 
@@ -18983,10 +19001,13 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderDisqialified() {
-		if (null != this.getManagedBean().getDisqualifiedSuppliersDM()
-				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
-			for (ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
-				if (null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()) {
+		List<ScQtEvaluationResultDtl> disqualifiedList = null != this.getManagedBean().getDisqualifiedSuppliersDM()
+				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList() ? this.getManagedBean()
+				.getDisqualifiedSuppliersDM().getList() : null;
+		if (CollectionUtils.isEmpty(disqualifiedList)) {
+			for (ScQtEvaluationResultDtl disQualDtl : disqualifiedList) {
+				boolean isDisqualifiedCompliance = null != disQualDtl.isCompliance() && !disQualDtl.isCompliance();
+				if (isDisqualifiedCompliance) {
 					return true;
 				}
 			}
@@ -18994,6 +19015,8 @@ private void retriveCommitteeRemarksList(){
 		return false;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to render diswualified column.
 	 * 
@@ -19001,13 +19024,15 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl) {
-		if (null != evalResultDtl.isCompliance()
-				&& !evalResultDtl.isCompliance()) {
+		boolean isDisqualified = null != evalResultDtl.isCompliance() && !evalResultDtl.isCompliance();
+		if (isDisqualified) {
 			return true;
 		}
 		return false;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to display mandatory spec and compliance
 	 * columns for sample items.
@@ -19016,15 +19041,20 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecAndComplianceColumnSample() {
-		for (ScQtSampleItem sample : this.getManagedBean().getSampleItemList()) {
-			if (sample.getScRequestItem() != null && sample.getScRequestItem().getTplSpecQuestion() != null
-					&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()) {
+		List<ScQtSampleItem> sampleItemList = this.getManagedBean().getSampleItemList();
+		for (ScQtSampleItem sample : sampleItemList) {
+			boolean isMandatorySpecForSample = sample.getScRequestItem() != null
+					&& sample.getScRequestItem().getTplSpecQuestion() != null
+					&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample();
+			if (isMandatorySpecForSample) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to get spec master details and checking for sample items.
 	 * 
@@ -19046,16 +19076,21 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	private void checkMandatorySpecForSample(ScQtSampleItem item, TemplateSpecResDTO resDTO) {
 		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
 			for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-				if (question.isMandatorySpec()) {
+				boolean isMandatorySpec = question.isMandatorySpec();
+				if (isMandatorySpec) {
 					item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
 				}
 			}
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	private void adjustUserScoreBasedOnCompliance(ScQtSampleItem item) {
 		BigDecimal userScore = item.getUserScore();
 		Boolean compliance = item.getCompliance();
@@ -19065,20 +19100,21 @@ private void retriveCommitteeRemarksList(){
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to disable and enable the UserScore in screen and also if
 	 * disable this method will set default value for UserScore 0.
 	 * 
-	 * @param itm
+	 * @param sampleItem
 	 * @return
 	 */
-	public void onchangeCompliance(ScQtSampleItem itm) {
+	public void onchangeCompliance(ScQtSampleItem sampleItem) {
 		for (ScQtSampleItem item : this.getManagedBean().getSampleItemList()) {
-			if (itm.getSampleItemId().compareTo(item.getSampleItemId()) == 0 && itm.getCompliance() != null) {
-				if (itm.getCompliance() == Boolean.FALSE) {
-					item.setUserScore(BigDecimal.ZERO);
-				} 
-			} 
+			if (sampleItem.getSampleItemId().compareTo(item.getSampleItemId()) == 0 && sampleItem.getCompliance() != null
+					&& sampleItem.getCompliance() == Boolean.FALSE) {
+				item.setUserScore(BigDecimal.ZERO);
+			}
 		}
 	}
 

@@ -86,30 +86,30 @@
 		<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 			<p:commandButton immediate="true" id="backButton"
 				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-				process="@this" style="float:left;" rendered="#{isEditable}"
+				process="@this" style="float:left;" rendered="#{isEditable and !simpleQuoteBackingBean.managedBean.trackingDairyView}"
 				action="#{simpleQuoteBackingBean.backToPrevious}"
 				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
-			</p:commandButton>
+			</p:commandButton><ui:remove>25790</ui:remove>
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
-				process="@all" update="@form" rendered="#{isEditable}" />
+				process="@all" update="@form" rendered="#{isEditable and !simpleQuoteBackingBean.managedBean.trackingDairyView}" /><ui:remove>25790</ui:remove>
 
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-				update="@form" process="@all" rendered="#{isEditable}">
+				update="@form" process="@all" rendered="#{isEditable  and !simpleQuoteBackingBean.managedBean.trackingDairyView}">
 				<ui:param name="action" value=""></ui:param>
 				<f:setPropertyActionListener
 					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
 					value="#{action}" />
-			</p:commandButton>
+			</p:commandButton><ui:remove>25790</ui:remove>
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-				process="@this" partialSubmit="true" rendered="#{isEditable}" />
+				process="@this" partialSubmit="true" rendered="#{isEditable  and !simpleQuoteBackingBean.managedBean.trackingDairyView}" /><ui:remove>25790</ui:remove>
 		</c:if>
 	</div>
 

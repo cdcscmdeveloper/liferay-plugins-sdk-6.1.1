@@ -3382,6 +3382,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	private void setWorkshopTemplateWorkers(SmSvTemplate svTemplate, SmFacility facility){
+		if (!EntityHelper.isCollectionEmpty(svTemplate.getSmSvWorkers())){
+			return;
+		}
 		svTemplate.setSmSvWorkers(new ArrayList<SmSvWorker>());
 		Long templateL3 = svTemplate.getSuppCategory().getPmCategoryL3().getCategoryL3Id();
 		for (SmSupplierCategoryFacility catFac : facility.getSmSupplierCategoryFacilities()) {
