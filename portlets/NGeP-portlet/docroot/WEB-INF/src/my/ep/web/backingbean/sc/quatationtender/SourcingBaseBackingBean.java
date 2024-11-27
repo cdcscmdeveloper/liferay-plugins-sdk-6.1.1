@@ -997,11 +997,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.info("-----------after set header hatta .rtf only ----------");
 			log.info(" isDirectDownload "+isDirectDownload);
 			log.info(" filename=" + attachment.getFileName());
-			String finalFileName = attachment.getFileName() + ".rtf"; 
+			String finalFileName = attachment.getFileName(); 
+			log.info(" finalFileName=" + finalFileName);
 			if (!isDirectDownload) {
-				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
-				res.setHeader("Content-Transfer-Encoding", "binary");
-				res.setContentType(getMimeType(finalFileName)); // asal
+				res.setContentType("application/rtf");
+				res.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\"");
+
 				res.flushBuffer();
 				out = res.getOutputStream();
 	     	}
