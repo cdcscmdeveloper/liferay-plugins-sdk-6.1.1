@@ -11913,6 +11913,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * MOF Supplier
 	 * 
 	 * @param supplierId
+	 * @param mofNo
 	 */
 	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
 		log.info("[#26282] onViewDisciplinaryAction");
@@ -11930,6 +11931,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				smSupplier = new SmSupplier();
 				// set supplier id
 				smSupplier.setSupplierId(supplierId);
+				smSupplier.setFlagSupplier(true);
+				smSupplier.setFlagDASuppProfile(true);
 			} else {
 				log.info("Invalid supplier id!!!");
 				throw new EpException(MessageConst.ERROR_760041);

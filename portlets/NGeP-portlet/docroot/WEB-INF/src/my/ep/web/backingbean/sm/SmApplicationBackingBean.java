@@ -187,6 +187,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -13309,6 +13310,7 @@ public class SmApplicationBackingBean extends
 						.getSmApplSectionReviews()) {
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						rev.setChangedBy(getUserIdSessionFromLoginId());//#35759
 						getManagedBean().setPoSecReview(rev);
 						containsSecRev = true;
 					}
@@ -18023,4 +18025,28 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//#36587 END
+	
+	//#36594 - Start
+	/**
+	 * Set terms and condition message with parameter.
+	 * 
+	 * @return String
+	 */
+	public String setRenewalTnc(String applicationType){
+		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod);
+		String label = "";
+		
+		if(applicationType.equalsIgnoreCase("R")){
+			label = "lbl.sm.renewMof.descData";
+		}else if(applicationType.equalsIgnoreCase("N")){
+			label = "lbl.sm.upgradeMof.descData";
+		}
+		
+		return ResourceBundleUtils.getMessage(
+				label, new String[] {word , String.valueOf(renewalPeriod)},
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
+	}
+	//#36594 - End
 }
