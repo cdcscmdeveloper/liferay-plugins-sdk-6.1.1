@@ -758,6 +758,7 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
 	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
+	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
 	
 	public String getCOMPANY_TYPE_CLBG() {
@@ -1510,6 +1511,10 @@ public class SupplierManagementConst {
 
 	public String getAuTabIdAdminInfo() {
 		return AU_TAB_ID_ADMIN_INFO;
+	}
+
+	public static String getSupplierApplSearchUrl() {
+		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
 

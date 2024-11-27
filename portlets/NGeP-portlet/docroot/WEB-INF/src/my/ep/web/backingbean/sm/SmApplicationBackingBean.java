@@ -1292,31 +1292,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					"SmApplicationBackingBean.proceedToApplication", "getCurrentSupplier-1", 
 					subStartTime); //20211005@fadhli - #31754
 			boolean cannotProceedAlertMsg = false;
-			//26238 - start 28144
-			if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
-				if (currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-2", 
-							subStartTime); //20211005@fadhli - #31754
-					
-					if(discList != null && discList.size() > 0){
-						for(SmDisciplinaryAction disc : discList){
-							if(disc.isBumiputeraCancel()){
-								throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-										null));
-							}else if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)){
-								if(disc.isSuspendRegistration() || disc.isCancelRegistration() || disc.isBlacklistOwner()){
-									throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-											null));
-								}
-							}
-						}
-					}
-				}
-			} 
-			//26238 - end 28144
+			//26238, 28144
+			checkActiveDisciplinaryAction(currSupp, applicationType);
 			
 			if (applicationType
 					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -1459,32 +1436,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmCommonUtil.redirectToPage(
 							"/xhtml/sm/payment/portletViewMode.xhtml", "", null, null);
 				}
-				
-				//26238 - start
-				//check disciplinary action on supplier
-				if (currSupp != null){
-					subStartTime = System.currentTimeMillis();
-					List<SmDisciplinaryAction> activeDisc = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-					SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
-							"SmApplicationBackingBean.proceedToApplication", "retrieveActiveSmDisciplinaryActionBySupplier-9", 
-							subStartTime); //20211005@fadhli - #31754
-//					SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-					if(activeDisc != null && activeDisc.size() > 0){
-						for(SmDisciplinaryAction disciplinary : activeDisc){
-							if(disciplinary.isSuspendRegistration() 
-									|| disciplinary.isCancelRegistration()
-									|| disciplinary.isBlacklistOwner()){
-								FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-										SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-												new String[] { labelNameVal })));
-								
-								//27848
-								return SmApplicationUtil.setStringNavigationForApplTnCPage(applicationType);
-							}
-						}					
-					}
-				}							
-				//26238 - end
 
 				// #29583 - start
 				/* comment - this code does not exist in prd
@@ -1763,14 +1714,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().getSmAppl().setSmStaffTotals(
 					SmApplicationUtil.getStaffList(smAppl));
 		}
-
-		//#26238 Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - Start
-		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
-			SmApplicationUtil.enableBankSectionOnly(getManagedBean());
-		}
-		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
-		// Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration - End
-
+		
 		if (!fromBpm) {
 			setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 
@@ -2825,6 +2769,42 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				subStartTime); //20211005@fadhli - #31754
 		return SmApplicationUtil.setNavigationForAppl(applicationType);
 
+	}
+	
+	//#26238
+	private void checkActiveDisciplinaryAction(SmSupplier currSupp, String applType){
+		if (currSupp == null){
+			return;
+		}
+		long startTime = System.currentTimeMillis();
+		String sessionId = ((PortletRequest) FacesContext.getCurrentInstance()
+				.getExternalContext().getRequest()).getRequestedSessionId(); 
+		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
+		SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
+				"SmApplicationBackingBean", "checkActiveDisciplinaryAction", startTime); //20211005@fadhli - #31754
+		if (EntityHelper.isCollectionEmpty(discList)){
+			return;
+		}
+		String errorDA = SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action", null);
+		boolean hasCannotLoginDA = SmApplicationUtil.hasCannotLoginDA(discList);
+		List<String> disableApplTypes = Arrays.asList(
+				ParameterConst.NEW_SM_APPLN_FOR_MOF, ParameterConst.NEW_SM_APPLN_FOR_BUMI, 
+				ParameterConst.NEW_SM_APPLN_FOR_RENEW, ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES);
+		if (hasCannotLoginDA && disableApplTypes.contains(applType)){
+			throw new EpException(errorDA);
+		}
+		if (ParameterConst.NEW_SM_APPLN_FOR_BUMI.equalsIgnoreCase(applType)){
+			for(SmDisciplinaryAction disc : discList) {
+				if(disc.isBumiputeraCancel()){
+					throw new EpException(errorDA);
+				}
+			}
+		}
+		//#26238 Bug #28847 - Defaulted side menu to bank account side menu if DA suspend registration
+		if(ParameterConst.NEW_SM_APPLN_FOR_UPDATE.equalsIgnoreCase(applType)){
+			SmApplicationUtil.enableBankSectionOnly(getManagedBean(), discList);
+		}
+		getManagedBean().setTabActiveIndex(getManagedBean().getEditVO().isDisciplinary() ? 4 : 0);
 	}
 	
 	//#3460 - Start
@@ -4467,13 +4447,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				validSave = SmApplicationUtil.validateBasicInfoBeforeSave(
 						validSave, getManagedBean(), currentTab);
-				//#27853
-				if (!getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
-					//START 27748 - SM Disciplinary action - 26238
-					if(getManagedBean().getEditVO()!=null && !getManagedBean().getEditVO().isDisciplinary()){
-						SmApplicationUtil.validateCoordinate(getManagedBean());
-					}
-					//END 27748
+				//#27853, 27748 - SM Disciplinary action - 26238
+				boolean isDisciplinary = getManagedBean().getEditVO()!= null && getManagedBean().getEditVO().isDisciplinary();
+				if (!isDisciplinary && !getManagedBean().isApproverUser() && !getManagedBean().isPoUser()) {
+					SmApplicationUtil.validateCoordinate(getManagedBean());
 				}
 			}
 			break;
@@ -4571,7 +4548,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	private void validateBeforeSubmit() {
 		//START 26238 -  Disciplonary action - 27748
-		SmApplicationUtil.enableBankSectionOnly(getManagedBean());
+		SmApplicationUtil.enableBankSectionOnly(getManagedBean(), null);
 		if(getManagedBean().getEditVO()!=null && getManagedBean().getEditVO().isDisciplinary()){
 			return;
 		}
@@ -5010,6 +4987,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
+		
+		//#36483
+		if(getManagedBean().getBasicCompanyFacility().getOwnershipType().equals(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			SmApplicationUtil.getInstance().cloneAddress(
+					getManagedBean().getBasicCompanyFacility().getSmAddress(),
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0).getSmAddress());
+		}
+		//#36483
+		
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		
 		// 32064 - Start
@@ -8023,10 +8010,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		// set muslim flg
 		//#29856 - start
-		if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase
+		/*if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase
 				(getManagedBean().getSelectedShareHolder().getIdentificationType().getParameterCode())){
-			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);*/ //Commented for #31130
 		//#29856 - end
+		//#31130 --START 12/11/24 -set muslim flg to null when country other than Malaysia
+		if(!getManagedBean().getSelectedShareHolder().getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);
+		//#31130 --END 12/11/24
 		} else{
 			if(getManagedBean().getSelectedShareHolder().getMuslimFlgTrans()== null){
 				getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
@@ -13388,6 +13380,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.getSmApplSectionReviews()) {
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						rev.setChangedBy(getUserIdSessionFromLoginId());//#35759
 						getManagedBean().setPoSecReview(rev);
 						containsSecRev = true;
 					}
@@ -15086,8 +15079,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			businessType = true;
 		}
 		//end #30043
-		if (EntityHelper.isCollectionEmpty(getManagedBean()
-				.getActiveCategoryList())) {
+		//#28775 - Site Grouping Enhancement
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getActiveCategoryList())
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			applCategories = getManagedBean().getSmAppl()
 					.getSmSupplierCategories();
 		} else {

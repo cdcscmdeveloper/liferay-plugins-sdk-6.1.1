@@ -1078,52 +1078,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-	
-	// start - 36615
-	/**
-	 * Get status select items by module and doc type for dropdown.
-	 * 
-	 * @param moduleCode
-	 *            the module code
-	 * @param docTypes
-	 *            the documents type
-	 * @param searchBean
-	 *            the SearchBean instance
-	 * @return array of SelectItem
-	 */
-	public SelectItem[] getStatusDropdownValuesBySearchBean(String moduleCode, List<SelectItem> docTypes,
-			SearchBean<PmStatusDesc> searchBean) {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
-		List<PmStatusDesc> combinedStatusDescs = new ArrayList<>();
-
-		try {
-			for (SelectItem item : docTypes) {
-				if (item.getValue() != null) {
-					List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(moduleCode,
-							item.getValue().toString(), searchBean);
-					combinedStatusDescs.addAll(statusDescs);
-				}
-			}
-
-			items = new SelectItem[combinedStatusDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			int i = 1;
-			for (PmStatusDesc statusDesc : combinedStatusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
-			}
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, SLALogConstant.COMMON_BASE_BACKINGBEAN,
-					"", SLALogConstant.COMMON_GET_STATUSDROPDOWNVALUES_SEARCHBEAN, getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		}
-
-		return items;
-	}
-
-	// end - 36615
 
 	/**
 	 * Get Status description by status id.
@@ -2401,34 +2355,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
-	private String[] sortOutcomes(String[] outcomes) {
-		// 25037(29253) - start
-		if (null == outcomes) {
-			return ArrayUtils.EMPTY_STRING_ARRAY;
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
 		}
-		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
-			// last index will appear on the far right,
-			// if outcome not ranked, order come as is,
-			// existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
 
-			@Override
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});
-		String[] bpmOutcomes = new String[bpmActions.size()];
-		return bpmActions.toArray(bpmOutcomes);
-		// 25037(29253) - end
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
 	}
 
 	/**
@@ -4421,7 +4360,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	/**
 	 * Processes the given string by replacing newline characters with HTML line
 	 * break tags and encoding the < and > characters to their HTML entity
-	 * equivalents. If the string is null or empty, it returns null.
+	 * equivalents. If the string is null, empty or contains only whitespace, it returns null.
 	 * 
 	 * @param value
 	 *            the string to be processed; may be null
@@ -4430,13 +4369,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-		if (value == null || value.isEmpty()) {
+		if (value == null || value.trim().isEmpty()) {
 			return null;
 		}
 		// Replace < and > with their HTML entity equivalents
 		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
 		// Replace any newline characters (\r\n or \n) with <br/>
-		return formatted.replaceAll("(\r\n|\n)", "<br />");
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
 	// #28854,#25000 - End
 	

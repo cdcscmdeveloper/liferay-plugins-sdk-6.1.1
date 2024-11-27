@@ -27,7 +27,6 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -70,8 +69,6 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
 
-	private transient Map<Integer, NavigationAction> navigationActions = createNavigationActions();
-
 	/**
 	 * Throw exception for AuditTrails
 	 */
@@ -100,11 +97,12 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 */
 	public void redirectToAuditTrailsViews(Long docId) throws AuditTrailRedirectException {
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
+		int activeIndex = 0;
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setBackURL(fc.getViewRoot().getViewId());
-		navigateToGeneralInfoTab();
+		onTabMenuChangeAction(activeIndex);
 
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/sc/quatationtender/audit/auditTrailDetailsMain.xhtml");
@@ -120,100 +118,10 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
-
+	
+	
 	/**
 	 * #35500 To navigate to the selected tab
-	 * 
-	 */
-	public interface NavigationAction {
-		/**
-		 * navigate
-		 */
-		void navigate();
-	}
-
-	/**
-	 * Navigate Tab Index
-	 * 
-	 * @return Map
-	 */
-	private Map<Integer, NavigationAction> createNavigationActions() {
-		Map<Integer, NavigationAction> actions = new HashMap<>();
-
-		// Array of navigation methods
-		NavigationAction[] navigationTabActions = { new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToGeneralInfoTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToBriefingSiteVisitTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToSupplierListTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToDeskOfficerAssistantTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToDeskOfficerTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToSpecCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToEvalCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToTechCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToFinanceCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToOpenCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToQuotCommitteeAppointTab();
-			}
-		}, new NavigationAction() {
-			@Override
-			public void navigate() {
-				navigateToProcBoardAppointTab();
-			}
-		} };
-
-		// Populate the map using a loop
-		for (int i = 0; i < navigationTabActions.length; i++) {
-			actions.put(i, navigationTabActions[i]);
-		}
-
-		return actions;
-	}
-
-	/**
-	 * Navigate Tab changes
-	 * 
 	 * @param activeIndex
 	 */
 	public void onTabMenuChangeAction(Integer activeIndex) {
@@ -222,125 +130,59 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
 		if (previousIndex != activeIndex) {
-			navigateToTab(activeIndex);
+			switch (activeIndex) {			
+			case 0:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
+				break;
+			case 1:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
+				break;
+			case 2:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
+				break;
+			case 3:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
+				break;
+			case 4:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
+				break;
+			case 5:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
+				break;
+			case 6:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
+				break;
+			case 7:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
+				break;
+			case 8:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
+				break;
+			case 9:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
+				break;
+			case 10:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+				break;
+			case 11:
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+				break;
+			default:				
+				break;
+			}
 			this.getManagedBean().setActiveIndex(activeIndex);
+			reloadTabData();
 		} else {
 			RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
 		}
 	}
-
-	private void navigateToTab(Integer activeIndex) {
-		NavigationAction action = navigationActions.get(activeIndex);
-		if (action != null) {
-			action.navigate();
-		}
-	}
-
-	private void navigateToGeneralInfoTab() {
-		log.info("navigateToGeneralInfoTab");
+	
+	private void reloadTabData() {
 		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToBriefingSiteVisitTab() {
-		log.info("navigateToBriefingSiteVisitTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToSupplierListTab() {
-		log.info("navigateToSupplierListTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToDeskOfficerAssistantTab() {
-		log.info("navigateToDeskOfficerAssistantTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToDeskOfficerTab() {
-		log.info("navigateToDeskOfficerTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToSpecCommitteeAppointTab() {
-		log.info("navigateToSpecCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToEvalCommitteeAppointTab() {
-		log.info("navigateToEvalCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToTechCommitteeAppointTab() {
-		log.info("navigateToTechCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-	}
-
-	private void navigateToOpenCommitteeAppointTab() {
-		log.info("navigateToOpenCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToFinanceCommitteeAppointTab() {
-		log.info("navigateToFinanceCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToQuotCommitteeAppointTab() {
-		log.info("navigateToQuotCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToProcBoardAppointTab() {
-		log.info("navigateToProcBoardAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-	}
+		searchQT.reloadData();		
+	}	
+	
 
 	private class SearchQTPagingDataModel extends PagingDataModel<AuditQTDTO> {
 

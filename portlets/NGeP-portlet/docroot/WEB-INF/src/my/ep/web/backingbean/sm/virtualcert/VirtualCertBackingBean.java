@@ -211,8 +211,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	    return countCert > 1 || countBumi > 1;
 	}
 
-	// If there is duplicate cert on same applId, prevention step, To make sure
-	// display latest smMofcert only by applId
+	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
 	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(List<SmMofCert> mofCerts) {
 		List<SmMofCert> cert = new ArrayList<>();
 		List<SmMofCert> bumiCert = new ArrayList<>();
@@ -233,14 +232,12 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
 		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
 
-		// if more than 1 Cert on a same appl_id, need reorder it and means
-		// there is duplicate, sort cert by asc order
+		// if more than 1 Cert on a same appl_id, need reorder it and means there is duplicate, sort cert by asc order
 		if (cert.size() > 1) {
 			sortCertsListByAsc(cert);
 		}
 
-		// if more than 1 bumiCert on a same appl_id, need reorder it and means
-		// there is duplicate, Sort bumiCert by asc order
+		// if more than 1 bumiCert on a same appl_id, need reorder it and means there is duplicate, Sort bumiCert by asc order
 		if (bumiCert.size() > 1) {
 			sortCertsListByAsc(bumiCert);
 		}

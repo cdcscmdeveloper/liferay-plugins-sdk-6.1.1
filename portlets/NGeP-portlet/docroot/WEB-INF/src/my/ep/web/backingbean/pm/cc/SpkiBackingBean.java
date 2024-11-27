@@ -131,9 +131,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			//end checking for validation
 		}
 		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
-		// #30425 - End
+		// #30425 - End, #36605
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
 			logger.info("::: #25061 getSpkiEnabledProperty true :::");
 			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
@@ -161,8 +161,8 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 			//end checking for validation
 		}
 		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
-		//#30425 - End
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		//#30425 - End, #36605
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
@@ -235,19 +235,24 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		}
 		return signedData;
 	}
-
+	
+	//#36605 - start
+	/**
+	 * SPKI Sign Transaction
+	 * @param originalText
+	 * @return
+	 */
 	public byte[] spkiSignTransaction(String originalText) {
-		//#36605
-		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
-			return spkiEnabledSignTransaction(originalText, null);
-		} else {
-			return null;
-		}
+		return spkiSignTransaction(originalText, null);
 	}
-
-	public byte[] spkiSignTransaction(String originalText,
-			String identificationNo) {
-		//#36605
+	
+	/**
+	 * SPKI Sign Transaction
+	 * @param originalText
+	 * @param identificationNo
+	 * @return
+	 */
+	public byte[] spkiSignTransaction(String originalText, String identificationNo) {
 		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			return spkiEnabledSignTransaction(originalText, identificationNo);
 		} else {
@@ -255,18 +260,14 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		}
 	}
 	
-	//#36605
 	private boolean isCertEnabled(String identificationNo){
-		String idNo = StringUtils.isBlank(identificationNo) ? getLoginUser()
-				.getIdentificationNo() : identificationNo;
-		
-		String cert = getCertIssuer(idNo);
+		String cert = StringUtils.isBlank(identificationNo) ? getCertIssuer() : getCertIssuer(identificationNo);
 		boolean isTrustgate = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && "true".equals(trustgateEnabled);
 		boolean isDigicert = cert.equals(SupplierManagementConst.CERT_DIGICERT) && "true".equals(digicertEnabled);
+		logger.info("isCertEnabled-"+cert+"\t"+isTrustgate+"\t"+isDigicert);
 		return isTrustgate || isDigicert;
-		
-
 	}
+	//#36605 - end
 
 	public void setChallengeQues1(String challengeQues1) {
 		this.challengeQues1 = challengeQues1;
@@ -299,9 +300,14 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		Object returnObj = null;
 		//#36605
 		//PIN must be 8 chars long, contain only letters, numbers, and at least 1 alphabet and 1 number
-		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")
-				&& "true".equalsIgnoreCase(getSpkiEnabledProperty())){
-			throw new EpException(MessageConst.ERROR_776060, null);
+		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")){
+			String cert = getCertIssuer();
+			boolean checkTG = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && !"true".equals(trustgateEnabled);
+			boolean checkDG = cert.equals(SupplierManagementConst.CERT_DIGICERT) && !"true".equals(digicertEnabled);
+			if (checkTG || checkDG || !"true".equalsIgnoreCase(getSpkiEnabledProperty())){
+				//disable for environment other than PRD
+				//throw new EpException(MessageConst.ERROR_776060, null);
+			}
 		}
 
 		try {
@@ -439,6 +445,10 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void changeChallengeQuestions() {
+		//#36605
+		if (!isCertEnabled(null)){
+			return;
+		}
 		if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			challs = TrustGateHelper.getInstance().getChallengeQuestion(
 					getLoginUser().getIdentificationNo(),
