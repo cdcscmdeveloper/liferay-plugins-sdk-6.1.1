@@ -723,8 +723,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			validateRejectionDesc();
 		}
 		/************ AUDIT *************/
-		
-//		getUserIdSessionFromLoginId();
 		AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean(); 
 		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
@@ -806,6 +804,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			ReasonResDTO resDTO = reqSO.createReason(reqDTO);
 			if(resDTO.isSuccessful()){
 //				loadRejectReason(resDTO.getPmReason().getReasonId());
+				this.getManagedBean().setNewPmReason(resDTO.getPmReason());
 				log.info("createRejectReason - successful"); //TODO 770015
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
@@ -1142,11 +1141,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("deleteRestrictions");
 
 //		List<PmSupplierReason> tempList = new ArrayList<PmSupplierReason>();
+//		List<PmSupplierReason> appTypeList = new ArrayList<PmSupplierReason>();
+		
 		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
 			if(this.getManagedBean().getDeleteAppTypeRestrictions()!=null && !this.getManagedBean().getDeleteAppTypeRestrictions().isEmpty()){
 				if(this.getManagedBean().getAppTypeRestrictions()==null){
 					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
 				}
+				
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteAppTypeRestrictions()){
 					if(!suppReason.isBrandNew()){
 						suppReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
