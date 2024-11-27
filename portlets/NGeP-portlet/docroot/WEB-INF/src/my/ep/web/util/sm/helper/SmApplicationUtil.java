@@ -1802,10 +1802,6 @@ public class SmApplicationUtil {
 								&& (cat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS
 										|| cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS || cat
 										.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS)) {
-							//#36587
-							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
-								cat.setApproverRemarks(cat.getPoRemarks());
-							}
 							//31043 start
 							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
 								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
@@ -1896,10 +1892,6 @@ public class SmApplicationUtil {
 							}
 						} else if (managedBean.isApproverUser()
 								&& cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
-							//#36587
-							if(StringUtils.isNotEmpty(cat.getPoRemarks())){
-								cat.setApproverRemarks(cat.getPoRemarks());
-							}
 							//31043 start
 							if(StringUtils.isNotEmpty(cat.getApproverRemarks())){
 								for(int i = 0; i < cat.getApproverRemarks().length(); i++) {
