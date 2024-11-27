@@ -2364,6 +2364,12 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+			auditResDTO.setRoleCode(checkRolesForAuditTrail(this.getManagedBean().getScQt().getQtId()));
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
+					||auditResDTO.getRoleCode().equals(RoleCode.PBB_SECRETARY.value())){
+				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+			}
 			
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
@@ -2395,9 +2401,7 @@ if (CollectionUtils.isNotEmpty(
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 		
 		for (ScCommitteeMember committeeMember : committeeMembers) {
-			auditResDTO.setActionType(type);
-			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
-			auditResDTO.setRoleCode(checkRolesForAuditTrail());
+			auditResDTO.setActionType(type);			
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_NAME);
 			auditResDTO.setNewValue(committeeMember.getMemberName());
 			AuditTrailReqDTO auditReqDTOName = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
@@ -2417,31 +2421,52 @@ if (CollectionUtils.isNotEmpty(
 		return auditReqList;
 	}
 	
-	
 	/**
 	 * Method to check the session user's role
 	 * #288895 - 35500
+	 * @param qtId
 	 * @return
 	 */
-	public String checkRolesForAuditTrail() {
+	public String checkRolesForAuditTrail(Long qtId) {
 		FacesScopes facesScopes = new FacesScopes();
 		String role = RoleCode.QCA_SECRETARY.value();
+		
+		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
+		CommitteResDTO committeeResDTO = new CommitteResDTO();
+		committeeReqDTO.setQtId(qtId);
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			UserResDTO resDTO = null;
 			userReqDTO.setLoginId(facesScopes.getUserSessionBean().getLoginId().toLowerCase());
 			userReqDTO.setRoleRequired(true);
-			resDTO = userSO.isUserExist(userReqDTO);
+			UserResDTO resDTO = userSO.isUserExist(userReqDTO);
 			List<String> pmRoles = resDTO.getPmRoleNames();
 
 			if (pmRoles.contains(RoleCode.QCB_SECRETARY.value())) {
-				role = RoleCode.QCB_SECRETARY.value();
+				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
+				if (null != committeeResDTO ){
+					role = RoleCode.QCB_SECRETARY.value();
+				}				
 			} else if (pmRoles.contains(RoleCode.PBB_SECRETARY.value())) {
-				role = RoleCode.PBB_SECRETARY.value();
+				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD);
+				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
+				if (null != committeeResDTO ){
+					role = RoleCode.PBB_SECRETARY.value();
+				}
 			} else if (pmRoles.contains(RoleCode.FPB_SECRETARY.value())) {
-				role = RoleCode.FPB_SECRETARY.value();
+				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
+				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
+				
+				CommitteReqDTO committeeReqDTOSarawak = new CommitteReqDTO();
+				CommitteResDTO committeeResDTOSarawak = new CommitteResDTO();
+				committeeReqDTOSarawak.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
+				committeeReqDTOSarawak.setQtId(qtId);
+				committeeResDTOSarawak = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTOSarawak);
+				if (null != committeeResDTO || null != committeeResDTOSarawak){
+					role = RoleCode.FPB_SECRETARY.value();
+				}
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
