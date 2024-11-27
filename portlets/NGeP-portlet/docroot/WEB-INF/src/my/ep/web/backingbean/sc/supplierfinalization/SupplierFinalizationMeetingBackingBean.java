@@ -2460,10 +2460,9 @@ if (CollectionUtils.isNotEmpty(
 				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
 				
 				CommitteReqDTO committeeReqDTOSarawak = new CommitteReqDTO();
-				CommitteResDTO committeeResDTOSarawak = new CommitteResDTO();
 				committeeReqDTOSarawak.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
 				committeeReqDTOSarawak.setQtId(qtId);
-				committeeResDTOSarawak = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTOSarawak);
+				CommitteResDTO committeeResDTOSarawak = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTOSarawak);
 				if (null != committeeResDTO || null != committeeResDTOSarawak){
 					role = RoleCode.FPB_SECRETARY.value();
 				}
