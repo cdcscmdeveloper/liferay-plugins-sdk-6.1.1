@@ -18463,7 +18463,7 @@ public class SpecificationBackingBean extends
 							//20210205@haziq- Bug #30046 - End
 							if (null != estimatedCost) {
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
-										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 							}
 							//20201217@haziq- Bug #29806 - End
 							/*}*/
@@ -18515,7 +18515,7 @@ public class SpecificationBackingBean extends
 					}//32134-End
 				}
 				//Bug #29808
-				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
 			// Check Intended Price
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
@@ -18560,7 +18560,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				
-				newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+				newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 				if (newTotalSpecEstimatedAmount
 								.compareTo(indPriceThreshold) > 0) {
 					throw new EpException(MessageConst.ERROR_760504,
