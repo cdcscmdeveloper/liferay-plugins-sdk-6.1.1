@@ -83,7 +83,8 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 			break;
 		// #28895_35501_DA Start - AUDIT TRAIL SM DA
 		case SupplierManagementConst.AU_TAB_ID_DISCIPLINARY_ACTION_INFO:
-			getManagedBean().getAuSmSearchBean().setAuGroupSection(BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION));
+			getManagedBean().getAuSmSearchBean().setAuGroupSection(
+					BigDecimal.valueOf(AuditSupplierManagementConst.AU_GROUP_SECTION_DISCIPLINARY_ACTION));
 			break;
 		// #28895_35501_DA End
 		case SupplierManagementConst.AU_TAB_ID_ADMIN_INFO:
