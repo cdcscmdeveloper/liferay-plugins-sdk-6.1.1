@@ -6957,7 +6957,10 @@ public class SmApplicationBackingBean extends
 	
 	// 29379 - Site Visit Grouping Enhancement -28775
 	private void validateAllWorkshops(){
-		if (EntityHelper.isCollectionEmpty(getManagedBean().getWorkshopFacilitiesVOList())){
+		if (getManagedBean().getSmAppl() == null || getManagedBean().getSmAppl().getPmStatus() == null
+				|| getManagedBean().getSmAppl().getPmStatus()
+					.getStatusId() != SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getWorkshopFacilitiesVOList())){
 			return;
 		}
 		final int minEmployee = 2;
