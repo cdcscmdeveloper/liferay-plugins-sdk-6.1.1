@@ -174,7 +174,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * navigate to acknowledge page.
 	 */
 	public String createDeliveryOrder(String action) {
-		FacesScopes facesScopes = new FacesScopes();
+//		FacesScopes facesScopes = new FacesScopes();//36534
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		IUserGroupSO userGroupSO = null;
@@ -196,7 +196,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			reqDTO.setSupplier(hasSupplierRole());
-			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());//36534
 			
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
