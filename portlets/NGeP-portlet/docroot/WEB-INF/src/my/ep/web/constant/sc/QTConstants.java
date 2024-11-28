@@ -452,4 +452,8 @@ public interface QTConstants {
 	// 36671 - end
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+	
+	//36678
+	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	
 }

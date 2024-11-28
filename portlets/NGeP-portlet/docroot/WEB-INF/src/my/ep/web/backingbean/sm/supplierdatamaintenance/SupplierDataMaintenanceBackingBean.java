@@ -2665,7 +2665,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put("PSUPPLIERID", supp.getSupplierId().toString());
-		generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY, paramMap);
+		if(supp.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY_BASIC, paramMap);
+		} else {
+			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY, paramMap);
+		}
 		
 	}
 	//26238 : Disciplinary Action - end 28111
