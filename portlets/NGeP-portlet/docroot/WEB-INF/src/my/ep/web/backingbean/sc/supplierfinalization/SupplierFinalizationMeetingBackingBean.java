@@ -2364,7 +2364,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
-			auditResDTO.setRoleCode(checkRolesForAuditTrail(this.getManagedBean().getScQt().getQtId()));
+			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
 					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
@@ -2427,13 +2427,10 @@ if (CollectionUtils.isNotEmpty(
 	 * @param qtId
 	 * @return
 	 */
-	public String checkRolesForAuditTrail(Long qtId) {
+	public String checkRolesForAuditTrail() {
 		FacesScopes facesScopes = new FacesScopes();
 		String role = RoleCode.QCA_SECRETARY.value();
-		
-		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
-		CommitteResDTO committeeResDTO = new CommitteResDTO();
-		committeeReqDTO.setQtId(qtId);
+
 		try {
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IUserSO.class);
@@ -2443,30 +2440,17 @@ if (CollectionUtils.isNotEmpty(
 			UserResDTO resDTO = userSO.isUserExist(userReqDTO);
 			List<String> pmRoles = resDTO.getPmRoleNames();
 
-			if (pmRoles.contains(RoleCode.QCB_SECRETARY.value())) {
-				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
-				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
-				if (null != committeeResDTO ){
-					role = RoleCode.QCB_SECRETARY.value();
-				}				
-			} else if (pmRoles.contains(RoleCode.PPB_SECRETARY.value())) {
-				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD);
-				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
-				if (null != committeeResDTO ){
-					role = RoleCode.PPB_SECRETARY.value();
-				}
-			} else if (pmRoles.contains(RoleCode.FPB_SECRETARY.value())) {
-				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
-				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
-				
-				CommitteReqDTO committeeReqDTOSarawak = new CommitteReqDTO();
-				committeeReqDTOSarawak.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
-				committeeReqDTOSarawak.setQtId(qtId);
-				CommitteResDTO committeeResDTOSarawak = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTOSarawak);
-				if (null != committeeResDTO || null != committeeResDTOSarawak){
-					role = RoleCode.FPB_SECRETARY.value();
+			String currentCommitteeType = this.getManagedBean().getCommitteeType();
+			if (currentCommitteeType.equals("FSB") || currentCommitteeType.equals("FSW")) {
+				currentCommitteeType = "FPB";
+			}
+			for (String userRole : pmRoles) {
+				String trimmedRole = userRole.substring(0, 3);
+				if (trimmedRole.equals(currentCommitteeType)) {
+					return userRole;
 				}
 			}
+
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
 					SLALogConstant.QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN,
