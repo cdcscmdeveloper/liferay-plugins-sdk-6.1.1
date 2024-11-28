@@ -533,7 +533,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));;
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -2683,20 +2683,18 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end

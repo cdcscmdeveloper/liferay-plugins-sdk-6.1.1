@@ -756,7 +756,15 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	// 26279 - Remove the retrieveDisciplinaryActions method because the method
 	// from the SM module is used for displaying the Disciplinary Action info in
 	// the pop-up
-
+	
+	/**
+	 * Retrieve message based on the specified key, parameters, and language code.
+	 *
+	 * @param key 
+	 * @param params 
+	 * @param langCode
+	 * @return msg
+	 */
 	private String getMessageByKey(String key, String[] params, String langCode) {
 		String msg;
 		Locale loc = new Locale("en", "EN");
@@ -795,21 +803,15 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * Sets the disciplinary action message
 	 * 
 	 * @param smDisciplinaryAction
+	 * @return warningOrDisciplinaryActionMsg
 	 */
 	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
 		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
-		String warningOrDisciplinaryActionMsg = StringUtils.EMPTY;
+
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
+				language, isWarningOnly);
 
-		} else {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-
-		}
-		return warningOrDisciplinaryActionMsg;
 	}
 
 	// 26279 - end

@@ -4427,10 +4427,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															answerRemark = answerRemark.replaceAll(
 																	QTConstants.NEW_LINE_CHARACTER,
 																	TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-															//#35295 #61 - start
-															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-															answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-															//#35295 #61 - end
 															map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 														}
 													}
@@ -4475,10 +4471,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																		QTConstants.NEW_LINE_CHARACTER,
 																		TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 																
-																//#35295 #61 - start
-																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-																answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-																//#35295 #61 - end
 																map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 																break;
 															}
@@ -4493,10 +4485,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															SSTConstant.GREATER_THAN_SYMBOL);
 													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
 															TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
-													//#35295 #61 - start
-													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-													specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-													//#35295 #61 - start
 													map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
 													map.put(SSTConstant.questionType, q.getQuestionType());
 													listPRQuestion.add(map);
@@ -4564,10 +4552,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														answerRemark = answerRemark.replaceAll(
 																QTConstants.NEW_LINE_CHARACTER,
 																TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-														//#35295 #61 - start
-														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-														answerRemark = (!answerRemark.isEmpty()) ? answerRemark.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-														//#35295 #61 - start
 														map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
 													}
 												}
@@ -4591,10 +4575,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
 														TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
 												
-												//#35295 #61 - start
-												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E) : "";
-												specVal = (!specVal.isEmpty()) ? specVal.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E) : "";
-												//#35295 #61 - start
 												map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);

@@ -710,20 +710,18 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getAdjustment().getFlRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end

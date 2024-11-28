@@ -2359,12 +2359,17 @@ if (CollectionUtils.isNotEmpty(
 			
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 
-			auditResDTO.setOrganizationProfileId(this.getManagedBean().getScQt().getOrgProfileId());
 			auditResDTO.setDocTypeId(this.getManagedBean().getScQt().getProcurementMode().getParameterId());
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+			auditResDTO.setRoleCode(checkRolesForAuditTrail(this.getManagedBean().getScQt().getQtId()));
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
+			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
+					||auditResDTO.getRoleCode().equals(RoleCode.PPB_SECRETARY.value())){
+				auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_PB);
+			}
 			
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
@@ -2396,9 +2401,7 @@ if (CollectionUtils.isNotEmpty(
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 		
 		for (ScCommitteeMember committeeMember : committeeMembers) {
-			auditResDTO.setActionType(type);
-			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
-			auditResDTO.setRoleCode(RoleCode.QCA_SECRETARY.value());
+			auditResDTO.setActionType(type);			
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_NAME);
 			auditResDTO.setNewValue(committeeMember.getMemberName());
 			AuditTrailReqDTO auditReqDTOName = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
@@ -2416,5 +2419,60 @@ if (CollectionUtils.isNotEmpty(
 
 		}
 		return auditReqList;
+	}
+	
+	/**
+	 * Method to check the session user's role
+	 * #288895 - 35500
+	 * @param qtId
+	 * @return
+	 */
+	public String checkRolesForAuditTrail(Long qtId) {
+		FacesScopes facesScopes = new FacesScopes();
+		String role = RoleCode.QCA_SECRETARY.value();
+		
+		CommitteReqDTO committeeReqDTO = new CommitteReqDTO();
+		CommitteResDTO committeeResDTO = new CommitteResDTO();
+		committeeReqDTO.setQtId(qtId);
+		try {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setLoginId(facesScopes.getUserSessionBean().getLoginId().toLowerCase());
+			userReqDTO.setRoleRequired(true);
+			UserResDTO resDTO = userSO.isUserExist(userReqDTO);
+			List<String> pmRoles = resDTO.getPmRoleNames();
+
+			if (pmRoles.contains(RoleCode.QCB_SECRETARY.value())) {
+				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
+				if (null != committeeResDTO ){
+					role = RoleCode.QCB_SECRETARY.value();
+				}				
+			} else if (pmRoles.contains(RoleCode.PPB_SECRETARY.value())) {
+				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD);
+				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
+				if (null != committeeResDTO ){
+					role = RoleCode.PPB_SECRETARY.value();
+				}
+			} else if (pmRoles.contains(RoleCode.FPB_SECRETARY.value())) {
+				committeeReqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
+				committeeResDTO = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTO);
+				
+				CommitteReqDTO committeeReqDTOSarawak = new CommitteReqDTO();
+				committeeReqDTOSarawak.setCommitteeType(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
+				committeeReqDTOSarawak.setQtId(qtId);
+				CommitteResDTO committeeResDTOSarawak = getCommitteeSO().retrieveCommitteByQtIdNCommType(committeeReqDTOSarawak);
+				if (null != committeeResDTO || null != committeeResDTOSarawak){
+					role = RoleCode.FPB_SECRETARY.value();
+				}
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					"SupplierFinalizationMeetingBackingBean.checkRolesForAuditTrail", getUserIdSessionFromLoginId(), e);
+		}
+		return role;
 	}
 }

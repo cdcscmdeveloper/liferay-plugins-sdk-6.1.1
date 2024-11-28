@@ -7279,19 +7279,19 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFlRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFlRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
-		}
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
+			supplier = getManagedBean().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
 
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
+
 	}
 
 	// 26279 - end

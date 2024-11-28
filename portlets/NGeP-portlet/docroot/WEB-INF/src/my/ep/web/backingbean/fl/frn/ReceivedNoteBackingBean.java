@@ -1099,9 +1099,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	private boolean isDisciplinaryActionDOPendingStatus(DeliveryOrderBackingBean doBB) {
 		Long statusId = doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
 		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
-				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_REVISION, FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
+				FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT, FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL,
+				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
 		return pendingStatusIds.contains(statusId);
 	}
 	// 26279 - End
@@ -1813,23 +1812,21 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
-	// 26279 - end	
+	// 26279 - end
 	
 	// 28855 - start
 	/**

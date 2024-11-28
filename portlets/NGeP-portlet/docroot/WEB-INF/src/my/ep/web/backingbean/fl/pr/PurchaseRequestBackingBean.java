@@ -3994,16 +3994,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		//36560-Start
-		Map<String, BigDecimal> extensionCodeCache = new HashMap<>();
-		double thresoldAmt;
-
-		FlItemSummaryReqDTO paidPaReq = new FlItemSummaryReqDTO();
-		List<Long> flFulfilmentRequestList;
-		paidPaReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		paidPaReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-		flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(paidPaReq);
-		// 36560-end
+		double thresoldAmt = 0;
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -4011,20 +4002,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			
-			// 36560-Start
-			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
-			summReq.setExtensionCode(extensionCode);
-
-			BigDecimal sumAmt;
-
-			if (extensionCodeCache.containsKey(extensionCode)) {
-				sumAmt = extensionCodeCache.get(extensionCode);
-			} else {
-				sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
-				extensionCodeCache.put(extensionCode, sumAmt);
-			}
-			// 36560-End
+			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
+			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
 			
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
@@ -5053,20 +5033,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
 	//24893 - start
