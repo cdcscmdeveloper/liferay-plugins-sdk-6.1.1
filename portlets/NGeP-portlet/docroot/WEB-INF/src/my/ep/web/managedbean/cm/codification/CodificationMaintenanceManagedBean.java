@@ -16,6 +16,13 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 
+//35503 Start
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
+import my.ep.persistence.entity.cm.catalog.CmType;
+//35503 End
+
 
 @ManagedBean(name = "codificationMaintenanceMB")
 @SessionScoped
@@ -98,7 +105,25 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
-
+	
+	// 35503 Start
+	private String auditCommodityCode;
+	private String auditCommodityTitle;
+	private String auditCommodityTitleEng;
+	private String auditClassCode;
+	private String auditClassTitle;
+	private String auditClassTitleEng;
+	private String auditFamilyCode;
+	private String auditFamilyTitle;
+	private String auditFamilyTitleEng;
+	private String auditSegmentCode;
+	private String auditSegmentTitle;
+	private String auditSegmentTitleEng;
+	private List<CmType> auditTypeExtList;
+	private List<CmBrand> auditBrandExtList;
+	private List<CmMeasurement> auditMeasurementExtList;
+	private List<CmColor> auditColourExtList;
+	// 35503 End
 	
 	public CmUnspsc getAutoCompleteUnspscCode() {
 		if (autoCompleteUnspscCode == null)
@@ -621,5 +646,143 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+
+	// 35503 Start
+	public String getAuditCommodityTitle() {
+		return auditCommodityTitle;
+	}
+
+	public String getAuditCommodityCode() {
+		return auditCommodityCode;
+	}
+
+	public void setAuditCommodityCode(String auditCommodityCode) {
+		this.auditCommodityCode = auditCommodityCode;
+	}
+
+	public void setAuditCommodityTitle(String auditCommodityTitle) {
+		this.auditCommodityTitle = auditCommodityTitle;
+	}
+
+	public String getAuditCommodityTitleEng() {
+		return auditCommodityTitleEng;
+	}
+
+	public void setAuditCommodityTitleEng(String auditCommodityTitleEng) {
+		this.auditCommodityTitleEng = auditCommodityTitleEng;
+	}
+
+	public String getAuditClassCode() {
+		return auditClassCode;
+	}
+
+	public void setAuditClassCode(String auditClassCode) {
+		this.auditClassCode = auditClassCode;
+	}
+
+	public String getAuditClassTitle() {
+		return auditClassTitle;
+	}
+
+	public void setAuditClassTitle(String auditClassTitle) {
+		this.auditClassTitle = auditClassTitle;
+	}
+
+	public String getAuditClassTitleEng() {
+		return auditClassTitleEng;
+	}
+
+	public void setAuditClassTitleEng(String auditClassTitleEng) {
+		this.auditClassTitleEng = auditClassTitleEng;
+	}
+
+	public String getAuditFamilyCode() {
+		return auditFamilyCode;
+	}
+
+	public void setAuditFamilyCode(String auditFamilyCode) {
+		this.auditFamilyCode = auditFamilyCode;
+	}
+
+	public String getAuditFamilyTitle() {
+		return auditFamilyTitle;
+	}
+
+	public void setAuditFamilyTitle(String auditFamilyTitle) {
+		this.auditFamilyTitle = auditFamilyTitle;
+	}
+
+	public String getAuditFamilyTitleEng() {
+		return auditFamilyTitleEng;
+	}
+
+	public void setAuditFamilyTitleEng(String auditFamilyTitleEng) {
+		this.auditFamilyTitleEng = auditFamilyTitleEng;
+	}
+
+	public String getAuditSegmentCode() {
+		return auditSegmentCode;
+	}
+
+	public void setAuditSegmentCode(String auditSegmentCode) {
+		this.auditSegmentCode = auditSegmentCode;
+	}
+
+	public String getAuditSegmentTitle() {
+		return auditSegmentTitle;
+	}
+
+	public void setAuditSegmentTitle(String auditSegmentTitle) {
+		this.auditSegmentTitle = auditSegmentTitle;
+	}
+
+	public String getAuditSegmentTitleEng() {
+		return auditSegmentTitleEng;
+	}
+
+	public void setAuditSegmentTitleEng(String auditSegmentTitleEng) {
+		this.auditSegmentTitleEng = auditSegmentTitleEng;
+	}
+
+	public List<CmType> getAuditTypeExtList() {
+		if (auditTypeExtList == null)
+			auditTypeExtList = new ArrayList<>();
+		return auditTypeExtList;
+	}
+
+	public void setAuditTypeExtList(List<CmType> auditTypeExtList) {
+		this.auditTypeExtList = auditTypeExtList;
+	}
+
+	public List<CmBrand> getAuditBrandExtList() {
+		if (auditBrandExtList == null)
+			auditBrandExtList = new ArrayList<>();
+		return auditBrandExtList;
+	}
+
+	public void setAuditBrandExtList(List<CmBrand> auditBrandExtList) {
+		this.auditBrandExtList = auditBrandExtList;
+	}
+
+	public List<CmMeasurement> getAuditMeasurementExtList() {
+		if (auditMeasurementExtList == null)
+			auditMeasurementExtList = new ArrayList<>();
+		return auditMeasurementExtList;
+	}
+
+	public void setAuditMeasurementExtList(List<CmMeasurement> auditMeasurementExtList) {
+		this.auditMeasurementExtList = auditMeasurementExtList;
+	}
+
+	public List<CmColor> getAuditColourExtList() {
+		if (auditColourExtList == null)
+			auditColourExtList = new ArrayList<>();
+		return auditColourExtList;
+	}
+
+	public void setAuditColourExtList(List<CmColor> auditColourExtList) {
+		this.auditColourExtList = auditColourExtList;
+	}
+	// 35503 End
 
 }

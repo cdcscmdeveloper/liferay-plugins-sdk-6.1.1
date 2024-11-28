@@ -1129,11 +1129,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//Start Fix - #36608
-				if(getSelectedDocNo() != null){
-					setSelectedDocNo(null);
-				}
-				//End Fix - #36608
 				return resDTO.getResultBean();
 			} else {
 				return new SearchResultBean<PmTrackingDiary>();

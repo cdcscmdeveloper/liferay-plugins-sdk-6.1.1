@@ -350,6 +350,13 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		// Start Fix - #36608
+		if(getManagedBean().getSelectedDocNo() != null){
+			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getSelectedDocNo());
+		}else{
+			paramMap.put(ReportConst.PARAM_DOC_NO, ReportConst.EMPTY_VAL);
+		}
+		// End Fix - #36608
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 		String reportName = getTrackingDiaryReportName(docType,docId);
@@ -378,6 +385,11 @@ public class PmTrackingDiaryBackingBean extends
 					QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
 			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
 		}// 25791-end
+		// Start Fix - #36608
+		if (getManagedBean().getSelectedDocNo() != null) {
+			getManagedBean().setSelectedDocNo(null);
+		}
+		// End Fix - #36608
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, this.getManagedBean().getBackURL());
@@ -450,9 +462,6 @@ public class PmTrackingDiaryBackingBean extends
 	public void redirectToRnContinuityTrackingDiary(String docType, Long docId, boolean isFilterBySupplier,
 			List<Map<String, String>> purchaseRequestMapList) {
 
-		log.info("redirectToSupplierTrackingDiary - start:docType=" + docType + " docId=" + docId
-				+ " isFilterBySupplier=" + isFilterBySupplier);
-
 		linkRnWithPrTrackingDiary(docType, docId, purchaseRequestMapList);
 		setTrackingDiaryParam(docType, docId, isFilterBySupplier);
 
@@ -490,15 +499,62 @@ public class PmTrackingDiaryBackingBean extends
 			TrackingDiaryResDTO trackDiaryResDTO = trackingDiarySO.retrieveByDocNoAndStatusIdAndRoleCode(trackDiaryReqDTO);
 			if (trackDiaryResDTO.getPmTrackingDiary() != null && trackDiaryResDTO.isSuccessful()) {
 				PmTrackingDiary trackDiary = trackDiaryResDTO.getPmTrackingDiary();
-
-				if (trackDiary.getGroupDocType() == null && trackDiary.getGroupId() == null) {
-					trackDiary.setGroupDocType(docType);
-					trackDiary.setGroupId(docId);
-					trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
-					trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
-				}
+				trackDiary.setGroupDocType(docType);
+				trackDiary.setGroupId(docId);
+				trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
+				trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
 			}
 		}
+	}
+	
+	/**
+	 * Redirects to the Tracking Diary page after linking PO to the purchase request and setting tracking parameters.
+	 * 
+	 * @param docType Type of document (e.g., "PO").
+	 * @param docId Document ID.
+	 * @param purchaseRequestNo Purchase request number.
+	 */	
+	public void redirectToPoContinuityTrackingDiary(String docType, Long docId, String purchaseRequestNo) {
+
+		linkPoWithPrTrackingDiary(docType, docId, purchaseRequestNo);
+		setTrackingDiaryParam(docType, docId, false);
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		log.info("fc.getViewRoot().getViewId()=" + fc.getViewRoot().getViewId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
+	}
+	
+	/**
+	 * Links a purchase order (PO) to a purchase request in the Tracking Diary.
+	 * Retrieves the tracking diary entry for the given purchase request number and updates it with the provided 
+	 * PO document type and ID if a valid entry is found.
+	 * 
+	 * @param docType The type of document (e.g., "PO").
+	 * @param docId The ID of the document to link.
+	 * @param purchaseRequestNo The purchase request number to associate with the PO in the Tracking Diary.
+	 */	
+	private void linkPoWithPrTrackingDiary(String docType, Long docId, String purchaseRequestNo) {
+		ITrackingDiarySO trackingDiarySO = BusinessDelegate.getInstance().getServiceObject("cc",
+				ITrackingDiarySO.class);
+
+			TrackingDiaryReqDTO trackDiaryReqDTO = new TrackingDiaryReqDTO();
+			trackDiaryReqDTO.setStatusId(new BigDecimal(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION));
+			trackDiaryReqDTO.setRoleCode(null);
+			trackDiaryReqDTO.setDocNo(purchaseRequestNo);
+
+			TrackingDiaryResDTO trackDiaryResDTO = trackingDiarySO.retrieveByDocNoAndStatusIdAndRoleCode(trackDiaryReqDTO);
+			if (trackDiaryResDTO.getPmTrackingDiary() != null && trackDiaryResDTO.isSuccessful()) {
+				PmTrackingDiary trackDiary = trackDiaryResDTO.getPmTrackingDiary();
+				trackDiary.setGroupDocType(docType);
+				trackDiary.setGroupId(docId);
+				trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
+				trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
+			}
+
 	}
 	//#25790 - end
 
