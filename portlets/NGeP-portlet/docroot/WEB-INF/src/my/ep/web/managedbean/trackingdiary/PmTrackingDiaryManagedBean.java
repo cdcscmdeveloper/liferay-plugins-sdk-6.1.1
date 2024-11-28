@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-//import java.util.Map; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+import java.util.Map; //#25790
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -138,6 +138,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private boolean viewAsSupplier;
 	private String supplierRole;
 	// end - #25396
+
+	//#25790 - start
+	private transient List<Map<String,String>> purchaseRequestMapList;
+	//#25790 - end
 
 	// 25791-start
 	private boolean isBiddingUrl=Boolean.FALSE;
@@ -1125,11 +1129,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//Start Fix - #36608
-				if(getSelectedDocNo() != null){
-					setSelectedDocNo(null);
-				}
-				//End Fix - #36608
 				return resDTO.getResultBean();
 			} else {
 				return new SearchResultBean<PmTrackingDiary>();
@@ -1284,5 +1283,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 	//End Fix - #36608
 	
-	
+	//#25790 - start
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<>();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	 * Sets the purchase Request Map List.
+	 * 
+	 * @param purchaseRequestMapList
+	 *            the purchase Request Map List
+	 */
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+	//#25790 - end
 }

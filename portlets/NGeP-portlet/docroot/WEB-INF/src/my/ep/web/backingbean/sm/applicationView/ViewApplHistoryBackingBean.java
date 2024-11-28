@@ -51,8 +51,6 @@ import my.ep.dto.sm.bulkApplication.SmBulkApplicationVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
@@ -64,7 +62,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -107,7 +104,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmOverlapCategoryVO;
 
@@ -116,8 +112,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
-//#28895_35501 - AUDIT TRAIL SM
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 //#29759 - Searching application status supporting doc loading
@@ -199,18 +193,17 @@ public class ViewApplHistoryBackingBean extends
 								.equalsIgnoreCase(getManagedBean()
 										.getSmSupplier().getBusinessType())) {
 					initFifthTabInfo();
-					// #28895_35501 Start - AUDIT TRAIL SM
-				} else if (SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT.equalsIgnoreCase(getManagedBean().getAccountType())) {
-					initAuditTab();
 				}
-			} else if (outputTab == 5) {
-				initAuditTab();
+
 			}
-		} else if (outputTab == 8) {
+			
+		}
+		// 25792 - end
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)){
 			initAuditTab();
 		}
 		// #28895_35501 End
-		// 25792 - end
 	}
 
 	/**
@@ -220,6 +213,8 @@ public class ViewApplHistoryBackingBean extends
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 - AUDIT TRAIL SM
+		checkAuditAccess();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(true);
@@ -254,13 +249,10 @@ public class ViewApplHistoryBackingBean extends
 		}
 		//26238 - start
 		else {			
+			getManagedBean().setDisciplinaryAction(false);
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-			if(!EntityHelper.isCollectionEmpty(resultList) && resultList.size() > 0){
-				getManagedBean().setDisciplinaryAction(true);
-			} else {
-				getManagedBean().setDisciplinaryAction(false);
-			}			
+			getManagedBean().setDisciplinaryAction(!EntityHelper.isCollectionEmpty(resultList));	
 		} //26238 - end
 
 		SmCommonUtil.redirectToPage("/xhtml/sm/revisionSmApplView/viewApplicationHistory/searchSupplierApplicationHistoryPage.xhtml","", null);
@@ -549,16 +541,10 @@ public class ViewApplHistoryBackingBean extends
 				.retrieveSmApplicationDetailsById(reqDTO).getSmAppl();
 		//26238 - start
 		SmSupplier supplier = smAppl.getSmSupplier();
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-		if(!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0){
-			getManagedBean().setDisciplinaryAction(true);
-		} else {
-			getManagedBean().setDisciplinaryAction(false);
-		}
-		//26238 - end
 		//28237
 		retrieveActiveDisciplinaryAction(supplier);
+		getManagedBean().setDisciplinaryAction(!getManagedBean().isNoDisciplinary());
+		//26238 - end
 		
 		// 25792 - start
 		log.info("Init Sm Appl");
@@ -680,8 +666,7 @@ public class ViewApplHistoryBackingBean extends
 	}
 	
 	// #36401 - Start
-	// If there is duplicate cert on same applId, prevention step, To make sure
-	// display latest smMofcert only by applId
+	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
 	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(List<SmMofCert> mofCerts) {
 		List<SmMofCert> cert = new ArrayList<>();
 		List<SmMofCert> bumiCert = new ArrayList<>();
@@ -702,14 +687,12 @@ public class ViewApplHistoryBackingBean extends
 		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
 		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
 
-		// if more than 1 Cert on a same appl_id, need reorder it and means
-		// there is duplicate, sort cert by asc order
+		// if more than 1 Cert on a same appl_id, need reorder it and means there is duplicate, sort cert by asc order
 		if (cert.size() > 1) {
 			sortCertsListByAsc(cert);
 		}
 
-		// if more than 1 bumiCert on a same appl_id, need reorder it and means
-		// there is duplicate, Sort bumiCert by asc order
+		// if more than 1 bumiCert on a same appl_id, need reorder it and means there is duplicate, Sort bumiCert by asc order
 		if (bumiCert.size() > 1) {
 			sortCertsListByAsc(bumiCert);
 		}
@@ -1601,15 +1584,17 @@ public class ViewApplHistoryBackingBean extends
 	return uomCodeDesc;	
 	}
 	//26238 - start
+	/**
+	 * View Disciplinary Action
+	 */
 	public void onViewDisciplinaryAction() {
 		//28237 - start
 		SmSupplier currSupp = getManagedBean().getSmSupplier();
-		
+		getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		if(currSupp != null){
 			
 			//27876: Disciplinary Action - start - <27876>
-			SmSupplier newCurrSupp =  new SmSupplier();
-			newCurrSupp = currSupp;
+			SmSupplier newCurrSupp = currSupp;
 			newCurrSupp.setFlagSupplier(true);
 			//27876: Disciplinary Action - end - <27876>
 			
@@ -1618,45 +1603,14 @@ public class ViewApplHistoryBackingBean extends
 			//30872: Disciplinary Action - end - <30872>
 			
 			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(newCurrSupp);
-			if(!EntityHelper.isCollectionEmpty(voList)
-					&& voList.size() > 0){
+			if(!EntityHelper.isCollectionEmpty(voList)){
 				getManagedBean().setDisciplineVOs(voList);
-			} else {
-				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-			}
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			} 
 		}
 		//28237 - end
-		/*
-		SmSupplier currSupp = null;
-		if(getManagedBean().isSupplierUser()){
-			currSupp = SmApplicationUtil.getCurrentSupplier();
-		} else {
-			currSupp = getManagedBean().getSearchSupplier();
-		}
-		
-		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
-		if(!EntityHelper.isCollectionEmpty(voList)
-				&& voList.size() > 0){
-			getManagedBean().setDisciplineVOs(voList);
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-		}
-		*/
 		RequestContext.getCurrentInstance().execute(
 				"disciplinaryActionHistoryDlg.show();");
 	} 
-	
-	
-	public boolean mofView(){
-		boolean mofView = false;
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		if(supplier != null && supplier.getMofNo() != null){
-			mofView = true;
-		}
-		return mofView;
-	}
 	//26238 - end
 	
 	public void resetInputOnChangeAccountType() {
@@ -1932,10 +1886,6 @@ public class ViewApplHistoryBackingBean extends
 		
 		SmWorkFlowStatusResDTO smWorkFlowStatusResDTO = workFlowStatusSO.retrieveCurrentWorkFlowStatusByDocId(smWorkFlowStatusReqDTO);
 		Boolean button = false;
-		//#26238 - START
-		boolean cancelCategoryCode = this.getManagedBean().isCancelCategoryCode();
-		List<DisciplinaryActionCategoryVO> cancelCategoryCodeList = this.getManagedBean().getCategoryCodeList();
-		//#26238 - END
 		if(smWorkFlowStatusResDTO != null 
 				&& smWorkFlowStatusResDTO.getWorkflowStatus() != null 
 				&& smWorkFlowStatusResDTO.getWorkflowStatus().getSmAppl() != null
@@ -1957,9 +1907,11 @@ public class ViewApplHistoryBackingBean extends
 						 && checkStatusMofNoBySupplierId(smAppl)== false){
 					button = false;
 				}//#32002 - end
-				else if(cancelCategoryCode && cancelCategoryCodeList.size() > 0){ //#26238
-					button = false;
-				}
+			}
+			//#26238
+			if(getManagedBean().isCancelCategoryCode() && 
+					!EntityHelper.isCollectionEmpty(getManagedBean().getCategoryCodeList())){
+				button = false;
 			}
 		}
 		// #32628 - start
@@ -2138,11 +2090,4 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END	
-	// #28895_35501 Start - AUDIT TRAIL SM
-	private void initAuditTab() {
-		SmAppl suppAppl = getManagedBean().getSmAppl();
-		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
-		auSmView.initAuditTab(suppAppl);
-	}
-	// #28895_35501 End
 }

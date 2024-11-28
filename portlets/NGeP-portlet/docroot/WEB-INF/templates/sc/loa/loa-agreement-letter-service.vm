@@ -479,7 +479,9 @@ u.underline {
 					<p>
 					## 10
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
+						##25025 note 579 - start
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan nilai seperti termaktub di bawah PP/PK 1.7.</span>
+						##25025 note 579 - end
 					</p>
 					<p style="padding-bottom:110px; margin-bottom:0px">
 					## 11
@@ -807,7 +809,7 @@ u.underline {
 					</td>
 					<td class="text_family" valign="top">:</td>
 					<td class="text_family" valign="top">RM $offerPrice <br/>
-					<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
+					##<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding" valign="top">
@@ -884,7 +886,9 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-									<td class="text_header_submenu">Skop Perkhidmatan/Service Level Agreement (SLA) <i>(sekiranya berkaitan)</i></td>
+									##25025 note 579 - start
+									<td class="text_header_submenu">Spesifikasi/Skop Perkhidmatan/<i>Service Level Agreement</i> (SLA) (sekiranya berkaitan)</td>
+									##25025 note 579 - end
 								</tr>
 						</table>
 					</td>
@@ -1167,6 +1171,42 @@ u.underline {
 									</tr>
 						
 				</tr>
+				##25025 & 26770 add point 12
+				<tr>
+						<td colspan="3">
+						<br/><br/>
+						<table>
+									<tr>
+										<td align="center" style="vertical-align: top;" class="text_sub_header_red">12. </td>
+										<td class="text_header_submenu_red">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)
+											<br/>
+											<span class="text_family_small">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span>
+										</td>
+									</tr>
+						</table>
+						</td>	
+				</tr>
+				<tr>	
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">12.1 Nama</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">12.2 Nombor Telefon</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">12.3 Alamat E-mel</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+				</tr>	
+				 ##25025 & 26770 end point 12
 			#else
 				<tr>
 						<td colspan="3">
@@ -1206,7 +1246,42 @@ u.underline {
 									</tr>
 						
 				</tr>
-					
+				##25025 & 26770 add point 12
+				<tr>
+						<td colspan="3">
+						<br/><br/>
+						<table>
+									<tr>
+										<td align="center" style="vertical-align: top;" class="text_sub_header_red">11. </td>
+										<td class="text_header_submenu_red">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)
+											<br/>
+											<span class="text_family_small">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span>
+										</td>
+									</tr>
+						</table>
+						</td>	
+				</tr>
+				<tr>	
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">11.1 Nama</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">11.2 Nombor Telefon</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">11.3 Alamat E-mel</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+				</tr>	
+				 ##25025 & 26770 end point 12	
 			 #end	
 				<tr>
 					<td align="left" class="submenu_padding"><span

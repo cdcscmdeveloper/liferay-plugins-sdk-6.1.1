@@ -727,7 +727,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			//27738 Start - System allow to add 221709 without basic category
 			MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
 			SmAppl activeAppl = SmCommonUtil.getActiveApplBySupplier(currSupp);
-			currSupp.setSmAppl(activeAppl);
+			if (activeAppl != null){
+				currSupp.setSmAppl(activeAppl);
+			}
 			reqDTO1.setApplNo(currSupp.getSmAppl().getApplNo());
 			SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
 					.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();

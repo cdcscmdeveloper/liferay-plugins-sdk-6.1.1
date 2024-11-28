@@ -31,8 +31,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
@@ -70,27 +68,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-	//26238 - start - #28281
-	/*
-	private boolean warningExist;
-	private boolean warning;
-	private boolean cancelCategoryCode;
-	private boolean suspendRegistration;
-	private boolean cancelRegistration;
-	private boolean blacklistOwnerOrDirector;
-	private boolean bumiputeraStatusCancel;
-	private boolean manufacturerStatusCancel;
-	private List<DisciplinaryActionVO> disciplinaryActionVoList;
-	private List<DisciplinaryActionVO> disciplineVOs; 
-	private List<SmPersonnel> ownerAndDirectorList; 
-	private List<SmPersonnel> selectedOwnerAndDirectorList; 
-	private String applType; 
-	private boolean viewFlag; 
-	private SmSupplier smSupp; 
-	private boolean viewMode; 
-	private boolean disciplinaryAction;
-	private boolean mofNoExist;
-	*/
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<PmFinancialOrg> financialOrgLs;
 	
@@ -143,14 +120,6 @@ public class ViewSuppProfileManagedBean extends
 	private SmSupplierBusiness selectedBusinessNature;
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	
-	/*	#28281
-	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
-	private String startDate;
-	private String endDate;
-	private String remarks;
-	private boolean noDisciplinary;
-	private List<DisciplinaryActionCategoryVO> categoryCodeList;
-	*/
 	//27437 : Disciplinary Action
 	private IPagingDataModel<SmSupplier> basicSupplierDataModel = new SmBasicSupplierPagingDataModel();
 	private String searchByCompanyName;
@@ -294,8 +263,6 @@ public class ViewSuppProfileManagedBean extends
 				}
 			} catch (Exception ex) {
 				return new SearchResultBean();
-			} finally {
-				reqDTO = null;
 			}
 		}
 		
@@ -315,10 +282,9 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSmAppl(smAppl);
 			// 28273: Disciplinary Action - end - 26238
 			
-			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveBasicSupplierForMaintenance(reqDTO)
 					.getSupplierResultBean();
-			return resultBean;
 		}
 	} 
 	
@@ -790,23 +756,7 @@ public class ViewSuppProfileManagedBean extends
 	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
 		this.smSuppOwners = smSuppOwners;
 	}
-	/*	#28281
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
-
-	public boolean isWarningExist() {
-		return warningExist;
-	}
-
-	public void setWarningExist(boolean warningExist) {
-		this.warningExist = warningExist;
-	} 
-	*/
+	
 	//27437 : Disciplinary Action 
 	/**
 	 * Search supplier latest application
