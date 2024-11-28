@@ -359,11 +359,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Long purchaseRequestId;
 	//28878 - End
 	
-	//#36119 - start
-    /** The new sourcing dp bpm version flag */
-    private boolean sourcingDpNewBpmVer = Boolean.FALSE;
-    //#36119 - end
-    
+	// #36119 - start
+	/** The new sourcing dp bpm version flag */
+	private boolean sourcingDpNewBpmVer = Boolean.FALSE;
+	// #36119 - end
+	
     /**
      * Instantiates a new request note managed bean.
      */

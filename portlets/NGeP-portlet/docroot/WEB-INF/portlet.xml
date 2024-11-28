@@ -10928,7 +10928,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	<!-- 25037 - end -->	
+	<!-- 25037 - end -->
 	<portlet>
 		<portlet-name>testSpki</portlet-name>
 		<display-name>Test SPKI</display-name>
