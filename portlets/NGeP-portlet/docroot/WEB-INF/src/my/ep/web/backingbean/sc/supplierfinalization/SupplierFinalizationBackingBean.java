@@ -10195,8 +10195,10 @@ public class SupplierFinalizationBackingBean extends
 	 * Populate and initialize data for update committee screen.
 	 */
 	public void prepareUpdateCommitteeMember() {
-		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType()))
+		if (StringUtils.isEmpty(this.getManagedBean().getCommitteeType())) {
 			return;
+		}
+
 		SupplierFinalizationMeetingBackingBean meetingBB = new SupplierFinalizationMeetingBackingBean();
 		meetingBB.renewSesionObject();
 		this.getManagedBean().setMeetingBB(meetingBB);

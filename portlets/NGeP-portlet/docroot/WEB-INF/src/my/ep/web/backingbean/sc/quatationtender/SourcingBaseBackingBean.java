@@ -83,6 +83,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -2123,7 +2124,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = offerPrice;
 		if (gstAmount != null) {
 			overallCtAmount = overallCtAmount.add(gstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
@@ -2141,7 +2142,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = offerPrice;
 		if (sstAmount != null) {
 			overallCtAmount = overallCtAmount.add(sstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
@@ -6066,8 +6067,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public List<ScQtCommitteRemarks> omitLatestRemarkForDisplay(List<ScQtCommitteRemarks> remarks) {
 		List<ScQtCommitteRemarks> omittedList = new ArrayList<>();
-		if (CollectionUtils.isEmpty(remarks))
+		if (CollectionUtils.isEmpty(remarks)){
 			return omittedList;
+		}
 
 		for (ScQtCommitteRemarks r : remarks) {
 			if (StringUtils.isNotEmpty(r.getRemark())) {
@@ -6097,25 +6099,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	@SuppressWarnings("unchecked")
 	public List<QtCommitteeMemberBean> getMemberHistoryList(ScCommittee scCommittee) {
 		List<QtCommitteeMemberBean> list = new ArrayList<>();
-		try {
-			if (scCommittee != null) {
-				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
+		if (scCommittee != null) {
+			List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
 
-				if (CollectionUtils.isNotEmpty(histories)) {
-					Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
-						@Override
-						public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
-							return o2.getCreatedDate().compareTo(o1.getCreatedDate());
-						}
-					});
+			if (CollectionUtils.isNotEmpty(histories)) {
+				Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
+					@Override
+					public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
+						return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+					}
+				});
 
-					ScCommitteeMemberHistory h = histories.get(0);
-					list = (List<QtCommitteeMemberBean>) (Object) h.deserializeList(h.getCommitteeMembers());
-					CustomUtils.sortQtCommitteeMemberRole(list);
-				}
+				ScCommitteeMemberHistory h = histories.get(0);
+				list = (List<QtCommitteeMemberBean>) (Object) h.deserializeList(h.getCommitteeMembers());
+				CustomUtils.sortQtCommitteeMemberRole(list);
 			}
-		} catch (Exception e) {
-			log.debug(e);
 		}
 		return list;
 	}
@@ -6168,8 +6166,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
 		boolean pendingApproval = false;// 25037 note 629
-		if (null == qtCommittee || null == qtCommittee.getScCommittee())
+		if (null == qtCommittee || null == qtCommittee.getScCommittee()) {
 			return;
+		}
 
 		ScCommittee scCommittee = qtCommittee.getScCommittee();
 		if (validateCommitteeApproval) {
@@ -6189,7 +6188,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		// 25037 - start - note 629
 		List<QtCommitteeMemberBean> memberList = new ArrayList<>();
-		final List<String> sortOrder = Arrays.asList("M", "C", "S");
+		final List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_MEMBER,
+				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY);
 		if (pendingApproval) {
 			if (CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMemberHistories())) {
 				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
@@ -6247,12 +6247,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						DbValueConst.RECORD_STATUS_ACTIVE));
 
 		Map<String, String> roleMap = new HashMap<>();
-		roleMap.put(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, "_CHAIRPERSON");
-		roleMap.put(ParameterConst.COMMITTEE_ROLE_MEMBER, "_MEMBER");
+		roleMap.put(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, SourcingConstants.CONCAT_STRING_CHAIRPERSON);
+		roleMap.put(ParameterConst.COMMITTEE_ROLE_MEMBER, SourcingConstants.CONCAT_STRING_MEMBER);
 		for (QtCommitteeMemberBean member : memberList) {
 			String memberRoleCode = member.getMemberRole();
-			if (memberRoleCode.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY))
+			if (memberRoleCode.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				continue;
+			}
 
 			String memberRole = ResourceBundleUtils.getMessage("lbl.sc.committee.role.".concat(memberRoleCode),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -6725,6 +6726,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return committeeNames;
 	}
+	
+	/**
+	 * Sort outcomes.
+	 * 
+	 * @param outcomes
+	 * @return the string[]
+	 */
+	public String[] sortQtOutcomes(String[] outcomes) {
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY;
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_REVISE };
+			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
+	}
 	// 25037 - end
 		
 		//26130 - start
@@ -7013,4 +7038,56 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End
+
+	// 25791-start
+	/**
+	 * The method used to retrieve the contract status of the contract.
+	 * 
+	 * @param contractStatus
+	 * @return Effective, Terminated, Expired, Inactive
+	 */
+	public String getContractStatusDesc(int contractStatus) {
+		if (contractStatus == ContractConst.CONTRACT_STATUS_EFFECTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EFFECTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_INACTIVE) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INACTIVE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_EXPIRED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_EXPIRED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (contractStatus == ContractConst.CONTRACT_STATUS_TERMINATED) {
+			return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_TERMINATED,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return "";
+		}
+	}
+	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * The method used to retrieve the status completion of the contract.
+	 * 
+	 * @param contractNo
+	 * @param status
+	 * @return complete or incomplete
+	 */
+	public String chkContractStatusType(String contractNo, int status) {
+		if (StringUtils.isNotEmpty(contractNo) && StringUtils.isNotBlank(contractNo)) {
+			if (status == ContractConst.STATUS_COMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_COMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_INCOMPLETE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_INCOMPLETE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			} else if (status == ContractConst.STATUS_NOT_APPLICABLE) {
+				return ResourceBundleUtils.getMessage(QTConstants.CONTRACT_STATUS_NOT_APPLICABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+		}
+
+		return "";
+	}
+	// 25791-End
 }

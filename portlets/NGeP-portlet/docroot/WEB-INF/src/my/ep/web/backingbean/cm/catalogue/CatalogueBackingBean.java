@@ -288,11 +288,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	/* 13984 schNo for table */
 	private String schno;
 
-	// [#26282] disciplinary action - start
 	// Navigation Details
-	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml";
-
-	// [#26282] disciplinary action - end
+	private static final String NAV_TO_DA = "/xhtml/cm/shared/applicationView/cmDisciplinaryActionViewOnly.xhtml"; //#26282
 	
 	private boolean declareChecked; //#30457
 
@@ -7053,9 +7050,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			}
 
-			// String nextNavigation = naviToMaintenancePage(false);
 			// [#26282 - start]
-			String nextNavigation = "";
+			String nextNavigation;
 			checkForDisciplinaryAction(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			if (this.getManagedBean().isDaCancelReg() || this.getManagedBean().isDaBlacklistOwner()) {
@@ -11911,16 +11907,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
-	// [#26282]
+	// [#26282] check for Disciplinary Action - Start
+	/**
+	 * The popup view for Disciplinary Action list either for Basic Supplier or
+	 * MOF Supplier
+	 * 
+	 * @param supplierId
+	 * @param mofNo
+	 */
 	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
 		log.info("[#26282] onViewDisciplinaryAction");
 
-		SmSupplier smSupplier = null;
-		DisciplinaryActionVO voObj = null;
-		String daMsg = "";
+		SmSupplier smSupplier;
+		DisciplinaryActionVO voObj;
+		String daMsg;
 		FacesScopes facesScopes = new FacesScopes();
 
-		if ((facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value()))) {
+		if (facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value())) {
 			log.info("[#26282] is REQUISITIONER user...");
 
 			log.info("[#26282] Supplier Id: " + supplierId + ", MOF No: " + mofNo);
@@ -11933,17 +11936,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				throw new EpException(MessageConst.ERROR_760041);
 			}
 
-			// set MOF supplier status
-			if (mofNo != null) {
-				getManagedBean().setMofSupplier(true);
-			} else {
-				getManagedBean().setMofSupplier(false);
-			}
-
 			// get disicplinary action history
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getActiveDisciplinaryActionVO(smSupplier);
 
-			if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
+			if (!EntityHelper.isCollectionEmpty(voList)) {
 				voObj = voList.get(0);
 				log.info("[#26282] DA effective date: " + voObj.getStartDate());
 				log.info("[#26282] DA expire date: " + voObj.getEndDate());
@@ -11964,14 +11960,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
-	// [#26282]
+	/**
+	 * To check what DA the supplier involve
+	 * 
+	 * @param supplierId
+	 */
 	public void checkForDisciplinaryAction(Long supplierId) {
 		log.info("[#26282] checkForDisciplinaryAction");
 
 		// check for disciplinary action (DA)
 		List<SmDisciplinaryAction> disciplinaryActList = CmApplicationUtil.checkForDisciplinaryAction(supplierId);
 
-		if (disciplinaryActList != null && disciplinaryActList.size() > 0) {
+		if (disciplinaryActList != null && !disciplinaryActList.isEmpty()) {
 			SmDisciplinaryAction disciplinaryAct = disciplinaryActList.get(0);
 
 			log.info("[#26282] - DA - Warning: " + disciplinaryAct.isWarning());
@@ -11995,10 +11995,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if (disciplinaryAct.isBlacklistOwner()) {
 				this.getManagedBean().setDaBlacklistOwner(disciplinaryAct.isBlacklistOwner());
 			}
-		} else {
-			log.info("[#26282] - Disciplinary action does not imposed on supplier");
 		}
 	}
+	// [#26282] check for Disciplinary Action - End
 
 	// 26284 - Start
 	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
