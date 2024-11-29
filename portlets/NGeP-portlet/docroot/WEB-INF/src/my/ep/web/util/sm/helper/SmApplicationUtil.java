@@ -4665,13 +4665,12 @@ public class SmApplicationUtil {
 		}
 		managedBean.getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories().removeAll(delCatList);
 		//#34209 END
+		//28775 - Site Visit Grouping Enhancement -28775
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE,
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
-			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
-					&& cat.getPmCategoryL3() != null) {
+			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
 				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
 						.getEntityBySinglePropertyFromList(cat
@@ -7908,10 +7907,7 @@ public class SmApplicationUtil {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			//26671 - Site Visit Grouping Enhancement -28775 - start
-			boolean validStatus = cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
-					|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
-					|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId());
-			
+			boolean validStatus = isValidCategory(cat, managedBean.getSmAppl());
 			if (cat.getPmCategoryL3().getCategoryTypeCode() != null	&& validStatus	&& !isCategoryRejected(cat)) {
 				//26671 - Site Visit Grouping Enhancement -28775 - end
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -10879,10 +10875,8 @@ public class SmApplicationUtil {
 		List<SelectItem> categoryTypeItems = new ArrayList<>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				boolean validStatus = cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-						//26671 - Site Visit Grouping Enhancement -28775
-						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
-						|| isActiveCategoryAfterApproval(cat, appl.getApplId()); //#32008 - after approval bug
+				//26671 - Site Visit Grouping Enhancement -28775, //#32008 - after approval bug
+				boolean validStatus = isValidCategory(cat, appl);
 				validStatus &= !isCategoryRejected(cat);
 				if (validStatus && cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
@@ -11897,10 +11891,8 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				//#32008 - after approval bug
-				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
-						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
-						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
+				//#32008 - after approval bug, #28775
+				if (isValidCategory(cat, smAppl)
 						&& (cat.getPmCategoryL3() != null
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
@@ -15533,7 +15525,21 @@ public class SmApplicationUtil {
 		String otherLbl = SmCommonUtil.getMessage("lbl.sm.catCodes.othDesc", null)+": ";
 		return sCat != null ? otherLbl + sCat.getOtherDesc() : null;
 	}
-	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
+	private static boolean isValidCategory(SmSupplierCategory suppCat, SmAppl appl){
+		if (suppCat == null || appl == null){
+			return false;
+		}
+		int status = suppCat.getRecordStatusFlg().intValue();
+		boolean isValid = status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+				|| status == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				|| isActiveCategoryAfterApproval(suppCat, appl.getApplId());
+		if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			isValid |= status == DbValueConst.RECORD_STATUS_ACTIVE;
+		}
+		return isValid;
+	}
+	//29380, 26671 - Site Visit Grouping Enhancement -28775 - end
 	
 	// #34303 - start
 	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {

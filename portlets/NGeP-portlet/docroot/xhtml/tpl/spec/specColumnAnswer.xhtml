@@ -80,14 +80,14 @@
 					</p:commandButton>
 				</h:panelGroup>
 			</p:column>
-			<!-- #29187 Start Vinod -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" rendered="#{templateSpecBackingBean.displayMandatorySpecColumn(templateSpecBean)}">
 				<h:panelGroup rendered="#{!isSpecTypeFinancial}">
 					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
 					<ac:iconTooltip rendered="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec and !isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
 				</h:panelGroup>
 			</p:column>
-			<!-- #29187 End Vinod -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 			<!-- #31134 Farid Start 25/6/2021-->
 			<!---remove here #32952 -->
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial or !isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">

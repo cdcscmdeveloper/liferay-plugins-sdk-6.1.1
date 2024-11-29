@@ -13,10 +13,11 @@
 			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(storeCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(storeCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 				</table>

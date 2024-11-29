@@ -4231,15 +4231,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IRequestItemSO.class);
+
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			handleDirectPurchaseMode(requestItemSO, requestItemId);
+			handleDirectPurchaseMode(itemSpecOfferList);
 		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-			handleQuotationTenderOrDirectNegoMode(requestItemSO, requestItemId);
+			handleQuotationTenderOrDirectNegoMode(itemSpecOfferList);
 		}
 
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
@@ -4254,20 +4256,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
-	    List<String> itemSpecList = new ArrayList<>();
-	    List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+	private void handleDirectPurchaseMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
+		List<String> itemSpecList = new ArrayList<>();
 
-	    for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
-	        String questionType = itemSpecOffer.getQuestionType();
-	        if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
-	            getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
-	            getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-	        } else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-	        	itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
-	        }
-	    }
-	    getManagedBean().setItemSpecification(itemSpecList);
+		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
+			String questionType = itemSpecOffer.getQuestionType();
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			}
+		}
+		getManagedBean().setItemSpecification(itemSpecList);
 	}
 	
 	/**
@@ -4280,10 +4281,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
-		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
+	private void handleQuotationTenderOrDirectNegoMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
 
-		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOfferList.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
 
 			// Encoding by directly applying to non-null fields
@@ -4297,7 +4297,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 		}
 
-		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOfferList);
 	}
 	// #28854 - End
 

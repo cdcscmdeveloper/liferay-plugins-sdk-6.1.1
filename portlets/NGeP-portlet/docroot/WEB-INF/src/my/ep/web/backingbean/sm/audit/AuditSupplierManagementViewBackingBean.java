@@ -51,6 +51,7 @@ public class AuditSupplierManagementViewBackingBean extends BaseBackingBean<Audi
 			auSmSearchBean.setDocType(AuditSupplierManagementConst.AU_DOC_TYPE_G2G);
 			tabName = SupplierManagementConst.AU_TAB_ID_BANK_INFO;
 		}
+		auSmSearchBean.setUserId(BigInteger.valueOf(getUserIdSessionFromLoginId()));
 		getManagedBean().setAuSmSearchBean(auSmSearchBean);
 		getManagedBean().setActiveIndex(0);
 		loadAuditInfo(tabName);
