@@ -182,6 +182,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 			// #25638 - Start
 			displayReviseInstrn(getManagedBean().getCommitteeList());
 			// #25638 - End
+
+			// #25037 -start-
+			prepareUpdateCommitteeMember();
+			// #25037 -end-
+			
+			// #25037 -start-
+			prepareUpdateCommitteeMember();
+			// #25037 -end-
 			
 			fc.getApplication()
 					.getNavigationHandler()
@@ -208,7 +216,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @param qtId
 	 */
 	public void retrieveOnlineBiddingEndorsement(Long qtId) {
-		// 25037 - end
+	// 25037 - end
 		retriveQTDetails(qtId);
 		if (StringUtils.isNotBlank(
 				getManagedBean().getCommitteeType())) {
@@ -367,7 +375,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @param qtId
 	 */
 	public void retrieveCommitteeAndMeetingDetails(Long qtId) {
-		// 25037 - end
+	// 25037 - end
 		IQTMeetingSO meetingSO = null;
 		try {
 			meetingSO = BusinessDelegate.getInstance()
@@ -1147,7 +1155,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				});
 			}
 			// 25037 - end
-
+			
 			scQtCommittee.setQtCommitteRemarks(remarks);
 	
 			// Committee Remarks list
@@ -1821,7 +1829,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 * @param skipValidation
 	 */
 	public void saveOnlineEndorsement(boolean skipValidation) {
-		// 25037 - end
+	// 25037 - end
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()

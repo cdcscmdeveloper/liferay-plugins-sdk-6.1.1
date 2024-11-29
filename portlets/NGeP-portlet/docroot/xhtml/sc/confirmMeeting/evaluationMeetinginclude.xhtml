@@ -13,20 +13,22 @@
 	<p:messages id="evaluationMeeting" showDetail="true"
 		autoUpdate="#{evaluationMeetingBackingBean.managedBean.autoUpdate}"
 		closable="true" severity="error,info" showSummary="false" />
-	
+	<!-- 25037 start -->
+	<ui:param name="btnAction" value="#{evaluationMeetingBackingBean.managedBean.currentOutcome}"/>	
+	<!-- 25037 end -->
 
-	<ui:param name="btnAction"
-		value="#{evaluationMeetingBackingBean.managedBean.currentOutcome}" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
 			update="@all" onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();" />
+		<!-- 25037 start -->
 		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			styleClass="ui-button"
 			action="#{evaluationMeetingBackingBean.resolveSubmitMeetingDialog()}"
 			style="float:right;" process="@all" partialSubmit="true">
 		</p:commandButton>
+		<!-- 25037 end -->
 	</div>
 	<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
 
@@ -124,15 +126,19 @@
 		</div>
 		<ui:param name="confirmmeetingdtlsDeleteId"
 			value="confirmmeetingdtlsDeleteId"></ui:param>
+		<!-- 25037 start -->
 		<ac:confirmationPopup id="#{confirmmeetingdtlsDeleteId}"
 			widget="confirmMeetingDtlsDeletePopUp" loadingWidget="blockWidget"
 			okAction="evaluationMeetingBackingBean.deleteMeetingDtls"
 			title="#{lbl['lbl.sc.meeting.details']}"
 			content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
 			update="@([id$=evaluationConfirmmeetingId])" />
+		<!-- 25037 end -->
 	</p:panel>
+
 	<p:panel id="evaluationConfirmMeetingCommitteemembersListPanel"
 		header="#{lbl['lbl.sc.committee.member.list']}" toggleable="true">
+		<!-- 25037 start -->
 		<c:choose>
 			<c:when
 				test="#{evaluationMeetingBackingBean.managedBean.validFor25037}">
@@ -188,6 +194,7 @@
 				</div>
 			</c:when>
 			<c:otherwise>
+				<!-- 25037 end -->
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.committee.member.list.instruction']}"
 					escape="false" />
@@ -291,9 +298,14 @@
 							value="#{false}" />
 					</p:commandButton>
 				</div>
+
+				<!-- 25037 start -->
 				<ui:include src="addexistingcommittee.xhtml" />
+				<!-- 25037 end -->
+
 				<ui:param name="confirmmeetingCommitteemembersDeleteId"
 					value="confirmmeetingCommitteemembersDeleteId"></ui:param>
+				<!-- 25037 start -->
 				<ac:confirmationPopup id="#{confirmmeetingCommitteemembersDeleteId}"
 					widget="confirmMeetingCommitteemembersDeletePopUp"
 					loadingWidget="blockWidget"
@@ -313,6 +325,7 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="evaluationMeetingBackingBean.submitMettingDetails()"
 			content="#{lbl['lbl.sc.popup.submitcommitteeapprover']}" />
+		<!-- 25037 end -->
 	</p:panel>
 
 	<ac:scRemarkAndAttachment

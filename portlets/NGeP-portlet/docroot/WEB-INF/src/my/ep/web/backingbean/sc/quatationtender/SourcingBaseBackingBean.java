@@ -537,8 +537,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			//response.setContentType(getMimeType(finalFileName)); // asal
-			response.setContentType("application/pdf"); //najmi test
+			response.setContentType(getMimeType(finalFileName)); // asal
+			//response.setContentType("application/pdf"); //najmi test
 			
 			response.flushBuffer();
 
@@ -582,11 +582,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			response = PortalUtil.getHttpServletResponse(portalresponse);
 //			response.setContentType("Content-type: text/zip");
-			
+			String finalFileName = zipFileName + ".zip";
 			//START:test by syazwan
 			//response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
-			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+			//response.setContentType("application/zip");
 			//response.setHeader("Content-Transfer-Encoding", "application/octet-stream");
 			log.info("-----------after set header----------");
 			//END:Test by syazwan
@@ -965,6 +966,92 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				parameterType, searchBean);
 
 	}
+	
+	//36715 START
+	/**
+	 * To get report from orcle reports only for .rtf format file
+	 * 
+	 * @param reportName
+	 * @param paramMap
+	 * @param attachment
+	 * @param isDirectDownload
+	 * @return File instance
+	 * @throws IOException
+	 */
+	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment, boolean isDirectDownload)
+			throws IOException {
+
+		String reportUrl = generateReportURL(reportName, paramMap);
+		log.info("reportUrl: " + reportUrl);
+
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		OutputStream out = null;
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		InputStream input = null;
+		FileOutputStream fos = null;
+		try {
+			
+			log.info("-----------after set header hatta .rtf only ----------");
+			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName(); 
+			log.info(" finalFileName=" + finalFileName);
+			if (!isDirectDownload) {
+				res.setContentType("application/rtf");
+				res.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\"");
+
+				res.flushBuffer();
+				out = res.getOutputStream();
+	     	}
+		
+			log.info("-----------after set header hatta .rtf only ----------");
+
+			File localFile = new File(getActualFilePath(attachment));
+
+			if (reportUrl.toString() != null) {
+				try {
+					URL obj = new URL(reportUrl.toString());
+					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (ConnectException e) {
+					throw new EpException(MessageConst.ERROR_100058);
+				}
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] buf = new byte[1024];
+				try {
+					for (int readNum; (readNum = input.read(buf)) != -1;) {
+						bos.write(buf, 0, readNum);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				byte[] bytes = bos.toByteArray();
+				fos = new FileOutputStream(localFile);
+				fos.write(bytes);
+				fos.flush();
+			}
+			if (!isDirectDownload) {
+				out.flush();
+
+			}
+			return localFile;
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+			if (input != null) {
+				input.close();
+			}
+			if (out != null) {
+				out.close();
+			}
+		}
+
+	}
+	//36715 END
 
 	/**
 	 * To get report from orcle reports
@@ -991,14 +1078,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try {
+//			if (!isDirectDownload) {
+//				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
+//				res.setHeader("Content-Transfer-Encoding", "binary");
+//				//res.setContentType("application/octet-stream");
+//				res.setContentType("text/rtf");
+//				res.flushBuffer();
+//				out = res.getOutputStream();
+//			}
+			
+			//36715 START
+			log.info("-----------after set header hatta ----------");
+			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName() + ".zip"; 
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				//res.setContentType("application/octet-stream");
-				res.setContentType("text/rtf");
+				//res.setContentType("application/pdf");
+				res.setContentType(getMimeType(finalFileName)); // asal
 				res.flushBuffer();
 				out = res.getOutputStream();
-			}
+	     	}
+		
+			log.info("-----------after set header hatta ----------");
+			//36715 END
 
 			File localFile = new File(getActualFilePath(attachment));
 
@@ -4584,7 +4688,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			RuleResDTO ruleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 
 			if (ruleResDTO.isSuccessful()) {
-				if(ruleResDTO.getRuleValueList()!=null && ruleResDTO.getRuleValueList().size()>0) {
+				//#35061 - Start
+				if(ruleResDTO.getRuleValueList()!=null && !ruleResDTO.getRuleValueList().isEmpty()) {
+				//#35061 - End
 					indPriceThreshold = new BigDecimal(ruleResDTO.getRuleValueList().get(0).getRuleValue());
 				} else {
 					throw new EpException(MessageConst.ERROR_770222, new String[]{getRuleTypeDesc(ruleReqDTO.getRuleType())});
@@ -6099,8 +6205,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public List<ScQtCommitteRemarks> omitLatestRemarkForDisplay(List<ScQtCommitteRemarks> remarks) {
 		List<ScQtCommitteRemarks> omittedList = new ArrayList<>();
-		if (CollectionUtils.isEmpty(remarks))
+		if (CollectionUtils.isEmpty(remarks)) {
 			return omittedList;
+		}
 
 		for (ScQtCommitteRemarks r : remarks) {
 			if (StringUtils.isNotEmpty(r.getRemark())) {
@@ -6132,26 +6239,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	@SuppressWarnings("unchecked")
 	public List<QtCommitteeMemberBean> getMemberHistoryList(ScCommittee scCommittee) {
 		List<QtCommitteeMemberBean> list = new ArrayList<>();
-		try {
-			if (scCommittee != null) {
-				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
+		if (scCommittee != null) {
+			List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
 
-				if (CollectionUtils.isNotEmpty(histories)) {
-					Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
-						@Override
-						public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
-							return o2.getCreatedDate().compareTo(o1.getCreatedDate());
-						}
-					});
+			if (CollectionUtils.isNotEmpty(histories)) {
+				Collections.sort(histories, new Comparator<ScCommitteeMemberHistory>() {
+					@Override
+					public int compare(ScCommitteeMemberHistory o1, ScCommitteeMemberHistory o2) {
+						return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+					}
+				});
 
-					ScCommitteeMemberHistory h = histories.get(0);
-					list = (List<QtCommitteeMemberBean>) (Object) h.deserializeList(h.getCommitteeMembers());
-					CustomUtils.sortQtCommitteeMemberRole(list);
-				}
+				ScCommitteeMemberHistory h = histories.get(0);
+				list = (List<QtCommitteeMemberBean>) (Object) h.deserializeList(h.getCommitteeMembers());
+				CustomUtils.sortQtCommitteeMemberRole(list);
 			}
-		} catch (Exception e) {
-			log.debug(e);
 		}
+
 		return list;
 	}
 	// 25037 - end
@@ -6205,8 +6309,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
 		ScQtCommittee qtCommittee = committeSO.retrieveCommitteByQtIdNCommType(reqDTO).getScQtCommittee();
 		boolean pendingApproval = false;// 25037 note 629
-		if (null == qtCommittee || null == qtCommittee.getScCommittee())
+		if (null == qtCommittee || null == qtCommittee.getScCommittee()) {
 			return;
+		}
 
 		ScCommittee scCommittee = qtCommittee.getScCommittee();
 		if (validateCommitteeApproval) {
@@ -6219,14 +6324,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			pendingApproval = true;
 		}
 
-		if (CollectionUtils.isEmpty(scCommittee.getScCommitteeMembers()))
+		if (CollectionUtils.isEmpty(scCommittee.getScCommitteeMembers())) {
 			return;
+		}
 
 		List<ScCommitteeMember> members = scCommittee.getScCommitteeMembers();
 
 		// 25037 - start - note 629
 		List<QtCommitteeMemberBean> memberList = new ArrayList<>();
-		final List<String> sortOrder = Arrays.asList("M", "C", "S");
+		final List<String> sortOrder = Arrays.asList(ParameterConst.COMMITTEE_ROLE_MEMBER,
+				ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY);
 		if (pendingApproval) {
 			if (CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMemberHistories())) {
 				List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
@@ -6286,12 +6393,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						DbValueConst.RECORD_STATUS_ACTIVE));
 
 		Map<String, String> roleMap = new HashMap<>();
-		roleMap.put(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, "_CHAIRPERSON");
-		roleMap.put(ParameterConst.COMMITTEE_ROLE_MEMBER, "_MEMBER");
+		roleMap.put(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, SourcingConstants.CONCAT_STRING_CHAIRPERSON);
+		roleMap.put(ParameterConst.COMMITTEE_ROLE_MEMBER, SourcingConstants.CONCAT_STRING_MEMBER);
 		for (QtCommitteeMemberBean member : memberList) {
 			String memberRoleCode = member.getMemberRole();
-			if (memberRoleCode.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY))
+			if (memberRoleCode.equals(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
 				continue;
+			}
 
 			String memberRole = ResourceBundleUtils.getMessage("lbl.sc.committee.role.".concat(memberRoleCode),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -6405,6 +6513,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		return committeeNames;
+	}
+	
+	/**
+	 * Sort outcomes.
+	 *
+	 * @param outcomes
+	 * @return the string[]
+	 */
+	public String[] sortQtOutcomes(String[] outcomes) {
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY; 
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[] {BpmOutcomeConst.BPM_REVISE};
+			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
 	}
 	// 25037 - end
 }

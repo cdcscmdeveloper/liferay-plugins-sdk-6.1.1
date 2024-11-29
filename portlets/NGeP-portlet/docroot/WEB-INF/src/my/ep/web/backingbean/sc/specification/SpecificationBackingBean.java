@@ -10851,12 +10851,14 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// #25638 -start-
 	public void specCommitteBpmTask(String action) {
 		// #25638 -end-
+		// remove when #25635 ready for Production -start-
 		// #1873 -start-
 		// #34837 - start
 		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
 		// #34837 - end
 		// #1873 -end-
+		// remove when #25635 ready for Production -end-
 
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -17645,43 +17647,33 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			qt.setSampleReq(sample);
 		}
 	}
-	
+
 	// 25037 - start
 	/**
-	 * Submit action based on outcome. 
+	 * Submit action based on outcome.
+	 * 
 	 * @param outcome
 	 */
 	public void submitAction(String outcome) {
 		assertConcurrentComittteeChangesApproval();
-		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			/*
-			 * A = RequestContext.getCurrentInstance().execute(
-			 * "submitConfirmPopUp2.show()"); B = specCommitteBpmTask(outcome);
-			 * ::: use B instead of A coz A (#25635) not ready for UAT - as of
-			 * 27-aug-2022. ::: use A coz 25635 closed in SIT - as of
-			 * 7-dec-2022.
-			 */
 
-			// 1873 - start - note 52 <<< use this when 25635 ready for UAT &
-			// remove below -start-
-			if (!assertPendingFinancialSubmission()) {
-				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
-			}
-			// 1873 - end - note 52 <<< use this when 25635 ready for UAT &
-			// remove below -end-
+		// remove when #25635 ready for Production -start-
+		specCommitteBpmTask(outcome);
+		// remove when #25635 ready for Production -end-
 
-			// // 1873 - start - note 52 <<< remove this when 25635 ready for
-			// UAT & use above -start-
-			// if (!assertPendingFinancialSubmission()) {
-			// specCommitteBpmTask(outcome);
-			// }
-			// // 1873 - end - note 52 <<< remove this when 25635 ready for UAT
-			// & use above -end-
-		} else {
-			specCommitteBpmTask(outcome);
-		}
+		// open below conditions when #25635 ready for Production -start-
+//		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+//			if (!assertPendingFinancialSubmission()) {
+//				RequestContext.getCurrentInstance().execute("submitConfirmPopUp2.show()");
+//			}
+//		} else {
+//			specCommitteBpmTask(outcome);
+//		}
+		// open above conditions when #25635 ready for Production -end-
 	}
+	// 25037 - end
 
+	// 25037 - start
 	private void assertConcurrentComittteeChangesApproval() {
 		String taskName = this.getManagedBean().getTaskName();
 		taskName = StringUtils.isNotEmpty(taskName) ? taskName : "";

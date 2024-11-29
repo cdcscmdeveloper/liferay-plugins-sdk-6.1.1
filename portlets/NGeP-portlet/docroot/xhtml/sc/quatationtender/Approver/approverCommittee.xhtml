@@ -30,7 +30,8 @@
 			</p:dataTable>
 		</p:panel>
 	</c:if>
-
+	
+	<!-- 25037 start -->
 	<p:panel header="#{lbl['lbl.sc.lbl.prevCommittee']}"
 		rendered="#{approvalBackingBean.managedBean.committeeUpdateFlow}"
 		toggleable="true" id="prevCommitteeId">
@@ -113,4 +114,5 @@
 			<ui:include src="committeeApprovalTab.xhtml" />
 		</c:otherwise>
 	</c:choose>
+	<!-- 25037 end -->
 </ui:composition>

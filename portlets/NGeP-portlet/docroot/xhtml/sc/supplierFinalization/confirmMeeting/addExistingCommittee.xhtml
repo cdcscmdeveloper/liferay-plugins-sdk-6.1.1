@@ -52,69 +52,66 @@
 							resetValues="true" partialSubmit="true" process="@this" />
 					</div>
 				</p:panel>
-			<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true"
-				style="width:100%;">
-				<p:dataTable id="existingMemberTbl"
-					value="#{suppFinalMeetingBackingBean.managedBean.userSearchDataModel}"
-					selection="#{suppFinalMeetingBackingBean.managedBean.selectedPmUsers}"
-					rowKey="#{existingMember.userId}" var="existingMember" lazy="true"
-					styleClass="existingCommitteeResults" style="width : 100%;"
-					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rows="10" rowIndexVar="index">
+				<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true"
+					style="width:100%;">
+					<p:dataTable id="existingMemberTbl"
+						value="#{suppFinalMeetingBackingBean.managedBean.userSearchDataModel}"
+						selection="#{suppFinalMeetingBackingBean.managedBean.selectedPmUsers}"
+						rowKey="#{existingMember.userId}" var="existingMember"
+						lazy="true" styleClass="existingCommitteeResults" style="width : 100%;"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rows="10"
+						rowIndexVar="index">
 
-					<ac:paginator for="existingMemberTbl" />
-					<p:ajax event="rowSelect"
-						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
-					<p:ajax event="rowUnselect"
-						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
-					<p:ajax event="rowSelectCheckbox"
-						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
-					<p:ajax event="rowUnselectCheckbox"
-						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
-					<p:ajax event="toggleSelect"
-						update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
-					<p:column selectionMode="multiple" style="width:2%" />
+						<ac:paginator for="existingMemberTbl" />
+                <p:ajax event="rowSelect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowUnselect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowSelectCheckbox" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+			<p:ajax event="toggleSelect" update="@([id$=supplierFinalizationMeetingAddOnBtnId])" />
+						<p:column selectionMode="multiple" style="width:2%" />
 
-					<p:column headerText="#{lbl['lbl.sc.name']}">
-						<h:outputText value="#{existingMember.userName}"
-							style="white-space: normal;" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-						<h:outputText value="#{existingMember.identificationNo}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.designation']}">
-						<h:outputText value="#{existingMember.designation}"
-							style="white-space: normal;" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.email']}">
-						<h:outputText value="#{existingMember.email}"
-							style="white-space: normal;" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.grade']}">
-						<h:outputText value="#{existingMember.grade}" />
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-							<ac:iconTooltip id="pnpTT#{index}"
-								value="#{lbl['lbl.sc.pnp.tooltip']}" />
-						</f:facet>
-						<h:outputText
-							value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.role']}">
-						<ui:param name="filteredRoles" value="#{fn:split('S',',')}" /> 
-						<p:selectOneMenu id="appaction"
-							value="#{existingMember.memberRoleId}"
-							style="width: 110px;margin-bottom: 5px;">
-							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
-								value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember, filteredRoles)}"
-								itemLabel="#{role.codeName}"
-								itemValue="#{role.pmParameter.parameterId}" />
-						</p:selectOneMenu>
-					</p:column>
-				</p:dataTable>
-			</p:panel>
+						<p:column headerText="#{lbl['lbl.sc.name']}">
+							<h:outputText value="#{existingMember.userName}"
+								style="white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+							<h:outputText value="#{existingMember.identificationNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.designation']}">
+							<h:outputText value="#{existingMember.designation}"
+								style="white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.email']}">
+							<h:outputText value="#{existingMember.email}"
+								style="white-space: normal;" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.grade']}">
+							<h:outputText value="#{existingMember.grade}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+								<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							</f:facet>
+							<h:outputText
+								value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.role']}">
+							<ui:remove>25037 -start-</ui:remove>
+							<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+							<p:selectOneMenu id="appaction"
+								value="#{existingMember.memberRoleId}"
+								style="width: 110px;margin-bottom: 5px;">
+								<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+									value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember, filteredRoles)}"
+									itemLabel="#{role.codeName}"
+									itemValue="#{role.pmParameter.parameterId}" />
+							</p:selectOneMenu>
+							<ui:remove>25037 -end-</ui:remove>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
 		</h:panelGroup>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}"

@@ -14,18 +14,25 @@
 		<cc:attribute name="widget" default="" />
 		<cc:attribute name="okAction" required="true" default="" />
 		<cc:attribute name="cancelAction" default="" />
+		<!-- 25037 -start- -->
 		<cc:attribute name="width" default="auto" />
 		<cc:attribute name="height" default="auto" />
+		<!-- 25037 -end- -->
 		<cc:attribute name="resetInput" default="" />
 		<cc:attribute name="okProcess" default="@this" />
+		<!-- 25037 -start- -->
 		<cc:attribute name="noProcess" default="@this" />
+		<!-- 25037 -end- -->
 		<!-- 25692 -start- -->
 		<cc:attribute name="style" default="" />
+		<!-- 25037 -start- -->
 		<cc:attribute name="dialogCSS" default="" />
-		<cc:attribute name="loadingWidget" default=""/>
+		<cc:attribute name="loadingWidget" default="" />
+		<!-- 25037 -end- -->
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- 25037 -start- -->
 		<style>
 			#{cc.attrs.dialogCSS}
 			.confirm-ui-dialog{
@@ -50,16 +57,18 @@
 			}
 		
 		</style>
+		<!-- 25037 -end- -->
+
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
 
-		<!-- 25692 -start- -->
+		<!-- 25692,25037 -start- -->
 		<p:dialog styleClass="confirm-ui-dialog" id="#{cc.attrs.id}"
 			widgetVar="#{cc.attrs.widget}" header="#{confirmationheader}"
 			resizable="false" width="#{cc.attrs.width}"
 			height="#{cc.attrs.height}" closable="false" modal="true"
 			style="#{cc.attrs.style}">
-		<!-- 25692 -end- -->
+			<!-- 25692,25037 -end- -->
 
 			<p:blockUI block="#{cc.attrs.id}Popup"
 				widgetVar="confirmPopupBlockWidget">
@@ -80,6 +89,7 @@
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
 					<c:choose>
+						<!-- 25037 -start- -->
 						<c:when test="#{not empty cc.attrs.loadingWidget}">
 							<ui:remove>
 								<!--trigger external blockwidget, TODO: maybe refactor this conditional fragment -->
@@ -91,38 +101,47 @@
 								oncomplete="#{cc.attrs.loadingWidget}.hide();"
 								update="#{cc.attrs.update}" />
 						</c:when>
+						<!-- 25037 -end- -->
 						<c:when test="#{empty cc.attrs.resetInput}">
+							<!-- 25037 -start- -->
 							<p:commandButton id="yesWithResetId"
 								value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 								partialSubmit="true" onstart="confirmPopupBlockWidget.show();"
 								action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();"
 								update="#{cc.attrs.update}" />
+							<!-- 25037 -end- -->
 						</c:when>
 						<c:otherwise>
+							<!-- 25037 -start- -->
 							<p:commandButton id="yesWithoutResetId"
 								value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
 								partialSubmit="true" onstart="confirmPopupBlockWidget.show();"
 								action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
 								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();"
 								update="#{cc.attrs.update}">
+								<!-- 25037 -end- -->
 								<p:resetInput target="#{cc.attrs.resetInput}" />
 							</p:commandButton>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
 						<c:when test="#{not empty cc.attrs.cancelAction}">
+							<!-- 25037 -start- -->
 							<p:commandButton id="noWithActionId" value="#{lbl['lbl.btn.no']}"
 								partialSubmit="true" onstart="confirmPopupBlockWidget.show();"
 								action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.cancelAction)}"
 								oncomplete="confirmPopupBlockWidget.hide(); #{cc.attrs.widget}.hide();"
 								update="#{cc.attrs.update}" process="#{cc.attrs.noProcess}" />
+							<!-- 25037 -end- -->
 						</c:when>
 						<c:otherwise>
+							<!-- 25037 -start- -->
 							<p:commandButton id="noWithoutActionId"
 								value="#{lbl['lbl.btn.no']}" immediate="true"
 								oncomplete="#{cc.attrs.widget}.hide();"
 								process="#{cc.attrs.noProcess}" />
+							<!-- 25037 -end- -->
 						</c:otherwise>
 					</c:choose>
 

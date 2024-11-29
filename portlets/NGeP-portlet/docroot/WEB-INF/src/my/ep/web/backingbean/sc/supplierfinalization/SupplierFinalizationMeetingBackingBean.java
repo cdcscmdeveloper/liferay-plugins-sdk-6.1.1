@@ -1471,6 +1471,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void submitAction(String outCome, String navigateTo) {
 	// 25037 - end
+
 		IQTMeetingSO meetingSO = null;
 		try {
 			FacesScopes facesScopes = new FacesScopes();
@@ -1509,6 +1510,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			reqDTO.setCommitteeModified(this.getManagedBean().isCommitteeModified());
 			// 25037 - end
+			
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
@@ -1850,6 +1852,7 @@ if (CollectionUtils.isNotEmpty(
 		}
 
 	}
+	
 	// 25037 - start
 	private ICommitteSO getCommitteeSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
@@ -1873,14 +1876,14 @@ if (CollectionUtils.isNotEmpty(
 		mainPage = finalBiddingBB == null ? mainPage
 				: "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
 
-		if ("back".equalsIgnoreCase(action)) {
+		if (CommonConstants.ACTION_BACK.equalsIgnoreCase(action)) {
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-		} else if ("update".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_UPDATE.equalsIgnoreCase(action)) {
 			updateAction();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
-		} else if ("confirm".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_CONFIRM.equalsIgnoreCase(action)) {
 			validateCommitteeChanges();
 			if (finalBB != null) {
 				submitChanges(finalBB, mainPage);

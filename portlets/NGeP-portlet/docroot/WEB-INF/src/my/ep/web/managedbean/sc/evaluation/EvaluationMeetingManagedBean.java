@@ -145,7 +145,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private boolean nameRequired;
 	
 	private boolean hasPreviousMeeting; //#29473, #31675
-
+	
 	// 25037 - start
 	private Paginator historyPaginator;
 	private Paginator memberHistoryPaginator;
@@ -163,7 +163,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	// 25037 - end
 
-	
 	/**
 	 * Gets the today.
 	 * 
@@ -835,7 +834,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 	// #29473, #31675 -End
-
+	
 	// 25037 - start
 	public Paginator getHistoryPaginator() {
 		return historyPaginator;

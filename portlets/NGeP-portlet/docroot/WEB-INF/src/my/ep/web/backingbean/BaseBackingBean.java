@@ -2234,33 +2234,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
-	private String[] sortOutcomes(String[] outcomes) {
-		// 25037(29253) - start
-		if (null == outcomes) {
-			return ArrayUtils.EMPTY_STRING_ARRAY;
-		}
-		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
-			// last index will appear on the far right,
-			// if outcome not ranked, order come as is,
-			// existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
-			@Override
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});
-		String[] bpmOutcomes = new String[bpmActions.size()];
-		return bpmActions.toArray(bpmOutcomes);
-		// 25037(29253) - end
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
 	}
 
 	/**
@@ -2736,6 +2722,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(smSupplier.getRegNo());
 			ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+			//#29582
+			ssmReqDTO.setSmSupp(smSupplier);
 			//27329
 			ssmReqDTO.setPreRegistration(true);
 			//ssmReqDTO.setCheckOnly(true);
@@ -2763,6 +2751,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					this.getManagedBean().setStatusDescFromSSM(sb.toString());
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
+				}// #29582-start
+				else if (ssmResDTO.getSmPersonnelAll() != null && ssmResDTO.getSmPersonnelAll().size() > 0) {
+					SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+				// #29582- end
 				}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
 					//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 					SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(postRegBean.getSmSupplier().getSupplierId(), "N");
