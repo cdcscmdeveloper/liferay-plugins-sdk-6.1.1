@@ -382,6 +382,7 @@
 					<td><p:outputPanel id="postCodeCompPanelId">
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId==backingBean.managedBean.myCountryId}">
+								<!-- #36483 - add ajax  for smSupPostCodeMy -->
 								<p:inputText maxlength="5" required="true"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeMy"
 									disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull) or backingBean.managedBean.upsCannotEdit}"
@@ -389,6 +390,7 @@
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35">
 									<f:validator validatorId="postcodeValidator" />
+									<p:ajax event="change" process="@this" listener="#{backingBean.onChangePostcode(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
 								</p:inputText>
 								<ac:ssmShowIconAlertGreen 
 									greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}" 
