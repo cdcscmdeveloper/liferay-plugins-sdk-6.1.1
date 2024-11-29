@@ -291,7 +291,11 @@ public interface QTConstants {
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
 	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
 	// 25037 - end
-	
+
+	// 36671, 25037 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671, 25037 - end
+
 	// Bug #35688@Syazani 10/07/2024 -- Start
 	public static final String TAB_SC_GENERAL_INFORMATION = "0";
 	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
