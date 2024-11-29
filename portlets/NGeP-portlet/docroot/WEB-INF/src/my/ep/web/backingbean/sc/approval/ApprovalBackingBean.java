@@ -2955,8 +2955,9 @@ return scQt;
 
 		List<TabBean> scQtCommittees = this.getManagedBean().getScCommitteeMemberTabList();
 
+		scQt.setScQtCommittees(new ArrayList<ScQtCommittee>());
+		
 		for (TabBean tabBean : scQtCommittees) {
-			scQt.setScQtCommittees(new ArrayList<ScQtCommittee>());
 			scQt.getScQtCommittees().add(tabBean.getScQtCommittee());
 		}
 
