@@ -69,7 +69,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			prepareList(rsltReportList);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
-					"generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
+					"generateRptExcelForAuditTrailDetailsAll", getUserIdSessionFromLoginId(), e);
 		}
 		Workbook wb = new XSSFWorkbook();
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)
@@ -153,7 +153,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			prepareList(rsltReportList);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
-					"AuditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
+					"generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
 		}
 		Workbook wb = new XSSFWorkbook();
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)) {
@@ -314,7 +314,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			wb.close();// Close Workbook
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
-					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptExcelForAuditTrailDetails",
+					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "exportExcelReportAudit",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
