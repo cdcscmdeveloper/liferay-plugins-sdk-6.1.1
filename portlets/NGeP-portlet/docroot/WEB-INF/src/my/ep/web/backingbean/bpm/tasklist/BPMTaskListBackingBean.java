@@ -116,6 +116,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME,
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
+			temp.put(SCProcessNameConst.CODIFY_PURCHASE_REQUEST_PROCESS_NAME,
+					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);// #36119
 
 			temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			//temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
@@ -691,6 +693,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					SourcingConstants.NAV_PAGE_REVIEW_REQUEST_NOTE);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.SUPPLIER_CODIFICATION_PROCESS_NAME),
 					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);
+			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.CODIFY_PURCHASE_REQUEST_PROCESS_NAME),
+					SourcingConstants.NAV_PAGE_REQUEST_NOTE_CODE_ASSIGNMENT);// #36119
 
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME), SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_INQUIRY);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME) + SCProcessNameConst.REQUISITIONER_RESPONSE_PURCHASE_IN_DEFAULT, SourcingConstants.NAV_PAGE_REVIEW_PURCHASE_IN_DEFAULT); //#28865
