@@ -205,7 +205,7 @@
 				berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. <br/>
 				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018</span>
 			</p>
-			
+   
 			## #26770 #503 - start
 			<p style="margin-bottom:1px">
 				<span class="text_family">*3. <span class="text_indent">Harga</span> Kontrak adalah tidak termasuk cukai perkhidmatan selaras dengan Perintah Cukai Perkhidmatan 2018.</span>
@@ -370,7 +370,7 @@
 					</p>
 					<p>
 					## 11
-						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
+						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan nilai seperti termaktub di bawah PP/PK 1.7.</span>
 					</p>
 					<div style="text-align:justify; margin-bottom:1px !important">
 						## 12					
@@ -988,6 +988,39 @@
 			terkemudian. <br/><br/>
 		</td>
 	</tr>
+	##25025 & 26770 add point 12
+	<tr>
+		<td colspan="3" >
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header" >12. </td>
+					<td class="text_header_submenu">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span class="text_family_small_black">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span></td>
+				</tr>
+				
+				
+			</table>
+		</td>
+	</tr>	
+	<tr>
+			<td align="left" class="submenu_padding"><span class="text_family">12.1 Nama</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+			<td align="left" class="submenu_padding"><span class="text_family">12.2 Nombor Telefon</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr valign="top">
+			<td align="left" class="submenu_padding"><span class="text_family">12.3 Alamat E-mel</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	##25025 & 26770 end point 12
 	<tr>
 		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
 				yang tidak berkenaan</i></td>

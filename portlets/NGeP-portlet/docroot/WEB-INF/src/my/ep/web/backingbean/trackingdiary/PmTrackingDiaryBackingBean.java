@@ -342,6 +342,13 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		// Start Fix - #36608
+		if (getManagedBean().getSelectedDocNo() != null) {
+			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getSelectedDocNo());
+		} else {
+			paramMap.put(ReportConst.PARAM_DOC_NO, ReportConst.EMPTY_VAL);
+		}
+		// End Fix - #36608
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 		String reportName = getTrackingDiaryReportName(docType,docId);
@@ -371,7 +378,11 @@ public class PmTrackingDiaryBackingBean extends
 			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
 		}
 		// 25791 -end-
-
+		// Start Fix - #36608
+		if (getManagedBean().getSelectedDocNo() != null) {
+			getManagedBean().setSelectedDocNo(null);
+		}
+		// End Fix - #36608
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
@@ -392,6 +403,21 @@ public class PmTrackingDiaryBackingBean extends
 		}
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
+	}
+	
+	/**
+	 * Fix - #36608
+	 * Add docNo / circular no for data from circular
+	 * @param docType
+	 * @param docId
+	 * @param docNo
+	 * @throws IOException
+	 * @throws PortalException
+	 * @throws SystemException
+	 */
+	public void redirectToTrackingDiaryForCircularContract(String docType, Long docId, String docNo)  throws IOException,PortalException, SystemException{
+		getManagedBean().setSelectedDocNo(docNo);
+		redirectToSupplierTrackingDiary(docType, docId, false);
 	}
 
 	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
