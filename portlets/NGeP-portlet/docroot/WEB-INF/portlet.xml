@@ -10929,7 +10929,6 @@
 		</security-role-ref>
 	</portlet>
 	<!-- 25037 - end -->
-
 	<portlet>
 		<portlet-name>CatalogueMaintenanceTemp</portlet-name>
 		<display-name>CatalogueMaintenanceTemp</display-name>

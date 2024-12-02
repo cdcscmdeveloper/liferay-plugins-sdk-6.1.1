@@ -3214,14 +3214,14 @@ public class SupplierFinalizationBackingBean extends
 								.longValue()
 				// 25638 - End.
 				)) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			reportAttachment = generateDocumentAttachmentRtf(scQtFinalizationReport, false); //36715
 			
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		} else {
 			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 
 			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+				reportAttachment = generateDocumentAttachmentRtf(scQtFinalizationReport, false); //36715
 				
 				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 				
@@ -3292,6 +3292,54 @@ public class SupplierFinalizationBackingBean extends
 
 		return streamContent;
     }	
+    
+	//36715 START
+    /**
+	 *Get the Documents Report Information.
+	 * 
+	 *@return the ScQtFinalizationReportAttachment instance.
+	 *             
+	 */
+	public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
+			ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
+		log.info("generateDocumentAttachment");
+		String definitionType = scQtFinalizationReport.getDefinationType()
+				.getParameterCode();
+		ScQtFinalization scQtFinalization = getManagedBean()
+				.getScQtFinalization();
+
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+					.getDocDefinitionKey();
+			ScQt scQt = getManagedBean().getScQt();
+			reportAttachment = new ScQtFinalizationReportAttachment();
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
+			ScAttachment attachment = (ScAttachment) reportAttachment;
+			StringBuilder filename = new StringBuilder();
+			// replace white space due to firefox
+			filename.append(scQtFinalizationReport.getTitle()
+					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
+					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
+			
+			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+				filename.append(".rtf");
+				reportAttachment.setFileName(filename.toString());
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
+
+			} else {
+				debugLogger("No document type is exists with the key "
+						+ docDefinitionKey);
+				reportAttachment = null;
+			}
+
+		} 
+		
+		return reportAttachment;
+	}
+	//36715 END
      
     /**
 	 *Get the Documents Report Information.
@@ -3338,6 +3386,8 @@ public class SupplierFinalizationBackingBean extends
 		
 		return reportAttachment;
 	}
+	
+	
 	
 	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
 										   throws Exception {
@@ -3391,6 +3441,61 @@ public class SupplierFinalizationBackingBean extends
 		// #18685 - End
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
+	
+	//36715 START
+	private void generateKertasTaklimatRtf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
+			   throws Exception {
+		populateAttachmentDetails(attachment);
+		
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
+		
+		String estimatedAmountStr = null;
+		IQTDetailSO qtDetailSO = null;
+		try {
+		qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+		ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
+		estimatedAmountStr = estimatedAmount.toPlainString();
+		} finally {
+		qtDetailSO = null;
+		}		
+		
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+		.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
+		StringBuilder ulasan=new StringBuilder();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
+		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
+		for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
+		if(StringUtils.isNotBlank(remark.getRemark())){
+		ulasan.append(remark.getRemark() + "\n");
+		}
+		}
+		}
+		/*StringBuilder pengesyoran=new StringBuilder();
+		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
+		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
+		for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
+		if(StringUtils.isNotBlank(remark.getRemark())){
+		pengesyoran.append(remark.getRemark() + "\n");
+		}
+		}
+		}*/
+		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
+		StringUtils.EMPTY : ulasan.toString());
+		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
+		//paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
+		//StringUtils.EMPTY : pengesyoran.toString());
+		// #18685 - Start
+		paramMap.put("flowType", "tasklist");
+		// #18685 - End
+		generateRtfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
+    }
+	//36715 End
 
 	private void generateEndorsementReportFromVelocityToPdf(
 			ScQtFinalization scQtFinalization, ScAttachment attachment)
@@ -8622,7 +8727,7 @@ public class SupplierFinalizationBackingBean extends
 		paramMap.put("flowType", "tasklist");
 		// #18685 - End
 		
-		generateRtfFromOracle(reportName, paramMap, attachment, false);
+		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 	// #18685 - End
 	
