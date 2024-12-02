@@ -159,9 +159,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		// start checking for validation (for checking cert expiration)
 		validateInternalSPKI(getSupplier().getEpNo());
 		// end checking for validation
-		// #30425 - End
+		// #30425 - End, #36605
 		
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			// #30425 - Start
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 			// #30425 - End
