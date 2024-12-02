@@ -2015,16 +2015,16 @@ public class SmPersonnelBackingBean extends
 			}
 		}
 		//32515 END
+
+		//Start 13320
 		// Start - 35178
-		if (!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()
-				.isEmpty()) {
+		if (!getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().isEmpty()) {
 			// Start 13320
-			for (SmPersonnelAddress per : getManagedBean()
-					.getBasicSmPersonnel().getSmPersonnelAddresses()) {
+			for (SmPersonnelAddress per : getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses()) {
 				// #33592-start
-				if (per.getSmAddress().getPmState().getStateCode() != null
-						&& !per.getSmAddress().getPmState().getStateCode()
-								.equals(SupplierManagementConst.SARAWAK_CODE)) {
+				if ((per.getSmAddress() != null)
+						&& (per.getSmAddress().getPmState().getStateCode() != null && !per.getSmAddress().getPmState()
+								.getStateCode().equals(SupplierManagementConst.SARAWAK_CODE))) {
 					per.getSmAddress().setPmDivision(null);
 				}// #33592-end
 			}
@@ -3458,8 +3458,8 @@ public class SmPersonnelBackingBean extends
 					
 					PersonnelReqDTO reqDTO1 = new PersonnelReqDTO();
 					PersonnelResDTO resDTO1 = new PersonnelResDTO();
-					
-					personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+					personnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+					/*personnel.setCreatedDate(new Timestamp(System.currentTimeMillis()));*/
 					
 					//admin assign new roles to personnel (supplier user & fullfillment user)
 					if (getManagedBean().getEpRoleTrans().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) && !ePStatus

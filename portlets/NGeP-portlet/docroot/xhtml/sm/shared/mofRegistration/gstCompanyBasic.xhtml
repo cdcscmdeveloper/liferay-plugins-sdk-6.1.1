@@ -27,12 +27,14 @@
 						<c:when test="#{backingBean.managedBean.supplierUser 
 							and (backingBean.managedBean.smAppl.applType eq 'N' 
 							or backingBean.managedBean.smAppl.applType eq 'R')}">
+							<!-- Disable for UPS 32008 - START -->
 							<p:inputText label="#{lbl['lbl.sm.gstNo']}"
 								required="#{not empty backingBean.managedBean.companyBasicGst.gstEffDate 
 								or not empty backingBean.managedBean.companyBasicGst.gstEndDate}"
 								value="#{backingBean.managedBean.companyBasicGst.gstRegNo}"
 								id="smGstRegistrationNo" size="35" maxlength="12"
-								validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
+								validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								<p:ajax process="@this" partialSubmit="true" update="@([id$=gstHqPanelId])" />
 							</p:inputText>
@@ -68,7 +70,8 @@
 								maxdate="#{CommonConstants.CURRENT_DATE}" 
 								value="#{backingBean.managedBean.companyBasicGst.gstEffDate}" 
 								required="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
-								or not empty backingBean.managedBean.companyBasicGst.gstEndDate}">
+								or not empty backingBean.managedBean.companyBasicGst.gstEndDate}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this" />
 							</p:calendar>
 							<p:message id="gstEffDateMsg" for="gstEffDate"
@@ -77,7 +80,8 @@
 						<c:otherwise>
 							<p:inputText
 								value="#{backingBean.managedBean.companyBasicGst.gstEffDate}"
-								readonly="true" size="35">
+								readonly="true" size="35"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</p:inputText>
@@ -105,7 +109,9 @@
 						<c:otherwise>
 							<p:inputText
 								value="#{backingBean.managedBean.companyBasicGst.gstEndDate}"
-								readonly="true" size="35">
+								readonly="true" size="35"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
+								<!-- Disable for UPS 32008 - END -->
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 							</p:inputText>

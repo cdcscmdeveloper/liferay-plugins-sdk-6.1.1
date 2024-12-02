@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.1.0//EN" "http://www.liferay.com/dtd/liferay-display_6_1_0.dtd">
 <display>
 	<category name="NGeP">
 		<category name="category.ep.au">
@@ -24,6 +23,7 @@
 			<portlet id="ctRequestFactoring" />
 			<portlet id="ctSuppAgreement" />
 			<portlet id="ctContractSuspend" />
+			<portlet id="ctContractReqadmin" />
 			<portlet id="ctContractTerminate" />
 			<portlet id="ctContractAmendment" />
 			<portlet id="ctChangeBankAccount" />
@@ -31,6 +31,7 @@
 			<portlet id="ctContractSearch" />
 			<portlet id="ctContractDashBoard" />
 			<portlet id="ctCustomerService" />
+			<portlet id="ctContractOwnerManagement" />
 		</category>
 		
 		<!-- Profile Management - START -->
@@ -183,6 +184,10 @@
 			<portlet id="deskOfficerMaintenance"/>
 			<portlet id="deskOfficerMaintenanceApproval"/>
 			<!-- Enhancement 25627-end- -->
+			<!-- 25037 - start -->
+			<portlet id="maintenanceRequestApproval"/>
+			<portlet id="maintenanceRequestRevision"/>
+			<!-- 25037 - end -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -379,6 +384,7 @@
 		<portlet id="profileRobExpire"></portlet>
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
+		<portlet id="spkiTest"></portlet>
 	</category>
 
 	<category name="category.ep.wp">

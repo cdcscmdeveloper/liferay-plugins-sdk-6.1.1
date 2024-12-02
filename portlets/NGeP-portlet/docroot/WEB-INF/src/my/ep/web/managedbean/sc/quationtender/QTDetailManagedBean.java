@@ -22,9 +22,11 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -60,6 +62,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -87,6 +90,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
@@ -1630,6 +1634,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean approverTabLoaded = false;
 	// bug #30435, Enhancement #25077 -end-
 
+	// #9019 (Harun) -start-
+	private Long qtRemarksIdRemove;
+
+	/** The qt remark missing issues. */
+	private boolean scQtRemarksEmpty = false;
+	// #9019 08082022 (Harun) -end-
+
 	// #1873 -start
 	private boolean technicalOtherCheckList;
 	private boolean technicalTemplateEdited;
@@ -1643,6 +1654,33 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
 	
+	// 25037 - start
+	private boolean showHistory;
+	private Paginator committeeHistories;
+	private String currentCommitteeDesc;
+	private ScCommitteeMemberHistory selectedCommitteeHistory;
+	private Paginator selectedHistoryMember;
+	private boolean committeeReviseFlow;
+	private List<QtCommitteeMemberBean> memberHistoryList;
+	private ScQtApprovalRequest scQtApprovalRequest;
+	private ScQtApprovalRequest doaaRequest;
+	private boolean doaRequestEditable;
+	private List<ScQtContactPerson> newDoaList;
+	private List<ScQtContactPerson> prevDoaList;
+	private List<PmUser> deskOfficerAssistantList;
+	private ScQtRequestContent requestContent;
+	private boolean reapproval;
+	private String prevDOAs;
+	private String[] roleFilterList;
+	private Long currentQTStatus;
+	private Long currentCMTStatus;
+	private boolean committeeUpdateFlow;
+	private List<String> mainTaskNames;
+	private List<TabBean> readOnlyCommitteeTabBean; // Bug 32277
+	// 25037 - end
+
+	private String msgConfirmBelowIndi; // Bug #35061 - asyrafhaziq
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10318,7 +10356,25 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.approverTabLoaded = approverTabLoaded;
 	}
 	// bug #30435, Enhancement #25077 - end
-	
+
+	// #9019 - Start (Harun)
+	public Long getQtRemarksIdRemove() {
+		return qtRemarksIdRemove;
+	}
+
+	public void setQtRemarksIdRemove(Long qtRemarksIdRemove) {
+		this.qtRemarksIdRemove = qtRemarksIdRemove;
+	}
+
+	public boolean isScQtRemarksEmpty() {
+		return scQtRemarksEmpty;
+	}
+
+	public void setScQtRemarksEmpty(boolean scQtRemarksEmpty) {
+		this.scQtRemarksEmpty = scQtRemarksEmpty;
+	}
+	// #9019 - End (Harun)
+
 	// 1873 - start
 	public boolean isTechnicalOtherCheckList() {
 		return technicalOtherCheckList;
@@ -10388,5 +10444,194 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
+
+	// 25037 - start
+	public boolean isShowHistory() {
+		return showHistory;
+	}
+
+	public void setShowHistory(boolean showHistory) {
+		this.showHistory = showHistory;
+	}
+
+	public Paginator getCommitteeHistories() {
+		return committeeHistories;
+	}
+
+	public void setCommitteeHistories(Paginator committeeHistories) {
+		this.committeeHistories = committeeHistories;
+	}
+
+	public String getCurrentCommitteeDesc() {
+		return currentCommitteeDesc;
+	}
+
+	public void setCurrentCommitteeDesc(String currentCommitteeDesc) {
+		this.currentCommitteeDesc = currentCommitteeDesc;
+	}
+
+	public ScCommitteeMemberHistory getSelectedCommitteeHistory() {
+		return selectedCommitteeHistory;
+	}
+
+	public void setSelectedCommitteeHistory(ScCommitteeMemberHistory selectedCommitteeHistory) {
+		this.selectedCommitteeHistory = selectedCommitteeHistory;
+	}
+
+	public Paginator getSelectedHistoryMember() {
+		return selectedHistoryMember;
+	}
+
+	public void setSelectedHistoryMember(Paginator selectedHistoryMember) {
+		this.selectedHistoryMember = selectedHistoryMember;
+	}
+
+	public boolean isCommitteeReviseFlow() {
+		return committeeReviseFlow;
+	}
+
+	public void setCommitteeReviseFlow(boolean committeeReviseFlow) {
+		this.committeeReviseFlow = committeeReviseFlow;
+	}
+
+	public List<QtCommitteeMemberBean> getMemberHistoryList() {
+		return memberHistoryList;
+	}
+
+	public void setMemberHistoryList(List<QtCommitteeMemberBean> memberHistoryList) {
+		this.memberHistoryList = memberHistoryList;
+	}
+
+	public ScQtApprovalRequest getScQtApprovalRequest() {
+		return scQtApprovalRequest;
+	}
+
+	public void setScQtApprovalRequest(ScQtApprovalRequest scQtApprovalRequest) {
+		this.scQtApprovalRequest = scQtApprovalRequest;
+	}
+
+	public ScQtApprovalRequest getDoaaRequest() {
+		return doaaRequest;
+	}
+
+	public void setDoaaRequest(ScQtApprovalRequest doaaRequest) {
+		this.doaaRequest = doaaRequest;
+	}
+
+	public boolean isDoaRequestEditable() {
+		return doaRequestEditable;
+	}
+
+	public void setDoaRequestEditable(boolean doaRequestEditable) {
+		this.doaRequestEditable = doaRequestEditable;
+	}
+
+	public List<ScQtContactPerson> getNewDoaList() {
+		return newDoaList;
+	}
+
+	public void setNewDoaList(List<ScQtContactPerson> newDoaList) {
+		this.newDoaList = newDoaList;
+	}
+
+	public List<PmUser> getDeskOfficerAssistantList() {
+		return deskOfficerAssistantList;
+	}
+
+	public void setDeskOfficerAssistantList(List<PmUser> deskOfficerAssistantList) {
+		this.deskOfficerAssistantList = deskOfficerAssistantList;
+	}
+
+	public List<ScQtContactPerson> getPrevDoaList() {
+		return prevDoaList;
+	}
+
+	public void setPrevDoaList(List<ScQtContactPerson> prevDoaList) {
+		this.prevDoaList = prevDoaList;
+	}
+
+	public boolean isReapproval() {
+		return reapproval;
+	}
+
+	public void setReapproval(boolean reapproval) {
+		this.reapproval = reapproval;
+	}
+
+	public ScQtRequestContent getRequestContent() {
+		return requestContent;
+	}
+
+	public void setRequestContent(ScQtRequestContent requestContent) {
+		this.requestContent = requestContent;
+	}
+
+	public String getPrevDOAs() {
+		return prevDOAs;
+	}
+
+	public void setPrevDOAs(String prevDOAs) {
+		this.prevDOAs = prevDOAs;
+	}
+
+	public String[] getRoleFilterList() {
+		return roleFilterList;
+	}
+
+	public void setRoleFilterList(String[] roleFilterList) {
+		this.roleFilterList = roleFilterList;
+	}
+
+	public Long getCurrentQTStatus() {
+		return currentQTStatus;
+	}
+
+	public void setCurrentQTStatus(Long currentQTStatus) {
+		this.currentQTStatus = currentQTStatus;
+	}
+
+	public Long getCurrentCMTStatus() {
+		return currentCMTStatus;
+	}
+
+	public void setCurrentCMTStatus(Long currentCMTStatus) {
+		this.currentCMTStatus = currentCMTStatus;
+	}
+
+	public boolean isCommitteeUpdateFlow() {
+		return committeeUpdateFlow;
+	}
+
+	public void setCommitteeUpdateFlow(boolean committeeUpdateFlow) {
+		this.committeeUpdateFlow = committeeUpdateFlow;
+	}
+
+	public List<String> getMainTaskNames() {
+		return mainTaskNames;
+	}
+
+	public void setMainTaskNames(List<String> mainTaskNames) {
+		this.mainTaskNames = mainTaskNames;
+	}
+
+	// Bug 32277 - start
+	public List<TabBean> getReadOnlyCommitteeTabBean() {
+		return readOnlyCommitteeTabBean;
+	}
+
+	public void setReadOnlyCommitteeTabBean(List<TabBean> readOnlyCommitteeTabBean) {
+		this.readOnlyCommitteeTabBean = readOnlyCommitteeTabBean;
+	}
+	// Bug 32277 - end
+	// 25037 - end
+
+	// Bug #35061 -start-
+	public String getMsgConfirmBelowIndi() {
+		return msgConfirmBelowIndi;
+	}
+
+	public void setMsgConfirmBelowIndi(String msgConfirmBelowIndi) {
+		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
+	}
+	// Bug #35061 -end-
 }

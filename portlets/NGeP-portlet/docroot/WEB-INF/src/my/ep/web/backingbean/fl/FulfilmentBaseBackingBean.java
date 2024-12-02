@@ -5,12 +5,11 @@ package my.ep.web.backingbean.fl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -239,94 +238,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		return list2;
 	}
-	
-	
-//Start-35429 - Do cancellation	
-	/**
-	 * 
-	 * Sort Approver User List
-	 * @param approver, approverGroupUserList, groupId
-	 * @return PmUser List
-	 */
-	protected List<PmUser> sortApproverUserListDO(List<PmUserGroupUser> approverGroupUserList, PmUser approver,Long groupId){
-	    IUserGroupSO userGroupSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
-	    List<String> names = new ArrayList<>();
-	    List<PmUser> list1 = new ArrayList<>();
-	    List<PmUser> list2 = new CopyOnWriteArrayList<>();  // Thread-safe list
-	    UserGroupReqDTO reqDTO = new UserGroupReqDTO();
-	    UserGroupReqDTO reqDTOCheckActive = new UserGroupReqDTO();
-	    BigDecimal isRemove = BigDecimal.ONE;
-
-	    List<PmUser> pmUserList = new ArrayList<>();
-	    if (approver != null) {
-	         log.info("users from approverGroupUserList");
-	        for(PmUserGroupUser groupUser : approverGroupUserList){
-	            PmUser pmUser = groupUser.getPmUser();
-	            names.add(pmUser.getUserName());
-	            pmUserList.add(pmUser);
-	        }
-	        log.info(" Add approver to the list");
-	        if(!names.contains(approver.getUserName())){
-	            names.add(approver.getUserName());
-	            pmUserList.add(approver);
-	        }
-
-	        log.info("Sort pmUserList by userName");
-	        Collections.sort(pmUserList, new Comparator<PmUser>() {
-				@Override
-				public int compare(PmUser s1, PmUser s2) {
-					return s1.getUserName().compareToIgnoreCase(s2.getUserName());
-				}
-			});
-
-	        boolean match = false;
-	        for(PmUser pmUser : pmUserList){
-	            if(pmUser.getUserName().equals(approver.getUserName())){
-	            	match = true;
-	            }
-	            else{
-					match = false;
-				}
-	            if(match){
-	            	log.info("Add to list2 ");
-	                list2.add(pmUser);
-	            } else {
-	            	log.info("Add to list1 ");
-	                list1.add(pmUser);
-	            }
-	        }
-
-	        log.info("Check approver getCheckActive");
-	        reqDTOCheckActive.setGroupId(groupId);
-	        reqDTOCheckActive.setUserId(approver.getUserId());
-	        UserGroupResDTO resDTOCheckActive = userGroupSO.checkApproverUserActive(reqDTOCheckActive);
-	        isRemove = resDTOCheckActive.getCheckActive();
-	        if (isRemove.equals(BigDecimal.ZERO)) {
-	        	log.info("1 -approver is remove from list2");
-	            removeFirstElement(list2);
-	        } else{
-	        	log.info("Check approver by userGroup");
-	            reqDTO.setGroupId(groupId);
-	            reqDTO.setUserId(approver.getUserId());
-	            UserGroupResDTO resDTO = userGroupSO.retrieveUserGroupUserByUserIdAndGroupId(reqDTO);
-	            if (resDTO.getUserGroupUser()==null || resDTO.getUserGroupUser().getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE){
-	            	log.info("2 -approver is remove from list2");
-	                removeFirstElement(list2);
-	            }
-	        }
-
-	        list2.addAll(list1);
-	    }
-	    return list2;
-	}
-
-	private void removeFirstElement(List<PmUser> list) {
-	    if (!list.isEmpty()) {
-	        list.remove(0);
-	    }
-	}
-//End-35429 - Do cancellation	
-	
 	
 	/**
 	 * Checks if is supplier role.
@@ -779,5 +690,42 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		}
 		return null;
 	}
-	
+
+	// 36386 -Start
+	/**
+	 * Checks if is Government User Role
+	 * 
+	 * @return true, if user has Government User Role
+	 */
+	public boolean hasFlGovernmentUserRole() {
+		List<String> roles = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.FL_APPROVER.value(),
+				RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(), RoleCode.PAY_OFFICER.value(),
+				RoleCode.BPK_APPROVER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(),
+				RoleCode.AUDITOR_INTERNAL.value(), RoleCode.SYS_ADMIN.value());
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Determines whether the PRCR link can be viewed based on user roles.
+	 * 
+	 * @return {@code true} if the user can view the PRCR link, {@code false}
+	 *         otherwise
+	 */
+	public boolean canViewPRCRLink() {
+
+		if (hasSupplierRole() || hasFactoringUserRole()) {
+			if (hasGovtSellerRole() && hasFlGovernmentUserRole()) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
+	// 36386 -End
 }

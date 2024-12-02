@@ -16,6 +16,11 @@
 					<td>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.own']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.rent']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.ownershipType}" 
+							currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType}" 
+							alertValue="#{viewSmApplBackingBean.getOwnershipTypeLabel(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.ownershipType)}"/>
 					</td>
 					<td>&#160;</td>
 					<td>&#160;</td>
@@ -26,28 +31,63 @@
 						<td>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.facilityType}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType}" 
+								alertValue="#{viewSmApplBackingBean.getFacTypeLabel(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
 						</td>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.landLordName']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.ownerName}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.ownerName}"/></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.monthRent']}" /></td>
-						<td><ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}" /></td>
+						<td><ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.rentalRate}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}" 
+								alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.rentalRate)}"/></td>
 					</tr>
 					
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.companyaddress']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.address1}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.address1}"/></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryName}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryName}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}" 
+								alertValue="#{viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmCountry.countryId)}"/></td>
 					</tr>
 					<tr>
 						<td>&#160;</td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address2}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.address2}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address2}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.address2}"/></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateName}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateName}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}" 
+								alertValue="#{viewSmApplBackingBean.getStateLabelById(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmState.stateId)}"/></td>
 					</tr>
 					<!-- 13320 -->
 					<tr>
@@ -57,24 +97,49 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
 											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionName}"
-											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/></td>
+											rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.adoptDivision}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}" 
+								alertValue="#{viewSmApplBackingBean.getDivisionLabelById(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}"/></td>
 						<!-- #13320 - render division - end-->
 					</tr>
 					<tr>
 						<td>&#160;</td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.address3}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.address3}"/></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtName}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtName}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}" 
+								alertValue="#{viewSmApplBackingBean.getDistrictLabelById(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmDistrict.districtId)}"/></td>
 					</tr>
 					<tr>
 						<td>&#160;</td>
 						<td></td>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityName}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityName}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}" 
+								alertValue="#{viewSmApplBackingBean.getCityLabelById(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.pmCity.cityId)}"/></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.smAddress.postcode}"/></td>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>
@@ -86,25 +151,45 @@
 						<td>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.facilityType}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType}" 
+								alertValue="#{viewSmApplBackingBean.getFacTypeLabel(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.facilityType)}"/>
 						</td>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.ownerName']}" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}"/></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}"/>
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.ownerName}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.ownerName}"/></td>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.purchaseDate']}" /></td>
-						<td><ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}" /></td>
+						<td><ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}" />
+							<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.purchaseDate}" 
+									currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}" 
+									alertValue="#{viewSmApplBackingBean.getDateFormat(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.purchaseDate)}"/></td>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.purchasePrice']}" /></td>
-						<td><ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}" /></td>
+						<td><ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}" />
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestAppl.hqFacility.purchasePrice}" 
+								currValue="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}" 
+								alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestAppl.hqFacility.purchasePrice)}"/></td>
 						<td>&#160;</td>
 						<td>&#160;</td>
 					</tr>

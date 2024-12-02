@@ -7,17 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table style="width: 100%">
 		<tr>
+			<!-- Disable for UPS 32008 - START -->
 			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
-					size="35" />
+					size="35" disabled="#{backingBean.managedBean.upsCannotEdit}" />
 			</td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.address']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
-					size="35" />
+					size="35"  disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 			</td>
 		</tr>
 
@@ -25,19 +26,19 @@
 			<td></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
-					size="35" /></td>
+					size="35"  disabled="#{backingBean.managedBean.upsCannotEdit}"/></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
-					size="35" /></td>
+					size="35" disabled="#{backingBean.managedBean.upsCannotEdit}"/></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 			<td><p:selectOneMenu id="branchesCountry"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.countryId}"
-					style="width: 207px;margin-bottom: 5px;">
+					style="width: 207px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCountry"
 						value="#{backingBean.managedBean.countryItems}" />
@@ -51,7 +52,7 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.stateId}"
-					id="branchesState">
+					id="branchesState" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnState"
 						value="#{backingBean.managedBean.branchCompanyStates}" />
@@ -77,7 +78,7 @@
 			<td>
 			<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.divisionId}"
-					id="branchesDivision">
+					id="branchesDivision" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDivision"
 						value="#{backingBean.managedBean.branchCompanyDivisions}" />
@@ -94,7 +95,7 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchesDist"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.districtId}">
+					value="#{backingBean.managedBean.selectedBranch.smAddress.districtId}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDist"
 						value="#{backingBean.managedBean.branchCompanyDistricts}" />
@@ -107,7 +108,7 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchesCity"
-					value="#{backingBean.managedBean.selectedBranch.smAddress.cityId}">
+					value="#{backingBean.managedBean.selectedBranch.smAddress.cityId}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCity"
 						value="#{backingBean.managedBean.branchCompanyCities}" />
@@ -121,7 +122,7 @@
 			<td>
 				<p:inputText validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="10">
+					size="10" disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:validator validatorId="postcodeValidator"/>
 					</p:inputText>
 				
@@ -131,7 +132,7 @@
 								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeConsMy"
 								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
 								validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}" 
-								size="35" >
+								size="35" disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<f:validator validatorId="postcodeValidator" />
 								</p:inputText>
 								<p:message id="branchPostCodeConsMyMsg"
@@ -142,7 +143,7 @@
 						<p:inputText maxlength="10"
 								label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeConsForeign"
 								value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" 
-								size="35" >
+								size="35" disabled="#{backingBean.managedBean.upsCannotEdit}">
 								</p:inputText>
 								<p:message id="branchPostCodeConsForeignMsg"
 								for="branchPostCodeConsForeign" showSummary="true" showDetail="false"
@@ -155,12 +156,13 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35" /></td>
+					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35" disabled="#{backingBean.managedBean.upsCannotEdit}"/></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35" /></td>
+					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35" disabled="#{backingBean.managedBean.upsCannotEdit}"/></td>
+			<!-- Disable for UPS 32008 - END -->
 		</tr>
 
 	</table>

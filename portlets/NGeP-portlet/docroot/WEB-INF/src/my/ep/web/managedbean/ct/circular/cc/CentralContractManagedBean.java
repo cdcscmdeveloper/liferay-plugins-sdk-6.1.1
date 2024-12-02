@@ -103,6 +103,13 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private List<CtCircularPidReason> ctCircularPidReasons;
 	private int attachFileIndex;//#28713
 
+
+	//#33533 start
+	private String backToPreviousPage; 
+	private String taskIdFromTaskList;
+	private String[] outComesFromTaskList;
+	//#33533 end
+
 	/**
 	 * @return the updateAction
 	 */
@@ -834,5 +841,26 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.attachFileIndex = attachFileIndex;
 	}	
 	//#28713 - end
+
+	//#33533 start
+	public String getBackToPreviousPage(){
+		return backToPreviousPage;
+	}
+	public void setBackToPreviousPage(String backToPreviousPage){
+		this.backToPreviousPage=backToPreviousPage;
+	}
+	public String getTaskIdFromTaskList(){
+		return taskIdFromTaskList;
+	}
+	public void setTaskIdFromTaskList(String taskIdFromTaskList){
+		this.taskIdFromTaskList=taskIdFromTaskList;
+	}
+	public String[] getOutComesFromTaskList() {
+		return outComesFromTaskList;
+	}
+	public void setOutComesFromTaskList(String[] outComesFromTaskList) {
+		this.outComesFromTaskList = outComesFromTaskList;
+	}
+	//#33533 end
 
 }

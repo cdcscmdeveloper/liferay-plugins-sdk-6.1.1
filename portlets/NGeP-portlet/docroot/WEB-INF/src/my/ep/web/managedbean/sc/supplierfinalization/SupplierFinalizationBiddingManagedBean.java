@@ -35,6 +35,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.MenuModel;
@@ -151,6 +152,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//25638 - Start.
 	private List<ScQtFinalizationRemarks> finalizationRemarks;
 	//25638 - End.
+	
+	private SupplierFinalizationMeetingBackingBean meetingBB; // 25037
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1266,4 +1269,13 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	}
 	//25638 - End.
 
+	// 25037 - start
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	// 25037 - end
 }

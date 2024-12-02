@@ -210,6 +210,13 @@
 					<property name="bundleKey" value="lbl.sm.businessregno" />
 					<property name="columnWidth" value="150" />
 				</bean>
+				<!-- <bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smMofAccounts.mofNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.sm.mofno" />
+					<property name="viewable" value="false" />
+				</bean> -->
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="supplierRecordStatusStr" />
 					<property name="bundleFile"
@@ -1910,7 +1917,7 @@
 			</list>
 		</property>
 	</bean>
-	<!--shafie #28833 -start  -->
+
 	<bean id="PM_ORG_PROFILE_KUMPULAN_PTJ" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
 		<property name="daoClass"
@@ -1933,7 +1940,6 @@
 			</list>
 		</property>
 	</bean>
-	<!--shafie #28833 -end  -->
 	<bean id="PM_ORG_PROFILE_PTJ_GROUP" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
 
@@ -2442,5 +2448,4 @@
 		</property>
 	</bean>
 	<!-- Enhancement 25627-end- -->
-	
 </beans>

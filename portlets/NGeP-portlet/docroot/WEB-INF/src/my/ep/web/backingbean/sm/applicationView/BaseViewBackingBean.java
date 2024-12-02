@@ -33,6 +33,11 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 		extends BaseReviewApplicationBackingBean<T> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public void setTabValue(int outputTab, String outputPageType) {
 		super.setTabValue(outputTab, outputPageType);
 
@@ -318,26 +323,30 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 			List<SmSupplierCategory> categories = SmServiceLookup
 					.getSupplierApplicationSO().retrieveEighthTab(reqDTO)
 					.getSmSupplierCategories();
+			
+			//#30766 & #34209 - START
 			getManagedBean()
 					.setDockYardFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_DOCKYARD,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
 			getManagedBean()
 					.setWorkshopFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
 			getManagedBean()
 					.setStoreFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_STORE,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
 			getManagedBean()
 					.setFactoryFacilitiesVOList(
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY,
-									categories, facilities));
+									getManagedBean().getSmAppl(), facilities));
+			//#30766 & #34209 - END
+
 			getManagedBean().setLoadFacilityInfo(true);
 		}
 	}

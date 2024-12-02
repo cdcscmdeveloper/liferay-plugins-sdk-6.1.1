@@ -73,12 +73,11 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public String orgTypeName;
 	public List<SelectItem> agencyTypeItems;
 	
-	// #29712 - start
+	// #29712, #32564 - start
 	private SmSupplier selectedSupplier;
 	
 	private VBasicAccountWithMof selectedBasicAccount;
-	// #29712 - end
-
+	// #29712, #32564 - end
 
 	public VBasicAccountWithMof getSelectedBasicAccount() {
 		return selectedBasicAccount;
@@ -87,7 +86,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	public void setSelectedBasicAccount(VBasicAccountWithMof selectedBasicAccount) {
 		this.selectedBasicAccount = selectedBasicAccount;
 	}
-	
+
 	// #30824 - START
 	private VMofAccount selectedMofAccount;
 
@@ -100,7 +99,7 @@ public abstract class SmReportManagedBean extends ReportBaseManagedBean {
 	}
 
 	// #30824 - END
-
+	
 	public String getDocumentType() {
 		return documentType;
 	}

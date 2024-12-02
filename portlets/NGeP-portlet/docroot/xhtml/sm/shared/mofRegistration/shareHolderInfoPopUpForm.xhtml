@@ -144,10 +144,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="equiPerIdenType" required="true"
+				<td>
+				<!--29582 & 35300-->
+				<p:selectOneMenu id="equiPerIdenType" required="true"
 						label="#{lbl['lbl.sm.identificationtype']}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY' 
-						or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'PR'}"
+						or backingBean.managedBean.selectedShareHolder.permanentResident}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
 						<f:selectItems
@@ -808,6 +810,14 @@
 						<f:selectItems value="#{backingBean.getYearDropDown()}" />
 						<p:ajax process="@this" update="equiJbFnInfYrTo" partialSubmit="true"/>
 					</p:selectOneMenu> 
+					<!-- #35086 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId 
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.fromYear}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.fromYear}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.fromYear}"/>
 					<p:message id="equiJbFnInfYrFrmMsg"
 						for=":#{p:component('equiJbFnInfYrFrm')}" showSummary="true"
 						showDetail="false" display="icon" /></td>

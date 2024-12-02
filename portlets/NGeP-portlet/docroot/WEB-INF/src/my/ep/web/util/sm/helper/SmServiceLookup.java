@@ -660,7 +660,7 @@ public class SmServiceLookup {
 	}
 	//#30457-end
 	
-	//#34209 - START
+	//#30766 & #34209 - START
 	/**
 	 * Get ISupplierCategorySO
 	 * 
@@ -671,7 +671,7 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierCategorySO.class);
 	}
-	//#34209 - END
+	//#30766 & #34209 - END
 	
 	// #29617 start
 	/**

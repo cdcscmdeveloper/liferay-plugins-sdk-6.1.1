@@ -9,7 +9,9 @@ import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -23,10 +25,13 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBranchBank;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.managedbean.sm.applicationView.BaseReviewApplicationManagedBean;
 import my.ep.web.vo.SmLicenseInfoVO;
+import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -59,10 +64,13 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
+
+				/*//#32008
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCompBasic(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
@@ -71,6 +79,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
+
+				/*//#32008
 				if (step1CompanyBasicHasDifference(bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCompBasic(true);
@@ -79,6 +89,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCompBasic(true);
 				}
+				*/
 			}
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
@@ -100,10 +111,13 @@ public class SmSideMenuIconUtil {
 						bean.getLatestAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
+
+				/*//#32008
 				if (step2AssocCompProjExpHasDifference(false,
 						bean.getSupplierAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setPoEditAssocProj(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
@@ -112,6 +126,8 @@ public class SmSideMenuIconUtil {
 						bean.getLatestAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
+
+				/*//#32008
 				if (step2AssocCompProjExpHasDifference(false,
 						bean.getSupplierAppl(), bean.getPoAppl())) {
 					bean.getEditVO().setPoEditAssocProj(true);
@@ -120,6 +136,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditAssocProj(true);
 				}
+				*/
 			}
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
@@ -145,10 +162,15 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+
+				log.info("31230 Check if PO edit personnel");
+
+				/*//#32008
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
@@ -157,6 +179,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
+
+				/*//#32008
 				if (step3PersonnelHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setPoEditPersonnel(true);
@@ -165,6 +189,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setAppEditPersonnel(true);
 				}
+				*/
 			}
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
@@ -186,10 +211,13 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
+
+				/*//#32008
 				if (step4EquityHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditEquity(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
@@ -198,6 +226,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
+
+				/*//#32008
 				if (step4EquityHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditEquity(true);
@@ -206,6 +236,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditEquity(true);
 				}
+				*/
 			}
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
@@ -227,10 +258,13 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
+
+				/*//#32008
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditBank(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
@@ -239,6 +273,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
+
+				/*//#32008
 				if (step5BankHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditBank(true);
@@ -247,6 +283,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditBank(true);
 				}
+				*/
 			}
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
@@ -269,9 +306,12 @@ public class SmSideMenuIconUtil {
 				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+
+				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),bean.getSmAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
@@ -280,6 +320,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
+
+				/*//#32008
 				if (step6CatCodeHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditCategory(true);
@@ -288,6 +330,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditCategory(true);
 				}
+				*/
 			}
 			//#31230 START
 			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
@@ -314,10 +357,13 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
+
+				/*//#32008
 				if (step7FacilityHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditFacility(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
@@ -326,6 +372,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
+
+				/*//#32008
 				if (step7FacilityHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditFacility(true);
@@ -334,6 +382,7 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditFacility(true);
 				}
+				*/
 			}
 		} else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)) {
@@ -355,10 +404,13 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
+
+				/*//#32008
 				if (step8EquipmentHasDifference(false, bean.getSupplierAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setPoEditEquipment(true);
 				}
+				*/
 			} else if (bean.isApproverUser()) {
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
@@ -367,6 +419,8 @@ public class SmSideMenuIconUtil {
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
+
+				/*//#32008
 				if (step8EquipmentHasDifference(false, bean.getSupplierAppl(),
 						bean.getPoAppl())) {
 					bean.getEditVO().setPoEditEquipment(true);
@@ -375,8 +429,11 @@ public class SmSideMenuIconUtil {
 						bean.getSmAppl())) {
 					bean.getEditVO().setAppEditEquipment(true);
 				}
+				*/
 			}
-		} else if (sectionType
+		} 
+		/*//#32008
+		else if (sectionType
 				.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 			if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditSuppDoc(false);
@@ -398,7 +455,7 @@ public class SmSideMenuIconUtil {
 					bean.getEditVO().setAppEditSuppDoc(true);
 				}
 			}
-		}
+		} */
 	}
 
 	public static void setAllSectionEditorVO(SmApplicationManagedBean bean,
@@ -430,6 +487,16 @@ public class SmSideMenuIconUtil {
 	public static String getSideMenuVerificationIcon(
 			SmApplicationManagedBean bean, String sectionType) {
 		String retVal = StringUtils.EMPTY;
+		//#31043 START
+		PmStatus applCurrentStatus = null;
+		if(bean.getSmAppl().getSmWorkflowStatuses() != null){
+			for(SmWorkflowStatus workflowStatus : bean.getSmAppl().getSmWorkflowStatuses()){
+				if(workflowStatus.getIsCurrent()){
+					applCurrentStatus = workflowStatus.getPmStatus();
+				}
+			}
+		}
+		//#31043 END
 		if (!bean.isSupplierUser()) {
 			retVal = ICON_UNTICK;
 			SmApplSectionReview rev = bean.isPoUser() ? bean.getPoSecReview()
@@ -488,9 +555,8 @@ public class SmSideMenuIconUtil {
 						|| bean.getSmAppl().getApplType()
 								.equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 					retVal = ICON_VIEW;
-					//#31043
-					bean.setCategoryCodeVerified(true);
 				} else {
+					//#31043
 					if(bean.isReviewSiteVisit()){
 						retVal = ICON_TICK;
 					}
@@ -516,27 +582,20 @@ public class SmSideMenuIconUtil {
 						//to check, if data not exist no need to auto check
 						if(bean.isPoUser() && isAllCatcodeVerified &&(bean.getActiveCategoryList()==null || bean.getActiveCategoryList().size()<=0) ){
 							//#31043 start
-							// #26528 - start
-							// Checkbox 'Registered Category' section not ticked for Renewal MOF application
-							if (bean.getApprovedCategoryList()!=null) {
-								isAllCatcodeVerified = true;
-								
-							} else {
-								isAllCatcodeVerified = false;
+							if(applCurrentStatus.getStatusId() != Long.parseLong(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION)){
+								if (bean.getApprovedCategoryList()!=null) {
+									isAllCatcodeVerified = true;
+									
+								} else {
+									isAllCatcodeVerified = false;
+								}
 							}
-							// #26528 - end
 							//#31043 end
 						}
 						
 						
 						if (isAllCatcodeVerified) {
 							retVal = ICON_TICK;
-							//#31043
-							bean.setCategoryCodeVerified(true);
-						}
-						else{
-							//#31043
-							bean.setCategoryCodeVerified(false);
 						}
 					}
 				}
@@ -568,117 +627,109 @@ public class SmSideMenuIconUtil {
 				}
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
-				//24964 & 31043 - start
-				//retVal = ICON_UNTICK; 
-				
+
+				//31043 - start
 				boolean mandatoryDocVerified = false; 
-				boolean nonMandatoryDocVerified = false; 
-				boolean licenseMandatoryDocVerified = false; 
+				boolean nonMandatoryDocVerified = true; 
+				boolean licenseMandatoryDocVerified = true; 
 				
-				//#31043 start
-				if(bean.isApproverUser() || bean.isReviewSiteVisit()){
-					retVal = ICON_TICK;
-					bean.setDocumentVerified(true);
-					mandatoryDocVerified = true; 
-				}
-				else{
-					retVal = ICON_UNTICK;
-				}
-				//#31043 end
-				
-				//24964 & 31043 - end
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
 				if (!EntityHelper.isCollectionEmpty(bean
 						.getMandatoryLicenseDocs())) {
 					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
 						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
 					}
 				}
-				//24964 & 31043 - start
-				if(!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())){
-					if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser(),
-							bean.getSmAppl().getApplNo())){
-						mandatoryDocVerified = true;
-					}
-					else{
-						if(bean.isApproverUser()){
-							mandatoryDocVerified = false;
+				
+				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
+					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
+						if(bean.isPoUser() && doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
+							licenseMandatoryDocVerified = false;
+							break;
+						}
+						if(bean.isApproverUser() && doc.getVerifiedFlg() != null){
+							doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+							if(doc.getApproverVerifiedFlg() == 0){
+								licenseMandatoryDocVerified = false;
+								break;
+							}
 						}
 					}
+				}
+				
+				if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
+						.getMandatoryDocs(), bean.getSmAppl()
+						.getSupportingDocMode(), bean.isApproverUser())
+						&& SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
+								.getNonMandatoryDocs(), bean.getSmAppl()
+								.getSupportingDocMode(), bean.isApproverUser())
+						&& SmApplicationUtil.isAllSuppDocAlreadyVerified(
+								licenseMandatoryDocs, bean.getSmAppl()
+										.getSupportingDocMode(), bean
+										.isApproverUser())) {
+					retVal = ICON_TICK;
+				}
+				
+				int countDocs = 0;
+				int countVerifiedDocs = 0;
+				if (!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())) {
+					for (SmApplSupportDoc doc : bean.getMandatoryDocs()) {
+						countDocs++;
+						if(bean.isPoUser()){
+							if(doc.getVerifiedFlg() != null){
+								if(doc.getVerifiedFlg() == 1)
+									countVerifiedDocs++;
+							}
+						}
+						else if(bean.isApproverUser()){
+							if(doc.getApproverVerifiedFlg() != null){
+								if(doc.getApproverVerifiedFlg() == 1)
+									countVerifiedDocs++;
+								}
+						}
+					}
+					log.info("No of docs: "+countDocs);
+					log.info("No of docs verified "+countVerifiedDocs);
+					if(countDocs != 0 && countVerifiedDocs != 0)
+						if(countVerifiedDocs == countDocs)
+							mandatoryDocVerified = true;
+						else
+							mandatoryDocVerified = false;
 				}
 				
 				if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
-					if(SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getNonMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser(),
-							bean.getSmAppl().getApplNo())){
-						nonMandatoryDocVerified = true;
-					}
-				} else {
-					nonMandatoryDocVerified = true;
-				}
-				
-				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
-					if(SmApplicationUtil.isAllSuppDocAlreadyVerified(
-							licenseMandatoryDocs, bean.getSmAppl()
-							.getSupportingDocMode(), bean
-							.isApproverUser(), bean.getSmAppl().getApplNo())){
-						licenseMandatoryDocVerified = true;
-					}
-				} else {
-					licenseMandatoryDocVerified = true;
-				}
-				
-				//#31043 start
-					int countDocs = 0;
-					int countVerifiedDocs = 0;
-					if (!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())) {
-						for (SmApplSupportDoc doc : bean.getMandatoryDocs()) {
-							countDocs++;
-							if(bean.isPoUser()){
-								if(doc.getVerifiedFlg() != null){
-									if(doc.getVerifiedFlg() == 1)
-										countVerifiedDocs++;
+					for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
+						if(doc.getSmApplDocFiles() != null){
+							for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
+								if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+										|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
+									nonMandatoryDocVerified = false;
+									break;
+								}
+								if(bean.isApproverUser() && !(" ").equals(docFile.getFilePath()) && doc.getApproverVerifiedFlg() != null 
+										&& doc.getApproverVerifiedFlg() == 0){
+									nonMandatoryDocVerified = false;
+									break;
 								}
 							}
-							else if(bean.isApproverUser()){
-								if(doc.getApproverVerifiedFlg() != null){
-									if(doc.getApproverVerifiedFlg() == 1)
-										countVerifiedDocs++;
-									}
+							if(!nonMandatoryDocVerified){
+								break;
 							}
 						}
-						log.info("No of docs: "+countDocs);
-						log.info("No of docs verified "+countVerifiedDocs);
-						if(countDocs != 0 && countVerifiedDocs != 0)
-							if(countVerifiedDocs == countDocs)
-								mandatoryDocVerified = true;
-							else
-								mandatoryDocVerified = false;
 					}
-				//#31043 end
-				
-				if(mandatoryDocVerified && nonMandatoryDocVerified && licenseMandatoryDocVerified){
-					//#31043
-					bean.setDocumentVerified(true);
-						retVal = ICON_TICK;
 				}
-				else{
-					if(bean.isApproverUser()){
+			
+				if(mandatoryDocVerified){
+					retVal = ICON_TICK;
+					if(!licenseMandatoryDocVerified || !nonMandatoryDocVerified){
 						retVal = ICON_UNTICK;
 					}
-					bean.setDocumentVerified(false);
+				}else{
+					retVal = ICON_UNTICK;
 				}
-				//24964 & 31043 - end
-
-			//#31043 - start
-			} else if (sectionType
-					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)){
-				if(bean.isApproverUser())
-					rev.setSitevisitVerified(true);
-				
+			
+			} else if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV) && rev.isSitevisitVerified()) {
+				retVal = ICON_UNTICK;
 				if(rev.isSitevisitVerified())
 					retVal = ICON_TICK;
 			}
@@ -1247,13 +1298,20 @@ public class SmSideMenuIconUtil {
 		boolean retVal = false;
 
 		if (applPrev != null && applCurr != null) {
-
+			//24964 - if equal means no changes
+			if(applPrev.getApplId() == applCurr.getApplId()){
+				return false;
+			}
+			//#32008
 			String[] arrExcludeProps = new String[] { "prevApprDecFlg",
 					"apprvrDecFlg", "poDecFlg", "approvedByPo",
 					"prevApprovedByPo", "prevPoDecFlg", "poRemarks",
 					"approverRemarks", "prevPoRemarks", "prevApproverRemarks",
 					"approvedDate", "approvedByAp", "prevApprovedByAp",
-					"recordStatusFlg" };
+					"recordStatusFlg", "overLapCategory", "suspendCategory",
+					"cancelCategory", "isActiveDA", "disciplinaryActionId",
+					"supplierType", "applRefId", "prevOtherDesc", 
+					"cancelledDate", "categoryEffDate"};
 
 			// smSupplierCategory
 			if (isSupplier) {
@@ -1570,5 +1628,54 @@ public class SmSideMenuIconUtil {
 		}
 		return retVal;
 	}
-
+	
+	//#32008 - start
+	public static void setSectionEditorVO(BaseReviewApplicationManagedBean bean){
+		if(!bean.isShowFieldChanges() || bean.getLatestAppl() == null || bean.getSmAppl() == null){
+			bean.setEditVO(new SmSectionEditorVO());
+			return;
+		}
+		
+		bean.getEditVO().setSuppEditCompBasic(false);
+		if (step1CompanyBasicHasDifference(bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditCompBasic(true);
+		}
+		
+		bean.getEditVO().setSuppEditAssocProj(false);
+		if (step2AssocCompProjExpHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditAssocProj(true);
+		}	
+		
+		bean.getEditVO().setSuppEditPersonnel(false);
+		if (step3PersonnelHasDifference(true, bean.getLatestAppl(), bean.getSmAppl(), null)) {
+			bean.getEditVO().setSuppEditPersonnel(true);
+		}
+			
+		bean.getEditVO().setSuppEditEquity(false);
+		if (step4EquityHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditEquity(true);
+		}
+		
+		bean.getEditVO().setSuppEditBank(false);
+		if (step5BankHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditBank(true);
+		}
+		
+		bean.getEditVO().setSuppEditCategory(false);
+		
+		if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditCategory(true);
+		}
+		
+		bean.getEditVO().setSuppEditFacility(false);
+		if (step7FacilityHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditFacility(true);
+		}
+				
+		bean.getEditVO().setSuppEditEquipment(false);
+		if (step8EquipmentHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
+			bean.getEditVO().setSuppEditEquipment(true);
+		}
+	}
+	//#32008 - end
 }

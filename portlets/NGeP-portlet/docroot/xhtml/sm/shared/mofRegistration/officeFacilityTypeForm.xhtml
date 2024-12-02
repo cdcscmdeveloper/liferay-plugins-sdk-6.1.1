@@ -8,9 +8,9 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.offFacility']}" id="ofp"
 		toggleable="true">
-		
+		<!-- Disable for UPS 32008 - START -->
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.officeFacilityVerfied}"
@@ -25,7 +25,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.officeFacilityVerfied}"
@@ -41,7 +41,7 @@
 			</p:outputPanel>
 		</table>
 		<p:outputPanel id="offInfPan" layout="block">
-			<p:blockUI block=":form:tt:offInfPan" widgetVar="buiPoOff"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:offInfPan" widgetVar="buiPoOff"
 				id="poOffBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.officeFacilityVerfied : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.officeFacilityVerfied : false)}" />
 
@@ -52,7 +52,8 @@
 					<td style="padding-bottom: 2px;"><p:selectOneRadio
 							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
-							required="true">
+							required="true"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
 								itemValue="O" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
@@ -71,6 +72,7 @@
 							display="icon" /></td>
 					<td colspan='2'>&#160;</td>
 				</tr>
+				<!-- 29480 - Update: remove code for Re-endorsed CR -->
 				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O' or backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td><p:outputLabel
@@ -82,7 +84,8 @@
 							<td style="padding-bottom: 4px;"><p:selectOneRadio
 									id="rentedFacTypeId"
 									value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
-									required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
+									required="true" label="#{lbl['lbl.sm.facility.facilityType']}"
+									disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<f:selectItem
 										itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}"
 										itemValue="H" />
@@ -120,7 +123,8 @@
 							<p:inputText id="fcltyOwnerName"
 								label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true"> 
+								size="35" required="true"
+								disabled="#{backingBean.managedBean.upsCannotEdit}"> 
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
 								
@@ -144,7 +148,8 @@
 									label="#{lbl['lbl.sm.facility.purchaseDate']}"
 									value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									required="true" yearRange="-99:+0">
+									required="true" yearRange="-99:+0"
+									disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<p:ajax event="dateSelect" process="@this" partialSubmit="true"/>
 								</p:calendar> 
 								
@@ -165,7 +170,8 @@
 									value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
 									size="35" required="true" maxlength="17"
 									validatorMessage="#{lbl['lbl.sm.facility.monthRent']} - #{lbl['lbl.sm.minAmt.validMsg']}"
-									label="#{lbl['lbl.sm.facility.monthRent']}">
+									label="#{lbl['lbl.sm.facility.monthRent']}"
+									disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<f:validateDoubleRange
 										minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
 										maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
@@ -197,7 +203,8 @@
 								label="#{lbl['lbl.sm.facility.purchasePrice']}"
 								validatorMessage="#{lbl['lbl.sm.facility.purchasePrice']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"
-								required="true">
+								required="true"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:validateDoubleRange
 									minimum="#{SupplierManagementConst.MIN_AMT_RANGE}"
 									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
@@ -224,7 +231,8 @@
 								styleClass="mandatory" /></td>
 						<td><p:inputText id="companyAdd1" size="35" maxlength="100"
 								required="true" label="#{lbl['lbl.sm.companyaddress']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" >
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
+								disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
 							
@@ -241,7 +249,8 @@
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="companyCntry"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.countryId}"
-								required="true" label="#{lbl['lbl.sm.country']}">
+								required="true" label="#{lbl['lbl.sm.country']}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="basicCountry"
 									value="#{backingBean.managedBean.countryItems}" />
@@ -263,7 +272,8 @@
 					<tr>
 						<td></td>
 						<td><p:inputText id="companyAdd2" size="35" maxlength="100"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" >
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<p:ajax partialSubmit="true" process="@this" />
 							</p:inputText>
 							
@@ -279,7 +289,8 @@
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.stateId}"
 								id="basicOffFacState" required="true"
-								label="#{lbl['lbl.sm.state']}">
+								label="#{lbl['lbl.sm.state']}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offState"
 									value="#{backingBean.managedBean.basicOffFacStates}" />
@@ -312,7 +323,8 @@
 						<p:selectOneMenu id="basicOffFacDivision" required="true"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.basicCompanyFacility.smAddress.divisionId}"
-						style="width: 207px;margin-bottom: 5px;">
+						style="width: 207px;margin-bottom: 5px;"
+						disabled="#{backingBean.managedBean.upsCannotEdit}">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="division"
 							value="#{backingBean.managedBean.basicOffFacDivisions}"
@@ -323,6 +335,12 @@
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity" />
 					</p:selectOneMenu>
+					<!-- #35086 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges}"
+						oriValue="#{backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId}" 
+						currValue="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDivision.divisionId}" 
+						alertValue="#{backingBean.getDivisionLabelById(backingBean.managedBean.latestAppl.hqFacility.smAddress.pmDivision.divisionId)}"/>
 					<!-- #34159 - START -->
 					<p:message id="basicOffFacDivisionMsg" for="basicOffFacDivision" showSummary="true" showDetail="false" display="icon" />
 					<!-- #34159 - END -->
@@ -332,7 +350,8 @@
 					<tr>
 						<td></td>
 						<td><p:inputText id="companyAdd3" size="35" maxlength="100"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}"/>
 							
 							<ac:smFieldChangeAlert 
 								isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -346,7 +365,8 @@
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="basicOffFacDist" required="true"
 								label="#{lbl['lbl.sm.district']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtId}">
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.districtId}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
@@ -373,7 +393,8 @@
 						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								id="basicOffFacCity" required="true"
 								label="#{lbl['lbl.sm.towncity']}"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityId}">
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.cityId}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
@@ -402,7 +423,8 @@
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostMyCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
 										validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
-										size="35">
+										size="35"
+										disabled="#{backingBean.managedBean.upsCannotEdit}">
 										<f:validator validatorId="postcodeValidator" />
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:inputText>
@@ -421,7 +443,8 @@
 									<p:inputText maxlength="10" required="true"
 										label="#{lbl['lbl.sm.postcode']}" id="companyPostForeignCode"
 										value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}"
-										size="35">
+										size="35"
+										disabled="#{backingBean.managedBean.upsCannotEdit}">
 										<p:ajax partialSubmit="true" process="@this" />
 									</p:inputText>
 									
@@ -469,7 +492,9 @@
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							latitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}"
-							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" />					
+							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}"
+							disabled="#{backingBean.managedBean.upsCannotEdit}" />
+							<!-- Disable for UPS 32008 - END -->
 					</td>
 				</tr>
 				</p:outputPanel>
@@ -512,6 +537,16 @@
 		<p:confirmDialog id="alertFacTypeChangeDlg" closable="true"
 			header="#{lbl['lbl.sm.facility.facilityType.change.alertheader']}" severity="alert"
 			widgetVar="alertFacTypeChangeDlg">
+			<!-- 32236 - Start -->
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		}
+			
+	      	</script>
+			<!-- 32236 - End -->
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertFacTypeChangeDlg.hide();" />
@@ -522,6 +557,58 @@
 		    </f:facet>
 		    
 		</p:confirmDialog>
+		<!-- 29480 - Start -->
+		<p:dialog id="showPremisesTypeInfo" widgetVar="showPremisesTypeInfo" closable="true" modal="true" resizable="false" style="display: static;">
+			<p:outputPanel layout="block" id="showPremisesTypeInfoBlockPanel">
+				<table style="width: 425px">
+					<tr align="justify">
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info9']}" /></td>
+						<td>&#160;</td>
+						<td colspan='3'><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info1']}" /></td>
+					</tr>
+					<tr>
+						<td colspan='5'>&#160;</td>
+					</tr>
+					<tr align="justify">
+						<td colspan="2">&#160;</td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info2']}" /></td>
+						<td>&#160;</td>
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info3']}" /> <b><h:outputText
+									value="#{lbl['lbl.sm.premises.type.info8']}" /></b></td>
+					</tr>
+					<tr>
+						<td colspan='5'>&#160;</td>
+					</tr>
+					<tr align="justify">
+						<td colspan="2">&#160;</td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info4']}" /></td>
+						<td>&#160;</td>
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info5']}" /></td>
+					</tr>
+					<tr>
+						<td colspan='5'>&#160;</td>
+					</tr>
+					<tr align="justify">
+						<td colspan="2">&#160;</td>
+						<td valign="top"><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info6']}" /></td>
+						<td>&#160;</td>
+						<td><h:outputText
+								value="#{lbl['lbl.sm.premises.type.info7']}" /></td>
+					</tr>
+					<tr>
+						<td colspan="5">&#160;</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:dialog>
+	<!-- 29480 - End -->
 		
 	</p:panel>
 </ui:composition>

@@ -188,7 +188,7 @@
 					</td>
 				</tr>
 <!-- #13208 - END -->
-				
+				<!-- #35178 - Start : Remove disabled for email -->
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
@@ -197,7 +197,7 @@
 							label="#{lbl['lbl.sm.userprofile.email']}"
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}" 
 							validatorMessage="#{lbl['lbl.sm.userprofile.email']} - #{lbl['lbl.sm.invalidEmail']}"
-							size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+							size="40" required="true">
 							<f:validateRegex
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 							</p:inputText>
@@ -214,6 +214,7 @@
 							<p:message id="basicBUDesMsg" for="basicBUDes"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
+				<!-- #35178 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td>
