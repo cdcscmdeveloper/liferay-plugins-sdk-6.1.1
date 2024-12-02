@@ -36,8 +36,8 @@
 		<tr align="left">
 			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
 			<td width="5%">:</td>
-			#if($companyInfo.ssmNewRegNo != $null)
-	      	<td width="50%">$!companyInfo.ssmNewRegNo</td>
+			#if($ssmNewRegNo != $null)
+	      	<td width="50%">$!ssmNewRegNo</td>
 	      	#else
 	      	<td width="50%">$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
 	      	#end
