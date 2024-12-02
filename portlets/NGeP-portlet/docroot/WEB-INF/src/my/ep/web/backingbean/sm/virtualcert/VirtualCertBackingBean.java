@@ -198,17 +198,17 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	
 	// #36401 - Start
 	private boolean countCerts(List<SmMofCert> certs) {
-	    int countCert = 0;
-	    int countBumi = 0;
-	    for (SmMofCert cert : certs) {
-	        if (!cert.isBumiCert()) {
-	            countCert++;
-	        }
-	        if (cert.isBumiCert()) {
-	            countBumi++;
-	        }
-	    }
-	    return countCert > 1 || countBumi > 1;
+		int countCert = 0;
+		int countBumi = 0;
+		for (SmMofCert cert : certs) {
+			if (!cert.isBumiCert()) {
+				countCert++;
+			}
+			if (cert.isBumiCert()) {
+				countBumi++;
+			}
+		}
+		return countCert > 1 || countBumi > 1;
 	}
 
 	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
