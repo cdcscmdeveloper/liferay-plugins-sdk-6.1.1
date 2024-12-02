@@ -2229,6 +2229,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				getManagedBean().setFromReport(true);
 				retrieveSiteVisitInfo("");
 				getManagedBean().setFromReport(false);
+				changeActiveIndex(getManagedBean().getActiveIndex(), getManagedBean().getSelectedSvTemplate());
 				//9608 - Site Visit Grouping Enhancement - 28775 - end, 30550
 			} else {
 				RequestContext.getCurrentInstance().execute(submissionConfirmDlgConstant);
@@ -2757,8 +2758,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	private Map<String, String> getAllPurchaseMethod(){
 		Map<String, String> purchaseMethodMap = new HashMap<>();
 		//28775 - Site Visit Grouping Enhancement - 28775
-		List<PmParameterDesc> purchaseMethodLs = SmCommonUtil.retrieveParameterDescList(ParameterTypeConst.PURCHASING_METHOD, LANG_CODE);
-		
+		List<PmParameterDesc> purchaseMethodLs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.PURCHASING_METHOD);
 		//CR 28774: Static Code Analysis
 		if(!purchaseMethodLs.isEmpty()){
 			for(PmParameterDesc pmDesc : purchaseMethodLs){
@@ -3107,10 +3108,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param categoryL3Id
 	 */
 	public void setMachineList(SmSvTemplate template, long categoryL3Id){
-		if(!EntityHelper.isCollectionEmpty(template.getSmSvMachines())){
+		if(EntityHelper.isCollectionEmpty(template.getSmSvMachines())){
 			List<SmMachineCategory> machineCategoryLs = retrieveMachineDtlByApplIdAndCategoryL3Id(
 					getManagedBean().getSmSvTask().getSmAppl().getApplId(), categoryL3Id);
-			
+			template.setSmSvMachines(new ArrayList<SmSvMachine>());
 			if(!machineCategoryLs.isEmpty()){
 				for(SmMachineCategory machineCat : machineCategoryLs){
 					SmSvMachine svMachine = new SmSvMachine();
@@ -3136,8 +3137,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param machine
 	 */
 	public void editTravellingSoftware(PmMachine machine){
+		List<SmSupplierSystem> systems = getManagedBean().getSmSvTask().getSmAppl().getSmSupplierSystems();
 		SmSupplierSystem travel = (SmSupplierSystem) EntityHelper.getEntityBySinglePropertyFromList(
-				machine.getMachineId(), getManagedBean().getSmSvTask().getSmAppl().getSmSupplierSystems(), "system");
+				machine.getMachineId(), systems, "system");
+		if(machine.getMachineId() == null){
+			for (SmSupplierSystem system : systems){
+				if (system.getSystem() == null){
+					travel = system;
+					break;
+				}
+			}
+		}
 		if(machine.isSelected() || machine.getMachineCode() == null){
 			if (travel == null) {
 				travel = new SmSupplierSystem();
@@ -3148,12 +3158,12 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				} else {
 					travel.setSystemName(machine.getMachineDesc());
 				}
-				getManagedBean().getSmSvTask().getSmAppl().getSmSupplierSystems().add(travel);
+				systems.add(travel);
 			} else {
 				travel.setSystemName(machine.getMachineDesc());
 			}
 		} else { //remove unselected machine
-			getManagedBean().getSmSvTask().getSmAppl().getSmSupplierSystems().remove(travel);
+			systems.remove(travel);
 		}
 	}
 	
@@ -3401,8 +3411,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	
 	private Map<String, String> getIdentificationTypes(){
 		Map<String, String> idTypeMap = new HashMap<>();
-		List<PmParameterDesc> idTypeLs = SmCommonUtil.retrieveParameterDescList(
-				ParameterTypeConst.IDENTIFICATION_TYPES, LANG_CODE);
+		List<PmParameterDesc> idTypeLs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
 		if(idTypeLs.isEmpty()){
 			return idTypeMap;
 		}
@@ -3420,7 +3430,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		for(SmSvTemplate template : getManagedBean().getTemplates()){
 			for(SmSvWorker worker : template.getSmSvWorkers()){
 				String idNo = worker.getIdentificationNo();
-				if(worker.getIdentificationTypeId() == typeId && idNo.length() != SupplierManagementConst.IC_NO_LENGTH){
+				if(worker.getIdentificationTypeId() != null && worker.getIdentificationTypeId() == typeId 
+						&& idNo.length() != SupplierManagementConst.IC_NO_LENGTH){
 					throw new EpException(MessageConst.ERROR_722532, new String[] {idNo});
 				}
 			}
