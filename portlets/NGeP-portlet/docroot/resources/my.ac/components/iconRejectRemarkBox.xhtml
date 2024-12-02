@@ -1,0 +1,71 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="id" />
+		<cc:attribute name="show" default="false" />
+		<cc:attribute name="supplierCode" />
+		<cc:attribute name="remark" />
+
+	</cc:interface>
+	<cc:implementation>
+		<ui:fragment rendered="#{cc.attrs.show}">
+			<p:commandLink process="@this" onclick="widget#{cc.attrs.supplierCode}.show()">
+				<p:graphicImage id="imageId"
+					value="/css/images/design/icon_error.png" />
+				<p:tooltip id="#{cc.attrs.id}" for="imageId"
+					style="max-width:400px !important;">
+					<div style="display: inline !important;">
+						<div
+							style="display: inline !important; text-align: left !important;">#{lbl['lbl.sc.supplier.reject.popup.tooltip']}</div>
+						<div style="display: inline !important;">
+							<p:graphicImage style="margin-bottom:-3px !important;"
+								value="/css/images/design/icon_error.png" />
+						</div>
+						<div
+							style="display: inline !important; text-align: left !important;">#{lbl['lbl.sc.supplier.reject.popup.tooltip2']}</div>
+					</div>
+				</p:tooltip>
+			</p:commandLink>
+
+			<p:dialog id="WidgetId#{cc.attrs.supplierCode}"
+				widgetVar="widget#{cc.attrs.supplierCode}"
+				header="#{lbl['lbl.sc.supplier.reject.popup.header']}"
+				resizable="false" modal="true">
+				<p:outputPanel id="panelRejectRemark#{cc.attrs.supplierCode}"
+					layout="block">
+					<table class="ui-panelgrid ui-widget">
+						<thead class="ui-panelgrid-header">
+							<tr class="ui-widget-header">
+								<td style="text-align: center !important;"
+									class="ui-widget-header"><h:outputText
+										value="#{lbl['lbl.sc.supplier.code']}" /></td>
+								<td style="text-align: center !important;"
+									class="ui-widget-header"><h:outputText
+										value="#{lbl['lbl.sc.supplier.reject.remark']}" /></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="ui-widget-content">
+								<td style="text-align: center !important;"><h:outputText
+										value="#{cc.attrs.supplierCode}" /></td>
+								<td style="text-align: center !important;"><h:outputText
+										value="#{cc.attrs.remark}" /></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="ppRightBtn">
+						<p:commandButton
+							oncomplete="widget#{cc.attrs.supplierCode}.hide()"
+							value="#{lbl['lbl.btn.ok']}" process="@this" />
+					</div>
+				</p:outputPanel>
+			</p:dialog>
+		</ui:fragment>
+	</cc:implementation>
+
+</ui:component>
