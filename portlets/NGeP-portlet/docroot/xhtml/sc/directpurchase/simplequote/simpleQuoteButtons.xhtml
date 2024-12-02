@@ -70,7 +70,7 @@
 		<tr>
 			<td><p:commandButton immediate="true"
 					value="#{lbl['lbl.btn.back']}" partialSubmit="true" process="@this"
-					style="float:left;" rendered="#{!isEditable}"
+					style="float:left;" rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
 					action="#{simpleQuoteBackingBean.backToPrevious}" /></td>
 
 			<td style="vertical-align: bottom;"><p:commandLink
@@ -86,7 +86,7 @@
 		<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 			<p:commandButton immediate="true" id="backButton"
 				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-				process="@this" style="float:left;" rendered="#{isEditable and !simpleQuoteBackingBean.managedBean.trackingDairyView}"
+				process="@this" style="float:left;" rendered="#{isEditable  and !simpleQuoteBackingBean.managedBean.trackingDairyView}"
 				action="#{simpleQuoteBackingBean.backToPrevious}"
 				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 			</p:commandButton><ui:remove>25790</ui:remove>
