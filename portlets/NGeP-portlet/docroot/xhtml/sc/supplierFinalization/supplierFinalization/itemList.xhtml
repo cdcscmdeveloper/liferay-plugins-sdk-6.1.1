@@ -79,7 +79,7 @@
 						required="true" label="#{lbl['lbl.sc.cancelled']}" 
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or item.disabled or item.awardedItem or 
 									!(isSecretaryUser or 
-										isBPKTaskAndClaimed)}" 
+										isBPKTaskAndClaimed) or supplierFinalizationReadOnly}" 
 						style="width:95%;">
 				<!-- 19336 -end- -->
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
@@ -133,7 +133,7 @@
 				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{!isSupplierFinalization or item.cancelled or 
 					item.disabled or item.awardedItem or (item.higherAuthReq and 
 					suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId eq 
-						suppFinalizationBackingBean.managedBean.loggedInUserId)}">
+						suppFinalizationBackingBean.managedBean.loggedInUserId) or supplierFinalizationReadOnly}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"/>
 				</p:selectBooleanCheckbox>				
 			</p:column>		
@@ -150,7 +150,7 @@
 					process="@this" partialSubmit="true" 
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
 					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
-					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding}" style="float:right;"/>
+					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding or supplierFinalizationReadOnly}" style="float:right;"/>
 			<!-- 19336 -end- -->
 			</h:column>
 

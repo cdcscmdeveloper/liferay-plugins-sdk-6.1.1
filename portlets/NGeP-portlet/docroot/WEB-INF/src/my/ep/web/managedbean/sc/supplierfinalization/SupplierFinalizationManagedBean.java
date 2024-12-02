@@ -249,6 +249,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
 	// 25037 - end
+	
+	// 6906 - start - note 117
+	private SelectItem[] decisionDropdown;
+	private boolean supplierFinalizationReadOnly = true;
+	private boolean disabledSelection;
+	private boolean noProposalSubmitted;
+	private List<String> disqualifiedStages;
+	private boolean hasSupplierQualifiedForCurrentSelection;
+
+	// 6906 - end - note 117
 
 	/**
 	 * @return the activeIndex
@@ -2175,7 +2185,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableJustifications = disableJustifications;
 	}
 	// 28834 end
-	
+
 	// 25037 - start
 	public List<ScCommitteeMember> getDeletedMemberList() {
 		return deletedMemberList;
@@ -2193,4 +2203,54 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.meetingBB = meetingBB;
 	}
 	// 25037 - end
+	
+	// 6906 - start - note 117
+	public SelectItem[] getDecisionDropdown() {
+		return decisionDropdown;
+	}
+
+	public void setDecisionDropdown(SelectItem[] decisionDropdown) {
+		this.decisionDropdown = decisionDropdown;
+	}
+
+	public boolean isSupplierFinalizationReadOnly() {
+		return supplierFinalizationReadOnly;
+	}
+
+	public void setSupplierFinalizationReadOnly(boolean supplierFinalizationReadOnly) {
+		this.supplierFinalizationReadOnly = supplierFinalizationReadOnly;
+	}
+
+	public boolean isDisabledSelection() {
+		return disabledSelection;
+	}
+
+	public void setDisabledSelection(boolean disabledSelection) {
+		this.disabledSelection = disabledSelection;
+	}
+
+	public boolean isNoProposalSubmitted() {
+		return noProposalSubmitted;
+	}
+
+	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
+		this.noProposalSubmitted = noProposalSubmitted;
+	}
+
+	public List<String> getDisqualifiedStages() {
+		return disqualifiedStages;
+	}
+
+	public void setDisqualifiedStages(List<String> disqualifiedStages) {
+		this.disqualifiedStages = disqualifiedStages;
+	}
+	
+	public boolean isHasSupplierQualifiedForCurrentSelection() {
+		return hasSupplierQualifiedForCurrentSelection;
+	}
+
+	public void setHasSupplierQualifiedForCurrentSelection(boolean hasSupplierQualifiedForCurrentSelection) {
+		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
+	}
+	// 6906 - end - note 117
 }

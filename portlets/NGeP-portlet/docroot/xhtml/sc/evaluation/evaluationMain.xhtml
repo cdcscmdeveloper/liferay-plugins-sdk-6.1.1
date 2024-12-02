@@ -12,6 +12,16 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
+		<c:if test="#{evaluationBackingBean.managedBean.noProposalSubmitted}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{evaluationBackingBean.getNoSupplierWarningMessage()}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
 		<p:messages id="evaluateMessages" showDetail="true" autoUpdate="#{evaluationBackingBean.managedBean.autoUpdate}"
 			showSummary="false" closable="true" severity="error, info,warn" />
 		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
@@ -44,9 +54,11 @@
 					rendered="#{validityDaysExpiredQt and bpmAction != 'SUBMIT' and bpmAction != 'REVISEBP'}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@all" partialSubmit="true"
+					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 				<ui:remove> 25037,28834 - end </ui:remove>
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					disabled="#{evaluationBackingBean.managedBean.noProposalSubmitted}"
 					rendered="#{validityDaysExpiredQt and bpmAction == 'SUBMIT'}"
 					oncomplete="confirmUpdateAsAttendPopup.show();"
 					style="float:right;" />
@@ -63,7 +75,7 @@
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex == 0}"
-			disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified}"
+			disabled="#{!evaluationMeetingBackingBean.managedBean.committeeModified or evaluationBackingBean.managedBean.noProposalSubmitted}"
 			styleClass="ui-button"
 			action="#{evaluationMeetingBackingBean.submitMettingDetails()}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
