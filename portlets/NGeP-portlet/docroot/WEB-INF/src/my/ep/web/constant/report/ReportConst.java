@@ -1145,6 +1145,7 @@ public class ReportConst implements Serializable{
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
 	//26238 : Disciplinary Action
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY_BASIC = "SM_DISCIPLINARY_ACTION_HISTORY_BASIC.jsp";
 	
 	// YEP
 	public static final String FL_DOCTYPE_CO = "CR";
