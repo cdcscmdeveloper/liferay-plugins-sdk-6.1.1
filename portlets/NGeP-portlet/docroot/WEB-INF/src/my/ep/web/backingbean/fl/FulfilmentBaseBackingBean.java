@@ -61,6 +61,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -711,22 +712,28 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return SupplierDataMaintenanceResDTO SmDisciplinaryActions info
 	 */
 	protected SmDisciplinaryAction getImposedDisciplinaryAction(SmSupplier smSupplier) {
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(smSupplier);
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Entering getImposedDisciplinaryAction method");
 
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+	    SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+	    reqDTO.setSupplier(smSupplier);
 
-		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
-				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always
-																		// return
-																		// single
-																		// result
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 2: SupplierDataMaintenanceReqDTO initialized with supplier");
 
-		if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
-			return resDTO.getSmDisciplinaryActions().get(0);
-		}
-		return null;
+	    ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+	            ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+
+	    SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
+	            .retrieveImposedDisciplinaryActionBySupplier(reqDTO);
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 3: retrieveImposedDisciplinaryActionBySupplier executed");
+
+	    if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Disciplinary actions found");
+	        return resDTO.getSmDisciplinaryActions().get(0);
+	    }
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 5: No disciplinary actions found, returning null");
+	    return null;
 	}
 
 	/**
@@ -738,18 +745,33 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return msg
 	 */
 	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, String langCode, boolean isWarningOnly) {
+		LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Entering getDisciplinaryActionMsg method");
+
 		StringBuilder msg = new StringBuilder();
+
 		if (startDate != null && endDate != null) {
+			LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Both startDate and endDate are not null");
+
 			msg.append(" ");
-			String messagePrefix;
-			if (isWarningOnly) {
-				messagePrefix = "lbl.sm.supplier.warning.disc.action";
-			} else {
-				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
-			}
-			msg.append(getMessageByKey(messagePrefix, new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
-					DateUtils.dateToString("dd-MM-yyyy", endDate) }, langCode));
+			String messagePrefix = isWarningOnly ? "lbl.sm.supplier.warning.disc.action"
+					: "lbl.sm.supplier.imposed.disc.action";
+
+			LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Message prefix set based on isWarningOnly");
+
+			String message = getMessageByKey(
+					messagePrefix,
+					new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
+							DateUtils.dateToString("dd-MM-yyyy", endDate) }, langCode);
+
+			LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Message retrieved using getMessageByKey");
+
+			msg.append(message);
+		} else {
+			LoggerUtils.getInstance().logCodeCoverage(
+					"Test Case 5: Either startDate or endDate is null, returning empty string");
 		}
+
+		LoggerUtils.getInstance().logCodeCoverage("Test Case 6: Exiting getDisciplinaryActionMsg method with result");
 		return msg.toString();
 	}
 
@@ -766,17 +788,25 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return msg
 	 */
 	private String getMessageByKey(String key, String[] params, String langCode) {
-		String msg;
-		Locale loc = new Locale("en", "EN");
-		if ("ms".equalsIgnoreCase(langCode)) {
-			loc = new Locale("ms", "MY");
-		}
-		if (params != null) {
-			msg = ResourceBundleUtils.getMessage(key, params, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		} else {
-			msg = ResourceBundleUtils.getMessage(key, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		}
-		return msg;
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Entering getMessageByKey method");
+
+	    Locale loc = "ms".equalsIgnoreCase(langCode) 
+	        ? new Locale("ms", "MY") 
+	        : new Locale("en", "EN");
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Locale determined based on langCode");
+
+	    String msg;
+	    if (params != null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Parameters provided, retrieving localized message with parameters");
+	        msg = ResourceBundleUtils.getMessage(key, params, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 4: No parameters provided, retrieving localized message without parameters");
+	        msg = ResourceBundleUtils.getMessage(key, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
+	    }
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 5: Exiting getMessageByKey method with message: " + msg);
+	    return msg;
 	}
 
 	/**
@@ -787,16 +817,29 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return true if the action is only a warning, false if otherwise actions
 	 */
 	public boolean isWarningOnly(SmDisciplinaryAction smDisciplinaryAction) {
-		Set<Boolean> actionSet = new HashSet<>();
-		actionSet.add(smDisciplinaryAction.isCancelCategory());
-		actionSet.add(smDisciplinaryAction.isSuspendRegistration());
-		actionSet.add(smDisciplinaryAction.isCancelRegistration());
-		actionSet.add(smDisciplinaryAction.isBlacklistOwner());
-		actionSet.add(smDisciplinaryAction.isBumiputeraCancel());
-		actionSet.add(smDisciplinaryAction.isManufacturerCancel());
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Entering isWarningOnly with SmDisciplinaryAction");
 
-		boolean isImposedAction  = actionSet.contains(true);
-		return !isImposedAction && smDisciplinaryAction.isWarning();
+	    if (smDisciplinaryAction == null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: SmDisciplinaryAction is null, returning false");
+	        return false;
+	    }
+
+	    Set<Boolean> actionSet = new HashSet<>();
+	    actionSet.add(smDisciplinaryAction.isCancelCategory());
+	    actionSet.add(smDisciplinaryAction.isSuspendRegistration());
+	    actionSet.add(smDisciplinaryAction.isCancelRegistration());
+	    actionSet.add(smDisciplinaryAction.isBlacklistOwner());
+	    actionSet.add(smDisciplinaryAction.isBumiputeraCancel());
+	    actionSet.add(smDisciplinaryAction.isManufacturerCancel());
+
+	    boolean isImposedAction = actionSet.contains(true);
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Determined isImposedAction as " + isImposedAction);
+
+	    boolean result = !isImposedAction && smDisciplinaryAction.isWarning();
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Computed result as " + result);
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 5: Exiting isWarningOnly with result");
+	    return result;
 	}
 	
 	/**
@@ -806,12 +849,27 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return warningOrDisciplinaryActionMsg
 	 */
 	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		LoggerUtils.getInstance().logCodeCoverage(
+				"Test Case 1: Entering getDisciplinaryActionMsg with SmDisciplinaryAction");
+
+		if (smDisciplinaryAction == null) {
+			LoggerUtils.getInstance().logCodeCoverage(
+					"Test Case 2: SmDisciplinaryAction is null, returning empty string");
+			return "";
+		}
+
 		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
+		LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Determined isWarningOnly as " + isWarningOnly);
 
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
-				language, isWarningOnly);
+		LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Retrieved user locale language as " + language);
 
+		String message = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
+				smDisciplinaryAction.getEndDate(), language, isWarningOnly);
+		LoggerUtils.getInstance().logCodeCoverage("Test Case 5: Generated disciplinary action message: " + message);
+
+		LoggerUtils.getInstance().logCodeCoverage("Test Case 6: Exiting getDisciplinaryActionMsg with result");
+		return message;
 	}
 
 	// 26279 - end

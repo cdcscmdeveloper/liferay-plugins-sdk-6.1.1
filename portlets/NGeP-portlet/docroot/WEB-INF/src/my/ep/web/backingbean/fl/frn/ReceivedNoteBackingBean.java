@@ -103,6 +103,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -596,16 +597,25 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * 
 	 */
 	private void checkDisciplinaryActionFRN() {
-		if (isDisciplinaryActionFRNPendingStatus()) {
-			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if (smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
+	    LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryActionFRN");
+
+	    if (isDisciplinaryActionFRNPendingStatus()) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: FRN Pending Status is true");
+
+	        SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+
+	        if (smDisciplinaryAction != null) {
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Disciplinary Action Found");
+	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	        } else {
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 2: No Disciplinary Action Found");
+	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	        }
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: FRN Pending Status is false");
+	    }
 	}
 
 	/**
@@ -615,11 +625,23 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 *         otherwise statuses
 	 */
 	private boolean isDisciplinaryActionFRNPendingStatus() {
-		Long statusId = getManagedBean().getFulfilmentNote().getStatus().getStatusId();
-		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.FN_PENDING_APPROVAL,
+	    LoggerUtils.getInstance().logCodeCoverage("Entering isDisciplinaryActionFRNPendingStatus");
+
+	    Long statusId = getManagedBean().getFulfilmentNote().getStatus().getStatusId();
+	    if (statusId == null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 3: statusId is null");
+	        return false;
+	    }
+
+	    Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.FN_PENDING_APPROVAL,
 				FulfilmentStatusConst.FN_PENDING_REVISION, FulfilmentStatusConst.FN_PENDING_REV_APPROVAL,
 				FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION, FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT));
-		return pendingStatusIds.contains(statusId);
+
+	    boolean isPending = pendingStatusIds.contains(statusId);
+	    LoggerUtils.getInstance().logCodeCoverage(
+	        isPending ? "Test Case 1: statusId matches a pending status"
+	                  : "Test Case 2: statusId does not match any pending status");
+	    return isPending;
 	}
 	// 26279 - End
 
@@ -1077,16 +1099,25 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * 
 	 */
 	private void checkDisciplinaryActionDO(DeliveryOrderBackingBean doBB) {
-		if (isDisciplinaryActionDOPendingStatus(doBB)) {
-			SmSupplier smSupplier = doBB.getManagedBean().getFulfilmentRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if (smDisciplinaryAction != null) {
-				doBB.getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				doBB.getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-			} else {
-				doBB.getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
+	    LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryActionDO");
+
+	    if (isDisciplinaryActionDOPendingStatus(doBB)) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: DO Pending Status is true");
+
+	        SmSupplier smSupplier = doBB.getManagedBean().getFulfilmentRequest().getSmSupplier();
+	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+
+	        if (smDisciplinaryAction != null) {
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Disciplinary Action Found");
+	            doBB.getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+	            doBB.getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	        } else {
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 2: No Disciplinary Action Found");
+	            doBB.getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	        }
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: DO Pending Status is false");
+	    }
 	}
 
 	/**
@@ -1097,11 +1128,30 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 *         otherwise statuses
 	 */
 	private boolean isDisciplinaryActionDOPendingStatus(DeliveryOrderBackingBean doBB) {
-		Long statusId = doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
-		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
+	    LoggerUtils.getInstance().logCodeCoverage("Entering isDisciplinaryActionDOPendingStatus");
+
+	    if (doBB == null || doBB.getManagedBean() == null || 
+	        doBB.getManagedBean().getFulfilmentOrder() == null || 
+	        doBB.getManagedBean().getFulfilmentOrder().getStatus() == null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 4: doBB or nested objects are null");
+	        return false;
+	    }
+
+	    Long statusId = doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
+	    if (statusId == null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 3: statusId is null");
+	        return false;
+	    }
+
+	    Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
 				FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT, FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL,
 				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
-		return pendingStatusIds.contains(statusId);
+
+	    boolean isPending = pendingStatusIds.contains(statusId);
+	    LoggerUtils.getInstance().logCodeCoverage(
+	        isPending ? "Test Case 1: statusId matches a pending status"
+	                  : "Test Case 2: statusId does not match any pending status");
+	    return isPending;
 	}
 	// 26279 - End
 	
@@ -1812,18 +1862,23 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier supplier;
+	    LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
 
-		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			supplier.setFlagSupplier(true);
-			supplier.setFlagDASuppProfile(true);
+	    SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+	    if (supplier != null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Supplier found, proceeding with disciplinary action handling.");
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
-					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-		}
+	        supplier.setFlagSupplier(true);
+	        supplier.setFlagDASuppProfile(true);
+
+	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(supplier);
+	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+
+	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+	        LoggerUtils.getInstance().logCodeCoverage("Disciplinary action history dialog displayed.");
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("No supplier found, no action taken.");
+	    }
 	}
 
 	// 26279 - end

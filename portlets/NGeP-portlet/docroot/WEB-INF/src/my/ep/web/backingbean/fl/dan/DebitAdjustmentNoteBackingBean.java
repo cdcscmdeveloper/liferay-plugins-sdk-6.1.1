@@ -64,6 +64,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -236,17 +237,22 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (getManagedBean().getAdjustment().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL
-				.longValue()) {
-			SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if (smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
+		LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
+	    if (getManagedBean().getAdjustment().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL
+	            .longValue()) {
+	        SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+	        if (smDisciplinaryAction != null) {
+	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	        } else {
+	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	        }
+
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Status is DN_PENDING_APPROVAL");
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Status is not DN_PENDING_APPROVAL");
+	    }
 	}
 	// 26279 - End
 	
@@ -710,20 +716,28 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier supplier;
+	    LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
 
-		if (getManagedBean().getAdjustment().getFlRequest().getSmSupplier() != null) {
-			supplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
-			supplier.setFlagSupplier(true);
-			supplier.setFlagDASuppProfile(true);
+	    SmSupplier supplier;
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
-					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-		}
+	    if (getManagedBean() != null && 
+	        getManagedBean().getAdjustment() != null && 
+	        getManagedBean().getAdjustment().getFlRequest() != null && 
+	        getManagedBean().getAdjustment().getFlRequest().getSmSupplier() != null) {
+
+	        supplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+	        supplier.setFlagSupplier(true);
+	        supplier.setFlagDASuppProfile(true);
+
+	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(supplier);
+	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+
+	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Disciplinary action dialog displayed ");
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: No supplier found ");
+	    }
 	}
-
 	// 26279 - end
 	
 	//29599-start

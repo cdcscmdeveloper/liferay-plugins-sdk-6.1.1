@@ -125,6 +125,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
@@ -527,17 +528,33 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (isDisciplinaryActionPAPendingStatus()) {
-			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+	    LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
 
-			if (smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
+	    if (isDisciplinaryActionPAPendingStatus()) {
+	        LoggerUtils.getInstance().logCodeCoverage("Disciplinary action PA pending status verified");
+
+	        SmSupplier smSupplier = getManagedBean() != null 
+	                && getManagedBean().getFulfilmentRequest() != null 
+	                ? getManagedBean().getFulfilmentRequest().getSmSupplier() 
+	                : null;
+
+	        if (smSupplier != null) {
+	            SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+
+	            if (smDisciplinaryAction != null) {
+	                getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+	                getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	                LoggerUtils.getInstance().logCodeCoverage("Disciplinary action found and set (TC1)");
+	            } else {
+	                getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	                LoggerUtils.getInstance().logCodeCoverage("No disciplinary action found (TC2)");
+	            }
+	        } else {
+	            LoggerUtils.getInstance().logCodeCoverage("Supplier is null (TC3)");
+	        }
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Disciplinary action PA pending status not verified (TC4)");
+	    }
 	}
 
 	/**
@@ -547,11 +564,20 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 *         otherwise statuses
 	 */
 	private boolean isDisciplinaryActionPAPendingStatus() {
-		Long statusId = getManagedBean().getPaymentAdvice().getStatus().getStatusId();
-		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY,
-				FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH,
-				FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION));// //30738 - add new status filter
-		return pendingStatusIds.contains(statusId);
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Verify PAPendingStatus check method enters");
+
+	    Long statusId = getManagedBean().getPaymentAdvice().getStatus().getStatusId();
+	    Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY,
+	            FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH,
+	            FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION));
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Verify PAPendingStatus check contains statusId");
+
+	    boolean result = pendingStatusIds.contains(statusId);
+
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: PAPendingStatus result is: " + result);
+
+	    return result;
 	}
 	// 26279 - End
 	
@@ -2683,20 +2709,29 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier supplier;
+	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Entering viewDisciplinaryAction method");
 
-		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			supplier.setFlagSupplier(true);
-			supplier.setFlagDASuppProfile(true);
+	    SmSupplier supplier;
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
-					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-		}
+	    if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: SmSupplier is not null, processing supplier");
+
+	        supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+	        supplier.setFlagSupplier(true);
+	        supplier.setFlagDASuppProfile(true);
+
+	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(supplier);
+	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Disciplinary actions set, executing dialog");
+
+	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 4: disciplinaryActionHistoryDlg executed successfully");
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 5: SmSupplier is null, no actions taken");
+	    }
 	}
-
 	// 26279 - end
 	
 	//28221 -start

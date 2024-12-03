@@ -115,6 +115,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.common.CommonBackingBean;
@@ -856,19 +857,21 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL
-				.longValue()
-				|| getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL
-						.longValue()) {
-			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-			if (smDisciplinaryAction != null) {
-				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-			} else {
-				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-			}
-		}
+	    if (getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL
+	            .longValue()
+	            || getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL
+	                    .longValue()) {
+	        SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+	        if (smDisciplinaryAction != null) {
+	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	        } else {
+	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	        }
+
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Invoice status is IN_PENDING_CANCEL_APPROVAL or IN_PENDING_MODIFICATION_APPROVAL");
+	    }
 	}
 	// 26279 - End
 	
@@ -2662,18 +2665,20 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier supplier;
+	    SmSupplier supplier;
 
-		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
-			supplier.setFlagSupplier(true);
-			supplier.setFlagDASuppProfile(true);
+	    if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
+	        supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+	        supplier.setFlagSupplier(true);
+	        supplier.setFlagDASuppProfile(true);
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
-					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-		}
+	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+	                .getDisciplinaryActionVO(supplier);
+	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Supplier is not null");
+	    }
 	}
 
 	// 26279 - end
