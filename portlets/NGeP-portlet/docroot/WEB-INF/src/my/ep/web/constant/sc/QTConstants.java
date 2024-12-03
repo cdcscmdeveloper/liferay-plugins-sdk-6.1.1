@@ -280,10 +280,6 @@ public interface QTConstants {
 	// 19287#91, 17376#104 -start-
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
-	// 25037 - start
-	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
-	// 25037 - end
 
 	//#15391 #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
@@ -301,10 +297,10 @@ public interface QTConstants {
 	// 9019 - Start (Harun) WIP transaction Pending QT Submission
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
 	// 9019 - End (Harun)
-	
+
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
-	
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -318,6 +314,15 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
 	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
+
+	// 36671, 25037 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671, 25037 - end
+
 	// Bug #35688@Syazani 10/07/2024 -- Start
 	public static final String TAB_SC_GENERAL_INFORMATION = "0";
 	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
@@ -377,8 +382,4 @@ public interface QTConstants {
 	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
 	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
 	//#10542 End Dayan
-	
-	// 36671 - start
-	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
-	// 36671 - end
 }
