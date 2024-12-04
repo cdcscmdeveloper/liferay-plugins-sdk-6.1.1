@@ -1120,7 +1120,6 @@ public class SpecificationBackingBean extends
 			}
 			// 1873 - end- note 52
 
-			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST).getScQt());	//Bug #35688@Syazani 10/07/2024
 			specSo.validateCheckList(specReqDTO);
 			// #34656 adjust position (remove #31292)
 
