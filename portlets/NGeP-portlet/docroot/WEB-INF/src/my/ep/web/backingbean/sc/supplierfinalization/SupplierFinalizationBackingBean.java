@@ -8691,7 +8691,13 @@ public class SupplierFinalizationBackingBean extends
 			if (method.equalsIgnoreCase("L")) {
 				return act.isMultiLoiSignedOff();
 			} else if (method.equalsIgnoreCase("B")) {
-				return act.isBiddingSignedOff();
+				// 33764 - start
+				if (getManagedBean().getQtRefinalized()) {
+					return act.isSignedOff();
+				} else {
+					return act.isBiddingSignedOff();
+				}
+				// 33764 - end
 			} else {
 				return act.isSignedOff();
 			}
@@ -10317,29 +10323,6 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
-	}
-
-	public boolean disableReevaluationOptions(String stage) {
-		boolean disabled = false;
-		List<String> list = this.getManagedBean().getDisqualifiedStages();
-		if (CollectionUtils.isNotEmpty(list) && !getManagedBean().isHasSupplierQualified()) {
-			Collections.sort(list, new Comparator<String>() {
-				List<String> sortOrder = Arrays.asList("F", "T", "C");
-
-				public int compare(String s1, String s2) {
-					return Integer.valueOf(sortOrder.indexOf(s1)).compareTo(Integer.valueOf(sortOrder.indexOf(s2)));
-				}
-			});
-			List<String> disabledStages = new ArrayList<String>();
-			if (stage.equals("T"))
-				disabledStages = Arrays.asList(new String[] { "C" });
-			else if (stage.equals("F"))
-				disabledStages = Arrays.asList(new String[] { "T", "C" });
-
-			return disabledStages.contains(list.get(0));
-
-		}
-		return disabled;
 	}
 	// 6906 - end - note 117
 }
