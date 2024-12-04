@@ -89,8 +89,8 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
-	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 7;
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13; //#31043 start
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;  //#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -564,9 +564,15 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_357_0_SEQ = "SM_MOF_357_0_SEQ";
 	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
 	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //#30766 & #34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";

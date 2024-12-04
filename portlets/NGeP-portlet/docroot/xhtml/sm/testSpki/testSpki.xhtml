@@ -23,7 +23,7 @@
 			<p:selectOneRadio value="#{bb.cert}" id="certRadio">
 				<f:selectItem itemLabel="Trustgate" itemValue="TG" />
 				<f:selectItem itemLabel="Digicert" itemValue="DG" />
-				<p:ajax event="change" update="@form" />
+				<p:ajax event="change" update="@form" partialSubmit="true"/>
 			</p:selectOneRadio>
 			<p:outputLabel value=""/>
 			

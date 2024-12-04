@@ -304,11 +304,13 @@
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
 											<ui:remove>9019 -end</ui:remove>
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
 											<!-- 25729 -start- -->
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											<!-- 25729 -end- -->
 											</p:ajax>
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -1050,24 +1052,23 @@
 			<ui:remove> #11104 - start </ui:remove>
 			<tr>
 				<h:panelGroup id="QuotationtenderGeneralSample">
-					<ui:fragment rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td>
-							<p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
-								<f:selectItems
-									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change" partialSubmit="true"
-									listener="#{createQtBB.sampleChange}" update="@form"
-									process="@this"></p:ajax>
-							</p:selectOneRadio>
-						</td>
-						<td style="margin-top: -3px">
-							<ac:iconTooltip value="#{lbl['lbl.sc.qt.sampel.instructions']}" />
-						</td>
+					<ui:fragment
+						rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.sampleShowHide}">
+							<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneRadio value="#{scQt.sampleReq}"
+									disabled="#{isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
+									<f:selectItems
+										value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									<p:ajax event="change" partialSubmit="true"
+										listener="#{createQtBB.sampleChange}" update="@form"
+										process="@this"></p:ajax>
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>
+						</ui:fragment>
 					</ui:fragment>
 				</h:panelGroup>
 			</tr>

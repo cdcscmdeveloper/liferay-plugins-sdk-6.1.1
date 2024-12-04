@@ -2755,6 +2755,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.getManagedBean().setViewContract(false);
 		ctBB.getManagedBean().setFromViewPage(false); //#15851
 		getManagedBean().setLoaContractVerList(null);
+		getManagedBean().setLoaContractVerId(null); //#15851
 		ContractItemSearchBackingBean  contractBB= new ContractItemSearchBackingBean();
 		contractBB.getManagedBean().setItemcode(null);
 		contractBB.getManagedBean().setItemname(null);

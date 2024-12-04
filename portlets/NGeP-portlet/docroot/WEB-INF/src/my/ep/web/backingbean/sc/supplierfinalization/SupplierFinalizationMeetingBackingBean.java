@@ -276,6 +276,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 				// End #26189:PK2.1
 				
 				if (CollectionUtils.isNotEmpty(membersList)) {
+					//#25426 - Start
+					//to exclude member list inactive committee
+					checkAndExcludeInactiveCommittee(membersList);
+					//#25426 - End
 					Collections.sort(membersList);
 					
 					getManagedBean().setCommitteeMembersList(
@@ -346,6 +350,33 @@ public class SupplierFinalizationMeetingBackingBean extends
 			qtMeetingSO = null;
 		}
 	}
+	
+	
+	// #25426 - Start
+	/**
+	 * To exclude inactive committee list
+	 * 
+	 * @param membersList
+	 */
+	public void checkAndExcludeInactiveCommittee(List<ScCommitteeMember> membersList) {
+		List<ScCommitteeMember> toRemove = new ArrayList<>();
+
+		for (ScCommitteeMember scMember : membersList) {
+			Long userId = scMember.getPmUser().getUserId();
+			String committeeType = scMember.getScCommittee().getCommitteeType().getParameterCode();
+			String roleCode = getParameterDesc(scMember.getMemberRole()).toUpperCase();
+
+			boolean isInactive = getCommitteeSO().isInactiveCommitteeByUserId(userId, committeeType, roleCode);
+
+			if (isInactive) {
+				toRemove.add(scMember); // Collect inactive members to remove later
+			}
+		}
+		membersList.removeAll(toRemove); // Remove all inactive members from the list
+	}
+
+	// #25426 - End
+
 	
 	/**
 	 * Action to add meeting
@@ -1882,14 +1913,14 @@ if (CollectionUtils.isNotEmpty(
 		mainPage = finalBiddingBB == null ? mainPage
 				: "/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/endorsement.xhtml";
 
-		if ("back".equalsIgnoreCase(action)) {
+		if (CommonConstants.ACTION_BACK.equalsIgnoreCase(action)) {
 			restoreUnconfirmChanges();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, mainPage);
-		} else if ("update".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_UPDATE.equalsIgnoreCase(action)) {
 			updateAction();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "/xhtml/sc/supplierFinalization/confirmMeeting/memberUpdate.xhtml");
-		} else if ("confirm".equalsIgnoreCase(action)) {
+		} else if (CommonConstants.ACTION_CONFIRM.equalsIgnoreCase(action)) {
 			validateCommitteeChanges();
 			if (finalBB != null) {
 				submitChanges(finalBB, mainPage);

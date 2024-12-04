@@ -115,7 +115,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
-import my.ep.persistence.entity.ct.VCtFl; //Fix - #30866
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -154,8 +153,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	/**
 	 * Instantiates a new fulfilment order backing bean.
 	 */
-	public FulfilmentOrderBackingBean(){
-	}
+	public FulfilmentOrderBackingBean(){ }
 	
 	/**
 	 * close/manual payment fulfilment order.
@@ -188,8 +186,8 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			resDTO = fulfilementOrderSO.closeManualPayment(reqDTO);			
 			
 			if(resDTO.isSuccessful()) {
-				successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_PURCHASE_ORDER,getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
+				successMessage(MessageConst.INFO_700072, ParameterTypeConst.DOCUMENT_TYPES, 
+						ParameterConst.DOCTYPE_PURCHASE_ORDER, getManagedBean().getFulfilmentOrder().getDocNo().toString(), Boolean.FALSE);
 				/*String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
@@ -206,22 +204,20 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 			} else {
 				throw new EpException(MessageConst.ERROR_740017);
-			}
-			
-			
-		}finally{
+			}			
+		} finally {
 			fulfilementOrderSO = null;
 		}
 	}
   	
-  	private void validateCloseManualRequest() {	
-	
-			/*validate remark cannot be null*/
-			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
-			}
-		
-  	}
+	private void validateCloseManualRequest() {
+
+		/* validate remark cannot be null */
+		if (flBB.getManagedBean().getRemarkList().get(0).getRemark() == null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage("lbl.txt.remarks", 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
 	
 	/**
 	 * save,submit Fulfillment order.
@@ -313,6 +309,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				//28508-end
 			}
+			
 			//#34686 start
 			else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				if(getManagedBean().getAttachment().getFileName() != null){
@@ -327,8 +324,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 					resDTO = fulfilmentOrderSO.proceedAP58(reqDTO);
 				}
-     			}
+     		}
 			//#34686 end
+			
 			else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				reqDTO.setApprover(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()));
 				reqDTO.setStopIns(getManagedBean().getStopIns());
@@ -386,6 +384,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
+			
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !hasFactoringUserRole()) {
@@ -488,6 +487,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 			}
 		}
+		
 		for(FlDeliveryAddress deliveryAddress : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
 				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
@@ -498,6 +498,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 			}
 		}
+		
 		doMB.getSupplierGst(resDTO.getFlFulfilmentRequest());
 		doMB.getManagedBean().setDisplayStopIntrDetls(false);
 		if(resDTO.getFlStopInstr() !=null){
@@ -516,6 +517,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			doMB.getManagedBean().getFlStopInstr().setStopInstrNo(resDTO.getFlStopInstr().getStopInstrNo());
 			doMB.getManagedBean().setRejectedRemark(resDTO.getStopInstrRejectedRemarkList());
 		}
+		
 		doMB.sortOrderSummaryList(doMB.getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		doMB.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
@@ -672,8 +674,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			}
 			//34316-End
 		}
-		getEspkbCommitmentNo();
-		
+		getEspkbCommitmentNo();		
 	}
 	
 	/**
@@ -1304,7 +1305,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//35462
 				
 			}
 			return messageSuffix;	

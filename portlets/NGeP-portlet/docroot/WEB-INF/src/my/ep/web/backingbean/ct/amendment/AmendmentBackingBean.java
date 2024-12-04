@@ -591,22 +591,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			
-			if(contractVerId!=null) {
+			// #25956 - Start (view Contract Amendment url from notification)
+			if (contractVerId != null) {
+
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 				ctReqDTO.setUpdateAction(false);
-				getManagedBean().setBackToNtf("notifications"); //25956
-				ctBackingBean.getManagedBean().setViewContract(true); //25956
-				
-				setAmendmentContractVer(ctReqDTO);
-				ConstructTabSideMenu();
-				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+				ctReqDTO.setViewOnly(true);
+				getManagedBean().setBackToNtf("notifications"); // 25956
 				getManagedBean().setViewOnly(true);
+				getManagedBean().setSelectedTabIndex(0);
+
+				setAmendmentContractVer(ctReqDTO);
+				ctBackingBean.getManagedBean().setViewContract(true); // 25956
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); // 25956
+				ConstructTabSideMenu();
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
-			//#25956 - End (view Contract Amendment url from notification)
+			// #25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				ConstructTabSideMenu();
 
@@ -1606,6 +1610,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// #29403 end
+			
+			// #25956 start
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(
+							CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(
+									CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME) || getManagedBean()
+							.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME))) {
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+			}
+			// #25956 end
 
 			//Enhancement 15851 - Prefix for supplemental contract letter
 			//start
@@ -2156,8 +2172,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& (supplierRemark == null || supplierRemark.length() == 0)) {
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); //#25956
 			}
 		}/*Remark validation end*/
 
@@ -6672,7 +6688,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public boolean isContractAmountAmend() {
 		boolean isContractAmountAmend = false;
-		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() < 20000L){
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() <= 20000L){//#36635
 			isContractAmountAmend = true;
 		}
 		return isContractAmountAmend;
@@ -7743,8 +7759,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (message != null
 				&& ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0))) {
 			setTabValue("AD");
-			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) }); //#25956
 		}
 		// #26688 end
 	}

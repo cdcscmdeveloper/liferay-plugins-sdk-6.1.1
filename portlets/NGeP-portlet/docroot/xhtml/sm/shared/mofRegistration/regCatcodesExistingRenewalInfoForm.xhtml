@@ -115,7 +115,8 @@
 							itemValue="0" />
 						<p:ajax event="change" process="@this" update="poCatRDecisionRmrk"
 							partialSubmit="true"
-							listener="#{backingBean.assignCategoryApproveOrRejectDate(aprvdCatBean)}" />
+							listener="#{backingBean.assignCategoryApproveOrRejectDate(aprvdCatBean)}" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</p:selectOneRadio>
 		
 					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
@@ -162,7 +163,8 @@
 							itemValue="0" />
 						<p:ajax event="change" process="@this"
 							update="apprvrCatRDecisionRmrk" partialSubmit="true"
-							listener="#{backingBean.assignCategoryApproveOrRejectDate(aprvdCatBean)}" />
+							listener="#{backingBean.assignCategoryApproveOrRejectDate(aprvdCatBean)}" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 					</p:selectOneRadio>
 				</p:column>
 				<!-- 32348 START - adjust width -->
@@ -434,8 +436,5 @@
 				process="@this" partialSubmit="true" update=":form:tt:catCodeInfPan"
 				action="#{backingBean.resetApplnCategoryType}" />
 		</div>
-
 	</p:confirmDialog>
-	
-
 </ui:composition>

@@ -9,10 +9,15 @@
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
 
-	<p:column style="width: 25%;white-space: normal;word-break:normal;"><!-- #29006 word-break:normal -->
+	<p:column style="width: 25%;white-space: normal;"><!-- #29006 word-break:normal | #36103-remove word-break:normal -->
+		<ui:remove>#29007 Added wordBreakForDLOA condition Vinod</ui:remove>
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
-			rendered="#{!isRepeated}" />
+			rendered="#{!isRepeated and !templateSpecBean.wordBreakForQT}"
+			style="word-break:normal;"/><!-- #36103 - add style word-break:normal -->
 		<!-- #29007 Start Vinod -->
+		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
+				rendered="#{!isRepeated and templateSpecBean.wordBreakForQT}" 
+				style="word-break:break-all;"/>
 		<p:spacer width="5" />
 		<ui:fragment rendered="#{!empty question.cmItem.extensionCode and directLOABackingBean.managedBean.iconForDL}">
 		<p:commandLink id="itemName"
@@ -45,7 +50,7 @@
 			<ui:param name="clspecDetail" value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
 			<h:outputText value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}" escape="false"
 				rendered="#{!isRepeated}"
-				style="white-space: normal;word-wrap: break-word;" />
+				style="white-space: normal;word-wrap: break-word; word-break:break-word;" />  <!-- #36103 - add style word-break:break-word -->
 		</c:if>
 		</ui:fragment>
 	</p:column>
