@@ -15,10 +15,16 @@ public class MapKey implements Serializable {
 	public MapKey(Long zoneId, Long itemId) {
 		this.zoneId = zoneId;
 		this.itemId = itemId;
-		this.supplierId = 0L;// 33380 - start
+		this.supplierId = 0L;// 33380 - start 
 	}
 
 	// 33380 - start
+	/**
+	 * Construct new MapKey with a composite key of supplierId, zoneId, itemId
+	 * @param supplierId
+	 * @param zoneId
+	 * @param itemId
+	 */
 	public MapKey(Long supplierId, Long zoneId, Long itemId) {
 		this.zoneId = zoneId;
 		this.itemId = itemId;
@@ -94,10 +100,11 @@ public class MapKey implements Serializable {
 		} else if (!itemId.equals(other.itemId)) {
 			return false;
 		}
+		
 		// 33380 - start
-		if (supplierId == null && other.supplierId != null) {
-			return false;
-		} else if (!supplierId.equals(other.supplierId)) {
+		boolean supplierIsNull = null == supplierId && null != other.supplierId;
+		boolean supplierNotEqual = null != supplierId && !supplierId.equals(other.supplierId);
+		if (supplierIsNull || supplierNotEqual) {
 			return false;
 		}
 		// 33380 - end
