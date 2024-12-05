@@ -588,7 +588,10 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			FlDeliveryOrder deliveryOrder = resDTO.getFlDeliveryOrder();
 			if (deliveryOrder != null && !deliveryOrder.getFlDelOrderItem().isEmpty()) {
 				for (FlDelOrderItem flDelOrderItem : deliveryOrder.getFlDelOrderItem()) {
-					log.info("navigateToPage() DO FlItem[" + flDelOrderItem.getFlItem() + "] FulfilmentItemId()["+ flDelOrderItem.getFlItem().getFulfilmentItemId() + "]");
+					if(flDelOrderItem.getFlItem() !=null && flDelOrderItem.getFlItem().getFulfilmentItemId() !=null){
+						log.info("navigateToPage() DO FulfilmentItemId()["+ flDelOrderItem.getFlItem().getFulfilmentItemId() + "]");
+					}
+					
 				}
 			}
 			//36534 - end 
