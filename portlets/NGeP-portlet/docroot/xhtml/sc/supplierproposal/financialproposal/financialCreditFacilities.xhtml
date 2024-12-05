@@ -239,8 +239,8 @@
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							id="financialCreditFacilityUserScoreId"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
-							value="#{noOfContracts.userScore or rejectedSupplier}" maxlength="18" required="true"
-							disabled="#{pageDisable}" style="text-align:right"
+							value="#{noOfContracts.userScore}" maxlength="18" required="true"
+							disabled="#{pageDisable or rejectedSupplier}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '2'}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
