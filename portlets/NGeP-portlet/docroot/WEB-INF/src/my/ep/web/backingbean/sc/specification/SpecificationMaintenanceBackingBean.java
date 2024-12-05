@@ -662,6 +662,15 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
+		// #10141 Start Vinod
+		boolean isReadOnly = this.getManagedBean().isReadOnly();
+		if (!isReadOnly
+				&& Arrays.asList(QTStatusConst.QT_SPEC_MAINTENANCE_INACTIVE_CHECKLIST_UPDATE_GROUP).contains(
+						this.getManagedBean().getCurrentStatusId())) {
+			specBB.checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),
+					QTConstants.SPEC_MAINTENANCE);
+		}
+		// #10141 End Vinod
 		
 	log.debug("end editSpecificationMaintenance");
 }

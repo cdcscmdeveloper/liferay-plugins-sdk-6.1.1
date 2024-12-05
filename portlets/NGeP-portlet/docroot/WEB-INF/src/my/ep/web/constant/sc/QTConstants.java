@@ -451,6 +451,9 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_PC,
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
+	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
+	public static final String PARAM_MAP_PKEY = "PKEY";
+	public static final String PARAM_MAP_QTID = "QT_ID";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";

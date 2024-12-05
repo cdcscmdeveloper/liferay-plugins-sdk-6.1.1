@@ -239,7 +239,8 @@
 		<ui:remove> #10141 Start Vinod </ui:remove>
 		<p:dialog id="inActiveChecklistNotificationId"
 			widgetVar="inActiveChecklistNotification" showHeader="false"
-			resizable="false" width="30%" closable="false">
+			resizable="false" width="30%" onstart="blockWidget.show();"
+			closable="false">
 			<p:outputPanel name="inActiveChecklistNotificationPanel"
 				id="inActiveChecklistNotificationPanel" autoUpdate="true">
 				<h:outputText escape="false"
