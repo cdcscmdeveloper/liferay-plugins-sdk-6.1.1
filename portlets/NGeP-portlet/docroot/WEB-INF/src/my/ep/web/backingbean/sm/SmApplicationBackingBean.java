@@ -3097,6 +3097,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 		
+		//#36483 - START
+		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
+				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+					fac.getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+					fac.getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+				}
+			}
+		}
+		//#36483 - END
+		
 		// #34166 - Start
 		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			validateText();
@@ -12897,6 +12911,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -12943,6 +12959,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 			}
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 		
 		/*//13320-start
@@ -12998,6 +13016,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				&& addr.getDistrictId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -13017,6 +13037,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				&& addr.getCityId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 		}
+		
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -16716,6 +16739,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				&& addr.getDivisionId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 	//13320-End	
