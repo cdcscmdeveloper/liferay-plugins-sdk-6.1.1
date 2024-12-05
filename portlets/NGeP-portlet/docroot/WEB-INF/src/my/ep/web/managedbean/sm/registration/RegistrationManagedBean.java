@@ -134,15 +134,15 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private boolean viewMode;
 	private boolean deletedNotActivatedSupplier;
 	//#16052019 - SSM INTEGRATION CR - Fahmi
-	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
-	private List<SmPersonnel> smPersonnelDirector = new ArrayList();
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList<SmSupplierOwner>();
+	private List<SmPersonnel> smPersonnelDirector = new ArrayList<SmPersonnel>();
 	private List dummy = new ArrayList();
-	private List<SmPersonnel> smPersonnelOwners = new ArrayList();
+	private List<SmPersonnel> smPersonnelOwners = new ArrayList<SmPersonnel>();
 	private SmPersonnel smPersonnelSelected= new SmPersonnel();
-	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList();
-	private List<SmPersonnel> SmPersonnelAll = new ArrayList();
-	private List<SmEquityCompany> smEquityCompany = new ArrayList();
-	 private List<SmSupplierBranch> smSupplierBranches = new ArrayList();
+	private List<SelectItem> selectItemsSmPersonnelOwners = new ArrayList<SelectItem>();
+	private List<SmPersonnel> SmPersonnelAll = new ArrayList<SmPersonnel>();
+	private List<SmEquityCompany> smEquityCompany = new ArrayList<SmEquityCompany>();
+	 private List<SmSupplierBranch> smSupplierBranches = new ArrayList<SmSupplierBranch>();
 	private String headerName = "";
 	private boolean ownerIsEquity=false;
 	private boolean ownerIsDirector=false;
@@ -181,6 +181,17 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	//#30829 end
 	
 	private boolean showOwnerPersonnel = false;
+	// 27691 - Add/Delete Supplier Owner
+	private List <SmSupplierOwner> supplierOwnerls = new ArrayList<SmSupplierOwner>(); 
+	
+	private List<SmSupplierOwner> selectedSuppOwners = new ArrayList<SmSupplierOwner>();
+	
+	private boolean allOwnerSelected;
+	
+	private List<SmSupplierOwner> addSuppOwnerLs = new ArrayList<SmSupplierOwner>();
+	
+	private List<SmSupplierOwner> delSuppOwnerLs = new ArrayList<SmSupplierOwner>();
+	//27691 END
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -1088,4 +1099,45 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	}
 	//#30829 End
 	
+	//#27691 START
+	public List<SmSupplierOwner> getSupplierOwnerls() {
+		return supplierOwnerls;
+	}
+
+	public void setSupplierOwnerls(List<SmSupplierOwner> supplierOwnerls) {
+		this.supplierOwnerls = supplierOwnerls;
+	}
+
+	public List<SmSupplierOwner> getSelectedSuppOwners() {
+		return selectedSuppOwners;
+	}
+
+	public void setSelectedSuppOwners(List<SmSupplierOwner> selectedSuppOwners) {
+		this.selectedSuppOwners = selectedSuppOwners;
+	}
+
+	public boolean isAllOwnerSelected() {
+		return allOwnerSelected;
+	}
+
+	public void setAllOwnerSelected(boolean allOwnerSelected) {
+		this.allOwnerSelected = allOwnerSelected;
+	}
+
+	public List<SmSupplierOwner> getAddSuppOwnerLs() {
+		return addSuppOwnerLs;
+	}
+
+	public void setAddSuppOwnerLs(List<SmSupplierOwner> addSuppOwnerLs) {
+		this.addSuppOwnerLs = addSuppOwnerLs;
+	}
+
+	public List<SmSupplierOwner> getDelSuppOwnerLs() {
+		return delSuppOwnerLs;
+	}
+
+	public void setDelSuppOwnerLs(List<SmSupplierOwner> delSuppOwnerLs) {
+		this.delSuppOwnerLs = delSuppOwnerLs;
+	}
+	//#27691 END
 }

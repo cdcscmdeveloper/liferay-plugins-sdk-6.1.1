@@ -166,47 +166,54 @@
 								</table>
 							</td>
 						</tr>
-						<ui:remove> #11104 - start </ui:remove>						
-						<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td>
-					<table>
+
+						<ui:remove> #11104 - start </ui:remove>
+						<ui:fragment rendered="#{isSampleExist}">
 							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.coordinate.officer']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
 								<td>
-					<p:inputText id="samplecoordinatingofficerzonal"
-								required="#{qTScheduleDetailBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.coordinate.officer']}"
-								disabled="#{schedulecoordinatingofficer}"
-								value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
-								size="30" maxlength="85" /> </td>
-							<td><p:message id="samplecoordinatingofficerzonalMsg"
-								for="samplecoordinatingofficerzonal" display="icon" /></td>
-							</tr>
-							</table>	
-					</td>
-					
-					
-					<td><p:outputLabel value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td>
-					<table>
-							<tr>
+									<table>
+										<tr>
+											<td><p:inputText id="samplecoordinatingofficerzonal"
+													required="#{qTScheduleDetailBackingBean.managedBean.required}"
+													label="#{lbl['lbl.sc.coordinate.officer']}"
+													disabled="#{schedulecoordinatingofficer}"
+													value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtSampleSubmission.scAddress.contactPerson}"
+													size="30" maxlength="85" /></td>
+											<td><p:message id="samplecoordinatingofficerzonalMsg"
+													for="samplecoordinatingofficerzonal" display="icon" /></td>
+										</tr>
+									</table>
+								</td>
+
+
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" />
+									<p:outputLabel value="*" styleClass="mandatory" /></td>
 								<td>
-					<p:inputText id="samplecoordinatingofficerzonalContactNo"
-					disabled="#{schedulecoordinatingofficer}"
-								required="#{qTScheduleDetailBackingBean.managedBean.required}"
-								label="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no.validation.msg']}"
-								value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
-								size="20" maxlength="20" validator="#{webappBean.checkPhoneNumber}" /> </td>
-							<td><p:message id="samplecoordinatingofficerzonalContactNoMsg"
-								for="samplecoordinatingofficerzonalContactNo" display="icon" /></td>
+									<table>
+										<tr>
+											<td><p:inputText
+													id="samplecoordinatingofficerzonalContactNo"
+													disabled="#{schedulecoordinatingofficer}"
+													required="#{qTScheduleDetailBackingBean.managedBean.required}"
+													label="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no.validation.msg']}"
+													value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtSampleSubmission.scAddress.contactMobileNo}"
+													size="20" maxlength="20"
+													validator="#{webappBean.checkPhoneNumber}" /></td>
+											<td><p:message
+													id="samplecoordinatingofficerzonalContactNoMsg"
+													for="samplecoordinatingofficerzonalContactNo"
+													display="icon" /></td>
+										</tr>
+									</table>
+								</td>
+
 							</tr>
-							</table>	
-					</td>
-					
-					</tr>
-					<ui:remove> #11104 - end </ui:remove>
+						</ui:fragment>
+						<ui:remove> #11104 - end </ui:remove>
 					</table>
 
 					<div class="ppRightBtn">
