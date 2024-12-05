@@ -70,7 +70,7 @@
 		<tr>
 			<td><p:commandButton immediate="true"
 					value="#{lbl['lbl.btn.back']}" partialSubmit="true" process="@this"
-					style="float:left;" rendered="#{!isEditable}"
+					style="float:left;" rendered="#{simpleQuoteBackingBean.managedBean.trackingDairyView}"
 					action="#{simpleQuoteBackingBean.backToPrevious}" /></td>
 
 			<td style="vertical-align: bottom;"><p:commandLink
@@ -86,30 +86,30 @@
 		<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 			<p:commandButton immediate="true" id="backButton"
 				value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
-				process="@this" style="float:left;" rendered="#{isEditable and !simpleQuoteBackingBean.managedBean.trackingDairyView}"
+				process="@this" style="float:left;" rendered="#{isEditable}"
 				action="#{simpleQuoteBackingBean.backToPrevious}"
 				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
-			</p:commandButton><ui:remove>25790</ui:remove>
+			</p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
-				process="@all" update="@form" rendered="#{isEditable and !simpleQuoteBackingBean.managedBean.trackingDairyView}" /><ui:remove>25790</ui:remove>
+				process="@all" update="@form" rendered="#{isEditable}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
-				update="@form" process="@all" rendered="#{isEditable  and !simpleQuoteBackingBean.managedBean.trackingDairyView}">
+				update="@form" process="@all" rendered="#{isEditable}">
 				<ui:param name="action" value=""></ui:param>
 				<f:setPropertyActionListener
 					target="#{simpleQuoteBackingBean.managedBean.selectedAction}"
 					value="#{action}" />
-			</p:commandButton><ui:remove>25790</ui:remove>
+			</p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-				process="@this" partialSubmit="true" rendered="#{isEditable  and !simpleQuoteBackingBean.managedBean.trackingDairyView}" /><ui:remove>25790</ui:remove>
+				process="@this" partialSubmit="true" rendered="#{isEditable}" />
 		</c:if>
 	</div>
 
