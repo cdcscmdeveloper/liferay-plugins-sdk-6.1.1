@@ -484,6 +484,8 @@ u.underline {
 					
 					<p>
 					## #25025 #478 - end
+		
+	   
 					## 9
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
@@ -1193,6 +1195,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
 				##25025 note 579 - start
 				<tr>
 						<td colspan="3">
@@ -1268,6 +1274,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>									
 				##25025 note 579 - start
 				<tr>
 						<td colspan="3">
@@ -1306,11 +1316,6 @@ u.underline {
 				##25025 note 579 - end
 				
 			  #end	
-				<tr>
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
-				</tr>
-				
 			</table>
 		</tr>
 	</table>
@@ -1726,6 +1731,7 @@ u.underline {
 					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
 					<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+			
 					##26130 - end 03032022
 					
 					  #if ($rowCount == 0)
@@ -1916,6 +1922,8 @@ u.underline {
 														</tr>
 													#end
 												#end	
+			 
+		   
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -2033,6 +2041,7 @@ u.underline {
 						#set($rowCount = $rowCount + 1)
 						
 						##26130 - start 03032022
+			  
 						</table>
 						#end
 						#if ($rowCount > 0)
@@ -2325,6 +2334,7 @@ u.underline {
 				##26130 - start 03032022
 				#if($tplspecMaster.tplSpecQuestions.size() > 0)
 						<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+			 
 						#set($rowCount = 0)
 						
 						##26130- end 03032022	
@@ -2640,6 +2650,7 @@ u.underline {
 														#end
 												#end
 											#end	
+	
 											</tr>
 									
 									#end
@@ -2650,6 +2661,7 @@ u.underline {
 							
 							#set($rowCount = $rowCount + 1)
 							##26130 - start 03032022
+			   
 							</table>
 							#end
 							#if ($rowCount > 0)
@@ -2812,6 +2824,7 @@ u.underline {
 			</tbody>
 		</table>
 	#end
+			   
  
 	 #else
      

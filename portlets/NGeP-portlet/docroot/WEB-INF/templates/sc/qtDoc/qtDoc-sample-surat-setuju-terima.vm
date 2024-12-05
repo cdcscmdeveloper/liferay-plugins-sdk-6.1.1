@@ -987,6 +987,10 @@
 			terkemudian. <br/><br/>
 		</td>
 	</tr>
+	<tr>
+		<td align="left" class="submenu_padding"><span
+			class="text_family_small_black"><i>*potong mana yang tidak berkenaan</i></span></td>
+	</tr>
 	##25025 & 26770 add point 12
 	<tr>
 		<td colspan="3" >
@@ -1020,10 +1024,6 @@
 			<td class="text_family">.....................................................................</td>
 	</tr>
 	##25025 & 26770 end point 12
-	<tr>
-		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
-				yang tidak berkenaan</i></td>
-	</tr>			
 </table>
 	
 <div class="break-after"><br/></div>
