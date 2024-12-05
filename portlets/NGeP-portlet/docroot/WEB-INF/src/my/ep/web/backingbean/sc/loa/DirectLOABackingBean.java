@@ -1363,7 +1363,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 		}
 		// #36757 Start Vinod 05/12/2024
-		validateTierStandardUnitPrice();
+		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
+				|| BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+			validateTierStandardUnitPrice();
+		}
 		// #36757 Start Vinod 05/12/2024
 		
 		// #11134 - Start
