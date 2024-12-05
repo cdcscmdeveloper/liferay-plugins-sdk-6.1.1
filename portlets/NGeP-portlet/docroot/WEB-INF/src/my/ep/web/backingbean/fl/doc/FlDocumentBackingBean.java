@@ -76,6 +76,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
+import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
@@ -582,6 +583,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			reqDTO.setDeliveryOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+			
+			//36534 - start temporary for debug
+			FlDeliveryOrder deliveryOrder = resDTO.getFlDeliveryOrder();
+			if (deliveryOrder != null && !deliveryOrder.getFlDelOrderItem().isEmpty()) {
+				for (FlDelOrderItem flDelOrderItem : deliveryOrder.getFlDelOrderItem()) {
+					log.info("navigateToPage() DO FlItem[" + flDelOrderItem.getFlItem() + "] FulfilmentItemId()["+ flDelOrderItem.getFlItem().getFulfilmentItemId() + "]");
+				}
+			}
+			//36534 - end 
 			DeliveryOrderBackingBean doBB=new DeliveryOrderBackingBean();
 			doBB.getManagedBean().setSelectedTabIndex(0);
 			doBB.getManagedBean().setButtonVal(buttonVal);
