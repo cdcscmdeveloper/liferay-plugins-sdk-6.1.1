@@ -5094,7 +5094,7 @@ public class SupplierFinalizationBackingBean extends
 		if (expectTotalIndPriceBetweenThreshold==true && 
 				SourcingConstants.QCA_COMMITTEE.equals(CommType)) {
 			if (excludedDecisionList == null) {
-				excludedDecisionList = new ArrayList<String>();
+				excludedDecisionList = new ArrayList<>();
 			}
 			
 			excludedDecisionList.add(
