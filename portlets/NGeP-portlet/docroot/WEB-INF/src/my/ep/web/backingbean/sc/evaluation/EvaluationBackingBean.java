@@ -2373,8 +2373,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						// #35384 recalculate when at endorse or sign off -start-
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT) 
-						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)))
-						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)
+						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)
+						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)))
 						// #35384 recalculate when at endorse or sign off -end-
 				) {
 					// #25638 -end-
@@ -6502,9 +6502,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							&& null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 							&& (this.getManagedBean().getCurrentStatusId()
 									.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT) || this.getManagedBean()
-									.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF))
+									.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)
 									||this.getManagedBean()
-									.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)
+									.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION))
 							// #35384 recalculate at endorse or sign off -end-
 					) {
 						if (null == this.getManagedBean().getScQt()
@@ -6625,8 +6625,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						// #35384 avoid run this code below when endorse or sign off -start-
 								&& (!this.getManagedBean().getCurrentStatusId()
 										.equals(QTStatusConst.EC_PENDING_ENDORSEMENT) || !this.getManagedBean()
-										.getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF))
-										|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)
+										.getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)
+										|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
 						// #35384 avoid run this code below when endorse or sign off -end-
 						) {
 
