@@ -537,8 +537,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			response.setHeader("Content-Disposition", "attachment; filename=\""+ finalFileName + "\";");
 //			response.setHeader("Content-Disposition", "attachment; filename=" + finalFileName);
 //			response.setContentType("application/octet-stream");
-			//response.setContentType(getMimeType(finalFileName)); // asal
-			response.setContentType("application/pdf"); //najmi test
+			response.setContentType(getMimeType(finalFileName)); // asal
+			//response.setContentType("application/pdf"); //najmi test
 			
 			response.flushBuffer();
 
@@ -582,11 +582,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			PortletResponse portalresponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
 			response = PortalUtil.getHttpServletResponse(portalresponse);
 //			response.setContentType("Content-type: text/zip");
-			
+			String finalFileName = zipFileName + ".zip";
 			//START:test by syazwan
 			//response.setContentType("application/x-download");
-			response.setHeader("Content-Disposition", "attachment; filename="+ zipFileName + ".zip");
-			response.setContentType("application/zip");
+			response.setHeader("Content-Disposition", "attachment; filename="+ finalFileName);
+			response.setContentType(getMimeType(finalFileName));
+			//response.setContentType("application/zip");
 			//response.setHeader("Content-Transfer-Encoding", "application/octet-stream");
 			log.info("-----------after set header----------");
 			//END:Test by syazwan
@@ -965,6 +966,92 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				parameterType, searchBean);
 
 	}
+	
+	//36715 START
+	/**
+	 * To get report from orcle reports only for .rtf format file
+	 * 
+	 * @param reportName
+	 * @param paramMap
+	 * @param attachment
+	 * @param isDirectDownload
+	 * @return File instance
+	 * @throws IOException
+	 */
+	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment, boolean isDirectDownload)
+			throws IOException {
+
+		String reportUrl = generateReportURL(reportName, paramMap);
+		log.info("reportUrl: " + reportUrl);
+
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		OutputStream out = null;
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		InputStream input = null;
+		FileOutputStream fos = null;
+		try {
+			
+			log.info("-----------after set header hatta .rtf only ----------");
+			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName(); 
+			log.info(" finalFileName=" + finalFileName);
+			if (!isDirectDownload) {
+				res.setContentType("application/rtf");
+				res.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\"");
+
+				res.flushBuffer();
+				out = res.getOutputStream();
+	     	}
+		
+			log.info("-----------after set header hatta .rtf only ----------");
+
+			File localFile = new File(getActualFilePath(attachment));
+
+			if (reportUrl.toString() != null) {
+				try {
+					URL obj = new URL(reportUrl.toString());
+					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (ConnectException e) {
+					throw new EpException(MessageConst.ERROR_100058);
+				}
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] buf = new byte[1024];
+				try {
+					for (int readNum; (readNum = input.read(buf)) != -1;) {
+						bos.write(buf, 0, readNum);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				byte[] bytes = bos.toByteArray();
+				fos = new FileOutputStream(localFile);
+				fos.write(bytes);
+				fos.flush();
+			}
+			if (!isDirectDownload) {
+				out.flush();
+
+			}
+			return localFile;
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+			if (input != null) {
+				input.close();
+			}
+			if (out != null) {
+				out.close();
+			}
+		}
+
+	}
+	//36715 END
 
 	/**
 	 * To get report from orcle reports
@@ -991,14 +1078,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		InputStream input = null;
 		FileOutputStream fos = null;
 		try {
+//			if (!isDirectDownload) {
+//				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
+//				res.setHeader("Content-Transfer-Encoding", "binary");
+//				//res.setContentType("application/octet-stream");
+//				res.setContentType("text/rtf");
+//				res.flushBuffer();
+//				out = res.getOutputStream();
+//			}
+			
+			//36715 START
+			log.info("-----------after set header hatta ----------");
+			log.info(" isDirectDownload "+isDirectDownload);
+			log.info(" filename=" + attachment.getFileName());
+			String finalFileName = attachment.getFileName() + ".zip"; 
 			if (!isDirectDownload) {
 				res.setHeader("Content-Disposition", "attachment; filename=" + attachment.getFileName());
 				res.setHeader("Content-Transfer-Encoding", "binary");
-				//res.setContentType("application/octet-stream");
-				res.setContentType("text/rtf");
+				//res.setContentType("application/pdf");
+				res.setContentType(getMimeType(finalFileName)); // asal
 				res.flushBuffer();
 				out = res.getOutputStream();
-			}
+	     	}
+		
+			log.info("-----------after set header hatta ----------");
+			//36715 END
 
 			File localFile = new File(getActualFilePath(attachment));
 
@@ -5160,11 +5264,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			// and before space) length for data 'ITEM'.
 			String[] words = clItem.split(" "); // get array of words
 			StringBuilder sb = new StringBuilder();
-			StringBuilder subSb = new StringBuilder();// this is for perfomance
+			StringBuilder subSb; //Bug #36438@Syazani - 24/10/2024
 			for (String word : words) // affect each word in string
 			{
 				int length = word.length();
 				if (length >= 20) {
+					// subSb reset here due to redundant text issue
+					subSb = new StringBuilder();	//Bug #36438@Syazani - 24/10/2024
 					String subWord;
 					for (int i = 0; i < length; i += 20) {
 						subWord = word.substring(i, Math.min(length, i + 20));
@@ -5308,34 +5414,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			List<ScQtCheckList> scQtCheckLists = resDto.getSpecResultBean().getResultList();
 
 			if (CollectionUtils.isNotEmpty(scQtCheckLists)) {
-				// #26130 #97 - End
-				for (ScQtCheckList scQtCheckList : scQtCheckLists) {
-					List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
-
-					TplSpecMaster master = null;
-					master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-
-					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						if (validateTplSpecMaster(scLoa, master)) {
-							constructSpecData(scLoa, master, question);
-							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
-
-							// temporary for Prod #26130. Start remove here if #21695 ready for Prod -start-
-							// origin method private void initializeTplSpecMaster(ScQtCheckList checklist, ScLoa scLoa)
-							// at QTSpecSO.java
-							validateSpecZoneQty(question, scLoa);
-							// temporary for Prod #26130. End remove here if #21695 ready for Prod -end-
-
-							if (validateTplSpecQuestion(scLoa, question)) {
-								question.setListCombineZonal(getCOmbineZonalSPec(question, master));
-							}
-						}
-					}
-
-					master.setTplSpecQuestions(newTplSpecQuestionsList);
-
-					masters.add(master);
-				}
+				loopScQtCheckListsConstructSupplierSpecificationAndRemarks(scQtCheckLists, masters, scLoa, dafaltValue);	// Bug #36438@Syazani - 24/10/2024
 			}
 
 			context.put("isZonal", scLoa.getScLoiLoa().isZonal());
@@ -5346,6 +5425,51 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
+	
+	// Bug #36438@Syazani - 24/10/2024 -- Start
+	private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
+			List<TplSpecMaster> masters, ScLoa scLoa, String dafaltValue) {
+		// Bug #36438@Syazani - 24/10/2024 -- End
+		// #26130 #97 - End
+		for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+			List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+			TplSpecMaster master = null;
+			// Bug #36438@Syazani - 24/10/2024 -- Start
+			// Making sure it didn't impact original value
+			if (null != scQtCheckList.getScQtDoc() && null != scQtCheckList.getScQtDoc().getTplSpecMaster()) {
+				master = (TplSpecMaster) scQtCheckList.getScQtDoc().getTplSpecMaster().cloneEntity();
+			}
+			// Bug #36438@Syazani - 24/10/2024 -- End
+
+			if (master != null) { // Bug #36438@Syazani - 24/10/2024
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					if (validateTplSpecMaster(scLoa, master)) {
+						constructSpecData(scLoa, master, question);
+						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+
+						// temporary for Prod #26130. Start remove here if
+						// #21695 ready for Prod -start-
+						// origin method private void
+						// initializeTplSpecMaster(ScQtCheckList checklist,
+						// ScLoa scLoa)
+						// at QTSpecSO.java
+						validateSpecZoneQty(question, scLoa);
+						// temporary for Prod #26130. End remove here if
+						// #21695 ready for Prod -end-
+
+						if (validateTplSpecQuestion(scLoa, question)) {
+							question.setListCombineZonal(getCOmbineZonalSPec(question, master));
+						}
+					}
+				}
+
+				master.setTplSpecQuestions(newTplSpecQuestionsList);
+
+				masters.add(master);
+			}	// Bug #36438@Syazani - 24/10/2024
+		}
+	} // Bug #36438@Syazani - 24/10/2024
+
 	// #26130 -end-
 
 	// #26130 -start-
@@ -5355,7 +5479,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param specMasters
 	 */
 	public void constructSupplierSpecificationAndRemarks(VelocityContext context, ScLoa scLoa,
-			List<TplSpecMaster> specMasters) {
+			List<TplSpecMaster> specMastersParam) {	//Bug #36438@Syazani - 24/10/2024
+		//Making sure it didn't impact original value
+		List<TplSpecMaster> specMasters = CustomUtils.getInstance().deepCopyArrayList(specMastersParam);	//Bug #36438@Syazani - 24/10/2024
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 
 		String dafaltValue = "T/B";
@@ -6135,6 +6261,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	@SuppressWarnings("unchecked")
 	public List<QtCommitteeMemberBean> getMemberHistoryList(ScCommittee scCommittee) {
 		List<QtCommitteeMemberBean> list = new ArrayList<>();
+
 		if (scCommittee != null) {
 			List<ScCommitteeMemberHistory> histories = scCommittee.getScCommitteeMemberHistories();
 
@@ -6409,6 +6536,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 		return committeeNames;
+	}
+	// 25037 - end
+	
+	// 25037 - start
+	/**
+	 * Sort outcomes.
+	 *
+	 * @param outcomes
+	 * @return the string[]
+	 */
+	public String[] sortQtOutcomes(String[] outcomes) {
+		if (null == outcomes) {
+			return ArrayUtils.EMPTY_STRING_ARRAY; 
+		}
+		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
+		Collections.sort(bpmActions, new Comparator<String>() {
+			String[] orderedAction = new String[] {BpmOutcomeConst.BPM_REVISE};
+			List<String> sortOrder = Arrays.asList(orderedAction);
+
+			@Override
+			public int compare(String s1, String s2) {
+				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
+			}
+		});
+		String[] bpmOutcomes = new String[bpmActions.size()];
+		return bpmActions.toArray(bpmOutcomes);
 	}
 	// 25037 - end
 }

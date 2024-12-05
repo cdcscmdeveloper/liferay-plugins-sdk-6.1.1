@@ -22,15 +22,26 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.complianceProposalSubmitSuppliers}"
 				update="complianceTechnicalSupplier" />
+			<ui:param name="isRejected"
+				value="#{not empty complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:20%; text-align:center;">
-
-				<h:outputText
-					value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
-
-
+				<table
+					style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
+					<tr>
+						<td style="text-align: center; border: 0 !important" />
+						<td style="text-align: center; border: 0 !important"><h:outputText
+								value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}" />
+						</td>
+						<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
+								show="#{isRejected}" id="remarkId"
+								remark="#{complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{complianceTechnicalSupplier.scQtProposal.supplierNo}" />
+						</td>
+					</tr>
+				</table>
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
 				style="width:70%;text-align: center;">
 				
@@ -47,18 +58,21 @@
 
 			<p:column headerText="#{lbl['lbl.sc.action']}"
 				style="width:10%;text-align: center;">
-				
+
 				<p:commandButton value="#{lbl['lbl.sc.btn.compliance']}"
 					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and (complianceTechnicalSupplier.compliance eq null or complianceTechnicalSupplier.compliance eq 2)}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}" />
-					
-						<p:commandButton value="#{lbl['lbl.btn.view']}"
+					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}"
+					disabled="#{isRejected}"/>
+
+				<p:commandButton value="
+					#{lbl['lbl.btn.view']}"
 					rendered="#{(complianceTechnicalSupplier.scQtProposalChecklistAttachment ne null and complianceTechnicalSupplier.compliance ne null and complianceTechnicalSupplier.compliance ne 2) or complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}" />
-					
-<!-- 				<p:commandButton value="#{lbl['lbl.btn.view']}" -->
+					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}"
+					disabled="#{isRejected}" />
+
+				<!-- 				<p:commandButton value="#{lbl['lbl.btn.view']}" -->
 <!-- 					rendered="#{complianceTechnicalSupplier.scQtProposalChecklistAttachment eq null}" -->
 <!-- 					process="@this" partialSubmit="true" -->
 <!-- 					action="#{evaluationBackingBean.complianceUploadBasedOnSupp(complianceTechnicalSupplier,'F')}" /> -->

@@ -386,6 +386,7 @@
 		<portlet id="profileRobExpire"></portlet>
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
+		<portlet id="spkiTest"></portlet>
 	</category>
 
 	<category name="category.ep.wp">

@@ -325,8 +325,8 @@
 							id="technicalNonGovernmentContractsUserScoreId"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
 							value="#{noOfContracts.userScore}" required="true" maxlength="18"
-							disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}" style="text-align:right"
-							rendered="#{checklistScoreType eq '2'}">
+							disabled="#{pageDisable or technicalorFinancialReEvaluateRequired or rejectedSupplier}"
+							style="text-align:right" rendered="#{checklistScoreType eq '2'}">
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="14" integerOnly="true" />

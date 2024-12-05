@@ -370,16 +370,12 @@ public void specCommitteeMaintenancereset() {
 		try {
 			mb = (QTDetailManagedBean) BeanUtils.cloneBean(this.getManagedBean());
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -393,8 +389,8 @@ public void specCommitteeMaintenancereset() {
 	public void switchToOrigManagedBean() {
 		// boolean setOtherActiveIndex = false;
 		FacesScopes fs = new FacesScopes();
-		QTDetailManagedBean mb1 = (QTDetailManagedBean) fs.getSessionScope(getManagedBeanName());
-		QTDetailManagedBean mb2 = (QTDetailManagedBean) fs.getSessionScope(getTempManagedBeanName());
+		//QTDetailManagedBean mb1 = (QTDetailManagedBean) fs.getSessionScope(getManagedBeanName());
+		//QTDetailManagedBean mb2 = (QTDetailManagedBean) fs.getSessionScope(getTempManagedBeanName());
 
 		fs.setSessionScope(getManagedBeanName(), (QTDetailManagedBean) fs.getSessionScope(getTempManagedBeanName()));
 		fs.removeFromSession(getTempManagedBeanName());
@@ -462,7 +458,7 @@ public void specCommitteeMaintenancereset() {
 				// RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			}
 		}
-	// 25037 - end - note 510
+		// 25037 - end - note 510
 	}
 
 	/**

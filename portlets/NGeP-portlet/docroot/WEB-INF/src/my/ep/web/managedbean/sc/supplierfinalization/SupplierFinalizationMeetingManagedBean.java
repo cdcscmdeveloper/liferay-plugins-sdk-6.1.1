@@ -79,7 +79,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private Date currentDate = new Date();
 	private boolean nameRequired;
-
+	
 	// 25037 - start
 	private Paginator historyPaginator;
 	private Paginator memberHistoryPaginator;
@@ -561,7 +561,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setNameRequired(boolean nameRequired) {
 		this.nameRequired = nameRequired;
 	}
-
+	
 	// 25037 - start
 	public Paginator getHistoryPaginator() {
 		return historyPaginator;

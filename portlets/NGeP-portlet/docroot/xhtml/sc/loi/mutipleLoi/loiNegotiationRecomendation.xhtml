@@ -337,9 +337,11 @@
 								</h:panelGroup>
 							</p:column>
 
-							<p:column selectionMode="multiple"
+							<ui:remove>#33267 - Start</ui:remove>	
+							<p:column selectionMode="multiple" disabledSelection="#{empty item.awardSupplierList}"
 								styleClass="td-check-box-spacing"
 								rendered="#{isPendingNegotiationStatus}" />
+							<ui:remove>#33267 - End</ui:remove>	
 						</p:dataTable> <h:panelGrid border="0" cellpadding="0" cellspacing="0"
 							width="100%" columns="2" columnClasses="columnWidth20"
 							rendered="#{isPendingNegotiationStatus and 
