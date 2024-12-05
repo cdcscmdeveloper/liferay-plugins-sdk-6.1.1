@@ -210,13 +210,13 @@ u.underline {
 		</tr>
 		<tr>
 			<table align="right" class="text_family">
-				## #25025 #509 -start
+						 
 				<tr style="margin-bottom:1px;">
 					<td valign="top"> Rujukan Kami</td>
 					<td valign="top">:</td>
 					<td valign="top">$fileNo</td>
 				</tr>
-				## #25025 #509 -end
+					   
 				<tr>
 					<td valign="top">Tarikh</td>
 					<td valign="top">:</td>
@@ -481,9 +481,9 @@ u.underline {
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
 					</p>
-					
-					<p>
 					## #25025 #478 - end
+					<p>
+						 
 					## 9
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
@@ -630,7 +630,7 @@ u.underline {
 					<span class="text_family"> $!loaSignerDesignation </span>
 					<br />
 					<br />
-				
+	
 			</td>
 		</tr>
 	</table>
@@ -831,12 +831,12 @@ u.underline {
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding" valign="top">
-						## #25025-start
+					## #25025-start
 						<table class="text_family">
 								<td align="center" style="vertical-align: top;">4.2 </td>
 								<td style="vertical-align: top;">Peruntukan Cukai Jualan (sekiranya berkaitan)</td>
 						</table>
-						## #25025-end
+					## #25025-end		
 					</td>
 					<td valign="top" class="text_family">:</td>
 					<td valign="top" class="text_family">RM $sstAmt</td>
@@ -1075,7 +1075,7 @@ u.underline {
 								<td align="bottom"><span class="text_family_red">___________________________</span></td>
 							</tr>
 						</table>
-					<td>
+					<td>					
 				</tr>
 			 #if ($isSL1M == "true")
 				<tr>
@@ -1193,6 +1193,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
 				##25025 note 579 - start
 				<tr>
 						<td colspan="3">
@@ -1268,6 +1272,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
 				##25025 note 579 - start
 				<tr>
 						<td colspan="3">
@@ -1304,13 +1312,8 @@ u.underline {
 									</tr>
 				</tr>	
 				##25025 note 579 - end
-				
+	
 			  #end	
-				<tr>
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
-				</tr>
-				
 			</table>
 		</tr>
 	</table>
@@ -1726,6 +1729,7 @@ u.underline {
 					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
 					<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+						<body>
 					##26130 - end 03032022
 					
 					  #if ($rowCount == 0)
@@ -1786,7 +1790,7 @@ u.underline {
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; " rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
@@ -1833,9 +1837,9 @@ u.underline {
 																#end
 																		##26130 end 12052022
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
 															#end
 														
 														#end
@@ -1844,7 +1848,7 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" ) 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whiteSpace</td>
 															#else
-															#set ($feedback = $specCombine.feedback)
+																#set ($feedback = $specCombine.feedback)
 																#set($feedback = $feedback.replace(">", "&#62;"))
 																#set($feedback = $feedback.replace("<", "&#60;"))
 																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
@@ -1864,7 +1868,7 @@ u.underline {
 															#end
 														
 														
-															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px;" rowspan="$rowSpanSize">$whiteSpace</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whiteSpace</td>
 															#set($rowCount = $rowCount + 1)
 														#end
 														
@@ -1887,9 +1891,9 @@ u.underline {
 
 																#if ($combine.feedback == "&nbsp;" || $combine.feedback == " ") 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px;">$whiteSpace</td>
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whiteSpace</td>
 																				
-																#else	
+																#else
 																		#set ($feedback = $combine.feedback)
 																		#set($feedback = $feedback.replace(">", "&#62;"))
 																		#set($feedback = $feedback.replace("<", "&#60;"))
@@ -1901,7 +1905,7 @@ u.underline {
 															
 															##remark
 															#if ($combine.remark == "&nbsp;" || $combine.remark == " ") 
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>		
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
 																	#set ($remark = $combine.remark)
@@ -1910,12 +1914,14 @@ u.underline {
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																	
 																#else 
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px;">$serviceScope</td>
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
 															#end
 														</tr>
 													#end
-												#end	
+													#end
+													
+											
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -1939,7 +1945,7 @@ u.underline {
 													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qtyBerperingkat</td>	
 												#if ($specType == "T")
 													#if ($specCombine.feedback == "&nbsp" || $specCombine.feedback == " ")
-														<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
+														<td class="title border left"   style="text-align: left;  padding-left: 5px; font-size:12px; padding-right: 5px;">$whitespace</td>
 													#else
 														#set ($feedback = $specCombine.feedback)
 														#set($feedback = $feedback.replace(">", "&#62;"))
@@ -2033,6 +2039,7 @@ u.underline {
 						#set($rowCount = $rowCount + 1)
 						
 						##26130 - start 03032022
+						</tbody>
 						</table>
 						#end
 						#if ($rowCount > 0)
@@ -2325,6 +2332,7 @@ u.underline {
 				##26130 - start 03032022
 				#if($tplspecMaster.tplSpecQuestions.size() > 0)
 						<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+						<tbody>
 						#set($rowCount = 0)
 						
 						##26130- end 03032022	
@@ -2395,17 +2403,17 @@ u.underline {
 														#end
 														#if ($specCombine.clUomFrequency == "&nbsp")		
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
 														#end
 														#if ($specCombine.clUomPerDay == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
 														#end
 														#if ($specCombine.clUomPerMonth == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
 														#end
 														
 														#if ($specType == "F")
@@ -2452,7 +2460,7 @@ u.underline {
 																#set ($feedback = $specCombine.feedback)
 																#set($feedback = $feedback.replace(">", "&#62;"))
 																#set($feedback = $feedback.replace("<", "&#60;"))
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: center;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 															#end
 															##26130 - start 03032022
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " ") 
@@ -2497,7 +2505,7 @@ u.underline {
 																		#set($feedback = $feedback.replace("<", "&#60;"))
 																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																				
-																#else	
+																#else
 																		#set ($feedback = $combine.feedback)
 																		#set($feedback = $feedback.replace(">", "&#62;"))
 																		#set($feedback = $feedback.replace("<", "&#60;"))
@@ -2526,7 +2534,7 @@ u.underline {
 														</tr>
 													#end
 													#end
-													
+			 
 											
 											#end	
 									
@@ -2573,7 +2581,7 @@ u.underline {
 													#end
 
 													#if ($specCombine.remark == "&nbsp;" || $specCombine.remark == " ") 
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
+														<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px;  padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#else
 														#if ($answerRemark)
 															#set ($remark = $specCombine.remark)
@@ -2639,7 +2647,8 @@ u.underline {
 															#end
 														#end
 												#end
-											#end	
+												#end
+				
 											</tr>
 									
 									#end
@@ -2650,6 +2659,7 @@ u.underline {
 							
 							#set($rowCount = $rowCount + 1)
 							##26130 - start 03032022
+							</tbody>
 							</table>
 							#end
 							#if ($rowCount > 0)
@@ -2661,7 +2671,7 @@ u.underline {
 				
 		#end
 #else	
-##start - 29006 note 794
+	##start - 29006 note 794	
 	#if ($scLoa.scLoiLoa.docType == "PR")
 	  ##35295 - @zaim start
 	 #if($PRSSTList.size() > 0)
@@ -2812,6 +2822,7 @@ u.underline {
 			</tbody>
 		</table>
 	#end
+	## 35295 - end
  
 	 #else
      
