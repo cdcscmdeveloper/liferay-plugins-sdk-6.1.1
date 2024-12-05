@@ -228,7 +228,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setSvTaskId(getManagedBean().getSvTaskId());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
 		SmSvTask svoTask = reqSO.retrieveSiteVisitInfoBySvTaskId(reqDTO).getSmSvTask();
-		log.info("*****SM PRE-PRD ISLAND TESTING***** after SiteVisitSO.retrieveSiteVisitInfoBySvTaskId");
 		log.info("*********SV Task***********" + svoTask.getSvTaskId());
 		
 		if(StringUtils.isNotBlank(viewMode)){
