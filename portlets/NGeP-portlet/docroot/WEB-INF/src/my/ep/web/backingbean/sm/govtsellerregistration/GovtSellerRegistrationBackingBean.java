@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.govtsellerregistration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +21,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -64,7 +67,6 @@ import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "govtSellerBackingBean")
@@ -256,9 +258,15 @@ public class GovtSellerRegistrationBackingBean extends
 			if (orgProfile.getSmSupplier() != null
 					&& orgProfile.getSmSupplier().getRecordStatusFlg() != null) {
 				//#28765 - Start add OR DbValueConst.RECORD_STATUS_REJECTED
-				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || 
-						orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED) {
+				if (orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+						|| orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_REJECTED
+						|| orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) { //#34319
 				//#28765 - End
+					//#34319 - Start
+					if(orgProfile.getSmSupplier().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED){
+						getManagedBean().setCancelApp(true);
+					}
+					//#34319 - End
 					supplier = orgProfile.getSmSupplier();
 					getManagedBean().setDeletedNotActivatedSupplier(true);
 				} else {
@@ -1453,6 +1461,8 @@ public class GovtSellerRegistrationBackingBean extends
 		smPersonnel
 				.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		smPersonnel.setClerical(true);
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+		
 		if (smPersonnel.getTitle() != null
 				&& smPersonnel.getTitle().getSalutationId() == null) {
 			smPersonnel.setTitle(null);
@@ -1527,30 +1537,23 @@ public class GovtSellerRegistrationBackingBean extends
 	 */
 	private void setSupplierGstBeforeSubmit() {
 		if (getManagedBean().isGstFlag()) {
-			getManagedBean().getSmSupp().setGstRegisteredFlag(
-					DbValueConst.RECORD_STATUS_ACTIVE);
+			getManagedBean().getSmSupp().setGstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
 			// main company
 			SmGstSupplier gstSupplier = getManagedBean().getSmGstSupplier();
 			gstSupplier.setIsCurrent(true);
 			SmCommonUtil.removeNotUploadedGstSuppDoc(gstSupplier);
 			gstSupplier.setSmSupplier(getManagedBean().getSmSupp());
-			getManagedBean().getSmSupp().setSmGstSuppliers(
-					new ArrayList<SmGstSupplier>());
+			getManagedBean().getSmSupp().setSmGstSuppliers(new ArrayList<SmGstSupplier>());
 			getManagedBean().getSmSupp().getSmGstSuppliers().add(gstSupplier);
 
 			// branch
-			if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl()
-					.getSmSupplierBranches())) {
-				for (SmSupplierBranch br : getManagedBean().getSmAppl()
-						.getSmSupplierBranches()) {
-					if (br.getGst() != null
-							&& StringUtils
-									.isNotBlank(br.getGst().getGstRegNo())) {
+			if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierBranches())) {
+				for (SmSupplierBranch br : getManagedBean().getSmAppl().getSmSupplierBranches()) {
+					if (br.getGst() != null && StringUtils.isNotBlank(br.getGst().getGstRegNo())) {
 						SmCommonUtil.removeNotUploadedGstSuppDoc(br.getGst());
 						br.getGst().setSmSupplier(getManagedBean().getSmSupp());
 						br.getGst().setBranchCode(br.getBranchCode());
-						getManagedBean().getSmSupp().getSmGstSuppliers()
-								.add(br.getGst());
+						getManagedBean().getSmSupp().getSmGstSuppliers().add(br.getGst());
 					}
 				}
 			}
@@ -1560,28 +1563,23 @@ public class GovtSellerRegistrationBackingBean extends
 	//harris
 	private void setSupplierSstBeforeSubmit() {
 		if (getManagedBean().isSstFlag()) {
-			getManagedBean().getSmSupp().setSstRegisteredFlag(
-					DbValueConst.RECORD_STATUS_ACTIVE);
+			getManagedBean().getSmSupp().setSstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
 			// main company
 			SmSstSupplier sstSupplier = getManagedBean().getSmSstSupplier();
 			sstSupplier.setIsCurrent(true);
-//			SmCommonUtil.removeNotUploadedSstSuppDoc(sstSupplier);
+			//SmCommonUtil.removeNotUploadedSstSuppDoc(sstSupplier);
 			sstSupplier.setSmSupplier(getManagedBean().getSmSupp());
-			getManagedBean().getSmSupp().setSmSstSuppliers(
-					new ArrayList<SmSstSupplier>());
+			getManagedBean().getSmSupp().setSmSstSuppliers(new ArrayList<SmSstSupplier>());
 			getManagedBean().getSmSupp().getSmSstSuppliers().add(sstSupplier);
 
 			// branch
 			if (!SmCommonUtil.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierBranches())) {
 				for (SmSupplierBranch br : getManagedBean().getSmAppl().getSmSupplierBranches()) {
-//					if (br.getSst() != null
-//							&& StringUtils
-//									.isNotBlank(br.getSst().getSalestaxregno())) {
+//					if (br.getSst() != null && StringUtils.isNotBlank(br.getSst().getSalestaxregno())) {
 //						SmCommonUtil.removeNotUploadedSstSuppDoc(br.getSst());
 //						br.getSst().setSmSupplier(getManagedBean().getSmSupp());
 //						br.getSst().setBranchCode(br.getBranchCode());
-//						getManagedBean().getSmSupp().getSmSstSuppliers()
-//								.add(br.getSst());
+//						getManagedBean().getSmSupp().getSmSstSuppliers().add(br.getSst());
 //					}
 				}
 			}
@@ -1594,27 +1592,36 @@ public class GovtSellerRegistrationBackingBean extends
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setAppType(getManagedBean().getSmAppl().getApplType());
 		reqDTO.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
-		getManagedBean().getSmAppl()
-				.setSmSupplier(getManagedBean().getSmSupp());
-		getManagedBean().getSmAppl().setApplNo(
-				SmServiceLookup.getMofRegistrationSO()
-						.generateApplicaitonNumber(reqDTO).getApplNum());
-		getManagedBean().getSmSupp().setCompanyName(
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getCompanyName());
+		getManagedBean().getSmAppl().setSmSupplier(getManagedBean().getSmSupp());
+		getManagedBean().getSmAppl().setApplNo(SmServiceLookup.getMofRegistrationSO().generateApplicaitonNumber(reqDTO).getApplNum());
+		getManagedBean().getSmSupp().setCompanyName(getManagedBean().getSmAppl().getSmCompanyBasic().getCompanyName());
 		getManagedBean().getSmSupp().setSmAppls(new ArrayList<SmAppl>());
-		getManagedBean().getSmSupp().getSmAppls()
-				.add(getManagedBean().getSmAppl());
+		getManagedBean().getSmSupp().getSmAppls().add(getManagedBean().getSmAppl());
+		//#34319 - Start
+		if (getManagedBean().isCancelApp()) {
+			log.info(">>>> Into cancel application that want to create new <<<<");
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			supplierSearchReqDTO.setSupplierId(getManagedBean().getSmSupp().getSupplierId());
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO().retriveSupplierSmApplById(supplierSearchReqDTO);
+			if (resDTO.getSmSupplier().getSmAppls() != null) {
+				log.info("Not Null + Size >> " + resDTO.getSmSupplier().getSmAppls().size());
+				supplierSearchReqDTO.setSmSupplier(resDTO.getSmSupplier());
+				//checking if the application has a record in smPersonnelAuthLog
+				SupplierSearchResDTO resDTO1 = SmServiceLookup.getSupplierSearchSO().checkSupplierApplAuthLogRecord(supplierSearchReqDTO);
+				if (resDTO1.isRecord()) {
+					getManagedBean().getSmSupp().getSmAppls().addAll(resDTO.getSmSupplier().getSmAppls());
+				}
+			}
+		}
+		//#34319 - End
 	}
 
 	private void setBranchBankBeforeSubmit() {
-		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl()
-				.getSmSupplierBanks())) {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmSupplierBanks())) {
 			SmSupplierBranchBank brBank = null;
 			SmSupplierBranch br = null;
 			List<SmSupplierBranchBank> toRemoveBranchBankList = new ArrayList<SmSupplierBranchBank>();
-			for (SmSupplierBank bk : getManagedBean().getSmAppl()
-					.getSmSupplierBanks()) {
+			for (SmSupplierBank bk : getManagedBean().getSmAppl().getSmSupplierBanks()) {
 
 				// set supplierBranchBanks
 				if (bk.getSmSupplierBranchBanks() == null) {
@@ -1623,13 +1630,9 @@ public class GovtSellerRegistrationBackingBean extends
 
 				if (!EntityHelper.isCollectionEmpty(bk.getBranches())) {
 					for (SmSupplierBranch brTmp : bk.getBranches()) {
-						br = (SmSupplierBranch) EntityHelper
-								.getEntityBySinglePropertyFromList(brTmp
-										.getBranchCode(), getManagedBean()
-										.getSmAppl().getSmSupplierBranches(),
-										"branchCode");
-						brBank = getSupplierBranchBank(br,
-								bk.getSmSupplierBranchBanks());
+						br = (SmSupplierBranch) EntityHelper.getEntityBySinglePropertyFromList(brTmp.getBranchCode(), 
+								getManagedBean().getSmAppl().getSmSupplierBranches(), "branchCode");
+						brBank = getSupplierBranchBank(br, bk.getSmSupplierBranchBanks());
 						if (brTmp.isSelected()) {
 							brBank.setSmSupplierBranch(br);
 							brBank.setSmSupplierBank(bk);

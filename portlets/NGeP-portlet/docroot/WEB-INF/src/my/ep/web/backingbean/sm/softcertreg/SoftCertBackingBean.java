@@ -34,6 +34,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -224,7 +225,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
 						}
 						if (!result) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							//#30855 - START
+							FacesScopes fs = new FacesScopes();
+							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							}
+							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.FL_USER.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							}
+							//#30855 - END
 						}
 					}
 				}
@@ -547,12 +562,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 
 					}
+					
+					//#29481 - Start
+					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
+					//#29481 - End
+					
 				} else {
+					sbName = new StringBuilder();
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
 						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
-							sbName = new StringBuilder();
 							sbName.append(per.getName()).append(",");
 						}
 						name = sbName.toString();
@@ -1135,9 +1155,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							int count = SmServiceLookup.getPersonnelSO()
 									.countPersonnelSoftcertBill(reqDTO);
 
-							if (count > 0) {
+							//#34964 - start
+							int countBillDtl = SmServiceLookup.getPersonnelSO()
+									.countPersonnelSoftcertBillDtl(reqDTO);
+
+							if (count > 0 && countBillDtl == 0) {
 								smPersonnel.setDisableRowSelection(true);
 							}
+							//#34964 - end
 						}
 					}
 				}
@@ -1196,12 +1221,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
 							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
 					// #31462 - end
-					reqDTO.setForeigner(softcertUploadSuppDocVO
-							.getPersonnel()
-							.getPmCountry()
-							.getCountryCode()
-							.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ? false
+					
+					// #35314 - START
+					PmParameter paramID = SmCommonUtil.retrieveParameterById(softcertUploadSuppDocVO.getPersonnel().getIdentificationTypeId());
+					reqDTO.setForeigner(paramID
+							.getParameterCode()
+							.equals(SupplierManagementConst.IDENTIFICATION_TYPE_IC) ? false
 							: true);
+					// #35314 END
+					
 					softcertSuppDocList = SmServiceLookup.getDocumentSO()
 							.retrieveSoftcertSuppDocuments(reqDTO)
 							.getDocumentList();

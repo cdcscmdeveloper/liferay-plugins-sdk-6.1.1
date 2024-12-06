@@ -121,8 +121,8 @@
 				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
 						id="equiPerRace" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.pmRace ne null and backingBean.managedBean.selectedShareHolder.pmRace.raceId ne null and backingBean.disableFieldSSm(backingBean.managedBean.selectedShareHolder.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.selectedShareHolder.raceSsmNull)}"
-						style="width: 207px;margin-bottom: 5px;">
+						disabled="#{backingBean.isRaceDisabled()}"
+						style="width: 207px;margin-bottom: 5px;"> <!-- #35145 -->
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="select"
 							value="#{backingBean.managedBean.raceSelectItems}"
@@ -144,9 +144,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="equiPerIdenType" required="true"
+				<td>
+				<!--29582 & 35300-->
+				<p:selectOneMenu id="equiPerIdenType" required="true"
 						label="#{lbl['lbl.sm.identificationtype']}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY' 
+						or backingBean.managedBean.selectedShareHolder.permanentResident}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
 						<f:selectItems

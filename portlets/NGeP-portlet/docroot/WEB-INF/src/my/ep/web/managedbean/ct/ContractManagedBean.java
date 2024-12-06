@@ -165,18 +165,18 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long applID;
 	//End Fix - #33674
 	
-	private boolean hasAmendmentLoaNo = false; //15851
-	private boolean fromViewPage = false;//15851
-	private boolean amendFromViewPage = false;//15851
-	private boolean viewSCL = false;//15851
-
-	private boolean viewSCLFromContract = false;//34142
-	private String[] outcomesFromContract = null;//34142, 15851 04/12/2022
-	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	private boolean amendFromTaskList = false;
+	private boolean amendFromViewPage = false;
+	private boolean hasAmendmentLoaNo = false;
 	private boolean viewContractFromAgreement = false;
+	private boolean viewSCL = false;
+	private boolean viewSCLFromContract = false;
+	private boolean viewSclFromAgreement;
 	private boolean backFromSCL = false;
+	private boolean backFromContract = false;
+	private boolean inPage = false;
+	private boolean fromViewPage = false;
 	private String docTypeFromTaskList = null;
 	private Long contractIdFromTaskList = null;
 	private Long contractVerIdFromTaskList = null;
@@ -188,9 +188,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long agreementIdFromAgreementTaskList = null;
 	private String taskIdFromAgreementTaskList = null;
 	private Long contractVerIdFromAgreementTaskList = null;
-	private boolean backFromContract = false;
 	private Long statusIdFromTaskList = null;
-	private boolean inPage = false;
+	private String[] outcomesFromContract = null;
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
 
 	//#28854 - start
@@ -198,7 +197,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String newOfferSpec;
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
-	//#28854 - end	
+	//#28854 - end
+	
+	//#29983 start
+	private String businessRegNoNew;
+	//#29983 end
 
 	/**
 	 * @return the fileDirectory
@@ -1433,6 +1436,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	//Bug 34142 - shaqimi end 16112022
 	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
+	public boolean isViewSclFromAgreement() {
+		return viewSclFromAgreement;
+	}
+	
+	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
+		this.viewSclFromAgreement = viewSclFromAgreement;
+	}
+	
 	public String[] getOutcomesFromContract() {
 		return outcomesFromContract;
 	}
@@ -1474,6 +1485,22 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/
+	
+	//#29983 start
+	/**
+	 * @return the businessRegNoNew
+	 */
+	public String getBusinessRegNoNew() {
+		return businessRegNoNew;
+	}
+
+	/**
+	 * @param businessRegNoNew the businessRegNoNew to set
+	 */
+	public void setBusinessRegNoNew(String businessRegNoNew) {
+		this.businessRegNoNew = businessRegNoNew;
+	}
+	//#29983 end
 	
 	//Bug 34142, 15851 - shaqimi start 04/12/2022
 	public boolean isAmendFromTaskList() {

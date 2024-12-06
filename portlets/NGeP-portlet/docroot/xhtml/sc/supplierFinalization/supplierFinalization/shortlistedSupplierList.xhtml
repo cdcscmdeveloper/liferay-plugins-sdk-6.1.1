@@ -310,16 +310,12 @@
 						value="#{shortlistedSupp.supplierRejectionRemark.remark}" />
 				</p:column>
 				<ui:remove>#11134 -end-</ui:remove>
-				<ui:remove> #26247 - start </ui:remove>					
 
-				<p:column selectionMode="single" rendered="#{showSelectionColumn}" 
-						  disabledSelection="#{!(isSecretaryUser or isBPKTaskAndClaimed) or 
-													shortlistedSupp.suppSelectionDisabled or 
-														suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding 
-														or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
-														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
-			</p:dataTable>		 	    
-			<ui:remove> #26247 - end </ui:remove>
+				<ui:remove> #26247,#21692,#28777,#29729,#35157 -start- </ui:remove>
+				<p:column selectionMode="single" rendered="#{showSelectionColumn}"
+					disabledSelection="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" />
+				<ui:remove> #26247,#21692,#28777,#29729,#35157 -end- </ui:remove>
+			</p:dataTable>
 
 			<p:dataTable id="supplierListTblMultiple" var="shortlistedSupp" 
 						 value="#{suppFinalizationBackingBean.managedBean.shortlistedSuppliersByRecommendType}"
@@ -571,16 +567,15 @@
 					Enhancement #19336 START #142
 				</ui:remove>				
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
-					<ui:remove> #30999 - start </ui:remove>
-					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
-						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or shortlistedSupp.suppSelectionDisabled or 
-											suppFinalizationBackingBean.managedBean.disableSupplierSelection or isBidding
-											or (shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions
-														and !shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}">
-						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
-								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
-					</p:selectBooleanCheckbox>	
-					<ui:remove> #30999 - end </ui:remove>
+					<ui:remove> #26247,#30999,#21692,#28777,#29729,#35157 -start- </ui:remove>
+					<p:selectBooleanCheckbox id="selectShortlistSupplier"
+						value="#{shortlistedSupp.shortListed}"
+						disabled="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}">
+						<ui:remove> #26247,#30999,#21692,#28777,#29729,#35157 -end- </ui:remove>
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=itemListTbl],[id$=supplierListTblMultiple])"
+							listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
+					</p:selectBooleanCheckbox>
 				</p:column>
 				
 			</p:dataTable>

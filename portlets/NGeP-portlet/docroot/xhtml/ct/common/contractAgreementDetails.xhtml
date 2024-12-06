@@ -11,10 +11,12 @@
 			<h:outputText value="#{lbl['lbl.ct.agreement.detail']}" />
 			<ac:iconTooltip value="#{lbl['lbl.ct.agreement.detail.tooltip']}" />
 		</f:facet>
+				<!-- #29418 start -->
 				<p:dataTable id="contractAgreementTableID" lazy="true"
 					value="#{ctBackingBean.filterAgreementList()}"
-					var="agreement" width="100%" rows="10" rowIndexVar="index">
-
+					var="agreement" width="100%" rows="10" rowIndexVar="index"
+					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<!-- #29418 end -->
 					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.ct.agreement.no']}" />
@@ -31,81 +33,119 @@
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.ct.agreement.signed.date']}" />
 						</f:facet>
-						<h:outputText value="#{ctBackingBean.getAgreementSignedDate(agreement)}">
-							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>						
-				</p:column>
-				<p:column>
-						<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.ct.agreement.attachment.doc']}" />
-						</f:facet>
-						<h:outputText value="#{lbl['lbl.ct.agreement.doc']} : " 
-						rendered="#{agreement.status.statusId == CtStatusConst.acComplete}"/>
-						<h:outputText value="#{lbl['lbl.ct.agreement.supplemental.doc']} : " 
-						rendered="#{agreement.status.statusId == CtStatusConst.saComplete}"/>
-						<ui:repeat value="#{agreement.contractDocumentAttachments}" var="attachment" varStatus="attStatus">
-							<h:commandLink styleClass="blue_font"
-							title="#{attachment.fileName}"
-							value="#{attachment.fileName}"
-							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
+				<!-- Enhancement 29418 - shaqimi start -->
+				<h:outputText
+					value="#{ctBackingBean.getAgreementSignedDate(agreement)}" rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.acComplete}" >
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+				<!-- Enhancement 29418 - shaqimi start 11102022 -->
+				<p:outputPanel rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
+					<h:outputText value="#{lbl['lbl.ct.view.value.na']}"/>
+				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.agreement.attachment.doc']}" />
+				</f:facet>
+				<p:outputPanel rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.acComplete}">
+					<h:outputText value="#{lbl['lbl.ct.agreement.doc']} : "
+						rendered="#{agreement.status.statusId == CtStatusConst.acComplete}" />
+					<h:outputText value="#{lbl['lbl.ct.agreement.supplemental.doc']} : "
+						rendered="#{agreement.status.statusId == CtStatusConst.saComplete}" />
+					<ui:repeat value="#{agreement.contractDocumentAttachments}"
+						var="attachment" varStatus="attStatus" 
+						rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.acComplete}" >
+						<h:commandLink styleClass="blue_font"
+							title="#{attachment.fileName}" value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}"
 							rendered="#{attStatus.index == 0}" />
-							<h:commandLink styleClass="blue_font"
-							title="#{attachment.fileName}"
-							value="#{attachment.fileName}"
-							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
-							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete and language eq 'en'}" style="margin-left:182px;" />
-							<h:commandLink styleClass="blue_font"
-							title="#{attachment.fileName}"
-							value="#{attachment.fileName}"
-							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
-							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete and language eq 'en'}" style="margin-left:259px;" />
-							<h:commandLink styleClass="blue_font"
-							title="#{attachment.fileName}"
-							value="#{attachment.fileName}"
-							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
-							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete and language eq 'ms'}" style="margin-left:164px;" />
-							<h:commandLink styleClass="blue_font"
-							title="#{attachment.fileName}"
-							value="#{attachment.fileName}"
-							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}" 
-							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete and language eq 'ms'}" style="margin-left:224px;" />
-							<br />
-						</ui:repeat>										
-						<h:outputText value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />		
 						<h:commandLink styleClass="blue_font"
-							title="#{agreement.signedPageName}"
-							value="#{agreement.signedPageName}"
-							action="#{ctBackingBean.commonDownload(agreement.signedPagePath, agreement.signedPageName)}" /><br />		
-						<h:outputText value="#{lbl['lbl.ct.agreement.stamping.page.attachment']} : " />
+							title="#{attachment.fileName}" value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}"
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete and language eq 'en'}"
+							style="margin-left:182px;" />
 						<h:commandLink styleClass="blue_font"
-							title="#{agreement.stampedPageName}"
-							value="#{agreement.stampedPageName}"
-							action="#{ctBackingBean.commonDownload(agreement.stampedPagePath, agreement.stampedPageName)}" /><br />
-						<ui:param name="suppCtLetterList" value="#{ctBackingBean.getSupplementalContractLetter(agreement)}"></ui:param>
-						<h:outputText value="#{lbl['lbl.ct.amend.loa.sst']} : " 
-						rendered="#{not empty suppCtLetterList and agreement.status.statusId == CtStatusConst.saComplete}"/>
-						<ui:repeat value="#{suppCtLetterList}" var="suppCtLetter" varStatus="suppLetterStatus">	
+							title="#{attachment.fileName}" value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}"
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete and language eq 'en'}"
+							style="margin-left:259px;" />
 						<h:commandLink styleClass="blue_font"
-							title="#{suppCtLetter.fileName}"
-							value="#{suppCtLetter.fileName}"
-							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
-							rendered="#{suppLetterStatus.index == 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}"/>
+							title="#{attachment.fileName}" value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}"
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.acComplete and language eq 'ms'}"
+							style="margin-left:164px;" />
 						<h:commandLink styleClass="blue_font"
-							title="#{suppCtLetter.fileName}"
-							value="#{suppCtLetter.fileName}"
-							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
+							title="#{attachment.fileName}" value="#{attachment.fileName}"
+							action="#{ctBackingBean.commonDownload(attachment.filePath, attachment.fileName)}"
+							rendered="#{attStatus.index > 0 and agreement.status.statusId == CtStatusConst.saComplete and language eq 'ms'}"
+							style="margin-left:224px;" />
+						<br />
+					</ui:repeat>
+					<h:outputText
+						value="#{lbl['lbl.ct.agreement.signing.page.attachment']} : " />
+					<h:commandLink styleClass="blue_font"
+						title="#{agreement.signedPageName}"
+						value="#{agreement.signedPageName}"
+						action="#{ctBackingBean.commonDownload(agreement.signedPagePath, agreement.signedPageName)}" />
+					<br />
+					<h:outputText
+						value="#{lbl['lbl.ct.agreement.stamping.page.attachment']} : " />
+					<h:commandLink styleClass="blue_font"
+						title="#{agreement.stampedPageName}"
+						value="#{agreement.stampedPageName}"
+						action="#{ctBackingBean.commonDownload(agreement.stampedPagePath, agreement.stampedPageName)}" />
+					<br />
+					<ui:param name="suppCtLetterList"
+						value="#{ctBackingBean.getSupplementalContractLetter(agreement)}"></ui:param>
+					<h:outputText value="#{lbl['lbl.ct.amend.loa.sst']} : "
+						rendered="#{not empty suppCtLetterList and agreement.status.statusId == CtStatusConst.saComplete}" />
+					<ui:repeat value="#{suppCtLetterList}" var="suppCtLetter"
+						varStatus="suppLetterStatus">
+						<h:commandLink styleClass="blue_font"
+							title="#{suppCtLetter.fileName}" value="#{suppCtLetter.fileName}"
+							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}"
+							rendered="#{suppLetterStatus.index == 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete}" />
+						<h:commandLink styleClass="blue_font"
+							title="#{suppCtLetter.fileName}" value="#{suppCtLetter.fileName}"
+							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}"
 							rendered="#{suppLetterStatus.index > 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete 
-							and language eq 'en'}" 
-							style="margin-left:169px;"/>
+							and language eq 'en'}"
+							style="margin-left:169px;" />
 						<h:commandLink styleClass="blue_font"
-							title="#{suppCtLetter.fileName}"
-							value="#{suppCtLetter.fileName}"
-							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}" 
+							title="#{suppCtLetter.fileName}" value="#{suppCtLetter.fileName}"
+							action="#{ctBackingBean.commonDownload(suppCtLetter.filePath, suppCtLetter.fileName)}"
 							rendered="#{suppLetterStatus.index > 0 and not empty suppCtLetter and agreement.status.statusId == CtStatusConst.saComplete 
-							and language eq 'ms'}" 
-							style="margin-left:200px;"/><br />					
-						</ui:repeat>
-				</p:column>
-				</p:dataTable>
-				</p:panel>
-				</ui:composition>
+								and language eq 'ms'}"
+							style="margin-left:200px;" />
+						<br />
+				</ui:repeat>
+				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi start 11102022 -->
+				<p:outputPanel rendered="#{agreement.status.docType == ParameterConst.doctypeSupplementalAgreement and agreement.status.statusId != CtStatusConst.saComplete}">
+					<h:outputText value="#{lbl['lbl.ct.view.value.na']}"/>
+				</p:outputPanel>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
+			</p:column>
+			<p:column style="text-align: center;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.menu.view.amendment.details']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.tooltip.view.amendment.details']}" />
+				</f:facet>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
+				<p:commandButton
+					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.saPendingCreation
+						or agreement.status.statusId == CtStatusConst.saPendingApproval or agreement.status.statusId == CtStatusConst.saPendingRevision 
+						or agreement.status.statusId == CtStatusConst.saPendingRevisionApproval}" ajax="false"
+					value="#{lbl['lbl.btn.download']}">
+					<p:fileDownload
+						value="#{ctBackingBean.generateReportPDF(agreement)}" />
+				</p:commandButton>
+				<!-- Enhancement 29418 - shaqimi end 11102022 -->
+			</p:column>
+			<!-- Enhancement 29418- shaqimi end -->
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

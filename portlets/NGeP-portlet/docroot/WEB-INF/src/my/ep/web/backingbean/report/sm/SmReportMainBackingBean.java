@@ -24,7 +24,7 @@ public class SmReportMainBackingBean extends
 		renewSesionObject();
 		retrieveReportListByAuthorization(StringUtils
 				.upperCase(ModuleCodeConst.SUPPLIER_MANAGEMENT));
-
+		setLocaleLanguageToLoginUser();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, REPORT_MAIN);

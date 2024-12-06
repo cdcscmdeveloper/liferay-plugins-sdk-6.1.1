@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.applicationView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -30,8 +31,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
@@ -115,6 +114,7 @@ public class ViewSuppProfileManagedBean extends
 	private Long divisionId;
 	private boolean divisionBox = true;
 	//13320-End
+	private Map<Long, String> tempCategoryLs; //#30766 & #34209
 	private List<SelectItem> businessCityLs;
 	private List<SelectItem> residentialCityLs;
 	private List<SelectItem> permenantCityLs;
@@ -125,7 +125,7 @@ public class ViewSuppProfileManagedBean extends
 	
 	private SmPersonnel smPersonnel;
 	private SmSupplierOwner smSuppOwner;
-	private List<SmSupplierOwner> smSuppOwners = new ArrayList();
+	private List<SmSupplierOwner> smSuppOwners = new ArrayList<SmSupplierOwner>();
 	private SmPersonnelAddress smPersonnelAdd;
 	
 	private Integer userBumiFlg;
@@ -207,13 +207,13 @@ public class ViewSuppProfileManagedBean extends
 					if (!isSearchCriteriaEmpty()) {
 						return getApplicationHistoryResultBean(reqDTO);
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<SmSupplier>();
 					}
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<SmSupplier>();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<SmSupplier>();
 			} finally {
 				reqDTO = null;
 			}
@@ -262,10 +262,10 @@ public class ViewSuppProfileManagedBean extends
 				if(isBasicAccountMaintenance()){
 					return getBasicSupplierResultBean(reqDTO);
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<SmSupplier>();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean();
+				return new SearchResultBean<SmSupplier>();
 			} finally {
 				reqDTO = null;
 			}
@@ -932,6 +932,16 @@ public class ViewSuppProfileManagedBean extends
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
 	}
+	
+	//#30766 & #34209 - START
+	public Map<Long, String> getTempCategoryLs() {
+		return tempCategoryLs;
+	}
+
+	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
+		this.tempCategoryLs = tempCategoryLs;
+	}
+	//#30766 & #34209 - END
 
 	public List<Long> getBumiCodeList() {
 		return bumiCodeList;

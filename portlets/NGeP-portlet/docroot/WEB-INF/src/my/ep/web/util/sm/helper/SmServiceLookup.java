@@ -47,6 +47,7 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.rule.ISmRuleSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
@@ -650,6 +651,19 @@ public class SmServiceLookup {
 		return (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 	}
 	//#30457-end
+	
+	//#30766 & #34209 - START
+	/**
+	 * Get ISupplierCategorySO
+	 * 
+	 * @return ISupplierCategorySO
+	 */
+	public static ISupplierCategorySO getSupplierCategorySO() {
+		return (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierCategorySO.class);
+	}
+	//#30766 & #34209 - END
 	
 	// #29617 start
 	/**

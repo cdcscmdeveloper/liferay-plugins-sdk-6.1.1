@@ -74,15 +74,17 @@
 				<f:facet name="header" style="white-space:normal;">
 					<h:outputText value="#{lbl['lbl.fl.delivery.start']}"/>
 					<c:choose>
-							<c:when test="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}">
+		<!--#35357--><c:when test="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing
+							and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}">
 						 		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.start.date']}"/>
 						 	</c:when>
 						 </c:choose>
 				</f:facet>
-				<p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
+	<!--#35357--><p:calendar id="calStartDate" value="#{address.startDate}" style="float:right;" mindate="#{contractRequestBackingBean.managedBean.minContractDate}"
 				 maxdate="#{contractRequestBackingBean.managedBean.maxContractDate}"
 					readonlyInput="true"
-					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
+					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing
+					and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					size="6" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
@@ -96,11 +98,12 @@
 			</p:column>
 			<!--#17087 calendarEndDate -->
 			<p:column headerText="#{lbl['lbl.fl.delivery.end']}"  style="white-space:normal;text-align:center">				
-				<p:calendar value="#{address.endDate}" id="calEndDate" 
+  <!--#35357-->	<p:calendar value="#{address.endDate}" id="calEndDate" 
 					mindate="#{address.startDate}"
 					style="float:right;"
 					readonlyInput="true"
-					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing }"
+					rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing 
+					and contractRequestBackingBean.managedBean.buttonVal!=BpmOutcomeConstant.bpmView}"
 					size="6"
 					maxdate="#{address.endDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -263,7 +266,8 @@
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
-				<p:column>
+				<!-- #35159-->
+				<p:column style="white-space:normal;width:40%">
 					<f:facet name="header" style="width:8%;text-align:center">
 <!-- #16344 START-->	<h:outputText value="#{lbl['lbl.fl.item.details']}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.details(a)']}" />
@@ -787,81 +791,89 @@
 						value="#{contractRequestBackingBean.managedBean.uomPerYear}" 
 						size="35" /></td>					
 			</tr>
-		</table> 
-	
-	<!-- 28855 start -->
-	<h:panelGroup>   
-		<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}" toggleable="false" >
-			
-		  <table style="width: 68%">	
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
-						value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}"
-						size="35" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.tooltip']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
-			</tr>
-			
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
-				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
-						value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
-						size="35" /> 
-						<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" rendered="#{contractRequestBackingBean.managedBean.dpFlag}"/></td>
-			</tr>
-			</table> 
-			<p:dataTable id="specificationDt" var="specificationList"
-			value="#{contractRequestBackingBean.managedBean.itemSpecList}" width="100%">
-			<ac:paginator for="specificationDt" />
-			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center" 
-			rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
-			<p:inputTextarea disabled="true" rendered="#{contractRequestBackingBean.managedBean.dpFlag}" styleClass="colFloatLeft"
-						value="#{specificationList.itemSpec}" cols="135" rows="2" style="width: 100% !important;"/>
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.fl.spec']}" style="text-align:center"
-			rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">			
-			<p:inputTextarea cols="41" rows="6" id="itemSpecification"
-						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
-						styleClass="colFloatLeft"
-						autoResize="false"
-						style="width: 96% !important; margin-left:0px;" 
-						disabled="true"
-						value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" /> 
-			</p:column>
-			<p:column rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">	
-				<f:facet name="header" style="text-align:center">
-					<h:outputText value="#{lbl['lbl.fl.supp.offer']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}"/>
-				</f:facet>
-			<p:inputTextarea cols="41" rows="6" id="supplierOffer"
-						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
-						styleClass="colFloatLeft"
-						autoResize="false"
-						style="width: 96% !important; margin-left:0px;" 
-						disabled="true"
-						value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" /> 
-			</p:column>
-			<p:column rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">	
-				<f:facet name="header" style="text-align:center">
-					<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"/>
-				</f:facet>
-			<p:inputTextarea cols="41" rows="6" id="newOfferedSpec"
-						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
-						styleClass="colFloatLeft"
-						autoResize="false"
-						style="width: 96% !important; margin-left:0px;" 
-						disabled="true"
-						value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" /> 
-			</p:column>
-			</p:dataTable>	
-		</p:panel>
-	 	</h:panelGroup>  
-	 	<!-- 28855 End -->
-		
- 	  <h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
+		</table>
+
+		<!-- 28855 start -->
+		<h:panelGroup>
+			<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}"
+				toggleable="false">
+
+				<table style="width: 68%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+						<td><p:inputText disabled="true"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+								value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}"
+								size="35" /> <ac:iconTooltip
+								value="#{lbl['lbl.fl.supp.offer.tooltip']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+						<td><p:inputText disabled="true"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+								value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
+								size="35" /> <ac:iconTooltip
+								value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+					</tr>
+				</table>
+				<p:dataTable id="specificationDt" var="specificationList"
+					value="#{contractRequestBackingBean.managedBean.itemSpecList}"
+					width="100%">
+					<ac:paginator for="specificationDt" />
+
+					<p:column headerText="#{lbl['lbl.fl.spec']}"
+						style="text-align:center"
+						rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
+						<p:inputTextarea disabled="true"
+							rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" value="#{specificationList.itemSpec}"
+							cols="135" rows="2" style="width: 100% !important;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.fl.spec']}"
+						style="text-align:center"
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<p:inputTextarea cols="41" rows="6" id="itemSpecification"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" />
+					</p:column>
+					<p:column
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<f:facet name="header" style="text-align:center">
+							<h:outputText value="#{lbl['lbl.fl.supp.offer']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}" />
+						</f:facet>
+						<p:inputTextarea cols="41" rows="6" id="supplierOffer"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" />
+					</p:column>
+					<p:column
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<f:facet name="header" style="text-align:center">
+							<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" />
+						</f:facet>
+						<p:inputTextarea cols="41" rows="6" id="newOfferedSpec"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+		<!-- 28855 End -->
+
+		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false">
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
 					value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"

@@ -168,6 +168,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	//25956
 	private boolean viewOnly = false; /*#25956 notification setting*/
+	private String backToNtf; //25956
 	
 	//Enhancement 15851 - shaqimi start
 	/** The back to previous page. */
@@ -178,7 +179,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private Map<String, Integer> indexing;
 	
-	private boolean viewSclFromAgreement;
 	//Enhancement 15851 - shaqimi end
 	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
 	
@@ -1610,13 +1610,6 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.indexing = indexing;
 	}
 
-	public boolean isViewSclFromAgreement() {
-		return viewSclFromAgreement;
-	}
-	public void setViewSclFromAgreement(boolean viewSclFromAgreement) {
-		this.viewSclFromAgreement = viewSclFromAgreement;
-	}
-
 	//Bug 34142, 15851 - shaqimi 04/12/2022 removed unnecessary code
 	//Bug 33096 - shaqimi start
 	public String getSupplementalLoaNo() {
@@ -1629,4 +1622,14 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	//15851 - shaqimi end
 
 	//Bug 34142, 15851 - shaqimi 04/12/2022 - Reverted bug 34030 as it is no longer needed
+	
+	// #25956 - Start
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	// #25956 - End
 }

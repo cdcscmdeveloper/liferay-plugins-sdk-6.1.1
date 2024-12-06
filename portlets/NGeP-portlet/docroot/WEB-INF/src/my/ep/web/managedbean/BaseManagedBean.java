@@ -5,8 +5,6 @@ package my.ep.web.managedbean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,7 +31,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -59,14 +56,15 @@ public abstract class BaseManagedBean implements Serializable {
 	/*
 	 * commonly used as a flag to user's permission to download documents/attachment
 	 */
-	private Boolean enableDownloadAllDocuments = Boolean.FALSE;
+	private Boolean enableDownloadAllDocuments = Boolean.FALSE; // #25201
 	private List<SelectItem> localAuthorityItems;
 	private String captchaText;
 	private String captchaAnswer;
-	
-	//27382
-	private boolean errorInvalidSelfRequest;
-	
+	// #25692 -start-
+	private Set<UserTasks> userTasks;
+	private Map<String, List<String>> additionalPages;
+	// #25692 -end-
+
 	private boolean disciplinaryAction;
 	
 	// 18685 - Start
@@ -78,9 +76,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private ScQtEvaluationReport selectedReport;
 	private List<ScQtFinalizationReport> evaluationReportList;
 	private List<ScQtEvaluationReport> reportsToBeRemovedList;
-	private boolean autoUpdate = Boolean.TRUE;
-	private Set<UserTasks> userTasks; // #25142
-	private Map<String, List<String>> additionalPages; // #25142
+
 	private List<ScQtFinalizationReport> newBriefingPaperReportList;
 	private ScQtFinalizationReport selectedBriefingReport;
 	private List<ScQtFinalizationReport> removeFinalizationReports;
@@ -89,6 +85,10 @@ public abstract class BaseManagedBean implements Serializable {
 	private String docNo;
 	// 18685 - End.
 
+	//27382
+	private boolean errorInvalidSelfRequest;
+	private boolean autoUpdate = Boolean.TRUE;	
+		
 	//16052019 - SSM INTEGRATION CR - Fahmi
 	private boolean ssmIntegrationActive;
 	private boolean validateWithSSM;
@@ -107,6 +107,7 @@ public abstract class BaseManagedBean implements Serializable {
 	//#24540 - start -
 	private boolean disableFields;
 	//#24540 - end -
+	
 	//27951
 	private boolean preRegistration=false;
 	private SsmResDTO ssmResDTO;
@@ -137,6 +138,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private List<SmPersonnel> personnelsOwnerSsm = new ArrayList<SmPersonnel>();
 	private SmAddress smAddress;
 	//27346-end
+	
 	// 28767
 	private List<SmPersonnel> personnelDirectorManager = new ArrayList<SmPersonnel>();
 	private List<SmPersonnel> personnelMembers = new ArrayList<SmPersonnel>();
@@ -144,7 +146,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 	// #25638 - Start		
 	private boolean displayReviseInstrn;
-	// #25638 - End	
+	// #25638 - End
 	
 	//#25037-start
 	private String currentTaskDocType;
@@ -158,9 +160,20 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	private Integer wipStatusMax;//34865,34866,34867 - 29021 WIP
 
-	//27346-start 
+	// start #29956
+	private String termAndConditionCheckOwner;
+	private String termAndConditionCheckOwnerA;
+	private String termAndConditionCheckOwnerC;
+	private String termAndConditionCheckOwnerChangeRole;
+	private Boolean isDowngradeRole;
+	// end #29956
+	
 	// 27346
 	private StreamedContent downloadfile;
+	
+	// #32236 start
+	private String outputPage;
+	// #32236 end
 	
 	//#28784 - Demo WIP - To display QT BPM version
 	private String bpmVersionNo;
@@ -282,11 +295,11 @@ public abstract class BaseManagedBean implements Serializable {
 		return smSupplierBusinessSsm;
 	}
 
-	public void setSmSupplierBusinessSsm(
-			List<SmSupplierBusiness> smSupplierBusinessSsm) {
+	public void setSmSupplierBusinessSsm(List<SmSupplierBusiness> smSupplierBusinessSsm) {
 		this.smSupplierBusinessSsm = smSupplierBusinessSsm;
 	}
 	//27346-end
+	
 	/**
 	 * @return the token
 	 */
@@ -295,8 +308,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param token
-	 *            the token to set
+	 * @param token the token to set
 	 */
 	public void setToken(Object token) {
 		this.token = token;
@@ -310,8 +322,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param taskId
-	 *            the taskId to set
+	 * @param taskId the taskId to set
 	 */
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
@@ -325,8 +336,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param outComes
-	 *            the outComes to set
+	 * @param outComes the outComes to set
 	 */
 	public void setOutComes(String[] outComes) {
 		this.outComes = outComes;
@@ -340,8 +350,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param currentStatusId
-	 *            the currentStatusId to set
+	 * @param currentStatusId the currentStatusId to set
 	 */
 	public void setCurrentStatusId(Long currentStatusId) {
 		this.currentStatusId = currentStatusId;
@@ -355,8 +364,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param taskName
-	 *            the taskName to set
+	 * @param taskName the taskName to set
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
@@ -370,8 +378,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param isAssignedState
-	 *            the isAssignedState to set
+	 * @param isAssignedState the isAssignedState to set
 	 */
 	public void setAssignedState(boolean isAssignedState) {
 		this.isAssignedState = isAssignedState;
@@ -385,8 +392,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param payLoad
-	 *            the payLoad to set
+	 * @param payLoad the payLoad to set
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
@@ -400,8 +406,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param title
-	 *            the title to set
+	 * @param title the title to set
 	 */
 	public void setTitle(String title) {
 		this.title = title;
@@ -415,8 +420,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param processName
-	 *            the processName to set
+	 * @param processName the processName to set
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
@@ -430,8 +434,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @param groupTask
-	 *            the groupTask to set
+	 * @param groupTask the groupTask to set
 	 */
 	public void setGroupTask(Boolean groupTask) {
 		this.groupTask = groupTask;
@@ -502,147 +505,6 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setCaptchaAnswer(String captchaAnswer) {
 		this.captchaAnswer = captchaAnswer;
 	}
-
-	// #25142 - start
-	/**
-	 * @return the reportDownloadFileName
-	 */
-	public String getReportDownloadFileName() {
-		return reportDownloadFileName;
-	}
-
-	/**
-	 * @param reportDownloadFileName the reportDownloadFileName to set
-	 */
-	public void setReportDownloadFileName(String reportDownloadFileName) {
-		this.reportDownloadFileName = reportDownloadFileName;
-	}
-
-	/**
-	 * @return the scAttachment
-	 */
-	public ScAttachment getScAttachment() {
-		return scAttachment;
-	}
-
-	/**
-	 * @param scAttachment the scAttachment to set
-	 */
-	public void setScAttachment(ScAttachment scAttachment) {
-		this.scAttachment = scAttachment;
-	}
-
-	/**
-	 * @return the scQtEvaluationReportList
-	 */
-	public List<ScQtEvaluationReport> getScQtEvaluationReportList() {
-		return scQtEvaluationReportList;
-	}
-
-	/**
-	 * @return the templateSpecBean
-	 */
-	public TemplateSpecBean getTemplateSpecBean() {
-		return templateSpecBean;
-	}
-
-	/**
-	 * @param templateSpecBean the templateSpecBean to set
-	 */
-	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
-		this.templateSpecBean = templateSpecBean;
-	}
-
-	/**
-	 * @return the selectedScQtEvaluationReports
-	 */
-	public List<ScQtEvaluationReport> getSelectedScQtEvaluationReports() {
-		return selectedScQtEvaluationReports;
-	}
-
-	/**
-	 * @param selectedScQtEvaluationReports the selectedScQtEvaluationReports to set
-	 */
-	public void setSelectedScQtEvaluationReports(List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
-		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
-	}
-
-	/**
-	 * @return the selectedReport
-	 */
-	public ScQtEvaluationReport getSelectedReport() {
-		/*if (null != selectedReport && StringUtils.isNotEmpty(selectedReport.getReportContent())) {
-			List<ScQtEvaluationReport> evaluationReportList = this.getScQtEvaluationReportList();
-			for (ScQtEvaluationReport evaluationReport : evaluationReportList) {
-				if (evaluationReport.getQtReportId() == selectedReport.getQtReportId())
-				evaluationReport.setReportContent(selectedReport.getReportContent());
-				break;
-			}
-		}*/
-		
-		//#25142 to display special character after save the content --- tested for Supplier finalization (briefing paper tab)
-		String reportContent = null;
-		try {
-			if(selectedReport != null && StringUtils.isNotEmpty(selectedReport.getReportContent()))
-			{
-				reportContent = selectedReport.getReportContent();
-				
-				reportContent = URLDecoder.decode(reportContent, "UTF-8");
-				
-				selectedReport.setReportContent(reportContent);
-			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} finally {
-			reportContent = null;
-		}
-		
-		return selectedReport;
-	}
-
-	/**
-	 * @param selectedReport the selectedReport to set
-	 */
-	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
-		this.selectedReport = selectedReport;
-	}
-
-	/**
-	 * @return the evaluationReportList
-	 */
-	public List<ScQtFinalizationReport> getEvaluationReportList() {
-		return evaluationReportList;
-	}
-
-	/**
-	 * @param evaluationReportList the evaluationReportList to set
-	 */
-	public void setEvaluationReportList(List<ScQtFinalizationReport> evaluationReportList) {
-		this.evaluationReportList = evaluationReportList;
-	}
-
-	/**
-	 * @return the reportsToBeRemovedList
-	 */
-	public List<ScQtEvaluationReport> getReportsToBeRemovedList() {
-		return reportsToBeRemovedList;
-	}
-
-	/**
-	 * @param reportsToBeRemovedList the reportsToBeRemovedList to set
-	 */
-	public void setReportsToBeRemovedList(List<ScQtEvaluationReport> reportsToBeRemovedList) {
-		this.reportsToBeRemovedList = reportsToBeRemovedList;
-	}
-	// #25142 - end
-	
-	public Boolean getEnableDownloadAllDocuments() {
-		return enableDownloadAllDocuments;
-	}
-
-	public void setEnableDownloadAllDocuments(Boolean enableDownloadAllDocuments) {
-		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
-	}
 	
 	public boolean isSsmIntegrationActive() {
 		return ssmIntegrationActive;
@@ -692,6 +554,74 @@ public abstract class BaseManagedBean implements Serializable {
 		this.statusDescFromSSM = statusDescFromSSM;
 	}
 	
+	// #25692 -start-
+	public Set<UserTasks> getUserTasks() {
+		return userTasks;
+	}
+
+	public void setUserTasks(Set<UserTasks> userTasks) {
+		this.userTasks = userTasks;
+	}
+
+	public void addUserTasks(UserTasks userTask) {
+		if (this.userTasks == null) {
+			userTasks = new HashSet<UserTasks>();
+		}
+		
+		userTasks.add(userTask);
+	}
+
+	public void removeUserTasks(UserTasks userTask) {
+		if (this.userTasks != null && !CollectionUtils.isEmpty(userTasks)) {
+			userTasks.remove(userTask);
+		}
+	}
+
+	public Map<String, List<String>> getAdditionalPages() {
+		return additionalPages;
+	}
+
+	public void setAdditionalPages(Map<String, List<String>> additionalPages) {
+		this.additionalPages = additionalPages;
+	}
+
+	public void addAdditionalPages(String k, String page) {
+		if (this.additionalPages == null) {
+			this.additionalPages = new HashMap<String, List<String>>();
+			
+			List<String> t = new ArrayList<String>();
+			
+			this.additionalPages.put(k, t);
+		}
+		
+		if (!this.additionalPages.containsKey(k) || this.additionalPages.get(k) == null) {
+			List<String> t = new ArrayList<String>();
+			
+			this.additionalPages.put(k, t);
+		}
+		
+		this.additionalPages.get(k).add(page);
+	}
+
+	/**
+	 * Copy BPM TaskDetails to another instance of BaseManagedBean
+	 * 
+	 * @param bm - another BaseManagedBean instance
+	 */
+	public void copyBPMTaskDetails(BaseManagedBean bm) {
+		bm.setToken(this.token);
+		bm.setTaskId(this.taskId);
+		bm.setOutComes(this.outComes);
+		bm.setCurrentStatusId(this.currentStatusId);
+		bm.setTaskName(taskName);
+		bm.setAssignedState(this.isAssignedState);
+		bm.setPayLoad(this.payLoad);
+		bm.setProcessName(this.processName);
+		bm.setGroupTask(this.groupTask);
+		bm.setReadOnly(this.isReadOnly);
+	}
+	// #25692 -end-
+	
 	public SmSupplier getSmSupplierSsm() {
 		return smSupplierSsm;
 	}
@@ -722,7 +652,8 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDisableFields(boolean disableFields) {
 		this.disableFields = disableFields;
 	}
-	//#24540 - end -	
+	//#24540 - end -
+	
 	// #25142 - start
 	/**
 	 * @return the autoUpdate
@@ -737,66 +668,6 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
-
-	public Set<UserTasks> getUserTasks() {
-		return userTasks;
-	}
-
-	public void setUserTasks(Set<UserTasks> userTasks) {
-		this.userTasks = userTasks;
-	}
-	
-	public void addUserTasks(UserTasks userTask){
-		if(this.userTasks == null){
-			userTasks = new HashSet<UserTasks>();
-		}
-		userTasks.add(userTask);
-	}
-	
-	public void removeUserTasks(UserTasks userTask){
-		if(this.userTasks != null && !CollectionUtils.isEmpty(userTasks)){
-			userTasks.remove(userTask);
-		}
-	}
-
-	public Map<String, List<String>> getAdditionalPages() {
-		return additionalPages;
-	}
-
-	public void setAdditionalPages(Map<String, List<String>> additionalPages) {
-		this.additionalPages = additionalPages;
-	}
-	
-	public void addAdditionalPages(String k, String page){
-		if(this.additionalPages == null){
-			this.additionalPages = new HashMap<String, List<String>>();
-			List<String> t= new ArrayList<String>();
-			this.additionalPages.put(k, t);
-		}
-		if(!this.additionalPages.containsKey(k) || this.additionalPages.get(k)==null){
-			List<String> t= new ArrayList<String>();
-			this.additionalPages.put(k, t);
-		}
-		this.additionalPages.get(k).add(page);
-	}
-	
-	/**
-	 * Copy BPM TaskDetails to another instance of BaseManagedBean
-	 * @param bm - another BaseManagedBean instance
-	 */
-	public void copyBPMTaskDetails(BaseManagedBean bm){
-		bm.setToken(this.token);
-		bm.setTaskId(this.taskId);
-		bm.setOutComes(this.outComes);
-		bm.setCurrentStatusId(this.currentStatusId);
-		bm.setTaskName(taskName);
-		bm.setAssignedState(this.isAssignedState);
-		bm.setPayLoad(this.payLoad);
-		bm.setProcessName(this.processName);
-		bm.setGroupTask(this.groupTask);
-		bm.setReadOnly(this.isReadOnly);
-	}
-
 	// #25142 - end
 	
 	/**
@@ -889,6 +760,114 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setErrorInvalidSelfRequest(boolean errorInvalidSelfRequest) {
 		this.errorInvalidSelfRequest = errorInvalidSelfRequest;
 	}
+	
+	
+	public StreamedContent getDownloadfile() {
+		return downloadfile;
+	}
+
+	public void setDownloadfile(StreamedContent downloadfile) {
+		this.downloadfile = downloadfile;
+	}
+	
+	// #25201 -start-
+	public Boolean getEnableDownloadAllDocuments() {
+		return enableDownloadAllDocuments;
+	}
+
+	public void setEnableDownloadAllDocuments(Boolean enableDownloadAllDocuments) {
+		this.enableDownloadAllDocuments = enableDownloadAllDocuments;
+	}
+	// #25201 -end-
+
+	// Enhancement #18685 - start
+	public String getReportDownloadFileName() {
+		return reportDownloadFileName;
+	}
+
+	public void setReportDownloadFileName(String reportDownloadFileName) {
+		this.reportDownloadFileName = reportDownloadFileName;
+	}
+
+	public ScAttachment getScAttachment() {
+		return scAttachment;
+	}
+
+	public void setScAttachment(ScAttachment scAttachment) {
+		this.scAttachment = scAttachment;
+	}
+
+	public List<ScQtEvaluationReport> getScQtEvaluationReportList() {
+		return scQtEvaluationReportList;
+	}
+
+	public void setScQtEvaluationReportList(List<ScQtEvaluationReport> scQtEvaluationReportList) {
+		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	}
+
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
+	}
+
+	public List<ScQtEvaluationReport> getSelectedScQtEvaluationReports() {
+		return selectedScQtEvaluationReports;
+	}
+
+	public void setSelectedScQtEvaluationReports(List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
+		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
+	}
+
+	public ScQtEvaluationReport getSelectedReport() {
+		return selectedReport;
+	}
+
+	public void setSelectedReport(ScQtEvaluationReport selectedReport) {
+		this.selectedReport = selectedReport;
+	}
+
+	public List<ScQtFinalizationReport> getEvaluationReportList() {
+		return evaluationReportList;
+	}
+
+	public void setEvaluationReportList(List<ScQtFinalizationReport> evaluationReportList) {
+		this.evaluationReportList = evaluationReportList;
+	}
+
+	public List<ScQtEvaluationReport> getReportsToBeRemovedList() {
+		return reportsToBeRemovedList;
+	}
+
+	public void setReportsToBeRemovedList(List<ScQtEvaluationReport> reportsToBeRemovedList) {
+		this.reportsToBeRemovedList = reportsToBeRemovedList;
+	}
+
+	public List<ScQtFinalizationReport> getNewBriefingPaperReportList() {
+		return newBriefingPaperReportList;
+	}
+
+	public void setNewBriefingPaperReportList(List<ScQtFinalizationReport> newBriefingPaperReportList) {
+		this.newBriefingPaperReportList = newBriefingPaperReportList;
+	}
+
+	public ScQtFinalizationReport getSelectedBriefingReport() {
+		return selectedBriefingReport;
+	}
+
+	public void setSelectedBriefingReport(ScQtFinalizationReport selectedBriefingReport) {
+		this.selectedBriefingReport = selectedBriefingReport;
+	}
+
+	public List<ScQtFinalizationReport> getRemoveFinalizationReports() {
+		return removeFinalizationReports;
+	}
+
+	public void setRemoveFinalizationReports(List<ScQtFinalizationReport> removeFinalizationReports) {
+		this.removeFinalizationReports = removeFinalizationReports;
+	}
 
 	// #18685 - Start
 	/**
@@ -901,8 +880,7 @@ public abstract class BaseManagedBean implements Serializable {
 	/**
 	 * @param consolidationBriefingPaperReportList the consolidationBriefingPaperReportList to set
 	 */
-	public void setConsolidationBriefingPaperReportList(
-			List<ScQtFinalizationReport> consolidationBriefingPaperReportList) {
+	public void setConsolidationBriefingPaperReportList(List<ScQtFinalizationReport> consolidationBriefingPaperReportList) {
 		this.consolidationBriefingPaperReportList = consolidationBriefingPaperReportList;
 	}
 		
@@ -916,8 +894,7 @@ public abstract class BaseManagedBean implements Serializable {
 	/** 
 	 * @param sfBriefingPaperReportList the sfBriefingPaperReportList to set
 	 */
-	public void setSfBriefingPaperReportList(
-			List<ScQtFinalizationReport> sfBriefingPaperReportList) {
+	public void setSfBriefingPaperReportList(List<ScQtFinalizationReport> sfBriefingPaperReportList) {
 		this.sfBriefingPaperReportList = sfBriefingPaperReportList;
 	}
 	
@@ -934,7 +911,7 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
 	}
-	// #18685 - End
+	// Enhancement #18685 - end
 	
 	// #25638 - Start
 	/**
@@ -985,8 +962,8 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setInactiveSCMemberStr(String inactiveSCMemberStr) {
 		this.inactiveSCMemberStr = inactiveSCMemberStr;
 	}
-	//25037 - end - note 510
 	// #25037 - end
+	
 	// 28767
 	public List<SmPersonnel> getPersonnelDirectorManager() {
 		return personnelDirectorManager;
@@ -1012,65 +989,57 @@ public abstract class BaseManagedBean implements Serializable {
 		this.totalShare = totalShare;
 	}
 	
-	// Enhancement #18685 - start
-
-	public void setScQtEvaluationReportList(
-			List<ScQtEvaluationReport> scQtEvaluationReportList) {
-		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	// start #29956
+	public String getTermAndConditionCheckOwner() {
+		return termAndConditionCheckOwner;
 	}
 
-	/**
-	 * @return the newBriefingPaperReportList
-	 */
-	public List<ScQtFinalizationReport> getNewBriefingPaperReportList() {
-		return newBriefingPaperReportList;
+	public void setTermAndConditionCheckOwner(String termAndConditionCheckOwner) {
+		this.termAndConditionCheckOwner = termAndConditionCheckOwner;
 	}
 
-	/**
-	 * @param newBriefingPaperReportList the newBriefingPaperReportList to set
-	 */
-	public void setNewBriefingPaperReportList(
-			List<ScQtFinalizationReport> newBriefingPaperReportList) {
-		this.newBriefingPaperReportList = newBriefingPaperReportList;
+	public String getTermAndConditionCheckOwnerA() {
+		return termAndConditionCheckOwnerA;
 	}
 
-	/**
-	 * @return the selectedBriefingReport
-	 */
-	public ScQtFinalizationReport getSelectedBriefingReport() {
-		return selectedBriefingReport;
+	public void setTermAndConditionCheckOwnerA(String termAndConditionCheckOwnerA) {
+		this.termAndConditionCheckOwnerA = termAndConditionCheckOwnerA;
 	}
 
-	/**
-	 * @param selectedBriefingReport the selectedBriefingReport to set
-	 */
-	public void setSelectedBriefingReport(ScQtFinalizationReport selectedBriefingReport) {
-		this.selectedBriefingReport = selectedBriefingReport;
+	public String getTermAndConditionCheckOwnerC() {
+		return termAndConditionCheckOwnerC;
 	}
+
+	public void setTermAndConditionCheckOwnerC(String termAndConditionCheckOwnerC) {
+		this.termAndConditionCheckOwnerC = termAndConditionCheckOwnerC;
+	}
+
+	public String getTermAndConditionCheckOwnerChangeRole() {
+		return termAndConditionCheckOwnerChangeRole;
+	}
+
+	public void setTermAndConditionCheckOwnerChangeRole(String termAndConditionCheckOwnerChangeRole) {
+		this.termAndConditionCheckOwnerChangeRole = termAndConditionCheckOwnerChangeRole;
+	}
+
+	public Boolean isDowngradeRole() {
+		return isDowngradeRole;
+	}
+
+	public void setDowngradeRole(Boolean isDowngradeRole) {
+		this.isDowngradeRole = isDowngradeRole;
+	}
+	// end #29956
 	
-	/**
-	 * @return the removeFinalizationReports
-	 */
-	public List<ScQtFinalizationReport> getRemoveFinalizationReports() {
-		return removeFinalizationReports;
+	//#32236 - start
+	public String getOutputPage() {
+		return outputPage;
 	}
 
-	/**
-	 * @param removeFinalizationReports the removeFinalizationReports to set
-	 */
-	public void setRemoveFinalizationReports(
-			List<ScQtFinalizationReport> removeFinalizationReports) {
-		this.removeFinalizationReports = removeFinalizationReports;
+	public void setOutputPage(String outputPage) {
+		this.outputPage = outputPage;
 	}
-	// Enhancement #18685 - end
-
-	public StreamedContent getDownloadfile() {
-		return downloadfile;
-	}
-
-	public void setDownloadfile(StreamedContent downloadfile) {
-		this.downloadfile = downloadfile;
-	}
+	//#32236 - end
 
 	public Integer getWipStatusMax() {
 		return wipStatusMax;

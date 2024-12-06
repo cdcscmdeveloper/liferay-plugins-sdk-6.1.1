@@ -50,17 +50,28 @@
 		<BR />
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.qt.committee.appointment.instruction']}" escape="false" rendered="#{isQTStatusChecklistAndAfter}" />
-			
+
+		<c:choose>
+			<c:when
+				test="#{qTDetailBB.managedBean.taskName eq 'Approve Committee'}">
+				<c:set var="tabBeans"
+					value="#{qTDetailBB.managedBean.readOnlyCommitteeTabBean}" />
+				<c:set var="committeeReadOnly" value="true" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="tabBeans"
+					value="#{qTDetailBB.managedBean.scCommitteeMemberTabList}" />
+				<c:set var="committeeReadOnly" value="false" />
+			</c:otherwise>
+		</c:choose>
+
 		<p:tabMenu id="committeTabMenu"
 			activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}">
-			<c:forEach var="tabBean" varStatus="status"
-				items="#{qTDetailBB.managedBean.scCommitteeMemberTabList}">
+			<c:forEach var="tabBean" varStatus="status" items="#{tabBeans}">
 				<p:menuitem value="#{tabBean.titleName}"
-					action="#{qTDetailBB.committeTabChangeAction(status.index)}" 
-					partialSubmit="true"
-					update="@form, committeeTabListId"
-					process="@form"
-					disabled="#{tabBean.disabled}">
+					action="#{qTDetailBB.committeTabChangeAction(status.index, committeeReadOnly)}"
+					partialSubmit="true" update="@form, committeeTabListId"
+					process="@form" disabled="#{tabBean.disabled}">
 					<c:if test="#{!empty tabBean.icon}">
 						<f:attribute name="icon" value="#{tabBean.icon}" />
 					</c:if>

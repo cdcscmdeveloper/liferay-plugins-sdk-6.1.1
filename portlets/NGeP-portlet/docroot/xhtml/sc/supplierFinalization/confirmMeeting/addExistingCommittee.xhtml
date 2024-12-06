@@ -98,9 +98,19 @@
 								value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.role']}">
-							<h:outputText value="#{suppFinalMeetingBackingBean.getRoleDesc(existingMember)}" />
+							<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+							<p:selectOneMenu id="appaction"
+								value="#{existingMember.memberRoleId}"
+								style="width: 110px;margin-bottom: 5px;">
+								<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+									value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember, filteredRoles)}"
+									itemLabel="#{role.codeName}"
+									itemValue="#{role.pmParameter.parameterId}" />
+							</p:selectOneMenu>
+	
 						</p:column>
-					</p:dataTable>
+				</p:dataTable>
+
 				</p:panel>
 		</h:panelGroup>
 		<div class="ppRightBtn">

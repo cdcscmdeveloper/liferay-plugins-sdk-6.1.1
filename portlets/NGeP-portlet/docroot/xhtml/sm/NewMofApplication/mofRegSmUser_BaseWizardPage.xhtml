@@ -26,6 +26,18 @@
 						"#{lbl['lbl.sm.newMofAppln']}");
 			</script>
 		</h:panelGroup>
+		<!-- #35529 - start -->
+		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser and backingBean.managedBean.smAppl.resubmit}">
+			<script>
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.basic.resubmit.appl']}");
+
+				$('#portlet_DirectMofRegistration_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.basic.resubmit.appl']}");
+			</script>
+		</h:panelGroup><!-- #35529 - end -->
 	</ui:define>
 
 

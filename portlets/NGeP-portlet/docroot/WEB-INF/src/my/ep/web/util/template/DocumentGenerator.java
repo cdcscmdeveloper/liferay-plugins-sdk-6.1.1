@@ -394,7 +394,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
 		// 25025 - End.
 		Text t4 = factory.createText();
-		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini.");
+		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini");
 		run.getContent().add(t1);
 		//run.getContent().add(br);
 		run.getContent().add(br);
@@ -594,6 +594,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		html = doc.body().html();		
 		
 	}
+	
 
 	// #26130 - start
 	private String getServerUrl() {
@@ -608,14 +609,13 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	}
 	// #26130-end
 
-	// #25025 -start
-	public static void setMarginSpace(WordprocessingMLPackage wordPackage) {
-		ObjectFactory factory = Context.getWmlObjectFactory();
-		PgMar pg = factory.createSectPrPgMar();
-		pg.setLeft(BigInteger.valueOf(1000));
-		pg.setRight(BigInteger.valueOf(1000));
-
+	//#25025 -start
+	public static void setMarginSpace (WordprocessingMLPackage wordPackage) {
+		ObjectFactory factory = Context.getWmlObjectFactory ();
+		PgMar pg = factory.createSectPrPgMar ();
+		pg.setLeft (BigInteger.valueOf(1000));
+		pg.setRight (BigInteger.valueOf(1000));
 		wordPackage.getDocumentModel().getSections().get(0).getSectPr().setPgMar(pg);
 	}
-	// #25025 - end
+	//#25025 - end
 }
