@@ -135,7 +135,7 @@
 					rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}">
 					<!-- #28784 -end- --><!-- #25138, #21695 -end- -->			
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" maxIntegerDigits="14" integerOnly="true" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" maxIntegerDigits="14"/>
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
