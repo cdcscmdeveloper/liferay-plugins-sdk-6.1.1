@@ -140,6 +140,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
+			//#36474 - Start
+			Boolean resubmitExpired = false;
 			//30713 - Start
 			//Add checking for expired process fee KN
 			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
@@ -152,12 +154,13 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				//if expired
 				if (diffDays >= SmRuleHelper.getInstance()
 						.getApplicationResubmissionDays()) {
+					resubmitExpired = true;
 					getManagedBean().setRejectedApplExist(false);
 					isRejectedApplExist = false;
 					rejectedWf = null;
 				}
 			}
-			//30713 - End
+			//30713 & #36474 - End
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
@@ -255,8 +258,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
-								//32627 START
-								if(wfStat != null &&
+								//32627 & 36474 START
+								if(wfStat != null && !resubmitExpired &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION ||
 									wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS ||
@@ -284,15 +287,17 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									log.info("*******Not Resubmit********");
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
-
-									if (rejectedWf != null) {
+									
+									if(rejectedWf != null && !resubmitExpired){ //#36474
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
-										//#35579 --start--
-										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
+									//#35579 --start--
+										if(wfStat != null &&
+												wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT){
 											getManagedBean().setFlowStatus(8);
 										}
-									} else {
-										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
+									}else{
+										if(wfStat != null &&
+												wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT){
 											getManagedBean().setFlowStatus(7);
 										}
 									}

@@ -806,7 +806,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-				itemSpecList.add(itemSpecOffer.getItemSpec());
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 			}
 		}
 		getManagedBean().setItemSpecification(itemSpecList);
@@ -824,13 +824,16 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
 		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-		Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
 
-		while (iterator.hasNext()) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
-			if (itemSpecOffer.getNewOfferSpec() != null) {
-				itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-			}
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
 			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
 				iterator.remove();
 			}
