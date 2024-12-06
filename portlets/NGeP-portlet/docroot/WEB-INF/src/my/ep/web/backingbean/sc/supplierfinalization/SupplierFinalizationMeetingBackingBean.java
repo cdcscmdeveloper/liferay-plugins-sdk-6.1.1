@@ -2397,23 +2397,37 @@ if (CollectionUtils.isNotEmpty(
 	 * @return
 	 */
 	public List<AuditTrailReqDTO> insertCommitteeAuditTrail(AuditTrailResDTO auditResDTO,
-			List<ScCommitteeMember> committeeMembers,String type,IQTAuditTrailSO qtAuditTrailSO) {
+			List<ScCommitteeMember> committeeMembers, String type, IQTAuditTrailSO qtAuditTrailSO) {
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-		
+
 		for (ScCommitteeMember committeeMember : committeeMembers) {
-			auditResDTO.setActionType(type);			
+			auditResDTO.setActionType(type);
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_NAME);
-			auditResDTO.setNewValue(committeeMember.getMemberName());
+			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
+				auditResDTO.setOldValue(null);
+				auditResDTO.setNewValue(committeeMember.getMemberName());
+			} else {
+				auditResDTO.setNewValue(null);
+				auditResDTO.setOldValue(committeeMember.getMemberName());
+			}
 			AuditTrailReqDTO auditReqDTOName = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTOName);
 
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_IDENTIFICATION);
-			auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
+				auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+			} else {
+				auditResDTO.setOldValue(committeeMember.getPmUser().getIdentificationNo());
+			}
 			AuditTrailReqDTO auditReqDTOIdentification = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTOIdentification);
 
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_ROLE);
-			auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
+				auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+			} else {
+				auditResDTO.setOldValue(committeeMember.getMemberRole().getParameterCode());
+			}
 			AuditTrailReqDTO auditReqDTORole = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTORole);
 
