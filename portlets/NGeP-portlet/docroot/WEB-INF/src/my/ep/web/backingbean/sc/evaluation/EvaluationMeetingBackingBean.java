@@ -2535,14 +2535,47 @@ public class EvaluationMeetingBackingBean extends
 
 		auditResDTO.setQtFieldLabelId(fieldRole);
 		if (auditResDTO.getActionType().equals(QTAuditConstant.AU_TYPE_CREATE)) {
-			auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+			auditResDTO.setNewValue(getParameterDescByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, committeeMember
+					.getMemberRole().getParameterCode(), CommonConstants.LANGUAGE_CODE_MALAY));
 		} else {
-			auditResDTO.setOldValue(committeeMember.getMemberRole().getParameterCode());
+			auditResDTO.setOldValue(getParameterDescByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, committeeMember
+					.getMemberRole().getParameterCode(), CommonConstants.LANGUAGE_CODE_MALAY));
 		}
 		AuditTrailReqDTO auditReqDTORole = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTORole);
 
 		return auditReqList;
+	}
+	
+	/** 
+	 * 28895 - 35500
+	 * Get PM_PARAMETER Description By Type and Code
+	 * @param parameterType
+	 * @param parameterCode
+	 * @param languageCode
+	 * @return
+	 */
+	private String getParameterDescByTypeAndCode(String parameterType,
+			String parameterCode, String languageCode) {
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+	            ModuleCodeConst.SUPPLIER_SELECTION, IParameterSO.class);;
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(parameterType);
+		reqDTO.setLanguageCode(languageCode == null || languageCode.isEmpty()?CommonConstants.DEFAULT_LANGUAGE_CODE:languageCode);
+		SearchBean<PmParameterDesc> parameterDescSearchBean = new SearchBean<>();
+		parameterDescSearchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_EQUALS.value(), parameterCode));
+		reqDTO.setParameterDescSearchBean(parameterDescSearchBean);
+
+		List<PmParameterDesc> parameterDescList = parameterSO
+				.retrieveParameterDescListByType(reqDTO).getParameterDescList();
+
+		if (parameterDescList != null && !parameterDescList.isEmpty()) {
+			return parameterDescList.get(0).getCodeName();
+		}
+
+		return null;
 	}
 	// 25037 - end
 }
