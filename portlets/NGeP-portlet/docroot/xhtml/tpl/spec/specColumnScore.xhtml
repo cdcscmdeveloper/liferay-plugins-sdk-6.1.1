@@ -5,7 +5,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-	<ui:remove><!--  #35384 related to fixing #35293 (edit pattern validatenumber)--></ui:remove>
 	
 	<p:column style="width:60px; text-align:right;"  
 		rendered="#{templateSpecBackingBean.hasWeightage(templateSpecBean)}">
@@ -17,31 +16,42 @@
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{isScoring and !isRepeated}">
 			<h:outputText value="#{tplSpecAnswer.autoScore}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<ui:remove><!-- 35384,35293 -end- --></ui:remove>
 			</h:outputText>
 			 / 
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<ui:remove><!-- 35384,35293 -end- --></ui:remove>
 			</h:outputText>
 		</h:panelGroup>
 	</p:column>
-	
-	<ui:remove><!--  #35384 related to fixing #35293 (edit pattern validatenumber)--></ui:remove>
-	
 	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+		
 		<h:panelGroup rendered="#{!empty question.scoreTypeCode and !isScoring and !isRepeated}">
 			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
 				value="#{tplSpecAnswer.userScore}"
 				required="false" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}">
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" maxIntegerDigits="14"/>
+				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
+				<ac:validateNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}"
+					maxIntegerDigits="14" />
+				<ui:remove><!-- 35384,35293 -end- --></ui:remove>
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
 			</p:inputText>
 			 / 
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<ui:remove><!-- 35384,35293 -start- --></ui:remove>
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<ui:remove><!-- 35384,35293 -end- --></ui:remove>
 			</h:outputText>
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
 		</h:panelGroup>
