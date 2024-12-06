@@ -1745,7 +1745,9 @@ public class SmApplicationUtil {
 		validateSpecialAndNormalCategory(validSave, managedBean, currentTab);//#30508
 		//#32236 - start
 		if(managedBean.isSupplierUser()){
-			if(currentTab == 5 && !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
+			if(currentTab == 5    
+					&& managedBean.getOutputPage() != null //#31018
+					&& !managedBean.getOutputPage().equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)){
 				validateSpecialAndNormalCategoryCapital(managedBean);	
 			}	
 		}
@@ -3624,6 +3626,9 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			managedBean.setOverLappedCategoryExists(true); //#31018
+		} else{
+			managedBean.setOverlapDocs(null);//#31018
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
@@ -3675,18 +3680,21 @@ public class SmApplicationUtil {
 			String currPage) {
 		String msg = currPage == null ? MessageConst.ERROR_722654
 				: MessageConst.ERROR_722661;
-		if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
-			throw new EpException(msg);
-		} else {
-			for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
-				if (doc.getPmDocument() == null
+		//#31018 START
+		if(bean.isSupplierUser()) { 
+			if (EntityHelper.isCollectionEmpty(bean.getOverlapDocs())) {
+				throw new EpException(msg);
+			} else {
+				for (SmCategoryOverlapDoc doc : bean.getOverlapDocs()) {
+					if (doc.getPmDocument() == null
 						|| StringUtils.isBlank(doc.getFileName())) {
-					throw new EpException(msg);
-				} else if (StringUtils.isBlank(doc.getOverlapReason())) {
-					throw new EpException(msg);
+						throw new EpException(msg);
+					} else if (StringUtils.isBlank(doc.getOverlapReason())) {
+						throw new EpException(msg);
+					}
 				}
 			}
-		}
+		}//#31018 END
 	}
 
 	public static void updateOverlapDocsToSmAppl(SmApplicationManagedBean bean) {
@@ -9580,6 +9588,7 @@ public class SmApplicationUtil {
 			bean.getSmAppl().setSmCategoryOverlapDocs(
 					new ArrayList<SmCategoryOverlapDoc>());
 			bean.setOverlapDocs(new ArrayList<SmCategoryOverlapDoc>());
+			bean.setOverLappedCategoryExists(false); //#31018
 		}
 	}
 

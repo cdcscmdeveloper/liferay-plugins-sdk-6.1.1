@@ -44,6 +44,7 @@ public class SmSideMenuIconUtil {
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
+		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			log.info("31230 Check Company Basic has difference - start");
 			if (bean.isSupplierUser()) {
@@ -359,6 +360,8 @@ public class SmSideMenuIconUtil {
 			log.info("31230 Check if application category is overlap");
 			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
 				bean.getEditVO().setHasOverlapped(true);
+			} else {
+				bean.getEditVO().setHasOverlapped(false); //#31018
 			}
 			//#31230 END
 			log.info("31230 Check Category Code has difference/overlap - end");
