@@ -175,6 +175,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		reqDTO.setContractId(new Long(dataType.getContractId()));
 		reqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
 		reqDTO.setDocType(dataType.getDocType());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getLatestVersionId())); //#15851
 		getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
 		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)){
 			getManagedBean().setDisableField(true);
@@ -1357,25 +1358,39 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	}
 
 	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	@Override
 	public void goToLoaView(ScLoa scLoa) {
-		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
-		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		String slLoaNo = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaNo() : this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContract().getContractId() : this.getManagedBean().getContractVer().getCtContract().getContractId();
+		Long statusId = null;
+		String docType = null;
 		
+		if(!ctBB.getManagedBean().isViewContract()){
+			statusId = this.getManagedBean().getContractVer()==null?
+					ctBB.getManagedBean().getContractVer().getStatus().getStatusId() : this.getManagedBean().getContractVer().getStatus().getStatusId();
+			docType = ParameterConst.DOCTYPE_CONTRACT_TERMINATION;
+		}
+				
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-	
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(docType);
+			ctBB.getManagedBean().setStatusIdFromTaskList(statusId);
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 	
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){

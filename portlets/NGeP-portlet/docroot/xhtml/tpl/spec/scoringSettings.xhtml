@@ -8,7 +8,9 @@
 	
 	<ui:param name="isQuestionTypeItem" value="#{templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
 	
-	<h:outputText styleClass="instruction" rendered="#{!isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" /><!-- #29187 Added Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<h:outputText styleClass="instruction" rendered="#{!isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<ui:param name="itemSpecInfo" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
 	<tr>
@@ -75,19 +77,23 @@
 		</td>
 		<td>
 			<h:panelGroup rendered="#{isWeightageReq}">	<!-- Bug #35307@Syazani 12/12/2023 -->
+				<ui:remove><!-- #36248_haziq - Start --></ui:remove>
 				<p:inputText id="weightage" style="text-align:right;" 
 					value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
 					required="true" size="15" maxlength="19"
 					disabled="#{!editable}"
-					label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" maxIntegerDigits="2" />
-				</p:inputText> <ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
+					label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}"
+					validator="#{templateSpecBackingBean.validateWeightage}">
+					<ac:validateNumber maxIntegerDigits="3" maxFractionDigits="2" min="0.01" max="100"></ac:validateNumber>
+				</p:inputText> 
+				<ui:remove><!-- #36248_haziq - End --></ui:remove>
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
 				<p:message id="weightageMsg" for="weightage" display="icon" />
 				
 			</h:panelGroup>
 		</td>
 	</tr>
-	<!-- #29187 Start Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
 	<tr>
 		<td></td>
 		<td></td>
@@ -105,7 +111,7 @@
 			</h:panelGroup>
 		</td>
 	</tr>
-	<!-- #29187 End Vinod -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 	</table>
 	
 	<br />
