@@ -2535,11 +2535,13 @@ public class EvaluationMeetingBackingBean extends
 
 		auditResDTO.setQtFieldLabelId(fieldRole);
 		if (auditResDTO.getActionType().equals(QTAuditConstant.AU_TYPE_CREATE)) {
-			auditResDTO.setNewValue(getParameterDescByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, committeeMember
-					.getMemberRole().getParameterCode(), CommonConstants.LANGUAGE_CODE_MALAY));
+			auditResDTO.setNewValue(ParameterHelper.getInstance().getParameterDesc(
+					ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+					SourcingConstants.MY_LOCALE));
 		} else {
-			auditResDTO.setOldValue(getParameterDescByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, committeeMember
-					.getMemberRole().getParameterCode(), CommonConstants.LANGUAGE_CODE_MALAY));
+			auditResDTO.setOldValue(ParameterHelper.getInstance().getParameterDesc(
+					ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+					SourcingConstants.MY_LOCALE));
 		}
 		AuditTrailReqDTO auditReqDTORole = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTORole);
