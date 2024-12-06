@@ -1366,13 +1366,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			
 		}
+
 		// #36757 Start Vinod 05/12/2024
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)
 				|| BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
 			validateTierStandardUnitPrice();
 		}
-		// #36757 Start Vinod 05/12/2024
-		
+		// #36757 End Vinod 05/12/2024
+
 		// #11134 - Start
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
@@ -13027,6 +13028,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35078@Syazani -- End 14/09/2023
+
 	// #36757 Start Vinod 05/12/2024
 	/**
 	 * This method will validate unit price for tier standard and zone.
@@ -13037,25 +13039,20 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	private void validateTierStandardUnitPrice() {
 		FacesScopes facesScopes = new FacesScopes();
 
-		boolean showUnitPriceError = checkUnitPriceForProductAndServiceFromQuestions(this
-				.getManagedBean().getProdscQtDoc().getTplSpecMaster())// product
-																		// validation.
-				|| checkUnitPriceForProductAndServiceFromQuestions(this
-						.getManagedBean().getServicescQtDoc()
+		boolean showUnitPriceError = checkUnitPriceForProductAndServiceFromQuestions(this.getManagedBean()
+				.getProdscQtDoc().getTplSpecMaster()) // product validation.
+				|| checkUnitPriceForProductAndServiceFromQuestions(this.getManagedBean().getServicescQtDoc()
 						.getTplSpecMaster());// Service validation.
 
 		if (showUnitPriceError) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] {
-					ResourceBundleUtils.getMessage(
-							QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							facesScopes.getUserLocale()), "" });
+					ResourceBundleUtils.getMessage(QTConstants.LBL_TPL_SPEC_CONTENT_UNIT_PRICE,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), "" });
 		}
 	}
-
 	// #36757 End Vinod 05/12/2024
-	// #36757 Start Vinod 05/12/2024
 
+	// #36757 Start Vinod 05/12/2024
 	/**
 	 * This is the common method to check both product and service if unit price
 	 * is entered or not using questions.
@@ -13066,8 +13063,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 * @return boolean if user key in all the unit price this method returns
 	 *         false if any one is null this method returns true to throw error.
 	 */
-	private boolean checkUnitPriceForProductAndServiceFromQuestions(
-			TplSpecMaster specMaster) {
+	private boolean checkUnitPriceForProductAndServiceFromQuestions(TplSpecMaster specMaster) {
 		TplSpecMaster specMasterLocal = specMaster;
 		List<TplSpecQuestion> questions = specMasterLocal.getTplSpecQuestions();
 
@@ -13076,30 +13072,24 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 		}
 
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
-		String itemType = getParameterDescForReport(specMasterLocal
-				.getItemTypeCode());
-		boolean isProduct = itemType.equals(SSTConstant.produk)
-				|| itemType.equals(SSTConstant.product);
+		String itemType = getParameterDescForReport(specMasterLocal.getItemTypeCode());
+		boolean isProduct = itemType.equals(SSTConstant.produk) || itemType.equals(SSTConstant.product);
 
 		for (TplSpecQuestion question : questions) {
-			boolean isZoneItem = isZonal
-					&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question
-							.getQuestionType());
+			boolean isZoneItem = isZonal && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question.getQuestionType());
 			boolean isProductTier = isProduct
-					&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question
-							.getQuestionType())
-					&& question.getClPriceTypeCode().getParameterCode()
-							.equals(ParameterConst.PRICE_TYPE_TIER);
-			if ((isZoneItem || isProductTier)
-					&& checkUnitPriceisNullForTierAndZoneFromAnswers(question)) {
+					&& TemplateSpecConst.QUESTION_TYPE_ITEM.equals(question.getQuestionType())
+					&& question.getClPriceTypeCode().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER);
+			
+			if ((isZoneItem || isProductTier) && checkUnitPriceisNullForTierAndZoneFromAnswers(question)) {
 				return true;
 			}
 		}
 
 		return false;
 	}
+	// #36757 End Vinod 05/12/2024
 
-	// #36757 Start Vinod 05/12/2024
 	// #36757 Start Vinod 05/12/2024
 
 	/**
@@ -13113,8 +13103,7 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 	 * @return boolean if user key in all the unit price this method returns
 	 *         false if any one is null this method returns true to throw error.
 	 */
-	private boolean checkUnitPriceisNullForTierAndZoneFromAnswers(
-			TplSpecQuestion question) {
+	private boolean checkUnitPriceisNullForTierAndZoneFromAnswers(TplSpecQuestion question) {
 		TplSpecQuestion questionLocal = question;
 
 		if (CollectionUtils.isEmpty(questionLocal.getTplSpecAnswers())) {
@@ -13129,5 +13118,5 @@ if(this.getManagedBean().getScQt().isZonal() && !isComplete){//29007-start
 
 		return false;
 	}
-	// #36757 Start Vinod 05/12/2024
+	// #36757 End Vinod 05/12/2024
 }
