@@ -8,7 +8,9 @@
 	
 	<ui:param name="isQuestionTypeItem" value="#{templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
 	
-	<h:outputText styleClass="instruction" rendered="#{!isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" /><!-- #29187 Added Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<h:outputText styleClass="instruction" rendered="#{!isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<ui:param name="itemSpecInfo" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
 	<tr>
@@ -91,7 +93,7 @@
 			</h:panelGroup>
 		</td>
 	</tr>
-	<!-- #29187 Start Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
 	<tr>
 		<td></td>
 		<td></td>
@@ -109,7 +111,7 @@
 			</h:panelGroup>
 		</td>
 	</tr>
-	<!-- #29187 End Vinod -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 	</table>
 	
 	<br />

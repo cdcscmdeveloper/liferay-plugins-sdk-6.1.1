@@ -1,0 +1,152 @@
+<!-- 29379  - Site Visit Grouping Enhancement -28775 -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<style>
+.splNotesFontInstruction {
+	color: rgb(0, 0, 255);
+	font-weight: italic;
+	float: left
+}
+
+.ui-dialog-content>.ui-icon {
+	display: none;
+}
+</style>
+
+	<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true"
+		id="pnlEmployeeInfo">
+		<h:outputText styleClass="splNotesFontInstruction"
+			value="#{lbl['lbl.sm.insertemployee.instruction']}" escape="false">
+		</h:outputText>
+		<br />
+		<p:dataTable var="empInfo"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{backingBean.managedBean.selectedWorkShopFacility.smSvWorkers}"
+			selection="#{backingBean.managedBean.selectedWorkers}"
+			id="empInfoId" rowKey="#{empInfo}">
+
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteEmpBtnId')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteEmpBtnId')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('deleteEmpBtnId')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('deleteEmpBtnId')}" />
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{not empty backingBean.managedBean.selectedWorkShopFacility.smSvWorkers
+							and !backingBean.managedBean.upsCannotEdit}" />
+
+			<p:column style="white-space:normal;">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.sm.employee.name']}
+				</f:facet>
+				<p:inputText id="empNameId" value="#{empInfo.name}"
+					label="#{lbl['lbl.sm.employee.name']}" size="50"
+					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					maxlength="80" style="width: 80% !important;">
+				</p:inputText><p:message id="empNameIdMsg" for="empNameId"
+								showSummary="true" showDetail="false" display="icon" />
+			</p:column>
+
+			<p:column style="white-space:normal;">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.sm.employee.idtype']}
+				</f:facet>
+				<p:outputPanel>
+
+					<p:selectOneMenu id="empIdTypeId" size="50"
+						label="#{lbl['lbl.sm.employee.idtype']}"
+						required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}"
+						value="#{empInfo.identificationTypeId}"
+						style="width: 80% !important;margin-bottom: 5px !important;">
+						<f:selectItems
+							value="#{backingBean.managedBean.identificationTypes}" />
+						<p:ajax event="change" process="@this" update="pnlIdentType,@this" />
+					</p:selectOneMenu>
+				</p:outputPanel>
+			</p:column>
+
+			<p:column id="icColumn" style="white-space:normal;">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.sm.employee.icno']}
+				</f:facet>
+				<p:outputPanel id="pnlIdentType">
+				<p:inputText id="empIcId" value="#{empInfo.identificationNo}"
+					label="#{lbl['lbl.sm.employee.icno']}"
+					rendered="#{empInfo.identificationTypeId eq '115'}"
+					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					maxlength="12" size="30" style="width: 80% !important;"
+					validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					<p:ajax process="@this" partialSubmit="true" update=":#{p:component('workShopDialogMsg')}" />
+				</p:inputText><p:message id="empIcIdMsg" for="empIcId"
+								showSummary="true" showDetail="false" display="icon" />	
+				<p:inputText id="empPassId" value="#{empInfo.identificationNo}"
+					label="#{lbl['lbl.sm.employee.icno']}"
+					rendered="#{empInfo.identificationTypeId ne '115'}"
+					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					maxlength="12" size="30" style="width: 80% !important;">
+				</p:inputText><p:message id="empPassIdMsg" for="empPassId"
+								showSummary="true" showDetail="false" display="icon" />
+				</p:outputPanel>
+			</p:column>
+
+			<p:column style="white-space:normal;">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.sm.employee.specialization']}
+				</f:facet>
+				<p:inputTextarea id="empSpclId" value="#{empInfo.expertise}"
+					rows="1" cols="30" autoResize="false" maxlength="2000"
+					label="#{lbl['lbl.sm.employee.specialization']}"
+					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					style="width: 75% !important;">
+				</p:inputTextarea><p:message id="empSpclIdMsg" for="empSpclId"
+									showSummary="true" showDetail="false" display="icon" />
+			</p:column>
+
+			<p:column style="white-space:normal;">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					#{lbl['lbl.sm.employee.experience']}
+				</f:facet>
+				<p:inputText id="empExpId" value="#{empInfo.workExpYear}" size="30"
+					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2"
+					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					disabled="#{backingBean.managedBean.upsCannotEdit}"
+					style="width: 80% !important;">
+				</p:inputText><p:message id="empExpIdMsg" for="empExpId"
+								showSummary="true" showDetail="false" display="icon" />
+			</p:column>
+		</p:dataTable>
+
+		<p:outputPanel rendered="#{!backingBean.managedBean.upsCannotEdit}">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+					process="@this,empInfoId" action="#{backingBean.addEmployee}"
+					id="addEmpBtnId" update=":#{p:component('workShopBlockPanel')},@this" />
+
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					partialSubmit="true" process="@this,:#{p:component('workShopBlockPanel')}"
+					disabled="#{empty backingBean.managedBean.selectedWorkers}"
+					id="deleteEmpBtnId" oncomplete="empDeletePopUp.show()"
+					update="@this">
+					<f:param name="disabledValidation" value="true" />
+				</p:commandButton>
+			</div>
+		</p:outputPanel>
+
+	</p:panel>
+</ui:composition>
