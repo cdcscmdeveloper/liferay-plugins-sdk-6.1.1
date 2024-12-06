@@ -110,7 +110,7 @@
 					<p:inputText id="financialAssetsAndLiabilityUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfContracts.userScore}" maxlength="18" required="true"
-						disabled="#{pageDisable or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
+						disabled="#{pageDisable or rejectedSupplier or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
 						style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
 						<!-- 21695, 25138 -end- -->
 						<ac:validateNumber
@@ -155,7 +155,7 @@
 						maxlength="18" style="text-align:right" required="true"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfYears.userScore}"
-						disabled="#{pageDisable or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
+						disabled="#{pageDisable or rejectedSupplier or evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}"
 						rendered="#{companyScoreType eq '2'}">
 						<!-- 21695, 25138 -end- -->
 						<ac:validateNumber

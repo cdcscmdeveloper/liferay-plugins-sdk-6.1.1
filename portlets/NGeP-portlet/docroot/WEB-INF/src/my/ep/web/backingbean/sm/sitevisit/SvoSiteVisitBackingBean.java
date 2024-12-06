@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -46,6 +47,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -59,6 +61,7 @@ import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
 import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -1293,17 +1296,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		SmAddress compAddress = svTask.getSmSvAddress().getAddress();
 		List<SmMofAccount> mofAccountLs = svTask.getSmAppl().getSmSupplier().getSmMofAccounts();
 		
-		if(getManagedBean().getBpmPojo() != null){
-			String poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
-
-			if(StringUtils.isNotBlank(poLoginId)){
-				PmUser poUser = PmCommonUtil.retrieveUserByLoginId(poLoginId);
-
-				if(poUser != null){
-					context.put("poName", poUser.getUserName());
-				}
-			}
-		}
+		context.put("poName", getPOUsername());	//#36721
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("applNo", svTask.getSmAppl().getApplNo());
@@ -3090,4 +3083,32 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		}
 	}
 	// #34166 - End
+	//#36721
+	private String getPOUsername(){
+		if(getManagedBean().getBpmPojo() != null){
+			String poLoginId = ((SMMOFRegDataType)getManagedBean().getBpmPojo()).getPoUsers();
+
+			if(StringUtils.isNotBlank(poLoginId)){
+				PmUser poUser = PmCommonUtil.retrieveUserByLoginId(poLoginId);
+				if(poUser != null){
+					return poUser.getUserName();
+				}
+			}
+		}
+		SmWorkFlowStatusReqDTO reqDTO1 = new SmWorkFlowStatusReqDTO();
+		reqDTO1.setStatusIds(Arrays.asList(SupplierManagementConst.PM_STATUS_PENDING_REVIEW_APPLICATION));
+		reqDTO1.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
+		SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
+				.retrieveWorkflowByDocIdAndMultipleStatus(reqDTO1).getWorkflowStatus();
+		if (wf != null){
+			UserReqDTO reqDTO2 = new UserReqDTO();
+			reqDTO2.setUserId(wf.getChangedBy());
+			PmUser poUser = SmServiceLookup.getUserSO().retrieveUserByUserId(reqDTO2).getPmUser();
+			if (poUser != null){
+				return poUser.getUserName();
+			}
+		}
+		return "";
+	}
+	
 }
