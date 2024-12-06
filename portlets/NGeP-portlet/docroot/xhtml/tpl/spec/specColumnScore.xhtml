@@ -30,15 +30,19 @@
 			<h:outputText value="#{tplSpecAnswer.autoScore}"
 				rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or 
 			isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+				<!-- #35293 -Start- -->
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<!-- #35293 -End- -->
 			</h:outputText>
 
 			<h:outputText value="#{tplSpecAnswer.autoScore}"
 				rendered="#{isSpecTypeTechnical and isZonal and !tplSpecAnswer.notOfferAll or 
 			isSpecTypeTechnical and !isZonal and !tplSpecAnswer.notOfferAll}">
+				<!-- #35293 -Start- -->
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<!-- #35293 -End- -->
 			</h:outputText>
 
 			<!-- Bug #33991 Start-->
@@ -46,8 +50,10 @@
 				rendered="#{isSpecTypeTechnical and tplSpecAnswer.notOfferAll or 
 							isSpecTypeTechnical and tplSpecAnswer.autoScore eq null}">
 				<!-- Bug #33991 End-->
+				<!-- #35293 -Start- -->
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+			    <!-- #35293 -End- -->
 			</h:outputText>
 
 			<h:outputText value="/"
@@ -56,16 +62,20 @@
 			<h:outputText
 				value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 				rendered="#{isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq 'S'}">
+				<!-- #35293 -Start- -->
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<!-- #35293 -End- -->
 			</h:outputText>
 			<c:if
 				test="#{isZonal and isSpecTypeFinancial and evaluationBackingBean.managedBean.speczonedtlReq}">
 				<h:outputText
 					value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 					rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+					<!-- #35293 -Start- -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+					<!-- #35293 -End- -->
 				</h:outputText>
 			</c:if>
 			<c:if
@@ -73,16 +83,20 @@
 				<h:outputText
 					value="#{tplSpecAnswer.tplSpecZoneQty.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 					rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+					<!-- #35293 -Start- -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+					<!-- #35293 -End- -->
 				</h:outputText>
 			</c:if>
 			<c:if test="#{!isZonal and isSpecTypeFinancial}">
 				<h:outputText
 					value="#{tplSpecAnswer.tplSpecQuestion.maxScore* (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 					rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+					<!-- #35293 -Start- -->
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+					<!-- #35293 -End- -->
 				</h:outputText>
 			</c:if>
 			<ui:remove>
@@ -134,8 +148,10 @@
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or tplSpecAnswer.ratePerUom eq 0 or tplSpecAnswer.notOfferAll}">
-					<!-- #28784 -end- --><!-- #25138, #21695 -end- -->			
+					<!-- #28784 -end- --><!-- #25138, #21695 -end- -->	
+				<!-- #35293 -Start- -->		
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" maxIntegerDigits="14"/>
+				<!-- #35293 -End- -->
 				<f:attribute name="min" value="0" />
 				<f:attribute name="max" value="#{(tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString()}" />
 				<p:ajax partialSubmit="true" process="@this" update="@this, userScoreMsg, @(.calcScore)" />
@@ -148,7 +164,9 @@
 					value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 					rendered="#{tplSpecAnswer.tplSpecQuestion.maxScore ne null and (isSpecTypeTechnical and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 or isSpecTypeTechnical and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 or isSpecTypeTechnical and tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification)}">
 					<!-- #28784 -end- --><!-- #25138, #21695 -end- -->
+				<!-- #35293 -Start- -->
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+				<!-- #35293 -End- -->
 				</h:outputText>
 
 				<!-- #25138 - start -->
@@ -157,8 +175,10 @@
 					<h:outputText
 						value="#{tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 						rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+						<!-- #35293 -Start- -->
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+						<!-- #35293 -End- -->
 					</h:outputText>
 				</c:if>
 				<c:if
@@ -166,8 +186,10 @@
 					<h:outputText
 						value="#{tplSpecAnswer.tplSpecZoneQty.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 						rendered="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0}">
+						<!-- #35293 -Start- -->
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+						<!-- #35293 -End- -->
 					</h:outputText>
 				</c:if>
 				<!-- #25138 - end -->
@@ -175,7 +197,9 @@
 				<c:if test="#{!isZonal and isSpecTypeFinancial}">
 				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.maxScore* (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)}"
 								rendered="#{tplSpecAnswer.tplSpecQuestion.clQuantity ne 0}">
+					<!-- #35293 -Start- -->
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(templateSpecBackingBean.hasWeightage(templateSpecBean) ? CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT : CommonConstants.NUMBER_FORMAT_TYPE_INTEGER )}" />
+					<!-- #35293 -End- -->
 				</h:outputText>
 			</c:if>
 			<p:message id="userScoreMsg" for="userScore" display="icon" />
