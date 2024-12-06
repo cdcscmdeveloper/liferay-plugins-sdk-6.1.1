@@ -2399,7 +2399,6 @@ if (CollectionUtils.isNotEmpty(
 	public List<AuditTrailReqDTO> insertCommitteeAuditTrail(AuditTrailResDTO auditResDTO,
 			List<ScCommitteeMember> committeeMembers, String type, IQTAuditTrailSO qtAuditTrailSO) {
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-		IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
 		for (ScCommitteeMember committeeMember : committeeMembers) {
 			auditResDTO.setActionType(type);
