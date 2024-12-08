@@ -18,7 +18,8 @@
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
 			<ac:paginator for="othersFinListId" />
-			
+
+			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty othersFinList.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -36,7 +37,8 @@
 					</tr>
 				</table>
 			</p:column>
-			
+			<ui:remove><!-- 6906 - end --></ui:remove>
+
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:25%;text-align:right;">
 				<h:outputText value="#{othersFinList.totalScore}"></h:outputText>
@@ -57,6 +59,7 @@
 					
 				</f:facet>
 
+				<ui:remove>6906, add disabled -start-</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
 					process="@this" partialSubmit="true"
@@ -67,6 +70,7 @@
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}"
 					disabled="#{isRejected}" />
+				<ui:remove>6906, add disabled -end-</ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
