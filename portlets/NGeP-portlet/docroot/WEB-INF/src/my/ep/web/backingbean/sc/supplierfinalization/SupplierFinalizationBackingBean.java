@@ -1338,12 +1338,13 @@ public class SupplierFinalizationBackingBean extends
 			// 6906 - start - note 117
 			String desicion = scQtFinalization.getDecision() == null ? null : scQtFinalization.getDecision()
 					.getParameterCode();
-			List<String> decisionList = new ArrayList<String>();
+			List<String> decisionList = new ArrayList<>();
 			if (this.getManagedBean().getDecisionDropdown() != null
 					&& this.getManagedBean().getDecisionDropdown().length > 0) {
 				for (SelectItem item : this.getManagedBean().getDecisionDropdown()) {
-					if (item.getValue() != null)
+					if (item.getValue() != null){
 						decisionList.add(item.getValue().toString());
+					}
 				}
 			}
 			if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion)
@@ -2227,12 +2228,13 @@ public class SupplierFinalizationBackingBean extends
 			// 6906 - start - note 117
 			String desicion = scQtFinalization.getDecision() == null ? null : scQtFinalization.getDecision()
 					.getParameterCode();
-			List<String> decisionList = new ArrayList<String>();
+			List<String> decisionList = new ArrayList<>();
 			if (this.getManagedBean().getDecisionDropdown() != null
 					&& this.getManagedBean().getDecisionDropdown().length > 0) {
 				for (SelectItem item : this.getManagedBean().getDecisionDropdown()) {
-					if (item.getValue() != null)
+					if (item.getValue() != null){
 						decisionList.add(item.getValue().toString());
+					}
 				}
 			}
 			if (CollectionUtils.isEmpty(decisionList) || StringUtils.isEmpty(desicion)
@@ -6502,7 +6504,7 @@ public class SupplierFinalizationBackingBean extends
 					recommendCount++;
 				}
 			}
-			this.getManagedBean().setSelectionMode(recommendCount > 0 ? "multiple" : "single");
+			this.getManagedBean().setSelectionMode(recommendCount > 0 ? QTConstants.SELECTION_MODE_MULTIPLE : QTConstants.SELECTION_MODE_SINGLE);
 		}
 		// 33380 - end
 		if (scQtRecommend.isSelected()) {
@@ -10271,48 +10273,39 @@ public class SupplierFinalizationBackingBean extends
 		meetingBB.getManagedBean().setFinalBB(this);
 	}
 	// 25037 - end
-	
+
 	// 6906 - start - note 117
 	private void evaluateDecisionList() {
 		ScQt scQt = this.getManagedBean().getScQt();
 		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTProposalSO.class);
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
+
 		reqDTO.setQtId(scQt.getQtId());
+
 		Long proposalSubmitted = proposalSO.getTotalSubmittedProposal(reqDTO).getTotalSubmitted();
+
 		this.getManagedBean().setNoProposalSubmitted(proposalSubmitted.compareTo(0L) < 0);
+
 		if (!this.getManagedBean().isNoProposalSubmitted()) {
 			List<String> disqualifiedStages = getQTSuppFinalizationSO().retrieveDisqualifiedStages(scQt.getQtId());
 			this.getManagedBean().setDisqualifiedStages(disqualifiedStages);
 		}
+
 		boolean disabledSelection = !((this.getManagedBean().isInitialDecisionFwdToBPK() && !this.getManagedBean()
-				.isReadOnly()) || this.getManagedBean().isSecretaryUser())
-				|| this.isQTMaintenanceScreen();
-				//|| this.getManagedBean().isReversed();
+				.isReadOnly()) || this.getManagedBean().isSecretaryUser()) || this.isQTMaintenanceScreen();
+
 		this.getManagedBean().setDisabledSelection(disabledSelection);
+
 		boolean proposalValid = this.checkProposalValidityDateReach(scQt.getProposalValidityEndDate());
-// 		start - use when 21692 enter production
-//		boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt
-//				.getProposalValidityEndDate());
-//		end - use when 21692 enter production
+
 		if (disabledSelection) {
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-		}
-// 		start - use this when 21692 enter production
-//		else if (proposalValid || meetingDoneBeforeproposalValidityExpired) {
-//			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-//		} else if (!proposalValid && !meetingDoneBeforeproposalValidityExpired) {
-//			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
-//		}
-//		end - use this when 21692 enter production
-
-// 		start - remove this when 21692 enter production
-		else if (proposalValid) {
+		} else if (proposalValid) {
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
 		} else {
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
 		}
-// 		start - remove this when 21692 enter production
 
 		if (this.getManagedBean().getDecisionDropdown() != null
 				&& this.getManagedBean().getDecisionDropdown().length > 0) {
