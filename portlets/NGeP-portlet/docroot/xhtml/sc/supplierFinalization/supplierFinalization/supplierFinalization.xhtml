@@ -32,10 +32,12 @@
 			  value="#{suppFinalizationBackingBean.managedBean.scQt.evaluationType eq ParameterConst.evaluationTypesTwoTier}" />	
 	<ui:param name="hasPresentationDemo" value="#{suppFinalizationBackingBean.managedBean.scQt.demoRequired}" />
 
+	<!-- 6906 note 117 start -->
 	<ui:param name="decisionSupplFinalOrFwdHighAuth"
 		value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
 							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority
 							or empty suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}" />
+	<!-- 6906 note 117 end -->
 	<!-- 25729 -start- -->
 	<ui:param name="expectTotalIndPriceBelowThreshold" 
 			  value="#{suppFinalizationBackingBean.expectTotalIndPriceBelowThreshold(suppFinalizationBackingBean.managedBean.scQt,'SP')}" />
@@ -64,22 +66,25 @@
 				<table>
 					<tr>
 						<td>
-							<ui:param name="disableSelect"
+							<!-- 19287 -start- --> <!-- 6906 note 117 start -->
+							<ui:param
+								name="disableSelect"
 								value="#{suppFinalizationBackingBean.managedBean.disabledSelection}" />
 							<p:selectOneMenu id="decisionType"
 								label="#{lbl['lbl.sc.sf.meeting.decision']}"
 								rendered="#{not empty suppFinalizationBackingBean.managedBean.decisionDropdown}"
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}"
 								disabled="#{disableSelect}" style="width:333px;">
+								<!-- 19287 -end- -->
 								<f:selectItems
 									value="#{suppFinalizationBackingBean.managedBean.decisionDropdown}" />
-								<p:ajax event="change"
-									update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-																     [id$=rePublishPanel],[id$=itemSupplierPanel], [id$=remarksPanel])"
-									listener="#{suppFinalizationBackingBean.decisionEvent}"
-									process="@this" onstart="blockWidget.show();"
-									oncomplete="blockWidget.hide();" />
-							</p:selectOneMenu>
+					   			<!-- 6906 note 117 end -->
+								<!-- 18685 -start- -->
+								<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
+															     [id$=rePublishPanel],[id$=itemSupplierPanel], [id$=remarksPanel])" 
+									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+								<!-- 18685 -end- -->
+				   			</p:selectOneMenu>
 						</td>
 						<td style="margin-top: -3px;">
 							<ac:iconTooltip value="#{lbl['lbl.sc.sf.meeting.decision.tooltip']}" />
@@ -91,9 +96,10 @@
 				
 		<p:outputPanel id="recommendSupplierPanel">
 			<ui:param name="finalizationMethod" value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}" />
+			<!-- 6906 note 117 start -->
 			<ui:param name="supplierFinalizationReadOnly"
 				value="#{suppFinalizationBackingBean.managedBean.supplierFinalizationReadOnly}" />
-
+			<!-- 6906 note 117 end -->
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 				columnClasses="columnWidth20" rendered="#{decisionSupplFinalOrFwdHighAuth}">
 				<h:column>
@@ -104,8 +110,9 @@
 					<table>
 						<tr>
 							<td>
-								 <!-- 19336,25201,17376,19287 -start- -->
-								<p:selectOneRadio id="recommendType" required="true"
+								<!-- 19336,25201,17376,19287,6906 -start- --> 
+								<p:selectOneRadio
+									id="recommendType" required="true"
 									label="#{lbl['lbl.sc.recomend.type']}"
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}"
 									disabled="#{!(isSecretaryUser or
@@ -117,7 +124,7 @@
 																(suppFinalizationBackingBean.managedBean.finalizationMethod eq 
 																	ParameterConst.recommendByOnlineBidding)) ) or suppFinalizationBackingBean.isQTMaintenanceScreen()
 																	or supplierFinalizationReadOnly}">
-									<!-- 19336,25201,17376,19287 -end- -->
+									<!-- 19336,25201,17376,19287,6906 -end- -->
 									<f:selectItems
 										value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<!-- 18685 -start- -->
@@ -147,18 +154,22 @@
 					<table>
 						<tr>
 							<td>
-								<!-- 19336,25201,17376,19287 -start- -->
-								<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
+								<!-- 19336,25201,17376,19287,6906 -start- --> 
+								<p:selectOneMenu
+									id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
 									value="#{suppFinalizationBackingBean.managedBean.finalizationMethod}"
 									disabled="#{!(isSecretaryUser or 
 													isBPKTaskAndClaimed) or isQTStatusReFinalized or suppFinalizationBackingBean.isQTMaintenanceScreen()
 													or supplierFinalizationReadOnly}">
-									<!-- 19336,25201,17376,19287 -end- -->													
-									<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
-									<p:ajax event="change" update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])" 
-										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}" process="@this" 
-										onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-					   			</p:selectOneMenu>
+								<!-- 19336,25201,17376,19287,6906 -end- -->
+									<f:selectItems
+										value="#{suppFinalizationBackingBean.getFinalizationMethodDropDown()}" />
+									<p:ajax event="change"
+										update="@([id$=recommendSupplierPanel],[id$=itemSupplierPanel])"
+										listener="#{suppFinalizationBackingBean.finalizationMethodEvent}"
+										process="@this" onstart="blockWidget.show();"
+										oncomplete="blockWidget.hide();" />
+								</p:selectOneMenu>
 							</td>
 							<td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.recommend.by.package.tooltip']}" />
@@ -175,12 +186,12 @@
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 				</h:column>
 				<h:column>
-					<!-- 19336,25201,17376,19287 -start- -->
+					<!-- 19336,25201,17376,19287,6906 -start- -->
 					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}" 
 						disabled="#{!isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen()
 							or supplierFinalizationReadOnly}">
-					<!-- 19336,25201,17376,19287 -end- -->
+					<!-- 19336,25201,17376,19287,6906 -end- -->
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
@@ -199,12 +210,12 @@
 					<table>
 						<tr>
 							<td>
-								<!-- 19336,25201,17376,19287 -start- -->
+								<!-- 19336,25201,17376,19287,6906 -start- -->
 								<p:selectOneRadio id="reason" layout="grid" columns="1" 
 										required="true" label="#{lbl['lbl.sc.reason']}"
 										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId}"
 										disabled="#{!isSecretaryUser or suppFinalizationBackingBean.isQTMaintenanceScreen() or supplierFinalizationReadOnly}">
-									<!-- 19336,25201,17376,19287 -end- -->
+									<!-- 19336,25201,17376,19287,6906 -end- -->
 									<f:selectItems value="#{suppFinalizationBackingBean.getReasonRadioBtn()}"/>
 									<p:ajax event="change" partialSubmit="true" process="@this" 
 											listener="#{suppFinalizationBackingBean.changeReasonEvent}" 
@@ -229,7 +240,7 @@
 				</h:column>
 
 				<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
-					<!-- 19336,25201,17376,19287 -start- -->
+					<!-- 19336,25201,17376,19287,6906 -start- -->
 					<p:selectOneMenu id="finalizationCommittee"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterId}"
 						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}"
@@ -237,14 +248,14 @@
 										empty suppFinalizationBackingBean.managedBean.scQtFinalization.reason.reasonId 
 										or suppFinalizationBackingBean.isQTMaintenanceScreen()
 										or supplierFinalizationReadOnly}">
-						<!-- 19336,25201,17376,19287 -end- -->
+						<!-- 19336,25201,17376,19287,6906 -end- -->
 						<f:selectItems
 							value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
 						<p:ajax event="change" update="@([id$=committeeSecretary],[id$=reasonLabel],[id$=reason])" 
 							listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}"
 							process="@this" />
 					</p:selectOneMenu>
-					<!-- 19336,25201,17376,19287 -start- -->
+					<!-- 19336,25201,17376,19287,6906 -start- -->
 					<p:selectOneMenu id="committeeSecretary"
 						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId}"
 						required="true" label="#{lbl['lbl.sc.sf.higher.authority']}" 
@@ -253,7 +264,7 @@
 										or suppFinalizationBackingBean.isQTMaintenanceScreen()
 										or supplierFinalizationReadOnly}" 
 						rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
-						<!-- 19336,25201,17376,19287 -end- -->
+						<!-- 19336,25201,17376,19287,6906 -end- -->
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems var="usersSecretary"
 							value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(
@@ -407,6 +418,7 @@
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
+				<ui:remove><!-- 6906 note80 --></ui:remove>
 				<ui:fragment rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and
 				 			  decisionSupplFinalOrFwdHighAuth}">
 				 			  	
@@ -431,10 +443,11 @@
 				<ui:remove> #11134 -end- </ui:remove>
 
 				<td class="tdWidth" valign="top">
+					<!-- 6906 note 117 -->
 					<h:panelGroup id="itemPanel" rendered="#{decisionSupplFinalOrFwdHighAuth and suppFinalizationBackingBean.managedBean.itemize}">
 						<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/itemList.xhtml" />
 					</h:panelGroup>
-					<h:panelGroup id="supplierPanel" rendered="#{decisionSupplFinalOrFwdHighAuth}">
+					<h:panelGroup id="supplierPanel" rendered="#{decisionSupplFinalOrFwdHighAuth}"><!-- 6906 note 117 -->
 						<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/shortlistedSupplierList.xhtml" />
 					</h:panelGroup>
 				</td>

@@ -58,6 +58,7 @@
 				rowKey="#{complianceSample}">
 				<ac:paginator for="complianceSample" />
 
+				<ui:remove><!-- 6906 - start --></ui:remove>
 				<ui:param name="isRejected"
 					value="#{not empty complianceSample.scQtProposal.supplierRejectionRemark}" />
 				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -75,6 +76,7 @@
 						</tr>
 					</table>
 				</p:column>
+				<ui:remove> <!-- 6906 - end --> </ui:remove>				
 
 				<ui:remove> #11104 - start </ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.label.no']}" style="width:40%">
@@ -101,13 +103,13 @@
 						rendered="#{!evaluationBackingBean.sampleChecklistCompleted(complianceSample)}"
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}"
-						disabled="#{isRejected}" />
+						disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
 
 					<p:commandButton value="#{lbl['lbl.btn.view']}"
 						rendered="#{evaluationBackingBean.sampleChecklistCompleted(complianceSample)}"
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}"
-						disabled="#{isRejected}" />
+						disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
 
 				</p:column>
 
