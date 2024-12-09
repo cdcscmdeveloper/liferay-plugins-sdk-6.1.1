@@ -256,7 +256,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
 						if(circularItem.getCtContractItem() != null)
-							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPrice());
+							Collections.sort(circularItem.getCtContractItem().getCtItemPrices()); //#36726
 					}
 				}
 			}
