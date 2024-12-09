@@ -428,6 +428,7 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
+			getManagedBean().setTrackingDairyView(Boolean.TRUE);//#25790
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote != null ? scQuote.getCreatedBy():null).getUserName());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
@@ -8198,6 +8199,12 @@ public class SimpleQuoteBackingBean extends
 				ppBB.getManagedBean().setFromCircularNotice(false);
 				ppBB.getManagedBean().setDifferentModule(false);
 				ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
+				
+				//25790 - start
+				if(getManagedBean().isEditableFlag()){
+					ppBB.getManagedBean().setSqEditableMode(true);
+				}
+				//25790 - end
 				ppBB.getManagedBean().setSupplierItemDocId(getManagedBean().getSupplierItemDocId());
 				final TemplateSpecBean ptsb = new TemplateSpecBean();
 				try {

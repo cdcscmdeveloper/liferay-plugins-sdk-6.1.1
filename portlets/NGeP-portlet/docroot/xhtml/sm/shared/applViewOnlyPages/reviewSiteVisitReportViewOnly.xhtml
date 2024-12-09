@@ -28,6 +28,7 @@
 				<h:outputText rendered="#{svTask.smSvTemplate.suppCategory.otherDesc != null}" 
 					value=" (#{svTask.smSvTemplate.suppCategory.otherDesc})"/>
 				
+				<h:panelGroup rendered="#{svTask.smSvTaskGroups.size() > 0}">
 				<ui:repeat var="svGroup" value="#{svTask.smSvTaskGroups}">
 					<br/>
 					<h:outputText rendered="#{!svGroup.redundant}"
@@ -35,6 +36,7 @@
 					<h:outputText rendered="#{!svGroup.redundant and svGroup.smSvTemplate.suppCategory.otherDesc != null}"
 						value=" (#{svGroup.smSvTemplate.suppCategory.otherDesc})"/>
 				</ui:repeat>
+				</h:panelGroup>
 			</p:column>
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 			<!-- #28175 end -->
