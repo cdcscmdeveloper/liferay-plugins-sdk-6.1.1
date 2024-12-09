@@ -12913,6 +12913,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 
@@ -12961,6 +12962,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 		
 		/*//13320-start
@@ -13018,6 +13020,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 
@@ -13040,6 +13043,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 
@@ -16741,6 +16745,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 	//13320-End	
