@@ -1891,6 +1891,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLoaContract;
 	// 25791-End
 
+	//28895 - 35500 start
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
+	/** The deleted sc qt committee */
+	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	
+	private boolean auditViewRole;
+	//#28895 - 35500 end
+	
+	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
+
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -11862,6 +11876,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
 	
+	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
+		return pmUserDeletedContactPersonList;
+	}
+
+	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
+	}
+
+	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
+		return newScCommitteeMemberAuditTrailList;
+	}
+
+	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
+		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
+	}
+
 	/**
 	 * @return the isFromSubmitCatChange
 	 */
@@ -12113,4 +12143,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.checkLoaContract = checkLoaContract;
 	}
 	// 25791-End
+
+	//#28895 - 35500 start
+	public List<ScCommitteeMember> getDeletedScCommitteeMemberAuditTrailList() {
+		return deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public void setDeletedScCommitteeMemberAuditTrailList(List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList) {
+		this.deletedScCommitteeMemberAuditTrailList = deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public boolean isAuditViewRole() {
+		return auditViewRole;
+	}
+
+	public void setAuditViewRole(boolean auditViewRole) {
+		this.auditViewRole = auditViewRole;
+	}
+	//#28895 - 35500 end
+	
+	/** #36678 related to #35061
+	 * 
+	 * @return
+	 */
+	public boolean isFieldProcurementJustification() {
+		return isFieldProcurementJustification;
+	}
+
+	/** #36678 related to #35061
+	 * @param
+	 */
+	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
+		this.isFieldProcurementJustification = isFieldProcurementJustification;
+	}
 }

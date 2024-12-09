@@ -2265,14 +2265,14 @@ public class TemplateSpecBackingBean extends
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
-								.getAnswerNumeric()).setScale(2, BigDecimal.ROUND_UP);
+								.getAnswerNumeric()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						
 					}
 				}
 
 				if (tplSpecAnswer.getAmountPerYear() != null) {
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-							.getAmountPerYear()).setScale(2, BigDecimal.ROUND_UP);
+							.getAmountPerYear()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 					
 				}
 			}
@@ -3161,7 +3161,7 @@ public class TemplateSpecBackingBean extends
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+										.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -3182,7 +3182,7 @@ public class TemplateSpecBackingBean extends
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		}
@@ -3228,7 +3228,7 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 			}
 			else {
 				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
@@ -3236,7 +3236,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+						.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 				}
 				else {
 					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
@@ -3246,7 +3246,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(RoundIndicativePrice.setScale(2, BigDecimal.ROUND_UP))); // bugs #26234 add decimal point
+								.multiply(RoundIndicativePrice.setScale(2, QTConstants.QT_ROUNDING_MODE)));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					}
 				}
 			}
@@ -5717,13 +5717,15 @@ public class TemplateSpecBackingBean extends
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt().getQtNo();
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
-					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
+					qtNo, SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
 					getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * checking for displaying mandatory specification column.
 	 * 
@@ -5732,14 +5734,16 @@ public class TemplateSpecBackingBean extends
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if (null != this.getManagedBean().getScQt()
+		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId()
-				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
-			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
-				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
-						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId() ? this.getManagedBean()
+				.getScQt().getQtStatus().getStatusId() : Long.MIN_VALUE;
+		if (statusId == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
+			for (TplSpecAnswer tplSpecAnswer : answerList) {
+				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
+				if (questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && isMandatorySpec) {
 					manSpec = true;
 					break;
 				}
@@ -5747,7 +5751,8 @@ public class TemplateSpecBackingBean extends
 		}
 		return manSpec;
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for UOM and quantity details.
 	 * 
@@ -5757,7 +5762,8 @@ public class TemplateSpecBackingBean extends
 	public void showUOMQuantityDetails() {
 		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for zone quantity details.
 	 * 
@@ -5767,7 +5773,8 @@ public class TemplateSpecBackingBean extends
 	public void zoneQuantityPopup() {
 		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * update user score based on compliance.
 	 * 
@@ -5775,7 +5782,8 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void onchangeCompliance(TplSpecAnswer ans) {
-		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+		List<TplSpecAnswer> answerList = this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+		for (TplSpecAnswer answer : answerList) {
 			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
 				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);

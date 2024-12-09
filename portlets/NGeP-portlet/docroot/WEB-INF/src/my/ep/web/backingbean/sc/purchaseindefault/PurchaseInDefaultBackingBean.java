@@ -1711,7 +1711,7 @@ public class PurchaseInDefaultBackingBean extends
 								}
 							}
 						}
-						pidPage = purchaseInDefaultResponsePage; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+						pidPage = purchaseInDefaultRequisitionerResponsePage; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 					}
 				}
 			}

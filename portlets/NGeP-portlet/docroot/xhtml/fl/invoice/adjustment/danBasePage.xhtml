@@ -18,13 +18,23 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{danBackingBean.managedBean.adjustment.status.statusId.longValue() == FulfilmentStatusCont.dnPendingApproval.longValue() 
-		and not empty danBackingBean.managedBean.disciplinaryActionMessage}">
-		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
-		<h:outputText class="ui-messages-info-icon" /><ul><li>
-		<h:outputText class="ui-messages-info-detail" /> #{danBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{danBackingBean.viewDisciplinaryAction(danBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		<!--#26279 Start-->
+		<h:panelGroup layout="block" class="ui-messages ui-widget"
+			rendered="#{not empty danBackingBean.managedBean.disciplinaryActionMessage}">
+			<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+				<h:outputText class="ui-messages-info-icon" />
+				<ul>
+					<li><h:outputText class="ui-messages-info-detail" />
+						#{danBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink
+							id="sharedcommand" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{danBackingBean.viewDisciplinaryAction(danBackingBean.managedBean.smDisciplinaryAction)}"
+							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
+						#{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li>
+				</ul>
+			</h:panelGroup>
 		</h:panelGroup>
-		</h:panelGroup>
+		<!--#26279 End-->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
@@ -59,10 +69,10 @@
 		<table style="width: 100%;">
 			<tr>
 				<td>
-					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+		<!--#36519--><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{danBackingBean.backToPervious}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-						rendered="#{danBackingBean.managedBean.taskId==null}" />
+						rendered="#{danBackingBean.managedBean.taskId==null or danBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" />
 				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">

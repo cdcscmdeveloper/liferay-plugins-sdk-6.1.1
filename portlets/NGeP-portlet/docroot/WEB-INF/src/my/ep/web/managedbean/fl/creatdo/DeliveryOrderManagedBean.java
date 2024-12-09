@@ -146,6 +146,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	//#35508 start
 	private String originalSupplierDoRef;
 	//#35508 end
+	private String backToNtf;//36519
 
 	/**
 	 * Gets the item selected for cal.
@@ -1375,4 +1376,22 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setOriginalSupplierDoRef(String originalSupplierDoRef) {
 		this.originalSupplierDoRef = originalSupplierDoRef;
 	}
+	
+	// 36519-Start
+	/**
+	 * @return the backToNtf
+	 */
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	/**
+	 * @param backToNtf
+	 *            the backToNtf to set
+	 */
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	// 36519-End
+
 }

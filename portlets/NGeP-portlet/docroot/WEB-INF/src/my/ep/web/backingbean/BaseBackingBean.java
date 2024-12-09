@@ -1020,23 +1020,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
 			int i = 1;
-			//#25790 - start
-			Locale localeMY = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
-					CommonConstants.DEFAULT_COUNTRY_CODE);
-			
-			Locale localeEN = new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
-			//#25790 - end
 			for (PmStatusDesc statusDesc : statusDescs) {
-				//#25790 - start
-				items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc
-						.getStatusName()
-						.replace(
-								ResourceBundleUtils.getMessage("lbl.txt.error",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeMY), StringUtils.EMPTY)
-						.replace(
-								ResourceBundleUtils.getMessage("lbl.txt.error",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, localeEN), StringUtils.EMPTY));
-				//#25790 - end
+				//start - 36615 - revert to previous code
+				items[i++] = new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName());
+				//end - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1090,7 +1078,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-	
+
 	/**
 	 * Get Status description by status id.
 	 * 
@@ -2367,34 +2355,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
-	private String[] sortOutcomes(String[] outcomes) {
-		// 25037(29253) - start
-		if (null == outcomes) {
-			return ArrayUtils.EMPTY_STRING_ARRAY;
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
 		}
-		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
-			// last index will appear on the far right,
-			// if outcome not ranked, order come as is,
-			// existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
 
-			@Override
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});
-		String[] bpmOutcomes = new String[bpmActions.size()];
-		return bpmActions.toArray(bpmOutcomes);
-		// 25037(29253) - end
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
 	}
 
 	/**
@@ -3493,6 +3466,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("ssmNewRegNo", this.getManagedBean().getSmSupplier().getSsmNewRegNo());	//#24819
 		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
 		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
@@ -4383,26 +4357,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		generateReport(report, paramMap);
 	}
 	
-	//#28854,#25000 - Start
+	// #28854,#25000 - Start
 	/**
-	 * Processes the given string by replacing newline characters with HTML line break tags
-	 * and encoding the < and > characters to their HTML entity equivalents. If the string
-	 * is null or empty, it returns null.
-	 *
-	 * @param value the string to be processed; may be null
-	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
-	 *         and <, > characters encoded to &lt; and &gt; respectively; {@code null} if the input is null or empty
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null, empty or contains only whitespace, it returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-	    if (value == null || value.isEmpty()) {
-	        return null;
-	    }
-	    // Replace < and > with their HTML entity equivalents
-	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
-	    // Replace newline characters with <br/>
-	    return formatted.replace("\n", "<br/>");
+		if (value == null || value.trim().isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
-	//#28854,#25000 - End
+	// #28854,#25000 - End
 	
 	// #25000 - Start
 	/**

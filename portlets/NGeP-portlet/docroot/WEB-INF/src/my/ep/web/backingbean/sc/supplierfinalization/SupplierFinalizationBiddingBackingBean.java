@@ -3155,11 +3155,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 		Long supplierId = smSupplier.getSupplierId();
 		ScQt scQt = this.getManagedBean().getScQt();
-	
-		IQTSuppFinalizationSO qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);	
 		
-		if(supplierId != null && scQt != null && qtSuppFinalizationSO.isQtIdCheckCurrentSupplierBranchDeleted(supplierId, scQt.getQtId())){
+		if(supplierId != null && scQt != null){
 			return Boolean.TRUE;
 	    }
 		return Boolean.FALSE;

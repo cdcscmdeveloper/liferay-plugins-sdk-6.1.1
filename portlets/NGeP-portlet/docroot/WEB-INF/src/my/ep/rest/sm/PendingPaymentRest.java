@@ -30,9 +30,9 @@ public class PendingPaymentRest {
 	    log.info("Remote host:\t" + remoteHost + " (" + remoteAddr + ":" + remotePort + ")");
 		try {
 			PendingPaymentResDTO resDTO = SmServiceLookup.getPendingPaymentSO().retrievePendingProcess();
-			//#33948 - Start
-			resDTO = SmServiceLookup.getPendingPaymentSO().filterAndUpdateSmPendingProcess(resDTO);
-			//#33948 - End
+			// #36401 - Start
+			resDTO = SmServiceLookup.getPendingPaymentSO().updateSmPendingProcessIsPickup(resDTO);
+			// #36401 - End
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
 				// #36401 - Start
 				log.info("#36401 :: logger :: " + smPendingProcess.getApplId() + "Attempt :: "
@@ -42,6 +42,9 @@ public class PendingPaymentRest {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
 				} catch (Exception e) {
 					smPendingProcess.setAttemp(smPendingProcess.getAttemp() + 1);
+					// #36401 - Start
+					smPendingProcess.setPickup(false);
+					// #36401 - End
 					smPendingProcess.setErrorMsg(e.getMessage());
 					try {
 						SmServiceLookup.getPendingPaymentSO().updateFailPending(smPendingProcess);
@@ -50,10 +53,10 @@ public class PendingPaymentRest {
 					}
 				}
 			}
-			//#36401 - Start
+			// #36401 - Start
 			long endTime = System.currentTimeMillis();
 			log.info("#36401 This function takes " + (endTime - startTime) + " milliseconds");
-			//#36401 - End
+			// #36401 - End
 			return Response.status(200).entity("success calling process pending payment !!").build();
 		} catch (Exception e) {
 			return Response.status(406).entity(e.getMessage()).build();

@@ -184,7 +184,9 @@
 						<p:outputLabel value="#{lbl['lbl.sm.country']}" /> 
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
-					<td><p:selectOneMenu label="#{lbl['lbl.sm.country']}"
+					<td>
+						<!-- #36483 - START - add coordinatePanelId,postCodeCompPanelId in ajax update -->
+						<p:selectOneMenu label="#{lbl['lbl.sm.country']}"
 							style="width: 250px;margin-bottom: 5px;" required="#{!empty param['disableValidation']}"
 							id="smSupCont" disabled="#{(backingBean.managedBean.smAppl.applValidWithSsm ? !backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull : true) or backingBean.managedBean.upsCannotEdit}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId}">
@@ -192,7 +194,7 @@
 							<f:selectItems var="basicCountry" value="#{backingBean.managedBean.countryItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-								update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId" />
+								update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId,coordinatePanelId,postCodeCompPanelId" />
 						</p:selectOneMenu>
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull)}" 
@@ -209,11 +211,14 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td>
+					<td><!-- #36483 - START - add ajax -->
 						<p:inputText size="35" required="true" id="smSupAddr1"
 							maxlength="100" label="#{lbl['lbl.sm.companyaddress']}"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr1', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
+						</p:inputText>
+						<!-- #36483 - END -->
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull)}" 
 							poUser="true" />
@@ -229,6 +234,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>								
+						<!-- #36483 - START - add coordinatePanelId,postCodeCompPanelId in ajax update -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicComState"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
@@ -239,7 +245,7 @@
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 								SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-								update="basHdPan,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity" />
+								update="basHdPan,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity,coordinatePanelId,postCodeCompPanelId" />
 						</p:selectOneMenu> 
 						<ac:ssmShowIconAlertGreen 
 							greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateSsmNull)}" 
@@ -256,10 +262,13 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td>
+					<td><!-- #36483 - START - add ajax -->
 						<p:inputText size="35" maxlength="100" id="smSupAddr2"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr2', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
+						</p:inputText>
+						<!-- #36483 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" 
@@ -274,6 +283,7 @@
 						<h:panelGroup
 							id="divisionCompInfoDropdownPanelId"
 							rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
+							<!-- #36483 - START - add coordinatePanelId,postCodeCompPanelId in ajax update -->
 							<p:selectOneMenu id="basicComDivision" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.division']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
@@ -286,7 +296,7 @@
 									itemLabel="#{division.divisionName}" />
 								<p:ajax event="change" process="@this"
 									listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-									update="basicCompDist,basicCompCity" />
+									update="basicCompDist,basicCompCity,coordinatePanelId,postCodeCompPanelId" />
 							</p:selectOneMenu>
 							<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -301,10 +311,13 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td>
+					<td><!-- #36483 - START - add ajax -->
 						<p:inputText size="35" maxlength="100" id="smSupAddr3"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" />
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr3', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
+						</p:inputText>
+						<!-- #36483 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" 
@@ -316,6 +329,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
+						<!-- #36483 - START - add coordinatePanelId,postCodeCompPanelId in ajax update -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompDist"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
@@ -325,7 +339,7 @@
 							<f:selectItems var="dist" value="#{backingBean.managedBean.basicCompanyDistricts}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-								update="basicCompCity,localAuthInputOutPanelId" />
+								update="basicCompCity,localAuthInputOutPanelId,coordinatePanelId,postCodeCompPanelId" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -345,6 +359,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
+						<!-- #36483 - START - add coordinatePanelId,postCodeCompPanelId in ajax update -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompCity"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
@@ -354,7 +369,7 @@
 							<f:selectItems var="city" value="#{backingBean.managedBean.basicCompanyCities}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
-								update="basicCompCity" />
+								update="basicCompCity,coordinatePanelId,postCodeCompPanelId" />
 						</p:selectOneMenu> 
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
@@ -373,6 +388,7 @@
 					<td><p:outputPanel id="postCodeCompPanelId">
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId==backingBean.managedBean.myCountryId}">
+								<!-- #36483 - add ajax  for smSupPostCodeMy -->
 								<p:inputText maxlength="5" required="true"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeMy"
 									disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull) or backingBean.managedBean.upsCannotEdit}"
@@ -380,6 +396,7 @@
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 									size="35">
 									<f:validator validatorId="postcodeValidator" />
+									<p:ajax event="change" process="@this" listener="#{backingBean.onChangePostcode(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
 								</p:inputText>
 								<ac:ssmShowIconAlertGreen 
 									greenIcon="#{backingBean.showGreenIconSsm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull)}" 
@@ -515,6 +532,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td colspan="3"  >
+					<!-- #36483 START - put coordinate input into panelGroup to update using ajax -->
+					<h:panelGroup id="coordinatePanelId">
 						<script>
 						
 					      function getAddress2() {
@@ -543,6 +562,8 @@
 							longitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" />	
 							<!-- Disable for UPS 32008 - END -->				
+					</h:panelGroup>
+					<!-- #36483 END - put coordinate input into panelGroup to update using ajax -->
 					</td>
 				</tr>
 				

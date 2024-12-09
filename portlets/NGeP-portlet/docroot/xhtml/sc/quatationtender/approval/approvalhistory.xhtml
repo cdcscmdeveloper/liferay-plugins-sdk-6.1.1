@@ -27,10 +27,10 @@
 			<ui:remove>21692 - Start</ui:remove>
 				<h:outputText
 					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}"
-					rendered="#{historyDtls.decessionType eq null}"/>
+					rendered="#{historyDtls.decisionType eq null}"/>
 				<h:outputText
 					value="#{approvalBackingBean.retrieveApproverAction(historyDtls)}"
-					rendered="#{historyDtls.decessionType ne null}"/>
+					rendered="#{historyDtls.decisionType ne null}"/>
 			<ui:remove>21692 - End</ui:remove>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.date']}">
