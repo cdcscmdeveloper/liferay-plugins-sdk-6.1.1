@@ -20,11 +20,6 @@ public class SLALogConstant {
 	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean";
 	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean";
-	// #29187 Start Vinod
-	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
-	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
-	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "SpecificationBackingBean";
-	// #29187 End Vinod
 	
 	// 25037 - start
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
@@ -50,6 +45,9 @@ public class SLALogConstant {
 	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
+	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
+	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "SpecificationBackingBean";
 	// #29187 End Vinod
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";

@@ -183,7 +183,8 @@ public class SuppPerformRptBackingBean extends
 						.setCompanyName(StringUtils.EMPTY);
 			}
 		}*/
-		getManagedBean().setSelectedOrgProfile(null);//24635
+//		getManagedBean().setSelectedOrgProfile(null);//24635
+		getManagedBean().setSelectedSupplierPerformance(null); //#36125
 		getManagedBean().setMofNo(StringUtils.EMPTY);
 		getManagedBean().setRegType(StringUtils.EMPTY);
 		getManagedBean().setEpNo(StringUtils.EMPTY);
