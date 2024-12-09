@@ -1171,6 +1171,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
 				##25025 & 26770 add point 12
 				<tr>
 						<td colspan="3">
@@ -1246,6 +1250,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
 				##25025 & 26770 add point 12
 				<tr>
 						<td colspan="3">
@@ -1283,11 +1291,6 @@ u.underline {
 				</tr>	
 				 ##25025 & 26770 end point 12	
 			 #end	
-				<tr>
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
-				</tr>
-				
 			</table>
 		</tr>
 	</table>
