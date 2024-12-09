@@ -2424,9 +2424,13 @@ if (CollectionUtils.isNotEmpty(
 
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_ROLE);
 			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
-				auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+				auditResDTO.setNewValue(ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+						SourcingConstants.MY_LOCALE));
 			} else {
-				auditResDTO.setOldValue(committeeMember.getMemberRole().getParameterCode());
+				auditResDTO.setOldValue(ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+						SourcingConstants.MY_LOCALE));
 			}
 			AuditTrailReqDTO auditReqDTORole = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTORole);
