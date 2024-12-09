@@ -169,7 +169,7 @@
 					</td>
 					<td>
 						<!-- #34159 - START -->
-						<!-- #36483 - START -- add coordinatePanelId in ajax update -->
+						<!-- #36483 - START - add coordinatePanelId in ajax update -->
 						<p:selectOneMenu label="#{lbl['lbl.sm.country']}"
 							style="width: 250px;margin-bottom: 5px;" required="#{!empty param['disableValidation']}"
 							id="smSupCont" disabled="#{(backingBean.managedBean.smAppl.applValidWithSsm ? !backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countrySsmNull : true) or backingBean.managedBean.upsCannotEdit}"
@@ -220,7 +220,7 @@
 					</td>
 					<td>		
 						<!-- #34159 - START -->						
-						<!-- #36483 - START -- add coordinatePanelId in ajax update -->
+						<!-- #36483 - START - add coordinatePanelId in ajax update -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicComState"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
@@ -271,7 +271,7 @@
 							id="divisionCompInfoDropdownPanelId"
 							rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
 							<!-- #34159 - START -->
-							<!-- #36483 - START -- add coordinatePanelId in ajax update -->
+							<!-- #36483 - START - add coordinatePanelId in ajax update -->
 							<p:selectOneMenu id="basicComDivision" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.division']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.divisionId}"
@@ -319,7 +319,7 @@
 					</td>
 					<td>
 						<!-- #34159 - START -->
-						<!-- #36483 - START -- add coordinatePanelId in ajax update -->
+						<!-- #36483 - START - add coordinatePanelId in ajax update -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompDist"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
@@ -351,7 +351,7 @@
 					</td>
 					<td>
 						<!-- #34159 - START -->
-						<!-- #36483 - START -- add coordinatePanelId in ajax update -->
+						<!-- #36483 - START - add coordinatePanelId in ajax update -->
 						<p:selectOneMenu
 							style="width: 250px;margin-bottom: 5px;" id="basicCompCity"
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
