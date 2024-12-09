@@ -11,7 +11,9 @@
 
 
 	<p:panel id="onerTierTechnicalOrTecSummarySuppliersQualifiedIdsEvaluation" toggleable="true">
-	<ui:param name="isDisqualified" value="#{evaluationBackingBean.renderDisqialified()}" /><!-- #29187 Added Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<ui:param name="isDisqualified" value="#{evaluationBackingBean.renderDisqialified()}" />
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<f:facet name="header">
 			<h:outputText
 				value="#{lbl['lbl.sc.eva.technical.presentation.demo.supplier.qualified.list']}" />
@@ -121,8 +123,10 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 233 --></ui:remove>
 
+			<ui:remove>#29187 updated width Vinod</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:30%;white-space: normal;text-align:right;">
+				<ui:remove>#29187 updated width Vinod</ui:remove>
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
 
 			</p:column>
@@ -137,14 +141,14 @@
 					value="#{empty disQualifiedSupplier.totalRating? 0: disQualifiedSupplier.totalRating}" />
 			</p:column>
 			<ui:remove>28784 - note 122 - add column rating - end</ui:remove>
-			<!-- 29187 Start Vinod-->	
+			<ui:remove>#29187 Start Vinod</ui:remove>	
 			<p:column style="width:25%;white-space: normal;text-align:center;" rendered="#{isDisqualified}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.disqualified']}" />
 				</f:facet>
 				<h:outputText value="#{evaluationBackingBean.isDisqialifiedByCompliance(disQualifiedSupplier) ? lbl['lbl.sc.eva.disqualified.supplier.disqualified.message'] : ''}"/>
 			</p:column>
-			<!-- 29187 End Vinod-->
+			<ui:remove>#29187 End Vinod</ui:remove>
 		</p:dataTable>
 
 		<p:spacer height="10px" />

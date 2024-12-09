@@ -331,7 +331,7 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
 	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
 	// #29007 End Vinod
-	// #29007 Start Vinod
+	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
 	public static final String LBL_TXT_NO = "lbl.txt.no";
@@ -339,7 +339,7 @@ public interface QTConstants {
 	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
 	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
-	// #29007 End Vinod
+	// #29187 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
 	
@@ -403,4 +403,24 @@ public interface QTConstants {
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
  
+	// 25791 -start-
+	public static final String QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";
+	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
+	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
+	public static final int TAB_MAIN_INDEX = 0;
+	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
+	public static final String DATATABLE_QT_DL_LOA_CT_COMPONENT_ID = "ctLoaId";
+	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "laCtdvd";
+	public static final String CONTRACT_STATUS_EFFECTIVE = "lbl.ct.effective";
+	public static final String CONTRACT_STATUS_INACTIVE = "lbl.ct.inactive";
+	public static final String CONTRACT_STATUS_EXPIRED = "lbl.ct.expired";
+	public static final String CONTRACT_STATUS_TERMINATED = "lbl.ct.terminated";
+	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
+	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
+	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	// 25791 -end-
+
+	// #36757 Start Vinod 04/12/2024
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 End Vinod 04/12/2024
 }

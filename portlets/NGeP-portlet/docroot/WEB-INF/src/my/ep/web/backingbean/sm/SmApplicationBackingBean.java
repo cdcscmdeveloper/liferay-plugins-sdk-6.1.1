@@ -187,6 +187,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -6953,6 +6954,29 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
+	
+	// 29379 - Site Visit Grouping Enhancement -28775
+	private void validateAllWorkshops(){
+		if (getManagedBean().getSmAppl() == null || getManagedBean().getSmAppl().getPmStatus() == null
+				|| getManagedBean().getSmAppl().getPmStatus()
+					.getStatusId() != SupplierManagementConst.PM_STATUS_PENDING_APPL_DECLARATION
+				|| EntityHelper.isCollectionEmpty(getManagedBean().getWorkshopFacilitiesVOList())){
+			return;
+		}
+		final int minEmployee = 2;
+		for (PmCategoryL3 cat : getManagedBean().getWorkshopFacilitiesVOList()){
+			if (EntityHelper.isCollectionEmpty(cat.getFacilityList())){
+				continue;
+			}
+			for (SmFacility fac : cat.getFacilityList()){
+				if (EntityHelper.isCollectionEmpty(fac.getSmSvWorkers()) 
+						|| fac.getSmSvWorkers().size() < minEmployee){
+					throw new EpException(
+							SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
+				}
+			}
+		}
+	}
 
 	/**
 	 * Cancel add or update functionality and close the workshop information
@@ -9633,6 +9657,8 @@ public class SmApplicationBackingBean extends
 
 		// validateDontHavePersonnelWithLogin();
 		validateNoChangesBeenMadeToApplication();
+		//#28775 - Site Grouping Enhancement
+		validateAllWorkshops();
 
 		// try {
 		//#28776 - start
@@ -10295,6 +10321,19 @@ public class SmApplicationBackingBean extends
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
+			//#36483 - START
+			if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+				for(SmFacility fac : reqDTO.getSmAppl().getSmFacilities()){
+					if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+						fac.getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+						fac.getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+					}
+				}
+			}
+			//#36483 - END
 			//log.info("******* Save as draft User List to BPM Size *******"
 				//	+ reqDTO.getUserList());
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
@@ -12741,6 +12780,12 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
+	
+	public void onChangePostcode(SmAddress addr, String panelName){
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(addr.getPostcode());
+		}
+	}
 	//#36483 - END
 	
 	/**
@@ -12772,6 +12817,8 @@ public class SmApplicationBackingBean extends
 		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -12809,6 +12856,7 @@ public class SmApplicationBackingBean extends
 		
 		//#36483 - START
 		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType() != null
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
 				&& addr.getStateId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setStateId(addr.getStateId());
@@ -12817,6 +12865,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 			}
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 		
 		/*//13320-start
@@ -12872,6 +12922,8 @@ public class SmApplicationBackingBean extends
 				&& addr.getDistrictId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -12891,6 +12943,8 @@ public class SmApplicationBackingBean extends
 				&& addr.getCityId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -13309,6 +13363,7 @@ public class SmApplicationBackingBean extends
 						.getSmApplSectionReviews()) {
 					if (rev.getRoleType().equalsIgnoreCase(
 							SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+						rev.setChangedBy(getUserIdSessionFromLoginId());//#35759
 						getManagedBean().setPoSecReview(rev);
 						containsSecRev = true;
 					}
@@ -16579,6 +16634,8 @@ public class SmApplicationBackingBean extends
 				&& addr.getDivisionId()!=null){
 			getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
 		//#36483 - END
 	}
 	//13320-End	
@@ -18023,4 +18080,28 @@ public class SmApplicationBackingBean extends
 		}
 	}
 	//#36587 END
+	
+	//#36594 - Start
+	/**
+	 * Set terms and condition message with parameter.
+	 * 
+	 * @return String
+	 */
+	public String setRenewalTnc(String applicationType){
+		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod, new FacesScopes().getUserLocale());
+		String label = "";
+		
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			label = "lbl.sm.renewMof.descData";
+		}else if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			label = "lbl.sm.upgradeMof.descData";
+		}
+		
+		return ResourceBundleUtils.getMessage(
+				label, new String[] {word , String.valueOf(renewalPeriod)},
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
+	}
+	//#36594 - End
 }
