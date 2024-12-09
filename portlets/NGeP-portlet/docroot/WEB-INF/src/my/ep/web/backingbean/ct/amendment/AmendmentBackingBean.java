@@ -4338,6 +4338,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getSelectedItem().setCtItemPrices(itemPrice.getCtItemPrices());
 					//#30879,#31065 for Max QTY & price - End
 					for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
+						log.info("======#36726 method 1 amendmentbackingbean====== :" +ctItemPrice.getItemPriceId()+", "+ctItemPrice.isChangePrice());
 						if(itemPrice.isBrandNew()){
 							ctItemPrice.setItemPriceId(null);
 						}
