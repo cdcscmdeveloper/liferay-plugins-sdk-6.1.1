@@ -11596,12 +11596,12 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		this.getManagedBean().setDisabledSelection(disabledSelection);
 		boolean proposalValid = this.checkProposalValidityDateReach(scQt.getProposalValidityEndDate());
 		boolean meetingDoneBeforeproposalValidityExpired = this.checkMeetingDoneLessThanValidityEndDate(scQt
-				.getProposalValidityEndDate());
+				.getProposalValidityEndDate());// #21692
 		if (disabledSelection) {
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-		} else if (proposalValid || meetingDoneBeforeproposalValidityExpired) {
+		} else if (proposalValid || meetingDoneBeforeproposalValidityExpired) {// #21692
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-		} else if (!proposalValid && !meetingDoneBeforeproposalValidityExpired) {
+		} else if (!proposalValid && !meetingDoneBeforeproposalValidityExpired) {// #21692
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
 		}
 		if (this.getManagedBean().getDecisionDropdown() != null
