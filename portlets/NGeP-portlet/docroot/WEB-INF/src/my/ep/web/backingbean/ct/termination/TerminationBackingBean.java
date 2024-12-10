@@ -817,10 +817,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		context.put("supplierAddress", formatAddress(ctContractVer.getCtContractValue().getSupplierAddress()));
 
 		context.put("contractTitle", getManagedBean().getCtContract().getContractName());
-		context.put(
-				"contractPhysicalNo",
-				formatContractPhysicalNo() != null ? formatContractPhysicalNo() : ResourceBundleUtils.getMessage("lbl.txt.na",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		context.put("contractPhysicalNo", formatContractPhysicalNo() != null ? formatContractPhysicalNo() : "T/B");
 		context.put("contractNo", getManagedBean().getCtContract().getContractNo());
 		context.put("contractAmount", ctContractVer.getCtContractAmount().getContractAmount().toString());
 		context.put("effDate", formatDate(ctContractVer.getCtContractValue().getEffDate()));
