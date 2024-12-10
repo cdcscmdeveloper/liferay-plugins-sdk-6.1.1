@@ -29,11 +29,16 @@
 								<td><p:outputLabel
 										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 										styleClass="mandatory" /></td>
-								<td ><p:inputText
-										maxlength="100" required="true" id="permAdd1"
+								<td >
+									<!-- #36716 - START - change required value -->
+									<p:inputText
+										maxlength="100" required="#{!empty param['disableValidation']}" id="permAdd1"
 										label="#{lbl['lbl.sm.address']}"
 										value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.address1}" 
-										size="35"><p:ajax event="blur" process="@this" partialSubmit="true"/></p:inputText>
+										size="35">
+										<p:ajax event="blur" process="@this" partialSubmit="true"/>
+									</p:inputText>
+									<!-- #36716 - END -->
 									<p:message id="permAdd1Msg" for="permAdd1"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
@@ -171,7 +176,8 @@
 									<p:outputPanel id="basicPermAddPostCodePanelId">
 										<p:outputPanel
 											rendered="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId==forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
-											<p:inputText maxlength="5" required="true"
+											<!-- #36716 - START - change required value -->
+											<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 												label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeMy"
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.postcode}"
 												validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -179,6 +185,7 @@
 												<p:ajax event="blur" process="@this" partialSubmit="true"/>
 												<f:validator validatorId="postcodeValidator" />
 											</p:inputText>
+											<!-- #36716 - END -->
 											<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
 												showSummary="true" showDetail="false" display="icon" />
 										</p:outputPanel>

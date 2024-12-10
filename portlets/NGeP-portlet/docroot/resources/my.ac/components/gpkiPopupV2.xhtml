@@ -14,6 +14,7 @@
 		oncomplete="gpki.setUser(xhr,status,args); "/>
 	<p:remoteCommand name="enableBtn" action="#{gpkiBackingBean.enableBtn()}" update="resendOtpBtn"/>
 	<p:remoteCommand name="disableBtn" action="#{gpkiBackingBean.disableBtn()}" update="resendOtpBtn"/>
+	<p:remoteCommand name="saveNonce" action="#{gpkiBackingBean.saveNonce()}" />
 	<h:outputScript library="ep/gpki_js" name="obfuscate_gpki-api-v2.js" />
 	<h:outputScript library="ep/gpki_js" name="obfuscate_gpkiPopup2.js" />
 
@@ -36,13 +37,13 @@
 		
 		var otpTimeoutId;
 		function disableOtpTimeout(){
-			disableBtn();				
+			disableBtn();
 			$("[id$='gpkiOtpNotes']").show();
 			otpTimeoutId = setTimeout(
 				function() {
 					$("[id$='gpkiOtpNotes']").hide();
 					enableBtn();
-				}, gpki.otpExp() * 1000);
+				}, getTimeoutMillis());
 		}
 		
 		function reset(){
@@ -70,7 +71,7 @@
 			<p:messages id="dlgMessages" for="gpki" showDetail="true" autoUpdate="true" closable="true"/>
 			
 			<div id="gpkiOtpNotes" >
-				<ac:instructionText value="#{lbl['lbl.gpki.otp.notes']}" rendered="#{gpkiBackingBean.isMediumTypeOTP()}"/>
+				<ac:instructionText value="#{gpkiBackingBean.getNotes()}" rendered="#{gpkiBackingBean.isMediumTypeOTP()}"/>
 			</div>
 			
 			<h:panelGrid columns="4" cellpadding="5" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
@@ -79,7 +80,7 @@
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="token()" />
 				
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-				<p:commandButton id="skipBtn1" value="Sign W/O Token"  
+				<p:commandButton id="skipBtn1" value="Sign W/O GPKI"  
 					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 			

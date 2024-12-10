@@ -53,6 +53,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
@@ -195,6 +196,11 @@ public class ViewApplHistoryBackingBean extends
 			
 		}
 		// 25792 - end
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)){
+			initAuditTab();
+		}
+		// #28895_35501 End
 	}
 
 	/**
@@ -204,6 +210,8 @@ public class ViewApplHistoryBackingBean extends
 	public void preRenderViewApplicationHistory() {
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 - AUDIT TRAIL SM
+		checkAuditAccess();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(true);
@@ -648,12 +656,83 @@ public class ViewApplHistoryBackingBean extends
 			getManagedBean().setMofCertLs(
 					SmServiceLookup.getVirtualCertSO()
 							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
+			// #36401 - Start
+			getLatestSmMofCertsIfDuplicate(getManagedBean().getMofCertLs());
+			// #36401 - End
 		} catch (Exception ex) {
 			getManagedBean().setMofCertLs(
 					SmServiceLookup.getVirtualCertSO()
 							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
+			// #36401 - Start
+			getLatestSmMofCertsIfDuplicate(getManagedBean().getMofCertLs());
+			// #36401 - End
 		}
 	}
+	
+	// #36401 - Start
+	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
+	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
+			List<SmMofCert> mofCerts) {
+		List<SmMofCert> cert = new ArrayList<>();
+		List<SmMofCert> bumiCert = new ArrayList<>();
+
+		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
+		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
+
+		for (SmMofCert mofCert : mofCerts) {
+			if (!mofCert.isBumiCert()) {
+				cert.add(mofCert);
+			}
+
+			if (mofCert.isBumiCert()) {
+				bumiCert.add(mofCert);
+			}
+		}
+
+		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
+		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
+
+		// if more than 1 Cert on a same appl_id, need reorder it and means there is duplicate, sort cert by asc order
+		if (cert.size() > 1) {
+			sortCertsListByAsc(cert);
+		}
+
+		// if more than 1 bumiCert on a same appl_id, need reorder it and means there is duplicate, Sort bumiCert by asc order
+		if (bumiCert.size() > 1) {
+			sortCertsListByAsc(bumiCert);
+		}
+
+		if (cert.size() > 1 || bumiCert.size() > 1) {
+			// clear actual list
+			mofCerts.clear();
+
+			if (!cert.isEmpty()) {
+				mofCerts.add(cert.get(0));
+			}
+
+			if (!bumiCert.isEmpty()) {
+				mofCerts.add(bumiCert.get(0));
+			}
+		}
+
+		return mofCerts;
+	}
+
+	/**
+	 * To sort list of smMofCert by asc
+	 * 
+	 * @param smMofCert
+	 */
+	public void sortCertsListByAsc(List<SmMofCert> smMofCert) {
+		Collections.sort(smMofCert, new Comparator<SmMofCert>() {
+			@Override
+			public int compare(SmMofCert cert1, SmMofCert cert2) {
+				return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+			}
+		});
+	}
+
+	// #36401 - End
 
 	/**
 	 * Initialized PO or approver decision info
@@ -664,6 +743,7 @@ public class ViewApplHistoryBackingBean extends
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		for (SmApplSectionReview sectionReview : getManagedBean().getSmAppl()
 				.getSmApplSectionReviews()) {
+			saveSmApplSectionReview(sectionReview);//alter #35759
 			reqDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 			SmWorkflowStatus poWorkflowStatus = workFlowStatusSO.retrieveWorkflowStatusWhenApplicationPendingPOReview(reqDTO)
 					.getWorkflowStatus();
@@ -1845,12 +1925,12 @@ public class ViewApplHistoryBackingBean extends
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
 		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
-		//#34392 - start
+		// #34392 - start
 		getManagedBean().setMandatoryDocsInquiry(
 				new ArrayList<SmApplSupportDocInquiry>());
 		getManagedBean().setNonMandatoryDocsInquiry(
 				new ArrayList<SmApplSupportDocInquiry>());
-		
+
 		for (SmApplSupportDocInquiry doc : applInquiry
 				.getSmApplSupportDocInquiries()) {
 			doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
@@ -1861,37 +1941,9 @@ public class ViewApplHistoryBackingBean extends
 			}
 
 		}
-
-		if(!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())){
-			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
-				@Override
-				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
-					if(doc1.getPmDocument().getDisplaySeq() == null){
-						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
-					}
-					if(doc2.getPmDocument().getDisplaySeq() == null){
-						return -1;
-					}
-					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
-				}
-			});
-		}
-		
-		if(!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())){
-			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>(){
-				@Override
-				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
-					if(doc1.getPmDocument().getDisplaySeq() == null){
-						return (doc2.getPmDocument().getDisplaySeq() == null) ?  0 : 1;
-					}
-					if(doc2.getPmDocument().getDisplaySeq() == null){
-						return -1;
-					}
-					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
-				}
-			});
-		}
-		//#34392 - end
+		sortMandatoryDocsInquiry();
+		sortNonMandatoryDocsInquiry();
+		// #34392 - end
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	//14530
@@ -1902,14 +1954,49 @@ public class ViewApplHistoryBackingBean extends
 	 * 
 	 * @param applInquiry
 	 */
-	public List<SmApplInquiryDocFile> reselectDocFileValue(
-			long applSupportDocInquiryId) {
-		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
-				.getInstance().getServiceObject("sm",
-						ISupportingDocInquirySO.class);
+	public List<SmApplInquiryDocFile> reselectDocFileValue(long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm",
+				ISupportingDocInquirySO.class);
 
-		return reqSO
-				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
+	}
+	
+	public void sortMandatoryDocsInquiry() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())) {
+			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>() {
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if (doc1.getPmDocument().getDisplaySeq() == null) {
+						return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+					}
+					if (doc2.getPmDocument().getDisplaySeq() == null) {
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+							.compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+	}
+
+	public void sortNonMandatoryDocsInquiry() {
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())) {
+			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>() {
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if (doc1.getPmDocument().getDisplaySeq() == null) {
+						return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+					}
+					if (doc2.getPmDocument().getDisplaySeq() == null) {
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+							.compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
 	}
 	// #34392 - end
 	

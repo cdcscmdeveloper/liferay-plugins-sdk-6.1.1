@@ -1654,6 +1654,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#29403 end
 			
+			// #25956 start
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(
+							CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(
+									CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME) || getManagedBean()
+							.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME))) {
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+			}
+			// #25956 end
+			
 			//#13847 start
 			//check & set performance bond deferment
 			chkBondWaivedAttachment();
@@ -4326,6 +4338,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getSelectedItem().setCtItemPrices(itemPrice.getCtItemPrices());
 					//#30879,#31065 for Max QTY & price - End
 					for(CtItemPrice ctItemPrice : itemPrice.getCtItemPrices()){
+						log.info("======#36726 method 1 amendmentbackingbean====== :" +ctItemPrice.getItemPriceId()+", "+ctItemPrice.isChangePrice());
 						if(itemPrice.isBrandNew()){
 							ctItemPrice.setItemPriceId(null);
 						}
@@ -7508,7 +7521,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public boolean isContractAmountAmend() {
 		boolean isContractAmountAmend = false;
-		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() < 20000L){
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() <= 20000L){ //#36635
 			isContractAmountAmend = true;
 		}				
 		return isContractAmountAmend;

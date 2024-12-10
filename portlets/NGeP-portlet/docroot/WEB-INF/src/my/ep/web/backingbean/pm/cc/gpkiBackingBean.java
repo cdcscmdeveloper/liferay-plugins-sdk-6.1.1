@@ -57,6 +57,8 @@ public class gpkiBackingBean implements Serializable {
 	private static String serialNumber = "SERIALNUMBER";
 	private static String sn = "SN";
 	private static String surname = "SURNAME";
+	private static String nonce = "gpkiNonce";
+	private static String nonceTime = "nonceTime";
 	//#35488 - end
 
 	public gpkiBackingBean() {
@@ -251,6 +253,19 @@ public class gpkiBackingBean implements Serializable {
 		RequestContext.getCurrentInstance().addCallbackParam("otpExp", otpExp);
 		RequestContext.getCurrentInstance().addCallbackParam("hostOTP", hostOTP);
 		RequestContext.getCurrentInstance().addCallbackParam("hostBroker", hostBroker);
+		Map<String, Object> map = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+		try {
+			String gpkiNonce = (String) map.get(nonce);
+			if(gpkiNonce != null){
+				RequestContext.getCurrentInstance().addCallbackParam(nonce, gpkiNonce);
+			}
+			Long requestTime = (Long) map.get(nonceTime);
+			if(requestTime != null){
+				RequestContext.getCurrentInstance().addCallbackParam(nonceTime, requestTime);
+			}
+		} catch (Exception e){
+			log.error(e);
+		}
 	}
 	
 	/**
@@ -377,6 +392,17 @@ public class gpkiBackingBean implements Serializable {
 		
 		new LogKey(userIdSession);
 		return userIdSession;
+	}
+	
+	public void saveNonce(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		fc.getExternalContext().getSessionMap().put(nonce, map.get(nonce));
+		fc.getExternalContext().getSessionMap().put(nonceTime, System.currentTimeMillis());
+	}
+	
+	public String getNotes(){
+		return SmCommonUtil.getMessage("lbl.gpki.otp.notes", new String[] {otpExp});
 	}
 	//#35488 - end
 }
