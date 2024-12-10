@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.comparator.ct.CtItemPriceComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -256,7 +257,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
 						if(circularItem.getCtContractItem() != null)
-							Collections.sort(circularItem.getCtContractItem().getCtItemPrices()); //#36726
+							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
 					}
 				}
 			}
