@@ -49,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -190,7 +191,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	
 	// #27397 - start
 	public void validateMofRegNo(String mofNo) {
-		if (StringUtils.isEmpty(mofNo)) {
+		if (mofNo == null && StringUtils.isEmpty(mofNo)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780029);
 		}
 	}
@@ -206,6 +207,9 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				throw new EpException(MessageConst.ERROR_REPORT_780062);
 			} else {
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
+					if(getManagedBean().getSelectedMofAccount() == null){
+						throw new EpException(MessageConst.ERROR_REPORT_780029);
+					}
 					validateMofRegNo(getManagedBean().getSelectedMofAccount().getMofNo()); //30824
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedBasicAccount());
@@ -3383,5 +3387,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 	// #28115 - end
 	
+	// #7754_#35984 - Start
+	public String getZoneByUser() {
+		PmZone zone = SmCommonUtil.getInstance().getUserZone();
+
+		if (zone != null) {
+			getManagedBean().setZone(zone.getZoneName());
+		} else {
+			getManagedBean().setZone(null);
+		}
+
+		log.info("User Zone>>>>>" + getManagedBean().getZone());
+		return getManagedBean().getZone();
+	}
+	// #7754_#35984 - End
 	
 }

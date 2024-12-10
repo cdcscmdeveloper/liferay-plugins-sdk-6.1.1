@@ -48,29 +48,6 @@
 			</td>
 		</tr>
 		</table>
-		<!-- START 35336 -->
-		<c:if test="#{!viewSmApplBackingBean.checkRejectedApplExpired(viewSmApplBackingBean.managedBean.smAppl) 
-        	 	and viewSmApplBackingBean.managedBean.smAppl.recordStatusFlg == 9}">
-			<tr>
-     			<td id="newReplaceAdminMsg" >
-     				<span class="normal">#{lbl['lbl.sm.new.replace.admin.message1']}</span>
-        	 		<span class="bold">#{lbl['lbl.sm.new.replace.admin.message2']} <br/><br/> </span>
-        	 		<span class="normal">#{lbl['lbl.sm.new.replace.admin.message3']}</span>
-    	 		</td>
-  			</tr>
-  		</c:if>
-		<style id="newReplaceAdminMsg" type="text/css">
-        .bold {
-            font-weight: bold;
-            color: red;
-        }
-
-        .normal {
-            font-weight: normal;
-            color: red;
-        }
-    	</style>
-    	<!-- END 35336 -->
     	
 		<p:confirmDialog id="confirmDialog" closable="true"
 			message="#{lbl['lbl.sm.resubmit.url.expired.inprogress.msg']}"

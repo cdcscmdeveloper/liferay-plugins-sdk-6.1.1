@@ -27,20 +27,21 @@
 			<td>
 				<!-- #12483 - START, #34892 -->
 				<ac:smReviseReason bBean="#{backingBean}"/>
+				<!--#34392 Start -->
 				<div style="width: 100%" align="right">
 				<!-- #12483 - END -->
-					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}" rendered="#{backingBean.managedBean.inquirySiteVisitAfter}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-						update=":#{p:component('sendInqDialog')}" />
+						update=":#{p:component('sendInqDialog')}"/>
 				</div>
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>
 		</tr>
 	</table>
 	
-	<p:dialog width="1050px" header="#{lbl['lbl.sm.send.enquiry']}"
+	<p:dialog width="1000px" height="450px" header="#{lbl['lbl.sm.send.enquiry']}"
 		id="sendInqDialog" widgetVar="sendInqDialog" resizable="false"
 		showEffect="fade" hideEffect="fade" modal="true" closable="false">
 					
@@ -50,7 +51,6 @@
 				
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
-		
 				<!-- <p:dataTable var="onTable" id="inquiryMainSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{backingBean.managedBean.missinDocs}">
 					<ac:paginator for="inquiryMainSdList" />
@@ -112,8 +112,8 @@
 					<p:column headerText="#{lbl['lbl.sm.remarks']}"
 						style="width : 27% !important;"
 						rendered="#{table.pmDocument.mandatory}">
-						<h:inputTextarea value="#{table.inquiryRemark}"
-							style="float: left;white-space: normal;width:97% !important;" />
+						<p:inputTextarea value="#{table.inquiryRemark}"
+							style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 					</p:column>
 				</p:dataTable>
 				<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
@@ -135,7 +135,7 @@
 								headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 								style="width : 70% !important;overflow: hidden !important;" />
 							<p:column headerText="#{lbl['lbl.sm.remarks']}"
-								style="width : 27% !important;overflow: hidden !important;" />
+								style="width : 27% !important;overflow: hidden !important;"/>
 						</p:row>
 						<p:row>
 							<p:column
@@ -187,8 +187,8 @@
 					<p:column headerText="#{lbl['lbl.sm.remarks']}"
 						style="width : 27% !important;"
 						rendered="#{!table.pmDocument.mandatory}">
-						<h:inputTextarea value="#{table.inquiryRemark}"
-							style="float: left;white-space: normal;width:97% !important;" />
+						<p:inputTextarea value="#{table.inquiryRemark}"
+							style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 					</p:column>
 				</p:dataTable>
 				<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
@@ -210,7 +210,7 @@
 								headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 								style="width : 70% !important;overflow: hidden !important;" />
 							<p:column headerText="#{lbl['lbl.sm.remarks']}"
-								style="width : 27% !important;overflow: hidden !important;" />
+								style="width : 27% !important;overflow: hidden !important;"/>
 						</p:row>
 						<p:row>
 							<p:column
@@ -223,7 +223,7 @@
 					</p:columnGroup>
 				</p:dataTable>
 			</p:panel>
-			
+			<!--#34392 End -->
 			<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryOtherMainPanelId" 
 				rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
 				<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;

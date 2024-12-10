@@ -3995,6 +3995,8 @@ public class SmCommonUtil {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442 - Site Visit Grouping Enhancement -28775
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442 - Site Visit Grouping Enhancement -28775
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
@@ -4354,6 +4356,58 @@ public class SmCommonUtil {
 		}
 	}
 	
+	//29379 - Site Visit Grouping Enhancement - 28775 -start
+	/**
+	 * Verify MyIdentity with IC only
+	 * @param name
+	 * @param identificationNo
+	 * @return status code
+	 */
+	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
+		reqDTO.setName(name.trim());
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		try{
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerificationIcOnly(reqDTO);
+			log.info("verifyWithMyIdentityICOnly>>>>" + resDTO.getSeverity()
+					+ ">>code>>" + resDTO.getStatusCode());
+			
+			if (!resDTO.getSeverity().equalsIgnoreCase(
+					my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+				switch (resDTO.getStatusCode()) {
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70004":
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+				}
+			}
+			return resDTO.getStatusCode();
+			
+		} catch(Exception ex){
+			String msg = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (msg != null) {
+				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
+			} else {
+				log.error(ex);
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	//29379 - Site Visit Grouping Enhancement - 28775 -end
+	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 		/**
 		 * Verify regNo no with SSM
@@ -4647,25 +4701,20 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
+			//29582, 30064, 35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES,
+					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
-							.getIdentificationType().getParameterCode()
-							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
-				//start #30064
-				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
-						.getIdentificationType().getParameterCode()
-						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
-					per.setIdentificationType(per.getIdentificationType());
-				}else{
-					per.setIdentificationType(ic);
-				}
-				//end #30064
-			} else {
+				per.setIdentificationType(ic);
+			}	else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) 
+					&& per.isPermanentResident()){
+				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
+			}//29582, 30064, 35300 end
+		else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);
@@ -5418,6 +5467,28 @@ public class SmCommonUtil {
 		
 		return resDTO.getSmSupplierCategoryList();
 	}
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param applId
+	 * @param categoryL3Id
+	 * @param applType
+	 * @return supplier categories
+	 */
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
+			Long applId, Long categoryL3Id, String applType){
+	
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setApplId(applId);
+			reqDTO.setCategoryId(categoryL3Id);
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+			return resDTO.getSmSupplierCategoryList();
+		}
+		return retrieveSupplierCategoryByApplIdAndCategoryId(applId, categoryL3Id);
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 	/**
 	 * Gets the my identity status description based on the responsecode.
@@ -6273,18 +6344,17 @@ public class SmCommonUtil {
 			return vCode;
 		}
 		//END 34136
-	// #29582- start
+		
+		//#29582- start
 	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
-		log.info("ssm status: " + resDTO.getStatusCode());
-		if (resDTO.getSmPersonnelAll() != null
-				&& resDTO.getSmPersonnelAll().size() > 0) {
-			boolean errMsg = false;
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
 			StringBuilder sb = new StringBuilder();
 			int i = 0;
+
 			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
 				if (per.getIdentificationTypeSsm() != null) {
-					String ssmTypeDesc = ParameterHelper.getInstance()
-							.getParameterDesc(
+					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
 									ParameterConst.IDENTIFICATION_TYPES_SSM,
 									per.getIdentificationTypeSsm());
 					if (ssmTypeDesc == null) {
@@ -6294,6 +6364,7 @@ public class SmCommonUtil {
 										ParameterConst.IDENTIFICATION_TYPES_SSM,
 										"NA");
 					}
+
 					sb.append("<br/>");
 					sb.append(++i + ". ");
 					sb.append(per.getName() + " ");
@@ -6311,10 +6382,19 @@ public class SmCommonUtil {
 					sb.append(per.getIdentificationTypeSsm() + " = ");
 					sb.append(ssmTypeDesc + ")");
 					sb.append("<br/>");
-					errMsg = true;
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null
+						&& per.getIdentificationType().equals(
+								ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
 				}
 			}
-			if (errMsg) {
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
 				if (resDTO.isBasicAcc()
 						|| SupplierManagementConst.ACC_BASIC.equals(resDTO
 								.getSmAppl().getApplType())) {
@@ -6324,6 +6404,6 @@ public class SmCommonUtil {
 							new String[] { sb.toString() });
 				}
 			}
-		}// #29582- end
-	}
+		}
+	}// #29582- end
 }

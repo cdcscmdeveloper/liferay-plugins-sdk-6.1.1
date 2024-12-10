@@ -68,6 +68,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private List<DisciplinaryActionVO> disciplineVOs;
     private SmDisciplinaryAction smDisciplinaryAction;
     //26279 - end
+    private String searchFunctionType;//36386
 	/**
 	 * Gets the reason descs.
 	 *
@@ -424,4 +425,20 @@ public class StopInstrManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+	// 36386-start
+	/**
+	 * @return the searchFunctionType
+	 */
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	/**
+	 * @param searchFunctionType
+	 *            the searchFunctionType to set
+	 */
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+	// 36386-end
 }

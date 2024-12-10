@@ -11,6 +11,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -45,6 +46,7 @@ public class SmSideMenuIconUtil {
 
 	public static void setSectionEditorVO(SmApplicationManagedBean bean,
 			String sectionType) {
+		SmApplicationUtil.checkOverLappingCategories(bean); //#31018
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
 				//27641, 27736 : Disciplinary Action - #26238 - start 
@@ -64,7 +66,7 @@ public class SmSideMenuIconUtil {
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				
 				bean.getEditVO().setSuppEditCompBasic(false);
-				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
+				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -78,7 +80,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
-				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
+				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -93,7 +95,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
 				bean.getEditVO().setAppEditCompBasic(false);
-				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
+				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -128,7 +130,7 @@ public class SmSideMenuIconUtil {
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditAssocProj(false);
 				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestAppl(), bean.getSmAppl())) {
+						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				// used to check got changes to display supporting doc
@@ -141,7 +143,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
 				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestAppl(), bean.getSupplierAppl())) {
+						bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				/*//#32008
@@ -156,7 +158,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditAssocProj(false);
 				bean.getEditVO().setAppEditAssocProj(false);
 				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestAppl(), bean.getSupplierAppl())) {
+						bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				/*//#32008
@@ -189,7 +191,7 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditPersonnel(false);
-				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
@@ -206,7 +208,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
-				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
@@ -226,7 +228,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				bean.getEditVO().setAppEditPersonnel(false);
-				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
@@ -260,7 +262,7 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditEquity(false);
-				if (step4EquityHasDifference(true, bean.getLatestAppl(),
+				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
@@ -273,7 +275,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
-				if (step4EquityHasDifference(true, bean.getLatestAppl(),
+				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
@@ -288,7 +290,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
 				bean.getEditVO().setAppEditEquity(false);
-				if (step4EquityHasDifference(true, bean.getLatestAppl(),
+				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
@@ -322,7 +324,9 @@ public class SmSideMenuIconUtil {
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditBank(false);
-				if (step5BankHasDifference(true, bean.getLatestAppl(),
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
+				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
@@ -334,7 +338,9 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
-				if (step5BankHasDifference(true, bean.getLatestAppl(),
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
+				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
@@ -348,7 +354,9 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
-				if (step5BankHasDifference(true, bean.getLatestAppl(),
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
+				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
@@ -391,7 +399,7 @@ public class SmSideMenuIconUtil {
 				//27641, 27736 : Disciplinary Action - #26238 - end
 				bean.getEditVO().setSuppEditCategory(false);
 				
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSmAppl()) 
+				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),bean.getSmAppl()) 
 						&& !flagSmDisciplinaryActionIsCancelCategory) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
@@ -405,7 +413,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
+				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				/*//#32008
@@ -418,7 +426,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
 				bean.getEditVO().setAppEditCategory(false);
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
+				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
@@ -436,6 +444,8 @@ public class SmSideMenuIconUtil {
 			//#31230 START
 			if(step6OverlappedCategory(bean.isOverLappedCategoryExists())){
 				bean.getEditVO().setHasOverlapped(true);
+			} else {
+				bean.getEditVO().setHasOverlapped(false); //#31018
 			}
 			//#31230 END
 		} else if (sectionType
@@ -443,7 +453,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
-				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
+				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
@@ -456,7 +466,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
-				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
+				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
@@ -471,7 +481,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
 				bean.getEditVO().setAppEditFacility(false);
-				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
+				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
@@ -491,7 +501,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
-				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
+				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
@@ -504,7 +514,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setDisciplinary(false); //27641 : Disciplinary Action - #26238
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
-				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
+				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
@@ -519,7 +529,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
 				bean.getEditVO().setAppEditEquipment(false);
-				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
+				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
@@ -738,77 +748,37 @@ public class SmSideMenuIconUtil {
 			} else if (sectionType
 					.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 				//24964 & 31043 - start
-				//retVal = ICON_UNTICK; 
 				
 				boolean mandatoryDocVerified = false; 
-				boolean nonMandatoryDocVerified = false; 
+				boolean nonMandatoryDocVerified = true; 
 				boolean licenseMandatoryDocVerified = true; 
 				
 				log.info("SmAppl revise: "+bean.getSmAppl().getPmStatus().getStatusId());
 				
-				//#31043 start
-				/*if(bean.isApproverUser() || bean.isReviewSiteVisit()
-						|| (applStatus.equals(SupplierManagementConst.PM_STATUS_PENDING_REVISE_APPLICATION))){
-					retVal = ICON_TICK;
-					bean.setDocumentVerified(true);
-					mandatoryDocVerified = true; 
-				}
-				else{
-					retVal = ICON_UNTICK;
-				}
-				//#31043 end
-				
-				//24964 & 31043 - end
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
+				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<>();
 				if (!EntityHelper.isCollectionEmpty(bean
 						.getMandatoryLicenseDocs())) {
 					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
 						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
 					}
 				}
-				//24964 & 31043 - start
-				if(!EntityHelper.isCollectionEmpty(bean.getMandatoryDocs())){
-					if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser(),
-							bean.getSmAppl().getApplNo())){
-						mandatoryDocVerified = true;
-					}
-					else{
-						if(bean.isApproverUser()){
-							mandatoryDocVerified = false;
+				
+				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
+					for (SmApplSupportDoc doc : licenseMandatoryDocs) {
+						if(bean.isPoUser() && doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0){
+							licenseMandatoryDocVerified = false;
+							break;
+						}
+						if(bean.isApproverUser() && doc.getVerifiedFlg() != null){
+							doc.setApproverVerifiedFlg(doc.getVerifiedFlg());
+							if(doc.getApproverVerifiedFlg() == 0){
+								licenseMandatoryDocVerified = false;
+								break;
+							}
 						}
 					}
 				}
 				
-				if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
-					if(SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
-							.getNonMandatoryDocs(), bean.getSmAppl()
-							.getSupportingDocMode(), bean.isApproverUser(),
-							bean.getSmAppl().getApplNo())){
-						nonMandatoryDocVerified = true;
-					}
-				} else {
-					nonMandatoryDocVerified = true;
-				}
-				
-				if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
-					if(SmApplicationUtil.isAllSuppDocAlreadyVerified(
-							licenseMandatoryDocs, bean.getSmAppl()
-							.getSupportingDocMode(), bean
-							.isApproverUser(), bean.getSmAppl().getApplNo())){
-						licenseMandatoryDocVerified = true;
-					}
-				} else {
-					licenseMandatoryDocVerified = true;
-				}*/
-				List<SmApplSupportDoc> licenseMandatoryDocs = new ArrayList<SmApplSupportDoc>();
-				if (!EntityHelper.isCollectionEmpty(bean
-						.getMandatoryLicenseDocs())) {
-					for (SmLicenseInfoVO docVO : bean.getMandatoryLicenseDocs()) {
-						licenseMandatoryDocs.addAll(docVO.getLicenseSuppDocs());
-					}
-				}
 				if (SmApplicationUtil.isAllSuppDocAlreadyVerified(bean
 						.getMandatoryDocs(), bean.getSmAppl()
 						.getSupportingDocMode(), bean.isApproverUser())
@@ -848,11 +818,23 @@ public class SmSideMenuIconUtil {
 							else
 								mandatoryDocVerified = false;
 					}
-					if(!EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
-						for (SmApplSupportDoc doc : licenseMandatoryDocs) {
-							if(doc.getVerifiedFlg() != null){
-								if(doc.getVerifiedFlg() == 0){
-									licenseMandatoryDocVerified = false;
+					
+					if(!EntityHelper.isCollectionEmpty(bean.getNonMandatoryDocs())){
+						for (SmApplSupportDoc doc : bean.getNonMandatoryDocs()) {
+							if(doc.getSmApplDocFiles() != null){
+								for(SmApplDocFile docFile : doc.getSmApplDocFiles()){
+									if(bean.isPoUser() && !(" ").equals(docFile.getFilePath()) && (doc.getVerifiedFlg() == null
+											|| (doc.getVerifiedFlg() != null && doc.getVerifiedFlg() == 0)) ){
+										nonMandatoryDocVerified = false;
+										break;
+									}
+									if(bean.isApproverUser() && !(" ").equals(docFile.getFilePath()) && doc.getApproverVerifiedFlg() != null 
+											&& doc.getApproverVerifiedFlg() == 0){
+										nonMandatoryDocVerified = false;
+										break;
+									}
+								}
+								if(!nonMandatoryDocVerified){
 									break;
 								}
 							}
@@ -861,7 +843,7 @@ public class SmSideMenuIconUtil {
 				
 				if(mandatoryDocVerified){
 					retVal = ICON_TICK;
-					if(!licenseMandatoryDocVerified && !EntityHelper.isCollectionEmpty(licenseMandatoryDocs)){
+					if(!licenseMandatoryDocVerified || !nonMandatoryDocVerified){
 						retVal = ICON_UNTICK;
 					}
 				}else{
@@ -1847,6 +1829,8 @@ public class SmSideMenuIconUtil {
 		}
 		
 		bean.getEditVO().setSuppEditBank(false);
+		// #28895_35501 - AUDIT TRAIL SM
+		bean.getEditVO().setSuppEditAuditTrail(false);
 		if (step5BankHasDifference(true, bean.getLatestAppl(), bean.getSmAppl())) {
 			bean.getEditVO().setSuppEditBank(true);
 		}

@@ -66,6 +66,7 @@
 				<!-- #30824 & #29712, #32564 - start -->
 				<ac:lov id="g2g" lovId="SM_RPT_G2G_ACCOUNT"
 					headerText="#{lbl['lbl.rpt.organization.list.lov']}"
+					readonly="true"
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedOrgProfile"
 					conditionField="#{profileOfRegCompanyRptBB.constructConditionFields()}"
@@ -90,6 +91,7 @@
 				<ac:lov id="supplier" lovId="SM_RPT_MOF_ACCOUNT"
 					headerText="#{lbl['lbl.sm.supplov']}"
 					required="true"
+					readonly="true"
 					label="#{lbl['lbl.rpt.mofRegNo']}"
 					value="#{profileOfRegCompanyRptBB.managedBean.selectedMofAccount.mofNo}" 
 					saveObject="profileOfRegCompanyRptBB.managedBean.selectedMofAccount"

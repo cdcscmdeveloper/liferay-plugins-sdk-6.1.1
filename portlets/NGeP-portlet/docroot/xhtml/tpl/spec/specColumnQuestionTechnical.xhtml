@@ -32,9 +32,11 @@
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText
-						value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
-						<!-- #25725 end -->
+						value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" />						
+						<!-- #36238 - start @zaim add id to tooltip to prevent duplicate id in server -->
+						<ac:iconTooltip id="fulfilmentType#{row}TP"
+						value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" />
+						<!-- #25725 & 36238 end -->
 				</f:facet>
 
 			</p:column>

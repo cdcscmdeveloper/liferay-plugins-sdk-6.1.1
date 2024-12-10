@@ -72,7 +72,9 @@ p {text-align: justify;}
 <body>
 
 	<div class='header'>
-		<span class='title-text'>No.Surat Setuju Terima :$loaNo</span>
+		## #25025 #528 -start
+		<span class='title-text'>No. Surat Setuju Terima : $loaNo</span>
+		## #25025 #528 -stop
 	</div>
 	<br />
 	<br />

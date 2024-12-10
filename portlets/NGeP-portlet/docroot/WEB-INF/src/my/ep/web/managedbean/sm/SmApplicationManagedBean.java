@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -607,6 +608,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> selectedRejectReasonDescs;
 	private boolean showDifferenceRejection;
 	// #30974 - END
+
+	// 29379 - Site Visit Grouping Enhancement -28775 - start
+	private SmSvWorker[] selectedWorkers;
+	private List<SmSvWorker> deletedWorkers;
+	// 29379 - Site Visit Grouping Enhancement -28775 - end
+	
+	// #28778 -28775 - Start
+	private boolean specialCategoryRechecked;
+	// #28778 - End
 	
 	//29727
 	private String deleteBranchMsg;
@@ -653,7 +663,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	private List<SmApplSupportDoc> missinDocsMandatory;
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
 	//#34393 - end
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
+	// #34831 - Start
+	private boolean basicSupplier;
+	// #34831 - End
 		
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -734,6 +751,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			
+			// #34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			// #34831 - End
 		}
 
 		defaultAddr = new SmAddress();
@@ -4384,7 +4408,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	// #15629 - END
-	
+
+	// 29379 - Site Visit Grouping Enhancement -28775 START
+	public SmSvWorker[] getSelectedWorkers() {
+		return selectedWorkers;
+	}
+
+	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
+		this.selectedWorkers = selectedWorkers;
+	}
+
+	public List<SmSvWorker> getDeletedWorkers() {
+		return deletedWorkers;
+	}
+
+	public void setDeletedWorkers(List<SmSvWorker> deletedWorkers) {
+		this.deletedWorkers = deletedWorkers;
+	}
+	// 29379 - Site Visit Grouping Enhancement -28775 END
 	//#34135 - START - Commit part from Redmine 29727
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;
@@ -4402,15 +4443,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.deleteBranchMsg = deleteBranchMsg;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
+	public boolean isSpecialCategoryRechecked() {
+		return specialCategoryRechecked;
 	}
 
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
+	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 	
 	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
@@ -4603,6 +4642,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			List<SmApplSupportDoc> missinDocsNonMandatory) {
 		this.missinDocsNonMandatory = missinDocsNonMandatory;
 	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
 	//#34392 - end
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
 
 }

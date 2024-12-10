@@ -157,5 +157,11 @@ public class SSTConstant {
 		 */
 		public static final String LIST_PURCHASE_REQUEST_SST = "PRSSTList";	
 		//35295 @zaim - end
+		//36122 - start
+		/**
+		 * Add whitespace to the text
+		 */
+		public static final String ADD_WHITESPACE = " ";
+		//36122 - end
 		
 }

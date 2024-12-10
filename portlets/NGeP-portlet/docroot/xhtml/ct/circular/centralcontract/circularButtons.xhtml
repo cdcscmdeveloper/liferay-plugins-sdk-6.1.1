@@ -27,7 +27,8 @@
 			<c:if test="#{centralContractBackingBean.managedBean.action eq 'view'}">
 				<td style="text-align: right">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(centralContractBackingBean.managedBean.circularVer.docType, centralContractBackingBean.managedBean.circular.circularId)}"  />
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiaryForCircularContract(centralContractBackingBean.managedBean.circularVer.docType,
+						 centralContractBackingBean.managedBean.circular.circularId, centralContractBackingBean.managedBean.circular.circularNo)}"  /> <!-- #36608 -->
 				</td>
 			</c:if>				
 		</tr>

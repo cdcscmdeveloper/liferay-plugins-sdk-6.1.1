@@ -75,6 +75,12 @@ import org.primefaces.event.FileUploadEvent;
 //#28765 - Start
 //#28765 - End
 import org.primefaces.event.SelectEvent;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -138,6 +144,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
 				.getAgencyName());
 		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
+		reqDTO.setAccType(getManagedBean().getAccType()); //#33129
 
 		//#28765 chained method retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc
 		if (getManagedBean().getAccType().equals(
@@ -344,17 +351,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
-			
-			//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
-			if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
-//					&& resDto.isTerminateSupplier() == false
-					) {
-				// End 28765 comment changes 12981
-				PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
 						.inactiveSupplierRole(getOldAdminReqDTO());
-			} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+			//33129
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && getManagedBean().getSmSupplier().getSmAppl() != null &&
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus() != null &&
+					(getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){ //#34483
 				getManagedBean().setBypassFlag1(1);
 			}
 			//#28765 - End
@@ -788,12 +791,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 						new String[] { getManagedBean().getOldAdmin()
 								.getIdentificationNo() });
 			}
-//			//#29616 -start
-//			//check old admin have active softcert
-//			if (getManagedBean().getOldAdmin().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-//				throw new EpException(MessageConst.ERROR_722685,
-//						new String[] { getManagedBean().getOldAdmin().getName() });
-//			}//#29616 -end
 		}
 		
 		listenerClickStaffRole(); // #33563
@@ -1083,6 +1080,129 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 
+	//#34159 - START
+	public void onChangeCountry(SmAddress addr, String addrType){
+		Long countryId = addr.getPmCountry().getCountryId();
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setPermStates(SmCommonUtil.getStateList(countryId));
+			} else {
+				this.getManagedBean().setPermStates(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+			this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(countryId != null){
+				addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+				this.getManagedBean().setMailStates(SmCommonUtil.getStateList(countryId));
+			} else {
+				this.getManagedBean().setMailStates(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+			this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+		}
+		
+		addr.setPmState(new PmState());
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+	}
+		
+	public void onChangeState(SmAddress addr, String addrType){
+		Long stateId = addr.getPmState().getStateId();
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(stateId));
+					this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+				} else {
+					this.getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(stateId));
+				}
+			} else {
+				addr.setPmState(new PmState());
+				this.getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
+				this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(stateId != null){
+				addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+				if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+					this.getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(stateId));
+					this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+				} else {
+					this.getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(stateId));
+				}
+			} else {
+				addr.setPmState(new PmState());
+				this.getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
+				this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+		}
+		
+		addr.setPmDivision(new PmDivision());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+	}
+		
+	public void onChangeDivision(SmAddress addr, String addrType){
+		Long divisionId = addr.getPmDivision().getDivisionId();
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(divisionId != null){
+				this.getManagedBean().setPermDistricts(SmCommonUtil.getDistrictListByID(divisionId));
+			} else {
+				this.getManagedBean().setPermDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(divisionId != null){
+				this.getManagedBean().setMailDistricts(SmCommonUtil.getDistrictListByID(divisionId));
+			} else {
+				this.getManagedBean().setMailDistricts(new ArrayList<SelectItem>());
+			}
+			this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+			
+		}
+		
+		addr.setPmDistrict(new PmDistrict());
+		addr.setPmCity(new PmCity());
+	}
+		
+	public void onChangeDistrict(SmAddress addr, String addrType){
+		Long districtId = addr.getPmDistrict().getDistrictId();
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)){
+			if(districtId != null){
+				this.getManagedBean().setPermCities(SmCommonUtil.getCityList(districtId));
+			} else {
+				this.getManagedBean().setPermCities(new ArrayList<SelectItem>());
+			}
+		}
+		
+		if(addrType.equals(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)){
+			if(districtId != null){
+				this.getManagedBean().setMailCities(SmCommonUtil.getCityList(districtId));
+			} else {
+				this.getManagedBean().setMailCities(new ArrayList<SelectItem>());
+			}
+		}
+		
+		addr.setPmCity(new PmCity());
+	}
+	//#34159 - END
+		
 	/**
 	 * Set default permanent and mail address to Malaysia
 	 */
@@ -1112,7 +1232,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			//#34159 - START
 			if(perm.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(perm.getSmAddress().getPmDivision().getDivisionId()));
+				getManagedBean().setPermDivisions(SmCommonUtil.getDivisionList(perm.getSmAddress().getPmState().getStateId()));
 			} else {
 				getManagedBean().setPermDivisions(new ArrayList<SelectItem>());
 			}
@@ -1148,7 +1268,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		} else {
 			//#34159 - START
 			if(mail.getSmAddress().getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
-				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(mail.getSmAddress().getPmDivision().getDivisionId()));
+				getManagedBean().setMailDivisions(SmCommonUtil.getDivisionList(mail.getSmAddress().getPmState().getStateId()));
 			} else {
 				getManagedBean().setMailDivisions(new ArrayList<SelectItem>());
 			}
@@ -1283,6 +1403,16 @@ public class ForceReplaceSuppAdminBackingBean extends
 							MessageConst.INFO_721036, null, null);
 				}
 			}
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				getManagedBean().setForceReplace(true);
+				getManagedBean().setOldIdentification(getManagedBean().getReactivateBasic().getIdentificationNo());
+				getManagedBean().setNewIdentifiction(getManagedBean().getReactivateBasic().getNewIdentificationNo());
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), null);
+			}
+			// #28895_35501 End
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
 		}
@@ -1395,25 +1525,37 @@ public class ForceReplaceSuppAdminBackingBean extends
 				country.setCountryId(refAddress.getPmCountry().getCountryId());
 				address.setPmCountry(country);
 				
-				state.setStateId(refAddress.getPmState().getStateId());
+				//#36716 - START
+				if(refAddress.getPmState().getStateId() != null){
+					state = SmCommonUtil.getInstance().getStateById(refAddress.getPmState().getStateId());
+				}
+				//#36716 - END
 				address.setPmState(state);
 				
 				//#34159 - START
-				updateMailAddLists("", refAddress.getPmState().getStateId().toString(), "", "");
+				//#36716 - START
+				onChangeState(address, "M");
 				
-				
-				if(("14").equalsIgnoreCase(refAddress.getPmState().getStateId().toString())){
+				if(refAddress.getPmState().getStateId()!= null &&("14").equalsIgnoreCase(refAddress.getPmState().getStateId().toString())){
+					//#36716 - END
 					division.setDivisionId(refAddress.getPmDivision().getDivisionId());
 					updateMailAddLists("", "",refAddress.getPmDivision().getDivisionId().toString(), "");
 				} else {
 					division.setDivisionId(null);
 				}
 				address.setPmDivision(division);
-				district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
+				
+				//#36716 - START
+				if(refAddress.getPmDistrict().getDistrictId() != null){
+					district = SmCommonUtil.getInstance().getDistrictById(refAddress.getPmDistrict().getDistrictId());
+				}
 				address.setPmDistrict(district);
-				updateMailAddLists("", "", "",refAddress.getPmDistrict().getDistrictId().toString());
+				onChangeDistrict(address, "M");
 				//#34159 - END
-				city.setCityId(refAddress.getPmCity().getCityId());
+				if(refAddress.getPmCity().getCityId() != null){
+					city = SmCommonUtil.getInstance().getCityById(refAddress.getPmCity().getCityId());
+				}
+				//#36716 - END
 				address.setPmCity(city);
 			}
 		}
