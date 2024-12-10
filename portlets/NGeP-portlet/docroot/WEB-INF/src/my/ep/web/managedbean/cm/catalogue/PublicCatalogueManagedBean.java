@@ -106,7 +106,8 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private String lastSearchItemName;
 
 	/** The clone item names. */
-	private List<String> cloneItemNames = new ArrayList<String>();
+	private List<String> cloneItemNames = new ArrayList<>();// SonarLint Issues Fixing...
+
 
 	private int totalRecord = 0;
 
@@ -118,9 +119,9 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private PagingDataModel<Object[]> searchDataModel = new SearchPagingDataModel();
 	
 	private boolean singleCommoditySelected = false;
+	
+	private boolean converterVisible = false;
 	//#10747,#35739 and SonarLint fixing - End
-
-	private String itemTypeParameter;
 	
 	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
@@ -286,10 +287,10 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 
 	
-
+	// SonarLint Issues Fixing- Start
 	public List<CmUnspsc> getFamilyList() {
 		if(familyList==null)
-			familyList = new ArrayList<CmUnspsc>();
+			familyList = new ArrayList<>();
 		return familyList;
 	}
 
@@ -304,7 +305,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	 */
 	public List<VCmPubSuppItem> getCatalogueList() {
 		if(this.catalogueList == null){
-			this.catalogueList = new ArrayList<VCmPubSuppItem>();
+			this.catalogueList = new ArrayList<>();
 		}
 		return catalogueList;
 	}
@@ -517,7 +518,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	 */
 	public List<String> getFamilyCodeList() {
 		if(familyCodeList==null){
-			familyCodeList = new ArrayList<String>();
+			familyCodeList = new ArrayList<>();
 		}
 		return familyCodeList;
 	}
@@ -541,7 +542,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	 */
 	public List<CmUnspsc> getPopularCommodityList() {
 		if(popularCommodityList==null)
-			popularCommodityList = new ArrayList<CmUnspsc>();
+			popularCommodityList = new ArrayList<>();
 		return popularCommodityList;
 	}
 
@@ -564,7 +565,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	 */
 	public List<SelectItem> getBrandCriteria() {
 		if (brandCriteria == null)
-			brandCriteria = new ArrayList<SelectItem>();
+			brandCriteria = new ArrayList<>();
 		return brandCriteria;
 	}
 
@@ -651,7 +652,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	public List<String> getCloneItemNames() {
 
 		if(cloneItemNames==null)
-			cloneItemNames = new ArrayList<String>();
+			cloneItemNames = new ArrayList<>();
 		return cloneItemNames;
 	}
 
@@ -700,11 +701,17 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	public void setSelectedUnspscObj(CmUnspsc selectedUnspscObj) {
 		this.selectedUnspscObj = selectedUnspscObj;
 	}
-
-
+	
+	/**
+	 * Reset searchDataModel
+	 * 
+	 * @param SearchPagingDataModel
+	 *            the new SearchPagingDataModel
+	 */
 	public void reset(){
 		this.setSearchDataModel(new SearchPagingDataModel());
 	}
+	// SonarLint Issues Fixing- End
 
 	public boolean isCloneNameFlag() {
 		return cloneNameFlag;
@@ -729,6 +736,26 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 	public void setSingleCommoditySelected(boolean singleCommoditySelected) {
 		this.singleCommoditySelected = singleCommoditySelected;
+	}
+	
+	/**
+	 * Checks the Converter visible.
+	 * 
+	 * @return true, if is Converter visible view
+	 */
+	public boolean istConverterVisible() {
+		return converterVisible;
+	}
+
+
+	/**
+	 * Sets the Converter visible.
+	 * 
+	 * @param converterVisible
+	 *            the new converterVisible
+	 */
+	public void setConverterVisible(boolean converterVisible) {
+		this.converterVisible = converterVisible;
 	}
 
 	/**

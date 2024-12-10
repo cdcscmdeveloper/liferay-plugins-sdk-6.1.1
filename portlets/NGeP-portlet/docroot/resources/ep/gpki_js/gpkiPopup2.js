@@ -7,6 +7,7 @@ var hostOTP = "";
 var hostBroker = "";
 var gpkiNonce;
 var gpki = {};
+var gpkiRequestTime = 0;
 (function () {
   var nric = "";
   var email = "";
@@ -32,6 +33,11 @@ var gpki = {};
     }
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
+    gpkiNonce = args.gpkiNonce;
+    gpkiRequestTime = Number(args.nonceTime);
+    if (typeof gpkiRequestTime !== "number" || isNaN(gpkiRequestTime)) {
+    	gpkiRequestTime = 0;
+    }
     this.requestMedium();
   };
 
@@ -45,7 +51,7 @@ var gpki = {};
 
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = a[0];
+    text = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
@@ -132,11 +138,13 @@ function parseTxResultRequestOTP(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
-        disableOtpTimeout();
+    	gpkiRequestTime = Date.now();
+    	disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
         gpkiNonce = response.nonce;
-        alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
+        saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
       } else {
+    	disableOtpTimeout();
         showError(obj.status, obj.message);
       }
     });
@@ -187,4 +195,21 @@ function parseTxResultSigningRoaming(msg) {
 function showError(code, msg) {
   errorAction([{ name: 'statusCode', value: code },
                { name: 'statusMsg', value: msg }]);
+}
+
+/**
+ * Get timeout in ms, depending on when OTP was last requested
+ * @returns {Number}
+ */
+function getTimeoutMillis(){
+  const DEFAULT_TIMEOUT = 120 * 1000;
+  try {
+    const timeout = gpki.otpExp() * 1000;
+    const diff = Date.now() - gpkiRequestTime;
+    if (isNaN(timeout) || isNaN(diff) || diff < 0 || diff > timeout) {
+      return DEFAULT_TIMEOUT;
+    }
+	return Math.max(timeout - diff, 0);
+  } catch (e){ }
+  return DEFAULT_TIMEOUT;
 }

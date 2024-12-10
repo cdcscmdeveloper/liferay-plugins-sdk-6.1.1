@@ -298,11 +298,6 @@
 					tabNo="7" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP}"
 					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditEquipment}" />
 			</p:menuitem>
-			<p:menuitem>
-				<ac:smApplMenuItemView bean="#{viewSmApplBackingBean}" label="#{lbl['lbl.audit.link.auditTrail']}"
-					tabNo="8" section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}"
-					suppEdit="#{viewSmApplBackingBean.managedBean.editVO.suppEditAduitTrail}" />
-			</p:menuitem>
 			<!-- 
 			<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			actionListener="#{viewSmApplBackingBean.setTabValue('4',SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
@@ -317,9 +312,17 @@
 			actionListener="#{viewSmApplBackingBean.setTabValue('7',SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 			update=":form" />
 			--><!-- #32008 - end -->
+			<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+			<c:if test="#{!viewSmApplBackingBean.managedBean.viewApplicationHistory and viewSmApplBackingBean.managedBean.auditAccess}">
+				<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)}"
+					update=":form" />
+			</c:if>
+			<ui:remove>#28895_35501 End</ui:remove>
 			<c:if test="#{viewSmApplBackingBean.managedBean.viewApplicationHistory}">
 			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+				actionListener="#{viewSmApplBackingBean.setTabValue('8',SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 				update=":form" />
 			<c:choose>
 				<!-- 14530 START -->
@@ -327,24 +330,10 @@
 					<c:choose>
 					<c:when test="#{viewSmApplBackingBean.checkPoinquiry()}">
 					<p:menuitem value="#{lbl['lbl.sm.sitevist.report']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+						actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 						update=":form" />
 					<p:menuitem value="#{lbl['lbl.sm.inquiry']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
-						update=":form" />
-					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
-						update=":form" />
-					<p:menuitem value="#{lbl['lbl.td.tracking.diary']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('13',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
-						update=":form" />
-					<p:menuitem value="#{lbl['lbl.sm.po.approver.decision']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('14',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
-						update=":form" />
-					</c:when>
-					<c:otherwise>
-					<p:menuitem value="#{lbl['lbl.sm.sitevist.report']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
 						update=":form" />
 					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
@@ -354,6 +343,20 @@
 						update=":form" />
 					<p:menuitem value="#{lbl['lbl.sm.po.approver.decision']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						actionListener="#{viewSmApplBackingBean.setTabValue('13',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
+						update=":form" />
+					</c:when>
+					<c:otherwise>
+					<p:menuitem value="#{lbl['lbl.sm.sitevist.report']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.td.tracking.diary']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+						update=":form" />
+					<p:menuitem value="#{lbl['lbl.sm.po.approver.decision']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC)}"
 						update=":form" />
 					</c:otherwise>
 					</c:choose>
@@ -365,18 +368,8 @@
 							>
 							<p:menuitem value="#{lbl['lbl.sm.inquiry']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
+								actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY)}"
 								update=":form" />
-							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
-								update=":form" />
-							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								actionListener="#{viewSmApplBackingBean.setTabValue('12',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
-								update=":form" />
-								</c:when>
-							<c:otherwise>
 							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
@@ -384,6 +377,16 @@
 							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								actionListener="#{viewSmApplBackingBean.setTabValue('11',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
+								update=":form" />
+								</c:when>
+							<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sm.virtual.cert']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('9',SupplierManagementConst.SM_APPL_PAGE_TYPE_VIRTUAL_CERT)}"
+								update=":form" />
+							<p:menuitem value="#{lbl['lbl.td.tracking.diary']}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								actionListener="#{viewSmApplBackingBean.setTabValue('10',SupplierManagementConst.SM_APPL_PAGE_TYPE_TRACKING_DIARY)}"
 								update=":form" />
 							</c:otherwise>
 							</c:choose>
@@ -422,10 +425,14 @@
 		onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 		actionListener="#{viewSmApplBackingBean.setTabValue('4',null)}"
 		update=":form" />
-		<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}" 
-		onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-		actionListener="#{viewSmApplBackingBean.setTabValue('5',null)}"
-		update=":form" />
+		<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+		<c:if test="#{viewSmApplBackingBean.managedBean.auditAccess}">
+			<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('5', SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)}"
+				update=":form" />
+		</c:if>
+		<ui:remove>#28895_35501 End</ui:remove>
 		</c:if>
 		</c:when>
 		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
@@ -440,10 +447,15 @@
 						update=":form" />
 		<p:menuitem value="#{lbl['lbl.sm.catalogue.info']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						actionListener="#{viewSmApplBackingBean.setTabValue('3',null)}"
-						update=":form" />
-		<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						actionListener="#{viewSmApplBackingBean.setTabValue('4',null)}"
 						update=":form" />	
+		<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+		<c:if test="#{viewSmApplBackingBean.managedBean.auditAccess}">
+			<p:menuitem value="#{lbl['lbl.audit.link.auditTrail']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{viewSmApplBackingBean.setTabValue('4', SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)}"
+				update=":form" />
+		</c:if>
+		<ui:remove>#28895_35501 End</ui:remove>
 		</c:when>
 		</c:choose>
 	</p:tabMenu>

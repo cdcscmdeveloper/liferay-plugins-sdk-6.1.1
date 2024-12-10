@@ -52,12 +52,14 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_EXPIRED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_DOWNGRADE_BASIC);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					schedulerReqDTO.getSmSupplier().setSmAppl(mofAccount.getSmSupplier().getSmAppl());
 					schedulerReqDTO.getSmSupplier().setPrevSuppStatus(mofAccount.getSmSupplier().getRecordStatusFlg());
 
 					try {
@@ -83,12 +85,14 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);
 					schedulerReqDTO.setSchedulerType(SupplierManagementConst.SM_SCHEDULER_MOF_EXPIRED_ONEYEAR);
 					schedulerReqDTO.setSmSupplier(mofAccount.getSmSupplier());
+					schedulerReqDTO.getSmSupplier().setSmAppl(mofAccount.getSmSupplier().getSmAppl());
 
 					try {
 						reqSO.updateExpiredMOFSupplierPersonnel(schedulerReqDTO);
@@ -121,6 +125,7 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
 					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
@@ -151,6 +156,8 @@ public class DowngradeExpMofPersonnelRest {
 					mofAccount.setPrevMofStatus(mofAccount.getRecordStatusFlg());
 					mofAccount.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 					mofAccount.setLastCheckDate(new Date());
+					mofAccount.setChangedBy(null);
+					
 					SmSchedulerReqDTO schedulerReqDTO = new SmSchedulerReqDTO();
 					mofAccount.setNewMofStatus(mofAccount.getRecordStatusFlg());
 					schedulerReqDTO.setMofAccount(mofAccount);

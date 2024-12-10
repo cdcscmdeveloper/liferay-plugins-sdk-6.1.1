@@ -423,29 +423,37 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 /* ***25692#95 - end */
 
 
-/**
- * The method  used to get the specificationMaintenance edit details.
- * @param ScQt scQt.
- * @param Boolean true/false.
- */
-//25037 - start - note 510
-public void editSpecificationMaintenance(ScQt scQt, boolean isEditable){
-	editSpecificationMaintenance(scQt, isEditable, false);
-}
-
-
-public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
-	editSpecificationMaintenance(scQt, isEditable, true,false, null);
-	if(popup){
-		this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
-		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
-			SpecificationBackingBean specBB = new SpecificationBackingBean();
-			specBB.qtChecklistTabChange(10);
-			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
-		}
+	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 */
+	// 25037 - start - note 510
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable) {
+		editSpecificationMaintenance(scQt, isEditable, false);
 	}
-	//25037 - end - note 510
-}
+
+
+	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 * @param popup
+	 */
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
+		editSpecificationMaintenance(scQt, isEditable, true, false, null);
+		if (popup) {
+			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
+			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+				SpecificationBackingBean specBB = new SpecificationBackingBean();
+				specBB.qtChecklistTabChange(10);
+				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			}
+		}
+	// 25037 - end - note 510
+	}
 
 /**
  * The method  used to get the specificationMaintenance edit details.
@@ -544,12 +552,14 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 		specBB.retriveTechnicalCheckList();//#11104-start
 		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip=specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance();//11104Wip
 		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
 		for(ScQtCheckList checkList: technicalChekclist){
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 				.equalsIgnoreCase(checkList.getDefinationType()
 						.getParameterCode())) {
 			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			checkList.setSampleWip(isSampleWip);//11104Wip
 			break;
 
 		}
@@ -649,7 +659,7 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
 		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
-
+		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		
@@ -776,15 +786,16 @@ public boolean renderIcon(ScQt qt) {
 	//1873 note 125 end
 }
 
-private boolean checkStatus(Long statusId){
-	if(QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)){//#25037
-		return false;
+	private boolean checkStatus(Long statusId) {
+		// 25037 - start
+		if (QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)) {
+			return false;
+		}
+		// 25037 - end
+		return isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+
 	}
-	return isQTStatusInBetween(statusId,
-			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-	
-}
 //#115391 - start
 public boolean isSpecCommittee() {
 	return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());

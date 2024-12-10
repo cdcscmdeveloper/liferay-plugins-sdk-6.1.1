@@ -11,7 +11,7 @@
 		<cc:attribute name="dialogHeader" default="#{lbl['lbl.sm.view.history.disciplinary.action.headerlbl']}"/>
 		<cc:attribute name="dialogHeader1" default="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}"/>
 		<cc:attribute name="dialogWidth" default="1100px" />
-		<cc:attribute name="dialogHeight" default="500px" />
+		<cc:attribute name="dialogHeight" default="500" />
 		<cc:attribute name="voList" type="java.util.List" required="true" />
 		<cc:attribute name="mofView" default="true" />
 		<cc:attribute name="dialogMessage" default=""/>
@@ -22,24 +22,29 @@
 		<cc:attribute name="btnView" default="false" />
 	</cc:interface>
 	<cc:implementation>
-	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" closable="true"
+	<p:dialog id="disciplinaryActionHistoryDlgId" 
+		header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" 
+		closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="auto"
-		resizable="false" style="display: block;">		
+		resizable="false" style="display: block; overflow: hidden;">		
 		<p:outputPanel id="disciplinaryActionMsgOP" rendered="#{not empty cc.attrs.dialogMessage}">     
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />
 			<p:spacer height="3" />
 		</p:outputPanel>
+		<ui:param name="isMOF" value="#{empty cc.attrs.voList ? false : cc.attrs.voList.get(0).mofNoExist}" />
 							
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
 		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
-		 style="table-layout: fixed;">
+		 scrollable="#{cc.attrs.voList.size() gt 1}"
+		 scrollHeight="#{cc.attrs.voList.size() gt 5 ? 470 : ''}" 	 
+		 style="table-layout: fixed; width: 97%; margin: 0; padding: 0;">
 			
 	/*  start : 27445 = Disciplinary Actions / history popup window*/
 			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2% !important; vertical-align:top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal !important;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 23% !important; vertical-align:top;white-space: normal !important;">
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.punishment.type']}" style="width : 20% !important; vertical-align:top;white-space: normal !important;">
 				<p:outputLabel rendered="#{disciplinaryAction.warning}" styleClass="outputLabel-view">
 					<h:outputText value="#{lbl['lbl.sm.disciplinary.jktt.warning']}"/>
 					<h:outputText value="," rendered="#{disciplinaryAction.warning and (disciplinaryAction.cancelCategory || 
@@ -87,16 +92,14 @@
 				<ac:labelDateTime styleClass="outputLabel-view" value="#{disciplinaryAction.endDate}"/>
 			</p:column>
 			<!-- 27796: Disciplinary Action - start - 26238 -->
-			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" style="white-space: normal !important; width : 25% !important; vertical-align:top;word-break: break-all;">
+			<p:column headerText="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" 
+				style="white-space: normal !important; width : 25% !important; vertical-align:top;">
 				<h:dataTable value="#{disciplinaryAction.remarksList}" var="remarksList" rendered="#{not empty disciplinaryAction.remarksList}"
 					rowIndexVar="indexCat" emptyMessage="#{lbl['lbl.sm.no.available']}" 
-					style="border: none !important; table-layout: fixed;">
+					style="border: none !important; table-layout: fixed; width: 100%;">
 					<p:column style="border: none !important;">
-						<!-- 26238 - START -->
-						<p:scrollPanel style="height:300px;border:0;" mode="native">
-							<h:outputText value="#{remarksList.remarks}" escape="false" style="white-space:pre-line;"/>
-						</p:scrollPanel>
-						<!-- 26238 - END -->
+						<h:outputText value="#{remarksList.remarks}" escape="false" 
+							style="white-space:pre-line; overflow-wrap: break-word; word-wrap: break-word;"/>
 					</p:column>
 				</h:dataTable>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty disciplinaryAction.remarksList}"/>
@@ -105,7 +108,7 @@
 			<!-- 28613, 28637 -->
 			<!-- 30842 -->
 			<p:column headerText="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" 
-				rendered="#{supplierDataMaintenanceBackingBean.managedBean.viewCatCode || cc.attrs.mofView || cc.attrs.smAppl.supplierType eq 'K' || cc.attrs.smAppl.supplierType eq 'J'}"
+				rendered="#{isMOF}"
 				style="white-space: normal !important;width : 15% !important; vertical-align:top;">
 				<!-- 30842 End -->
 				<h:dataTable value="#{disciplinaryAction.categoryCodeList}" var="suppCat" rendered="#{not empty disciplinaryAction.categoryCodeList}"

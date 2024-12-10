@@ -298,10 +298,11 @@
 											value="#{scQt.tmpExpectedIntendedPrice}" required="#{not empty param['skipsubmitvalidation']}"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											</p:ajax>
-
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"
@@ -1174,12 +1175,26 @@
 					</c:if>
 					<c:if test="#{!expectTotalIndPriceBelowThreshold}">
 						<td>
+						<ui:remove><!-- #36678 related to #35061 Start(to enable field at spec preparation if user change below 50k)--></ui:remove>
+						<c:choose>
+							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING and specificationBackingBean.checkIndPriceBecomeBelow()}">
+							<p:inputTextarea id="justificationProcValueId_2"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
+										cols="110" rows="3"
+										disabled="#{!specificationBackingBean.managedBean.fieldProcurementJustification}">
+							</p:inputTextarea>
+							</c:when> 
+							<c:otherwise>
 							<p:inputTextarea id="justificationProcValueId_2"
 										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
 										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
 										cols="110" rows="3"
 										disabled="true" >
 							</p:inputTextarea>
+							</c:otherwise>
+						</c:choose>
+						<ui:remove> <!-- #36678 related to #35061 End--> </ui:remove> 
 						</td>
 				</c:if>
 				<!--#25729 #142 END -->
@@ -1190,6 +1205,7 @@
 				<tr>
 				<h:panelGroup id="QuotationtenderGeneralSample">
 				<ui:fragment rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+				<ui:fragment rendered="#{specificationBackingBean.managedBean.sampleShowHide}"><!-- 11104-start -->
 					<td>
 					<p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
@@ -1204,6 +1220,7 @@
 			</td>
 			<td style="margin-top: -3px"><ac:iconTooltip
 			value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>	
+			</ui:fragment><!-- 11104-end -->
 			</ui:fragment>	
 			</h:panelGroup>			
 				</tr>
