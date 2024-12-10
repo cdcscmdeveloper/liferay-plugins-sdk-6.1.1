@@ -8,24 +8,29 @@ public class MapKey implements Serializable {
 	
 	private Long zoneId;
 	private Long itemId;
-	private Long supplierId;// 33380
+	private Long supplierId; // 33380, #6906
 
 	public MapKey() {}
 	
 	public MapKey(Long zoneId, Long itemId) {
 		this.zoneId = zoneId;
 		this.itemId = itemId;
-		this.supplierId = 0L;// 33380 - start
+		this.supplierId = 0L; // 33380, #6906
 	}
 
-	// 33380 - start
+	// 33380, #6906 - start
+	/**
+	 * Construct new MapKey with a composite key of supplierId, zoneId, itemId
+	 * @param supplierId
+	 * @param zoneId
+	 * @param itemId
+	 */
 	public MapKey(Long supplierId, Long zoneId, Long itemId) {
 		this.zoneId = zoneId;
 		this.itemId = itemId;
 		this.supplierId = supplierId;
 	}
-
-	// 33380 - end
+	// 33380, #6906 - end
 
 	/**
 	 * @return the zoneId
@@ -61,8 +66,10 @@ public class MapKey implements Serializable {
 	public int hashCode() {
 		int result = ((zoneId == null) ? 0 : zoneId.hashCode());
 		result += ((itemId == null) ? 0 : itemId.hashCode());
-		result += ((supplierId == null) ? 0 : supplierId.hashCode());// 33380
-
+		// 33380, #6906 -start-
+		result += ((supplierId == null) ? 0 : supplierId.hashCode());
+		// 33380, #6906 -end-
+		
 		return result;
 	}
 
@@ -94,10 +101,11 @@ public class MapKey implements Serializable {
 		} else if (!itemId.equals(other.itemId)) {
 			return false;
 		}
+		
 		// 33380 - start
-		if (supplierId == null && other.supplierId != null) {
-			return false;
-		} else if (!supplierId.equals(other.supplierId)) {
+		boolean supplierIsNull = null == supplierId && null != other.supplierId;
+		boolean supplierNotEqual = null != supplierId && !supplierId.equals(other.supplierId);
+		if (supplierIsNull || supplierNotEqual) {
 			return false;
 		}
 		// 33380 - end
@@ -111,10 +119,10 @@ public class MapKey implements Serializable {
 	public String toString() {
 		return "MapKey [itemId=" + (itemId == null ? 0 : itemId) + 
 			   ", zoneId=" + (zoneId == null ? 0 : zoneId) + 
-			   ", supplierId=" + (zoneId == null ? 0 : zoneId) + "]";// 33380
+			   ", supplierId=" + (zoneId == null ? 0 : zoneId) + "]"; //33380, #6906
 	}
 
-	// 33380 - start
+	// 33380, #6906 - start
 	public Long getSupplierId() {
 		return supplierId;
 	}
@@ -122,5 +130,5 @@ public class MapKey implements Serializable {
 	public void setSupplierId(Long supplierId) {
 		this.supplierId = supplierId;
 	}
-	// 33380 - end
+	// 33380, #6906 - end
 }

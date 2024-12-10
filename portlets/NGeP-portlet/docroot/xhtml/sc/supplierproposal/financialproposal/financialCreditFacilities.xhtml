@@ -236,12 +236,14 @@
 						</ui:fragment></td>
 					<td><p:inputText readonly="true" disabled="true" size="25"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
-							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-							id="financialCreditFacilityUserScoreId"
+							rendered="#{ checklistScoreType eq '1'}"></p:inputText> 
+						<ui:remove>6906 -start-</ui:remove>
+						<p:inputText id="financialCreditFacilityUserScoreId"
 							label="#{lbl['lbl.tpl.spec.content.user.score']}"
 							value="#{noOfContracts.userScore}" maxlength="18" required="true"
-							disabled="#{pageDisable}" style="text-align:right"
-							rendered="#{ checklistScoreType eq '2'}">
+							disabled="#{pageDisable or rejectedSupplier}"
+							style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
+							<ui:remove>6906 -end-</ui:remove>
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="14" integerOnly="true" />
