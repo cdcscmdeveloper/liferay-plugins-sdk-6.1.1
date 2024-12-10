@@ -128,7 +128,7 @@
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width:48% !important; overflow: hidden !important;" />
+							style="width:38% !important; overflow: hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"	
 							style="width:11% !important; overflow: hidden !important;"/>
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
@@ -144,7 +144,7 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{backingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:48% !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:38% !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
@@ -248,11 +248,11 @@
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width:48% !important; overflow: hidden !important;" />
+							style="width:38% !important; overflow: hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 							style="width:11% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width:23% !important; overflow:hidden !important;" />
+							style="width:33% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" 
 							style="width:5% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"  
@@ -262,7 +262,7 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{supportingDocInquiryBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:48% !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:38% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
@@ -280,7 +280,7 @@
 						<br />
 					</ui:repeat>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:23% !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:33% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:inputTextarea value="#{table.poRemarks}" disabled="true"
 						style="float:left; white-space:normal; width:97%;" />
 				</p:column>

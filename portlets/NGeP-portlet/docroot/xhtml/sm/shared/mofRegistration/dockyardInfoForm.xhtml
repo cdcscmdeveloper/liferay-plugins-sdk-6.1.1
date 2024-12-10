@@ -14,10 +14,11 @@
 				<table style="width: 100%;">
 					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175 -->
 						    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 					<tr>
@@ -174,11 +175,13 @@
 					</td>
 				</tr>
 				
+				<!-- #34159 - add disableValidation attribute-->
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedDockyardFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.dockFacilityStates}"
 					divisionItems="#{backingBean.managedBean.dockFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.dockFacilityDistricts}" cityItems="#{backingBean.managedBean.dockFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL}" panelId="dockYardBlockPanelId" disabled="#{backingBean.managedBean.upsCannotEdit}"
+					disableValidation="#{param['disableValidation']}"/>
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -300,11 +303,15 @@
 			</table>
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateDockYardToSmAppl}"
 					partialSubmit="true" process="dockYardDialog"
 					onclick="dockyardBlockWidget.show();" oncomplete="dockyardBlockWidget.hide();"
-					update=":#{p:component('smDocDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smDocDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelDockyardSaveorUpdate}"

@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -60,6 +61,7 @@ import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -1287,7 +1289,8 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				List<TplSpecSuppAnswer> tobeDeletedSuppAnswers = new ArrayList<TplSpecSuppAnswer>();
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
-				if (templateSpecBeans.size() > 0) {
+				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {// 28777(35838) - fix sonarqube issue
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
@@ -1355,8 +1358,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							}
 							toDeleteZoneAnswers = null;
 						}
+						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
 				}
+				//#34363 - note 50 - Start - Vinod
+				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
+						&& null != getManagedBean().getQt()
+						&& getManagedBean().getQt().isPartial()) {
+					checkAllUnitPriceForPartialOffer(activeTemplateSpecBeans);
+				}
+				//#34363 - note 50 - End - Vinod
 				proposalReqDTO.setToBeRemovedSpecAnswers(tobeDeletedAnswers);
 				proposalReqDTO.setToBeRemovedSpecSuppAnswers(tobeDeletedSuppAnswers);
 			} else {
@@ -2926,7 +2937,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			if (CollectionUtils.isNotEmpty(zones)) {
 				this.getManagedBean().setZones(zones);
 				// wip doesnt need to execute this code below
-				if (this.getManagedBean().getWipStatusMax() > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				IQTSpecSO	specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+				SpecificationReqDTO specReqDto=new SpecificationReqDTO();
+				specReqDto.setScQt(this.getManagedBean().getQt());
+				if (specSo.checkWipScoreSettingMax(specReqDto) > ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 					if (this.getManagedBean().getQt().isPartial()) {
 						disableDefaultSelected();
 					} else {
@@ -3328,6 +3343,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 											.getSpecZoneId()));
 					TemplateSpecBean templateSpecbean=	getManagedBean().getTemplateSpecBean(); //#28785-start
 					if(null!=templateSpecbean && null!=templateSpecbean.getSpecAnswerList() && templateSpecbean.getSpecAnswerList().size()>0){
+					templateSpecbean.setWordBreakForQT(true);//#29007 Added Vinod
 					List<TplSpecAnswer> specAnswerList=	templateSpecbean.getSpecAnswerList();
 						for(int i=0;i<specAnswerList.size();i++){	
 							if(null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswerList.get(i).getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ 
@@ -3414,6 +3430,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			templateSpecBean.setContentType(reqDTO.getContentType());
 			templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 			templateSpecBean.setSelectedSpecQuestion(null);
+			templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 			//#21695 Farid start(calculation rate per uom reset to 0 if partial offer				
 			this.getManagedBean().getTemplateSpecBackingBean().calcAllSpecAnswerTotalAmount(templateSpecBean);
 			//#21695 Farid end				
@@ -6643,7 +6660,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 				asnwerList.add(retrieveAns);
 			}
 			// Technical Item
-			if (retrieveAns != null && this.getManagedBean().getZones().size() == 1) {
+			if (retrieveAns != null && this.getManagedBean().getZones().size() >= 1) {//#36226 more than 1 zones also included
 				for (TplSpecZoneDtl specZonedtl : this.getManagedBean().getZones()) {
 					if (specZonedtl != null) {
 						for (TplSpecZoneQty specZoneQty : retrieveAns.getTplSpecQuestion().getTplSpecZoneQties()) {
@@ -6651,7 +6668,9 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 							boolean hasPositiveQty = specZoneQty != null && specZoneQty.getQty().compareTo(BigDecimal.ZERO) > 0;
 							boolean hasMatchingSpecZoneId = specZonedtl.getSpecZoneId().equals(specZoneQty.getTplSpecZoneDtl().getSpecZoneId());
 
-							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId) {
+							if (hasDifferentSizes && hasPositiveQty && hasMatchingSpecZoneId
+									&& !retrieveAns.getTplSpecQuestion().getSpecQuestionId()
+									.equals(specquestionidItem)) {//#36226 oncce per item per zone
 								specquestionidItem = retrieveAns.getTplSpecQuestion().getSpecQuestionId();
 								asnwerList.add(retrieveAns);
 							}
@@ -6666,4 +6685,24 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 			templateSpecBean.setSpecAnswerList(asnwerList);
 		}
 	}
+
+	// #34363 - note 50 - Start - Vinod
+	/**
+	 * 
+	 * @param activeTemplateSpecBeans
+	 *            This method is added to validate unit price for all zones if
+	 *            the qt is partial offer
+	 */
+	private void checkAllUnitPriceForPartialOffer(List<TemplateSpecBean> activeTemplateSpecBeans) {
+		List<TemplateSpecBean> templateSpecBeans = activeTemplateSpecBeans;
+		for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
+			for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
+				BigDecimal ratePerUom = specAnswer.getRatePerUom();
+				if (ratePerUom == null) {
+					throw new EpException(MessageConst.ERROR_760464);
+				}
+			}
+		}
+	}
+	// #34363 - note 50 - End - Vinod
 }

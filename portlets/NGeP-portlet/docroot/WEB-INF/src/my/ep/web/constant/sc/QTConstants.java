@@ -3,6 +3,8 @@
  */
 package my.ep.web.constant.sc;
 
+import java.math.RoundingMode;	//Bug #35600@Syazani 19/09/2024
+
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -274,9 +276,10 @@ public interface QTConstants {
 	
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	
-	//25037 QT Bpm Composite Version Validity ID
-	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L; 
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
 
 	//#11104
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
@@ -312,8 +315,25 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
+	public static final String LAMPIRAN_A3_JUSTIFICATION = "Dikemas kini atas sebab ";
+	public static final String LAMPIRAN_A3_FILE_EXTENSION_PDF = ".pdf";
+	public static final String PORTLET_ATTRIBUTE_NEW_OFFERED_SPECIFICATION = "selectedScLoiLoaItem";
+	public static final String REDIRECT_URL_NEW_OFFERED_SPECIFICATION = "/xhtml/sc/loa/directnego/directLoaSuppliersProposalSpecificationUpdatePopup.xhtml";
+	public static final String REDIRECT_URL_NEW_OFFERED_SPECIFICATION_LOA = "/xhtml/sc/loa/loarequest/loaSuppliersProposalSpecificationUpdatePopup.xhtml";
+	public static final String LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE= "lbl.sc.loiloa.suppliers.proposal.specification.update";
+	public static final String LBL_SC_JUSTIFICATION = "lbl.sc.justification";
+	public static final String LBL_SC_LOILOA_SUPPLIER_SPECIFICATION_SAVE = "lbl.sc.loiloa.supplier.specification.save";
+	public static final String LAMPIRAN_A3_TEXT_TB = "T/B";
+	public static final String LAMPIRAN_A3_TEXT_NA = "N/A";
+	public static final String LAMPIRAN_A3_TEXT_SERVICE_SCOPE = "serviceScope";
+	public static final String LAMPIRAN_A3_TEXT_ITEMS_LIST = "itemsList";
+	public static final String LAMPIRAN_A3_TEXT_IS_ZONAL = "isZonal";
+	public static final String LAMPIRAN_A3_TEXT_BEAN = "bean";
+	public static final String LAMPIRAN_A3_TEXT_YA = "Ya";
+	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
+	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
 	//#29007 End Vinod
-	// #29007 Start Vinod
+	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
 	public static final String LBL_TXT_NO = "lbl.txt.no";
@@ -321,7 +341,7 @@ public interface QTConstants {
 	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
 	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
-	// #29007 End Vinod
+	// #29187 End Vinod
 	public static final String CONFIRM_BRIEF_POPUP = "confirmBriefPopup.show()";//sonarQube Issue 2 #91 # Vinod #Added
 	
 	//#25726 - reopen note 110
@@ -382,4 +402,61 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	public static final String PORTLET_ID = "PORTLET_ID";
+	public static final String PORTLET_NAME_CREATE = "createmanualsourcing";
+	public static final String PORTLET_NAME_REVIEW = "reviewmanualsourcing";
+	public static final String  USER_PTJ_POPUP_HIDE = "userPtjPopup.hide();";
+	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A = "lbl.sc.category.has.changes.on.prerender.view.2.a";
+	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
+	//#29732 -End
+	
+	//Bug #35688@Syazani 10/07/2024 -- Start
+	public static final String TAB_SC_GENERAL_INFORMATION = "0";
+	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
+	public static final String TAB_SC_TECHNICAL_CHECKLIST = "2";
+	public static final String TAB_SC_FINANCIAL_CHECKLIST = "3";
+	public static final String TAB_SC_TECHNICAL_SCORING = "4";
+	public static final String TAB_SC_FINANCIAL_SCORING = "5";
+	public static final String TAB_SC_OVERALL_SCORING = "6";
+	public static final String TAB_SC_DELIVERY_ADDRESS = "7";
+	public static final String TAB_SC_PAYMENT_DEDUCTION = "8";
+	public static final String TAB_SC_FULFILMENT_SCHEDULE = "9";
+	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "10";
+	//Bug #35688@Syazani 10/07/2024 -- End
+
+	// 25791-start
+	public static final String QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";
+	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
+	public static final String LOA_CT_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewLOAContractList.xhtml";
+	public static final int TAB_MAIN_INDEX = 0;
+	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
+	public static final String DATATABLE_QT_DL_LOA_CT_COMPONENT_ID = "ctLoaId";
+	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "laCtdvd";
+	public static final String CONTRACT_STATUS_EFFECTIVE = "lbl.ct.effective";
+	public static final String CONTRACT_STATUS_INACTIVE = "lbl.ct.inactive";
+	public static final String CONTRACT_STATUS_EXPIRED = "lbl.ct.expired";
+	public static final String CONTRACT_STATUS_TERMINATED = "lbl.ct.terminated";
+	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
+	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
+	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	// 25791-End
+	
+	// 36671 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671 - end
+	
+	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+	
+	//36678
+	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	// #36757 Start Vinod 04/12/2024
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 Start Vinod 04/12/2024
+	
 }

@@ -18,7 +18,7 @@ import my.ep.dto.pm.common.report.RPTRequestResDTO;//#32675 - shaqimi
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.sm.SmPersonnel;
+//import my.ep.persistence.entity.sm.SmPersonnel; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;//#32675 - shaqimi
@@ -246,10 +246,10 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					ccContractItemMonitoringRptBB.getManagedBean().setSelectedPTJ(getManagedBean().getSelectedPTJ());
 					//cc
 					ccContractItemMonitoringRptBB.getManagedBean().setDisableMinistryField(true);
-					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
+					ccContractItemMonitoringRptBB.getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 					//mc
 					getManagedBean().setDisableMinistryField(true);
-					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())? true:false);
+					getManagedBean().setDisableOrgField(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()));//Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 				}
 				
 				else if (getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
@@ -338,8 +338,8 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 					// cc
 					ctManagementReportBB.getManagedBean().setDisableMinistryField(true);
 					ctManagementReportBB.getManagedBean().setDisableOrgField(
-							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) ? true : false);
-
+							getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())); //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+					ctManagementReportBB.getManagedBean().setSupplierVisible(true);
 				}
 			}
 			else if (getManagedBean().getReportCode().equalsIgnoreCase(CtReportConst.CT_CONTRACT_MANAGEMENT_RPT_CC_VAL)) {

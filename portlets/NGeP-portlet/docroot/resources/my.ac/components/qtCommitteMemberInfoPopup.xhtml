@@ -15,19 +15,17 @@
 		<ui:param name="bBean" value="#{cc.attrs.bBean}" />
 		<ui:param name="widget" value="#{cc.attrs.widget}" />
 		<style>
-.dialogContainer {
-	width: 70% !important;
-}
-
-.gridContainer {
-	width: 100%;
-}
-
-.sp-centered {
-	text-align: center;
-	display: block;
-}
-</style>
+			.dialogContainer {
+				width: 70% !important;
+			}
+			.gridContainer {
+				width: 100%;
+			}
+			.sp-centered {
+				text-align: center;
+				display: block;
+			}
+		</style>
 		<p:dialog id="memberInfoPopup"
 			header="#{lbl['lbl.sc.committee.add.member.search.header.user.info'].toUpperCase()}"
 			closable="true" widgetVar="#{widget}" modal="true"

@@ -11,7 +11,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 		id="InqSuppDocPanel">
-
+		<!--#34392 Start -->
 		<!-- <p:dataTable var="onTable" id="inqSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.missinDocs}">
 			<ac:paginator for="inqSdList" />
@@ -72,8 +72,8 @@
 			<p:column headerText="#{lbl['lbl.sm.remarks']}"
 				style="width : 27% !important;"
 				rendered="#{table.pmDocument.mandatory}">
-				<h:inputTextarea value="#{table.inquiryRemark}"
-					style="float: left;white-space: normal;width:97% !important;" />
+				<p:inputTextarea value="#{table.inquiryRemark}"
+					style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 			</p:column>
 		</p:dataTable>
 		<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
@@ -145,8 +145,8 @@
 			<p:column headerText="#{lbl['lbl.sm.remarks']}"
 				style="width : 27% !important;"
 				rendered="#{!table.pmDocument.mandatory}">
-				<h:inputTextarea value="#{table.inquiryRemark}"
-					style="float: left;white-space: normal;width:97% !important;" />
+				<p:inputTextarea value="#{table.inquiryRemark}"
+					style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 			</p:column>
 		</p:dataTable>
 		<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
@@ -179,7 +179,7 @@
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>
-
+		<!--#34392 Start -->
 	</p:panel>
 	
 	<p:panel id="inquiryTextPanelId" header="#{lbl['lbl.sm.other.application.inquiry']}"

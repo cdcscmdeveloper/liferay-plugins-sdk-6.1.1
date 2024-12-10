@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.primefaces.component.log.Log;
 
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -17,6 +18,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
+import my.ep.web.constant.SSTConstant;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -141,5 +143,159 @@ public class VmUtil {
 	public String getCompleteAddress(SmAddress smAdd) {
 		return AddressUtils.getFullAddress(smAdd);
 	}
+	
+	//36122 - start
+	/**
+	 * This method will break Long words to display properly in velocity template.
+	 * 
+	 * @param key
+	 * @param maxLength
+	 * @return the updatedKey
+	 */
+	public String addLineBreaks(String key, int maxLength) {
+		if (key == null || maxLength <= 0) {
+			return key;
+		}
+		String[] stringArray = key.split("\\s+");
+		StringBuilder updatedKey = new StringBuilder();
+		for (String s : stringArray) {
+			boolean containsPattern = s.matches(".*-.*?-.*"); //35295 @zaim 
+			if (s.length() > maxLength && !containsPattern) { //35295 @zaim 
+				String chopString = s.replaceAll("(.{" + maxLength + "})(?!$)",
+						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE);
+				chopString = validateHtmlEntitySyntax(chopString);
+				updatedKey.append(chopString);
+				
+			} else {
+				updatedKey.append(s.concat(SSTConstant.ADD_WHITESPACE));
+			}
+		}
+		log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
+		return updatedKey.toString();
+	}
+	
+	/**
+	 * @param chopString
+	 * @param isHtmlSyntaxIncomplete
+	 * @return
+	 */
+	public String validateHtmlEntitySyntax(String chopString) {
+		String newChopString = chopString;
+		newChopString = validateBreakLine(newChopString);
+		
+		newChopString = validateLessThanBracket(newChopString);
+		
+		newChopString = validateGreaterThanBracket(newChopString);
+		
+		return newChopString;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateGreaterThanBracket(String newChopString) {
+		String checkBracket = newChopString;
+		if (checkBracket.contains("&#<br />62;")) {
+			checkBracket = checkBracket.replaceAll("&#<br />62;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkBracket.contains("&#62<br />;")){
+			checkBracket = checkBracket.replaceAll("&#62<br />;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkBracket.contains("&#6<br />2;")){
+			checkBracket = checkBracket.replaceAll("&#6<br />2;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkBracket.contains("&<br />#62;")){
+			checkBracket = checkBracket.replaceAll("&<br />#62;", SSTConstant.GREATER_THAN_SYMBOL+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		//35295 - start
+		if (checkBracket.contains("&#62;<br /><br")){
+			checkBracket = checkBracket.replaceAll("&#62;<br /><br", SSTConstant.GREATER_THAN_SYMBOL+"<br");
+		}
+		//35295 - end
+		return checkBracket;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateLessThanBracket(String newChopString) {
+		String checkBracket = newChopString;
+		if (checkBracket.contains("&#<br />60;")) {
+			checkBracket = checkBracket.replaceAll("&#<br />60;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+		}
+		if (checkBracket.contains("&#60<br />;")){
+			checkBracket = checkBracket.replaceAll("&#60<br />;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+		}
+		if (checkBracket.contains("&#6<br />0;")){
+			checkBracket = checkBracket.replaceAll("&#6<br />0;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+		}
+		if (checkBracket.contains("&<br />#60;")){
+			checkBracket = checkBracket.replaceAll("&<br />#60;", TemplateSpecConst.HTML_NEW_LINE_CHARACTER+SSTConstant.LESS_THAN_SYMBOL); //35295 #93 @zaim
+		}
+		return checkBracket;
+	}
+
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateBreakLine(String newChopString) {
+		String checkBreakLine = newChopString;
+		if (checkBreakLine.contains("<br<br /> />")){
+			checkBreakLine = checkBreakLine.replaceAll("<br<br />/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkBreakLine.contains("<b<br />r />")){
+			checkBreakLine = checkBreakLine.replaceAll("<b<br />r/>", TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkBreakLine.contains("<b<br />r")){
+			checkBreakLine = checkBreakLine.replaceAll("<b<br />r", "<br");
+		}
+		if (checkBreakLine.contains("<<br />br")){
+			checkBreakLine = checkBreakLine.replaceAll("<<br />br", "<br");
+		}
+		//35295 - start
+		if (checkBreakLine.contains("<br /><br ")){
+			checkBreakLine = checkBreakLine.replaceAll("<br /><br ", "<br ");
+		}
+		//35295 - end
+		return checkBreakLine;
+	}
+	//36122 - end
+	// #29007 - note 724 Vinod start
+	/**
+	* This method will replace following special characters from the string to HTML keys
+	* '<' to "&#60;" , '>' to "&#62;" and  '\r\n' to "<br />"
+	* to avoid errors and achieve line spacing in VM report.
+	* 
+	* @param key
+	* @return updated String
+	*/
+	public String replaceAllSpecialCharactersToHTML(String key) {
+		if (key == null || key == "") {
+			return key;
+		}
+		String localKey = key;
+
+		if (localKey.contains(TemplateSpecConst.LESS_THEN_SYMBOL)) {
+			localKey = localKey.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		}
+		if (localKey.contains(TemplateSpecConst.GREATER_THEN_SYMBOL)) {
+			localKey = localKey.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+					TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		}
+		if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER)) {
+			localKey = localKey.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER_R)) {
+			localKey = localKey.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+
+		return localKey;
+	}
+	// #29007 - note 724 Vinod End
 	
 }

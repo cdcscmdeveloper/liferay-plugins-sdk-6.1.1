@@ -46,6 +46,12 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementCancelRegisteredCategoryBackingBean;
+//#28895_35501 End
 
 // TODO: Auto-generated Javadoc
 @ManagedBean(name = "deleteCategoryCodeBB")
@@ -314,6 +320,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 				//25963 - update deleted codes in rejected appl, if any
 				updateDeletedCodesInRejAppl();
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementCancelRegisteredCategoryBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				//START 14150
 				SmApplicationUtil.sortSupplierCategory(getManagedBean().getActiveCategoryList());			
 				SmApplicationUtil.sortbyDate(getManagedBean().getActiveCategoryList());
@@ -576,7 +589,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 						rejectedApplCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						rejectedApplCat.setCancelledDate(new Date());
 						rejectedApplCat.setChangedBy(loginSessionUserId);
-						//rejectedApplCat.setChangedDate(null);
+						rejectedApplCat.setRemarks(selCat.getRemarks());
 					}
 				}
 			}

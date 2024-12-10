@@ -369,14 +369,14 @@
 					</p>
 					<p>
 					## 11
-						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
+						<span class="text_family">*11.<span class="text_indent"> Syarikat </span>Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan nilai seperti termaktub di bawah PP/PK 1.7.</span>
 					</p>
 					<div style="text-align:justify; margin-bottom:1px !important">
 						## 12					
-						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
+						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kredit ICP Mandatori dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
 					</div>		
 					<span class="text_family">penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori. </span>
-					<br/><span class="text_family_small_black">(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+					<br/><span class="text_family_small_black">*(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 						
 			<p>
 				13. <span class="text_indent">Syarikat</span> tuan juga adalah diingatkan bahawa Kerajaan berhak 
@@ -447,7 +447,7 @@
 			## #26770 #503 - start
 			<p>
 				14.	<span class="text_indent">Sekiranya</span> Surat ini dibatalkan atas alasan seperti yang ditetapkan di perenggan 13, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan. 
-					<br/><span class="text_family_small_black" style="color: red;">*perenggan 9 sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan 13 sekiranya perolehan melibatkan ICP</span>
+					<br/><span class="text_family_small_black">*perenggan 9 sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan 13 sekiranya perolehan melibatkan ICP</span>
 			</p>
 			## #26770 #503 - end
 			<p>
@@ -726,7 +726,7 @@
 		<table>
 			<tr>
 				<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-				<td class="text_header_submenu">Spesifikasi Pembekalan/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</td>
+				<td class="text_header_submenu">Spesifikasi Pembekalan/Spesifikasi/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</td>
 			</tr>
 		</table>
 		</td>
@@ -734,7 +734,7 @@
 	<tr>
 		<td align="left" class="submenu_padding" colspan="3">
 			<span class="text_family">
-				Spesifikasi Pembekalan/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
+				Spesifikasi Pembekalan/Spesifikasi/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
 			</span>
 		</td>
 	</tr>
@@ -988,9 +988,42 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
-				yang tidak berkenaan</i></td>
-	</tr>			
+		<td align="left" class="submenu_padding"><span
+			class="text_family_small_black"><i>*potong mana yang tidak berkenaan</i></span></td>
+	</tr>
+	##25025 & 26770 add point 12
+	<tr>
+		<td colspan="3" >
+			<table>
+				<tr>
+					<td align="center" style="vertical-align: top;" class="text_family_header" >12. </td>
+					<td class="text_header_submenu">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span class="text_family_small_black">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span></td>
+				</tr>
+				
+				
+			</table>
+		</td>
+	</tr>	
+	<tr>
+			<td align="left" class="submenu_padding"><span class="text_family">12.1 Nama</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr>
+			<td align="left" class="submenu_padding"><span class="text_family">12.2 Nombor Telefon</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	<tr valign="top">
+			<td align="left" class="submenu_padding"><span class="text_family">12.3 Alamat E-mel</span></td>
+			<td class="text_family">:</td>
+			<td class="text_family">.....................................................................</td>
+	</tr>
+	##25025 & 26770 end point 12
 </table>
 	
 <div class="break-after"><br/></div>

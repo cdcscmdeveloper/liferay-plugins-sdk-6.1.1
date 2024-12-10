@@ -50,7 +50,7 @@
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
 						</c:otherwise>
 					</c:choose>
-					<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
+					<h:panelGroup>
 					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
@@ -111,9 +111,9 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column style="width : 10%;">
+			<p:column style="width : 10%;" rendered="#{backingBean.managedBean.supplierUser}">
 				<f:facet name="header">
-					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
+					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.btn.upload.doc']}" />
 				</f:facet>
 				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"

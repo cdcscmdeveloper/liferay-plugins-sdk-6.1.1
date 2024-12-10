@@ -170,4 +170,25 @@ public class CommonUtils {
 		return formattedDate;
 	}
 	
+	//#25000 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line break tags
+	 * and encoding the < and > characters to their HTML entity equivalents. If the string
+	 * is null or empty, it returns null.
+	 *
+	 * @param value the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
+	 *         and <, > characters encoded to &lt; and &gt; respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+	    if (value == null || value.isEmpty()) {
+	        return null;
+	    }
+	    // Replace < and > with their HTML entity equivalents
+	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+	    // Replace newline characters with <br/>
+	    return formatted.replace("\n", "<br/>");
+	}
+	//#25000 - End
+	
 }

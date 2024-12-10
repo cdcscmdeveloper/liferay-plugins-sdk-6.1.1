@@ -174,7 +174,7 @@ public class CircularManagedBean extends BaseManagedBean {
 			try {		
 				
 				if(getSearchCircularNo()!=null && getSearchCircularNo().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ccv.CIRCULAR_NO",	SearchOperator.OPERATOR_EQUALS.value(),getSearchCircularNo());
+					SearchFilterBean filterBean = new SearchFilterBean("ccr.CIRCULAR_NO",	SearchOperator.OPERATOR_EQUALS.value(),getSearchCircularNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);	
 				}
