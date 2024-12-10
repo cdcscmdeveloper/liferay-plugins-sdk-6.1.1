@@ -45,8 +45,10 @@
 					value="#{suppFinalizationBackingBean.canShowSupplierProposal() or isSecretaryUser or !empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
 			<ui:remove> Enhancement 19287 19336 25201 - end</ui:remove>
 
+			<!-- 6906 note 117 start -->
 			<ui:param name="showSelectionColumn" value="#{(empty suppFinalizationBackingBean.managedBean.finalizationMethod or 
 		               			  			 				!suppFinalizationBackingBean.managedBean.itemCancelled) and !supplierFinalizationReadOnly}" />
+		    <!-- 6906 note 117 end -->
 		               			  			 				
 			<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{suppFinalizationBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
