@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -72,6 +73,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -2067,6 +2069,14 @@ public class SmPersonnelBackingBean extends
 			} else if (getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_DELETED) {
 				String[] params = { getManagedBean().getBasicSmPersonnel()
 						.getName() };
+				// #29616 -start
+				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm",
+						ISupplierSearchSO.class);
+				if (getManagedBean().getBasicSmPersonnel().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						|| supplierSearchSO.isSoftCeritificateActive(getManagedBean().getBasicSmPersonnel().getPmUser())) {
+					throw new EpException(MessageConst.ERROR_722685, new String[] { getManagedBean().getBasicSmPersonnel()
+							.getName() });
+				}// #29616 -end
 				getManagedBean().setDeactivateTerminateConfirmMsg(
 						SmCommonUtil.getMessage(
 								"lbl.sm.userprofile.terminate.personnel",
@@ -2542,11 +2552,16 @@ public class SmPersonnelBackingBean extends
 				throw new EpException(MessageConst.ERROR_770228, new String[] { fs.getUserSessionBean().getUserName() });
 			}
 			// #26050 - end
+			
 			//#29616 -start
 			//check old admin have active softcert
-			if (getManagedBean().getUpdateSmPersonnel().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm",
+					ISupplierSearchSO.class);
+			if (getManagedBean().getUpdateSmPersonnel().getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					|| supplierSearchSO.isSoftCeritificateActive(getManagedBean().getUpdateSmPersonnel().getPmUser())) {
 				throw new EpException(MessageConst.ERROR_722685, new String[] { getManagedBean().getUpdateSmPersonnel().getName() });
 			}// #29616 -end
+			
 			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 		}
 	}

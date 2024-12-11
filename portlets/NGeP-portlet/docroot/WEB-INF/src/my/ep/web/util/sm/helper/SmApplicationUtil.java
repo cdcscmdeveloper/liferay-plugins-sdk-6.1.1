@@ -12777,7 +12777,10 @@ public class SmApplicationUtil {
 				countAuthorizedPersonnel++;
 			}
 			//#29616 -start
-			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					"sm", ISupplierSearchSO.class);
+			if (shr.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					|| supplierSearchSO.isSoftCeritificateActive(shr.getPmUser())) {
 				throw new EpException(MessageConst.ERROR_722685,
 						new String[] { shr.getName() });
 			}//#29616 -end
@@ -14893,7 +14896,7 @@ public class SmApplicationUtil {
 	// 29616-start
 	public static boolean validatePersonnelSoftcert(SmSupplier supplier) {
 		log.info("******* Validate active softcert For cancel mof account******** ");
-		boolean validPersonnels = true;
+		boolean validPersonnels = false;
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -14901,18 +14904,22 @@ public class SmApplicationUtil {
 		List<SmPersonnel> latestActivePersonnels = SmServiceLookup
 				.getPersonnelSO().retrieveLatestPersonnelBySupplierId(reqDTO)
 				.getSmPersonnelList();
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 		if (!SmCommonUtil.isCollectionEmpty(latestActivePersonnels)) {
 			for (SmPersonnel per : latestActivePersonnels) {
-				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				if (per.getSoftcertFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+						|| supplierSearchSO.isSoftCeritificateActive(per
+								.getPmUser())) {
 					sb.append(++i + ". ");
 					sb.append(per.getName());
 					sb.append(" ");
-					validPersonnels = false;
+					validPersonnels = true;
 				}
 			}
 		}
-		if (!validPersonnels) {
+		if (validPersonnels) {
 			throw new EpException(MessageConst.ERROR_722707,
 					new String[] { sb.toString() });
 		}
