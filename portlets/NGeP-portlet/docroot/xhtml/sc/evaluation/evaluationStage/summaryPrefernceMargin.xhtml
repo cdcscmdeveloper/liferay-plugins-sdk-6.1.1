@@ -33,6 +33,7 @@
 				<h:outputText value="#{prefQualSupplier.evalRank}"></h:outputText>
 			</p:column>
 			
+			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty prefQualSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -51,6 +52,7 @@
 						</td>
 					</tr>
 				</table>
+				<ui:remove><!-- 6906 - end --></ui:remove>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
@@ -157,6 +159,7 @@
 			<ac:paginator
 				for="evaluationSummaryPreferencemarginDisQualifiedSuppliers" />
 
+			<ui:remove><!-- 6906 - start note 233--></ui:remove>
 			<ui:param name="isRejectedDisqualified" value="#{not empty disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}"/>
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:20%; text-align:center;">
 				<table style="table-layout: fixed; margin:auto !important; max-width:90px !important">
@@ -173,6 +176,7 @@
 					</tr>
 				</table>
 			</p:column> 
+			<ui:remove><!-- 6906 - end note 233--></ui:remove>
 			
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:10%;text-align:right;">
