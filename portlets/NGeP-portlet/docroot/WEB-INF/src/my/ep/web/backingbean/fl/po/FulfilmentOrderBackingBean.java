@@ -2580,4 +2580,42 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		return NAV_CO;
 	}
 	// End - #30866
+	// Start - #25790
+	/**
+	 * 
+	 * Navigates to the purchase request page by retrieving the fulfillment
+	 * request details and initializing the necessary backing beans. This method
+	 * sets various attributes in the PurchaseRequestBackingBean based on the
+	 * retrieved fulfillment request information.
+	 * 
+	 * @return the string
+	 */
+	public String navigatePurchaseRequest() {
+		FulfilmentBackingBean fulfilmentBB = new FulfilmentBackingBean();
+		IFulfilmentRequestSO requestSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getFlRequest().getFulfilmentReqId());
+		reqDTO.setFlRequestLink(true);
+		FulfilmentResDTO resDTO = requestSO.retrieveFulfilmentRequest(reqDTO);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+		prBB.initializePRBeans();
+		prBB.getManagedBean().setSubmitButtonStatus(false);
+		prBB.getManagedBean().setDocProcess(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+		prBB.getManagedBean().setBackToDocument(fc.getViewRoot().getViewId());
+		prBB.getManagedBean().setHyperLinkPage(false);
+		prBB.getManagedBean().setPreviousRemarkList(fulfilmentBB.getManagedBean().getRemarkList());
+		prBB.getManagedBean().setPreviousAttachmentList(fulfilmentBB.getManagedBean().getAttachmentList());
+		prBB.setFulfilmentRequestField(resDTO);
+		prBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+		prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+		prBB.getManagedBean().setDeclarationCheck(true);
+		prBB.getManagedBean().setPrevHideRemarks(fulfilmentBB.getManagedBean().isHideRemarks());
+		fulfilmentBB.getManagedBean().setHideRemarks(true);
+		prBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+
+		return NAV_PR;
+	}
+	// End - #25790
 }

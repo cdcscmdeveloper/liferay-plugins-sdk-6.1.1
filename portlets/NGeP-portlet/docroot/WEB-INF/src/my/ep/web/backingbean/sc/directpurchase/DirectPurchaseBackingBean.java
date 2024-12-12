@@ -657,7 +657,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-			rnBackingBean.viewRequestNote(docId);
+			rnBackingBean.viewRequestNote(docId,true); //#25790
 			rnBackingBean.getManagedBean().setDpObj(dpObj);
 			rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 

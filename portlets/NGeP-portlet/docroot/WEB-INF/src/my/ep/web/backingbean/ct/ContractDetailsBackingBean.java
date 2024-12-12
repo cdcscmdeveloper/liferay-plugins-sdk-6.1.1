@@ -2808,6 +2808,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		// End - #30866
 	
+		// #25790 - start
+		if (getManagedBean().getDpContinuitySession() != null) {
+			getManagedBean().setExternalPageUrl(getManagedBean().getDpContinuitySession());
+		}
+		// #25790 - end
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
