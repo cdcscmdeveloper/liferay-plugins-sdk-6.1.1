@@ -458,5 +458,8 @@ public interface QTConstants {
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 Start Vinod 04/12/2024
-	
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
 }
