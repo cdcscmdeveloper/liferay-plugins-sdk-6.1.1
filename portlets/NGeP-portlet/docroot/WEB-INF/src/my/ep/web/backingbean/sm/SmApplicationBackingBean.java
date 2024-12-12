@@ -7953,6 +7953,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *             the parse exception
 	 */
 	public void addOrUpdateShareHolderToSmAppl() throws ParseException {
+		log.info("SM DEV ISLAND TESTING: Enter SmApplicationBackingBean.addOrUpdateShareHolderToSmAppl");
 		boolean validShrHldr = true;
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
@@ -8190,6 +8191,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		}
 
+	log.info("SM DEV ISLAND TESTING: Exit SmApplicationBackingBean.addOrUpdateShareHolderToSmAppl");
 	}
 
 	public String showTravellingInstruction() {
