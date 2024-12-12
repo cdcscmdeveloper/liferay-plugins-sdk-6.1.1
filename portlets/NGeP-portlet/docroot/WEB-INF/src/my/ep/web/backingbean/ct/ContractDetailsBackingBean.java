@@ -1099,11 +1099,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			if(ctContractVer.getCtAgencies() != null){
-			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
-			}
-		}
+			//Start Fix - #36694 || #25406
+//			if(ctContractVer.getCtAgencies() != null){
+//			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
+//				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
+//			}
+//			
+//		}
+			//End Fix - #36694 || #25406
 			ctContractVer.setOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile());			
 			ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}
