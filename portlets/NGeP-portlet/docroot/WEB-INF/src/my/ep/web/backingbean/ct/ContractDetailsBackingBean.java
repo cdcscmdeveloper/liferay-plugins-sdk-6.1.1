@@ -35,7 +35,6 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.comparator.ct.CtItemPriceComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -613,11 +612,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 						cisbb.getManagedBean().setItemServiceExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726
+//						Collections.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726
 						ctBB.getManagedBean().getCtItemServiceList().add(item);			           
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 						cisbb.getManagedBean().setItemProductExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726
+//						Collections.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726
 						if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
 								ctBB.checkAgencyStatus(ceilingQty.getCtAgency());		        	   
