@@ -3803,7 +3803,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (groupTabSection != null) {// BSV Audit Trails Section
 			auditResDTO.setAuGroupSectionId(groupTabSection);
 			auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-			auditResDTO.setStatusId(QTStatusConst.BSV_COMPLETED);
+			auditResDTO.setStatusId(QTStatusConst.EPV_APPROVED);
 			AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTO);
 

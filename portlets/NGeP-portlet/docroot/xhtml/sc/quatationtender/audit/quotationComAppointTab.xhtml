@@ -6,7 +6,22 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.audit.quot.committee.appoint']}" toggleable="true" style="min-width:100%">
+	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true"
+		style="min-width:100%">
+		<td>
+			<div align="right" style="width: 100%">
+				<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+					<p:fileDownload
+						value="#{auditQTBackingBean.generateReport(auditQTBackingBean.managedBean.qtId)}" />
+				</p:commandLink>
+				&#160;
+				<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
+					<p:fileDownload
+						value="#{auditQTBackingBean.getAuditTrailDetailsForExlRpt(auditQTBackingBean.managedBean.qtId, auditQTBackingBean.managedBean.groupSectionId)}" />
+				</p:commandLink>
+				&#160;
+			</div>
+		</td>
 		<p:dataTable id="searchQtTblId" var="obj" rows="10" 
 			value="#{auditQTBackingBean.searchQT}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

@@ -508,5 +508,8 @@ public interface QTConstants {
 	
 	//36678
 	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	// #36757 Start Vinod 04/12/2024
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 Start Vinod 04/12/2024
 	
 }

@@ -759,6 +759,8 @@ public class SmBulkApplicationBackingBean extends
 		reqDTO.setState("ASSIGNED");
 		reqDTO.setCtxToken(token);
 		reqDTO.setDocType("SR");
+		// #36838 - Bug
+		reqDTO.setStatus(Integer.valueOf(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_APPROVAL));
 		if (assignmentType.equals(BpmConstants.ASSIGNMENT_GROUP)) {
 			reqDTO.setIsClaimed(false);
 		}
