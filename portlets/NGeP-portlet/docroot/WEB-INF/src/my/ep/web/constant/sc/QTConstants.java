@@ -309,4 +309,9 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
 	// Bug #35688@Syazani 10/07/2024 -- End
+	
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
 }

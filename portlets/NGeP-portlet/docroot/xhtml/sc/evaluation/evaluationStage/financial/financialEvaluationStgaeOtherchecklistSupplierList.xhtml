@@ -19,15 +19,25 @@
 			rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
 			<ac:paginator for="othersFinListId" />
 
-
+			<ui:remove><!-- 6906 - start --></ui:remove>
+			<ui:param name="isRejected"
+				value="#{not empty othersFinList.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:20%; text-align:center;">
-
-				<h:outputText value="#{othersFinList.scQtProposal.supplierNo}"></h:outputText>
-
-
+				<table
+					style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
+					<tr>
+						<td style="text-align: center; border: 0 !important" />
+						<td style="text-align: center; border: 0 !important"><h:outputText
+								value="#{othersFinList.scQtProposal.supplierNo}" /></td>
+						<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
+								show="#{isRejected}" id="remarkId"
+								remark="#{othersFinList.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{othersFinList.scQtProposal.supplierNo}" /></td>
+					</tr>
+				</table>
 			</p:column>
-
+			<ui:remove><!-- 6906 - end --></ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:25%;text-align:right;">
@@ -49,14 +59,18 @@
 					
 				</f:facet>
 
+				<ui:remove>6906, add disabled -start-</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 					rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" />
+					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}"
+					disabled="#{isRejected}" />
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{othersFinList.evaluationStatus.statusId eq '61601'}"
 					process="@this" partialSubmit="true"
-					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" />
+					action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}"
+					disabled="#{isRejected}" />
+				<ui:remove>6906, add disabled -end-</ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
