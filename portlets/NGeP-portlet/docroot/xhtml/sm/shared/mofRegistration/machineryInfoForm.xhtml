@@ -62,7 +62,7 @@
 							rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 							<ac:paginator for="macDt" />
 							
-							<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls} and !backingBean.managedBean.upsCannotEdit">
+							<p:column style="width: 5% !important;" rendered="#{not empty machCatVar.smMachineDtls and !backingBean.managedBean.upsCannotEdit}">
 								<f:facet name="header">
 						          <p:selectBooleanCheckbox value="#{machCatVar.selected}" >
 						          	<p:ajax event="change" update=":#{p:component('machineMainPanelId')}" 
