@@ -7907,9 +7907,11 @@ public void saveComplianceSample() {
 						.isReadOnly()))) {
 					// checkMeetingDetailsAndStatus(this.getManagedBean()
 					// .getScQtMeetings());
-					checkCommitteeMembersAttendance(this.getManagedBean()
-							.getCommitteeMemberList());
 					if (currentTab == 0) {
+						// #36828 Start Vinod 13/12/2024
+						// moved this checking from outside to here
+						checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
+						// #36828 End Vinod 13/12/2024
 						saveMeetingDtls(false);
 					}
 							}
