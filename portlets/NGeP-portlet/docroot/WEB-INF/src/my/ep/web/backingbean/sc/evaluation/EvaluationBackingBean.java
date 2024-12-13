@@ -7897,26 +7897,10 @@ public void saveComplianceSample() {
 				}
 			}
 			if (outputTab == 1) {
-				this.getManagedBean().setCheckReportDownload(false);
-				if (((ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType()) && !this.getManagedBean()
-						.isReadOnly()) || (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType()) && !this.getManagedBean()
-						.isReadOnly()))) {
-					// checkMeetingDetailsAndStatus(this.getManagedBean()
-					// .getScQtMeetings());
-					if (currentTab == 0) {
-						// #36828 Start Vinod 13/12/2024
-						// moved this checking from outside to here
-						checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
-						// #36828 End Vinod 13/12/2024
-						saveMeetingDtls(false);
-					}
-							}
-				retriveComplianceTechnical();
-				// retrives1Details();
+				// #36828 Start Vinod 13/12/2024
+				// moved and refactored all the related code to following method.
+				outputTabOneFunctionality(currentTab);
+				// #36828 End Vinod 13/12/2024
 			} else if (outputTab == 2) {
 				this.getManagedBean().setDemo(false);
 				//#28784 - start
@@ -19275,5 +19259,23 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setMaxItemAllOtherElementsPercentage(scoreSetting.getOverallOtherTechnical());
 	}
 	//#28784 add demo condition - End
+	
+	// #36828 Start Vinod 13/12/2024
+	private void outputTabOneFunctionality(int currentTab) throws Exception {
+		this.getManagedBean().setCheckReportDownload(false);
+		boolean isCommittee = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
+				.getCommitteeType())
+				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
+						.getCommitteeType());
+		boolean isReadOnly = this.getManagedBean().isReadOnly();
+
+		if (isCommittee && !isReadOnly && currentTab == 0) {
+			// moved this checking from outside to here in #36828
+			checkCommitteeMembersAttendance(this.getManagedBean().getCommitteeMemberList());
+			saveMeetingDtls(false);
+		}
+		retriveComplianceTechnical();
+	}
+	// #36828 End Vinod 13/12/2024
 
 }
