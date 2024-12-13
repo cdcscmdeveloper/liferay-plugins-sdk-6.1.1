@@ -245,6 +245,7 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
@@ -415,7 +416,7 @@ public class SpecificationBackingBean extends
 
 		try {
 			//#10141 Start Vinod Added condition
-			boolean showMessage = this.getManagedBean().isSaveForSpecPrepareReport() ? false : true;
+			boolean showMessage = this.getManagedBean().isSaveForSpecPrepareReport();
 			//#10141 End Vinod 
 			validatePrepareQtChecklist();
 
@@ -23777,6 +23778,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 End Vinod
+	// #10141 Start Vinod
+	private StreamedContent currentStreamContent;
+	// #10141 End Vinod
 
 	// #10141 Start Vinod
 	/**
@@ -23787,31 +23791,45 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 * @throws IOException
 	 */
-	public void downloadScoreReport() throws IOException {
-		this.getManagedBean().setSaveForSpecPrepareReport(Boolean.TRUE);
-		saveSpecificationCommitteeDtls();
-		String reportName = updateFileNameAndReportNameForScoreReport();
-		ScQt scQt = getManagedBean().getQt();
-		ScAttachment reportAttachment = new ScQtCheckListAttachment();
-		StringBuilder fileName = new StringBuilder(this.getManagedBean().getReportDownloadFileName());
-		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
-		reportAttachment.setFileName(fileName.toString());
-		reportAttachment.setDocNo(scQt.getQtNo());
-		// reportAttachment.setPrefixFileName();
-		try {
+	public StreamedContent getScoreReport() throws IOException {
+		if (null == currentStreamContent) {
+			// this.getManagedBean().setSaveForSpecPrepareReport(Boolean.TRUE);
+			// saveSpecificationCommitteeDtls();
+			String reportName = updateFileNameAndReportNameForScoreReport();
+			ScQt scQt = getManagedBean().getQt();
+			ScAttachment reportAttachment = new ScQtCheckListAttachment();
+			StringBuilder fileName = new StringBuilder(this.getManagedBean().getReportDownloadFileName());
+			fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+			reportAttachment.setFileName(fileName.toString());
+			reportAttachment.setDocNo(scQt.getQtNo());
+			// reportAttachment.setPrefixFileName();
 			ScAttachment attachment = reportAttachment;
-			populateAttachmentDetails(attachment);
+			try {
+				populateAttachmentDetails(attachment);
 
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_PKEY, SourcingConstants.ORACLE_ENCRYPTION_KEY);
-			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
+				Map<String, String> paramMap = new HashMap<>();
 
-			previewScoreDetails(reportName, paramMap, attachment);
-		} catch (IOException e) {
-			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
-					qtNo, SLALogConstant.QT_DOWNLOAD_SCORE_REPORT, getUserIdSessionFromLoginId(), e);
+				paramMap.put(QtReportConst.PARAM_KEY_REPORT, ReportConst.SC_TEC_RPT_JSP);
+				paramMap.put(QtReportConst.PARAM_REPORT_CODE, ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL);
+				paramMap.put(QtReportConst.PARAM_USER_ID, "86577");
+				paramMap.put(QtReportConst.QUOTATION_TENDER_ID, "148735");
+
+				// paramMap.put(QTConstants.PARAM_MAP_PKEY,
+				// SourcingConstants.ORACLE_ENCRYPTION_KEY);
+				// paramMap.put(QTConstants.PARAM_MAP_QTID,
+				// getManagedBean().getQt().getQtId().toString());
+
+				previewScoreDetails(reportName, paramMap, attachment);
+				currentStreamContent = getAttachmentStreamContent(attachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+				// getStreamForScoreReport(attachment);
+			} catch (IOException e) {
+				String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
+				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, SLALogConstant.QT_DOWNLOAD_SCORE_REPORT,
+						getUserIdSessionFromLoginId(), e);
+			}
 		}
+		return currentStreamContent;
 	}
 
 	// #10141 End Vinod
@@ -23852,6 +23870,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 End Vinod
+	
+	public void closeScoreReport(){
+		if(currentStreamContent != null){
+			currentStreamContent = null;
+		}
+	}
 
 	// #10141 Start Vinod
 	/**
@@ -23870,13 +23894,14 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			throws IOException {
 		try {
 			super.generatePdfFromOracle(reportName, paramMap, attachment, true);
-			previewFile(attachment);
+			//previewFile(attachment);
 		} catch (IOException e) {
 			ScQt scQt = this.getManagedBean().getQt();
 			String qtNo = scQt == null ? "" : scQt.getQtNo();
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
 					qtNo, SLALogConstant.QT_DOWNLOAD_REPORT_SPEC_PREPARE, getUserIdSessionFromLoginId(), e);
 		}
+		
 	}
 
 	// #10141 End Vinod

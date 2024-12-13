@@ -18,10 +18,14 @@
 					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeButtons.xhtml" />
 				<ui:include src="/xhtml/sc/specification/common/commonHeader.xhtml" />
 				<ui:remove>#10141 Start Vinod -- Added print button to print screen</ui:remove>
-				<p:commandButton value="#{lbl['lbl.btn.print']}" rendered="#{specificationBackingBean.renderPtintButtonForSpecCommittee()}"
+				<!-- <p:commandButton value="#{lbl['lbl.btn.print']}" rendered="#{specificationBackingBean.renderPtintButtonForSpecCommittee()}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					onclick="this.form.target='_blank'" process="@form"
-					style="float:right;" action="#{specificationBackingBean.downloadScoreReport}" />
+					style="float:right;" action="#{specificationBackingBean.downloadScoreReport}" /> -->
+				<p:commandButton value="#{lbl['lbl.btn.print']}" rendered="#{specificationBackingBean.renderPtintButtonForSpecCommittee()}"
+					oncomplete="scoreDlg.show();"
+					process="@this"
+					style="float:right;" action="#{specificationBackingBean.getScoreReport}" />
 				<ui:remove>#10141 End Vinod </ui:remove>
 				<ui:include
 					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMenu.xhtml" />
@@ -33,4 +37,18 @@
 		catCodeList="#{specificationBackingBean.managedBean.catCodeList}"
 		widget="catCodeChangeAlert" />
 <!-- #29732 End - reOpen Fix -->
+	<p:dialog id="scoreDlgId" widgetVar="scoreDlg" modal="true"
+		dynamic="true" resizable="false" width="1000px" closable="false"
+		height="500px" styleClass="pop_up_top">
+		<p:media value="#{specificationBackingBean.scoreReport}"
+			width="100%" height="450px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.btn.close']}" action="#{specificationBackingBean.closeScoreReport}"
+						onclick="scoreDlg.hide()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:dialog>
 </ui:composition>
