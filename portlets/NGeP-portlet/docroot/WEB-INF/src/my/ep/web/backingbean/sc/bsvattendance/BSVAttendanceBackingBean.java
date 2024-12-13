@@ -1803,7 +1803,7 @@ public class BSVAttendanceBackingBean extends
 			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
 				auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);				
-				auditResDTO.setStatusId(scQt.getQtStatus().getStatusId());
+				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_PENDING_APPROVAL);
 				for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
 					auditResDTO.setNewValue(newBriefingRegistration.getSupplier().getCompanyName());
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);

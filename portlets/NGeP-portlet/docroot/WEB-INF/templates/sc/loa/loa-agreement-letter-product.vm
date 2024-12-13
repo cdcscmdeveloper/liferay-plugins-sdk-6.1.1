@@ -374,7 +374,7 @@ u.underline {
 				#if($isSL1M == "true")
 					<p>
 						<span class="text_family_red">
-									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs- Ready To Work </i> 
+									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> 
 									(PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
@@ -409,7 +409,7 @@ u.underline {
 				## #25025 & #26770 -start
 					<p>
 						<span class="text_family">6. &#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah digalakkan melaksanakan program <i>Professional Training
-						and Education for Growing Entrepreneurs- Ready To Work </i> (PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan.</span>
+						and Education for Growing Entrepreneurs - Ready To Work </i> (PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan.</span>
 					</p>
 				## #25025 & #26770 -end	
 					
@@ -472,7 +472,7 @@ u.underline {
 						</p>
 						## #25025 & #26770 -end
 						<p>
-							<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+							<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 						</p>
 					#end		
 					<p>
@@ -484,6 +484,8 @@ u.underline {
 					
 					<p>
 					## #25025 #478 - end
+		
+	   
 					## 9
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah merujuk dan mengadakan perbincangan lebih lanjut dengan pihak Technology Depository Agency (TDA)** sebagai agensi pelaksana bagi menentu dan memuktamadkan butiran projek-projek ICP untuk dimasukkan di dalam Perjanjian Utama ICP yang akan ditandatangani antara pihak Kerajaan dengan Syarikat Tuan secara bersama dengan Kontrak Perolehan Utama.</span>
@@ -500,10 +502,10 @@ u.underline {
 					<p style="padding-bottom:110px; margin-bottom:0px">
 					## 11
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP</span>								
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kredit ICP Mandatori dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP</span>								
 					</p>
 					<span class="text_family_red">dan penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori.</span>
-					<br/><span class="text_family_small">(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+					<br/><span class="text_family_small">*(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 								
 					<p>
 					#set($numberCount = $numberCount+1)		
@@ -586,7 +588,7 @@ u.underline {
 					#set ($prevNumberCount = $numberCount - 1)
 					<p>
 						<span class="text_family" style="margin-bottom:0px">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9#{else}8#end/*perenggan #if ($isSL1M == "true")13#{else}12#end</span>, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
-						<br/><span class="text_family_small">*perenggan #if ($isSL1M == "true")9#{else}8#end sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan #if ($isSL1M == "true")13#{else}12#end sekiranya perolehan melibatkan ICP </span>
+						<br/><span class="text_family_small">*perenggan #if ($isSL1M == "true")9#{else}8#end sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan #if ($isSL1M == "true")13#{else}12#end sekiranya perolehan melibatkan ICP. </span>
 					</p>
 					#set($numberCount = $numberCount+1)
 					<p>
@@ -617,14 +619,20 @@ u.underline {
 		</tr>
 		<tr>
 		## #25025 & #26770 -start
-			<td>Saya yang menjalankan amanah, <br /> <br />
+			<td><span class="text_family">Saya yang menjalankan amanah, </span><br /> <br />
 			## #25025 & #26770 -end
 				<p class="text_family">
 					<span class="text_family_small">Tandatangan Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak <br /> <br /> </span>
 				</p>
-				____________________________<br /> $!loaSigner <br /> 
-				$!loaSignerDesignation <br />
-			<br />
+				____________________________
+				<br /> 
+				
+					<span class="text_family"> $!loaSigner </span>
+					<br /> 
+					<span class="text_family"> $!loaSignerDesignation </span>
+					<br />
+					<br />
+				
 			</td>
 		</tr>
 	</table>
@@ -1187,6 +1195,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
 				##25025 note 579 - start
 				<tr>
 						<td colspan="3">
@@ -1262,6 +1274,10 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>									
 				##25025 note 579 - start
 				<tr>
 						<td colspan="3">
@@ -1300,11 +1316,6 @@ u.underline {
 				##25025 note 579 - end
 				
 			  #end	
-				<tr>
-					<td align="left" class="submenu_padding"><span
-						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
-				</tr>
-				
 			</table>
 		</tr>
 	</table>
@@ -1720,6 +1731,7 @@ u.underline {
 					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
 					<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+			
 					##26130 - end 03032022
 					
 					  #if ($rowCount == 0)
@@ -1910,6 +1922,8 @@ u.underline {
 														</tr>
 													#end
 												#end	
+			 
+		   
 											#end	
 									
 							##26130 - zaim end	070220222
@@ -2027,6 +2041,7 @@ u.underline {
 						#set($rowCount = $rowCount + 1)
 						
 						##26130 - start 03032022
+			  
 						</table>
 						#end
 						#if ($rowCount > 0)
@@ -2319,6 +2334,7 @@ u.underline {
 				##26130 - start 03032022
 				#if($tplspecMaster.tplSpecQuestions.size() > 0)
 						<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+			 
 						#set($rowCount = 0)
 						
 						##26130- end 03032022	
@@ -2634,6 +2650,7 @@ u.underline {
 														#end
 												#end
 											#end	
+	
 											</tr>
 									
 									#end
@@ -2644,6 +2661,7 @@ u.underline {
 							
 							#set($rowCount = $rowCount + 1)
 							##26130 - start 03032022
+			   
 							</table>
 							#end
 							#if ($rowCount > 0)
@@ -2806,6 +2824,7 @@ u.underline {
 			</tbody>
 		</table>
 	#end
+			   
  
 	 #else
      
