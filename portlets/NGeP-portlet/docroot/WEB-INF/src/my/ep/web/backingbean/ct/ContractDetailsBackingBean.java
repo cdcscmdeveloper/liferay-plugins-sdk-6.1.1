@@ -569,8 +569,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setDisableAgent(true);
 					ctBB.getManagedBean().setOwnerOrgProfile(true);
 					for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
-							ctBB.checkAgencyStatus(ctAgency);
-					    // Start Fix - #36694
+						ctBB.checkAgencyStatus(ctAgency);
+						// Start Fix - #36694
 						if (!reqDTO.isViewOnly()) {
 							if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 								ctAgency.setAp178(false);
