@@ -2970,6 +2970,20 @@ public class SmApplicationBackingBean extends
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 
+		//#36483 - START
+		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
+				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+					fac.getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+					fac.getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+				}
+			}
+		}
+		//#36483 - END
+				
 		// #34166 - Start
 		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			validateText();
@@ -12819,6 +12833,7 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 
@@ -12867,6 +12882,7 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 		
 		/*//13320-start
@@ -12924,6 +12940,7 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 
@@ -12945,6 +12962,7 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 
@@ -16636,6 +16654,7 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		addr.setPostcode("");
 		//#36483 - END
 	}
 	//13320-End	
