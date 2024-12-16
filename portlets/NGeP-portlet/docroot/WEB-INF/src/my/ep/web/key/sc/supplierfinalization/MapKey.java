@@ -14,6 +14,7 @@ public class MapKey implements Serializable {
 	
 	public MapKey(Long zoneId, Long itemId) {
 		this.zoneId = zoneId;
+		this.itemId = itemId;
 		this.supplierId = 0L; // 33380, #6906
 	}
 
