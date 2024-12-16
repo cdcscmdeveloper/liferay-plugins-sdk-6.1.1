@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.audit.desk.officer.assistant']}" toggleable="true">
+		<p:dataTable id="searchQtTblId" var="obj" rows="10" width="100%"
+			value="#{auditQTBackingBean.searchQT}"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			rowIndexVar="index" lazy="true">
+			
+			<ac:paginator for="searchQtTblId"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
+				style="white-space: normal!important;" width="5%">
+				<h:outputText value="#{obj.createdDate}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.action.type']}" style="width:5%;">
+				<h:outputText value="#{empty obj.actionType ? lbl['lbl.audit.no.available']:obj.actionType}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.action.by']}" style="width:5%;">
+				<h:outputText value="#{obj.actionBy}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.org.name']}" style="width:10%;">
+				<h:outputText value="#{obj.orgName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.role']}" style="width:5%;">
+				<h:outputText value="#{obj.roleName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.docType']}" style="width:5%;">
+				<h:outputText value="#{obj.docType}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.docNo']}" style="width:10%;">
+				<h:outputText value="#{obj.docNo}" />
+			</p:column>		
+			
+			<p:column headerText="#{lbl['lbl.sc.document.status']}" style="width:40%;">
+				<h:outputText value="#{obj.docStatus}" />
+			</p:column>	
+			
+			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}" style="width:5%;">
+				<h:outputText value="#{empty obj.fieldName ? lbl['lbl.audit.no.available']:obj.fieldName}" />
+			</p:column>			
+			
+			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}" style="width:5%;">
+				<h:outputText value="#{empty obj.oldValue ? lbl['lbl.audit.no.available']:obj.oldValue}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.audit.header.newValue']}" style="width:5%;">
+				<h:outputText value="#{empty obj.newValue ? lbl['lbl.audit.no.available']:obj.newValue}" />
+			</p:column>
+			
+			
+		</p:dataTable>	
+	</p:panel>
+</ui:composition>
+	

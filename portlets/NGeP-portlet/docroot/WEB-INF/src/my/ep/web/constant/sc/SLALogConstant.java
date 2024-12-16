@@ -78,6 +78,10 @@ public class SLALogConstant {
 	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
 	// 25791-end
 	
+	//12471 //28895-35500 - start
+	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
+	//12471 - end
+	
 	private SLALogConstant(){
 		
 	}	
