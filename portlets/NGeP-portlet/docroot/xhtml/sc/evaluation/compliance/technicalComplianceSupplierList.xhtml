@@ -63,7 +63,7 @@
 				<p:selectOneMenu style="max-width: 225px !important; width:100% !important" 
 					disabled="#{(complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired) 
 					or isRejected  or (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
-					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified))}"
 					value="#{complianceTechnicalSupplier.compliance}"><ui:remove>#21692</ui:remove>
 
 					<f:selectItems
@@ -77,7 +77,7 @@
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
 					and !(complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod ne null
-					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected)}"><ui:remove>#21692</ui:remove>
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified))}"><ui:remove>#21692</ui:remove>
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
 						disabled="#{evaluationBackingBean.managedBean.statusOnly or evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
@@ -93,7 +93,7 @@
 				<ui:remove>#21692 - start</ui:remove>
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'
-					and complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+					and (complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or complianceTechnicalSupplier.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}">
 					<p:inputTextarea rows="2" cols="40" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);"
 						onmouseout="limitTextArea(this,200);"
 						disabled="true"

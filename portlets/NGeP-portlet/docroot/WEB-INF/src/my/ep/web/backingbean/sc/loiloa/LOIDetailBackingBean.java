@@ -860,13 +860,13 @@ public class LOIDetailBackingBean extends
 					}
 					if (CollectionUtils.isNotEmpty(zoneDetails)) {
 						this.getManagedBean().setMultiLOIZoneDetails(zoneDetails);
+						generateZoneMenuModel();// 33380 - change position 
 						this.getManagedBean().setSelectedZone(zoneDetails.get(0));
 						this.getManagedBean().setZoneActiveIndex(
 									zoneDetails.get(0).getZoneTabIndex());
 						this.getManagedBean().setScQtRecommendsByZone(scQtRecommendsByZone);
 						processMultiLOIDetails(recommendType, 
 								scQtRecommendsByZone.get(zoneDetails.get(0).getSpecZoneId()));					
-						generateZoneMenuModel();
 					}					
 				} else {
 					processMultiLOIDetails(recommendType, scQtRecommendList);
@@ -1708,6 +1708,7 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
+		getManagedBean().setReadOnly(false);// 36293
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -1864,9 +1865,9 @@ public class LOIDetailBackingBean extends
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 			// #29007	Vinod Start
-			String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007	Vinod End
 		} finally {
@@ -1910,9 +1911,9 @@ public class LOIDetailBackingBean extends
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			// #29007	Vinod Start
-			String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007	Vinod End
 		
@@ -1940,9 +1941,9 @@ public class LOIDetailBackingBean extends
 			populateLOIDetails(resDTO);
 			getManagedBean().setButtonFlag(Boolean.TRUE);
 			// #29007	Vinod Start
-			String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007	Vinod End
 
@@ -2065,7 +2066,7 @@ public class LOIDetailBackingBean extends
 						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 						if(offeredPriceSubTotal != null){
 							scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
-							offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal).setScale(2, BigDecimal.ROUND_UP);
+							offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						}
 
 						// final price sub total and total - for bidding.
@@ -2076,13 +2077,13 @@ public class LOIDetailBackingBean extends
 							
 							// For bid re finalization final price as bid offer price - subtotal
 							scLoiLoaItem.setBidFinalPriceSubTotal(finalPriceSubTotal);
-							finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal).setScale(2, BigDecimal.ROUND_UP);
+							finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						}
 
 						// after nego unit price sub total and total
 						afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), quantity);
 						if (afterNegoSubTotal != null) {
-							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal).setScale(2, BigDecimal.ROUND_UP);
+							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
 
 						}
@@ -2632,21 +2633,6 @@ public class LOIDetailBackingBean extends
 			}
 		} finally {
 			// iqtAwardSO = null;
-		}
-	}
-	
-	/**
-	 * BUG 33353 : To Update ScQtRecommendDtl (Reject Scenario, to prevent bugs on Multipla LOI (Recommendation) Stage)
-	 * @param List<ScQtRecommendDtl>
-	 * @return null
-	 */
-	private void updateRejectQtRecommendDtl(ScLoiLoa scLoiLoa){
-		try{
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoiLoa(scLoiLoa);
-			getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);
-		}catch(Exception e){
-			
 		}
 	}
 
@@ -3234,7 +3220,7 @@ public class LOIDetailBackingBean extends
 				}
 			}
 
-			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only
+			if (getManagedBean().getScQtCommittee() != null) {// #27502, Adding Condition only  - Bug #36187
 				for (ScQtMeetingAttendance meetingAttendance : getManagedBean().getScQtCommittee()
 						.getMeetingAttendances()) {
 					if (meetingAttendance.isSelected() || meetingAttendance != null) {
@@ -5595,8 +5581,9 @@ public class LOIDetailBackingBean extends
 					}
 					offeredQuantity = offeredQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
-					BigDecimal offerPrice = proposalItem.getOfferPrice();
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					//Bug #36417 - start
+					BigDecimal finalPrice = proposalItem.getFinalPrice(); 
+					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
 					ScRequestItem requestItem = recommendDtl
 							.getScQtRecommend().getRequestItem();
@@ -5604,7 +5591,8 @@ public class LOIDetailBackingBean extends
 					BigDecimal offeredPrice = TemplateSpecHelper
 							.getInstance().calculateTotalAmount(
 									requestItem.getTplSpecQuestion(),
-									offerPrice, offeredQuantity);
+									finalPrice, offeredQuantity);
+					//Bug #36417 - end
 					if (offeredPrice != null) {
 						offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					}
@@ -6358,6 +6346,11 @@ public class LOIDetailBackingBean extends
 	 * @return true, if is loi required disabled
 	 */
 	public boolean isLoiRequiredDisabled(ScLoiLoa scLoiLoa){
+		// 36293 - start
+		if (scLoiLoa.isLoiRequiredDisabled()) {
+			return Boolean.TRUE;
+		}
+		// 36293 - end
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
@@ -6426,8 +6419,9 @@ public class LOIDetailBackingBean extends
 	}
 
 	private boolean checkIfAllLoiCompleted(List<ScLoi> lois) {
-		if (CollectionUtils.isEmpty(lois))
+		if (CollectionUtils.isEmpty(lois)) {
 			return false;
+		}
 		for (ScLoi loi : lois) {
 			PmStatus status = null != loi.getScWorkFlowStatus() && null != loi.getScWorkFlowStatus().getPmStatus() ? loi
 					.getScWorkFlowStatus().getPmStatus() : new PmStatus();
@@ -6556,38 +6550,39 @@ public class LOIDetailBackingBean extends
 	public void addSuppliersProposalSpecificationUpdate() {
 		debugLogger("addSuppliersProposalSpecificationUpdate");
 		ScLoi scLoi = getManagedBean().getScLoi();
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
-			
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();// 20230711@Asyrafhaziq-SQUBE Bug Minor #16
+
 		List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
-		if(null == scNegoTerms) {
-			scNegoTerms = new ArrayList<ScLoiTerm>();
+		if (null == scNegoTerms) {
+			scNegoTerms = new ArrayList<>();
 		}
 		ScLoiTerm negoTerm = new ScLoiTerm();
-			
-		String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
+
+		String message = ResourceBundleUtils.getMessage(
+				QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		boolean alredyAdded = false;
-		for(ScLoiTerm scLoiTerm : scNegoTerms){
-			if(null!=scLoiTerm.getTermDesc() && scLoiTerm.getTermDesc().equals(message)){//29007
+		for (ScLoiTerm scLoiTerm : scNegoTerms) {
+			if (null != scLoiTerm.getTermDesc() && scLoiTerm.getTermDesc().equals(message)) {// 29007
 				alredyAdded = true;
 				break;
 			}
 		}
-		if(alredyAdded == false){
+		if (!alredyAdded) {// sonarQubeIssue7#84
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				negoTerm.setSelectedTerm(Boolean.FALSE);
-			} else{
+			} else {
 				negoTerm.setSelectedTerm(Boolean.TRUE);
 				negoTerm.setSelected(true);
 			}
 			negoTerm.setTermDesc(message);
-			negoTerm.setSelectTerm(Boolean.TRUE);//29007
+			negoTerm.setSelectTerm(Boolean.TRUE);// 29007
 			negoTerm.setScLoi(scLoi);
 			negoTerm.setModified(true);
 			scNegoTerms.add(negoTerm);
 			scLoi.setScNegoTerms(scNegoTerms);
 		}
-			
+
 	}
 	// #29007	Vinod End
 	
@@ -6599,7 +6594,7 @@ public class LOIDetailBackingBean extends
 		
 		ScLoi scLoi =this. getManagedBean().getScLoi();
 
-		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+		if (CollectionUtils.isNotEmpty(scLoi.getScNegoTerms())) {//sonarQubeIssue7#84
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
 				term.setSelectTerm(Boolean.FALSE);	
 			}
@@ -6658,6 +6653,8 @@ public class LOIDetailBackingBean extends
 				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL)))
 				&& isValidFor21692
 				) ? true : false;
+		
+		getManagedBean().setAbleToCancelLOI(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}

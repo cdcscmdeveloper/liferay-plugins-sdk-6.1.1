@@ -22,6 +22,10 @@ import my.ep.dto.sm.selfrequestsupplieradmin.SelfRequestSupplierAdminReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -256,19 +260,19 @@ public class SelfRequestSupplierAdminBackingBean extends
 						.add(permAddr);
 			}
 			getManagedBean().setSelectedAdminPermAddr(permAddr);
-			onChangeCountry(getManagedBean().getSelectedAdminPermAddr()
-					.getSmAddress());
-			onChangeState(getManagedBean().getSelectedAdminPermAddr()
-					.getSmAddress());
 			//#34159 - START
+			onChangeCountry(getManagedBean().getSelectedAdminPermAddr()
+					.getSmAddress(), true);
+			onChangeState(getManagedBean().getSelectedAdminPermAddr()
+					.getSmAddress(), true);
 			if(getManagedBean().getSelectedAdminPermAddr().getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
-				onChangeDivision(getManagedBean().getSelectedAdminPermAddr().getSmAddress());
+				onChangeDivision(getManagedBean().getSelectedAdminPermAddr().getSmAddress(), true);
 			}
-			//#34159 - END
 			onChangeDistrict(getManagedBean().getSelectedAdminPermAddr()
-					.getSmAddress());
+					.getSmAddress(), true);
 			onChangeCity(getManagedBean().getSelectedAdminPermAddr()
-					.getSmAddress());
+					.getSmAddress(), true);
+			//#34159 - END
 		} else {
 			if (!StringUtils.isBlank(invalidIcMsg)) {
 				fc.addMessage("icNoId", new FacesMessage(
@@ -341,6 +345,16 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
 				reqDTO);
+		
+		//#34159 - START
+		if (permAddr != null && permAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
+				&& !permAddr.getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)
+				&& permAddr.getSmAddress().getPmDivision() != null && permAddr.getSmAddress().getPmDivision().getDivisionId() != null) {
+			SmAddress addr = SmServiceLookup.getSmAddressSO().retrieveSmAddressByAddressId(permAddr.getSmAddress().getAddressId());
+			addr.getPmDivision().setDivisionId(null);
+			SmServiceLookup.getSmAddressSO().updatePmDivisionByAddressId(addr.getPmDivision(), addr.getAddressId());
+		}
+		//#34159 - END
 
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.clear();
@@ -565,92 +579,139 @@ public class SelfRequestSupplierAdminBackingBean extends
 
 	}
 
-	public void onChangeCountry(SmAddress addr) {
-		Long countryId = addr.getCountryId() == null ? addr.getPmCountry()
-				.getCountryId() : addr.getCountryId();
-		addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
-		addr.setCountryId(countryId);
-
-		List<SelectItem> stateItems = SmCommonUtil.getStateList(countryId);
-		getManagedBean().setStateItems(stateItems);
+	//#34159 - Refactor this method
+	public void onChangeCountry(SmAddress addr, boolean isPreRender) {
+		Long  countryId = addr.getCountryId();
+		
+		if(isPreRender){ 
+			countryId = addr.getCountryId() == null ? addr.getPmCountry().getCountryId() : addr.getCountryId();
+		} 
+	
+		if(countryId != null){
+			addr.setPmCountry(SmCommonUtil.getInstance().getCountryById(countryId));
+			getManagedBean().setStateItems(SmCommonUtil.getStateList(countryId));
+		} else {
+			addr.setPmCountry(new PmCountry());
+			getManagedBean().setStateItems(new ArrayList<SelectItem>());
+		}
+		
+		getManagedBean().setDivisionItems(new ArrayList<SelectItem>());
 		getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
 		getManagedBean().setCityItems(new ArrayList<SelectItem>());
-
+		addr.setCountryId(countryId);
 		addr.setStateId(null);
+		addr.setDivisionId(null);
 		addr.setDistrictId(null);
 		addr.setCityId(null);
-	}
-
-	public void onChangeState(SmAddress addr) {
-		Long stateId = addr.getStateId() == null ? addr.getPmState()
-				.getStateId() : addr.getStateId();
-		addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
-		addr.setStateId(stateId);
-		//13320-Start
-		PmState states = (SmCommonUtil.getInstance().getStateById(stateId));
-		if(states !=null && states.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
-			addr.setDivisionId(null);
-			addr.setDistrictId(null);
-			addr.setCityId(null);
-			
-			List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(stateId);
-			this.getManagedBean().setDivisionItems(divisionLs);
-			
-			getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
-			getManagedBean().setCityItems(null);
-			addr.getPmState().setAdoptDivision(true);
-			//29939 - Self request error
-		}else if(addr.getPmState()!= null){
-			addr.getPmState().setAdoptDivision(false);
-		} 
-		if(states !=null && states.getAdoptDivision()) {
-			getManagedBean().setDivisionBox(false);	
-		}else {
-			getManagedBean().setDivisionBox(true);//13320-End
 		
-		List<SelectItem> districtItems = SmCommonUtil.getDistrictList(stateId);
-		getManagedBean().setDistrictItems(districtItems);
-		getManagedBean().setCityItems(new ArrayList<SelectItem>());
-
-		addr.setDistrictId(null);
-		addr.setCityId(null);
+		if(!isPreRender){ 
+			addr.setPmState(new PmState());
+			//addr.setPmDivision(new PmDivision());
+			addr.setPmDistrict(new PmDistrict());
+			addr.setPmCity(new PmCity());
 		}
 	}
 
-	public void onChangeDistrict(SmAddress addr) {
-		Long districtId = addr.getDistrictId() == null ? addr.getPmDistrict()
-				.getDistrictId() : addr.getDistrictId();
-		addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(
-				districtId));
-		addr.setDistrictId(districtId);
-
-		List<SelectItem> cityItems = SmCommonUtil.getCityList(districtId);
-		getManagedBean().setCityItems(cityItems);
-
+	//#34159 - Refactor this method
+	public void onChangeState(SmAddress addr, boolean isPreRender) {
+		Long stateId = addr.getStateId();
+		
+		//PR - preRender
+		if(isPreRender){
+			stateId = addr.getStateId() == null ? addr.getPmState().getStateId() : addr.getStateId();
+		} 
+		
+		if(stateId != null){
+			addr.setPmState(SmCommonUtil.getInstance().getStateById(stateId));
+			if(addr.getPmState().getStateCode().equals(SupplierManagementConst.SARAWAK_CODE)){
+				getManagedBean().setDivisionItems(SmCommonUtil.getDivisionList(stateId));
+				getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
+			} else {
+				getManagedBean().setDistrictItems(SmCommonUtil.getDistrictList(stateId));
+			}
+		} else {
+			addr.setPmState(new PmState());
+			getManagedBean().setDivisionItems(new ArrayList<SelectItem>());
+			getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
+		}
+		
+		getManagedBean().setCityItems(new ArrayList<SelectItem>());
+		addr.setStateId(stateId);
+		addr.setDivisionId(null);
+		addr.setDistrictId(null);
 		addr.setCityId(null);
+		
+		if(!isPreRender){
+			//addr.setPmDivision(new PmDivision());
+			addr.setPmDistrict(new PmDistrict());
+			addr.setPmCity(new PmCity());
+		}
+	}
+
+	//#34159 - Refactor this method
+	public void onChangeDistrict(SmAddress addr, boolean isPreRender) {
+		Long districtId = addr.getDistrictId();
+		
+		//PR - preRender
+		if(isPreRender){
+			districtId = addr.getDistrictId() == null ? addr.getPmDistrict().getDistrictId() : addr.getDistrictId();
+		}
+		
+		if(districtId != null){
+			addr.setPmDistrict(SmCommonUtil.getInstance().getDistrictById(districtId));
+			this.getManagedBean().setCityItems(SmCommonUtil.getCityList(districtId));
+		} else {
+			addr.setPmDistrict(new PmDistrict());
+			this.getManagedBean().setCityItems(new ArrayList<SelectItem>());
+		}
+		addr.setDistrictId(districtId);
+		addr.setCityId(null);
+		
+		//PR - preRender
+		if(!isPreRender){
+			addr.setPmCity(new PmCity());
+		}
 	}
 	
 	//13320-Start
-	public void onChangeDivision(SmAddress addr) {
-		Long divisionId = addr.getDivisionId() == null ? addr.getPmDivision()
-				.getDivisionId() : addr.getDivisionId();
-		//#13320 - SmCommonUtil change method
-		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(
-				divisionId));
-		addr.setDivisionId(divisionId);
-
-		List<SelectItem> districtItems = SmCommonUtil.getDistrictListByID(divisionId);
-		getManagedBean().setDistrictItems(districtItems);
+	//#34159 - Refactor this method
+	public void onChangeDivision(SmAddress addr, boolean isPreRender) {
+		Long divisionId = addr.getDivisionId();
+		
+		if(isPreRender){
+			divisionId = addr.getDivisionId() == null ? addr.getPmDivision().getDivisionId() : addr.getDivisionId();
+		}
+		if(divisionId != null){
+			addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(divisionId));
+			getManagedBean().setDistrictItems(SmCommonUtil.getDistrictListByID(divisionId));
+		} else {
+			addr.setPmDivision(new PmDivision());
+			getManagedBean().setDistrictItems(new ArrayList<SelectItem>());
+		}
 		getManagedBean().setCityItems(new ArrayList<SelectItem>());
+		addr.setDivisionId(divisionId);
 		addr.setDistrictId(null);
 		addr.setCityId(null);
+		
+		if(!isPreRender){
+			addr.setPmDistrict(new PmDistrict());
+			addr.setPmCity(new PmCity());
+		}
 	}
 	//13320-End
 
-	public void onChangeCity(SmAddress addr) {
-		Long cityId = addr.getCityId() == null ? addr.getPmCity().getCityId()
-				: addr.getCityId();
-		addr.setPmCity(SmCommonUtil.getInstance().getCityById(cityId));
+	//#34159 - Refactor this method
+	public void onChangeCity(SmAddress addr, boolean isPreRender) {
+		Long cityId = addr.getCityId();
+		
+		if(isPreRender){
+			cityId = addr.getCityId() == null ? addr.getPmCity().getCityId() : addr.getCityId();
+		}
+		if(cityId != null){
+			addr.setPmCity(SmCommonUtil.getInstance().getCityById(cityId));
+		} else {
+			addr.setPmCity(new PmCity());
+		}
 		addr.setCityId(cityId);
 	}
 

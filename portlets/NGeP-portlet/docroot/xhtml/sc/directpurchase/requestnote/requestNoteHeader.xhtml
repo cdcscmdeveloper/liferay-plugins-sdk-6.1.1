@@ -101,7 +101,9 @@
 									value="#{lbl['lbl.sc.purchase.in.default.pid.no']}" />
 							</c:when>
 							<c:otherwise>
-								<h:outputLabel value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+								<c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo != null}">
+									<h:outputLabel value="#{lbl['lbl.sc.sq.simple.quote.no']}" />
+								</c:if>
 							</c:otherwise>
 						</c:choose></td>
 					<td style="width: 9%"><c:choose>
@@ -122,11 +124,13 @@
 									immediate="true" />
 							</c:when>
 							<c:otherwise>
-								<p:commandLink
-									value="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}"
-									styleClass="command-link"
-									action="#{requestNoteBackingBean.showSimpleQuote}"
-									immediate="true" />
+								<c:if test="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo != null}">
+									<p:commandLink
+										value="#{requestNoteBackingBean.managedBean.requestNote.quote.quoteNo}"
+										styleClass="command-link"
+										action="#{requestNoteBackingBean.showSimpleQuote}"
+										immediate="true" />
+								</c:if>
 							</c:otherwise>
 						</c:choose></td>
 				</tr>

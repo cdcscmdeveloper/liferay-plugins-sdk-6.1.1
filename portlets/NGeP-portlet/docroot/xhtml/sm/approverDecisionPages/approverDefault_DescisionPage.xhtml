@@ -241,22 +241,5 @@
 		title="#{lbl['lbl.sm.approve.application']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approverAppDialog"/>
-	
-	<ac:confirmationPopup id="pendingQTPopUpApproverCloseId"
-		widget="pendingQTPopUpApproverClose"
-		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
-		update=":form:tt:approverAppDialog"/>
-			
-	<ac:confirmationPopup id="pendingQTPopUpApproverTwoId"
-		widget="pendingQTPopUpApproverTwo"
-		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt; &lt;br&gt;
-		#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
-		update=":form:tt:approverAppDialog"/>
 	<!-- END #29727 -->
 </ui:composition>

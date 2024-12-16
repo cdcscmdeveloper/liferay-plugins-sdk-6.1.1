@@ -12,9 +12,9 @@
 		<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
 		<!-- #29729 End -->
 		<ui:remove>#21692 - start</ui:remove>
-		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.rec.instruction']}" />
-		</c:if>
+		<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+			<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+		</c:forEach>
 		<ui:remove>#21692 - end</ui:remove>
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{consolidationReportBackingBean.managedBean.itemsList}"

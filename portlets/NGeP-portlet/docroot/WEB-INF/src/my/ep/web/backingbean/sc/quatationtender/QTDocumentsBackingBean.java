@@ -2949,8 +2949,8 @@ public class QTDocumentsBackingBean extends
 			detailBean.retrieveDeductionPaymentTabDtl();
 			if(CollectionUtils.isNotEmpty(this.getManagedBean().getScQtDeductionList())){
 				StringBuilder paymentDeductions=new StringBuilder();
-				paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE)
-				.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER)
+				//paymentDeductions.append(TemplateDocConst.PARAM_PAYMENT_DEDUCTION__APPLIABLE) //#34873
+				paymentDeductions.append(TemplateDocConst.PARAM_HTML_NEW_LINE_CHARACTER) //#34873
 				.append("<table>");
 				for(int i=0;i<this.getManagedBean().getScQtDeductionList().size();i++){
 				ScQtDeduction deduction=this.getManagedBean().getScQtDeductionList().get(i);
@@ -3121,6 +3121,7 @@ public class QTDocumentsBackingBean extends
 				 */
 
 				tplDocMaster.setTplDocSectionCollection(new ArrayList<TplDocSection>());
+				Map<TplDocSection, TplDocSection> originalToCloneMap = new HashMap<>(); //#34873
 				List<TplDocSection> docSectionCOllection = templateDocMaster
 						.getTplDocSectionCollection();
 				for (TplDocSection tplDocSection : docSectionCOllection) {
@@ -3132,13 +3133,25 @@ public class QTDocumentsBackingBean extends
 						section.setSectionTitle(title);
 					}
 					section.setDocSectionId(null);
-					section.setParent(null); // Temporarily am setting null, need to
+					//#34873
+					//section.setParent(null); // Temporarily am setting null, need to
 												// confirm once
 					section.setTplDocMaster(tplDocMaster);
 
 					setUserDetails(section);
 					tplDocMaster.getTplDocSectionCollection().add(section);
+					originalToCloneMap.put(tplDocSection, section); //#34873
 				}
+				
+				//#34873 - start
+				for (TplDocSection section : tplDocMaster.getTplDocSectionCollection()) {
+			        TplDocSection originalParent = section.getParent();
+			        if (originalParent != null) {
+			            TplDocSection cloneParent = originalToCloneMap.get(originalParent);
+			            section.setParent(cloneParent);
+			        }
+			    }
+				//#34873 - end
 
 				// Procurement Category
 				PmParameter procurementCategory = scQtDocReport.getScQt()

@@ -31,7 +31,7 @@
 		value="#{requestNoteBackingBean.managedBean.purchaseRequestMapList}" style="width:100%"  id="purchaseRequestTableID" rows="10" preserveDataModel="true">
 		<ac:paginator for="purchaseRequestTableID"></ac:paginator>
 		<p:column headerText="#{lbl['lbl.sc.continuity.no']}" style="text-align:center;">
-			<p:outputLabel value="#{index + 1}" style="vertical-align: middle;" />
+			<div align="center"><h:outputText value="#{index + 1}" /></div>
 		</p:column>
 		<p:column headerText="#{lbl['lbl.rpt.prNo']}"
 			style="text-align:center;">

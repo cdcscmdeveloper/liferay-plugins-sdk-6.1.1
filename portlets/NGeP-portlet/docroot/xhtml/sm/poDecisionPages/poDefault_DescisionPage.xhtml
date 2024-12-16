@@ -102,7 +102,9 @@
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
-							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+							or backingBean.managedBean.specialCategoryRechecked}">
+							<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 							
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -283,8 +285,14 @@
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
+										
+										<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 										<c:when
-											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
+												or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+												or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
+											
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
@@ -360,29 +368,12 @@
 	</p:dialog>
 	
 	<!-- #29727 START -->
-	<ac:confirmationPopup id="pendingQTPopUpApprovePoId"
-		widget="pendingQTPopUpApprovePo"
-		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt; &lt;br&gt;
-		#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
-		update=":form:tt:approveDialog"/>
-		
 	<ac:confirmationPopup id="pendingQTPopUpRecommendApprovePoId"
 		widget="pendingQTPopUpRecommendApprovePo"
 		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
-		update=":form:tt:approveDialog"/>
-		
-	<ac:confirmationPopup id="pendingQTPopUpCloseApprovePoId"
-		widget="pendingQTPopUpCloseApprovePo"
-		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
 		update=":form:tt:approveDialog"/>
 	<!-- #29727 END -->
 		

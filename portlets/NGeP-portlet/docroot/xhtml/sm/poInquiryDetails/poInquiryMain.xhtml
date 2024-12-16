@@ -27,13 +27,14 @@
 			<td>
 				<!-- #12483 - START, #34892 -->
 				<ac:smReviseReason bBean="#{backingBean}"/>
+				<!--#34392 Start -->
 				<div style="width: 100%" align="right">
 				<!-- #12483 - END -->
-					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}" rendered="#{backingBean.managedBean.inquirySiteVisitAfter}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-						update=":#{p:component('sendInqDialog')}" />
+						update=":#{p:component('sendInqDialog')}"/>
 				</div>
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>
@@ -50,7 +51,6 @@
 				
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
-				<!--#34392 Start -->
 				<!-- <p:dataTable var="onTable" id="inquiryMainSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{backingBean.managedBean.missinDocs}">
 					<ac:paginator for="inquiryMainSdList" />
@@ -113,7 +113,7 @@
 						style="width : 27% !important;"
 						rendered="#{table.pmDocument.mandatory}">
 						<p:inputTextarea value="#{table.inquiryRemark}"
-							style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
+							style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 					</p:column>
 				</p:dataTable>
 				<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
@@ -188,7 +188,7 @@
 						style="width : 27% !important;"
 						rendered="#{!table.pmDocument.mandatory}">
 						<p:inputTextarea value="#{table.inquiryRemark}"
-							style="float: left;white-space: normal;width:97% !important;" maxlength="100"/>
+							style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 					</p:column>
 				</p:dataTable>
 				<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->

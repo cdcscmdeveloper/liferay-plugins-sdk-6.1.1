@@ -91,11 +91,11 @@
 				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
-					rendered="#{qtLOABackingBean.isSupplierEPVStatusRejected() and !lOADetailBackingBean.managedBean.scLoa.brandNew
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and !lOADetailBackingBean.managedBean.scLoa.brandNew
 					and lOADetailBackingBean.isLOAStatusAbleToCancel()}"
 					oncomplete="cancelLoaPopup.show();"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
-					update="#{isReject ? '@this' : '@form'}" />
+					update="#{isReject ? '@this' : '@form'}" /><ui:remove>36339, 21692</ui:remove>
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">

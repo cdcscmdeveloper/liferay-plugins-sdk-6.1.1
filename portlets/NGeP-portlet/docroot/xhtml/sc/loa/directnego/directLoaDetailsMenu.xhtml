@@ -504,7 +504,10 @@
 											<p:ajax event="change" process="@this" partialSubmit="true"
 												update="@this, menuItems,agreementReqPG, expDateLabel, effDateLabel, contractDurationLabel, @([id$=uploadApprovalLetterPg])"
 												listener="#{directLOABackingBean.fulfilmentChange}"></p:ajax>
-																							
+											
+											<p:ajax event="change" 
+												listener="#{directLOABackingBean.changeResetValuePK7FullfilmentType()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
+																								
 											<p:ajax event="change"
 												listener="#{directLOABackingBean.isPbDropDown()}"
 												partialSubmit="true" 
@@ -960,6 +963,9 @@
 														<!-- #25726 START -->
 														 <p:ajax event="change" partialSubmit="true" update="agreementReqPG @([id$=uploadApprovalLetterPg])" 
 														 listener="#{directLOABackingBean.onChangeAgreementReqType}"/>
+														 
+														<p:ajax event="change" 
+														 listener="#{directLOABackingBean.changeResetRequiredAgreement()}" ></p:ajax> <ui:remove> #25726#323 </ui:remove>
 														<!-- #25726 END -->
 													</p:selectOneMenu>
 												</c:when>
@@ -1063,7 +1069,7 @@
 				<td colspan="3">
 					<p:outputPanel id="uploadApprovalLetterPg"> 
 						<!-- #25726 START -->													
-						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
+						<h:panelGroup  rendered="#{(StatusLOASubmission || StatusLOARevision || StatusLOAApproval) and ((((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and !directLOABackingBean.managedBean.readOnly)||(((isNonPeriodic || isOneOff) and !isPK7) and !directLOABackingBean.managedBean.agreementReqChange and !directLOABackingBean.managedBean.scLoa.agreementReq and above500K and directLOABackingBean.managedBean.readOnly))}" 
 						required="true">
 						<!-- #25726 END -->
 							<table>
@@ -1097,7 +1103,7 @@
 			 	 				</tr>
 			 	 			</table>			 	 				
 			 	 		</h:panelGroup>
-			 	 		<h:panelGroup  rendered="#{!(StatusLOASubmission or StatusLOARevision) and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
+			 	 		<h:panelGroup  rendered="#{!(StatusLOASubmission or StatusLOARevision or StatusLOAApproval) and directLOABackingBean.managedBean.scLoa.scLoaAttachment ne null}" required="true">
 							<table>
 								<tr>
 									<td width="300">

@@ -2,7 +2,10 @@ package my.ep.web.backingbean.sm.virtualcert;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -184,10 +187,96 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		reqDTO.setSupplierId(supplierId);
 		VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
 		this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
-		if(resDTO.getSmMofCerts().size() > 0){
-			this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
+		if (resDTO.getSmMofCerts().size() > 0) {
+			// #36401 - Start
+			if (countCerts(resDTO.getSmMofCerts())) {
+				this.getManagedBean().setMofCertLs(
+						getLatestSmMofCertsIfDuplicate(resDTO.getSmMofCerts()));
+			} else {
+				this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
+			}
+			// #36401 - End
 		}
 	}
+	
+	// #36401 - Start
+	private boolean countCerts(List<SmMofCert> certs) {
+		int countCert = 0;
+		int countBumi = 0;
+		for (SmMofCert cert : certs) {
+			if (!cert.isBumiCert()) {
+				countCert++;
+			}
+			if (cert.isBumiCert()) {
+				countBumi++;
+			}
+		}
+		return countCert > 1 || countBumi > 1;
+	}
+
+	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
+	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
+			List<SmMofCert> mofCerts) {
+		List<SmMofCert> cert = new ArrayList<>();
+		List<SmMofCert> bumiCert = new ArrayList<>();
+
+		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
+		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
+
+		for (SmMofCert mofCert : mofCerts) {
+			if (!mofCert.isBumiCert()) {
+				cert.add(mofCert);
+			}
+
+			if (mofCert.isBumiCert()) {
+				bumiCert.add(mofCert);
+			}
+		}
+
+		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
+		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
+
+		// if more than 1 Cert on a same appl_id, need reorder it and means there is duplicate, sort cert by asc order
+		if (cert.size() > 1) {
+			sortCertsListByAsc(cert);
+		}
+
+		// if more than 1 bumiCert on a same appl_id, need reorder it and means there is duplicate, Sort bumiCert by asc order
+		if (bumiCert.size() > 1) {
+			sortCertsListByAsc(bumiCert);
+		}
+
+		if (cert.size() > 1 || bumiCert.size() > 1) {
+			// clear actual list
+			mofCerts.clear();
+
+			if (!cert.isEmpty()) {
+				mofCerts.add(cert.get(0));
+			}
+
+			if (!bumiCert.isEmpty()) {
+				mofCerts.add(bumiCert.get(0));
+			}
+		}
+
+		return mofCerts;
+	}
+
+	/**
+	 * To sort list of smMofCert by asc
+	 * 
+	 * @param smMofCert
+	 */
+	public void sortCertsListByAsc(List<SmMofCert> smMofCert) {
+		Collections.sort(smMofCert, new Comparator<SmMofCert>() {
+			@Override
+			public int compare(SmMofCert cert1, SmMofCert cert2) {
+				return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+			}
+		});
+	}
+
+	// #36401 - End
 	
 	/**
 	 * Print Virtual Cert

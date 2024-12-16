@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.applicationView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -193,6 +194,12 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasActiveDA; //#34626
 	
 	private Map<Long, String> tempCategoryLs; //#34209
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
+	// #28895_35501 End
 	
 	public ViewSuppProfileManagedBean() {
 
@@ -1021,4 +1028,37 @@ public class ViewSuppProfileManagedBean extends
 	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
 		this.tempCategoryLs = tempCategoryLs;
 	}
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
 }
