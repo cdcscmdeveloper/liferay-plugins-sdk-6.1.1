@@ -199,6 +199,7 @@
 							maxlength="100" label="#{lbl['lbl.sm.companyaddress']}"
 							disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.addressSsmNull) or backingBean.managedBean.upsCannotEdit}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" >
+							<p:ajax event="change" process="@this" listener="#{backingBean.onChangeAddress(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 'Addr1', SupplierManagementConst.SM_BASIC_INFO_PANEL)}"/>
 						</p:inputText>
 						<!-- #36483 - END -->
 						<ac:ssmShowIconAlertGreen 
