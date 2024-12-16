@@ -314,4 +314,6 @@ public interface QTConstants {
 	// Bug #35688@Syazani 10/07/2024 -- End
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+	
+	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 }
