@@ -184,6 +184,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// 6906 note 117 - end
 
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
 			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
@@ -2202,7 +2207,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.meetingBB = meetingBB;
 	}
 	// 25037 - end
-
+	
 	// 6906 note 117 - start
 	public SelectItem[] getDecisionDropdown() {
 		return decisionDropdown;

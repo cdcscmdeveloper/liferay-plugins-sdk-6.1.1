@@ -22,7 +22,6 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.complianceProposalSubmitSuppliers}"
 				update="complianceTechnicalSupplier" />
-
 			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark}" />

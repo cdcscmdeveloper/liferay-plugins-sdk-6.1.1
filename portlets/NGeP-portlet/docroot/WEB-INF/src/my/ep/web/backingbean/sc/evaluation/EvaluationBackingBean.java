@@ -12791,8 +12791,7 @@ private void retriveCommitteeRemarksList(){
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 	// 25037 - end - note 568
-	// 25037 - end
-
+	
 	// 6906 - start
 	/**
 	 * Get warning message when no supplier participate on evaluation
@@ -12803,7 +12802,6 @@ private void retriveCommitteeRemarksList(){
 	public String getNoSupplierWarningMessage() {
 		return MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES,
 				new FacesScopes().getUserLocale());
-
 	}
 	// 6906 - end
 }
