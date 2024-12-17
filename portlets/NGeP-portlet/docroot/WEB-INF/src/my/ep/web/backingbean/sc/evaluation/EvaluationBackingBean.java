@@ -6326,6 +6326,7 @@ public class EvaluationBackingBean extends
 			int outputTab) throws Exception {
 		IQTEvaluationSO evaluationSo = null;
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();// 6906
 		try {
 
 			// this.currentTab = currentTab;
@@ -6883,6 +6884,9 @@ public class EvaluationBackingBean extends
 				getManagedBean().setTempTab(outputTab);
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
+			// 6906 - start
+			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);
+			// 6906 - end
 		}catch(Exception e){
 			log.info("ExceptionBlock"+currentTab);
 			log.info("ExceptionBlockCommitteeType"+this.getManagedBean()
@@ -7688,6 +7692,7 @@ private void retriveCommitteeRemarksList(){
 			int tempIndx = getManagedBean().getTempTab();
 			boolean checkQualifiedSuppliers = this.getManagedBean()
 					.isCheckQualifiedSuppliers();
+			boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();// 6906 - note 93
 			ScAttachment attachemnt = this.getManagedBean().getScAttachment();
 			String reportFileName = this.getManagedBean()
 					.getReportDownloadFileName();
@@ -7745,6 +7750,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setPayLoad(evaluationDataType);
 			this.getManagedBean().setCurrentTime(currentTime);
 			this.getManagedBean().setStatusOnly(evaluationStatus);
+			this.getManagedBean().setNoProposalSubmitted(noProposalSubmitted);// 6906 - note 93
 
 			/* ***#25638#99 - start */
 			if(userHasRole(new RoleCode[]{RoleCode.SC_SECRETARY, RoleCode.EC_SECRETARY, RoleCode.TEC_SECRETARY, RoleCode.OC_SECRETARY})
@@ -8780,7 +8786,15 @@ private void retriveCommitteeRemarksList(){
 
 		// FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
-
+		// 6906 - start
+		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTProposalSO.class);
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setQtId(evaluationDataType.getQtId().longValue());
+		Long proposalSubmitted = proposalSO.getTotalSubmittedProposal(reqDTO).getTotalSubmitted();
+		this.getManagedBean().setNoProposalSubmitted(proposalSubmitted.compareTo(new Long(0)) == 0);
+		// 6906 - end
+		
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
 		String taskName = this.getManagedBean().getTaskName();
@@ -11375,7 +11389,7 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {// 6906
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -11398,7 +11412,7 @@ private void retriveCommitteeRemarksList(){
 		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
 
 		} else {
-			if (!this.getManagedBean().isReadOnly()) {
+			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()) {// 6906
 				this.getManagedBean().setCheckFinancialQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -12866,5 +12880,17 @@ private void retriveCommitteeRemarksList(){
 	}
 	// 25037 - end - note 568
 	// 25037 - end
-
+	
+	// 6906 - start
+	/**
+	 * Get warning message when no supplier participate on evaluation
+	 * 
+	 * @param
+	 * @return String
+	 */
+	public String getNoSupplierWarningMessage() {
+		return MessageUtils.getMessage(MessageConst.WARN_760530, MessageUtils.BUNDLE_COMMON_MESSAGES,
+				new FacesScopes().getUserLocale());
+	}
+	// 6906 - end
 }
