@@ -3948,8 +3948,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		List<List<Map<String, String>>> listConstructQuestion = new ArrayList<>();
 		boolean isZonalAdded = Boolean.FALSE;
 		String answerRemark = "";
-		String specVal = "";
-		String clItem = "";
 		List<ScLoiLoaItem> listSSTItem = new ArrayList<>();
 		Long tempRequestItemId = 0L;
 		// 35295 @zaim end
