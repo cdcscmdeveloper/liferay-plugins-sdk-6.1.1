@@ -135,7 +135,7 @@
 					<p:inputText
 						id="technicalGovernmentNoofContractsUserScoreId"
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						disabled="#{pageDisable or technicalorFinancialReEvaluateRequired}"
+						disabled="#{pageDisable or rejectedSupplier or technicalorFinancialReEvaluateRequired}"
 						value="#{noOfContracts.userScore}" required="true" maxlength="18"
 						style="text-align:right" rendered="#{checklistScoreType eq '2'}">
 						<ac:validateNumber

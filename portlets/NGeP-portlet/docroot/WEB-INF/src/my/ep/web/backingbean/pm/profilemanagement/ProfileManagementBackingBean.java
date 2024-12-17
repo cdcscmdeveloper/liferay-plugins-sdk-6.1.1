@@ -598,7 +598,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				pmUserOrg.setPmUser(pmUser);
 				pmUser.getPmUserOrgs().add(pmUserOrg);
 				this.getManagedBean().setSelectedUserOrg(pmUserOrg);
-				/////////////////////// the following info need to use for Tracking Dairy
+				// the following info need to use for Tracking Dairy
 				this.getManagedBean().setPmUserOriginal((PmUser) pmUser.cloneEntity());
 				this.getManagedBean().setPmUserOrgOriginal((PmUserOrg) pmUserOrg.cloneEntity());
 
@@ -650,7 +650,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
 
-		// ////////////////////fill up relations to PmUser
+		// fill up relations to PmUser
 		PmUserOrg pmUserOrg = new PmUserOrg();
 		pmUserOrg.setPMP(false);
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
@@ -1073,47 +1073,47 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	}
 	   
-		//#36489 - Start
-		/**
-		 * check if user still have:
-		 * 1) pending task (BPM)
-		 * 2) pending task for user role (any module transaction)
-		 * 3) active at any user group (FL Approver and RN Approver)
-		 * 4) active at Supplier User Appointment in Org Profile Maintenance
-		 */
-		public void orgUnitStatusChange() {
-			logger.info("orgUnitStatusChange");
-			if (validateUserOrg()) {
-				int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
-				if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
-					EpException ex;
-					if (isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())) {
-						// revert it to active
-						this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-						// hit error and exit
-						throw new EpException(MessageConst.ERROR_770167);
-					} else if ((ex = isAnyPendingDocForUserRole(validateUserOrgandRole(), this.getManagedBean()
-							.getSelectedUser().getUserId())) != null) {
-						// revert it to active
-						this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-						// hit error and exit
-						throw ex;
-					} else if (isActiveUserGroupUser() != null) {
-						this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-						throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
-					} else if (validateUserOrgProfileAndStatus()) {
-						checkIsActiveGovtSellerUser();
-					} else {
-						// if inactive set expire Date to SyetemDate
-						inactiveUserOrgRoleAndReceivingAddress(status);
-					}
+	//#36489 - Start
+	/**
+	 * check if user still have:
+	 * 1) pending task (BPM)
+	 * 2) pending task for user role (any module transaction)
+	 * 3) active at any user group (FL Approver and RN Approver)
+	 * 4) active at Supplier User Appointment in Org Profile Maintenance
+	 */
+	public void orgUnitStatusChange() {
+		logger.info("orgUnitStatusChange");
+		if (validateUserOrg()) {
+			int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				EpException ex;
+				if (isAnyPendingTaskForUser(this.getManagedBean().getSelectedUser().getLoginId())) {
+					// revert it to active
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					// hit error and exit
+					throw new EpException(MessageConst.ERROR_770167);
+				} else if ((ex = isAnyPendingDocForUserRole(validateUserOrgandRole(), this.getManagedBean()
+						.getSelectedUser().getUserId())) != null) {
+					// revert it to active
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					// hit error and exit
+					throw ex;
+				} else if (isActiveUserGroupUser() != null) {
+					this.getManagedBean().getSelectedUserOrg().setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					throw new EpException(MessageConst.ERROR_770202, isActiveUserGroupUser());
+				} else if (validateUserOrgProfileAndStatus()) {
+					checkIsActiveGovtSellerUser();
+				} else {
+					// if inactive set expire Date to SyetemDate
+					inactiveUserOrgRoleAndReceivingAddress(status);
 				}
-				//#35489 - Start
-				this.getManagedBean().setOrgUnitStatusChange(true);
-				//#35489 - End
 			}
+			//#35489 - Start
+			this.getManagedBean().setOrgUnitStatusChange(true);
+			//#35489 - End
 		}
-		//#36489 - End
+	}
+	//#36489 - End
 
 	public void userStatusChange() {
 		logger.info("userStatusChange");
@@ -1149,12 +1149,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		// #35489 - End
 	}
 
-	/*
-	 * public void changeResponsibleOrgDates(ValueChangeEvent changeEvent){
-	 * logger.info("changeResponsibleOrgDates"); logger.info("NEW " +
-	 * changeEvent.getNewValue()); logger.info("OLD " +
-	 * changeEvent.getOldValue()); }
-	 */
 	public void resetOrgTypeAndCode() {
 		PmOrgProfile orgProfile = new PmOrgProfile();
 		orgProfile.setPmOrgValidity(new PmOrgValidity());
@@ -1184,7 +1178,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			orgProfile.setOrgTypeCode(pmParameter);
 			getManagedBean().getSelectedUserOrg().setPmOrgProfile(orgProfile);
 		}
-
 	}
 
 	public void changeOrgUnit(BaseEntity entity) {
@@ -1206,7 +1199,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 			}
 		}
-
 	}
 
 	public void clearOrgNameAndRoleLovSearchFields() {
@@ -1224,7 +1216,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} else {
 			this.getManagedBean().getSelectedOrgType().setParameterCode(null);
 		}
-
 	}
 
 	/**
@@ -1416,8 +1407,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 
 	/**
-	 * update ui receiving address tab if selected roles contain "Receiving
-	 * Role"
+	 * update ui receiving address tab if selected roles contain "Receiving Role"
 	 */
 	private void updateReceivingAddressFlag() {
 		logger.info("updateReceivingAddressFlag");
@@ -1470,14 +1460,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getDeleteUserRoles().clear();
 			updateReceivingAddressFlag();
 		}
-
 	}
 
 	/**
 	 * Remove check box tick from data table
 	 * 
-	 * @param AjaxBehaviorEvent
-	 *            e
+	 * @param AjaxBehaviorEvent e
 	 */
 	public void unSelectRole(AjaxBehaviorEvent e) {
 		if (this.getManagedBean().getDeleteUserRoles() != null
@@ -1496,7 +1484,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				setDisableDeleteRole(true);
 			}
 		}
-
 	}
 
 	public void checkDeleteRoles() {
@@ -1536,7 +1523,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (oriPmRoles.contains(this.getManagedBean().getSelectedRole().getPmRole())) {
 				isUnique = false;
 			}
-
 		}
 		return isUnique;
 	}
@@ -1566,9 +1552,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						|| RoleCode.RN_APPROVER.value().equals(pmUserRole.getPmRole().getRoleCode()))
 						//Bug #31509 - Start 
 						&& isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()) != null) {
-					// check for FL Approver and RN Approver only
-					// revert it to active
-					//pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					// check for FL Approver and RN Approver only revert it to active
 					throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(pmUserRole.getPmRole().getRoleCode()));
 					//Bug #31509 - End
 				} else {
@@ -1621,7 +1605,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 		getManagedBean().setRoleTabActiveIndex(0);
-
 	}
 
 	/**
@@ -1839,7 +1822,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} else {
 			throw new EpException(MessageConst.ERROR_770025);
 		}
-
 	}
 
 	/**
@@ -1968,7 +1950,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	/**
 	 * show user role options
 	 */
-
 	private ISearchBean<PmRoleDesc> getRoleBeanData(ISearchBean<PmRoleDesc> searchBean, Long currentOrgTypeId) {
 		logger.info("getRoleBeanData");
 
@@ -2109,15 +2090,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						obj.setSelected(true);
 					}
 				}
-
 			}
 		}
 	}
-
 	/** Roles & Paging - End */
 
 	/** User Search & Paging - Start */
-
 	/**
 	 * search user profiles
 	 */
@@ -2464,7 +2442,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.addPmAddressType(pmAddressType);
 			}
 		}
-
 	}
 
 	/**
@@ -2552,7 +2529,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				user.addPmAddressType(pmAddressType);
 			}
 		}
-
 	}
 
 	/**
@@ -2640,7 +2616,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						logger.info("deleteRoleList : " + deleteRole.getPmRole().getRoleCode() + "|RoleStatus :" + deleteRole.getPmRole().getRecordStatusFlg());
 					}
 				}
-				
 			}
 		}
 	}
@@ -2685,8 +2660,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						for (int index2 = index1 + 1; index2 < user.getPmUserOrgs().size(); index2++) {
 							if (user.getPmUserOrgs().get(index2)
 									.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-								// Overlap exists if (StartA <= EndB) and (EndA
-								// >= StartB)
+								// Overlap exists if (StartA <= EndB) and (EndA >= StartB)
 								Date startA = user.getPmUserOrgs().get(index1).getEffDate();
 								Date endA = user.getPmUserOrgs().get(index1).getExpDate();
 								Date startB = user.getPmUserOrgs().get(index2).getEffDate();
@@ -2729,13 +2703,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						userOrg.setCurrentActive(true);
 						activeOrgNumber++;
 						if (userOrg.getPmUserRoles() == null || userOrg.getPmUserRoles().isEmpty()) {
-
 						}
 						for (PmUserRole userRole : userOrg.getPmUserRoles()) {
 							if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()) {
 								activeRoleNumber++;
 							}
-
 						}
 						if (activeRoleNumber == 0) {
 							throw new EpException(MessageConst.ERROR_770150);
@@ -2743,7 +2715,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					} else {
 						userOrg.setCurrentActive(false);
 					}
-
 				}
 			}
 		}
@@ -2752,7 +2723,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} else if (user.isBrandNew() && activeOrgNumber == 0) {
 			throw new EpException(MessageConst.ERROR_770029);
 		}
-
 	}
 
 	/**
@@ -2783,14 +2753,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							&& (RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode()) || RoleCode.RN_APPROVER
 									.value().equals(userRole.getPmRole().getRoleCode()))
 							&& isActiveAtUserGroupUser(userRole.getPmRole().getRoleCode()) != null) {
-						// check for FL Approver and RN Approver only
-						// revert it to active
+						// check for FL Approver and RN Approver only revert it to active
 						userRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 						throw new EpException(MessageConst.ERROR_770202, isActiveAtUserGroupUser(userRole.getPmRole()
 								.getRoleCode()));
 					}
 					// Bug #31509 - End
-
 
 					// Check single role for all users
 					if (userRole.getPmRole().isSingleRole()
@@ -2805,8 +2773,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							}
 						}
 					}
-					// check if one role is active for user org active status
-					// only
+					// check if one role is active for user org active status only
 					if (DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()) {
 						activeRole = true;
 					}
@@ -2819,7 +2786,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (!activeRole) {
 			throw new EpException(MessageConst.ERROR_770022);
 		}
-
 	}
 
 	/**
@@ -2859,7 +2825,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		String oldDesignation = user.getDesignation();
 		String newDesignation = userOrg.getDesignation();
-		if (oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)) {//if designation was modified
+		if (oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)) {// if designation was modified
 			logger.info("oldDesignation : " + oldDesignation);
 			logger.info("newDesignation : " + newDesignation);
 			isProfileDetailsChanged = true;
@@ -2915,7 +2881,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {// ????
 
 			for (PmUserRole userRole : reqDTO.getNewRoleList()) {
-				//
+				
 				if (userRole.isBrandNew()) {
 
 					logger.info("Tracking diary for user profile: add new Role :saveUserProfile");
@@ -2981,13 +2947,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						reqDTO.setTrackingStatus(true);
 						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,
 								getActionDesc(messageId, msgParam), userOrg.getRecordStatusFlg().longValue()));
-
 					}
 				}
 			}
-
 		}
-
 	}
 
 	/**
@@ -3215,7 +3178,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 				uploadAttachments();
 				deleteAttachments();
-
+				
 				if (!isNewUser) {
 					if (!userOrg.isBrandNew()) {
 						loadUserProfile(resDTO.getPmUser().getUserId(), userOrg.getUserOrgId());
@@ -3537,12 +3500,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
-
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser().setHasActiveOrg(true);
 						PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
+						
 						if (orgProfile.getOrgName() == null || orgProfile.getOrgCode() == null) {
 							String param1 = null;
+							
 							if (orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode()
 									.getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
 								param1 = orgProfile.getSmSupplier().getCompanyName();
@@ -3552,6 +3516,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								param1 = orgProfile.getPmFinancialOrg().getFinOrgName();
 
 							}
+							
 							throw new EpException(MessageConst.ERROR_770215, new String[] { param1 });
 						}
 						throw new EpException(MessageConst.ERROR_770155,
@@ -3645,8 +3610,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser().setHasActiveOrg(true);
 						PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
+						
 						if (orgProfile.getOrgName() == null || orgProfile.getOrgCode() == null) {
 							String param1 = null;
+							
 							if (orgProfile.getOrgTypeCode().getParameterCode() != null && orgProfile.getOrgTypeCode()
 									.getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)) {
 								param1 = orgProfile.getSmSupplier().getCompanyName();
@@ -3656,11 +3623,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								param1 = orgProfile.getPmFinancialOrg().getFinOrgName();
 
 							}
+
 							throw new EpException(MessageConst.ERROR_770215, new String[] { param1 });
 						}
 						throw new EpException(MessageConst.ERROR_770155,
 								new String[] { orgProfile.getOrgName(), orgProfile.getOrgCode() });
-
 					} else {
 
 						IPersonnelSO personnelSO;
@@ -3670,7 +3637,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 						reqDTO.setIdentificationNo(getManagedBean().getSelectedUser().getIdentificationNo());
 						PersonnelResDTO resDTO1 = personnelSO.isSupplierPersonnel(reqDTO);
-
+						//
 						if (resDTO1.isSupplierPersonnel()) {
 							throw new EpException(MessageConst.ERROR_770214,
 									new String[] { getManagedBean().getSelectedUser().getIdentificationNo() });
@@ -3755,7 +3722,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			} finally {
 				userSO = null;
 			}
-
 		}
 	}
 
@@ -3792,8 +3758,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		List<PmUserGroup> userGroups = PmCommonUtil.retrieveUserActiveAtUserGroup(userId, role, null);
 		return userGroups != null ? userGroups.get(0) : null;
 	}
-	//Bug #31509 - Start 
-
+	//Bug #31509 - Start
+	
 	/**
 	 * The method used for generating a list of available display type of org
 	 * type as selection.
@@ -3807,7 +3773,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
 			searchBean = getUserOrgTypeObjectSearchBean("somOtherOrgType");
 		}
-
+		
 		SelectItem[] items = null;
 		if (searchBean != null) {
 			searchBean.getSortColumns();

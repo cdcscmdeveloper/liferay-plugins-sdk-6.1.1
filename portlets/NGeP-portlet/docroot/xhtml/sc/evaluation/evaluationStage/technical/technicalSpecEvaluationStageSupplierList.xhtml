@@ -17,16 +17,26 @@
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}">
 			<ac:paginator for="templateSpecId" />
-
-
+			
+			<ui:remove><!-- 6906 - start --></ui:remove>
+			<ui:param name="isRejected"
+				value="#{not empty templateSpec.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
-				style="width:25%; text-align:center;">
-
-				<h:outputText value="#{templateSpec.scQtProposal.supplierNo}"></h:outputText>
-
-
+				style="width:20%; text-align:center;">
+				<table
+					style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
+					<tr>
+						<td style="text-align: center; border: 0 !important" />
+						<td style="text-align: center; border: 0 !important"><h:outputText
+								value="#{templateSpec.scQtProposal.supplierNo}" /></td>
+						<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
+								show="#{isRejected}" id="remarkId"
+								remark="#{templateSpec.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{templateSpec.scQtProposal.supplierNo}" /></td>
+					</tr>
+				</table>
+				<ui:remove><!-- 6906 - end --></ui:remove>
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -55,17 +65,20 @@
 				<p:commandButton value="#{lbl['lbl.btn.evaluate']}" process="@this"
 					partialSubmit="true"
 					rendered="#{templateSpec.evaluationStatus.statusId eq '61600' and evaluationBackingBean.managedBean.scQtChecklist.scoringReq}"
-					action="#{evaluationBackingBean.technicalSupplierEvaluate(templateSpec,'T')}" />
+					action="#{evaluationBackingBean.technicalSupplierEvaluate(templateSpec,'T')}" 
+					disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
 
 				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
 					partialSubmit="true"
 					rendered="#{templateSpec.evaluationStatus.statusId eq '61601' and evaluationBackingBean.managedBean.scQtChecklist.scoringReq}"
-					action="#{evaluationBackingBean.technicalSupplierEvaluate(templateSpec,'T')}" />
+					action="#{evaluationBackingBean.technicalSupplierEvaluate(templateSpec,'T')}" 
+					disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
 
 				<p:commandButton value="#{lbl['lbl.btn.view']}" process="@this"
 					partialSubmit="true"
 					rendered="#{((templateSpec.evaluationStatus.statusId eq '61600' and !evaluationBackingBean.managedBean.scQtChecklist.scoringReq) or (templateSpec.evaluationStatus.statusId eq '61601' and !evaluationBackingBean.managedBean.scQtChecklist.scoringReq))}"
-					action="#{evaluationBackingBean.technicalSupplierEvaluate(templateSpec,'T')}" />
+					action="#{evaluationBackingBean.technicalSupplierEvaluate(templateSpec,'T')}" 
+					disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
