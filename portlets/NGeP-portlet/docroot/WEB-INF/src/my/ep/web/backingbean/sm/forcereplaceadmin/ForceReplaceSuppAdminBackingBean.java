@@ -1499,8 +1499,27 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
 	}
 	
+	// #36716 - Start
+	public void recheckVal(SmAddress srcAddr) {
+		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1()) || srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null
+				|| ("14").equalsIgnoreCase(srcAddr.getPmState().getStateId().toString())
+				&& srcAddr.getPmDivision() == null && srcAddr.getPmDivision().getDivisionId() == null
+				|| srcAddr.getPmDistrict() == null || srcAddr.getPmDistrict().getDistrictId() == null
+				|| srcAddr.getPmCity() == null || srcAddr.getPmCity().getCityId() == null
+				|| StringUtils.isBlank(srcAddr.getPostcode())) {
+			String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
+			getManagedBean().getMailAddr().setSameAsPerm(false);
+			throw new EpException(MessageConst.ERROR_722656, new String[] { addrType });
+		}
+	}
+	// #36716 - End
+	
 	public void copyPermanentAddress(SmAddress refAddress){
 		if(this.getManagedBean().getMailAddr().isSameAsPerm()){
+			//#36716 - Start
+			recheckVal(refAddress);
+			//#36716 - End
 			if(this.getManagedBean().getMailAddr().getSmAddress() != null){
 				if(this.getManagedBean().getMailAddr().getSmAddress() == null){
 					this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
