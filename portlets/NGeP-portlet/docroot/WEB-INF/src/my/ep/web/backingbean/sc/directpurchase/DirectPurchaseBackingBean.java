@@ -390,9 +390,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						getManagedBean().getSearchDocumentType());
 			}
 		}else{
-			return super.getStatusDropdownValues(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-					getManagedBean().getSearchDocumentType());
+			// start - 36615 & 25790
+			if (StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())) {
+				return super.getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), getManagedBean()
+						.getSearchDocumentType());
+			}
+			return null;
+			// end - 36615 & 25790
 		}
 	}
 
@@ -666,7 +670,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-			reset(false); //#25396
+			//reset(false); #36502 & #25790 - remove this code
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166

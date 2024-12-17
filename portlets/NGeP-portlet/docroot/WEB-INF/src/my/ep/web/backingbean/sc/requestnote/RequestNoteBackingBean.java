@@ -1300,11 +1300,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				// #36362 - start
+				// #36362 & 25790 - start
 				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { 
 					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
 				}
-				// #36362 - end
+				// #36362 & 25790 - end
 				
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
@@ -6198,7 +6198,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					lOADetailBackingBean.getManagedBean().setScLoa(scLoa);
 					mapScLoa.put(
 							ContinuityDPConst.getLoaStatus(),
-							lOADetailBackingBean.isSqStillValid() ? lOADetailBackingBean
+							!lOADetailBackingBean.isSqStillValid() && sqExpiredMessageFlag ? lOADetailBackingBean
 									.getStatusDescById(DPStatusConstants.SQ_EXPIRED) : lOADetailBackingBean
 									.getStatusDescById(scLoa.getPmStatus().getStatusId()));
 
