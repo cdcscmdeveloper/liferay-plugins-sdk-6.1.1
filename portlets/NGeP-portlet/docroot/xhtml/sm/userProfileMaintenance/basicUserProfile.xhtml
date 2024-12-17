@@ -537,6 +537,7 @@
 									<td></td>				
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
 											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
 												partialSubmit="true" process="@this @([id$=MailingAddressInfo])" resetValues="true"
 												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
@@ -600,7 +601,9 @@
 												value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 											<!-- #13320 - added division -->
 											<!-- #33592-->
-											<p:ajax event="change"
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<p:ajax event="change" 
+												process="@this @([id$=MailingAddressInfo])"
 												update="basicMailAddStateList, basicMailAddDivisionList, basicMailAddDistrictList, basicMailAddCityList,basicMailAddPostCodePanelId, divisionLabelPanelId, divisionDropdownPanelId"
 												listener="#{smPersonnelBackingBean.onChangeCountry(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
 										</p:selectOneMenu>
@@ -626,7 +629,8 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 											<!-- #33592-->
-											<p:ajax event="change"  process="@this"
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<p:ajax event="change"  process="@this @([id$=MailingAddressInfo])"
 												update="divisionLabelPanelId, divisionDropdownPanelId, basicMailAddDistrictList, basicMailAddCityList"
 												listener="#{smPersonnelBackingBean.onChangeState(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
 										</p:selectOneMenu>
@@ -663,7 +667,8 @@
 															itemValue="" />
 														<f:selectItems
 															value="#{smPersonnelBackingBean.managedBean.mailAddDivisionList}" />
-														<p:ajax event="change"
+														<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+														<p:ajax event="change" process="@this @([id$=MailingAddressInfo])"
 															update="basicMailAddDistrictList,basicMailAddCityList" 
 															listener="#{smPersonnelBackingBean.onChangeDivision(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}"/>
 													</p:selectOneMenu>
@@ -693,7 +698,10 @@
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
 											<!-- #13320 - added division -->
-											<p:ajax event="change" update="basicMailAddCityList"
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<p:ajax event="change" 
+												process="@this @([id$=MailingAddressInfo])"
+												update="basicMailAddCityList"
 												listener="#{smPersonnelBackingBean.onChangeDistrict(smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress, 'M')}" />
 										</p:selectOneMenu>
 									<!-- #34159 - End  -->
@@ -717,6 +725,8 @@
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
+											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<p:ajax process="@this @([id$=MailingAddressInfo])" />
 										</p:selectOneMenu>
 									<!-- #34159 - End  -->
 										<p:message id="basicMailAddCityListMsg"
