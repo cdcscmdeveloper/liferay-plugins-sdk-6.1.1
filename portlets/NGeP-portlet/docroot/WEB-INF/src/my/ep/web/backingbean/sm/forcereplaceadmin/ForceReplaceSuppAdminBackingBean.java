@@ -1500,16 +1500,27 @@ public class ForceReplaceSuppAdminBackingBean extends
 	}
 	
 	// #36716 - Start
+	/**
+	 * Rechecks the validity of the specified source address.
+	 * @param srcAddr
+	 * @throws NullPointerException
+	 */
 	public void recheckVal(SmAddress srcAddr) {
 		if (isInvalidAddress(srcAddr)) {
 			handleInvalidAddress();
 		}
 	}
-
+	
 	private boolean isInvalidAddress(SmAddress srcAddr) {
-		return srcAddr == null || isBlank(srcAddr.getAddress1()) || isInvalidState(srcAddr)
-				|| isInvalidDivision(srcAddr) || isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr)
-				|| isBlank(srcAddr.getPostcode());
+	    if (srcAddr == null) {
+	        return true;
+	    }
+	    return isBlank(srcAddr.getAddress1()) || hasInvalidLocation(srcAddr) || isBlank(srcAddr.getPostcode());
+	}
+	
+	private boolean hasInvalidLocation(SmAddress srcAddr) {
+	    return isInvalidState(srcAddr) || isInvalidDivision(srcAddr) 
+	            || isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr);
 	}
 
 	private boolean isInvalidState(SmAddress srcAddr) {
