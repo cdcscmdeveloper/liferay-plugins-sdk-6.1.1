@@ -1520,7 +1520,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	
 	private boolean hasInvalidLocation(SmAddress srcAddr) {
 	    return isInvalidState(srcAddr) || isInvalidDivision(srcAddr) 
-	            || isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr);
+	            || isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr); 
 	}
 
 	private boolean isInvalidState(SmAddress srcAddr) {
