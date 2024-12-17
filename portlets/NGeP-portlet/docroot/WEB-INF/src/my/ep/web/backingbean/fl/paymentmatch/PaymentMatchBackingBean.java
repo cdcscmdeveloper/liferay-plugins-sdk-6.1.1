@@ -528,10 +528,10 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-	    LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
+		LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
 
 	    if (isDisciplinaryActionPAPendingStatus()) {
-	        LoggerUtils.getInstance().logCodeCoverage("Disciplinary action PA pending status verified");
+	    	LoggerUtils.getInstance().logCodeCoverage("Disciplinary action PA pending status verified");
 
 	        SmSupplier smSupplier = getManagedBean() != null 
 	                && getManagedBean().getFulfilmentRequest() != null 
@@ -564,18 +564,20 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 *         otherwise statuses
 	 */
 	private boolean isDisciplinaryActionPAPendingStatus() {
-	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Verify PAPendingStatus check method enters");
-
 	    Long statusId = getManagedBean().getPaymentAdvice().getStatus().getStatusId();
+	    LoggerUtils.getInstance().logCodeCoverage("Checking if status ID is in pending payment status");
+
 	    Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(FulfilmentStatusConst.PO_PENDING_PAYMENT_QUERY,
 	            FulfilmentStatusConst.CO_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH,
 	            FulfilmentStatusConst.PA_PENDING_PAYMENT_QUERY, FulfilmentStatusConst.CR_PENDING_QUERY_VERIFICATION));
 
-	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Verify PAPendingStatus check contains statusId");
-
 	    boolean result = pendingStatusIds.contains(statusId);
 
-	    LoggerUtils.getInstance().logCodeCoverage("Test Case 1: PAPendingStatus result is: " + result);
+	    if (result) {
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Status ID is pending payment");
+	    } else {
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Status ID is not pending payment");
+	    }
 
 	    return result;
 	}

@@ -967,6 +967,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
+		 LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
 	    SmSupplier supplier;
 
 	    if (getManagedBean().getStopInstr().getFlRequest().getSmSupplier() != null) {
@@ -980,6 +981,8 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 
 	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Supplier is not null");
+	    } else {
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Supplier is null");
 	    }
 	}
 

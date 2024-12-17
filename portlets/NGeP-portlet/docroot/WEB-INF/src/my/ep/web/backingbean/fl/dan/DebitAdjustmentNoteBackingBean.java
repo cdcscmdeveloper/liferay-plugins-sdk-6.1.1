@@ -238,21 +238,26 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 */
 	private void checkDisciplinaryAction() {
 		LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
-	    if (getManagedBean().getAdjustment().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL
-	            .longValue()) {
+
+	    Long statusId = getManagedBean().getAdjustment().getStatus().getStatusId();
+	    if (statusId != null && statusId.longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL.longValue()) {
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Status is DN_PENDING_APPROVAL");
+
 	        SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
 	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 	        if (smDisciplinaryAction != null) {
 	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Disciplinary action is set with a message");
 	        } else {
 	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 3: No disciplinary action found, message set to empty");
 	        }
-
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Status is DN_PENDING_APPROVAL");
 	    } else {
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Status is not DN_PENDING_APPROVAL");
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Status is not DN_PENDING_APPROVAL");
 	    }
+
+	    LoggerUtils.getInstance().logCodeCoverage("Exiting checkDisciplinaryAction");
 	}
 	// 26279 - End
 	
@@ -716,7 +721,7 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-	    LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
+		LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
 
 	    SmSupplier supplier;
 
@@ -733,10 +738,12 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
 
 	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Disciplinary action dialog displayed ");
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Disciplinary action dialog displayed");
 	    } else {
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: No supplier found ");
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 2: No supplier found");
 	    }
+
+	    LoggerUtils.getInstance().logCodeCoverage("Exiting viewDisciplinaryAction");
 	}
 	// 26279 - end
 	

@@ -857,20 +857,25 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
+		LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
 	    if (getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_CANCEL_APPROVAL
 	            .longValue()
 	            || getManagedBean().getInvoice().getStatus().getStatusId().longValue() == FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL
 	                    .longValue()) {
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Invoice status is in pending cancel/modification approval");
+
 	        SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 	        if (smDisciplinaryAction != null) {
 	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
 	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Disciplinary action found and set");
 	        } else {
 	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+	            LoggerUtils.getInstance().logCodeCoverage("Test Case 3: No disciplinary action found, empty message set");
 	        }
-
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Invoice status is IN_PENDING_CANCEL_APPROVAL or IN_PENDING_MODIFICATION_APPROVAL");
+	    } else {
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Invoice status is not in pending cancel/modification approval");
 	    }
 	}
 	// 26279 - End
@@ -2665,19 +2670,21 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-	    SmSupplier supplier;
-
+		LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
 	    if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-	        supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Supplier is not null");
+
+	        SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 	        supplier.setFlagSupplier(true);
 	        supplier.setFlagDASuppProfile(true);
 
-	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
-	                .getDisciplinaryActionVO(supplier);
+	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(supplier);
 	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Supplier is not null");
+	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Disciplinary actions set and dialog executed");
+	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+	    } else {
+	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 3: Supplier is null, no action performed");
 	    }
 	}
 
