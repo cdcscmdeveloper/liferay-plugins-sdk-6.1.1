@@ -5733,7 +5733,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				.retrieveRenewalPeriodForAppl(
 						ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 
-		String word = NumberWordUtil.changeNumberToWord(renewalPeriod);
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod, new FacesScopes().getUserLocale());
 		
 		return ResourceBundleUtils.getMessage("lbl.sm.basic.account.mof.tnc",
 				new String[] { word, String.valueOf(renewalPeriod) },

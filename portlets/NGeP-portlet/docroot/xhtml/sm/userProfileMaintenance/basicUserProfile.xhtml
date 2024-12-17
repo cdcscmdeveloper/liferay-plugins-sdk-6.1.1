@@ -533,7 +533,7 @@
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
 											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
-												partialSubmit="true" process="@this"
+												partialSubmit="true" process="@this @([id$=MailingAddressInfo])" resetValues="true"
 												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
 												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
 										</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>

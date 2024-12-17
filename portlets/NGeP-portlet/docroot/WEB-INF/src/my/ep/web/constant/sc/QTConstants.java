@@ -331,7 +331,7 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
 	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
 	// #29007 End Vinod
-	// #29007 Start Vinod
+	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
 	public static final String LBL_TXT_NO = "lbl.txt.no";
@@ -339,7 +339,7 @@ public interface QTConstants {
 	public static final String COMPLIANCE_SAMPLE_CONFIRMATION_POPUP = "complianceSampleConfirmPopUp.show()";
 	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
-	// #29007 End Vinod
+	// #29187 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";
 	
@@ -419,4 +419,14 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
 	// 25791 -end-
+
+	// #36757 Start Vinod 04/12/2024
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 End Vinod 04/12/2024
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
+	
+	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 }
