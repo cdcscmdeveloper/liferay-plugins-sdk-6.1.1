@@ -83,6 +83,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.ListIterator;
 import java.util.Map;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementAdminInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementPersonnelBackingBean;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+//#28895_35501 End
 
 
 @ManagedBean(name = "smPersonnelBackingBean")
@@ -182,6 +191,8 @@ public class SmPersonnelBackingBean extends
 		renewSesionObject();
 		boolean isHasSupplierUser = false;
 		SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
+		// #28895_35501 - AUDIT TRAIL SM
+		copyOldData(smSupplier);
 		SmPersonnel adminPersonnel = null;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(smSupplier.getSupplierId());
@@ -2269,6 +2280,10 @@ public class SmPersonnelBackingBean extends
 				getManagedBean().getEpRoleTrans() != null && !getManagedBean().getEpRoleTrans().equals(getManagedBean().getBasicSmPersonnel().getEpRole()) &&
 				getManagedBean().getAccountStatus() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			
+			// #28895_35501 Start - AUDIT TRAIL SM
+			getManagedBean().setOldRole(getManagedBean().getEpRoleTrans());
+			getManagedBean().setNewRole(getManagedBean().getBasicSmPersonnel().getEpRole());
+			// #28895_35501 End
 			String name = getManagedBean().getBasicSmPersonnel().getName();
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());//#33592-start
@@ -2409,6 +2424,13 @@ public class SmPersonnelBackingBean extends
 			PersonnelResDTO resDTO = updatePersonnel(smPersonnel);
 			log.info("Result:" + resDTO.isSuccessful());
 			if (resDTO.isSuccessful()) {
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				SmCommonUtil.redirectToPage("userProfileSearch.xhtml",
 						MessageConst.INFO_100002, null, null);
 				getManagedBean().setBasicSmPersonnel(resDTO.getSmPersonnel());
@@ -2871,6 +2893,13 @@ public class SmPersonnelBackingBean extends
 		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
 
 		if (resDTO.isSuccessful()) {
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+			}
+			// #28895_35501 End
 			SmCommonUtil
 					.callDeactivationSuccessDialog(MessageConst.INFO_721027);
 		} else {
@@ -3688,6 +3717,10 @@ public class SmPersonnelBackingBean extends
 			//The whole changing delete and changing role process start here
 			if (getManagedBean().getEpRoleTrans() != null
 					&& !personnel.getEpRole().equalsIgnoreCase(getManagedBean().getEpRoleTrans())) {
+				// #28895_35501 Start - AUDIT TRAIL SM
+				getManagedBean().setOldRole(personnel.getEpRole());
+				getManagedBean().setNewRole(getManagedBean().getEpRoleTrans());
+				// #28895_35501 End
 				//If user has a pmUser or active role
 				if (personnel.getPmUser() != null) {
 					//If supplier admin want to delete the role
@@ -3848,6 +3881,13 @@ public class SmPersonnelBackingBean extends
 			}
 			// 9569
 			// Make sure table is updated
+			// #28895_35501 Start - AUDIT TRAIL SM
+			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementPersonnelBackingBean();
+				auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+			}
+			// #28895_35501 End
 			PersonnelReqDTO reqDTO3 = new PersonnelReqDTO();
 			reqDTO3.setApplId(getManagedBean().getSmAppl().getApplId());
 			List<SmPersonnel> smPersonnelList2 = SmServiceLookup.getPersonnelSO().retrieveMOFPersonnelListByApplId(reqDTO3).getSmPersonnelList();
@@ -4136,5 +4176,28 @@ public class SmPersonnelBackingBean extends
 		return valid;
 	}
 	//32515 END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private void copyOldData(SmSupplier smSupplier) {
+		getManagedBean().setOldSmSupplier(smSupplier);
+		String oldRole = null;
+		FacesScopes facesScope = new FacesScopes();
+		if (facesScope.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+			oldRole = RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		} else if (facesScope.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())) {
+			oldRole = RoleCode.G2G_SUPPLIER_ADMIN.value();
+		} else if (facesScope.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+			oldRole = RoleCode.MOF_SUPPLIER_ADMIN.value();
+		}
+		getManagedBean().setOldRole(oldRole);
+		PmOrgProfile orgProfile = new PmOrgProfile();
+		if (getUserIdSessionFromLoginId() != null) {
+			List<PmUserOrg> orgList = PmCommonUtil.retrieveActiveOrg(getUserIdSessionFromLoginId());
+			if (!orgList.isEmpty()) {
+				orgProfile = orgList.get(0).getPmOrgProfile();
+			}
+		}
+		getManagedBean().setOldOrg(orgProfile);
+	}
+	// #28895_35501 End
 
 }

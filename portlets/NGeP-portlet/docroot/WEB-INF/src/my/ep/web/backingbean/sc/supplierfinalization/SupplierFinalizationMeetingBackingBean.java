@@ -294,6 +294,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 						retriveMeetingDetails(qtId);
 						return;
 					}
+					//#25426 - Start
+					//to exclude member list inactive committee
+					checkAndExcludeInactiveCommittee(membersList);
+					//#25426 - End
 					//#31870 - END
 					Collections.sort(membersList);
 					
@@ -364,6 +368,30 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 	}
 	
+	
+	//#25426 - Start
+	/**
+	 * To exclude inactive committee list
+	 * @param membersList
+	 */
+	public void checkAndExcludeInactiveCommittee(List<ScCommitteeMember> membersList) {
+		List<ScCommitteeMember> toRemove = new ArrayList<>();
+
+		for (ScCommitteeMember scMember : membersList) {
+			Long userId = scMember.getPmUser().getUserId();
+			String committeeType = scMember.getScCommittee().getCommitteeType().getParameterCode();
+			String roleCode = getParameterDesc(scMember.getMemberRole()).toUpperCase();
+
+			boolean isInactive = getCommitteeSO().isInactiveCommitteeByUserId(userId, committeeType, roleCode);
+
+			if (isInactive) {
+				toRemove.add(scMember); // Collect inactive members to remove later
+			}
+		}
+		membersList.removeAll(toRemove); // Remove all inactive members from the list
+	}
+	
+	//#25426 - End
 	/**
 	 * Action to add meeting
 	 */

@@ -161,6 +161,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -755,6 +757,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl() != null) {
 			getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 		}
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if (outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)) {
+			initAuditTab();
+		}
+		// #28895_35501 End
 	}
 
 	/**
@@ -876,10 +883,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.retrieveMofCertsByApplId(certReqDTO).getSmMofCerts();
 
 			if (!EntityHelper.isCollectionEmpty(certs)) {
-				// #36401 - Start
-				int count = countCerts(certs);
-				assignMofCert(certs, count);
-				// #36401 - End
+				for (SmMofCert cert : certs) {
+					if (!cert.isBumiCert()) {
+						getManagedBean().setSmMofCert(cert);
+						break;
+					}
+				}
 			}
 		}
 
@@ -939,72 +948,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setReviewApplicationExist(true);
 	}
 
-	// #36401 - Start
-	/**
-	 * to count if non bumi certs more than 1
-	 * 
-	 * @param certs
-	 * @return
-	 */
-	private int countCerts(List<SmMofCert> certs) {
-		int count = 0;
-		for (SmMofCert cert : certs) {
-			if (!cert.isBumiCert()) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	/**
-	 * To assign non bumi cert to display at comp info
-	 * 
-	 * @param mofCerts
-	 * @param counter
-	 */
-	// Checking cert that is not bumi, if more than 1 cert assign the first one by asc order
-	public void assignMofCert(List<SmMofCert> mofCerts, int counter) {
-		if (counter > 1) {
-			sortMofCertsByDate(mofCerts);
-			List<SmMofCert> certs = filterCerts(mofCerts, false);
-			getManagedBean().setSmMofCert(certs.get(0));
-		} else {
-			for (SmMofCert cert : mofCerts) {
-				if (!cert.isBumiCert()) {
-					getManagedBean().setSmMofCert(cert);
-					break;
-				}
-			}
-		}
-	}
-
-	// Helper method to sort by asc order
-	private void sortMofCertsByDate(List<SmMofCert> mofCerts) {
-		if (mofCerts.size() > 1) {
-			Collections.sort(mofCerts, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert1.getCreatedDate().compareTo(
-							cert2.getCreatedDate());
-				}
-			});
-		}
-	}
-
-	// Helper method to filter certs
-	private List<SmMofCert> filterCerts(List<SmMofCert> mofCerts,
-			final boolean isBumi) {
-		List<SmMofCert> filteredCerts = new ArrayList<>();
-		for (SmMofCert mofCert : mofCerts) {
-			if (mofCert.isBumiCert() == isBumi) {
-				filteredCerts.add(mofCert);
-			}
-		}
-		return filteredCerts;
-	}
-
-	// #36401 - End
-	
 	/**
 	 * Initialized revision application company information step
 	 */
@@ -1455,11 +1398,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setStoreFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_STORE));
-		//34303 - Start
+		//34303 - Start, 28775 - Site Visit Grouping Enhancement - 28775
 		getManagedBean().getStoreFacilitiesVOList()
 				.addAll(getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE));
-		//34303 - End
+		//34303 - End, 28775 - Site Visit Grouping Enhancement - 28775
 		getManagedBean().setFactoryFacilitiesVOList(
 				getCategoryFacilityVO(getManagedBean().getSmAppl(),
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY));
@@ -3314,8 +3257,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Redirect to Supplier Profile or Supplier History Page
 	 */
 	public void redirectToSupplierProfileOrHistoryPage() {
-		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
-				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
+		// #28895_35501 Start - AUDIT TRAIL SM
+		String isAudit;
+		if (this.getManagedBean().isAuditAccess()) {
+			isAudit = SmCommonUtil.md5("true");
+		} else {
+			isAudit = SmCommonUtil.md5("false");
+		}
+		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl() + "?supplierId=" + getManagedBean().getSupplierIdParam() + "&isAudit="
+				+ isAudit);
+		// #28895_35501 End
 	}
 
 	/**
@@ -5411,4 +5362,42 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 	//#32008 - end	
+	//29380 - Site Visit Grouping Enhancement -28775 - start
+	/**
+	 * @param catL3
+	 * @return other description for category code
+	 */
+	public String getCategoryCodeOtherDesc(PmCategoryL3 catL3){
+		return SmApplicationUtil.getCategoryCodeOtherDesc(
+				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
+	}
+	//29380 - Site Visit Grouping Enhancement -28775 - end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	/**
+	 * Check if user have access to Audit Trail page
+	 */
+	public void checkAuditAccess() {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		if (PortalUtil.getCurrentURL(request).contains(SupplierManagementConst.SUPPLIER_APPL_SEARCH_URL)) {
+			FacesScopes facesScopes = new FacesScopes();
+			String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
+					RoleCode.EP_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
+			for (String role : roles) {
+				if (facesScopes.hasRoleUser(role)) {
+					this.getManagedBean().setAuditAccess(true);
+					break;
+				}
+			}
+		}
+	}
+
+	/**
+	 * initialize Audit Trail data selected application
+	 */
+	public void initAuditTab() {
+		SmAppl suppAppl = getManagedBean().getSmAppl();
+		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+		auSmView.initAuditTab(suppAppl);
+	}
+	// #28895_35501 End
 }

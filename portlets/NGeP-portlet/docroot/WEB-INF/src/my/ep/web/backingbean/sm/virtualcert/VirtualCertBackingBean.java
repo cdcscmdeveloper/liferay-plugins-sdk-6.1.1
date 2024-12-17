@@ -187,17 +187,18 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		reqDTO.setSupplierId(supplierId);
 		VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
 		this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
-		if(resDTO.getSmMofCerts().size() > 0){
+		if (resDTO.getSmMofCerts().size() > 0) {
 			// #36401 - Start
 			if (countCerts(resDTO.getSmMofCerts())) {
-				this.getManagedBean().setMofCertLs(getLatestSmMofCertsIfDuplicate(resDTO.getSmMofCerts()));
+				this.getManagedBean().setMofCertLs(
+						getLatestSmMofCertsIfDuplicate(resDTO.getSmMofCerts()));
 			} else {
 				this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
 			}
 			// #36401 - End
 		}
 	}
-
+	
 	// #36401 - Start
 	private boolean countCerts(List<SmMofCert> certs) {
 		int countCert = 0;
@@ -213,8 +214,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		return countCert > 1 || countBumi > 1;
 	}
 
-	// If there is duplicate cert on same applId, prevention step, To make sure
-	// display latest smMofcert only by applId
+	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
 	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
 			List<SmMofCert> mofCerts) {
 		List<SmMofCert> cert = new ArrayList<>();
@@ -236,14 +236,12 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
 		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
 
-		// if more than 1 Cert on a same appl_id, need reorder it and means
-		// there is duplicate, sort cert by asc order
+		// if more than 1 Cert on a same appl_id, need reorder it and means there is duplicate, sort cert by asc order
 		if (cert.size() > 1) {
 			sortCertsListByAsc(cert);
 		}
 
-		// if more than 1 bumiCert on a same appl_id, need reorder it and means
-		// there is duplicate, Sort bumiCert by asc order
+		// if more than 1 bumiCert on a same appl_id, need reorder it and means there is duplicate, Sort bumiCert by asc order
 		if (bumiCert.size() > 1) {
 			sortCertsListByAsc(bumiCert);
 		}
@@ -277,6 +275,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			}
 		});
 	}
+
 	// #36401 - End
 	
 	/**

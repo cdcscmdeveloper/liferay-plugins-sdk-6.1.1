@@ -13667,8 +13667,10 @@ public class SpecificationBackingBean extends
 			Integer index = null;//1873 - note 97
 			
 			// #29187 Start Vinod
-			for (TplSpecQuestion question : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-				if (question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+			List<TplSpecQuestion> questionsList = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+			for (TplSpecQuestion question : questionsList) {
+				String questionType = question.getQuestionType();
+				if (questionType.equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					question.setMandatorySpec(false);
 				}
 			}
@@ -14491,8 +14493,10 @@ public class SpecificationBackingBean extends
 			List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 			
 			// #29187 Start Vinod
-			for (TplSpecQuestion question : scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()) {
-				if (question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+			List<TplSpecQuestion> questionsList = scQtCheckList.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+			for (TplSpecQuestion question : questionsList) {
+				String questionType = question.getQuestionType();
+				if (questionType.equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					question.setMandatorySpec(false);
 				}
 			}
@@ -17797,7 +17801,6 @@ public class SpecificationBackingBean extends
 		retrieveStatusByTypeAndId(scQt);
 		// Bug #33661@Syazani 06/10/2022 -- End
 		
-		Long statusId = scQt != null ? scQt.getQtStatus().getStatusId():null;//#29732(#232)
 		//#15391 - start
 		log.info("STATUS ID: "+scQt.getQtStatus().getStatusId());
 		log.info("THIS STATUS ID: "+this.getManagedBean().getCurrentStatusId());
@@ -18464,7 +18467,7 @@ public class SpecificationBackingBean extends
 							//20210205@haziq- Bug #30046 - End
 							if (null != estimatedCost) {
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
-										.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 							}
 							//20201217@haziq- Bug #29806 - End
 							/*}*/
@@ -18516,7 +18519,7 @@ public class SpecificationBackingBean extends
 					}//32134-End
 				}
 				//Bug #29808
-				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
 			// Check Intended Price
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
@@ -18561,7 +18564,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				
-				newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
+				newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 				if (newTotalSpecEstimatedAmount
 								.compareTo(indPriceThreshold) > 0) {
 					throw new EpException(MessageConst.ERROR_760504,
@@ -19742,8 +19745,10 @@ public class SpecificationBackingBean extends
 
 		if (null == st2technicalproposalList ||  this.getManagedBean().getScQtCheckSt2techProposal()
 				.isEmpty()) {
-			st2technicalproposalList = new ArrayList<ScQtCheckList>();
-			//retriveTechnicalCheckList();
+			// 11104 -start-
+			st2technicalproposalList = new ArrayList<>();
+			// 11104 -end-
+			
 
 		}
 		IParameterSO parameterSo = null;
@@ -19820,7 +19825,9 @@ public class SpecificationBackingBean extends
 			
 		}//11104-End
 		scoringPopUpAction(null);
-		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);//#29187 Added Vinod
+		// #29187 Start Vinod
+		this.retriveSampleSpecmasterForMandatorySpecChecking(templateChecklist);
+		// #29187 End Vinod
 		return 	TECHNICAL_CHECKLIST_SAMPLE_ITEM_VIEW;//11104-Reendorse		
 	}
 	/**** 11104-start
@@ -19884,33 +19891,6 @@ public class SpecificationBackingBean extends
 		}
 		return null;
 	}
-/****11104-start
- * display scoresetting dropdown values in sample screen.
- * @param scoreTyp
- * @return( SelectItem[])
- */
-public SelectItem[] getDropDownSampleScoreType(String scoreTyp){	
-	List<String> ScoreTypes = new ArrayList<String>();
-	ScoreTypes.add(ParameterConst.ANSWER_TYPE_TEXT);
-	SelectItem[] items = null;
-	try {
-		items = new SelectItem[ScoreTypes.size()];
-		int i = 0;
-		for (String scoreType : ScoreTypes) {
-			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.ANSWER_TYPE);
-			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterCode()
-						.equals(scoreType)) {
-					items[i++] = new SelectItem(paramDesc.getPmParameter()
-							.getParameterId(), paramDesc.getCodeName());
-				}
-			}
-		}
-	} finally {
-
-	}
-	return items;
-}
 /***11104-start
  * sample required checkbox selection for sample item.
  * @param specQuestion
@@ -19930,14 +19910,18 @@ public void sampleRequiredChange(TplSpecQuestion specQuestion){
 	ParameterResDTO scoreTyperesDTO = parameterSo
 			.retrieveParameterByTypeAndCode(scoreType);
 	specQuestion.setSampleScoreTypeCode(scoreTyperesDTO.getPmParameter());
-	specQuestion.setMandatorySpec(true);//#29187 Added Vinod
+			// #29187 Start Vinod
+			specQuestion.setMandatorySpec(true);
+			// #29187 End Vinod
 	}else{
 		log.info("elsesampleRequiredChange==="+specQuestion.isSampleReq());
 		specQuestion.setSampleQuantity(null);
 		specQuestion.setSampleScoreTypeCode(null);
 		specQuestion.setSampleScore(null);
 		scoringPopUpAction(null);
-		specQuestion.setMandatorySpec(false);//#29187 Added Vinod
+			// #29187 Start Vinod
+			specQuestion.setMandatorySpec(false);
+			// #29187 Added Vinod
 	}
 	
 	
@@ -19947,21 +19931,24 @@ public void sampleRequiredChange(TplSpecQuestion specQuestion){
  * @param specQuestion
  */
 public void scoringPopUpAction(TplSpecQuestion specQuestion){
-List<TplSpecQuestion> specSampleQuestionList=	this.getManagedBean().getSampleCheckList().getScQtDoc()
-	.getTplSpecMaster().getTplSpecQuestions();
-BigDecimal sampleScore = BigDecimal.valueOf(0);
-for(TplSpecQuestion samplespecQuestion: specSampleQuestionList){
-	//if(samplespecQuestion.isSampleReq()){
-		log.info("samplespecQuestion"+samplespecQuestion.getClItem());
-		if(samplespecQuestion.isSampleReq() && null!=samplespecQuestion.getSampleScore()){
-			sampleScore = sampleScore.add(samplespecQuestion.getSampleScore());	
+	List<TplSpecQuestion> specSampleQuestionList = this.getManagedBean()
+			.getSampleCheckList().getScQtDoc().getTplSpecMaster()
+			.getTplSpecQuestions();
+	BigDecimal sampleScore = BigDecimal.valueOf(0);
+	for (TplSpecQuestion samplespecQuestion : specSampleQuestionList) {
+		log.info("samplespecQuestion" + samplespecQuestion.getClItem());
+		if (samplespecQuestion.isSampleReq()
+				&& null != samplespecQuestion.getSampleScore()) {
+			sampleScore = sampleScore.add(samplespecQuestion
+					.getSampleScore());
 		}
-	//}
-}
-this.getManagedBean().setSampleTotalScore(sampleScore.intValue());
-if(null!=specQuestion){
-	RequestContext.getCurrentInstance().execute("samplescoringSetPopup.hide()");
-}
+
+	}
+	this.getManagedBean().setSampleTotalScore(sampleScore.intValue());
+	if (null != specQuestion) {
+		RequestContext.getCurrentInstance().execute(
+				"samplescoringSetPopup.hide()");
+	}
 }
 /**** 11104-start
  * sample items save and complete action for sample itmes.
@@ -22327,78 +22314,88 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 	// #28784
 
-	/*#29187 Start Vinod*/
+	/* #29187 Start Vinod */
 	/**
 	 * This method is to get dropdown values for mandatory spec.
-	 * @param 
+	 * 
+	 * @param
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMandatorySpecDropdownValues() {
 		List<SelectItem> selectItems = new ArrayList<>();
 
 		try {
-			selectItems.add(new SelectItem(false, ResourceBundleUtils
-					.getMessage(QTConstants.LBL_TXT_SELECT,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(true, ResourceBundleUtils
-					.getMessage(QTConstants.LBL_TXT_YES,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(false, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(true, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, this.getManagedBean().getQt().getQtNo(),
-					SLALogConstant.QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES, getUserIdSessionFromLoginId(), e);
+			String qtNo = this.getManagedBean().getQt().getQtNo();
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES, getUserIdSessionFromLoginId(), e);
 		}
-		
+
 		return selectItems;
 	}
+
+	/* #29187 End Vinod */
+	/* #29187 Start Vinod */
 	/**
 	 * This method is to render mandatory spec.
+	 * 
 	 * @param tplSpecQuestions
 	 * @return boolean
 	 */
 	public boolean renderManSpec(List<TplSpecQuestion> tplSpecQuestions) {
 
 		for (TplSpecQuestion question : tplSpecQuestions) {
-			if (question.isMandatorySpecForSample()) {
+			boolean isMandatorySpecForSample = question.isMandatorySpecForSample();
+			if (isMandatorySpecForSample) {
 				return true;
 			}
 		}
 
 		return false;
 	}
-	
+
+	/* #29187 End Vinod */
+	/* #29187 Start Vinod */
 	/**
-	* retrives the specification details to check mandatory specification.
-	* 
-	* @param templateChecklist.
-	* @return 
-	*/
-	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist){
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
-						ITemplateSpecSO.class);
+	 * retrives the specification details to check mandatory specification.
+	 * 
+	 * @param templateChecklist
+	 *            .
+	 * @return
+	 */
+	public void retriveSampleSpecmasterForMandatorySpecChecking(ScQtCheckList templateChecklist) {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			
-		for(TplSpecQuestion itemQuestion : templateChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions()){
+		List<TplSpecQuestion> tplSpecQuestions = templateChecklist.getScQtDoc().getTplSpecMaster().getTplSpecQuestions();
+
+		for (TplSpecQuestion itemQuestion : tplSpecQuestions) {
 			specReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			specReqDTO.setItemName(itemQuestion.getClItem());
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.retrieveTechSpecByItemNames(specReqDTO);
-				
+			TemplateSpecResDTO resDTO = templateSpecSO.retrieveTechSpecByItemNames(specReqDTO);
+
 			checkMandatorySpecForSample(itemQuestion, resDTO);
 		}
 	}
+
+	/* #29187 End Vinod */
+	/* #29187 Start Vinod */
 	private void checkMandatorySpecForSample(TplSpecQuestion itemQuestion, TemplateSpecResDTO resDTO) {
-	    if (resDTO != null && resDTO.getSpecQuestionList() != null) {
-	        for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-	            if (question.isMandatorySpec()) {
-	                itemQuestion.setMandatorySpecForSample(true);
-	            }
-	        }
-	    }
+		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+			List<TplSpecQuestion> tplSpecQuestions = resDTO.getSpecQuestionList();
+			for (TplSpecQuestion question : tplSpecQuestions) {
+				if (question.isMandatorySpec()) {
+					itemQuestion.setMandatorySpecForSample(true);
+				}
+			}
+		}
 	}
-	/*#29187 End Vinod*/
+
+	/* #29187 End Vinod */
 
 	// Bug #33661@Syazani 06/10/2022 -- Start
 	private void retrieveStatusByTypeAndId(ScQt scQt) {
