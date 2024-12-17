@@ -612,7 +612,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSvWorker> deletedWorkers;
 	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
-	// #28778 - Start
+	// #28778 -28775 - Start
 	private boolean specialCategoryRechecked;
 	// #28778 - End
 	

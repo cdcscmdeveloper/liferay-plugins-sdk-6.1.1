@@ -4376,24 +4376,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 												if (q.getQuestionType().equalsIgnoreCase(
 														ParameterConst.TPL_SPEC_QUESTION_TYPE_ITEM)
 														&& !isZonalAdded) {
-													clItem = q.getClItem();
-													clItem = clItem.replaceAll(QTConstants.LESS_THEN,
-															SSTConstant.LESS_THAN_SYMBOL);
-													clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
-															SSTConstant.GREATER_THAN_SYMBOL);
-													clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-															TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-													map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(clItem, 16));//35295 #93 @zaim
+													map.put(SSTConstant.clItem, VmUtil.getInstance().escapeAndWrapText(q.getClItem(), 16,SSTConstant.FILE_TYPE_DOC));//35295 #124 @zaim
 													map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 															getParameterDesc(q.getClFulfilmentTypeCode(),
 																	SourcingConstants.MY_LOCALE));
 													map.put(SSTConstant.uomName, sstItem.getScRequestItem().getUom()
 															.getUomName());
-													//35295 - start #93
-													String zoneName = zoneDtl.getZoneName().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-													zoneName = zoneName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-													zoneName = zoneName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.zoneName, VmUtil.getInstance().addLineBreaks(zoneName, 11));
+													//35295 - start #124
+													map.put(SSTConstant.zoneName, VmUtil.getInstance().escapeAndWrapText(zoneDtl.getZoneName(), 11,SSTConstant.FILE_TYPE_DOC));
 													//35295 - end
 													map.put(SSTConstant.quantity, sstItem.getQty().toString());
 													map.put(SSTConstant.clUomFrequency,
@@ -4418,16 +4408,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																		.equals(zoneDtl.getSpecZoneId())) {
 															answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
 																	: ans.getAnswerRemark();
-															answerRemark = answerRemark
-																	.replaceAll(QTConstants.LESS_THEN,
-																			SSTConstant.LESS_THAN_SYMBOL);
-															answerRemark = answerRemark.replaceAll(
-																	QTConstants.GREATER_THEN,
-																	SSTConstant.GREATER_THAN_SYMBOL);
-															answerRemark = answerRemark.replaceAll(
-																	QTConstants.NEW_LINE_CHARACTER,
-																	TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-															map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
+															map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
 														}
 													}
 													isZonalAdded = Boolean.TRUE;
@@ -4438,11 +4419,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													// second row zone name
 													map.put(SSTConstant.clItem, SSTConstant.nbsp);
 													map.put(SSTConstant.uomName, SSTConstant.nbsp);
-													//35295 - start #93
-													String zoneName = zoneDtl.getZoneName().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-													zoneName = zoneName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-													zoneName = zoneName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.zoneName, VmUtil.getInstance().addLineBreaks(zoneName, 11));
+													//35295 - start #124
+													map.put(SSTConstant.zoneName, VmUtil.getInstance().escapeAndWrapText(zoneDtl.getZoneName(), 11,SSTConstant.FILE_TYPE_DOC));
 													//35295 - end
 													map.put(SSTConstant.quantity, SSTConstant.nbsp);
 													map.put(SSTConstant.clUomFrequency, SSTConstant.nbsp);
@@ -4461,31 +4439,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 																			.equals(zoneDtl.getSpecZoneId())) {
 																answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
 																		: ans.getAnswerRemark();
-																answerRemark = answerRemark.replaceAll(
-																		QTConstants.LESS_THEN,
-																		SSTConstant.LESS_THAN_SYMBOL);
-																answerRemark = answerRemark.replaceAll(
-																		QTConstants.GREATER_THEN,
-																		SSTConstant.GREATER_THAN_SYMBOL);
-																answerRemark = answerRemark.replaceAll(
-																		QTConstants.NEW_LINE_CHARACTER,
-																		TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-																
-																map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
+																map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); //35295 - #124 start
 																break;
 															}
 														}
 													}
 
 												} else {
-													specVal = q.getClSpecDetail();
-													specVal = specVal.replaceAll(QTConstants.LESS_THEN,
-															SSTConstant.LESS_THAN_SYMBOL);
-													specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
-															SSTConstant.GREATER_THAN_SYMBOL);
-													specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-															TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
-													map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
+													map.put(SSTConstant.specValue, VmUtil.getInstance().escapeAndWrapText(q.getClSpecDetail(), 60,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
 													map.put(SSTConstant.questionType, q.getQuestionType());
 													listPRQuestion.add(map);
 													break;
@@ -4511,14 +4472,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 													.equals(sstItem.getScRequestItem().getTplSpecQuestion()
 															.getSpecQuestionId())) {
 
-												clItem = q.getClItem();
-												clItem = clItem.replaceAll(QTConstants.LESS_THEN,
-														SSTConstant.LESS_THAN_SYMBOL);
-												clItem = clItem.replaceAll(QTConstants.GREATER_THEN,
-														SSTConstant.GREATER_THAN_SYMBOL);
-												clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-														TemplateSpecConst.HTML_NEW_LINE_CHARACTER);//35295 #93 @zaim
-												map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(clItem, 16)); //35295 #93 @zaim
+												map.put(SSTConstant.clItem, VmUtil.getInstance().escapeAndWrapText(q.getClItem(), 16,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
 												map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,
 														getParameterDesc(q.getClFulfilmentTypeCode(),
 																SourcingConstants.MY_LOCALE));
@@ -4544,15 +4498,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															.equals(supplierId)) {
 														answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
 																: ans.getAnswerRemark();
-														answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN,
-																SSTConstant.LESS_THAN_SYMBOL);
-														answerRemark = answerRemark.replaceAll(
-																QTConstants.GREATER_THEN,
-																SSTConstant.GREATER_THAN_SYMBOL);
-														answerRemark = answerRemark.replaceAll(
-																QTConstants.NEW_LINE_CHARACTER,
-																TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-														map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 13)); //35295 #93 @zaim
+														map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
 													}
 												}
 												map.put(SSTConstant.ROWSPAN_ITEM_NAME,
@@ -4567,15 +4513,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 															.getSpecQuestionId()
 															.equals(sstItem.getScRequestItem().getTplSpecQuestion()
 																	.getSpecQuestionId())) {
-												specVal = q.getClSpecDetail();
-												specVal = specVal.replaceAll(QTConstants.LESS_THEN,
-														SSTConstant.LESS_THAN_SYMBOL);
-												specVal = specVal.replaceAll(QTConstants.GREATER_THEN,
-														SSTConstant.GREATER_THAN_SYMBOL);
-												specVal = specVal.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-														TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //35295 #93 @zaim
-												
-												map.put(SSTConstant.specValue, VmUtil.getInstance().addLineBreaks(specVal, 60)); //35295 #93 @zaim
+												map.put(SSTConstant.specValue, VmUtil.getInstance().escapeAndWrapText(q.getClSpecDetail(), 60,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
 												map.put(SSTConstant.questionType, q.getQuestionType());
 												listPRQuestion.add(map);
 												listConstructQuestion.add(listPRQuestion);

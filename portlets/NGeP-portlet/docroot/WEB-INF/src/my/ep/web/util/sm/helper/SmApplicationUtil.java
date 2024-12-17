@@ -3314,6 +3314,7 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean checkValidUser(SmPersonnel pers, SmAppl appl) {
+		log.info("SM DEV ISLAND TESTING: Enter SmApplicationUtil.checkValidUser");
 		boolean validUser = true;
 		if (pers.getIdentificationType().getParameterCode()
 				.equalsIgnoreCase("I")) {
@@ -3379,6 +3380,7 @@ public class SmApplicationUtil {
 						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
 						.equalsIgnoreCase(RoleCode.CM_USER.value())))
 			validatePersonnelICandEmailLiferayAndPm(pers);
+		log.info("SM DEV ISLAND TESTING: Exit SmApplicationUtil.checkValidUser");
 		return validUser;
 	}
 
