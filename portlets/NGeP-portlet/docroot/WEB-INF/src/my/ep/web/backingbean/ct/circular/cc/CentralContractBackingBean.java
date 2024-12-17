@@ -127,6 +127,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 
 /**
  * Central Contract Circular Backingbean
@@ -1098,6 +1099,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); //#30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start
 			PanelBackingBean panelBB = new PanelBackingBean();
@@ -1127,6 +1129,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return getManagedBean().getGotoPreviewPage();
 		} else if(getManagedBean().getGotoPreviewPage()!=null) {
 			return getManagedBean().getGotoPreviewPage();
+		} else if (circularBB.getManagedBean()
+				.isContinuityCircularAuditSearch()) { // Fix -#30866
+			return "/xhtml/ct/viewcontract/resultViewCircularContract.xhtml?faces-redirect=true"; // Fix -#30866
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}
