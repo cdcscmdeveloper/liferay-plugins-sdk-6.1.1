@@ -159,7 +159,6 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LOIDetailBackingBean.
  * 
@@ -2046,19 +2045,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
 
-		// TODO
 		scLoi.setFileExtnNo("001");
-		
-		/*
-		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
-		 * .getScWorkFlowStatus().getPmStatus().getStatusId())) {
-		 * 
-		 * if (getManagedBean().getScQt() != null) { if
-		 * (("P").equals(getManagedBean().getScQt().getScheduleType())) { //
-		 * progressive payment. formProgressivePayment(scLoi); } else if
-		 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) { //
-		 * Fulfilment Schedule formFulfilmentSchedule(scLoi); } } }
-		 */
 	}
 
 	
@@ -5347,8 +5334,9 @@ public class LOIDetailBackingBean extends
 					}
 					offeredQuantity = offeredQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
-					BigDecimal offerPrice = proposalItem.getOfferPrice();
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					//Bug #36417 - start
+					BigDecimal finalPrice = proposalItem.getFinalPrice(); 
+					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
 					ScRequestItem requestItem = recommendDtl
 							.getScQtRecommend().getRequestItem();
@@ -5356,7 +5344,8 @@ public class LOIDetailBackingBean extends
 					BigDecimal offeredPrice = TemplateSpecHelper
 							.getInstance().calculateTotalAmount(
 									requestItem.getTplSpecQuestion(),
-									offerPrice, offeredQuantity);
+									finalPrice, offeredQuantity);
+					//Bug #36417 - end
 					if (offeredPrice != null) {
 						offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					}
@@ -5844,6 +5833,7 @@ public class LOIDetailBackingBean extends
 	 * @param docType the doc type
 	 * @return true, if successful
 	 */
+	/*
 	private boolean updatePendingLoiLoas(List<ScLoiLoa> recSupplierList, String docType){
 		boolean isLoiRequired = Boolean.FALSE;
 		boolean isLoiLoasUpdate = Boolean.FALSE;
@@ -5859,6 +5849,7 @@ public class LOIDetailBackingBean extends
 		}
 		return isLoiLoasUpdate;
 	}
+	*/
 	
 	/**
 	 * Localize date.
@@ -6198,7 +6189,6 @@ public class LOIDetailBackingBean extends
 		}
 		return true;
 	}
-
 	// 6906 - end - fix for #436
 
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		

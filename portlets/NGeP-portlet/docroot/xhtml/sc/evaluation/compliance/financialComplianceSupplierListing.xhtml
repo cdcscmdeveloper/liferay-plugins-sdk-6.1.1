@@ -22,7 +22,6 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.complianceProposalSubmitSuppliers}"
 				update="complianceTechnicalSupplier" />
-
 			<ui:param name="isRejected"
 				value="#{not empty complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark}" /><ui:remove><!-- 6906 --></ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
