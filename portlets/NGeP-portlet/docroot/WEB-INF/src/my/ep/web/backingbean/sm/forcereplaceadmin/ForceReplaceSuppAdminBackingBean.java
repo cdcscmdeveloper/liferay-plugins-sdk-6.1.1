@@ -1501,17 +1501,43 @@ public class ForceReplaceSuppAdminBackingBean extends
 	
 	// #36716 - Start
 	public void recheckVal(SmAddress srcAddr) {
-		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1()) || srcAddr.getPmState() == null
-				|| srcAddr.getPmState().getStateId() == null
-				|| ("14").equalsIgnoreCase(srcAddr.getPmState().getStateId().toString())
-				&& srcAddr.getPmDivision() == null && srcAddr.getPmDivision().getDivisionId() == null
-				|| srcAddr.getPmDistrict() == null || srcAddr.getPmDistrict().getDistrictId() == null
-				|| srcAddr.getPmCity() == null || srcAddr.getPmCity().getCityId() == null
-				|| StringUtils.isBlank(srcAddr.getPostcode())) {
-			String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
-			getManagedBean().getMailAddr().setSameAsPerm(false);
-			throw new EpException(MessageConst.ERROR_722656, new String[] { addrType });
+		if (isInvalidAddress(srcAddr)) {
+			handleInvalidAddress();
 		}
+	}
+
+	private boolean isInvalidAddress(SmAddress srcAddr) {
+		return srcAddr == null || isBlank(srcAddr.getAddress1()) || isInvalidState(srcAddr)
+				|| isInvalidDivision(srcAddr) || isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr)
+				|| isBlank(srcAddr.getPostcode());
+	}
+
+	private boolean isInvalidState(SmAddress srcAddr) {
+		return srcAddr.getPmState() == null || srcAddr.getPmState().getStateId() == null;
+	}
+
+	private boolean isInvalidDivision(SmAddress srcAddr) {
+	    return "14".equalsIgnoreCase(srcAddr.getPmState().getStateId().toString()) 
+	            && (srcAddr.getPmDivision() == null 
+	                || srcAddr.getPmDivision().getDivisionId() == null);
+	}
+
+	private boolean isInvalidDistrict(SmAddress srcAddr) {
+		return srcAddr.getPmDistrict() == null || srcAddr.getPmDistrict().getDistrictId() == null;
+	}
+
+	private boolean isInvalidCity(SmAddress srcAddr) {
+		return srcAddr.getPmCity() == null || srcAddr.getPmCity().getCityId() == null;
+	}
+
+	private boolean isBlank(String value) {
+		return StringUtils.isBlank(value);
+	}
+
+	private void handleInvalidAddress() {
+		String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
+		getManagedBean().getMailAddr().setSameAsPerm(false);
+		throw new EpException(MessageConst.ERROR_722656, new String[] { addrType });
 	}
 	// #36716 - End
 	
