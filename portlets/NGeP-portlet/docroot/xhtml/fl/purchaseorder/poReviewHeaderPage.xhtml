@@ -18,16 +18,13 @@
 								immediate="true" /></td>
 					</c:when>
 					<c:otherwise>
-						<td class="header-info-text">
-							<!-- 36386 - add validation canViewPRCRLink--> <p:outputLabel
-								rendered="#{!flOrderBB.canViewPRCRLink()}"
+						<td class="header-info-text"><p:outputLabel
+								rendered="#{flOrderBB.hasSupplierRole()}"
 								style="font-weight:normal !important"
 								value="#{flOrderBB.managedBean.flRequest.docNo}"></p:outputLabel>
 							<p:commandLink value="#{flOrderBB.managedBean.flRequest.docNo}"
 								action="#{flOrderBB.navigateDocument(flOrderBB.managedBean.flRequest.docType)}"
-								immediate="true" rendered="#{flOrderBB.canViewPRCRLink()}" />
-						</td>
-						<!-- 36386 -->
+								immediate="true" rendered="#{!flOrderBB.hasSupplierRole()}" /></td>
 					</c:otherwise>
 				</c:choose>
 				<ui:remove>end - #25790</ui:remove>
