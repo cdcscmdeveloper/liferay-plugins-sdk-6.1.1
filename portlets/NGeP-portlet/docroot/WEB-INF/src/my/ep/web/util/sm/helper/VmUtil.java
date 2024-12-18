@@ -7,8 +7,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
-import org.primefaces.component.log.Log;
-
+import my.ep.constant.tpl.TemplateDocConst;	// Bug #36702@Syazani 28/11/2024
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -16,7 +15,6 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.util.AddressUtils;
@@ -368,5 +366,38 @@ public class VmUtil {
 			return localKey;
 		}
 		// #29007 - note 724 Vinod End
+		
+	// Bug #36702@Syazani 28/11/2024 -- Start
+	/**
+	 * This method will split Long words to display properly in velocity
+	 * template.
+	 * 
+	 * @param key
+	 * @param maxLength
+	 * @return the updatedKey
+	 */
+	public String splitText(String key, int maxLength) {
+		String[] words = key.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder subSb;
+		for (String word : words) {
+			int length = word.length();
+			if (length >= maxLength) {
+				subSb = new StringBuilder();
+				String newWord;
+				String subWord;
+				for (int i = 0; i < length; i += maxLength) {
+					subWord = word.substring(i, Math.min(length, i + maxLength));
+					subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+				}
+				newWord = subSb.toString();
+				sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+			} else {
+				sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+			}
+		}
+		return sb.toString();
+	}
+	// Bug #36702@Syazani 28/11/2024 -- End
 	
 }
