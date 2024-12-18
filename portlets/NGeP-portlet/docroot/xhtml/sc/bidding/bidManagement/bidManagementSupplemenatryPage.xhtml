@@ -147,5 +147,10 @@
 	</c:if>
 
 	<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
-
+	<ac:disciplinaryActionActiveQT
+		voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"
+		btnView="true"
+		startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
+		endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
+		isWarning="#{viewSuppProfileBackingBean.managedBean.warning}" />
 </ui:composition>

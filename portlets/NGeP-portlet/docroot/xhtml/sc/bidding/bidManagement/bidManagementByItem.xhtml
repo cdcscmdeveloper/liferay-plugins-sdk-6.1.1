@@ -101,6 +101,26 @@
 						<h:outputText id="isBumiVBI"
 							value="#{(bidPriceItem.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+						</f:facet>
+						<p:commandLink onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							style="color:red; font-weight:bold;"
+							rendered="#{bidPriceItem.supplier.disciplinaryActions}"
+							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(bidPriceItem.supplier)}"
+							process="@this" partialSubmit="true" update=":form">
+							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+								styleClass="warning" />
+						</p:commandLink>
+						<p:spacer width="2" />
+						<h:outputText
+							rendered="#{!bidPriceItem.supplier.disciplinaryActions}"
+							value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					</p:column>
 					<p:column style="align : center; width : 14%"
 						headerText="#{lbl['lbl.sc.starting.price']}">
 						<h:outputText id="itemStartPriceVBI" style="float : right"

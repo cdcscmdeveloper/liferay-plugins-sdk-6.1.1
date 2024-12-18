@@ -881,6 +881,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
+			checkDA(this.getManagedBean().getScLoa());
 			this.getManagedBean().setValidatewitness(Boolean.TRUE); //#17376-144
 
 		} catch (Exception e) {
