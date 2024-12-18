@@ -11878,22 +11878,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
-	
-	public List<ScQtContactPerson> getPmUserDeletedContactPersonList() {
-		return pmUserDeletedContactPersonList;
-	}
-
-	public void setPmUserDeletedContactPersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
-		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
-	}
-
-	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
-		return newScCommitteeMemberAuditTrailList;
-	}
-
-	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
-		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
-	}
 
 	/**
 	 * @return the isFromSubmitCatChange
@@ -12168,12 +12152,28 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// 25791-End
 
 	//#28895 - 35500 start
+	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
+		return newScCommitteeMemberAuditTrailList;
+	}
+
+	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
+		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
+	}
+
 	public List<ScCommitteeMember> getDeletedScCommitteeMemberAuditTrailList() {
 		return deletedScCommitteeMemberAuditTrailList;
 	}
 
 	public void setDeletedScCommitteeMemberAuditTrailList(List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList) {
 		this.deletedScCommitteeMemberAuditTrailList = deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public List<ScQtContactPerson> getPmUserDeletedContactPersonList() {
+		return pmUserDeletedContactPersonList;
+	}
+
+	public void setPmUserDeletedContactPersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
 	}
 
 	public boolean isAuditViewRole() {
