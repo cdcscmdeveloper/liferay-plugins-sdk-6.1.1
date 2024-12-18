@@ -591,8 +591,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					//#29481 - Start
 					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
-					
-					if (!isSoftcertCurrentUserOnly(reqDTO.getFreeSofcertPersonnelList())){
+					if (!isSoftcertCurrentUserOnly(reqDTO.getFreeSofcertPersonnelList())
+							&& getManagedBean().getSupplierTmpPersonnel() == null){
 						msgKey = MessageConst.INFO_721068;
 						params = getSoftCertNameEmailMulti(reqDTO.getFreeSofcertPersonnelList());
 					}
