@@ -89,15 +89,28 @@ public class ScPropValidPeriodExtListReportBackingBean extends QtReportBackingBe
 	 * @return
 	 */
 	public boolean showErrorWhenTitleAndNumberNull() {
-		return this.getManagedBean().getQuotationNumber() == null && StringUtils.isEmpty(this.getManagedBean().getQuotationTitle());
+		ScReportFieldsSearchBean reportFieldBean = this.getManagedBean().getScReportSearchBean();
+		return this.getManagedBean().getQuotationNumber() == null && StringUtils.isEmpty(this.getManagedBean().getQuotationTitle())
+				&& null == reportFieldBean.getPtjProfile() && StringUtils.isEmpty(reportFieldBean.getScStatus());
 	}
 	
 	/**
-	 * Clear all search criteria, this enable error message to show up when user delete Tender Title
+	 * Clear all Tender Title field, this enable error message to show up when user delete Tender Title
 	 */
 	public void clearTenderTitle() {
-		if (StringUtils.isEmpty(this.getManagedBean().getQuotationTitle())) {
-			resetSearchBB();
+		if (StringUtils.isEmpty(this.getManagedBean().getQuotationTitle()) && this.getManagedBean().getQuotationId() == null) {
+			this.getManagedBean().setQuotationNumber(null);
+			this.getManagedBean().setQuotationTitle(null);
+		}
+	}
+	
+	/**
+	 * Clear all Decision Status field, this enable error message to show up when user delete Tender Title
+	 */
+	public void clearDecisionStatus() {
+		if (StringUtils.isEmpty(this.getManagedBean().getScReportSearchBean().getScStatus()) && this.getManagedBean().getQuotationId() == null) {
+			this.getManagedBean().setQuotationNumber(null);
+			this.getManagedBean().getScReportSearchBean().setScStatus(null);
 		}
 	}
 	

@@ -1811,6 +1811,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			}
 		}
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+			//36754 -start
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				validateOrderFulfiledAndDOFRNPendingCancellation();
+			}
+			//36754 -end
+			
 			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0 || getManagedBean().getInvoice().getPaymentBank() == null ) {
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.bank.acc.no.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
@@ -2808,5 +2814,30 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		return auFlAuditTrail;
 	}
 	// #35508 fl audit trail
+	
+	//36754 -Start
+	/**
+	 * Validates if an order can proceed based on the following checks:
+	 * 1. Check quantities of ordered and received items fully fulfilled
+	 * 2. Check Stop Delivery Instruction (SDI) with approval status if Quantities is not fully fulfilled 
+	 * 3. Check if any Pending cancellations for Delivery Orders (DO) or Fulfilment Notes (FRN).
+	 *
+	 * @throws EpException if the order validation fails with a specific error code.
+	 */
+	private void validateOrderFulfiledAndDOFRNPendingCancellation() {
+		Boolean allowToProceed = true;
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = null;
+		
+		reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
+		reqDTO.setFlOrderId(getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
+		resDTO= orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
+		allowToProceed = resDTO.isAllowToProceed();		
+		if(!allowToProceed){
+			throw new EpException(MessageConst.ERROR_740069);
+		}	
+	}
+	//36754 -End
 	
 }

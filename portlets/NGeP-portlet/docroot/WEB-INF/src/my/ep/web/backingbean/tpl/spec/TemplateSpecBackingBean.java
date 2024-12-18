@@ -5717,13 +5717,15 @@ public class TemplateSpecBackingBean extends
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt().getQtNo();
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
-					this.getManagedBean().getQt().getQtNo(), SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
+					qtNo, SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
 					getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * checking for displaying mandatory specification column.
 	 * 
@@ -5732,14 +5734,17 @@ public class TemplateSpecBackingBean extends
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if (null != this.getManagedBean().getScQt()
+		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId()
-				&& this.getManagedBean().getScQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
-			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
-				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
-						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId() ? this.getManagedBean()
+				.getScQt().getQtStatus().getStatusId() : Long.MIN_VALUE;
+		if (statusId
+				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
+			for (TplSpecAnswer tplSpecAnswer : answerList) {
+				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
+				if (questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC) && isMandatorySpec) {
 					manSpec = true;
 					break;
 				}
@@ -5747,7 +5752,8 @@ public class TemplateSpecBackingBean extends
 		}
 		return manSpec;
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for UOM and quantity details.
 	 * 
@@ -5757,7 +5763,8 @@ public class TemplateSpecBackingBean extends
 	public void showUOMQuantityDetails() {
 		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for zone quantity details.
 	 * 
@@ -5767,7 +5774,8 @@ public class TemplateSpecBackingBean extends
 	public void zoneQuantityPopup() {
 		RequestContext.getCurrentInstance().execute(QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
-
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * update user score based on compliance.
 	 * 
@@ -5775,7 +5783,8 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void onchangeCompliance(TplSpecAnswer ans) {
-		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
+		List<TplSpecAnswer> answerList = this.getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+		for (TplSpecAnswer answer : answerList) {
 			if (ans.getSpecAnswerId() == answer.getSpecAnswerId() && ans.getCompliance() != null) {
 				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);
