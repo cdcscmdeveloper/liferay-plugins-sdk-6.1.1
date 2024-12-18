@@ -11931,15 +11931,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				smSupplier = new SmSupplier();
 				// set supplier id
 				smSupplier.setSupplierId(supplierId);
-				smSupplier.setFlagSupplier(true);
-				smSupplier.setFlagDASuppProfile(true);
 			} else {
 				log.info("Invalid supplier id!!!");
 				throw new EpException(MessageConst.ERROR_760041);
 			}
 
 			// get disicplinary action history
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getActiveDisciplinaryActionVO(smSupplier);
 
 			if (!EntityHelper.isCollectionEmpty(voList)) {
 				voObj = voList.get(0);

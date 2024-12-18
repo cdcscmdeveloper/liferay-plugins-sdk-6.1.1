@@ -571,14 +571,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setOwnerOrgProfile(true);
 					for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 						ctBB.checkAgencyStatus(ctAgency);
-						if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
-							ctAgency.setAp178(false);
-							//ctBB.getManagedBean().setDisableAgent(true); //Bug #27579
-						} else {
-							ctAgency.setAp178(true);
-							ctBB.getManagedBean().setDisableAgent(false);
-							ctBB.getManagedBean().setOwnerOrgProfile(false); //Bug #27579
+						// Start Fix - #36694
+						if (!reqDTO.isViewOnly()) {
+							if (ctBB.getManagedBean().getMinistryProfileId()
+									.equals(ctAgency.getOrgProfile().getMinstryId())) {
+								ctAgency.setAp178(false);
+								// ctBB.getManagedBean().setDisableAgent(true);
+								// //Bug #27579
+							} else {
+								ctAgency.setAp178(true);
+								ctBB.getManagedBean().setDisableAgent(false);
+								ctBB.getManagedBean().setOwnerOrgProfile(false); // Bug #27579
+							}
 						}
+						// End Fix - #36694
 					}
 				}
 			}
@@ -612,11 +618,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 						cisbb.getManagedBean().setItemServiceExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+//						Collections.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726
 						ctBB.getManagedBean().getCtItemServiceList().add(item);			           
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 						cisbb.getManagedBean().setItemProductExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+//						Collections.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726
 						if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
 								ctBB.checkAgencyStatus(ceilingQty.getCtAgency());		        	   
@@ -1109,11 +1115,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			
 			if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 					&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-				if(ctContractVer.getCtAgencies() != null){
-					for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-						ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
-					}
-				}
+				//Start Fix - #36694 || #25406
+//				if(ctContractVer.getCtAgencies() != null){
+//					for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
+//						ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
+//					}
+//				}
+				//End Fix - #36694 || #25406
 				ctContractVer.setOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile());
 				ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 			}

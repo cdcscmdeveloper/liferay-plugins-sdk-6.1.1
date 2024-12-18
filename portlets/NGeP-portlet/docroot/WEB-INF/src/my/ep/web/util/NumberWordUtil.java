@@ -4,6 +4,7 @@
 package my.ep.web.util;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 import my.ep.util.ResourceBundleUtils;
 
@@ -139,7 +140,7 @@ public class NumberWordUtil {
 	}
 	
 	// #36594 - Start
-	public static String changeNumberToWord(int number) {
+	public static String changeNumberToWord(int number, Locale locale) {
 
 		if (number == 0) {
 			return "zero";
@@ -175,12 +176,12 @@ public class NumberWordUtil {
 			words.append(units[number]).append(" ");
 		}
 
-		return changeNumberToWordLabel(words.toString().trim());
+		return changeNumberToWordLabel(words.toString().trim(), locale);
 	}
 
-	private static String changeNumberToWordLabel(String label) {
+	private static String changeNumberToWordLabel(String label, Locale locale) {
 		return ResourceBundleUtils.getMessage("lbl.sm.words." + label,
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, null);
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 	}
 	// #36594 - End
 }
