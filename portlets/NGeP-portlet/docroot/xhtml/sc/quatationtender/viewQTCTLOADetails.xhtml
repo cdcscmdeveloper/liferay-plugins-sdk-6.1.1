@@ -11,13 +11,6 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<ui:remove> #25791 start </ui:remove>
-		<style>
-.commandLink_font {
-	color: #009ae5 !important;
-}
-</style>
-		<ui:remove> #25791 start </ui:remove>
 		<ui:param name="isQtDirectNego"
 			value="#{qTDetailBB.managedBean.viewTrackingDiaryQTDL.procurementMode.parameterCode == ParameterConst.procurementModeDirectNego}" />
 
@@ -31,7 +24,7 @@
 			</tr>
 		</table>
 
-		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}" style="width:100% !important;"
+		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}"
 			toggleable="true" id="qtsearchCtLoaTrackingdtlsid">
 
 			<p:dataTable id="qtCtLoa" var="scQtTrack"
@@ -69,13 +62,13 @@
 
 				<p:column style="width:10%;">
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{!isQtDirectNego}" styleClass="commandLink_font"
+						rendered="#{!isQtDirectNego}"
 						action="#{qTDetailBB.editQuationTenderDetails(scQtTrack, false, true, view.viewId)}">
 						<h:outputText value="#{scQtTrack.qtNo}" escape="false" />
 					</p:commandLink>
 
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{isQtDirectNego}" styleClass="commandLink_font"
+						rendered="#{isQtDirectNego}"
 						action="#{qTDetailBB.viewDirectLOADetails(scQtTrack, view.viewId)}">
 						<h:outputText value="#{scQtTrack.qtNo}" escape="false" />
 					</p:commandLink>
@@ -95,6 +88,8 @@
 			</p:dataTable>
 
 			<br />
+			<br />
+			<br />
 
 			<p:dataTable id="ctLoaId"
 				value="#{qTDetailBB.managedBean.viewQtDlLoaContractTrackingDtls}"
@@ -110,14 +105,14 @@
 
 				<p:column headerText="#{lbl['lbl.sc.qt.view.loiloa.loa.no']}"
 					style="width:10%;white-space: normal;">
-					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_font"
+					<p:commandLink process="@this" partialSubmit="true"
 						action="#{qTDetailBB.viewNormalLoaTrackingDetailsPage(qTDetailBB.managedBean.viewTrackingDiaryQTDL, scLoaTracking, view.viewId)}"
 						rendered="#{!isQtDirectNego}">
 						<h:outputText value="#{scLoaTracking.loaNo}" escape="false" />
 					</p:commandLink>
 
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{isQtDirectNego}" styleClass="commandLink_font"
+						rendered="#{isQtDirectNego}"
 						action="#{qTDetailBB.viewDirectLOADetails(qTDetailBB.managedBean.viewTrackingDiaryQTDL, view.viewId)}">
 						<h:outputText value="#{scLoaTracking.loaNo}" escape="false" />
 					</p:commandLink>
@@ -133,7 +128,7 @@
 					value="#{qTDetailBB.retrieveContractDtlsByLoa(scLoaTracking)}"></ui:param>
 				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 					style="width:10%;" styleClass="column-align-center">
-					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_font"
+					<p:commandLink process="@this" partialSubmit="true"
 						action="#{qTDetailBB.viewLoaContractDetailsPage(vCtContract,view.viewId)}">
 						<h:outputText value="#{vCtContract.contractNo}" escape="false" />
 					</p:commandLink>
