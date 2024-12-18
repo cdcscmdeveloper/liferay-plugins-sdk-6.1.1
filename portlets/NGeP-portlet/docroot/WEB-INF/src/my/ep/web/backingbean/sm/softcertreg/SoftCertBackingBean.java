@@ -591,6 +591,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					//#29481 - Start
 					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
+					
+					if (!isSoftcertCurrentUserOnly(reqDTO.getFreeSofcertPersonnelList())){
+						msgKey = MessageConst.INFO_721068;
+						params = getSoftCertNameEmailMulti(reqDTO.getFreeSofcertPersonnelList());
+					}
 					//#29481 - End
 					
 				} else {
@@ -620,7 +625,33 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 	}
-
+	
+	//#29481 - start
+	private boolean isSoftcertCurrentUserOnly(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels) || freeSoftcertPersonnels.size() > 1){
+			return false;
+		}
+		Long currentUserId = (new FacesScopes()).getUserSessionBean().getUserId();
+		SmPersonnel per = freeSoftcertPersonnels.get(0);
+		if (per.getPmUser() != null){
+			return per.getPmUser().getUserId().equals(currentUserId);
+		}
+		return false;
+	}
+	
+	private String[] getSoftCertNameEmailMulti(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels)){
+			return new String[] { StringUtils.EMPTY, StringUtils.EMPTY }; 
+		}
+		int count = 1;
+		StringBuilder sb = new StringBuilder();
+		for (SmPersonnel per : freeSoftcertPersonnels){
+			sb.append(count++ +". " + per.getName() + " (" + per.getEmail() + ")<br />");
+		}
+		return new String[]{sb.toString()};
+	}
+	//#29481 - end
+	
 	/**
 	 * Remove check box tick from data table
 	 * 
