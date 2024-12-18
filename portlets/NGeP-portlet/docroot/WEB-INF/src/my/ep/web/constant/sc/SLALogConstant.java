@@ -19,8 +19,10 @@ public class SLALogConstant {
 	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
 	public static final String COMMON_BASE_BACKINGBEAN = "BaseBackingBean";
 	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean";
-	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean";
-	
+	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean";	
+	//12471 //28895-35500 - start
+	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
+	//12471 - end	
 	// 25037 - start
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
 	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
@@ -76,11 +78,7 @@ public class SLALogConstant {
 	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLoaContractDetailsPage";
 	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
 	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
-	// 25791-end
-	
-	//12471 //28895-35500 - start
-	public static final String QT_SUPPLIER_FINALIZATION_MEETING_BACKINGBEAN = "SupplierFinalizationMeetingBackingBean";
-	//12471 - end
+	// 25791-end	
 	
 	private SLALogConstant(){
 		
