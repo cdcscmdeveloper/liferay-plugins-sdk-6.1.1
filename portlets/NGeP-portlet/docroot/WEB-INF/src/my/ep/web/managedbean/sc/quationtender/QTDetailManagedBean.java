@@ -11876,11 +11876,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
 	
-	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
+	public List<ScQtContactPerson> getPmUserDeletedContactPersonList() {
 		return pmUserDeletedContactPersonList;
 	}
 
-	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+	public void setPmUserDeletedContactPersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
 		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
 	}
 
