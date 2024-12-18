@@ -41,7 +41,7 @@ public class gpkiBackingBean implements Serializable {
 	private PmDigiSign pmDigiSign = new PmDigiSign();
 	private Exception nonSigningException;
 	//#35488 - start
-	private boolean isMediumTypeOTP = false;
+	private boolean isMediumTypeOTP = true;
 	private String nric = "";
 	private static String gpkiEnabled = EpPropertiesUtils.getInstance().getProperty("gpki.enabled");
 	private static String gpkiNewRoaming = EpPropertiesUtils.getInstance().getProperty("mygpki.new.roaming");
@@ -231,7 +231,9 @@ public class gpkiBackingBean implements Serializable {
 	public void setMediumType(){
 		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("mediumTypeId");
-		isMediumTypeOTP = "5".equals(id);
+		//isMediumTypeOTP = "5".equals(id)
+		// popup default to OTP for any error
+		isMediumTypeOTP = !"4".equals(id);
 	}
 	
 	
