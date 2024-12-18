@@ -161,14 +161,22 @@
 					<h:outputLabel value="" />
 				</c:otherwise>
 			</c:choose>
-			<h:outputLabel value="" />
-			
+			<h:outputLabel value="" />			
 			<h:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText
 				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
 			</h:outputText>
 			<h:outputLabel value="" />
 			<h:outputLabel value="" />
+			
+			<!-- #36709 Start -->
+			<h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText  value="#{noticeBoardBackingBean.managedBean.scQt.estimatedAmount}">			
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>	
+			<h:outputLabel value="" />
+			<!-- #36709 End -->	
+						
 				<!-- #21693 Venkat Start -->	
 			<!--  <h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText value="#{lbl['lbl.sc.notice.board.eval.one.tier']}"
@@ -257,6 +265,15 @@
 				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
 			</h:outputText>
 			<h:outputLabel value="" />
+			
+			<!-- #36709 Start -->	
+			<h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputText  value="#{noticeBoardBackingBean.managedBean.scQt.estimatedAmount}">			
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>	
+			<h:outputLabel value="" />
+			<!-- #36709 End -->
+			
 			<!-- #21693 Venkat Start -->	
 			<!--  
 			<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
