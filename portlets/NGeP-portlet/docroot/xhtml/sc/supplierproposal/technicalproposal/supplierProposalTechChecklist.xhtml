@@ -6,7 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.technical.proposal']}" toggleable="true">
+	<ui:remove> #25791 start </ui:remove>
+	<p:panel header="#{lbl['lbl.sc.technical.proposal']}" toggleable="true"
+		style="width:100% !important;">
+		<ui:remove> #25791 end </ui:remove>
 		<p:dataTable id="techDeailsId" var="techList"
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
@@ -74,7 +77,9 @@
 						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
-						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}" style="width:101px;" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
+						value="#{supplierProposalDetailBackingBean.managedBean.readOnly ? lbl['lbl.btn.view']:lbl['lbl.btn.prepare']}"
+						style="width:101px;" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
 				</ui:fragment>
 
 				<ui:fragment
