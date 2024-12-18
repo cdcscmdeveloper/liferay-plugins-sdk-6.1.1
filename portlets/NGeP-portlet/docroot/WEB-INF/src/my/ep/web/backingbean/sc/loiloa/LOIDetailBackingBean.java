@@ -160,7 +160,6 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LOIDetailBackingBean.
  * 
@@ -2230,7 +2229,6 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSigners(userResDTO.getUserList());
 
-		// TODO
 		scLoi.setFileExtnNo("001");
 		
 		/*
@@ -5585,8 +5583,9 @@ public class LOIDetailBackingBean extends
 					}
 					offeredQuantity = offeredQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
-					BigDecimal offerPrice = proposalItem.getOfferPrice();
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					//Bug #36417 - start
+					BigDecimal finalPrice = proposalItem.getFinalPrice(); 
+					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
 					ScRequestItem requestItem = recommendDtl
 							.getScQtRecommend().getRequestItem();
@@ -5594,7 +5593,8 @@ public class LOIDetailBackingBean extends
 					BigDecimal offeredPrice = TemplateSpecHelper
 							.getInstance().calculateTotalAmount(
 									requestItem.getTplSpecQuestion(),
-									offerPrice, offeredQuantity);
+									finalPrice, offeredQuantity);
+					//Bug #36417 - end
 					if (offeredPrice != null) {
 						offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					}
@@ -6082,6 +6082,7 @@ public class LOIDetailBackingBean extends
 	 * @param docType the doc type
 	 * @return true, if successful
 	 */
+	/*
 	private boolean updatePendingLoiLoas(List<ScLoiLoa> recSupplierList, String docType){
 		boolean isLoiRequired = Boolean.FALSE;
 		boolean isLoiLoasUpdate = Boolean.FALSE;
@@ -6097,6 +6098,7 @@ public class LOIDetailBackingBean extends
 		}
 		return isLoiLoasUpdate;
 	}
+	*/
 	
 	/**
 	 * Localize date.
@@ -6353,6 +6355,7 @@ public class LOIDetailBackingBean extends
 			return Boolean.TRUE;
 		}
 		// 36293 - end
+
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
@@ -6399,7 +6402,7 @@ public class LOIDetailBackingBean extends
 		return scLoiAttachment;
 	}
 	
-	//6906 - start - fix for #346
+	// 6906 - start - fix for #436
 	private void checkIsLoiProcessRequired(List<ScLoiLoa> pendingLoiLoas) {
 		this.getManagedBean().setLoiRequired(false);
 		boolean isAllLoiRequired = true;
@@ -6435,7 +6438,7 @@ public class LOIDetailBackingBean extends
 		}
 		return true;
 	}
-	//6906 - end - fix for #346
+	// 6906 - end - fix for #436
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
 	/**
