@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import my.ep.constant.tpl.TemplateDocConst;	// Bug #36702@Syazani 28/11/2024
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -154,12 +155,13 @@ public class VmUtil {
 		if (key == null || maxLength <= 0) {
 			return key;
 		}
+		int newMaxLength;
 		String[] stringArray = key.split("\\s+");
 		StringBuilder updatedKey = new StringBuilder();
 		for (String s : stringArray) {
-			boolean containsPattern = s.matches(".*-.*?-.*"); //35295 @zaim 
-			if (s.length() > maxLength && !containsPattern) { //35295 @zaim 
-				String chopString = s.replaceAll("(.{" + maxLength + "})(?!$)",
+			if (s.length() > maxLength) {
+				newMaxLength = isStringContainHTMLEntity(maxLength, s);
+				String chopString = s.replaceAll("(.{" + newMaxLength + "})(?!$)",
 						"$1" + TemplateSpecConst.HTML_NEW_LINE_CHARACTER).concat(SSTConstant.ADD_WHITESPACE);
 				chopString = validateHtmlEntitySyntax(chopString);
 				updatedKey.append(chopString);
@@ -185,6 +187,9 @@ public class VmUtil {
 		
 		newChopString = validateGreaterThanBracket(newChopString);
 		
+		newChopString = validateProtegeCharacterUpperCase(newChopString); //35295 #93 @zaim
+		
+		newChopString = validateProtegeCharacterLowerCase(newChopString); //35295 #93 @zaim
 		return newChopString;
 	}
 
@@ -253,12 +258,86 @@ public class VmUtil {
 		if (checkBreakLine.contains("<<br />br")){
 			checkBreakLine = checkBreakLine.replaceAll("<<br />br", "<br");
 		}
+		return checkBreakLine;
+	}
+
+	/**
+	 * @param maxLength
+	 * @param s
+	 * @return
+	 */
+	private int isStringContainHTMLEntity(int maxLength, String s) {
+		int newMaxlength = maxLength;
+		if (s.contains(TemplateSpecConst.HTML_NEW_LINE_CHARACTER) || s.contains("<b")){
+			newMaxlength = newMaxlength+TemplateSpecConst.HTML_NEW_LINE_CHARACTER.length();
+		}
+		if (s.contains(SSTConstant.LESS_THAN_SYMBOL)){
+			newMaxlength = newMaxlength+SSTConstant.LESS_THAN_SYMBOL.length();
+		}
+		if (s.contains(SSTConstant.GREATER_THAN_SYMBOL)){
+			newMaxlength = newMaxlength+SSTConstant.GREATER_THAN_SYMBOL.length();
+		}
 		//35295 - start
-		if (checkBreakLine.contains("<br /><br ")){
-			checkBreakLine = checkBreakLine.replaceAll("<br /><br ", "<br ");
+		if (s.contains(SSTConstant.PROTEGE_LOWERCASE_E)){
+			newMaxlength = newMaxlength+(SSTConstant.PROTEGE_LOWERCASE_E.length() * 2);
+		}
+		if (s.contains(SSTConstant.PROTEGE_UPPERCASE_E)){
+			newMaxlength = newMaxlength+(SSTConstant.PROTEGE_UPPERCASE_E.length() * 2);
 		}
 		//35295 - end
-		return checkBreakLine;
+		return newMaxlength;
+	}
+	//35295 - start
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateProtegeCharacterUpperCase(String newChopString){
+		String checkProtege = newChopString;
+		if (checkProtege.contains("&<br />#201;")){
+			checkProtege = checkProtege.replaceAll("&<br />#201;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#<br />201;")){
+			checkProtege = checkProtege.replaceAll("&#<br />201;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#2<br />01;")){
+			checkProtege = checkProtege.replaceAll("&#2<br />01;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#20<br />1;")){
+			checkProtege = checkProtege.replaceAll("&#20<br />1;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#201<br />;")){
+			checkProtege = checkProtege.replaceAll("&#201<br />;", SSTConstant.PROTEGE_UPPERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		
+		return checkProtege;
+		
+	}
+	
+	/**
+	 * @param newChopString
+	 * @return
+	 */
+	private String validateProtegeCharacterLowerCase(String newChopString){
+		String checkProtege = newChopString;
+		if (checkProtege.contains("&<br />#233;")){
+			checkProtege = checkProtege.replaceAll("&<br />#233;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#<br />233;")){
+			checkProtege = checkProtege.replaceAll("&#<br />233;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#2<br />33;")){
+			checkProtege = checkProtege.replaceAll("&#2<br />33;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#23<br />3;")){
+			checkProtege = checkProtege.replaceAll("&#23<br />3;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (checkProtege.contains("&#233<br />;")){
+			checkProtege = checkProtege.replaceAll("&#233<br />;", SSTConstant.PROTEGE_LOWERCASE_E+TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		
+		return checkProtege;
+		//35295 - end
 	}
 	//36122 - end
 	// #29007 - note 724 Vinod start
@@ -329,4 +408,66 @@ public class VmUtil {
 	}
 	// Bug #36702@Syazani 28/11/2024 -- End
 	
+	// 35295 - start
+		/**
+		 * This method will break Long words for file type docx.
+		 *
+		 * 
+		 * @param key
+		 * @param maxLength
+		 * @return the updatedKey
+		 */
+		public String wordWrapText(String key, int maxLength) {
+			if (key == null || maxLength <= 0) {
+				return key;
+			}
+			String[] stringArray = key.split("(?<!\r)\n|[ \t]+");
+			StringBuilder updatedKey = new StringBuilder();
+			for (String s : stringArray) {
+				boolean containsPattern = s.matches(".*-.*");
+				if (s.length() > maxLength && !containsPattern) {
+					String chopString = s
+							.replaceAll("(.{" + maxLength + "})(?!$)", "$1" + SSTConstant.WORD_BREAK_TO_REMOVE);
+
+					chopString = chopString.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+							SSTConstant.WORD_BREAK_TO_REMOVE);
+					if (chopString.contains("/AddBreakLineHere//AddBreakLineHere/")) {
+						chopString = chopString.replaceAll("/AddBreakLineHere//AddBreakLineHere/",
+								SSTConstant.WORD_BREAK_TO_REMOVE);
+					}
+					updatedKey.append(chopString);
+				} else {
+					updatedKey.append(s.concat(SSTConstant.ADD_WHITESPACE).replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+							SSTConstant.WORD_BREAK_TO_REMOVE));
+				}
+			}
+			log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
+			return updatedKey.toString();
+		}
+
+		/**
+		 * This method will replace special character
+		 * and wrap the text based on file type .
+		 * @param text
+		 * @param length
+		 * @param fileType
+		 * @return
+		 */
+		public String escapeAndWrapText(String text, int length, String fileType) {
+			String textAfterWrap = wordWrapText(text, length);
+			if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_DOC)){
+				textAfterWrap = StringEscapeUtils.escapeHtml(textAfterWrap);
+			}else if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_PDF)){
+				if (textAfterWrap.contains(TemplateSpecConst.LESS_THEN_SYMBOL)) {
+					textAfterWrap = textAfterWrap.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+				}
+				if (textAfterWrap.contains(TemplateSpecConst.GREATER_THEN_SYMBOL)) {
+					textAfterWrap = textAfterWrap.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+							TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+				}
+			}
+			textAfterWrap = textAfterWrap.replaceAll(SSTConstant.WORD_BREAK_TO_REMOVE,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+			return textAfterWrap;
+		}
 }
