@@ -3416,7 +3416,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return newValidity;
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	private void responsePeriodValidations(ScQt scQt) {
 		if (null == scQt.getResponsePeriod()) {
 			throw new EpException(MessageConst.ERROR_770243, new String[] { ResourceBundleUtils.getMessage(
@@ -3433,7 +3435,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			throw new EpException(MessageConst.ERROR_770245, new String[] { toValue });
 		}
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	private String retrieveResponsePeriod(String value) {
 
 		IRuleSO ruleSO = null;
@@ -3461,7 +3465,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		return result;
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	private void checkAttachedDocument(QuationTenderReqDTO reqDTO) {
 		
 		ScQtApprovalRequest approvalRequest = reqDTO.getApprovalRequests().get(0);
@@ -3478,17 +3484,22 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	// doing this to enable date validation
 	public void validDateFirst() {
 		String showDialog = "confirmUpdateValidityExtension.show()";
 		RequestContext.getCurrentInstance().execute(showDialog);
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	public void rejectShowUp() {
 		String showDialog = "supplierRejectConfirmation.show()";
 		RequestContext.getCurrentInstance().execute(showDialog);
 	}
+	//#21692 - End
 	//#21692 - Start
 	private String getFCMessgeConstant(String outCome) {
 		String msgCode = null;
@@ -3501,7 +3512,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return msgCode;
 	}
 	//#21692 - End
-	
+
+	//#21692 - Start
 	private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -3525,7 +3537,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		return null;
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	/**
 	 * check if FC approve EPV 
 	 * 
@@ -3536,8 +3550,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId()
 				|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecessionType().getParameterId();
 	}
+	//#21692 - End
 	
-
+	//#21692 - Start
 	/**
 	 * enable each Type of Request to has attachment
 	 * 
@@ -3588,7 +3603,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().getToBeRemoveEPVAttachments().remove(typeOfRequest);
 		}
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	/**
 	 * overload method without Base Entity
 	 * 
@@ -3597,7 +3614,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void deleteEpvUploadFile(BaseEntity delEntity) {
 		deleteEpvUploadFile();
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	/**
 	 * delete EPV file update either R1, R2 or R3
 	 * 
@@ -3620,7 +3639,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		this.getManagedBean().getToBeRemoveEPVAttachments().add(typeOfRequest);
 		handleDecisionNull(apprvRequest);
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	/**
 	 * cannot assign value a constant directly from html, take the value to backing bean and return string
 	 * 
@@ -3630,7 +3651,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public String assignValueForEpvAttachment(String epvType) {			
 		return epvType;
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	// make sure if epv attachment is not empty, assign each of them to their transient
 	private void setEpvAttachment(List<ScQtApprovalRequest> apprvReqList) {
 		ScQtApprovalRequest apprvReq = apprvReqList.get(0);
@@ -3647,7 +3670,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	// set decisions null for attachments
 	private void setDecisionsNull(ScQtApprovalRequest apprvRequest) {
 		if (this.getManagedBean().getQt().isApprovalPBM()) {
@@ -3660,22 +3685,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		} else {
 			if (apprvRequest.getDecessionType().getParameterId() == null) {
 				apprvRequest.setDecessionType(null);
-			}
-		}
-	}
-
-	// set new param for null decisions
-	private void setDecisionsNewParam(ScQtApprovalRequest apprvReq) {
-		if (this.getManagedBean().getQt().isApprovalPBM()) {
-			if (apprvReq.getDecisionCertPBM() == null) {
-				apprvReq.setDecisionCertPBM(new PmParameter());
-			}
-			if (apprvReq.getDecessionType() == null) {
-				apprvReq.setDecessionType(new PmParameter());
-			}
-		} else {
-			if (apprvReq.getDecessionType() == null) {
-				apprvReq.setDecessionType(new PmParameter());
 			}
 		}
 	}
@@ -3708,7 +3717,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	private void checkRemarks(List<ScQtApprovalRemark> remarks) {
 		for (int i = 0; i < remarks.size(); i++) {
 			String userRemark = remarks.get(i).getRemark();
@@ -3718,7 +3729,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	private void checkValidityDateAndSupplierResponseDate() {
 		ScQtApprovalRequest request = this.getManagedBean().getScQtApprovalRequestList().get(0);
 		Date date = new Date();
