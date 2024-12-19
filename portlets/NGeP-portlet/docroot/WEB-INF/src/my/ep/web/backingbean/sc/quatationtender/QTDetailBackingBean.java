@@ -7223,12 +7223,16 @@ public class QTDetailBackingBean extends
 			String changedCatCodeList = checkCatCodeChange();
 			ScWorkFlowStatus specMainworkflow = this.getManagedBean().getQt().getCurrentWorkFlowStatus();
 			Long workflowStatusId = specMainworkflow.getPmStatus().getStatusId();
-			boolean qtStatusWorkflow = workflowStatusId.equals(QTStatusConst.SE_PENDING_SUBMISSION)
-					|| workflowStatusId.equals(QTStatusConst.SE_PENDING_ENDORSMENT) || workflowStatusId
-					.equals(QTStatusConst.SE_PENDING_SIGNOFF) || workflowStatusId
-					.equals(QTStatusConst.SE_PENDING_REVISION)  || workflowStatusId
-					.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)|| workflowStatusId
-					.equals(QTStatusConst.SE_COMPLETED);
+			
+			Set<Long> pendingStatuses = new HashSet<>(Arrays.asList(
+			        QTStatusConst.SE_PENDING_SUBMISSION,
+			        QTStatusConst.SE_PENDING_ENDORSMENT,
+			        QTStatusConst.SE_PENDING_SIGNOFF,
+			        QTStatusConst.SE_PENDING_REVISION,
+			        QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL,
+			        QTStatusConst.SE_COMPLETED
+			));
+			boolean qtStatusWorkflow = pendingStatuses.contains(workflowStatusId);
 			if (!changedCatCodeList.isEmpty() && qtStatusWorkflow) {
 				this.getManagedBean().setCatCodeList(changedCatCodeList);
 				RequestContext.getCurrentInstance().execute(QTConstants.QT_CAT_CODE_CHANGE_ALERT_SHOW); 
