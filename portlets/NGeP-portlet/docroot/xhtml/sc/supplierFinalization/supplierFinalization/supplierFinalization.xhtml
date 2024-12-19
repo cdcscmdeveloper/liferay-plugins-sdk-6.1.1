@@ -38,6 +38,7 @@
 							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority
 							or empty suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}" />
 	<!-- 6906 note 117 end -->
+
 	<!-- 25729 -start- -->
 	<ui:param name="expectTotalIndPriceBelowThreshold" 
 			  value="#{suppFinalizationBackingBean.expectTotalIndPriceBelowThreshold(suppFinalizationBackingBean.managedBean.scQt,'SP')}" />
@@ -100,6 +101,7 @@
 			<ui:param name="supplierFinalizationReadOnly"
 				value="#{suppFinalizationBackingBean.managedBean.supplierFinalizationReadOnly}" />
 			<!-- 6906 note 117 end -->
+
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 				columnClasses="columnWidth20" rendered="#{decisionSupplFinalOrFwdHighAuth}">
 				<h:column>
@@ -127,6 +129,7 @@
 									<!-- 19336,25201,17376,19287,6906 -end- -->
 									<f:selectItems
 										value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
+
 									<!-- 18685 -start- -->
 									<p:ajax event="change"
 										update="@([id$=itemSupplierPanel],[id$=recommendSupplierPanel], [id$=remarksPanel])"
@@ -135,6 +138,7 @@
 										oncomplete="blockWidget.hide();" />
 									<!-- 18685 -end- -->
 								</p:selectOneRadio>
+
 							</td>
 							<td style="margin-top: -3px">
 								<ac:iconTooltip value="#{lbl['lbl.sc.recomend.type.tooltip']}" />
@@ -424,7 +428,6 @@
 				<ui:remove><!-- 6906 note80 --></ui:remove>
 				<ui:fragment rendered="#{suppFinalizationBackingBean.managedBean.scQt.zonal and
 				 			  decisionSupplFinalOrFwdHighAuth}">
-				 			  	
 					<td width="20%" class="sidemenutd" valign="top">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@form" 
 										 partialSubmit="true" process="@form" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />

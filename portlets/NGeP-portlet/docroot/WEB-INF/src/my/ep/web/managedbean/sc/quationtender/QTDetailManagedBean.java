@@ -1695,10 +1695,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private String msgConfirmBelowIndi; // Bug #35061 - asyrafhaziq
 
-	//#25426 - Start
-	private boolean firstViewPageCAUsers = false; 
-	//#25426 - End
-	
+	// #25426 - Start
+	private boolean firstViewPageCAUsers = false;
+	// #25426 - End
+
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -10763,7 +10763,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
 	// Bug #35061 -end-
-	
+
 	// #25426 - Start
 	public boolean isFirstViewPageCAUsers() {
 		return firstViewPageCAUsers;

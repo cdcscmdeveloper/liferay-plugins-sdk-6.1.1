@@ -271,10 +271,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 				// End #26189:PK2.1
 				
 				if (CollectionUtils.isNotEmpty(membersList)) {
-					//#25426 - Start
-					//to exclude member list inactive committee
+					// #25426 - Start
+					// to exclude member list inactive committee
 					checkAndExcludeInactiveCommittee(membersList);
-					//#25426 - End
+					// #25426 - End
+
 					Collections.sort(membersList);
 					
 					getManagedBean().setCommitteeMembersList(
@@ -344,8 +345,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			qtMeetingSO = null;
 		}
 	}
-	
-	
+
 	// #25426 - Start
 	/**
 	 * To exclude inactive committee list
@@ -366,12 +366,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 				toRemove.add(scMember); // Collect inactive members to remove later
 			}
 		}
+
 		membersList.removeAll(toRemove); // Remove all inactive members from the list
 	}
-
 	// #25426 - End
 
-	
 	/**
 	 * Action to add meeting
 	 */
@@ -1582,6 +1581,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 				renewSesionObject();
 			}
 			// 25037 - end
+
 		} finally {
 			meetingSO = null;
 		}
