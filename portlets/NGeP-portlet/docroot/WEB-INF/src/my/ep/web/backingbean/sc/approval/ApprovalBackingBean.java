@@ -2696,6 +2696,15 @@ return scQt;
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				getManagedBean().setAutoUpdate(false);
 				RequestContext.getCurrentInstance().execute(QTConstants.QT_GPKI_DLG_SHOW);// 25037
+			}// #30477 - Start
+			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
+					&& taskName.equalsIgnoreCase(SCProcessNameConst.GENERIC_APPROVAL_REVISE)) {
+				if (isInactivePublicationApproverRole()) {
+					throw new EpException(MessageConst.ERROR_775173);
+				} else {
+					updateGenericApprovalTask(null);
+				}
+			 // #30477 - End
 			} else {
 				updateGenericApprovalTask(null);
 			}
