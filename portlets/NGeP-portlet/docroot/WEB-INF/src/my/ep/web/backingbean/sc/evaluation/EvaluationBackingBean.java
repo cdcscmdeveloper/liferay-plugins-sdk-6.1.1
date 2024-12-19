@@ -18989,7 +18989,7 @@ private void retriveCommitteeRemarksList(){
 		List<ScQtEvaluationResultDtl> disqualifiedList = null != this.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList() ? this.getManagedBean()
 				.getDisqualifiedSuppliersDM().getList() : null;
-		if (CollectionUtils.isEmpty(disqualifiedList)) {
+		if (CollectionUtils.isNotEmpty(disqualifiedList)) {
 			for (ScQtEvaluationResultDtl disQualDtl : disqualifiedList) {
 				boolean isDisqualifiedCompliance = null != disQualDtl.isCompliance() && !disQualDtl.isCompliance();
 				if (isDisqualifiedCompliance) {
