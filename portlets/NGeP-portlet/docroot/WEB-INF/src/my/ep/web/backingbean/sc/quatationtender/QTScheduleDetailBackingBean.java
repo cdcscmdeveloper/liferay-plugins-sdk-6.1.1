@@ -429,13 +429,24 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 				.getPmuserContactpersonList();
 		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
 				.getSelectedpmuserContactpersonList();
+		//#28895 - 35500 start
+		List<ScQtContactPerson> deletedContactList = new ArrayList<ScQtContactPerson>();
+		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		//#28895 - 35500 end		
 
 		if (null == selectedContactList || selectedContactList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760098);
 		} else {
 			for (ScQtContactPerson contactPerson : selectedContactList) {
 				contactList.remove(contactPerson);
+				//#28895-35500 start
+				deletedContactList.add(contactPerson);				
+				if (newDoaList != null && newDoaList.contains(contactPerson)){
+					newDoaList.remove(contactPerson);
+				}
 			}
+			this.getManagedBean().setPmUserDeletedContactPersonList(deletedContactList);
+			//#28895 - 35500 end
 		}
 		this.getManagedBean().setSelectedpmuserContactpersonList(null);
 	}
@@ -487,6 +498,13 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 			contactPerson.setFaxNo(newUser.getFaxNo());
 			contactPerson.setUser(newUser);
 		}
+		
+		//28895 - 35500 start
+		List<ScQtContactPerson> newDoaList = this.getManagedBean().getNewDoaList();
+		newDoaList = newDoaList == null ? new ArrayList<ScQtContactPerson>() : newDoaList;
+		newDoaList.add(contactPerson);
+		this.getManagedBean().setNewDoaList(newDoaList);
+		//#28895-35500 end
 
 //		if (list != null) {
 //			for (PmUser user : list) {
