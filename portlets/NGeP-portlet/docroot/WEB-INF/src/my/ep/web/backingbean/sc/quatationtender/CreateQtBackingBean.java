@@ -346,7 +346,7 @@ public class CreateQtBackingBean extends
 						.getOrgProfileId());
 				if (ptjSpecialApproval != null) {
 					scQt.setCircularVer(null);
-					this.getManagedBean().setPanel(null);
+					this.getManagedBean().setPanel(false);//35507 defaulted to false
 					scQt.setPanel(false);
 					this.getManagedBean().setPtjSpecialApproval(ptjSpecialApproval);
 					scQt.setObtainSpecialApproval(false);
@@ -507,10 +507,14 @@ public class CreateQtBackingBean extends
 			
 			 Long currentStatus = this.getManagedBean().getQt().getQtStatus()
 					.getStatusId();
-
-			if (currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
+			//Reopen #25726 note 220 - issue 7
+             PmParameter contractType = this.getManagedBean().getQt().getContractType();
+             
+			if ((currentStatus.equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)  ||  
 				currentStatus.equals(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION) ||
-				  isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+				isQTStatusGreaterThan(currentStatus,QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING))&&
+				contractType != null &&  
+				!ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(contractType.getParameterCode())){ //Reopen #25726 note 220 - issue 7
 			
 			SpecificationBackingBean specificationBackingBean = new SpecificationBackingBean();
 			List<ScQtCheckList> financialSpecCheckList = this.getManagedBean()
@@ -530,7 +534,7 @@ public class CreateQtBackingBean extends
 									.getParameterCode())) {
 					financialchecklist.setPmStatus(status);
 				}
-			}
+			 }
 			}
 		  }
 		}
@@ -1181,7 +1185,7 @@ public class CreateQtBackingBean extends
 			}
 			
 			//Start Reopen 9019 #note-289 remove the alert message while save
-			if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())){
+			//#35061 - remove to allow show the the panel
 				// 25729#174 start
 				//BugBug #35061 - asyrafhaziq
 				// get total indicative price threshold validation value
@@ -1197,7 +1201,7 @@ public class CreateQtBackingBean extends
 					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 				}
 				// 25729#174 end
-			}
+		
 			//End Reopen 9019 #note-289 remove the alert message while save
 			
 		} finally {
@@ -1406,7 +1410,8 @@ public class CreateQtBackingBean extends
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.PROCUREMENT_CATEGORY);
 			for (PmParameterDesc paramDesc : localParamDesc) {
-				  if (paramDesc.getPmParameter().getParameterId() == type) {
+				//20231122@asyrafhaziq_25726 - Issue 10
+				  if (paramDesc.getPmParameter().getParameterId().equals(type)) {
 
 					this.getManagedBean().setProcuremntCategory(
 							paramDesc.getPmParameter().getParameterCode());
@@ -1430,6 +1435,8 @@ public class CreateQtBackingBean extends
 		 */try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
+			// Reopen 25726 note 271- Issue 4 
+			PmParameter previousFulfilmentType = this.getManagedBean().getQt().getFulfilmentType();		
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				//Start Reopen 9019 #note-289 remove the alert message while save
@@ -1475,11 +1482,18 @@ public class CreateQtBackingBean extends
 
 			}
 			// #25726 END
+			// Reopen 25726 note 271- Issue 4 
+			PmParameter newFulfilmentType = this.getManagedBean().getQt().getFulfilmentType	();
+		    boolean isUpdatefulfillment = updatefullfillmentDetails (newFulfilmentType, previousFulfilmentType);
+						
 			this.getManagedBean().getQt().setScQtSchedules(null);
 			this.getManagedBean().getQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_PROGRESSIVE_PAYMENT);
-			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
-
+			// Reopen 25726 note 271- Issue 4 
+			if (!isUpdatefulfillment){
+			  removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
+			}
+			
 			//20210615@asyrafahaziq - Bug #30891 - Start
 //			 if (!this.getManagedBean().getQt().getContractDuration().equals(null) ) {
 //				 ContractPeriodChange();
@@ -1544,6 +1558,35 @@ public class CreateQtBackingBean extends
 					new ArrayList<ScQtProgressivePayment>());
 		}
 
+	}
+	// Reopen 25726 note 271- Issue 4 
+	/**
+	 * this method is used to update fulfillment details objects in fulfillment
+	 * details side menu.
+	 * 
+	 * @Param String(String scheduleType).
+	 * 
+	 */
+	private boolean updatefullfillmentDetails(PmParameter newFulfilmentType,PmParameter previousFulfilmentType ) {
+		
+		if ((ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()) || 
+			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(newFulfilmentType.getParameterCode()))&&
+			(ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()) || 
+			ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equalsIgnoreCase(previousFulfilmentType.getParameterCode()))){
+			
+			List<ScQtSchedule> scheduleList = this.getManagedBean()
+					.getScheduleList();
+
+			if (CollectionUtils.isNotEmpty(scheduleList)) {
+				
+				for (ScQtSchedule qtSchedule : scheduleList) {
+						qtSchedule.setScheduleType(newFulfilmentType);
+				}
+			}
+			 return true;
+		}
+		
+      return false;
 	}
 	
 	
@@ -2606,24 +2649,25 @@ public class CreateQtBackingBean extends
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			
+			ScQt scQt = getManagedBean().getQt(); //Reopen #25726 note 187 - issue 7,8
 			//Start Reopen 9019 #note-289 remove the alert message while save
 			if(null != parameterId){
+				
+				
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(parameterId);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-				this.getManagedBean().getQt()
-						.setContractType(resDTO.getPmParameter());
-				if(null!=this.getManagedBean().getQt()
-						.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
-						.getContractType().getParameterCode())){
-					ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
-					fulfilMentAsandWhen
-							.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-					fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-					ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
-							.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
-					this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+				scQt.setContractType(resDTO.getPmParameter());
+				
+				if(null!=scQt.getContractType() && ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(scQt.getContractType().getParameterCode())){			
+					
+					scQt.setFulfilmentType(
+							getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE,
+									ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN));	
 				}
+			//Reopen #25726 note 187 - issue 7,8
+			}else{
+				scQt.setContractType(new PmParameter());
 			}
 			//End Reopen 9019 #note-289 remove the alert message while save
 	

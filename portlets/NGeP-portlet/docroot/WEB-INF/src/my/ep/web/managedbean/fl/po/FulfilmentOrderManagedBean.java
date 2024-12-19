@@ -178,7 +178,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private boolean yep;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplineVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//28377 - start
@@ -198,6 +198,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	//34316-Start
 	private int yepButtonFlag =0;
 	//34316-End
+	
+	private boolean isDpContinuityView = false;//#26790 note 266
 	
     /**
 	 * @return the pendingDoDataModel
@@ -1488,12 +1490,12 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplineVO() {
+		return disciplineVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
+		this.disciplineVO = disciplineVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1615,4 +1617,25 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	}
 	//34316 - end
 
+	// #25790 - start
+	/**
+	 * Checks if from DP continuity view.
+	 * 
+	 * @return {@code true} if from DP continuity view, {@code false} otherwise.
+	 */
+	public boolean isDpContinuityView() {
+		return isDpContinuityView;
+	}
+
+	/**
+	 * Sets the DP continuity view .
+	 * 
+	 * @param isDpContinuityView
+	 *            {@code true} to enable the DP continuity view, {@code false}
+	 *            to disable it.
+	 */
+	public void setDpContinuityView(boolean isDpContinuityView) {
+		this.isDpContinuityView = isDpContinuityView;
+	}
+	// #25790 - end
 }

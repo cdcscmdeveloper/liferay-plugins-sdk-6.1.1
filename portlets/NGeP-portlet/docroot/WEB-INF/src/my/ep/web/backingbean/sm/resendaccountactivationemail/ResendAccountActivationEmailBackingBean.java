@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -22,6 +23,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -32,7 +34,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,35 +68,37 @@ public class ResendAccountActivationEmailBackingBean extends
 		//26238 - start 27848
 		//check disciplinary action on supplier
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
+		if (pmUser == null || pmUser.getUserId() == null || !hasValidDisciplinaryAction()){
 			renewSesionObject();
-			SmCommonUtil
-					.redirectToPage(
-							"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
-							"", null, null);
-		}else{
-			SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
-			
-			SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-			supReqDTO.setSupplier(currSupp);
-			SupplierDataMaintenanceResDTO activeDisc = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-			if(activeDisc != null){
-				String labelNameVal = "";
-				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
-								new String[] { labelNameVal })));
-				SmCommonUtil.redirectToPage(
-						"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml", "", null, null);
-			} else {		
-				renewSesionObject();
-				SmCommonUtil
-						.redirectToPage(
-								"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
-								"", null, null);
-			}
 		}
+		SmCommonUtil
+		.redirectToPage(
+				"/xhtml/sm/resendaccountactivationemail/resendAccountActivationEmail.xhtml",
+				"", null, null);
 		// 26238 - END 27848
 	}
+	//#26238
+	private boolean hasValidDisciplinaryAction(){
+		SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
+		supReqDTO.setSupplier(SmApplicationUtil.getCurrentSupplier());
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
+		
+		if(EntityHelper.isCollectionEmpty(resDTO.getSmDisciplinaryActions())){
+			return false;
+		}
+		for (SmDisciplinaryAction da : resDTO.getSmDisciplinaryActions()){
+			if(da.isCancelRegistration() || da.isSuspendRegistration() || da.isBlacklistOwner()){
+				FacesContext.getCurrentInstance().addMessage("imposedDisciplinary", 
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",
+								new String[] { "" })));
+				return true;
+			}
+		}
+		return false;
+	}
+	
 
 	public void onClickResend() {
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
@@ -208,10 +211,17 @@ public class ResendAccountActivationEmailBackingBean extends
 
 	private SmPersonnel getAdminPersonnel(SmSupplier supplier) {
 		SmPersonnel retVal = null;
-		if (supplier.getSmAppl() != null
-				&& !EntityHelper.isCollectionEmpty(supplier.getSmAppl()
-						.getSmPersonnels())) {
-			for (SmPersonnel per : supplier.getSmAppl().getSmPersonnels()) {
+		//#35442 START
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		if(supplier.getSmAppl() != null){
+			reqDTO.setApplId(supplier.getSmAppl().getApplId());
+		}
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelListByApplId(reqDTO).getSmPersonnelList();
+		
+		if (personnels != null
+				&& !EntityHelper.isCollectionEmpty(personnels)) {
+			for (SmPersonnel per : personnels) { //#35442 END
 				if (per.getEpRole() != null
 						&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 								.contains(per.getEpRole())

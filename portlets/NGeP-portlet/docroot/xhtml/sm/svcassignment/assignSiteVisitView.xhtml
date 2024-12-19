@@ -69,25 +69,29 @@
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel  value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
-				<td class="header-info-text">
-					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"/>
+				<!-- #24819 - start -->
+				<td><p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+				<td>
+					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
+						rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" />
+					<h:outputText value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" />
 					&#160;
-						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
-						<p:tooltip id="newRegNott" for="newRegNoti">
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
-						</p:tooltip>&#160;
-				</td>
+					<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" /> 
+					<p:tooltip id="newRegNott" for="newRegNoti">
+					<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
+					</p:tooltip>&#160;</td>
 			</tr>
+			
 			<tr>
 				<td></td>
-				<td  class="header-info-text">
-				<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
-				</td>
+				<td class="header-info-text">
+					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
 				<td></td>
 				<td></td>
 			</tr>
+			<!-- #24819 - end -->
+			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.siteassign.company.address']}" /></td>
 				<td>
@@ -110,23 +114,18 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
-				<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start-->
 					#{catCode} 
-					<!-- <h:outputText value="#{catCode} - #{catApp.categoryL1Name} / #{catApp.categoryL2Name} / #{catApp.categoryL3Name}"></h:outputText> -->
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.category.description']}">
-					<!-- #28175 - start -->
-					<c:choose>
-						<c:when test="#{not svcSiteAssignBackingBean.managedBean.smAppl.activeAppl}">
-							#{catApp.categoryL3Name}
-						</c:when>
-						<c:otherwise>
-							#{catApp.pmCategoryL3.categoryName}
-						</c:otherwise>
-					</c:choose>
-					<!-- #28175 - start -->
-					<h:outputText value="#{catApp.otherDesc}" rendered="#{catApp.otherDesc != null}" />
+					<!-- #28175 - start, 28775 - Site Visit Grouping Enhancement - 28775 -->
+				<p:column headerText="#{lbl['lbl.sm.category.description']}"
+					style="white-space: normal; width: 88%;">
+					<h:outputText value="#{svcSiteAssignBackingBean.getSupplierCategoryName(catApp, 
+										svcSiteAssignBackingBean.managedBean.smAppl)}"
+								style="white-space: pre-wrap; word-wrap: break-word;"/>
+					<br />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.othDesc']}: #{catApp.otherDesc}" 
+						rendered="#{catApp.otherDesc != null}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -134,10 +133,7 @@
 		<p:panel header="#{lbl['lbl.sm.siteassign.pnl.siteassign']}">
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.svcTaskVOLs}" rowIndexVar="rowIndex">
-				<ui:param name="facilityType" 
-				value="#{svc.smSvTask.smSvAddress.facilityType}" />
 				<p:column headerText="#{lbl['lbl.sm.facility.type']}">
-					<!--  #{facilityType} -->
 					<h:outputText value="#{svcSiteAssignBackingBean.getFacilityType(svc.smSvTask)}" 
 						escape="false"/>
 					<!-- 28775 - Site Visit Grouping Enhancement - 28775  - end-->

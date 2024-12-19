@@ -57,6 +57,8 @@ import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtAddress;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
@@ -72,6 +74,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
@@ -175,6 +178,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		reqDTO.setContractId(new Long(dataType.getContractId()));
 		reqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
 		reqDTO.setDocType(dataType.getDocType());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getLatestVersionId())); //#15851
 		getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
 		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)){
 			getManagedBean().setDisableField(true);
@@ -199,7 +203,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(reqDTO);
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-			ctBB.renewSesionObject();
+//			ctBB.renewSesionObject(); //#36196 - Fixing Bugs on Remark.
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
@@ -466,7 +470,8 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	public void validateContractTermination(String outcome){
 		this.getManagedBean().setAutoUpdate(true);
 
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) 
+				|| outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {  //#36196 - Fixing 
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
 			if((remark == null || remark.length() == 0)) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
@@ -558,13 +563,13 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}
-
-		if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && this.getManagedBean().isMutualTermination()) {
+		/* //#36196 - Fixing
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) { 
 			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 			if(this.getManagedBean().getAttachmentList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_750014);
 			}
-		}
+		}*/
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isApproverSetting() 
 				&& getManagedBean().getApproverModel().getTarget().size()==0) {
@@ -689,181 +694,230 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		this.viewNoticeFlag = viewNoticeFlag;
 	}
 
+	// #25000 - Start
 	/**
-	 * This method is used to generate notice letter
-	 * Templates using to generate letter
+	 * Previews the notice action by generating a document based on the contract
+	 * state and configuration. This method validates the view notice flag,
+	 * populates the Velocity context with necessary data, generates the
+	 * document, and initiates a download.
+	 * 
+	 * @throws Exception
+	 *             if any error occurs during the process
 	 */
 	public void previewNoticeAction() throws Exception {
-		VelocityContext context = null;
-		String vmFile = null;
-		StringBuffer  ministryJabatan = new StringBuffer();
+		VelocityContext context = new VelocityContext();
+		String vmFile = determineVmFile();
+		StringBuilder ministryJabatan = new StringBuilder();
 
+		validateViewNotice();
 		try {
-			validateViewNotice();
-			if (isViewNoticeFlag()) {
-				context = new VelocityContext();
-				//   String imgUrl = getServerUrl()+ "css/images/gov.png";
-				if (getManagedBean().isTermination()) {				
-					vmFile = ContractConst.DOCPATH_CT_TERMINATION_NOTICE;
-				} else if (getManagedBean().isMutualTermination()) {
-					vmFile = ContractConst.DOCPATH_CT_MUTUAL_TERMINATION_NOTICE;
-				} else if(getManagedBean().isRemedy()) {			
-					vmFile = ContractConst.DOCPATH_CT_REMEDY_NOTICE;
-				}
 
-				if(vmFile !=null) {							 				
-					if(getServerUrl() != null){
-						context.put("imgUrl",getServerUrl()+  "NGeP-portlet/css/images/gov.png" );
-					}
-
-					context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-					String jabtanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					if(!jabtanName.isEmpty()) {
-						ministryJabatan.append(jabtanName);
-						ministryJabatan.append(" / ");
-					}
-
-					PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-					if(ministryOrgProfile!=null) {
-						ministryJabatan.append(ministryOrgProfile.getOrgName());
-						context.put("ministryName", ministryOrgProfile.getOrgName());
-					}
-
-					context.put("ministryJabatanName", ministryJabatan );					
-					context.put("decisionDate", getManagedBean().getContractVer().getCtTermination().getDecisionDate());
-
-					if(getManagedBean().getContractVer().getOwnerOrgAddress()!=null) {
-						String ptjAddress = getFullAddress(getManagedBean().getContractVer().getOwnerOrgAddress());
-						ptjAddress = ptjAddress.replaceAll("\r\n", "<br />");
-						ptjAddress = ptjAddress.replaceAll("&", "&#38;");  
-						context.put("ptjAddress", ptjAddress);
-						context.put("telNo", getManagedBean().getContractVer().getOwnerOrgAddress().getPhoneNoFull());
-						context.put("faxNo", getManagedBean().getContractVer().getOwnerOrgAddress().getFaxNoFull());
-					} else {
-						context.put("ptjAddress", "");
-						context.put("telNo", "");
-						context.put("faxNo", "");
-					}
-
-					if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
-						context.put("fileRefNo", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
-					}
-
-					if(getManagedBean().getContractVer().getCtTermination().getNoticeDate()!=null) {
-						context.put("noticeDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getNoticeDate()));
-					}	else {
-						getManagedBean().getContractVer().getCtTermination().setNoticeDate(new Date());
-						context.put("noticeDate",dateformat.format(new Date()));
-					}
-
-					context.put("supplierName",getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-					String supplierAddress = getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-					supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
-					supplierAddress = supplierAddress.replaceAll("&", "&#38;");					         
-					context.put("supplierAddress" ,supplierAddress);
-					context.put("contractTitle",getManagedBean().getCtContract().getContractName());
-					String contractPhysicalNo = getManagedBean().getCtContract().getContractNo();
-					if (getManagedBean().getContractVer().getContractPhysicalNo() == null
-							|| getManagedBean().getContractVer().getContractPhysicalNo().isEmpty()) {
-						contractPhysicalNo = contractPhysicalNo + " / " + getManagedBean().getContractVer().getCtContractValue().getLoaNo();
-					} else {
-						contractPhysicalNo = contractPhysicalNo + " / " + getManagedBean().getContractVer().getContractPhysicalNo();
-					}
-					context.put("contractPhysicalNo", contractPhysicalNo);
-					context.put("contractNo",getManagedBean().getCtContract().getContractNo());
-					//	context.put("currentDate",dateFormat.format(date));
-					if (getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons() != null) {
-						context.put("reasonList", getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons());
-					} else {
-						context.put("reasonList", "");
-					}
-
-					if(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()!=null) {
-						context.put("remedyStartDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyStartDate()));
-					} else {
-						context.put("remedyStartDate", "");
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()!=null) {
-						context.put("remedyEndDate",dateformat.format(getManagedBean().getContractVer().getCtTermination().getRemedyEndDate()));
-					} else {
-						context.put("remedyEndDate", "");
-					}
-					//retrieve approver from CtActor
-					if (getManagedBean().getContractVer().getContractVerId() != null) {
-						String roleCode = null;
-						if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-								ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-							roleCode = RoleCode.CT_APPROVER.value();
-						} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-								ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-							roleCode = RoleCode.BPK_CC_APPROVER.value();
-						}
-						CtActor approverActor = retrieveContractActor(
-								getManagedBean().getContractVer().getContractVerId(),
-								getManagedBean().getContractVer().getDocType(),
-								roleCode);
-
-						if(approverActor != null) {
-							if (approverActor.getUserName() != null) {
-								context.put("approverName", approverActor.getUserName());
-							} else {
-								context.put("approverName", "");
-							}
-							if (approverActor.getDesignation() != null) {
-								context.put("approverDesignation", approverActor.getDesignation());
-							} else {
-
-							} context.put("approverDesignation", "");
-						} else {
-							context.put("approverName", "");
-							context.put("approverDesignation", "");
-						}
-					} else {
-						context.put("approverName", "");
-						context.put("approverDesignation", "");
-					}
-					// Extra For Termination Notice
-					context.put("contractAmount", getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString());
-					context.put("effDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-					context.put("expDate", dateformat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
-					if(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()!=null) {
-						context.put("lastRemedyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getLastRemedyDate()));
-					} else {
-						context.put("lastRemedyDate", "");
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo()!=null && getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo().length()>0) {
-						context.put("lastRemedyFileNo", getManagedBean().getContractVer().getCtTermination().getLastRemedyFileNo());
-					} else {
-						context.put("lastRemedyFileNo", "");
-					}
-					if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()!=null && getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()>0) {
-						context.put("recommendAgency", getManagedBean().getContractVer().getCtTermination().getRecommendedAgency());
-					} else {
-						context.put("recommendAgency", "");
-					}	
-					if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()!=null) {
-						context.put("recommendAgencyDate", dateformat.format(getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate()));
-					} else {
-						context.put("recommendAgencyDate", "");
-					}	
-
-					String filePath = getManagedBean().getFileDirectory();
-					File file = new File(filePath);
-					file.mkdirs();
-					String fileName = getTemplateFileName();
-					AttachmentFormat attachmentFormat = null;
-					attachmentFormat = new AttachmentDateFormat();
-					filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
-
-					DocumentGenerator.getInstance().generateDocFromVelocity(vmFile, context, filePath);
-					commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
-					//RequestContext.getCurrentInstance().execute("noticeDlg.show()");
-				}
+			if (isViewNoticeFlag() && vmFile != null) {
+				populateContext(context, ministryJabatan);
+				String filePath = prepareFilePath();
+				DocumentGenerator.getInstance().generateDocFromVelocity(vmFile, context, filePath);
+				commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), getTemplateFileName());
 			}
-		} finally {
-			context = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "previewNoticeAction",
+					getManagedBean().getCtContract().getContractNo(), "previewNoticeAction", getUserIdSessionFromLoginId(), e);
 		}
 	}
+
+	/**
+	 * Determines the appropriate Velocity template file based on the contract
+	 * state.
+	 * 
+	 * @return the path to the Velocity template file, or null if no matching
+	 *         state is found
+	 */
+	private String determineVmFile() {
+		if (getManagedBean().isTermination()) {
+			return ContractConst.DOCPATH_CT_TERMINATION_NOTICE;
+		} else if (getManagedBean().isMutualTermination()) {
+			return ContractConst.DOCPATH_CT_MUTUAL_TERMINATION_NOTICE;
+		} else if (getManagedBean().isRemedy()) {
+			//#25000
+			return ContractConst.DOCPATH_CT_NOTICE_OF_DEFAULT;
+		}
+		return null;
+	}
+
+	/**
+	 * Populates the Velocity context with necessary data for document
+	 * generation.
+	 * 
+	 * @param context
+	 *            the Velocity context to populate
+	 * @param ministryJabatan
+	 *            a StringBuilder to store ministry and jabatan information
+	 */
+	private void populateContext(VelocityContext context, StringBuilder ministryJabatan) {
+		CtContractVer ctContractVer = getManagedBean().getContractVer();
+		if (getServerUrl() != null) {
+			context.put("imgUrl", getServerUrl() + "NGeP-portlet/css/images/gov.png");
+		}
+		context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+
+		addMinistryJabatanInfo(context, ministryJabatan);
+		addTerminationContextInfo(context, ctContractVer);
+		addApproverContextInfo(context, ctContractVer);
+	}
+
+	/**
+	 * Adds ministry and jabatan information to the context.
+	 * 
+	 * @param context
+	 *            the Velocity context to populate
+	 * @param ministryJabatan
+	 *            a StringBuilder to store ministry and jabatan information
+	 */
+	private void addMinistryJabatanInfo(VelocityContext context, StringBuilder ministryJabatan) {
+		String jabatanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		if (!jabatanName.isEmpty()) {
+			ministryJabatan.append(jabatanName).append(" / ");
+		}
+
+		PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		if (ministryOrgProfile != null) {
+			ministryJabatan.append(ministryOrgProfile.getOrgName());
+			context.put("ministryName", ministryOrgProfile.getOrgName());
+		}
+
+		context.put("ministryJabatanName", ministryJabatan);
+
+	}
+
+	/**
+	 * Adds termination-specific context information to the Velocity context.
+	 * 
+	 * @param context
+	 *            the Velocity context to populate
+	 */
+	private void addTerminationContextInfo(VelocityContext context, CtContractVer ctContractVer) {
+		CtTermination ctTermination = ctContractVer.getCtTermination();
+		if (ctTermination != null && encodeHtmlStringOrNull(ctTermination.toString()) != null) {
+			context.put("decisionDate", formatDate(ctTermination.getDecisionDate()));
+			context.put("fileRefNo", ctTermination.getFileRefNo() != null ? ctTermination.getFileRefNo() : "");
+			context.put("reasonList", ctTermination.getCtTerminationReasons() != null ? ctTermination.getCtTerminationReasons() : "");
+			context.put("remedyStartDate", formatDate(ctTermination.getRemedyStartDate()));
+			context.put("remedyEndDate", formatDate(ctTermination.getRemedyEndDate()));
+			context.put("lastRemedyDate", formatDate(ctTermination.getLastRemedyDate()));
+			context.put("lastRemedyFileNo", ctTermination.getLastRemedyFileNo() != null ? ctTermination.getLastRemedyFileNo() : "");
+			context.put("recommendAgency", ctTermination.getRecommendedAgency() != null ? ctTermination.getRecommendedAgency() : "");
+			context.put("recommendAgencyDate", formatDate(ctTermination.getRecommendedAgencyDate()));
+			context.put("scopeOfContract", ctTermination.getScopeOfContract() != null ? ctTermination.getScopeOfContract() : "");
+		}
+
+		context.put("ptjAddress", formatAddress(ctContractVer.getOwnerOrgAddress()));
+		context.put("telNo", ctContractVer.getOwnerOrgAddress().getPhoneNoFull() != null ? ctContractVer.getOwnerOrgAddress().getPhoneNoFull() : "");
+		context.put("faxNo", ctContractVer.getOwnerOrgAddress().getFaxNoFull() != null ? ctContractVer.getOwnerOrgAddress().getFaxNoFull() : "");
+		context.put("noticeDate", formatNoticeDate());
+		context.put("supplierName", ctContractVer.getCtContractValue().getSupplierName());
+		context.put("supplierAddress", formatAddress(ctContractVer.getCtContractValue().getSupplierAddress()));
+
+		context.put("contractTitle", getManagedBean().getCtContract().getContractName());
+		context.put("contractPhysicalNo", formatContractPhysicalNo() != null ? formatContractPhysicalNo() : ContractConst.NULL_FOR_BM);
+		context.put("contractNo", getManagedBean().getCtContract().getContractNo());
+		context.put("contractAmount", ctContractVer.getCtContractAmount().getContractAmount().toString());
+		context.put("effDate", formatDate(ctContractVer.getCtContractValue().getEffDate()));
+		context.put("expDate", formatDate(ctContractVer.getCtContractValue().getExpDate()));
+	}
+
+	/**
+	 * Adds approver information to the Velocity context.
+	 * 
+	 * @param context
+	 *            the Velocity context to populate
+	 */
+	private void addApproverContextInfo(VelocityContext context, CtContractVer ctContractVer) {
+		if (getManagedBean().getContractVer().getContractVerId() != null) {
+			String roleCode = determineRoleCode();
+			CtActor approverActor = retrieveContractActor(ctContractVer.getContractVerId(), ctContractVer.getDocType(), roleCode);
+
+			context.put("approverName", approverActor != null ? approverActor.getUserName() : "");
+
+			context.put("approverDesignation", approverActor != null ? approverActor.getDesignation() : "");
+
+		} else {
+			context.put("approverName", "");
+
+			context.put("approverDesignation", "");
+
+		}
+
+	}
+
+	/**
+	 * Formats the address by replacing line breaks and special characters.
+	 * 
+	 * @param address
+	 *            the Address object to format
+	 * @return the formatted address string
+	 */
+	private String formatAddress(CtAddress address) {
+		return (address != null) ? getFullAddress(address).replaceAll("\r\n", "<br />").replaceAll("&", "&#38;") : "";
+	}
+	
+	/**
+	 * Determines the role code based on the contract type.
+	 * 
+	 * @return the role code string, or null if no matching contract type is
+	 *         found
+	 */
+	private String determineRoleCode() {
+		if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			return RoleCode.CT_APPROVER.value();
+		} else if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			return RoleCode.BPK_CC_APPROVER.value();
+		}
+		return null;
+	}
+
+	/**
+	 * Prepares the file path for storing the generated document.
+	 * 
+	 * @return the prepared file path string
+	 */
+	private String prepareFilePath() {
+		String filePath = getManagedBean().getFileDirectory();
+		new File(filePath).mkdirs();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		return filePath + "/" + attachmentFormat.format(getTemplateFileName(), null);
+	}
+
+	/**
+	 * Formats the notice date. If the notice date is null, it sets the current
+	 * date.
+	 * 
+	 * @return the formatted notice date string
+	 */
+	private String formatNoticeDate() {
+		CtContractVer contractVer = getManagedBean().getContractVer();
+		if (contractVer.getCtTermination().getNoticeDate() != null) {
+			return dateformat.format(contractVer.getCtTermination().getNoticeDate());
+		}
+		contractVer.getCtTermination().setNoticeDate(new Date());
+		return dateformat.format(new Date());
+	}
+
+	/**
+	 * Formats the contract physical number by appending the LOA number if
+	 * necessary.
+	 * 
+	 * @return the formatted contract physical number string
+	 */
+	private String formatContractPhysicalNo() {
+		String contractPhysicalNo = getManagedBean().getCtContract().getContractNo();
+		if (getManagedBean().getContractVer().getContractPhysicalNo() == null || getManagedBean().getContractVer().getContractPhysicalNo().isEmpty()) {
+			contractPhysicalNo += " / " + getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		} else {
+			contractPhysicalNo += " / " + getManagedBean().getContractVer().getContractPhysicalNo();
+		}
+		return contractPhysicalNo;
+	}
+
+	// #25000 - End
 
 	private void validateViewNotice() {
 		setViewNoticeFlag(true);
@@ -1357,31 +1411,46 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		} else if (getManagedBean().isMutualTermination()) {
 			return "mutual-termination-notice.docx";
 		} else if (getManagedBean().isRemedy()) {
-			return "remedy-notice.docx";
+			//#25000
+			return "notice-of-default.docx";
 		}
 		return null;
 	}
 
 	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	@Override
 	public void goToLoaView(ScLoa scLoa) {
-		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
-		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		String slLoaNo = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaNo() : this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContract().getContractId() : this.getManagedBean().getContractVer().getCtContract().getContractId();
+		Long statusId = null;
+		String docType = null;
 		
+		if(!ctBB.getManagedBean().isViewContract()){
+			statusId = this.getManagedBean().getContractVer()==null?
+					ctBB.getManagedBean().getContractVer().getStatus().getStatusId() : this.getManagedBean().getContractVer().getStatus().getStatusId();
+			docType = ParameterConst.DOCTYPE_CONTRACT_TERMINATION;
+		}
+				
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-	
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(docType);
+			ctBB.getManagedBean().setStatusIdFromTaskList(statusId);
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 	
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){

@@ -1,6 +1,6 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.util.ArrayList; //#26475
+//import java.util.ArrayList; //#26475 //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 import java.util.List;
 import java.util.Locale;
 
@@ -20,6 +20,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -39,6 +40,7 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 
 public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends SourcingBaseBackingBean<T> {
+	private static final String USER_PTJ_ORG = "userPtjOrg";
 	private static final long serialVersionUID = 1L;
 
 	protected void viewContractDetails(ScLoa scLoa) {
@@ -67,6 +69,27 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 			RequestContext.getCurrentInstance().update("usergrouping");
 		}
 	}
+	// 20230111@Haziq - #12487&29693 - start
+
+	/**
+	 * to set detail selected PTJ
+	 * 
+	 * @param userOrg
+	 */
+	public void userPtjListener(PmUserOrg userOrg) {
+		if (userOrg != null) {
+			this.getManagedBean().setSelectedUserPtj(userOrg);
+			
+			log.info("signerUserListener");
+		
+			ScLoa scLoa = getManagedBean().getScLoa();
+			scLoa.setContractSigner(userOrg.getPmUser());
+			scLoa.setLoaSignerDesig(userOrg.getPmUser().getDesignation());
+			
+			RequestContext.getCurrentInstance().update(USER_PTJ_ORG);
+		}
+	}
+	// 20230111@Haziq - #12487&29693 - end
 	
 	// #26475 - start
 	/**
@@ -161,7 +184,9 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		} else {
 			getManagedBean().getScLoa().setBondReq(false);
 		}
-		calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+		// Reopen #25726 note 220 - issue 5	
+		//calcBondAmountWithSST(getManagedBean().getScLoa(), isDirectLOA()); //Bug #35227@Syazani 20/10/2022
+		
 	}
 	
 	/**

@@ -29,7 +29,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.web.backingbean.sc.evaluation.EvaluationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -128,6 +130,9 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	/** The remove committee list. */
 	private List<ScCommitteeMember> removeCommitteeList;
+	
+	/** #28895 - 35500 The new committee list. */
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -158,62 +163,21 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private boolean  committeeUpdateEnabled;
 	private List<QtCommitteeMemberBean> prevCommitteeMembers;
 	private ScQtApprovalRemark tempScQtApprovalRemark;	//25037 #568
-
-	//#25037-END
-	// #12471 Start
-	/** The popup member name. */
-	private String memberName;
-
-	/** The popup member ministry or organization. */
-	private String memberMinOrg;
-
-	/** The popup member ptj or organization code. */
-	private String memberPtjOrgCode;
-
-	/** The popup member ptj or organization name. */
-	private String memberPtjOrgName;
-
-	/** The organization category. */
-	private String orgCat;
-
-	/** The organization category ptj constant. */
-	private String orgCatPTJ;
-
-	/** The organization category others constant. */
-	private String orgCatOther;
-
-	/** The ministry. */
-	private String ministry;
-
-	/** The PTJ Group. */
-	private String ptjGroup;
-
-	/** The PTJ. */
-	private String ptj;
-
-	/** The organization type. */
-	private String orgType;
-
-	/** The organization name. */
-	private String orgName;
-
-	/** The ministry dropdown list. */
-	private SelectItem[] ministryDDList;
-
-	/** The ptj group dropdown list. */
-	private SelectItem[] ptjGroupDDList;
-
-	/** The ptj dropdown list. */
-	private SelectItem[] ptjDDList;
-
-	/** The organization type dropdown list. */
-	private SelectItem[] orgTypeDDList;
-
-	/** The organization name dropdown list. */
-	private SelectItem[] orgNameDDList;
-	// #12471 End
+	//#25037-END	
 	
 	private boolean hasPreviousMeeting;//#29473
+
+	//12471 - start
+	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
+	private UserCommitteeSearchBean userCommitteeSearchBean;
+	
+	/**
+	 * Instantiates a new EvaluationMeetingManagedBean. 
+	 */
+	public EvaluationMeetingManagedBean() {
+		userCommitteeSearchBean = new UserCommitteeSearchBean();
+	}
+	//12471 - end
 
 	/**
 	 * Gets the today.
@@ -992,328 +956,32 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.tempScQtApprovalRemark = tempScQtApprovalRemark;
 	}
 	//25037 #568 - end
-	// #12471 Start
-	/**
-	 * Gets the member name.
-	 * 
-	 * @return the member name.
-	 */
-	public String getMemberName() {
-		return memberName;
+
+	//12471 - start
+	public IPagingDataModel<PmUser> getUserSearchCommitteeDataModel() {
+		return userSearchCommitteeDataModel;
 	}
 
-	/**
-	 * Sets the member name.
-	 * 
-	 * @param memberName
-	 *            the new member name.
-	 */
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
+	public void setUserSearchCommitteeDataModel(IPagingDataModel<PmUser> userSearchCommitteeDataModel) {
+		this.userSearchCommitteeDataModel = userSearchCommitteeDataModel;
 	}
 
-	/**
-	 * Gets the member ministry or organization.
-	 * 
-	 * @return the member ministry or organization.
-	 */
-	public String getMemberMinOrg() {
-		return memberMinOrg;
+	public UserCommitteeSearchBean getUserCommitteeSearchBean() {
+		return userCommitteeSearchBean;
 	}
 
-	/**
-	 * Sets the member ministry or organization.
-	 * 
-	 * @param memberMinOrg
-	 *            the new member ministry or organization.
-	 */
-	public void setMemberMinOrg(String memberMinOrg) {
-		this.memberMinOrg = memberMinOrg;
+	public void setUserCommitteeSearchBean(UserCommitteeSearchBean userCommitteeSearchBean) {
+		this.userCommitteeSearchBean = userCommitteeSearchBean;
+	}
+	//12471 - end
+
+	//#28895-35500 start
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
 	}
 
-	/**
-	 * Gets the member ptj or organization code.
-	 * 
-	 * @return the member ptj or organization code.
-	 */
-	public String getMemberPtjOrgCode() {
-		return memberPtjOrgCode;
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
 	}
-
-	/**
-	 * Sets the member ptj or organization code.
-	 * 
-	 * @param memberPtjOrgCode
-	 *            the new member ptj or organization code.
-	 */
-	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
-		this.memberPtjOrgCode = memberPtjOrgCode;
-	}
-
-	/**
-	 * Gets the member ptj or organization name.
-	 * 
-	 * @return the member ptj or organization name.
-	 */
-	public String getMemberPtjOrgName() {
-		return memberPtjOrgName;
-	}
-
-	/**
-	 * Sets the member ptj or organization name.
-	 * 
-	 * @param memberPtjOrgName
-	 *            the new member ptj or organization name.
-	 */
-	public void setMemberPtjOrgName(String memberPtjOrgName) {
-		this.memberPtjOrgName = memberPtjOrgName;
-	}
-
-	/**
-	 * Gets the organization category.
-	 * 
-	 * @return the organization category.
-	 */
-	public String getOrgCat() {
-		return orgCat;
-	}
-
-	/**
-	 * Sets the organization category.
-	 * 
-	 * @param orgCat
-	 *            the new organization category.
-	 */
-	public void setOrgCat(String orgCat) {
-		this.orgCat = orgCat;
-	}
-
-	/**
-	 * Gets the organization category ptj constant.
-	 * 
-	 * @return the organization category ptj constant.
-	 */
-	public String getOrgCatPTJ() {
-		return orgCatPTJ;
-	}
-
-	/**
-	 * Sets the organization category ptj constant.
-	 * 
-	 * @param orgCatPTJ
-	 *            the new organization category ptj constant.
-	 */
-	public void setOrgCatPTJ(String orgCatPTJ) {
-		this.orgCatPTJ = orgCatPTJ;
-	}
-
-	/**
-	 * Gets the organization category others.
-	 * 
-	 * @return the organization category others.
-	 */
-	public String getOrgCatOther() {
-		return orgCatOther;
-	}
-
-	/**
-	 * Sets the organization category others.
-	 * 
-	 * @param orgCatOther
-	 *            the new organization category others.
-	 */
-	public void setOrgCatOther(String orgCatOther) {
-		this.orgCatOther = orgCatOther;
-	}
-
-	/**
-	 * Gets the ministry.
-	 * 
-	 * @return the ministry.
-	 */
-	public String getMinistry() {
-		return ministry;
-	}
-
-	/**
-	 * Sets the ministry.
-	 * 
-	 * @param ministry
-	 *            the new ministry.
-	 */
-	public void setMinistry(String ministry) {
-		this.ministry = ministry;
-	}
-
-	/**
-	 * Gets the PTJ Group.
-	 * 
-	 * @return the PTJ Group.
-	 */
-	public String getPtjGroup() {
-		return ptjGroup;
-	}
-
-	/**
-	 * Sets the PTJ Group.
-	 * 
-	 * @param ptjGroup
-	 *            the new PTJ Group.
-	 */
-	public void setPtjGroup(String ptjGroup) {
-		this.ptjGroup = ptjGroup;
-	}
-
-	/**
-	 * Gets the PTJ.
-	 * 
-	 * @return the PTJ.
-	 */
-	public String getPtj() {
-		return ptj;
-	}
-
-	/**
-	 * Sets the PTJ.
-	 * 
-	 * @param ptj
-	 *            the new PTJ.
-	 */
-	public void setPtj(String ptj) {
-		this.ptj = ptj;
-	}
-
-	/**
-	 * Gets the organization type.
-	 * 
-	 * @return the organization type.
-	 */
-	public String getOrgType() {
-		return orgType;
-	}
-
-	/**
-	 * Sets the organization type.
-	 * 
-	 * @param orgType
-	 *            the new organization type.
-	 */
-	public void setOrgType(String orgType) {
-		this.orgType = orgType;
-	}
-
-	/**
-	 * Gets the organization name.
-	 * 
-	 * @return the organization name.
-	 */
-	public String getOrgName() {
-		return orgName;
-	}
-
-	/**
-	 * Sets the organization name.
-	 * 
-	 * @param orgName
-	 *            the new organization name.
-	 */
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
-
-	/**
-	 * Gets the ministry dropdown list.
-	 * 
-	 * @return the ministry dropdown list.
-	 */
-	public SelectItem[] getMinistryDDList() {
-		return ministryDDList;
-	}
-
-	/**
-	 * Sets the ministry dropdown list.
-	 * 
-	 * @param ministryDDList
-	 *            the new ministry dropdown list.
-	 */
-	public void setMinistryDDList(SelectItem[] ministryDDList) {
-		this.ministryDDList = ministryDDList;
-	}
-
-	/**
-	 * Gets the ptj group dropdown list.
-	 * 
-	 * @return the ptj group dropdown list.
-	 */
-	public SelectItem[] getPtjGroupDDList() {
-		return ptjGroupDDList;
-	}
-
-	/**
-	 * Sets the ptj group dropdown list.
-	 * 
-	 * @param ptjGroupDDList
-	 *            the new ptj group dropdown list.
-	 */
-	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
-		this.ptjGroupDDList = ptjGroupDDList;
-	}
-
-	/**
-	 * Gets the ptj dropdown list.
-	 * 
-	 * @return the ptj dropdown list.
-	 */
-	public SelectItem[] getPtjDDList() {
-		return ptjDDList;
-	}
-
-	/**
-	 * Sets the ptj dropdown list.
-	 * 
-	 * @param ptjDDList
-	 *            the new ptj dropdown list.
-	 */
-	public void setPtjDDList(SelectItem[] ptjDDList) {
-		this.ptjDDList = ptjDDList;
-	}
-
-	/**
-	 * Gets the organization type dropdown list.
-	 * 
-	 * @return the organization type dropdown list.
-	 */
-	public SelectItem[] getOrgTypeDDList() {
-		return orgTypeDDList;
-	}
-
-	/**
-	 * Sets the organization type dropdown list.
-	 * 
-	 * @param orgTypeDDList
-	 *            the new organization type dropdown list.
-	 */
-	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
-		this.orgTypeDDList = orgTypeDDList;
-	}
-
-	/**
-	 * Gets the organization name dropdown list.
-	 * 
-	 * @return the organization name dropdown list.
-	 */
-	public SelectItem[] getOrgNameDDList() {
-		return orgNameDDList;
-	}
-
-	/**
-	 * Sets the organization name dropdown list.
-	 * 
-	 * @param orgNameDDList
-	 *            the new organization name dropdown list.
-	 */
-	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
-		this.orgNameDDList = orgNameDDList;
-	}
-	// #12471 End
+	//#28895-35500 end
 }

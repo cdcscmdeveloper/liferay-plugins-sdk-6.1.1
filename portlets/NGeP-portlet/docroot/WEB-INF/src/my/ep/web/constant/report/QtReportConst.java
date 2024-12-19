@@ -218,7 +218,7 @@ public class QtReportConst implements Serializable {
 	//#21692 - end
 	
 	//#29580_14306 - start
-	public String getScQuotTenderProposalOfferSubmRptBySupplierVal() {
+	public String getScQuotTenderProposalOfferSubmRptBySupplierVal() {//Changes by Idham(Sonarqube issue55)
 		return SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL;
 	}
 	//#29580_14306 - end
