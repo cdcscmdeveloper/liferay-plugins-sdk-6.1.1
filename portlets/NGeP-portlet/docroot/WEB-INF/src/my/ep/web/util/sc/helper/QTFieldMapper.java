@@ -197,7 +197,6 @@ public class QTFieldMapper {
         //Proposal Preparation 
 		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
 				new String[] { 
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD}),
 					
 		// QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE
