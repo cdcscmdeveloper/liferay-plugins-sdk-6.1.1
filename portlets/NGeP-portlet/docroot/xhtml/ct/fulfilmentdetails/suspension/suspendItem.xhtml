@@ -5,6 +5,32 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- Start Fix - #35597 -->
+	<script>
+		document.addEventListener('DOMContentLoaded',
+				function() {
+				// Use correct escaping for colons in IDs
+				var calendarButtons = document.querySelectorAll('.calendarBlock .ui-datepicker-trigger');
+							if (calendarButtons.length === 0) {
+								console.error('No calendar buttons found with the given selector.');
+							}
+							calendarButtons.forEach(function(button) {
+								button.classList.add('disabled-calendar-icon');
+							});
+						});
+
+		function handleRowAction() {
+			// Use correct escaping for colons in IDs
+			var calendarButtons = document.querySelectorAll('.calendarBlock .ui-datepicker-trigger');
+			if (calendarButtons.length === 0) {
+				console.error('No calendar buttons found with the given selector.');
+			}
+			calendarButtons.forEach(function(button) {
+				button.classList.add('disabled-calendar-icon');
+			});
+		}
+	</script>
+	<!-- End Fix - #35597 -->
 	<p:panel id="itemId" toggleable="true"  toggleSpeed="500" header="#{lbl['lbl.ct.panel.item']}" collapsed="false" >
 		<h:panelGrid columns="4" style="width:70%" columnClasses="columnWidth10"  >
 			<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" />
@@ -87,14 +113,14 @@
 	         </p:column>
 			
 			
-			
+			<!-- Start Fix - #35597 -->
 			   <p:column style="width:14%;" styleClass="column-align-center" >
 			      <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.effective.date']}"/>
 			   	  </f:facet>
 			      <p:calendar id="effDateActive" value="#{itemData.effDate}" readonlyInput="true"  style="float:left"
-			         disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" styleClass="calanderWidth"  showOn="button"  navigator="true"
+			         disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" styleClass="calendarBlock"  showOn="button"  navigator="true"
 			         mindate="#{DateUtils.getCurrentDateWithoutTime()}"  maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			         <p:ajax event="dateSelect" process="@this" update="expDateActive" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
@@ -106,7 +132,7 @@
 						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.expiry.date']}"/>
 			   	  </f:facet>
-			      <p:calendar id="expDateActive" value="#{itemData.expDate}"  styleClass="calanderWidth" style="float:left"
+			      <p:calendar id="expDateActive" value="#{itemData.expDate}"  styleClass="calendarBlock" style="float:left"
 			          showOn="button" disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" readonlyInput="true" navigator="true"
 			          mindate="#{itemData.effDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			          pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -114,7 +140,7 @@
                       <f:validator validatorId="primeDateRangeValidator" />
 			      </p:calendar>
 			  </p:column>
-		   	  
+		   	  <!-- End Fix - #35597 -->
 		   	  <p:column style="width:10%;" styleClass="column-align-center" >
 		   	  	   <f:facet name="header">
 						<h:outputText value="#{lbl['lbl.ct.status']}"/>
@@ -124,7 +150,7 @@
 				         <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 				         <p:ajax event="change" process="@this" update="effDateActive, expDateActive"
-				 	        listener="#{suspensionBackingBean.setSuspensionStatusValue(itemData)}" />
+				 	        listener="#{suspensionBackingBean.setSuspensionStatusValue(itemData)}" oncomplete="handleRowAction();" /> <!-- Fix - #35597 -->
 			       </p:selectOneMenu>
 			   </p:column>
 		

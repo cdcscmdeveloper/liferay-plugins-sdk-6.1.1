@@ -21,7 +21,9 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
@@ -52,6 +54,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.evaluation.EvaluationMeetingBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -505,6 +508,19 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	private boolean hasPreviousMeeting; //#29473, #31675
 	
+	// 25037 - start
+	private EvaluationMeetingBackingBean meetingBB;
+	private List<ScCommitteeMember> committeeMemberActivity;
+	private List<ScCommitteeMember> removeCommitteeList;
+	private ScQtApprovalRemark scQtApprovalRemark;
+
+	// 25037 - end
+	// 6906 - start
+	private boolean noProposalSubmitted;
+	private boolean supplierRejected;
+
+	// 6906 - end
+
 	/**
 	 * Gets the today.
 	 * 
@@ -3462,5 +3478,56 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 	// #29473, #31675 -End
+	
+	// 25037 - start
+	public EvaluationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
 
+	public void setMeetingBB(EvaluationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+
+	public ScQtApprovalRemark getScQtApprovalRemark() {
+		return scQtApprovalRemark;
+	}
+
+	public void setScQtApprovalRemark(ScQtApprovalRemark scQtApprovalRemark) {
+		this.scQtApprovalRemark = scQtApprovalRemark;
+	}
+
+	public List<ScCommitteeMember> getRemoveCommitteeList() {
+		return removeCommitteeList;
+	}
+
+	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
+		this.removeCommitteeList = removeCommitteeList;
+	}
+
+	public List<ScCommitteeMember> getCommitteeMemberActivity() {
+		return committeeMemberActivity;
+	}
+
+	public void setCommitteeMemberActivity(List<ScCommitteeMember> committeeMemberActivity) {
+		this.committeeMemberActivity = committeeMemberActivity;
+	}
+	// 25037 - end
+
+	// 6906 - start
+	public boolean isNoProposalSubmitted() {
+		return noProposalSubmitted;
+	}
+
+	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
+		this.noProposalSubmitted = noProposalSubmitted;
+	}
+
+	public boolean isSupplierRejected() {
+		return supplierRejected;
+	}
+
+	public void setSupplierRejected(boolean supplierRejected) {
+		this.supplierRejected = supplierRejected;
+	}
+	// 6906 - end
 }

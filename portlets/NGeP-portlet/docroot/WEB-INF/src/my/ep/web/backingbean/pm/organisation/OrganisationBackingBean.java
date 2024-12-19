@@ -3512,6 +3512,10 @@ public class OrganisationBackingBean extends
 					&& addressType.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 				log.info(":::onChangeAddressStatus()...yes u should appear bro!");
 				throw new EpException(MessageConst.ERROR_775139);
+			} else {
+				// #35489 - Start
+				addressType.setChangedBy(getUserIdSessionFromLoginId());
+				// #35489 - End
 			}
 		}
 	}
@@ -3989,4 +3993,26 @@ public class OrganisationBackingBean extends
 	}
 	//END #3790
 	
+	// #36489 - Start
+	public void checkUserProfile(Long userId, Integer index) {
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile()
+				.getOrgProfileId());
+
+		UserResDTO resDTO = userSO
+				.findInactiveUserIdByUserIdAndOrgProfileId(reqDTO);
+
+		if (resDTO.isSuccessful() && resDTO.getUserId().longValue() > 0) {
+			this.getManagedBean().getSmPersonnels().get(index)
+					.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+			throw new EpException(MessageConst.ERROR_775220);
+		}
+	}
+	// #36489 - End
 }

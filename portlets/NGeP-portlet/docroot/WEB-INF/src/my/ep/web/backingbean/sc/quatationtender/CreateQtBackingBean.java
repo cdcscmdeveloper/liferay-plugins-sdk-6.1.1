@@ -90,6 +90,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -137,9 +138,12 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "createQtBB")
 @RequestScoped
-public class CreateQtBackingBean extends
- SourcingBaseBackingBean<QTDetailManagedBean> {
+public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger.getLogger(CreateQtBackingBean.class);
 
@@ -149,15 +153,11 @@ public class CreateQtBackingBean extends
 	public CreateQtBackingBean() {
 		log.debug("inside constructor");
 		log.debug("@@@@@@@@@ Managed Bean @@@@@@@@@ = " + this.getManagedBean());
-
 	}
 
-	/**
-	 * Debug logger.
+	/** Debug logger.
 	 * 
-	 * @param message
-	 *            the message
-	 */
+	 * @param message the message */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -273,6 +273,42 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setPanel(true);
 		}
 
+		// 9019 Start - (Harun) #Note-501
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else {
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+
+		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
+			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
+		}
+		
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
+		}
+		
+		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
+		}
+		
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
+		}
+		// 9019 End
+
 	}
 
 	/**
@@ -319,33 +355,9 @@ public class CreateQtBackingBean extends
 			scQt.setPmProcurementCategory(new PmParameter());
 			scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 
-			/*ScQtCommittee qtCommitte = new ScQtCommittee();
-			qtCommitte.setScQt(scQt);
-			setUserDetails(qtCommitte);
-			qtCommitte.setCommitteeActivities(null);
-			qtCommitte.setQtCommitteRemarks(null);
-			qtCommitte.setScQtMeetings(null);
-			ScCommittee committee = new ScCommittee();
-			PmStatus committeStatus = new PmStatus();
-			committeStatus.setStatusId(QTStatusConst.CMT_PENDING_SUBMISSION);
-			committee.setCommitteStatus(committeStatus);
-			committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO
-					.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-			parameterReqDTO
-					.setParameterCode(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
-			ParameterResDTO parameterResDTO = getParameterSO()
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-			committee.setCommitteeType(parameterResDTO.getPmParameter());
-			qtCommitte.setScCommittee(committee);
-			this.getManagedBean().setScQtCommittee(qtCommitte);
-			this.getManagedBean().setScCommitteeMemberList(
-					qtCommitte.getScCommittee().getScCommitteeMembers());
-			this.getManagedBean().setCommitteMember(new ScCommitteeMember());*/
 			PmStatus status = getPmStatusByStatusId(QTStatusConst.QT_PENDING_QT_SUBMISSION);
 			scQt.setQtStatus(status);
-			/* scQt.setQtNo(dto.getQtNo()); */
+
 			ScQtStatus qtStatus = new ScQtStatus();
 			qtStatus.setScQt(scQt);
 			qtStatus.setPmStatus(status);
@@ -363,6 +375,11 @@ public class CreateQtBackingBean extends
 			scQt.setContractType(new PmParameter());
 
 			setUserDetails(scQt);
+            
+			// 9019 initializing QT remark for Quotation/Tender creation -start-
+			scQt.setScQtRemarks(initializeRemarks(scQt, qtStatus, scQt.getScQtRemarks(), ScQtRemark.class));
+			// 9019 end
+			
 			this.getManagedBean().setQt(scQt);
 			Long currentStatus = this.getManagedBean().getQt().getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
@@ -907,14 +924,24 @@ public class CreateQtBackingBean extends
 			if (isPanel) {
 				BigDecimal panelThreshold = getPanelThresholdAmount();
 
-				if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
-					throw new EpException(MessageConst.ERROR_760380, new String[] { SourcingConstants.DF_AMOUNT.format(panelThreshold) });
+				// Start 9019 #note-342
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())) {
+					if (null == amount || (amount.compareTo(panelThreshold) <= 0)) {
+						throw new EpException(MessageConst.ERROR_760380,
+								new String[] { SourcingConstants.DF_AMOUNT.format(panelThreshold) });
+					}
 				}
+				// End 9019 
 			} else {
 				// Enhancement #25729 -start-
-				if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
-					throw new EpException(MessageConst.ERROR_760024, new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
-				}
+				// Start Reopen 9019 #note-289
+				if (!QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId())) {
+					// #9019 note-289 -end-
+					if (null == amount || (amount.compareTo(BigDecimal.ZERO) <= 0)) {
+						throw new EpException(MessageConst.ERROR_760024,
+								new String[] { SourcingConstants.DF_AMOUNT.format(BigDecimal.ZERO) });
+					}
+				} // 9019 #note-289
 
 				if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this.getManagedBean().getCurrentStatusId()) || this.getManagedBean().isCreateQt()) {
 					scQt.setJustificationProcValue(null);
@@ -998,11 +1025,26 @@ public class CreateQtBackingBean extends
 				}
 			}
 
+			// Start Reopen 9019 #note-289
+			//#35061 - remove to allow show the the panel 
+			// #9019 note-289 -end-
 			// 25729#174 start
-			if ((!isPanel && enable.length > 0) && (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0)) {
+			// Bug #35061 - asyrafhaziq -start-
+			// get total indicative price threshold validation value
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+			if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <= 0)) {
+				// set message
+				String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE,
+						new String[] { String.valueOf(indPriceThreshold).trim() });
+				// SONARQUBE QT 2023 - haziq
+				this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
+				// Bug #35061 -end-
 				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
 			}
 			// 25729#174 end
+		 // 9019 #note-289
+
 		} finally {
 			parameterSo = null;
 		}
@@ -1168,13 +1210,18 @@ public class CreateQtBackingBean extends
 		 */try {
 			Long type = (Long) event.getComponent().getAttributes().get("value");
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
-			for (PmParameterDesc paramDesc : localParamDesc) {
-				if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(type))) {
 
-					this.getManagedBean().setFulfilmentType(paramDesc.getPmParameter().getParameterCode());
-					this.getManagedBean().getQt().setFulfilmentType(paramDesc.getPmParameter());
-					break;
-				}
+			for (PmParameterDesc paramDesc : localParamDesc) {
+				// Start Reopen 9019 #note-289
+				if (null != type) {
+					// #9019 note-289 -end-
+					if (paramDesc.getPmParameter().getParameterId().equals(Long.valueOf(type))) {
+
+						this.getManagedBean().setFulfilmentType(paramDesc.getPmParameter().getParameterCode());
+						this.getManagedBean().getQt().setFulfilmentType(paramDesc.getPmParameter());
+						break;
+					}
+				} // 9019 #note-289
 			}
 
 			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
@@ -1196,13 +1243,7 @@ public class CreateQtBackingBean extends
 			removefullfillmentDetails(ParameterConst.PERIODIC_SCHEDULE_TYPE_FREQUENCY_SCHEDULE);
 
 			// 20210615@asyrafahaziq - Bug #30891 - Start
-			// if
-			// (!this.getManagedBean().getQt().getContractDuration().equals(null)
-			// ) {
-			// ContractPeriodChange();
-			// }
 			// 9019 Start - Harun change comparing null done by Haziq
-			// #32778 - Include because it occurred during test in PDS
 			if (null != this.getManagedBean().getQt().getContractDuration()) {
 				ContractPeriodChange();
 			}
@@ -2185,18 +2226,29 @@ public class CreateQtBackingBean extends
 		IParameterSO parameterSO = null;
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			this.getManagedBean().getQt().setContractType(resDTO.getPmParameter());
-			if (null != this.getManagedBean().getQt().getContractType()
-					&& ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt().getContractType().getParameterCode())) {
-				ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
-				fulfilMentAsandWhen.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-				fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
-				ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
-				this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
-			}
+
+			// Start Reopen 9019 #note-289
+			if (null != parameterId) {
+				// #9019 note-289 -end-
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(parameterId);
+
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+
+				this.getManagedBean().getQt().setContractType(resDTO.getPmParameter());
+
+				if (null != this.getManagedBean().getQt().getContractType()
+						&& ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(this.getManagedBean().getQt()
+								.getContractType().getParameterCode())) {
+					ParameterReqDTO fulfilMentAsandWhen = new ParameterReqDTO();
+					fulfilMentAsandWhen.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+					fulfilMentAsandWhen.setParameterCode(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+
+					ParameterResDTO fulfilMentAsandWhenresDTO = parameterSO
+							.retrieveParameterByTypeAndCode(fulfilMentAsandWhen);
+					this.getManagedBean().getQt().setFulfilmentType(fulfilMentAsandWhenresDTO.getPmParameter());
+				}
+			} // 9019 #note-289
 
 		} finally {
 			parameterSO = null;
@@ -2360,6 +2412,8 @@ public class CreateQtBackingBean extends
 	 * @return navigate to busineess owner menu pages.
 	 */
 	public void panelConformationDelete() {
+		Locale locale = new FacesScopes().getUserLocale(); // 9019 #Note-501
+
 		setDataNull();
 		ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean().getQt().getScQtSupplierCriteria();
 		if (null != zoneSupplierCriteria && zoneSupplierCriteria.isBrandNew() == false && null != zoneSupplierCriteria.getQtZoneCriterias()
@@ -2370,6 +2424,33 @@ public class CreateQtBackingBean extends
 				deleteDeliveryAdreesZoneDetails(getManagedBean().getQt());
 			}
 		}
+
+		// 9019 Start - (Harun) #Note-501
+		if (StringUtils.isBlank(getManagedBean().getQt().getQtTitle())) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
+		}
+
+		boolean emptyRemarksExist = false;
+		
+		if (null != this.getManagedBean().getQt().getScQtRemarks()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			for (int i = 0; i < this.getManagedBean().getQt().getScQtRemarks().size(); i++) {
+				String userRemark = this.getManagedBean().getQt().getScQtRemarks().get(i).getRemark();
+			
+				if (null == userRemark || "".equals(userRemark)) {
+					emptyRemarksExist = true;
+				} else {
+					emptyRemarksExist = false;
+				}
+			}
+
+			if (emptyRemarksExist) {
+				this.getManagedBean().getQt().setScQtRemarks(null);
+			}
+		}
+		// 9019 End
+		
 		removespecDtls();
 
 		ScQt scQt = this.getManagedBean().getQt();
@@ -2391,6 +2472,43 @@ public class CreateQtBackingBean extends
 				scQt.setItemGroup(new CtPanelItemGroup());
 			}
 		}
+		
+		// 9019 Start - (Harun) #Note-501
+		if (CollectionUtils.isEmpty(this.getManagedBean().getQt().getScQtRemarks())) {
+			List<ScQtRemark> qtRemarks = initializeRemarks(scQt, this.getManagedBean().getQt()
+					.getCurrentWorkFlowStatus(), scQt.getScQtRemarks(), ScQtRemark.class);
+
+			for (ScQtRemark qtRemark : qtRemarks) {
+				qtRemark.setEditable(true);
+			}
+			
+			this.getManagedBean().getQt().setScQtRemarks(qtRemarks);
+
+		} else {
+			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+		}
+
+		if (null == this.getManagedBean().getQt().getProcurementTypeCatId()) {
+			this.getManagedBean().getQt().setProcurementTypeCatId(new PmParameter());
+			this.getManagedBean().getQt().getProcurementTypeCatId().setParameterId((long) 0);
+		}
+		
+		if (null == this.getManagedBean().getQt().getFulfilmentType()) {
+			this.getManagedBean().getQt().setFulfilmentType(new PmParameter());
+			this.getManagedBean().getQt().getFulfilmentType().setParameterId((long) 0);
+		}
+		
+		if (null == this.getManagedBean().getQt().getPmProcurementCategory()) {
+			this.getManagedBean().getQt().setPmProcurementCategory(new PmParameter());
+			this.getManagedBean().getQt().getPmProcurementCategory().setParameterId((long) 0);
+		}
+		
+		if (null == this.getManagedBean().getQt().getContractType()) {
+			this.getManagedBean().getQt().setContractType(new PmParameter());
+			this.getManagedBean().getQt().getContractType().setParameterId((long) 0);
+		}
+		// 9019 - End (Harun)
+		
 		RequestContext.getCurrentInstance().execute("panelApprovalDlgs.hide()");
 	}
 
@@ -2413,7 +2531,12 @@ public class CreateQtBackingBean extends
 			// Start - 25729
 			if (null != amount) {
 				// 25729#174 Change 1 line code
-				if (amount.compareTo(BigDecimal.valueOf(SourcingConstants.QT_BELOW_20K)) <= 0) {
+				// Bug #35061 - asyrafhaziq -start-
+				// get total indicative price threshold validation value
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+				if (amount.compareTo(indPriceThreshold) <= 0) {
+					// Bug #35061 -end-
 					setProcurementMode(scQt, amount, "Y");
 				} else {
 					setProcurementMode(scQt, amount);
@@ -2542,6 +2665,16 @@ public class CreateQtBackingBean extends
 			amendMentBean.getValueMap().put(field, valueBean);
 		}
 		valueBean.setNewValue(newValue);
+
+		// #29425 - start
+		QTDetailBackingBean qtDtl = new QTDetailBackingBean();
+
+		if (field.equalsIgnoreCase(SourcingConstants.QT_VALIDITY_PERIOD)) {
+			if (null != newValue) {
+				qtDtl.validateNewValueForValidityDays((int) newValue);
+			}
+		}
+		// #29425 - end
 
 		if (valueBean.getOldValue() != null && newValue != null) {
 			if (!valueBean.getOldValue().equals(newValue)) {
@@ -3364,5 +3497,12 @@ public class CreateQtBackingBean extends
 		return Boolean.FALSE;
 	}
 	/* :::Enhancement #25638 #29 - end::: */
+
+	// 9019 Start - (Harun) #Note-501
+	public void updateRemarks(ScQt scQt) {
+		this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
+
+	}
+	// 9019 End
 
 }

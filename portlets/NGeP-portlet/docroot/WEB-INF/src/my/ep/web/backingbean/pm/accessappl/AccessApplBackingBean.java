@@ -11,6 +11,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+//#35584 - Start
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+//#35584 - End
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -681,6 +685,151 @@ public class AccessApplBackingBean extends
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
 		}
+				
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				log.error("cannot retrieve created dated ", e);
+				throw e;
+			}
+		}
+		// #35584 - End
+		
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				log.error("cannot retrieve created dated ", e);
+				throw e;
+			}
+		}
+		// #35584 - End
+		
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				log.error("cannot retrieve created dated ", e);
+				throw e;
+			}
+		}
+		// #35584 - End
+		
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				log.error("cannot retrieve created dated ", e);
+				throw e;
+			}
+		}
+		// #35584 - End
+		
+		// #35584 - Start
+		if (accessAppl.isBrandNew()) {
+			IAccessApplSO accessApplSO = null;
+			try {
+				accessApplSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAccessApplSO.class);
+
+				AccessApplReqDTO reqDTO = new AccessApplReqDTO();
+				reqDTO.setIdentificationNo(accessAppl.getIdentificationNo());
+				reqDTO.setMarketResearchType(accessAppl.isMarketResearch());
+				reqDTO.setCompanyProfileType(accessAppl.isCompanyProfile());
+
+				AccessApplResDTO resDTO = accessApplSO.isAccessApplPendAccessApprovalByIdNo(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.isValid()) {
+
+					this.getManagedBean().getAccessAppl().isMarketResearch();
+
+					DateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					throw new EpException(MessageConst.ERROR_776045, new String[] { dateFormat.format(resDTO
+							.getCreatedDate()) });
+				}
+			} catch (Exception e) {
+				log.error("cannot retrieve created dated ", e);
+				throw e;
+			}
+		}
+		// #35584 - End
 		
 		if(accessAppl.isBrandNew()){
 			IAccessApplSO accessApplSO = null;
@@ -821,17 +970,13 @@ public class AccessApplBackingBean extends
 	 * @param fileName
 	 * @throws IOException
 	 */
-	private void downloadFile(String filePath, String fileName)
-			throws IOException {
+	private void downloadFile(String filePath, String fileName) throws IOException {
 		log.info("Inside downloadFile start");
-		log.info(" file path : "+filePath);
-		log.info(" file name : "+fileName);
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ fileName + "\"");//
+		log.info(" file path : " + filePath);
+		log.info(" file name : " + fileName);
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");//
 		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
@@ -870,25 +1015,20 @@ public class AccessApplBackingBean extends
 	public void uploadAttachments() throws FileNotFoundException, IOException {
 		log.info("uploadAttachments - START");
 		try {
-			if (this.getManagedBean().getFileEventMapper() != null
-					&& !this.getManagedBean().getFileEventMapper().isEmpty()) {
+			if (this.getManagedBean().getFileEventMapper() != null && !this.getManagedBean().getFileEventMapper().isEmpty()) {
 				PmAccessApplDoc tempPmUserAttachment = null;
 				FileUploadEvent tempFileUploadEvent = null;
-				for (Map.Entry<PmAccessApplDoc, FileUploadEvent> entry : this
-						.getManagedBean().getFileEventMapper().entrySet()) {
+				for (Map.Entry<PmAccessApplDoc, FileUploadEvent> entry : this.getManagedBean().getFileEventMapper().entrySet()) {
 					tempPmUserAttachment = entry.getKey(); // PmUserAttachment
 					tempFileUploadEvent = entry.getValue(); // FileUploadEvent
-					PmCommonUtil.commonUploadFile(tempFileUploadEvent,
-							PmCommonUtil.getAttachmentPath(tempPmUserAttachment
-									.getFilePath()));
+					PmCommonUtil.commonUploadFile(tempFileUploadEvent, PmCommonUtil.getAttachmentPath(tempPmUserAttachment.getFilePath()));
 				}
 				this.getManagedBean().getFileEventMapper().clear();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770060,
-					new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770060, new String[] { e.getMessage() });
 
 		}
 		log.info("uploadAttachments - END");
@@ -900,8 +1040,7 @@ public class AccessApplBackingBean extends
 	 * @param event
 	 * @throws Exception
 	 */
-	public void handleFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		log.info("handleFileUpload - START");
 		try {
 			if (event != null) {

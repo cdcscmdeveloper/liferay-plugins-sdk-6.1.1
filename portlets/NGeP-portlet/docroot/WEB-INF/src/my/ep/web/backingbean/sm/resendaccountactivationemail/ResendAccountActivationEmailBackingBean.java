@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -175,10 +176,17 @@ public class ResendAccountActivationEmailBackingBean extends
 
 	private SmPersonnel getAdminPersonnel(SmSupplier supplier) {
 		SmPersonnel retVal = null;
-		if (supplier.getSmAppl() != null
-				&& !EntityHelper.isCollectionEmpty(supplier.getSmAppl()
-						.getSmPersonnels())) {
-			for (SmPersonnel per : supplier.getSmAppl().getSmPersonnels()) {
+		//#35442 START
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		if(supplier.getSmAppl() != null){
+			reqDTO.setApplId(supplier.getSmAppl().getApplId());
+		}
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
+				.retrievePersonnelListByApplId(reqDTO).getSmPersonnelList();
+		
+		if (personnels != null
+				&& !EntityHelper.isCollectionEmpty(personnels)) {
+			for (SmPersonnel per : personnels) { //#35442 END
 				if (per.getEpRole() != null
 						&& my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 								.contains(per.getEpRole())

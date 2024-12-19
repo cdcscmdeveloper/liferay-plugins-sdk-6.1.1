@@ -55,9 +55,7 @@ import my.ep.persistence.entity.sm.SmReplaceSupplierAdminDocFile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -74,9 +72,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-//#28765 - Start
-//#28765 - End
-import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -136,6 +131,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
 				.getAgencyName());
 		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
+		reqDTO.setAccType(getManagedBean().getAccType()); //#33129
 
 		//#28765 chained method retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc
 		if (getManagedBean().getAccType().equals(
@@ -338,17 +334,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if (getManagedBean().getSmSupplier().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
 			redirectToSuccessPageForInProgress(resDto);
 		} else {
-			
-			//#28765 - Start - to pass through inactiveSupplierRole for G2G normal replace supplier admin	
-			if((getManagedBean().isBypassFlag()==false && !getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) 
-//					&& resDto.isTerminateSupplier() == false
-					) {
-				// End 28765 comment changes 12981
-				PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
-						.inactiveSupplierRole(getOldAdminReqDTO());
-			} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-					(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-					getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
+					getManagedBean().getSmSupplier().getSmAppl() != null && getManagedBean().getSmSupplier().getSmAppl().getPmStatus() != null &&
+					(getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+					getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){ //#34483
 				getManagedBean().setBypassFlag1(1);
 			}
 			//#28765 - End
@@ -381,8 +371,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		//START 12981
 		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
 //		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO()
-					.inactiveSupplierRole(getOldAdminReqDTO());
+			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
 		redirectToSuccessPage(resDto);
@@ -472,13 +461,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 		if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){ 
 			List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
 			boolean isContractor = false;
-			if (getManagedBean().getReactivateBasic().getSuppType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			if (getManagedBean().getReactivateBasic().getSuppType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
 				isContractor = true;
 			} else {
 				isContractor = false;
 			}
-	
+
 			if (supplierLs.size() > 1) {
 				for (SmSupplier supplier : supplierLs) {
 					if (supplier.getSmAppl().getSupplierType() != null) {
@@ -497,7 +485,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 				supplierLs.removeAll(removeSupp);
 			}
-		}  
+		}
+
 		//#33129 - END
 		//then start for throwing exception based from list that has been remove by supplier type
 		//#33153 - End
@@ -1016,6 +1005,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					getManagedBean().getMailAddr().getSmAddress().getPmDivision().setDivisionId(null);
 				}
 				getManagedBean().setMailDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getMailAddr().getSmAddress().getPmDistrict().setDistrictId(null);
 				getManagedBean().setMailCities(null);
 			}
 		}
@@ -1060,6 +1050,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 					getManagedBean().getPermAddr().getSmAddress().getPmDivision().setDivisionId(null);
 				}
 				getManagedBean().setPermDistricts(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
+				getManagedBean().getPermAddr().getSmAddress().getPmDistrict().setDistrictId(null);
 				getManagedBean().setPermCities(null);
 			}
 		}
@@ -1409,10 +1400,26 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 	}
 	
+	//16052019 - SSM INTEGRATION CR
+	public void listenerChangeRole(){
+		if(this.getManagedBean().getNewAdmin() !=null){
+			if(this.getManagedBean().getNewAdmin().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(true);
+				this.getManagedBean().getNewAdmin().setClerical(false);
+			}else if(!this.getManagedBean().getNewAdmin().isEquityOwner()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);				
+			}else if(this.getManagedBean().getNewAdmin().isClerical()){
+				this.getManagedBean().setDisableStaff(false);
+				this.getManagedBean().setDisableEquity(false);
+			}
+		}
+	}
 	//#28765 - Start
 	public void confirmDeclare(){
 		RequestContext.getCurrentInstance().execute("groupDeleteConfirm.show()"); 
 	}
+	
 	private boolean isExistInSelectedPersonnel(SmPersonnel personnel) {
 		boolean exist = false;
 		for (SmPersonnel selectedPersonnel : getManagedBean()
@@ -1425,6 +1432,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		return exist;
 	}
+	
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
 		
@@ -1475,31 +1483,25 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmReplaceSupplierAdminDoc replaceSupplierAdminDoc = new SmReplaceSupplierAdminDoc();
 		replaceSupplierAdminDoc.setPmDocument(document);
 		SmReplaceSupplierAdminDocFile adminDocFile = new SmReplaceSupplierAdminDocFile();
-		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList());
+		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList<SmReplaceSupplierAdminDocFile>());
 		replaceSupplierAdminDoc.getSmReplacesupplieradminDocFiles().add(adminDocFile);
 		log.info("--------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>.."+replaceSupplierAdminDoc.getPmDocument().getDocName());
 		getManagedBean().getSmReplaceSupplierAdminDocs().add(replaceSupplierAdminDoc);
 	}
+	
 	private void personnelBypassValidation() {	
 		//from checking appl
 		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
-		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-				.getSupplierId());		
-		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
+		mofReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO().retrieveActiveSmApplBySupp(mofReqDTO).getSmAppl();
 
 		//from validat
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-		paramReqDTO.setParameterId(getManagedBean().getReactivateBasic()
-				.getNewIdentificationType());
-		PmParameter idno = SmServiceLookup.getParameterSO()
-				.retrieveParameterById(paramReqDTO).getPmParameter();
+		paramReqDTO.setParameterId(getManagedBean().getReactivateBasic().getNewIdentificationType());
+		PmParameter idno = SmServiceLookup.getParameterSO().retrieveParameterById(paramReqDTO).getPmParameter();
 		if (idno.getParameterCode().equals(SupplierManagementConst.NEW_IC)) {
-			if (getManagedBean().getReactivateBasic().getNewIdentificationNo()
-					.length() < 12) {
-				throw new EpException(MessageConst.ERROR_722532,
-						new String[] { getManagedBean().getReactivateBasic()
-								.getNewIdentificationNo() });
+			if (getManagedBean().getReactivateBasic().getNewIdentificationNo().length() < 12) {
+				throw new EpException(MessageConst.ERROR_722532, new String[] { getManagedBean().getReactivateBasic().getNewIdentificationNo() });
 			}
 		}
 		if (getManagedBean()
@@ -1632,6 +1634,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 										.getIdentificationNo() });
 					}
 				}
+		listenerChangeRole();
 		
 		SmPersonnel admin = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(
 				RoleCode.SUPPLIER_TEMP.value(), getManagedBean().getSmSupplier().getSmAppl().getSmPersonnels(),

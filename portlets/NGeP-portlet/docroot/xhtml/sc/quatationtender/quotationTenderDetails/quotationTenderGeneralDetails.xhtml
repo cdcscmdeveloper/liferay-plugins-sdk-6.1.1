@@ -66,9 +66,11 @@
 								<td><c:choose>
 										<c:when
 											test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_OBTAIN_SPEC_APPROVAL) and !isReadOnly}">
-											<p:selectOneRadio id="specialApprovId" required="true"
+											<ui:remove>9019 -start</ui:remove>
+											<p:selectOneRadio id="specialApprovId" required="#{not empty param['skipsubmitvalidation']}"
 												label="#{lbl['lbl.sc.qt.special.approval']}"
 												value="#{scQt.obtainSpecialApproval}">
+												<ui:remove>9019 -end</ui:remove>
 												<f:selectItems
 													value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 												<p:ajax event="change"
@@ -102,8 +104,10 @@
 							<td><c:choose>
 									<c:when
 										test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
-										<p:selectOneRadio id="panelTitle" required="true"
+										<ui:remove>9019 -start</ui:remove>
+										<p:selectOneRadio id="panelTitle" required="#{not empty param['skipsubmitvalidation']}"
 											label="#{lbl['lbl.sc.spec.panel']}" value="#{createQtBB.managedBean.panel}">
+											<ui:remove>9019 -end</ui:remove>
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 											<p:ajax event="change"
@@ -168,10 +172,12 @@
 						<td colspan="3"><c:choose>
 								<c:when
 									test="#{qtStatusChecklistScoringAndBefore and !isReadOnly}">
-									<p:selectOneMenu id="panelItemId" required="true"
+									<ui:remove>9019 -start</ui:remove>
+									<p:selectOneMenu id="panelItemId" required="#{not empty param['skipsubmitvalidation']}"
 										label="#{lbl['lbl.sc.spec.group.item']}"
 										value="#{scQt.itemGroup.panelItemGroupId}"
 										style="width: 210px;margin-bottom: 5px;">
+										<ui:remove>9019 -end</ui:remove>
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 											itemValue="#{null}" />
 										<f:selectItems value="#{createQtBB.panelGroupItems}"
@@ -197,16 +203,19 @@
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputTextarea id="title1"
+				<td colspan="3">
+					<ui:remove>9019 -start</ui:remove>
+					<p:inputTextarea id="title1"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly}"
-						label="#{lbl['lbl.sc.title']}" required="true"
+						label="#{lbl['lbl.sc.title']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isProcurementTitleMandatory(scQt) or not empty param['skipmenuvalidation']}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
 						onkeyup="limitTextArea(this,1000);"
 						onkeydown="limitTextArea(this,1000);"
 						onmouseout="limitTextArea(this,1000);"
-						style=" margin-bottom:5px; width: 714px;" maxlength="1000"><ui:remove>#29472</ui:remove>
+						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
 						<!-- #34163  Changed maxlength to 1000 Vinod -->
+					<ui:remove>9019 -end</ui:remove>
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>
 			</tr>
@@ -239,10 +248,13 @@
 				<td style="width: 270px;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.fileno']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText id="fileno"
-						label="#{lbl['lbl.sc.qt.fileno']}" required="true"
+				<td colspan="3">
+					<ui:remove>9019 -start</ui:remove>
+				<p:inputText id="fileno"
+						label="#{lbl['lbl.sc.qt.fileno']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isFileNoMandatory(scQt) or not empty param['skipmenuvalidation']}"
 						value="#{scQt.fileNo}" style="width:653px;" maxlength="50"
 						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FILE_NO) or isReadOnly}">
+					<ui:remove>9019 -end</ui:remove>
 						<p:ajax event="blur" partialSubmit="true" update="@this"
 							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
 					</p:inputText> <p:message id="filenoMsg" for="fileno" display="icon" /></td>
@@ -266,17 +278,21 @@
 								styleClass="mandatory" /></td>
 						<td><table>
 								<tr>
-									<td><p:inputText id="expIntendedPrice"
+									<td>
+										<ui:remove>9019 -start</ui:remove>
+										<p:inputText id="expIntendedPrice"
 											style="text-align:right; width:195px;"
-											value="#{scQt.tmpExpectedIntendedPrice}" required="true"
+											value="#{scQt.tmpExpectedIntendedPrice}" required="#{not empty param['skipsubmitvalidation']}"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
+											<ui:remove>9019 -end</ui:remove>
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
 											<!-- 25729 -start- -->
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											<!-- 25729 -end- -->
 											</p:ajax>
-
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"
@@ -294,10 +310,12 @@
 						<td><c:choose>
 								<c:when
 									test="#{createQtBB.managedBean.procMethodDropdownPresent}">
-									<p:selectOneMenu id="procMode" required="true"
+									<ui:remove>9019 -start</ui:remove>
+									<p:selectOneMenu id="procMode" required="#{not empty param['skipsubmitvalidation']}"
 										value="#{scQt.procurementMode.parameterId}"
 										style="width: 205px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.procurement.mode']}">
+										<ui:remove>9019 -end</ui:remove>
 										<f:selectItems value="#{createQtBB.getProcurementModeDropdownValues()}" />
 										<p:ajax event="change" process="@this" partialSubmit="true"
 											update="@form" listener="#{createQtBB.procurementModeChange}" />
@@ -347,10 +365,12 @@
 						<td colspan="3"><c:choose>
 								<c:when
 									test="#{!isReadOnly and createQtBB.managedBean.procMethodDropdownPresent}">
-									<p:selectOneMenu id="procMode" required="true"
+									<ui:remove>9019 -start</ui:remove>
+									<p:selectOneMenu id="procMode" required="#{not empty param['skipsubmitvalidation']}"
 										value="#{scQt.procurementMode.parameterId}"
 										style="width: 205px;margin-bottom: 5px;"
 										label="#{lbl['lbl.sc.procurement.mode']}">
+										<ui:remove>9019 -end</ui:remove>
 										<f:selectItems
 											value="#{createQtBB.getProcurementModeDropdownValues()}" />
 										<p:ajax event="change" process="@this" partialSubmit="true"
@@ -378,8 +398,11 @@
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_QT_TYPE) and !scQt.panel and !isReadOnly}">
 							<table>
 								<tr>
-									<td><p:selectOneRadio required="true" id="tenderType"
+									<td>
+										<ui:remove>9019 -start</ui:remove>
+									<p:selectOneRadio required="#{not empty param['skipsubmitvalidation']}" id="tenderType"
 											label="#{lbl['lbl.sc.qttentype']}" value="#{scQt.qtType}">
+											<ui:remove>9019 -end</ui:remove>
 											<f:selectItems
 												value="#{createQtBB.getQuotationTendervalues(ParameterTypeConst.quotationTenderType,scQt)}" />
 											<p:ajax event="change" process="@this" partialSubmit="true"
@@ -403,8 +426,11 @@
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_OPEN_FOR) and scQt.qtType == ParameterConst.quotationTenderTypeOpen and !scQt.panel and !isReadOnly}">
 							<table>
 								<tr>
-									<td><p:selectOneRadio required="true" id="openFor"
+									<td>
+										<ui:remove>9019 -start</ui:remove>
+									<p:selectOneRadio required="#{not empty param['skipsubmitvalidation']}" id="openFor"
 											label="#{lbl['lbl.sc.open.for']}" value="#{scQt.openFor}">
+											<ui:remove>9019 -end</ui:remove>
 											<f:selectItems
 												value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
 											<p:ajax event="change" process="@this" partialSubmit="true"
@@ -458,11 +484,13 @@
 				<td><c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID) and !isReadOnly}">
+							<ui:remove>9019 -start</ui:remove>
 							<p:selectOneMenu id="qtmaintainprocTypeBoCategory"
-								required="true"
+								required="#{not empty param['skipsubmitvalidation']}"
 								label="#{lbl['lbl.sc.procurment.type.category']}"
 								value="#{scQt.procurementTypeCatId.parameterId}"
 								style="width: 205px;margin-bottom: 5px;">
+								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
@@ -482,10 +510,12 @@
 				<td><c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_PROCUREMENT_CATEGORY) and !isReadOnly}">
-							<p:selectOneMenu id="procCategory" required="true"
+							<ui:remove>9019 -start</ui:remove>
+							<p:selectOneMenu id="procCategory" required="#{not empty param['skipsubmitvalidation']}"
 								style="margin-bottom:5px;width:210px;"
 								label="#{lbl['lbl.sc.procurement.category']}"
 								value="#{scQt.pmProcurementCategory.parameterId}">
+								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 								<p:ajax event="change"
@@ -543,10 +573,12 @@
 				<td><c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_CONTRACT_TYPE)}">
+							<ui:remove>9019 -start</ui:remove>
 							<p:selectOneMenu id="contractType"
 								value="#{scQt.contractType.parameterId}"
 								style="width: 205px;margin-bottom: 5px;"
-								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}" required="true">
+								label="#{lbl['lbl.sc.loiloa.loa.cont.type']}" required="#{not empty param['skipsubmitvalidation']}">
+								<ui:remove>9019 -end</ui:remove>
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
 								<f:selectItems
@@ -595,11 +627,13 @@
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FULFILMENT_TYPE) and !isReadOnly or isGenInfo}">
 						<!-- 15391 -end- -->
-							<p:selectOneMenu required="true" id="fulfilId"
+							<ui:remove>9019 -start</ui:remove>
+							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}" id="fulfilId"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
 								style="width: 205px;margin-bottom: 5px;">
+								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 								<p:ajax event="change" process="@this" partialSubmit="true"
@@ -612,14 +646,16 @@
 							<p:inputText id="fulfilTypeTxt" rendered="#{!specificationBackingBean.managedBean.isGenInfo() or isReadOnly}"
 								value="#{createQtBB.getParameterDesc(scQt.fulfilmentType)}"
 								style="width:195px;" disabled="true" />
+							<ui:remove>9019 note-289 -start</ui:remove>
 							 <!-- 26012023@syazani - Bug #34428 - Start -->
-							<p:selectOneMenu required="#{empty param['skipvalidation']}"
+							<p:selectOneMenu required="#{not empty param['skipsubmitvalidation']}"
 								id="fulfilId" rendered="#{specificationBackingBean.managedBean.isGenInfo() and !isReadOnly}"
 								disabled="#{scQt.contractType ne null and scQt.contractType.parameterCode eq 'CC'}"
 								label="#{lbl['lbl.sc.fullfillent.type']}"
 								value="#{scQt.fulfilmentType.parameterId}"
 								style="width: 205px;margin-bottom: 5px;">
 							<!-- 26012023@syazani - Bug #34428 - End -->
+							<ui:remove>9019 note-289 -end</ui:remove>
 							<!-- 29464 -end- -->
 								<f:selectItems
 									value="#{createQtBB.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -681,13 +717,16 @@
 					<td>
 						<table>
 							<tr>
-								<td><p:inputMask id="publishperiod" mask="9?99"
+								<td>
+									<ui:remove>9019 -start</ui:remove>
+									<p:inputMask id="publishperiod" mask="9?99"
 										maxlength="3" placeHolder=""
-										label="#{lbl['lbl.sc.qt.publishing.period']}" required="true"
+										label="#{lbl['lbl.sc.qt.publishing.period']}" required="#{not empty param['skipsubmitvalidation']}"
 										value="#{scQt.publishPeriod}"
 										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
 										valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
 										style="text-align:right; width:195px;">
+										<ui:remove>9019 -end</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this, @(.amendButton)"
 											listener="#{createQtBB.handlePublishClosingDate}" />
@@ -705,13 +744,16 @@
 					<td>
 						<table>
 							<tr>
-								<td><p:inputMask id="proposalvalidity" mask="9?9999"
+								<td>
+									<ui:remove>9019 -start</ui:remove>
+									<p:inputMask id="proposalvalidity" mask="9?9999"
 										maxlength="5" placeHolder=""
-										label="#{lbl['lbl.sc.qt.proposal.validity']}" required="true"
+										label="#{lbl['lbl.sc.qt.proposal.validity']}" required="#{not empty param['skipsubmitvalidation']}"
 										value="#{scQt.qtValidityPeriod}"
 										disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
 										valueChangeListener="#{createQtBB.proposalValidityChanged}"
 										style="text-align:right; width:200px;">
+										<ui:remove>9019 -end</ui:remove>
 										<p:ajax event="blur" process="@this" partialSubmit="true"
 											update="@this, @(.amendButton)"
 											listener="#{createQtBB.handleProposalValidityDate}" />
@@ -733,8 +775,10 @@
 				<td><c:choose>
 						<c:when
 							test="#{!qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_REQUIRED_MINIS_SPEC_APPROVAL) and !isReadOnly}">
-							<p:selectOneRadio required="true" value="#{scQt.specApprovalReq}"
+							<ui:remove>9019 -start</ui:remove>
+							<p:selectOneRadio required="#{not empty param['skipsubmitvalidation']}" value="#{scQt.specApprovalReq}"
 								label="#{lbl['lbl.sc.qt.req.approval.specification']}">
+								<ui:remove>9019 -end</ui:remove>
 								<f:selectItems
 									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 								<p:ajax event="change" partialSubmit="true" process="@this"
@@ -763,10 +807,13 @@
 									rendered="#{scQt.specApprovalReq ne null and scQt.specApprovalReq ne '0'}">
 									<table>
 										<tr>
-											<td><p:selectOneMenu id="ministryspec" required="true"
+											<td>
+											<ui:remove>9019 -start</ui:remove>
+											<p:selectOneMenu id="ministryspec" required="#{not empty param['skipsubmitvalidation']}"
 													label="#{lbl['lbl.sc.ministry.spec.secretary']}"
 													value="#{scQt.ministrySpecSecrataryId.userId}"
 													style="width: 210px;margin-bottom: 5px;">
+													<ui:remove>9019 -end</ui:remove>
 													<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 														itemValue="#{null}" />
 													<f:selectItems value="#{createQtBB.ministrySpecApprovers}"
@@ -801,14 +848,16 @@
 					<td><c:choose>
 							<c:when
 								test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+								<ui:remove>9019 note-289 -start</ui:remove>
 								<p:inputTextarea id="justificationProcValueId_1"
 									style="margin-bottom:5px; width: 250px;" maxlength="100"
-									value="#{scQt.justificationProcValue}" required="true"
+									value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
 									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
 									disabled="#{isReadOnly}" cols="110" rows="3"
 									onkeyup="limitTextArea(this,100);"
 									onkeydown="limitTextArea(this,100);"
 									onmouseout="limitTextArea(this,100);">
+									<ui:remove>9019 note-289 -end</ui:remove>
 									<f:ajax></f:ajax>
 								</p:inputTextarea>
 								<p:message id="title2Msg_1" for="justificationProcValueId_1"
@@ -842,6 +891,56 @@
 			<!-- 25729 -end- -->
 		</table>
 	</p:panel>
+	<ui:remove>#9019  start</ui:remove>
+	<c:choose>
+		<c:when test="#{scQt.brandNew}">
+			<ac:scRemarkAndAttachment header="#{lbl['lbl.sc.qt.remarks']}"
+				remarkList="#{scQt.scQtRemarks}" showAttachment="false" />
+		</c:when>
+		<c:otherwise>
+			<p:panel id="cancelRemark" header="#{lbl['lbl.sc.qt.remarks']}"
+				toggleable="true">
+				<table style="width: 100%">
+					<tr>
+						<td class="TableFieldLeft" width="10%"><p:outputLabel
+								value="#{lbl['lbl.sc.qt.remark']}" /></td>
+						<td class="TableFieldRight"><p:dataGrid
+								value="#{qTDetailBB.managedBean.qt.scQtRemarks}" var="remarkVar"
+								rowIndexVar="remarkIndex" columns="1"
+								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+								<table>
+									<tr>
+										<td rowspan="2" valign="top"><h:graphicImage
+												value="#{qTDetailBB.userImagePath(remarkVar.createdUser.loginId)}"
+												height="30" width="30" /></td>
+										<td width="5"></td>
+										<td><h:outputText
+												value="#{remarkVar.createdUser.userName}" />, <h:outputText
+												id="remarkDates" value="#{remarkVar.changedDate}">
+												<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+											</h:outputText></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td><p:inputTextarea cols="40"
+												value="#{remarkVar.remark}"
+												label="#{lbl['lbl.sc.qt.remark']}" id="scRemarkId"
+												required="true and !scQt.cloned"
+												validatorMessage="Remark required"
+												readonly="${qTDetailBB.managedBean.maintanceFlow}">
+												<p:ajax event="change" process="@this" partialSubmit="true"
+													update="@this" listener="#{createQtBB.updateRemarks(scQt)}" />
+											</p:inputTextarea>
+											<p:message id="scRemarkMsgId" for="scRemarkId" display="icon" /></td>
+									</tr>
+								</table>
+							</p:dataGrid></td>
+					</tr>
+				</table>
+			</p:panel>
+		</c:otherwise>
+	</c:choose>
+	<ui:remove>#9019 end</ui:remove>
 
 	<ui:include src="viewCircularPanelItemsPopup.xhtml"></ui:include>
 	<h:panelGroup id="generalLocationList">
@@ -872,11 +971,13 @@
 	</p:dialog>
 
 	<!-- #25729 #174 START -->
+	<ui:remove>Bug 35061 - change message value -start-</ui:remove>
 	<p:confirmDialog id="proceedBelowQtValueId"
 		widgetVar="proceedBelowQtValueDlgs"
 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
 		resizable="false" closable="false">
+		<ui:remove>Bug 35061 - change message value -end-</ui:remove>
 		<div align="right">
 			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"
 				action="#{createQtBB.enableJustificationProValue(true)}"

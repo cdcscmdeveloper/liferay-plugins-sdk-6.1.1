@@ -96,13 +96,12 @@
 					<p:row>
 					<!-- #34392 - Start -->
 						<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}" colspan="7" style="background-color:PeachPuff !important;text-align: center !important;color:black !important"/>
-		            <!-- #34392 - End -->
 		            </p:row>
              		<p:row>
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width:48% !important; overflow: hidden !important;" />
+							style="width:38% !important; overflow: hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 							style="width:11% !important; overflow: hidden !important;"
 							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
@@ -123,7 +122,7 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{supportingDocInquiryBackingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:48% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:38% !important;" rendered="#{table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
@@ -145,7 +144,6 @@
 					<h:inputTextarea value="#{supportingDocInquiryBackingBean.retrieveRemarkByDocId(table.pmDocument)}" disabled="true"
 						style="float:left; white-space:normal; width:97%;" />
 				</p:column>
-				<!-- #34392 - Start -->
 				<p:column style="width : 10%;text-align: center  !important; " rendered="#{table.pmDocument.mandatory and !table.received}">
 					<p:commandLink rendered="#{not empty table.pmDocument.docDefinitionKey}"
 						action="#{supportingDocInquiryBackingBean.downloadSignatureSuppDoc(table.pmDocument.docDefinitionKey)}"
@@ -221,6 +219,7 @@
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" rendered="#{!supportingDocInquiryBackingBean.nonMandatoryEmpty}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
+					<!-- #34392 - Start -->
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}" colspan="6" 
 							style="background-color:PaleGreen !important;text-align: center !important;color:black !important"/>
@@ -229,12 +228,12 @@
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width:48% !important; overflow: hidden !important;" />
+							style="width:38% !important; overflow: hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 							style="width:11% !important; overflow:hidden !important;"
 							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width:23% !important; overflow:hidden !important;" />
+							style="width:33% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" 
 							style="width:5% !important; overflow:hidden !important;"
 							rendered="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}" />
@@ -246,7 +245,7 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{supportingDocInquiryBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:48% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:38% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
@@ -264,10 +263,11 @@
 						<br />
 					</ui:repeat>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:23% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:33% !important;" rendered="#{!table.pmDocument.mandatory and !table.received}">
 					<h:inputTextarea value="#{supportingDocInquiryBackingBean.retrieveRemarkByDocId(table.pmDocument)}" disabled="true"
 						style="float:left; white-space:normal; width:97%;" />
 				</p:column>
+				<!-- #34392 - End -->
 				<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" style="width:5% !important; text-align:center !important" 
 					rendered="#{!table.pmDocument.mandatory and supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE and !table.received}">
 					<p:commandLink oncomplete="uploadDialogId.show();return false;"

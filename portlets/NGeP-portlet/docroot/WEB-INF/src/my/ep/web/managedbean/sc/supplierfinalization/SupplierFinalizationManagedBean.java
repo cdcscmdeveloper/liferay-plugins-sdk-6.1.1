@@ -17,6 +17,7 @@ import my.ep.bean.sc.QtEvaluationResultDtlBean;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.common.ScRemark;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -36,6 +37,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -171,7 +173,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//Online Bidding Endorsement
 	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
-	
+	// 6906 note 117 - start
+	private SelectItem[] decisionDropdown;
+	private boolean supplierFinalizationReadOnly = true;
+	private boolean disabledSelection;
+	private boolean noProposalSubmitted;
+	private List<String> disqualifiedStages;
+	private boolean hasSupplierQualifiedForCurrentSelection;// 6906 note 202
+	// 6906 note 117 - end
+
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
@@ -236,6 +246,17 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
+	
+	// 28834 starts
+	private boolean disableBfButton;
+	private boolean ktReportGenerated;
+	private boolean disableJustifications;
+	// 28834 end
+	
+	// 25037 - start
+	private List<ScCommitteeMember> deletedMemberList;
+	private SupplierFinalizationMeetingBackingBean meetingBB;
+	// 25037 - end
 
 	/**
 	 * @return the activeIndex
@@ -2122,4 +2143,114 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.haveSupplierRejection = haveSupplierRejection;
 	}
 	// #11134 -end-
+	
+	// 28834 start
+	public boolean isDisableBfButton() {
+		return disableBfButton;
+	}
+
+	public void setDisableBfButton(boolean disableBfButton) {
+		this.disableBfButton = disableBfButton;
+	}
+
+	/**
+	 * @return the ktReportGenerated
+	 */
+	public boolean isKtReportGenerated() {
+		return ktReportGenerated;
+	}
+
+	/**
+	 * @param ktReportGenerated
+	 *            the ktReportGenerated to set
+	 */
+	public void setKtReportGenerated(boolean ktReportGenerated) {
+		this.ktReportGenerated = ktReportGenerated;
+	}
+
+	/**
+	 * @return the disableJustifications
+	 */
+	public boolean isDisableJustifications() {
+		return disableJustifications;
+	}
+
+	/**
+	 * @param disableJustifications
+	 *            the disableJustifications to set
+	 */
+	public void setDisableJustifications(boolean disableJustifications) {
+		this.disableJustifications = disableJustifications;
+	}
+	// 28834 end
+	
+	// 25037 - start
+	public List<ScCommitteeMember> getDeletedMemberList() {
+		return deletedMemberList;
+	}
+
+	public void setDeletedMemberList(List<ScCommitteeMember> deletedMemberList) {
+		this.deletedMemberList = deletedMemberList;
+	}
+
+	public SupplierFinalizationMeetingBackingBean getMeetingBB() {
+		return meetingBB;
+	}
+
+	public void setMeetingBB(SupplierFinalizationMeetingBackingBean meetingBB) {
+		this.meetingBB = meetingBB;
+	}
+	// 25037 - end
+	
+	// 6906 note 117 - start
+	public SelectItem[] getDecisionDropdown() {
+		return decisionDropdown;
+	}
+
+	public void setDecisionDropdown(SelectItem[] decisionDropdown) {
+		this.decisionDropdown = decisionDropdown;
+	}
+
+	public boolean isSupplierFinalizationReadOnly() {
+		return supplierFinalizationReadOnly;
+	}
+
+	public void setSupplierFinalizationReadOnly(boolean supplierFinalizationReadOnly) {
+		this.supplierFinalizationReadOnly = supplierFinalizationReadOnly;
+	}
+
+	public boolean isDisabledSelection() {
+		return disabledSelection;
+	}
+
+	public void setDisabledSelection(boolean disabledSelection) {
+		this.disabledSelection = disabledSelection;
+	}
+
+	public boolean isNoProposalSubmitted() {
+		return noProposalSubmitted;
+	}
+
+	public void setNoProposalSubmitted(boolean noProposalSubmitted) {
+		this.noProposalSubmitted = noProposalSubmitted;
+	}
+
+	public List<String> getDisqualifiedStages() {
+		return disqualifiedStages;
+	}
+
+	public void setDisqualifiedStages(List<String> disqualifiedStages) {
+		this.disqualifiedStages = disqualifiedStages;
+	}
+	// 6906 note 117 - end
+
+	// 6906 note 202 - start
+	public boolean isHasSupplierQualifiedForCurrentSelection() {
+		return hasSupplierQualifiedForCurrentSelection;
+	}
+
+	public void setHasSupplierQualifiedForCurrentSelection(boolean hasSupplierQualifiedForCurrentSelection) {
+		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
+	}
+	// 6906 note 202 - end
 }

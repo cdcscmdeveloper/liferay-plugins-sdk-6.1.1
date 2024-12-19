@@ -16,7 +16,7 @@
 			value="#{registrationBackingBean.managedBean.smSuppOwners}"
 			rowKey="#{varOwner}"
 			sortBy="#{varOwner.ownerName}"	>
-			<ac:paginator for="tableOwner" />	
+			<ac:paginator for="tableOwner" />
 			<p:column style="width:2%" disabledSelection="#{registrationBackingBean.isSmSupplierOwnerIsAdmin(varOwner)}" rendered="#{not empty registrationBackingBean.managedBean.smSuppOwners and registrationBackingBean.managedBean.companyValidWithSSM eq 'false'}">
 				<f:facet name="header">
 		        	<p:selectBooleanCheckbox value="#{registrationBackingBean.managedBean.allOwnerSelected}" >
@@ -50,7 +50,7 @@
 				<c:otherwise>
 					<h:outputText value="#{lbl['lbl.sm.ownername']}"/>
 				</c:otherwise>
-				</c:choose>		
+				</c:choose>	
 				</f:facet>
 						<h:outputText rendered="#{!varOwner.showTextField}" value="#{varOwner.ownerName}" />
 					
@@ -64,13 +64,13 @@
 				</f:facet>
 				<h:outputText value="#{registrationBackingBean.getParamDescriptionByLanguageAndPmParameter(varOwner.identificationType)}" />
 			</p:column>
-			
+			<!-- #30064 && 29582 -->
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
-					<c:if test="#{not empty varOwner.nationality and varOwner.nationality.countryCode != 'MY'}">
+					<c:if test="#{not empty varOwner.nationality and varOwner.nationality.countryCode != 'MY' and varOwner.identificationType.parameterCode != 'I'}">
 						<h:outputText value="#{lbl['lbl.sm.individual.passport']}" />
 					</c:if>
-					<c:if test="#{empty varOwner.nationality or varOwner.nationality.countryCode eq 'MY'}">
+					<c:if test="#{empty varOwner.nationality or varOwner.nationality.countryCode eq 'MY' or varOwner.identificationType.parameterCode eq 'I'}">
 						<h:outputText value="#{lbl['lbl.sm.individual.newicno']}" />
 					</c:if>
 				</f:facet>
@@ -89,11 +89,13 @@
 				<!-- 16052019 - SSM INTEGRATION CR - START -->
 				<!-- #27878 disable when choose applType = SupplierManagementConst.ACC_BASIC-->
 				<!-- #27826 start -->
-				<!-- #30064 varOwner.disableNationality -->
+				<!-- #30064 & 29582-->
 				<p:selectOneMenu 
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.person.nationality.origin']}" 
 					value="#{varOwner.tempCountryId}"
-					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or (!varOwner.nationalityNull and varOwner.tempCountryId ne 0)or varOwner.disableNationality}">
+					disabled="#{registrationBackingBean.managedBean.smAppl.applType==SupplierManagementConst.ACC_BASIC or 
+					(varOwner.identificationType.parameterCode eq ParameterConst.identificationTypesIc and !varOwner.disableNationality) and
+					(!varOwner.nationalityNull and varOwner.tempCountryId ne 0 )}">
 					<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 					<f:selectItems var="counLs"
 						value="#{registrationBackingBean.managedBean.countryLs}" />
@@ -116,7 +118,7 @@
 									<td style="width:10%" >
 										<c:choose>
 										<c:when test="registrationBackingBean.managedBean.smPersonnelAll.size() != null and registrationBackingBean.managedBean.smPersonnelAll.size() > 0">
-										<!-- 27691 Start -->
+											<!-- 27691 Start -->
 											<p:selectBooleanCheckbox rendered="#{!varOwner.showTextField and registrationBackingBean.managedBean.showOwner}" value="#{varOwner.ownerIsEquity}" disabled="#{registrationBackingBean.managedBean.disableRole}" />												
 										</c:when>
 										<c:otherwise>
@@ -155,7 +157,7 @@
 			</p:column>
 
 		</p:dataTable>
-		<!-- 27691 - start - Unbold disabled on DEV Server -->
+		<!-- 27691 - start -->
 		<style>
 		.ui-state-disabled {
 			font-weight: normal !important;
@@ -172,7 +174,6 @@
    				}
 			}
 		</script>
-	
 		<!-- 27691 - start - Add/Delete Supplier Owner -->
 		<p:outputPanel id="suppOwnersActionPanel" 
 			rendered="#{registrationBackingBean.showSupplierOwnersActionPanel}">
@@ -289,5 +290,4 @@
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirm.delete']}" 
 		update=":#{p:component('ownerBusiness')}"/>
-	
 	</ui:composition>

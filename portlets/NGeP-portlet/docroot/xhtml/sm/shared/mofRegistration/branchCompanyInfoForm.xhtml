@@ -27,8 +27,9 @@
 					rows="2" cols="50" value="#{lbl['lbl.sm.branch.panHdrToolTip']}" />
 			</p:tooltip>
 		</f:facet>
+		<!-- Disable for UPS 32008 - START -->
 		<table style="width: 100%">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.branchVerified}"
@@ -43,7 +44,8 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<!-- #32008 -->
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.branchVerified}"
@@ -59,7 +61,7 @@
 			</p:outputPanel>
 		</table>
 		<p:outputPanel id="brnInfPan" layout="block">
-			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
 			<!-- #34135 START -->
@@ -71,7 +73,7 @@
 				<ac:paginator for="dt" />
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectSsmBranch}" update=":form:tt:dt"></p:ajax>
 				<!--  SSM INTEGRATION -->
-				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.displayBranches}" disabledSelection="#{branchBean.ssmData}"/>
+				<p:column selectionMode="multiple" width="1%" rendered="#{not empty backingBean.managedBean.displayBranches and !backingBean.managedBean.upsCannotEdit}" disabledSelection="#{branchBean.ssmData}"/>
 			<!-- #34135 END -->
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 					<table style="width: 100%">
@@ -133,8 +135,9 @@
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelBranch(branchBean,index)}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 							style="margin-right:2px;" />
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" rendered="#{backingBean.managedBean.upsCannotEdit}"/>
 					</p:commandLink>
 					<ac:smFieldChangeTableAlert object="#{branchBean}" />
 				</p:column>
@@ -142,11 +145,11 @@
 
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.assignNewBranchBean}" partialSubmit="true"
 					process="@this" update=":form:tt:banchDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="brnInfPan"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
 					update=":form:tt:dt" oncomplete="branchDeletePopUp.show()" />
@@ -192,9 +195,10 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
+	<!-- Disable for ups 32008 -->
 	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
-		id="banchDialog" resizable="false" modal="true" closable="false">
+		id="banchDialog" resizable="false" modal="true" closable="true">
 		
 		<p:outputPanel layout="block" id="branchBlockPanel">
 			<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
@@ -211,15 +215,16 @@
 	
 			<br />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="branchPopUpSaveBtn"
 					action="#{backingBean.addOrUpdateBranchToSmAppl}"
 					partialSubmit="true" process="banchDialog"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
 					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignCancelBranchBean}" />
+				<!-- Disable for UPS 32008 - END -->
 			</div>
 			<p:blockUI block="branchBlockPanel" widgetVar="branchBlockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

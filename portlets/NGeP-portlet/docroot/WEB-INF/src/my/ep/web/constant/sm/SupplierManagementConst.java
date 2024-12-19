@@ -89,8 +89,8 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ACK_PAGE = "/xhtml/shared/acknowledge.xhtml";
 	public static final int NEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int NEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
-	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 7;
-	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 12;
+	public static final int BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT = 13; //#31043 start
+	public static final int BUMI_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;  //#31043 end
 	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_NORMCAT_REVIEW_MAXCOUNT = 13;
 	public static final int RENEW_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
@@ -137,21 +137,23 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_STORE = "S";
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
-
+	
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
+		
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
 		FACILITY_TYPE_MAP = new HashMap<String, String>();
 		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_FACTORY, SmCommonUtil.getMessage("lbl.sm.facility.type.factory", null));
-		FACILITY_TYPE_MAP
-				.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
-		FACILITY_TYPE_MAP
-				.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_DOCKYARD, SmCommonUtil.getMessage("lbl.sm.facility.type.dockyard", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_WORKSHOP, SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null));
 		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_STORE, SmCommonUtil.getMessage("lbl.sm.facility.type.store", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
-		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE,
-				SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_HOMEOFFICE, SmCommonUtil.getMessage("lbl.sm.facility.type.home.office", null));
+		FACILITY_TYPE_MAP.put(SM_FACILITY_TYPE_BUSSINESSOFFICE, SmCommonUtil.getMessage("lbl.sm.facility.type.business.office", null));
 	}
 
 	public static String[] CAT_TYPE_CODES = new String[] { SupplierManagementConst.CAT_TYPE_TRANSPORTATION,
@@ -210,11 +212,11 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
+	public static final String IDENTIFICATION_TYPE_IC = "I";//#35314
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
-	//30865 Start & #34098 - START
+	//34098
 	public static final int CANCEL_RECORD_STATUS = 2;
-	//30865 End & #34098 - END
 	public static final int DELETED_RECORD_STATUS = 9;
 	public static final int MIGRATION_DATA_RECORD_STATUS = 7;
 	public static final int PENDING_RE_APPROVAL_STATUS = 6;
@@ -467,6 +469,7 @@ public class SupplierManagementConst {
 	// #12483 - START
 	public static final String PM_STATUS_PENDING_REVISE_APPLICATION = "20398";
 	// #12483 - END
+
 	public static final String PM_STATUS_PENDING_CERTIFCATE_GENERATION = "20198";
 	public static final String PM_STATUS_REGISTERED = "20199";
 	public static final String PM_STATUS_PENDING_APPLICATION_REJECTION = "20115";
@@ -480,6 +483,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -532,9 +536,15 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_357_0_SEQ = "SM_MOF_357_0_SEQ";
 	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
 	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //#30766 & #34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -1111,13 +1121,12 @@ public class SupplierManagementConst {
 	public int getAPPROVED_RECORD_STATUS() {
 		return APPROVED_RECORD_STATUS;
 	}
-
-	//30865 Start & #34098 - START
+	
+	//34098
 	public int getCANCEL_RECORD_STATUS() {
 		return CANCEL_RECORD_STATUS;
 	}
-	//30865 End & #34098 - END
-	
+
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
 	}
@@ -1310,4 +1319,19 @@ public class SupplierManagementConst {
 	public String getIDENTIFICATION_TYPE_PASSPORT() {
 		return IDENTIFICATION_TYPE_PASSPORT;
 	}
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
+
+	// #35314 - START 
+	public static String getIdentificationTypeIc() {
+		return IDENTIFICATION_TYPE_IC;
+	}
+	// #35314 - END 
 }

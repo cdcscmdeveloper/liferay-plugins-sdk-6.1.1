@@ -610,6 +610,17 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		this.getManagedBean().setSmApplDocFile(null);
 	}
 	
+	//#34392 - start
+	public void deleteInquirySupDocFileAttachment() {
+		SmApplSupportDoc smApplSupportDoc = getManagedBean().getSupportDoc();
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
+	}
+	//#34392 - end
+	
 	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
 		this.getManagedBean().setAttachedFileIndex(index);
 		this.getManagedBean().setSupportDoc(doc);

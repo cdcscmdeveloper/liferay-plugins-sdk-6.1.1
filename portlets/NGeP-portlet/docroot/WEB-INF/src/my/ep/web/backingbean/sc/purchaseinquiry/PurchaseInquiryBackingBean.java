@@ -1023,14 +1023,17 @@ public class PurchaseInquiryBackingBean extends
 	public void validatePk7(String procurementType) {
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(
-					new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			//Temp(#34274 - Start)
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(
+//					new CommonUtils().getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-							MessageConst.INFO_760440, new String[] { amountDF.format(maxProcurementAmt) },
+							MessageConst.INFO_760440, null,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			//Temp(#34274 - End)
 
 		}
 	}

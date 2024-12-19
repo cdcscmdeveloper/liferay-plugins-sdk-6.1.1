@@ -82,7 +82,7 @@
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
 					<p:ajax event="change"  update=":form:typesOfAmend, :form:approvingAuthorityPanel" process="@form"
-					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
+					     onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onClauseChecked}"/> <!-- Fix #33287 -->
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
@@ -94,8 +94,8 @@
 			
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{ctBackingBean.managedBean.disableAmendDetails or amendmentBackingBean.isContractAmountAmend()}"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" >
-					<p:ajax event="change" update=":form" process="@form"
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.valueChangeByGst}" ><!-- #33287 -->
+					<p:ajax event="change" update=":form, approverAuthorityReq" process="@form"
 					    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  listener="#{amendmentBackingBean.onChangeValueByGstChecked}" /> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -260,6 +260,11 @@
 				<p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
 	   				 rendered="#{!ctBackingBean.managedBean.gstCheckingGUI}" value="#{lbl['lbl.txt.na']}">
 				</p:inputText>
+				<p:spacer width="1"/>
+			    <p:graphicImage id="iconToolTipGst" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="gstTooltipSource" for="iconToolTipGst" style="max-width: 450px; z-index: 9999;">
+						<h:outputText id="gstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.gst.amt']}" />
+					</p:tooltip>
 			</h:panelGrid>
 			
 							
@@ -275,6 +280,11 @@
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
 				</p:inputText>
 				<p:message for="newStaxAmtTxt" display="icon" />
+				<p:spacer width="1"/>
+			    <p:graphicImage id="iconToolTipSst" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="sstTooltipSource" for="iconToolTipSst" style="max-width: 500px; z-index: 9999;">
+						<h:outputText id="sstLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.additional.new.stax.amt']}" />
+					</p:tooltip>
 			</h:panelGrid>
 			
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
@@ -283,6 +293,11 @@
 					value="#{amendmentBackingBean.newOverallContractAmount()}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
+				<p:spacer width="1"/>
+			    <p:graphicImage id="iconToolTipAmt" value="/css/images/design/tooltips.png" /> 
+				  	<p:tooltip id="amtTooltipSource" for="iconToolTipAmt">
+						<h:outputText id="amtLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
+					</p:tooltip>
 			</h:panelGrid>	
 			
 			<f:verbatim rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
@@ -314,8 +329,9 @@
 			<f:verbatim rendered="#{amendmentBackingBean.getAmendValue(3)}" />
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(3)}">
 				<p:selectBooleanCheckbox
+					id ="approverAuthorityReq"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.approverAuthorityReq}"
-					disabled="#{!amendmentBackingBean.isContractAmountAmend()}" />
+					disabled="#{!amendmentBackingBean.isContractAmountAmend()}" /> <!-- #33287 -->
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.approval']}" style="text-align:left" />
 			</h:panelGrid>

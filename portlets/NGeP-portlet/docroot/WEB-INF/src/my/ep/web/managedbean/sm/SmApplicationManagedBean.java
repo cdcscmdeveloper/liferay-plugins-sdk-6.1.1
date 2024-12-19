@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -600,16 +601,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
-	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
-	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
@@ -640,6 +631,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String personnelRoleMsg; 
 	//#30762-end 
 	
+	//32008
+	private boolean upsCannotEdit;
+	// 31043 START
+	private boolean showFacilityMachine;
+	
+	private boolean allowedToSiteVisit;
+	// 31043 END
+	
+	// #34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
+	//#34392 - end
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4463,6 +4469,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.smApplDocFile = smApplDocFile;
 	}
 	//#28807 - End
+	
 	//#12483 - START
 	public SmApplRevise getSmApplRevise() {
 		return smApplRevise;
@@ -4496,6 +4503,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		return reviseApprover;
 	}
 	// #12483 - END
+	
 	//#15629 - START
 	public List<PmReasonDesc> getSelectedRecommendReasonDescs() {
 		return selectedRecommendReasonDescs;
@@ -4545,6 +4553,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	
 	// #31461-start
 	public boolean isPoApproverEquityErr() {
 		return poApproverEquityErr;
@@ -4626,6 +4635,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceBankInfoAction = showDifferenceBankInfoAction;
 	}
 	//#12492 - end
+	
 	//#32968 START
 	public boolean isCheckBranch() {
 		return checkBranch;
@@ -4635,42 +4645,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.checkBranch = checkBranch;
 	}
 	//#32968 END
-
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
-
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
-	
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 
 	//31130-start
 	public boolean isPoApproverPersonnelErr() {
@@ -4695,23 +4669,94 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
 		this.poApproverAcedemicErr = poApproverAcedemicErr;
-	}//31130-end
+	}
+	//31130-end
 
 	//30762-Start 171123
 	public boolean isPoApproverPersonnelRoleMsg() {
 		return poApproverPersonnelRoleMsg;
-		}
-	
+	}
+
 	public void setPoApproverPersonnelRoleMsg(boolean poApproverPersonnelRoleMsg) {
 		this.poApproverPersonnelRoleMsg = poApproverPersonnelRoleMsg;
-		}
-	
+	}
+
 	public String getPersonnelRoleMsg() {
 		return personnelRoleMsg;
-		}
-	
+	}
+
 	public void setPersonnelRoleMsg(String personnelRoleMsg) {
 		this.personnelRoleMsg = personnelRoleMsg;
-		}
+	}
 	//30762-End 
+
+	//Start 32008
+	public boolean isUpsCannotEdit() {
+		return upsCannotEdit;
+	}
+
+	public void setUpsCannotEdit(boolean upsCannotEdit) {
+		this.upsCannotEdit = upsCannotEdit;
+	}
+	//end 32008
+		
+	//#31043 START	
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
+	
+	//#34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+	
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
 }

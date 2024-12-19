@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -155,7 +154,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -2398,7 +2396,7 @@ public class SimpleQuoteBackingBean extends
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
 						
-						// Bug #35298 - start
+						// Bug #35514 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getProductTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if (tplSpecQuestion.getCmItem() != null
@@ -2424,7 +2422,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							}
 						}
-						// Bug #35298 - end
+						// Bug #35514 - end
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -2446,7 +2444,7 @@ public class SimpleQuoteBackingBean extends
 							specMaster.setTplSpecZone(quote.getQuoteZone());
 						}
 						
-						// Bug #35298 - start
+						// Bug #35514 - start
 						for (TplSpecQuestion tplSpecQuestion : getManagedBean().getServiceTemplateSpecBean()
 								.getSpecMaster().getTplSpecQuestions()) {
 							if ((tplSpecQuestion.getAnswerTypeCode() != null)
@@ -2466,7 +2464,7 @@ public class SimpleQuoteBackingBean extends
 								}
 							}
 						}
-						// Bug #35298 - end
+						// Bug #35514 - end
 						
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
@@ -2648,19 +2646,21 @@ public class SimpleQuoteBackingBean extends
 		
 		// when procurement type as pk7 selected 
 		if (procurementType.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)){
+			//Temp(#34274 - Start)
 			// MaxProcurementAmt
-			BigDecimal maxProcurementAmt = getPRThresholdAmount();
-			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
-			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+//			BigDecimal maxProcurementAmt = getPRThresholdAmount();
+//			DecimalFormat amountDF = new DecimalFormat(new CommonUtils()
+//			.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
 							.getMessage(
 									MessageConst.INFO_760440,
-									new String[] {amountDF.format(maxProcurementAmt)},
+									null,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+			//Temp(#34274 - End)
 
 		}
 		// #28536 - start
@@ -4446,10 +4446,9 @@ public class SimpleQuoteBackingBean extends
 				List<TplSpecQuestion> prodItemQuestions = new ArrayList<TplSpecQuestion>();
 				List<TplSpecQuestion> serviceItemQuestions = new ArrayList<TplSpecQuestion>();
 				
-				//Bug #35298 - get value for fulfilment type one-off
-				PmParameter FTypeOneOff = getParameterByTypeAndCode(
-						ParameterTypeConst.FULFILMENT_TYPE,
-						ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				//Bug #35514 start - get value for fulfilment type one-off
+				PmParameter FTypeOneOff = getParameterByTypeAndCode(ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				//Bug #35514 end
 				
 				if(cloneSpecMaster.getTplSpecQuestions().size() > 0) {
 					for(TplSpecQuestion question: cloneSpecMaster.getTplSpecQuestions()) {
@@ -4464,7 +4463,17 @@ public class SimpleQuoteBackingBean extends
 										String pOrS = catalogueSO.checkProductOrService(extensionCode);
 										if(pOrS.equalsIgnoreCase(CommonConstants.PRODUCT_INITIAL)) {
 											isProduct = true;
-											question.setClFulfilmentTypeCode(FTypeOneOff);	 //Bug #35298 - Assigning value one-off to product
+											
+											// #35514 @zaim start
+											question.setClFulfilmentTypeCode(FTypeOneOff);
+											if (question.getClDurationMonth() != null) {
+												question.setClDurationMonth(null);
+											}
+											if (question.getClUomFrequency() != null) {
+												question.setClUomFrequency(null);
+											}
+											// #35514 @zaim end
+											
 											prodItemQuestions.add(question);
 										} else {
 											isProduct = false;
@@ -5252,6 +5261,7 @@ public class SimpleQuoteBackingBean extends
 	 * render the supplier view based on the task id from notification.
 	 */
 	public void supplierView() {
+		int isSpCompleted = 0; //36301 @zaim
 		TplSpecMaster serviceMaster = null;
 		TplSpecMaster productMaster = null;
 		HttpServletRequest servletRequest = new FacesScopes()
@@ -5283,6 +5293,13 @@ public class SimpleQuoteBackingBean extends
 				Long supplierId = getSupplierId();
 				quoteReqDTO.setSupplierId(supplierId);
 				
+				//36301 - start
+				boolean isContainDraft = isQuoteDocContainDraft(scQuote.getQuoteDocs());
+				if (isContainDraft && scQuote.getQuoteId() != null){
+					isSpCompleted = getQuoteSO().executeSPFortemplateStatusDraft(scQuote.getQuoteId());
+				}
+				//36301 - end
+
 				// clear session data.
 				renewSesionObject();
 
@@ -5445,7 +5462,10 @@ public class SimpleQuoteBackingBean extends
 			// #28199 - Start : Remove back button from SQ Response Screen
 			getManagedBean().setSqAuditFlg(Boolean.FALSE);
 			// #28199 - End
-			
+			//36301 - start
+			reloadSupplierView(isSpCompleted);			
+			//36301 - end
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -8122,4 +8142,41 @@ public class SimpleQuoteBackingBean extends
 		return sb.toString();
 	}
     //29832 - end
+
+	// 36301 - start
+	/**
+	 * To validate if tpl spec master contain template status draft after
+	 * submit.
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public boolean isQuoteDocContainDraft(List<ScQuoteDoc> list) {
+		boolean isContainDraft = Boolean.FALSE;
+
+		if (list != null && CollectionUtils.isNotEmpty(list)) {
+			for (ScQuoteDoc doc : list) {
+				if ((doc.getSpecMaster() != null && StringUtils.isNotEmpty(doc.getSpecMaster().getTemplateStatus()))
+						&& doc.getSpecMaster().getTemplateStatus()
+								.equalsIgnoreCase(TemplateSpecConst.TEMPLATE_STATUS_DRAFT)) {
+					isContainDraft = Boolean.TRUE;
+				}
+			}
+		}
+
+		return isContainDraft;
+	}
+
+	/**
+	 * Reload supplierView() method.
+	 * 
+	 * @param isSpCompleted
+	 */
+	public void reloadSupplierView(int isSpCompleted) {
+		if (isSpCompleted == 1) {
+			supplierView();
+		}
+
+	}
+	// 36301 - end
 }

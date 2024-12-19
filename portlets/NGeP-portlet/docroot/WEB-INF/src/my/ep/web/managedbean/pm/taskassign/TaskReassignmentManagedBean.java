@@ -83,7 +83,19 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 	//[#22117 - start]
 	private boolean bpkAdminUser;
 	//[#22117 - stop]
-
+	
+	// #29822 - start
+	private boolean enableRemoveAllGroupTasksButton;
+	private boolean enableRemoveAllOthersTasksButton;
+	private boolean showRemoveProcessMessageGroup;
+	private boolean showRemoveProcessMessageOther;
+	// #29822 - end
+	
+	// 20231010 #7465 - Start
+	private boolean fromUserMaintenanceDetails;
+	private PmOrgProfile pmOrgProfile;
+	private PmUser pmUser;
+	// 20231010 #7465 - End	
 	
 	public TaskReassignmentManagedBean(){}
 
@@ -640,5 +652,65 @@ public class TaskReassignmentManagedBean extends BaseManagedBean {
 		this.bpkAdminUser = bpkAdminUser;
 	}
 
-		
+	// #29822 - start
+	public boolean isEnableRemoveAllGroupTasksButton() {
+		return enableRemoveAllGroupTasksButton;
+	}
+
+	public void setEnableRemoveAllGroupTasksButton(boolean enableRemoveAllGroupTasksButton) {
+		this.enableRemoveAllGroupTasksButton = enableRemoveAllGroupTasksButton;
+	}
+
+	public boolean isEnableRemoveAllOthersTasksButton() {
+		return enableRemoveAllOthersTasksButton;
+	}
+
+	public void setEnableRemoveAllOthersTasksButton(boolean enableRemoveAllOthersTasksButton) {
+		this.enableRemoveAllOthersTasksButton = enableRemoveAllOthersTasksButton;
+	}
+
+	public boolean isShowRemoveProcessMessageGroup() {
+		return showRemoveProcessMessageGroup;
+	}
+
+	public void setShowRemoveProcessMessageGroup(boolean showRemoveProcessMessageGroup) {
+		this.showRemoveProcessMessageGroup = showRemoveProcessMessageGroup;
+	}
+
+	public boolean isShowRemoveProcessMessageOther() {
+		return showRemoveProcessMessageOther;
+	}
+
+	public void setShowRemoveProcessMessageOther(boolean showRemoveProcessMessageOther) {
+		this.showRemoveProcessMessageOther = showRemoveProcessMessageOther;
+	}
+
+	// #29822 - end
+	
+	// 20231010 #7465 - Start
+	public boolean isFromUserMaintenanceDetails() {
+		return fromUserMaintenanceDetails;
+	}
+	
+	public void setFromUserMaintenanceDetails(boolean fromUserMaintenanceDetails) {
+		this.fromUserMaintenanceDetails = fromUserMaintenanceDetails;
+	}
+	
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+	
+	public PmUser getPmUser() {
+		return pmUser;
+	}
+	
+	public void setPmUser(PmUser pmUser) {
+		this.pmUser = pmUser;
+	}
+	// 20231010 #7465 - End
+
 }

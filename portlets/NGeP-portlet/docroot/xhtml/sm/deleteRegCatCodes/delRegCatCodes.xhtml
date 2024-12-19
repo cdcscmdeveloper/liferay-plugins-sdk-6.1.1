@@ -101,10 +101,40 @@
 					process="@this" update="@form"/>
 			</div>
 		</p:panel>
+		<!-- 32236 - Start -->
 		<p:confirmDialog id="catDelConfirm"
-			message="#{lbl['lbl.sm.delete.sure']} #{deleteCategoryCodeBB.managedBean.selectedCategories.size()} #{lbl['lbl.sm.records.sure']}"
 			header="#{lbl['lbl.sm.catcode.delete.header']}" severity="alert"
 			widgetVar="confirmation">
+			<!-- 32236 - Start -->
+			<f:facet name="message">
+				<h:outputText escape="false"
+					value="#{lbl['lbl.sm.delete.sure']} #{deleteCategoryCodeBB.managedBean.selectedCategories.size()} #{lbl['lbl.sm.records.sure']} #{lbl['lbl.sm.records.reapplication']}"
+					style="white-space : normal !important" />
+			</f:facet>
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		}
+			
+	      	</script>
+			<!-- 32236 - End -->
+			
+			<f:facet name="message">
+				<h:outputText escape="false"
+					value="#{lbl['lbl.sm.delete.sure']} #{deleteCategoryCodeBB.managedBean.selectedCategories.size()} #{lbl['lbl.sm.records.sure']} #{lbl['lbl.sm.records.reapplication']}"
+					style="white-space : normal !important" />
+			</f:facet>
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		};
+			
+	      	</script>
+			<!-- 32236 - End -->
 			
 			<div align="right">
 				<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}"

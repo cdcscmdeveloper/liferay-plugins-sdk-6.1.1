@@ -1087,7 +1087,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		if(null != flItemAddr.getOrderedQty()){
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
-			flItemAddr.setOrderQtyByUser(formattedOrderedQty);//35159
 		}	
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
@@ -1386,7 +1385,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		// temp: to monitor performance
-		MDC.put("taskId", taskId);
+		if (taskId != null) {//36386 -error blank page when user click PR link from dashboard
+			MDC.put("taskId", taskId);
+		}
 		log.info("start - getLoginUserOrg");
 		getLoginUserOrg();
 		log.info("end - getLoginUserOrg");

@@ -17,13 +17,25 @@
 				<h:panelGrid columns="2" id="userSearchCriteria" cellpadding="0"
 					cellspacing="0">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}" />
+					<!-- #29822 - START -->
 					<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"
 						size="60"
-						value="#{supplierTaskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, supplierTaskReassignmentBackingBean.managedBean.selectedTask.docType)}" />
-					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}" />
-					<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}" disabled="true"
+						value="#{supplierTaskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, supplierTaskReassignmentBackingBean.managedBean.selectedTask.docType)}"
+						rendered="#{supplierTaskReassignmentBackingBean.managedBean.singleReassign}"/>
+					<p:inputText label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"
 						size="60"
-						value="#{supplierTaskReassignmentBackingBean.managedBean.selectedTask.docNumber}" />
+						value="#{supplierTaskReassignmentBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, supplierTaskReassignmentBackingBean.managedBean.docType)}" 
+						rendered="#{supplierTaskReassignmentBackingBean.managedBean.bulkReassign}" />
+					<!-- #29822 - END -->
+					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}" />
+					<!-- #29822 - START -->
+					<p:inputText label="#{lbl['lbl.pm.ta.doc.no']}" rows="3" cols="60" disabled="true" 
+						value="#{supplierTaskReassignmentBackingBean.managedBean.selectedTask.docNumber}" 
+						rendered="#{supplierTaskReassignmentBackingBean.managedBean.singleReassign}"/>
+					<p:inputTextarea label="#{lbl['lbl.pm.ta.doc.no']}" rows="3" cols="60" disabled="true" 
+						value="#{supplierTaskReassignmentBackingBean.managedBean.selectedTasksTA}" 
+						rendered="#{supplierTaskReassignmentBackingBean.managedBean.bulkReassign}" />
+					<!-- #29822 - END -->
 					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}" />
 					<p:inputText label="#{lbl['lbl.pm.ta.username']}" size="60"
 						value="#{supplierTaskReassignmentBackingBean.managedBean.searchUserName}" />

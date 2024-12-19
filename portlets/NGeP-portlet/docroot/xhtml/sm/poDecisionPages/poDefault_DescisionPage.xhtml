@@ -55,7 +55,9 @@
 								partialSubmit="true" process="@this"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
+							<!-- Disable for UPS 32008 - START -->
 							<p:commandButton onstart="blockWidget.show()"
+								rendered="#{!backingBean.managedBean.upsCannotEdit}"
 								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
 								value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 								partialSubmit="true" process="@this"
@@ -72,13 +74,14 @@
 								<c:if
 									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+										<!-- #31043 -->
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>
@@ -117,17 +120,18 @@
 
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.reject']}"
+									rendered="#{!backingBean.managedBean.upsCannotEdit}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
-								
+							<!-- #31043 -->		
 							<p:commandButton
 								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
 								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this"
@@ -138,7 +142,7 @@
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:approveDialog" partialSubmit="true"
-								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
+								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
@@ -154,23 +158,25 @@
 									action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton}"
+								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
 									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
 									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
+							<!-- Disable for UPS 32008 - END -->
 								<c:if
 									test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 									<c:if test="#{!backingBean.managedBean.reviewSiteVisit}">
+									<!-- #31043 -->
 										<p:commandButton
 											value="#{lbl['lbl.sm.button.recommend.site.visit']}"
 											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>

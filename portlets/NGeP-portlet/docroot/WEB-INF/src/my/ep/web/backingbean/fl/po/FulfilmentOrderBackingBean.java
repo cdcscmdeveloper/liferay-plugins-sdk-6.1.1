@@ -32,14 +32,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentYepSO;
@@ -120,9 +112,16 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
+import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Fulfillment Order.
@@ -1245,7 +1244,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			} catch (Exception e) {
-				throw new EpException(MessageConst.ERROR_776107);
+				throw new EpException(MessageConst.ERROR_000001);//35462
 				
 			}
 			return messageSuffix;	
@@ -1356,7 +1355,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	public String preSubmitFulfillmentOrder(PmDigiSign pmDigiSign) throws Exception {
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
-			if(((hasSupplierRole() && !hasGovtSellerRole())) || getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_AP58_PROCEED) ) { //29440
+			if(((hasSupplierRole() && !hasGovtSellerRole()))) {
 				setTextBeforeSign(getManagedBean().getButtonAction());
 				updateSpkiDigiSignData(getManagedBean().getPmDigiSign(), getManagedBean().getFulfilmentOrder().getDocType(), 
 						getManagedBean().getFulfilmentOrder().getFulfilmentOrderId(), getManagedBean().getFulfilmentOrder().getDocNo(), 

@@ -3,6 +3,8 @@
  */
 package my.ep.web.constant.sc;
 
+import java.math.RoundingMode;	//Bug #35600@Syazani 19/09/2024
+
 /**
  * QTConstants for constants for sourcing.
  * 
@@ -31,6 +33,9 @@ public interface QTConstants {
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
+	// #9019 -start-
+	public static final String QT_SEARCHING_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml?faces-redirect=true";
+	// #9019 -end-
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";
 	public static final String QT_SUPPLIERQULIFICATION_TAB = "Supplier Qualification Criteria";
@@ -204,21 +209,21 @@ public interface QTConstants {
 	public static final int ACTIVE_TAB_INDEX = 8;
 	
 	
-	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; // TODO
-	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; // TODO
-	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; 
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; 
+	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; 
 	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV = 15;
 	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV = 16;
 	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV = 17;
-	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; 
 	public static final int CRITERIA_TYPE_TOTAL_EMPLOYEE = 21;
-	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; // TODO
-	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; // TODO
+	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; 
+	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; 
 	public static final int CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT = 50;
 	public static final int CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES = 51;
 	public static final int CRITERIA_TYPE_TOTAL_CASH_ON_HAND = 52;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO = 60;
-	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; // TODO
+	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; 
 	public static final int CRITERIA_TYPE_SUPPLIER_DETAILS = 30;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO = 61;
 	public static final String NEW_LINE_CHARACTER = "\r\n";
@@ -263,6 +268,57 @@ public interface QTConstants {
 	// #15391 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
 	// #15391 -end-
-	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";	// Bug #35227@Syazani 20/10/2022
 
+	// 9019 - Start (Harun) WIP transaction Pending QT Submission
+	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
+	// 9019 - End (Harun)
+
+	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
+	
+	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
+
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
+	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
+	public static final String TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-TechnicalEvaluation-Committee-Report";
+	public static final String FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-FinancialEvaluation-Committee-Report";
+
+	public static final String DOC_TYPE_SC_EVALUATION_COMMITTEE_REPORT_ATTACHMENT = "ECR";
+	public static final String DOC_TYPE_SC_OPEN_COMMITTEE_REPORT_ATTACHMENT = "OCR";
+	public static final String DOC_TYPE_SC_TECHNICAL_EVALUATION_REPORT_ATTACHMENT = "TCR";
+	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
+	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
+	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
+	
+	// 36671, 25037 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671, 25037 - end
+	
+	// Bug #35688@Syazani 10/07/2024 -- Start
+	public static final String TAB_SC_GENERAL_INFORMATION = "0";
+	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
+	public static final String TAB_SC_TECHNICAL_CHECKLIST = "2";
+	public static final String TAB_SC_FINANCIAL_CHECKLIST = "3";
+	public static final String TAB_SC_TECHNICAL_SCORING = "4";
+	public static final String TAB_SC_FINANCIAL_SCORING = "5";
+	public static final String TAB_SC_OVERALL_SCORING = "6";
+	public static final String TAB_SC_DELIVERY_ADDRESS = "7";
+//	public static final String TAB_SC_PAYMENT_DEDUCTION = "8";
+	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
+	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
+	// Bug #35688@Syazani 10/07/2024 -- End
+	
+	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+	
+	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
+	
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
 }

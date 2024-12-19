@@ -86,8 +86,10 @@
 					value="#{meetingDtl.meetingStatusStr}" disabled="#{disableMeeting}">
 					<f:selectItems
 						value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}" />
-					<p:ajax partialSubmit="true" process="@this" update="@this"
+					<!-- ***28834 start -->
+					<p:ajax partialSubmit="true" process="@this" update="@form"
 						listener="#{suppFinalizationBackingBean.changeMeetingStatus(meetingDtl)}" />
+					<!-- ***28834 ends-->
 				</p:selectOneMenu>
 			</p:column>
 

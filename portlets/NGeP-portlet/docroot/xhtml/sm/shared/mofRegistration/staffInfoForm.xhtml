@@ -9,7 +9,8 @@
 	<p:panel header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true"
 		id="stfInfoHdrPanel">
 		<table style="width: 350px">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<!-- Disable for UPS 32008 - START -->
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.staffVerified}"
@@ -24,7 +25,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.staffVerified}"
@@ -40,7 +41,7 @@
 			</p:outputPanel>
 		</table>
 		<p:outputPanel id="stfInfPan" layout="block">
-			<p:blockUI block=":form:tt:stfInfPan" widgetVar="buiPoStf"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:stfInfPan" widgetVar="buiPoStf"
 				id="poStfBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.staffVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.staffVerified : false)}" />
 			<ui:repeat value="#{backingBean.managedBean.smAppl.smStaffTotals}" var="staff" >
@@ -65,7 +66,7 @@
 						<td width="55px"><p:inputText size="5" id="bumiStf"
 								value="#{staff.totalBumi}" maxlength="5"
 								style="min-width: 0px !important;"
-								label="#{lbl['lbl.sm.staff.bumi']}" required="true">
+								label="#{lbl['lbl.sm.staff.bumi']}" required="true" disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText> 
@@ -85,7 +86,7 @@
 						<td width="55px"><p:inputText size="5" id="nonBumStf"
 								style="min-width: 0px !important;"
 								label="#{lbl['lbl.sm.staff.nonBumi']}"
-								value="#{staff.totalNonBumi}" maxlength="5" required="true">
+								value="#{staff.totalNonBumi}" maxlength="5" required="true" disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText> 
@@ -105,7 +106,8 @@
 						<td width="55px"><p:inputText id="frgStf" size="5"
 								value="#{staff.totalForeigner}"
 								label="#{lbl['lbl.sm.staff.frgnr']}" maxlength="5"
-								style="min-width: 0px !important;" required="true">
+								style="min-width: 0px !important;" required="true" disabled="#{backingBean.managedBean.upsCannotEdit}">
+								<!-- Disable for UPS 32008 - END -->
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText> 

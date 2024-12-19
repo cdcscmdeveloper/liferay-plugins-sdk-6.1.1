@@ -89,6 +89,11 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private Integer selectedRoleSearchOption;
 	private boolean isPmUserExist = false;
 	private SelectItem[] orgTypeList;
+	//#35489 - Start
+	private boolean isOrgUnitStatusChange = false;
+	private boolean isUserStatusChange = false;
+	//#35489 - End
+	private boolean suppGovSellerUser = false; // #36489
 
 	public ProfileManagementManagedBean(){}
 	
@@ -800,5 +805,39 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setOrgTypeList(SelectItem[] orgTypeList) {
 		this.orgTypeList = orgTypeList;
 	}
+	
+	//#35489 - Start
+	public boolean isOrgUnitStatusChange() {
+		return isOrgUnitStatusChange;
+	}
 
+	public void setOrgUnitStatusChange(boolean isOrgUnitStatusChange) {
+		this.isOrgUnitStatusChange = isOrgUnitStatusChange;
+	}
+	
+	public boolean isUserStatusChange() {
+		return isUserStatusChange;
+	}
+
+	public void setUserStatusChange(boolean isUserStatusChange) {
+		this.isUserStatusChange = isUserStatusChange;
+	}
+	//#35489 - End
+	
+	//#36489 - Start
+	/**
+	 * @return the suppGovSellerUser
+	 */
+	public boolean isSuppGovSellerUser() {
+		return suppGovSellerUser;
+	}
+
+	/**
+	 * @param suppGovSellerUser
+	 *            the suppGovSellerUser to set
+	 */
+	public void setSuppGovSellerUser(boolean suppGovSellerUser) {
+		this.suppGovSellerUser = suppGovSellerUser;
+	}
+	//#36489 - End
 }

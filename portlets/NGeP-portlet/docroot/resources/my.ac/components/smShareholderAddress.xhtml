@@ -195,6 +195,13 @@
 							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
 								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
 						</p:selectOneMenu> 
+						<!-- #35086 -->
+						<ac:smFieldChangeAlert 
+							isShow="#{cc.attrs.bBean.managedBean.showFieldChanges
+								and not empty cc.attrs.bBean.managedBean.latestPersonnel}"
+							oriValue="#{cc.attrs.latestAddrObj.smAddress.pmDivision.divisionId}" 
+							currValue="#{cc.attrs.addrObj.smAddress.pmDivision.divisionId}" 
+							alertValue="#{cc.attrs.bBean.getDivisionLabelById(cc.attrs.latestAddrObj.smAddress.pmDivision.divisionId)}"/>
 						<!-- #34159 - START -->
 						<p:message id="#{cc.attrs.divisionId}Msg" for="#{cc.attrs.divisionId}"
 							showSummary="true" showDetail="false" display="icon" />

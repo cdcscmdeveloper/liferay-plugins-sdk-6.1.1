@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -32,22 +31,20 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
-import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
@@ -64,7 +61,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -990,6 +986,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void setDisableFlUserRowSelection(List<SmPersonnel> personnels) {
 		if (!getManagedBean().isAllAuthSuppUserAlreadyRequested()) {
 			for (SmPersonnel personnel : personnels) {
+				log.info("name: " + personnel.getName());
 				if (!StringUtils.isBlank(personnel.getEpRole())
 						&& personnel.getEpRole().equals(
 								RoleCode.FL_USER.value())) {
@@ -1181,9 +1178,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							int count = SmServiceLookup.getPersonnelSO()
 									.countPersonnelSoftcertBill(reqDTO);
 
-							if (count > 0) {
+							//#34964 - start
+							int countBillDtl = SmServiceLookup.getPersonnelSO()
+									.countPersonnelSoftcertBillDtl(reqDTO);
+
+							if (count > 0 && countBillDtl == 0) {
 								smPersonnel.setDisableRowSelection(true);
 							}
+							//#34964 - end
 						}
 					}
 				}
@@ -1242,12 +1244,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
 							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
 					// #31462 - end
-					reqDTO.setForeigner(softcertUploadSuppDocVO
-							.getPersonnel()
-							.getPmCountry()
-							.getCountryCode()
-							.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ? false
+					
+					// #35314 - START
+					PmParameter paramID = SmCommonUtil.retrieveParameterById(softcertUploadSuppDocVO.getPersonnel().getIdentificationTypeId());
+					reqDTO.setForeigner(paramID
+							.getParameterCode()
+							.equals(SupplierManagementConst.IDENTIFICATION_TYPE_IC) ? false
 							: true);
+					// #35314 END 
 					softcertSuppDocList = SmServiceLookup.getDocumentSO()
 							.retrieveSoftcertSuppDocuments(reqDTO)
 							.getDocumentList();

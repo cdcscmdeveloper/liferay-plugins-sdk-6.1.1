@@ -11,27 +11,27 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<table width="100%">
-			<tr>
-				<td align="right">
-					<p:commandButton value="#{lbl['lbl.btn.back']}"
-						style="float:left;"
-						action="#{committeBackingBean.viewHistoryBackAction}" />
-				</td>
-			</tr>
-		</table>
-
+		<!-- 25037 start -->
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{committeBackingBean.viewHistoryBackAction}" />
+		</div>
+		<!-- 25037 end -->
 		<ui:include src="../quotationcommitteeheader.xhtml" />
-		
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="10%" valign="top" class="sidemenutd">
-				<ui:include src="historyVersion.xhtml" />
-			</td>
-			<td width="90%" valign="top">
-				<ui:include src="historyDetails.xhtml" />
-			</td>
-		</tr>
-		</table>
+				<!-- 25037 start -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:messages id="viewHistoryMsg" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" severity="error, info" />
+		<ac:committeeHistoryPanel
+			historyPaginator="#{committeBackingBean.managedBean.historyPaginator}"
+			selectedHistory="#{committeBackingBean.managedBean.selectedCommitteeHistory}"
+			memberHistoryPaginator="#{committeBackingBean.managedBean.memberHistoryPaginator}"
+			onSelectHistory="onSelectHistory"
+			committeeName="#{committeBackingBean.managedBean.currentCommitteeType}"
+			backingBean="#{committeBackingBean}" isSFCommittee="true"
+			isLegacy="true" />
+		<!-- 25037 end -->
 	</ui:define>
 </ui:composition>

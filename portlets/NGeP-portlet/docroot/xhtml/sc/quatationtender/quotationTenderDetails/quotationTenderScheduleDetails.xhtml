@@ -9,6 +9,10 @@
 	<ui:param name="isRequire" value="#{!qTDetailBB.managedBean.readOnly}" />
 	<ui:param name="scheduleReadonly"
 		value="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_SCHDETAILS)}" />
+	<ui:remove> 25037 - start </ui:remove>
+	<ui:param name="deskOfficerAssistanceEditable"
+		value="#{!qTDetailBB.enableFieldByStatusNFiledName('DESK_OFFICER_ASSISTANT') and qTDetailBB.managedBean.doaRequestEditable}" />
+	<ui:remove> 25037 - end </ui:remove>
 	
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true"
 		id="scheduleDetalsPublishingClosing">
@@ -586,56 +590,62 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" id="quotationTndrMainDeskOfficerAdminAssistantPanel"
 		toggleable="true">
-		<p:dataTable id="doaaid" var="deskofficeradmin"
+		<ui:remove> 25037 - start </ui:remove>
+		<ui:param name="doaRequestContent"
+			value="#{qTDetailBB.managedBean.requestContent}" />
+		<p:dataTable id="doaTableId" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex" rows="10">
-			
-			<ac:paginator for="doaaid" />
+			<ac:paginator for="doaTableId" />
+			<ui:remove> 25037 - end </ui:remove>
 <p:ajax event="rowSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="rowUnselect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="rowSelectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=quotationTndrDeskOfficerAdminAssistantDeleteBtnId])" />
+			<ui:remove> 25037 - start </ui:remove>
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{!scheduleReadonly}" />
+				rendered="#{deskOfficerAssistanceEditable}" />
+			<ui:remove> 25037 - end </ui:remove>
+
 
 			
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<c:choose>
-					<c:when test="#{!scheduleReadonly}">
-						<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
-							id="doaaUserId">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
-								var="appName" itemLabel="#{appName.userName}"
-								itemValue="#{appName.userId}" />
-							<p:ajax event="change" process="doaaUserId" update="doaaUserId"
-								listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
-						</p:selectOneMenu>
-					</c:when>
-					<c:otherwise>
-						#{deskofficeradmin.user.userName}
-					</c:otherwise>
-				</c:choose>
+				<ui:remove> 25037 - start </ui:remove>
+				<ui:fragment rendered="#{deskOfficerAssistanceEditable}">
+					<p:selectOneMenu value="#{deskofficeradmin.userId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
+							var="user" itemLabel="#{user.userName}"
+							itemValue="#{user.userId}" />
+						<p:ajax event="change" update="doaTableId"
+							listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
+					</p:selectOneMenu>
+				</ui:fragment>
+				<ui:fragment rendered="#{!deskOfficerAssistanceEditable}"> #{deskofficeradmin.user.userName} </ui:fragment>
+				<ui:remove> 25037 - end </ui:remove>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
+			<ui:remove> 25037 - start </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				styleClass="BtnSpacing"
-				rendered="#{!scheduleReadonly}"
-				process="@this, doaaid" partialSubmit="true"
+				styleClass="BtnSpacing" rendered="#{deskOfficerAssistanceEditable}"
+				partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
-				update="doaaid" />
+				update="quotationTndrMainDeskOfficerAdminAssistantPanel" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			id="quotationTndrDeskOfficerAdminAssistantDeleteBtnId" disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
-				styleClass="BtnSpacing" process="@this, doaaid" partialSubmit="true"
-				oncomplete="doaaDeletePopUp.show()"
+				id="quotationTndrDeskOfficerAdminAssistantDeleteBtnId"
+				disabled="#{empty qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
+				styleClass="BtnSpacing" process="@this, doaTableId"
+				partialSubmit="true" oncomplete="doaaDeletePopUp.show()"
 				update="@([id$=#{doaaDeleteId}])"
-				rendered="#{!scheduleReadonly}" />
+				rendered="#{deskOfficerAssistanceEditable}" />
+			<ui:remove> 25037 - end </ui:remove>
 		</div>
 		<ui:param name="doaaDeleteId" value="doaaDeleteId" />
 		<ac:confirmationPopup id="#{doaaDeleteId}" widget="doaaDeletePopUp"

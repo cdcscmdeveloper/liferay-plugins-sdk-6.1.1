@@ -1,13 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -61,7 +57,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
-import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -76,13 +71,11 @@ import my.ep.web.vo.CategoryRptVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -92,8 +85,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.context.RequestContext;
 
@@ -118,13 +109,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		reqDTO.setParametersMap(params);
+		
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			log.info("Key : " + entry.getKey() + "=" + entry.getValue() + "&");
+		}
 				
 		try {
 			RPTRequestResDTO resDTO = rptRequestSO.generateReport(reqDTO);
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 			RequestContext.getCurrentInstance().execute("rptConfirmationDlg.show()");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -135,8 +129,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 
 	public void setDefaultDateFromAndDateTo() {
-		if (getManagedBean().getDateFrom() == null
-				|| getManagedBean().getDateTo() == null) {
+		if (getManagedBean().getDateFrom() == null || getManagedBean().getDateTo() == null) {
 			Calendar fromDate = Calendar.getInstance();
 			fromDate.set(fromDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 			getManagedBean().setDateFrom(fromDate.getTime());
@@ -199,7 +192,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	
 	// #27397 - start
 	public void validateMofRegNo(String mofNo) {
-		if (StringUtils.isEmpty(mofNo)) {
+		if (mofNo == null && StringUtils.isEmpty(mofNo)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780029);
 		}
 	}
@@ -208,14 +201,17 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	// #21331 - start
 	public void validateParameterValue(String reportCode) {
 		log.info("************** SmReportBackingBean.validateParameterValue() | reportCode: " + reportCode);
-		// #29712 & #30824, #32564 - start
+		// #29712 & #30824 - start
 		// SM_001
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL))) {
 			if (StringUtils.isEmpty(getManagedBean().getRegType())) {
 				throw new EpException(MessageConst.ERROR_REPORT_780062);
 			} else {
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
-					validateMofRegNo(getManagedBean().getMofNo());
+					if(getManagedBean().getSelectedMofAccount() == null){
+						throw new EpException(MessageConst.ERROR_REPORT_780029);
+					}
+					validateMofRegNo(getManagedBean().getSelectedMofAccount().getMofNo()); //30824
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
 					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedBasicAccount());
 					if (getManagedBean().getSelectedBasicAccount() == null) {
@@ -230,7 +226,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				}
 			}
 		}
-		// #29712 & #30824, #32564 - end
+		// #29712 & #30824 - end
 		
 		// SM_048
 		if (StringUtils.isNotEmpty(reportCode) && (reportCode.trim().equalsIgnoreCase(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))) {
@@ -3397,5 +3393,18 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 	// #28115 - end
 	
-	
+	// #7754_#35984 - Start
+	public String getZoneByUser() {
+		PmZone zone = SmCommonUtil.getInstance().getUserZone();
+
+		if (zone != null) {
+			getManagedBean().setZone(zone.getZoneName());
+		} else {
+			getManagedBean().setZone(null);
+		}
+
+		log.info("User Zone>>>>>" + getManagedBean().getZone());
+		return getManagedBean().getZone();
+	}
+	// #7754_#35984 - End
 }

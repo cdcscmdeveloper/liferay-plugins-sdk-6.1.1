@@ -21,6 +21,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -74,6 +75,11 @@ public class ViewApplHistoryManagedBean extends
 	private SmApplInquiry poToSupplierInquiry;
 	
 	private Boolean displayResubmitButton; //#31248
+	
+	// #34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	// #34392 - end
 
 	public ViewApplHistoryManagedBean() {
 
@@ -450,4 +456,24 @@ public class ViewApplHistoryManagedBean extends
 		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 	//#11641 - End
+	
+	// #34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(
+			List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(
+			List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+	// #34392 - end
 }
