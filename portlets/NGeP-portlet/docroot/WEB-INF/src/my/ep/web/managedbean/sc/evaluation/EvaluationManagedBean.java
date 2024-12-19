@@ -515,14 +515,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> committeeMemberActivity;
 	private List<ScCommitteeMember> removeCommitteeList;
 	private ScQtApprovalRemark scQtApprovalRemark;
-
 	// 25037 - end
 	
 	// 6906 - start
 	private boolean noProposalSubmitted;
 	private boolean supplierRejected;
-
 	// 6906 - end
+
 	/**
 	 * Gets the today.
 	 * 

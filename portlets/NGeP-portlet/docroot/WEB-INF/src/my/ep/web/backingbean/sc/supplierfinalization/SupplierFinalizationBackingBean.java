@@ -702,6 +702,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}
 					// 33380 - end
+					
 					// only update cache data for same item and zone (cater for normal and zonal package to run once).
 					if (!zoneAndItemIds.contains(zoneAndItemId)) {
 						List<ScQtEvaluationResultDtl> recommendedSuppliers = retrieveRecommendedSuppliers(
@@ -1494,6 +1495,7 @@ public class SupplierFinalizationBackingBean extends
 		// 35381 - Related 6906 - start
 		finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));
 		// 35381 - Related 6906 - end
+		
 		List<ScQtFinalizationReport> toBeRemovedReports 
 					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
@@ -1948,6 +1950,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()
 				.getFinalizationMethod()) && this.getManagedBean().getQtRefinalized();
 		// 33380 - end
+		
 		for (QtEvaluationResultDtlBean recommendedSupplier 
 									     : cachedSuppliers) {
 			if (isSingleAward) {
@@ -2247,6 +2250,7 @@ public class SupplierFinalizationBackingBean extends
 						new FacesScopes().getUserLocale()) });
 			}
 			// 6906 - end - note 117
+			
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
@@ -4488,6 +4492,7 @@ public class SupplierFinalizationBackingBean extends
 		List<Long> rejectedRecommendIds = getManagedBean().getRejectedScQtRecommendIds();
 		rejectedRecommendIds = rejectedRecommendIds == null ? new ArrayList<Long>() : rejectedRecommendIds;
 		// 33380 - end
+		
 		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
 			for (ScQtRecommend recommend : scQtRecommends) {
 				if (recommend.getRecommendDtls() != null) {
@@ -6529,6 +6534,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setSelectedItemList(
 					new ArrayList<ScQtRecommend>());
 		}
+		
 		// 33380 - start
 		int recommendCount = 0;
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()
@@ -6543,6 +6549,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setSelectionMode(recommendCount > 0 ? QTConstants.SELECTION_MODE_MULTIPLE : QTConstants.SELECTION_MODE_SINGLE);
 		}
 		// 33380 - end
+		
 		if (scQtRecommend.isSelected()) {
 			getManagedBean().setSelectedItem(scQtRecommend);
 			getManagedBean().getSelectedItemList().add(scQtRecommend);
@@ -9394,8 +9401,10 @@ public class SupplierFinalizationBackingBean extends
 				getManagedBean().setHasSupplierQualified(Boolean.TRUE);
 			else
 				getManagedBean().setHasSupplierQualified(Boolean.FALSE);
+
 			this.getManagedBean().setHasSupplierQualifiedForCurrentSelection(
 					resDTO.isHasSupplierQualifiedForCurrentSelection());// 6906 - note 202
+
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -10421,7 +10430,7 @@ public class SupplierFinalizationBackingBean extends
 		meetingBB.getManagedBean().setFinalBB(this);
 	}
 	// 25037 - end
-
+	
 	// 6906 - start - note 117
 	private void evaluateDecisionList() {
 		ScQt scQt = this.getManagedBean().getScQt();

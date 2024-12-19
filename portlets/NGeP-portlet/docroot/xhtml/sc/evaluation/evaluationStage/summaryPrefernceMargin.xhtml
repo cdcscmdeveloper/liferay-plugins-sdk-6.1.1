@@ -6,11 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-
-
-
-
-	<p:panel toggleable="true">
+<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{qualifiedSupplierListHeader}" />
 			<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
@@ -23,11 +19,7 @@
 			lazy="true" rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
 			<ac:paginator
 				for="evaluationSummaryPreferencemarginQualifiedSuppliers" />
-
-
-
-
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				<p:column headerText="#{lbl['lbl.sc.ranking']}"
 				style="width:10%;text-align:right;">
 
 				<h:outputText value="#{prefQualSupplier.evalRank}"></h:outputText>
@@ -63,7 +55,7 @@
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:15%">
 				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-																	  		fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
+					fn:toUpperCase(prefQualSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
@@ -177,7 +169,6 @@
 				</table>
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 233--></ui:remove>
-			
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:10%;text-align:right;">
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
@@ -186,7 +177,7 @@
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
 				style="width:25%">
 				<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-																	  		fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
+					fn:toUpperCase(disQualifiedSupplier.qtEvaluationResult.scQtProposal.bumi))}" />
 			</p:column>
 
 
@@ -200,14 +191,11 @@
 						value="#{lbl['lbl.sc.evaluation.total.suppliers']}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
+						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText>
+				</td>
 			</tr>
 
 		</table>
 
 	</p:panel>
-
-
-
-
 </ui:composition>

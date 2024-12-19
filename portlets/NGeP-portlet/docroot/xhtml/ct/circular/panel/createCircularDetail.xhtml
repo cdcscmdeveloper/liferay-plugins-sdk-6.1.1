@@ -69,7 +69,7 @@
          	          <p:message for="popupButtonCal1" display="icon" />
          	       </h:panelGrid>	
 					<!-- #33752 end -->
-
+					
 		          <p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 			         <h:panelGroup id="uploadCircularPg">
 		 			<h:panelGrid columns="5">
@@ -85,7 +85,7 @@
 											<td></td>
 											<td>
 											 	<h:commandLink action="#{panelBackingBean.downloadFile(attachAggreement)}" 
-											 		styleClass="blue_font" value="#{attachAggreement.fileName}" />			
+											 		styleClass="blue_font" style="color:#009ae5 !important;" value="#{attachAggreement.fileName}" /> <!-- Fix -#30866 -->			
 										     	<p:commandLink action="#{panelBackingBean.setAttachmentIndex(attachAggreementIndex)}"
 								   	                 onclick="deleteAttachFile.show();" rendered="#{!panelBackingBean.managedBean.viewContract}">
 								   				   <h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>

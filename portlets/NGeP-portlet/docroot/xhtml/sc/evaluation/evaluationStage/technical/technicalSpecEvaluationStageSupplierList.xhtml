@@ -17,7 +17,6 @@
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 			rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}">
 			<ac:paginator for="templateSpecId" />
-
 			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty templateSpec.scQtProposal.supplierRejectionRemark}" />
@@ -37,7 +36,6 @@
 				</table>
 				<ui:remove><!-- 6906 - end --></ui:remove>
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
 				style="width:20%;text-align:right;"
 				rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
