@@ -3399,7 +3399,7 @@ public class QTDetailBackingBean extends
 		debugLogger("updateBpmTask");
 
 		// #29732 Start
-		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals((QTStatusConst.QT_PENDING_QT_SUBMISSION))
+		if (this.getManagedBean().getQt().getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
 						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 				|| this.getManagedBean().getQt().getQtStatus().getStatusId()
