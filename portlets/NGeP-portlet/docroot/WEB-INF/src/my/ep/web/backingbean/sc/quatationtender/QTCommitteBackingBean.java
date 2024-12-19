@@ -1949,7 +1949,7 @@ public class QTCommitteBackingBean extends
 			if (this.getManagedBean().getMainTaskNames().contains(SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE)) {
 				return false;
 			}
-			
+
 			if (super.isQTStatusPublished(currentStatusId)) {
 				Long[] allowedStatusAfterPublish = new Long[] { QTStatusConst.QT_BRIEFING_SITE_VISIT,
 						QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE, QTStatusConst.QT_PROPOSAL_PREPARATION };
@@ -2017,6 +2017,7 @@ public class QTCommitteBackingBean extends
 						return true;
 					}
 				// 25037 - end
+
 					if (QTStatusConst.QT_RE_EVALUATION.equals(currentStatusId)) {
 						ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 						if (scQtFinalization == null) {
@@ -2083,7 +2084,7 @@ public class QTCommitteBackingBean extends
 
 		return true;
 	}
-	
+
 	/**
 	 * Checks if send for approval checkbox is disabled.
 	 * 
@@ -2145,6 +2146,13 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
+
+		// #25426 #36 #85 #95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow() && isDeskOfficer()) && !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// #25426 #36 #85 #95 ruzaimah - end
+
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2719,4 +2727,12 @@ public class QTCommitteBackingBean extends
 		return false;
 	}
 	// 25037 - end
+
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	// #25426#36 ruzaimah - end
+
 }
