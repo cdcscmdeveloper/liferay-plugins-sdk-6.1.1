@@ -23576,25 +23576,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 Start Vinod
 	/**
-	 * This method is to check render print button
-	 * 
-	 * @return boolean
-	 */
-	public boolean renderPtintButtonForSpecCommittee() {
-		int activeIndex = this.getManagedBean().getActiveIndex();
-		if (QTConstants.ACTIVE_INDEX_4 == activeIndex
-				|| QTConstants.ACTIVE_INDEX_5 == activeIndex
-				|| QTConstants.ACTIVE_INDEX_6 == activeIndex) {
-			return true;
-		}
-
-		return false;
-	}
-
-	// #10141 End Vinod
-
-	// #10141 Start Vinod
-	/**
 	 * This method is to update selected items for technical checklist preview
 	 * 
 	 * @param checkList
@@ -23779,57 +23760,47 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 End Vinod
 	// #10141 Start Vinod
-	private StreamedContent currentStreamContent;
-	// #10141 End Vinod
+	public void specScoreReportWindow() throws IOException {
+		log.info("specScoreReportWindow");
+		this.getManagedBean().setSaveForSpecPrepareReport(Boolean.TRUE);
+		//saveSpecificationCommitteeDtls();
 
-	// #10141 Start Vinod
-	/**
-	 * Listener method to download score report
-	 * 
-	 * @param
-	 * @return
-	 * 
-	 * @throws IOException
-	 */
-	public StreamedContent getScoreReport() throws IOException {
-		if (null == currentStreamContent) {
-			// this.getManagedBean().setSaveForSpecPrepareReport(Boolean.TRUE);
-			// saveSpecificationCommitteeDtls();
-			String reportName = updateFileNameAndReportNameForScoreReport();
-			ScQt scQt = getManagedBean().getQt();
-			ScAttachment reportAttachment = new ScQtCheckListAttachment();
-			StringBuilder fileName = new StringBuilder(this.getManagedBean().getReportDownloadFileName());
-			fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
-			reportAttachment.setFileName(fileName.toString());
-			reportAttachment.setDocNo(scQt.getQtNo());
-			// reportAttachment.setPrefixFileName();
-			ScAttachment attachment = reportAttachment;
-			try {
-				populateAttachmentDetails(attachment);
+		String reportName = updateFileNameAndReportNameForScoreReport();
+		ScQt scQt = getManagedBean().getQt();
+		ScAttachment reportAttachment = new ScQtCheckListAttachment();
+		StringBuilder fileName = new StringBuilder(this.getManagedBean().getReportDownloadFileName());
+		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+		reportAttachment.setFileName(fileName.toString());
+		reportAttachment.setDocNo(scQt.getQtNo());
+		// reportAttachment.setPrefixFileName();
+		// ScAttachment attachment = reportAttachment;
+		this.getManagedBean().setScoreAttachment(reportAttachment);
+		ScAttachment scoreAttachment = reportAttachment;
 
-				Map<String, String> paramMap = new HashMap<>();
+		try {
+			populateAttachmentDetails(scoreAttachment);
 
-				paramMap.put(QtReportConst.PARAM_KEY_REPORT, ReportConst.SC_TEC_RPT_JSP);
-				paramMap.put(QtReportConst.PARAM_REPORT_CODE, ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL);
-				paramMap.put(QtReportConst.PARAM_USER_ID, "86577");
-				paramMap.put(QtReportConst.QUOTATION_TENDER_ID, "148735");
+			Map<String, String> paramMap = new HashMap<>();
 
-				// paramMap.put(QTConstants.PARAM_MAP_PKEY,
-				// SourcingConstants.ORACLE_ENCRYPTION_KEY);
-				// paramMap.put(QTConstants.PARAM_MAP_QTID,
-				// getManagedBean().getQt().getQtId().toString());
+			paramMap.put(QtReportConst.PARAM_KEY_REPORT, ReportConst.SC_TEC_RPT_JSP);
+			paramMap.put(QtReportConst.PARAM_REPORT_CODE, ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL);
+			paramMap.put(QtReportConst.PARAM_USER_ID, "86577");
+			paramMap.put(QtReportConst.QUOTATION_TENDER_ID, "148735");
 
-				previewScoreDetails(reportName, paramMap, attachment);
-				currentStreamContent = getAttachmentStreamContent(attachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-				// getStreamForScoreReport(attachment);
-			} catch (IOException e) {
-				String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
-						SLALogConstant.QT_SPECIFICATION_BACKINGBEAN, qtNo, SLALogConstant.QT_DOWNLOAD_SCORE_REPORT,
-						getUserIdSessionFromLoginId(), e);
-			}
+			// paramMap.put(QTConstants.PARAM_MAP_PKEY,
+			// SourcingConstants.ORACLE_ENCRYPTION_KEY);
+			// paramMap.put(QTConstants.PARAM_MAP_QTID,
+			// getManagedBean().getQt().getQtId().toString());
+
+			previewScoreDetails(reportName, paramMap, scoreAttachment);
+
+		} catch (IOException e) {
+			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
+					qtNo, SLALogConstant.QT_DOWNLOAD_SCORE_REPORT, getUserIdSessionFromLoginId(), e);
 		}
-		return currentStreamContent;
+
+		RequestContext.getCurrentInstance().execute("specScoreDlgWidget.show();");
 	}
 
 	// #10141 End Vinod
@@ -23871,12 +23842,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 End Vinod
 	
-	public void closeScoreReport(){
-		if(currentStreamContent != null){
-			currentStreamContent = null;
-		}
-	}
-
 	// #10141 Start Vinod
 	/**
 	 * This method to preview report for scoring and show it in screen for spec
@@ -23894,7 +23859,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			throws IOException {
 		try {
 			super.generatePdfFromOracle(reportName, paramMap, attachment, true);
-			//previewFile(attachment);
 		} catch (IOException e) {
 			ScQt scQt = this.getManagedBean().getQt();
 			String qtNo = scQt == null ? "" : scQt.getQtNo();

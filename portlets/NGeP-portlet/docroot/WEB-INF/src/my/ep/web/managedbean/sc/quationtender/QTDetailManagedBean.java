@@ -58,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -1680,6 +1681,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean selectAllFinPreview;
 	private boolean saveForSendNotification;
 	private boolean saveForSpecPrepareReport;
+	private ScAttachment scoreAttachment;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
@@ -11490,7 +11492,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSaveForSpecPrepareReport(boolean saveForSpecPrepareReport) {
 		this.saveForSpecPrepareReport = saveForSpecPrepareReport;
 	}
-	
+
+	public ScAttachment getScoreAttachment() {
+		return scoreAttachment;
+	}
+
+	public void setScoreAttachment(ScAttachment scoreAttachment) {
+		this.scoreAttachment = scoreAttachment;
+	}
 	// #10141 - end
 		
 		//#9019 - Start (Harun) 08082022 Missing remarks issue

@@ -5,7 +5,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -14,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -49,7 +47,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
@@ -221,7 +218,6 @@ import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -7332,107 +7328,4 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return "";
 	}
 	// 25791-End
-	
-	// #10141 Start Vinod
-	public <ATTACHMENT extends ScAttachment> File previewFile(ATTACHMENT scAttachment) throws IOException {
-		File file = null;
-		if (scAttachment != null && StringUtils.isNotBlank(scAttachment.getFileName())) {
-			try {
-				String fileName = scAttachment.getFileName();
-				if (StringUtils.isNotBlank(scAttachment.getTempFileName())) {
-					String extension = FilenameUtils.getExtension(scAttachment.getFileName());
-					fileName = scAttachment.getTempFileName() + "." + extension;
-				}
-				file = previewFile(getActualFilePath(scAttachment), fileName, scAttachment);
-			} catch (FileNotFoundException exception) {
-				String splitMsg[] = StringUtils.split(exception.getMessage(), SourcingConstants.BACK_SLASH);
-				int size = splitMsg.length;
-				String filePath = Arrays.toString(splitMsg);
-				if (size > 1) {
-					filePath = splitMsg[size - 1];
-				}
-				throw new EpException(MessageConst.ERROR_760411, new String[] { StringUtils.replace(filePath,
-						SourcingConstants.FILE_EXCEPTION_MSG, " ") });
-			}
-		} else {
-			throw new EpException(MessageConst.ERROR_760412);
-		}
-		return file;
-	}
-
-	// #10141 End Vinod
-
-	// #10141 Start Vinod
-	public File previewFile(String filePath, String fileName, ScAttachment scAttachment) throws IOException {
-		long byteSize = 0;
-		if (filePath != null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-				SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SOURCING_BACKINGBEAN,
-						"", SLALogConstant.QT_PREVIEW_FILE, getUserIdSessionFromLoginId(), e);
-			}
-
-			byteSize = previewFileByInputStream(filePath, input, fileName);
-		}
-		File file = new File(filePath);
-		scAttachment.setFileSize(byteSize);
-		return file;
-	}
-
-	// #10141 End Vinod
-
-	// #10141 Start Vinod
-	@SuppressWarnings("resource")
-	protected long previewFileByInputStream(String filePath, InputStream input, String fileName) throws IOException {
-		log.info("Inside previewFile(..)");
-		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
-				.getResponse();
-		HttpServletResponse response = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		OutputStream out = null;
-		CountingOutputStream countingStream = null;
-		long bytesWritten = 0;
-		
-
-		try {
-			response.setHeader("Pragma", "no-cache");
-			response.setDateHeader("Expires", 0);
-
-			
-			// Set Content-Disposition to "inline" to show in browser
-			String finalFileName = fileName.replaceAll("\\s+", QTConstants.REPLACE_CHAR);
-			log.info("finalFileName: " + finalFileName);
-			response.setHeader("Content-Disposition", "inline; filename=\"" + finalFileName + "\";");
-			response.setContentType(getMimeType(finalFileName));
-	        response.flushBuffer();
-	        
-			out = response.getOutputStream();
-			
-			countingStream = new CountingOutputStream(out);
-
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				countingStream.write(buffer, 0, bytesRead);
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
-
-			bytesWritten = countingStream.getByteCount();
-
-			out.flush();
-			
-			FacesContext.getCurrentInstance().responseComplete();
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SOURCING_BACKINGBEAN, "",
-					SLALogConstant.QT_PREVIEW_FILE_BY_INPUT_STREAM, getUserIdSessionFromLoginId(), e);
-		}
-
-		return bytesWritten;
-	}
-	// #10141 End Vinod
 }
