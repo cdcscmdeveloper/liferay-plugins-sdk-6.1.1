@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.comparator.ct.CtItemPriceComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -109,6 +110,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -248,15 +250,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 
 			if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
-				Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726
 				for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 
 					if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
-						Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
+						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
-//						if(circularItem.getCtContractItem() != null) //#36726
-//							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
+						if(circularItem.getCtContractItem() != null) 
+							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
 					}
 				}
 			}
