@@ -205,6 +205,7 @@
 				berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM. <br/>
 				<span class="text_family_small_black">Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018</span>
 			</p>
+   
 			## #26770 #503 - start
 			<p style="margin-bottom:1px">
 				<span class="text_family">*3. <span class="text_indent">Harga</span> Kontrak adalah tidak termasuk cukai perkhidmatan selaras dengan Perintah Cukai Perkhidmatan 2018.</span>
@@ -373,10 +374,10 @@
 					</p>
 					<div style="text-align:justify; margin-bottom:1px !important">
 						## 12					
-						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
+						<span class="text_family">*12.<span class="text_indent">Syarikat </span> Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kredit ICP Mandatori dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP dan</span>
 					</div>		
 					<span class="text_family">penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori. </span>
-					<br/><span class="text_family_small_black">(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+					<br/><span class="text_family_small_black">*(Perenggan 9 hingga perenggan 12  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 						
 			<p>
 				13. <span class="text_indent">Syarikat</span> tuan juga adalah diingatkan bahawa Kerajaan berhak 
@@ -726,7 +727,7 @@
 		<table>
 			<tr>
 				<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-				<td class="text_header_submenu">Spesifikasi Pembekalan/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</td>
+				<td class="text_header_submenu">Spesifikasi Pembekalan/Spesifikasi/Skop Perkhidmatan/Service Level Agreement (SLA) (sekiranya berkaitan)</td>
 			</tr>
 		</table>
 		</td>
@@ -734,7 +735,7 @@
 	<tr>
 		<td align="left" class="submenu_padding" colspan="3">
 			<span class="text_family">
-				Spesifikasi Pembekalan/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
+				Spesifikasi Pembekalan/Spesifikasi/Skop Perkhidmatan/SLA yang	ditetapkan seperti di <b><i>Lampiran A3</i></b>
 			</span>
 		</td>
 	</tr>
@@ -987,6 +988,12 @@
 			terkemudian. <br/><br/>
 		</td>
 	</tr>
+	<tr>
+		<td colspan="3" class="text_family_small_black"><br/><br/><br/><br/><br/><br/>*<i>potong mana
+				yang tidak berkenaan</i></td>
+	</tr>
+	<br/>
+ 
 	##25025 & 26770 add point 12
 	<tr>
 		<td colspan="3" >
@@ -1020,10 +1027,7 @@
 			<td class="text_family">.....................................................................</td>
 	</tr>
 	##25025 & 26770 end point 12
-	<tr>
-		<td colspan="3" class="text_family"><br/><br/><br/><br/><br/><br/>*<i>potong mana
-				yang tidak berkenaan</i></td>
-	</tr>			
+	
 </table>
 	
 <div class="break-after"><br/></div>

@@ -3393,7 +3393,7 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome) {
+	public void updateBpmTask(String outcome) {
 		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
@@ -3699,13 +3699,11 @@ public class QTDetailBackingBean extends
 				//#25037 end
 			
 				debugLogger("end of updateBpmTask");
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
 			detailSO = null;
 			committeSO=null;
 		}
-		return null;
 	}
 	
 	/**
