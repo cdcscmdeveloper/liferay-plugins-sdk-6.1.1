@@ -7,14 +7,12 @@ package my.ep.web.constant.sc;
  */
 public class SLALogConstant {
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
-	
-	
+
 	/*
 	 * MODULE
 	 */
-	public static final String QT_MODULE = "QT"; //#25426
-	
-	
+	public static final String QT_MODULE = "QT"; // #25426
+
 	/*
 	 * CLASS_NAME
 	 */
@@ -23,10 +21,11 @@ public class SLALogConstant {
 	public static final String QT_APPROVAL_BACKINGBEAN = "ApprovalBackingBean";
 	public static final String QT_DETAIL_BACKINGBEAN = "QTDetailBackingBean";
 	// 25037 - end
-	//#25426 - start
+
+	// #25426 - start
 	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
-	//#25426 - end
-	
+	// #25426 - end
+
 	/*
 	 * METHOD_NAME
 	 */

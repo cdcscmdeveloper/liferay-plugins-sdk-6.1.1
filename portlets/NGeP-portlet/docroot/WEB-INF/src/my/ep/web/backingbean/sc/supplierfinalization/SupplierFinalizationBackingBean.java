@@ -702,7 +702,7 @@ public class SupplierFinalizationBackingBean extends
 						}
 					}
 					// 33380 - end
-					
+
 					// only update cache data for same item and zone (cater for normal and zonal package to run once).
 					if (!zoneAndItemIds.contains(zoneAndItemId)) {
 						List<ScQtEvaluationResultDtl> recommendedSuppliers = retrieveRecommendedSuppliers(
@@ -766,6 +766,7 @@ public class SupplierFinalizationBackingBean extends
 				});
 			}
 			// 25037 - end
+
 			scQtCommittee.setQtCommitteRemarks(remarks);
 	
 			// Committee Remarks list
@@ -1337,7 +1338,7 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			
+
 			// 6906 - start - note 117
 			String desicion = scQtFinalization.getDecision() == null ? null : scQtFinalization.getDecision()
 					.getParameterCode();
@@ -1495,7 +1496,7 @@ public class SupplierFinalizationBackingBean extends
 		// 35381 - Related 6906 - start
 		finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));
 		// 35381 - Related 6906 - end
-		
+
 		List<ScQtFinalizationReport> toBeRemovedReports 
 					= new ArrayList<ScQtFinalizationReport>();
 		if (CollectionUtils.isNotEmpty(finalizationReports)) {
@@ -1950,7 +1951,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()
 				.getFinalizationMethod()) && this.getManagedBean().getQtRefinalized();
 		// 33380 - end
-		
+
 		for (QtEvaluationResultDtlBean recommendedSupplier 
 									     : cachedSuppliers) {
 			if (isSingleAward) {
@@ -2250,7 +2251,7 @@ public class SupplierFinalizationBackingBean extends
 						new FacesScopes().getUserLocale()) });
 			}
 			// 6906 - end - note 117
-			
+
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 
 			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
@@ -2620,12 +2621,12 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Save Preparation and Supplier finalization tab(s) data 
 		// before throwing exception
-		
+
 		// #25426 ruzaimah - Start
 		// 202407252@haziq #25426
-		validateInactiveRole(scQtFinalization,decisionTypeCode);
+		validateInactiveRole(scQtFinalization, decisionTypeCode);
 		// #25426 ruzaimah - End
-		
+
 		validateReEvaluation();
 		reqDTO = validateInfo(2);
 		//#27364 Start
@@ -4492,7 +4493,7 @@ public class SupplierFinalizationBackingBean extends
 		List<Long> rejectedRecommendIds = getManagedBean().getRejectedScQtRecommendIds();
 		rejectedRecommendIds = rejectedRecommendIds == null ? new ArrayList<Long>() : rejectedRecommendIds;
 		// 33380 - end
-		
+
 		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
 			for (ScQtRecommend recommend : scQtRecommends) {
 				if (recommend.getRecommendDtls() != null) {
@@ -6534,7 +6535,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setSelectedItemList(
 					new ArrayList<ScQtRecommend>());
 		}
-		
+
 		// 33380 - start
 		int recommendCount = 0;
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()
@@ -6549,7 +6550,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setSelectionMode(recommendCount > 0 ? QTConstants.SELECTION_MODE_MULTIPLE : QTConstants.SELECTION_MODE_SINGLE);
 		}
 		// 33380 - end
-		
+
 		if (scQtRecommend.isSelected()) {
 			getManagedBean().setSelectedItem(scQtRecommend);
 			getManagedBean().getSelectedItemList().add(scQtRecommend);
@@ -8707,7 +8708,9 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 	}
+	//#25426 -end-
 
+	//#25426 -start-
 	/**
 	 * 202407252@haziq #25426 
 	 * To check Inactive Commitee Role
@@ -8723,7 +8726,6 @@ public class SupplierFinalizationBackingBean extends
 				|| (!scQtFinalization.isReEvaluateCompReq() && !scQtFinalization.isReEvaluateTechReq() && !scQtFinalization
 						.isReEvaluateFinReq())) {// #25426#264 if evaluationcommitee not selected
 			isECNotSelected = true;
-
 		}
 
 		if (ParameterConst.DECISION_RE_PUBLISH.equals(decisionTypeCode)) {
@@ -8733,10 +8735,13 @@ public class SupplierFinalizationBackingBean extends
 		} else if (ParameterConst.DECISION_RE_EVALUATION.equals(decisionTypeCode) && isECNotSelected) {// #25426#264 if evaluationcommitee not selected
 			handleReEvaluationDecision(scQtFinalization, stageType, decisionTypeCode);
 		}
-}
-		
+	}
+	// #25426 -end-
+
+	// #25426 -start-
 	/**
-	 * 202407252@haziq #25426 To handle Re Publish Decision
+	 * 202407252@haziq #25426 
+	 * To handle Re Publish Decision
 	 * 
 	 * @param scQtFinalization
 	 * @param decisionTypeCode
@@ -8745,6 +8750,7 @@ public class SupplierFinalizationBackingBean extends
 	private void handleRePublishDecision(ScQtFinalization scQtFinalization, String decisionTypeCode, String stageType) {
 		IParameterSO parameterSO = null;
 		String parameterCode = null;
+
 		try {
 
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -8752,6 +8758,7 @@ public class SupplierFinalizationBackingBean extends
 			Long parameterId = scQtFinalization.getRePublishOption().getParameterId();
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
+
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			parameterCode = resDTO.getPmParameter().getParameterCode();
 
@@ -8768,10 +8775,13 @@ public class SupplierFinalizationBackingBean extends
 				.equalsIgnoreCase(parameterCode)) && isInactiveCommiteeRole) {// #25426#264
 			throw new EpException(MessageConst.ERROR_760486);
 		}
-}
+	}
+	// #25426 -end-
 
+	// #25426 -start-
 	/**
-	 * 202407252@haziq #25426 To handle Re Evaluation Decision
+	 * 202407252@haziq #25426 
+	 * To handle Re Evaluation Decision
 	 * 
 	 * @param scQtFinalization
 	 * @param stageType
@@ -8790,10 +8800,13 @@ public class SupplierFinalizationBackingBean extends
 			throw new EpException(errorMessage);
 		}
 	}
+	// #25426 -end-
 
+	// #25426 -start-
 	/**
-	 * 202407252@haziq #25426
+	 * 202407252@haziq #25426 
 	 * To check is inactive committee role
+	 * 
 	 * @param scQtFinalization
 	 * @param stageType
 	 * @param decisionTypeCode
@@ -8816,7 +8829,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 
 	}
-	// #25426 ruzaimah - End		
+	// #25426 ruzaimah - End
 
 	// #18685 -start-
 	/* (non-Javadoc)
@@ -9776,7 +9789,7 @@ public class SupplierFinalizationBackingBean extends
 
 				// #25426 ruzaimah - Start
 				// 202407252@haziq #25426
-				validateInactiveRole(scQtFinalization,decisionTypeCode);
+				validateInactiveRole(scQtFinalization, decisionTypeCode);
 				// #25426 ruzaimah - End
 
 				break;
@@ -10430,7 +10443,7 @@ public class SupplierFinalizationBackingBean extends
 		meetingBB.getManagedBean().setFinalBB(this);
 	}
 	// 25037 - end
-	
+
 	// 6906 - start - note 117
 	private void evaluateDecisionList() {
 		ScQt scQt = this.getManagedBean().getScQt();
