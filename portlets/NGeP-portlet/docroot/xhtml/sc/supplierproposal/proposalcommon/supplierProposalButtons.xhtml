@@ -22,7 +22,13 @@
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
 					immediate="true"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
-				<ui:remove>
+
+		<ui:remove>#25791 start </ui:remove></td>
+		</tr>
+	</table>
+	<div class="ppRightBtn">
+		<ui:remove>#25791 end </ui:remove>
+		<ui:remove>
 					Bug #27412 #75 : START
 				</ui:remove>	
 				<c:if test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
@@ -43,9 +49,9 @@
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
 					update="@this" process="@this" partialSubmit="true"/>
-					</td>
-		</tr>
-	</table>
+					
+	</div>
+	<ui:remove> #25791 end </ui:remove>
 
 	<p:outputPanel id="spkiOutputPanel">
 		<ac:spkiPopup id="spkiPopup"
