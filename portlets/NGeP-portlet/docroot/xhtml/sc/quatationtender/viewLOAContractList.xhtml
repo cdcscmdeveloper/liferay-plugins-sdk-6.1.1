@@ -11,13 +11,6 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<ui:remove> #25791 start </ui:remove>
-		<style>
-.commandLink_font {
-	color: #009ae5 !important;
-}
-</style>
-		<ui:remove> #25791 end </ui:remove>
 		<table style="width: 100%;" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
@@ -70,13 +63,13 @@
 				</p:column>
 
 				<p:column style="width:10%;white-space: normal;">
-					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_font"
+					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
 						action="#{qTDetailBB.viewSupplierProposalDetailsGen(qtLoaTrack, view.viewId)}"
 						rendered="#{!isQtDirectNego}">
 						<h:outputText value="#{qtLoaTrack.docNo}" escape="false" />
 					</p:commandLink>
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{isQtDirectNego}" styleClass="commandLink_font"
+						rendered="#{isQtDirectNego}" styleClass="commandLink_link"
 						action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}">
 						<h:outputText value="#{qtLoaTrack.docNo}" escape="false" />
 					</p:commandLink>
@@ -84,7 +77,7 @@
 
 				<p:column style="width:10%;white-space: normal;">
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{!isQtDirectNego}" styleClass="commandLink_font"
+						rendered="#{!isQtDirectNego}" styleClass="commandLink_link"
 						action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
 						<h:outputText value="#{scQt.qtNo}" escape="false" />
 					</p:commandLink>
@@ -123,7 +116,7 @@
 
 				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 					style="width:15%;" styleClass="column-align-center">
-					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_font"
+					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
 						action="#{qTDetailBB.viewLoaContractDetailsPage(loaContractTracking,view.viewId)}">
 						<h:outputText value="#{loaContractTracking.contractNo}"
 							escape="false" />
