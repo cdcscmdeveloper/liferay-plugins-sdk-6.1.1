@@ -18989,7 +18989,7 @@ private void retriveCommitteeRemarksList(){
 		List<ScQtEvaluationResultDtl> disqualifiedList = null != this.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList() ? this.getManagedBean()
 				.getDisqualifiedSuppliersDM().getList() : null;
-		if (CollectionUtils.isEmpty(disqualifiedList)) {
+		if (CollectionUtils.isNotEmpty(disqualifiedList)) {
 			for (ScQtEvaluationResultDtl disQualDtl : disqualifiedList) {
 				boolean isDisqualifiedCompliance = null != disQualDtl.isCompliance() && !disQualDtl.isCompliance();
 				if (isDisqualifiedCompliance) {
@@ -19064,7 +19064,7 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 	// #29187 Start Vinod
 	private void checkMandatorySpecForSample(ScQtSampleItem item, TemplateSpecResDTO resDTO) {
-		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+		if (resDTO != null && CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())) {
 			for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
 				boolean isMandatorySpec = question.isMandatorySpec();
 				if (isMandatorySpec) {

@@ -8047,7 +8047,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
 			//28895 - 35500 start
-			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
+			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
 
