@@ -11,7 +11,13 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-
+		<ui:remove> #25791 start </ui:remove>
+		<style>
+.commandLink_font {
+	color: #009ae5 !important;
+}
+</style>
+		<ui:remove> #25791 end </ui:remove>
 		<table style="width: 100%;" class="BtnSpacing">
 			<tr>
 				<td align="right"><p:commandButton
@@ -22,7 +28,7 @@
 			</tr>
 		</table>
 		
-		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}"
+		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}" style="width:100% !important;"
 			toggleable="true" id="laCtpId">
 			
 			<p:dataTable id="laCtdId" var="qtLoaTrack" style="width:100%;"
@@ -64,13 +70,13 @@
 				</p:column>
 
 				<p:column style="width:10%;white-space: normal;">
-					<p:commandLink process="@this" partialSubmit="true"
+					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_font"
 						action="#{qTDetailBB.viewSupplierProposalDetailsGen(qtLoaTrack, view.viewId)}"
 						rendered="#{!isQtDirectNego}">
 						<h:outputText value="#{qtLoaTrack.docNo}" escape="false" />
 					</p:commandLink>
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{isQtDirectNego}"
+						rendered="#{isQtDirectNego}" styleClass="commandLink_font"
 						action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}">
 						<h:outputText value="#{qtLoaTrack.docNo}" escape="false" />
 					</p:commandLink>
@@ -78,7 +84,7 @@
 
 				<p:column style="width:10%;white-space: normal;">
 					<p:commandLink process="@this" partialSubmit="true"
-						rendered="#{!isQtDirectNego}"
+						rendered="#{!isQtDirectNego}" styleClass="commandLink_font"
 						action="#{qTDetailBB.editQuationTenderDetails(scQt, false, true, view.viewId)}">
 						<h:outputText value="#{scQt.qtNo}" escape="false" />
 					</p:commandLink>
@@ -101,8 +107,6 @@
 			</p:dataTable>
 
 			<br />
-			<br />
-			<br />
 
 			<p:dataTable id="laCtdvd" var="loaContractTracking" rows="10"
 				lazy="true"
@@ -119,7 +123,7 @@
 
 				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 					style="width:15%;" styleClass="column-align-center">
-					<p:commandLink process="@this" partialSubmit="true"
+					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_font"
 						action="#{qTDetailBB.viewLoaContractDetailsPage(loaContractTracking,view.viewId)}">
 						<h:outputText value="#{loaContractTracking.contractNo}"
 							escape="false" />

@@ -23151,7 +23151,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	/* #29187 End Vinod */
 	/* #29187 Start Vinod */
 	private void checkMandatorySpecForSample(TplSpecQuestion itemQuestion, TemplateSpecResDTO resDTO) {
-		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+		if (resDTO != null && CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())) {
 			List<TplSpecQuestion> tplSpecQuestions = resDTO.getSpecQuestionList();
 			for (TplSpecQuestion question : tplSpecQuestions) {
 				if (question.isMandatorySpec()) {
