@@ -1798,13 +1798,12 @@ public class BSVAttendanceBackingBean extends
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_SL);
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_SL_COMPANY_NAME);			
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setOrganizationProfileId(scQt.getOrgProfileId());
 			auditResDTO.setDocTypeId(scQt.getProcurementMode().getParameterId());
 
 			if(!(newBriefingRegistrationList == null||newBriefingRegistrationList.isEmpty())){	
 				auditResDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);				
-				auditResDTO.setStatusId(scQt.getQtStatus().getStatusId());
+				auditResDTO.setStatusId(QTStatusConst.BSA_ADDITIONAL_ATTENDANCE_PENDING_APPROVAL);
 				for(ScQtBsvRegistration newBriefingRegistration : newBriefingRegistrationList){
 					auditResDTO.setNewValue(newBriefingRegistration.getSupplier().getCompanyName());
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);

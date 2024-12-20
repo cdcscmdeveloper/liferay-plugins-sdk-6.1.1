@@ -6498,7 +6498,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					lOADetailBackingBean.getManagedBean().setScLoa(scLoa);
 					mapScLoa.put(
 							ContinuityDPConst.getLoaStatus(),
-							lOADetailBackingBean.isSqStillValid() ? lOADetailBackingBean
+							!lOADetailBackingBean.isSqStillValid() && sqExpiredMessageFlag ? lOADetailBackingBean
 									.getStatusDescById(DPStatusConstants.SQ_EXPIRED) : lOADetailBackingBean
 									.getStatusDescById(scLoa.getPmStatus().getStatusId()));
 

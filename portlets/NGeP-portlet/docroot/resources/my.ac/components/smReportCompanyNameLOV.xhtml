@@ -16,8 +16,10 @@
 			<ac:lov id="smCompanyName" readonly="true" style="width:289px;"
 				lovId="PM_ORG_PROFILE_WITH_COMPANY_REPORT" size="40"
 				headerText="#{lbl['lbl.rpt.cmpName']}" 
-				value="#{cc.attrs.bBean.managedBean.selectedSupplierPerformance.companyName}"
-				saveObject="#{cc.attrs.saveObj}" />
+				value="#{cc.attrs.bBean.managedBean.selectedSupplierPerformance.companyName}" 
+				saveObject="#{cc.attrs.saveObj}" 
+				displayResultWhenFirstLoad = "false" 
+				displayResultWhenReset = "false" />
 			<ac:lovPopup />
 	</cc:implementation>
 </ui:component>
