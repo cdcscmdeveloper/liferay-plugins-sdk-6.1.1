@@ -76,39 +76,37 @@
 			rendered="#{noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusCancelled and 
 				noticeBoardBackingBean.managedBean.selectedTab ne ParameterConst.noticeBoardStatusClosed}">
 			<ui:remove>#36709 - End </ui:remove>
-			<ui:fragment
-				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
-				<p:commandLink id="chkQualIcon"
-					action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}"
-					title="#{lbl['lbl.sc.notice.board.check.supplier.qualification.tooltip']}">
-					<p:graphicImage
-						value="#{CommonUIConstant.imagePathUptoDesign}/tick.png"
-						rendered="#{noticeBoardBackingBean.displayImage}" />
-				</p:commandLink>
-				<p:commandButton id="downloadIcon" icon="ui-icon-download"
-					style="background-color:transparent !important; border:0px none;"
-					ajax="false"
-					action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}"
-					title="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
+					<p:commandLink id="chkQualIcon"
+						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}"
+						title="#{lbl['lbl.sc.notice.board.check.supplier.qualification.tooltip']}">
+						<p:graphicImage 
+							value="#{CommonUIConstant.imagePathUptoDesign}/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
+					</p:commandLink>
+					<p:commandButton id="downloadIcon" icon="ui-icon-download"
+						style="background-color:transparent !important; border:0px none;"
+						ajax="false"
+						action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}"
+						title="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
 				<p:commandLink
 					action="#{noticeBoardBackingBean.showPriceSchedules(scqt[0])}">
 					<h:outputText value="#{lbl['lbl.sc.notice.board.price.schedule']}"
 						rendered="#{noticeBoardBackingBean.isCommitteeFormed(scqt[0])}"></h:outputText>
 				</p:commandLink>
 			</ui:fragment>
-			<ui:fragment
-				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
-				<p:commandLink
-					action="#{noticeBoardBackingBean.showAwardDetails(scqt[0])}">
-					<h:outputText
-						value="#{lbl['lbl.sc.notice.board.view.awarded.list']}"></h:outputText>
-				</p:commandLink>
-			</ui:fragment>
-		</p:column>
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
+					<p:commandLink
+						action="#{noticeBoardBackingBean.showAwardDetails(scqt[0])}">
+						<h:outputText value="#{lbl['lbl.sc.notice.board.view.awarded.list']}"></h:outputText>
+					</p:commandLink>
+				</ui:fragment>
+			</p:column>
 
-	</p:dataTable>
+		</p:dataTable>
 
 </ui:composition>
