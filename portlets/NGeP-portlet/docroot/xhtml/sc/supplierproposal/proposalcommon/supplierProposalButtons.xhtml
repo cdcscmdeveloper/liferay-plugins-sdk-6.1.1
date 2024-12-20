@@ -22,30 +22,36 @@
 					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
 					immediate="true"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
-				<ui:remove>
-					Bug #27412 #75 : START
-				</ui:remove>	
-				<c:if test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
-					<p:commandButton value="#{lbl['lbl.sc.print.proposal']}" styleClass="BtnSpacing" ajax="false" action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
-				</c:if>
-				<ui:remove>
-					Bug #27412 #75 : END
-				</ui:remove>				
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					styleClass="BtnSpacing" onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()"
-					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
-					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
-					update="spkiOutputPanel,proposalMenuContent" process="@form"
-					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
-					
-				<p:commandButton value="#{lbl['lbl.btn.update']}"
-					styleClass="BtnSpacing"  onstart="updateProposal.show()"
-					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
-					update="@this" process="@this" partialSubmit="true"/>
-					</td>
+
+		<ui:remove>#25791 start </ui:remove></td>
 		</tr>
 	</table>
+	<div class="ppRightBtn">
+		<ui:remove>#25791 end </ui:remove>
+		<ui:remove>
+					Bug #27412 #75 : START
+				</ui:remove>
+				<c:if test="#{!empty qTDetailBB.isMofSupplier() and qTDetailBB.isMofSupplier()}">
+					<p:commandButton value="#{lbl['lbl.sc.print.proposal']}" styleClass="BtnSpacing" ajax="false" action="#{supplierProposalDetailBackingBean.downloadProposalReport}" />
+		</c:if>
+		<ui:remove>
+					Bug #27412 #75 : END
+				</ui:remove>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			styleClass="BtnSpacing" onstart="blockWidget.show()"
+			oncomplete="blockWidget.hide()"
+			action="#{supplierProposalDetailBackingBean.spkiSignAction}"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
+			update="spkiOutputPanel,proposalMenuContent" process="@form"
+			disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
+
+		<p:commandButton value="#{lbl['lbl.btn.update']}"
+			styleClass="BtnSpacing" onstart="updateProposal.show()"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
+			update="@this" process="@this" partialSubmit="true" />
+	</div>
+	<ui:remove> #25791 end </ui:remove>
+
 
 	<p:outputPanel id="spkiOutputPanel">
 		<ac:spkiPopup id="spkiPopup"
