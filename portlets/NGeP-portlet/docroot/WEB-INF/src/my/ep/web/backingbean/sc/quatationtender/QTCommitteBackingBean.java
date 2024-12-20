@@ -1050,7 +1050,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setTabTitle(titleName);
 		getManagedBean().setAutoUpdate(false);
 		getManagedBean().setNameRequired(true);
-		
+
 		// 25037 - start
 		Long qtStatus = getCurrentQtStatusId();
 		if (null == qtStatus) {
@@ -1801,7 +1801,6 @@ public class QTCommitteBackingBean extends
 			bean.getScQtCommittee().getScCommittee().setApprovalReq(false);
 		}
 
-
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
@@ -1917,6 +1916,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeInfoEditable(Long committeStatus, String commType) {
 		ScQt scQt = getManagedBean().getQt();
+
 		// 25037 - start
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if (scQt.getQtStatus() != null) {
@@ -2142,6 +2142,13 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
+
+		// #25426 #36 #85 #95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow() && isDeskOfficer()) && !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// #25426 #36 #85 #95 ruzaimah - end
+
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2428,7 +2435,6 @@ public class QTCommitteBackingBean extends
 	}
 	// 25037 - end
 
-	
 	/**
 	 * Method to check the CheckBox is enable or disable based on committeeStatus and CommitteeType.
 	 * 
@@ -2614,7 +2620,7 @@ public class QTCommitteBackingBean extends
 	}
 	}
 	}
-	
+
 	// 25037 - start
 	private Long getCurrentQtStatusId() {
 		ScQt scQt = getManagedBean().getQt();
@@ -2716,5 +2722,12 @@ public class QTCommitteBackingBean extends
 		return false;
 	}
 	// 25037 - end
+
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	// #25426#36 ruzaimah - end
 
 }
