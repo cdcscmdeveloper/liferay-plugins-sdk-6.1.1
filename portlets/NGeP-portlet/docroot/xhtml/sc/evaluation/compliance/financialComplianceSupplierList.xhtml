@@ -157,16 +157,14 @@
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
 				<!-- 26339  Removed from disabled attribute  'or evaluationBackingBean.managedBean.FP_Compliance'-->
-<<<<<<< HEAD
 				<!-- 28703 -start- -->
 				<!-- 29685,25638 -start- -->
 				<p:selectOneMenu
 					disabled="#{evaluationBackingBean.isComplianceStatusDisabled(complianceTechnicalSupplier)}"
 					value="#{complianceTechnicalSupplier.compliance}">
-                <!-- 29685,25638 -end- -->
-                <!-- 28703 -end- -->
-                  <!-- 26339 End-->
-=======
+                		<!-- 29685,25638 -end- -->
+                		<!-- 28703 -end- -->
+                  		<!-- 26339 End-->
 				<!-- 28703, 6906 -start- -->
 						<p:selectOneMenu
 							style="max-width: 225px !important; width:100% !important"
@@ -174,7 +172,6 @@
 							value="#{complianceTechnicalSupplier.compliance}">
 							<!-- 28703, 6906 -end- -->
 				<!-- 26339 End-->
->>>>>>> refs/remotes/origin/release-prd
 					<f:selectItems
 						value="#{evaluationBackingBean.statusDropdownCodeValues(ParameterTypeConst.complianceStatus,complianceTechnicalSupplier.scQtProposalChecklistAttachment)}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
