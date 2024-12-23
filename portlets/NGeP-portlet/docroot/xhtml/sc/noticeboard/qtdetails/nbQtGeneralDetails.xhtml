@@ -166,14 +166,15 @@
 			<h:outputText
 				value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.procurementMode)}">
 			</h:outputText>
-			<h:outputLabel value="" />
-			<h:outputLabel value="" />
+			<h:outputLabel value="" />			
 			
 			<!-- #36709 Start -->
-			<h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<h:outputLabel value="" />
+			<h:outputLabel value="#{lbl['lbl.sc.qt.total.indi.price']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText  value="#{noticeBoardBackingBean.managedBean.scQt.estimatedAmount}">			
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>	
+			<h:outputLabel value="" />
 			<h:outputLabel value="" />
 			<!-- #36709 End -->	
 						
@@ -266,8 +267,8 @@
 			</h:outputText>
 			<h:outputLabel value="" />
 			
-			<!-- #36709 Start -->	
-			<h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
+			<!-- #36709 Start -->
+			<h:outputLabel value="#{lbl['lbl.sc.qt.total.indi.price']}" styleClass="outputLabel-view-label" style="white-space: nowrap"/>
 			<h:outputText  value="#{noticeBoardBackingBean.managedBean.scQt.estimatedAmount}">			
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>	
