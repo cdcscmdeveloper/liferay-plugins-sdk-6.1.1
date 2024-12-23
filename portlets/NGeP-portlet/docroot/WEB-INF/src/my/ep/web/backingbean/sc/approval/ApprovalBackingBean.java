@@ -2966,6 +2966,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	
 	private void prepareDeskOfficerAssistantApproval(Long qtId, Long requestId) {
 		assertBriefingSiteVisitIsComplete(qtId);
+		String requestType = this.getManagedBean().getCurrentTaskDocType();
+		getApprovalRequests(qtId, ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APPROVAL, "",
+				Arrays.asList(new String[] { requestType }), "");
 		QTScheduleDetailBackingBean scheduleBB = new QTScheduleDetailBackingBean();
 		scheduleBB.getDeskOfficerAdminAssistant();
 		ScQt scQt = this.getManagedBean().getQt();
