@@ -24,6 +24,7 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.savePresentationDemoDtls}"
 				update="demoSupplierId" />
+			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty demoSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -40,15 +41,16 @@
 								supplierCode="#{demoSupplier.scQtProposal.supplierNo}" /></td>
 					</tr>
 				</table>
-				<h:outputText
-					value="#{evaluationBackingBean.retrieveDemoSupplierNo(demoSupplier.scQtProposal.supplierNo)}"></h:outputText>
 			</p:column>
-			
+			<ui:remove><!-- 6906 - end --></ui:remove>
+
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
 				style="width:25%">
+				<ui:remove><!-- 6906 - start --></ui:remove>
 				<p:inputText value="#{demoSupplier.totalUserScore}"
 					style="text-align:right" maxlength="18"
 					disabled="#{evaluationBackingBean.managedBean.readOnly or isRejected}">
+					<ui:remove><!-- 6906 - end --></ui:remove>
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />

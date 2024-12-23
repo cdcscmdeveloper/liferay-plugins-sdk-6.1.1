@@ -173,8 +173,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//Online Bidding Endorsement
 	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
 	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
-	
+
+	// 6906 note 117 - start
+	private SelectItem[] decisionDropdown;
+	private boolean supplierFinalizationReadOnly = true;
+	private boolean disabledSelection;
+	private boolean noProposalSubmitted;
+	private List<String> disqualifiedStages;
+	private boolean hasSupplierQualifiedForCurrentSelection;// 6906 note 202
+	// 6906 note 117 - end
+
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		{
 			add(SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT);
 			add(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT);
@@ -249,16 +263,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
 	// 25037 - end
-	
-	// 6906 - start - note 117
-	private SelectItem[] decisionDropdown;
-	private boolean supplierFinalizationReadOnly = true;
-	private boolean disabledSelection;
-	private boolean noProposalSubmitted;
-	private List<String> disqualifiedStages;
-	private boolean hasSupplierQualifiedForCurrentSelection;
-
-	// 6906 - end - note 117
 
 	/**
 	 * @return the activeIndex
@@ -2185,7 +2189,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.disableJustifications = disableJustifications;
 	}
 	// 28834 end
-
+	
 	// 25037 - start
 	public List<ScCommitteeMember> getDeletedMemberList() {
 		return deletedMemberList;
@@ -2204,7 +2208,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// 25037 - end
 	
-	// 6906 - start - note 117
+	// 6906 note 117 - start
 	public SelectItem[] getDecisionDropdown() {
 		return decisionDropdown;
 	}
@@ -2244,7 +2248,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setDisqualifiedStages(List<String> disqualifiedStages) {
 		this.disqualifiedStages = disqualifiedStages;
 	}
-	
+	// 6906 note 117 - end
+
+	// 6906 note 202 - start
 	public boolean isHasSupplierQualifiedForCurrentSelection() {
 		return hasSupplierQualifiedForCurrentSelection;
 	}
@@ -2252,5 +2258,5 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setHasSupplierQualifiedForCurrentSelection(boolean hasSupplierQualifiedForCurrentSelection) {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
-	// 6906 - end - note 117
+	// 6906 note 202 - end
 }

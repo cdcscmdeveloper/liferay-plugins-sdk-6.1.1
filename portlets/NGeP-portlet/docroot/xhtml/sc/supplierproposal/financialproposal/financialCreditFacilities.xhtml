@@ -243,7 +243,7 @@
 							value="#{noOfContracts.userScore}" maxlength="18" required="true"
 							disabled="#{pageDisable or rejectedSupplier}"
 							style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
-							<ui:remove>6906 -end-</ui:remove>
+						<ui:remove>6906 -end-</ui:remove>
 							<ac:validateNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 								maxIntegerDigits="14" integerOnly="true" />

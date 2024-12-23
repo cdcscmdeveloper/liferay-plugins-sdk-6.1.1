@@ -24,13 +24,7 @@
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="qualifiedListId" />
 
-
-			<p:column headerText="#{lbl['lbl.sc.ranking']}"
-				style="text-align:right">
-
-				<h:outputText value="#{finEvaluationqualifiedSupplier.evalRank}"></h:outputText>
-			</p:column>
-
+			<ui:remove><!-- 6906 - start note 212 --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -49,6 +43,16 @@
 						</td>
 					</tr>
 				</table>
+			</p:column>
+			<ui:remove><!-- 6906 - end note 212 --></ui:remove>
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+				style="width:30%; text-align:center;">
+
+				<h:outputText
+					value="#{finEvaluationqualifiedSupplier.qtEvaluationResult.scQtProposal.supplierNo}"></h:outputText>
+
+
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
@@ -100,6 +104,7 @@
 			lazy="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="disQualifiedListId" />
 
+			<ui:remove><!-- 6906 - start note 233--></ui:remove>
 			<ui:param name="isRejectedDisqualified"
 				value="#{not empty disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -119,6 +124,7 @@
 					</tr>
 				</table>
 			</p:column>
+			<ui:remove><!-- 6906 - end note 233--></ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="text-align:right">
@@ -141,9 +147,4 @@
 		</table>
 
 	</p:panel>
-
-
-
-
-
 </ui:composition>

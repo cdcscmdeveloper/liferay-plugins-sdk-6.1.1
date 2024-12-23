@@ -22,7 +22,7 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.complianceProposalSubmitSuppliers}"
 				update="complianceTechnicalSupplier" />
-
+			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -41,6 +41,7 @@
 						</td>
 					</tr>
 				</table>
+			<ui:remove><!-- 6906 - end --></ui:remove>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
@@ -62,6 +63,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
+				<ui:remove><!-- 6906 - add disabled isRejected, add style --></ui:remove>
 				<p:selectOneMenu
 					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired
 					 or isRejected}"

@@ -46,7 +46,6 @@
 					</tr>
 				</table>
 			</p:column>
-
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:30%;white-space: normal;text-align:right;">
 				<h:outputText value="#{qualifiedSupplier.totalScore}"></h:outputText>
@@ -85,7 +84,6 @@
 			lazy="true" id="oneTierDisQualifiedSupplier" editable="true"
 			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="oneTierDisQualifiedSupplier" />
-
 			<ui:param name="isRejectedDisqualified"
 				value="#{not empty disQualifiedSupplier.qtEvaluationResult.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -106,13 +104,12 @@
 				</table>
 			</p:column>
 
+
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:50%;white-space: normal;text-align:right;">
 				<h:outputText value="#{disQualifiedSupplier.totalScore}"></h:outputText>
-
+				
 			</p:column>
-
-
 		</p:dataTable>
 
 		<p:spacer height="10px" />

@@ -74,14 +74,14 @@
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.cancelled']}" />
 				</f:facet>
-				<ui:remove>Enhancement #19336 START #142</ui:remove>
+				<ui:remove>Enhancement #19336 START #142, #6906</ui:remove>
 				<h:selectOneMenu value="#{item.cancelled}" 
 						required="true" label="#{lbl['lbl.sc.cancelled']}" 
 						disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or item.disabled or item.awardedItem or 
 									!(isSecretaryUser or 
 										isBPKTaskAndClaimed) or supplierFinalizationReadOnly}" 
 						style="width:95%;">
-				<!-- 19336 -end- -->
+				<!-- 19336,6906 -end- -->
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemCancellationDropDown(item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel])" 
 								listener="#{suppFinalizationBackingBean.itemCancellationEvent(item)}"
@@ -130,12 +130,15 @@
 			
 			<p:column headerText="#{lbl['lbl.sc.req.higher.authority']}" styleClass="td-check-box-spacing" 
 					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
-				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{!isSupplierFinalization or item.cancelled or 
+				<!-- 6906 note 117 -start- -->
+				<p:selectBooleanCheckbox value="#{item.higherAuthReq}"
+					disabled="#{!isSupplierFinalization or item.cancelled or 
 					item.disabled or item.awardedItem or (item.higherAuthReq and 
 					suppFinalizationBackingBean.managedBean.scQtFinalization.higherSecretary.userId eq 
 						suppFinalizationBackingBean.managedBean.loggedInUserId) or supplierFinalizationReadOnly}">
-					<p:ajax partialSubmit="true" process="@this" update="@this"/>
-				</p:selectBooleanCheckbox>				
+					<!-- 6906 note 117 -end- -->
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
 			</p:column>		
 						
 		</p:dataTable>
@@ -144,14 +147,17 @@
 		
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="1"
 			columnClasses="columnWidth20">
-			<ui:remove>Enhancement #19336 START #142</ui:remove>
-			<h:column rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen()}">
+			<ui:remove>Enhancement #19336 START #142, #6906</ui:remove>
+			<h:column
+				rendered="#{!suppFinalizationBackingBean.isQTMaintenanceScreen()}">
 				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
-					process="@this" partialSubmit="true" 
+					process="@this" partialSubmit="true"
 					actionListener="#{suppFinalizationBackingBean.getShortlistedCommomSupplier}"
-					oncomplete="commomSuppPopUp.show();" update="@([id$=commomSuppPopUpId])"  
-					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding or supplierFinalizationReadOnly}" style="float:right;"/>
-			<!-- 19336 -end- -->
+					oncomplete="commomSuppPopUp.show();"
+					update="@([id$=commomSuppPopUpId])"
+					disabled="#{suppFinalizationBackingBean.isQTMaintenanceScreen() or !(isSecretaryUser or isBPKTaskAndClaimed) or isBidding or supplierFinalizationReadOnly}"
+					style="float:right;" />
+				<!-- 19336,6906 -end- -->
 			</h:column>
 
 		</h:panelGrid>

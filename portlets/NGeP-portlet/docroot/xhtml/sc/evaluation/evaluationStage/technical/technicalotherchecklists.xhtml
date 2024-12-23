@@ -102,8 +102,10 @@
 					value="#{evaluationBackingBean.managedBean.contractScores}"></ui:param>
 				<ui:param name="pageDisable"
 					value="#{evaluationBackingBean.managedBean.readOnly}"></ui:param>
+				<ui:remove><!-- 6906 Start--></ui:remove>
 				<ui:param name="rejectedSupplier"
 					value="#{not empty evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierRejectionRemark}"></ui:param>
+				<ui:remove><!-- 6906 End--></ui:remove>
 				<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
 				<p:spacer height="25"></p:spacer>
 				<ui:include

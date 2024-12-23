@@ -40,7 +40,8 @@
 						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						value="#{noOfContracts.userScore}" maxlength="18" required="true"
 						disabled="#{pageDisable or rejectedSupplier}"
-						style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
+						style="text-align:right"
+						rendered="#{ checklistScoreType eq '2'}">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="14" integerOnly="true" />

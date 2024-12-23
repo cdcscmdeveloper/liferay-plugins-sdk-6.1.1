@@ -20,7 +20,7 @@
 			rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}"
 			rows="10">
 			<ac:paginator for="othersTechListId" />
-
+			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected"
 				value="#{not empty othersList.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
@@ -38,6 +38,7 @@
 					</tr>
 				</table>
 			</p:column>
+			<ui:remove><!-- 6906 - end --></ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="width:20%;text-align:right;">
@@ -63,13 +64,13 @@
 					rendered="#{othersList.evaluationStatus.statusId eq '61600'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}"
-					disabled="#{isRejected}"/>
+					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
 
 				<p:commandButton value="#{lbl['lbl.btn.view']}"
 					rendered="#{othersList.evaluationStatus.statusId eq '61601'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.technicalSupplierEvaluate(othersList,'T')}"
-					disabled="#{isRejected}"/>
+					disabled="#{isRejected}"/><ui:remove><!-- 6906 --></ui:remove>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

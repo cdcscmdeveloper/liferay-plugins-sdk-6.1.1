@@ -1755,17 +1755,19 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param selectedRecommendList the selectedRecommendList to set
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
-		// #33267 - Start.
+		// #33267, #6906 - Start.
 		if (CollectionUtils.isNotEmpty(selectedRecommendList)) {
 			Iterator<ScQtRecommend> iterator = selectedRecommendList.iterator();
+
 			while (iterator.hasNext()) {
 				ScQtRecommend scQtRecommend = iterator.next();
+
 				if (null != scQtRecommend && CollectionUtils.isEmpty(scQtRecommend.getAwardSupplierList())) {
 					iterator.remove();
 				}
 			}
 		}
-		// #33267 - End.
+		// #33267, #6906 - End.
 		this.selectedRecommendList = selectedRecommendList;
 	}
 
