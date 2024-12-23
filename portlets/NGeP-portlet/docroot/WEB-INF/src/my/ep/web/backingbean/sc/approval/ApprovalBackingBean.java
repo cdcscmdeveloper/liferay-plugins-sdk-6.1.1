@@ -141,6 +141,11 @@ import org.primefaces.event.FileUploadEvent;
 public class ApprovalBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger.getLogger(ApprovalBackingBean.class);
 
@@ -157,7 +162,6 @@ public class ApprovalBackingBean extends
 
 	}
 
-	// TODO Need to check why this code... vidya
 
 	/**
 	 * Inits the.
