@@ -446,7 +446,7 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 					newDoaList.remove(contactPerson);
 				}
 			}
-			this.getManagedBean().setPmuserDeletedContactpersonList(deletedContactList);
+			this.getManagedBean().setPmUserDeletedContactPersonList(deletedContactList);
 			//#28895 - 35500 end
 		}
 		this.getManagedBean().setSelectedpmuserContactpersonList(null);

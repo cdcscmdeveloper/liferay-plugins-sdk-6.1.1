@@ -417,33 +417,36 @@ public class VmUtil {
 		 * @param maxLength
 		 * @return the updatedKey
 		 */
-		public String wordWrapText(String key, int maxLength) {
-			if (key == null || maxLength <= 0) {
-				return key;
-			}
-			String[] stringArray = key.split("(?<!\r)\n|[ \t]+");
-			StringBuilder updatedKey = new StringBuilder();
-			for (String s : stringArray) {
-				boolean containsPattern = s.matches(".*-.*");
-				if (s.length() > maxLength && !containsPattern) {
-					String chopString = s
-							.replaceAll("(.{" + maxLength + "})(?!$)", "$1" + SSTConstant.WORD_BREAK_TO_REMOVE);
-
-					chopString = chopString.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-							SSTConstant.WORD_BREAK_TO_REMOVE);
-					if (chopString.contains("/AddBreakLineHere//AddBreakLineHere/")) {
-						chopString = chopString.replaceAll("/AddBreakLineHere//AddBreakLineHere/",
-								SSTConstant.WORD_BREAK_TO_REMOVE);
-					}
-					updatedKey.append(chopString);
-				} else {
-					updatedKey.append(s.concat(SSTConstant.ADD_WHITESPACE).replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-							SSTConstant.WORD_BREAK_TO_REMOVE));
-				}
-			}
-			log.info("input : " + key + " maxLength : " + maxLength + " String : " + updatedKey.toString());
-			return updatedKey.toString();
+	public String wordWrapText(String key, int maxLength) {
+		if (key == null || maxLength <= 0) {
+			return key;
 		}
+
+		String[] words = key.split("(?<!\r)\n|[ \t]+");
+		StringBuilder result = new StringBuilder();
+
+		for (String word : words) {
+			if (word.length() > maxLength && !word.contains("-")) {
+				String choppedWord = word.replaceAll("(.{" + maxLength + "})(?=(.{4,}|$))", "$1"
+						+ SSTConstant.WORD_BREAK_TO_REMOVE);
+				choppedWord = choppedWord.endsWith(SSTConstant.WORD_BREAK_TO_REMOVE) ? choppedWord.substring(0,
+						choppedWord.length() - SSTConstant.WORD_BREAK_TO_REMOVE.length()) : choppedWord;
+
+				choppedWord = choppedWord.replace(TemplateSpecConst.NEW_LINE_CHARACTER,
+						SSTConstant.WORD_BREAK_TO_REMOVE);
+				choppedWord = choppedWord.replace("/AddBreakLineHere//AddBreakLineHere/",
+						SSTConstant.WORD_BREAK_TO_REMOVE);
+
+				result.append(choppedWord).append(SSTConstant.ADD_WHITESPACE);
+			} else {
+				result.append(word.replace(TemplateSpecConst.NEW_LINE_CHARACTER, SSTConstant.WORD_BREAK_TO_REMOVE))
+						.append(SSTConstant.ADD_WHITESPACE);
+			}
+		}
+
+		log.info("input : " + key + " maxLength : " + maxLength + " String : " + result.toString());
+		return result.toString();
+	}
 
 		/**
 		 * This method will replace special character
@@ -453,21 +456,22 @@ public class VmUtil {
 		 * @param fileType
 		 * @return
 		 */
-		public String escapeAndWrapText(String text, int length, String fileType) {
-			String textAfterWrap = wordWrapText(text, length);
-			if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_DOC)){
-				textAfterWrap = StringEscapeUtils.escapeHtml(textAfterWrap);
-			}else if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_PDF)){
-				if (textAfterWrap.contains(TemplateSpecConst.LESS_THEN_SYMBOL)) {
-					textAfterWrap = textAfterWrap.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-				}
-				if (textAfterWrap.contains(TemplateSpecConst.GREATER_THEN_SYMBOL)) {
-					textAfterWrap = textAfterWrap.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
-							TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-				}
-			}
-			textAfterWrap = textAfterWrap.replaceAll(SSTConstant.WORD_BREAK_TO_REMOVE,
-					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-			return textAfterWrap;
+	public String escapeAndWrapText(String text, int length, String fileType) {
+		String textAfterWrap = wordWrapText(text, length);
+
+		// Process text based on file type
+		if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_DOC)) {
+			textAfterWrap = StringEscapeUtils.escapeHtml(textAfterWrap);
+		} else if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_PDF)) {
+			textAfterWrap = textAfterWrap.replace(TemplateSpecConst.LESS_THEN_SYMBOL,
+					TemplateSpecConst.LESS_THEN_HTML_ENTITY).replace(TemplateSpecConst.GREATER_THEN_SYMBOL,
+					TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
 		}
+
+		// Replace word break characters with HTML new line
+		textAfterWrap = textAfterWrap.replace(SSTConstant.WORD_BREAK_TO_REMOVE,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+
+		return textAfterWrap;
+	}
 }
