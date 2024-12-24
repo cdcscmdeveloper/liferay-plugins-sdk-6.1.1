@@ -5738,7 +5738,8 @@ public class TemplateSpecBackingBean extends
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus().getStatusId() ? this.getManagedBean()
 				.getScQt().getQtStatus().getStatusId() : Long.MIN_VALUE;
-		if (statusId == QTStatusConst.QT_PROPOSAL_PREPARATION) {
+		if (statusId
+				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
 			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answerList) {
 				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
