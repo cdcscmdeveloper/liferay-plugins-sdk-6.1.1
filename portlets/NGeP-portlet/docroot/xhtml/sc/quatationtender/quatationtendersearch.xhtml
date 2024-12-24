@@ -138,7 +138,7 @@
 								<p:menuitem id="menuItem1" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[0] and QTStatusConst.QT_AWARDED ne scQt.qtStatus.statusId}"
-									icon="ui-icon-view"
+									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>
@@ -149,12 +149,12 @@
 								<p:menuitem id="mItmAwd" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[0] and QTStatusConst.QT_AWARDED eq scQt.qtStatus.statusId}"
-									icon="ui-icon-view"
+									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQtLoaContractDtls(scQt,view.viewId)}"
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>
 								<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{!qTDetailBB.isAuditor() and scQt.actionRender[1] and !qTDetailBB.isUpdatable(scQt.qtStatus.statusId,scQt.qtNo)}"
 								icon="ui-icon-edit" action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}" 
 								partialSubmit="true" process="@this"/>
@@ -165,38 +165,38 @@
 								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED ne scQt.qtStatus.statusId}"
-									icon="ui-icon-view"
+									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
 								<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
-									icon="ui-icon-view"
+									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQtLoaContractDtls(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>
 								<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();"  styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[3]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem5" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();"  styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[4]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem6" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[5]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem7" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[6]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
 							<p:menuitem id="menuItem8" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[7]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
 								partialSubmit="true" process="@this"/>
@@ -214,18 +214,19 @@
 								Bug #27412 START
 							</ui:remove>
 							<p:menuitem id="menuItem12" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								rendered="#{scQt.actionRender[12]}"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}" 
 								partialSubmit="true" process="@this"/>
 							<ui:remove>
 								Bug #27412 END
 							</ui:remove>
-						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
+						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}" styleClass="commandLink_link"
 								rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isDeskOfficer() and (qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_ARCHIVED) or qTDetailBB.isQTCloneStatus(scQt.qtStatus.statusId))}" 
 								icon="ui-icon-edit" update=":form:displayk" title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
 								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
 								partialSubmit="true" process="@this"/>
+								<ui:remove>#25791 end </ui:remove>
 						</p:menuButton>
 					</p:column>
 					<!-- ***17376#55 - end -->
@@ -320,8 +321,9 @@
 					<!-- Enhancement #21694 - LOA Cancellation START-->
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
+						  <ui:remove>#25791 start </ui:remove>
 							<p:menuitem value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
+								oncomplete="blockWidget.hide();" styleClass="commandLink_link"
 								icon="ui-icon-view" action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
 								rendered="#{listType eq 'loiList'}"
 								partialSubmit="true" process="@this"/>
@@ -329,14 +331,14 @@
 								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									icon="ui-icon-view"
+									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
 									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED ne qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)}"
 									partialSubmit="true" process="@this" />
 
 								<p:menuitem value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									icon="ui-icon-view"
+									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewLoaContractTrackingDtls(listItem, view.viewId)}"
 									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED eq qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)}"
 									partialSubmit="true" process="@this" />
