@@ -22,6 +22,9 @@
 	<ui:param name="isQTClosePermanently" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_CLOSE_PERMANENTLY}" />
 	<ui:param name="iscloseQTIfValidityPeriodExpiredAndStatusRelated" value="#{qTDetailBB.closeQTIfValidityPeriodExpiredAndStatusRelated()}" />
 	<!-- 26095@hatta - end -->
+	<ui:remove> #25426,#30477 Start </ui:remove>
+	<ui:param name="isCommitteeApprovalReviseTask" value="#{qTDetailBB.isCommitteeApprovalReviseTask(qTDetailBB.managedBean.taskName)}" />
+	<ui:remove> #25426,#30477 End </ui:remove>
 				
 		<table width="100%">
 		<tr>
@@ -137,6 +140,15 @@
 							<!-- 25077 -start- -->
 							<ui:param name="bpAction" value="SUBMIT" />
 							<!-- 25077 -end- -->
+							<ui:remove> #25426,#30477 Start </ui:remove>	
+							<p:commandButton value="#{lbl[buttonLabel]}"
+								styleClass="ui-button" onclick="blockWidget.show();"
+								oncomplete="blockWidget.hide();"
+								rendered="#{isCommitteeApprovalReviseTask}"
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+							</p:commandButton>
+							<ui:remove> #25426,#30477 End </ui:remove>
+							
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
@@ -169,15 +181,16 @@
 					</c:when>
 						<c:otherwise>
 							<!-- 25037 Start -->
+							<ui:remove> #25426,#30477 - update disabled part </ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
 								process="@form" update="@all" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
-								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and 
-								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
-							<!-- 25037 End -->								
+								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_EVALUATION_PROPOSAL) and
+							(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
+							<ui:remove> #25426,#30477 -end- </ui:remove><!-- 25037 End -->
 						</c:otherwise>
 					</c:choose>
 
