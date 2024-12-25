@@ -156,7 +156,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -215,7 +214,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -229,6 +227,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
@@ -250,7 +249,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
-import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.UserTasks;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
@@ -2884,6 +2882,7 @@ public class QTDetailBackingBean extends
 				committeTabs.add(new TabBean(fcTitleName, tabType, null));
 			}
 		} 
+
 		// Bug 32277 - start
 		if (committeeReadOnly) {
 			this.getManagedBean().setReadOnlyCommitteeTabBean(committeTabs);
@@ -3364,6 +3363,10 @@ public class QTDetailBackingBean extends
 				checkValidationForStatusAndFileAttachment(qt.getScQtApprovals(), ParameterConst.APPROVAL_CATEGORY_OTHERS);
 			}
 			// #25077 End
+
+			// #30477, #25426 Start
+			validateUserInactive(taskName, currentStatus, outcome);
+			// #30477, #25426 End
 
 			// #30477, #25426 Start
 			validateUserInactive(taskName, currentStatus, outcome);
@@ -6553,7 +6556,7 @@ public class QTDetailBackingBean extends
 				}
 
 				//#25692-start
-				 if (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) {
+				if (getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() && isApprovalScreen()) {
 					// Bug 32277 - start
 					if (CollectionUtils.isEmpty(this.getManagedBean().getScCommitteeMemberTabList())) {
 						ApprovalBackingBean approvalbean = new ApprovalBackingBean();
@@ -6571,7 +6574,8 @@ public class QTDetailBackingBean extends
 							this.getManagedBean().setMemberHistoryList(historyList);
 						}
 					}
-					// Bug 32277 - end	
+					// Bug 32277 - end
+
 				 } else if(getUserTaskIsBPKApproval() && isApprovalScreen()) {
 					 this.getManagedBean().setPublicationApproval(null);	
 				 } else if(getUserTaskIsPublicationApproval() && isApprovalScreen()) {
@@ -9668,6 +9672,7 @@ public class QTDetailBackingBean extends
 				boolean approvaleditable = this.getManagedBean().isApprovalEditableSection();
 				boolean approvalScreen = this.getManagedBean().isApprovalScreen();
 				boolean isCommitteeUpdateFlow = this.getManagedBean().isCommitteeUpdateFlow();// 25037
+
 				List<ScQtApprovalRequest> approvalRequest = this.getManagedBean().getScQtApprovalRequestList();
 				boolean committeeApprovalSpec = getUserTaskIsCommitteeAppointmentApproval();
 				getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec();// 25037

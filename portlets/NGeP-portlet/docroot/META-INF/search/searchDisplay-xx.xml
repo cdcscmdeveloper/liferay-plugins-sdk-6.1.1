@@ -82,9 +82,7 @@
 				</bean>
 			</list>
 		</property>
-	</bean>
-	
-	
+	</bean>	
 
 	<bean id="PM_CITY" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="cityId" />
@@ -95,15 +93,13 @@
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="cityCode" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.city.code" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="cityName" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.city.name" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
