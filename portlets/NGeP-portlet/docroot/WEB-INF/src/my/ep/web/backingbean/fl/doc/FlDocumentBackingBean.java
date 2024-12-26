@@ -888,6 +888,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		defaultPtjAndMinistryValues();
 	}
 	
+	//36386-Start
+	/**
+	 * Reset Search Results.
+	 */
+	public void resetSearchResult(){
+		getManagedBean().getFlDocumentDataModel().resetData();
+	}
+	//36386-End
+	
 	/**
 	 * Gets the procurement type list based on procurement type and language code.
 	 *
