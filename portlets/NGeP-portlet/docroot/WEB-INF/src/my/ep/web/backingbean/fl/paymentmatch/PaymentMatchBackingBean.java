@@ -1615,7 +1615,7 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
-			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){//36754
 				validateOrderFulfiledAndDOFRNPendingCancellation();//36754
 				calPmSummary();
 			}
