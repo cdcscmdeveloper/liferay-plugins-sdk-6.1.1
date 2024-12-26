@@ -2363,7 +2363,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
