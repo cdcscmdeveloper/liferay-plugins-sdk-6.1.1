@@ -109,7 +109,6 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import my.ep.constant.sc.QTStatusConst; //#32682
 
 /**
  * Backing Bean for Task Reasssingment (new)
@@ -2777,13 +2776,6 @@ public class TaskReassignmentBackingBean extends
 				// not allow to search
 				isSearched = true;
 			}
-			
-			//Redmine Bug #32682 - START
-			if(QTStatusConst.SF_PENDING_LOI_PREPARATION.equals(task.getDocStatus().longValue()) || 
-					QTStatusConst.QT_PENDING_LOA.equals(task.getDocStatus().longValue())) {
-				getManagedBean().setCommitteeUpdate(true);
-			}
-			//Redmine Bug #32682 - END
 
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_USER_MIN_KPTJ_PTJ:
