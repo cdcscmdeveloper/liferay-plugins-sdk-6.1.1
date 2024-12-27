@@ -26,8 +26,9 @@
 						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
 						<b>#{lbl['lbl.sm.basic.mof.tnc.header']}</b>
 						<br />
-						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mof.tnc']}" /></p>
-					</c:when>
+						<!--#36594-Start-->
+						<p><h:outputText escape="false" value="#{registrationBackingBean.setMofRegTnc()}" /></p>
+						<!--#36594-End-->					</c:when>
 
 					<c:otherwise>
 						<b>#{lbl['lbl.sm.basic.basic.tnc.header']}</b>
