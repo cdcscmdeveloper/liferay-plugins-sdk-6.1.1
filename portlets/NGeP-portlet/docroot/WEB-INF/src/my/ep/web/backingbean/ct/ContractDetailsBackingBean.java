@@ -32,6 +32,8 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.comparator.ct.CtContractZoneComparator; //#36726 || #33287
+import my.ep.comparator.ct.CtItemPriceComparator; //#36726 || #33287
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -80,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils; //#36726 || #33287
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
@@ -385,6 +388,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * 
 	 * @param resDTO  the response data transfer object for contract
 	 */
+	@SuppressWarnings("unchecked") //#36726 || #33287
 	public void setValidateContractField(ContractReqDTO reqDTO) {
 		IContractSO contractSO = null;
 		ContractResDTO resDTO = null;
@@ -494,11 +498,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 					if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 						cisbb.getManagedBean().setItemServiceExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						CustomUtils.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726 || #33287
 						ctBB.getManagedBean().getCtItemServiceList().add(item);			           
 					} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 						cisbb.getManagedBean().setItemProductExist(true);
-						Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+						CustomUtils.sort(item.getCtItemPrices(), new CtItemPriceComparator()); //#36726 || #33287
 						if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
 							for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
 								ctBB.checkAgencyStatus(ceilingQty.getCtAgency());		        	   
@@ -527,7 +531,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (ctBB.getManagedBean().getContractVer().getCtSchedules() != null 
 					&& !ctBB.getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
 				ctBB.getManagedBean().setChkSchedule(true);
-				Collections.sort(ctBB.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
+				CustomUtils.sort(ctBB.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule()); //#36726 || #33287
 				for (CtSchedule ctSchedule : ctBB.getManagedBean().getContractVer().getCtSchedules()) {
 					if (ctSchedule.isUseInFulfilment()) {
 						ctBB.getManagedBean().setDisableScheduleRadio(true);
@@ -539,7 +543,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 			if (ctBB.getManagedBean().getContractVer().getCtProgressivePayments() != null 
 					&& !ctBB.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-				Collections.sort(ctBB.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
+				CustomUtils.sort(ctBB.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment()); //#36726 || #33287
 				for (CtProgressivePayment ctProgressivePayment : ctBB.getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (ctProgressivePayment.isUseInFulfilment()) {
 						ctBB.getManagedBean().setDisableScheduleRadio(true);
@@ -631,7 +635,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			// Retrieve Zones
 			if (ctBB.getManagedBean().getContractVer().getCtContractZones() != null 
 					&& ctBB.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
-				Collections.sort(ctBB.getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+				CustomUtils.sort(ctBB.getManagedBean().getContractVer().getCtContractZones(), new CtContractZoneComparator()); //#36726 || #33287
 				ctBB.retriveZonesByContractVer();
 			}
 
@@ -3303,8 +3307,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	private void sortDeductions() {
 		// sort created date asc
-		Collections.sort(ctBB.getManagedBean().getContractVer().getCtDeductions(),
-				new Comparator<CtDeduction>() {
+		CustomUtils.sort(ctBB.getManagedBean().getContractVer().getCtDeductions(), new Comparator<CtDeduction>() { //#36726 || #33287
 					public int compare(CtDeduction o1, CtDeduction o2) {
 						if (o2.getCreatedDate() == null
 								|| o1.getCreatedDate() == null)
