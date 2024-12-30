@@ -9981,11 +9981,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			
 			// start - #34898/#29006 - start - note 850,852,856
 			if (scLoiLoaItem.getLoaSpecJustification() != null) {
-				String loaSpecJustification = scLoiLoaItem.getLoaSpecJustification();
-				loaSpecJustification = loaSpecJustification.replaceAll("<", "&#60;");
-				loaSpecJustification = loaSpecJustification.replaceAll(">", "&#62;");
-				loaSpecJustification = loaSpecJustification.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36122 @zaim
-				scLoiLoaItem.setLoaSpecJustification(VmUtil.getInstance().addLineBreaks(loaSpecJustification, 90)); //36122 @zaim
+				scLoiLoaItem.setLoaSpecJustification(VmUtil.getInstance().escapeAndWrapText(scLoiLoaItem.getLoaSpecJustification(), 90, SSTConstant.FILE_TYPE_PDF)); ////35295 #124 @zaim
 			}
 
 			for (TplSpecAnswer tplSpecAnswer : scLoiLoaItem.getTplSpecAnswerList()) {
@@ -10029,11 +10025,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			//36122 - start @zaim
 			if (scLoiLoaItem.getScRequestItem() != null && scLoiLoaItem.getScRequestItem().getItemName() != null){
-				String itemName = scLoiLoaItem.getScRequestItem().getItemName();
-				itemName = itemName.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-				itemName = itemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-				itemName = itemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-				itemName = VmUtil.getInstance().addLineBreaks(itemName, 90);
+				String itemName = VmUtil.getInstance().escapeAndWrapText(scLoiLoaItem.getScRequestItem().getItemName(), 90,SSTConstant.FILE_TYPE_PDF); //35295 - #124 @zaim
 				scLoiLoaItem.getScRequestItem().setItemName(itemName);
 			}
 			//36122 - end
@@ -10352,13 +10344,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			for (TplSpecQuestion tpqSpec : tpqSpecList) {
 				if (StringUtils.isNotBlank(tpqSpec.getClSpecDetail())) {
 					//36122 - start @zaim
-					String specDtl = tpqSpec.getClSpecDetail().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
-							TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-					specDtl = specDtl.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
-							TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-					specDtl = specDtl.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-							TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-					itemClone.getItemSpecificationList().add(VmUtil.getInstance().addLineBreaks(specDtl, 70)); 
+					itemClone.getItemSpecificationList().add(VmUtil.getInstance().escapeAndWrapText(tpqSpec.getClSpecDetail(), 70,SSTConstant.FILE_TYPE_PDF)); //35295 - #124 @zaim
 					//36122 - @zaim
 				}
 			}
@@ -12050,10 +12036,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							if (CollectionUtils.isEmpty(listItem)) {
 								map.put(SSTConstant.questionType, question.getQuestionType());
 								//36122 - start @zaim
-								String itemName = question.getClItem().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-								itemName = itemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-								itemName = itemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-								map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(itemName, 22)); 
+								map.put(SSTConstant.clItem, VmUtil.getInstance().escapeAndWrapText(question.getClItem(), 12,SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 								//36122 - end @zaim
 								map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE,getParameterDesc(question.getClFulfilmentTypeCode(),SourcingConstants.MY_LOCALE));
 								map.put(SSTConstant.uomName, question.getClUom().getUomName());
@@ -12065,10 +12048,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								map.put(SSTConstant.CL_DURATION_MONTH, question.getClDurationMonth().toString());
 								if (zone != null) {
 									//36122 start
-									String zoneName = zone.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-									zoneName = zoneName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-									zoneName = zoneName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-									map.put(SSTConstant.zoneName, VmUtil.getInstance().addLineBreaks(zoneName, 11));
+									map.put(SSTConstant.zoneName, VmUtil.getInstance().escapeAndWrapText(zone, 11,SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 									//36122 - end
 								}
 								map.put(SSTConstant.ZONE_SIZE, String.valueOf(scLoiLoaItem.getZoneNameList().size()));
@@ -12086,11 +12066,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 														.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 													// supplier respond and make new
 													// supplier offer
-													answerRemark = answer.getNewSupplierOffer();
-													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim
+													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
 														map.put(SSTConstant.LAST_INDEX_WIP, "true");
@@ -12101,11 +12077,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 																.isEmpty())) {
 													// supplier respond but no
 													// changes
-													answerRemark = answer.getAnswerRemark();
-													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim
+													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 													map.put(SSTConstant.IS_WIP, "true");
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
 														map.put(SSTConstant.LAST_INDEX_WIP, "true");
@@ -12118,10 +12090,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 														.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 													// supplier respond and make new
 													// supplier offer
-													answerRemark = answer.getNewSupplierOffer().replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim
+													answerRemark = answer.getNewSupplierOffer();
+													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF));//35295 #124 @zaim
 												} else if ((answer.getNewSupplierOffer() == null || answer
 														.getNewSupplierOffer().isEmpty())
 														&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark()
@@ -12129,10 +12099,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 													// supplier respond but no
 													// changes
 													answerRemark = answer.getAnswerRemark();
-													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim
+													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 												}
 											}
 										}
@@ -12160,10 +12127,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 								map.put(SSTConstant.CL_DURATION_MONTH, SSTConstant.whiteSpace);
 								if (zone != null) {
 									//36122 - start
-									String zoneName = zone.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-									zoneName = zoneName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-									zoneName = zoneName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-									map.put(SSTConstant.zoneName, VmUtil.getInstance().addLineBreaks(zoneName, 11));
+									map.put(SSTConstant.zoneName, VmUtil.getInstance().escapeAndWrapText(zone, 11, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 									//36122 - end
 								}
 								map.put(SSTConstant.quantity, SSTConstant.whiteSpace);
@@ -12182,11 +12146,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												if (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty()) {
 													// supplier respond but no
 													// changes
-													answerRemark = answer.getAnswerRemark();
-													answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-													answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-													map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim);
+													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 												} else {
 													// no changes and no supplier
 													// respond
@@ -12210,10 +12170,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						Map<String, String> map = new HashMap<>();
 						map.put(SSTConstant.questionType, question.getQuestionType());
 						//36122 - start @zaim
-						String itemName = question.getClItem().replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-						itemName = itemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL, TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
-						itemName = itemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-						map.put(SSTConstant.clItem, VmUtil.getInstance().addLineBreaks(itemName, 16)); 
+						map.put(SSTConstant.clItem, VmUtil.getInstance().escapeAndWrapText(question.getClItem(), 12, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim 
 						//36122 - end @zaim
 						map.put(SSTConstant.CL_FULFILMENT_TYPE_CODE, getParameterDesc(question.getClFulfilmentTypeCode(),SourcingConstants.MY_LOCALE));
 						map.put(SSTConstant.uomName, question.getClUom().getUomName());
@@ -12235,21 +12192,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							if ((answer.getNewSupplierOffer() != null && StringUtils.isNotEmpty(answer
 									.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 								// supplier respond and make new supplier offer
-								answerRemark = answer.getNewSupplierOffer();
-								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER,
-										TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-								map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim
+								map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13,SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 								break;
 							} else if ((answer.getNewSupplierOffer() == null || answer.getNewSupplierOffer().isEmpty())
 									&& (answer.getAnswerRemark() != null && !answer.getAnswerRemark().isEmpty())) {
 								// supplier respond but no changes
-								answerRemark = answer.getAnswerRemark();
-								answerRemark = answerRemark.replaceAll(QTConstants.LESS_THEN, SSTConstant.LESS_THAN_SYMBOL);
-								answerRemark = answerRemark.replaceAll(QTConstants.GREATER_THEN, SSTConstant.GREATER_THAN_SYMBOL);
-								answerRemark = answerRemark.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-								map.put(SSTConstant.answerRemark, VmUtil.getInstance().addLineBreaks(answerRemark, 16)); //36122 @zaim
+								map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 							} else {
 								// no changes and no supplier respond
 								map.put(SSTConstant.answerRemark, SSTConstant.TB);
