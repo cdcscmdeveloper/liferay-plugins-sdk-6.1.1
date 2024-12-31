@@ -23873,20 +23873,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	
-	//#36678 related to #35061 start
-	public boolean checkIndPriceBecomeBelow() {
-		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
-
-		if (!this.getManagedBean().getQt().isPanel()
-				&& indPriceThreshold != null && intendedPrice != null && intendedPrice.compareTo(indPriceThreshold) <= 0
-				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt()
-						.getJustificationProcValue().isEmpty())) {
-			return true;
-		}
-		return false;
-	}
-
 	public String redirectSpecComMainYes() {
 		this.getManagedBean().setFieldProcurementJustification(true);
 		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
