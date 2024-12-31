@@ -1497,9 +1497,74 @@ public class ForceReplaceSuppAdminBackingBean extends
 		return SmServiceLookup.getMofRegistrationSO()
 				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
 	}
+
+	// #36716 - Start
+	/**
+	 * Rechecks the validity of the specified source address.
+	 * 
+	 * @param srcAddr
+	 * @throws NullPointerException
+	 */
+	public void recheckVal(SmAddress srcAddr) {
+		if (isInvalidAddress(srcAddr)) {
+			handleInvalidAddress();
+		}
+	}
+
+	private boolean isInvalidAddress(SmAddress srcAddr) {
+		if (srcAddr == null) {
+			return true;
+		}
+		return isBlank(srcAddr.getAddress1()) || hasInvalidLocation(srcAddr)
+				|| isBlank(srcAddr.getPostcode());
+	}
+
+	private boolean hasInvalidLocation(SmAddress srcAddr) {
+		return isInvalidState(srcAddr) || isInvalidDivision(srcAddr)
+				|| isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr);
+	}
+
+	private boolean isInvalidState(SmAddress srcAddr) {
+		return srcAddr.getPmState() == null
+				|| srcAddr.getPmState().getStateId() == null;
+	}
+
+	private boolean isInvalidDivision(SmAddress srcAddr) {
+		return "14".equalsIgnoreCase(srcAddr.getPmState().getStateId()
+				.toString())
+				&& (srcAddr.getPmDivision() == null || srcAddr.getPmDivision()
+						.getDivisionId() == null);
+	}
+
+	private boolean isInvalidDistrict(SmAddress srcAddr) {
+		return srcAddr.getPmDistrict() == null
+				|| srcAddr.getPmDistrict().getDistrictId() == null;
+	}
+
+	private boolean isInvalidCity(SmAddress srcAddr) {
+		return srcAddr.getPmCity() == null
+				|| srcAddr.getPmCity().getCityId() == null;
+	}
+
+	private boolean isBlank(String value) {
+		return StringUtils.isBlank(value);
+	}
+
+	private void handleInvalidAddress() {
+		String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress",
+				null);
+		getManagedBean().getMailAddr().setSameAsPerm(false);
+		throw new EpException(MessageConst.ERROR_722656,
+				new String[] { addrType });
+	}
+
+	// #36716 - End
 	
 	public void copyPermanentAddress(SmAddress refAddress){
 		if(this.getManagedBean().getMailAddr().isSameAsPerm()){
+			//#36716 - Start
+			recheckVal(refAddress);
+			//#36716 - End
 			if(this.getManagedBean().getMailAddr().getSmAddress() != null){
 				if(this.getManagedBean().getMailAddr().getSmAddress() == null){
 					this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
