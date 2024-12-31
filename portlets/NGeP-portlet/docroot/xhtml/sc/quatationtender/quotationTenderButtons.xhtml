@@ -140,25 +140,19 @@
 							<!-- 25077 -start- -->
 							<ui:param name="bpAction" value="SUBMIT" />
 							<!-- 25077 -end- -->
-							<ui:remove> #25426,#30477 Start </ui:remove>	
-							<p:commandButton value="#{lbl[buttonLabel]}"
-								styleClass="ui-button" onclick="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
-								rendered="#{isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
-							</p:commandButton>
-							<ui:remove> #25426,#30477 End </ui:remove>
 							
+							<ui:remove> #37632 - Update rendered - Start </ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								rendered="#{!qTDetailBB.isCancel(bpmAction)}"
+								rendered="#{!qTDetailBB.isCancel(bpmAction) or isCommitteeApprovalReviseTask}"
 								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
 								<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 								<f:param name="skipsubmitvalidation" value="0" />
 								<ui:remove>end 9019 - Reopen #note-317</ui:remove>
 							</p:commandButton>
+							<ui:remove> #37632 - Update rendered - End </ui:remove>
 
 							<ui:remove>9019 -start</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
