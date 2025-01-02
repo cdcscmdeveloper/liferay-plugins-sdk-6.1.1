@@ -5721,11 +5721,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
 			
 			BigDecimal actualIntendedPrice = new BigDecimal(0);
-			if ("createQt".equals(ScreenType)) {
+			if ("createQt".equals(ScreenType) && !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) { //36678 add condition status id related to 35061
 				actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+				
 			}
 			else {
-				actualIntendedPrice = scQt.getEstimatedAmount();
+				actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0) ;
+				//36678 related to 35061
 			}
 			
 			
@@ -5744,7 +5746,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					return Boolean.TRUE;
 				}
 			}
-			
+			//#36678 set null if user change above 50k. related to 35061
+			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+				scQt.setJustificationProcValue(null);
+			}
 			return Boolean.FALSE;
 		}
 		//#25729 - end -
