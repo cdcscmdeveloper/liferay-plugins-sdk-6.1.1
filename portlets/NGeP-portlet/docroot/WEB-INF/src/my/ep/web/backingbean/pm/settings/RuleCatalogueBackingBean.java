@@ -4414,7 +4414,7 @@ public class RuleCatalogueBackingBean extends
 	
 	public void saveQtValues() {
 		/*
-		 * Urgent issue fixing, refactor code
+		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
 		 * 
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
@@ -4436,7 +4436,6 @@ public class RuleCatalogueBackingBean extends
 					throw new EpException("QT Values : Date Overlapping - " + approval.getPmOrgProfile().getOrgName());
 				}
 			}// end of second loop
-
 		}// end of first loop*/
 		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
 
