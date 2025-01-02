@@ -12117,7 +12117,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.auditViewRole = auditViewRole;
 	}
 	//28895 - 35500 end
-
 	//#21692 #note-504 - Start
 	public List<String> getToBeRemoveEPVAttachments() {
 		return toBeRemoveEPVAttachments;

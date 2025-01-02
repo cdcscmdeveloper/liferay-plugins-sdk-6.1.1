@@ -2269,10 +2269,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (requestdetails.getDecessionType().getParameterId() != null) {
 				parameterReqDTO.setParameterId(requestdetails.getDecessionType().getParameterId());
 				requestdetails.setDecessionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(!getManagedBean().getQt().isApprovalPBM() ?
+						ParameterConst.EPV_TYPE_REQUEST_1 : ParameterConst.EPV_TYPE_REQUEST_3);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 			}
 			//#21692 note-418 issue 3 - Start
 			else {
 				requestdetails.setDecessionType(new PmParameter());
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(!getManagedBean().getQt().isApprovalPBM() ?
+						ParameterConst.EPV_TYPE_REQUEST_1 : ParameterConst.EPV_TYPE_REQUEST_3);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 			}
 			//#21692 note-418 issue 3 - End
 		}
@@ -2295,6 +2305,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.setDecisionCertPBM((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 				requestdetails
 						.setDecessionType(new PmParameter());
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_2);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 				if (requestdetails.getEpvApprovalReqAttachmentR3() != null) {
 					this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_3);
 					deleteEpvUploadFile();
@@ -2304,6 +2318,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				requestdetails
 				.setDecisionCertPBM(new PmParameter());
 				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//#21692 show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_2);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 			}
 			//#21692 - start
 			if (requestdetails.getDecisionCertPBM().getParameterCode() != null) {
