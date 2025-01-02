@@ -17,7 +17,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
-import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -34,6 +33,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+//#28175
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
