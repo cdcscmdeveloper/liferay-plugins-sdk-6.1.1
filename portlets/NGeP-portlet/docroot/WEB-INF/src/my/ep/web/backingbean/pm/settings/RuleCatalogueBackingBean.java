@@ -4416,7 +4416,7 @@ public class RuleCatalogueBackingBean extends
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
-		for (int i = 0; i < this.getManagedBean().getMainPtjSpecialApprovalList().size(); i++) {
+		/*for (int i = 0; i < this.getManagedBean().getMainPtjSpecialApprovalList().size(); i++) {
 			approval=this.getManagedBean().getMainPtjSpecialApprovalList().get(i);
 			// check validation
 			for (int j = i + 1; j <= (this.getManagedBean().getMainPtjSpecialApprovalList().size() - 1); j++) {				
@@ -4434,7 +4434,7 @@ public class RuleCatalogueBackingBean extends
 				}
 			}// end of second loop
 
-		}// end of first loop
+		}// end of first loop*/
 		
 		IPtjSpecialApprovalSO approvalSO = null;
 		try{
