@@ -4436,7 +4436,6 @@ public class RuleCatalogueBackingBean extends
 					throw new EpException("QT Values : Date Overlapping - " + approval.getPmOrgProfile().getOrgName());
 				}
 			}// end of second loop
-
 		}// end of first loop*/
 		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
 
