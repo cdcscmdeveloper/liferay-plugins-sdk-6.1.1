@@ -4413,6 +4413,9 @@ public class RuleCatalogueBackingBean extends
 	
 	
 	public void saveQtValues() {
+		/*
+		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
+		 * 
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
@@ -4433,8 +4436,51 @@ public class RuleCatalogueBackingBean extends
 					throw new EpException("QT Values : Date Overlapping - " + approval.getPmOrgProfile().getOrgName());
 				}
 			}// end of second loop
+		}// end of first loop*/
+		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
 
-		}// end of first loop
+	    // Group approvals by OrgProfileId using a HashMap
+	    Map<Long, List<PmPtjSpecialApproval>> groupedApprovals = new HashMap<>();
+	    for (PmPtjSpecialApproval approval : approvals) {
+	        Long orgProfileId = approval.getPmOrgProfile().getOrgProfileId();
+	        if (!groupedApprovals.containsKey(orgProfileId)) {
+	            groupedApprovals.put(orgProfileId, new ArrayList<PmPtjSpecialApproval>());
+	        }
+	        groupedApprovals.get(orgProfileId).add(approval);
+	    }
+
+	    // Iterate through each group and check for overlapping dates
+	    for (Map.Entry<Long, List<PmPtjSpecialApproval>> entry : groupedApprovals.entrySet()) {
+	        List<PmPtjSpecialApproval> group = entry.getValue();
+
+	        // Sort the group by effective date using Collections.sort
+	        Collections.sort(group, new Comparator<PmPtjSpecialApproval>() {
+	            @Override
+	            public int compare(PmPtjSpecialApproval a1, PmPtjSpecialApproval a2) {
+	                return a1.getEffDate().compareTo(a2.getEffDate());
+	            }
+	        });
+
+	        // Check for overlapping dates in the sorted list
+	        for (int i = 0; i < group.size() - 1; i++) {
+	        	PmPtjSpecialApproval current = group.get(i);
+	        	PmPtjSpecialApproval next = group.get(i + 1);
+
+	            // Check for date overlap
+	            boolean isOverlapping = isDateOverlaped(
+	                current.getEffDate(), current.getExpDate(),
+	                next.getEffDate(), next.getExpDate()
+	            );
+
+	            if (isOverlapping) {
+	                // Handle overlap
+	                this.getManagedBean().setDisabledSelectedMinistryId(false);
+	                this.getManagedBean().setMinistryProfileId(null);
+
+	                throw new EpException("QT Values: Date Overlapping - " + current.getPmOrgProfile().getOrgName());
+	            }
+	        }
+	    }
 		
 		IPtjSpecialApprovalSO approvalSO = null;
 		try{
