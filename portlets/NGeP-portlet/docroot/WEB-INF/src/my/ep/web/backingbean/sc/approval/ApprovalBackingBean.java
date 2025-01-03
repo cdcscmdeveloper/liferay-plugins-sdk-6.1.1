@@ -19,8 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -3609,9 +3611,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			handleDecisionNull(apprvRequest);
 			boolean toBeRemoveAttachmentIsNotEmpty = CollectionUtils.isNotEmpty(this.getManagedBean().getToBeRemoveEPVAttachments())
 					&& this.getManagedBean().getToBeRemoveEPVAttachments().contains(typeOfRequest);
+			//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - Start
 			if (toBeRemoveAttachmentIsNotEmpty) {
+				Set<String> set = new HashSet<>(this.getManagedBean().getToBeRemoveEPVAttachments());
+				this.getManagedBean().getToBeRemoveEPVAttachments().clear();
+				this.getManagedBean().getToBeRemoveEPVAttachments().addAll(set);
 				this.getManagedBean().getToBeRemoveEPVAttachments().remove(typeOfRequest);
 			}
+			//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - End
 		}
 		
 		/**
