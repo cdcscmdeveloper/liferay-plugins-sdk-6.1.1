@@ -1681,7 +1681,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean selectAllTechPreview;
 	private boolean selectAllFinPreview;
 	private boolean saveForSendNotification;
-	private boolean saveForSpecPrepareReport;
 	private ScAttachment scoreAttachment;
 	// #10141 - end
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
@@ -11486,14 +11485,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSaveForSendNotification(boolean saveForSendNotification) {
 		this.saveForSendNotification = saveForSendNotification;
-	}
-
-	public boolean isSaveForSpecPrepareReport() {
-		return saveForSpecPrepareReport;
-	}
-
-	public void setSaveForSpecPrepareReport(boolean saveForSpecPrepareReport) {
-		this.saveForSpecPrepareReport = saveForSpecPrepareReport;
 	}
 
 	public ScAttachment getScoreAttachment() {

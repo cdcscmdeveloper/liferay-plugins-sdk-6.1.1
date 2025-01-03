@@ -5782,7 +5782,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	 * @param qt
 	 */
 	private void validateProposalCloseTime(ScQt qt) {
-		/*Calendar closeTime = Calendar.getInstance();
+		Calendar closeTime = Calendar.getInstance();
 		closeTime.setTime(qt.getClosingDate());
 		closeTime.set(Calendar.SECOND,0);
 		closeTime.set(Calendar.MILLISECOND,0);
@@ -5799,7 +5799,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			throw new EpException(MessageConst.ERROR_760461, new String[] {
 					qtSB.toString(),
 					closeDateFormat.format(qt.getClosingDate()).toString() });
-		}*/
+		}
 	}
 
 	/**

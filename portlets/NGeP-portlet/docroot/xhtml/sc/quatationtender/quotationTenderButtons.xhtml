@@ -134,7 +134,7 @@
 			<ui:remove>9019 end</ui:remove>
 				
 			<c:if test="#{!qTDetailBB.managedBean.readOnly}">
-			
+			  	
 			 <!-- danial #25635 - rollback 22/11/2020-->
 			 <p:commandButton value="#{lbl['lbl.btn.clone']}" style="float:right;" id="cloneButton" rendered="#{isClone1}"
 											process="@this" partialSubmit="true" update="pnlid2" disabled="#{qTDetailBB.isCloneBtnDisable()}"
@@ -167,12 +167,14 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="bpAction" value="SUBMIT" />
 							
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
 								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+							<ui:remove>#10141 End Vinod</ui:remove>
 								
 							<ui:remove> #30477 Start </ui:remove>	
 <!-- #29732 Start - reOpen Fix -->
@@ -505,5 +507,5 @@
 			title="#{lbl['lbl.sc.confirmation']}"
 			okAction="qTDetailBB.submitQtDetailsFormMaintanace()"
 			content="#{lbl['lbl.sc.popup.confirmSpecMemberReendorse']}" />
-			
+		
 </ui:composition>

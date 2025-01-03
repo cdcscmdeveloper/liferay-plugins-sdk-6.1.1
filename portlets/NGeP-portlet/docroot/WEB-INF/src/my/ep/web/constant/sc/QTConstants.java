@@ -404,6 +404,7 @@ public interface QTConstants {
 	// Bug #35485@Syazani 08/02/2024 -- End
 	// #10141 Start Vinod
 	public static final String INACTIVE_CHECKLIST_NOTIFICATION = "inActiveChecklistNotification.show()";
+	public static final String SPEC_SCORE_DLG_WIDGET_SHOW = "specScoreDlgWidget.show()";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST = "lbl.sc.spec.confirm.inactive.techfin.checklist";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_SPECPREPARE = "lbl.sc.spec.confirm.inactive.techfin.checklist.specprepare";
 	public static final String LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED = "lbl.sc.spec.confirm.inactive.techfin.checklist.notified";
@@ -416,6 +417,9 @@ public interface QTConstants {
 	public static final String LBL_SC_SPEC_TECHNICAL_SCORE_REPORT = "lbl.sc.spec.technical.score.report";
 	public static final String LBL_SC_SPEC_FINANCIAL_SCORE_REPORT = "lbl.sc.spec.financial.score.report";
 	public static final String LBL_SC_SPEC_OVERALL_SCORE_REPORT = "lbl.sc.spec.overall.score.report";
+	public static final String LBL_SC_SPEC_TECH_SCORING = "lbl.sc.spec.tech.scoring";
+	public static final String LBL_SC_SPEC_FINANCIAL_SCORING = "lbl.sc.spec.financial.scoring";
+	public static final String LBL_SC_SPEC_RECOMMENDATION = "lbl.sc.spec.recommendation";
 	public static final int ACTIVE_INDEX_4 = 4;
 	public static final int ACTIVE_INDEX_5 = 5;
 	public static final int ACTIVE_INDEX_6 = 6;

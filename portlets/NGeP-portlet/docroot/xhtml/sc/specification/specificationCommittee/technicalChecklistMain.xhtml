@@ -421,6 +421,7 @@
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
 				action="#{specificationBackingBean.technicalCheckListPreview}"
+				onstart="blockWidget.show()"
 				oncomplete="technicalChecklistPreview.show();"
 				process="@this" update="@([id$=technicalChecklistTitleListId])" />
 			<ui:remove>#10141 End Vinod</ui:remove>

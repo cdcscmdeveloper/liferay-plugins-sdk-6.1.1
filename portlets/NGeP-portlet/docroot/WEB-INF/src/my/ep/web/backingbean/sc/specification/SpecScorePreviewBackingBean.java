@@ -17,6 +17,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -31,7 +32,7 @@ import org.primefaces.model.StreamedContent;
  * 
  * @author: #10141 Vinod.
  */
-@ManagedBean(name = "specScorePreviewBB")
+@ManagedBean(name = "specScorePreviewBackingBean")
 @RequestScoped
 public class SpecScorePreviewBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> implements Serializable {
 
@@ -39,7 +40,7 @@ public class SpecScorePreviewBackingBean extends SourcingBaseBackingBean<QTDetai
 	 * The serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(SpecGuideLineInstructionsBackingBean.class);
+	private static Logger log = Logger.getLogger(SpecScorePreviewBackingBean.class);
 	private StreamedContent currentStream;
 
 	/**
@@ -69,6 +70,13 @@ public class SpecScorePreviewBackingBean extends SourcingBaseBackingBean<QTDetai
 		return currentStream;
 	}
 
+	/**
+	 * This method will generate the file details to show in stream.
+	 * 
+	 * @param newAttachment
+	 * @return 
+	 * 
+	 */
 	private void generateFileDetails(ScAttachment newAttachment) throws IOException {
 		log.debug("generateFileDetails");
 
@@ -97,7 +105,37 @@ public class SpecScorePreviewBackingBean extends SourcingBaseBackingBean<QTDetai
 		newAttachment.setCreatedUser(createdUser);
 		newAttachment.setFilePath(filePath.toString());
 	}
+	
+	/**
+	 * This method to return header name based on active index to display in
+	 * document preview.
+	 * 
+	 * @param
+	 * @return String will return header name.
+	 * 
+	 */
+	public String scoreReportPreviewHeader() {
+		int activeIndex = this.getManagedBean().getActiveIndex();
 
+		switch (activeIndex) {
+		case QTConstants.ACTIVE_INDEX_4:
+			return getMessageCommon(QTConstants.LBL_SC_SPEC_TECH_SCORING);
+		case QTConstants.ACTIVE_INDEX_5:
+			return getMessageCommon(QTConstants.LBL_SC_SPEC_FINANCIAL_SCORING);
+		case QTConstants.ACTIVE_INDEX_6:
+			return getMessageCommon(QTConstants.LBL_SC_SPEC_RECOMMENDATION);
+		default:
+			return "";
+		}
+	}
+
+	/**
+	 * This method will be called when the preview pop-up is closed to reset currentStream.
+	 * 
+	 * @param
+	 * @return 
+	 * 
+	 */
 	public void closeScoreReport() {
 		if (currentStream != null) {
 			currentStream = null;

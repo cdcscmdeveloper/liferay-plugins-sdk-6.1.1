@@ -1,3 +1,4 @@
+<!-- Author: #10141 Vinod -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -6,69 +7,84 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<p:dialog id="technicalChecklistPreviewId" widgetVar="technicalChecklistPreview"
-	resizable="false" position="top" styleClass="pop_up_top"
-	header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650" height="650">
-	<p:ajax event="close" update="@([id$=stageTwotechProposal])" actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
-		
-	<p:panel id="technicalChecklistPreviewPanel1Id" header="#{lbl['lbl.sc.spec.technical.checklist.preview.printing']}" toggleable="true">
-		<h:outputText styleClass="instruction"
-			value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instructions']}" escape="false"/>
-			
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
-				action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
-				styleClass="BtnSpacing" process="@this"  />
-		</div>
-	</p:panel>
-		
-	<p:panel id="technicalChecklistPreviewPanel2Id" header="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing']}" toggleable="true">
-		<h:outputText styleClass="instruction" style="color : #0099cc; font-style: italic;"
-			value="#{lbl['lbl.sc.spec.technical.financial.checklist.element.details.preview.printing.instructions']}" escape="false"/>
-				
-		<p:dataTable id="technicalChecklistTitleListId"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			selection="#{specificationBackingBean.managedBean.techChecklistSelect}"
-			first="#{specificationBackingBean.managedBean.technicalPreviewTableRow}"
-			value="#{specificationBackingBean.managedBean.techChecklistPreview}"
-			var="techChecklist" rowIndexVar="index" rowKey="#{techChecklist}"
-			width="100%">
-				
-			<p:column style="width:10%;text-align:center;">
-				<f:facet name="header">
-					<p:selectBooleanCheckbox
-						value="#{specificationBackingBean.managedBean.selectAllTechPreview}">
-						<p:ajax partialSubmit="true" process="@this"
-							update="@([id$=technicalChecklistTitleListId])"
-							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.selectAllTechPreview, specificationBackingBean.managedBean.techChecklistPreview)}" />
+	<p:dialog id="technicalChecklistPreviewId"
+		widgetVar="technicalChecklistPreview" resizable="false" position="top"
+		styleClass="pop_up_top"
+		header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650"
+		height="650">
+		<p:ajax event="close" oncomplete="blockWidget.hide()"
+			update="@([id$=stageTwotechProposal])"
+			actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
+
+		<p:panel id="technicalChecklistPreviewPanel1Id"
+			header="#{lbl['lbl.sc.spec.technical.checklist.preview.printing']}"
+			toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.technical.checklist.preview.printing.instructions']}"
+				escape="false" />
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.download']}"
+					partialSubmit="true" ajax="false"
+					action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+					styleClass="BtnSpacing" process="@this" />
+			</div>
+		</p:panel>
+
+		<p:panel id="technicalChecklistPreviewPanel2Id"
+			header="#{lbl['lbl.sc.spec.technical.checklist.element.details.preview.printing']}"
+			toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.technical.financial.checklist.element.details.preview.printing.instructions']}"
+				escape="false" />
+
+			<p:dataTable id="technicalChecklistTitleListId"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				selection="#{specificationBackingBean.managedBean.techChecklistSelect}"
+				first="#{specificationBackingBean.managedBean.technicalPreviewTableRow}"
+				value="#{specificationBackingBean.managedBean.techChecklistPreview}"
+				var="techChecklist" rowIndexVar="index" rowKey="#{techChecklist}"
+				width="100%">
+
+				<p:column style="width:10%;text-align:center;">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox
+							value="#{specificationBackingBean.managedBean.selectAllTechPreview}">
+							<p:ajax partialSubmit="true" process="@this"
+								update="@([id$=technicalChecklistTitleListId])"
+								listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.selectAllTechPreview, specificationBackingBean.managedBean.techChecklistPreview)}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{techChecklist.selected}">
+						<p:ajax partialSubmit="true" process="@this" update="@this"
+							listener="#{specificationBackingBean.updateSelectedTechnicalChecklistPreviewIndx(techChecklist,index)}" />
 					</p:selectBooleanCheckbox>
-				</f:facet>
-				<p:selectBooleanCheckbox value="#{techChecklist.selected}">		
-					<p:ajax partialSubmit="true" process="@this" update="@this"
-						listener="#{specificationBackingBean.updateSelectedTechnicalChecklistPreviewIndx(techChecklist,index)}" />				
-				</p:selectBooleanCheckbox>
 
-			</p:column>
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
-				style="width:90%;white-space: normal;">
+				<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+					style="width:90%;white-space: normal;">
 
 					<h:outputText value="#{techChecklist.title}"></h:outputText>
 
-			</p:column>
-				
-		</p:dataTable>
+				</p:column>
+
+			</p:dataTable>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.download']}"
+					partialSubmit="true" ajax="false"
+					action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"
+					styleClass="BtnSpacing" process="@this" />
+			</div>
+		</p:panel>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download']}" partialSubmit="true" ajax="false"
-				action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"
-				styleClass="BtnSpacing" process="@this"  />
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true"
+				oncomplete="blockWidget.hide()"
+				update="@([id$=stageTwotechProposal])"
+				onclick="technicalChecklistPreview.hide();"
+				action="#{specificationBackingBean.closeTechChecklistPreview()}"
+				styleClass="BtnSpacing" process="@this" />
 		</div>
-	</p:panel>
-	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" update="@([id$=stageTwotechProposal])"
-			onclick="technicalChecklistPreview.hide();" action="#{specificationBackingBean.closeTechChecklistPreview()}"
-			styleClass="BtnSpacing" process="@this"  />
-	</div>
-		
-</p:dialog>
+
+	</p:dialog>
 </ui:composition>

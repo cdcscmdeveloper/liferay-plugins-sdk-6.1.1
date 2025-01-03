@@ -342,6 +342,7 @@
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
 				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
 				action="#{specificationBackingBean.financialCheckListPreview}"
+				onstart="blockWidget.show()"
 				oncomplete="financialChecklistPreview.show();"
 				process="@this" update="@([id$=financialChecklistTitleListId])"/>
 			<ui:remove>#10141 End Vinod </ui:remove>

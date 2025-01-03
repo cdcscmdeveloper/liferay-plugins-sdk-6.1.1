@@ -8,7 +8,26 @@
 
 	<p:commandButton value="#{lbl['lbl.btn.print']}" immediate="true"
 				style="float:right;" update="@([id$=scoreDlgId])"
-				action="#{specificationBackingBean.specScoreReportWindow()}" />
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{specificationBackingBean.generateSpecScoreReport()}" />
 
-<ui:include src="specScorePreviewPopup.xhtml"></ui:include>
+	<p:dialog id="scoreDlgId" widgetVar="specScoreDlgWidget" modal="true"
+		header="#{specScorePreviewBackingBean.scoreReportPreviewHeader()}"
+		dynamic="true" resizable="false" width="1000px" closable="true"
+		height="500px" styleClass="pop_up_top">
+		<p:ajax event="close"
+			actionListener="#{specScorePreviewBackingBean.closeScoreReport}" />
+		<p:media value="#{specScorePreviewBackingBean.getScoreReport()}" width="100%"
+			height="450px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.sc.close']}" process="@this"
+						partialSubmit="true"
+						action="#{specScorePreviewBackingBean.closeScoreReport}"
+						onclick="specScoreDlgWidget.hide()" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:dialog>
 </ui:composition>

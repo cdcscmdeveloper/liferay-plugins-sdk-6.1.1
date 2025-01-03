@@ -14,7 +14,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -73,7 +72,6 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -128,9 +126,6 @@ import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -176,9 +171,6 @@ import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
-import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScFinancialUserScoringSchemaAttachment;
@@ -205,13 +197,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalUserScoringSchemaAttachment;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -260,7 +250,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.QTFieldMapper;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -288,7 +277,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.velocity.VelocityContext;
 import org.eclipse.persistence.indirection.IndirectList;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
@@ -415,17 +403,10 @@ public class SpecificationBackingBean extends
 	public void saveSpecificationCommitteeDtls() {
 
 		try {
-			//#10141 Start Vinod Added condition
-			boolean showMessage = this.getManagedBean().isSaveForSpecPrepareReport();
-			//#10141 End Vinod 
 			validatePrepareQtChecklist();
 
-			//#10141 Start Vinod Added condition
-			if (showMessage) {
-				successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.specification.details.for"), this
-						.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
-			}
-			//#10141 End Vinod 
+			successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.specification.details.for"), this
+					.getManagedBean().getQt().getQtNo(), Boolean.FALSE);
 		} finally {
 
 		}
@@ -23760,10 +23741,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 End Vinod
 	// #10141 Start Vinod
-	public void specScoreReportWindow() throws IOException {
-		log.info("specScoreReportWindow");
-		this.getManagedBean().setSaveForSpecPrepareReport(Boolean.TRUE);
-		//saveSpecificationCommitteeDtls();
+	/**
+	 * this method will generate score report from oracle report to show in the
+	 * preview.
+	 * 
+	 * @param
+	 * @return
+	 */
+	public void generateSpecScoreReport() throws IOException {
+		log.info("generateSpecScoreReport");
+		validatePrepareQtChecklist();
 
 		String reportName = updateFileNameAndReportNameForScoreReport();
 		ScQt scQt = getManagedBean().getQt();
@@ -23800,7 +23787,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 					qtNo, SLALogConstant.QT_DOWNLOAD_SCORE_REPORT, getUserIdSessionFromLoginId(), e);
 		}
 
-		RequestContext.getCurrentInstance().execute("specScoreDlgWidget.show();");
+		RequestContext.getCurrentInstance().execute(QTConstants.SPEC_SCORE_DLG_WIDGET_SHOW);
 	}
 
 	// #10141 End Vinod
