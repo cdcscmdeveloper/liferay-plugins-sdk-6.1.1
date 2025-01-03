@@ -4508,9 +4508,8 @@ public class RuleCatalogueBackingBean extends
 		}catch(Exception e){
 			this.getManagedBean().setDisabledSelectedMinistryId(false);
 			this.getManagedBean().setMinistryProfileId(null);
-			log.error(e);
+			throw new EpException(MessageConst.ERROR_000001);
 		}
-
 	}
 	
 	private void sortPmOrgProfileByName(List<PmOrgProfile> list) {
