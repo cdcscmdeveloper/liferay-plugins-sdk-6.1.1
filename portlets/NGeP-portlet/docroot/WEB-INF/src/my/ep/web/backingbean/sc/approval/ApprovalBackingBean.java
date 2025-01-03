@@ -3827,6 +3827,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
@@ -3834,7 +3835,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						: reqDTO.getDoaaList();
 
 				for (ScQtContactPerson add : newDoaList) {
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);
 					auditResDTO.setNewValue(add.getUser().getUserName());
 					auditResDTO.setNewValueId(add.getUser().getUserId());
@@ -3842,8 +3842,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
-				for (ScQtContactPerson remove : removedList) {
-					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
+				for (ScQtContactPerson remove : removedList) {					
 					auditResDTO.setNewValue(null);
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_DELETE);
 					auditResDTO.setOldValue(remove.getUser().getUserName());
