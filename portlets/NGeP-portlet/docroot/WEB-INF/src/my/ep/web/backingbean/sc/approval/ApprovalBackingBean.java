@@ -3831,11 +3831,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			}
-			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);			
 
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
 				List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
