@@ -694,29 +694,26 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
 	 */
 	public void deleteEpvAttachments() {
 		ScQtApprovalRequest apprvRequest = this.getManagedBean().getScQtApprovalRequestList().get(0);
-
-		List<ScQtEpvApprovalReqAttachment> deletedAttachment = new ArrayList<>();
-		List<ScQtEpvApprovalReqAttachment> attachmentList = apprvRequest.getEpvApprovalReqAttachment();
-
-		for (ScQtEpvApprovalReqAttachment att : attachmentList) {
-			deletedAttachment.add(att);
+		//#21692 only remove decision and attachment, do not save data - Start
+		apprvRequest.setEpvApprovalReqAttachmentR1(null);
+		apprvRequest.setEpvApprovalReqAttachmentR2(null);
+		apprvRequest.setEpvApprovalReqAttachmentR3(null);
+		if (CollectionUtils.isEmpty(this.getManagedBean().getToBeRemoveEPVAttachments())) {
+			this.getManagedBean().setToBeRemoveEPVAttachments(new ArrayList<String>());
 		}
-
-		if (deletedAttachment != null) {
-			attachmentList.removeAll(deletedAttachment);
-		}
-		apprvRequest.setEpvApprovalReqAttachment(attachmentList);
+		this.getManagedBean().getToBeRemoveEPVAttachments().add(ParameterConst.EPV_TYPE_REQUEST_1);
+		this.getManagedBean().getToBeRemoveEPVAttachments().add(ParameterConst.EPV_TYPE_REQUEST_2);
+		this.getManagedBean().getToBeRemoveEPVAttachments().add(ParameterConst.EPV_TYPE_REQUEST_3);
 		apprvRequest.setDecisionCertPBM(null);
 		apprvRequest.setDecessionType(null);
-
-		ScQtApprovalRequest apprvReq = getQTDetailSO().saveApprovalRequest(apprvRequest);
-
+		
 		List<ScQtApprovalRequest> newApprovalReqList = new ArrayList<>();
 		if (this.getManagedBean().getQt().isApprovalPBM()) {
-			apprvReq.setDecisionCertPBM(new PmParameter());
+			apprvRequest.setDecisionCertPBM(new PmParameter());
 		}
-		apprvReq.setDecessionType(new PmParameter());
-		newApprovalReqList.add(apprvReq);
+		apprvRequest.setDecessionType(new PmParameter());
+		newApprovalReqList.add(apprvRequest);
+		//#21692 only remove decision and attachment, do not save data - End
 		this.getManagedBean().setScQtApprovalRequestList(newApprovalReqList);
 	}
 	// #21692 attachment - End

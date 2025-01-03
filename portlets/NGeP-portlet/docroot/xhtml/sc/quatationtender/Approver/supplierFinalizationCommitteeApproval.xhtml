@@ -167,7 +167,8 @@
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}"
+										update="requestDetailsId" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;">
@@ -265,7 +266,8 @@
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}"
+										update="requestDetailsId" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 									display="icon" /></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;">
