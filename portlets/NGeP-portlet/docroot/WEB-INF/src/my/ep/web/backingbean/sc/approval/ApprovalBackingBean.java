@@ -3799,7 +3799,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			}
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
+			
 
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
@@ -3809,6 +3809,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						: reqDTO.getDoaaList();
 
 				for (ScQtContactPerson add : newDoaList) {
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_CREATE);
 					auditResDTO.setNewValue(add.getUser().getUserName());
 					auditResDTO.setNewValueId(add.getUser().getUserId());
@@ -3817,6 +3818,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					auditReqList.add(auditReqDTO);
 				}
 				for (ScQtContactPerson remove : removedList) {
+					auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 					auditResDTO.setNewValue(null);
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_DELETE);
 					auditResDTO.setOldValue(remove.getUser().getUserName());
