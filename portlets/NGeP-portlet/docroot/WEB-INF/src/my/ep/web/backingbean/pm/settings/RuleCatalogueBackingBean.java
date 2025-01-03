@@ -5058,7 +5058,7 @@ public class RuleCatalogueBackingBean extends
 		}catch(Exception e){
 			this.getManagedBean().setDisabledSelectedMinistryId(false);
 			this.getManagedBean().setMinistryProfileId(null);
-			throw e;
+			throw new EpException(MessageConst.ERROR_000001);
 		}finally{
 			approvalSO = null;
 		}
