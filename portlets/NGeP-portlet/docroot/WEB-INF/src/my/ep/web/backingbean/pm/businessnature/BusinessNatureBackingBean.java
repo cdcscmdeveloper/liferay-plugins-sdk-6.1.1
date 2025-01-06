@@ -994,6 +994,8 @@ public class BusinessNatureBackingBean extends
 
 	/**
 	 * save and update business nature detail
+	 * @return the String
+	 * @throws Exception
 	 * 
 	 */
 	public String saveBusinessNatureDtls() {
@@ -1018,22 +1020,28 @@ public class BusinessNatureBackingBean extends
 			reqDTO.setBusinessNature(businessnature);
 
 			/************ AUDIT *************/
-			AuditPMBackingBeanTemplate auTemplate = new AuditPMBusinessNatureBackingBean(); 
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMBusinessNatureBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
-			
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_BUSINESS_NATURE) && businessnature.getBusinessNatureId() != null) {
+
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_BUSINESS_NATURE)
+					&& businessnature.getBusinessNatureId() != null) {
 				reqDTO.setBusinessNatureId(businessnature.getBusinessNatureId());
-				PmBusinessNature oldPmBusinessNature = businessNatureSO.retrieveBusinessNatureById(reqDTO).getBusinessNature();
+				PmBusinessNature oldPmBusinessNature = businessNatureSO.retrieveBusinessNatureById(reqDTO)
+						.getBusinessNature();
 				getManagedBean().setOldPmBusinessNature(oldPmBusinessNature);
 			}
 			/************ AUDIT *************/
-			
-			BusinessNatureResDTO resDTO = businessNatureSO
-					.saveBusinessNatureDtls(reqDTO);
-			this.getManagedBean().setPmBusinessNature(
-					resDTO.getBusinessNature());
+
+			BusinessNatureResDTO resDTO = businessNatureSO.saveBusinessNatureDtls(reqDTO);
+			this.getManagedBean().setPmBusinessNature(resDTO.getBusinessNature());
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_BUSINESS_NATURE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_BUSINESS_NATURE);
+				}
+				/************ AUDIT *************/
+				
 				if (this.getManagedBean().isBrandNew()) {
 					returnUrl = "/xhtml/pm/businessnature/businessNatureMain.xhtml";
 					// if (Integer.valueOf(this.getManagedBean()
@@ -1102,11 +1110,6 @@ public class BusinessNatureBackingBean extends
 															new FacesScopes()
 																	.getUserLocale())));
 				}
-				/************ AUDIT *************/
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_BUSINESS_NATURE)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_BUSINESS_NATURE);
-				}
-				/************ AUDIT *************/
 			}
 
 		} catch (Exception e) {

@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -46,6 +47,11 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private Date tomorrow = tomorrowDate();
 	private PmCertSignatory deleteSignatory;
 	private Date today = new Date();
+	
+	/************ AUDIT *************/
+	private List<PmCertSignatory> newCertSignatories;
+	private Map<Long,PmCertSignatory> existingCertSignatoriesMap;
+	/************ AUDIT *************/
 
 	public AuthorizedSignatoryManagedBean() {
 	}
@@ -245,6 +251,22 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	 */
 	public void setToday(Date today) {
 		this.today = today;
+	}
+
+	public Map<Long, PmCertSignatory> getExistingCertSignatoriesMap() {
+		return existingCertSignatoriesMap;
+	}
+
+	public void setExistingCertSignatoriesMap(Map<Long, PmCertSignatory> existingCertSignatoriesMap) {
+		this.existingCertSignatoriesMap = existingCertSignatoriesMap;
+	}
+
+	public List<PmCertSignatory> getNewCertSignatories() {
+		return newCertSignatories;
+	}
+
+	public void setNewCertSignatories(List<PmCertSignatory> newCertSignatories) {
+		this.newCertSignatories = newCertSignatories;
 	}
 
 }

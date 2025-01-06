@@ -27,10 +27,12 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -39,11 +41,13 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
@@ -54,6 +58,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -64,11 +69,15 @@ import my.ep.persistence.entity.pm.common.PmMachineCategory;
 import my.ep.persistence.entity.pm.common.PmMachineSection;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMCategoryCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.CategoryCodePublicSearchBean;
@@ -76,6 +85,7 @@ import my.ep.web.managedbean.pm.category.CategoryManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -85,12 +95,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 //start #29665
-import my.ep.persistence.entity.pm.common.PmRemarkCategory;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.web.util.pm.helper.ParameterHelper;
-import javax.faces.component.UIComponent;
-import javax.faces.validator.ValidatorException;
-import my.ep.util.SLAUtils;
 //end #29665
 
 /**
@@ -1285,6 +1289,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			trackingDiaryForCreateAndUpdateOfMainCategory(reqDTO);
 			
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)){
+				reqDTO.setCategoryL1Id(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
+				this.getManagedBean().setAuditCategoryL1(Boolean.TRUE);
+				this.getManagedBean().setAuditOldCategoryL1(resDTO.getCategoryL1());
+			}
+			/************ AUDIT *************/
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveCategory(reqDTO);
 			PmCategoryL1 oldCategoryL1 = (PmCategoryL1) BeanUtils
 					.cloneBean(resDTO.getCategoryL1());
@@ -1332,6 +1347,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 											resDTO.getCategoryL1().getCategoryL1Code() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
+				
+				/************ AUDIT 35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT 35509 *************/
 			}
 		} catch (Exception e) {
 			throw(e);
@@ -1509,6 +1530,17 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			trackingDiaryForCreateAndUpdateOfSubCategory(reqDTO);
 
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE) && this.getManagedBean().getPmCategoryL2().getCategoryL2Id() != null){
+				reqDTO.setCategoryL2Id(this.getManagedBean().getPmCategoryL2().getCategoryL2Id());
+				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
+				this.getManagedBean().setAuditCategoryL2(Boolean.TRUE);
+				this.getManagedBean().setAuditOldCategoryL2(resDTO.getCategoryL2());
+			}
+			/************ AUDIT *************/
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubCategory(reqDTO);
 
 			// start @29665 add if to avoid NPE when create new sub categ
@@ -1522,6 +1554,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setOldCategoryL2(oldCategoryL2);
 			
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT 35509 *************/
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL2(
 							resDTO.getCategoryL2());
@@ -1752,7 +1789,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			// end #29665
 
-			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			reqDTO.setCategoryLevel(this.getManagedBean().getCatLevel());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
@@ -1767,7 +1803,19 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			getAllCategoryDetailsForTracking(reqDTO, this.getManagedBean().getPmCategoryL3()
 					.getRecordStatusFlg().longValue());
-			
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCategoryCodeBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)){
+				reqDTO.setCategoryL3Id(pmCategoryL3.getCategoryL3Id());
+				CategoryCodeResDTO resDTO = categoryCodeSO
+						.retrieveCategoryL3DtlById(reqDTO);
+				this.getManagedBean().setAuditCategoryL3(Boolean.TRUE);
+				// masuk old
+				this.getManagedBean().setAuditOldCategoryL3(resDTO.getCategoryL3());
+			}
+			/************ AUDIT *************/
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
@@ -1821,6 +1869,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 											this.getManagedBean().getPmCategoryL3().getCategoryL3Code() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
+				
+				/************ AUDIT 35509*************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT *************/
 			}
 
 		} catch (Exception e) {

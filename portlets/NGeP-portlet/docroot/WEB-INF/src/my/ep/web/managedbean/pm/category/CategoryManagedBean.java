@@ -229,6 +229,17 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private Integer disableSection = 0;
 	//ENd #29665
 	
+	/************ AUDIT 35509 *************/
+	private PmCategoryL1 auditOldCategoryL1;
+	private PmCategoryL2 auditOldCategoryL2;
+	private PmCategoryL3 auditOldCategoryL3;
+	
+	private boolean isAuditCategoryL1;
+	private boolean isAuditCategoryL2;
+	private boolean isAuditCategoryL3;
+	
+	private String auditLevelCategory;
+	/************ AUDIT 35509 *************/
 	
 	/**
 	 * Instantiates a new category managed bean.
@@ -1386,5 +1397,63 @@ public class CategoryManagedBean extends BaseManagedBean {
 	}
 	
 	//end #29665
+	
+	/************ AUDIT 35509 *************/
+	public PmCategoryL3 getAuditOldCategoryL3() {
+		return auditOldCategoryL3;
+	}
+
+	public void setAuditOldCategoryL3(PmCategoryL3 auditOldCategoryL3) {
+		this.auditOldCategoryL3 = auditOldCategoryL3;
+	}
+
+	public PmCategoryL1 getAuditOldCategoryL1() {
+		return auditOldCategoryL1;
+	}
+
+	public void setAuditOldCategoryL1(PmCategoryL1 auditOldCategoryL1) {
+		this.auditOldCategoryL1 = auditOldCategoryL1;
+	}
+
+	public PmCategoryL2 getAuditOldCategoryL2() {
+		return auditOldCategoryL2;
+	}
+
+	public void setAuditOldCategoryL2(PmCategoryL2 auditOldCategoryL2) {
+		this.auditOldCategoryL2 = auditOldCategoryL2;
+	}
+
+	public boolean isAuditCategoryL1() {
+		return isAuditCategoryL1;
+	}
+
+	public void setAuditCategoryL1(boolean isAuditCategoryL1) {
+		this.isAuditCategoryL1 = isAuditCategoryL1;
+	}
+
+	public boolean isAuditCategoryL2() {
+		return isAuditCategoryL2;
+	}
+
+	public void setAuditCategoryL2(boolean isAuditCategoryL2) {
+		this.isAuditCategoryL2 = isAuditCategoryL2;
+	}
+
+	public boolean isAuditCategoryL3() {
+		return isAuditCategoryL3;
+	}
+
+	public void setAuditCategoryL3(boolean isAuditCategoryL3) {
+		this.isAuditCategoryL3 = isAuditCategoryL3;
+	}
+
+	public String getAuditLevelCategory() {
+		return auditLevelCategory;
+	}
+
+	public void setAuditLevelCategory(String auditLevelCategory) {
+		this.auditLevelCategory = auditLevelCategory;
+	}
+	/************ AUDIT 35509 *************/
 
 }
