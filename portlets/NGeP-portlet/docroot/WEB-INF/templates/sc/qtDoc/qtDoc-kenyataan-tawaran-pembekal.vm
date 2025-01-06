@@ -131,7 +131,10 @@ th{
 		<tr>
 			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JUMLAH HARGA INDIKATIF (RM) :</span> $estimatedAmount</td>
 		</tr>
+<<<<<<< HEAD
 		
+=======
+>>>>>>> refs/remotes/origin/release-sit
 		#if($panel == "true")
 			
 		#else

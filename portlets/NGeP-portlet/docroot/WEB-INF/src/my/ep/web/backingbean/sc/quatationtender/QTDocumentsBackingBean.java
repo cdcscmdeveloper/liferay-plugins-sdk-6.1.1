@@ -2527,11 +2527,19 @@ public class QTDocumentsBackingBean extends
 		context.put("closingDate", closingDate);
 		context.put("validityPeriod", qt.getQtValidityPeriod());
 		
+<<<<<<< HEAD
 		// #37613 - Start
 		DecimalFormat dformat = new DecimalFormat(
 				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		context.put("estimatedAmount", dformat.format(qt.getEstimatedAmount()));
 		// #37613 - End
+=======
+		// #36709 - Start
+		DecimalFormat dformat = new DecimalFormat(
+				commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		context.put("estimatedAmount", dformat.format(qt.getEstimatedAmount()));
+		// #36709 - End
+>>>>>>> refs/remotes/origin/release-sit
 
 		String locationLevel = null;
 		boolean isLocLevel = false;
