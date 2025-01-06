@@ -4964,7 +4964,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("saveQtValues");
 		/*
 		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
-		 * 
+		 *
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
