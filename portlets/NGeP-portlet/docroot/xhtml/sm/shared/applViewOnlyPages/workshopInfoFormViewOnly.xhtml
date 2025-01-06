@@ -12,6 +12,9 @@
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}">
 			<h:outputText value="#{lbl['lbl.sm.workShop.notApplicable']}" />
 		</p:outputPanel>
+		<!-- #28175 -->
+		<ui:param name="isSuppProfile" 
+			value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
 		
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 			<table style="width: 100%;">

@@ -12,12 +12,17 @@
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}">
 			<h:outputText value="#{lbl['lbl.sm.factory.notApplicable']}" />
 		</p:outputPanel>
+		<!-- #28175 -->
+		<ui:param name="isSuppProfile" 
+			value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
 		
 		<ui:repeat var="factoryCatVar" value="#{viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<td style="white-space: nowrap; float: left;">
-					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.categoryName})" />
+					<!-- #28175 -->
+				    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
+				    	(#{viewSmApplBackingBean.getSupplierCategoryName(factoryCatVar, isSuppProfile, true)})" 
+				    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
 			</table>
