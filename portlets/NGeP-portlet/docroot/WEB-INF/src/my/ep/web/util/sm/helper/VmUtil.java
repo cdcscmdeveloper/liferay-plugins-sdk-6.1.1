@@ -378,6 +378,10 @@ public class VmUtil {
 	 * @return the updatedKey
 	 */
 	public String splitText(String key, int maxLength) {
+		if (null == key) {
+			return key;
+		}
+		
 		String[] words = key.split(" ");
 		StringBuilder sb = new StringBuilder();
 		StringBuilder subSb;
