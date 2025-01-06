@@ -207,11 +207,13 @@
 										</p:outputPanel>
 										<p:outputPanel
 											rendered="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId!=forceReplaceSuppAdminBackingBean.managedBean.myCountryId}">
-											<p:inputText maxlength="10" required="true"
+											<!-- #36716 - Start -->
+											<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 												label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeForeign"
 												value="#{forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.postcode}"
 												size="35">
 											</p:inputText>
+											<!-- #36716 - End -->
 											<p:message id="basicPermAddPostCodeForeignMsg"
 												for="basicPermAddPostCodeForeign" showSummary="true"
 												showDetail="false" display="icon" />
