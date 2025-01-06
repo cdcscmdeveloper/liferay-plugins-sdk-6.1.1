@@ -91,6 +91,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //Fix - #36708
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
@@ -7054,7 +7055,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			vmFile = ContractConst.DOCPATH_CT_LOA_AGREEMENT_LETTER;
 			ScLoa scLoa = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa();
 			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
-			String  sclRefNo = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSclRefNo(); //Fix - #36708
+			String  sclRefNo =  EntityHelper.getStringNestedProperty( ctBackingBean.getManagedBean(), "contractVer.ctAmendment.sclRefNo"); //Fix - #36708
 			context = new VelocityContext();
 			PmOrgProfile pmOrgProfile = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
 
