@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import my.ep.constant.tpl.TemplateDocConst;	// Bug #36702@Syazani 28/11/2024
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -399,5 +400,71 @@ public class VmUtil {
 		return sb.toString();
 	}
 	// Bug #36702@Syazani 28/11/2024 -- End
+	// 35295 - start
+			/**
+			 * This method will break Long words for file type docx.
+			 *
+			 * 
+			 * @param key
+			 * @param maxLength
+			 * @return the updatedKey
+			 */
+		public String wordWrapText(String key, int maxLength) {
+			if (key == null || maxLength <= 0) {
+				return key;
+			}
+
+			String[] words = key.split("(?<!\r)\n|[ \t]+");
+			StringBuilder result = new StringBuilder();
+
+			for (String word : words) {
+				if (word.length() > maxLength && !word.contains("-")) {
+					String choppedWord = word.replaceAll("(.{" + maxLength + "})(?=(.{4,}|$))", "$1"
+							+ SSTConstant.WORD_BREAK_TO_REMOVE);
+					choppedWord = choppedWord.endsWith(SSTConstant.WORD_BREAK_TO_REMOVE) ? choppedWord.substring(0,
+							choppedWord.length() - SSTConstant.WORD_BREAK_TO_REMOVE.length()) : choppedWord;
+
+					choppedWord = choppedWord.replace(TemplateSpecConst.NEW_LINE_CHARACTER,
+							SSTConstant.WORD_BREAK_TO_REMOVE);
+					choppedWord = choppedWord.replace("/AddBreakLineHere//AddBreakLineHere/",
+							SSTConstant.WORD_BREAK_TO_REMOVE);
+
+					result.append(choppedWord).append(SSTConstant.ADD_WHITESPACE);
+				} else {
+					result.append(word.replace(TemplateSpecConst.NEW_LINE_CHARACTER, SSTConstant.WORD_BREAK_TO_REMOVE))
+							.append(SSTConstant.ADD_WHITESPACE);
+				}
+			}
+
+			log.info("input : " + key + " maxLength : " + maxLength + " String : " + result.toString());
+			return result.toString();
+		}
+
+			/**
+			 * This method will replace special character
+			 * and wrap the text based on file type .
+			 * @param text
+			 * @param length
+			 * @param fileType
+			 * @return
+			 */
+		public String escapeAndWrapText(String text, int length, String fileType) {
+			String textAfterWrap = wordWrapText(text, length);
+
+			// Process text based on file type
+			if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_DOC)) {
+				textAfterWrap = StringEscapeUtils.escapeHtml(textAfterWrap);
+			} else if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_PDF)) {
+				textAfterWrap = textAfterWrap.replace(TemplateSpecConst.LESS_THEN_SYMBOL,
+						TemplateSpecConst.LESS_THEN_HTML_ENTITY).replace(TemplateSpecConst.GREATER_THEN_SYMBOL,
+						TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+			}
+
+			// Replace word break characters with HTML new line
+			textAfterWrap = textAfterWrap.replace(SSTConstant.WORD_BREAK_TO_REMOVE,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+
+			return textAfterWrap;
+		}
 	
 }
