@@ -2811,16 +2811,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 *             if the order validation fails with a specific error code.
 	 */
 	private void validateOrderFulfiledAndDOFRNPendingCancellation() {
-		Boolean allowToProceed = true;
-		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = null;
 
 		reqDTO.setFlRequestId(getManagedBean().getPaymentAdvice().getFlRequest().getFulfilmentReqId());
 		reqDTO.setFlOrderId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getFulfilmentOrderId());
-		resDTO = orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
-		allowToProceed = resDTO.isAllowToProceed();
+		FulfilmentResDTO resDTO = orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
+		Boolean allowToProceed = resDTO.isAllowToProceed();
 		if (!allowToProceed) {
 			throw new EpException(MessageConst.ERROR_740069);
 		}

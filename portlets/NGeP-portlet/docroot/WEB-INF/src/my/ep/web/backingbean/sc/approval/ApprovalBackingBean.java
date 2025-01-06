@@ -19,8 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -2274,10 +2276,20 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (requestdetails.getDecisionType().getParameterId() != null) {
 				parameterReqDTO.setParameterId(requestdetails.getDecisionType().getParameterId());
 				requestdetails.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(!getManagedBean().getQt().isApprovalPBM() ?
+						ParameterConst.EPV_TYPE_REQUEST_1 : ParameterConst.EPV_TYPE_REQUEST_3);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 			}
 			//#21692 note-418 issue 3 - Start
 			else {
 				requestdetails.setDecisionType(new PmParameter());
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(!getManagedBean().getQt().isApprovalPBM() ?
+						ParameterConst.EPV_TYPE_REQUEST_1 : ParameterConst.EPV_TYPE_REQUEST_3);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 			}
 			//#21692 note-418 issue 3 - End
 		}
@@ -2300,6 +2312,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.setDecisionCertPBM((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 				requestdetails
 						.setDecisionType(new PmParameter());
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_2);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 				if (requestdetails.getEpvApprovalReqAttachmentR3() != null) {
 					this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_3);
 					deleteEpvUploadFile();
@@ -2309,6 +2325,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				requestdetails
 						.setDecisionCertPBM(new PmParameter());
 				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//#21692 show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
+				//#21692 note 524 - Start
+				this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_2);
+				deleteEpvUploadFile();
+				//#21692 note 524 - End
 			}
 			//#21692 - start
 			if (requestdetails.getDecisionCertPBM().getParameterCode() != null) {
@@ -3591,9 +3611,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			handleDecisionNull(apprvRequest);
 			boolean toBeRemoveAttachmentIsNotEmpty = CollectionUtils.isNotEmpty(this.getManagedBean().getToBeRemoveEPVAttachments())
 					&& this.getManagedBean().getToBeRemoveEPVAttachments().contains(typeOfRequest);
+			//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - Start
 			if (toBeRemoveAttachmentIsNotEmpty) {
+				Set<String> set = new HashSet<>(this.getManagedBean().getToBeRemoveEPVAttachments());
+				this.getManagedBean().getToBeRemoveEPVAttachments().clear();
+				this.getManagedBean().getToBeRemoveEPVAttachments().addAll(set);
 				this.getManagedBean().getToBeRemoveEPVAttachments().remove(typeOfRequest);
 			}
+			//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - End
 		}
 		
 		/**
@@ -3806,11 +3831,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			}
-			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
+			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);			
 
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
 				List<ScQtContactPerson> newDoaList = reqDTO.getDoaaList() == null ? new ArrayList<ScQtContactPerson>()
