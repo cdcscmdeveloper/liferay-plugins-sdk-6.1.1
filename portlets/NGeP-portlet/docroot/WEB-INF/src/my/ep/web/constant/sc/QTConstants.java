@@ -321,5 +321,4 @@ public interface QTConstants {
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
 	// 6906 - end
-
 }
