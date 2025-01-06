@@ -91,6 +91,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //Fix - #36708
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtActor;
@@ -7046,7 +7047,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
-
+		String  sclRefNo =  EntityHelper.getStringNestedProperty( ctBackingBean.getManagedBean(), "contractVer.ctAmendment.sclRefNo"); //Fix - #36708
 		// Supplemental Contract Letter
 		if (ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE.equalsIgnoreCase(docDefinitionKey)) {
 			FacesScopes fs = new FacesScopes();
@@ -7056,7 +7057,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 			context = new VelocityContext();
 			PmOrgProfile pmOrgProfile = ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile();
-
 			context.put("ptjName", pmOrgProfile.getOrgName());
 			String jabtanName = retrieveJabatanByOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 			StringBuffer  ministryJabatan = new StringBuffer();
@@ -7085,7 +7085,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("ptjAddress", ptjAddress);
 			context.put("phoneNo", phoneNo);
 			context.put("faxNo", faxNo);
-			context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+			context.put("fileNo", sclRefNo + "-" + scLoa.getFileExtNo()); //Fix - #36708
 			context.put("loaNo", scLoa.getLoaNo());
 
 			String issueDate = "";
@@ -7345,8 +7345,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				context.put("govSignDate", "_______________");
 			}
-			if (!StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())) {
-				context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo());
+			if (!StringUtils.isEmpty(sclRefNo)) { //Fix - #36708
+				context.put("agencyRefNo", sclRefNo);
 			} else {
 				context.put("agencyRefNo", "_______________");
 			}			
