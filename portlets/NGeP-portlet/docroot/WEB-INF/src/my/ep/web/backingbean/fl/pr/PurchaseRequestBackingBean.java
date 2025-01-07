@@ -435,7 +435,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 							scReqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
 						}
 
-						scReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());//TODO
+						scReqDTO.setFlAddress(getManagedBean().getSelectedDelAddr().getFlAddress());
 						PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByFlAddress(scReqDTO);
 						itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
 
@@ -1384,7 +1384,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		// temp: to monitor performance
-		if (taskId != null) { //28855 - handle the NullPointerException
+		if (taskId != null) {//36386 -error blank page when user click PR link from dashboard
 			MDC.put("taskId", taskId);
 		}
 		getLoginUserOrg();
@@ -4911,6 +4911,21 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	//24893 - end
 	
 	//12183 - Start
+	/**
+	 * Triggered from: prReviewHeaderPage.xhtml.
+	 * 
+	 * Code performance risk: triggered everytime page loads.
+	 * 
+	 * Mitigation: 
+	 * 1. Make sure logic and service calls is optimized. 
+	 * 2. Create new service to execute and return specific value. Fast execution time.
+	 * 3. Disable logging
+	 * 
+	 * @param docNo
+	 * @param docStatusId
+	 * @param docType
+	 * @return String 
+	 */
 	public String getDocStatus(FlFulfilmentRequest flFulfilmentRequest){
 		
 		if(checkStatusPidExpired(flFulfilmentRequest)){
