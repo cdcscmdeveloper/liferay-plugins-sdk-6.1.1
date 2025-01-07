@@ -12646,6 +12646,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						checkZoneLocationChange(this.getManagedBean().getQt());
 					}
 					//20210621@asyrafhaziq_Bug #30914 - End
+					validateSupplierCriteriaIntegrity(this.getManagedBean().getQt());	// Bug #36730@Syazani 07/01/2025
 					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
