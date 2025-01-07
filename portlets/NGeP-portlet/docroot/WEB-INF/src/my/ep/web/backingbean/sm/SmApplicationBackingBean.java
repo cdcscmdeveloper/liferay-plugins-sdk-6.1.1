@@ -2707,6 +2707,18 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
 				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+					log.info("=======#36483 - b4 update method updateSmAppl=======");
+					log.info("#36483 - addr1 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress1());
+					log.info("#36483 - addr2 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress2());
+					log.info("#36483 - addr3 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress3());
+					log.info("#36483 - country - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().getCountryName());
+					log.info("#36483 - state - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().getStateName());
+					log.info("#36483 - district - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().getDistrictName());
+					log.info("#36483 - city - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().getCityName());
+					log.info("#36483 - postcode - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPostcode());
+					log.info("#36483 - latitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLatitude());
+					log.info("#36483 - longitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLongitude());
+					
 					fac.getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
 					fac.getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
@@ -2723,6 +2735,18 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
 					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().setCityId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId());
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+					
+					log.info("=======#36483 - AFTER update method updateSmAppl=======");
+					log.info("#36483 - addr1 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress1());
+					log.info("#36483 - addr2 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress2());
+					log.info("#36483 - addr3 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress3());
+					log.info("#36483 - country - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().getCountryName());
+					log.info("#36483 - state - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().getStateName());
+					log.info("#36483 - district - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().getDistrictName());
+					log.info("#36483 - city - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().getCityName());
+					log.info("#36483 - postcode - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPostcode());
+					log.info("#36483 - latitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLatitude());
+					log.info("#36483 - longitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLongitude());
 				}
 			}
 		}
@@ -9734,6 +9758,18 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				for(SmFacility fac : reqDTO.getSmAppl().getSmFacilities()){
 					if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+						log.info("=======#36483 - b4 update method intializeSaveDraftBpm=======");
+						log.info("#36483 - addr1 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress1());
+						log.info("#36483 - addr2 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress2());
+						log.info("#36483 - addr3 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress3());
+						log.info("#36483 - country - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().getCountryName());
+						log.info("#36483 - state - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().getStateName());
+						log.info("#36483 - district - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().getDistrictName());
+						log.info("#36483 - city - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().getCityName());
+						log.info("#36483 - postcode - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPostcode());
+						log.info("#36483 - latitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLatitude());
+						log.info("#36483 - longitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLongitude());
+						
 						fac.getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
 						fac.getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
 						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
@@ -9750,6 +9786,18 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
 						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().setCityId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId());
 						getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+						
+						log.info("=======#36483 - AFTER update method intializeSaveDraftBpm=======");
+						log.info("#36483 - addr1 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress1());
+						log.info("#36483 - addr2 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress2());
+						log.info("#36483 - addr3 - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getAddress3());
+						log.info("#36483 - country - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().getCountryName());
+						log.info("#36483 - state - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().getStateName());
+						log.info("#36483 - district - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().getDistrictName());
+						log.info("#36483 - city - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().getCityName());
+						log.info("#36483 - postcode - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getPostcode());
+						log.info("#36483 - latitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLatitude());
+						log.info("#36483 - longitude - " + getManagedBean().getBasicCompanyFacility().getSmAddress().getMapLongitude());
 					}
 				}
 			}
