@@ -46,6 +46,10 @@ import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 //#28175 ReOpen
 import my.ep.web.constant.sm.SupplierManagementConst;
 //#28175 end
+//#28895_35501 Start - AUDIT TRAIL SM
+import javax.servlet.http.HttpServletRequest;
+import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -72,6 +76,16 @@ public class ViewSuppProfileBackingBean extends
 		long subStartTime = 0L;
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 Start - AUDIT TRAIL SM
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String isAudit = originalServletRequest.getParameter("isAudit");
+		if (SmCommonUtil.md5("true").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(true);
+		} else if (SmCommonUtil.md5("false").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(false);
+		}
+		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
