@@ -44,6 +44,7 @@
 							listener="#{specificationBackingBean.setProcurementMode(scQt, 'Y')}">
 						</p:ajax><!-- #36678 add ajax-->
 					</p:commandButton>
+					
 					<ui:remove><!-- 1873 note 74 update rendered condition--></ui:remove>
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!specificationBackingBean.managedBean.readOnly or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() and specificationBackingBean.managedBean.readOnly)}"
@@ -105,29 +106,6 @@
 				title="#{lbl['lbl.sc.spec.financial.title']}" />
 
 		</h:panelGroup>
-
-		
-		 <!-- Bug#35061 - change message value -->	
- 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
- 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
-		resizable="false" closable="false">
-		<div align="right">
-			<p:commandButton id="conf20k" 
-				value="#{lbl['lbl.btn.yes']}" 
-				action="#{specificationBackingBean.redirectSpecComMainYes()}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				update="@form"
-				process="@this"/>
-			<p:commandButton id="decline20k" 
-				value="#{lbl['lbl.btn.no']}" 
-				action="#{specificationBackingBean.redirectSpecComMainNo()}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				process="@this"
-				update="@form"/>
-		</div>
-	</p:confirmDialog> 	
-<!-- #25729 #174 END -->
 
 		<!-- Bug#36678 related to #35061 DISPLAY POP UP IF BELOW 50k-->
 		<p:confirmDialog id="proceedBelowQtValueId"
