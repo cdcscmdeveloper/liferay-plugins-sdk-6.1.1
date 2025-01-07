@@ -45,7 +45,7 @@
 						<p:ajax event="click"
 							listener="#{specificationBackingBean.setProcurementMode(scQt, 'Y')}">
 						</p:ajax><!-- #36678 add ajax-->
-
+					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!specificationBackingBean.managedBean.readOnly 
 							or (specificationBackingBean.isMemberChairpersonSpecPreparationTask() 
