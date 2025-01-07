@@ -1813,6 +1813,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean firstViewPageCAUsers = false; 
 	//#25426 - End
 	
+	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
+	
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
@@ -11344,4 +11346,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#25426 - End
 
+	/** #36678 related to #35061
+	 * 
+	 * @return
+	 */
+	public boolean isFieldProcurementJustification() {
+		return isFieldProcurementJustification;
+	}
+
+	/** #36678 related to #35061
+	 * @param
+	 */
+	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
+		this.isFieldProcurementJustification = isFieldProcurementJustification;
+	}
 }

@@ -386,4 +386,8 @@ public interface QTConstants {
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
 	// 6906 - end
+	
+	//36678
+	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+		
 }
