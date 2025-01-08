@@ -9,7 +9,6 @@
 	<p:tabMenu activeIndex="#{backingBean.managedBean.tabActiveIndex}"
 		styleClass="sidemenu">
 		
-		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
 				suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
@@ -172,7 +171,6 @@
 								<!-- 14530 -->
 								<c:choose>
 									<c:when test="#{!empty backingBean.managedBean.poSupplierInquiryHistory}">
-											<p:menuitem>
 											
 												<ac:smApplMenuItem backingBean="#{backingBean}"
 												suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
