@@ -1112,6 +1112,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				reqDTO.setCtAgencySearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchRecommendedAgency(reqDTO);
 				if (resDTO.isSuccessful()) {
+					// #36707 - Start
+					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						List<CtAgency> resultList = new ArrayList<CtAgency>();
+						resultList.add(new CtAgency());
+						resultList.get(0).setOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
+						resDTO.getCtAgencyResultBean().setTotalRecord(1);
+						resDTO.getCtAgencyResultBean().setResultList(resultList);
+						return resDTO.getCtAgencyResultBean();
+					}
+					// #36707 - End
 					return resDTO.getCtAgencyResultBean();
 				}
 			} catch (Exception e) {
