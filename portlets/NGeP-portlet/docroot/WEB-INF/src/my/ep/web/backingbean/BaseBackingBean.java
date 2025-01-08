@@ -4240,8 +4240,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
 		log.info("#37598 -- isMofAccEffDatePassed6MonthCurrDate ==>>>>>" + isMofAccEffDatePassed6MonthCurrDate);
 		String applType = smAppl.getApplType();
-		Boolean disalllowEditApplType = applType.equalsIgnoreCase(SupplierManagementConst.ACC_BASIC)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+		Boolean disalllowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
 				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
 		log.info("#37598 -- smAppl.getApplType() ==>>>>>" + smAppl.getApplType());
@@ -4259,7 +4258,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
 				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
 				
 				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);

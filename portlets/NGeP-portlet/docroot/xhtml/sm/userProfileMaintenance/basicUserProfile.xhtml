@@ -401,7 +401,8 @@
 												value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 											<!-- #13320 - added division -->
 											<!-- #33592-->
-											<p:ajax event="change" process="@this"
+											<!-- #36717 - add @([id$=PermanentAddressInfo]) in ajax process -->
+											<p:ajax event="change" process="@this @([id$=PermanentAddressInfo])"
 												update="divisionBasicProLabelPanelId,divisionBasicProDropdownPanelId,basicPermAddDistrictList, basicPermAddCityList"
 												listener="#{smPersonnelBackingBean.onChangeState(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress, 'I')}" />
 										</p:selectOneMenu>
