@@ -3890,7 +3890,13 @@ return	remarksNotFound;
 			
 			// #28834 - Start
 			// To force latest briefing paper updated with the recent content during Endorsement or SignOff status.
-			if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()) {
+			// #36831 note-11 -start-
+			if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+					.longValue()
+					|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION
+							.longValue())
+			// #36831 note-11 -end-
+			{
 				ScQtFinalizationReport scQtFinalizationReport = null;
 				for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
 					if (report.getTitle().contains("Kertas Taklimat")) {
