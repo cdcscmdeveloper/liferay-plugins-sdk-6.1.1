@@ -1151,22 +1151,6 @@
 									</p:inputTextarea>
 									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
 								</c:when>
-								<ui:remove><!-- #36678 related to #35061 Start(to enable field at spec preparation if user change below 50k)-->
-										   <!-- #36678 add disable estimated amount if has null value for first time enter -->
-								</ui:remove>
-								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}">
-								<p:inputTextarea id="justificationProcValueId_1"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" 
-										disabled="#{isReadOnly and scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.estimatedAmount eq null}" 
-										cols="110" rows="3"
-										onkeyup="limitTextArea(this,100);"
-										onkeydown="limitTextArea(this,100);"
-										onmouseout="limitTextArea(this,100);">
-										<f:ajax></f:ajax>
-								</p:inputTextarea>
-								</c:when>
-								<ui:remove> <!-- #36678 related to #35061 End--> </ui:remove> 
 								<c:otherwise>
 									<p:inputTextarea id="justificationProcValueId_2"
 										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
@@ -1181,26 +1165,12 @@
 					</c:if>
 					<c:if test="#{!expectTotalIndPriceBelowThreshold}">
 						<td>
-						<c:choose>
-							<ui:remove><!-- #36678 Start(to enable field at spec preparation if user change below 50k)--></ui:remove>
-							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING and specificationBackingBean.checkIndPriceBecomeBelow()}">
-							<p:inputTextarea id="justificationProcValueId_2"
-										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
-										label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
-										cols="110" rows="3"
-										disabled="#{!specificationBackingBean.managedBean.fieldProcurementJustification}">
-							</p:inputTextarea>
-							</c:when> 
-							<ui:remove> <!-- #36678 End--> </ui:remove> 
-							<c:otherwise>
 							<p:inputTextarea id="justificationProcValueId_2"
 										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
 										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
 										cols="110" rows="3"
-										disabled="true">
+										disabled="true" >
 							</p:inputTextarea>
-							</c:otherwise>
-						</c:choose>
 						</td>
 				</c:if>
 				<!--#25729 #142 END -->
