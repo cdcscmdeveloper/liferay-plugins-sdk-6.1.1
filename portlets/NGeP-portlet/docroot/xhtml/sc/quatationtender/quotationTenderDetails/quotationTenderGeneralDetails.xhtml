@@ -1183,7 +1183,7 @@
 						<td>
 						<c:choose>
 							<ui:remove><!-- #36678 Start(to enable field at spec preparation if user change below 50k)--></ui:remove>
-							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING and specificationBackingBean.checkIndPriceBecomeBelow()}">
+							<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}">
 							<p:inputTextarea id="justificationProcValueId_2"
 										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
 										label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
