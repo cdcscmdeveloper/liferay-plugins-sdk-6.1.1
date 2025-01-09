@@ -325,6 +325,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//#30008 - start
 	private boolean notReachAgrm;
 	
+	private boolean allSupplierDisagreeEPV;//#21692
+	
 	/**
 	 * @return the activeIndex
 	 */
@@ -2594,6 +2596,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setNotReachAgrm(boolean notReachAgrm) {
 		this.notReachAgrm = notReachAgrm;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 
 }
 // ***25201

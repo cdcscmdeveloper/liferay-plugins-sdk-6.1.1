@@ -106,6 +106,8 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	
 	//#28784
 	private boolean isDemoReq;
+	
+	private boolean allSupplierDisagreeEPV;//#21692
 	//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 	private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
@@ -667,5 +669,15 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setDemoReq(boolean isDemoReq) {
 		this.isDemoReq = isDemoReq;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 
 }

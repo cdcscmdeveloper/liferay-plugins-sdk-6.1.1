@@ -4265,7 +4265,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 				
 				if(isPersonnelAdminRole
-						&& !isMofAccEffDatePassed6MonthCurrDate
+						&& isMofAccEffDatePassed6MonthCurrDate
 						&& disalllowEditApplType){ // #37598
 					getManagedBean().setDisAllowOwnerEdit(true);
 					break;
