@@ -51,9 +51,13 @@ import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -98,12 +102,20 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.division.DivisionReqDTO;
+import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
@@ -144,7 +156,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -216,6 +227,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
@@ -1584,13 +1596,38 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						ScAddress scAddress = scQtSampleSubmission.getScAddress();
-
+						BriefingZoneBean briefingsamplebean=null;//11104-start
+						if(CollectionUtils.isNotEmpty(this.getManagedBean().getSampleAddressBean())){
+							for(BriefingZoneBean briefBean: this.getManagedBean().getSampleAddressBean()){
+								if(briefBean.getTplSpecZoneDtl().getSpecZoneId().equals(scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId())|| scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId()==scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId()){
+									briefingsamplebean=briefBean;	
+								}							
+							}
+						}//11104-End
 						if (null != scAddress) {
 							if (scAddress.getPmDivision() != null
 									&& scAddress.getPmDivision()
 											.getDivisionId() == null) {
 								scAddress.setPmDivision(null);
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getDivisionId()){//11104-start
+									scAddress.setPmDivision(retrievePmDivsById(briefingsamplebean.getDivisionId()));
+								}//11104-End
 							}
+							if(null!=scAddress.getPmState() && scAddress.getPmState().getStateId()==null){//11104-start
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getStateId()){
+									scAddress.setPmState(retrievePmStateById(briefingsamplebean.getStateId()));
+								}
+							}
+							if(null!=scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId()==null){
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getDistrictid()){
+									scAddress.setPmDistrict(retrievePmDistById(briefingsamplebean.getDistrictid()));
+								}
+							}
+							if(null!=scAddress.getPmCity() && scAddress.getPmCity().getCityId()==null){
+								if(null!=briefingsamplebean && null!=briefingsamplebean.getCityId()){
+									scAddress.setPmCity(retrievePmCityById(briefingsamplebean.getCityId()));
+								}
+							}//11104-End
 							scAddress.setPmCountry(retrieveCountry());
 						}
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
@@ -2600,8 +2637,7 @@ public class QTDetailBackingBean extends
 
 	public void retrieveCommitteeAppointmentTabDtl(int formCommitteeFlag, int reformCommitteeFlag,
 			boolean committeeReadOnly) {
-	// Bug 32277 - end	
-		
+		// Bug 32277 - end		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
 		
@@ -2860,7 +2896,7 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 		}
 		// Bug 32277 - end
-
+		
 		for (TabBean tabBean : committeTabs) {
 			if ((!SourcingConstants.COMMITTE_TYPE_FINALIZATION.equals(tabBean
 					.getTabType()) && tabBean.getScQtCommittee()
@@ -3207,10 +3243,11 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String updateBpmTask(String outcome) {
-		// 25037 - start - remove after clone(25635) enter production
+		
+		//25037 - start - remove after clone(25635) enter production
 		assertSpecificationUpdateInProgress(false);
-		// 25037 - end - remove after clone(25635) enter production
-
+		//25037 - end - remove after clone(25635) enter production
+		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
 
@@ -3326,6 +3363,10 @@ public class QTDetailBackingBean extends
 				checkValidationForStatusAndFileAttachment(qt.getScQtApprovals(), ParameterConst.APPROVAL_CATEGORY_OTHERS);
 			}
 			// #25077 End
+
+			// #30477, #25426 Start
+			validateUserInactive(taskName, currentStatus, outcome);
+			// #30477, #25426 End
 
 			// #30477, #25426 Start
 			validateUserInactive(taskName, currentStatus, outcome);
@@ -3727,7 +3768,7 @@ public class QTDetailBackingBean extends
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
                     	}
-                      } else {
+						} else {
 							if (!isApprovalScreen() && existingApprovalTabs == null) { // 25037
 								// 13344_start
 								qtApproval.setScQtApprovalRemarks(initializeRemarks(qtApproval,
@@ -6537,7 +6578,7 @@ public class QTDetailBackingBean extends
 					}
 					// Bug 32277 - end
 
-				} else if(getUserTaskIsBPKApproval() && isApprovalScreen()) {
+				 } else if(getUserTaskIsBPKApproval() && isApprovalScreen()) {
 					 this.getManagedBean().setPublicationApproval(null);	
 				 } else if(getUserTaskIsPublicationApproval() && isApprovalScreen()) {
 					 this.getManagedBean().setPublicationApproval(null);	
@@ -6742,7 +6783,6 @@ public class QTDetailBackingBean extends
 
 	public void submitQtDetailsFormMaintanace(boolean confirmResetReendorse) {
 	// 25037 - end
-		log.debug("submitQtDetailsFormMaintanace");
 		IQTDetailSO detailSO;
 		try {
 			this.getManagedBean().setSaveFlow(false);
@@ -6751,6 +6791,11 @@ public class QTDetailBackingBean extends
 
 			updateApprovalDetails(this.getManagedBean().getQt());
 			retrieveApprovalTabDtl();
+			if (this.getManagedBean().getQt().isSampleReq()) {//11104-start
+				this.getManagedBean().setSubmit(true);
+				retrieveScheduleTabDtl();
+
+			}//11104-End
 			// 25037 - start
 			boolean showPopup = validateIsCommitteeFormed(confirmResetReendorse);
 			if (showPopup) {
@@ -10292,6 +10337,13 @@ public class QTDetailBackingBean extends
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO)
 				.getWorkFlowStatus();
 		
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			currentWorkFlowStatus = null;
+			bpmExistFlag = true;
+		}
+		// End - #30866		
 		if (null != currentWorkFlowStatus) {
 			if (currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)) {
 				bpmExistFlag = false;
@@ -10368,6 +10420,72 @@ public class QTDetailBackingBean extends
 		return 0;
 	}
 	// #29425 - end
+	
+	
+	/**11104-start
+	 * Retrieve pm state by id.
+	 * 
+	 * @param stateId
+	 *            - Long state id
+	 * @return PmState object
+	 */
+	public static PmState retrievePmStateById(Long stateId) {
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(stateId);
+		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
+
+		return resDTO.getPmState();
+	}
+	
+	/**
+	 * Retrieve pm city by id.
+	 * 
+	 * @param cityId
+	 *            - Long the city id
+	 * @return PmCity object
+	 */
+	public static PmCity retrievePmCityById(Long cityId) {
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setCityId(cityId);
+		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+
+		return resDTO.getPmCity();
+	}
+
+	/**
+	 * Retrieve pm dist by id.
+	 * 
+	 * @param distId
+	 *            - Long the dist id
+	 * @return PmDistrict object
+	 */
+	public static PmDistrict retrievePmDistById(Long distId) {
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDistrictId(distId);
+		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
+
+		return resDTO.getPmDistrict();
+	}
+	
+	public static PmDivision retrievePmDivsById(Long divnId) {
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDivisionSO.class);
+		DivisionReqDTO reqDTO = new DivisionReqDTO();
+		reqDTO.setDivisionId(divnId);
+		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
+
+		return resDTO.getPmDivision();
+	}//11104-End
 	
 	// 25037 - start
 	/**
