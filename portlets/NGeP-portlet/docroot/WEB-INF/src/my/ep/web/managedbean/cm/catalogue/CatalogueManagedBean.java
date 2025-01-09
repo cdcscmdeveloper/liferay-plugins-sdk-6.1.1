@@ -4475,7 +4475,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * To check what DA the supplier involve
 	 */
 	public void checkForDisciplinaryAction() {
-
+		
 		for (VCmSupplierItem supplierItem : getViewSupplierItemList()) {
 
 			// check for disciplinary action
@@ -4494,8 +4494,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				log.info("[#26282] - ========================================");
 
 				applyDisciplinaryActions(supplierItem, disciplinaryAct);
-			} else {
-				log.info("[#26282] - Disciplinary action does not imposed on supplier");
 			}
 		}
 	}

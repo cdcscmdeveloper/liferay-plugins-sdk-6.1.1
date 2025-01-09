@@ -2351,7 +2351,7 @@ public class EvaluationMeetingBackingBean extends
 	 * Determine the popup that should appear upon submission.
 	 */
 	public void resolveSubmitMeetingDialog() {
-		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity())) {
+		if (isCommitteeModified(this.getManagedBean().getCommitteeMemberActivity()) && this.getManagedBean().isValidFor25037()) {
 			RequestContext.getCurrentInstance().execute("confirmSubmitToApproverPopup.show();");
 		} else {
 			RequestContext.getCurrentInstance().execute("confirmSubmitMeetingPopup.show();");
@@ -2430,12 +2430,12 @@ public class EvaluationMeetingBackingBean extends
 			
 			AuditTrailResDTO auditResDTO = new AuditTrailResDTO();
 
-			auditResDTO.setOrganizationProfileId(this.getManagedBean().getQt().getOrgProfileId());
 			auditResDTO.setDocTypeId(this.getManagedBean().getQt().getProcurementMode().getParameterId());
 			auditResDTO.setDocId(this.getManagedBean().getQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
+			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {
@@ -2515,17 +2515,35 @@ public class EvaluationMeetingBackingBean extends
 		auditResDTO.setAuGroupSectionId(groupSectionId);
 
 		auditResDTO.setQtFieldLabelId(typeName);
-		auditResDTO.setNewValue(committeeMember.getMemberName());
+		if (auditResDTO.getActionType().equals(QTAuditConstant.AU_TYPE_CREATE)) {
+			auditResDTO.setOldValue(null);
+			auditResDTO.setNewValue(committeeMember.getMemberName());
+		} else {
+			auditResDTO.setNewValue(null);
+			auditResDTO.setOldValue(committeeMember.getMemberName());
+		}
 		AuditTrailReqDTO auditReqDTOName = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTOName);
 
 		auditResDTO.setQtFieldLabelId(fieldIdentification);
-		auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+		if (auditResDTO.getActionType().equals(QTAuditConstant.AU_TYPE_CREATE)) {
+			auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+		} else {
+			auditResDTO.setOldValue(committeeMember.getPmUser().getIdentificationNo());
+		}
 		AuditTrailReqDTO auditReqDTOIdentification = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTOIdentification);
 
 		auditResDTO.setQtFieldLabelId(fieldRole);
-		auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+		if (auditResDTO.getActionType().equals(QTAuditConstant.AU_TYPE_CREATE)) {
+			auditResDTO.setNewValue(ParameterHelper.getInstance().getParameterDesc(
+					ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+					SourcingConstants.MY_LOCALE));
+		} else {
+			auditResDTO.setOldValue(ParameterHelper.getInstance().getParameterDesc(
+					ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+					SourcingConstants.MY_LOCALE));
+		}
 		AuditTrailReqDTO auditReqDTORole = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 		auditReqList.add(auditReqDTORole);
 

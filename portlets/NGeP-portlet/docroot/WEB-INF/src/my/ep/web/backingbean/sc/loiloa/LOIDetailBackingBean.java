@@ -885,13 +885,13 @@ public class LOIDetailBackingBean extends
 					}
 					if (CollectionUtils.isNotEmpty(zoneDetails)) {
 						this.getManagedBean().setMultiLOIZoneDetails(zoneDetails);
+						generateZoneMenuModel();// 33380 - change position 
 						this.getManagedBean().setSelectedZone(zoneDetails.get(0));
 						this.getManagedBean().setZoneActiveIndex(
 									zoneDetails.get(0).getZoneTabIndex());
 						this.getManagedBean().setScQtRecommendsByZone(scQtRecommendsByZone);
 						processMultiLOIDetails(recommendType, 
 								scQtRecommendsByZone.get(zoneDetails.get(0).getSpecZoneId()));					
-						generateZoneMenuModel();
 					}					
 				} else {
 					processMultiLOIDetails(recommendType, scQtRecommendList);
@@ -1956,9 +1956,9 @@ public class LOIDetailBackingBean extends
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 			// #29007	Vinod Start
-			String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007	Vinod End
 		} finally {
@@ -2002,9 +2002,9 @@ public class LOIDetailBackingBean extends
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
 			// #29007	Vinod Start
-			String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007	Vinod End
 		
@@ -2059,9 +2059,9 @@ public class LOIDetailBackingBean extends
 			populateLOIDetails(resDTO);
 			getManagedBean().setButtonFlag(Boolean.TRUE);
 			// #29007	Vinod Start
-			String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007	Vinod End
 
@@ -2883,21 +2883,6 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
-	/**
-	 * BUG 33353 : To Update ScQtRecommendDtl (Reject Scenario, to prevent bugs on Multipla LOI (Recommendation) Stage)
-	 * @param List<ScQtRecommendDtl>
-	 * @return null
-	 */
-	private void updateRejectQtRecommendDtl(ScLoiLoa scLoiLoa){
-		try{
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoiLoa(scLoiLoa);
-			getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);
-		}catch(Exception e){
-			
-		}
-	}
-
 	/**
 	 * Update bpm task. update bpm - save data into database and BPM process
 	 * will route to the next respective user.
@@ -6718,8 +6703,9 @@ public class LOIDetailBackingBean extends
 	}
 
 	private boolean checkIfAllLoiCompleted(List<ScLoi> lois) {
-		if (CollectionUtils.isEmpty(lois))
+		if (CollectionUtils.isEmpty(lois)) {
 			return false;
+		}
 		for (ScLoi loi : lois) {
 			PmStatus status = null != loi.getScWorkFlowStatus() && null != loi.getScWorkFlowStatus().getPmStatus() ? loi
 					.getScWorkFlowStatus().getPmStatus() : new PmStatus();
@@ -6847,38 +6833,39 @@ public class LOIDetailBackingBean extends
 	public void addSuppliersProposalSpecificationUpdate() {
 		debugLogger("addSuppliersProposalSpecificationUpdate");
 		ScLoi scLoi = getManagedBean().getScLoi();
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
-		
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();// 20230711@Asyrafhaziq-SQUBE Bug Minor #16
+
 		List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
-		if(null == scNegoTerms) {
-			scNegoTerms = new ArrayList<ScLoiTerm>();
+		if (null == scNegoTerms) {
+			scNegoTerms = new ArrayList<>();
 		}
 		ScLoiTerm negoTerm = new ScLoiTerm();
-			
-		String message=	ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
+
+		String message = ResourceBundleUtils.getMessage(
+				QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		boolean alredyAdded = false;
-		for(ScLoiTerm scLoiTerm : scNegoTerms){
-			if(null!=scLoiTerm.getTermDesc() && scLoiTerm.getTermDesc().equals(message)){//29007
+		for (ScLoiTerm scLoiTerm : scNegoTerms) {
+			if (null != scLoiTerm.getTermDesc() && scLoiTerm.getTermDesc().equals(message)) {// 29007
 				alredyAdded = true;
 				break;
 			}
 		}
-		if(!alredyAdded){//sonarQubeIssue7#84
+		if (!alredyAdded) {// sonarQubeIssue7#84
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				negoTerm.setSelectedTerm(Boolean.FALSE);
-			} else{
+			} else {
 				negoTerm.setSelectedTerm(Boolean.TRUE);
 				negoTerm.setSelected(true);
 			}
 			negoTerm.setTermDesc(message);
-			negoTerm.setSelectTerm(Boolean.TRUE);//29007
+			negoTerm.setSelectTerm(Boolean.TRUE);// 29007
 			negoTerm.setScLoi(scLoi);
 			negoTerm.setModified(true);
 			scNegoTerms.add(negoTerm);
 			scLoi.setScNegoTerms(scNegoTerms);
 		}
-			
+
 	}
 	// #29007	Vinod End
 	

@@ -3,8 +3,10 @@ package my.ep.web.backingbean.pm.signatory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -12,10 +14,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.signatory.ISignatorySO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
@@ -26,17 +30,22 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMAuthorizedSignBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.springframework.util.ObjectUtils;
 
 
 /**
@@ -395,10 +404,36 @@ public class AuthorizedSignatoryBackingBean extends
 			}			
 		}
 		reqDTO.setCertSignatorys(certSignatories);
+		/************ AUDIT *************/
+		reqDTO.setZoneId(certSignatories.get(0).getPmZone().getZoneId());
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMAuthorizedSignBackingBean(); 
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+		
+		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
+			SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);
+//			this.getManagedBean().setOldCertSignatories(resDTO.getCertSignatories());
+			
+			getManagedBean().setExistingCertSignatoriesMap(new HashMap<Long,PmCertSignatory>());
+			
+			if(!ObjectUtils.isEmpty(resDTO.getCertSignatories().toArray())){
+				for(PmCertSignatory ruleValue : resDTO.getCertSignatories()){
+//					PmConfigRuleValue currentRuleValue = (PmConfigRuleValue)ruleValue.cloneEntity(); 
+					getManagedBean().getExistingCertSignatoriesMap().put(ruleValue.getCertSignatoryId(), ruleValue);
+				}
+			}
+		}
+		/************ AUDIT *************/	
+		
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
 			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
-			
+			/************ AUDIT *************/
+			this.getManagedBean().setNewCertSignatories(resDTO.getCertSignatories());
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_AUTHORIZED);
+			}
+			/************ AUDIT *************/
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 		     FacesMessage.SEVERITY_INFO,
 		     null,

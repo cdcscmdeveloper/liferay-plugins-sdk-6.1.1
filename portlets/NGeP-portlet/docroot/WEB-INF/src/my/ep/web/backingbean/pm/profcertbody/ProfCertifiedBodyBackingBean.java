@@ -384,6 +384,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 	/**
 	 * to save professional / certified details
+	 * @return the String
 	 * 
 	 */	
 	public String saveCertBodyDtls() {
@@ -459,7 +460,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				getManagedBean().setOldAuditPmCertBody(oldFiled.getCertBody());
 			}
 			/************ AUDIT *************/
-			
 			CertBodyResDTO resDTO = certBodySO
 					.saveOrUpdateCertBodyDtls(certBodyReqDTO);
 			reloadProfCertData(resDTO.getCertBody());
@@ -469,6 +469,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 			this.getManagedBean().setCertBody(resDTO.getCertBody());
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CERT_BODY)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CERT_BODY);
+				}
+				/************ AUDIT *************/
 				if (certBody.isBrandNew()) {
 					FacesContext
 							.getCurrentInstance()
@@ -503,12 +508,6 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 																	.getUserLocale())));
 					redirectUrl = null;
 				}
-			/************ AUDIT *************/
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CERT_BODY)) {
-				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CERT_BODY);
-			}
-			/************ AUDIT *************/
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

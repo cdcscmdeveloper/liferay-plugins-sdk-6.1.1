@@ -48,6 +48,10 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 	private Map<String, String> categoryTypeMap;
 	private Map<Long,PmPoJobWeight> jobWeightMap;
 	
+	/************ AUDIT *************/
+	private boolean brandNew = false;
+	/************ AUDIT *************/
+	
 	public PoJobTypeRatioManagedBean() {
 	}
 
@@ -230,5 +234,18 @@ public class PoJobTypeRatioManagedBean extends BaseManagedBean {
 			return null;
 		}
 
+	}
+	/**
+	 * @return the brandNew
+	 */
+	public boolean isBrandNew() {
+		return brandNew;
+	}
+
+	/**
+	 * @param brandNew the brandNew to set
+	 */
+	public void setBrandNew(boolean brandNew) {
+		this.brandNew = brandNew;
 	}
 }
