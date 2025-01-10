@@ -46,7 +46,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
-import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
@@ -60,7 +59,6 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
-import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
@@ -135,8 +133,6 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
-import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
-import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -3773,11 +3769,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		IRequestNoteSO requestNoteSO = null;
 		List<ScRequestNoteDtl> rndtls = null;
 		// #36119 - end
-		//Start: #35492#58
-		boolean audit = false;
-		PurchaseRequestResDTO auditResponse = null;
-		//End: #35492#58
-				
+		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
 			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: " + DPStatusConstants.RN_PENDING_ITEM_CODIFICATION + " docType : " + ParameterConst.DOCTYPE_REQUEST_NOTE);
@@ -3814,7 +3806,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 					reqDTO.setRequestNoteDtls(rndtls);
 					PurchaseRequestResDTO response = purchaseRequestSO.updateCancelCodifyPR(reqDTO);
-					auditResponse = response; //#35492#58
 					
 					if(getManagedBean().isSourcingDpNewBpmVer()){
 						RequestNoteReqDTO rnReqDTO = new RequestNoteReqDTO();
@@ -3839,7 +3830,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					if (response.isSuccessful()) {
 						successMessage(MessageConst.INFO_776041, (String) prObj[1],
 								(String) prObj[3], Boolean.TRUE);
-						audit = true;//#35492#58
 					} else {
 						throw new EpException(MessageConst.ERROR_700020);
 					}
@@ -3859,22 +3849,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			} else {
 				log.error(this.getClass().getName() + ".cancelPendingItemCodificationDPM(): receipeints not found to send a notification");
 			}
-			
-			//START - #35492#58
-			if (audit) {
-				// /************ AUDIT #28895_35492 *************/
-				IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-
-				AuditDPRequestNoteBackingBeanTemplate auTemplate = new AuditDPRequestNoteBackingBean();
-				if (auditDPRequestNoteSO.isAuditConfig(AuditDPRequestNoteConst.SC_DP_AU_RN_CONF)) {
-					getManagedBean().setPurchaseRequestResDTO(auditResponse);
-					auTemplate.auditSaveData(getManagedBean(), getUserIdSessionFromLoginId());//#35492#58
-				}
-				// /************ END AUDIT #28895_35492 *************//
-			}
-			//END - #35492#58
-			
 			facesScopes.removeFromSession("directPurchaseManagedBean");
 			super.renewSesionObject();
 		}
