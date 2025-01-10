@@ -7058,20 +7058,28 @@ public class LOIDetailBackingBean extends
 	 * @param bpmAction
 	 * @return void
 	 */
-	public void validateNegoDecisionAction() {
+	public void validateNegoDecisionAction(String outcome) {
 		try {
+			ScLoi scLoi = getManagedBean().getScLoi();
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
+			String bpmAction = outcome;
 
-			String decision = this.getManagedBean().getDecisionCode();
-			String justification = this.getManagedBean().getJustification();
-			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
+			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+				String decision = this.getManagedBean().getDecisionCode();
+				String justification = this.getManagedBean().getJustification();
+				bpmAction = BpmOutcomeConst.BPM_SUBMIT;
+				
 
-			if (decision == null) {
-				throw new EpException(MessageConst.ERROR_775194);
-			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-				throw new EpException(MessageConst.ERROR_775193);
-			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-				RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-			} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				if (decision == null) {
+					throw new EpException(MessageConst.ERROR_775194);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+					throw new EpException(MessageConst.ERROR_775193);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+					updateBpmTaskAction(bpmAction);
+				}
+			}else{
 				updateBpmTaskAction(bpmAction);
 			}
 
