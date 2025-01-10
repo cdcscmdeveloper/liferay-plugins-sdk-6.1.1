@@ -2172,7 +2172,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				// #30504 start #34795 start
+				// #30504  #34795 start
 				String currPoLoginId = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 				PmUser currPo = PmCommonUtil.retrieveUserWithPoRoleTaskByLoginId(currPoLoginId);
 				log.info("---Curent PO: "+currPo.getUserName());
@@ -2204,6 +2204,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					this.getManagedBean().setBpmPojo(smObj);
 				}
 				log.info("---Curent PO Latest: "+currPo.getUserName());
+				//34795 end
 				
 				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
