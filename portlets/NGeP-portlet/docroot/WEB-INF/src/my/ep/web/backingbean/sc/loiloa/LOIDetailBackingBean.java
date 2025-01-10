@@ -7068,7 +7068,6 @@ public class LOIDetailBackingBean extends
 				String decision = this.getManagedBean().getDecisionCode();
 				String justification = this.getManagedBean().getJustification();
 				bpmAction = BpmOutcomeConst.BPM_SUBMIT;
-				
 
 				if (decision == null) {
 					throw new EpException(MessageConst.ERROR_775194);
@@ -7079,14 +7078,14 @@ public class LOIDetailBackingBean extends
 				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
 					updateBpmTaskAction(bpmAction);
 				}
-			}else{
+			} else {
 				updateBpmTaskAction(bpmAction);
 			}
 
 		} finally {
 		}
 
-	}//#30008 - end
+	}// #30008 - end
 	
 	//20230111@Haziq - #12487
 	/**
