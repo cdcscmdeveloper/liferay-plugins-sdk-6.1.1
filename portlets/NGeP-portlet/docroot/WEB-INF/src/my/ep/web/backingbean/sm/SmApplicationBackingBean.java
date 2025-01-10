@@ -264,6 +264,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//SSM CHANGES #27214
 	//TO HANDLE, IF KN IS SIGN UP NEW SUPPLIER NO NEED TO CHECK WITH SSM AGAIN. IF UPGRADE NEED TO CHECK WITH SSM
 	public boolean fromPrerenderNewReg = false;
+	
 
 	//#11641 - START
 	private int mandatoryCounter = 1;
