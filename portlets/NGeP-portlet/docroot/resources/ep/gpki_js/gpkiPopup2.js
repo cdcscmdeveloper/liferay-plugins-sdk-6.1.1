@@ -61,6 +61,12 @@ var gpkiRequestTime = 0;
   };
 
   this.signRoam = function (a) {
+	// check if undefined, null, NaN, empty string, etc.
+	if (!gpkiNonce) {
+	  errorAction([{ name: 'gpkiNonceNull', value: 'invalid nonce'}]);
+	  return;
+	}
+	
     gpkiBlockWidget.show();
     text = a[0];
     const pin = a[1];
