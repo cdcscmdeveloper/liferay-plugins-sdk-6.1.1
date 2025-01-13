@@ -276,12 +276,9 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 		// Create Row/Cell - Report Title
 		Row titleRptRow = sheetRptAudit.createRow(1); // Create Row
 		Cell cellTitleRow = titleRptRow.createCell(1);// Create Cell (Column)
-		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set
-																		// Cell
-																		// Value
+		cellTitleRow.setCellValue(ReportExcelAuditConstant.RPT_TITLE); // Set Cell Value
 		cellTitleRow.setCellStyle(cellStyleTitleRpt);
-		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge
-																			// Cell
+		sheetRptAudit.addMergedRegion(new CellRangeAddress(1, 1, 1, 11)); // Merge Cell
 
 		// Create Row/Cell - Report Header Datatable
 		Row titleHeaderRow = sheetRptAudit.createRow(3);
@@ -410,8 +407,8 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 					.getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
-			response.setContentType("application/ms-excel");
-			response.setHeader("Expires:", "0"); // eliminates browser caching
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			response.setHeader("Expires", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition", "attachment; filename=\"Butiran Jejak Audit.xlsx\"");
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
