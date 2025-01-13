@@ -6,6 +6,7 @@ package my.ep.web.managedbean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -140,8 +141,13 @@ public abstract class BaseManagedBean implements Serializable {
 	private boolean displayReviseInstrn;
 	// #25638 - End
 	
-	//#25037-start
+	// 25037 - start
 	private String currentTaskDocType;
+	private Calendar currentTaskCreatedDate;
+	private boolean validFor25037;
+	private boolean committeModified;
+	private String inactiveSCMemberStr;
+	// 25037 - end
 	
 	//27346-start
 	// start #29956
@@ -153,6 +159,10 @@ public abstract class BaseManagedBean implements Serializable {
 	// end #29956
 	// 27346
 	private StreamedContent downloadfile;
+	
+	// #32236 start
+	private String outputPage;
+	// #32236 end
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -885,15 +895,47 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #25638 - End
 	
-	// #25037 - start
+	// 25037 - start
 	public String getCurrentTaskDocType() {
 		return currentTaskDocType;
 	}
-
+	
 	public void setCurrentTaskDocType(String currentTaskDocType) {
 		this.currentTaskDocType = currentTaskDocType;
 	}
-	// #25037 - end
+
+	public boolean isValidFor25037() {
+		return validFor25037;
+	}
+
+	public void setValidFor25037(boolean validFor25037) {
+		this.validFor25037 = validFor25037;
+	}
+
+	public boolean isCommitteModified() {
+		return committeModified;
+	}
+
+	public void setCommitteModified(boolean committeModified) {
+		this.committeModified = committeModified;
+	}
+
+	public String getInactiveSCMemberStr() {
+		return inactiveSCMemberStr;
+	}
+
+	public void setInactiveSCMemberStr(String inactiveSCMemberStr) {
+		this.inactiveSCMemberStr = inactiveSCMemberStr;
+	}
+
+	public Calendar getCurrentTaskCreatedDate() {
+		return currentTaskCreatedDate;
+	}
+
+	public void setCurrentTaskCreatedDate(Calendar currentTaskCreatedDate) {
+		this.currentTaskCreatedDate = currentTaskCreatedDate;
+	}
+	// 25037 - end
 	
 	// 28767
 	public List<SmPersonnel> getPersonnelDirectorManager() {
@@ -961,4 +1003,13 @@ public abstract class BaseManagedBean implements Serializable {
 		this.isDowngradeRole = isDowngradeRole;
 	}
 	// end #29956
+	//#32236 - start
+	public String getOutputPage() {
+		return outputPage;
+	}
+
+	public void setOutputPage(String outputPage) {
+		this.outputPage = outputPage;
+	}
+	//#32236 - end
 }

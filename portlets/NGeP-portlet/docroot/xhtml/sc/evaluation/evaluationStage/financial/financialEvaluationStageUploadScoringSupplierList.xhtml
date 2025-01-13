@@ -27,13 +27,25 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.SaveUploadCheckListSuppliersDM}"
 				update="evaluateFinSupplier" />
+			<ui:remove><!-- 6906 - start --></ui:remove>
+			<ui:param name="isRejected"
+				value="#{not empty evaFinSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:20%; text-align:center;">
-
-				<h:outputText value="#{evaFinSupplier.scQtProposal.supplierNo}"></h:outputText>
-
-
+				<table
+					style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
+					<tr>
+						<td style="text-align: center; border: 0 !important" />
+						<td style="text-align: center; border: 0 !important"><h:outputText
+								value="#{evaFinSupplier.scQtProposal.supplierNo}" /></td>
+						<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
+								show="#{isRejected}" id="remarkId"
+								remark="#{evaFinSupplier.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{evaFinSupplier.scQtProposal.supplierNo}" /></td>
+					</tr>
+				</table>
 			</p:column>
+			<ui:remove><!-- 6906 - end --></ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
 					<h:commandLink immediate="true" rendered="#{evaFinSupplier.scQtProposalChecklistAttachment ne null}"
@@ -60,11 +72,14 @@
 
 			<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
 				style="width:5%">
-				<p:inputText style="text-align:right;"  maxlength="18"
+				<ui:remove>6906 -start-</ui:remove>
+				<p:inputText style="text-align:right;" maxlength="18"
 					id="financialuploadNoActionUserScoreId"
 					label="#{lbl['lbl.tpl.spec.content.user.score']}"
 					value="#{evaFinSupplier.totalUserScore}" required="true"
-					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}">
+					disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+						or isRejected}">
+					<ui:remove>6906 -end-</ui:remove>
 					<ac:validateNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 						maxIntegerDigits="14" integerOnly="true" />
@@ -82,9 +97,14 @@
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 				<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="55" maxlength="200" onkeyup="limitTextArea(this,200);" onkeydown="limitTextArea(this,200);" onmouseout="limitTextArea(this,200);"
-						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+					<ui:remove>6906 -start-</ui:remove>
+					<p:inputTextarea rows="2" cols="55" maxlength="200"
+						onkeyup="limitTextArea(this,200);"
+						onkeydown="limitTextArea(this,200);"
+						onmouseout="limitTextArea(this,200);"
+						disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired or isRejected}"
 						value="#{evaFinSupplier.remark}">
+						<ui:remove>6906 -end-</ui:remove>
 						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:inputTextarea>
 				</ui:fragment>

@@ -14,81 +14,98 @@
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
 						size="50" readonly="true" disabled="true" /></td>
-				<td style="width: 20px"><p:selectBooleanCheckbox
+				<td style="width: 20px">
+					<!-- 25037 -start- --> 
+					<p:selectBooleanCheckbox
 						value="#{committe.approvalReq}"
-						disabled="#{!isCommitteeInfoEditable or qTCommitteBackingBean.isDisabledSendForApproval(qTCommitteBackingBean.managedBean.selectedTabBean.tabType)}">
+						disabled="#{!isCommitteeInfoEditable 
+							or qTCommitteBackingBean.isDisabledSendForApproval(qTCommitteBackingBean.managedBean.selectedTabBean.tabType, committe.committeStatus.statusId )}">
+						<!-- 25037 -end- -->
 						<p:ajax update="@(.scMemberDtl,.amendButton)"
 							listener="#{qTCommitteBackingBean.checkCommitteFormedOrNot()}" />
-					</p:selectBooleanCheckbox></td>
+					</p:selectBooleanCheckbox>
+				</td>
 				<td style="width: 102px"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.send.for.approval']}"
 						style="word-wrap: break-word;width:100px;text-align:left;" /></td>
 			</tr>
 		</table>
 
-		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
-			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
-			rowIndexVar="index" rowKey="#{specificationcommittee}"
-			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			selection="#{selectedCommittee}">
-           
-				
-					<p:column style="width:3px;text-align:center;" rendered="#{isEnablChkBoxes}">
-				<f:facet name="header">
+		<!-- 25037 -start- -->
+		<ui:fragment rendered="#{!showHistory}">
+			<!-- 25037 -end- -->
+			<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
+				value="#{committe.scCommitteeMembers}" var="specificationcommittee"
+				rowIndexVar="index" rowKey="#{specificationcommittee}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				selection="#{selectedCommittee}">
+
+				<p:column style="width:3px;text-align:center;"
+					rendered="#{isEnablChkBoxes}">
+					<f:facet name="header">
+						<!-- 25037 -start- -->
+						<p:selectBooleanCheckbox
+							disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(qTCommitteBackingBean.getParameterByTypeAndCode('CR','S')) or !isCommitteeInfoEditable}"
+							value="#{qTCommitteBackingBean.managedBean.templateSpecBean.selectAll}">
+							<!-- 25037 -end- -->
+							<p:ajax partialSubmit="true" process="@this" update="@form"
+								listener="#{qTCommitteBackingBean.selectAll(qTCommitteBackingBean.managedBean.templateSpecBean.selectAll, committe.scCommitteeMembers)}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<!-- 25037 -start- -->
 					<p:selectBooleanCheckbox
-						value="#{qTCommitteBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this" update="@form"
-							listener="#{qTCommitteBackingBean.selectAll(qTCommitteBackingBean.managedBean.templateSpecBean.selectAll, committe.scCommitteeMembers)}" />
+						disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole) or !isCommitteeInfoEditable}"
+						value="#{specificationcommittee.selected}">
+						<!-- 25037 -end- -->
+						<p:ajax partialSubmit="true" process="@this" update="@form" />
 					</p:selectBooleanCheckbox>
-				</f:facet>
-				<p:selectBooleanCheckbox value="#{specificationcommittee.selected}">
-					<p:ajax partialSubmit="true" process="@this" update="@form" />
-				</p:selectBooleanCheckbox>
-			</p:column>
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{specificationcommittee.memberName}"
-					style="white-space: normal;" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					<h:outputText value="#{specificationcommittee.memberName}"
+						style="white-space: normal;" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
-				style="width: 10%">
-				<h:outputText value="#{specificationcommittee.icPassport}" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+					style="width: 10%">
+					<h:outputText value="#{specificationcommittee.icPassport}" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.designation']}">
-				<h:outputText value="#{specificationcommittee.designation}"
-					style="white-space: normal;" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.designation']}">
+					<h:outputText value="#{specificationcommittee.designation}"
+						style="white-space: normal;" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.email']}">
-				<h:outputText value="#{specificationcommittee.email}"
-					style="white-space: normal;" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					<h:outputText value="#{specificationcommittee.email}"
+						style="white-space: normal;" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
-				<h:outputText value="#{specificationcommittee.grade}" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 10%">
+					<h:outputText value="#{specificationcommittee.grade}" />
+				</p:column>
 
-			<p:column style="width: 6%">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip id="pnpTT#{index}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
-				</f:facet>
-				<h:outputText
-					value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
-			</p:column>
+				<p:column style="width: 6%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+						<ac:iconTooltip id="pnpTT#{index}"
+							value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+				</p:column>
 
-			<p:column style="width: 13%">
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.role']}" />
-				</f:facet>
-
-				<c:choose>
-					<!-- 29464 -start- -->
-					<c:when test="#{isCommitteeInfoEditable and isCommitteeAppointmentMenuTab}">
-						<!-- 29464 -end- -->
+				<p:column style="width: 13%">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.role']}" />
+					</f:facet>
+					<!-- 25037 -start- -->
+					<ui:param name="filteredRoles"
+						value="#{approvalBackingBean.managedBean.roleFilterList}" />
+					<ui:fragment
+						rendered="#{(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole))}">
+						<!-- 25037 -end- -->
 						<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 							value="#{specificationcommittee.memberRoleId}"
 							style="width: 130px;margin-bottom: 5px;">
@@ -96,21 +113,30 @@
 								listener="#{qTCommitteBackingBean.roleChangedListener(specificationcommittee)}" />
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-							<f:selectItems var="role"
-								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(specificationcommittee.PNP,qTDetailBB.managedBean.qt,specificationcommittee.pmUser)}"
+							<!-- 25037 -start- -->
+							<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+								value="#{qTCommitteBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(specificationcommittee.PNP,qTDetailBB.managedBean.qt,specificationcommittee.pmUser, filteredRoles)}"
 								itemLabel="#{role.codeName}"
 								itemValue="#{role.pmParameter.parameterId}" />
+							<!-- 25037 -end- -->
 						</p:selectOneMenu>
 						<p:message id="roleidMsg" for="roleid" display="icon" />
-					</c:when>
-					<c:otherwise>
-						<h:outputText value="#{qTCommitteBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
-					</c:otherwise>
-				</c:choose>
-
-			</p:column>
-
-		</p:dataTable>
+						<!-- 25037 -start- -->
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{!(isCommitteeInfoEditable and qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole))}">
+						<h:outputText
+							value="#{qTCommitteBackingBean.getParameterDesc(specificationcommittee.memberRole)}" />
+					</ui:fragment>
+					<!-- 25037 -end- -->
+				</p:column>
+			</p:dataTable>
+			<!-- 25037 -start- -->
+		</ui:fragment>
+		<ui:fragment rendered="#{showHistory}">
+			<ui:include src="committeeHistory.xhtml" />
+		</ui:fragment>
+		<!-- 25037 -end- -->
 	</p:panel>
 
 </ui:composition>

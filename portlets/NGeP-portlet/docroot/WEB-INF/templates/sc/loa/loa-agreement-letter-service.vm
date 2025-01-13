@@ -1933,7 +1933,7 @@ u {
 							<div class="break-after"><br/></div>
 							#set($rowCount = 0)
 							#end
-				<table width="103%" border="1" cellpadding="0" cellspacing="-1">
+				<table width="100%" border="1" cellpadding="0" cellspacing="-1">		##36097
 				<tbody>
 				##26130 - end 03032022
 						 #if ($rowCount == 0)
@@ -1954,7 +1954,7 @@ u {
 								<td class="title border left" colspan="10" style="text-align: left; border-left:none;  border-bottom: none !important;">&nbsp;</td>
 							</tr>
 						</table>
-						<table width="103%" border="1" cellpadding="0" cellspacing="-1">
+						<table width="100%" border="1" cellpadding="0" cellspacing="-1">	##36097
 							<tr>
 								<th valign="top" bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: left; padding-left: 5px; padding-right: 5px;">Item</th>
 								<th valign="top" bgcolor="#6d839b" class="title border left" style="text-align: left; padding-left: 5px; padding-right: 5px;">UOM</th>
@@ -1973,9 +1973,9 @@ u {
 							</tr>
 							<tr>
 								#if ($isZonal)
-									<th bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center;">Spesifikasi</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" colspan="6" style="text-align: center;">Spesifikasi</th>
 								#else
-									<th bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
+									<th valign="top" bgcolor="#6d839b" class="title border left" colspan="5" style="text-align: center;">Spesifikasi</th>
 								#end
 							</tr>
 							#end
@@ -1983,6 +1983,7 @@ u {
 							#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
 							
 							##26130 zaim start 070220222
+							##36097 - start 13092024
 							#if ($isZonal)
 								
 								#if ($tplspecQuestion.questionType == "I")
@@ -1995,43 +1996,43 @@ u {
 														#set($rowSpanSizeForItem = $tplspecQuestion.tplSpecZoneQties.size())
 														#if ($specCombine.clItem == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 														#end
 														#if ($specCombine.uomName == "&nbsp")
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;" rowspan="$rowSpanSizeForItem">$specCombine.uomName</td>	
 														#end
 														#if ($specCombine.clUomFrequency == "&nbsp")		
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomFrequency</td>														
 														#end
 														#if ($specCombine.clUomPerDay == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerDay</td>														
 														#end
 														#if ($specCombine.clUomPerMonth == "&nbsp")
 																
 														#else
-														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
+														<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;"rowspan="$rowSpanSizeForItem">$specCombine.clUomPerMonth</td>														
 														#end
 														
 														#if ($specType == "F")
 															#if ($specCombine.zoneName == "&nbsp")
 															#else
 																#if ($specCombine.zoneName) 
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.zoneName</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$specCombine.zoneName</td>
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$serviceScope</td>
 																#end
 															#end
 															#if ($specCombine.tplSpecZoneQty.qty) == "&nbsp" 
 																
 															#else
 																#if ($specCombine.tplSpecZoneQty.qty) 
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.tplSpecZoneQty.qty</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$specCombine.tplSpecZoneQty.qty</td>
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$serviceScope</td>
 																#end
 															#end
 														
@@ -2040,23 +2041,23 @@ u {
 															#if ($specType == "T")
 																#if($specCombine.zoneName == "&nbsp")
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.zoneName</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$specCombine.zoneName</td>
 																#end
 																#if($specCombine.qty == "&nbsp")
 																#else
-																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qty</td>
+																	<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$specCombine.qty</td>
 																#end
 																
 															#else
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
-																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$serviceScope</td>
+																<td valign="top" class="standard border-bottom left-right" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$serviceScope</td>
 															#end
 														
 														#end
 														
 														#if ($rowCount == 0)
 															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
-																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
+																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$whitespace</td>
 															#else
 																#set ($feedback = $specCombine.feedback)
 																#set($feedback = $feedback.replace(">", "&#62;"))
@@ -2078,7 +2079,7 @@ u {
 																#end
 															#end
 															
-															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+															<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;" rowspan="$rowSpanSize">$whitespace</td>
 															#set($rowCount = $rowCount + 1)
 														#end
 														
@@ -2104,7 +2105,7 @@ u {
 																		#set ($feedback = $combine.feedback)
 																		#set($feedback = $feedback.replace(">", "&#62;"))
 																		#set($feedback = $feedback.replace("<", "&#60;"))
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$feedback</td>
 																				
 																#else
 																		#set ($feedback = $combine.feedback)
@@ -2148,25 +2149,25 @@ u {
 													
 													##26130- zaim start
 													#set($rowSpanSize = $tplspecQuestion.specList.size()+1)
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;" rowspan="$rowSpanSize">$specCombine.clItem</td>
 													##26130 - zaim end
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.uomName</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$specCombine.uomName</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">
 														#if ($specCombine.clUomFrequency)
 															$specCombine.clUomFrequency
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">
 														#if ($specCombine.clUomPerDay)
 															$specCombine.clUomPerDay
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">
 														#if ($specCombine.clUomPerMonth)
 															$specCombine.clUomPerMonth
 														#end
 													</td>
-													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.qty</td>
+													<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$specCombine.qty</td>
 													#if ($specType == "T")
 														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ")
 															<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
@@ -2174,7 +2175,7 @@ u {
 															#set ($feedback = $specCombine.feedback)
 															#set($feedback = $feedback.replace(">", "&#62;"))
 															#set($feedback = $feedback.replace("<", "&#60;"))
-															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
+															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$feedback</td>
 														#end					
 													#end
 
@@ -2192,7 +2193,7 @@ u {
 													#end		
 													
 													##26130 - start 03032022
-													<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;" rowspan="$rowSpanSize">$whitespace</td>
+													<td class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;" rowspan="$rowSpanSize">$whitespace</td>
 												##26130 - end 03032022
 											</tr>	
 											#end
@@ -2218,7 +2219,7 @@ u {
 																			#set ($feedback = $combine.feedback)
 																			#set($feedback = $feedback.replace(">", "&#62;"))
 																			#set($feedback = $feedback.replace("<", "&#60;"))
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
+																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px; font-size: 12px;">$feedback</td>
 																			
 																	#else
 																		#if(!$combine.feedback)
@@ -2264,6 +2265,7 @@ u {
 							
 							#end
 							##26130 - end 03032022
+							##36097 - end 13092024
 						#end
 					#end
 				

@@ -185,6 +185,10 @@
 			<portlet id="deskOfficerMaintenance"/>
 			<portlet id="deskOfficerMaintenanceApproval"/>
 			<!-- Enhancement 25627-end- -->
+			<!-- 25037 - start -->
+			<portlet id="maintenanceRequestApproval"/>
+			<portlet id="maintenanceRequestRevision"/>
+			<!-- 25037 - end -->
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -382,6 +386,7 @@
 		<portlet id="profileRobExpire"></portlet>
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
+		<portlet id="spkiTest"></portlet>
 	</category>
 
 	<category name="category.ep.wp">

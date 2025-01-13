@@ -30,11 +30,12 @@
 							<ui:fragment rendered="#{bpmAction ne '~'}">
 								<ui:param name="buttonLabel"
 									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								<!-- 25037 start -->
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" style="float:right;" process="@all"
-									partialSubmit="true"
-									action="#{suppFinalMeetingBackingBean.submitAction(bpmAction)}"
-									onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+									onclick="blockWidget.show();" partialSubmit="true"
+									oncomplete="confirmSubmitMeetingPopup.show();blockWidget.hide();" />
+								<!-- 25037 end -->
 							</ui:fragment>
 						</ui:repeat>
 					</div> <ui:include
@@ -144,39 +145,15 @@
 						<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 							styleClass="header-spacing" id="memberListPanel"
 							toggleable="true">
-							<h:outputText styleClass="instruction"
-								value="#{lbl['lbl.sc.committee.member.list.instruction']}"
-								escape="false" />
 
+							<!-- 25037 start -->
 							<p:dataTable id="memberListTbl" var="committeeMember"
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								rowKey="#{committeeMember}" update="@this"
-								selectionMode="single" rowIndexVar="index">
+								update="@this" rowIndexVar="index">
+								<!-- 25037 end -->
 								<ac:paginator for="memberListTbl" />
-
-								<!-- 	<p:ajax event="rowSelect" listener="#{suppFinalMeetingBackingBean.selectMemberEvent}" 
-										update="@([id$=memberListTbl])"></p:ajax>	 -->
-
-								<p:column styleClass="td-check-box-spacing">
-									<f:facet name="header">
-										<p:selectBooleanCheckbox id="selAllMemChk"
-											value="#{suppFinalMeetingBackingBean.managedBean.selectAllMembers}"
-											disabled="true">
-											<p:ajax partialSubmit="true" process="@this"
-												update="@([id$=supplierFinalizationMeetingCommitteememberspanelGroup])"
-												listener="#{suppFinalMeetingBackingBean.selectAll(
-																	suppFinalMeetingBackingBean.managedBean.selectAllMembers,suppFinalMeetingBackingBean.managedBean.committeeMembersList)}" />
-										</p:selectBooleanCheckbox>
-									</f:facet>
-									<p:selectBooleanCheckbox id="selectMember"
-										value="#{committeeMember.selected}"
-										disabled="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
-										<p:ajax partialSubmit="true" process="@this"
-											update="@([id$=supplierFinalizationMeetingCommitteememberspanelGroup])" />
-									</p:selectBooleanCheckbox>
-								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.name']}"
 									style="white-space:normal;">
@@ -216,61 +193,37 @@
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
-									<p:selectOneMenu
-										value="#{committeeMember.representativeTypeId}"
-										label="#{lbl['lbl.sc.representative.type']}"
-										style="width: 100%; margin-bottom: 5px; white-space:normal"
-										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
-										<f:selectItems
-											value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues(suppFinalMeetingBackingBean.managedBean.committeeType)}" />
-										<p:ajax event="change"
-											listener="#{suppFinalMeetingBackingBean.representiveTypeChangedListener(committeeMember)}"
-											process="@this" />
-									</p:selectOneMenu>
+									<!-- 25037 start -->
+									<h:outputText
+										value="#{suppFinalMeetingBackingBean.getParameterDesc(committeeMember.representativeType)}" />
+									<!-- 25037 end -->
 								</p:column>
 							</p:dataTable>
 
-							<div align="right" class="BtnSpacing">
-								<p:commandButton value="#{lbl['lbl.btn.clone']}" process="@this"
-									oncomplete="cloneMemberWidgetVar.show();"
-									actionListener="#{suppFinalMeetingBackingBean.clonePopupAction}"
-									update="@([id$=cloneDialogId])" />
-
-								<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-									actionListener="#{suppFinalMeetingBackingBean.addPopupAction}"
-									update="@([id$=memberDialogId])"
-									oncomplete="memberWidgetVar.show();" />
-
-								<p:commandButton value="#{lbl['lbl.btn.delete']}"
-									oncomplete="dlgPerformDel.show();"
-									process="@this,memberListTbl" partialSubmit="true"
-									update="@([id$=#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}])"
-									disabled="#{suppFinalMeetingBackingBean.deleteselectedList(suppFinalMeetingBackingBean.managedBean.committeeMembersList)}" />
+							<!-- 25037 start -->
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}"
+									styleClass="BtnSpacing"
+									action="#{suppFinalMeetingBackingBean.navigateToUpdateMember('update')}" />
+								<!-- 25037 end -->
 							</div>
 
-							<ui:param
-								name="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"
-								value="supplierFinalizationConfirmmeetingCommitteemembersDeleteId"></ui:param>
-
-							<ac:confirmationPopup
-								id="#{supplierFinalizationConfirmmeetingCommitteemembersDeleteId}"
-								widget="dlgPerformDel" width="450" height="100"
-								okAction="suppFinalMeetingBackingBean.committeeDeleteAction"
-								title="#{lbl['lbl.sc.committee.member.list']}"
-								content="#{lbl['lbl.sc.dialog.confirm.message']}"
-								update="@([id$=supplierFinalizationMeetingCommitteememberspanelGroup])" />
-
-
-
-							</p:panel>
-							</h:panelGroup> <ac:scRemarkAndAttachment
-								remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
-								showAttachment="false" /> <ui:include
-								src="addExistingCommittee.xhtml" /> 
-							<ui:include src="cloneCommittee.xhtml" />
+						</p:panel>
+					</h:panelGroup> 
+					<!-- 25037 start --> 
+					<ac:scRemarkAndAttachment
+						remarkList="#{suppFinalMeetingBackingBean.managedBean.qtCommitteeRemarks}"
+						showAttachment="false" /> 
+					<!-- 25037 end -->
 				</td>
 			</tr>
 		</table>
-
+		<!-- 25037 start -->
+		<ac:confirmationPopup id="confirmSubmitMeetingId"
+			widget="confirmSubmitMeetingPopup" width="490" height="100"
+			title="#{lbl['lbl.sc.confirmation']}"
+			okAction="suppFinalMeetingBackingBean.submitAction('SUBMIT')"
+			content="#{lbl['lbl.sc.popup.sendtofinalcommittee']}" />
+		<!-- 25037 end -->
 	</ui:define>
 </ui:composition>

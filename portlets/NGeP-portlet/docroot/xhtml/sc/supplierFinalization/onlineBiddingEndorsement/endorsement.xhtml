@@ -9,49 +9,50 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"/>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
 		</p:blockUI>
 		<p:messages id="supplierFinalization" showDetail="true"
-			autoUpdate="#{suppFinalBiddingBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
-
+			autoUpdate="#{suppFinalBiddingBackingBean.managedBean.autoUpdate}"
+			closable="true" severity="error,info" />
 		<ui:param name="isOnlineBiddingEndorseMeeting"
 			value="#{'M' eq suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" />
 
 		<ui:param name="validityDaysExpiredQt"
 			value="#{suppFinalBiddingBackingBean.checkProposalValidityDateReach(
 		     				suppFinalBiddingBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-		     				
+
 		<ui:param name="isSecretaryUser"
-				  value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
+			value="#{suppFinalBiddingBackingBean.managedBean.secretaryUser}" />
 
 		<!-- 18685 start -->
 		<ui:include src="/xhtml/sc/supplierFinalization/upload.xhtml" />
 		<!-- 18685 end -->
 
-		<ac:gpkiPopup textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
+		<ac:gpkiPopup
+			textBeforeSign="#{suppFinalBiddingBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalBiddingBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{suppFinalBiddingBackingBean.enableAutoUpdate()}" />
 
 		<div align="right" class="BtnSpacing">
-		<ui:param name="readOnlyTask" value="#{suppFinalBiddingBackingBean.managedBean.readOnly}" />
+			<ui:param name="readOnlyTask"
+				value="#{suppFinalBiddingBackingBean.managedBean.readOnly}" />
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
 				<ui:define name="outComeSection">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{isOnlineBiddingEndorseMeeting and 
 										suppFinalBiddingBackingBean.managedBean.secretaryUser}"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"				 
-						process="@all"
-						partialSubmit="true"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						process="@all" partialSubmit="true"
 						action="#{suppFinalBiddingBackingBean.saveOnlineEndorsement}"
 						update="@form" />
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!isOnlineBiddingEndorseMeeting and 
-										suppFinalBiddingBackingBean.managedBean.bpkUser}" process="@all"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"					
-						partialSubmit="true"
+										suppFinalBiddingBackingBean.managedBean.bpkUser}"
+						process="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" partialSubmit="true"
 						action="#{suppFinalBiddingBackingBean.saveOfflineEndorsement}"
 						update="@form" />
 
@@ -59,11 +60,13 @@
 						value="#{suppFinalBiddingBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<!-- 25037 start -->
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"	
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							styleClass="ui-button"
-							action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement(bpmAction)}"
+							action="#{suppFinalBiddingBackingBean.submitAction(bpmAction)}"
 							rendered="#{validityDaysExpiredQt}" />
+						<!-- 25037 end -->
 					</ui:repeat>
 				</ui:define>
 			</ui:decorate>
@@ -80,7 +83,7 @@
 				update="@form" rendered="#{isOnlineBiddingEndorseMeeting}" />
 			<p:menuitem value="#{lbl['lbl.sc.briefing.paper.preparation']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBriefingPaperTab}"
-				update="@form"/>
+				update="@form" />
 			<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
 				action="#{suppFinalBiddingBackingBean.navigateToBiddingSummaryTab}"
 				update="@form" />
@@ -107,7 +110,7 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/briefingPaperReport.xhtml" />
 			</c:if>
-			
+
 			<c:if
 				test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 							suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexSummary()}">
@@ -121,7 +124,8 @@
 				<ui:include
 					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml" />
 			</c:if>
-			<ui:fragment rendered="#{!isOnlineBiddingEndorseMeeting and
+			<ui:fragment
+				rendered="#{!isOnlineBiddingEndorseMeeting and
 								suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq 
 									suppFinalBiddingBackingBean.getOnlineBiddingActiveIndexOfflineEndorsement()}">
 				<ui:include
@@ -134,27 +138,49 @@
 
 		<!-- 25638 start -->
 		<p:dialog id="reviseBiddingDlgs" widgetVar="reviseBiddingDlgs"
-		header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
-		resizable="false" width="400" height="75" closable="false">
-		<table>
-			<tr>
-				<td align="center">
-					<h:graphicImage value="/css/images/design/exclamation.png" /> 
-					<p:outputLabel value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" />
-				</td>
-			</tr>
-		</table>
-		<p:spacer height="1" />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				oncomplete="reviseBiddingDlgs.hide();"
-				action="#{suppFinalBiddingBackingBean.reviseAction()}" />
-			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="reviseBiddingDlgs.hide();" type="button" />
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.to.revise']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviseBiddingDlgs.hide();"
+					action="#{suppFinalBiddingBackingBean.reviseAction()}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="reviseBiddingDlgs.hide();" type="button" />
 			</div>
 		</p:dialog>
 		<!-- 25638 end -->
 
-	</ui:define>
+		<!-- 25037 start -->
+		<p:dialog id="submissionPopupId" widgetVar="submissionPopup"
+			header="#{lbl['lbl.sc.dialog.confirm.consolidation.report.submit.header']}"
+			resizable="false" width="325" closable="true" modal="true">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.popup.finalupdateasattended']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" partialSubmit="true"
+					action="#{suppFinalBiddingBackingBean.submitBiddingEndorsement('SUBMIT')}"
+					oncomplete="submissionPopup.hide();" update="@form">
+				</p:commandButton>
 
+				<p:commandButton value="#{lbl['lbl.btn.no']}" immediate="true"
+					process="@this" onclick="submissionPopup.hide();" type="button" />
+
+			</div>
+		</p:dialog>
+		<!-- 25037 end -->
+	</ui:define>
 </ui:composition>

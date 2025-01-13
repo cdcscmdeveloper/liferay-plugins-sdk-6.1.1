@@ -22,14 +22,28 @@
 			<p:ajax event="page"
 				listener="#{evaluationBackingBean.complianceProposalSubmitSuppliers}"
 				update="complianceTechnicalSupplier" />
+			<ui:remove><!-- 6906 - start --></ui:remove>
+			<ui:param name="isRejected"
+				value="#{not empty complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark}" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:20%; text-align:center;">
-
-				<h:outputText
-					value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
-
-
+				<table
+					style="table-layout: fixed; margin: auto !important; max-width: 90px !important">
+					<tr>
+						<td style="text-align: center; border: 0 !important" />
+						<td style="text-align: center; border: 0 !important"><h:outputText
+								value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}" />
+						</td>
+						<td style="text-align: center; border: 0 !important"><ac:iconRejectRemarkBox
+								show="#{isRejected}" id="remarkId"
+								remark="#{complianceTechnicalSupplier.scQtProposal.supplierRejectionRemark.remark}"
+								supplierCode="#{complianceTechnicalSupplier.scQtProposal.supplierNo}" />
+						</td>
+					</tr>
+				</table>
+			<ui:remove><!-- 6906 - end --></ui:remove>
 			</p:column>
+
 			<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">
 				<ui:fragment
 					rendered="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'true'}">
@@ -49,8 +63,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
 				style="width:15%">
+				<ui:remove><!-- 6906 - add disabled isRejected, add style --></ui:remove>
 				<p:selectOneMenu
-					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired}"
+					disabled="#{complianceTechnicalSupplier.scQtProposal.submitted eq 'false' or  evaluationBackingBean.managedBean.statusOnly or  evaluationBackingBean.managedBean.complianceReEvaluateRequired
+					 or isRejected}"
 					value="#{complianceTechnicalSupplier.compliance}">
 
 					<f:selectItems

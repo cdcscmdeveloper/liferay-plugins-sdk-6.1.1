@@ -10,6 +10,7 @@ import javax.portlet.PortletRequest;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.SLAUtils;
@@ -146,5 +147,22 @@ public class ViewSuppProfileBackingBean extends
 		RequestContext.getCurrentInstance().execute("qualifyDialog.show()");
 	}
 	//#29482 - End
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 
 }

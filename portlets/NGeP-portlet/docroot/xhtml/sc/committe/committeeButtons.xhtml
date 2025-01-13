@@ -18,12 +18,15 @@
 					action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSubmit)}"
 					process="@all" rendered="#{empty committeBackingBean.managedBean.payLoad and isCommitteeRecordStatusActive}" 
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-					
+
+				<!-- 25037 -start- -->
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{committeBackingBean.updateCommitteDetails(null)}"
-					process="@all" rendered="#{!empty committeBackingBean.managedBean.payLoad}" 
-					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-				<ui:repeat var="bpmAction" value="#{committeBackingBean.managedBean.outComes}">
+					action="#{committeBackingBean.updateCommitteDetails(BpmOutcomeConstant.bpmSave)}"
+					process="@all"
+					rendered="#{!empty committeBackingBean.managedBean.payLoad}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /> 
+				<!-- 25037 -end- -->
+					<ui:repeat var="bpmAction" value="#{committeBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							action="#{committeBackingBean.updateCommitteDetails(bpmAction)}" 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -155,7 +156,18 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 		this.getManagedBean().setApproverRemark(null);
 		
-		
+		//#30766 & #34209 - START
+		getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
+		for(SmSupplierCategory supCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
+			if(supCat.getRecordStatusFlg().equals(SupplierManagementConst.RECORD_STATUS_ACTIVE) && supCat.isSpecialCategory()){
+				if(supCat.getOtherDesc()!=null){
+					getManagedBean().getTempCategoryLs().put(supCat.getSupplierCategoryId(), supCat.getOtherDesc());
+				} else {
+					getManagedBean().getTempCategoryLs().put(supCat.getSupplierCategoryId(), "");
+				}
+			}
+		}
+		//#30766 & #34209 - END
 	}
 
 	/**
@@ -327,6 +339,26 @@ public class SupplierDataMaintenanceBackingBean extends
 						getTrackingActionDesc(reqDTO,"OLA"));
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
+			
+			//#30766 & #34209 - START
+			//set tracking diary for other description if changed
+			for(SmSupplierCategory latestCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+				if(latestCat.getOtherDesc()==null){
+					latestCat.setOtherDesc("");
+				}
+				if(latestCat.getRecordStatusFlg().equals(SupplierManagementConst.RECORD_STATUS_ACTIVE) 
+					&& latestCat.isSpecialCategory() 
+					&& this.getManagedBean().getTempCategoryLs().containsKey(latestCat.getSupplierCategoryId())
+					&& !latestCat.getOtherDesc().equals(this.getManagedBean().getTempCategoryLs().get(latestCat.getSupplierCategoryId()))){
+						reqDTO.setCatCodeChanged(latestCat.getPmCategoryL1().getCategoryL1Code() + latestCat.getPmCategoryL2().getCategoryL2Code() + latestCat.getPmCategoryL3().getCategoryL3Code());
+						reqDTO.setOldDesc(this.getManagedBean().getTempCategoryLs().get(latestCat.getSupplierCategoryId()));
+						reqDTO.setNewDesc(latestCat.getOtherDesc());
+						SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(getManagedBean().getSmAppl(), getTrackingActionDesc(reqDTO,"OD"));
+						listSmTrackingDiary.add(smTrackingDairyVO);
+				}
+			}
+			//#30766 & #34209 - END
+			
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
@@ -895,9 +927,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
 		if (selectedCategories != null && selectedCategories.size() > 0) {
-			List<SmSupplierCategory> categories = selectedCategories;
-			deleteCatCodes(categories);
-
+			//#30766 & #34209 - START
+			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()){
+				throw new EpException(MessageConst.ERROR_722708);
+			} else {
+				List<SmSupplierCategory> categories = selectedCategories;
+				deleteCatCodes(categories);
+			}
+			//#30766 & #34209 - END
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			//Redmine #18959 - no need to check overlapping
 			//setOverLappingCategories();
@@ -952,6 +989,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
+						apprCat.setChangedBy(null); //#30766 & #34209 - START_END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}
@@ -969,11 +1007,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 				cat.setApprovedDate(new Date());
-				if (getManagedBean().isPoUser()) {
-					cat.setPoDecFlg(1);
-				} else {
-					cat.setApprvrDecFlg(1);
-				}
+				cat.setApprvrDecFlg(1);		//#30766 & #34209 - START
+				cat.setPoDecFlg(null);		//#30766 & #34209 - END
 				SmApplicationUtil.setSupplierCategoryEffectiveDate(cat,
 						getManagedBean().getSmAppl().getApplType());
 			}
@@ -1412,6 +1447,18 @@ public class SupplierDataMaintenanceBackingBean extends
 				.append(oriPoApprOverlappedRemark).append(" kepada ")
 				.append(latestPoApprOverlappedRemark).append(" oleh ").append(user.getUserName());
 		break;
+		//#30766 & #34209 - START
+		case "OD": //Other Description
+			PmUser curUser = new FacesScopes().getUserSessionBean();
+			sb.append("Keterangan Lain bagi bidang ");
+			sb.append(reqDTO.getCatCodeChanged());
+			sb.append(" telah diubah daripada ");
+			sb.append(reqDTO.getOldDesc());
+			sb.append(" kepada ");
+			sb.append(reqDTO.getNewDesc());
+			sb.append(" oleh ").append(curUser.getUserName());
+		break;
+		//#30766 & #34209 - END
 		default:
 			sb = new StringBuffer();
 			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);

@@ -12,7 +12,11 @@
 	<ui:define name="contentSection">
 		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
 		<ui:param name="scQtApproval" value="#{approvalBackingBean.managedBean.scQtApproval}" />
-		
+		<!-- 25037 start -->
+		<ui:param name="approvalRequest"
+			value="#{approvalBackingBean.managedBean.scQtApprovalRequest}" />
+		<!-- 25037 end -->
+
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/icon_loadingLarge.gif" />
 		</p:blockUI>
@@ -66,9 +70,19 @@
 		</c:if>
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalCategoryCommitteeeApointment}">
-			<ui:include src="requestPTJdetails.xhtml" />
-			<ui:include src="approverCommittee.xhtml" />
-			<ui:include src="approveremarksdetails.xhtml" />
+			<!-- 25037 start -->
+			<c:choose>
+				<c:when
+					test="${approvalBackingBean.managedBean.committeeReviseFlow}">
+					<ui:include src="committeUpdateApprover.xhtml" />
+				</c:when>
+				<c:otherwise>
+					<ui:include src="requestPTJdetails.xhtml" />
+					<ui:include src="approverCommittee.xhtml" />
+					<ui:include src="approveremarksdetails.xhtml" />
+				</c:otherwise>
+			</c:choose>
+			<!-- 25037 end -->
 		</c:if>
 		<c:if
 			test="${approvalBackingBean.managedBean.approvalType == ParameterConst.approvalRequestPublicationApproval}">
@@ -84,10 +98,12 @@
 			<ui:include src="approveremarksdetails.xhtml" />
 		</c:if>
 
+		<!-- 25037 start -->
 		<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
-			resizable="false" width="360" height="90" modal="true">
-
+			resizable="false" width="360" height="90" modal="true"
+			closable="false">
+			<!-- 25037 end -->
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -96,14 +112,19 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="reviceApprovalDlg.hide();"
+				<!-- 25037 start -->
+				<p:commandButton widgetVar="reviseOKBtn"
+					onclick="reviseOKBtn.disable(); reviseCANCELBtn.disable(); reviceApprovalDlg.hide(); blockWidget.show();"
+					value="#{lbl['lbl.btn.yes']}"
+					oncomplete="reviceApprovalDlg.hide();blockWidget.hide();"
 					action="#{approvalBackingBean.updateReviceBpmTask}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="reviceApprovalDlg.hide();" type="button" />
+				<p:commandButton widgetVar="reviseCANCELBtn"
+					value="#{lbl['lbl.btn.no']}" onclick="reviceApprovalDlg.hide();"
+					type="button" />
+				<!-- 25037 end -->
 			</div>
 		</p:dialog>
-		
+
 		<p:dialog id="rejectApprovalDlg" widgetVar="rejectApprovalDlg"
 			header="#{lbl['lbl.sc.dialog.confirm.header.reject']}"
 			resizable="false" width="350" height="90" modal="true">

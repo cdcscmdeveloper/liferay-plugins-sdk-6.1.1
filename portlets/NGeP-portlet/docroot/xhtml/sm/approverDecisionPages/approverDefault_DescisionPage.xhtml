@@ -46,10 +46,12 @@
 						oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 					<!-- #12483 - START -->
+						<!-- #31043 -->
 						<ui:repeat var="bpmAction" value="#{backingBean.managedBean.bpmActions}">
 							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.revise']}"
 								update=":form:tt:approverRevDialog" partialSubmit="true"
+								disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								process="@this" onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignFinalApproveOrReject('approverRevDialog')}" />

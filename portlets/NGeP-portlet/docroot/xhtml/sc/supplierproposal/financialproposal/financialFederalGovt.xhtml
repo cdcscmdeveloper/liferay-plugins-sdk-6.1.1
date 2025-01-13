@@ -5,95 +5,259 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:param name="isProposal"
+		value="#{QTStatusConst.QT_PROPOSAL_PREPARATION
+								.equals(supplierProposalDetailBackingBean.managedBean.qt.qtStatus.getStatusId())}" />
+	<p:panel id="creditFacilitiesPanel"
+		header="#{lbl['lbl.sc.spec.credit.facility']}" toggleable="true">
 
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction3']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 
-
-	<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
-		toggleable="true">
-		<table>
-			<tr>
-				<td><p:outputLabel style="font-weight: bold;" value="#{supplierProposalDetailBackingBean.managedBean.year}" />
-					<p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']} " /></td>
-			</tr>
-		</table>
-		
-		<p:dataTable id="financegovtid" var="suppExperience"
-			value="#{supplierProposalDetailBackingBean.managedBean.supplierExperienceList}"
+		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
+			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			rowKey="#{suppExperience}" rowIndexVar="rowIndex" rows="10">
+			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
+			<ac:paginator for="creditfaciitiesid" />
 
-			<ac:paginator for="financegovtid" />
+			<!-- CR 25201 -start- -->
+			<p:column style="width:2%" rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}">
+			<!-- CR 25201 -end- -->	
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{supplierProposalDetailBackingBean.managedBean.selectedAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="@([id$=creditFacilitiesPanel])"
+							listener="#{supplierProposalDetailBackingBean.selectAll(supplierProposalDetailBackingBean.managedBean.selectedAll,supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
 
-			<p:column headerText="#{lbl['lbl.sm.projDtls.clientName']}" style="white-space : normal; ">
-				<h:outputText value="#{suppExperience.clientName}" />
+				<p:selectBooleanCheckbox value="#{creditfacilities.selected}">
+					<p:ajax partialSubmit="true" process="@this"
+						update="@([id$=creditFacilitiesPanel])" />
+				</p:selectBooleanCheckbox>
+
+			</p:column>
+			<p:column style="white-space : normal; width : 22%; ">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.bank.name']}" />
+				</f:facet>
+				<h:outputText value="#{creditfacilities.bankName}"
+					rendered="#{!isProposal}" />
+				<p:inputText id="bankName" value="#{creditfacilities.bankName}"
+					style="width:85%;" required="true" maxlength="50"
+					rendered="#{isProposal}" label="#{lbl['lbl.sc.spec.bank.name']}">
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,bankNameMsg" />
+				</p:inputText>
+				<p:message id="bankNameMsg" for="bankName" display="icon" />
+			</p:column>
+			<p:column style="white-space : normal; width : 23%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.address']}" />
+				</f:facet>
+				<h:outputText value="#{creditfacilities.bankAddress}"
+					rendered="#{!isProposal}" />
+				<p:inputTextarea id="bankAddress" style="width:85%;"
+					value="#{creditfacilities.bankAddress}" rows="3" required="true"
+					maxlength="100" label="#{lbl['lbl.sc.address']}"
+					rendered="#{isProposal}" onkeyup="limitTextArea(this,100);" onkeydown="limitTextArea(this,100);" onmouseout="limitTextArea(this,100);" >
+					<p:ajax process="@this" partialSubmit="true"
+						update="@this,bankAddressMsg" />
+				</p:inputTextarea>
+				<p:message id="bankAddressMsg" for="bankAddress" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}" style="white-space : normal; ">
-				<h:outputText value="#{suppExperience.title}" />
+			<p:column style="width : 20%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.credit.type']}" />
+				</f:facet>
+				<p:outputLabel style="float : left"
+					value="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
+					rendered="#{!isProposal}" />
+				<p:selectOneMenu id="creditType"
+					value="#{creditfacilities.creditType.parameterId}"
+					style="width:95%;margin-bottom: 5px;" required="true"
+					rendered="#{isProposal}" label="#{lbl['lbl.sc.spec.credit.type']}">
+					<f:selectItems
+						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.creditType)}" />
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this,creditTypeMsg,creditfaciitiesid"
+						listener="#{supplierProposalDetailBackingBean.creditTypeChange(creditfacilities)}" />
+				</p:selectOneMenu>
+				<br></br>
+				<p:outputLabel style="float : left"
+					value="#{creditfacilities.otherCreditType}"
+					rendered="#{(creditfacilities.creditType.parameterCode eq 'KKL') and !isProposal}" />
+				<p:inputText style="width : 90%" id="otherCreditType"
+					required="true" value="#{creditfacilities.otherCreditType}"
+					label="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
+					rendered="#{(creditfacilities.creditType.parameterCode eq 'KKL') and isProposal}">
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="@this,otherCreditTypeMsg,creditfaciitiesid" />
+				</p:inputText>
+				<p:message id="otherCreditTypeMsg" for="otherCreditType"
+					display="icon" />
+				<p:message id="creditTypeMsg" for="creditType" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}" style="white-space : normal; ">
-				<ac:labelAmount value="#{suppExperience.contractValue}"	styleClass="outputLabel-view" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
-				<h:outputText value="#{suppExperience.procurementDate}">
-					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			<p:column style="text-align:right; width : 12%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.amt.credit']}" />
+				</f:facet>
+				<h:outputText value="#{creditfacilities.creditAmt}"
+					rendered="#{!isProposal}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
+				<p:inputText id="creditAmt" value="#{creditfacilities.creditAmt}"
+					style="text-align:right;width:80%;" required="true" maxlength="14"
+					label="#{lbl['lbl.sc.spec.amt.credit']}" rendered="#{isProposal}">
+					<p:ajax event="blur" process="@this" partialSubmit="true"
+						listener="#{supplierProposalDetailBackingBean.totalCreditFacilitiesSum}"
+						update="@this,creditAmtMsg,@([id$=totalSummaryPG])" />
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:message id="creditAmtMsg" for="creditAmt" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
-				<h:outputText value="#{lbl['lbl.sm.projDtls.inProgress']}" rendered="#{suppExperience.progressStatus eq 'P'}" />
-				<h:outputText value="#{lbl['lbl.sm.projDtls.success']}" rendered="#{suppExperience.progressStatus eq 'S'}" />
-				<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}" rendered="#{suppExperience.progressStatus eq 'F'}" />
-				<h:outputText value="#{lbl['lbl.sm.projDtls.kiv']}" rendered="#{suppExperience.progressStatus eq 'K'}" />
-				<h:outputText value="#{lbl['lbl.sm.projDtls.repeal']}" rendered="#{suppExperience.progressStatus eq 'R'}" />
+			<p:column style="text-align:right; width : 11%;">
+				<f:facet name="header">
+					<ui:fragment rendered="#{!statusHide}">
+						<h:outputText value="* " styleClass="mandatory" />
+					</ui:fragment>
+					<h:outputText value="#{lbl['lbl.sc.spec.amt.paid']}" />
+				</f:facet>
+				<h:outputText value="#{creditfacilities.amtPaid}" rendered="#{!isProposal}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<p:inputText id="amtPaid" value="#{creditfacilities.amtPaid}"
+					style="text-align:right;width:78%;" required="true" maxlength="14"
+					label="#{lbl['lbl.sc.spec.amt.paid']}" rendered="#{isProposal}">
+					<p:ajax event="blur" process="@this" partialSubmit="true"
+						listener="#{supplierProposalDetailBackingBean.creditFacilityValidator(rowIndex)}"
+						update="@this,amtPaidMsg,@([id$=totalSummaryPG])" />
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:message id="amtPaidMsg" for="amtPaid" display="icon" />
 			</p:column>
 
 		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
+				process="@all" partialSubmit="true" styleClass="BtnSpacing"
+				action="#{supplierProposalDetailBackingBean.addCreditFacilities}"
+				update="@([id$=creditFacilitiesPanel])" />
 
-		<p:spacer height="5" />
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 220px"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
-				<td colspan="3"><p:inputText style="text-align:right"
-						value="#{supplierProposalDetailBackingBean.managedBean.totalContractAmount}"
-						readonly="true" disabled="true" size="15">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
-				<td style="width: 120px;"><p:outputLabel
-						value="#{lbl['lbl.tpl.spec.content.system.score']}"
-						rendered="#{checklistScoreType eq '1'}" /> <p:outputLabel
-						value="#{lbl['lbl.tpl.spec.content.user.score']}"
-						rendered="#{ checklistScoreType eq '2'}" /> <ui:fragment
-						rendered="#{checklistScoreType eq '2' and !pageDisable}">
-						<p:outputLabel value="* " styleClass="mandatory" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				disabled="#{supplierProposalDetailBackingBean.deleteselectedList(supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities)}"
+				partialSubmit="true" styleClass="BtnSpacing"
+				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.readOnly}"
+				oncomplete="finCreditFacilityDelete.show();"
+				update="@([id$=finCreditFacilityDeleteId])">
+				<f:setPropertyActionListener
+					target="#{supplierProposalDetailBackingBean.managedBean.selectedAll}"
+					value="#{false}"></f:setPropertyActionListener>
+			</p:commandButton>
+
+			<ui:param name="finCreditFacilityDeleteId"
+				value="finCreditFacilityDeleteId"></ui:param>
 
 
-					</ui:fragment></td>
-				<td><p:inputText readonly="true" disabled="true"
-						value="#{noOfContracts.autoScore}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
-						id="financialGovernmentUserScoreId"
-						label="#{lbl['lbl.tpl.spec.content.user.score']}"
-						value="#{noOfContracts.userScore}" maxlength="18" required="true"
-						disabled="#{pageDisable}" style="text-align:right"
-						rendered="#{ checklistScoreType eq '2'}">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
-							maxIntegerDigits="14" integerOnly="true" />
-						<f:attribute name="min" value="0" />
-						<f:attribute name="max" value="#{contractUserScore}" />
-					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
-						value="/#{contractUserScore}"
-						rendered="#{ checklistScoreType eq '2'}" /> <p:message
-						id="financialGovernmentUserScoreMessage"
-						for="financialGovernmentUserScoreId" display="icon">
-					</p:message></td>
-			</tr>
-		</table>
+			<ac:confirmationPopup id="#{finCreditFacilityDeleteId}"
+				widget="finCreditFacilityDelete" width="400" height="200"
+				okAction="supplierProposalDetailBackingBean.deleteCreditFacilities"
+				title="#{lbl['lbl.sc.spec.credit.facility']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=creditFacilitiesPanel])" />
+
+		</div>
+
+		<h:panelGroup id="totalSummaryPG">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 165px"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.credit']} " /></td>
+					<td colspan="3"><p:inputText style="text-align:right"
+							id="totalcredit"
+							value="#{supplierProposalDetailBackingBean.managedBean.totalAmountCredit}"
+							readonly="true" disabled="true" size="30">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.credit.amount.paid']} " /></td>
+					<td colspan="3"><p:inputText style="text-align:right"
+							id="totalamtpaid"
+							value="#{supplierProposalDetailBackingBean.managedBean.totalAmountPaid}"
+							readonly="true" disabled="true" size="30">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}" /></td>
+					<td colspan="3"><p:inputText style="text-align:right"
+							id="percentagePaidID"
+							value="#{supplierProposalDetailBackingBean.managedBean.totalPercentagePaid}"
+							readonly="true" disabled="true" size="30">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+						</p:inputText></td>
+					<td style="width: 120px;"><p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.system.score']}"
+							rendered="#{checklistScoreType eq '1'}" /> <p:outputLabel
+							value="#{lbl['lbl.tpl.spec.content.user.score']}"
+							rendered="#{ checklistScoreType eq '2'}" /> <ui:fragment
+							rendered="#{checklistScoreType eq '2' and !pageDisable}">
+							<p:outputLabel value="* " styleClass="mandatory" />
+
+
+						</ui:fragment></td>
+					<td><p:inputText readonly="true" disabled="true" size="25"
+							value="#{noOfContracts.autoScore}" style="text-align:right"
+							rendered="#{ checklistScoreType eq '1'}"></p:inputText> 
+						<ui:remove>6906 -start-</ui:remove>
+						<p:inputText id="financialCreditFacilityUserScoreId"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}"
+							value="#{noOfContracts.userScore}" maxlength="18" required="true"
+							disabled="#{pageDisable or rejectedSupplier}"
+							style="text-align:right" rendered="#{ checklistScoreType eq '2'}">
+						<ui:remove>6906 -end-</ui:remove>
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="14" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max" value="#{contractUserScore}" />
+						</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText
+							value="/#{contractUserScore}"
+							rendered="#{ checklistScoreType eq '2'}" /> <p:message
+							id="financialCreditFacilityUserScoreMessage"
+							for="financialCreditFacilityUserScoreId" display="icon">
+						</p:message></td>
+				</tr>
+			</table>
+		</h:panelGroup>
 	</p:panel>
 
 </ui:composition>

@@ -287,6 +287,15 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
 	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
+
+	// 36671, 25037 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671, 25037 - end
+
 	// Bug #35688@Syazani 10/07/2024 -- Start
 	public static final String TAB_SC_GENERAL_INFORMATION = "0";
 	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
@@ -300,11 +309,18 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
 	// Bug #35688@Syazani 10/07/2024 -- End
-		
+	
 	//#11104
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
 	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148&11104
 	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148&11104
+	
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
+	
+	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 }

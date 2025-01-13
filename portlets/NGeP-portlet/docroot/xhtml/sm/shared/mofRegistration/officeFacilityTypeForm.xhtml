@@ -534,6 +534,16 @@
 		<p:confirmDialog id="alertFacTypeChangeDlg" closable="true"
 			header="#{lbl['lbl.sm.facility.facilityType.change.alertheader']}" severity="alert"
 			widgetVar="alertFacTypeChangeDlg">
+			<!-- 32236 - Start -->
+			<script>
+      
+				const collection = document.getElementsByClassName("ui-confirm-dialog-severity");
+       			for (let i = 0; i &lt; collection.length; i++) {
+          			collection[i].remove();
+        		};
+			
+	      	</script>
+			<!-- 32236 - End -->
 			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="alertFacTypeChangeDlg.hide();" />
