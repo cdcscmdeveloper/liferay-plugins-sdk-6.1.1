@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -995,8 +996,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * Back action.
 	 *
 	 * @return the string
+	 * @throws IOException 
 	 */
-	public String backAction() {
+	public String backAction() throws IOException {//36519-Start
 		if(this.getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -1007,8 +1009,19 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				flOrderBB.getManagedBean().getPendingDoDataModel().reloadData();
 			}
 			return getManagedBean().getBackToPrevious();
+		} 
+		//36519-Start
+		else if (getManagedBean().getBackToNtf() != null) {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+									+ "notifications");
+			return null;
 		}
-		else{
+		//36519-End
+		else {
 			if(this.getManagedBean().isPendingDelivery()){
 				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
 				return "/xhtml/fl/dopending/doPendingTable.xhtml?faces-redirect=true";
@@ -1467,8 +1480,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setBackToNtf("notifications");//36519
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW); //36519
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button. //36519
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
