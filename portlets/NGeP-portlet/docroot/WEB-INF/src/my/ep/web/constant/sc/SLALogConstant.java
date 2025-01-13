@@ -32,6 +32,7 @@ public class SLALogConstant {
 	// #29007 -start-
 	public static final String QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY = "generateLampiranA3PdfFromVelocity";
 	public static final String QT_CREATE_LAMPIRANA3FORQT = "createLampiranA3forQT";
+	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION= "createLampiranA3forQTVerification";
 	// #29007 -end-
 	// 25037 - start
 	public static final String QT_PRERENDER_GENERIC_APPROVAL = "preRenderGenericApproval";

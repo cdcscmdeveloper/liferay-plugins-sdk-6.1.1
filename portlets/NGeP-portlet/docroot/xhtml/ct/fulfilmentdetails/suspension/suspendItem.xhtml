@@ -169,10 +169,10 @@
 		style="max-height: 800px; max-width: 900px;" resizable="false">
 
 		<h:panelGroup
-			rendered="#{(suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase)}">
+			rendered="#{suspensionBackingBean.managedBean.contractVer.ctContract.loa.procurementMode.parameterCode eq ParameterConst.procurementModeDirectPurchase}">
 			<h:panelGrid column="2" cellspacing="7"
 				style="margin-bottom: 20px;margin-top: 10px;">
-
+				<!-- #31558 start - Aligning the output so that the display will not affect long data -->
 				<h:panelGroup>
 					<h:outputText value="#{lbl['lbl.ct.item.desc']}" escape="false"
 						style="float:left;font-weight:bold;display:block;width:125px" />
@@ -181,83 +181,51 @@
 					<h:outputText
 						value="#{suspensionBackingBean.managedBean.selectedItemForSpec.scRequestItem.itemName}"
 						escape="false"
-						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:450px" />
+						style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:430px" />
 					<br />
 				</h:panelGroup>
 
-				<c:if
-					test="#{suspensionBackingBean.managedBean.supplierOffer ne null}">
-					<h:panelGroup>
-						<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false"
-							style="float:left;font-weight:bold;display:block;width:125px" />
-						<h:outputText value=":&#160;" escape="false"
-							style="float:left;font-weight:bold" />
-						<div style="display: flex; align-items: flex-start;">
-							<div
-								style="overflow-y: auto; overflow-x: hidden; max-height: 100px; display: inline-block; position: relative;">
-								<h:outputText
-									value="#{suspensionBackingBean.managedBean.supplierOffer}"
-									escape="false"
-									style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 150px; width:450px" />
-							</div>
-							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"
-								style="position: absolute; left: 470px; top: 0;" />
+				<h:panelGroup>
+					<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false"
+						style="float:left;font-weight:bold;display:block;width:125px" />
+					<h:outputText value=":&#160;" escape="false"
+						style="float:left;font-weight:bold" />
+					<div style="display: flex; align-items: flex-start;">
+						<div
+							style="overflow-y: auto; overflow-x: hidden; max-height: 100px; display: inline-block; position: relative; padding-right: 15px; width: 450px;">
+							<h:outputText
+								value="#{suspensionBackingBean.managedBean.supplierOffer != null 
+								and not empty suspensionBackingBean.managedBean.supplierOffer.trim() ? suspensionBackingBean.managedBean.supplierOffer : lbl['lbl.sc.qt.item.spec.null']}"
+								escape="false"
+								style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 150px; width:430px" />
 						</div>
-						<br />
-					</h:panelGroup>
-				</c:if>
-				<c:if
-					test="#{suspensionBackingBean.managedBean.supplierOffer eq null}">
-					<h:panelGroup>
-						<h:outputText value="#{lbl['lbl.ct.supp.offer']}" escape="false"
-							style="float:left;font-weight:bold;display:block;width:125px" />
-						<h:outputText value=":&#160;" escape="false"
-							style="float:left;font-weight:bold" />
-						<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}"
-							escape="false"
-							style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px" />
-						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}" />
-					</h:panelGroup>
-				</c:if>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.dp.supplieroffer']}"
+							style="position: absolute; left: 470px; top: 0;" />
+					</div>
+					<br />
+				</h:panelGroup>
 
-				<c:if
-					test="#{suspensionBackingBean.managedBean.newOfferSpec ne null}">
-					<h:panelGroup>
-						<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}"
-							escape="false"
-							style="float:left;font-weight:bold;display:block;width:125px" />
-						<h:outputText value=":&#160;" escape="false"
-							style="float:left;font-weight:bold" />
-						<div style="display: flex; align-items: flex-start;">
-							<div
-								style="overflow-y: auto; overflow-x: hidden; max-height: 100px; display: inline-block; position: relative;">
-								<h:outputText
-									value="#{suspensionBackingBean.managedBean.newOfferSpec}"
-									escape="false"
-									style="float:left;font-weight:bold;display:block; word-wrap: break-word; max-height: 150px; width:450px" />
-							</div>
-							<ac:iconTooltip
-								value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"
-								style="position: absolute; left: 470px; top: 0;" />
+				<h:panelGroup>
+					<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}"
+						escape="false"
+						style="float:left; font-weight:bold; display:block; width: 125px; " />
+					<h:outputText value=":&#160;" escape="false"
+						style="float:left;font-weight:bold" />
+					<div style="display: flex; align-items: flex-start;">
+						<div
+							style="overflow-y: auto; overflow-x: hidden; max-height: 100px; display: inline-block; position: relative; padding-right: 15px; width: 450px;">
+							<h:outputText
+								value="#{suspensionBackingBean.managedBean.newOfferSpec != null 
+								and not empty suspensionBackingBean.managedBean.newOfferSpec.trim() ? suspensionBackingBean.managedBean.newOfferSpec : lbl['lbl.sc.qt.item.spec.null']}"
+								escape="false"
+								style="float:left;font-weight:bold;display:block;word-wrap: break-word; max-height: 150px; width:430px" />
 						</div>
-						<br />
-					</h:panelGroup>
-				</c:if>
-				<c:if
-					test="#{suspensionBackingBean.managedBean.newOfferSpec eq null}">
-					<h:panelGroup>
-						<h:outputText value="#{lbl['lbl.ct.new.supp.offer']}"
-							escape="false"
-							style="float:left;font-weight:bold;display:block;width:125px" />
-						<h:outputText value=":&#160;" escape="false"
-							style="float:left;font-weight:bold" />
-						<h:outputText value="#{lbl['lbl.sc.qt.item.spec.null']}"
-							escape="false"
-							style="float:left;font-weight:bold;display:block;word-wrap: break-word; width:400px" />
 						<ac:iconTooltip
-							value="#{lbl['lbl.ct.tooltip.newofferedspecification']}" />
-					</h:panelGroup>
-				</c:if>
+							value="#{lbl['lbl.ct.tooltip.newofferedspecification']}"
+							style="position: absolute; left: 470px; top: 0;" />
+					</div>
+					<br />
+				</h:panelGroup>
 				<!-- #31558 end -->
 			</h:panelGrid>
 
@@ -272,11 +240,11 @@
 				currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
 				scrollable="true" scrollHeight="150" liveScroll="true">
 				<p:column styleClass="column-align-center"
-					style="white-space:normal; width: 100%;">
+					style="white-space:normal;">
 					<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
 					<!-- #31558 start - Aligning the title to the center but the content to the left -->
 					<h:outputText
-						value="#{empty item ? lbl['lbl.sc.qt.item.spec.null'] : item}"
+						value="#{item == null || item.trim().isEmpty() ? lbl['lbl.sc.qt.item.spec.null'] : item}"
 						rows="5" escape="false"
 						style="float:left;text-align:left; display:block;word-wrap: break-word; max-width: 600px;"
 						disabled="true">
@@ -301,44 +269,44 @@
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 					currentPageReportTemplate="Page &#160; {currentPage}/{totalPages}"
 					scrollable="true" scrollHeight="200" liveScroll="true">
+
 					<p:column styleClass="column-align-center"
-						style="white-space:normal; vertical-align: top; width: 33%;">
+						style="white-space: normal; vertical-align: top; width: 33%;">
+						<!-- Aligns content to the top -->
 						<f:facet name="header">#{lbl['lbl.ct.specification']}</f:facet>
-						<!-- #31558 start - Aligning the content to the left -->
 						<h:outputText
-							value="#{empty item.itemSpec ? lbl['lbl.sc.qt.item.spec.null'] : item.itemSpec}"
+							value="#{item.itemSpec == null || item.itemSpec.trim().isEmpty() ? lbl['lbl.sc.qt.item.spec.null'] : item.itemSpec}"
 							style="float: left; text-align: left; max-width: 300px; word-wrap: break-word;"
 							escape="false">
 						</h:outputText>
-						<!-- #31558 end -->
 					</p:column>
+
 					<p:column styleClass="column-align-center"
-						style="white-space:normal; vertical-align: top; width: 33%;">
+						style="white-space: normal; vertical-align: top; width: 33%;">
+						<!-- Aligns content to the top -->
 						<f:facet name="header">#{lbl['lbl.ct.supp.offer']}
-     					<ac:iconTooltip
+            <ac:iconTooltip
 								value="#{lbl['lbl.ct.tooltip.qt.supplieroffer']}" />
 						</f:facet>
-						<!-- #31558 start - Aligning the content to the left -->
 						<h:outputText
-							value="#{empty item.supplierOffer ? lbl['lbl.sc.qt.item.spec.null'] : item.supplierOffer}"
+							value="#{item.supplierOffer == null || item.supplierOffer.trim().isEmpty()  ? lbl['lbl.sc.qt.item.spec.null'] : item.supplierOffer}"
 							style="float: left; text-align: left; max-width: 500px; word-wrap: break-word;"
 							escape="false">
 						</h:outputText>
-						<!-- #31558 end -->
 					</p:column>
+
 					<p:column styleClass="column-align-center"
-						style="white-space:normal; vertical-align: top; width: 33%;">
+						style="white-space: normal; vertical-align: top; width: 33%;">
+						<!-- Aligns content to the top -->
 						<f:facet name="header">#{lbl['lbl.ct.new.offer.spec']}
-      					<ac:iconTooltip
+            <ac:iconTooltip
 								value="#{lbl['lbl.ct.tooltip.newofferedspecification']}" />
 						</f:facet>
-						<!-- #31558 start - Aligning the content to the left -->
 						<h:outputText
-							value="#{empty item.newOfferSpec ? lbl['lbl.sc.qt.item.spec.null'] : item.newOfferSpec}"
+							value="#{item.newOfferSpec == null || item.newOfferSpec.trim().isEmpty() ? lbl['lbl.sc.qt.item.spec.null'] : item.newOfferSpec}"
 							style="float: left; text-align: left; max-width: 500px; word-wrap: break-word;"
 							escape="false">
 						</h:outputText>
-						<!-- #31558 end -->
 					</p:column>
 				</p:dataTable>
 			</h:panelGrid>
@@ -351,4 +319,5 @@
 			</div>
 		</f:facet>
 	</p:dialog>
+	<!-- #28854 end - Display item specification as defined in LOA -->
 </ui:composition>

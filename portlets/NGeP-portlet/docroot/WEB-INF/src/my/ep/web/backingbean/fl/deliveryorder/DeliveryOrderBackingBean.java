@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -995,8 +996,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * Back action.
 	 *
 	 * @return the string
+	 * @throws IOException 
 	 */
-	public String backAction() {
+	public String backAction() throws IOException {//36519-Start
 		if(this.getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -1007,8 +1009,19 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				flOrderBB.getManagedBean().getPendingDoDataModel().reloadData();
 			}
 			return getManagedBean().getBackToPrevious();
+		} 
+		//36519-Start
+		else if (getManagedBean().getBackToNtf() != null) {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+									+ "notifications");
+			return null;
 		}
-		else{
+		//36519-End
+		else {
 			if(this.getManagedBean().isPendingDelivery()){
 				log.info("****back Action isPendingDelivery value doPending****"+this.getManagedBean().isPendingDelivery());
 				return "/xhtml/fl/dopending/doPendingTable.xhtml?faces-redirect=true";
@@ -1224,6 +1237,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().getPmDigiSign().setOriginalData(getManagedBean().getTextBeforeSign());
 			}
 			//#26191-end
+			// 36361-Start
+			if (getManagedBean().getButtonAction().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				validateDelQtySaved();
+			}
+			// 36361-End
 		}
 		return createDeliveryOrder(getManagedBean().getButtonAction());
 	}
@@ -1462,8 +1480,9 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setBackToNtf("notifications");//36519
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW); //36519
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button. //36519
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
@@ -1634,6 +1653,45 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	// 36247-End
+	
+	// 36361-Start
+	/**
+	 * Validate that the delivered quantity does not exceed the remaining
+	 * quantity. Validate also if there are duplicate SupplierDoNo references
+	 * 
+	 * @throws EpException
+	 *             if the delivered quantity is greater than the remaining
+	 *             quantity
+	 */
+	private void validateDelQtySaved() {
+		BigDecimal remainingQty;
+		BigDecimal sumDeliveredQty;
+		IDeliveryOrderSO deliveryOrderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+
+		for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+				reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
+				reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
+
+				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
+				sumDeliveredQty = resDTO.getTotalDelOrderQty();
+
+				remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
+				if (itemAddr.getDeliveredQty() == null) {
+					itemAddr.setDeliveredQty(new BigDecimal(0));
+				}
+
+				if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
+					throw new EpException(MessageConst.ERROR_740071);
+				}
+			}
+		}
+	}
+	// 36361-End
 	
 	//26279 - start
 	public void viewDisciplinaryAction() {

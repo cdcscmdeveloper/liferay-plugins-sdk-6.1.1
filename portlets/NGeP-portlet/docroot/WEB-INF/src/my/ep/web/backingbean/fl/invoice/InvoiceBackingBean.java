@@ -417,6 +417,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					if(resDTO.getInvoice().getAp59Status()==null || 
 							(resDTO.getInvoice().getAp59Status()!=null && resDTO.getInvoice().getAp59Status().getStatusId().longValue()!=FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)) {
 						reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
+						reqDTO.setAdjustment(resDTO.getAdjustment());//36519
 						invoiceSO.sendCANNotification(reqDTO);
 					}
 				}

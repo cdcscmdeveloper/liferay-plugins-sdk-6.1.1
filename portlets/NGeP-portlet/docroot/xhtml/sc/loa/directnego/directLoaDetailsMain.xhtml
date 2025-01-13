@@ -71,11 +71,11 @@
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="1" />
 							</p:menuitem>
-							<!-- #29007 Added actionListener Vinod -start- -->
+							<ui:remove>#29007 Added actionListener Vinod start</ui:remove>
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
 								actionListener="#{directLOABackingBean.searchSupplierItemByName}"
 								update="@form">
-								<!-- #29007 Added actionListener Vinod -end- -->
+								<ui:remove>#29007 Added actionListener Vinod end</ui:remove>
 								<f:setPropertyActionListener
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="2" />
