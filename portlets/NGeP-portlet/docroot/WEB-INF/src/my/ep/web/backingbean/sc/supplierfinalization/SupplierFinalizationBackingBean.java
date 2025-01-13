@@ -3259,23 +3259,23 @@ public class SupplierFinalizationBackingBean extends
 		// #28834 - Start.
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
-		
-		for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
-			
-			  if (report.getTitle().contains("Kertas Taklimat")) {
-				  
-				  if (briefingPaperList == null) {
-					  briefingPaperList = new ArrayList<>();
-				  }
-				  
-				  briefingPaperList.add(report);
-			  } else {
-				  if (decisionPaperList == null) {
-					  decisionPaperList = new ArrayList<>();
-				  }
-				  
-				  decisionPaperList.add(report);
-			  }
+
+		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
+
+			if (report.getTitle().contains("Kertas Taklimat")) {
+
+				if (briefingPaperList == null) {
+					briefingPaperList = new ArrayList<>();
+				}
+
+				briefingPaperList.add(report);
+			} else {
+				if (decisionPaperList == null) {
+					decisionPaperList = new ArrayList<>();
+				}
+
+				decisionPaperList.add(report);
+			}
 		}
 		
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
@@ -3567,8 +3567,6 @@ public class SupplierFinalizationBackingBean extends
 		
 		return reportAttachment;
 	}
-	
-	
 	
 	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
 										   throws Exception {

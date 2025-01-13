@@ -50,7 +50,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditCompBasic(false);
 				log.info("31230 Check if Supplier edit company basic");
-				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
+				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -65,7 +65,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditCompBasic(false);
 				bean.getEditVO().setPoEditCompBasic(false);
 				log.info("31230 Check if Supplier edit company basic");
-				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
+				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -80,7 +80,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditCompBasic(false);
 				bean.getEditVO().setAppEditCompBasic(false);
 				log.info("31230 Check if Supplier edit company basic");
-				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
+				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -104,7 +104,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditAssocProj(false);
 				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestAppl(), bean.getSmAppl())) {
+						bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				// used to check got changes to display supporting doc
@@ -118,7 +118,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditAssocProj(false);
 				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestAppl(), bean.getSupplierAppl())) {
+						bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				/*//#32008
@@ -133,7 +133,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setAppEditAssocProj(false);
 				log.info("31230 Check if Supplier edit Project/Branch");
 				if (step2AssocCompProjExpHasDifference(true,
-						bean.getLatestAppl(), bean.getSupplierAppl())) {
+						bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
 				/*//#32008
@@ -154,7 +154,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				log.info("31230 Check if Supplier edit personnel");
-				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
@@ -172,7 +172,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
 				log.info("31230 Check if Supplier edit personnel");
-				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
@@ -188,7 +188,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditPersonnel(false);
 				bean.getEditVO().setAppEditPersonnel(false);
 				log.info("31230 Check if Supplier edit personnel");
-				if (step3PersonnelHasDifference(true, bean.getLatestAppl(),
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
@@ -210,7 +210,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquity(false);
 				log.info("31230 Check if Supplier edit equity");
-				if (step4EquityHasDifference(true, bean.getLatestAppl(),
+				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
@@ -224,7 +224,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditEquity(false);
 				bean.getEditVO().setPoEditEquity(false);
 				log.info("31230 Check if Supplier edit equity");
-				if (step4EquityHasDifference(true, bean.getLatestAppl(),
+				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
@@ -239,7 +239,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditEquity(false);
 				bean.getEditVO().setAppEditEquity(false);
 				log.info("31230 Check if Supplier edit equity");
-				if (step4EquityHasDifference(true, bean.getLatestAppl(),
+				if (step4EquityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquity(true);
 				}
@@ -261,7 +261,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				log.info("31230 Check if Supplier edit bank");
-				if (step5BankHasDifference(true, bean.getLatestAppl(),
+				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
@@ -275,7 +275,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				log.info("31230 Check if Supplier edit bank");
-				if (step5BankHasDifference(true, bean.getLatestAppl(),
+				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
@@ -290,7 +290,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
 				log.info("31230 Check if Supplier edit bank");
-				if (step5BankHasDifference(true, bean.getLatestAppl(),
+				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}
@@ -313,7 +313,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditCategory(false);
 				
 				log.info("31230 Check if Supplier edit category");
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
+				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
@@ -328,7 +328,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditCategory(false);
 				bean.getEditVO().setPoEditCategory(false);
 				log.info("31230 Check if Supplier edit category");
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),bean.getSupplierAppl())) {
+				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
 				/*//#32008
@@ -341,7 +341,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditCategory(false);
 				bean.getEditVO().setAppEditCategory(false);
 				log.info("31230 Check if Supplier edit category");
-				if (step6CatCodeHasDifference(true, bean.getLatestAppl(),
+				if (step6CatCodeHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditCategory(true);
 				}
@@ -371,7 +371,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditFacility(false);
 				log.info("31230 Check if Supplier edit facility");
-				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
+				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
@@ -385,7 +385,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditFacility(false);
 				bean.getEditVO().setPoEditFacility(false);
 				log.info("31230 Check if Supplier edit facility");
-				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
+				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
@@ -400,7 +400,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditFacility(false);
 				bean.getEditVO().setAppEditFacility(false);
 				log.info("31230 Check if Supplier edit facility");
-				if (step7FacilityHasDifference(true, bean.getLatestAppl(),
+				if (step7FacilityHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditFacility(true);
 				}
@@ -422,7 +422,7 @@ public class SmSideMenuIconUtil {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditEquipment(false);
 				log.info("31230 Check if Supplier edit equipment");
-				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
+				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
@@ -436,7 +436,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditEquipment(false);
 				bean.getEditVO().setPoEditEquipment(false);
 				log.info("31230 Check if Supplier edit equipment");
-				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
+				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
@@ -451,7 +451,7 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setPoEditEquipment(false);
 				bean.getEditVO().setAppEditEquipment(false);
 				log.info("31230 Check if Supplier edit equipment");
-				if (step8EquipmentHasDifference(true, bean.getLatestAppl(),
+				if (step8EquipmentHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditEquipment(true);
 				}
