@@ -1,78 +1,72 @@
-<u class="txtBold">Premise Location</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.premiselocation')</u>
 <br />
 <table>
-	<tr>
-		<td width="40%" class="txtBold">Ownership</td>
-		<td width="40%" class="txtBold">Private, Purchasing Price (RM)</td>
-		<td>$!preLocPurchasePrice</td>
-	</tr>
 	
 	<tr>
-		<td width="40%">$!ownerShipType</td>
-		<td class="txtBold" width="40%">Rent, Monthly Rate (RM)</td>
-		<td>$!preLocRentalRate</td>
-	</tr>
-	
-	<tr><td><br /></td></tr>
-	
-	<tr>
-		<td width="40%" class="txtBold">Area</td>
-		<td class="txtBold" width="40%">Overall Square Feet/Meter</td>
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevist.area')</td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.overall.sqft')</td>
 		#if($review)<td>$!facility.overallSqft</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold" width="40%">Enclosed Square Feet/Meter</td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.enclsd.sqft')</td>
 		#if($review)<td>$!facility.enclosedSqft</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold" width="40%">Enclosed Capacity Feet/Meter</td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.enclsd.cap.sqft')</td>
 		#if($review)<td>$!facility.enclosedCapacitySqft</td>#end
 	</tr>
 	
 	<tr>
-		<td width="40%" class="txtBold">Floor</td>
-		<td class="txtBold" width="40%">Cement</td>
-		#if($review)<td>#if($facility.cementFloor)Yes #else No #end</td>#end
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.floor')</td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.cement')</td>
+		#if($review)<td>#if($facility.cementFloor)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold" width="40%">Tar</td>
-		#if($review)<td>#if($facility.tarFloor)Yes #else No #end</td>#end
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.tar')</td>
+		#if($review)<td>#if($facility.tarFloor)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold"  width="40%">Others</td>
-		#if($review)<td>#if($facility.otherFloor)Yes - $facility.otherFloorRemark #else No #end</td>#end
+		<td class="txtBold"  width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.others')</td>
+		#if($review)<td>#if($facility.otherFloor)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') - $facility.otherFloorRemark 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
 	</tr>
 	
 	
 	<tr>
-		<td width="40%" class="txtBold">Environment</td>
-		<td class="txtBold"  width="40%">Fenced</td>
-		#if($review)<td>#if($facility.envFence)Yes #else No #end</td>#end
+		<td width="40%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.environment')</td>
+		<td class="txtBold"  width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.fenced')</td>
+		#if($review)<td>#if($facility.envFence)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
 	</tr>
-	<tr>
-		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold" width="40%">Cleanliness</td>
-		#if($review)<td>#if($facility.envClean)Yes #else No #end</td>#end
-	</tr>
-	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold" width="40%">Organized</td>
-		#if($review)<td>#if($facility.envOrganize)Yes #else No #end</td>#end
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.cleanliness')</td>
+		#if($review)<td>#if($facility.envClean)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
 	</tr>
 	
 	<tr>
 		<td width="40%" class="txtBold"><br /></td>
-		<td class="txtBold" width="40%">Others</td>
-		#if($review)<td>#if($facility.otherEnv)Yes - $facility.otherEnvRemark #else No #end</td>#end
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.organized')</td>
+		#if($review)<td>#if($facility.envOrganize)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
+	</tr>
+	
+	<tr>
+		<td width="40%" class="txtBold"><br /></td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevist.premiseloc.others')</td>
+		#if($review)<td>#if($facility.otherEnv)$smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') - $facility.otherEnvRemark 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>#end
 	</tr>
 
 </table>
