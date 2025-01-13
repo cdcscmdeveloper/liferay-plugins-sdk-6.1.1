@@ -177,6 +177,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -1020,8 +1021,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					face.getUserLocale()));
 			int i = 1;
 			for (PmStatusDesc statusDesc : statusDescs) {
+				//start - 36615 - revert to previous code
 				items[i++] = new SelectItem(statusDesc.getPmStatus()
 						.getStatusId(), statusDesc.getStatusName());
+				//end - end
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -1075,7 +1078,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 		return items;
 	}
-	
+
 	/**
 	 * Get Status description by status id.
 	 * 
@@ -1391,36 +1394,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//25638 - End
 
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		//#25037-START
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -2340,8 +2344,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			// 25037 - start
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
-			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());// 25037
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2349,28 +2355,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
 	private String[] sortOutcomes(String[] outComes) {
-		outComes = outComes==null ? new String[]{} : outComes;//29253-start
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[]{
-					BpmOutcomeConst.BPM_ENDORSE, 
-					BpmOutcomeConst.BPM_CANCEL}; 
-			//last index will appear on the far right, 
-			//if outcome not ranked, order come as is,
-			//existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});//29253-end
+
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+
 		outComes = new String[bpmActions.size()];
 		return bpmActions.toArray(outComes);
 	}
@@ -3419,18 +3414,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return retVal;
 	}
-	
-	//29956 START
-	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
-		Boolean retVal = false;
-		if (supplier != null && supplier.getSupplierId() != null) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
-		}
-		return retVal;
-	}
-	//29956 END
 
 	public static void checkEquityOwnerUpdateAllowance(BaseManagedBean managedBean) {
 		// #27165
@@ -3471,6 +3454,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("ssmNewRegNo", this.getManagedBean().getSmSupplier().getSsmNewRegNo());	//#24819
 		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
 		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
@@ -4252,8 +4236,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		getManagedBean().setDisAllowOwnerEdit(false);
 		
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
-		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+//		#37598 START
+		Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
+		log.info("#37598 -- isMofAccEffDatePassed6MonthCurrDate ==>>>>>" + isMofAccEffDatePassed6MonthCurrDate);
+		String applType = smAppl.getApplType();
+		Boolean disalllowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		log.info("#37598 -- smAppl.getApplType() ==>>>>>" + smAppl.getApplType());
+		log.info("#37598 -- disalllowEditApplType ==>>>>>" + disalllowEditApplType);
+//		#37598 END
 		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
@@ -4266,26 +4258,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
 				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
 				
 				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
 				
 				if(isPersonnelAdminRole
-						&& !isMofAccEffDatePassed6MonthCurrDate
-						&& !isBasicAccount){
+						&& isMofAccEffDatePassed6MonthCurrDate
+						&& disalllowEditApplType){ // #37598
 					getManagedBean().setDisAllowOwnerEdit(true);
+					break;
 				}
-				
-//				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
-//						&& isPersonnelAdminRole(personnel)
-//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-//					getManagedBean().getPersonnelsRole().add(personnel);
-//				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
-//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-//					getManagedBean().getPersonnelsRole().add(personnel);
-//				}
 			}
 		}
 		if(getManagedBean().getPersonnelsRole() != null 
@@ -4361,39 +4345,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		generateReport(report, paramMap);
 	}
 	
-	//#28854 - Start
+	// #28854,#25000 - Start
 	/**
-	 * Processes the given String value by replacing newline characters with HTML line break tags
-	 * and encoding the < and > characters to their HTML entity equivalents.
-	 *
-	 * @param value the string to be processed
-	 * @return the processed string value with newline characters replaced by &lt;br/&gt;
-	 *         and <, > characters encoded to &lt; and &gt; respectively
-	 */
-	public String encodeHtmlString(String value) {
-	    if (value == null) {
-	        return "";
-	    }
-	    // Replace < and > with their HTML entity equivalents
-	    String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
-	    // Replace newline characters with <br/>
-	    return formatted.replace("\n", "<br/>");
-	}
-	
-	/**
-	 * Encodes the given string as HTML if it is not null or empty.
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null, empty or contains only whitespace, it returns null.
 	 * 
-	 * <p>This method checks if the input string is neither null nor empty. If the string is valid, it is
-	 * passed to the {@link #encodeHtmlString(String)} method for encoding. If the string is null or empty,
-	 * the method returns null.</p>
-	 *
-	 * @param value the string to encode; may be null
-	 * @return the HTML-encoded string if {@code value} is not null or empty; {@code null} otherwise
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-	    return (value != null && !value.isEmpty()) ? encodeHtmlString(value) : null;
+		if (value == null || value.trim().isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
-	//#28854 - End
+	// #28854,#25000 - End
+	
+	// #25000 - Start
+	/**
+	 * A utility method to format a date.
+	 * 
+	 * @param date
+	 *            the Date object to format
+	 * @return the formatted date string, or an empty string if the date is null
+	 */
+	public String formatDate(Date date) {
+		SimpleDateFormat dateformat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		return date != null ? dateformat.format(date) : "";
+	}
+	// #25000 - End
 	
 }
 

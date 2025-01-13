@@ -125,7 +125,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}">
 							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{categoryBackingBean.onchangeDiscription}"/> <!-- @29665 add listener -->
+								update="@form" listener="#{categoryBackingBean.onChangeDescription}"/> <!-- @29665 add listener -->
 						</p:selectOneMenu>
 					</td>
 				</tr>

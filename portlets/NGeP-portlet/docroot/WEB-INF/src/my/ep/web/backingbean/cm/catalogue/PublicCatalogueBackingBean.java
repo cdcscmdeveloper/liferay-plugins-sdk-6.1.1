@@ -38,6 +38,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.component.datagrid.DataGrid;
 import org.primefaces.component.datatable.DataTable;
+import org.primefaces.context.RequestContext;
 
 /**
  * Class PublicCatalogueBackingBean.
@@ -62,11 +63,12 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 	 *            (String query(mandatory))
 	 * @return List<String>
 	 */
+	// SonarLint Issues Fixing..
 	public List<String> autoCompleteItemName(String query) {
 
 		log.info("query:::::::::::::::::::::::::::::: " + query);
 
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
+		ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -74,8 +76,8 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 
 		CodificationResDTO resDTO = codificationSO.searchItemNameByAuto(reqDTO);
 
-		List<String> itemNames = new ArrayList<String>();
-		if (resDTO.getItemList() != null && resDTO.getItemList().size() > 0) {
+		List<String> itemNames = new ArrayList<>();
+		if (resDTO.getItemList() != null && !resDTO.getItemList().isEmpty()) {
 			for (CmItem item : resDTO.getItemList()) {
 				itemNames.add(item.getItemName());
 			}
@@ -87,11 +89,12 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 	/**
 	 * Find popular commodity.
 	 */
+	// SonarLint Issues Fixing
 	public void findPopularCommodity() {
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",
+		ICatalogueSO catalogueSO = BusinessDelegate.getInstance().getServiceObject("cm",
 				ICatalogueSO.class);
-		ICodificationSO codeSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
+		ICodificationSO codeSO = BusinessDelegate.getInstance().getServiceObject("cm",
 				ICodificationSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
@@ -99,7 +102,7 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		this.getManagedBean().setPopularCommodityList(null);
 		CatalogueResDTO resDTO = catalogueSO.findPopularCommodity(reqDTO);
 
-		if (resDTO.getList() != null && resDTO.getList().size() > 0) {
+		if (resDTO.getList() != null && !resDTO.getList().isEmpty()) {
 			for (int i = 0; i < resDTO.getList().size(); i++) {
 
 				Object[] obj = (Object[]) resDTO.getList().get(i);
@@ -210,11 +213,9 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 	 * @param commodity
 	 *            (CmUnspsc commodity(mandatory))
 	 */
+	// remove unused Code - SonarLint Issues 
 	public void searchCatalogueByFamilyLevel(CmUnspsc commodity) {
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",
-				ICatalogueSO.class);
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
 		this.getManagedBean().getBrandCriteria().clear();
@@ -288,6 +289,12 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		this.getManagedBean().setDeliveryTo((Integer) null);
 		// #10747 - Soo - End
 		this.getManagedBean().setBrandId(0L);
+		// #10747- Start
+        this.getManagedBean().setConverterVisible(true);		
+		RequestContext.getCurrentInstance().reset("form:catalogueTabId:resultpl");
+		
+		this.getManagedBean().getSearchDataModel().reloadData();
+		// #10747- End
 	}
 
 	// #10747 - Soo - Start

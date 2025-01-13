@@ -32,7 +32,7 @@
 		value="#{requestNoteBackingBean.managedBean.loaMapList}" style="width:100%" id="loaTableID" rows="10" preserveDataModel="true">
 		<ac:paginator for="loaTableID"></ac:paginator>
 		<p:column headerText="#{lbl['lbl.sc.continuity.no']}" style="text-align:center;">
-			<p:outputLabel value="#{index + 1}" style="vertical-align: middle;" />
+			<div align="center"><h:outputText value="#{index + 1}" /></div>
 		</p:column>
 		<p:column headerText="#{lbl['lbl.sc.letter.of.acceptance.no']}"
 			style="text-align:center;">
