@@ -1655,74 +1655,23 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the string
 	 * @throws Exception 
 	 */
-	public String saveSubDivision() throws Exception {
+	//Bug #37757 - Start
+	public String saveSubDivision() {
 
 		ICategoryCodeSO categoryCodeSO;
-		IParameterSO parameterSO;
 		String returnUrl = null;
 		
-		//start #29665 check is it new category
-		if (!this.getManagedBean().isNewCategory()) {
-			this.getManagedBean().setPmCategoryL2(this.getManagedBean().getPmCategoryL3().getPmCategoryL2());
-		}
-		//end #29665 check is it new category
-
-		// check the duplicate restriction
-		if (!checkCategoryRestrDuplicateCompanyType()) {
-			throw new EpException(MessageConst.ERROR_775006);
-		}
-
+		validateNewAndDuplicateCategory();
 		// validation for fields
 		validatePmCategoryL3();
 
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance()
+			categoryCodeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							ICategoryCodeSO.class);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IParameterSO.class);
-
-			this.getManagedBean()
-					.getPmCategoryL3()
-					.setCategoryName(
-							this.getManagedBean().getPmCategoryL3()
-									.getCategoryName().toUpperCase());
-			this.getManagedBean()
-					.getPmCategoryL3()
-					.setBasicCategoryReq(
-							this.getManagedBean().getPmCategoryL3()
-									.isBasicCategoryReqValue() ? 1 : 0);
-			this.getManagedBean()
-					.getPmCategoryL3()
-					.setHomeOperated(
-							this.getManagedBean().getPmCategoryL3()
-									.isHomeOperatedValue() ? 1 : 0);
-			this.getManagedBean()
-					.getPmCategoryL3()
-					.setRecordStatusFlg(
-							this.getManagedBean().getPmCategoryL3()
-									.getRecordStatusFlg());
-
-			if (this.getManagedBean().isNewCategory()) {
-				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				// supplier type
-				parameterReqDTO.setParameterId(this.getManagedBean()
-						.getPmCategoryL3().getSupplierTypeCodeVal());
-				ParameterResDTO parameterResDTO = parameterSO
-						.retrieveParameterById(parameterReqDTO);
-				this.getManagedBean().getPmCategoryL3()
-						.setSupplierTypeCode(parameterResDTO.getPmParameter());
-
-				// Special Category
-				parameterReqDTO.setParameterId(this.getManagedBean()
-						.getPmCategoryL3().getCategoryTypeCodeVal());
-				parameterResDTO = parameterSO
-						.retrieveParameterById(parameterReqDTO);
-				this.getManagedBean().getPmCategoryL3()
-						.setCategoryTypeCode(parameterResDTO.getPmParameter());
-			}
+			
+			prepareCategoryData();
 			// Basic category and Category Restr data information
 			getBasicCategoryData();
 			getCategoryRestrData();
@@ -1735,9 +1684,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				prc.setCategoryLevel(3);
 				prc.setCreatedDate(new Timestamp(new Date().getTime()));
 				prc.setCreatedBy(getUserIdSessionFromLoginId());
-				if (!this.descriptionEditDisable
-						&& this.getManagedBean().getUpdatedCategoryDesc()
-								.compareTo(this.getManagedBean().getOldCategoryL3().getCategoryName()) != 0) {
+				if (validateCategoryDescAndName()) {
 					prc.setOldDescription(this.getManagedBean().getOldCategoryL3().getCategoryName());
 					this.getManagedBean().getPmCategoryL3()
 							.setCategoryName(this.getManagedBean().getUpdatedCategoryDesc().toUpperCase());
@@ -1756,9 +1703,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			reqDTO.setCategoryLevel(this.getManagedBean().getCatLevel());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+			//Bug #37757 - Start
+			if (validateSsmExclusive()) {
+				reqDTO.getPmCategoryL3().setSsmExclusive(0);
+			}
+			//Bug #37757 - End
 
 			PmCategoryL3 pmCategoryL3 = this.getManagedBean().getPmCategoryL3();
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+			IStatusSO statusSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			
 
@@ -1786,7 +1738,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					categoryCodeSO.saveSubCategory(reqDTO);
 				}
 
-				// categoryCodeSO.saveCategory(reqDTO);
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
 					returnUrl = "/xhtml/pm/category/search.xhtml";
@@ -1824,13 +1775,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 
 		} catch (Exception e) {
-			throw (e);
-		} finally {
-			categoryCodeSO = null;
-			parameterSO = null;
-		}
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, null, null,
+					"CategoryBackingBean.saveSubDivision", null, e);
+		} 
 		return returnUrl;
 	}
+	//Bug #37757 - End
 
 	/**
 	 * Tracking diary for create and update of sub division.
@@ -4370,4 +4320,64 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	//#29665 - End
+	
+	private void prepareCategoryData() {
+		IParameterSO parameterSO;
+		parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IParameterSO.class);
+
+		this.getManagedBean().getPmCategoryL3()
+				.setCategoryName(this.getManagedBean().getPmCategoryL3().getCategoryName().toUpperCase());
+		this.getManagedBean().getPmCategoryL3()
+				.setBasicCategoryReq(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue() ? 1 : 0);
+		this.getManagedBean().getPmCategoryL3()
+				.setHomeOperated(this.getManagedBean().getPmCategoryL3().isHomeOperatedValue() ? 1 : 0);
+		this.getManagedBean().getPmCategoryL3()
+				.setRecordStatusFlg(this.getManagedBean().getPmCategoryL3().getRecordStatusFlg());
+
+		if (this.getManagedBean().isNewCategory()) {
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			// supplier type
+			parameterReqDTO.setParameterId(this.getManagedBean().getPmCategoryL3().getSupplierTypeCodeVal());
+			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
+			this.getManagedBean().getPmCategoryL3().setSupplierTypeCode(parameterResDTO.getPmParameter());
+
+			// Special Category
+			parameterReqDTO.setParameterId(this.getManagedBean().getPmCategoryL3().getCategoryTypeCodeVal());
+			parameterResDTO = parameterSO.retrieveParameterById(parameterReqDTO);
+			this.getManagedBean().getPmCategoryL3().setCategoryTypeCode(parameterResDTO.getPmParameter());
+		}
+	}
+
+	private void validateNewAndDuplicateCategory() {
+		// start #29665 check is it new category
+		if (!this.getManagedBean().isNewCategory()) {
+			this.getManagedBean().setPmCategoryL2(this.getManagedBean().getPmCategoryL3().getPmCategoryL2());
+		}
+		// end #29665 check is it new category
+
+		// check the duplicate restriction
+		if (!checkCategoryRestrDuplicateCompanyType()) {
+			throw new EpException(MessageConst.ERROR_775006);
+		}
+	}
+    
+	//Bug #37757 - Start
+	/**
+	 * validate SsmExclusive if ssmExclusive is null
+	 */
+	private boolean validateSsmExclusive() {
+		return this.getManagedBean().getPmCategoryL3() != null
+				&& this.getManagedBean().getPmCategoryL3().getSsmExclusive() == null;
+	}
+
+	/**
+	 * validate Category Desc and Name
+	 */
+	private boolean validateCategoryDescAndName() {
+		return !this.descriptionEditDisable
+				&& this.getManagedBean().getUpdatedCategoryDesc()
+						.compareTo(this.getManagedBean().getOldCategoryL1().getCategoryName()) != 0;
+	}
+	//Bug #37757 - End
 }
