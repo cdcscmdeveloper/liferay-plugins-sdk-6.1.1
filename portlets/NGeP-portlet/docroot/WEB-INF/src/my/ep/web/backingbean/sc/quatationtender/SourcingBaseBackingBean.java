@@ -5340,53 +5340,53 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
-
 	// #26130 -end-
 	
 	// Bug #36438@Syazani - 24/10/2024 -- Start
-		private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
-				List<TplSpecMaster> masters, ScLoa scLoa, String dafaltValue) {
+	private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
+			List<TplSpecMaster> masters, ScLoa scLoa, String dafaltValue) {
+		// Bug #36438@Syazani - 24/10/2024 -- End
+		// #26130 #97 - End
+		for (ScQtCheckList scQtCheckList : scQtCheckLists) {
+			List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
+			TplSpecMaster master = null;
+			// Bug #36438@Syazani - 24/10/2024 -- Start
+			// Making sure it didn't impact original value
+			if (null != scQtCheckList.getScQtDoc() && null != scQtCheckList.getScQtDoc().getTplSpecMaster()) {
+				master = (TplSpecMaster) scQtCheckList.getScQtDoc().getTplSpecMaster().cloneEntity();
+			}
 			// Bug #36438@Syazani - 24/10/2024 -- End
-			// #26130 #97 - End
-			for (ScQtCheckList scQtCheckList : scQtCheckLists) {
-				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 
-				TplSpecMaster master = null;
-				// Bug #36438@Syazani - 24/10/2024 -- Start
-				// Making sure it didn't impact original value
-				if (null != scQtCheckList.getScQtDoc() && null != scQtCheckList.getScQtDoc().getTplSpecMaster()) {
-					master = (TplSpecMaster) scQtCheckList.getScQtDoc().getTplSpecMaster().cloneEntity();
-				}
-				// Bug #36438@Syazani - 24/10/2024 -- End
+			if (master != null) { // Bug #36438@Syazani - 24/10/2024
+				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					if (validateTplSpecMaster(scLoa, master)) {
+						constructSpecData(scLoa, master, question);
+						constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
 
-				if (master != null) { // Bug #36438@Syazani - 24/10/2024
-					for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-						if (validateTplSpecMaster(scLoa, master)) {
-							constructSpecData(scLoa, master, question);
-							constructTplSpecQuestion(dafaltValue, newTplSpecQuestionsList, master, question);
+						// temporary for Prod #26130. Start remove here if
+						// #21695 ready for Prod -start-
+						// origin method private void
+						// initializeTplSpecMaster(ScQtCheckList checklist,
+						// ScLoa scLoa)
+						// at QTSpecSO.java
+						validateSpecZoneQty(question, scLoa);
+						// temporary for Prod #26130. End remove here if
+						// #21695 ready for Prod -end-
 
-							// temporary for Prod #26130. Start remove here if
-							// #21695 ready for Prod -start-
-							// origin method private void
-							// initializeTplSpecMaster(ScQtCheckList checklist,
-							// ScLoa scLoa)
-							// at QTSpecSO.java
-							validateSpecZoneQty(question, scLoa);
-							// temporary for Prod #26130. End remove here if
-							// #21695 ready for Prod -end-
-
-							if (validateTplSpecQuestion(scLoa, question)) {
-								question.setListCombineZonal(getCOmbineZonalSPec(question, master));
-							}
+						if (validateTplSpecQuestion(scLoa, question)) {
+							question.setListCombineZonal(getCOmbineZonalSPec(question, master));
 						}
 					}
+				}
 
-					master.setTplSpecQuestions(newTplSpecQuestionsList);
+				master.setTplSpecQuestions(newTplSpecQuestionsList);
 
-					masters.add(master);
-				}	// Bug #36438@Syazani - 24/10/2024
-			}
-		}	// Bug #36438@Syazani - 24/10/2024
+				masters.add(master);
+			}	// Bug #36438@Syazani - 24/10/2024
+		}
+	}	
+	// Bug #36438@Syazani - 24/10/2024
 
 	// #26130 -start-
 	/**

@@ -11,6 +11,7 @@
 package my.ep.web.managedbean.sc.loiloa;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.model.MenuModel;
 
 // TODO: Auto-generated Javadoc
@@ -1753,6 +1755,19 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * @param selectedRecommendList the selectedRecommendList to set
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
+		// #33267, #6906 - Start.
+		if (CollectionUtils.isNotEmpty(selectedRecommendList)) {
+			Iterator<ScQtRecommend> iterator = selectedRecommendList.iterator();
+
+			while (iterator.hasNext()) {
+				ScQtRecommend scQtRecommend = iterator.next();
+
+				if (null != scQtRecommend && CollectionUtils.isEmpty(scQtRecommend.getAwardSupplierList())) {
+					iterator.remove();
+				}
+			}
+		}
+		// #33267, #6906 - End.
 		this.selectedRecommendList = selectedRecommendList;
 	}
 

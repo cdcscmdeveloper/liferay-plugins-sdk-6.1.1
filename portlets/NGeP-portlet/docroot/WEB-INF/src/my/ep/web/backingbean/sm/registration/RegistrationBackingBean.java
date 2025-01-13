@@ -107,6 +107,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -5347,4 +5348,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	// 27691 - end -  Add/Delete Supplier Owner
+	
+	//#36594 - Start
+	/**
+	 * Set terms and condition message with parameter.
+	 * 
+	 * @return String
+	 */
+	public String setMofRegTnc() {
+		int renewalPeriod = SmServiceLookup.getSmRuleSO()
+				.retrieveRenewalPeriodForAppl(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod, new FacesScopes().getUserLocale());
+		
+		return ResourceBundleUtils.getMessage("lbl.sm.basic.account.mof.tnc",
+				new String[] { word, String.valueOf(renewalPeriod) },
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale());
+	}
+	//#36594 - End
 }

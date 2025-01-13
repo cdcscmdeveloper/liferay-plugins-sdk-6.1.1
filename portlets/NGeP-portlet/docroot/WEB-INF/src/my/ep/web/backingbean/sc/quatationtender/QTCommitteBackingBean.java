@@ -1055,7 +1055,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setTabTitle(titleName);
 		getManagedBean().setAutoUpdate(false);
 		getManagedBean().setNameRequired(true);
-		
+
 		// 25037 - start
 		Long qtStatus = getCurrentQtStatusId();
 		if (null == qtStatus) {
@@ -1069,13 +1069,13 @@ public class QTCommitteBackingBean extends
 		if (Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation(qtStatus, committee)) {
 			List<String> list = new ArrayList<>();
 			if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(qtStatus)) {
-
-				String taskName = currentTaskName == null ? "" : currentTaskName;
-				if (!Arrays
-						.asList(new String[] { SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
-								SCProcessNameConst.ASSIGN_TEC_COMMITTEE }).contains(taskName)) {
+				// 36695 - start
+				Long currentCMTStatus = getCurrentCMTStatusId();
+				if (!Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_PENDING_APPROVAL,
+						QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REVISION_APPROVAL).contains(currentCMTStatus)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
+				// 36695 - end
 			} else {
 				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 			}
@@ -1733,7 +1733,6 @@ public class QTCommitteBackingBean extends
 			bean.getScQtCommittee().getScCommittee().setApprovalReq(false);
 		}
 
-
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
@@ -1849,6 +1848,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public boolean isCommitteeInfoEditable(Long committeStatus, String commType) {
 		ScQt scQt = getManagedBean().getQt();
+
 		// 25037 - start
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		if (scQt.getQtStatus() != null) {
@@ -2074,6 +2074,13 @@ public class QTCommitteBackingBean extends
 		
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
+
+		// #25426 #36 #85 #95 ruzaimah - Start
+		if ((this.getManagedBean().isMaintanceFlow() && isDeskOfficer()) && !this.getManagedBean().isReadOnly()) {
+			return true;
+		}
+		// #25426 #36 #85 #95 ruzaimah - end
+
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (isQTStatusInBetween(currentQtStatus,
 					QTStatusConst.QT_PENDING_PB_APPROVAL,
@@ -2360,7 +2367,6 @@ public class QTCommitteBackingBean extends
 	}
 	// 25037 - end
 
-	
 	/**
 	 * Method to check the CheckBox is enable or disable based on committeeStatus and CommitteeType.
 	 * 
@@ -2545,7 +2551,7 @@ public class QTCommitteBackingBean extends
 			}
 		}
 	}
-	
+
 	// 25037 - start
 	private Long getCurrentQtStatusId() {
 		ScQt scQt = getManagedBean().getQt();
@@ -2581,8 +2587,19 @@ public class QTCommitteBackingBean extends
 				}
 			} else {
 				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)) {
-					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
-							ParameterConst.COMMITTEE_ROLE_MEMBER).contains(role.getParameterCode());
+					// 36695 - start
+					Long currentCMTStatus = getCurrentCMTStatusId();
+					List<String> allowedRoles = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+							ParameterConst.COMMITTEE_ROLE_MEMBER);
+					allowedRoles = new ArrayList<>(allowedRoles);
+
+					if (Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_PENDING_APPROVAL,
+							QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REVISION_APPROVAL).contains(
+							currentCMTStatus)) {
+						allowedRoles.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					}
+					return allowedRoles.contains(role.getParameterCode());
+					// 36695 - end
 				} else if (status.equals(QTStatusConst.QT_RE_EVALUATION) && getManagedBean().getQt() != null) {
 					ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(committeeType, getManagedBean().getQt()
 							.getQtId());
@@ -2647,4 +2664,24 @@ public class QTCommitteBackingBean extends
 		return false;
 	}
 	// 25037 - end
+
+	// #25426#36 ruzaimah - Start
+	private boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
+	}
+	// #25426#36 ruzaimah - end
+	
+	// 36695 - start
+	private Long getCurrentCMTStatusId(){
+		ScQt scQt = getManagedBean().getQt();
+		if (this.getManagedBean().getCurrentCMTStatus() == null && scQt != null) {
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
+			if (wfStatus != null) {
+				this.getManagedBean().setCurrentCMTStatus(wfStatus.getPmStatus().getStatusId());
+			}
+		}
+		return this.getManagedBean().getCurrentCMTStatus();
+	}
+	// 36695 - end
 }

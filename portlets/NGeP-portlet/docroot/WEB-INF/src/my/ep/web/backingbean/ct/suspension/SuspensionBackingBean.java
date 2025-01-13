@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
+import my.ep.comparator.ct.CtContractItemComparator; //#36726 || #33287
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -45,6 +46,7 @@ import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils; //#36726 || #33287
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -187,6 +189,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
+	@SuppressWarnings("unchecked") //#36726 || #33287
 	public void setSuspensionContractVer(ContractReqDTO reqDTO){
 		ctBB.renewSesionObject();
 		IContractSuspensionSO contractSuspensionSO= null;
@@ -217,8 +220,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			/*If statement  for check contact item start*/
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
-				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
-
+				CustomUtils.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItemComparator()); //#36726 || #33287
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
 					getManagedBean().getContractItemList().add(contractItem);
 					/*Get latest contract item and map with the sc request item*/
