@@ -20723,15 +20723,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				setSampleDetailsIndex(specResDTO, technicalChecklist);
 			}
 		}
-	}// 11104-Reendose794	
-					resDTO.getSampleChecklist().setSampleWip(
-							this.getManagedBean().isSampleShowHide());
-					technicalChecklist.set(index, resDTO.getSampleChecklist());
-					break;
-				}
-			}
-		}
-	}
+	}// 11104-Reendose794
 
 	// 11104_end
 	
