@@ -3450,9 +3450,17 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		user[0] = ((SMMOFRegDataType) getManagedBean().getBpmPojo()).getPoUsers();
 		PmUser poApprover = PmCommonUtil.retrieveUserByLoginId(user[0]);
 		if(isAfterApproval){
-			poApprover = PmCommonUtil.retrieveUserById(wf.getCreatedBy(), true);
-			if(poApprover != null){
-				user[0] = poApprover.getLoginId();
+			// find workflow 20108, use changed by to find approver
+			SmWorkFlowStatusReqDTO reqDTO1 = new SmWorkFlowStatusReqDTO();
+			reqDTO1.setStatusIds(Arrays.asList(SupplierManagementConst.PM_STATUS_PO_ESCALTED_TO_APPROVER));
+			reqDTO1.setApplId(getManagedBean().getSmSvTask().getSmAppl().getApplId());
+			SmWorkflowStatus wfReview = SmServiceLookup.getSmWorkFlowStatusSO()
+					.retrieveWorkflowByDocIdAndMultipleStatus(reqDTO1).getWorkflowStatus();
+			if (wfReview != null){
+				poApprover = PmCommonUtil.retrieveUserById(wfReview.getChangedBy(), true);
+				if(poApprover != null){
+					user[0] = poApprover.getLoginId();
+				}
 			}
 		}
 		if(poApprover != null){
