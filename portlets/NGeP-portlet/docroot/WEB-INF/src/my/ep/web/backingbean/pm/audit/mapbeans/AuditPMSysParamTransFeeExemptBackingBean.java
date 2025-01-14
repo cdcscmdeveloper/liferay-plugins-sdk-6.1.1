@@ -41,32 +41,32 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	public AuditPMReqDTO spTFeeProcess(RuleCatalogueManageBean managedBeans, String roleCode) {
 		this.roleCode = roleCode;
 		this.lvlCode2 = AuditConst.PM_LVL_CODE_2_SPFEE;
-		feeExemptionOrgType = managedBeans.getAuditFeeExemptionType() != null
-				&& managedBeans.getAuditFeeExemptionType().equalsIgnoreCase(ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE) ? managedBeans
-				.getAuditFeeExemptionType() : null;
+		if (managedBeans.getAuditFeeExemptionType() != null) {
+			feeExemptionOrgType = managedBeans.getAuditFeeExemptionType().equalsIgnoreCase(
+					ProfileManagementConst.FEE_EXEMPTION_TYPE_ORGTYPE) ? managedBeans.getAuditFeeExemptionType() : null;
+
+			feeExemptionSuppItem = managedBeans.getAuditFeeExemptionType().equalsIgnoreCase(
+					ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER) ? managedBeans.getAuditFeeExemptionType() : null;
+
+			feeExemptionComodity = managedBeans.getAuditFeeExemptionType().trim()
+					.equalsIgnoreCase(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY) ? managedBeans
+					.getAuditFeeExemptionType() : null;
+
+			feeExemptionContract = managedBeans.getAuditFeeExemptionType().equalsIgnoreCase(
+					ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT) ? managedBeans.getAuditFeeExemptionType() : null;
+		}
 		if (feeExemptionOrgType != null) {
 			orgTypeProcessTab(managedBeans);
 		}
 
-		feeExemptionSuppItem = managedBeans.getAuditFeeExemptionType() != null
-				&& managedBeans.getAuditFeeExemptionType().equalsIgnoreCase(
-						ProfileManagementConst.FEE_EXEMPTION_TYPE_ORG_AND_SUPPLIER) ? managedBeans.getAuditFeeExemptionType()
-				: null;
 		if (feeExemptionSuppItem != null) {
 			suppItemProcessTab(managedBeans);
 		}
 
-		feeExemptionComodity = managedBeans.getAuditFeeExemptionType() != null
-				&& managedBeans.getAuditFeeExemptionType().trim()
-						.equalsIgnoreCase(ProfileManagementConst.FEE_EXEMPTION_TYPE_COMMODITY) ? managedBeans
-				.getAuditFeeExemptionType() : null;
 		if (feeExemptionComodity != null) {
 			comodityProcessTab(managedBeans);
 		}
 
-		feeExemptionContract = managedBeans.getAuditFeeExemptionType() != null
-				&& managedBeans.getAuditFeeExemptionType().equalsIgnoreCase(ProfileManagementConst.FEE_EXEMPTION_TYPE_CONTRACT) ? managedBeans
-				.getAuditFeeExemptionType() : null;
 		if (feeExemptionContract != null) {
 			contractProcessTab(managedBeans);
 		}
@@ -168,6 +168,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		return null; // No match found
 	}
 
+	// *******QT CHECKLIST TAB FOR UPDATED VALUE PEOCESS START *******//
 	/**
 	 * @param pmfeeMain
 	 * @param updateVal
@@ -200,16 +201,29 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 			expDatebool = true;
 		}
 		if (Boolean.valueOf(expDatebool)) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
-					pmfeeMainInt == 0 ? null : pmfeeMain.getExpDate().toString(), updateVal.getExpDate() != null ? updateVal
-							.getExpDate().toString() : null, AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			getExpDate(pmfeeMain, updateVal, pmfeeMainInt);
 		}
+		if (updateVal.getEffDate() != null) {
+			getEffDate(pmfeeMain, updateVal);
+		}
+	}
+
+	private void getExpDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal, int pmfeeMainInt) {
+		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, pmfeeMainInt == 0 ? null
+				: pmfeeMain.getExpDate().toString(), updateVal.getExpDate() != null ? updateVal.getExpDate().toString() : null,
+				AuditConst.PM_AUD_ACTION_TYPE_UPD);
+	}
+
+	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
 		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
 			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, pmfeeMain
 					.getEffDate().toString(), updateVal.getEffDate().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
+	// *******QT CHECKLIST TAB FOR UPDATED VALUE PEOCESS END *******//
+
+	// **QT CHECKLIST TAB FOR NEW CREATED AND DELETED VALUE PROCESS START**//
 	/**
 	 * @param newCreatedItem
 	 * @param deletedItem
@@ -217,34 +231,47 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	public void processSPTFeeCreateDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		PmFeeExemption pmFeeExemption = newCreatedItem != null ? newCreatedItem : deletedItem;
 		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID,
-				retrieveCreateDeleteVal(newCreatedItem, null, 1), retrieveCreateDeleteVal(null, deletedItem, 1));
+				getEffectiveDate(newCreatedItem, null), getEffectiveDate(null, deletedItem));
 
 		handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
-				retrieveCreateDeleteVal(newCreatedItem, null, 2), retrieveCreateDeleteVal(null, deletedItem, 2));
+				getExpiryDate(newCreatedItem, null), getExpiryDate(null, deletedItem));
 
 		if (feeExemptionOrgType != null) {
+			// orgName
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYOT_ORGTYPE_FIELDLABELID,
-					retrieveCreateDeleteVal(newCreatedItem, null, 3), retrieveCreateDeleteVal(null, deletedItem, 3));
+					byOTNewCreated(newCreatedItem, null), byOTNewCreated(null, deletedItem));
 		}
 		if (feeExemptionSuppItem != null) {
+			// suppName
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYSI_SUPPNAME_FIELDLABELID,
-					retrieveCreateDeleteVal(newCreatedItem, null, 3), retrieveCreateDeleteVal(null, deletedItem, 3));
+					bySIOrgTypeCodeDescNewDeleted(newCreatedItem, null), bySIOrgTypeCodeDescNewDeleted(null, deletedItem));
 
+			// itemName
+			handleFieldAuditSPTFee(pmFeeExemption, itemName, bySIItemNameNewCreated(newCreatedItem, null),
+					bySIItemNameNewCreated(null, deletedItem));
 		}
-		if (feeExemptionSuppItem != null || feeExemptionComodity != null || feeExemptionContract != null) {
-			handleFieldAuditSPTFee(pmFeeExemption, itemName, retrieveCreateDeleteVal(newCreatedItem, null, 4),
-					retrieveCreateDeleteVal(null, deletedItem, 4));
-		}
+
 		if (feeExemptionComodity != null) {
-			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_ITEMCODE_FIELDLABELID,
-					retrieveCreateDeleteVal(newCreatedItem, null, 5), retrieveCreateDeleteVal(null, deletedItem, 5));
+			// itemName
+			handleFieldAuditSPTFee(pmFeeExemption, itemName, byCONewDeleted(newCreatedItem, null),
+					byCONewDeleted(null, deletedItem));
 
+			// itemCode
+			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_ITEMCODE_FIELDLABELID,
+					byCOItemCodeNewDeleted(newCreatedItem, null), byCOItemCodeNewDeleted(null, deletedItem));
+
+			// itemType
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCO_TYPE_FIELDLABELID,
-					retrieveCreateDeleteVal(newCreatedItem, null, 6), retrieveCreateDeleteVal(null, deletedItem, 6));
+					byCOItemTypeExtensionNewDeleted(newCreatedItem, null), byCOItemTypeExtensionNewDeleted(null, deletedItem));
 		}
 		if (feeExemptionContract != null) {
+			// itemName
+			handleFieldAuditSPTFee(pmFeeExemption, itemName, byCINewDeleted(newCreatedItem, null),
+					byCINewDeleted(null, deletedItem));
+
+			// ContractNo
 			handleFieldAuditSPTFee(pmFeeExemption, AuditConst.PM_AUD_SYSPARAM_SPFEE_BYCI_CONTNO_FIELDLABELID,
-					retrieveCreateDeleteVal(newCreatedItem, null, 7), retrieveCreateDeleteVal(null, deletedItem, 7));
+					byCIContractNoNewCreated(newCreatedItem, null), byCIContractNoNewCreated(null, deletedItem));
 		}
 	}
 
@@ -256,32 +283,39 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		}
 	}
 
-	/**
-	 * @param newCreatedItem
-	 * @param deletedItem
-	 * @param paramVal
-	 * @return
-	 */
-	public String retrieveCreateDeleteVal(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem, int paramVal) {
-		switch (paramVal) {
-		case 1:
-			return getEffectiveDate(newCreatedItem, deletedItem);
-		case 2:
-			return getExpiryDate(newCreatedItem, deletedItem);
-		case 3:
-			return getOrgTypeCodeDesc(newCreatedItem, deletedItem);
-		case 4:
-			return getItemName(newCreatedItem, deletedItem);
-		case 5:
-			return getItemCode(newCreatedItem, deletedItem);
-		case 6:
-			return getItemTypeExtension(newCreatedItem, deletedItem);
-		case 7:
-			return getContractNo(newCreatedItem, deletedItem);
-		default:
-			return null; // or throw an IllegalArgumentException if paramVal is
-							// unexpected
+	private String byOTNewCreated(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+		// getOrgTypeCodeDesc
+		if (feeExemptionOrgType != null) {
+			if (newCreatedItem != null && newCreatedItem.getOrgTypeId() != null) {
+				return newCreatedItem.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+			} else if (deletedItem != null && deletedItem.getOrgTypeId() != null) {
+				return deletedItem.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
+			}
 		}
+		return null;
+	}
+
+	private String byCINewDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+		// getContractNo / ItemName
+		if (newCreatedItem != null && newCreatedItem.getRequestItemId() != null) {
+			return newCreatedItem.getRequestItemId().getItemName();
+		}
+
+		if (deletedItem != null && deletedItem.getRequestItemId() != null) {
+			return deletedItem.getRequestItemId().getItemName();
+		}
+		return null;
+	}
+
+	private String byCONewDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+		/* ItemName */
+
+		if (newCreatedItem != null && newCreatedItem.getUnspscId() != null) {
+			return newCreatedItem.getUnspscId().getUnspscTitle();
+		} else if (deletedItem != null && deletedItem.getUnspscId() != null) {
+			return deletedItem.getUnspscId().getUnspscTitle();
+		}
+		return null;
 	}
 
 	private String getEffectiveDate(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
@@ -302,53 +336,44 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		return null;
 	}
 
-	private String getOrgTypeCodeDesc(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
-		if (feeExemptionOrgType != null) {
-			if (newCreatedItem != null && newCreatedItem.getOrgTypeId() != null) {
-				return newCreatedItem.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
-			} else if (deletedItem != null && deletedItem.getOrgTypeId() != null) {
-				return deletedItem.getOrgTypeId().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc();
-			}
+	/**
+	 * @param newCreatedItem
+	 * @param deletedItem
+	 * @return
+	 */
+	private String bySIOrgTypeCodeDescNewDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+		if (newCreatedItem != null && newCreatedItem.getOrgProfileId() != null) {
+			return newCreatedItem.getOrgProfileId().getSmSupplier().getCompanyName();
 		}
-		if (feeExemptionSuppItem != null) {
-			if (newCreatedItem != null && newCreatedItem.getOrgProfileId() != null) {
-				return newCreatedItem.getOrgProfileId().getSmSupplier().getCompanyName();
-			} else if (deletedItem != null && deletedItem.getOrgProfileId() != null) {
-				return deletedItem.getOrgProfileId().getSmSupplier().getCompanyName();
-			}
+
+		if (deletedItem != null && deletedItem.getOrgProfileId() != null) {
+			return deletedItem.getOrgProfileId().getSmSupplier().getCompanyName();
 		}
 
 		return null;
 	}
 
-	private String getItemName(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
-		if (feeExemptionComodity != null || feeExemptionContract != null) {
-			if (newCreatedItem != null && newCreatedItem.getTypeId() != null) {
-				return newCreatedItem.getTypeId().getUnspscId().getCmUnspsc().getUnspscTitle();
-			} else if (deletedItem != null && deletedItem.getTypeId() != null) {
-				return deletedItem.getTypeId().getUnspscId().getCmUnspsc().getUnspscTitle();
-			}
+	private String bySIItemNameNewCreated(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+		if (newCreatedItem != null && newCreatedItem.getItemId() != null) {
+			return newCreatedItem.getItemId().getItemName();
 		}
-		if (feeExemptionSuppItem != null) {
-			if (newCreatedItem != null && newCreatedItem.getItemId() != null) {
-				return newCreatedItem.getItemId().getItemName();
-			} else if (deletedItem != null && deletedItem.getItemId() != null) {
-				return deletedItem.getItemId().getItemName();
-			}
+		if (deletedItem != null && deletedItem.getItemId() != null) {
+			return deletedItem.getItemId().getItemName();
+		}
+
+		return null;
+	}
+
+	private String byCOItemCodeNewDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+		if (newCreatedItem != null && newCreatedItem.getUnspscId() != null) {
+			return newCreatedItem.getUnspscId().getUnspscCode();
+		} else if (deletedItem != null && deletedItem.getUnspscId() != null) {
+			return deletedItem.getUnspscId().getUnspscCode();
 		}
 		return null;
 	}
 
-	private String getItemCode(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
-		if (newCreatedItem != null && newCreatedItem.getTypeId() != null) {
-			return newCreatedItem.getTypeId().getUnspscId().getUnspscCode();
-		} else if (deletedItem != null && deletedItem.getTypeId() != null) {
-			return deletedItem.getTypeId().getUnspscId().getUnspscCode();
-		}
-		return null;
-	}
-
-	private String getItemTypeExtension(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+	private String byCOItemTypeExtensionNewDeleted(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		if (newCreatedItem != null && newCreatedItem.getTypeId() != null) {
 			return newCreatedItem.getTypeId().getTypeName();
 		} else if (deletedItem != null && deletedItem.getTypeId() != null) {
@@ -357,7 +382,7 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		return null;
 	}
 
-	private String getContractNo(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
+	private String byCIContractNoNewCreated(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		if (newCreatedItem != null && newCreatedItem.getContractId() != null) {
 			return newCreatedItem.getContractId().getContractNo();
 		} else if (deletedItem != null && deletedItem.getContractId() != null) {
@@ -365,6 +390,8 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 		}
 		return null;
 	}
+
+	// **QT CHECKLIST TAB FOR NEW CREATED AND DELETED VALUE PROCESS END**//
 
 	/**
 	 * @param pmfeeMain

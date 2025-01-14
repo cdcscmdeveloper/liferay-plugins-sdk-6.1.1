@@ -276,7 +276,7 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					ICriteriaSO.class);
 
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
@@ -284,7 +284,7 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA) && newCriteria.getCriteriaId() != null) {
 				getManagedBean().setPmCriteriaOld(reqSO.retrieveCriteriaById(reqDTO).getPmCriteria());
 			}
-			/************ END AUDIT *************/
+			/************ END AUDIT #28895_35509 *************/
 			CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
 			if (resDTO.isSuccessful()) {
 				loadCriteria(resDTO.getPmCriteria().getCriteriaId());
@@ -294,12 +294,12 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_779006,
 								new String[] { newCriteria.getCriteriaCode() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
 					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
 				}
-				/************ END AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 			}
 
 		} catch (Exception e) {
@@ -454,7 +454,7 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 								new String[] { newCriteria.getCriteriaCode() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IAuditPMSO.class);
 				AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
@@ -462,7 +462,7 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
 				}
-				/************ END AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 
 				return redirectSupCriteriaSearch();
 			}

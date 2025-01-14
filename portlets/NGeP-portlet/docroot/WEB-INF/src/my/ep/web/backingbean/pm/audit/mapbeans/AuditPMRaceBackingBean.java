@@ -18,15 +18,12 @@ import my.ep.web.managedbean.pm.race.RaceManagedBean;
  * 
  */
 public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-	AuditPMSPDTO dtlObjName = new AuditPMSPDTO();
-	AuditPMSPDTO dtlSatus = new AuditPMSPDTO();
-	AuditPMSPDTO dtlCode = new AuditPMSPDTO();
+	String roleCode;
+	String raceCode;
+	BigInteger docId;
 
 	@Override
 	public String getRoleCode() {
@@ -41,81 +38,58 @@ public class AuditPMRaceBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
-		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		RaceManagedBean managedBeans = (RaceManagedBean) manageBean;
-
-		dtlSatus.setRoleCode(roleCode);
-		dtlSatus.setDocType(AuditConst.PM_AUD_RACE);
-		dtlSatus.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
-		dtlSatus.setDocNo(managedBeans.getPmRace().getRaceCode());
-		dtlSatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-		dtlSatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_RACE);
-		dtlSatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
-
-		dtlObjName.setRoleCode(roleCode);
-		dtlObjName.setDocType(AuditConst.PM_AUD_RACE);
-		dtlObjName.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
-		dtlObjName.setDocNo(managedBeans.getPmRace().getRaceCode());
-		dtlObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-		dtlObjName.setLvlCode2(AuditConst.PM_LVL_CODE_2_RACE);
-		dtlObjName.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
-
+		this.roleCode = roleCode;
+		this.raceCode = managedBeans.getPmRace().getRaceCode();
+		this.docId = BigInteger.valueOf(managedBeans.getPmRace().getRaceId());
 		if (managedBeans.getOldPmRace() != null && managedBeans.getOldPmRace().getRaceId() != null) {
 			if (managedBeans.getPmRace().getRaceName() != null
 					&& !managedBeans.getOldPmRace().getRaceName().equalsIgnoreCase(managedBeans.getPmRace().getRaceName())) {
-				dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
-				dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID);
-				dtlObjName.setOldValue(managedBeans.getOldPmRace().getRaceName());
-				dtlObjName.setNewValue(managedBeans.getPmRace().getRaceName());
-				dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(dtlObjName);
-				auditPMReqDTO.setObjList(objList);
+				detailObj(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID, managedBeans.getOldPmRace().getRaceName(), managedBeans
+						.getPmRace().getRaceName(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+
 			}
 			if (managedBeans.getOldPmRace().getRecordStatusFlg() != managedBeans.getPmRace().getRecordStatusFlg()) {
-				dtlSatus.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
-				dtlSatus.setFieldLabelCode(AuditConst.PM_AUD_RACE_STATUS_FIELDLABELID);
-				dtlSatus.setOldValue(managedBeans.getOldPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-						: AuditConst.PM_AUD_INACTIVE);
-				dtlSatus.setNewValue(managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-						: AuditConst.PM_AUD_INACTIVE);
-				dtlSatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(dtlSatus);
-				auditPMReqDTO.setObjList(objList);
+				detailObj(AuditConst.PM_AUD_RACE_STATUS_FIELDLABELID,
+						managedBeans.getOldPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+								: AuditConst.PM_AUD_INACTIVE,
+						managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+								: AuditConst.PM_AUD_INACTIVE, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			}
 		} else {
-			dtlCode.setRoleCode(roleCode);
-			dtlCode.setDocType(AuditConst.PM_AUD_RACE);
-			dtlCode.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
-			dtlCode.setDocNo(managedBeans.getPmRace().getRaceCode());
-			dtlCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			dtlCode.setLvlCode2(AuditConst.PM_LVL_CODE_2_RACE);
-			dtlCode.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
-			dtlCode.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
-			dtlCode.setFieldLabelCode(AuditConst.PM_AUD_RACE_CODE_FIELDLABELID);
-			dtlCode.setNewValue(managedBeans.getPmRace().getRaceCode());
-			dtlCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(dtlCode);
-			auditPMReqDTO.setObjList(objList);
+			detailObj(AuditConst.PM_AUD_RACE_CODE_FIELDLABELID, null, managedBeans.getPmRace().getRaceCode(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			dtlObjName.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
-			dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID);
-			dtlObjName.setNewValue(managedBeans.getPmRace().getRaceName());
-			dtlObjName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(dtlObjName);
-			auditPMReqDTO.setObjList(objList);
+			detailObj(AuditConst.PM_AUD_RACE_NAME_FIELDLABELID, null, managedBeans.getPmRace().getRaceName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			dtlSatus.setDocId(BigInteger.valueOf(managedBeans.getPmRace().getRaceId()));
-			dtlSatus.setFieldLabelCode(AuditConst.PM_AUD_RACE_STATUS_FIELDLABELID);
-			dtlSatus.setNewValue(managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
-			dtlSatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(dtlSatus);
-			auditPMReqDTO.setObjList(objList);
+			detailObj(AuditConst.PM_AUD_RACE_STATUS_FIELDLABELID, null,
+					managedBeans.getPmRace().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
-
 		managedBeans.setPmRace(null);
 		managedBeans.setOldPmRace(null);
-
+		auditPMReqDTO.setObjList(objList);
 		return auditPMReqDTO;
+	}
+
+	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
+		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
+		dtlObj.setRoleCode(roleCode);
+		dtlObj.setDocType(AuditConst.PM_AUD_RACE);
+		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_RACE_PMPARAMETERLVLID);
+		dtlObj.setDocNo(raceCode);
+		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_RACE);
+		dtlObj.setLvlCode3(AuditConst.PM_LVL_CODE_3_RACE);
+		dtlObj.setDocId(docId);
+		dtlObj.setFieldLabelCode(fieldLabelId);
+		if (oldValue != null) {
+			dtlObj.setOldValue(oldValue);
+		}
+		dtlObj.setNewValue(newValue);
+		dtlObj.setActionType(actionType);
+		objList.add(dtlObj);
+		return objList;
 	}
 }

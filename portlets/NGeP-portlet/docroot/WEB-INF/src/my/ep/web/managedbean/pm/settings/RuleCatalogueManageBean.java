@@ -166,6 +166,13 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmFeeExemption> auditUpdatedFeeExemptionsForComodity;
 	private List<PmFeeExemption> auditAddedFeeExemptionsForComodity;
 	private List<PmFeeExemption> auditFeeExemptionsForOrgComodityOld;
+
+	private List<PmConfigRuleValue> auditResDTOSelectedRuleValueList;
+	private List<PmConfigRuleValue> auditSelectedRuleValueListOld;
+	private List<PmConfigRuleValue> auditDeletedSelectedRuleValueList;
+	private List<PmConfigRuleValue> auditAddedSelectedRuleValueList;
+	private List<PmConfigRuleValue> auditUpdatedSelectedRuleValueList;
+
 	private String auditLevelCode;
 	private String auditFeeExemptionType;
 	/* 27827 - END */
@@ -1836,5 +1843,60 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public void setAuditFeeExemptionType(String auditFeeExemptionType) {
 		this.auditFeeExemptionType = auditFeeExemptionType;
+	}
+
+	public List<PmConfigRuleValue> getAuditDeletedSelectedRuleValueList() {
+		if (auditDeletedSelectedRuleValueList == null) {
+			auditDeletedSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditDeletedSelectedRuleValueList;
+	}
+
+	public void setAuditDeletedSelectedRuleValueList(List<PmConfigRuleValue> auditDeletedSelectedRuleValueList) {
+		this.auditDeletedSelectedRuleValueList = auditDeletedSelectedRuleValueList;
+	}
+
+	public List<PmConfigRuleValue> getAuditUpdatedSelectedRuleValueList() {
+		if (auditUpdatedSelectedRuleValueList == null) {
+			auditUpdatedSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditUpdatedSelectedRuleValueList;
+	}
+
+	public void setAuditUpdatedSelectedRuleValueList(List<PmConfigRuleValue> auditUpdatedSelectedRuleValueList) {
+		this.auditUpdatedSelectedRuleValueList = auditUpdatedSelectedRuleValueList;
+	}
+
+	public List<PmConfigRuleValue> getAuditSelectedRuleValueListOld() {
+		if (auditSelectedRuleValueListOld == null) {
+			auditSelectedRuleValueListOld = new ArrayList<>();
+		}
+		return auditSelectedRuleValueListOld;
+	}
+
+	public void setAuditSelectedRuleValueListOld(List<PmConfigRuleValue> auditSelectedRuleValueListOld) {
+		this.auditSelectedRuleValueListOld = auditSelectedRuleValueListOld;
+	}
+
+	public List<PmConfigRuleValue> getAuditAddedSelectedRuleValueList() {
+		if (auditAddedSelectedRuleValueList == null) {
+			auditAddedSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditAddedSelectedRuleValueList;
+	}
+
+	public void setAuditAddedSelectedRuleValueList(List<PmConfigRuleValue> auditAddedSelectedRuleValueList) {
+		this.auditAddedSelectedRuleValueList = auditAddedSelectedRuleValueList;
+	}
+
+	public List<PmConfigRuleValue> getAuditResDTOSelectedRuleValueList() {
+		if (auditResDTOSelectedRuleValueList == null) {
+			auditResDTOSelectedRuleValueList = new ArrayList<>();
+		}
+		return auditResDTOSelectedRuleValueList;
+	}
+
+	public void setAuditResDTOSelectedRuleValueList(List<PmConfigRuleValue> auditResDTOSelectedRuleValueList) {
+		this.auditResDTOSelectedRuleValueList = auditResDTOSelectedRuleValueList;
 	}
 }

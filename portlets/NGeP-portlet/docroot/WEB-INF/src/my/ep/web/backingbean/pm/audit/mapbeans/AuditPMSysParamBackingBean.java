@@ -43,16 +43,18 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
-		AuditPMSysParamTransFeeExemptBackingBean newDeletedBackingBean = new AuditPMSysParamTransFeeExemptBackingBean();
+		AuditPMSysParamTransFeeExemptBackingBean auditPMSysParamTransFeeExemptBackingBean = new AuditPMSysParamTransFeeExemptBackingBean();
+		AuditPMSysParamConstantRulesBackingBean auditPMSysParamConstantRulesBackingBean = new AuditPMSysParamConstantRulesBackingBean();
 		this.roleCode = roleCode;
 		RuleCatalogueManageBean managedBeans = (RuleCatalogueManageBean) manageBean;
-		// TAB System Param Year End Process
+
+		// *** TAB System Param Year End Process ***//
 		if (CollectionUtils.isNotEmpty(managedBeans.getResDTO().getFeeExemptions())
 				&& CollectionUtils.isNotEmpty(managedBeans.getResDTOOld().getFeeExemptions())) {
 			lvlCode2 = AuditConst.PM_LVL_CODE_2_SPYEP;
 			yepProcessFeeExemption(managedBeans);
 		}
-		// TAB System Param Quotation Values
+		// *** TAB System Param Quotation Values ***//
 		if (CollectionUtils.isNotEmpty(managedBeans.getAuditMainPtjSpecialApprovalList())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditUpdateMainPtjSpecialApprovalList())
 				|| CollectionUtils.isNotEmpty(managedBeans.getAuditDeletedMainPtjSpecialApprovalList())
@@ -63,10 +65,17 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 					managedBeans.getAuditDeletedMainPtjSpecialApprovalList(),
 					managedBeans.getAuditMainPtjSpecialApprovalListNewVal());
 		}
-		// TAB System Param Transaction Fee Exemption
-		if (managedBeans.getAuditLevelCode().equalsIgnoreCase(AuditConst.PM_LVL_CODE_2_SPFEE)) {
-			auditPMReqDTO = newDeletedBackingBean.spTFeeProcess(managedBeans, roleCode);
+		if (managedBeans.getAuditLevelCode() != null) {
+			// *** TAB System Param Transaction Fee Exemption ***//
+			if (managedBeans.getAuditLevelCode().equalsIgnoreCase(AuditConst.PM_LVL_CODE_2_SPFEE)) {
+				auditPMReqDTO = auditPMSysParamTransFeeExemptBackingBean.spTFeeProcess(managedBeans, roleCode);
+			}
+			// *** TAB System Param Constant Rule ***//
+			if (managedBeans.getAuditLevelCode().equalsIgnoreCase(AuditConst.PM_LVL_CODE_2_SPCONSTANTRULE)) {
+				auditPMReqDTO = auditPMSysParamConstantRulesBackingBean.spRulesValueTypeProcess(managedBeans, roleCode);
+			}
 		}
+
 		clearAllAuditBeanVal(managedBeans);
 		return auditPMReqDTO;
 	}
@@ -278,6 +287,7 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 				AuditConst.PM_LVL_CODE_3_SPQTV, fieldLabelCode, oldValue, newValue, actionType);
 	}
 
+	// /*************** YEP PROCESS START ******************///
 	/**
 	 * @param managedBeans
 	 * @param roleCode
@@ -385,6 +395,8 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 				fieldLabelCode, oldValue, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
+	// **************************** YEP END ******************//
+
 	/**
 	 * @param roleCode
 	 * @param codeName
@@ -444,5 +456,6 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans.setAuditAddedFeeExemptionsForComodity(null);
 
 		managedBeans.setAuditFeeExemptionType(null);
+		managedBeans.setAuditLevelCode(null);
 	}
 }

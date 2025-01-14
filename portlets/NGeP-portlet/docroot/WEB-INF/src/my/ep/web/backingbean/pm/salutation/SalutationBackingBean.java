@@ -11,6 +11,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -42,9 +45,6 @@ import my.ep.web.managedbean.pm.salutation.SalutationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * @author DK
@@ -163,9 +163,8 @@ public class SalutationBackingBean extends BaseBackingBean<SalutationManagedBean
 			List<String> activeAndInActiveStatus = new ArrayList<String>();
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans()
-					.add(new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_IN.value(),
-							activeAndInActiveStatus));
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_IN.value(), activeAndInActiveStatus));
 		}
 
 		return searchBean;
@@ -202,8 +201,7 @@ public class SalutationBackingBean extends BaseBackingBean<SalutationManagedBean
 
 				reqDTO.setSalutationSearchBean(searchBeanData);
 
-				ISalutationSO reqSO = (ISalutationSO) BusinessDelegate.getInstance().getServiceObject("pm",
-						ISalutationSO.class);
+				ISalutationSO reqSO = (ISalutationSO) BusinessDelegate.getInstance().getServiceObject("pm", ISalutationSO.class);
 				SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
 				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
@@ -285,16 +283,16 @@ public class SalutationBackingBean extends BaseBackingBean<SalutationManagedBean
 			salutationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					ISalutationSO.class);
 
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMSalutationBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION) && salutation.getSalutationId() != null) {
-					SalutationResDTO oldResDTO = salutationSO.retriveSalutaionById(reqDTO);
-					getManagedBean().setOldPmSalutation(oldResDTO.getSalutation());
-				}
-			/************ AUDIT *************/
+				SalutationResDTO oldResDTO = salutationSO.retriveSalutaionById(reqDTO);
+				getManagedBean().setOldPmSalutation(oldResDTO.getSalutation());
+			}
+			/************ END AUDIT #28895_35509 *************/
 
 			SalutationResDTO resDTO = salutationSO.saveOrUpdateSaluationDtls(reqDTO);
 			this.getManagedBean().setPmSalutation(resDTO.getSalutation());
@@ -310,11 +308,11 @@ public class SalutationBackingBean extends BaseBackingBean<SalutationManagedBean
 							MessageConst.INFO_779002, new String[] { resDTO.getSalutation().getSalutationCode(),
 									resDTO.getSalutation().getSalutationCode() });
 				}
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SALUTATION);
 				}
-				// /************ END AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 			}
 		} catch (Exception e) {
 			throw e;
@@ -334,8 +332,8 @@ public class SalutationBackingBean extends BaseBackingBean<SalutationManagedBean
 			ISearchBean<PmSalutation> searchBean = new SearchBean<PmSalutation>();
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("salutationCode", SearchOperator.OPERATOR_EQUALS.value(), salutation
-							.getSalutationCode().toLowerCase().trim(), true));
+					new SearchFilterBean("salutationCode", SearchOperator.OPERATOR_EQUALS.value(), salutation.getSalutationCode()
+							.toLowerCase().trim(), true));
 
 			if (!salutation.isBrandNew()) {
 				searchBean.getDataFilterBeans().add(
@@ -389,8 +387,8 @@ public class SalutationBackingBean extends BaseBackingBean<SalutationManagedBean
 							DbValueConst.RECORD_STATUS_ACTIVE));
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("salutationName", SearchOperator.OPERATOR_EQUALS.value(), salutation
-							.getSalutationName().toLowerCase().trim(), true));
+					new SearchFilterBean("salutationName", SearchOperator.OPERATOR_EQUALS.value(), salutation.getSalutationName()
+							.toLowerCase().trim(), true));
 
 			if (!salutation.isBrandNew()) {
 				searchBean.getDataFilterBeans().add(

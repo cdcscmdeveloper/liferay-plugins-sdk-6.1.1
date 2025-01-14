@@ -19,12 +19,13 @@ import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
  * 
  */
 public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	AuditPMSPDTO detailObjStatus = new AuditPMSPDTO();
+	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
+	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
+	String roleCode;
+	String docNo;
+	BigInteger docId;
+	BigInteger docGroupId;
 
 	@Override
 	public String getRoleCode() {
@@ -39,67 +40,33 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean managedBean, String roleCode) {
-		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		ZoneManagedBean managedBeans = (ZoneManagedBean) managedBean;
 
-		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
+		this.roleCode = roleCode;
+		this.docNo = managedBeans.getPmZone().getZoneCode();
+
 		if (null != managedBeans.getPmZone().getZoneId() && managedBeans.getPmZoneOld().getZoneId() != null) {
-			auditPMReqDTO = updateDetail(managedBeans, auditPMReqDTO, objList, roleCode);
+			updateDetail(managedBeans);
 		} else {
 			/*
 			 * New created
 			 */
-			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDocType(AuditConst.PM_AUD_SPZ);
-			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-			detailObjStatus.setDocNo(managedBeans.getPmZone().getZoneCode());
-			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
-			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
-			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID);
-			detailObjStatus
-					.setNewValue(managedBeans.getZoneResDTO().getPmZone().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-							: AuditConst.PM_AUD_INACTIVE);
-			detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(detailObjStatus);
+			this.docGroupId = BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId());
+			this.docId = BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId());
 
-			AuditPMSPDTO zoneCode = new AuditPMSPDTO();
-			zoneCode.setRoleCode(roleCode);
-			zoneCode.setDocType(AuditConst.PM_AUD_SPZ);
-			zoneCode.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-			zoneCode.setDocNo(managedBeans.getPmZone().getZoneCode());
-			zoneCode.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			zoneCode.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-			zoneCode.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-			zoneCode.setDocId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
-			zoneCode.setDocGroupId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
-			zoneCode.setFieldLabelCode(AuditConst.PM_AUD_SPZ_ZONECODE_FIELDLABELID);
-			zoneCode.setNewValue(managedBeans.getZoneResDTO().getPmZone().getZoneCode());
-			zoneCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(zoneCode);
+			detailObj(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone()
+					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			AuditPMSPDTO zoneName = new AuditPMSPDTO();
-			zoneName.setRoleCode(roleCode);
-			zoneName.setDocType(AuditConst.PM_AUD_SPZ);
-			zoneName.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-			zoneName.setDocNo(managedBeans.getPmZone().getZoneCode());
-			zoneName.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			zoneName.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-			zoneName.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-			zoneName.setDocId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
-			zoneName.setDocGroupId(BigInteger.valueOf(managedBeans.getZoneResDTO().getPmZone().getZoneId()));
-			zoneName.setFieldLabelCode(AuditConst.PM_AUD_SPZ_ZONENAME_FIELDLABELID);
-			zoneName.setNewValue(managedBeans.getZoneResDTO().getPmZone().getZoneName());
-			zoneName.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			objList.add(zoneName);
+			detailObj(AuditConst.PM_AUD_SPZ_ZONECODE_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone().getZoneCode(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			auditPMReqDTO.setObjList(objList);
+			detailObj(AuditConst.PM_AUD_SPZ_ZONENAME_FIELDLABELID, null, managedBeans.getZoneResDTO().getPmZone().getZoneName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			if (null != managedBeans.getZoneResDTO().getPmZone().getPmZoneStates()
 					&& !managedBeans.getZoneResDTO().getPmZone().getPmZoneStates().isEmpty()) {
-				auditPMReqDTO = zoneStateCodeSateName(managedBeans, auditPMReqDTO, objList, roleCode);
+				zoneStateCodeSateName(managedBeans);
 			}
 		}
 		managedBeans.setZoneResDTO(null);
@@ -107,168 +74,101 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans.setZoneStateListNewAdded(null);
 		managedBeans.setZoneStateListDeleted(null);
 
+		auditPMReqDTO.setObjList(objList);
+
 		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO updateDetail(ZoneManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			ArrayList<AuditPMSPDTO> objList, String roleCode) {
+	private void updateDetail(ZoneManagedBean managedBeans) {
 		if (managedBeans.getPmZoneOld().getRecordStatusFlg() != managedBeans.getPmZone().getRecordStatusFlg()) {
-			detailObjStatus.setRoleCode(roleCode);
-			detailObjStatus.setDocType(AuditConst.PM_AUD_SPZ);
-			detailObjStatus.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-			detailObjStatus.setDocNo(managedBeans.getPmZone().getZoneCode());
-			detailObjStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			detailObjStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-			detailObjStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-			detailObjStatus.setDocId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
-			detailObjStatus.setDocGroupId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
-			detailObjStatus.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID);
-			detailObjStatus.setOldValue(managedBeans.getPmZoneOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
-			detailObjStatus.setNewValue(managedBeans.getResZone().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
-			detailObjStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(detailObjStatus);
-			auditPMReqDTO.setObjList(objList);
+			this.docGroupId = BigInteger.valueOf(managedBeans.getPmZone().getZoneId());
+			this.docId = BigInteger.valueOf(managedBeans.getPmZone().getZoneId());
+			detailObj(
+					AuditConst.PM_AUD_SPZ_STATUS_FIELDLABELID,
+					managedBeans.getPmZoneOld().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+					managedBeans.getResZone().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 		// deleted rows
 		if (null != managedBeans.getZoneStateListDeleted() && !managedBeans.getZoneStateListDeleted().isEmpty()) {
-			zoneStateListDeleted(managedBeans, auditPMReqDTO, objList, roleCode);
+			zoneStateListDeleted(managedBeans);
 		}
 		/* add new rows */
 		if (null != managedBeans.getZoneStateListNewAdded() && !managedBeans.getZoneStateListNewAdded().isEmpty()) {
-			zoneStateListNewAdded(managedBeans, auditPMReqDTO, objList, roleCode);
+			zoneStateListNewAdded(managedBeans);
 		}
-		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO zoneStateListDeleted(ZoneManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			ArrayList<AuditPMSPDTO> objList, String roleCode) {
+	private void zoneStateListDeleted(ZoneManagedBean managedBeans) {
 		for (PmZoneState st : managedBeans.getZoneStateListDeleted()) {
 			if (st.getPmState().getStateCode() != null) {
-				AuditPMSPDTO dtlObjStateCodeAdd = new AuditPMSPDTO();
-				dtlObjStateCodeAdd.setRoleCode(roleCode);
-				dtlObjStateCodeAdd.setDocType(AuditConst.PM_AUD_SPZ);
-				dtlObjStateCodeAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-				dtlObjStateCodeAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
-				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-				dtlObjStateCodeAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-				dtlObjStateCodeAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateCodeAdd.setOldValue(st.getPmState().getStateCode());
-				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
-				dtlObjStateCodeAdd.setDocGroupId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
-				dtlObjStateCodeAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID);
-				dtlObjStateCodeAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-				objList.add(dtlObjStateCodeAdd);
-				auditPMReqDTO.setObjList(objList);
+				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
+				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
+				detailObj(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID, st.getPmState().getStateCode(), null,
+						AuditConst.PM_AUD_ACTION_TYPE_DEL);
 			}
 			if (st.getPmState().getStateName() != null) {
-				AuditPMSPDTO dtlObjStateNameAdd = new AuditPMSPDTO();
-				dtlObjStateNameAdd.setRoleCode(roleCode);
-				dtlObjStateNameAdd.setDocType(AuditConst.PM_AUD_SPZ);
-				dtlObjStateNameAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-				dtlObjStateNameAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
-				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-				dtlObjStateNameAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-				dtlObjStateNameAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateNameAdd.setOldValue(st.getPmState().getStateName());
-				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
-				dtlObjStateNameAdd.setDocGroupId(BigInteger.valueOf(managedBeans.getPmZone().getZoneId()));
-				dtlObjStateNameAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID);
-				dtlObjStateNameAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
-				objList.add(dtlObjStateNameAdd);
-				auditPMReqDTO.setObjList(objList);
+				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
+				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
+				detailObj(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID, st.getPmState().getStateName(), null,
+						AuditConst.PM_AUD_ACTION_TYPE_DEL);
 			}
 		}
-		auditPMReqDTO.setObjList(objList);
 		managedBeans.setZoneStateListDeleted(new ArrayList<PmZoneState>());
-
-		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO zoneStateListNewAdded(ZoneManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			ArrayList<AuditPMSPDTO> objList, String roleCode) {
+	private void zoneStateListNewAdded(ZoneManagedBean managedBeans) {
 		for (PmZoneState st : managedBeans.getZoneStateListNewAdded()) {
 			if (st.getPmState().getStateCode() != null && st.isBrandNew()) {
-				AuditPMSPDTO dtlObjStateCodeAdd = new AuditPMSPDTO();
-				dtlObjStateCodeAdd.setRoleCode(roleCode);
-				dtlObjStateCodeAdd.setDocType(AuditConst.PM_AUD_SPZ);
-				dtlObjStateCodeAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-				dtlObjStateCodeAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
-				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-				dtlObjStateCodeAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-				dtlObjStateCodeAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateCodeAdd.setNewValue(st.getPmState().getStateCode());
-				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
-				dtlObjStateCodeAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
-				dtlObjStateCodeAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID);
-				dtlObjStateCodeAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(dtlObjStateCodeAdd);
-				auditPMReqDTO.setObjList(objList);
+				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
+				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
+				detailObj(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID, null, st.getPmState().getStateCode(),
+						AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			}
 			if (st.getPmState().getStateName() != null && st.isBrandNew()) {
-				AuditPMSPDTO dtlObjStateNameAdd = new AuditPMSPDTO();
-				dtlObjStateNameAdd.setRoleCode(roleCode);
-				dtlObjStateNameAdd.setDocType(AuditConst.PM_AUD_SPZ);
-				dtlObjStateNameAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-				dtlObjStateNameAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
-				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-				dtlObjStateNameAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-				dtlObjStateNameAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateNameAdd.setNewValue(st.getPmState().getStateName());
-				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
-				dtlObjStateNameAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
-				dtlObjStateNameAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID);
-				dtlObjStateNameAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(dtlObjStateNameAdd);
-				auditPMReqDTO.setObjList(objList);
+				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
+				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
+				detailObj(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID, null, st.getPmState().getStateName(),
+						AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			}
 		}
 		managedBeans.setZoneStateListNewAdded(new ArrayList<PmZoneState>());
-
-		return auditPMReqDTO;
 	}
 
-	private AuditPMReqDTO zoneStateCodeSateName(ZoneManagedBean managedBeans, AuditPMReqDTO auditPMReqDTO,
-			ArrayList<AuditPMSPDTO> objList, String roleCode) {
+	private void zoneStateCodeSateName(ZoneManagedBean managedBeans) {
 		for (PmZoneState st : managedBeans.getZoneResDTO().getPmZone().getPmZoneStates()) {
 			if (st.getPmState().getStateCode() != null) {
-				AuditPMSPDTO dtlObjStateCodeAdd = new AuditPMSPDTO();
-				dtlObjStateCodeAdd.setRoleCode(roleCode);
-				dtlObjStateCodeAdd.setDocType(AuditConst.PM_AUD_SPZ);
-				dtlObjStateCodeAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-				dtlObjStateCodeAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
-				dtlObjStateCodeAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-				dtlObjStateCodeAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-				dtlObjStateCodeAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateCodeAdd.setNewValue(st.getPmState().getStateCode());
-				dtlObjStateCodeAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
-				dtlObjStateCodeAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
-				dtlObjStateCodeAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID);
-				dtlObjStateCodeAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(dtlObjStateCodeAdd);
-				auditPMReqDTO.setObjList(objList);
+				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
+				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
+				detailObj(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID, null, st.getPmState().getStateCode(),
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 			if (st.getPmState().getStateName() != null) {
-				AuditPMSPDTO dtlObjStateNameAdd = new AuditPMSPDTO();
-				dtlObjStateNameAdd.setRoleCode(roleCode);
-				dtlObjStateNameAdd.setDocType(AuditConst.PM_AUD_SPZ);
-				dtlObjStateNameAdd.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
-				dtlObjStateNameAdd.setDocNo(managedBeans.getPmZone().getZoneCode());
-				dtlObjStateNameAdd.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-				dtlObjStateNameAdd.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
-				dtlObjStateNameAdd.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
-				dtlObjStateNameAdd.setNewValue(st.getPmState().getStateName());
-				dtlObjStateNameAdd.setDocId(BigInteger.valueOf(st.getPmState().getStateId()));
-				dtlObjStateNameAdd.setDocGroupId(BigInteger.valueOf(st.getPmZone().getZoneId()));
-				dtlObjStateNameAdd.setFieldLabelCode(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID);
-				dtlObjStateNameAdd.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(dtlObjStateNameAdd);
-				auditPMReqDTO.setObjList(objList);
+				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
+				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
+				detailObj(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID, null, st.getPmState().getStateName(),
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 		}
-		auditPMReqDTO.setObjList(objList);
+	}
 
-		return auditPMReqDTO;
+	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
+		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
+		dtlObj.setRoleCode(roleCode);
+		dtlObj.setDocType(AuditConst.PM_AUD_SPZ);
+		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
+		dtlObj.setDocNo(docNo);
+		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPZ);
+		dtlObj.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPZ);
+		dtlObj.setDocId(docId);
+		dtlObj.setDocGroupId(docGroupId);
+		dtlObj.setFieldLabelCode(fieldLabelId);
+		if (oldValue != null) {
+			dtlObj.setOldValue(oldValue);
+		}
+		dtlObj.setNewValue(newValue);
+		dtlObj.setActionType(actionType);
+		objList.add(dtlObj);
 	}
 }

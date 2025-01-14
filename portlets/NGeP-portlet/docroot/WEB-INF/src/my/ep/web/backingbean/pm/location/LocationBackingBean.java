@@ -275,12 +275,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			// #32753 - END
 
 			reqDTO.setPmState(state);
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			reqDTO.setStateId(getManagedBean().getState().getStateId());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getState().getStateId() != null) {
 				getManagedBean().setStateOldVal(stateSO.retriveStateDetailsByID(reqDTO));
 			}
-			/************ AUDIT *************/
+			/************ END AUDIT #28895_35509 *************/
 			StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -289,13 +289,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						ResourceBundleUtils.getMessage("lbl.pm.state", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()), this.getManagedBean().getState().getStateName() };
 				locationId = getManagedBean().getState().getStateId();
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResState(resDTO.getPmState());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
 				}
-				/************ END AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 
 			}
 		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
@@ -318,12 +318,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 			reqDTO.setPmDivision(division);
 			reqDTO.setStateId(division.getPmState().getStateId());
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getDivision().getDivisionId() != null) {
 				reqDTO.setDivisionId(getManagedBean().getDivision().getDivisionId());
 				getManagedBean().setDivisionOldVal(divisionSO.retrieveDivisionById(reqDTO));
 			}
-			/************ AUDIT *************/
+			/************ END AUDIT #28895_35509 *************/
 			DivisionResDTO resDTO = divisionSO.saveOrUpdateDivision(reqDTO);
 			if (resDTO.isSuccessful()) {
 				message = getManagedBean().getDivision().isBrandNew() ? MessageConst.ERR_900016 : MessageConst.ERR_900017;
@@ -331,12 +331,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						ResourceBundleUtils.getMessage("lbl.pm.division", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()), this.getManagedBean().getDivision().getDivisionName() };
 				locationId = getManagedBean().getDivision().getDivisionId();
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResDivision(resDTO.getPmDivision());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
 				}
-				/************ AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 			}
 		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -369,11 +369,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
 
 			reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getDistrict().getDistrictId() != null) {
 				getManagedBean().setDistrictOldVal(districtSO.retriveDistrictByID(reqDTO));
 			}
-			/************ AUDIT *************/
+			/************ END AUDIT #28895_35509 *************/
 
 			DistrictResDTO resDTO = districtSO.saveOrUpdateDistrict(reqDTO);
 
@@ -384,12 +384,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								new FacesScopes().getUserLocale()), this.getManagedBean().getDistrict().getDistrictName() };
 				locationId = getManagedBean().getDistrict().getDistrictId();
 
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResDistrict(resDTO.getPmDistrict());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
 				}
-				/************ AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 			}
 		} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
 			CityReqDTO reqDTO = new CityReqDTO();
@@ -412,12 +412,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			reqDTO.setPmCity(city);
 			reqDTO.setDistrictId(city.getPmDistrict().getDistrictId());
 
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			reqDTO.setCityId(getManagedBean().getCity().getCityId());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getCity().getCityId() != null) {
 				getManagedBean().setCityOldVal(citySO.retriveCityById(reqDTO));
 			}
-			/************ AUDIT *************/
+			/************ END AUDIT #28895_35509 *************/
 
 			CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -427,12 +427,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								new FacesScopes().getUserLocale()), this.getManagedBean().getCity().getCityName() };
 				locationId = getManagedBean().getCity().getCityId();
 
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
 					getManagedBean().setResCity(resDTO.getPmCity());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
 				}
-				/************ AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 			}
 
 		}

@@ -194,7 +194,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			ZoneReqDTO reqDTO = new ZoneReqDTO();
 			reqDTO.setPmZone(zone);
 
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMSupplierZoneBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
@@ -205,7 +205,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
 				getManagedBean().setPmZoneOld(resDTO.getPmZone());
 			}
-			/************ AUDIT *************/
+			/************ AUDIT #28895_35509 *************/
 
 			ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -221,7 +221,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							MessageConst.INFO_780097, new String[] { resDTO.getPmZone().getZoneCode(),
 									resDTO.getPmZone().getZoneName() });
 				}
-				/************ AUDIT *************/
+				/************ AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ZONE)) {
 					zoneReqDTO.setZoneId(resDTO.getPmZone().getZoneId());
 					ZoneResDTO zonResDTOnew = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
@@ -229,7 +229,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 					getManagedBean().setResZone(resDTO.getPmZone());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SPZ);
 				}
-				/************ END AUDIT *************/
+				/************ END AUDIT #28895_35509 *************/
 			}
 		} catch (Exception e) {
 			throw e;
