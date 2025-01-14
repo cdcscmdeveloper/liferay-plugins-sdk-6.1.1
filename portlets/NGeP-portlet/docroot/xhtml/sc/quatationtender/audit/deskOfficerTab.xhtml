@@ -6,12 +6,15 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.audit.tab.desk.officer']}" toggleable="true" style="min-width:100%">
-		<p:dataTable id="searchQtTblId" var="obj" rows="10" 
+	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true"
+		style="min-width:100%">
+		<ui:include
+			src="/xhtml/sc/quatationtender/audit/auditPrintAndDownload.xhtml" />
+		<p:dataTable id="searchQtTblId" var="obj" rows="10"
 			value="#{auditQTBackingBean.searchQT}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowIndexVar="index" lazy="true">
-			
+
 			<ac:paginator for="searchQtTblId"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
@@ -21,48 +24,59 @@
 						pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
 				</h:outputText>
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.action.type']}" style="white-space: normal!important;" width="5%">
-				<h:outputText value="#{empty obj.actionType ? lbl['lbl.audit.no.available']:obj.actionType}" />
+
+			<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
+				style="white-space: normal!important;" width="5%">
+				<h:outputText
+					value="#{empty obj.actionType ? lbl['lbl.audit.no.available']:obj.actionType}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.action.by']}" style="white-space: normal!important;" width="5%">
+
+			<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.actionBy}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.org.name']}" style="white-space: normal!important;" width="10%">
+
+			<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
+				style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.orgName}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.role']}" style="white-space: normal!important;" width="5%">
+
+			<p:column headerText="#{lbl['lbl.audit.header.role']}"
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.roleName}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.docType']}" style="white-space: normal!important;" width="5%">
+
+			<p:column headerText="#{lbl['lbl.audit.header.docType']}"
+				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.docType}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.docNo']}" style="white-space: normal!important;" width="10%">
+
+			<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
+				style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.docNo}" />
-			</p:column>		
-			
-			<p:column headerText="#{lbl['lbl.sc.document.status']}" style="white-space: normal!important;" width="10%">
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.document.status']}"
+				style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.docStatus}" />
-			</p:column>	
-			
-			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}" style="white-space: normal!important;" width="5%">
-				<h:outputText value="#{empty obj.fieldName ? lbl['lbl.audit.no.available']:obj.fieldName}" />
-			</p:column>			
-			
-			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}" style="white-space: normal!important;" width="20%">
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
+				style="white-space: normal!important;" width="5%">
+				<h:outputText
+					value="#{empty obj.fieldName ? lbl['lbl.audit.no.available']:obj.fieldName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
+				style="white-space: normal!important;" width="20%">
 				<h:outputText value="#{obj.oldValue}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.audit.header.newValue']}" style="white-space: normal!important;" width="20%">
+
+			<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
+				style="white-space: normal!important;" width="20%">
 				<h:outputText value="#{obj.newValue}" />
-			</p:column>		
-			
-		</p:dataTable>		
+			</p:column>
+
+		</p:dataTable>
 	</p:panel>
 </ui:composition>
-	

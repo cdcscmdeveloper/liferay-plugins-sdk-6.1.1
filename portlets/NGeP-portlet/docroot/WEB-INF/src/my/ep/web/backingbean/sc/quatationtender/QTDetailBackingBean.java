@@ -983,6 +983,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//bug #30435 - end
 			
+			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
@@ -4250,6 +4252,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25077 End 
 			//#30477 Start Vinod
 			validateUserInactive(taskName, currentStatus, outcome);
+			validateSupplierCriteriaIntegrity(qt);	// Bug #36730@Syazani 07/01/2025 -- Start
 		
 			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
@@ -4466,9 +4469,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
 						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
 				
-				if ((valCondition && approval.getApprovalCategory().getParameterCode()
-						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
-						|| valConditionOthers) {
+				// #37632 - Check only for CAA - Start
+				if ((valConditionOthers || valCondition)
+						&& approval.getApprovalCategory().getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
+				// #37632 - Check only for CAA - End
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
@@ -5690,7 +5695,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 						ScQt scQt = resDTO.getQtResultBean().getResultList().get(i);
 
-						setBiddingStatusForQt(isBidding, qtnTenderSearchBean, scQt, detailSO);
+						setBiddingStatusForQt(isBidding, qtnTenderSearchBean, scQt);
 						// 25791-end
 					}
 				}
@@ -5716,14 +5721,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * @param isBidding
 		 * @param qtnTenderSearchBean
 		 * @param scQt
-		 * @param detailSO
 		 * @retrun Bidding Status QT.
 		 */
-		private ScQt setBiddingStatusForQt(boolean isBidding, QtnTenderSearchBean qtnTenderSearchBean, ScQt scQt,
-				IQTDetailSO detailSO) {
+		private ScQt setBiddingStatusForQt(boolean isBidding,
+				QtnTenderSearchBean qtnTenderSearchBean, ScQt scQt) {
 			if (isBidding) {
 				String status = qtnTenderSearchBean.getQtStatus();
-				Long statusId = getBiddingStatus(status, scQt, detailSO);
+				Long statusId = getBiddingStatus(status, scQt);
 				scQt.setStatusDesc(getStatusDescById(statusId));
 			}
 
@@ -5737,18 +5741,25 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		 * 
 		 * @param status
 		 * @param scQt
-		 * @param detailSO
 		 * @retrun Bidding Status QT.
 		 */
-		private Long getBiddingStatus(String status, ScQt scQt, IQTDetailSO detailSO) {
-			if (StringUtils.isNotBlank(status) || StringUtils.isNotEmpty(status)) {
+		private Long getBiddingStatus(String status, ScQt scQt) {
+			if (StringUtils.isNotBlank(status)
+					|| StringUtils.isNotEmpty(status)) {
 				return Long.valueOf(status);
 			} else {
-				QuationTenderReqDTO quotationReqDTO = new QuationTenderReqDTO();
-				quotationReqDTO.setQtdetail(scQt);
+				// 25791 -stat-
+				IBiddingSO biddingSO;
+				biddingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+				BiddingReqDTO biddingReqDTo = new BiddingReqDTO();
+				Long docId = scQt.getQtId();
+				biddingReqDTo.setDocId(docId);
+				return biddingSO
+						.retrieveBidScheduleDetailsStatus(biddingReqDTo)
+						.getScBidSchedule().getPmStatus().getStatusId();
+				// 25791 -end-
 
-				return detailSO.retriveScheduleDetailStatus(quotationReqDTO).getBidSchedule().getPmStatus()
-						.getStatusId();
 			}
 		}
 		// 25791-End
@@ -8041,7 +8052,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
 			//28895 - 35500 start
-			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
+			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
 
@@ -11284,22 +11295,24 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @return BiddingDetailsScreen
 	 */
 	public String viewOnlineBidding(ScQt scQt, String previousPageUrl) {
-		log.info("============viewOnlineBidding============");
-		IQTDetailSO detailSO;
-		detailSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderReqDTO qtReqDTo = new QuationTenderReqDTO();
-		qtReqDTo.setQtdetail(scQt);
-		QuationTenderResDTO qtResDTO = detailSO
-				.retriveScheduleDetailStatus(qtReqDTo);
+		// 25791-start-
+		IBiddingSO biddingSO;
+		biddingSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+		BiddingReqDTO biddingReqDTo = new BiddingReqDTO();
+		Long docId = scQt.getQtId();
+		biddingReqDTo.setDocId(docId);
+		BiddingResDTO biddingResDTO = biddingSO
+				.retrieveBidScheduleDetailsStatus(biddingReqDTo);
 		BiddingBackingBean biddingBB = new BiddingBackingBean();
 
-		if (null != qtResDTO && null != qtResDTO.getBidSchedule()) // 25791
+		if (null != biddingResDTO && null != biddingResDTO.getScBidSchedule()) // 25791
 		{
 			biddingBB.renewSesionObject();
 			return biddingBB.bidManagementQuotationTenderAction(
-					qtResDTO.getBidSchedule(), previousPageUrl);
+					biddingResDTO.getScBidSchedule(), previousPageUrl);
 		}
+		// 25791-end-
 
 		return QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW; // 25791
 	} //#17376-End onlineBiddingcodes

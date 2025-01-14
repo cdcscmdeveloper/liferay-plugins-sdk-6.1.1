@@ -885,13 +885,13 @@ public class LOIDetailBackingBean extends
 					}
 					if (CollectionUtils.isNotEmpty(zoneDetails)) {
 						this.getManagedBean().setMultiLOIZoneDetails(zoneDetails);
+						generateZoneMenuModel();// 33380 - change position 
 						this.getManagedBean().setSelectedZone(zoneDetails.get(0));
 						this.getManagedBean().setZoneActiveIndex(
 									zoneDetails.get(0).getZoneTabIndex());
 						this.getManagedBean().setScQtRecommendsByZone(scQtRecommendsByZone);
 						processMultiLOIDetails(recommendType, 
 								scQtRecommendsByZone.get(zoneDetails.get(0).getSpecZoneId()));					
-						generateZoneMenuModel();
 					}					
 				} else {
 					processMultiLOIDetails(recommendType, scQtRecommendList);
@@ -2883,21 +2883,6 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	
-	/**
-	 * BUG 33353 : To Update ScQtRecommendDtl (Reject Scenario, to prevent bugs on Multipla LOI (Recommendation) Stage)
-	 * @param List<ScQtRecommendDtl>
-	 * @return null
-	 */
-	private void updateRejectQtRecommendDtl(ScLoiLoa scLoiLoa){
-		try{
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoiLoa(scLoiLoa);
-			getQtAwardSO().saveSupplierRejectQTRecommendDtl(reqDTO);
-		}catch(Exception e){
-			
-		}
-	}
-
 	/**
 	 * Update bpm task. update bpm - save data into database and BPM process
 	 * will route to the next respective user.
@@ -6718,8 +6703,9 @@ public class LOIDetailBackingBean extends
 	}
 
 	private boolean checkIfAllLoiCompleted(List<ScLoi> lois) {
-		if (CollectionUtils.isEmpty(lois))
+		if (CollectionUtils.isEmpty(lois)) {
 			return false;
+		}
 		for (ScLoi loi : lois) {
 			PmStatus status = null != loi.getScWorkFlowStatus() && null != loi.getScWorkFlowStatus().getPmStatus() ? loi
 					.getScWorkFlowStatus().getPmStatus() : new PmStatus();
@@ -7072,27 +7058,34 @@ public class LOIDetailBackingBean extends
 	 * @param bpmAction
 	 * @return void
 	 */
-	public void validateNegoDecisionAction() {
+	public void validateNegoDecisionAction(String outcome) {
 		try {
+			ScLoi scLoi = getManagedBean().getScLoi();
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
+			String bpmAction = outcome;
 
-			String decision = this.getManagedBean().getDecisionCode();
-			String justification = this.getManagedBean().getJustification();
-			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
+			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+				String decision = this.getManagedBean().getDecisionCode();
+				String justification = this.getManagedBean().getJustification();
+				bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-			if (decision == null) {
-				throw new EpException(MessageConst.ERROR_775194);
-			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-				throw new EpException(MessageConst.ERROR_775193);
-			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-				RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-			} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				if (decision == null) {
+					throw new EpException(MessageConst.ERROR_775194);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+					throw new EpException(MessageConst.ERROR_775193);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+					updateBpmTaskAction(bpmAction);
+				}
+			} else {
 				updateBpmTaskAction(bpmAction);
 			}
 
 		} finally {
 		}
 
-	}//#30008 - end
+	}// #30008 - end
 	
 	//20230111@Haziq - #12487
 	/**

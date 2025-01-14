@@ -3414,18 +3414,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return retVal;
 	}
-	
-	//29956 START
-	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
-		Boolean retVal = false;
-		if (supplier != null && supplier.getSupplierId() != null) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
-		}
-		return retVal;
-	}
-	//29956 END
 
 	public static void checkEquityOwnerUpdateAllowance(BaseManagedBean managedBean) {
 		// #27165
@@ -4248,8 +4236,16 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		getManagedBean().setDisAllowOwnerEdit(false);
 		
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
-		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
+//		#37598 START
+		Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
+		log.info("#37598 -- isMofAccEffDatePassed6MonthCurrDate ==>>>>>" + isMofAccEffDatePassed6MonthCurrDate);
+		String applType = smAppl.getApplType();
+		Boolean disalllowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		log.info("#37598 -- smAppl.getApplType() ==>>>>>" + smAppl.getApplType());
+		log.info("#37598 -- disalllowEditApplType ==>>>>>" + disalllowEditApplType);
+//		#37598 END
 		
 		PersonnelReqDTO reqDto = new PersonnelReqDTO();
 		reqDto.setApplId(smAppl.getApplId());
@@ -4262,26 +4258,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
 				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 				
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
 				
 				if(shouldAddPersonnel){
 					getManagedBean().getPersonnelsRole().add(personnel);
 				}
 				
 				if(isPersonnelAdminRole
-						&& !isMofAccEffDatePassed6MonthCurrDate
-						&& !isBasicAccount){
+						&& isMofAccEffDatePassed6MonthCurrDate
+						&& disalllowEditApplType){ // #37598
 					getManagedBean().setDisAllowOwnerEdit(true);
+					break;
 				}
-				
-//				if(!isMofAccEffDatePassed6MonthCurrDate(supplier) 
-//						&& isPersonnelAdminRole(personnel)
-//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-//					getManagedBean().getPersonnelsRole().add(personnel);
-//				} else if(isMofAccEffDatePassed6MonthCurrDate(supplier)
-//						&& isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector)){
-//					getManagedBean().getPersonnelsRole().add(personnel);
-//				}
 			}
 		}
 		if(getManagedBean().getPersonnelsRole() != null 
