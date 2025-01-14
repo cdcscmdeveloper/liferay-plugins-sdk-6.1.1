@@ -1062,7 +1062,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 						resultList.get(0).setOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
 						resDTO.getCtAgencyResultBean().setTotalRecord(1);
 						resDTO.getCtAgencyResultBean().setResultList(resultList);
-						return resDTO.getCtAgencyResultBean();
 					}
 					// #36707 - End
 					return resDTO.getCtAgencyResultBean();
