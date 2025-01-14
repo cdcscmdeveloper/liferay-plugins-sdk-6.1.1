@@ -62,7 +62,8 @@
 			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">
 			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 		</h:outputText>	
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.rec.instruction']} " escape="false" /> <ui:remove>21692</ui:remove>	
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" /> <ui:remove>21692</ui:remove>	
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10" rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
