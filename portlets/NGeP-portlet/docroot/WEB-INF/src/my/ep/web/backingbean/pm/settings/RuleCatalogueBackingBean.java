@@ -130,15 +130,13 @@ import org.primefaces.event.TabChangeEvent;
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
-public class RuleCatalogueBackingBean extends
-		BaseBackingBean<RuleCatalogueManageBean> implements Serializable {
+public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManageBean> implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = Logger
-			.getLogger(RuleCatalogueBackingBean.class);
+	private static Logger log = Logger.getLogger(RuleCatalogueBackingBean.class);
 
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
@@ -174,8 +172,7 @@ public class RuleCatalogueBackingBean extends
 
 	public ISearchBean<PmParameterDesc> getParameterSearchBean() {
 		if (this.parameterSearchBean == null) {
-			this.parameterSearchBean = super.createSearchBean(
-					PmParameterDesc.class, "parameterId");
+			this.parameterSearchBean = super.createSearchBean(PmParameterDesc.class, "parameterId");
 		}
 
 		return this.parameterSearchBean;
@@ -194,8 +191,7 @@ public class RuleCatalogueBackingBean extends
 	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
 		log.info("*****addNewRuleTypeValue*$$$****");
 		this.getManagedBean().setSelectedCategoryL3(pmCategoryL3);
-		PmConfigRule configRuleType = this.getManagedBean()
-				.getSelectedRuleDescType().getRuleType();
+		PmConfigRule configRuleType = this.getManagedBean().getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(configRuleType);
 		newRuleValue.setEffDate(this.getManagedBean().getTomorrow());
@@ -203,18 +199,14 @@ public class RuleCatalogueBackingBean extends
 		// if (this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()
 		// .getParameterCode().equals("C")) {
 
-		newRuleValue.setCategoryL3Id(this.getManagedBean()
-				.getSelectedCategoryL3());
+		newRuleValue.setCategoryL3Id(this.getManagedBean().getSelectedCategoryL3());
 		// }
 
 		if (configRuleType.getRangeType() == 1) {
 
-			if (configRuleType.getConfigRuleValues() != null
-					&& configRuleType.getConfigRuleValues().size() > 0) {
+			if (configRuleType.getConfigRuleValues() != null && configRuleType.getConfigRuleValues().size() > 0) {
 				int size = configRuleType.getConfigRuleValues().size();
-				newRuleValue
-						.setGroupValueId(configRuleType.getConfigRuleValues()
-								.get(size - 1).getGroupValueId() + 1);
+				newRuleValue.setGroupValueId(configRuleType.getConfigRuleValues().get(size - 1).getGroupValueId() + 1);
 
 			} else {
 
@@ -224,30 +216,24 @@ public class RuleCatalogueBackingBean extends
 		}
 		int index = configRuleType.getConfigRuleValues().size();
 		configRuleType.getConfigRuleValues().add(index, newRuleValue);
-		RequestContext.getCurrentInstance().execute(
-				"ruleValueTblWidget.paginator.endLink.click()");
+		RequestContext.getCurrentInstance().execute("ruleValueTblWidget.paginator.endLink.click()");
 	}
 
 	public void typeValueChgangeListener(PmFeeExemption feeExemption) {
 		log.info("................updateUnspscForFee...............");
 
-		log.info("......feeExemption.getTypeId().getTypeId()"
-				+ feeExemption.getTypeId().getTypeId());
+		log.info("......feeExemption.getTypeId().getTypeId()" + feeExemption.getTypeId().getTypeId());
 
 		ICodificationSO unspscSO;
 		try {
 
 			if (feeExemption.getTypeId() != null) {
-				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
-								ICodificationSO.class);
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
 				ISearchBean<CmType> searchBeanType = new SearchBean<CmType>();
-				SearchFilterBean typeFilterBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_EQUALS.value());
+				SearchFilterBean typeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 				typeFilterBean.setSearchField("typeId");
-				typeFilterBean.setSearchValue(feeExemption.getTypeId()
-						.getTypeId());
+				typeFilterBean.setSearchValue(feeExemption.getTypeId().getTypeId());
 				searchBeanType.getDataFilterBeans().add(typeFilterBean);
 				reqDTO.setTypeSearchBean(searchBeanType);
 				CodificationResDTO resDTO = unspscSO.searchTypeObj(reqDTO);
@@ -266,8 +252,7 @@ public class RuleCatalogueBackingBean extends
 
 	public void getParameterObj(PmFeeExemption ex) {
 		if (ex.getOrgTypeId() != null) {
-			PmParameter parameter = ParameterHelper.getInstance()
-					.getPmParameterById(ex.getOrgTypeId().getParameterId());
+			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(ex.getOrgTypeId().getParameterId());
 			if (parameter != null)
 				ex.setOrgTypeId(parameter);
 
@@ -286,16 +271,14 @@ public class RuleCatalogueBackingBean extends
 		SelectItem[] items = null;
 		if (searchBean != null) {
 			searchBean.getSortColumns();
-			items = getDropdownValuesBySearchBean(
-					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+			items = getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 		}
 		return items;
 	}
 
 	private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String componentId) {
 		log.info(".......componentId=" + componentId);
-		ISearchBean<PmParameterDesc> orgTypeSearchBean = super
-				.createSearchBean(PmParameterDesc.class, componentId);
+		ISearchBean<PmParameterDesc> orgTypeSearchBean = super.createSearchBean(PmParameterDesc.class, componentId);
 		return orgTypeSearchBean;
 	}
 
@@ -354,12 +337,10 @@ public class RuleCatalogueBackingBean extends
 	// }
 
 	public String getInactiveFeeComoPopUpMsg() {
-
 		return inactiveFeeComoPopUpMsg;
 	}
 
 	public String getInactiveFeeContPopUpMsg() {
-
 		return inactiveFeeContPopUpMsg;
 	}
 
@@ -388,42 +369,38 @@ public class RuleCatalogueBackingBean extends
 			initGst();
 			initQuotationWithTenderValue();
 			initYearEndForProcessing();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, SETTING_CONFIG_MAIN);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SETTING_CONFIG_MAIN);
 		} catch (Exception e) {
 			e.printStackTrace();
-			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					null, e.getMessage()));
+			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, e.getMessage()));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
 		return "";
 	}
 	
-	private void initYearEndForProcessing(){
+	private void initYearEndForProcessing() {
 		IFeeExemptionSO feeSO = null;
 		this.getManagedBean().setMinDate(null);//32333
-		
+
 		try {
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IFeeExemptionSO.class);
+			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
 			this.getManagedBean().getFeeExemptionsForYepProcessing().clear();
 			this.getManagedBean().getDeletedYepProcessingFeeExemptions().clear();
-			
+
 			//retrieve pm_fee_exemption records
 			resFDTO = feeSO.getFeeExemptionsYepProcessing(reqFDTO);
-			
+
 			log.info("[#22119] resFDTO.getFeeExemptions size: " + resFDTO.getFeeExemptions().size());
-			/*22119*/
-//			String lang = getLanguage();
-			if(resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
+			/* 22119 */
+			//String lang = getLanguage();
+			if (resFDTO != null && resFDTO.getFeeExemptions().size() > 0) {
 				this.getManagedBean().setFeeExemptionsForYepProcessing(resFDTO.getFeeExemptions());
 			}
 		} finally {
 			feeSO = null;
-		}	
+		}
 	}
 
 	private void initConfigRule() {
@@ -5035,7 +5012,7 @@ public class RuleCatalogueBackingBean extends
 		log.info("saveQtValues");
 		/*
 		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
-		 * 
+		 *
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
