@@ -515,6 +515,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			log.info("code dev island cek value contract version = "+resDTO.getCtContractVer());
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			
 			//#35156 - Start
