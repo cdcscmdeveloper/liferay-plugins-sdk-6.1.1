@@ -5,7 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:p="http://primefaces.org/ui" 
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
-	xmlns:ac="http://ac.my/jsf/composite/cc"> 
+	xmlns:ac="http://ac.my/jsf/composite/cc" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 <!-- #28175 end -->
 
 	<ui:include src="/xhtml/sm/svositevisit/siteVisitOfficer.xhtml"></ui:include>
@@ -45,20 +46,20 @@
 							svoSiteVisitBackingBean.managedBean.smSvTask.smAppl)}">
 		        <!-- #28175 Reopen #94 End -->
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code} 
-						: 
-						#{cat.categoryL3Name} 
-						<!-- #28175 ReOpen -->
-						<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.otherDesc != null}"></h:outputText>
+						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
+				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
+						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
+						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:when>
 				<c:otherwise>
 					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
-						:
-						#{cat.pmCategoryL3.categoryName}
-						<!-- #28175 ReOpen -->
-						<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.otherDesc != null}"></h:outputText>
+						<!-- #28175 ReOpen start -->
+						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code} 
+				 			- #{tmp.suppCategory.pmCategoryL1.categoryName} / #{tmp.suppCategory.pmCategoryL2.categoryName}"/><br/>
+						<h:outputText value="/ #{tmp.suppCategory.pmCategoryL3.categoryName}"/>
+						<!-- #28175 ReOpen start -->
+						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
 					</p:column>
 				</c:otherwise>
 			</c:choose>

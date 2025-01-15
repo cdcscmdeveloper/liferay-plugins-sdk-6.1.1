@@ -19,10 +19,9 @@
 		<ui:repeat var="factoryCatVar" value="#{viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<!-- #28175 -->
-				    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
-				    	(#{viewSmApplBackingBean.getSupplierCategoryName(factoryCatVar, isSuppProfile, true)})" 
-				    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
+					<<!-- #28175 -->
+					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(factoryCatVar, isSuppProfile)})" />
 					</td>
 				</tr>
 			</table>
@@ -88,7 +87,7 @@
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
 									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile)})" 
--								styleClass="outputLabel-view" /><br />	<!-- #28175 -->
+								styleClass="outputLabel-view" /><br />	<!-- #28175 -->
 						</ui:repeat>
 					</td>
 				</tr>
