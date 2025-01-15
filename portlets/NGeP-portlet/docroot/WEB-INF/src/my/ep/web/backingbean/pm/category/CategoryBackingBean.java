@@ -4321,6 +4321,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 	//#29665 - End
 	
+	//Bug #37757 - Start
+	/**
+	 * prepare category code data
+	 */
 	private void prepareCategoryData() {
 		IParameterSO parameterSO;
 		parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -4348,7 +4352,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().getPmCategoryL3().setCategoryTypeCode(parameterResDTO.getPmParameter());
 		}
 	}
-
+    
+	/**
+	 * validate new and duplicate category code
+	 */
 	private void validateNewAndDuplicateCategory() {
 		// start #29665 check is it new category
 		if (!this.getManagedBean().isNewCategory()) {
@@ -4361,8 +4368,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
 	}
-    
-	//Bug #37757 - Start
+
 	/**
 	 * validate SsmExclusive if ssmExclusive is null
 	 */
