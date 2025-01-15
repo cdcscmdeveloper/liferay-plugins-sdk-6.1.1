@@ -1,10 +1,12 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+<!-- #28175 start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:ac="http://ac.my/jsf/composite/cc"> 
+<!-- #28175 end -->
 
 	<ui:include src="/xhtml/sm/svositevisit/siteVisitOfficer.xhtml"></ui:include>
 
@@ -36,13 +38,31 @@
 		<p:dataTable var="cat"
 			value="#{svoSiteVisitBackingBean.managedBean.supplierCategory}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column headerText="#{lbl['lbl.sm.category.description']}">
-				#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
-				:
-				#{cat.pmCategoryL3.categoryName}
-				
-				<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
-			</p:column>
+			<!-- #28175 start -->
+			<c:choose>
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{!svoSiteVisitBackingBean.isLatestCatCodeDesc(false,
+							svoSiteVisitBackingBean.managedBean.smSvTask.smAppl)}">
+		        <!-- #28175 Reopen #94 End -->
+					<p:column headerText="#{lbl['lbl.sm.category.description']}">
+						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code} 
+						: 
+						#{cat.categoryL3Name} 
+						<!-- #28175 ReOpen -->
+						<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.otherDesc != null}"></h:outputText>
+					</p:column>
+				</c:when>
+				<c:otherwise>
+					<p:column headerText="#{lbl['lbl.sm.category.description']}">
+						#{cat.pmCategoryL1.categoryL1Code}#{cat.pmCategoryL2.categoryL2Code}#{cat.pmCategoryL3.categoryL3Code}
+						:
+						#{cat.pmCategoryL3.categoryName}
+						<!-- #28175 ReOpen -->
+						<h:outputText value="(#{cat.otherDesc})" rendered="#{cat.otherDesc != null}"></h:outputText>
+					</p:column>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28175 end -->
 		</p:dataTable>
 	</p:panel>
 

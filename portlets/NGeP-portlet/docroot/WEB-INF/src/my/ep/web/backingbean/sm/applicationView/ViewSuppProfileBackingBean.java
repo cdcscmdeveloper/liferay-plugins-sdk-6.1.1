@@ -33,6 +33,15 @@ import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
+//#28175 start
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28175 ReOpen
+import my.ep.web.constant.sm.SupplierManagementConst;
+//#28175 end
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped

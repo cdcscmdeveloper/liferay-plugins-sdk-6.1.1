@@ -32,6 +32,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.SmVirtualCertHelper;
+//#28175 start
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.constant.ModuleCodeConst;
+//#28175 end
 
 import org.apache.log4j.Logger;
 
