@@ -3163,5 +3163,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 	}
 	//#28777 & #29729 - End
 	
+	//#21692 - Start
+	public boolean supplierRejectEPV(ScQtProposal proposal) {
+		return proposal.getIsAgreeQtExtendPeriod() == null ? false : proposal
+				.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) ||
+				proposal.getIsAgreeQtExtendPeriod().equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);
+	}
+	//#21692 - End
+	
 }
 

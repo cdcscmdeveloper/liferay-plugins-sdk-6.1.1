@@ -12104,6 +12104,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 													.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 												// supplier respond and make new
 												// supplier offer
+												answerRemark = answer.getNewSupplierOffer(); //36681&35295 - zaim
 												map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF));//35295 #124 @zaim
 											} else if ((answer.getNewSupplierOffer() == null || answer
 													.getNewSupplierOffer().isEmpty())
@@ -12111,6 +12112,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 															.isEmpty())) {
 												// supplier respond but no
 												// changes
+												answerRemark = answer.getAnswerRemark(); //36681&35295 - zaim
 												map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 											}
 										}
