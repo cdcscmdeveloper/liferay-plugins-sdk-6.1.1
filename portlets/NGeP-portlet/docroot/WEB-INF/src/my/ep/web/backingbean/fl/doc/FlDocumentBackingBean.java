@@ -442,6 +442,7 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			stopInstrBB.getManagedBean().setSelectedTabIndex(0);
 			stopInstrBB.populateStopInstrItem();
 			stopInstrBB.populateChargeLineData();
+			stopInstrBB.getManagedBean().setSearchFunctionType(getManagedBean().getSearchFunctionType());//36386
 			if(isFlFulfilmentApprover()){
 				stopInstrBB.checkCogstr();
 			}
@@ -885,6 +886,15 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 		renewSesionObject();
 		defaultPtjAndMinistryValues();
 	}
+	
+	//36386-Start
+	/**
+	 * Reset Search Results.
+	 */
+	public void resetSearchResult(){
+		getManagedBean().getFlDocumentDataModel().resetData();
+	}
+	//36386-End
 	
 	/**
 	 * Gets the procurement type list based on procurement type and language code.
