@@ -90,7 +90,8 @@
 				<ui:include src="overlapCategorySuppDoc.xhtml" />
 		</c:if>
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
-			<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
+			<ui:remove>#36838</ui:remove>
+			<p:panel header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true">
 			
 			<c:choose>
 				<c:when
