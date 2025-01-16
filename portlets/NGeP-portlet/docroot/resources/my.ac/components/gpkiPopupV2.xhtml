@@ -94,6 +94,10 @@
 				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="otp()"/>
 				<p:commandButton value="#{lbl['lbl.gpki.otp.resend']}" id="resendOtpBtn" onclick="gpki.requestOtp();" 
 					disabled="#{gpkiBackingBean.getBtn()}"/>
+				
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="skipBtn2" value="Sign W/O GPKI"  
+					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 		</p:panel>
 	</p:dialog>
