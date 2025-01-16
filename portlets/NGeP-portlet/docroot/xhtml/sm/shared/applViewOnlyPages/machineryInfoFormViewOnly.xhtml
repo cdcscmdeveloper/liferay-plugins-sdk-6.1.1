@@ -31,7 +31,7 @@
 						<h:outputText value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 									#{catFac.pmCategoryL3.categoryL3Code}
-								 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, true)})" 
+								 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile)})" 
 							style="float: left;white-space: normal;" /><br /> <!-- #28175 -->
 						</h:panelGroup >
 					<!-- #30766 & #34209 - END -->
@@ -91,7 +91,7 @@
 								<p:outputLabel styleClass="outputLabel-view" value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 											#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 											#{catFac.pmCategoryL3.categoryL3Code}
-										 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, false)})" /><br /> <!-- #28175 -->
+										 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile)})" /><br /> <!-- #28175 -->
 							</ui:repeat>
 						</td>
 					</tr>
