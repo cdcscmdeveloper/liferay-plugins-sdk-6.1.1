@@ -78,6 +78,10 @@
 				<p:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" id="pinLbl" styleClass="required" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="token()" />
+				
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="skipBtn1" value="Sign W/O GPKI"  
+					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 			
 			<h:panelGrid columns="5" cellpadding="5" id="otpPnl" rendered="#{gpkiBackingBean.isMediumTypeOTP()}">
@@ -90,6 +94,10 @@
 				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="otp()"/>
 				<p:commandButton value="#{lbl['lbl.gpki.otp.resend']}" id="resendOtpBtn" onclick="gpki.requestOtp();" 
 					disabled="#{gpkiBackingBean.getBtn()}"/>
+				
+				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
+				<p:commandButton id="skipBtn2" value="Sign W/O GPKI"  
+					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 		</p:panel>
 	</p:dialog>
