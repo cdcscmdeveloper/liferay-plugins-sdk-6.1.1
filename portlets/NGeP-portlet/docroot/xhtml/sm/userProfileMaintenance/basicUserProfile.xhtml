@@ -324,8 +324,10 @@
 									<td><p:outputLabel
 											value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 											styleClass="mandatory" /></td>
-									<td ><p:inputText
-											maxlength="100" required="true" id="permAdd1"
+									<td >
+										<!-- #36717 - change required value -->
+										<p:inputText
+											maxlength="100" required="#{!empty param['disableValidation']}" id="permAdd1"
 											label="#{lbl['lbl.sm.address']}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.address1}"
 											size="35" >
@@ -491,9 +493,10 @@
 										value="*" styleClass="mandatory" /></td>
 									<td>
 										<p:outputPanel id="basicPermAddPostCodePanelId">
+											<!-- #36717 - change required value -->
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="5" required="true"
+												<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeMy"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
 													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -504,9 +507,10 @@
 												<p:message id="basicPermAddPostCodeMyMsg" for="basicPermAddPostCodeMy"
 													showSummary="true" showDetail="false" display="icon" />
 											</p:outputPanel>
+											<!-- #36717 - change required value -->
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="10" required="true"
+												<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}" id="basicPermAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}"
 													size="35">
