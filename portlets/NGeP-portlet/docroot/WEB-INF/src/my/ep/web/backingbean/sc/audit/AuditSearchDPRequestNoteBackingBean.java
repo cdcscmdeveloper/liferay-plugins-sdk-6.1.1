@@ -407,8 +407,8 @@ public class AuditSearchDPRequestNoteBackingBean extends BaseBackingBean<AuDPReq
 					.getResponse();
 			HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
 
-			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-			response.setHeader("Expires", "0"); // eliminates browser caching
+			response.setContentType("application/ms-excel");
+			response.setHeader("Expires:", "0"); // eliminates browser caching
 			response.setHeader("Content-Disposition", "attachment; filename=\"Butiran Jejak Audit.xlsx\"");
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.flushBuffer();
