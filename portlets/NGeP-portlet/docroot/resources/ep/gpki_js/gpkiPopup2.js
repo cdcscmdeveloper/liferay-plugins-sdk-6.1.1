@@ -73,6 +73,12 @@ var gpkiRequestTime = 0;
       this.mandatoryError(a[4]);
       return;
     }
+	// check if undefined, null, NaN, empty string, etc.
+	if (!gpkiNonce) {
+	  errorAction([{ name: 'gpkiNonceNull', value: 'invalid nonce'}]);
+	  gpkiBlockWidget.hide();
+	  return;
+	}
     const data = encodeURIComponent(Gpki.hash(text));
     sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
   };
