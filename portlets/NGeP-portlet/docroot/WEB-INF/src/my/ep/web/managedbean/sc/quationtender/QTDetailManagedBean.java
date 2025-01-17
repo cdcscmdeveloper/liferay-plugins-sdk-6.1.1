@@ -1699,10 +1699,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean firstViewPageCAUsers = false;
 	// #25426 - End
 
-	// #25426 - Start
-	private boolean firstViewPageCAUsers = false;
-	// #25426 - End
-
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */

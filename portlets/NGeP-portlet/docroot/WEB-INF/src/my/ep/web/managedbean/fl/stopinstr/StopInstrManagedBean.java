@@ -61,6 +61,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private boolean coGstr;
     private boolean prevHideRemarks;
     private String backToNtf;
+    private String searchFunctionType;//36386
 	/**
 	 * Gets the reason descs.
 	 *
@@ -393,4 +394,20 @@ public class StopInstrManagedBean extends BaseManagedBean {
 		this.backToNtf = backToNtf;
 	}
 
+	// 36386-start
+	/**
+	 * @return the searchFunctionType
+	 */
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	/**
+	 * @param searchFunctionType
+	 *            the searchFunctionType to set
+	 */
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+	// 36386-end
 }
