@@ -12610,7 +12610,7 @@ public class SpecificationBackingBean extends
 		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
-		if (!this.getManagedBean().getQt().isPanel() && intendedPrice.compareTo(indPriceThreshold) <= 0 
+		if (!this.getManagedBean().getQt().isPanel() && null != intendedPrice && intendedPrice.compareTo(indPriceThreshold) <= 0 
 				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt().getJustificationProcValue().isEmpty())) {
 				throw new EpException(MessageConst.ERROR_760560);
 		}
