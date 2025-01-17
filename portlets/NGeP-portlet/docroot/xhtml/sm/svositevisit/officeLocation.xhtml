@@ -43,13 +43,14 @@
 			</tr>
 			
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 				<!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
 				<!-- #34166 - Start  -->
 				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" id="txtSignBoardRmk" readonly="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" validator="#{svoSiteVisitBackingBean.validateText}">
 					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.sign.board']}" />
 					<f:ajax event="blur" execute="@this" />
+					<f:validateLength maximum="4000" />
 					</p:inputTextarea>
 				</td>
 				<!-- #34166 - End  -->	
@@ -59,6 +60,7 @@
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" validator="#{svoSiteVisitBackingBean.validateText}" >
 					<f:attribute name="param" value="#{lbl['lbl.txt.remarks']}" />
 					<f:ajax event="blur" execute="@this" />
+					<f:validateLength maximum="4000" />
 					</p:inputTextarea>
 				</td>
 				<!-- #34166 - End  -->
