@@ -333,6 +333,9 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
 	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
 	//#29007 End Vinod
+	// #33787 Start Vinod
+	public static final String APP_VERSION_REDMINE_NO_33787 = "33787";
+	//#33787 End Vinod
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";

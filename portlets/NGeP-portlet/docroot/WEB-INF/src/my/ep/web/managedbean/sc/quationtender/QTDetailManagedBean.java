@@ -1664,6 +1664,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	List<String> selectedCategories;
 	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
 	// #29468 Vinod End
+	// #33787 Start Vinod 
+	private boolean minPaidUpCapitalWIP;
+	// #33787 End Vinod 
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
 	//#21692 - Start
@@ -12199,4 +12202,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
 		this.isFieldProcurementJustification = isFieldProcurementJustification;
 	}
+
+	// #33787 Start Vinod 
+	public boolean isMinPaidUpCapitalWIP() {
+		return minPaidUpCapitalWIP;
+	}
+
+	public void setMinPaidUpCapitalWIP(boolean minPaidUpCapitalWIP) {
+		this.minPaidUpCapitalWIP = minPaidUpCapitalWIP;
+	}
+	// #33787 End Vinod 
 }

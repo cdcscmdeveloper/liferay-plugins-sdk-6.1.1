@@ -187,6 +187,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 //#29732 End
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -5198,6 +5199,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retriveZonesByCircularNo();
 				}
 			}
+			// #33787 Start Vinod
+			checkMinPaidUpCapitalWIP();
+			// #33787 End Vinod
 		} finally {
 			QtDetailsSO=null;
 		}
@@ -14011,4 +14015,25 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
 	}
     //29732 end
+    // #33787 Start Vinod
+    private void checkMinPaidUpCapitalWIP(){
+    	IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+    	ScQt qt = this.getManagedBean().getQt();
+		
+		if(null != qt.getPublishDate()){
+			Date publishDate = qt.getPublishDate();
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_33787);
+			
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+			
+			Date effDate = appVerDtls.getEffDate();
+			
+			if(publishDate.before(effDate)){
+				this.getManagedBean().setMinPaidUpCapitalWIP(true);
+			}
+		}
+    }
+    // #33787 End Vinod
 }
