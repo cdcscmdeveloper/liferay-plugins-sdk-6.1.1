@@ -1368,10 +1368,10 @@ public class SupplierFinalizationBackingBean extends
 			
 			// Save Preparation and Supplier finalization tab(s) data 
 			ScQtCommittee scQtCommittee = null;
-			if (activeIndex == 0 && 
-					!getManagedBean().isInitialDecisionFwdToBPK()) {
-				this.getManagedBean().setSubmit(true); //#26189
-				
+
+			if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
+				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
+
 				reqDTO = validateInfo(activeIndex, skipValidation); // 25037 
 				scQtCommittee = reqDTO.getScQtCommittee();
 				reqDTO = validateInfo(2, skipValidation); // 25037 
