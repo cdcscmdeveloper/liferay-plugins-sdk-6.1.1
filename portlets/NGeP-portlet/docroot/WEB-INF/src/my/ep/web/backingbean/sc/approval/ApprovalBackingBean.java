@@ -19,8 +19,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -3620,9 +3622,14 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		handleDecisionNull(apprvRequest);
 		boolean toBeRemoveAttachmentIsNotEmpty = CollectionUtils.isNotEmpty(this.getManagedBean().getToBeRemoveEPVAttachments())
 				&& this.getManagedBean().getToBeRemoveEPVAttachments().contains(typeOfRequest);
+		//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - Start
 		if (toBeRemoveAttachmentIsNotEmpty) {
+			Set<String> set = new HashSet<>(this.getManagedBean().getToBeRemoveEPVAttachments());
+			this.getManagedBean().getToBeRemoveEPVAttachments().clear();
+			this.getManagedBean().getToBeRemoveEPVAttachments().addAll(set);
 			this.getManagedBean().getToBeRemoveEPVAttachments().remove(typeOfRequest);
 		}
+		//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - End
 	}
 	//#21692 - End
 
@@ -3817,9 +3824,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				auditResDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
 			}
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
+			
 
 			if (reqDTO.getApproverAction().equals(BpmOutcomeConst.BPM_SUBMIT)) {
+				auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_DOA_DESK_OFFICER_ASSISTANT_NAMES);
 				auditResDTO.setStatusId(QTStatusConst.DAR_PENDING_REVISE_APPROVAL);
 				List<ScQtContactPerson> removedList = reqDTO.getDeletedDoaaList() == null ? new ArrayList<ScQtContactPerson>()
 						: reqDTO.getDeletedDoaaList();
@@ -3834,7 +3842,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 					auditReqList.add(auditReqDTO);
 				}
-				for (ScQtContactPerson remove : removedList) {
+				for (ScQtContactPerson remove : removedList) {					
 					auditResDTO.setNewValue(null);
 					auditResDTO.setActionType(QTAuditConstant.AU_TYPE_DELETE);
 					auditResDTO.setOldValue(remove.getUser().getUserName());

@@ -1559,6 +1559,7 @@ public class DeskOfficerMaintenanceBackingBean extends SourcingBaseBackingBean<D
 			auditResDTO.setNewValue(null);
 			auditResDTO.setNewValueId(null);
 			auditResDTO.setActionType(null);
+			auditResDTO.setQtFieldLabelId(null);
 		}
 
 		AuditTrailReqDTO auditReqDTO = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
