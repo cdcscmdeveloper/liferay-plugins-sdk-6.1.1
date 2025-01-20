@@ -2607,9 +2607,6 @@ public class SupplierFinalizationBackingBean extends
 		  }
 		  // #28834 - End. 
 		  
-		  // #28834 - Start.
-		  scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
-		  // #28834 - End.
 		  ScQtFinalizationReport report = new ScQtFinalizationReport();
 		  report.setScQtFinalization(scQtFinalization);
 		  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
@@ -10097,6 +10094,7 @@ public class SupplierFinalizationBackingBean extends
 					&& ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
 				regenEvaluationDownload(attachment, false);
 			}
+			attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			// Bug #35485@Syazani 08/02/2024 -- End
 			scAttachments.add(attachment);
