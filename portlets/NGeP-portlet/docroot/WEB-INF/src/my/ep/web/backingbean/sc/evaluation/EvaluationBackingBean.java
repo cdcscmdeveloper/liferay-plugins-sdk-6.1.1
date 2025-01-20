@@ -9403,6 +9403,8 @@ public void saveComplianceSample() {
 
 			if (!this.getManagedBean().isReadOnly()) {
 				//saveQtReportDtls();
+				//An issue has arisen in production where users can bypass the Summary section, where the total score is calculated.
+				retriveSummaryEvaluationStage();	// Bug #36747@Syazani 20/01/2025
 				saveEvaluationReportsDtls();
 				setReportAttachment();
 			}
