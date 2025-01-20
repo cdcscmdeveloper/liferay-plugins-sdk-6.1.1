@@ -2730,6 +2730,8 @@ public class SupplierFinalizationBackingBean extends
 		  }
 		  // #28834 - End. 
 		  
+//		  scQtFinalizationReport = getManagedBean().getDocumentList().get(0);// 37622 - remove code
+
 		  ScQtFinalizationReport report = new ScQtFinalizationReport();
 		  report.setScQtFinalization(scQtFinalization);
 		  String reportTitle = ResourceBundleUtils.getMessage("lbl.sc.kertas.taklimat", 
