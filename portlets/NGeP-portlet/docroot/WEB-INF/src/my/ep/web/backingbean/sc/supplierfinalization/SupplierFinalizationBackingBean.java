@@ -98,6 +98,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
+import my.ep.persistence.entity.sc.common.ScActor; //Bug #32682
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -2269,6 +2270,10 @@ public class SupplierFinalizationBackingBean extends
 
 				this.getManagedBean().setSubmit(true);
 			}
+			
+			// Bug #32682 #27502 & #34921 - Start
+			setUserLoiLoaPreparedBy(scQtFinalization, currentStatusId);
+			// Bug #32682 #27502 & #34921 - End
 
 			SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 
@@ -9609,6 +9614,46 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// 25638 - End
+
+	// Bug #32682 #27502 & #34921 - Start
+	/**
+	 * to set user id for LoiLoaById based on LoiLoaBy
+	 * @param scQtFinalization
+	 * @param currentStatusId
+	 */
+	private void setUserLoiLoaPreparedBy(ScQtFinalization scQtFinalization, Long currentStatusId) {
+		if (scQtFinalization.getLoiLoaBy() != null
+				&& (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.equals(currentStatusId)
+					|| QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.equals(currentStatusId))){ 
+			if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(SourcingConstants.SC_LETTER_CREATOR_SECRETARY)) {
+				scQtFinalization.setLoiLoaById(getUserIdSessionFromLoginId());
+			} else if (scQtFinalization.getLoiLoaBy().equalsIgnoreCase(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+				scQtFinalization.setLoiLoaById(getActorUserIdByQtIdAndRoleCode(scQtFinalization.getScQt().getQtId()));
+			}
+		}
+	}
+	// Bug #32682 #27502 & #34921 - end
+	
+	//Bug #32682 start
+	private Long getActorUserIdByQtIdAndRoleCode(Long qtId) {
+		Long userId = null;
+		IScActorSO actorSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScActorSO.class);
+
+		ScActorReqDTO reqDTO = new ScActorReqDTO();
+		reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+		reqDTO.setDocId(qtId);
+		reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+
+		ScActor scActor = actorSO.retrieveActorByTypeIdAndRoleCode(reqDTO).getScActor();
+
+		if (scActor != null) {
+			userId = scActor.getUserId();
+		}
+		return userId;
+
+	}
+	//Bug #32682 end
 	
 	// 28834 -start-
 	public boolean changeMeetingStatusBrief() {
