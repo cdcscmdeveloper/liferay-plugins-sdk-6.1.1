@@ -9182,6 +9182,7 @@ public class SupplierFinalizationBackingBean extends
 					&& ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
 				regenEvaluationDownload(attachment, false);
 			}
+			attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			// Bug #35485@Syazani 08/02/2024 -- End
 			scAttachments.add(attachment);
@@ -10572,8 +10573,6 @@ public class SupplierFinalizationBackingBean extends
 			}
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
-
-		scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
 
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setScQtFinalization(scQtFinalization);
