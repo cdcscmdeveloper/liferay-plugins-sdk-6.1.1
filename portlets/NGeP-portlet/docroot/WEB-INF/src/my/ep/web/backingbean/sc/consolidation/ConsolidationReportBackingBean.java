@@ -541,7 +541,7 @@ public class ConsolidationReportBackingBean extends
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
 
-		for (ScQtFinalizationReport report : getManagedBean().getScQtFinalization().getScQtFinalizationReports()) {
+		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization().getScQtFinalizationReports())) {
 
 			if (report.getTitle().contains("Kertas Taklimat")) {
 

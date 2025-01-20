@@ -3563,7 +3563,7 @@ public class SupplierFinalizationBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatPdf(scQt, attachment, isDirectDownload);
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
 
 			} else {
 				debugLogger("No document type is exists with the key "
