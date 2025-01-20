@@ -141,8 +141,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.factory.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
-							required="#{backingBean.managedBean.valueReqd}" label="Name"
+							required="#{backingBean.managedBean.valueReqd}" 
+							label="#{lbl['lbl.sm.facility.factory.name']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
 						</p:inputText>
