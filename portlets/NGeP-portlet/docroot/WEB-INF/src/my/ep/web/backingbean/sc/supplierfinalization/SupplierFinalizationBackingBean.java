@@ -10331,6 +10331,8 @@ public class SupplierFinalizationBackingBean extends
 			}
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
+		
+//		scQtFinalizationReport = getManagedBean().getDocumentList().get(0); // 37622 - remove code
 
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setScQtFinalization(scQtFinalization);
