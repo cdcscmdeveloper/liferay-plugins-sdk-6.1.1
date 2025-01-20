@@ -5257,7 +5257,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
-									iterator.remove();
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 								//#28784
@@ -5267,7 +5266,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())) {//#28784
 									getManagedBean().getEvaluationReportList().add(report);
-									iterator.remove();
 								}
 							}
 						// 18685 - END.	
@@ -7340,4 +7338,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
+	
+	// 37622 - start
+	/**
+	 * Create a new list for displaying briefing paper report and filter
+	 * evaluation report form getting displayed
+	 * 
+	 * @param briefingPaperList
+	 * @return report list
+	 */
+	public List<ScQtFinalizationReport> briefingPaperDisplayFilter(List<ScQtFinalizationReport> briefingPaperList) {
+		List<ScQtFinalizationReport> reportList = new ArrayList<>();
+		if (CollectionUtils.isEmpty(briefingPaperList)) {
+			return reportList;
+		}
+		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
+			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
+					.getDocDefinitionKey() : "";
+			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
+					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
+					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+				reportList.add(briefingPaperReport);
+			}
+		}
+		return reportList;
+	}
+	// 37622 - end
 }

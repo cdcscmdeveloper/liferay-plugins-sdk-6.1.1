@@ -11,8 +11,9 @@
 		<h:outputText styleClass="instruction" 
 			value="#{lbl['lbl.sc.consolidation.report.brefing.papaer.instructions']}"
 			escape="false" />
-		
-		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" 
+		<!-- 37622 add briefingPaperDisplayFilter -->
+		<ui:param name="finalizationReports" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" />
+		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.briefingPaperDisplayFilter(finalizationReports)}" 
 			widgetVar="reportWidget" var="report" rows="10" rowKey="#{report}" 
 			rowIndexVar="rowIndex" styleClass="documentslist"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
