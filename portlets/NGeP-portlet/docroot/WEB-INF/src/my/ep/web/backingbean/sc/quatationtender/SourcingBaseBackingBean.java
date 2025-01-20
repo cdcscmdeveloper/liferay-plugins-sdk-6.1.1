@@ -4011,6 +4011,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
+//									iterator.remove();// 37622 - remove code
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 								// #28784 -start-
@@ -4025,6 +4026,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 								// #28784 -end-
 								{
 									getManagedBean().getEvaluationReportList().add(report);
+//									iterator.remove();// 37622 - remove code
 								}
 							}
 						}

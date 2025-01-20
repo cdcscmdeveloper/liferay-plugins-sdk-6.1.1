@@ -1405,13 +1405,16 @@ public class SupplierFinalizationBackingBean extends
 				// #25037 - start
 				reqDTO = validateInfo(activeIndex, skipValidation);
 				scQtCommittee = reqDTO.getScQtCommittee();
+				
+				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
+				
 				reqDTO = validateInfo(2, skipValidation);
 				// #25037 - end
 			} else {
 				if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 					scQtCommittee = preparationDtlsInfo();
 				}
-				reqDTO = validateInfo(2);
+				reqDTO = validateInfo(2, skipValidation); // 25037 
 			}
 
 			validateFinalizationReports(reqDTO, skipValidation);//25037 - note 31
@@ -10573,6 +10576,8 @@ public class SupplierFinalizationBackingBean extends
 			}
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
+
+//		scQtFinalizationReport = getManagedBean().getDocumentList().get(0);// 37622 - remove code
 
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setScQtFinalization(scQtFinalization);

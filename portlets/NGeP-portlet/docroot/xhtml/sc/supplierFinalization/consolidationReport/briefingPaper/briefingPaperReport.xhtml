@@ -12,7 +12,7 @@
 			value="#{lbl['lbl.sc.consolidation.report.brefing.papaer.instructions']}"
 			escape="false" />
 			
-		<!-- 37622 add briefingPaperDisplayFilter -->
+		<ui:remove>37622 add briefingPaperDisplayFilter</ui:remove>
 		<ui:param name="finalizationReports" value="#{consolidationReportBackingBean.managedBean.finalizationReports}" />
 		<p:dataTable id="reportTbl" value="#{consolidationReportBackingBean.briefingPaperDisplayFilter(finalizationReports)}" 
 			widgetVar="reportWidget" var="report" rows="10" rowKey="#{report}" 
