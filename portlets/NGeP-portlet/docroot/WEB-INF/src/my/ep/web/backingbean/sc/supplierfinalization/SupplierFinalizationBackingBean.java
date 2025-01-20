@@ -1372,11 +1372,8 @@ public class SupplierFinalizationBackingBean extends
 			if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
 				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
 
-				reqDTO = validateInfo(activeIndex, skipValidation); // 25037
+				reqDTO = validateInfo(activeIndex, skipValidation); // 25037 
 				scQtCommittee = reqDTO.getScQtCommittee();
-
-				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
-
 				reqDTO = validateInfo(2, skipValidation); // 25037 
 			} else {
 				if (!getManagedBean().isInitialDecisionFwdToBPK()) {
