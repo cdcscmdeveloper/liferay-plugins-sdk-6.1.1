@@ -392,6 +392,9 @@ public interface QTConstants {
 	//36678
 	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 	
+		
+	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	
 	//#29732 -Start
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
 	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";

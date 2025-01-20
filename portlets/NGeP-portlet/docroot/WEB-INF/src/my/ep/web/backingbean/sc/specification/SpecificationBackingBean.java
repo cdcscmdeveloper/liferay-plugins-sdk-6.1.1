@@ -11986,7 +11986,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
-		if (!this.getManagedBean().getQt().isPanel() && intendedPrice.compareTo(indPriceThreshold) <= 0 
+		if (!this.getManagedBean().getQt().isPanel() && null != intendedPrice && intendedPrice.compareTo(indPriceThreshold) <= 0 
 				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt().getJustificationProcValue().isEmpty())) {
 				throw new EpException(MessageConst.ERROR_760560);
 		}
@@ -13403,23 +13403,15 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().getScQtCheckSt2techProposal()
 						.add(this.getManagedBean().getIndex(), localCheckList);
 			}
-			// #11104-start
-			this.getManagedBean().getQt().setSampleReq(issample);
-			if (this.getManagedBean().getQt().isSampleReq()) {
-				for (ScQtCheckList checklist : this.getManagedBean()
-						.getScQtCheckSt2techProposal()) {
-					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-							.equalsIgnoreCase(checklist.getDefinationType()
-									.getParameterCode())) {
-						checklist
-								.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
 
-						break;
-					}
-				}
+			this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
+
+			// #11104-start
+			if (this.getManagedBean().getQt().isSampleReq()) {
+				sampleDetailsPendingTemplateSpec();
 			}
 			// #11104-End
-			
+
 			checklistSorting(this.getManagedBean().getScQtCheckSt2techProposal());
 		} else {
 			setFinSpecScoreWeightage(localCheckList);
