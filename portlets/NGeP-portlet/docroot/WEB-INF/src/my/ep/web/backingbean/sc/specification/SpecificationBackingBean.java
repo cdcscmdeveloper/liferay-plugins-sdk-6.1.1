@@ -14214,14 +14214,9 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().getQt().setSampleReq(issample);//11104ReendorseStart728
 			if(this.getManagedBean().getQt().isSampleReq()){ //#11104-start
-			for(ScQtCheckList checklist:this.getManagedBean()
-					.getScQtCheckSt2techProposal()){
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-						.getDefinationType().getParameterCode())) {
-					checklist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-					break;
-				}
-			}
+				// #11104-start
+				sampleDetailsPendingTemplateSpec();
+				// #11104-End
 			} //#11104-End
 			checklistSorting(this.getManagedBean()
 					.getScQtCheckSt2techProposal());
