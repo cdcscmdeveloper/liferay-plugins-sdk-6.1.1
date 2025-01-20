@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,16 +61,14 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 				}
 			} else {
 				PmConfigRuleValue oldValue = managedBean.getExistingConfigValueMap().get(ruleValue.getRuleValueId());
-				String newDate = oldValue.getExpDate() != null ? simpleDateFormat.format(ruleValue.getExpDate()) : null;
-				String oldDate = ruleValue.getExpDate() != null ? simpleDateFormat.format(oldValue.getExpDate()) : null;
+				String newDate = ruleValue.getExpDate() == null ? "" : simpleDateFormat.format(ruleValue.getExpDate());
+				String oldDate = oldValue.getExpDate() == null ? "" : simpleDateFormat.format(oldValue.getExpDate());
 				log.info(">>>>>>>>>>>>newDate>>>>>>>>>>>" + newDate);
 				log.info(">>>>>>>>>>>>oldDate>>>>>>>>>>>" + oldDate);
 
-				this.docType = ruleValue.getRuleValue();
-				this.docId = BigInteger.valueOf(ruleValue.getRuleValueId());
-				this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-
-				if (!oldValue.getExpDate().equals(ruleValue.getExpDate())) {
+				if (!(oldDate.equals(newDate))) {
+					this.docType = ruleValue.getRuleValue();
+					this.docId = BigInteger.valueOf(ruleValue.getRuleValueId());
 					detailObj(AuditConst.PM_AUD_SCP_EXP_DATE_FIELDLABELCODE, oldDate, newDate, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				}
 			}
@@ -84,7 +83,7 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 		if (newRuleValue.getEffDate().equals(ruleValue.getEffDate())) {
 			this.docType = ruleValue.getRuleValue();
 			this.docId = BigInteger.valueOf(newRuleValue.getRuleValueId());
-			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+//			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 
 			detailObj(AuditConst.PM_AUD_SCP_PROVIDER_FIELDLABELCODE, null, ruleValue.getRuleValue(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -97,7 +96,7 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
 	}
-
+	
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);

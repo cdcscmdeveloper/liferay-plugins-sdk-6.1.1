@@ -1296,7 +1296,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)){
 				reqDTO.setCategoryL1Id(this.getManagedBean().getPmCategoryL1().getCategoryL1Id());
 				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO);
-				this.getManagedBean().setAuditCategoryL1(Boolean.TRUE);
+				this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL1);
 				this.getManagedBean().setAuditOldCategoryL1(resDTO.getCategoryL1());
 			}
 			/************ AUDIT *************/
@@ -1537,7 +1537,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE) && this.getManagedBean().getPmCategoryL2().getCategoryL2Id() != null){
 				reqDTO.setCategoryL2Id(this.getManagedBean().getPmCategoryL2().getCategoryL2Id());
 				CategoryCodeResDTO resDTO = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO);
-				this.getManagedBean().setAuditCategoryL2(Boolean.TRUE);
+				this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL2);
 				this.getManagedBean().setAuditOldCategoryL2(resDTO.getCategoryL2());
 			}
 			/************ AUDIT *************/
@@ -1735,7 +1735,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				reqDTO.setRemarkCat(null);
 			}
 			// end #29665
-
+			
+			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			reqDTO.setCategoryLevel(this.getManagedBean().getCatLevel());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
@@ -1763,7 +1764,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				reqDTO.setCategoryL3Id(pmCategoryL3.getCategoryL3Id());
 				CategoryCodeResDTO resDTO = categoryCodeSO
 						.retrieveCategoryL3DtlById(reqDTO);
-				this.getManagedBean().setAuditCategoryL3(Boolean.TRUE);
+				this.getManagedBean().setAuditLevelCategory(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
 				// masuk old
 				this.getManagedBean().setAuditOldCategoryL3(resDTO.getCategoryL3());
 			}

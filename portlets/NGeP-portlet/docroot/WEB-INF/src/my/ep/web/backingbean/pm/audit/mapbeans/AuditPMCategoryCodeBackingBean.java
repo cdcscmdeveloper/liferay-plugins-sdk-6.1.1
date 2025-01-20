@@ -321,8 +321,8 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		PmCategoryL3 pmCategoryL3 = managedBean.getPmCategoryL3(); //
 		List<PmCategoryRestr> newCategoryRestr = pmCategoryL3.getPmCategoryRestrs();
 		
-		if (managedBean.getTobeAddedCategoryRestrList() != null) {
-			for (PmCategoryRestr addCategoryRestr : managedBean.getTobeAddedCategoryRestrList()){
+		if (managedBean.getCategoryRestrList() != null) {
+			for (PmCategoryRestr addCategoryRestr : managedBean.getCategoryRestrList()){
 				for (PmCategoryRestr updatedCategoryRestr : newCategoryRestr){
 					if(addCategoryRestr.getCompanyTypeId().getParameterId() == updatedCategoryRestr.getCompanyTypeId().getParameterId()){
 						AuditPMSPDTO addBussCompType = new AuditPMSPDTO();
@@ -388,6 +388,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						machineDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 						objList.add(machineDesc);
 						
+						// site visit
 //						machineCode.setRoleCode(roleCode);
 //						machineCode.setDocType(managedBean.getCatLevel());
 //						machineCode.setDocNo(pmCategoryL3.getCategoryL3Code());
@@ -426,10 +427,10 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 
 		PmCategoryL3 pmCategoryL3 = managedBean.getPmCategoryL3(); // new
 		List<PmBasicCategory> newBasicCategory = pmCategoryL3.getPmBasicCategory();
+		managedBean.getPmBasicCategoryList();
+		if (managedBean.getPmBasicCategoryList() != null) {
 
-		if (managedBean.getTobeAddedPmBasicCategoryList() != null) {
-
-			for(PmBasicCategory addBasicCategory : managedBean.getTobeAddedPmBasicCategoryList()) {
+			for(PmBasicCategory addBasicCategory : managedBean.getPmBasicCategoryList()) {
 
 				for(PmBasicCategory updatedBasicCategory : newBasicCategory) {
 
