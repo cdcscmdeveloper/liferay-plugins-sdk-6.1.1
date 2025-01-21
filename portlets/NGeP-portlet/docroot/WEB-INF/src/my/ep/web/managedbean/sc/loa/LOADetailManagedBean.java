@@ -2010,7 +2010,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
 		if(highestZoneScLoiLoaItemList ==null) {
-			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+			highestZoneScLoiLoaItemList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		}
 		return highestZoneScLoiLoaItemList;
 	}

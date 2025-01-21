@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -85,6 +86,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -159,6 +161,7 @@ public class ConsolidationReportBackingBean extends
 			loadInitialData();
 			// #18685 - Start.
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			getManagedBean().setAllSupplierDisagreeEPV(allSupplierDisagreeEPV(qtId));//#21692
 			// #18685 - End.
 			fc.getApplication()
 					.getNavigationHandler()
@@ -2090,6 +2093,10 @@ public class ConsolidationReportBackingBean extends
 				/*
 				 * BUG 32373 #83
 				 */
+				//#36239 4serangkai -adding to check zonal
+				if(null != selectedZoneId){
+					reqDTO.setZonal(true);
+				}
 				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 						.retrieveQualifiedSuppliersInfoByEvalStage(reqDTO);
 				SLAUtils.getInstance().logSQLPerformanceInfo("QT","32311(B)","QTSuppFinalizationSO.retrieveQualifiedSuppliersInfoByEvalStage", startTime,"#32311");
@@ -2735,4 +2742,54 @@ public class ConsolidationReportBackingBean extends
 		}
 		//#32401 - end
 		//#21695 Fix bug 32401 add qualifiedSupplierBeans end	
+		
+		//#21692 - Start
+		/**
+		 * Created to make sure new instructions in Consolidation Report status
+		 * start with 4 and in sequence.
+		 * 
+		 * Each TRUE condition is a + 1, meaning, first TRUE condition is 4, second is 5
+		 * and so on.
+		 * 
+		 * @param qtId
+		 * @return
+		 */
+		public List<String> qualifiedSupplierInstructionList(Long qtId) {
+			Locale locale = new FacesScopes().getUserLocale();
+			List<String> instructionList = new ArrayList<>();
+			int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
+			
+			//#28777#29729 condition
+			if (checkInstructionSupplierBranchDeleted(qtId)) {
+				condition = condition + 1;
+			}
+			
+			//#21692 condition, should be 5th instruction if above condition is TRUE, else 4th
+			if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {
+				condition = condition + 1;
+				instructionList.add(SourcingConstants.BREAK_LINE + condition + SourcingConstants.DOT
+						+ ResourceBundleUtils.getMessage("lbl.sc.qt.pending.rec.instruction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			}
+			
+			//Will be the list of instruction(s) above, can be empty if no condition met.
+			return instructionList;
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		/**
+		 * @return String Warning message for no supplier accept Extend Proposal Validity
+		 */
+		public String getNoSupplierWarningMessage() {
+			return MessageUtils.getMessage(MessageConst.WARN_7602693, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		private boolean allSupplierDisagreeEPV(Long qtId) {		
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.allSupplierDisagreeEPV(qtId);
+		}
+		//#21692 - End
 }

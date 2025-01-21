@@ -345,11 +345,11 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 						getManagedBean().setDisciplinaryActionEndDate(str2.toString());
 						
 						//#32643,32642 - Start (follow from SM bug 28198))
-						List<DisciplinaryActionVO> remList = new ArrayList<DisciplinaryActionVO>();
+						List<DisciplinaryActionVO> remList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 						
 						List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disciplinaryAction);
 						
-						if(remarksList != null && remarksList.size() > 0){
+						if(remarksList != null && !remarksList.isEmpty()){ //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 							for (SmDisciplinaryActionRemarks remarks : remarksList) {
 								DisciplinaryActionVO rem1 = new DisciplinaryActionVO();
 								rem1.setRemarks(remarks.getRemark());
@@ -388,7 +388,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 							
 						if(!EntityHelper.isCollectionEmpty(catList)
 								&& catList.size() > 0){
-							List<String> catCodeList = new ArrayList<String>();
+							List<String> catCodeList = new ArrayList<>(); //Sonarqube DP Code Smell Info Mohamad Fadzly [26/4/2024]
 							for(Object[] arr : catList){
 								if(disciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){
 									DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();

@@ -158,4 +158,25 @@ public class SSTConstant {
 	 */
 	public static final String LIST_PURCHASE_REQUEST_SST = "PRSSTList";	
 	//35295 @zaim - end
+	//36122 - start
+	/**
+	 * Add whitespace to the text
+	 */
+	public static final String ADD_WHITESPACE = " ";
+	//36122 - end
+	//35295 - start
+	/**
+	 * Represent temporary string before replace with <br>
+	 */
+	public static final String WORD_BREAK_TO_REMOVE = "/AddBreakLineHere/";
+	/**
+	 * Represent PDF file format
+	 */
+	public static final String FILE_TYPE_PDF = ".pdf";
+	/**
+	 * Represent Microsoft Word Document file format
+	 */
+	public static final String FILE_TYPE_DOC = ".doc";
+	
+	//35295 - end
 }

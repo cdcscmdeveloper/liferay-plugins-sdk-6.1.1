@@ -22,6 +22,14 @@
 	{
 	width: 250px;
 }
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
 </style>
 		<p:blockUI block=":form" widgetVar="blkContractSearchAuditTable">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -38,18 +46,20 @@
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.panel.quotationTender']}"
 					style="width:10%;" styleClass="column-align-center">
-					<p:commandLink value="#{metadata.quotationNo}"
-						styleClass="blue_font" style="text-align:left; float:left;"
-						action="#{qTDetailBB.editQuationTenderDetails(metadata.scQt, false, true, view.viewId)}"
-						onstart="blkContractSearchAuditTable.show()"
-						oncomplete="blkContractSearchAuditTable.hide()">
-					</p:commandLink>
+					<div class="left-align">
+						<p:commandLink value="#{metadata.quotationNo}"
+							styleClass="blue_font" style="color:#009ae5 !important;"
+							action="#{qTDetailBB.editQuationTenderDetails(metadata.scQt, false, true, view.viewId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
 				</p:column>
 				
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.panel.procurement.title']}"
 					styleClass="column-align-center" style="width:15%; white-space:normal;">
-					<div align="left">
+					<div class="left-align">
 						<h:outputText value="#{metadata.quotationTitle}" />
 					</div>
 				</p:column>
@@ -57,22 +67,23 @@
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.panel.procurement.method']}"
 					style="width:10%;" styleClass="column-align-center">
-					<h:outputText
-						value="#{circularBackingBean.checkProcModeValue(metadata.procurementModeCode)}"
-						style="text-align:left; float:left;"
-						rendered="#{metadata.procurementModeCode eq ParameterConst.procurementModeQuotation}" />
-					<h:outputText
-						value="#{circularBackingBean.checkProcModeValue(metadata.procurementModeCode)}"
-						style="text-align:left; float:left;"
-						rendered="#{metadata.procurementModeCode eq ParameterConst.procurementModeTender}" />
+					<div class="left-align">
+						<h:outputText
+							value="#{circularBackingBean.checkProcModeValue(metadata.procurementModeCode)}"
+							rendered="#{metadata.procurementModeCode eq ParameterConst.procurementModeQuotation}" />
+						<h:outputText
+							value="#{circularBackingBean.checkProcModeValue(metadata.procurementModeCode)}"
+							rendered="#{metadata.procurementModeCode eq ParameterConst.procurementModeTender}" />
+					</div>
 				</p:column>
 				
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.panel.qt.status']}"
 					style="width:10%;" styleClass="column-align-center">
+					<div class="left-align">
 					<h:outputText
-						value="#{circularBackingBean.getStatusDescById(metadata.status)}"
-						style="text-align:left; float:left;" />
+						value="#{circularBackingBean.getStatusDescById(metadata.status)}"/>
+						</div>
 				</p:column>
 				
 			</p:dataTable>

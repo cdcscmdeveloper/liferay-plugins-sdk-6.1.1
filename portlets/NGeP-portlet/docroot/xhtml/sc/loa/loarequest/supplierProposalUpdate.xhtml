@@ -67,21 +67,23 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.justification']}"></h:outputLabel> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
+					<ui:remove>#36681 - start</ui:remove>		
 					<td colspan="3"><p:inputTextarea
 							label="#{lbl['lbl.sc.justification']}" id="justification"
 							disabled="#{isTrackingDairyView}"
 							value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
 							style="width:800px; margin-bottom:5px;" maxlength="1000" rows="5"
 							validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
-							onkeyup="limitTextArea(this,1000);"
-							onkeydown="limitTextArea(this,1000);"
-							onmouseout="limitTextArea(this,1000);"
+							onkeyup="limitTextAreaWithBreakline(this,1000);" 
+							onkeydown="limitTextAreaWithBreakline(this,1000);"
+							onmouseout="limitTextAreaWithBreakline(this,1000);"
 							autoResize="false">
 							<p:ajax event="change" process="@this" update="@this" />
 							<f:validateLength for="justification" maximum="1000" />
 						</p:inputTextarea> <ac:iconTooltip value="#{lbl['lbl.sc.supplier.proposal.justification.tooltip']}" />
 						<p:message id="justificationMsg" for="justification"
 							display="icon" /></td>
+					<ui:remove>#36681 - end</ui:remove>		
 				</tr>
 			</table>
 			<table
@@ -144,41 +146,43 @@
 						<c:choose>
 							<c:when test="#{varStatus.index % 2 != '0'}">
 								<td
-									style="vertical-align: top;padding-left: 5px;background-color: #e8e8e8; border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;">
+									style="vertical-align: top;padding-left: 5px;background-color: #e8e8e8; border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left; word-break:break-word;">
 									<h:outputText value="#{itemSpec}" escape="false"/></td> <!-- //36103 @zaim -->
 							</c:when>
 							<c:otherwise>
 								<td
-									style="vertical-align: top;padding-left: 5px;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;">
+									style="vertical-align: top;padding-left: 5px;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left; word-break:break-word;">
 									<h:outputText value="#{itemSpec}" escape="false" /></td> <!-- //36103 @zaim -->
 							</c:otherwise>
 						</c:choose>
 						<c:if test="#{varStatus.index == '0'}">
 							<td
 								rowspan="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList.size()}"
-								style="vertical-align: top;padding-left: 5px;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left;"><h:outputText
+								style="vertical-align: top;padding-left: 5px;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: left; word-break:break-word;"><h:outputText
 									id="supplierOffered" rendered="#{!isMultipleSuppOffer}"
 									value="#{empty lOADetailBackingBean.managedBean.selectedSupplierOffer  ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.managedBean.selectedSupplierOffer}"
-									style="display:block;width:100%;">
+									style="display:block;width:100%; white-space: pre-wrap;"> <ui:remove>#36634 - add white-space: pre-wrap;</ui:remove>
 								</h:outputText> <h:outputText id="supplierOfferMultiple"
 									rendered="#{isMultipleSuppOffer}" escape="false"
 									value="#{empty lOADetailBackingBean.managedBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.managedBean.selectedSupplierOffer}"
-									style="display:block;width:100%;float:left;">
+									style="display:block;width:100%;float:left; word-break:break-word;">
 								</h:outputText></td>
 							<td
 								rowspan="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList.size()}"
 								style="vertical-align: top;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: right;">
+								<ui:remove>#36681 - start</ui:remove>
 								<p:inputTextarea id="newSupplierOfferedInput"
 									style="resize: vertical;width:calc(100% - 15px); height: 10em; top: 0;"
 									value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
 									disabled="#{isTrackingDairyView}" maxlength="1000"
 									validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
-									onkeyup="limitTextArea(this,1000);"
-									onkeydown="limitTextArea(this,1000);"
-									onmouseout="limitTextArea(this,1000);">
+									onkeyup="limitTextAreaWithBreakline(this,1000);"
+									onkeydown="limitTextAreaWithBreakline(this,1000);"
+									onmouseout="limitTextAreaWithBreakline(this,1000);">
 									<p:ajax event="change" process="@this" update="@this" />
 									<f:validateLength for="newSupplierOfferedInput" maximum="1000" />
 								</p:inputTextarea>
+								<ui:remove>#36681 - end</ui:remove>
 							</td>
 						</c:if>
 					</tr>

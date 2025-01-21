@@ -22,6 +22,11 @@
 			      <h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
 			  </c:if>
 			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+			</c:forEach>
+			<ui:remove>#21692 - end</ui:remove>
 		</c:if>
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
@@ -29,11 +34,6 @@
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 			</h:outputText>
 		</c:if>
-		<ui:remove>#21692 - start</ui:remove>
-		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(consolidationReportBackingBean.managedBean.scQt.qtId) and !consolidationReportBackingBean.managedBean.itemized}">
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.rec.instruction2']}" />
-		</c:if>
-		<ui:remove>#21692 - end</ui:remove>
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
@@ -92,14 +92,7 @@
 		           	<p:row>
 		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;" />
 		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}" style="width:10%;" />
-		           	</p:row>
-		           	
-		           	<ui:remove>	Enhancement #30008 START</ui:remove>
-					<p:row>
-						<p:column rowspan="2" headerText="iuoyuiiuoyti"
-							style="width:10%;white-space:normal;" />
-					</p:row>
-					<ui:remove>Enhancement #30008 END</ui:remove>
+		           	</p:row>		          
 		       	</p:columnGroup>
 				
 				<p:column style="text-align:center;">

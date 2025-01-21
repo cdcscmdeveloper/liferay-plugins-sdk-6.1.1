@@ -23,6 +23,14 @@
 	width: 250px;
 }
 
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
+
 </style>
 		<!--     
  <script>
@@ -62,84 +70,92 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 						style="width:10%;" styleClass="column-align-center">
-						<!-- <h:outputText value="#{data.contractNo}" style="text-align:left; float:left;" /> -->
-						<p:commandLink value="#{data.contractNo}" styleClass="blue_font"
-							style="text-align:left; float:left;"
-							action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
-							onstart="blkContractSearchTable.show()"
-							oncomplete="blkContractSearchTable.hide()">
-						</p:commandLink>
+						<div class="left-align">
+							<p:commandLink value="#{data.contractNo}" styleClass="blue_font"
+								style="color:#009ae5 !important;"
+								action="#{contractDetailsBackingBean.gotoViewPage(data.ctContract.contractId, data.ctContractVer.contractVerId)}"
+								onstart="blkContractSearchTable.show()"
+								oncomplete="blkContractSearchTable.hide()">
+							</p:commandLink>
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.title']}"
 						styleClass="column-align-center"
 						style="width:15%; white-space:normal;">
-						<h:outputText value="#{data.contractName}"
-							style="text-align:left; float:left;" />
+						<div class="left-align">
+							<h:outputText value="#{data.contractName}" />
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"
 						styleClass="column-align-center"
 						style="width:8%; white-space:normal;"
 						rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText value="#{data.circularNo}"
-							style="text-align:left; float:left;"
-							rendered="#{data.ctCircularVer != null and 
+						<div class="left-align">
+							<h:outputText value="#{data.circularNo}"
+								rendered="#{data.ctCircularVer != null and 
 						(data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
 							or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}" />
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.circular.status']}"
 						styleClass="column-align-center"
 						style="width:8%; white-space:normal;"
 						rendered="#{contractDetailsBackingBean.isBPKCCA()}">
-						<h:outputText
-							value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}"
-							style="text-align:left; float:left;"
-							rendered="#{data.ctCircularVer != null and 
+						<div class="left-align">
+							<h:outputText
+								value="#{contractDetailsBackingBean.getStatusDescById(data.ctCircularVer.status.statusId)}"
+								rendered="#{data.ctCircularVer != null and 
 						      (data.ctCircularVer.status.statusId != CtStatusConst.cqRejected
 						      	or data.ctCircularVer.status.statusId != CtStatusConst.cqCancelled)}" />
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}"
 						styleClass="column-align-center"
 						style="width:8%; white-space:normal;"
 						rendered="#{!contractDetailsBackingBean.isSupplierRole()}">
-						<div align="left">
+						<div class="left-align">
 							<h:outputText value="#{data.companyName}" />
 						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}"
 						styleClass="column-align-center"
 						style="width:8%; white-space:normal;">
-						<h:outputText value="#{data.loaPhysicalNo}"
-							style="text-align:left; float:left;" />
+						<div class="left-align">
+							<h:outputText value="#{data.loaPhysicalNo}" />
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.start']}"
 						styleClass="column-align-center"
 						style="width:5%; white-space:normal;">
-						<h:outputText value="#{data.effDate}"
-							style="text-align:left; float:left;">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
+						<div class="left-align">
+							<h:outputText value="#{data.effDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.end']}"
 						styleClass="column-align-center"
 						style="width:5%; white-space:normal;">
-						<h:outputText value="#{data.expDate}"
-							style="text-align:left; float:left;">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
+						<div class="left-align">
+							<h:outputText value="#{data.expDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}"
 						styleClass="column-align-center"
 						style="width:8%; white-space:normal;">
-						<h:outputText
-							value="#{contractDetailsBackingBean.getContractStatusDesc(data.contractStatus)}"
-							style="text-align:left; float:left;" />
+						<div class="left-align">
+							<h:outputText
+								value="#{contractDetailsBackingBean.getContractStatusDesc(data.contractStatus)}" />
+						</div>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.fulfilment.details.status']}"
 						styleClass="column-align-center"
 						style="width:15%; white-space:normal;">
-						<div align="left">
+						<div class="left-align">
 							<h:outputText
 								value="#{contractDetailsBackingBean.chkContractStatusType(data.fdStatus)}" />
 						</div>
@@ -147,7 +163,7 @@
 					<p:column headerText="#{lbl['lbl.ct.agreement.status']}"
 						styleClass="column-align-center"
 						style="width:15%; white-space:normal;">
-						<div align="left">
+						<div class="left-align">
 							<h:outputText
 								value="#{contractDetailsBackingBean.chkContractStatusType(data.agStatus)}" />
 						</div>
@@ -158,7 +174,7 @@
 							<h:outputText value="#{lbl['lbl.ct.doc.contract.status']}" />
 							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.status.contract']}" />
 						</f:facet>
-						<div align="left">
+						<div class="left-align">
 							<h:outputText
 								value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 						</div>
