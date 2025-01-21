@@ -85,16 +85,20 @@
 						<p:outputLabel value="#{lbl['lbl.sc.category.description']}" />
 					</td>
 					<td width="75%">
+						<ui:remove> #29732 Start ADD ONKEYPRESS </ui:remove>
 						<p:inputText id="catDecsr" value="#{categoryCodeSearchBackingBean.managedBean.categoryDesciption}" 
 							maxlength="100" label="#{lbl['lbl.sc.category.description']}"
+							onkeypress="if (event.keyCode == 13) { categoryCodeSearch.jq.click(); return false; }"
 							style="width:475px;" />
 						<p:message id="catDecsrMsg" for="catDecsr" display="icon" />
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" class="ppRightBtn">
+					<ui:remove> #29732 Start ADD Widget Var </ui:remove>
 						<p:commandButton
 							value="#{lbl['lbl.btn.search']}"
+							widgetVar="categoryCodeSearch"
 							action="#{categoryCodeSearchBackingBean.searchAction}" 
 							process="catCodePnl" update="catDescrTbl" />
 						<p:commandButton value="#{lbl['lbl.btn.reset']}"
