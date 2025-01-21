@@ -18,6 +18,14 @@
 	{
 	width: 250px;
 }
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
 </style>
 
 
@@ -37,84 +45,83 @@
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.contract.no']}"
 					style="width:10%;" styleClass="column-align-center">
-					<p:commandLink value="#{metadata.contractNo}"
-						styleClass="blue_font" style="text-align:left; float:left;"
-						action="#{contractDetailsBackingBean.gotoViewPage(metadata.ctContract.contractId, metadata.ctContract.latestContractVer.contractVerId)}"
-						onstart="blkContractSearchAuditTable.show()"
-						oncomplete="blkContractSearchAuditTable.hide()">
-					</p:commandLink>
+					<div class="left-align">
+						<p:commandLink value="#{metadata.contractNo}"
+							styleClass="blue_font" style="color:#009ae5 !important;"
+							action="#{contractDetailsBackingBean.gotoViewPage(metadata.ctContract.contractId, metadata.ctContract.latestContractVer.contractVerId)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
 				</p:column>
 
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.contract.title']}"
 					styleClass="column-align-center"
-					style="width:25%;white-space:normal;">
-					<div align="left">
-						<h:outputText value="#{metadata.contractName}"
-							style="text-align:left; float:left;" />
+					style="width:15%; white-space:normal;">
+					<div class="left-align">
+						<h:outputText value="#{metadata.contractName}" />
 					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.pkp.no']}"
 					style="width:10%;" styleClass="column-align-center">
-					<div align="left">
-						<h:outputText value="#{metadata.circularNo}"
-							style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.circularNo}" />
 					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.PP.status']}"
 					styleClass="column-align-center"
 					style="width:25%;white-space:normal;">
-					<div align="left">
-						<h:outputText value="#{metadata.statusName}"
-							style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.statusName}" />
 					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.business.name']}"
 					styleClass="column-align-center"
 					style="width:25%; white-space:normal;">
-					<div align="left">
-						<h:outputText value="#{metadata.supplierName}"
-							style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.supplierName}" />
 					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.fileReff.no']}"
 					style="width:10%;" styleClass="column-align-center">
-					<div align="left">
-						<h:outputText value="#{metadata.loaPhysicalNo}"
-							style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.loaPhysicalNo}" />
 					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.contractStart']}"
 					style="width:10%;" styleClass="column-align-center">
-					<div align="left">
-						<h:outputText value="#{metadata.effDate}"
-							style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.effDate}"> 
+							<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
 					</div>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ct.audit.circular.contractEnd']}"
 					styleClass="column-align-center">
-					<div align="left">
-						<h:outputText value="#{metadata.expDate}"
-							style="text-align:left; float:left;" />
+					<div class="left-align">
+						<h:outputText value="#{metadata.expDate}">
+							<f:convertDateTime
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> 
+						</h:outputText>
 					</div>
 				</p:column>
 
 				<p:column
 					headerText="#{lbl['lbl.ct.audit.circular.contractStatus']}"
 					style="width:10%;" styleClass="column-align-center">
-					<div align="left">
+					<div class="left-align">
 						<h:outputText
-							value="#{circularBackingBean.chkContractStatusType(metadata.docStatus)}"
-							style="text-align:left; float:left;" />
+							value="#{circularBackingBean.chkContractStatusType(metadata.docStatus)}" />
 					</div>
 				</p:column>
-
 			</p:dataTable>
 		</div>
 

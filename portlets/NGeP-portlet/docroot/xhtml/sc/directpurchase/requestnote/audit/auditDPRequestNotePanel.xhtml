@@ -6,15 +6,16 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel id="resultPanel" header="#{lbl['lbl.audit.panel.view']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
 		<p:dataTable id="searchDPId" var="obj" rows="10" width="100%"
-			value="#{auditSearchDPRequestNoteBackingBean.searchDP}" lazy="true">
+			value="#{auditSearchDPRequestNoteBackingBean.searchDP}"
+			rowIndexVar="index" lazy="true">
 			<ac:paginator for="searchDPId"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
 				style="white-space: normal!important;" width="5%">
 				<h:outputText value="#{obj.createdDate}">
-					<f:convertDateTime pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />									   
+					<f:convertDateTime
+						pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
@@ -29,7 +30,8 @@
 				style="white-space: normal!important;" width="10%">
 				<h:outputText value="#{obj.orgName}" escape="false" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.audit.header.role']}" style="width :5%">
+			<p:column headerText="#{lbl['lbl.audit.header.role']}"
+				style="width :5%">
 				<h:outputText value="#{obj.roleName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.docType']}"
@@ -42,7 +44,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.subDocNo']}"
 				style="white-space: pre-line;" width="40%">
-				<h:outputText value="#{obj.subDocNo}" escape="false" />
+				<h:outputText value="#{obj.subDocNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
 				style="width :5%">

@@ -22,7 +22,7 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
 	<ac:lovPopup />		
-	<ac:gpkiPopup beforeSignText="#{DOMaintenanceBackingBean.textBeforeSign}"
+	<ac:gpkiPopup textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
 				postSignAction="#{DOMaintenanceBackingBean.submitReassignmentForApproval(gpkiBackingBean.pmDigiSign)}"
 				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
 	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"

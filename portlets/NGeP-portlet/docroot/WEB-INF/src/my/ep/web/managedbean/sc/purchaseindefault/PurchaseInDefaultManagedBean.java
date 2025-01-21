@@ -161,7 +161,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean {
 	
 	private BigDecimal qtyByRequisitioner;//#28865
 	private BigDecimal qtyBySupplier;//#28865
-	private List<ScPIDRemark> suppRemarks = new ArrayList<ScPIDRemark>();//#28865
+	private List<ScPIDRemark> suppRemarks = new ArrayList<>();//#28865 //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	private Long contractId;//#28865
 	private Long suppRemarkId = null;//#28865
 

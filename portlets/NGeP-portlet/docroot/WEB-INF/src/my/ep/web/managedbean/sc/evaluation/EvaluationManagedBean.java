@@ -628,6 +628,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal maxItemTsScore;
 	//#28784 - end
 	private boolean fecIndexPreRender;//#10542
+	private boolean allSupplierRejectEpv;//#21692
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -4512,4 +4513,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
 		this.maxItemTsScore = maxItemTsScore;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }

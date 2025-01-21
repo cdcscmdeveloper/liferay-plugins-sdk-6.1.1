@@ -16,25 +16,48 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-
 		<style type="text/css">
-div.tbclass:hover {
-	background-color: #EDF0AF;
-}
+			div.tbclass:hover {
+				background-color: #EDF0AF;
+			}
+			
+			div[id$="publicCatalogId_content"] {
+				border: none !important;
+			}
+			
+			div[id$="publicCatalogId_content"] td.ui-datagrid-column {
+				width: 25% !important;
+			}
+			/* #10747 - Shafie - Start  */
+			div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
+				width: 20% !important;
+			}
+			/* #10747 - Shafie - End  */
+			<ui:remove> #10747- Start </ui:remove>
+			.horizontal_dotted_line_visible {
+            margin-bottom: 0px !important; border-top-color: rgb(255, 255, 255) !important; border-top-width: 2px !important; border-top-style: dotted !important;
+            }
+            <ui:remove> #10747- End </ui:remove>
+		</style>
 
-div[id$="publicCatalogId_content"] {
-	border: none !important;
-}
+		<ui:remove>
+		#35739
+		note: Legend for V_P_SUPP_ITEM table as below:
+        1)supplierItem[0]- ROW_ID
+        2)supplierItem[1]- BRAND_ID
+        3)supplierItem[2]- FAMILY_CODE
+        4)supplierItem[3]- COMPANY_NAME
+        5)supplierItem[4]- DELIVERY_TERM
+        6)supplierItem[5]- EP_NO
+        7)supplierItem[6]- DISCOUNT_PERCENTAGE
+        8)supplierItem[7]- IMAGE_PATH
+        9)supplierItem[8]- ITEM_NAME
+        10)supplierItem[9]- KEYWORD
+        11)supplierItem[10]- PRICE
+        12)supplierItem[11]- PROMOTION_PRICE
+        13)supplierItem[12]- SUPP_ITEM_ID
+		</ui:remove>
 
-div[id$="publicCatalogId_content"] td.ui-datagrid-column {
-	width: 25% !important;
-}
-/* #10747 - Shafie - Start  */
-div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
-	width: 20% !important;
-}
-/* #10747 - Shafie - End  */
-</style>
 		<!-- #10747 - Soo - Start -->
 		<p:messages id="publicCatMesId" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -163,17 +186,27 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 												value="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
-									<!-- #10747 - Shafie, Soo - Start -->
+									<!-- #10747 - Shafie, Soo, Azza- Start -->
 									<tr height="40px;">
-										<td style="border-bottom: 1px solid #CFD62A;"> #{lbl['lbl.cm.pub.catalog.from']} <p:inputText
+										<td style="border-bottom: 1px solid #CFD62A;">
+											#{lbl['lbl.cm.pub.catalog.from']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceForm}"
-												size="10"> <f:converter converterId="priceRangeConverter" />
-												</p:inputText> #{lbl['lbl.cm.pub.catalog.to']} <p:inputText
+												size="10">
+											    <f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="priceRangeConverter" />
+											</p:inputText> 
+											#{lbl['lbl.cm.pub.catalog.to']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
-												size="10"> <f:converter converterId="priceRangeConverter" />
-												</p:inputText>
+												size="10">
+												<f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="priceRangeConverter" />
+											</p:inputText>
 										</td>
 									</tr>
 									<tr height="30px;">
@@ -182,21 +215,32 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
 									<tr height="40px;">
-										<td style="border-bottom: 1px solid #CFD62A;"> #{lbl['lbl.cm.pub.catalog.from']} <p:inputText
+										<td style="border-bottom: 1px solid #CFD62A;">
+											#{lbl['lbl.cm.pub.catalog.from']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
 												value="#{pCatalogueBackingBean.managedBean.deliveryFrom}"
-												size="10"> <f:converter converterId="deliveryTermConverter" /> 
-												</p:inputText> #{lbl['lbl.cm.pub.catalog.to']} <p:inputText
+												size="10">
+												<f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="deliveryTermConverter" />
+											</p:inputText> 
+											#{lbl['lbl.cm.pub.catalog.to']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
 												value="#{pCatalogueBackingBean.managedBean.deliveryTo}"
-												size="10"> <f:converter converterId="deliveryTermConverter" />
-												</p:inputText>
+												size="10">
+												<f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="deliveryTermConverter" />
+											</p:inputText>
 										</td>
 									</tr>
 
 									<tr>
 										<td style="text-align: right; padding-top: 5px;"><p:commandButton
 												value="#{lbl['lbl.btn.reset']}"
+												immediate="true"
 												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.resetCatalogue()}"
 												update=":form" /> <p:commandButton
@@ -205,7 +249,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
 												update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable" /></td> <!--shift between catalogueListingTable and catalogueGridViewID -->
 									</tr>
-									<!-- #10747 - Shafie, Soo - End -->
+									<!-- #10747 - Shafie, Soo, Azza- End -->
 								</table>
 							</td>
 							<!-- #10747 - Shafie - Start  -->	
@@ -219,6 +263,13 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 										rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
 										style="font-weight:bold;float:left;font-size:18px;"
 										value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
+								     
+								    <!-- #10747, #35739 - Start -->
+								    <h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.keyWord and pCatalogueBackingBean.managedBean.unspscTitle.length() > 12 || pCatalogueBackingBean.managedBean.itemName.length() > 12}">
+								    <br />
+									<hr class="horizontal_dotted_line_visible"/>
+								    </h:panelGroup>
+								    <!-- #10747, #35739 - End -->
 									
 									<!-- #10747 - Soo - Start -->
 									<h:commandLink title="#{lbl['lbl.cm.list.icon']}"
@@ -279,15 +330,16 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 									<br />
 									<hr class="horizontal_dotted_line" /> <br />
 									<h:panelGroup rendered="#{pCatalogueBackingBean.managedBean.visible}">	<!-- #10747 - Soo -->
+									<!-- #10747, #35739 - Start -->
 									<p:dataGrid
-										style="width:100%;" lazy="true" columns="5" rows="#{pCatalogueBackingBean.managedBean.itemPerPage}"
+										style="width:100%;" lazy="true" columns="5" rows="15"
 										emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 										value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
 										id="catalogueGridViewID" var="supplierItem">
 										<ac:paginator for="catalogueGridViewID"></ac:paginator>
 										<div class="tbclass">
 											<p:commandLink
-												action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
+												action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem[12])}"
 												style="width: 10px;" process="@this">
 
 												<table
@@ -295,7 +347,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 													<tr>
 														<td align="center"
 															style="text-align: center; padding-top: 14px; padding-bottom: 16px;"><h:panelGroup
-																rendered="#{supplierItem.imagePath == null }">
+																rendered="#{supplierItem[7] == null }">
 																<div align="center" style="width: 100%">
 																	<div align="center"
 																		style="height: 100px; width: 100px; left: 0px !important;">
@@ -306,9 +358,9 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 																	</div>
 																</div>
 															</h:panelGroup> <h:panelGroup
-																rendered="#{supplierItem.imagePath != null }">
+																rendered="#{supplierItem[7] != null }">
 																<img
-																	src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}"
+																	src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{supplierItem[7]}"
 																	style="height: 100px; width: 100px; left: 0px !important;" />
 															</h:panelGroup></td>
 													</tr>
@@ -316,33 +368,33 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 													    <!-- Enhancement #31245 - start -->
 														<td align="center"
 															style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px; overflow-wrap: break-word;"><h:outputText
-																value="#{pCatalogueBackingBean.convertString(supplierItem.itemName.replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', ''), 20)}"  /></td>
+																value="#{pCatalogueBackingBean.convertString(supplierItem[8].replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', ''), 20)}"  /></td>
 														<!-- Enhancement #31245 - end -->
 													</tr>
 													<tr>
 														<td align="center"
 															style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px;">By
-															<h:outputText value="#{pCatalogueBackingBean.convertString(supplierItem.companyName, 18)}" />
+															<h:outputText value="#{pCatalogueBackingBean.convertString(supplierItem[3], 18)}" />
 														</td>
 													</tr>
-													<ui:fragment rendered="#{supplierItem.promotion == null}">
+													<ui:fragment rendered="#{supplierItem[11] == null}">
 													<tr>
 														<td style="text-align: center;">RM
-															<h:outputText value="#{supplierItem.price}" />
-															#{supplierItem.promotion}
+															<h:outputText value="#{supplierItem[10]}" />
+															#{supplierItem[11]}
 														</td>
 													</tr>
 													</ui:fragment>
-													<ui:fragment rendered="#{supplierItem.promotion != null}">
+													<ui:fragment rendered="#{supplierItem[11]!= null}">
 													<tr>
 														<td style="text-align: center;">RM
-															<h:outputText id="promoThumbnail" value="#{supplierItem.promotion}" />
+															<h:outputText id="promoThumbnail" value="#{supplierItem[11]}" />
 														</td>
 													</tr>
 													<tr>
 														<td style="text-align: center; padding-bottom: 14px;">
-															<h:outputText style="text-decoration: line-through;" value=" RM #{supplierItem.price}" />
-															<h:outputText value="	-#{supplierItem.discountPercentage}%" />
+															<h:outputText style="text-decoration: line-through;" value=" RM #{supplierItem[8]}" />
+															<h:outputText value="	-#{supplierItem[6]}%" />
 														</td>
 													</tr>
 													</ui:fragment>
@@ -355,7 +407,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 								   	<h:panelGroup rendered="#{!pCatalogueBackingBean.managedBean.visible}">	<!-- #10747 - Soo -->
 									<p:dataTable id="catalogueListingTable"
 										rowIndexVar="index" value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
-										var="supplierItem" lazy="true" rows="#{pCatalogueBackingBean.managedBean.itemPerPage}"
+										var="supplierItem" lazy="true" rows="15"
 										style="width:100%;">
 
 										<ac:paginator for="catalogueListingTable"></ac:paginator>
@@ -374,7 +426,7 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
  										<p:column style="width :10%;white-space:normal">
  										
  											<h:panelGroup
-												rendered="#{supplierItem.imagePath == null }">
+												rendered="#{supplierItem[7] == null }">
 													<div align="center" style="width: 100%">
 														<div align="center"
 															style="height: 70px; width: 70px; left: 0px !important;">
@@ -386,10 +438,10 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 													</div>
 											</h:panelGroup>
 											<h:panelGroup
-												rendered="#{supplierItem.imagePath != null }">
+												rendered="#{supplierItem[7]!= null }">
 													<!-- #10747 - Soo - Start -->
 													<div style="text-align: center;">
-														<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}"
+														<img src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{supplierItem[7]}"
 															 style="height: 70px; width: 70px; left: 0px !important;" />
 													</div>
 													<!-- #10747 - Soo - End -->
@@ -397,23 +449,24 @@ div[id$="catalogueGridViewID_content"] td.ui-datagrid-column {
 										</p:column>
 										<!-- Enhancement #31245 - start -->
 										<p:column style="width :30%;white-space:normal">
-											<h:commandLink value="#{supplierItem.itemName.replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}"
+											<h:commandLink value="#{supplierItem[8].replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}"
 						    				styleClass="blue_font"
-						    				action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
+						    				action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem[12])}" />
 										</p:column>
 										<!-- Enhancement #31245 - end -->
 										<p:column style="width :40%;white-space:normal">
-											<h:outputText value="#{supplierItem.companyName}"/>
+											<h:outputText value="#{supplierItem[3]}"/>
 										</p:column>
 										<p:column style="text-align:center; width :10%;white-space:normal">
-											<h:outputText value="#{supplierItem.price}"> <f:convertNumber pattern="#0.00"/></h:outputText>
+											<h:outputText value="#{supplierItem[10]}"> <f:convertNumber pattern="#0.00"/></h:outputText>
 										</p:column>
 										<p:column style="text-align:center; width :10%;white-space:normal">
-											<h:outputText id="promoList" rendered="#{supplierItem.promotion != null }" value="#{supplierItem.promotion}">
+											<h:outputText id="promoList" rendered="#{supplierItem[11] != null }" value="#{supplierItem[11]}">
 												<f:convertNumber pattern="#0.00"/></h:outputText>
-											<h:outputText rendered="#{supplierItem.promotion == null}" value="#{lbl['lbl.txt.na']}"></h:outputText>
+											<h:outputText rendered="#{supplierItem[11] == null}" value="#{lbl['lbl.txt.na']}"></h:outputText>
 										</p:column>
 									</p:dataTable>
+									 <!-- #10747, #35739 - End -->
 									</h:panelGroup>
 									</td>
 							</h:panelGroup>

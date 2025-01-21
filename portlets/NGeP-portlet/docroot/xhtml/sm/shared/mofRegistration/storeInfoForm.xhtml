@@ -13,10 +13,11 @@
 			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(storeCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(storeCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 				</table>
@@ -121,9 +122,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.store.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smStoreName"
+							label="#{lbl['lbl.sm.facility.store.name']}" id="smStoreName"
 							value="#{backingBean.managedBean.selectedStoreFacility.facilityName}" 
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
@@ -165,7 +167,8 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.storeFacilityStates}"
 					divisionItems="#{backingBean.managedBean.storeFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.storeFacilityDistricts}" cityItems="#{backingBean.managedBean.storeFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_STORE_FACILITY_PANEL}" panelId="storeBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"
+					disableValidation="#{param['disableValidation']}"/>  <!-- #34159 -->
 					
 				
 				<tr>
@@ -285,12 +288,15 @@
 			</table>
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
-
 					action="#{backingBean.addOrUpdateStoreToSmApplNew}"
 					partialSubmit="true" process="storeDialog"
 					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
-					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 
 					process="@this" partialSubmit="true"

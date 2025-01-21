@@ -125,7 +125,7 @@
 
 						<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.username']}"
 							style="width :15%">
-							<h:outputText value="#{userOrg.pmUser.userName}" />
+							<h:outputText value="#{userOrg.pmUser.salutationCode.salutationName.concat(' ').concat(userOrg.pmUser.userName)}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.useric']}"
