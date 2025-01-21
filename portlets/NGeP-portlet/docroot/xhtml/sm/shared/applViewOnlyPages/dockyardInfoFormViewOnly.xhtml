@@ -19,6 +19,7 @@
 		<ui:repeat var="dockyardCatVar" value="#{viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
+					<td>
 					<!-- #28175 -->
 					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
 					    	(#{viewSmApplBackingBean.getSupplierCategoryName(dockyardCatVar, isSuppProfile)})" />
