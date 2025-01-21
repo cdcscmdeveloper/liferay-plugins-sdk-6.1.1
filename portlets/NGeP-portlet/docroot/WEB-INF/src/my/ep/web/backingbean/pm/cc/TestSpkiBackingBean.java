@@ -21,6 +21,7 @@ import my.ep.helper.EntityHelper;
 import my.ep.util.MessageUtils;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SPKIHelper;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.vo.SpkiVO;
 
@@ -267,73 +268,102 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	}
 	
 	class TrustHelp extends TrustGateHelper implements CertHelper{
+//		@Override
+//		public List<String> getChallengeQuestion(){
+//			
+//			com.msctg.cdc.pki.KMCClient client = getClient();
+//			log.info("Test Client=" + client);
+//			KMCRequestBuilder reqbuilder = getReqBuilder();
+//			log.info("Test reqbuilder=" + reqbuilder);
+//			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(idNo, 10, epNo);
+//			log.info("Test Question=" + res);
+//			
+//			log.info("Test TG status code: "+res.getStatusCode());
+//			if(EntityHelper.isCollectionEmpty(res.CHALLENGE_RESPONSES)){
+//				log.info("empty challenge responses");
+//				throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
+//			}
+//			if(StringUtils.isBlank(getChallengeQues1())){
+//				return res.CHALLENGE_RESPONSES;
+//			}
+//			if(getChallengeQues1().equalsIgnoreCase(res.CHALLENGE_RESPONSES.get(0))){
+//				res.CHALLENGE_RESPONSES.remove(0);
+//			}
+//				
+//			return res.CHALLENGE_RESPONSES;
+//		}
 		@Override
-		public List<String> getChallengeQuestion(){
-			
-			com.msctg.cdc.pki.KMCClient client = getClient();
-			log.info("Test Client=" + client);
-			KMCRequestBuilder reqbuilder = getReqBuilder();
-			log.info("Test reqbuilder=" + reqbuilder);
-			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(idNo, 10, epNo);
-			log.info("Test Question=" + res);
-			
-			log.info("Test TG status code: "+res.getStatusCode());
-			if(EntityHelper.isCollectionEmpty(res.CHALLENGE_RESPONSES)){
-				log.info("empty challenge responses");
-				throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
-			}
-			if(StringUtils.isBlank(getChallengeQues1())){
-				return res.CHALLENGE_RESPONSES;
-			}
-			if(getChallengeQues1().equalsIgnoreCase(res.CHALLENGE_RESPONSES.get(0))){
-				res.CHALLENGE_RESPONSES.remove(0);
-			}
-				
-			return res.CHALLENGE_RESPONSES;
+		public List<String> getChallengeQuestion() {
+			return SPKIHelper.getInstance().getChallengeQuestion(
+					SupplierManagementConst.CERT_TRUSTGATE, idNo, epNo, null);
 		}
+		
+//		@Override
+//		public SpkiVO getSignedData(String identificationNo, String epNo,
+//				String pin, Map<Object, Object> challenges, String dataForSigning){
+//			SpkiVO vo = new SpkiVO();
+//			com.msctg.cdc.pki.KMCRequestBuilder reqbuilder = getReqBuilder();
+//			com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
+//					challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
+//			vo.setSignedData(res.SIGNATURE);
+//			vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
+//			return vo;
+//		}
 		
 		@Override
 		public SpkiVO getSignedData(String identificationNo, String epNo,
-				String pin, Map<Object, Object> challenges, String dataForSigning){
-			SpkiVO vo = new SpkiVO();
-			com.msctg.cdc.pki.KMCRequestBuilder reqbuilder = getReqBuilder();
-			com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
-					challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
-			vo.setSignedData(res.SIGNATURE);
-			vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
-			return vo;
+				String pin, Map<Object, Object> challenges,
+				String dataForSigning) {
+			return SPKIHelper.getInstance().getSignedData(
+					SupplierManagementConst.CERT_TRUSTGATE, identificationNo,
+					epNo, pin, challenges, dataForSigning);
 		}
 	}
 	
 	class DigiHelp extends DigiCertHelper implements CertHelper{
+//		@Override
+//		public List<String> getChallengeQuestion(){
+//			return super.getChallengeQuestion(idNo);
+//		}
+		
 		@Override
-		public List<String> getChallengeQuestion(){
-			return super.getChallengeQuestion(idNo);
+		public List<String> getChallengeQuestion() {
+			return SPKIHelper.getInstance().getChallengeQuestion(
+					SupplierManagementConst.CERT_DIGICERT, null, epNo, null);
 		}
+		
+//		@Override
+//		public SpkiVO getSignedData(String identificationNo, String epNo,
+//				String pin, Map<Object, Object> challenges, String dataForSigning){
+//			SpkiVO vo = new SpkiVO();
+//			com.augtech.kmc.client.KMCClient client = getClient();
+//			try {
+//				com.augtech.kmc.client.IKMCAPIResponse res = client.requestService(
+//						com.augtech.kmc.client.KMCRequestBuilder.signData(identificationNo, epNo, pin.toCharArray(),
+//						challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+//				vo.setSignedData((byte[]) res
+//						.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
+//				vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
+//				if (StringUtils.isBlank(res.getStatusMessage())){
+//					vo.setErrMsg(String.valueOf(res.getStatusCode()));
+//				}
+//			} catch (KMCAPIException e) {
+//				log.info(e);
+//				vo.setErrMsg("DigiCert error - KMCAPIException");
+//			} catch (InvalidKMCAPIFieldException e) {
+//				log.info(e);
+//				vo.setErrMsg("DigiCert error - InvalidKMCAPIFieldException");
+//			}
+//			return vo;
+//		}
 		
 		@Override
 		public SpkiVO getSignedData(String identificationNo, String epNo,
-				String pin, Map<Object, Object> challenges, String dataForSigning){
-			SpkiVO vo = new SpkiVO();
-			com.augtech.kmc.client.KMCClient client = getClient();
-			try {
-				com.augtech.kmc.client.IKMCAPIResponse res = client.requestService(
-						com.augtech.kmc.client.KMCRequestBuilder.signData(identificationNo, epNo, pin.toCharArray(),
-						challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
-				vo.setSignedData((byte[]) res
-						.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
-				if (StringUtils.isBlank(res.getStatusMessage())){
-					vo.setErrMsg(String.valueOf(res.getStatusCode()));
-				}
-			} catch (KMCAPIException e) {
-				log.info(e);
-				vo.setErrMsg("DigiCert error - KMCAPIException");
-			} catch (InvalidKMCAPIFieldException e) {
-				log.info(e);
-				vo.setErrMsg("DigiCert error - InvalidKMCAPIFieldException");
-			}
-			return vo;
+				String pin, Map<Object, Object> challenges,
+				String dataForSigning) {
+			return SPKIHelper.getInstance().getSignedData(
+					SupplierManagementConst.CERT_DIGICERT, identificationNo,
+					epNo, pin, challenges, dataForSigning);
 		}
 	}
 	
