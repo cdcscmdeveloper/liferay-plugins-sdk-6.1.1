@@ -3268,7 +3268,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
 
-		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
+		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getDocumentList())) {// 37622
 
 			if (report.getTitle().contains("Kertas Taklimat")) {
 
