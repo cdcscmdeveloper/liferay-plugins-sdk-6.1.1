@@ -25,6 +25,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
