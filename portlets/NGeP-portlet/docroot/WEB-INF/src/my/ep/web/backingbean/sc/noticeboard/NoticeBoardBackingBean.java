@@ -155,7 +155,6 @@ import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
-import com.sun.jmx.snmp.Timestamp;
 
 /**
  * Notice Board Backing Bean class displays the status of 
