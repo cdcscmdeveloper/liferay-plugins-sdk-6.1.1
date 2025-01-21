@@ -18,9 +18,22 @@
 			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
 					#{catCode}
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						#{catApp.pmCategoryL3.categoryName}
-			</p:column>
+			<!-- #28175 start -->
+			<c:choose>
+				<!-- #28175 Reopen #94, #141 Start -->
+				<c:when test="#{not svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.activeAppl}">
+		        <!-- #28175 Reopen #94 End -->
+					<p:column headerText="#{lbl['lbl.sm.category.description']}">
+						#{catApp.categoryL3Name} 
+					</p:column>
+				</c:when>
+				<c:otherwise>
+					<p:column headerText="#{lbl['lbl.sm.category.description']}">
+								#{catApp.pmCategoryL3.categoryName}
+					</p:column>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28175 end -->
 			
 			<p:column headerText="#{lbl['lbl.sm.sitevist.svo.first.recommendation']}">
 				#{lbl['lbl.sm.catCodes.approved']}
