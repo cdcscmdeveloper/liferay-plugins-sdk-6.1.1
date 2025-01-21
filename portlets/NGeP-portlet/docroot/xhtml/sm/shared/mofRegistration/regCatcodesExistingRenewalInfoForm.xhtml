@@ -46,14 +46,16 @@
 				<!-- 32348 START - adjust width -->
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}"  style="width :350px;white-space : normal">
 				<!-- 32348 END - adjust width -->
-					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{empty aprvdCatBean.categoryL1Name ? aprvdCatBean.pmCategoryL1.categoryName : aprvdCatBean.categoryL1Name}" />
-					<br />
-					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{empty aprvdCatBean.categoryL2Name ? aprvdCatBean.pmCategoryL2.categoryName : aprvdCatBean.categoryL2Name}" />
-					<br />
-					<h:outputText
-						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
+					<!-- #28175 Reopen Start -->
+					<h:outputText 
+						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+					<br/>
+					<h:outputText 
+						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+					<br/>
+					<h:outputText 
+						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+					<!-- #28175 Reopen End -->
 					<!-- 30865 Start -->
 					<p:outputLabel rendered="#{aprvdCatBean.cancelCategory}" styleClass="warning" style="color:red !important; text-align:left;">
 						<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
