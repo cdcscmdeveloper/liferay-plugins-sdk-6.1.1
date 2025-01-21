@@ -20,7 +20,7 @@
 		<ui:repeat var="factoryCatVar" value="#{viewSmApplBackingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-					<<!-- #28175 -->
+					<!-- #28175 -->
 					    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
 					    	(#{viewSmApplBackingBean.getSupplierCategoryName(factoryCatVar, isSuppProfile)})" />
 					</td>
