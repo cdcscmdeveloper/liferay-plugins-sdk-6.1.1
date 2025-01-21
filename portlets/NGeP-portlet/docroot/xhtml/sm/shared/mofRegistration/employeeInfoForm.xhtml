@@ -31,14 +31,15 @@
 			selection="#{backingBean.managedBean.selectedWorkers}"
 			id="empInfoId" rowKey="#{empInfo}">
 
-			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteEmpBtnId')}" />
-			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteEmpBtnId')}" />
-			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
-        	<p:ajax event="rowUnselect" update=":#{p:component('deleteEmpBtnId')}" />
-        	<p:ajax event="toggleSelect" update=":#{p:component('deleteEmpBtnId')}" />
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{not empty backingBean.managedBean.selectedWorkShopFacility.smSvWorkers
 							and !backingBean.managedBean.upsCannotEdit}" />
+
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('pnlEmployeeInfo')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('pnlEmployeeInfo')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('pnlEmployeeInfo')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('pnlEmployeeInfo')}" />
 
 			<p:column style="white-space:normal;">
 				<f:facet name="header">
@@ -54,7 +55,7 @@
 								showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 
-			<p:column style="white-space:normal;">
+			<p:column style="white-space:normal;width:15%;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.employee.idtype']}
@@ -66,7 +67,7 @@
 						required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
 						disabled="#{backingBean.managedBean.upsCannotEdit}"
 						value="#{empInfo.identificationTypeId}"
-						style="width: 80% !important;margin-bottom: 5px !important;">
+						style="width: 90%;margin-bottom: 5px;background-color:white;">
 						<f:selectItems
 							value="#{backingBean.managedBean.identificationTypes}" />
 						<p:ajax event="change" process="@this" update="pnlIdentType,@this" />
@@ -96,7 +97,7 @@
 					rendered="#{empInfo.identificationTypeId ne '115'}"
 					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
-					maxlength="12" size="30" style="width: 80% !important;">
+					maxlength="15" size="30" style="width: 80% !important;">
 				</p:inputText><p:message id="empPassIdMsg" for="empPassId"
 								showSummary="true" showDetail="false" display="icon" />
 				</p:outputPanel>
@@ -134,12 +135,12 @@
 
 		<p:outputPanel rendered="#{!backingBean.managedBean.upsCannotEdit}">
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
-					process="@this,empInfoId" action="#{backingBean.addEmployee}"
-					id="addEmpBtnId" update=":#{p:component('workShopBlockPanel')},@this" />
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this,:#{p:component('empInfoId')}" action="#{backingBean.addEmployee}"
+					id="addEmpBtnId" update=":#{p:component('empInfoId')}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					partialSubmit="true" process="@this,:#{p:component('workShopBlockPanel')}"
+					process="@this,:#{p:component('workShopBlockPanel')}"
 					disabled="#{empty backingBean.managedBean.selectedWorkers}"
 					id="deleteEmpBtnId" oncomplete="empDeletePopUp.show()"
 					update="@this">
