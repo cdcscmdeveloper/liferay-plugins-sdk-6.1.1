@@ -37,7 +37,7 @@
 
 			<p:ajax event="rowSelectCheckbox" update=":#{p:component('pnlEmployeeInfo')}" />
 			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('pnlEmployeeInfo')}" />
-			<p:ajax event="rowSelect" update=":#{p:component('pnlEmployeeInfo')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
         	<p:ajax event="rowUnselect" update=":#{p:component('pnlEmployeeInfo')}" />
         	<p:ajax event="toggleSelect" update=":#{p:component('pnlEmployeeInfo')}" />
 
@@ -86,7 +86,7 @@
 					rendered="#{empInfo.identificationTypeId eq '115'}"
 					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
-					maxlength="20" size="30" style="width: 80% !important;"
+					maxlength="12" size="30" style="width: 80% !important;"
 					validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					<p:ajax process="@this" partialSubmit="true" update=":#{p:component('workShopDialogMsg')}" />
@@ -97,7 +97,7 @@
 					rendered="#{empInfo.identificationTypeId ne '115'}"
 					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
-					maxlength="20" size="30" style="width: 80% !important;">
+					maxlength="15" size="30" style="width: 80% !important;">
 				</p:inputText><p:message id="empPassIdMsg" for="empPassId"
 								showSummary="true" showDetail="false" display="icon" />
 				</p:outputPanel>
