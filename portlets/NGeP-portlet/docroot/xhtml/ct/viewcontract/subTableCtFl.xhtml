@@ -69,7 +69,7 @@
 					style="width:10%;" styleClass="column-align-center">
 					<div class="left-align">
 						<p:commandLink value="#{metadata.docNoCo}" styleClass="blue_font"
-							rendered="#{metadata.statusCO != null}"
+							rendered="#{metadata.statusCO ne ParameterConst.statusZero}"
 							style="color:#009ae5 !important;"
 							action="#{flOrderBB.goToCOPage(metadata.docTypeCo, metadata.flOrder.fulfilmentOrderId)}"
 							onstart="blkContractSearchAuditTable.show()"
@@ -90,10 +90,10 @@
 					<div class="left-align">
 						<h:outputText
 							value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCR)}"
-							rendered="#{metadata.docNoCo == null or metadata.statusCO == null}" />
+							rendered="#{metadata.docNoCo == null or metadata.statusCO eq ParameterConst.statusZero}" />
 						<h:outputText
 							value="#{contractDetailsBackingBean.getStatusDescById(metadata.statusCO)}"
-							rendered="#{metadata.docNoCo != null and metadata.statusCO != null}" />
+							rendered="#{metadata.docNoCo != null and metadata.statusCO ne ParameterConst.statusZero}" />
 					</div>
 				</p:column>
 
