@@ -62,11 +62,12 @@
 									styleClass="ui-button"
 									action="#{specificationBackingBean.submitAction(bpmAction)}"
 									update="@([id$=#{submitConfirmId2}])" rendered="#{isClone}" />
-
+								
+								<ui:remove><!-- #29732 add disable--></ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="ui-button" style="float:right;"
-									rendered="#{!isClone}"
+									styleClass="ui-button" style="float:right;" rendered="#{!isClone}"
+									disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"
 									action="#{specificationBackingBean.submitAction(bpmAction)}" />
 								<!-- #25635 -end- -->
 							</ui:fragment>
@@ -98,9 +99,11 @@
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
                           
+                         	<ui:remove><!-- #29732 add disable--></ui:remove>  
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" style="float:right;"
+								disabled ="#{specificationBackingBean.managedBean.checkUserCanRevise and ((bpmAction eq BpmOutcomeConstant.bpmEndorse) or (bpmAction eq BpmOutcomeConstant.bpmSignOff))}"						
 								action="#{specificationBackingBean.specCommitteMaintenanceBpmTask(bpmAction)}" />
 								
 						</ui:fragment>
