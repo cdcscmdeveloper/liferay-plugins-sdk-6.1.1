@@ -10909,7 +10909,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 * 
 	 * @return SpecificationReqDTO
 	 */
-	private SpecificationReqDTO constructSpecCommitteDtls(String tabNo,boolean isFromTabSpecCommitteDtls) {	//Bug #35688@Syazani 10/07/2024
+	// #29732 -start-
+	private SpecificationReqDTO constructSpecCommitteDtls(String tabNo, boolean isFromTabSpecCommitteDtls)
+	// #29732 -end-
+	{ //Bug #35688@Syazani 10/07/2024
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 		boolean notThrowError = true;	//Bug #35688@Syazani 10/07/2024
