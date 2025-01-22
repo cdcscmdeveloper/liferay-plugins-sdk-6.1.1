@@ -3152,7 +3152,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 			// 29819 - start
-			if (CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) { 
+			if (smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size() > 0) {
 				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSmMofAccounts().get(0).getMofNo());
 			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
 				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSsmNewRegNo());
