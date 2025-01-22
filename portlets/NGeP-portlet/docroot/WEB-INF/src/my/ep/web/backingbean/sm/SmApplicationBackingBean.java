@@ -7177,9 +7177,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
-		if (getManagedBean().getIdentificationTypes() == null) {
-			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		}
+		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 
