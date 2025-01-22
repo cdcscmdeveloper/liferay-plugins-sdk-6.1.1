@@ -149,20 +149,20 @@
 					<h:panelGroup id="divisionCompInfoDropdownPanelId" rendered="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.adoptDivision}">
 						<!-- #34159 - START -->
 						<p:selectOneMenu id="busDivision" required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.division']}"
-						value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}"
-						style="width:80%">
-						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
-						<f:selectItems var="divisionBus"
-							value="#{bb.managedBean.businessDivisionLs}"
-							itemValue="#{divisionBus.divisionId}"
-							itemLabel="#{divisionBus.divisionName}" />
-						<p:ajax event="change" process="@this"
-							listener="#{bb.onChangeDivision(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision,'COMPANY_ADDRESS')}"
-							update="busDistrict,busCity" />
-					</p:selectOneMenu>
-					<p:message id="busDivisionMsg" for="busDivision" display="icon" />
-					<!-- #34159 - END -->
+							label="#{lbl['lbl.sm.division']}"
+							value="#{bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision.divisionId}"
+							style="width:80%">
+							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
+							<f:selectItems var="divisionBus"
+								value="#{bb.managedBean.businessDivisionLs}"
+								itemValue="#{divisionBus.divisionId}"
+								itemLabel="#{divisionBus.divisionName}" />
+							<p:ajax event="change" process="@this"
+								listener="#{bb.onChangeDivision(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision,'COMPANY_ADDRESS')}"
+								update="busDistrict,busCity" />
+						</p:selectOneMenu>
+						<p:message id="busDivisionMsg" for="busDivision" display="icon" />
+						<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>
