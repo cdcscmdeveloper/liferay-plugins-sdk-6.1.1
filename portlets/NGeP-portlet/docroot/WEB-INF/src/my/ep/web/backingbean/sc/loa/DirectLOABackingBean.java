@@ -190,6 +190,7 @@ import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
+import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.CalendarConstants;
 import my.ep.web.constant.sc.QTConstants;
@@ -9007,12 +9008,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
-			if(smSupplier.getSmMofAccount() != null && !smSupplier.getSmMofAccounts().isEmpty()){
-				context.put("mofNo", smSupplier.getSmMofAccounts().get(0).getMofNo());
-			}
-			else{
-				context.put("mofNo", smSupplier.getRegNo());
-			}
+			// 29819 - start
+			if (CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSmMofAccounts().get(0).getMofNo());
+			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSsmNewRegNo());
+			} else {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getRegNo());
+			} 
+			// 29819 - end
 		}
 		//#25025 - start
 		String headerTitle = "";
