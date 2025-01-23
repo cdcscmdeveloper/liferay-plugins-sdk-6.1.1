@@ -163,6 +163,7 @@ import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
+import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
@@ -3150,12 +3151,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #25025 - end
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
-			if(smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size()>0){
-				context.put("mofNo", smSupplier.getSmMofAccounts().get(0).getMofNo());
-			}
-			else{
-				context.put("mofNo", smSupplier.getRegNo());
-			}
+			// 29819 - start
+			if (smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size() > 0) {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSmMofAccounts().get(0).getMofNo());
+			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSsmNewRegNo());
+			} else {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getRegNo());
+			} 
+			// 29819 - end
 		}
 
 		FileOutputStream fos = null;
@@ -12066,6 +12070,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 														.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 													// supplier respond and make new
 													// supplier offer
+													answerRemark = answer.getNewSupplierOffer(); //36681&35295 - zaim
 													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
@@ -12077,6 +12082,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 																.isEmpty())) {
 													// supplier respond but no
 													// changes
+													answerRemark = answer.getAnswerRemark(); //36681&35295 - zaim
 													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
 													map.put(SSTConstant.IS_WIP, "true");
 													if (indi == scLoiLoaItem.getZoneNameList().size()){

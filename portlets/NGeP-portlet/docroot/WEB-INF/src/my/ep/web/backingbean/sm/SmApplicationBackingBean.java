@@ -2318,7 +2318,7 @@ public class SmApplicationBackingBean extends
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
-						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(),ssmResDTO);
+						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(getManagedBean().getSmAppl(),ssmResDTO); //#37598
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
 									getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
@@ -7028,9 +7028,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers() == null) {
 			getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		}
-		if (getManagedBean().getIdentificationTypes() == null) {
-			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		}
+		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		SmApplicationUtil.assignSupplierCategoryFacility(getManagedBean(),
 				facilityBean);
@@ -7069,9 +7067,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setFacilityType(
 				StringUtils.upperCase(SmCommonUtil.getMessage("lbl.sm.facility.type.workshop", null)));
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
-		if (getManagedBean().getIdentificationTypes() == null) {
-			getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		}
+		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		getManagedBean().getSelectedWorkShopFacility().setSmSvWorkers(new ArrayList<SmSvWorker>());
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 
