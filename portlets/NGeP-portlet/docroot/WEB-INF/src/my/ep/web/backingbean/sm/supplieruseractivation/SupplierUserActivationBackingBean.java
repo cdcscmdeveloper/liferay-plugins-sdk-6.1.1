@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,9 +59,13 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 
 
 @ManagedBean(name="supplierUserActivationBackingBean")
-public class SupplierUserActivationBackingBean extends
-		BaseBackingBean<SupplierUserActivationManagedBean> {
+public class SupplierUserActivationBackingBean extends BaseBackingBean<SupplierUserActivationManagedBean> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static Logger log = Logger.getLogger(SupplierUserActivationBackingBean.class);
 
 	private String tempPassword;
@@ -67,7 +73,12 @@ public class SupplierUserActivationBackingBean extends
 	//private String password;
 	//private String confirmPassword;
 	private String loginId;
-	
+	//#32040
+	private static final String[] ADMIN_ROLES = new String[] {
+		RoleCode.SUPPLIER_TEMP.value(),
+		RoleCode.MOF_SUPPLIER_ADMIN.value(),
+		RoleCode.BASIC_SUPPLIER_ADMIN.value(),
+		RoleCode.G2G_SUPPLIER_ADMIN.value() };
 		
 	public SupplierUserActivationBackingBean(){
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -91,8 +102,7 @@ public class SupplierUserActivationBackingBean extends
 		SmSupplier supplierProfile = null;
 		IPersonnelSO personnelSO = null;
 		
-		String errMsg = SmCommonUtil.getMessage(
-				"lbl.sm.activation.invalid.link.activated", null);
+		String errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.activated", null);
 		
 		try {
 			personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
@@ -101,10 +111,10 @@ public class SupplierUserActivationBackingBean extends
 			reqDTO.setPersonnelId(Long.valueOf(personnelId));
 			PersonnelResDTO resDTO = personnelSO.retrieveValidActivationPersonnel(reqDTO);
 			
-			if(resDTO.getSmPersonnel() != null) {
+			if (resDTO.getSmPersonnel() != null) {
 				personnel = resDTO.getSmPersonnel();
 				supplierProfile = personnel.getSmAppl().getSmSupplier();
-			}else{
+			} else{
 				//retrieve for invalid personnel
 				
 				// 1)Basic Personnel that already expired link and deleted by
@@ -114,13 +124,8 @@ public class SupplierUserActivationBackingBean extends
 				// scheduler
 				personnel = SmServiceLookup.getPersonnelSO()
 						.retrievePersonnelById(reqDTO).getSmPersonnel();
-				if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
-						|| (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && StringUtils
-								.isBlank(personnel.getEpRole()))) {
-					errMsg = SmCommonUtil.getMessage(
-							"lbl.sm.activation.invalid.link.expired",
-							new String[] { SmRuleHelper.getInstance()
-									.getEmailActivationDays() + "" });
+				if (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED || (personnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE && StringUtils.isBlank(personnel.getEpRole()))) {
+					errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired", new String[] { SmRuleHelper.getInstance().getEmailActivationDays() + "" });
 
 					// reset back personnel to null
 					personnel = null;
@@ -136,11 +141,26 @@ public class SupplierUserActivationBackingBean extends
 		//log.info("hash supplier id: " + SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())));
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		if(personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId()) 
-				&& isLatestActivationEmail(createdTimeParam, personnel)) {
+		if (personnel != null && supplierProfile != null && !isPersonnelAlreadyDeactivatedOrTerminates(personnel, supplierProfile.getSupplierId()) && isLatestActivationEmail(createdTimeParam, personnel)) {
+			//#32040 START
+			String adminName = null;
+			if(personnel.getSmAppl() != null && personnel.getSmAppl().getSmPersonnels() != null){
+				for(SmPersonnel person : personnel.getSmAppl().getSmPersonnels()){
+					if(person.getEpRole() != null &&
+							Arrays.asList(ADMIN_ROLES).contains(person.getEpRole())){
+						adminName = person.getName();
+						break;
+					}
+				}
+			}
 			if(hashSupplierId.equals(SmCommonUtil.hashString(String.valueOf(supplierProfile.getSupplierId())))) {
-				
-				long applDateInMilis = personnel.getCreatedDate().getTime();
+				long applDateInMilis;
+				if(personnel.getActivationDate() != null){
+					applDateInMilis = personnel.getActivationDate().getTime();
+				}else{
+					applDateInMilis = personnel.getCreatedDate().getTime();
+				}
+				//#32040 END
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
 				Date expiryDate = new Date(applDateInMilis + (SmRuleHelper.getInstance().getEmailActivationDays() * dayInMilis));
@@ -161,16 +181,34 @@ public class SupplierUserActivationBackingBean extends
 					log.info("****VALID - Expired******");
 					// redirect & display activation expired
 					this.getManagedBean().setValidActivation(false);
-					errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
-							new String[] { SmRuleHelper.getInstance()
-							.getEmailActivationDays() + "" });
+					//#32040
+					if(personnel.getEpRole() != null){
+						if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
+							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
+									new String[] { Integer.toString(SmRuleHelper.getInstance()
+											.getEmailActivationDays()) });
+						}else{
+							errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired.user",
+									new String[] { Integer.toString(SmRuleHelper.getInstance()
+											.getEmailActivationDays()) , adminName });
+						}
+					}
 				}
 			} else {
 				// redirect & display invalid activation
 				this.getManagedBean().setValidActivation(false);
-				errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
-						new String[] { SmRuleHelper.getInstance()
-						.getEmailActivationDays() + "" });
+				//#32040
+				if(personnel.getEpRole() != null){
+					if(Arrays.asList(ADMIN_ROLES).contains(personnel.getEpRole())){
+						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired",
+								new String[] { Integer.toString(SmRuleHelper.getInstance()
+										.getEmailActivationDays()) });
+					}else{
+						errMsg = SmCommonUtil.getMessage("lbl.sm.activation.invalid.link.expired.user",
+								new String[] { Integer.toString(SmRuleHelper.getInstance()
+										.getEmailActivationDays()) , adminName });
+					}
+				}
 				
 				log.info("****Hash String is not match******");
 			}
@@ -494,20 +532,26 @@ public class SupplierUserActivationBackingBean extends
 	private boolean isLatestActivationEmail(String createdTimeParam,
 			SmPersonnel smPersonnel) {
 		boolean retVal = true;
-		try {
+		try { //#32040 START
+			Timestamp activationDate;
+			if(smPersonnel.getActivationDate() != null){
+				activationDate = smPersonnel.getActivationDate();
+			}else{
+				activationDate = smPersonnel.getCreatedDate();
+			}
 			if (createdTimeParam != null
 					&& StringUtils.isNotBlank(createdTimeParam)) {
 				log.info(">>>>>>>>>>>>>Inside comparing latest activation email for personnelId:"
 						+ smPersonnel.getPersonnelId()
 						+ " sendMailDate:"
 						+ createdTimeParam
-						+ " createdDate:"
-						+ smPersonnel.getCreatedDate().getTime());
+						+ " activationDate:"
+						+ activationDate.getTime());
 				Long createdTime = Long.parseLong(createdTimeParam);
-				if (createdTime.compareTo(smPersonnel.getCreatedDate()
+				if (createdTime.compareTo(activationDate
 						.getTime()) != 0) {
 					retVal = false;
-				}
+				} //#32040 END
 			}
 		} catch (Exception ex) {
 		}

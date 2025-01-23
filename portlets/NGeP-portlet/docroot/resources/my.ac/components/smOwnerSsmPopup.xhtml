@@ -13,7 +13,7 @@
 		<cc:attribute name="btnOkProcess" required="false" default="@this" />
 		<cc:attribute name="btnOkUpdate" required="false" default="@form" />
 		<cc:attribute name="btnCancelLabel" required="true" />
-		<cc:attribute name="height" default="170" />
+		<cc:attribute name="height" default="auto !important" />
 		<cc:attribute name="width" default="650" />
 	</cc:interface>
 
@@ -25,12 +25,9 @@
 			<div id="#{cc.attrs.dialogId}ContentDiv"
 				style="overflow-wrap: break-word;">
 				
-				<c:choose>
-					<c:when test="#{!cc.attrs.bBean.managedBean.dontGetSsmData}">
-						<h:outputText value="#{lbl['lbl.sm.term.and.condition.checkowner']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
-						<h:outputText value="#{lbl['lbl.sm.term.and.condition.pre.checkowner']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
+ 				<c:choose>
+					<c:when test="#{!cc.attrs.bBean.managedBean.disAllowOwnerEdit}"> 
+						<h:outputText value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwner}" escape="false" />
 						<br /> &#160;&#160;&#160;&#160;&#160;a.
 						<p:commandLink update="#{cc.attrs.btnOkUpdate}"
 							style="margin-right:20px;"
@@ -39,33 +36,21 @@
 							<h:outputFormat value="#{lbl['lbl.txt.clickhere']}" escape="false"></h:outputFormat>
 						</p:commandLink>
 						<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.a']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
-						<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.a']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
+							value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerA}" escape="false" />
 						<br /> &#160;&#160;&#160;&#160;&#160;b.
 						<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
-						<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.b']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.b']}" escape="false" />
 						<br /> &#160;&#160;&#160;&#160;&#160;c.
 						<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.c']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
-						<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.pre.checkowner.c']}" rendered="#{cc.attrs.bBean.managedBean.preRegistration}"
-							escape="false" />
+							value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerC}" escape="false" />
 						<br />
-				</c:when>
+ 				</c:when>
 				<c:otherwise>
 					<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}"
 							escape="false" />
 				</c:otherwise>
-				</c:choose>
+				</c:choose> 
 				
 			</div>
 
@@ -78,9 +63,9 @@
 
 		<p:dialog id="#{cc.attrs.dialogId}Change"
 			style="overflow-wrap: break-word;" 
-			header="#{lbl['lbl.sm.term.and.condition.checkowner.changerole']}"
+			header="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwnerChangeRole}" 
 			widgetVar="#{cc.attrs.dialogId}ChangeWidgetVar" modal="true"
-			height="100" width="600" resizable="false" >
+			height="auto !important" width="800" resizable="false" >
 			<p:outputPanel id="popupRolePanelId">
 				<p:dataTable var="person" widgetVar="personRolePopupVar"
 					value="#{cc.attrs.bBean.managedBean.personnelsRole}"

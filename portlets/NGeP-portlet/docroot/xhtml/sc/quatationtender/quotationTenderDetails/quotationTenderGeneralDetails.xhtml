@@ -304,11 +304,13 @@
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
 											<ui:remove>9019 -end</ui:remove>
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
 											<!-- 25729 -start- -->
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											<!-- 25729 -end- -->
 											</p:ajax>
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -1003,36 +1005,49 @@
 				<!--#25729 #142 START -->
 				<c:if test="#{expectTotalIndPriceBelowThreshold}">
 
-					<td><c:choose>
-							<c:when
-								test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
-								<ui:remove>9019 note-289 -start</ui:remove>
+						<td>
+							<c:choose>
+								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_QT_SUBMISSION}">
+									<ui:remove>9019 Reopen #note-289 - change required validation from required="true"</ui:remove>
+									<p:inputTextarea id="justificationProcValueId_1"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" disabled="#{isReadOnly}" 
+										cols="110" rows="3"
+										onkeyup="limitTextArea(this,100);"
+										onkeydown="limitTextArea(this,100);"
+										onmouseout="limitTextArea(this,100);">
+										<f:ajax></f:ajax>
+									</p:inputTextarea>
+									<p:message id="title2Msg_1" for="justificationProcValueId_1" display="icon" />
+								</c:when>
+								<ui:remove><!-- #36678 related to #35061 Start(to enable field at spec preparation if user change below 50k)-->
+										   <!-- #36678 add disable estimated amount if has null value for first time enter -->
+								</ui:remove>
+								<c:when test="#{scQt.qtStatus.statusId == QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING}">
 								<p:inputTextarea id="justificationProcValueId_1"
-									style="margin-bottom:5px; width: 250px;" maxlength="100"
-									value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
-									disabled="#{isReadOnly}" cols="110" rows="3"
-									onkeyup="limitTextArea(this,100);"
-									onkeydown="limitTextArea(this,100);"
-									onmouseout="limitTextArea(this,100);">
-									<ui:remove>9019 note-289 -end</ui:remove>
-									<f:ajax></f:ajax>
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" required="#{not empty param['skipsubmitvalidation']}"
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" 
+										disabled="#{isReadOnly and scQt.qtStatus.statusId != QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING or scQt.estimatedAmount eq null}" 
+										cols="110" rows="3"
+										onkeyup="limitTextArea(this,100);"
+										onkeydown="limitTextArea(this,100);"
+										onmouseout="limitTextArea(this,100);">
+										<f:ajax></f:ajax>
 								</p:inputTextarea>
-								<p:message id="title2Msg_1" for="justificationProcValueId_1"
-									display="icon" />
-							</c:when>
-							<c:otherwise>
-								<p:inputTextarea id="justificationProcValueId_2"
-									style="margin-bottom:5px; width: 250px;" maxlength="100"
-									value="#{scQt.justificationProcValue}"
-									label="#{lbl['lbl.sc.spec.justification.procurement.value']}"
-									readonly="true" cols="110" rows="3" disabled="true">
-								</p:inputTextarea>
-								<p:message id="title2Msg_2" for="justificationProcValueId_2"
-									display="icon" />
-							</c:otherwise>
-						</c:choose></td>
-				</c:if>
+								</c:when>
+								<ui:remove> <!-- #36678 related to #35061 End--> </ui:remove> 
+								<c:otherwise>
+									<p:inputTextarea id="justificationProcValueId_2"
+										style="margin-bottom:5px; width: 250px;" maxlength="100" value="#{scQt.justificationProcValue}" 
+										label="#{lbl['lbl.sc.spec.justification.procurement.value']}" readonly="true" 
+										cols="110" rows="3"
+										disabled="true">
+									</p:inputTextarea>
+									<p:message id="title2Msg_2" for="justificationProcValueId_2" display="icon" />
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</c:if>
 				<c:if test="#{!expectTotalIndPriceBelowThreshold}">
 					<td><p:inputTextarea id="justificationProcValueId_2"
 							style="margin-bottom:5px; width: 250px;" maxlength="100"
@@ -1050,24 +1065,23 @@
 			<ui:remove> #11104 - start </ui:remove>
 			<tr>
 				<h:panelGroup id="QuotationtenderGeneralSample">
-					<ui:fragment rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
-						<td>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</td>
-						<td>
-							<p:selectOneRadio value="#{scQt.sampleReq}"
-								disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
-								<f:selectItems
-									value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-								<p:ajax event="change" partialSubmit="true"
-									listener="#{createQtBB.sampleChange}" update="@form"
-									process="@this"></p:ajax>
-							</p:selectOneRadio>
-						</td>
-						<td style="margin-top: -3px">
-							<ac:iconTooltip value="#{lbl['lbl.sc.qt.sampel.instructions']}" />
-						</td>
+					<ui:fragment
+						rendered="#{createQtBB.isSpecScreen() or createQtBB.isSpecEndorsmentScreen()}">
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.sampleShowHide}">
+							<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneRadio value="#{scQt.sampleReq}"
+									disabled="#{isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
+									<f:selectItems
+										value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									<p:ajax event="change" partialSubmit="true"
+										listener="#{createQtBB.sampleChange}" update="@form"
+										process="@this"></p:ajax>
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.qt.sampel.instructions']}" /></td>
+						</ui:fragment>
 					</ui:fragment>
 				</h:panelGroup>
 			</tr>
@@ -1179,10 +1193,11 @@
  	</ui:remove>
 
 	<!-- #25729 #174 START -->
+	<!-- Bug#35061 - change message value -->
 	<p:confirmDialog id="proceedBelowQtValueId"
 		widgetVar="proceedBelowQtValueDlgs"
 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
 		resizable="false" closable="false">
 		<div align="right">
 			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"

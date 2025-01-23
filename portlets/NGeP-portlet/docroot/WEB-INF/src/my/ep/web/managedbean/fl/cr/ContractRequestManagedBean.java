@@ -343,6 +343,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private int deleteOverallItem;
 	//11076 - end
 	private boolean bondIncomplete = false;//35024
+	
+	private String backToNtf; //35357
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3324,4 +3326,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.bondIncomplete = bondIncomplete;
 	}
 	//35024-End	
+
+	//35357-Start
+	/**
+	 * @return the backToNtf
+	 */
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	/**
+	 * @param backToNtf the backToNtf to set
+	 */
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//35357-End
 }

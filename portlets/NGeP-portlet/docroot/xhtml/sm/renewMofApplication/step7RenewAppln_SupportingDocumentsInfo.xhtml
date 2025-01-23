@@ -143,14 +143,40 @@
 												</td>
 											</tr>
 										</table>
-									</c:when>		
-									<c:otherwise>
+									</c:when>
+									<!-- #34303 Start -->
+									<c:when test="#{backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showMachineryEquipmentPanel}">
 									<table style="width: 100%">
 										<tr>
 											<td>
 												<div align="left" style="width: 99%">
 													<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 														actionListener="#{backingBean.setTabValue('8','7')}"
+														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+														update=":form" />
+														</div>
+														</td>
+														<td>
+														<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+													<div align="right" style="width: 99%">
+														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+															onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('8','9')}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
+															update=":form" />
+													</div>
+													</p:outputPanel>
+												</td>
+											</tr>
+										</table>
+									</c:when>	
+									<c:otherwise>
+									<table style="width: 100%">
+										<tr>
+											<td>
+												<div align="left" style="width: 99%">
+													<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+														actionListener="#{backingBean.setTabValue('7','6')}"
 														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
 														update=":form" />
 													<!--<p:commandButton value="#{lbl['lbl.sm.prev.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
@@ -165,7 +191,7 @@
 													<div align="right" style="width: 99%">
 														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 															onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
-															actionListener="#{backingBean.setTabValue('8','9')}"
+															actionListener="#{backingBean.setTabValue('7','8')}"
 															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION)}"
 															update=":form" />
 														<!--<p:commandButton value="#{lbl['lbl.sm.next.section']}"
@@ -178,6 +204,7 @@
 												</p:outputPanel>
 											</td>
 										</tr>
+									<!-- #34303 End -->
 									</table>
 									</c:otherwise>
 									</c:choose>

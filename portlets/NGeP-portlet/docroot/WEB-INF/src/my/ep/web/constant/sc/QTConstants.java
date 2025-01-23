@@ -280,17 +280,15 @@ public interface QTConstants {
 	// 19287#91, 17376#104 -start-
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
-	//25037 QT Bpm Composite Version Validity ID -start-
-	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	//25037 -end-
 
 	//#15391 #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
 	//#15391 #11104 -end-
 
-	//#11104
+	//#11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	//#11104 -end-
 	
 	// 32453, #21695, #25138 -start-
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER = "FISA";
@@ -299,10 +297,10 @@ public interface QTConstants {
 	// 9019 - Start (Harun) WIP transaction Pending QT Submission
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
 	// 9019 - End (Harun)
-	
+
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
-	
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -315,6 +313,29 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
+	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
+
+	// 36671, 25037 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671, 25037 - end
+
+	// Bug #35688@Syazani 10/07/2024 -- Start
+	public static final String TAB_SC_GENERAL_INFORMATION = "0";
+	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
+	public static final String TAB_SC_TECHNICAL_CHECKLIST = "2";
+	public static final String TAB_SC_FINANCIAL_CHECKLIST = "3";
+	public static final String TAB_SC_TECHNICAL_SCORING = "4";
+	public static final String TAB_SC_FINANCIAL_SCORING = "5";
+	public static final String TAB_SC_OVERALL_SCORING = "6";
+	public static final String TAB_SC_DELIVERY_ADDRESS = "7";
+//	public static final String TAB_SC_PAYMENT_DEDUCTION = "8";
+	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
+	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
+	// Bug #35688@Syazani 10/07/2024 -- End
 
 	// #33831, #21695, #25138 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
@@ -326,12 +347,31 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_DIKEMAS_KINI = "Dikemas kini";
 	public static final String LAMPIRAN_A3_LATEST = "Latest";
 	public static final String LAMPIRAN_A3_TERKINI = "Terkini";
-	// #29007 End Vinod	
+	public static final String LAMPIRAN_A3_JUSTIFICATION = "Dikemas kini atas sebab ";
+	public static final String LAMPIRAN_A3_FILE_EXTENSION_PDF = ".pdf";
+	public static final String PORTLET_ATTRIBUTE_NEW_OFFERED_SPECIFICATION = "selectedScLoiLoaItem";
+	public static final String REDIRECT_URL_NEW_OFFERED_SPECIFICATION = "/xhtml/sc/loa/directnego/directLoaSuppliersProposalSpecificationUpdatePopup.xhtml";
+	public static final String REDIRECT_URL_NEW_OFFERED_SPECIFICATION_LOA = "/xhtml/sc/loa/loarequest/loaSuppliersProposalSpecificationUpdatePopup.xhtml";
+	public static final String LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE = "lbl.sc.loiloa.suppliers.proposal.specification.update";
+	public static final String LBL_SC_JUSTIFICATION = "lbl.sc.justification";
+	public static final String LBL_SC_LOILOA_SUPPLIER_SPECIFICATION_SAVE = "lbl.sc.loiloa.supplier.specification.save";
+	public static final String LAMPIRAN_A3_TEXT_TB = "T/B";
+	public static final String LAMPIRAN_A3_TEXT_NA = "N/A";
+	public static final String LAMPIRAN_A3_TEXT_SERVICE_SCOPE = "serviceScope";
+	public static final String LAMPIRAN_A3_TEXT_ITEMS_LIST = "itemsList";
+	public static final String LAMPIRAN_A3_TEXT_IS_ZONAL = "isZonal";
+	public static final String LAMPIRAN_A3_TEXT_BEAN = "bean";
+	public static final String LAMPIRAN_A3_TEXT_YA = "Ya";
+	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
+	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
+	// #29007 End Vinod
 
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR"; // #28784
+	//#11104 -start-
 	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148
 	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
+	//#11104 -end-
 
 	public static final String SERVICE_OBJECT_CC = "cc";
 
@@ -342,5 +382,25 @@ public interface QTConstants {
 	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
 	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
 	//#10542 End Dayan
-
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
+	
+	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
+	
+	//36678
+	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	
+		
+	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A = "lbl.sc.category.has.changes.on.prerender.view.2.a";
+	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	//#29732 -End
 }

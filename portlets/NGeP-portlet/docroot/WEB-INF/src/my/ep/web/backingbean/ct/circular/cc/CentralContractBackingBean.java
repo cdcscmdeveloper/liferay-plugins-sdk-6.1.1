@@ -53,6 +53,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.comparator.ct.CtItemPriceComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -109,6 +110,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -127,6 +129,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 
 /**
  * Central Contract Circular Backingbean
@@ -245,15 +248,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 
 			if(getManagedBean().getCircularVer().getCtCircularContracts() != null && !getManagedBean().getCircularVer().getCtCircularContracts().isEmpty()) {
-				Collections.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+				CustomUtils.sort(getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract()); //#36726
 				for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
 
 					if(ctCircularContract.getCtCircularItems() != null && !ctCircularContract.getCtCircularItems().isEmpty())
-						Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
+						CustomUtils.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem()); //#36726
 
 					for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
-						if(circularItem.getCtContractItem() != null)
-							Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPrice());
+						if(circularItem.getCtContractItem() != null) 
+							CustomUtils.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPriceComparator()); //#36726
 					}
 				}
 			}
@@ -1098,6 +1101,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); //#30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start
 			PanelBackingBean panelBB = new PanelBackingBean();
@@ -1121,12 +1125,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			return getManagedBean().getBackToPreviousPage(); //return the previous page (cancel circular page)
 			//return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
 			//#33533 /#33752 end
-		} else if(getManagedBean().isFromCircularNotice()) {
+		} else if (getManagedBean().isFromCircularNotice()) {
 			return "../portal/circularListing.xhtml?faces-redirect=true";
-		} else if(getManagedBean().isChkCentralCircular()) {
+		} else if (getManagedBean().isChkCentralCircular()) {
 			return getManagedBean().getGotoPreviewPage();
-		} else if(getManagedBean().getGotoPreviewPage()!=null) {
+		} else if (getManagedBean().getGotoPreviewPage() != null) {
 			return getManagedBean().getGotoPreviewPage();
+		} else if (circularBB.getManagedBean()
+				.isContinuityCircularAuditSearch()) { // Fix -#30866
+			return "/xhtml/ct/viewcontract/resultViewCircularContract.xhtml?faces-redirect=true"; // Fix -#30866
 		} else {
 			return "search.xhtml?faces-redirect=true";
 		}

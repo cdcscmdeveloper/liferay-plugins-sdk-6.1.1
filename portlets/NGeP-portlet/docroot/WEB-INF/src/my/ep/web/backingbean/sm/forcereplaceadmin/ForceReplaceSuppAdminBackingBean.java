@@ -55,7 +55,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.forcereplaceadmin.ForceReplaceSuppAdminManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -130,6 +129,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setCompanyName(getManagedBean().getReactivateBasic()
 				.getAgencyName());
 		reqDTO.setSuppType(getManagedBean().getReactivateBasic().getSuppType());
+		reqDTO.setAccType(getManagedBean().getAccType()); //#33129
 
 		//#28765 chained method retrieveSupplierAndPersonnelsByBusRegNoAndNameBypassActiveAcc
 		if (getManagedBean().getAccType().equals(
@@ -177,11 +177,32 @@ public class ForceReplaceSuppAdminBackingBean extends
 						.getSmSupplier().getRecordStatusFlg() != 7)) {
 			if (getManagedBean().getAccType().equals(
 					SupplierManagementConst.ACC_GOVT_SELLER)) {
-				// Agency name does not exist for G2G
-				throw new EpException(MessageConst.ERROR_722659);
+				//#33129 - START  
+				if(getManagedBean().getSmSupplier() != null){
+					switch (getManagedBean().getSmSupplier().getRecordStatusFlg()){
+						case DbValueConst.RECORD_STATUS_SUSPENDED : throw new EpException(MessageConst.ERROR_722703);
+						case DbValueConst.RECORD_STATUS_CANCELLED : throw new EpException(MessageConst.ERROR_722701);
+						case DbValueConst.RECORD_STATUS_DELETED   : throw new EpException(MessageConst.ERROR_722702);
+					}
+				} else {
+					// Agency name does not exist for G2G
+					throw new EpException(MessageConst.ERROR_722659);
+				}
+				//#33129 - END
 			} else {
-				// Buss Reg No. and Established Date does not exist for Supplier
-				throw new EpException(MessageConst.ERROR_722593);
+				//33129 - START
+				if(getManagedBean().getSmSupplier() != null){
+					switch (getManagedBean().getSmSupplier().getRecordStatusFlg()){
+						case DbValueConst.RECORD_STATUS_SUSPENDED : throw new EpException(MessageConst.ERROR_722700);
+						case DbValueConst.RECORD_STATUS_CANCELLED : throw new EpException(MessageConst.ERROR_722698);
+						case DbValueConst.RECORD_STATUS_DELETED   : throw new EpException(MessageConst.ERROR_722699);
+					}
+				}
+				else{
+					// Buss Reg No. and Established Date does not exist for Supplier
+					throw new EpException(MessageConst.ERROR_722593);
+				}
+				//#33129 - END
 			}
 		} else {
 			//#28765 - Start
@@ -206,11 +227,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 				StringBuilder sb = new StringBuilder();
 				//12981 
 				//28765 - START
-				if(getManagedBean().getOldAdmin() != null){
-					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()})); //#28765
-				}else if(getManagedBean().getSmSupplier().getSmPersonnel() != null){
-					sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getSmSupplier().getSmPersonnel().getName()})); //#28765
-				}
+				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null)); //#33129
 				getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
 				//#28765 End
 				validate();
@@ -258,7 +275,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			reqDTO.setServerName(fs.getRequest().getServerName());
 			reqDTO.setServerPort(fs.getRequest().getServerPort());
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-			reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+			reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); //#33129
 			reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
 			reqDTO.setTaskList(getTaskList());
 			//#28765 - Start
@@ -299,10 +316,12 @@ public class ForceReplaceSuppAdminBackingBean extends
 //				&& resDto.isTerminateSupplier() == false
 				) {
 			// End 28765 comment changes 12981
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			//PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 		} else if (getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF) && 
-				(getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
-				getManagedBean().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){
+				getManagedBean().getSmSupplier().getSmAppl() != null && getManagedBean().getSmSupplier().getSmAppl().getPmStatus() != null &&
+				(getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER) ||
+				getManagedBean().getSmSupplier().getSmAppl().getPmStatus().getStatusId().toString().equalsIgnoreCase(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)) ){ //#34483
 			getManagedBean().setBypassFlag1(1);
 		}
 		//#28765 - End
@@ -327,7 +346,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		//START 12981
 		//#28765 - Start - inactiveSupplierRole to apply for both bypass/normal replace supplier admin
 //		if(getManagedBean().getBypassFlag1()==1 && getManagedBean().getAccType().equals(SupplierManagementConst.ACC_GOVT_SELLER)) {
-			PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			//PersonnelResDTO resDto2 = SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
+			SmServiceLookup.getPersonnelSO().inactiveSupplierRole(getOldAdminReqDTO());
 //		}
 		//#28765 - End
 		redirectToSuccessPage(resDto);
@@ -413,33 +433,37 @@ public class ForceReplaceSuppAdminBackingBean extends
 		
 		//#33153 - Start
 		// Sorting First By SupplierType
-		List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
-		boolean isContractor = false;
-		if (getManagedBean().getReactivateBasic().getSuppType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			isContractor = true;
-		} else {
-			isContractor = false;
-		}
+		//// #33129 - START : checking only for MOF account 
+		if(getManagedBean().getAccType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){ 
+			List<SmSupplier> removeSupp = new ArrayList<SmSupplier>();
+			boolean isContractor = false;
+			if (getManagedBean().getReactivateBasic().getSuppType()
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				isContractor = true;
+			} else {
+				isContractor = false;
+			}
 
-		if (supplierLs.size() > 1) {
-			for (SmSupplier supplier : supplierLs) {
-				if (supplier.getSmAppl().getSupplierType() != null) {
-					if (isContractor) {
-						if (!supplier.getSmAppl().getSupplierType()
-								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-							removeSupp.add(supplier);
-						}
-					} else if (!isContractor) {
-						if (!supplier.getSmAppl().getSupplierType()
-								.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-							removeSupp.add(supplier);
+			if (supplierLs.size() > 1) {
+				for (SmSupplier supplier : supplierLs) {
+					if (supplier.getSmAppl().getSupplierType() != null) {
+						if (isContractor) {
+							if (!supplier.getSmAppl().getSupplierType()
+									.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+								removeSupp.add(supplier);
+							}
+						} else if (!isContractor) {
+							if (!supplier.getSmAppl().getSupplierType()
+									.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+								removeSupp.add(supplier);
+							}
 						}
 					}
 				}
+				supplierLs.removeAll(removeSupp);
 			}
-			supplierLs.removeAll(removeSupp);
 		}
+		//#33129 - END
 		//then start for throwing exception based from list that has been remove by supplier type
 		//#33153 - End
 		
@@ -544,7 +568,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+		reqDTO.setOldAdminRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE); //#33129
 		reqDTO.setActionType(my.ep.constant.sm.SupplierManagementConst.FORCE_REPLACE_ADMIN);
 		reqDTO.setTaskList(getTaskList());
 		//#28765 - Start
@@ -1248,10 +1272,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 			}
 		}
 	}
+	
 	//#28765 - Start
 	public void confirmDeclare(){
 		RequestContext.getCurrentInstance().execute("groupDeleteConfirm.show()"); 
 	}
+	
+	/*
 	private boolean isExistInSelectedPersonnel(SmPersonnel personnel) {
 		boolean exist = false;
 		for (SmPersonnel selectedPersonnel : getManagedBean()
@@ -1264,6 +1291,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		return exist;
 	}
+	*/
+	
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
 		
@@ -1314,7 +1343,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		SmReplaceSupplierAdminDoc replaceSupplierAdminDoc = new SmReplaceSupplierAdminDoc();
 		replaceSupplierAdminDoc.setPmDocument(document);
 		SmReplaceSupplierAdminDocFile adminDocFile = new SmReplaceSupplierAdminDocFile();
-		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList());
+		replaceSupplierAdminDoc.setSmReplacesupplieradminDocFiles(new ArrayList<SmReplaceSupplierAdminDocFile>());
 		replaceSupplierAdminDoc.getSmReplacesupplieradminDocFiles().add(adminDocFile);
 		log.info("--------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>.."+replaceSupplierAdminDoc.getPmDocument().getDocName());
 		getManagedBean().getSmReplaceSupplierAdminDocs().add(replaceSupplierAdminDoc);
@@ -1538,7 +1567,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 						appl.getApplNo(),
 						getManagedBean().getSmSupplier().getCompanyName()}));
 			} else {
-				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", new String[] {getManagedBean().getOldAdmin().getName()}));  //#28765
+				sb.append(SmCommonUtil.getMessage("lbl.msg.confirm.declare4", null)); //#33129 
 			}
 			getManagedBean().setDisplayMessageReplaceTrans(sb.toString());
 			getManagedBean().setSmAppl(appl);

@@ -30,11 +30,11 @@
     	
     	<!-- 24819 start -->
     	<tr>
-	        <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+	        <td width="35%"><b>Business Registration No. (New)</b></td>
 	        #if($newBusinessRegistrationNo != $null)
 	      	<td>$newBusinessRegistrationNo</td>
 	      	#else
-	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
+	      	<td>N/A</td>
 	      	#end
     	</tr>
     	<!-- 24819 end

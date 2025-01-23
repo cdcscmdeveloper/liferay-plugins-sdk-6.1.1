@@ -30,9 +30,9 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supportingdocinquiry.SupportingDocInquiryManagedBean;
@@ -51,6 +51,10 @@ import org.primefaces.event.FileUploadEvent;
 @RequestScoped
 public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingDocInquiryManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SupportingDocInquiryBackingBean.class);
 	//#11641 - Start
 	private int mandatoryCounter = 1;
@@ -66,16 +70,13 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	/**
 	 * Pre - render Expired SDO Inquiry List Page
 	 */
+	@SuppressWarnings("deprecation")
 	public void preRenderExpiredInquiry() {
 		renewSesionObject();
 		getManagedBean().setExpiredSdoVerifySuppDocApplList(
-				SmServiceLookup.getSupportingDocInquirySO()
-						.retrieveExpiredSdoSuppDocVerificationAppl()
-						.getExpiredSdoInquiryApplList());
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
-						"",null);
+				SmServiceLookup.getSupportingDocInquirySO().retrieveExpiredSdoSuppDocVerificationAppl().getExpiredSdoInquiryApplList()
+				);
+		SmCommonUtil.redirectToPage("/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml", "", null);
 	}
 
 	/**
@@ -84,34 +85,28 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	 * @param SmAppl
 	 *            selectedSmAppl
 	 */
+	@SuppressWarnings("deprecation")
 	public void navigateToExpiredInquiryApplication(String applNo) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(applNo);
-		getManagedBean().setSmAppl(
-				SmServiceLookup.getMofRegistrationSO()
-						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
-		getManagedBean().setSmSupplier(
-				getManagedBean().getSmAppl().getSmSupplier());
+		getManagedBean().setSmAppl(SmServiceLookup.getMofRegistrationSO().retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		getManagedBean().setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
 		checkIfSupplierHasActiveTransaction();
 		if (getManagedBean().isAllowedToSubmit()) {
-			getManagedBean()
-					.setSupplierBusinessTypeVal(
-							SmCommonUtil
-									.getDropDownViewOnlyValueByCode(
-											SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-											getManagedBean().getSmSupplier()
-													.getBusinessType()));
+			getManagedBean().setSupplierBusinessTypeVal(
+					SmCommonUtil.getDropDownViewOnlyValueByCode(
+							SupplierManagementConst.SUPPLIER_BUSINESS_TYPE, getManagedBean().getSmSupplier().getBusinessType()
+					)
+			);
 			setBumiRecommendNote();
 		}
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryApplication.xhtml",
-						"",null);
+		SmCommonUtil.redirectToPage("/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryApplication.xhtml", "", null);
 	}
 
 	/**
 	 * Back to Expired SDO Inquiry List Page
 	 */
+	@SuppressWarnings("deprecation")
 	public void backToExpiredSdoInquiryListPage() {
 		SmCommonUtil
 				.redirectToPage(
@@ -271,16 +266,16 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	
 	public void preRenderView(){
 		log.info("**********preRenderView*********");
-		if(this.getManagedBean().getSmApplInquiry() == null){
-			//this.getManagedBean().setAppId(1259567L); //TODO
+		if(this.getManagedBean().getSmApplInquiry() == null)
+			//this.getManagedBean().setAppId(1259567L);
 			viewDocInquiry();
-		}
 	}
 	
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 	
+	/*
 	private String getUserRole() {
 		FacesScopes facesScopes = new FacesScopes();
 		if (facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
@@ -301,6 +296,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			return StringUtils.EMPTY;
 		}
 	}
+	*/
 	
 	/**
 	 * To check whether selected supplier has active transaction
@@ -609,6 +605,17 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		this.getManagedBean().setSmApplDocFile(null);
 	}
 	
+	//#34392 - start
+	public void deleteInquirySupDocFileAttachment() {
+		SmApplSupportDoc smApplSupportDoc = getManagedBean().getSupportDoc();
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
+	}
+	//#34392 - end
+	
 	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
 		this.getManagedBean().setAttachedFileIndex(index);
 		this.getManagedBean().setSupportDoc(doc);
@@ -657,5 +664,19 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 	}
 	//#11641 - END
+	
+	// #34392 - Start
+	public void downloadSignatureSuppDoc(String docDefinitionKey) throws Exception {
+		if (org.apache.commons.lang.StringUtils.isNotBlank(docDefinitionKey)) {
+			SmApplicationBackingBean SmApplicationBackingBean = new SmApplicationBackingBean();
+			if (docDefinitionKey.equals("SBP")) {
+				SmApplicationBackingBean.getManagedBean().setSmAppl(getManagedBean().getSmApplInquiry().getSmAppl());
+				SmApplicationBackingBean.printDeclarationForm();
+			} else if (docDefinitionKey.equals("SBV")) {
+				SmApplicationBackingBean.printBankVerificationForm();
+			}
+		}
+	}
+	// #34392 - END
 }
 
