@@ -2099,7 +2099,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = offerPrice;
 		if (gstAmount != null) {
 			overallCtAmount = overallCtAmount.add(gstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
@@ -2117,7 +2117,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		BigDecimal overallCtAmount = offerPrice;
 		if (sstAmount != null) {
 			overallCtAmount = overallCtAmount.add(sstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
