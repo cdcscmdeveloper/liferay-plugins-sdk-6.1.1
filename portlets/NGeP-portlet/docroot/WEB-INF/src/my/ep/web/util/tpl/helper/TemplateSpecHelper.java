@@ -46,6 +46,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.sc.QTConstants;	//Bug #35600@Syazani 19/09/2024
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -686,9 +687,9 @@ public class TemplateSpecHelper {
 		BigDecimal totalPrice = null;
 		boolean isPriceTypeTier = isPriceTypeTier(
 				specQuestion.getClPriceTypeCode().getParameterCode());
-		
+		BigDecimal unitPriceTemp = null != unitPrice ? unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE) : null; //Bug #35600@Syazani 19/09/2024
 		if (!isPriceTypeTier) {
-			totalPrice = calulateTotalAmount(specQuestion, unitPrice, quantity);
+			totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);	//Bug #35600@Syazani 19/09/2024
 		}
 		
 		return totalPrice;
@@ -779,7 +780,7 @@ public class TemplateSpecHelper {
 		}		
 		
 		if(null!=totalPrice){
-			totalPrice=totalPrice.setScale(2, BigDecimal.ROUND_UP);
+			totalPrice=totalPrice.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 		return totalPrice;
 	}
