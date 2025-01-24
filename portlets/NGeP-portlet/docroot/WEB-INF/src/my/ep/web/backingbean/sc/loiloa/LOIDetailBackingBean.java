@@ -1742,11 +1742,6 @@ public class LOIDetailBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
-	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-	}
 
 	/**
 	 * getting Approver drop down listing in approval details.
