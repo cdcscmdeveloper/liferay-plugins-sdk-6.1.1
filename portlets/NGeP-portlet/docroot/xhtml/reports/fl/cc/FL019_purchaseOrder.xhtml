@@ -85,7 +85,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			<!-- 29550 - Start-->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.central.contract.panel.name']}"></p:outputLabel>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - End -->
 			</td>
 			<td><p:inputText maxlength="30" id="panelNameId"
 					label="#{lbl['lbl.fl.sistem.panel.name']}"
@@ -214,8 +223,6 @@
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" itemDisabled="#{poRptBB.hasSupplierRole()}"
 						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
@@ -226,8 +233,10 @@
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.itmName']}"
 								itemValue="#{lbl['lbl.rpt.itmName']}"></f:selectItem>
-							<f:selectItem itemLabel="#{lbl['lbl.fl.sistem.panel.name']}"
-								itemValue="#{lbl['lbl.fl.sistem.panel.name']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+								itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
 								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
@@ -238,6 +247,8 @@
 								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
 						</c:when>
 						<c:otherwise>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}"
 								itemValue="#{lbl['lbl.rpt.procurementtypeScreen']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.status']}"

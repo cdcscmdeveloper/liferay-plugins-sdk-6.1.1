@@ -4,10 +4,9 @@
 package my.ep.web.managedbean;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,11 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.collections.CollectionUtils;
-
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.model.StreamedContent;
 
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -33,9 +27,12 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
-import my.ep.persistence.entity.sm.SmSupplier_;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author siew mei
@@ -58,6 +55,8 @@ public abstract class BaseManagedBean implements Serializable {
 	private Boolean groupTask;
 	private boolean isReadOnly;
 	private String currentTaskDocType;// #25037
+	private Calendar currentTaskCreatedDate;// #25037
+
 	/*
 	 * commonly used as a flag to user's permission to download
 	 * documents/attachment
@@ -179,6 +178,25 @@ public abstract class BaseManagedBean implements Serializable {
 	//#32236 end
 	
 	private Integer wipStatusMax;
+	
+	//#28784 - Demo WIP - To display QT BPM version
+	private String bpmVersionNo;
+	private boolean newVersion;
+	
+	//12471 Start
+	private SelectItem[] ministryDDList;
+	private SelectItem[] ptjGroupDDList;
+	private SelectItem[] ptjDDList;
+	private SelectItem[] orgTypeDDList;
+	private SelectItem[] orgNameDDList;
+	private String memberName;
+	private String memberMinOrg;
+	private String memberPtjOrgCode;
+	private String memberPtjOrgName;
+	private UserCommitteeSearchBean committeeSearchBean;
+	//12471 End
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean forceReplace;
 
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
@@ -1093,7 +1111,120 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}
-}
 
-// ***25201
-// ***25692
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
+
+	public boolean isNewVersion() {
+		return newVersion;
+	}
+
+	public void setNewVersion(boolean newVersion) {
+		this.newVersion = newVersion;
+	}
+	//25037 - start
+	public Calendar getCurrentTaskCreatedDate() {
+		return currentTaskCreatedDate;
+	}
+
+	public void setCurrentTaskCreatedDate(Calendar currentTaskCreatedDate) {
+		this.currentTaskCreatedDate = currentTaskCreatedDate;
+	}
+	//25037 - end
+	
+	//12471 Start
+	public SelectItem[] getMinistryDDList() {
+		return ministryDDList;
+	}
+
+	public void setMinistryDDList(SelectItem[] ministryDDList) {
+		this.ministryDDList = ministryDDList;
+	}
+
+	public SelectItem[] getPtjGroupDDList() {
+		return ptjGroupDDList;
+	}
+
+	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
+		this.ptjGroupDDList = ptjGroupDDList;
+	}
+
+	public SelectItem[] getPtjDDList() {
+		return ptjDDList;
+	}
+
+	public void setPtjDDList(SelectItem[] ptjDDList) {
+		this.ptjDDList = ptjDDList;
+	}
+
+	public SelectItem[] getOrgTypeDDList() {
+		return orgTypeDDList;
+	}
+
+	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
+		this.orgTypeDDList = orgTypeDDList;
+	}
+
+	public SelectItem[] getOrgNameDDList() {
+		return orgNameDDList;
+	}
+
+	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
+		this.orgNameDDList = orgNameDDList;
+	}
+
+	public String getMemberName() {
+		return memberName;
+	}
+
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
+	public String getMemberMinOrg() {
+		return memberMinOrg;
+	}
+
+	public void setMemberMinOrg(String memberMinOrg) {
+		this.memberMinOrg = memberMinOrg;
+	}
+
+	public String getMemberPtjOrgCode() {
+		return memberPtjOrgCode;
+	}
+
+	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
+		this.memberPtjOrgCode = memberPtjOrgCode;
+	}
+
+	public String getMemberPtjOrgName() {
+		return memberPtjOrgName;
+	}
+
+	public void setMemberPtjOrgName(String memberPtjOrgName) {
+		this.memberPtjOrgName = memberPtjOrgName;
+	}
+
+	public UserCommitteeSearchBean getCommitteeSearchBean() {
+		return committeeSearchBean;
+	}
+
+	public void setCommitteeSearchBean(UserCommitteeSearchBean committeeSearchBean) {
+		this.committeeSearchBean = committeeSearchBean;
+	}
+	//12471 end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isForceReplace() {
+		return forceReplace;
+	}
+
+	public void setForceReplace(boolean forceReplace) {
+		this.forceReplace = forceReplace;
+	}
+	// #28895_35501 End
+}

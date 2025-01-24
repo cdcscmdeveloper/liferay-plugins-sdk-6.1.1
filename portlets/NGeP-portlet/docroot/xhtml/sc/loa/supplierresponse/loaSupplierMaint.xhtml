@@ -18,6 +18,7 @@
 	    <ui:param name="isBondReq" value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}" />
 	    <ui:param name="isLoaReviseStatus" value="#{lOADetailBackingBean.isLoaReviseStatus()}" />
 	    <ui:param name="isZonalWithPaOrPs" value="#{lOADetailBackingBean.isZonalWithPaOrPs()}" />
+	    <ui:param name="isQtAudit" value="#{lOADetailBackingBean.isQtAudit()}" /> <!-- Bug #35078@Syazani - 14/09/2023 -->
 	
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />

@@ -434,7 +434,15 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.year.from']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/>
+						<!-- #35086 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedJobFunction.staffExperienceId 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.fromYear}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.fromYear}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.year.to']}" /></td>

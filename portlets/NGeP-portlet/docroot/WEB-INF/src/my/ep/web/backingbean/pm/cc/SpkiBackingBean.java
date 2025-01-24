@@ -28,9 +28,9 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.SPKIConst;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SPKIHelper;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -101,6 +101,9 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	private SmSupplier supplier;
 	private PmUser loginUser;
 	private String certIssuer;
+	//#36605
+	private static String digicertEnabled = EpPropertiesUtils.getInstance().getProperty("spki.digicert.enabled");
+	private static String trustgateEnabled = EpPropertiesUtils.getInstance().getProperty("spki.trustgate.enabled");
 	private static final Logger logger = EpLogger.getLogger(SpkiBackingBean.class);
 	//test #30425
 	public static Logger log = Logger.getLogger(SpkiBackingBean.class);
@@ -121,26 +124,35 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 
 	public void getChallengeQuestions() {
 		// #30425 - Start
-		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			//start checking for validation
 			validateInternalSPKI(getSupplier().getEpNo());
 			//end checking for validation
 		}
-		// #30425 - End
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		// #30425 - End, #36605
 		logger.info("::: #25061 getChallengeQuestions :::" + getSpkiEnabledProperty());
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(null)) {
 			logger.info("::: #25061 getSpkiEnabledProperty true :::");
 			logger.info("::: #25061 getCertIssuer " + getCertIssuer());
 			if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions | getCertIssuer-TG : " + getCertIssuer());
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo(),
-						getSupplier().getEpNo(), challengeQues1);
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(getCertIssuer(),
+								getLoginUser().getIdentificationNo(),
+								getSupplier().getEpNo(), challengeQues1)
+						: TrustGateHelper.getInstance().getChallengeQuestion(
+								getLoginUser().getIdentificationNo(),
+								getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions | getCertIssuer-DG : " + getCertIssuer());
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						getLoginUser().getIdentificationNo());
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(getCertIssuer(),
+								getLoginUser().getIdentificationNo(),
+								getSupplier().getEpNo(), challengeQues1)
+						: DigiCertHelper.getInstance().getChallengeQuestion(
+								getLoginUser().getIdentificationNo());
 			}
 			setChallengeQues1(challs.get(0));
 			logger.info("::: #25061 before spki_dlg.show");
@@ -150,25 +162,34 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	
 	public void getChallengeQuestions(String identificationNo) {
 		//#30425 - Start
-		// >>>>>>>> THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR SIT AND DEV ONLY <<<<<<<<<
+		// >>>>>>>> START - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
 		if (getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			//start checking for validation (for checking cert expiration)
 			validateInternalSPKI(getSupplier().getEpNo());
 			//end checking for validation
 		}
-		//#30425 - End
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+		// >>>>>>>> END - THIS 'IF BLOCK' FOR CHECKING SPKI ON/OFF SHOULD NOT MERGE INTO PDS, ONLY FOR UAT, SIT AND DEV ONLY <<<<<<<<<
+		//#30425 - End, #36605
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			if (getTypeOfCert(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam trust gate <<<<<<<<<<<<<");
-				challs = TrustGateHelper.getInstance().getChallengeQuestion(
-						identificationNo, getSupplier().getEpNo(),
-						challengeQues1);
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(
+								SupplierManagementConst.CERT_TRUSTGATE,
+								identificationNo, getSupplier().getEpNo(),
+								challengeQues1) : TrustGateHelper.getInstance()
+						.getChallengeQuestion(identificationNo,
+								getSupplier().getEpNo(), challengeQues1);
 			} else {
 				logger.info("getChallengeQuestions(icNo) || getCertIssuer-TG : " + getCertIssuer());
 				log.info(">>>>>>>>>>>>>>> masuk dalam certIssuer gate <<<<<<<<<");
-				challs = DigiCertHelper.getInstance().getChallengeQuestion(
-						identificationNo);
+				challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+						.getInstance().getChallengeQuestion(
+								SupplierManagementConst.CERT_DIGICERT,
+								identificationNo, getSupplier().getEpNo(),
+								challengeQues1) : DigiCertHelper.getInstance()
+						.getChallengeQuestion(identificationNo);
 			}
 			log.info("The properties of challs >>>>>>>>>>" + challs);
 			log.info("challs size >>>>>>>>>>>>>>>>>>>>>>>" + challs.size());
@@ -215,13 +236,22 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		challenges.put(challengeQues1, challengeAns1);
 
 		String dataForSigning = originalText;
+		String provider = getCertIssuer(identificationNo);
 
-		if (getCertIssuer(identificationNo).equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-			vo = TrustGateHelper.getInstance().getSignedData(identificationNo,
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+		if (provider.equals(SupplierManagementConst.CERT_TRUSTGATE)) {
+			vo = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getSignedData(provider, identificationNo,
+							getSupplier().getEpNo(), pin, challenges,
+							dataForSigning) : TrustGateHelper.getInstance()
+					.getSignedData(identificationNo, getSupplier().getEpNo(),
+							pin, challenges, dataForSigning);
 		} else {
-			vo = DigiCertHelper.getInstance().getSignedData(identificationNo,
-					getSupplier().getEpNo(), pin, challenges, dataForSigning);
+			vo = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getSignedData(provider, identificationNo,
+							getSupplier().getEpNo(), pin, challenges,
+							dataForSigning) : DigiCertHelper.getInstance()
+					.getSignedData(identificationNo, getSupplier().getEpNo(),
+							pin, challenges, dataForSigning);
 		}
 		if (StringUtils.isBlank(vo.getErrMsg())) {
 			signedData = vo.getSignedData();
@@ -230,25 +260,39 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		}
 		return signedData;
 	}
-
+	
+	//#36605 - start
+	/**
+	 * SPKI Sign Transaction
+	 * @param originalText
+	 * @return
+	 */
 	public byte[] spkiSignTransaction(String originalText) {
-
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
-			return spkiEnabledSignTransaction(originalText, null);
-		} else {
-			return null;
-		}
+		return spkiSignTransaction(originalText, null);
 	}
-
-	public byte[] spkiSignTransaction(String originalText,
-			String identificationNo) {
-
-		if (getSpkiEnabledProperty().equalsIgnoreCase("true")) {
+	
+	/**
+	 * SPKI Sign Transaction
+	 * @param originalText
+	 * @param identificationNo
+	 * @return
+	 */
+	public byte[] spkiSignTransaction(String originalText, String identificationNo) {
+		if ("true".equalsIgnoreCase(getSpkiEnabledProperty()) && isCertEnabled(identificationNo)) {
 			return spkiEnabledSignTransaction(originalText, identificationNo);
 		} else {
 			return null;
 		}
 	}
+	
+	private boolean isCertEnabled(String identificationNo){
+		String cert = StringUtils.isBlank(identificationNo) ? getCertIssuer() : getCertIssuer(identificationNo);
+		boolean isTrustgate = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && "true".equals(trustgateEnabled);
+		boolean isDigicert = cert.equals(SupplierManagementConst.CERT_DIGICERT) && "true".equals(digicertEnabled);
+		logger.info("isCertEnabled-"+cert+"\t"+isTrustgate+"\t"+isDigicert);
+		return isTrustgate || isDigicert;
+	}
+	//#36605 - end
 
 	public void setChallengeQues1(String challengeQues1) {
 		this.challengeQues1 = challengeQues1;
@@ -279,6 +323,17 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		logger.info("spkiSignAction");
 
 		Object returnObj = null;
+		//#36605
+		//PIN must be 8 chars long, contain only letters, numbers, and at least 1 alphabet and 1 number
+		if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z0-9]{8}$")){
+			String cert = getCertIssuer();
+			boolean checkTG = cert.equals(SupplierManagementConst.CERT_TRUSTGATE) && !"true".equals(trustgateEnabled);
+			boolean checkDG = cert.equals(SupplierManagementConst.CERT_DIGICERT) && !"true".equals(digicertEnabled);
+			if (checkTG || checkDG || !"true".equalsIgnoreCase(getSpkiEnabledProperty())){
+				//disable for environment other than PRD
+				//throw new EpException(MessageConst.ERROR_776060, null);
+			}
+		}
 
 		try {
 
@@ -415,13 +470,27 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 	}
 
 	public void changeChallengeQuestions() {
+		//#36605
+		if (!isCertEnabled(null)){
+			return;
+		}
 		if (getCertIssuer().equals(SupplierManagementConst.CERT_TRUSTGATE)) {
-			challs = TrustGateHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo(),
-					getSupplier().getEpNo(), challengeQues1);
+			challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getChallengeQuestion(
+							SupplierManagementConst.CERT_TRUSTGATE,
+							getLoginUser().getIdentificationNo(),
+							getSupplier().getEpNo(), challengeQues1)
+					: TrustGateHelper.getInstance().getChallengeQuestion(
+							getLoginUser().getIdentificationNo(),
+							getSupplier().getEpNo(), challengeQues1);
 		} else {
-			challs = DigiCertHelper.getInstance().getChallengeQuestion(
-					getLoginUser().getIdentificationNo());
+			challs = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getChallengeQuestion(
+							SupplierManagementConst.CERT_DIGICERT,
+							getLoginUser().getIdentificationNo(),
+							getSupplier().getEpNo(), challengeQues1)
+					: DigiCertHelper.getInstance().getChallengeQuestion(
+							getLoginUser().getIdentificationNo());
 		}
 		setChallengeQues1(challs.get(0));
 	}
@@ -487,31 +556,40 @@ public class SpkiBackingBean extends BaseBackingBean implements Serializable {
 		
 		// if process checking validation is successful
 		if (validateDigiCertDate.isSuccessful()) {
-			// if return with results, then personnel have record in Pm Digi Cert
+			// if return with results, then personnel have record in pmDigiCert
 			if(validateDigiCertDate.isHasRecord()){
-				// akan masuk if ni bila dia expired sahaja
-				if (validateDigiCertDate.isExpired()) {
-					if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-							|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-						log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-						throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-						// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+				// if the validation from pmDigiCert status = 1, then it will proceed check the date is expired or not
+				if (!validateDigiCertDate.isStatusNotValid()) {
+					// if the pmDigicert date is expired
+					if (validateDigiCertDate.isExpired()) {
+						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
+								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
+								|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+							log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776063);
+							// Please make sure your soft certificate application is completed and check the status in Softcert Management Menu.
+						} else {
+							StringBuilder sb = new StringBuilder();
+							sb.append(roleDesc());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+							// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
 					} else {
-						StringBuilder sb = new StringBuilder();
-						sb.append(roleDesc());
-						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
-						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
-						
+						// if it is not expired, but it is revoked, it will going into this block
+						if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED) {
+							StringBuilder sb = new StringBuilder();
+							sb.append(roleDesc());
+							throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+							// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
+						}
 					}
+
 				} else {
-					//if it is not expired, but it is revoked, it will going into this block
-					if(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REVOKED){
-						StringBuilder sb = new StringBuilder();
-						sb.append(roleDesc());
-						throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] {sb.toString()});
-						// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
-					}
+					// if softcert in pmDigiCert status = 0, then the softcert might be not useful anymore even the date is not expired
+					StringBuilder sb = new StringBuilder();
+					sb.append(roleDesc());
+					throw new EpException(MessageConst.ERROR_DIGICERT_776066, new String[] { sb.toString() });
+					// <Role Name> does not have a valid soft certificate. Please apply for a soft certificate first.
 				}
 			} else {
 				// if return with 0 results, then personnel didn't have record in Pm Digi Cert

@@ -160,7 +160,8 @@
 					<h:outputText value="#{category[2]}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.pm.category.desc']}">
+				<p:column headerText="#{lbl['lbl.pm.category.desc']}"
+				   style="max-width:400px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"> <!-- #35590 - wrap text -->
 					<h:outputText value="#{category[3]}" />
 				</p:column>
 

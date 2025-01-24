@@ -12,7 +12,9 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:panel header="#{lbl['lbl.sm.questionaire.answer.header']}" id="questionPanel">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<!-- #35070 - Start  -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<!-- #35070 - End -->
 			<table style="width: 100%">
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sm.questionaire.feedback.note1']}" escape="false"/></td>
@@ -62,13 +64,14 @@
 						value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
 						var="ques">
 						<tr>
-							<td>#{status.index+1}. </td>
-							<td>#{ques.smQuestion.questionValue}</td>
+							<!--START #34920 -->
+							<td><h:outputText rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId != 2}" value="#{status.index == 0 ? status.index+1 : status.index}. "/></td>
+							<td><h:outputText value="#{ques.smQuestion.questionValue}"/></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><!--START #12768 -->
-								<p:inputTextarea value="#{ques.otherRemark}" rows="6" cols="100" maxlength="2000" style="width:80%;"
+								<p:inputTextarea value="#{ques.otherRemark}" rows="6" cols="100" maxlength="3500" style="width:80%;"
 									label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
 									rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId == 2}" autoResize="false">
 									<c:set value="#{ques.smQuestion.smAnswerCategory.smAnswers[0].answerId}" target="#{ques.smAnswer}" property="answerId" />
@@ -76,8 +79,9 @@
 											
 								<p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}" 
 								disabled="#{ques.smQuestion.smAnswerCategory.answerCategoryId == 5 or ques.smQuestion.smAnswerCategory.answerCategoryId == 4}"
-								required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
+								required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index == 0 ? status.index+1 : status.index}"
 								rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId != 2}">
+								<!--END #34920 -->
 									<f:selectItems
 										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
 										var="ans" itemLabel="#{ans.answerDesc}"

@@ -33,7 +33,7 @@
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq
 						and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.noSupplierPackageExist ne null and evaluationBackingBean.managedBean.noSupplierPackageExist}"
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist ne null and evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
 					</c:if>

@@ -19,20 +19,13 @@
 		<tr>
 			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
 			<td><p:selectOneMenu
-					value="#{evaluationBackingBean.managedBean.financialSummaryView}" rendered="#{!evaluationBackingBean.managedBean.noSupplierPackageExist}">
+					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
 					<f:selectItems value="#{evaluationBackingBean.finanialSummaryDropDownValues()}"></f:selectItems>
 					<p:ajax event="change" process="@this" partialSubmit="true"
 						listener="#{evaluationBackingBean.financialsummaryChange}"
 						update="@([id$=financialviewSummary])"></p:ajax>
 				</p:selectOneMenu></td>
-				<td><p:selectOneMenu
-					value="#{evaluationBackingBean.managedBean.financialSummaryView}" rendered="#{evaluationBackingBean.managedBean.noSupplierPackageExist}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"/>
-					<f:selectItem itemLabel="#{lbl['lbl.sc.evaluation.view.by.item.preference.margin']}" itemValue="#{evaluationBackingBean.finanialSummaryDropDownValues().get(2).getValue()}"/>
-					<p:ajax event="change" process="@this" partialSubmit="true"
-						listener="#{evaluationBackingBean.financialsummaryChange}"
-						update="@([id$=financialviewSummary])"></p:ajax>
-				</p:selectOneMenu></td>
+
 		</tr>
 
 	</table>

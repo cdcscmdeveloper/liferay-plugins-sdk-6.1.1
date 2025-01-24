@@ -70,7 +70,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+			<!-- 29550 - Start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.central.contract.panel.name']}"></p:outputLabel>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - End -->
 			</td>
 			<td><p:inputText maxlength="30" id="panelNameId"
 					label="#{lbl['lbl.fl.sistem.panel.name']}"
@@ -133,8 +142,8 @@
 						itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
 					<c:choose>
 						<c:when test="#{flReportBB.hasFactoringUserRole()}">
-							<f:selectItem itemLabel="#{lbl['lbl.fl.sistem.panel.name']}"
-								itemValue="#{lbl['lbl.fl.sistem.panel.name']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+								itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
 								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"

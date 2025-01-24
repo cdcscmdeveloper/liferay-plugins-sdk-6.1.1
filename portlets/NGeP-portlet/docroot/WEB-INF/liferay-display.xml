@@ -116,6 +116,7 @@
 			<portlet id="scSpecificationBusinessOwner" />
 			<portlet id="scSpecificationCommittee" />
 			<portlet id="scNoticeBoard" />
+			<portlet id="scNoticeBoardDetail" />
 			<portlet id="scLoiList" />
 			<portlet id="scLoiReview" />
 			<portlet id="scLoiSupplierResponse" />
@@ -389,6 +390,7 @@
 		<portlet id="profileRobExpire"></portlet>
 		<!-- LOG :12491 Finish Button -->
 		<portlet id="FirstTimeMessage"></portlet>
+		<portlet id="spkiTest"></portlet>
 	</category>
 
 	<category name="category.ep.wp">

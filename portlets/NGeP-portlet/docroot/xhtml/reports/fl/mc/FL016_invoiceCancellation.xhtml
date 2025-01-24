@@ -168,7 +168,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"/> 
+			<!-- 29550 - start -->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}" style="margin-top:5px;width:190px;"/>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}"/>
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - end -->
 			</td>
 			<td>
 				<p:inputText value="#{mcInvCancelRptBB.managedBean.supplierInvNo}">
@@ -191,22 +200,29 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 							itemDisabled="#{mcInvCancelRptBB.hasSupplierRole()}"
 	      					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<c:if test="#{flReportBB.hasFactoringUserRole()}">
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.invoiceNo']}"
-							itemValue="#{lbl['lbl.rpt.invoiceNo']}"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.fl.supp.invoice.no']}"
-							itemValue="#{lbl['lbl.fl.supp.invoice.no']}"></f:selectItem>
-						<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
-							itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
-					</c:if>
+					<c:choose>
+						<c:when test="#{flReportBB.hasFactoringUserRole()}">
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.invoice.no']}"
+								itemValue="#{lbl['lbl.fl.invoice.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.inv.ref']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.inv.ref']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
+						</c:when>
+						<c:otherwise>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+						</c:otherwise>
+					</c:choose>
+					
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu></td>
 			<!-- 29550 - end -->

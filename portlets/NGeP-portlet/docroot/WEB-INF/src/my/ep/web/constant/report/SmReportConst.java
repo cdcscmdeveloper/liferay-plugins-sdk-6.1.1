@@ -234,6 +234,8 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_END_DATE_FROM = "PENDDATEFROM";
 	public static final String PARAM_END_DATE_TO = "PENDDATETO";
 	// #29617 end
+	//#33783
+	public static final String PARAM_IS_CLBG = "PISCLBG";
 	
 	public String getSM_RESPONSE_REPORT() {
 		return SM_RESPONSE_REPORT;

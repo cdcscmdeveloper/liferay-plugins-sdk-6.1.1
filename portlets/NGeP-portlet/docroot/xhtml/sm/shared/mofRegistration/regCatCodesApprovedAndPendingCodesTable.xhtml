@@ -36,8 +36,9 @@
 				update=":form:tt:catCodeInfPan"></p:ajax>
 			<p:columnGroup type="header">
 				<p:row>
+					<!-- #32008 -->
 					<p:column style="width:2%"
-						rendered="#{!backingBean.managedBean.approverUser}"
+						rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"
 						disabledSelection="#{backingBean.managedBean.supplierUser and 
 							(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
@@ -77,9 +78,9 @@
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:row>
 			</p:columnGroup>
-			<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null-->
+			<!-- 26238 add catBean.cancelCategory and catBean.disciplinaryActionId!=null, #32008 -->
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{!backingBean.managedBean.approverUser}"
+				rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"
 				disabledSelection="#{backingBean.managedBean.supplierUser and 
 					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or 
 					(not empty catBean.approvedDate and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS))
@@ -112,7 +113,7 @@
 				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="20"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" ><!-- #32008, #36289 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
@@ -407,6 +408,7 @@
 				</h:panelGroup>
 
 				#{lbl['lbl.sm.download.categorycode']}
+				<!-- #32008 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCategoryOtherDescription}"
@@ -415,6 +417,7 @@
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					oncomplete="addtnlCatCodeDeletePopUp.show()"
 					update="@form" partialSubmit="true"
 					process=":form:tt:catCodeInfPan">

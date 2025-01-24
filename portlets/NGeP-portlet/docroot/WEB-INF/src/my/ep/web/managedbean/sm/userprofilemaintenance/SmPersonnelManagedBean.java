@@ -29,6 +29,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 
 @ManagedBean(name = "smPersonnelMB")
 @SessionScoped
@@ -160,6 +162,15 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	// #31710 - start
 	private String supplierType;
 	// #31710 - end
+	//#34810 - Start
+	private boolean checkingAfterSave;
+	//#34810 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmSupplier oldSmSupplier;
+	private String oldRole;
+	private String newRole;
+	private PmOrgProfile oldOrg;
+	// #28895_35501 End
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -1123,5 +1134,46 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.supplierType = supplierType;
 	}
 	// #31710 - end
-	
+	//#34810 - Start
+	public boolean isCheckingAfterSave() {
+		return checkingAfterSave;
+	}
+
+	public void setCheckingAfterSave(boolean checkingAfterSave) {
+		this.checkingAfterSave = checkingAfterSave;
+	}
+	//#34810 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmSupplier getOldSmSupplier() {
+		return oldSmSupplier;
+	}
+
+	public void setOldSmSupplier(SmSupplier oldSmSupplier) {
+		this.oldSmSupplier = oldSmSupplier;
+	}
+
+	public String getOldRole() {
+		return oldRole;
+	}
+
+	public void setOldRole(String oldRole) {
+		this.oldRole = oldRole;
+	}
+
+	public String getNewRole() {
+		return newRole;
+	}
+
+	public void setNewRole(String newRole) {
+		this.newRole = newRole;
+	}
+
+	public PmOrgProfile getOldOrg() {
+		return oldOrg;
+	}
+
+	public void setOldOrg(PmOrgProfile oldOrg) {
+		this.oldOrg = oldOrg;
+	}
+	// #28895_35501 End
 }

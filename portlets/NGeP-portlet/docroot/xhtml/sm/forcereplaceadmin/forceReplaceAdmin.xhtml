@@ -45,7 +45,7 @@
 			
 			<p:outputPanel rendered="#{not empty forceReplaceSuppAdminBackingBean.managedBean.accType}">
 				<tr>
-					<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register']}" /></td>
+					<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register']} " /><br /><h:outputText styleClass="instruction" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC}" value="(#{lbl['lbl.sm.key.in.info.during.register.individual.note']})." /></td>
 				</tr>
 			</p:outputPanel>
 			

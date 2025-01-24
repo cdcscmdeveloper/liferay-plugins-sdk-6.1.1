@@ -149,7 +149,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean reviseInvoice = false;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplineVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	
@@ -162,6 +162,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
     //30911 end
 
     private boolean isSupplementContractComplete = true; //28719
+    
+    //#35508 start
+  	private String originalSupplierInvRef;
+  	private String originalBankAccNoName;
+  	//#35508 end
 
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
@@ -1237,12 +1242,12 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplineVO() {
+		return disciplineVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
+		this.disciplineVO = disciplineVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -1298,4 +1303,20 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.isSupplementContractComplete = isSupplementContractComplete;
 	}
 	//28719-end	
+
+	public String getOriginalSupplierInvRef() {
+		return originalSupplierInvRef;
+	}
+
+	public void setOriginalSupplierInvRef(String originalSupplierInvRef) {
+		this.originalSupplierInvRef = originalSupplierInvRef;
+	}
+
+	public String getOriginalBankAccNoName() {
+		return originalBankAccNoName;
+	}
+
+	public void setOriginalBankAccNoName(String originalBankAccNoName) {
+		this.originalBankAccNoName = originalBankAccNoName;
+	}
 }

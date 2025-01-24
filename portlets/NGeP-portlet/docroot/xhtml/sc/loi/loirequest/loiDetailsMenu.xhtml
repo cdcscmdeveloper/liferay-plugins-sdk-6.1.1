@@ -255,39 +255,51 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.loi.signer']}" id="loiSignerId"
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			
+			<!-- 20230111@Haziq - #12487 - start -->
 			<tr>
-				<td width="22%"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.signer']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" />
-				</td>
-				<td>
-					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
-						<p:selectOneMenu id="contractSigner" 
-						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
-							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
-							style="width: 276px;margin-bottom: 5px;"
-							required="#{!lOIDetailBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<!-- #30447 start -->
-							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
-								var="contractUser" itemLabel="#{contractUser.salutationCode.salutationName.concat(' ').concat(contractUser.userName)}"
-								itemValue="#{contractUser.userId}" />
-							<!-- #30447 end -->
-								<p:ajax event="change" listener="#{lOIDetailBackingBean.contractSignerEvent}"
-						    partialSubmit="true" process="@this" update="@this loiSignerId" />
-						</p:selectOneMenu>
-						<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
-					</c:if>
-					<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+				<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
 						<!-- #30447 start -->
-						<p:inputText size="34"
+						<p:inputText size="106"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}"
 							disabled="true" />
 						<!-- #30447 end -->
+				</c:if>	
+
+					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
+						<p:outputPanel id="opPtjOrgCode" >
+							<p:inputText 
+								size="106"
+								id="itSelectedUserPtj" 
+								value="#{lOIDetailBackingBean.managedBean.contractSignerUser.salutationCode.salutationName.concat(' ').concat(lOIDetailBackingBean.managedBean.contractSignerUser.userName)}" 
+								readonly="true"
+								/>
+							&#160;
+							<p:commandLink id="ptjSearchCL" partialSubmit="true"
+								process="@this" update=":form:userPtjOrg:userPtjPopup"
+								action="#{userOrganisationSearchBackingBean.initPtjPopupDefaultMinistry(lOIDetailBackingBean.managedBean.ministryOrgProfile.orgProfileId)}"
+								oncomplete="userPtjPopup.show();" >
+								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+							</p:commandLink>
+						</p:outputPanel>
+
+						<h:panelGroup >
+							<ac:userPtjPopup 
+								id="userPtjOrg"
+								orgTypeParamCode="#{ParameterConst.orgTypePtj}"
+								okAction="lOIDetailBackingBean.userPtjListener" update=":form:opPtjOrgCode,:form:itSelectedUserPtj,:form:loiSignerDesigId"
+								includeUser="true" 
+								includePegawaiPengawal="false" />
+						</h:panelGroup>
 					</c:if>
 				</td>
 			</tr>
+			<!-- 20230111@Haziq - #12487 - end -->
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.signer.desig']}" />
 					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />

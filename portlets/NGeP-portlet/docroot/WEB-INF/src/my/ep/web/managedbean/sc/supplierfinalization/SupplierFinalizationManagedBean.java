@@ -213,6 +213,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<String> disqualifiedStages;
 	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
 	//6906 note 117 - end
+	private ScQtRecommend lastSelectedItem;//35157
 
 	
 	//20230711@Asyrafhaziq-SQUBE Bug Minor #16
@@ -320,6 +321,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//29562 - END
 	
 	private ScQt checkCategoryCodeQt;//#29466
+	
+	//#30008 - start
+	private boolean notReachAgrm;
+	
+	private boolean allSupplierDisagreeEPV;//#21692
 	
 	/**
 	 * @return the activeIndex
@@ -2573,6 +2579,33 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	//6906 note 202 - end
+	//35157 - start
+	public ScQtRecommend getLastSelectedItem() {
+		return lastSelectedItem;
+	}
+	
+	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
+		this.lastSelectedItem = lastSelectedItem;
+	}
+	//35157 - end
+
+	public boolean isNotReachAgrm() {
+		return notReachAgrm;
+	}
+
+	public void setNotReachAgrm(boolean notReachAgrm) {
+		this.notReachAgrm = notReachAgrm;
+	}
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 
 }
 // ***25201

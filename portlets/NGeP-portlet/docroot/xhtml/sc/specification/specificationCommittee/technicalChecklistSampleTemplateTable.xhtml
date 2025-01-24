@@ -9,7 +9,8 @@
 	<p:panel id="technicalCheckListSampleTemplateTable"
 		header="#{lbl['lbl.sc.qt.sampel.technical.panel.template.header']}" 
 		toggleable="true">
-
+         <h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.spec.sample.spec.main.instruction']}" escape="false" /><!-- #11104 Reendorse -->
 
 		<p:dataTable var="technicalSampletemplate"
 			id="technicalSampleTemplateTableId"
@@ -18,15 +19,18 @@
 			rowIndexVar="index" style="width:100%"
 			rowKey="#{technicalSampletemplate}">
     
-
+<ui:param name="samplerequired"
+				value="#{specificationBackingBean.checkTemplateRequiredSample(technicalSampletemplate)}"></ui:param><!-- #11104 Reendorse -->
 			<p:column headerText="#{lbl['lbl.sc.qt.sampel.technical.template']}"
-				style="width:85%;white-space: normal;">
+				style="width:65%;white-space: normal;"><!-- #11104 Reendorse -->
 				<h:outputText value="#{technicalSampletemplate.title}"></h:outputText>
 			</p:column>
-
-
-
-			<p:column style="width:15%;text-align: center;">
+              <p:column 
+						headerText="#{lbl['lbl.sc.qt.spec.sample.question.requird.sample']}"
+						style="width:20%; white-space:normal;"><!-- #11104 Reendorse -->
+						<h:outputText value="#{lbl[samplerequired ? 'lbl.txt.yes' : 'lbl.txt.no']}"></h:outputText>
+			</p:column><!-- #11104 Reendorse -->         
+            <p:column style="width:15%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
 

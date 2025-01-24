@@ -12,45 +12,45 @@
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
-				suppEdit="false"
-				poEdit="false"
-				appEdit="false"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditCompBasic}"
+				poEdit="#{backingBean.managedBean.editVO.poEditCompBasic}"
+				appEdit="#{backingBean.managedBean.editVO.appEditCompBasic}"
 				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC}" 
 				tabNo="0" label="#{lbl['lbl.sm.companyStepLbl']}"/>
 		</p:menuitem>
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
-				suppEdit="false"
-				poEdit="false"
-				appEdit="false"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditAssocProj}"
+				poEdit="#{backingBean.managedBean.editVO.poEditAssocProj}"
+				appEdit="#{backingBean.managedBean.editVO.appEditAssocProj}"
 				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH}" 
 				tabNo="1" label="#{lbl['lbl.sm.branchStepLbl']}" />
 		</p:menuitem>
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
-				suppEdit="false"
-				poEdit="false"
-				appEdit="false"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditPersonnel}"
+				poEdit="#{backingBean.managedBean.editVO.poEditPersonnel}"
+				appEdit="#{backingBean.managedBean.editVO.appEditPersonnel}"
 				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL}" 
 				tabNo="2" label="#{lbl['lbl.sm.personStepLbl']}" />
 		</p:menuitem>
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
-				suppEdit="false"
-				poEdit="false"
-				appEdit="false"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditEquity}"
+				poEdit="#{backingBean.managedBean.editVO.poEditEquity}"
+				appEdit="#{backingBean.managedBean.editVO.appEditEquity}"
 				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}" 
 				tabNo="3" label="#{lbl['lbl.sm.capitalStepLbl']}"/>
 		</p:menuitem>
 		<p:menuitem>
 			<ac:smApplMenuItem
 				backingBean = "#{backingBean}"
-				suppEdit="false"
-				poEdit="false"
-				appEdit="false"
+				suppEdit="#{backingBean.managedBean.editVO.suppEditBank}"
+				poEdit="#{backingBean.managedBean.editVO.poEditBank}"
+				appEdit="#{backingBean.managedBean.editVO.appEditBank}"
 				section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK}" 
 				tabNo="4" label="#{lbl['lbl.sm.bankStepLbl']}"/>
 		</p:menuitem>
@@ -60,9 +60,9 @@
 				<p:menuitem>
 					<ac:smApplMenuItem
 						backingBean = "#{backingBean}"
-						suppEdit="false"
-						poEdit="false"
-						appEdit="false"
+						suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+						poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+						appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 						section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 						tabNo="5" label="#{lbl['lbl.sm.supDocStepLbl']}" />
 				</p:menuitem>
@@ -70,9 +70,9 @@
 				<p:menuitem>
 					<ac:smApplMenuItem
 						backingBean = "#{backingBean}"
-						suppEdit="false"
-						poEdit="false"
-						appEdit="false"
+						suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+						poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+						appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 						section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION}" 
 						tabNo="6" label="#{lbl['lbl.sm.wizard.declarationLbl']}" />
 				</p:menuitem>
@@ -81,9 +81,9 @@
 				<p:menuitem>
 					<ac:smApplMenuItem
 						backingBean = "#{backingBean}"
-						suppEdit="false"
-						poEdit="false"
-						appEdit="false"
+						suppEdit="#{backingBean.managedBean.editVO.suppEditCategory}"
+						poEdit="#{backingBean.managedBean.editVO.poEditCategory}"
+						appEdit="#{backingBean.managedBean.editVO.appEditCategory}"
 						hasOverlap="#{backingBean.managedBean.editVO.hasOverlapped}"
 						section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY}" 
 						tabNo="5" label="#{lbl['lbl.sm.catCodeStepLbl']}" />
@@ -94,9 +94,9 @@
 						<p:menuitem>
 							<ac:smApplMenuItem
 								backingBean = "#{backingBean}"
-								suppEdit="false"
-								poEdit="false"
-								appEdit="false"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditFacility}"
+								poEdit="#{backingBean.managedBean.editVO.poEditFacility}"
+								appEdit="#{backingBean.managedBean.editVO.appEditFacility}"
 								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY}" 
 								tabNo="6" label="#{lbl['lbl.sm.factoryStepLbl']}" />
 						</p:menuitem>
@@ -106,9 +106,9 @@
 								<p:menuitem>
 									<ac:smApplMenuItem
 										backingBean = "#{backingBean}"
-										suppEdit="false"
-										poEdit="false"
-										appEdit="false"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditEquipment}"
+										poEdit="#{backingBean.managedBean.editVO.poEditEquipment}"
+										appEdit="#{backingBean.managedBean.editVO.appEditEquipment}"
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP}" 
 										tabNo="7" label="#{lbl['lbl.sm.equipmentStepLbl']}" />
 								</p:menuitem>
@@ -116,9 +116,9 @@
 								<p:menuitem>
 									<ac:smApplMenuItem
 										backingBean = "#{backingBean}"
-										suppEdit="false"
-										poEdit="false"
-										appEdit="false"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="8" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
@@ -128,9 +128,9 @@
 										<p:menuitem>
 											<ac:smApplMenuItem
 												backingBean = "#{backingBean}"
-												suppEdit="false"
-												poEdit="false"
-												appEdit="false"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="9" label="#{lbl['lbl.sm.siteReviewLbl']}" />
 										</p:menuitem>
@@ -252,9 +252,9 @@
 								<p:menuitem>
 									<ac:smApplMenuItem
 										backingBean = "#{backingBean}"
-										suppEdit="false"
-										poEdit="false"
-										appEdit="false"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 										tabNo="7" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 								</p:menuitem>
@@ -264,9 +264,9 @@
 										<p:menuitem>
 											<ac:smApplMenuItem
 												backingBean = "#{backingBean}"
-												suppEdit="false"
-												poEdit="false"
-												appEdit="false"
+												suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+												poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+												appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 												section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 												tabNo="8" label="#{lbl['lbl.sm.siteReviewLbl']}" />
 										</p:menuitem>
@@ -392,9 +392,9 @@
 						<p:menuitem>
 							<ac:smApplMenuItem
 								backingBean = "#{backingBean}"
-								suppEdit="false"
-								poEdit="false"
-								appEdit="false"
+								suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+								poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+								appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 								section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS}" 
 								tabNo="6" label="#{lbl['lbl.sm.docsReviewLbl']}" />
 						</p:menuitem>
@@ -404,9 +404,9 @@
 								<p:menuitem>
 									<ac:smApplMenuItem
 										backingBean = "#{backingBean}"
-										suppEdit="false"
-										poEdit="false"
-										appEdit="false"
+										suppEdit="#{backingBean.managedBean.editVO.suppEditSuppDoc}"
+										poEdit="#{backingBean.managedBean.editVO.poEditSuppDoc}"
+										appEdit="#{backingBean.managedBean.editVO.appEditSuppDoc}"
 										section="#{SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV}" 
 										tabNo="7" label="#{lbl['lbl.sm.siteReviewLbl']}" />
 								</p:menuitem>

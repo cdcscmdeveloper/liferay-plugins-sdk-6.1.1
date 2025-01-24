@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
+ <ui:param name="isSampleExist" value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(supplierProposalDetailBackingBean.managedBean.qt)}"></ui:param><!-- #11104 Reendorse -->
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 
@@ -38,11 +38,11 @@
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.scAddress)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}">
+			<p:column headerText="#{lbl['lbl.sc.coordinate.officer']}" rendered="#{isSampleExist}"><!-- #11104 Reendorse -->
 				<p:outputLabel style="float : left;white-space: normal;"
 					value="#{samplesubmissiondtl.scAddress.contactPerson}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.sample.submission.coordinating.officer.contact.no']}" rendered="#{isSampleExist}"><!-- #11104 Reendorse -->
 				<p:outputLabel style="float : left"
 					value="#{samplesubmissiondtl.scAddress.contactMobileNo}" />
 			</p:column>
@@ -91,6 +91,7 @@
 				<td />
 				<td />
 			</tr>
+			<ui:fragment rendered="#{isSampleExist}"><!-- #11104 Reendorse -->
 			<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.coordinate.officer']}" /></td>
 								<td>
@@ -112,7 +113,8 @@
 								size="30"  /> </td>
 								<td />
 				                <td />
-		</tr>		                
+		</tr>	
+		</ui:fragment><!-- #11104 Reendorse -->	                
 			<tr>
 				<td colspan="4"><br /> <h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
@@ -131,11 +133,11 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.sampletosubmit']}" toggleable="true">
-	<!-- #29187 Start Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
 	<h:outputText styleClass="instruction"  
 			value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction']}"
 			escape="false" />
-	<!-- #29187 End Vinod -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<p:dataTable id="sampleitemid" var="sampleitemdtl"
 			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
@@ -154,7 +156,8 @@
 			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}" style="width:15%;">
 					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
 				</p:column >
-				<p:column style="width:15%;">
+				
+				<p:column style="width:15%;" rendered="#{isSampleExist}"><!-- #11104 Reendorse -->
 					<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.qt.sample.quantity.proposal']}" />
 							&#160;

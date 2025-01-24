@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IPtjReorgSO;
@@ -46,6 +48,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -475,8 +478,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value()) ||
 			getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || (hasSupplierRole() && !hasGovernmentUserRole())
 			//Enhancement 29550 - start
-			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
-			|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+			|| hasFactoringUserRole() || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+			|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
 			|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())
 			//Enhancement 29550 - end 
 			) {
@@ -533,13 +536,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	  *         false, if login user is not User/internal auditor
 	*/	
 	public boolean disableMinistryLov() {
-		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
-				//Enhancement 29550 - start
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				//Enhancement 29550 - end
-				);
+		return (hasGovernmentUserRole()	|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
 	}
 	
 	/**
@@ -552,13 +549,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	*/	
 	
 	public boolean disablePtjLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null 
-				//Enhancement 29550 - start
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				//Enhancement 29550 - end
-				);
+		return (hasGovernmentUserRole() || getManagedBean().getPtjGroup() == null);
 	}
 	
 	/**
@@ -571,13 +562,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	*/	
 	
 	public boolean disablePtjGroupLov() {
-		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null 
-				//Enhancement 29550 - start
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				//Enhancement 29550 - end
-				);
+		return (hasGovernmentUserRole() || getManagedBean().getMinistry() == null);
 	}
 	
 	/**
@@ -1705,6 +1690,78 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	
 	//Enhancement 29550 - start
 	/**
+	  * The method used to disable ptj group lov by report code.
+	*/	
+	public boolean disablePtjGroupLovByReportCode() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getManagedBean().getMinistry() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	  * The method used to disable ptj lov by report code.
+	*/	
+	public boolean disablePtjLovByReportCode() {
+		if(!getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value()) && !getFacesScopes().hasRoleUser(RoleCode.FACTORING_USER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.ACKNOWLEDGE_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.PAY_OFFICER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value()) 
+					|| getManagedBean().getPtjGroup() == null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Gets the default ptj group and ptj search values for certain 
+	 * reports based on role auditor internal and fl approver.
+	 */
+	@SuppressWarnings("null")
+	public void defaultPtjGrpAndPtjValues(){
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+		PmOrgProfile orgProfile = null;
+		
+		if (userResDTO.getUserOrgList() != null	&& userResDTO.getUserOrgList().size() > 0) {
+			orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+		}
+		
+		if(getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())){
+			PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(orgProfile.getOrgProfileId());
+			
+			if(ministryOrgProfile != null){
+				this.getManagedBean().setMinistry(ministryOrgProfile);
+				this.getManagedBean().setPtjGroup(retrieveJabatanOrgProfile(orgProfile.getOrgProfileId()));
+				this.getManagedBean().setPtj(orgProfile);
+			}else{
+				this.getManagedBean().setMinistry(orgProfile);
+			}
+			
+		}else{
+			this.getManagedBean().setMinistry(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()));
+			this.getManagedBean().setPtjGroup(null);
+			this.getManagedBean().setPtj(null);
+		}
+	}
+	
+	/**
 	 * To validate duration of contract which exceed 1 year or not
 	 */
 	public void getContractDuration(Date fromDate, Date toDate){
@@ -1754,7 +1811,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	
 	/**
-	 * To retrieve supplier data by company name
+	 * To retrieve supplier data by company name and registration number
 	 */
 	public void retrieveSuppDataByCompName(String compName, String regNo){
 		log.info("ReportBackingBean-retrieveSuppDataByCompName");
@@ -1765,6 +1822,52 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		getManagedBean().setBusinessRegNo(supplDataLst.getSmSupplier().getRegNo());
 		getManagedBean().setEpNo(supplDataLst.getSmSupplier().getEpNo());
 		getManagedBean().setMofNo(supplDataLst.getMofNo());
+	}
+	
+	/**
+	 * #29550 fix
+	 * Get status group select items for dropdown.
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getGroupStatusDropdown() {		
+		
+		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
+
+		try {
+			
+			items = new SelectItem[5];
+			
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 1:Status Before Pending Invoice: 41000,41002,41005,41010,41500,41505,41510
+			items[1] = new SelectItem("1", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.beforePendingInv", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 2:Status Pending Payment Match: 41025,41525
+			items[2] = new SelectItem("2", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.pendingPaymentMatch", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 3:Status Pending Payment and Closed: 41030,41035,41530,41535
+			items[3] = new SelectItem("3", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.pendingPaymentClosed", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			//group 4:Status Cancelled: 41400,41900
+			items[4] = new SelectItem("4", ResourceBundleUtils.getMessage(
+					"lbl.rpt.drpdown.cancelledLabel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			
+		} catch (Exception e) {
+			log.info(e.toString());
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+
+		return items;
 	}
 	
 	//Enhancement 29550 - end

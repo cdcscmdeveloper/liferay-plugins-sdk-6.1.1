@@ -19,7 +19,9 @@
 
 	<ui:define name="contentSection">
 		<p:outputPanel id="verification2Panel">
-		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+		<!-- #34159 - START -->
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>
+		<!-- #34159 - END -->
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -33,10 +35,14 @@
 				</td>
 				<td style="white-space: nowrap; float: right;">
 				<!-- #28765 -->
+					<!-- #34159 - START - add param disablevalidation -->
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="verification2Panel" 
-					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
-					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+						disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
+						update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+					<!-- #34159 - END -->
 					<!-- #33129 - START -->
 					<ac:confirmationPopup id="declareDeletePopUpId"
 						widget="declareDeletePopUp"

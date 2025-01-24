@@ -11,8 +11,8 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></td>
 				<c:choose>
-					<c:when test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
-					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
+					<c:when test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
 						<td style="font-size: 12px;">:
 						#{evaluationBackingBean.managedBean.supplierNo}</td>
 					</c:when>
@@ -26,8 +26,8 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>		
 				<c:choose>
-					<c:when test="evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
-					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification">
+					<c:when test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex == 1
+					and evaluationBackingBean.managedBean.evaluationCheckListType == ParameterConst.documentDefinitionTypeTemplateSpecification}">
 						<td style="font-size: 12px;">:
 						#{lbl['lbl.sc.eva.all.template']}</td>
 					</c:when>
@@ -38,7 +38,7 @@
 				</c:choose>		
 			</tr>
 			<ui:remove> <!-- Bug #34876 End--></ui:remove>
-			<!-- #29187 Start Vinod -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
 			<c:if test="#{!empty evaluationBackingBean.managedBean.tplSpecZoneDtl.zoneName}">
 			<tr>
 				<td><h:outputLabel
@@ -53,7 +53,7 @@
 				</td>
 			</tr>
 			</c:if>
-			<!-- #29187 End Vinod -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 		</table>
 	</div>
 

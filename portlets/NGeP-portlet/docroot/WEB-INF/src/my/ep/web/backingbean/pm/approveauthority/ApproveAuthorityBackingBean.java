@@ -49,6 +49,10 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	private static final Logger log = EpLogger.getLogger(ApproveAuthorityBackingBean.class);
 
 	private static final String NAV_TO_MAIN = "approveAuthorityMain";
+	
+	//Tab values
+	public static final int TAB_JAWATANKUASA_PEROLEHAN = 0;
+	public static final int TAB_PENGURUSAN_TERTINGGI = 1;
 
 	public ApproveAuthorityBackingBean() {
 		//ApproveAythorityBackingBean constructor
@@ -70,28 +74,14 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			List<PmAuthority> resultComittee = approveAuthoritySo.getPMAuthorityList();
 			this.getManagedBean().setListAuthCode(resultComittee);
 
-			for(PmAuthority pmAuth : getManagedBean().getListAuthCode()){
-				this.getManagedBean().setAuthCodeDesc(pmAuth.getAuthCodeDesc());
-				this.getManagedBean().setAuthority(pmAuth);	
-				
-				List<PmAuthorityCommittee> authComList = pmAuth.getPmAuthorityCommittee();
-				
-				if(authComList != null && !authComList.isEmpty()){
-					Collections.sort(authComList, new Comparator<PmAuthorityCommittee>(){
-						@Override
-						public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2){
-							return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
-						}					
-					});
-				}
-				this.getManagedBean().setListAuthCommittee(pmAuth.getPmAuthorityCommittee());
-				break;
-			}
-			
-			//Initialize for update committee
+			//Initialize for update committee - start
 			PmAuthorityCommittee committee = new PmAuthorityCommittee();
 			committee.setRecordStatus(true);
 			this.getManagedBean().setUpdateAuthCommittee(committee);
+			//Initialize for update committee - end
+
+			this.getManagedBean().setSelectedTabIndex(TAB_JAWATANKUASA_PEROLEHAN);
+			setAuthorityData(TAB_JAWATANKUASA_PEROLEHAN);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
@@ -137,14 +127,19 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 	 */
 	public void addNewCommittee() {
 
-		if (this.getManagedBean().getListAuthCommittee() == null) {
+		int index = 0;
+		if (this.getManagedBean().getListAuthCommittee() == null) { 
 			this.getManagedBean().setListAuthCommittee(new ArrayList<PmAuthorityCommittee>());
+		} else {
+			index = this.getManagedBean().getListAuthCommittee().size();
 		}
 		
 		//create new row
 		PmAuthorityCommittee authorityComm = new PmAuthorityCommittee();
-		authorityComm.setPmAuthority(this.getManagedBean().getAuthority());	
-		this.getManagedBean().getListAuthCommittee().add(authorityComm);
+		authorityComm.setPmAuthority(this.getManagedBean().getAuthority());
+		this.getManagedBean().getListAuthCommittee().add(index,authorityComm);
+		RequestContext.getCurrentInstance().execute(
+				"apprAuthorityTblWidVar.paginator.endLink.click()");
 	}
 
 	public SelectItem[] getResultStatusList() {
@@ -230,7 +225,6 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 					});
 
 					this.getManagedBean().setListAuthCommittee(pmAuth.getPmAuthorityCommittee());
-					break;
 				}			
 			}
 		} catch (Exception e) {
@@ -245,12 +239,12 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 		log.info("validateMessage");
 		
 		if(StringUtils.isBlank(authCommittee.getCommitteeName())){
-			throw new EpException(MessageConst.ERROR_775196, 
+			throw new EpException(MessageConst.ERROR_775199, 
 					new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.approveAuthority.name")});
 		}	
 		
 		if(!authCommittee.isBrandNew() && StringUtils.isBlank(this.getManagedBean().getRemark())){
-			throw new EpException(MessageConst.ERROR_775196, 
+			throw new EpException(MessageConst.ERROR_775199, 
 					new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.approveAuthority.remark")});
 		}
 	}
@@ -272,7 +266,7 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 			//update pm_authority_committee
 			PmAuthorityCommittee authCommittee = this.getManagedBean().getUpdateAuthCommittee();
 			
-			if(authCommittee != null && authCommittee.getAuthCommitteeId() != null){				
+			if(authCommittee != null && authCommittee.getAuthCommitteeId() != null){                
 				validateMessage(authCommittee);				
 				authCommittee.setChangedBy(getUserIdSessionFromLoginId());
 												
@@ -317,5 +311,74 @@ public class ApproveAuthorityBackingBean extends BaseBackingBean<ApproveAuthorit
 
 	private FacesScopes getFacesScopes() {
 		return new FacesScopes();
+	}
+	
+	/**
+	 * This getJawatankuasaPerolehan method is to get id for TAB_JAWATANKUASA_PEROLEHAN
+	 */
+	public int getJawatankuasaPerolehan(){
+		return TAB_JAWATANKUASA_PEROLEHAN;
+	}
+	
+	/**
+	 * This updatePengurusanTertinggiDetail method is to get a list of committee 
+	 * for Jawatankuasa Perolehan Kerajaan di Kementerian Kewangan Malaysia
+	 */
+	public void updateJawatankuasaPerolehanDetail(){
+		this.getManagedBean().setSelectedTabIndex(TAB_JAWATANKUASA_PEROLEHAN);
+		setAuthorityData(TAB_JAWATANKUASA_PEROLEHAN);
+		
+	}
+	
+	/**
+	 * This getJawatankuasaPerolehan method is to get id for TAB_PENGURUSAN_TERTINGGI
+	 */
+	public int getPengurusanTertinggi(){
+		return TAB_PENGURUSAN_TERTINGGI;
+	}
+	
+	/**
+	 * This updatePengurusanTertinggiDetail method is to get a list of committee 
+	 * for Pengurusan Tertinggi Kementerian Kewangan Malaysia
+	 */
+	public void updatePengurusanTertinggiDetail(){
+		this.getManagedBean().setSelectedTabIndex(TAB_PENGURUSAN_TERTINGGI);
+		setAuthorityData(TAB_PENGURUSAN_TERTINGGI);
+	}
+
+	private void setAuthorityData(int tabId){
+		int newtabId = tabId + 1;//tab view start with 0, in order to query from db, the id need to add 1
+		
+		for(PmAuthority pmAuth : getManagedBean().getListAuthCode()){
+			this.getManagedBean().setAuthIdInString(Long.toString(pmAuth.getAuthId()));
+			this.getManagedBean().setAuthCodeDesc(pmAuth.getAuthCodeDesc());
+			if(pmAuth.getAuthId().compareTo(new Long(newtabId)) == 0){
+				this.getManagedBean().setAuthority(pmAuth);
+				this.getManagedBean().setComName(pmAuth.getAuthCodeDesc());
+				
+				List<PmAuthorityCommittee> authComList = checkNullObj(pmAuth.getPmAuthorityCommittee());
+				
+				if(authComList != null && !authComList.isEmpty()){
+					Collections.sort(authComList, new Comparator<PmAuthorityCommittee>(){
+						@Override
+						public int compare(PmAuthorityCommittee c1, PmAuthorityCommittee c2){
+								return c1.getAuthCommitteeId().compareTo(c2.getAuthCommitteeId());
+						}					
+					});
+				}
+				this.getManagedBean().setListAuthCommittee(authComList);
+			}
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MAIN);
+	}
+	
+	private List<PmAuthorityCommittee> checkNullObj(List<PmAuthorityCommittee> pmCom){
+		List<PmAuthorityCommittee> newComList = new ArrayList<PmAuthorityCommittee>();
+		for(PmAuthorityCommittee com : pmCom){
+			if(com.getAuthCommitteeId() != null)
+				newComList.add(com);
+		}
+		return newComList;
 	}
 }

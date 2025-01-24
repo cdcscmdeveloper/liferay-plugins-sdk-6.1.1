@@ -7,14 +7,33 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />			
- 		<p:tabView orientation="left" dynamic="true"
-			value="#{ApproveAuthorityBackingBean.managedBean.listAuthCode}"
-			var="varAuthMenu" cache="false">
-			<p:ajax event="tabChange" listener="#{ApproveAuthorityBackingBean.loadCommitteeList}" update="authMenu"></p:ajax>
-			<p:tab id="authMenu" title="#{varAuthMenu.authCodeDesc}" style="height:30%;white-space: normal !important;">
-				<ui:include src="/xhtml/pm/approveauthority/approveAuthorityDetails.xhtml"></ui:include>
-			</p:tab>
-		</p:tabView>
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<table style="border:0; cellspacing:0; cellpadding:0; width:100%;">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu styleClass="sidemenu" id="tApproveAuth" activeIndex="#{ApproveAuthorityBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem style="white-space:normal;" 
+						value="#{ApproveAuthorityBackingBean.managedBean.authIdInString == 1 ? 
+						ApproveAuthorityBackingBean.managedBean.authCodeDesc : lbl['lbl.pm.approveAuthority.desc1']}" 
+							action="#{ApproveAuthorityBackingBean.updateJawatankuasaPerolehanDetail()}" update="@form">
+							<f:setPropertyActionListener target="#{ApproveAuthorityBackingBean.managedBean.selectedTabIndex}" 
+											value="#{ApproveAuthorityBackingBean.jawatankuasaPerolehan}" />
+						</p:menuitem>
+						<p:menuitem style="white-space:normal;" 
+						value="#{ApproveAuthorityBackingBean.managedBean.authIdInString == 2 ? 
+						ApproveAuthorityBackingBean.managedBean.authCodeDesc : lbl['lbl.pm.approveAuthority.desc2']}" 
+							action="#{ApproveAuthorityBackingBean.updatePengurusanTertinggiDetail()}" update="@form">
+							<f:setPropertyActionListener target="#{ApproveAuthorityBackingBean.managedBean.selectedTabIndex}" 
+											value="#{ApproveAuthorityBackingBean.pengurusanTertinggi}" />										
+						</p:menuitem>
+					</p:tabMenu>
+				</td>
+				<td style="width:80%;vertical-align:top;">
+					<p:outputPanel id="committeeList">
+						<ui:include src="/xhtml/pm/approveauthority/approveAuthorityDetails.xhtml"></ui:include>
+					</p:outputPanel>
+				</td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>

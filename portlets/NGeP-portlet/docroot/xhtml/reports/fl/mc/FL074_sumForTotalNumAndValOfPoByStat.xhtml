@@ -37,7 +37,7 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{mcSumTotalNumValofPoRptBB.disablePtjGroupLov()}"
+					disabled="#{mcSumTotalNumValofPoRptBB.disablePtjGroupLovByReportCode()}"
 					value="#{mcSumTotalNumValofPoRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcSumTotalNumValofPoRptBB.resetPtjProfile()"
 					update=":form"
@@ -54,7 +54,7 @@
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{mcSumTotalNumValofPoRptBB.disablePtjLov()}"
+					disabled="#{mcSumTotalNumValofPoRptBB.disablePtjLovByReportCode()}"
 					value="#{mcSumTotalNumValofPoRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="mcSumTotalNumValofPoRptBB.managedBean.ptj"
@@ -77,17 +77,8 @@
 				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{mcSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
-      					itemValue="#{lbl['lbl.rpt.drpdown.beforePendingInv']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"></f:selectItem>
+				<p:selectOneMenu value="#{mcSumTotalNumValofPoRptBB.managedBean.groupStatus}">
+					<f:selectItems value="#{mcSumTotalNumValofPoRptBB.getGroupStatusDropdown()}"/>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -142,8 +133,8 @@
 						itemValue="#{lbl['lbl.fl.purchaseorder.status']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+						itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 

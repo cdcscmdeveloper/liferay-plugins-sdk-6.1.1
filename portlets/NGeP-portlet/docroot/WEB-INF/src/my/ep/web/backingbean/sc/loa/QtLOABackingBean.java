@@ -511,38 +511,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	//#28777 & #29729 - Start
-    /**
-  	 * Method to return true, if branch in supplier has been deleted (LOA)
-  	 * @param supplier id 
-  	 * @return	true or false
-  	 **/
-	public boolean displaySupplierBranchListDeletedForLOA(Long supplierId){
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		boolean isSupplierBranchDeleted = false;
-		ScQt scQt = this.getManagedBean().getQt();
-		if(supplierId != null && scQt != null){
-			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
-				isSupplierBranchDeleted = true;
-		    }
-		}
-	    return isSupplierBranchDeleted;
-	}
-	
-    /**
-	* Method to display message info for supplier branch has been deleted (LOA)
-	**/
-	public void infoBranchSupplierListDeletedForLOA(){
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_760523, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-	}
-	//#28777 & #29729 - End
-	
-
-	
 	//#21692 - start
 	/**
 	 * Check If Supplier EPV Status Is Rejected
@@ -580,6 +548,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					&& isValidFor21692
 					) ? true : false;
 		}
+		getManagedBean().setAbleToCancelLOA(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}

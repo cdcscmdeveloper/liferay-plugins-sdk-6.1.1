@@ -14,7 +14,7 @@
 			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" styleClass="required" />
 			<h:panelGrid columns="2">
 				<p:inputText disabled="true" style="width:300px;"
-					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoiLoa.fileNo}" />
+					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.sclRefNo}" /> <!-- Fix - #36708 -->
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.scl.file.ref.no']}" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.supplemental.contract.letter.date']}" styleClass="required" />
@@ -54,7 +54,7 @@
 			<p:column headerText="#{lbl['lbl.ct.amend.sample']}" styleClass="column-align-center" style="width:10%;">
 				<h:panelGroup rendered="#{loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyAckOfLoaReceipt
 					or (loaReportVar.docDefinitionKey eq ParameterConst.documentDefinitionKeyLetterOfAcceptance
-						and !amendmentBackingBean.managedBean.disableFinalAmendDetails)}">
+						and !amendmentBackingBean.managedBean.disableFinalAmendDetails and !ctBackingBean.managedBean.viewSCL)}"> <!-- 15851 -->
 	   				<h:commandLink  action="#{amendmentBackingBean.downloadLOAContentFile(loaReportVar.docDefinitionKey)}" immediate="true">
 						<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 					</h:commandLink>
