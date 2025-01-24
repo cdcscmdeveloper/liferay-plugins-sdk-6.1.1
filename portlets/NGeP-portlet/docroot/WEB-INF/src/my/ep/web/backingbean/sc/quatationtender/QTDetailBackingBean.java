@@ -3532,9 +3532,11 @@ public class QTDetailBackingBean extends
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
 						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
 
-				if ((valCondition && approval.getApprovalCategory().getParameterCode()
-						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
-						|| valConditionOthers) {
+				// #37632 - Check only for CAA - Start
+				if ((valConditionOthers || valCondition)
+						&& approval.getApprovalCategory().getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
+				// #37632 - Check only for CAA - End
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174); // #11299 Start Vinod
 					// #11299 End Vinod
