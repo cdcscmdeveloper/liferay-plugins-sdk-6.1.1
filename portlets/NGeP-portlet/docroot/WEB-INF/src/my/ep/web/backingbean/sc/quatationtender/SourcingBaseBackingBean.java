@@ -894,6 +894,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
+	// 12471 - start
+	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+	}
+	// 12471 - end
 	/**
 	 * To initialize remarks.
 	 * 
