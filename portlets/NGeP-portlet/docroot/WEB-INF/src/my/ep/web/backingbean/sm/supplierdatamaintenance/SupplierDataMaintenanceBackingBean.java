@@ -1162,6 +1162,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().getActiveCategoryList().removeAll(catList);
 		}
 		// Remove from main list
+		//37807 - START
+		catList.clear();
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
@@ -1172,6 +1174,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 
 			}
+			getManagedBean().getSmAppl().getSmSupplierCategories().removeAll(catList);
 		} else {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
@@ -1182,6 +1185,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 
 			}
+			getManagedBean().getSmAppl().getSmSupplierCategories().removeAll(catList);
+			//37807 - END
 		}
 
 		assignApplnConsultantCategoryType();
