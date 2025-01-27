@@ -9047,6 +9047,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 			// 29819 - start
 			String mofNo = null;
+			String contextMofNo = smSupplier.getRegNo();
 			if (Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
 					scLoiLoa.getDocType())) {
 				if (StringUtils.isNotBlank(scLoiLoa.getMofNo())) {
@@ -9060,12 +9061,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			if (null != mofNo) {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, mofNo);
+				contextMofNo = mofNo;
 			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSsmNewRegNo());
-			} else {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getRegNo());
+				contextMofNo = smSupplier.getSsmNewRegNo();
 			}
+			context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, contextMofNo);
 			// 29819 - end
 		}
 		//#25025 - start
