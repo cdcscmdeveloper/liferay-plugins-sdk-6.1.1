@@ -4248,7 +4248,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    logger.logCodeCoverage("Test Case 3: isMofAccEffDatePassed6MonthCurrDate = " + isMofAccEffDatePassed6MonthCurrDate);
 
 	    String applType = smAppl.getApplType();
-	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF);
+	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
 	    logger.logCodeCoverage("Test Case 3: disallowEditApplType = " + disallowEditApplType);
 
 	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
@@ -4272,7 +4274,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
 	                getManagedBean().setDisAllowOwnerEdit(true);
-	                logger.logCodeCoverage("Test Case 3: disallowOwnerEdit set to true");
+	                logger.logCodeCoverage("Test Case 2: disallowOwnerEdit set to true");
 	                break;
 	            }
 	        }
