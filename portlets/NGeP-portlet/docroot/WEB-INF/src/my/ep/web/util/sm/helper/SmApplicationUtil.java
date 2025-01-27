@@ -1550,7 +1550,7 @@ public class SmApplicationUtil {
 			//#37605 START
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
 				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
-				        && !SmApplicationUtil.convertToAscii(cat.getOtherDesc())) {
+				        && !convertToAscii(cat.getOtherDesc())) {
 				    throw new EpException(MessageConst.ERROR_760555);
 				}
 
