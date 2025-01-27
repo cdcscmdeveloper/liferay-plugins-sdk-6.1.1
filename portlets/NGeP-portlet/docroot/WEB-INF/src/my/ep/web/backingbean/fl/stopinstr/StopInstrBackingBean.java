@@ -91,7 +91,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.GSLType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -352,26 +351,17 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-	    LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
-
-	    Long statusId = getManagedBean().getStopInstr().getPmStatus().getStatusId();
-	    if (statusId != null && statusId.equals(FulfilmentStatusConst.SD_PENDING_APPROVAL)) {
-	        LoggerUtils.getInstance().logCodeCoverage("PM Status is SD_PENDING_APPROVAL");
-
-	        SmSupplier smSupplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
-	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-
-	        if (smDisciplinaryAction != null) {
-	            LoggerUtils.getInstance().logCodeCoverage("Disciplinary Action Found");
-	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-	        } else {
-	            LoggerUtils.getInstance().logCodeCoverage("No Disciplinary Action Found");
-	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-	        }
-	    } else {
-	        LoggerUtils.getInstance().logCodeCoverage("PM Status does not match SD_PENDING_APPROVAL, no action taken.");
-	    }
+		if (getManagedBean().getStopInstr().getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.SD_PENDING_APPROVAL
+				.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
 	}
 	// 26279 - End
 	
@@ -996,23 +986,18 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		 LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
-	    SmSupplier supplier;
+		SmSupplier supplier;
 
-	    if (getManagedBean().getStopInstr().getFlRequest().getSmSupplier() != null) {
-	        supplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
-	        supplier.setFlagSupplier(true);
-	        supplier.setFlagDASuppProfile(true);
-	        
-	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
-	                .getDisciplinaryActionVO(supplier);
-	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Supplier is not null");
-	    } else {
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Supplier is null");
-	    }
+		if (getManagedBean().getStopInstr().getFlRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getStopInstr().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
 	}
 
 	// 26279 - end

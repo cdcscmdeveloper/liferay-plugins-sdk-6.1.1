@@ -64,7 +64,6 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -237,27 +236,17 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		LoggerUtils.getInstance().logCodeCoverage("Entering checkDisciplinaryAction");
-
-	    Long statusId = getManagedBean().getAdjustment().getStatus().getStatusId();
-	    if (statusId != null && statusId.longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL.longValue()) {
-	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Status is DN_PENDING_APPROVAL");
-
-	        SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
-	        SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
-	        if (smDisciplinaryAction != null) {
-	            getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-	            getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
-	            LoggerUtils.getInstance().logCodeCoverage("Test Case 2: Disciplinary action is set with a message");
-	        } else {
-	            getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
-	            LoggerUtils.getInstance().logCodeCoverage("Test Case 3: No disciplinary action found, message set to empty");
-	        }
-	    } else {
-	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 4: Status is not DN_PENDING_APPROVAL");
-	    }
-
-	    LoggerUtils.getInstance().logCodeCoverage("Exiting checkDisciplinaryAction");
+		if (getManagedBean().getAdjustment().getStatus().getStatusId().longValue() == FulfilmentStatusConst.DN_PENDING_APPROVAL
+				.longValue()) {
+			SmSupplier smSupplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
+			if (smDisciplinaryAction != null) {
+				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
+			} else {
+				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
+			}
+		}
 	}
 	// 26279 - End
 	
@@ -721,30 +710,20 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		LoggerUtils.getInstance().logCodeCoverage("Entering viewDisciplinaryAction");
+		SmSupplier supplier;
 
-	    SmSupplier supplier;
+		if (getManagedBean().getAdjustment().getFlRequest().getSmSupplier() != null) {
+			supplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
 
-	    if (getManagedBean() != null && 
-	        getManagedBean().getAdjustment() != null && 
-	        getManagedBean().getAdjustment().getFlRequest() != null && 
-	        getManagedBean().getAdjustment().getFlRequest().getSmSupplier() != null) {
-
-	        supplier = getManagedBean().getAdjustment().getFlRequest().getSmSupplier();
-	        supplier.setFlagSupplier(true);
-	        supplier.setFlagDASuppProfile(true);
-
-	        List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(supplier);
-	        getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-
-	        RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-	        LoggerUtils.getInstance().logCodeCoverage("Test Case 1: Disciplinary action dialog displayed");
-	    } else {
-	    	LoggerUtils.getInstance().logCodeCoverage("Test Case 2: No supplier found");
-	    }
-
-	    LoggerUtils.getInstance().logCodeCoverage("Exiting viewDisciplinaryAction");
+			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVOs);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		}
 	}
+
 	// 26279 - end
 	
 	//29599-start

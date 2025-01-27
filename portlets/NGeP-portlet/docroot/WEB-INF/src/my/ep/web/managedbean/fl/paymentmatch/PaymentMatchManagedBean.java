@@ -158,7 +158,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	//end 21229
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVO;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -1609,12 +1609,12 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVO() {
-		return disciplineVO;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVO(List<DisciplinaryActionVO> disciplineVO) {
-		this.disciplineVO = disciplineVO;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplineVO) {
+		this.disciplinaryActionVO = disciplineVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
