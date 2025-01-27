@@ -11489,8 +11489,8 @@ public class QTDetailBackingBean extends
 		// check submit empty category code
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
 				&& this.getManagedBean().isFromSubmitCatChange()) {
-			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			IQTSpecSO specSo = getQtSpecSO();
+			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 		}
