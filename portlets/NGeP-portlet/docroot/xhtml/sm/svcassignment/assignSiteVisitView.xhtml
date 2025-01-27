@@ -109,17 +109,18 @@
 		<p:panel header="#{lbl['lbl.sm.siteassign.catcode.req.site.visit']}">
 			<p:dataTable value="#{svcSiteAssignBackingBean.managedBean.categoryLs}" var="catApp" rowIndexVar="index">
 				<ui:param name="catCode" value="#{catApp.pmCategoryL1.categoryL1Code}#{catApp.pmCategoryL2.categoryL2Code}#{catApp.pmCategoryL3.categoryL3Code}" />
-				<p:column headerText="No.">
+				<!-- #37605 -->
+				<p:column headerText="No." style="white-space : normal;vertical-align: top;">
 					#{index + 1}
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space : normal;vertical-align: top;">
 					#{catCode} 
 				</p:column>
 				
 					<!-- #28175 - start, 28775 - Site Visit Grouping Enhancement - 28775 -->
 				<p:column headerText="#{lbl['lbl.sm.category.description']}"
-					style="white-space: normal; width: 88%;">
+					style="white-space: normal; width: 88%;vertical-align: top;">
 					<h:outputText value="#{svcSiteAssignBackingBean.getSupplierCategoryName(catApp, 
 										svcSiteAssignBackingBean.managedBean.smAppl)}"
 								style="white-space: pre-wrap; word-wrap: break-word;"/>
