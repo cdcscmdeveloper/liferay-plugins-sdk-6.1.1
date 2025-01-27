@@ -718,10 +718,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
 
 		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
-				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always
-																		// return
-																		// single
-																		// result
+				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always return single result
 
 		if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
 			return resDTO.getSmDisciplinaryActions().get(0);
@@ -737,7 +734,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @param langCode
 	 * @return msg
 	 */
-	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, String langCode, boolean isWarningOnly) {
+	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, boolean isWarningOnly) {
 		StringBuilder msg = new StringBuilder();
 		if (startDate != null && endDate != null) {
 			msg.append(" ");
@@ -747,8 +744,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			} else {
 				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
 			}
-			msg.append(getMessageByKey(messagePrefix, new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
-					DateUtils.dateToString("dd-MM-yyyy", endDate) }, langCode));
+			
+			msg.append(ResourceBundleUtils.getMessage(
+					messagePrefix,
+					new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
+							DateUtils.dateToString("dd-MM-yyyy", endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
 		}
 		return msg.toString();
 	}
@@ -757,27 +759,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	// from the SM module is used for displaying the Disciplinary Action info in
 	// the pop-up
 	
-	/**
-	 * Retrieve message based on the specified key, parameters, and language code.
-	 *
-	 * @param key 
-	 * @param params 
-	 * @param langCode
-	 * @return msg
-	 */
-	private String getMessageByKey(String key, String[] params, String langCode) {
-		String msg;
-		Locale loc = new Locale("en", "EN");
-		if ("ms".equalsIgnoreCase(langCode)) {
-			loc = new Locale("ms", "MY");
-		}
-		if (params != null) {
-			msg = ResourceBundleUtils.getMessage(key, params, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		} else {
-			msg = ResourceBundleUtils.getMessage(key, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		}
-		return msg;
-	}
+	// 26279 - remove getMessageByKey and use ResourceBundleUtils.getMessage
 
 	/**
 	 * Check if the disciplinary action is a warning-only action.
@@ -808,10 +790,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
 		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
 
-		String language = new FacesScopes().getUserLocale().getLanguage();
 		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
-				language, isWarningOnly);
-
+				isWarningOnly);
 	}
 
 	// 26279 - end

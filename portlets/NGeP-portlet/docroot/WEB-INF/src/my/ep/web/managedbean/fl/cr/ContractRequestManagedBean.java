@@ -3142,8 +3142,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		return disciplinaryActionVO;
 	}
 
-	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplineVO) {
-		this.disciplinaryActionVO = disciplineVO;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
