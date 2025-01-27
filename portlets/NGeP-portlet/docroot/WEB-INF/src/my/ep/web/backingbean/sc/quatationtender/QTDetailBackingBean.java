@@ -161,6 +161,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.scretry.ScRetryReqDTO;
 import my.ep.dto.sc.scretry.ScRetryResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
+import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -982,6 +983,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
+			
+			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
@@ -4250,6 +4253,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25077 End 
 			//#30477 Start Vinod
 			validateUserInactive(taskName, currentStatus, outcome);
+			validateSupplierCriteriaIntegrity(qt);	// Bug #36730@Syazani 07/01/2025 -- Start
 		
 			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
@@ -4466,9 +4470,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
 						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
 				
-				if ((valCondition && approval.getApprovalCategory().getParameterCode()
-						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
-						|| valConditionOthers) {
+				// #37632 - Check only for CAA - Start
+				if ((valConditionOthers || valCondition)
+						&& approval.getApprovalCategory().getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
+				// #37632 - Check only for CAA - End
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
@@ -8047,7 +8053,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			quationTenderReqDTO.setToken(fs.getBPMAuthenticationCtxToken());
 			//end #25037
 			//28895 - 35500 start
-			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmuserDeletedContactpersonList());
+			quationTenderReqDTO.setDeletedDoaaList(this.getManagedBean().getPmUserDeletedContactPersonList());
 			quationTenderReqDTO.setNewCommitteeMembersAuditTrailList(this.getManagedBean().getNewScCommitteeMemberAuditTrailList());			//28895 - 35500 end
 			// 25037 - end
 
@@ -14006,4 +14012,37 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
 	}
     //29732 end
+    
+	//12471 - Start - Dayan
+	/**
+	 * Method to evaluate if cancel button is rendered. Scenario: Do not render
+	 * cancel button when deskofficer tasklist is after publication and CMT
+	 * status at submission and revision.
+	 * 
+	 * @return flag to render cancel button.
+	 */
+	public boolean renderCancelButton() {
+		if (null == this.getManagedBean().getTaskName()) {
+			return false;
+		}
+		ScQt scQt = this.getManagedBean().getQt();
+
+		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
+		reqDTO.setDocId(scQt.getQtId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_COMMITTE_APROVAL);
+		ScWorkFlowStatusResDTO resDTO = getScWorkflowStatusSO().retrieveStatusByTypeAndId(reqDTO);
+		Long activeCMTStatus = null == resDTO.getWorkFlowStatus() ? 0L : resDTO.getWorkFlowStatus().getPmStatus()
+				.getStatusId();
+
+		boolean isQTAfterPublicationApproved = isQTStatusGreaterThan(scQt.getQtStatus().getStatusId(),
+				QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL);
+		boolean isDeskOfficerPendingCMT = Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION,
+				QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REAPPROVAL_REVISION).contains(
+				activeCMTStatus);
+
+		return isQTAfterPublicationApproved && isDeskOfficerPendingCMT;
+	}
+	//12471 - End - Dayan
+
+
 }

@@ -12553,7 +12553,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
 
-		if (!this.getManagedBean().getQt().isPanel() && intendedPrice.compareTo(indPriceThreshold) <= 0 
+		if (!this.getManagedBean().getQt().isPanel() && null != intendedPrice && intendedPrice.compareTo(indPriceThreshold) <= 0 
 				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt().getJustificationProcValue().isEmpty())) {
 				throw new EpException(MessageConst.ERROR_760560);
 		}
@@ -12646,6 +12646,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						checkZoneLocationChange(this.getManagedBean().getQt());
 					}
 					//20210621@asyrafhaziq_Bug #30914 - End
+					validateSupplierCriteriaIntegrity(this.getManagedBean().getQt());	// Bug #36730@Syazani 07/01/2025
 					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -14129,17 +14130,15 @@ if (null != checklist && !checklist.isEmpty()) {
 				this.getManagedBean().getScQtCheckSt2techProposal()
 						.add(this.getManagedBean().getIndex(), localCheckList);
 			}
-			this.getManagedBean().getQt().setSampleReq(issample);//11104ReendorseStart728
-			if(this.getManagedBean().getQt().isSampleReq()){ //#11104-start
-			for(ScQtCheckList checklist:this.getManagedBean()
-					.getScQtCheckSt2techProposal()){
-				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(checklist
-						.getDefinationType().getParameterCode())) {
-					checklist.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-					break;
-				}
+
+			this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
+
+			// #11104-start
+			if (this.getManagedBean().getQt().isSampleReq()) {
+				sampleDetailsPendingTemplateSpec();
 			}
-			} //#11104-End
+			// #11104-End
+
 			checklistSorting(this.getManagedBean()
 					.getScQtCheckSt2techProposal());
 		} else {
@@ -23151,7 +23150,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	/* #29187 End Vinod */
 	/* #29187 Start Vinod */
 	private void checkMandatorySpecForSample(TplSpecQuestion itemQuestion, TemplateSpecResDTO resDTO) {
-		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+		if (resDTO != null && CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())) {
 			List<TplSpecQuestion> tplSpecQuestions = resDTO.getSpecQuestionList();
 			for (TplSpecQuestion question : tplSpecQuestions) {
 				if (question.isMandatorySpec()) {
@@ -23630,35 +23629,33 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		this.getManagedBean().setNewVersion(isQtNewVersion);
 	}
 	
-	private void sampleDetailsPendingTemplateSpec(){// 11104-Reendose794
+	//11104 -start-
+	/**
+	 * sample checklist status update after template spec save.
+	 * 
+	 */
+	
+	private void sampleDetailsPendingTemplateSpec() {// 11104-Reendose794
 		List<ScQtCheckList> technicalChecklist = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
-
-		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-		for (ScQtCheckList checklist : technicalChecklist) {
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-					.equalsIgnoreCase(checklist.getDefinationType()
-							.getParameterCode()) && QTStatusConst.TS_COMPLETED.equals(checklist
-							.getPmStatus().getStatusId())) {
-				checklist
-						.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-				specReqDTO.setSampleCheckList(checklist);
-				break;
-			}
-		}
-		if(null!=specReqDTO.getSampleCheckList()){
-		SpecificationResDTO resDTO = getQtSpecSO().completeSampleChecklist(
-				specReqDTO);
+		if (checkISSampleExistWIPChecklist()) {
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			for (ScQtCheckList checklist : technicalChecklist) {
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(checklist.getDefinationType()
-								.getParameterCode())) {
-					int index = technicalChecklist.indexOf(checklist);
-					resDTO.getSampleChecklist().setSampleWip(
-							this.getManagedBean().isSampleShowHide());// 11104WIP
-					technicalChecklist.set(index, resDTO.getSampleChecklist());
+								.getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(checklist
+								.getPmStatus().getStatusId())) {
+					checklist
+							.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+					specReqDTO.setSampleCheckList(checklist);
 					break;
 				}
+			}
+			if (null != specReqDTO.getSampleCheckList()) {
+				SpecificationResDTO specResDTO = getQtSpecSO()
+						.completeSampleChecklist(specReqDTO);
+				setSampleDetailsIndex(specResDTO, technicalChecklist);
 			}
 		}	
 	}// 11104-Reendose794	
@@ -23873,20 +23870,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 	}
 	
-	//#36678 related to #35061 start
-	public boolean checkIndPriceBecomeBelow() {
-		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
-
-		if (!this.getManagedBean().getQt().isPanel()
-				&& indPriceThreshold != null && intendedPrice != null && intendedPrice.compareTo(indPriceThreshold) <= 0
-				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt()
-						.getJustificationProcValue().isEmpty())) {
-			return true;
-		}
-		return false;
-	}
-
 	public String redirectSpecComMainYes() {
 		this.getManagedBean().setFieldProcurementJustification(true);
 		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
@@ -23897,5 +23880,28 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
 	}
 	//#36678 related to #35061 end
+	
+	// 11104 -start-
+	/**
+	 * set Sample details index to list after save.
+	 * @param specResDTO
+	 * @param technicalChecklist
+	 * 
+	 */
+	private void setSampleDetailsIndex(SpecificationResDTO specResDTO,
+			List<ScQtCheckList> technicalChecklist) {
+		for (ScQtCheckList checklist : technicalChecklist) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+					.equalsIgnoreCase(checklist.getDefinationType()
+							.getParameterCode())) {
+				int index = technicalChecklist.indexOf(checklist);
+				specResDTO.getSampleChecklist().setSampleWip(
+						this.getManagedBean().isSampleShowHide());// 11104WIP
+				technicalChecklist.set(index, specResDTO.getSampleChecklist());
+				break;
+			}
+		}
+	}
+	// 11104 -end-
 	
 }

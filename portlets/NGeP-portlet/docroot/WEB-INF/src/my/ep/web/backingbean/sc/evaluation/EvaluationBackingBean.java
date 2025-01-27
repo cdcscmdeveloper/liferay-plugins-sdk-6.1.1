@@ -9403,6 +9403,8 @@ public void saveComplianceSample() {
 
 			if (!this.getManagedBean().isReadOnly()) {
 				//saveQtReportDtls();
+				//An issue has arisen in production where users can bypass the Summary section, where the total score is calculated.
+				retriveSummaryEvaluationStage();	// Bug #36747@Syazani 20/01/2025
 				saveEvaluationReportsDtls();
 				setReportAttachment();
 			}
@@ -11533,21 +11535,36 @@ private void retriveCommitteeRemarksList(){
 		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = null;
+		ScAttachment commReportAttachment = null; // 37617
 		ScQt scQt = getManagedBean().getScQt();
 		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
-			reportAttachment = new ScEvaluationCommitteeReportAttachment();
+			commReportAttachment = scQt.getScEvaluationCommitteeReportAttachment(); // 37617
+			reportAttachment = new ScEvaluationCommitteeReportAttachment(); 
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScOpenCommitteeReportAttachment(); // 37617
 			reportAttachment = new ScOpenCommitteeReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScTechnicalEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScTechnicalEvaluationReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScFinancialEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScFinancialEvaluationReportAttachment();
 		}	
+		
+		// 37617 - end
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = null != taskName ? taskName : "";
+		boolean isFetchReportOnly = Arrays.asList(SCProcessNameConst.EVAL_COMM_ENDORSE_GROUP).contains(taskName)
+				|| Arrays.asList(SCProcessNameConst.EVAL_COMM_SIGNOFF_GROUP).contains(taskName);
+		if (null != commReportAttachment && isFetchReportOnly) {
+			return commReportAttachment;
+		}
+		// 37617 - end
 		
 		StringBuilder fileName = new StringBuilder(
 				getManagedBean().getReportDownloadFileName());
@@ -18989,7 +19006,7 @@ private void retriveCommitteeRemarksList(){
 		List<ScQtEvaluationResultDtl> disqualifiedList = null != this.getManagedBean().getDisqualifiedSuppliersDM()
 				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList() ? this.getManagedBean()
 				.getDisqualifiedSuppliersDM().getList() : null;
-		if (CollectionUtils.isEmpty(disqualifiedList)) {
+		if (CollectionUtils.isNotEmpty(disqualifiedList)) {
 			for (ScQtEvaluationResultDtl disQualDtl : disqualifiedList) {
 				boolean isDisqualifiedCompliance = null != disQualDtl.isCompliance() && !disQualDtl.isCompliance();
 				if (isDisqualifiedCompliance) {
@@ -19064,7 +19081,7 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 	// #29187 Start Vinod
 	private void checkMandatorySpecForSample(ScQtSampleItem item, TemplateSpecResDTO resDTO) {
-		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+		if (resDTO != null && CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())) {
 			for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
 				boolean isMandatorySpec = question.isMandatorySpec();
 				if (isMandatorySpec) {
