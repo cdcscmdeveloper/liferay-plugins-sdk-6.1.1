@@ -1549,12 +1549,14 @@ public class SmApplicationUtil {
 				&& appl.getSmSupplierCategories().size() > 0) {
 			//#37605 START
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-	            if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
-	                if (!SmApplicationUtil.convertToAscii(cat.getOtherDesc())) {
-	                    throw new EpException(MessageConst.ERROR_760555);
-	                }
-	                cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
-	            }
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
+				        && !SmApplicationUtil.convertToAscii(cat.getOtherDesc())) {
+				    throw new EpException(MessageConst.ERROR_760555);
+				}
+
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
+				    cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+				}
 	        }
 			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
