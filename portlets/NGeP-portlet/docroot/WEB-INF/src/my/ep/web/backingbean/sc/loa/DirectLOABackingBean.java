@@ -15,6 +15,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8226,8 +8227,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 			// 29819 - start
-			if (smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size() > 0) {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSmMofAccounts().get(0).getMofNo());
+			String mofNo = null;
+			if (Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+					scLoiLoa.getDocType())) {
+				if (StringUtils.isNotBlank(scLoiLoa.getMofNo())) {
+					mofNo = scLoiLoa.getMofNo();
+				} else if (CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+					mofNo = smSupplier.getSmMofAccounts().get(0).getMofNo();
+				}
+			} else if (smSupplier.getSmMofAccount() != null
+					&& CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+				mofNo = smSupplier.getSmMofAccounts().get(0).getMofNo();
+			}
+
+			if (null != mofNo) {
+				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, mofNo);
 			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
 				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSsmNewRegNo());
 			} else {
