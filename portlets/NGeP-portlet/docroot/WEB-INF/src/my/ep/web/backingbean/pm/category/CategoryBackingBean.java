@@ -1881,7 +1881,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 
 		// start #29665
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList())) {
 			for (PmMachineCategory cat : this.getManagedBean().getPmMachineCategoryList()) {
