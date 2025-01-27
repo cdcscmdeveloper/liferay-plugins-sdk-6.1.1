@@ -7035,18 +7035,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().getQt().setScQtRemarks(scQt.getScQtRemarks());
 		}
 		//9019 - End (Harun)
-		
-		//#29732 
-		//Remove the deleted category code in the list, while user change tab without save 
-		//this to avoid error merge persistence cannot be save when the data has already been deleted
-		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
-		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
-			for (int i = 0; i < removeCategoryCodes.size(); i++) {
-				if (null != removeCategoryCodes.get(i).getQtCategoryId()) {
-					removeCategoryCodes.remove(removeCategoryCodes.get(i));
-				}
-			}
-		}
 	}
 
 	/**
@@ -11501,8 +11489,8 @@ public class QTDetailBackingBean extends
 		// check submit empty category code
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
 				&& this.getManagedBean().isFromSubmitCatChange()) {
-			IQTSpecSO specSo = getQtSpecSO();
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
+			IQTSpecSO specSo = getQtSpecSO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 		}
