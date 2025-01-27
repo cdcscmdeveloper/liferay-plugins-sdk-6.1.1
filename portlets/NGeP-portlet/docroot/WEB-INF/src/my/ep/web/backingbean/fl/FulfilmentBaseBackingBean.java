@@ -747,8 +747,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			
 			msg.append(ResourceBundleUtils.getMessage(
 					messagePrefix,
-					new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
-							DateUtils.dateToString("dd-MM-yyyy", endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new String[] { DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT_DASH, startDate),
+							DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT_DASH, endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale()));
 
 		}
