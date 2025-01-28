@@ -52,6 +52,10 @@ public class SuppPerformRptBackingBean extends
 		boolean isSprMv = false;
 		// #31893 - end
 		
+		//#36125 - START
+		ValidateSupplierPerformanceReport();
+		//#36125 - END
+		
 		if (getManagedBean().getSelectedSupplierPerformance() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) { //36125 - Change to view table
 				throw new EpException(MessageConst.ERROR_REPORT_780044);		
 		} 
@@ -250,4 +254,16 @@ public class SuppPerformRptBackingBean extends
 		}
 	}
 	//#33741 - END
+	//#36125 - START
+	public void ValidateSupplierPerformanceReport(){
+		SupplierSearchReqDTO ssReqDTO = new SupplierSearchReqDTO();
+		ssReqDTO.setMofAccountNo(getManagedBean().getMofNo());
+		ssReqDTO.setEpNo(getManagedBean().getEpNo());
+		ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+		Boolean ssResDTO = supplierSearchSO.isSupplierPerformanceReportExist(ssReqDTO);
+		if(!ssResDTO){
+			throw new EpException(MessageConst.ERROR_REPORT_780056);
+		}
+	}
+	//#36125 - END
 }
