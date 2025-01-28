@@ -88,8 +88,7 @@ public class SPKIHelper {
 				+ identificationNo + " epNo:" + epNo);
 		SpkiReqDTO reqDTO = new SpkiReqDTO();
 		reqDTO.setEpNo(epNo);
-		reqDTO.setIdentificationNo(identificationNo == null ? "NULL"
-				: identificationNo);
+		reqDTO.setIdentificationNo(identificationNo);
 		reqDTO.setSelectedQuestion(selectedQuest);
 		reqDTO.setSoftCertProvider(provider);
 		List<String> retVal = new ArrayList<String>();
