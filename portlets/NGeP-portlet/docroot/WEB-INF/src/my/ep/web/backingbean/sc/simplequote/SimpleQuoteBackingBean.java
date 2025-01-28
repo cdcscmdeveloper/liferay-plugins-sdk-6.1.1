@@ -434,7 +434,8 @@ public class SimpleQuoteBackingBean extends
 			
 			//#25886 - start
 			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
-				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+						getManagedBean().getScQuote());
 				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
 			}
@@ -5129,7 +5130,8 @@ public class SimpleQuoteBackingBean extends
 		
 		//#25886 - start
 		if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
-			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+					getManagedBean().getScQuote());
 			ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
 		}
