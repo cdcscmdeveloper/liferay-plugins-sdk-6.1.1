@@ -306,7 +306,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public String determineIcon(CtAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String fileExtension = "";
-
+		
+		// #25956 - Start
+		// Handle null attachment
+		if (attachment == null) {
+			return imageFileName;
+		}
+		// #25956 - End
+		
 		String fileName = attachment.getFileName();
 
 		// Retrieve the file extension base on filename
@@ -4224,15 +4231,17 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
 		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IRequestItemSO.class);
+
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
-			handleDirectPurchaseMode(requestItemSO, requestItemId);
+			handleDirectPurchaseMode(itemSpecOfferList);
 		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
 				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-			handleQuotationTenderOrDirectNegoMode(requestItemSO, requestItemId);
+			handleQuotationTenderOrDirectNegoMode(itemSpecOfferList);
 		}
 
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
@@ -4247,20 +4256,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleDirectPurchaseMode(IRequestItemSO requestItemSO, Long requestItemId) {
-	    List<String> itemSpecList = new ArrayList<>();
-	    List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+	private void handleDirectPurchaseMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
+		List<String> itemSpecList = new ArrayList<>();
 
-	    for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
-	        String questionType = itemSpecOffer.getQuestionType();
-	        if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
-	            getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
-	            getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-	        } else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-	            itemSpecList.add(itemSpecOffer.getItemSpec());
-	        }
-	    }
-	    getManagedBean().setItemSpecification(itemSpecList);
+		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
+			String questionType = itemSpecOffer.getQuestionType();
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			}
+		}
+		getManagedBean().setItemSpecification(itemSpecList);
 	}
 	
 	/**
@@ -4273,23 +4281,24 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @param requestItemId
 	 *            the ID of the request item; must not be null
 	 */
-	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
-		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-		Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
+	private void handleQuotationTenderOrDirectNegoMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
 
-		while (iterator.hasNext()) {
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOfferList.iterator(); iterator.hasNext();) {
 			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
-			if (itemSpecOffer.getNewOfferSpec() != null) {
-				itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-			}
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
 			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
 				iterator.remove();
 			}
 		}
 
-		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOfferList);
 	}
-
 	// #28854 - End
 
 	/**
@@ -4819,77 +4828,66 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void generateReportPDF(CtAgreement agreement){
 		log.info("generateReportPDF");
 		
-		IContractAmendmentSO caSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+		IContractAmendmentSO caSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 		
-		Map<String, Boolean> downloadReports = new HashMap<String, Boolean>();
-		Map<String, Map<String, String>> paramMaps = new HashMap<String, Map<String, String>>();
-		Map<String, String> paramMap = new HashMap<String, String>();
-		Map<String, Integer> reports = new HashMap<String, Integer>();
-		List<String> reportNames = new ArrayList<String>();
+		Map<String, Boolean> downloadReports = new HashMap<>();
+		Map<String, Map<String, String>> paramMaps = new HashMap<>();
+		Map<String, String> paramMap = new HashMap<>();
+		Map<String, Integer> reports = new HashMap<>();
+		List<String> reportNames = new ArrayList<>();
 		
 		Long contractId = agreement.getCtContract().getContractId();
 		String contractNo = agreement.getCtContract().getContractNo();
 		
-		Long prvContractVerId = caSO.getFDContractVerIdByContractId(contractId);
-		Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
-		
-		//checking for previous agreement in list. the last agreementid that is less than currentagreementid is the direct previous agreement
-		for(CtAgreement currAgreement : filterAgreementList()){
-			if((currAgreement.getCreatedDate().equals(agreement.getCreatedDate())
-					|| currAgreement.getCreatedDate().before(agreement.getCreatedDate())) 
-					&& currAgreement.getCtAmendment() != null
-					&& currContractVerId!=currAgreement.getCtAmendment().getCtContractVer().getContractVerId()){
-				//set previous amendment data for retrieval
-				prvContractVerId = currAgreement.getCtAmendment().getCtContractVer().getContractVerId();
-			}
-		}
-	
-		reports = caSO.callAmendmentReportSP(currContractVerId, prvContractVerId);
-		
-		for(Map.Entry<String, Integer> entry : reports.entrySet()){
-			if(entry.getValue() != null){
-				if(entry.getValue() > 0){
-					switch(entry.getKey()){
-					case "P_AMENDMENT_DETAIL":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL, true);
-						break;
-					case "P_ZONE":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE, true);
-						break;
-					case "P_AGENCY":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
-						break;
-					case "P_ITEM_ZONAL":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
-						break;
-					case "P_ITEM_NON_ZONAL":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
-						break;
-					case "P_DEDUCTION":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION, true);
-						break;
-					case "P_SCHEDULE":
-						downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE, true);
-						break;
+		try {
+			Long prvContractVerId = caSO.getPrevContractVerIdByContractId(contractId, agreement.getCtAmendment().getCtContractVer().getContractVerId());
+			Long currContractVerId = agreement.getCtAmendment().getCtContractVer().getContractVerId();
+			
+			reports = caSO.callAmendmentReportSP(currContractVerId, prvContractVerId);
+			
+			for(Map.Entry<String, Integer> entry : reports.entrySet()){
+				if(entry.getValue() != null){
+					if(entry.getValue() > 0){
+						switch(entry.getKey()){
+						case "P_AMENDMENT_DETAIL":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AMENDMENT_DETAIL, true);
+							break;
+						case "P_ZONE":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ZONE, true);
+							break;
+						case "P_AGENCY":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_AGENCY, true);
+							break;
+						case "P_ITEM_ZONAL":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_ZONAL, true);
+							break;
+						case "P_ITEM_NON_ZONAL":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_ITEM_NO_ZONAL, true);
+							break;
+						case "P_DEDUCTION":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_DEDUCTION, true);
+							break;
+						case "P_SCHEDULE":
+							downloadReports.put(ReportConst.CT_AMENDMENT_UPDATE_RPT_SCHEDULE, true);
+							break;
+						}
 					}
 				}
 			}
-		}
-		
-		//download reports
-		for (Map.Entry<String, Boolean> entry : downloadReports.entrySet()) {
-			if(entry.getValue()){
-				paramMap.put(ReportConst.PARAM_PREV_VER_ID, prvContractVerId.toString());
-				paramMap.put(ReportConst.PARAM_CURRENT_VER_ID, currContractVerId.toString());
-				paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
-				paramMaps.put(entry.getKey(), paramMap);
-				reportNames.add(entry.getKey());
+			
+			//download reports
+			for (Map.Entry<String, Boolean> entry : downloadReports.entrySet()) {
+				if(entry.getValue()){
+					paramMap.put(ReportConst.PARAM_PREV_VER_ID, prvContractVerId.toString());
+					paramMap.put(ReportConst.PARAM_CURRENT_VER_ID, currContractVerId.toString());
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					paramMaps.put(entry.getKey(), paramMap);
+					reportNames.add(entry.getKey());
+				}
 			}
-		}
-		
-		try {
 			generateReportPDF(contractNo, reportNames, paramMaps);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

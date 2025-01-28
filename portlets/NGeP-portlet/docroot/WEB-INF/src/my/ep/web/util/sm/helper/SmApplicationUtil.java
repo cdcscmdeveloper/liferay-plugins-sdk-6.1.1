@@ -1547,6 +1547,18 @@ public class SmApplicationUtil {
 		validateRenewalApplTypeForSpecialCategory(appl);
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
+			//#37605 START
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
+				        && !convertToAscii(cat.getOtherDesc())) {
+				    throw new EpException(MessageConst.ERROR_760555);
+				}
+
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
+				    cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+				}
+	        }
+			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
 			if (!StringUtils.isBlank(errMsg)) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -1783,12 +1795,14 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
+							//#36576
 							//#35086 - start
-							if(cat.getPoDecFlg() == null){
+							/*if(cat.getPoDecFlg() == null){
 								cat.setPoDecFlg(0);
-							}
+							}*/
 							//#35086 - end
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1816,8 +1830,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -1831,8 +1845,9 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL1().getCategoryL1Code()
 												+ cat.getPmCategoryL2().getCategoryL2Code()
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
-							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							}*/
+							
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1860,8 +1875,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							/*if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1877,8 +1892,9 @@ public class SmApplicationUtil {
 												+ cat.getPmCategoryL1().getCategoryL1Code()
 												+ cat.getPmCategoryL2().getCategoryL2Code()
 												+ cat.getPmCategoryL3().getCategoryL3Code() }));
-							}
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							}*/
+							
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1907,8 +1923,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//#31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -1924,8 +1940,9 @@ public class SmApplicationUtil {
 														+ cat.getPmCategoryL1().getCategoryL1Code()
 														+ cat.getPmCategoryL2().getCategoryL2Code()
 														+ cat.getPmCategoryL3().getCategoryL3Code() }));
-							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							}*/
+							
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -1980,7 +1997,8 @@ public class SmApplicationUtil {
 								*/
 								break;
 							}
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2011,8 +2029,8 @@ public class SmApplicationUtil {
 									}
 								}
 							}//31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -2036,8 +2054,9 @@ public class SmApplicationUtil {
 																		.getCategoryL2Code()
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
-							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							}*/
+							
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2083,7 +2102,8 @@ public class SmApplicationUtil {
 							//	break;
 							//}
 							//#30508-start
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							//#36576
+							/*if (StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2108,8 +2128,9 @@ public class SmApplicationUtil {
 																		.getCategoryL2Code()
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
-							}
-							if (StringUtils.isBlank(cat.getPoRemarks())
+							}*/
+							
+							if (cat.getPoDecFlg() != null && StringUtils.isBlank(cat.getPoRemarks())
 									&& cat.getPoDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2139,8 +2160,8 @@ public class SmApplicationUtil {
 								}
 							}
 							//#31043 end
-							
-							if (cat.getApprvrDecFlg() == null) {
+							//#36576
+							/*if (cat.getApprvrDecFlg() == null) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
 										managedBean);
@@ -2164,8 +2185,9 @@ public class SmApplicationUtil {
 																		.getCategoryL2Code()
 																+ cat.getPmCategoryL3()
 																		.getCategoryL3Code() }));
-							}
-							if (StringUtils.isBlank(cat.getApproverRemarks())
+							}*/
+							
+							if (cat.getApprvrDecFlg() != null && StringUtils.isBlank(cat.getApproverRemarks())
 									&& cat.getApprvrDecFlg() == 0) {
 								validSave = false;
 								setNavigationBackToCurrentPage(currentTab,
@@ -2268,14 +2290,24 @@ public class SmApplicationUtil {
 			//#28693
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
-					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null && (per.getPmCountry().getCountryId() == 131L))
+					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null 
+					&& (per.getPmCountry() != null && per.getPmCountry().getCountryId() == 131L)) //#31130 --18/11/24 						
 					// #30718 - end
-					//31130
-					|| per.getPmRace() == null || per.getTitle() == null) {
+					//#31130 --START 12/11/24
+					|| per.getPmRace() == null || per.getTitle() == null
+					|| per.getDesignation() == null 
+					|| per.getPmCountry() == null || per.getIdentificationNo() == null
+					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
+									SupplierManagementConst.STYPE_CONSULTANT)) 
+					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
+											&& per.isAuthorized() == true)
+					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
+			}//#31130 --END 12/11/24
+			/*} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			}
+			}*/ //Commented for #31130
 			//31130-start
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
@@ -3294,6 +3326,7 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean checkValidUser(SmPersonnel pers, SmAppl appl) {
+		log.info("SM DEV ISLAND TESTING: Enter SmApplicationUtil.checkValidUser");
 		boolean validUser = true;
 		if (pers.getIdentificationType().getParameterCode()
 				.equalsIgnoreCase("I")) {
@@ -3359,6 +3392,7 @@ public class SmApplicationUtil {
 						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
 						.equalsIgnoreCase(RoleCode.CM_USER.value())))
 			validatePersonnelICandEmailLiferayAndPm(pers);
+		log.info("SM DEV ISLAND TESTING: Exit SmApplicationUtil.checkValidUser");
 		return validUser;
 	}
 
@@ -3877,7 +3911,9 @@ public class SmApplicationUtil {
 				}
 				if (bean.isSupplierUser()) {
 					validateOverlapCategory(bean, currPage);
-				} else {
+				} 
+				//#36576 comment this line of code
+				/*else {
 					for (SmSupplierCategory cat : bean.getSmAppl()
 							.getSmSupplierCategories()) {
 						if (cat.isOverLapCategory()
@@ -3896,7 +3932,7 @@ public class SmApplicationUtil {
 							}
 						}
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -4643,13 +4679,12 @@ public class SmApplicationUtil {
 		}
 		managedBean.getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories().removeAll(delCatList);
 		//#34209 END
+		//28775 - Site Visit Grouping Enhancement -28775
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE,
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
-			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
-					&& cat.getPmCategoryL3() != null) {
+			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
 				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
 						.getEntityBySinglePropertyFromList(cat
@@ -7878,8 +7913,7 @@ public class SmApplicationUtil {
 	/**
 	 * Show or hide travelling software section panel
 	 * 
-	 * @param SmApplicationManagedBean
-	 *            managedBean
+	 * @param managedBean
 	 */
 	public static void showOrHideTravelSoftwarePanel(
 			SmApplicationManagedBean managedBean) {
@@ -7887,21 +7921,11 @@ public class SmApplicationUtil {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			//26671 - Site Visit Grouping Enhancement -28775 - start
-			if (cat.isSpecialCategory()
-					&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-					&& cat.getPmCategoryL3().getCategoryTypeCode()
-							.getParameterId() != null
-					//#32008 - after approval bug
-					&& (cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
-							|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
-							|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId()))
-					&& !isCategoryRejected(cat)) {
+			boolean validStatus = isValidCategory(cat, managedBean.getSmAppl());
+			if (cat.getPmCategoryL3().getCategoryTypeCode() != null	&& validStatus	&& !isCategoryRejected(cat)) {
 				//26671 - Site Visit Grouping Enhancement -28775 - end
-				String catType = "";
-				if (cat.getPmCategoryL3().getCategoryTypeCode() != null) {
-					catType = cat.getPmCategoryL3().getCategoryTypeCode()
-							.getParameterCode();
-				}
+				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
+				
 				if (StringUtils.isNotBlank(catType)
 						&& catType
 								.equalsIgnoreCase(ParameterConst.CATEGORY_TYPE_TRAVEL)) {
@@ -10862,22 +10886,20 @@ public class SmApplicationUtil {
 	 */
 	public static List<SelectItem> getSelectedCategoryTypeItems(SmAppl appl) {
 		String language = new FacesScopes().getUserLocale().getLanguage();
-		List<SelectItem> categoryTypeItems = new ArrayList<SelectItem>();
+		List<SelectItem> categoryTypeItems = new ArrayList<>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-						//26671 - Site Visit Grouping Enhancement -28775
-						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
-						|| isActiveCategoryAfterApproval(cat, appl.getApplId()) //#32008 - after approval bug
-						&& cat.getPmCategoryL3() != null
+				//26671 - Site Visit Grouping Enhancement -28775, //#32008 - after approval bug
+				boolean validStatus = isValidCategory(cat, appl);
+				validStatus &= !isCategoryRejected(cat);
+				if (validStatus && cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& Arrays
 								.asList(my.ep.constant.sm.SupplierManagementConst.SM_CAT_TYPE_MACHINERY)
 								.contains(
 										cat.getPmCategoryL3()
 												.getCategoryTypeCode()
-												.getParameterCode())
-						&& !isCategoryRejected(cat)) {
+												.getParameterCode())) {
 					SelectItem catType = (SelectItem) EntityHelper
 							.getEntityBySinglePropertyFromList(cat
 									.getPmCategoryL3().getCategoryTypeCode()
@@ -11883,10 +11905,8 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				//#32008 - after approval bug
-				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
-						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
-						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
+				//#32008 - after approval bug, #28775
+				if (isValidCategory(cat, smAppl)
 						&& (cat.getPmCategoryL3() != null
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
@@ -14966,22 +14986,6 @@ public class SmApplicationUtil {
 	
 	
 	/**
-	 * Get supplier category by supplierId and isCancelCategory
-	 * 
-	 * @return List<SmSupplierCategory>
-	 */
-	public static List<SmSupplierCategory> retrieveSmSupplierCategory() {
-		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
-		Long supplierId = getCurrentSupplier().getSupplierId();
-		
-		reqDTO.setSupplierId(supplierId);
-		
-		SupplierCategoryResDTO resDTO = SmServiceLookup.getSupplierCategorySO().
-				retrieveCategoryBySupplierId(reqDTO);
-		return resDTO.getSupplierCategoryList();
-	}
-	
-	/**
 	 * Get cancel category codes for current supplier
 	 * @return
 	 */
@@ -15007,6 +15011,11 @@ public class SmApplicationUtil {
 	//26238 - end
 	
 	//27617 : Disciplinary Action - 26238 - start
+	/**
+	 * Retrieve Cancel Category
+	 * @param disciplinaryActionId
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static List<Object[]> retrieveCancelCategoryByDisciplinaryActionId(Long disciplinaryActionId) {
 		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
@@ -15034,6 +15043,11 @@ public class SmApplicationUtil {
 	
 	//27796: Disciplinary Action - start - 26238
 	//28198: Disciplinary Action - start - 26238
+	/**
+	 * Retrieve Active Disciplinary Action Remarks
+	 * @param da
+	 * @return
+	 */
 	public static List<SmDisciplinaryActionRemarks> retrieveActiveSmDisciplinaryActionRemarksByDA(SmDisciplinaryAction da){
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		reqDTO.setSmDisciplinaryAction(da);
@@ -15525,7 +15539,21 @@ public class SmApplicationUtil {
 		String otherLbl = SmCommonUtil.getMessage("lbl.sm.catCodes.othDesc", null)+": ";
 		return sCat != null ? otherLbl + sCat.getOtherDesc() : null;
 	}
-	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
+	private static boolean isValidCategory(SmSupplierCategory suppCat, SmAppl appl){
+		if (suppCat == null || appl == null){
+			return false;
+		}
+		int status = suppCat.getRecordStatusFlg().intValue();
+		boolean isValid = status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+				|| status == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				|| isActiveCategoryAfterApproval(suppCat, appl.getApplId());
+		if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			isValid |= status == DbValueConst.RECORD_STATUS_ACTIVE;
+		}
+		return isValid;
+	}
+	//29380, 26671 - Site Visit Grouping Enhancement -28775 - end
 	
 	// #34303 - start
 	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {
@@ -15611,27 +15639,89 @@ public class SmApplicationUtil {
 	//#34483 END
 	
 	//#26238
-	 /**
+	/**
 	 * Supplier with DA Suspend Registration / Cancel Registration / Blacklist Owner
 	 *  can edit Bank Information only
 	 * @param bean
+	 * @param daList
 	 */
-	public static void enableBankSectionOnly(SmApplicationManagedBean bean){
+	public static void enableBankSectionOnly(SmApplicationManagedBean bean, List<SmDisciplinaryAction> daList){
 		if(bean.getEditVO() != null){
 			if(!bean.isSupplierUser() || bean.getSmSupplier() == null){
 				bean.getEditVO().setDisciplinary(false);
 				return;
 			}
-			List<SmDisciplinaryAction> activeDA = retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier());
+			List<SmDisciplinaryAction> activeDA = EntityHelper.isCollectionEmpty(daList) ?
+					retrieveActiveSmDisciplinaryActionBySupplier(bean.getSmSupplier()) : daList;
 			if(EntityHelper.isCollectionEmpty(activeDA)){
 				return;
 			}
-			for(SmDisciplinaryAction da : activeDA){
-				if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
-					bean.getEditVO().setDisciplinary(true);
-					return;
-				}
+			if(hasCannotLoginDA(activeDA)){
+				bean.getEditVO().setDisciplinary(true);
+				return;
 			}
 		}
 	}	
+	
+	/**
+	 * @param daList
+	 * @return true if suspend/cancel registration, blacklist owner DA exists
+	 */
+	public static boolean hasCannotLoginDA(List<SmDisciplinaryAction> daList){
+		for(SmDisciplinaryAction da : daList){
+			if(da.isSuspendRegistration() || da.isBlacklistOwner() || da.isCancelRegistration()){
+				return true;
+			}
+		}
+		return false;
+	}
+	//#26238 - end
+	//#37605 START
+	/*
+	 * Validate string using ASCII character
+	 */
+	public static boolean convertToAscii(String input) {
+        log.info("ASCII values for the string: \"" + input + "\"");
+        boolean isValid = true;
+        for (char character : input.toCharArray()) {
+            int asciiValue = (int) character; 
+            log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
+            if(asciiValue > 127){
+            	isValid = false;
+            }
+        }
+        return isValid;
+    }
+	
+	/*
+	 * Replace tab with a space
+	 */
+	public static String replaceTabWSpace(String input){
+		String str = null;
+		Map<String, String> documents = new HashMap<>();
+        documents.put("input", input);
+
+        log.info("Before Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        }
+
+        // Replace tabs with spaces in all values
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+            String value = entry.getValue();
+            if (value != null) {
+                // Replace tabs with 1 space
+                value = value.replace("\t", " ");
+                entry.setValue(value); 
+            }
+        }
+        
+        log.info("After Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        	str = entry.getValue();
+        }
+        return str;
+	}
+	//#37605 END
 }

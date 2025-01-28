@@ -64,18 +64,11 @@
 					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					process="@form" update="@form" />
-
-				<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>
+					
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
-					
-<!-- 				<p:commandButton value="#{lbl['lbl.btn.submit']}" -->
-<!-- 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}" -->
-<!-- 					action="#{lOIDetailBackingBean.validateNegoDecisionitAction}" process="@form" -->
-<!-- 					update="@form" /> -->
-				<ui:remove>#30008 - End</ui:remove>
 
 				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"

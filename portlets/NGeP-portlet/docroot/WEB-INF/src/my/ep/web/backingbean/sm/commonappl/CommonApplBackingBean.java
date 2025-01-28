@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.commonappl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,11 +36,9 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
@@ -67,7 +64,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -798,14 +794,18 @@ public class CommonApplBackingBean extends
 						SMProcessNameConst.PROCESSING_FEE.replaceAll("\\s", ""))) {
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
-			if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)) {
+			//#34178 - Start
+			if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_SUPP_REGISTRATION.replaceAll("\\s", ""))) {
+			//#34178 - End
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)) {
+			// #34178 - Start
+			} else if (resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN)
+					|| resDTO.getProcessName().equalsIgnoreCase(SMProcessNameConst.PROCESS_NAME_MOF_ACC_MAINTAIN.replaceAll("\\s", ""))) {
+			// #34178 - End
 				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
 				paymentBB.getManagedBean().setAppId(
 						(long) ((SMMOFRegDataType) bpmObj).getDocumentId());

@@ -73,14 +73,13 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
-import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDigiSign;														 
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
@@ -114,6 +113,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -301,198 +301,195 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * The method used to retrieve the information and render it on screen.
 	 */
 	public void preRenderView() {
+		
+		try {
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
 
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-
-		//Bug 34142, 15851 - shaqimi start 04/12/2022
-		if(taskId!=null){
-			ctBB.getManagedBean().setInPage(false);
-		}
-		if(!ctBB.getManagedBean().isInPage()){
-			if(ctBB.getManagedBean().isBackFromSCL()){
-				getManagedBean().setSelectedTabIndex(0);
-				ctBB.getManagedBean().setBackFromSCL(false);
-				
-				if (ctBB.getManagedBean().getContractVerIdFromAgreementTaskList() != null){
-					ContractReqDTO reqDTO = new ContractReqDTO();
-					reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromAgreementTaskList());
-					reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
-					reqDTO.setViewOnly(true);
-					
-					setValidateContractField(reqDTO);
-				}
+			// Bug 34142, 15851 - shaqimi start 04/12/2022
+			if (taskId != null) {
+				ctBB.getManagedBean().setInPage(false);
 			}
-			
-			if(!ctBB.getManagedBean().isViewContractFromAgreement()){
-				if(taskId != null && !taskId.isEmpty()){
-					ctBB.getManagedBean().setDocTypeFromTaskList(null);
-					ctBB.getManagedBean().setTaskIdFromTaskList(taskId);
-				} else {
-					if(ctBB.getManagedBean().getTaskIdFromTaskList() != null && !ctBB.getManagedBean().getTaskIdFromTaskList().isEmpty()){
-						taskId = ctBB.getManagedBean().getTaskIdFromTaskList();
+			if (!ctBB.getManagedBean().isInPage()) {
+				if (ctBB.getManagedBean().isBackFromSCL()) {
+					getManagedBean().setSelectedTabIndex(0);
+					ctBB.getManagedBean().setBackFromSCL(false);
+
+					if (ctBB.getManagedBean().getContractVerIdFromAgreementTaskList() != null) {
+						ContractReqDTO reqDTO = new ContractReqDTO();
+						reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromAgreementTaskList());
+						reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE); // View purpose, FU or FW also fine
+						reqDTO.setViewOnly(true);
+
+						setValidateContractField(reqDTO);
 					}
 				}
+
+				if (!ctBB.getManagedBean().isViewContractFromAgreement()) {
+					if (taskId != null && !taskId.isEmpty()) {
+						ctBB.getManagedBean().setDocTypeFromTaskList(null);
+						ctBB.getManagedBean().setTaskIdFromTaskList(taskId);
+					} else {
+						if (ctBB.getManagedBean().getTaskIdFromTaskList() != null && !ctBB.getManagedBean().getTaskIdFromTaskList().isEmpty()) {
+							taskId = ctBB.getManagedBean().getTaskIdFromTaskList();
+						}
+					}
+				}
+				ctBB.getManagedBean().setInPage(true);
 			}
-			ctBB.getManagedBean().setInPage(true);
-		}
-		//Bug 34142, 15851 - shaqimi end 04/12/2022
-		
-		if (taskId == null) {
-			//#35156 - Start
-			log.info("**Start preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
-					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
-			if (getManagedBean().getWarningPercentage() != null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-								MessageUtils.getMessage(MessageConst.INFO_745008,
-										new String[] {ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
-										getManagedBean().getWarningPercentage()}, 
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				getManagedBean().setWarningPercentage(null);
+			// Bug 34142, 15851 - shaqimi end 04/12/2022
+
+			if (taskId == null) {
+				// #35156 - Start
+				// log.info("**Start preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId()
+				// +", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+				if (getManagedBean().getWarningPercentage() != null) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.INFO_745008, new String[] {
+									ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(), 
+									getManagedBean().getWarningPercentage() }, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+					getManagedBean().setWarningPercentage(null);
+				}
+
+				if (ctBB.getManagedBean().getContractVer().getDocType() != null 
+						&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+						&& ctBB.getManagedBean().isServiceTaxAlertFlg()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+									MessageUtils.getMessage(MessageConst.INFO_755004, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					ctBB.getManagedBean().setServiceTaxAlertFlg(false);
+				}
+
+				// Start Fix - #30856
+				if (ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+
+					if (!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()) {
+						removePerformanceDatatableRow();
+					}
+
+					// Start - Fix #29368
+					if (ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)) {
+						checkandResetBondExempted();
+					}
+					// End - Fix #29368
+				}
+				// End Fix - #30856
+
+				// Bug 34142, 15851 - shaqimi start 04/12/2022
+				if (ctBB.getManagedBean().getOutcomesFromContract() != null) {
+					this.getManagedBean().setOutComes(ctBB.getManagedBean().getOutcomesFromContract());
+				} else {
+					ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
+				}
+				// Bug 34142, 15851 - shaqimi end 04/12/2022
+				//log.info("**End preRenderView from Maintenance** Check Bug #35156 :" 
+						//+ " ContractVer :" + ctBB.getManagedBean().getContractVer().getContractVerId() 
+						//+ ", Contract No :" + ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+				return;
 			}
 
-			if (ctBB.getManagedBean().getContractVer().getDocType() != null
-					&& ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-					&& ctBB.getManagedBean().isServiceTaxAlertFlg()) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, null, 
-								MessageUtils.getMessage(MessageConst.INFO_755004,
-										MessageUtils.BUNDLE_COMMON_MESSAGES, 
-										new FacesScopes().getUserLocale())));
-				ctBB.getManagedBean().setServiceTaxAlertFlg(false);				
+			// Bug 34142, 15851 - shaqimi start 06/12/2022
+			if (ctBB.getManagedBean().getDocTypeFromTaskList() != null) {
+				ContractReqDTO reqDTO = new ContractReqDTO();
+
+				reqDTO.setTaskName(ctBB.getManagedBean().getTaskNameFromTaskList());
+				reqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromTaskList());
+				reqDTO.setContractId(ctBB.getManagedBean().getContractIdFromTaskList());
+				reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromTaskList());
+				reqDTO.setViewOnly(true);// Bug 34142 - shaqimi 04/12/2022
+
+				setValidateContractField(reqDTO);
+				return;
 			}
-			
-			// Start Fix - #30856
-			if(ctBB.getManagedBean().getCtContractAmount().isBondExempted()){
-				
-				if(!ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty()){
-					
-					removePerformanceDatatableRow();
- 
+			// Bug 34142, 15851 - shaqimi end 06/12/2022
+
+			Object obj = super.getBpmTaskDetails(Object.class, new String[] { BpmOutcomeConst.BPM_SAVE });
+			getManagedBean().setSelectedTabIndex(0);
+
+			// #25406 - Start
+			/* re-Setting Cancel button */
+			//log.info("added checking include process name without space to cater for Oracle 12C [" + this.getClass().getSimpleName() + "][preRenderView]");
+			if (this.getManagedBean().getOutComes() != null 
+					&& getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME)
+					|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", ""))) {
+				String[] str_array = this.getManagedBean().getOutComes();
+				List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+				if (list.contains(BpmOutcomeConst.BPM_CANCEL)) {
+					list.remove(BpmOutcomeConst.BPM_CANCEL);
+					list.add(BpmOutcomeConst.BPM_CANCEL);
+					str_array = list.toArray(new String[0]);
+					this.getManagedBean().setOutComes(null);
+					this.getManagedBean().setOutComes(str_array);
 				}
-				
-				// Start - Fix #29368
-				if(ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-					checkandResetBondExempted();
-				  }
-				// End - Fix #29368
-				}
-			// End Fix - #30856
-			
-			//Bug 34142, 15851 - shaqimi start 04/12/2022
-			if(ctBB.getManagedBean().getOutcomesFromContract() != null){
+			}
+			// #25406 - End
+
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setViewOnly(true);// Bug 34142 - shaqimi 04/12/2022
+			reqDTO.setTaskName(getManagedBean().getTaskName());
+			//log.info("added checking include process name without space to cater for Oracle 12C [" + this.getClass().getSimpleName() + "][preRenderView]");
+			if ((getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
+					|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
+					|| (getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) 
+					|| getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME.replaceAll("\\s", "")))) {
+				CTContractAmendmentDataType dataType = (CTContractAmendmentDataType) obj;
+				reqDTO.setContractId(new Long(dataType.getContractId()));
+				reqDTO.setContractVerId(new Long(dataType.getDocId()));
+				reqDTO.setDocType(dataType.getDocType());
+			} else {
+				CTContractDataType dataType = (CTContractDataType) obj;
+				reqDTO.setContractId(new Long(dataType.getContractId()));
+				reqDTO.setContractVerId(new Long(dataType.getDocId()));
+				reqDTO.setDocType(dataType.getDocType());
+			}
+
+			// #35156 - Start
+			//log.info("**Start preRenderView from TaskList** Check Bug #35156 :" + " ContractVer :" + reqDTO.getContractVerId() + ", Contract Id :" + reqDTO.getContractId());
+
+			// Bug 34030 - shaqimi start
+			ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
+			ctBB.getManagedBean().setDocTypeFromTaskList(reqDTO.getDocType());
+			ctBB.getManagedBean().setContractIdFromTaskList(reqDTO.getContractId());
+			ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());
+			// Bug 34030 - shaqimi end
+
+			// Bug 34142, 15851 - shaqimi start 04122022
+			if (ctBB.getManagedBean().getOutcomesFromContract() != null) {
 				this.getManagedBean().setOutComes(ctBB.getManagedBean().getOutcomesFromContract());
 			} else {
 				ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
 			}
-			//Bug 34142, 15851 - shaqimi end 04/12/2022
-			log.info("**End preRenderView from Maintenance** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
-					+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
- 			return;
-		}
-				
-		//Bug 34142, 15851 - shaqimi start 06/12/2022
-		if (ctBB.getManagedBean().getDocTypeFromTaskList() != null){
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			
-			reqDTO.setTaskName(ctBB.getManagedBean().getTaskNameFromTaskList());
-			reqDTO.setDocType(ctBB.getManagedBean().getDocTypeFromTaskList());
-			reqDTO.setContractId(ctBB.getManagedBean().getContractIdFromTaskList());
-			reqDTO.setContractVerId(ctBB.getManagedBean().getContractVerIdFromTaskList());
-			reqDTO.setViewOnly(true);//Bug 34142 - shaqimi 04/12/2022
-			
-			setValidateContractField(reqDTO);
-			return;
-		}
-		//Bug 34142, 15851 - shaqimi end 06/12/2022
-		
-		Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
-		getManagedBean().setSelectedTabIndex(0);
+			// Bug 34142, 15851 - shaqimi start 04122022
 
-		
-		//#25406 - Start
-		/* re-Setting Cancel button*/
-		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
-		if (this.getManagedBean().getOutComes() != null
-				&& getManagedBean().getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME)
-				|| getManagedBean().getProcessName().equalsIgnoreCase(
-						CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", ""))) {
-		String[] str_array = this.getManagedBean().getOutComes();
-		List<String> list = new ArrayList<String>(Arrays.asList(str_array));
-		if(list.contains(BpmOutcomeConst.BPM_CANCEL)){
-			list.remove(BpmOutcomeConst.BPM_CANCEL);
-			list.add(BpmOutcomeConst.BPM_CANCEL);
-			str_array = list.toArray(new String[0]);
-			this.getManagedBean().setOutComes(null);
-			this.getManagedBean().setOutComes(str_array);
-		}
-	}
-		//#25406 - End	
-	
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		reqDTO.setViewOnly(true);//Bug 34142 - shaqimi 04/12/2022
-		reqDTO.setTaskName(getManagedBean().getTaskName());
-		log.info("added checking include process name without space to cater for Oracle 12C ["+this.getClass().getSimpleName()+"][preRenderView]");
-		if ((getManagedBean().getProcessName().equalsIgnoreCase(
-				CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) || getManagedBean().getProcessName()
-				.equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME.replaceAll("\\s", "")))
-				|| (getManagedBean().getProcessName().equalsIgnoreCase(
-						CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) || getManagedBean().getProcessName()
-						.equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME.replaceAll("\\s", "")))) {
-			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
-			reqDTO.setContractId(new Long(dataType.getContractId()));
-			reqDTO.setContractVerId(new Long(dataType.getDocId()));
-			reqDTO.setDocType(dataType.getDocType());
-		} else {
-			CTContractDataType dataType = (CTContractDataType) obj;
-			reqDTO.setContractId(new Long(dataType.getContractId()));
-			reqDTO.setContractVerId(new Long(dataType.getDocId()));
-			reqDTO.setDocType(dataType.getDocType());
-		}
-		
-		//#35156 - Start
-		log.info("**Start preRenderView from TaskList** Check Bug #35156 :"+" ContractVer :"+reqDTO.getContractVerId() 
-				+", Contract Id :"+reqDTO.getContractId());
-		
-		//Bug 34030 - shaqimi start
-		ctBB.getManagedBean().setTaskNameFromTaskList(reqDTO.getTaskName());
-		ctBB.getManagedBean().setDocTypeFromTaskList(reqDTO.getDocType());
-		ctBB.getManagedBean().setContractIdFromTaskList(reqDTO.getContractId());
-		ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());
-		//Bug 34030 - shaqimi end
-		
-		//Bug 34142, 15851 - shaqimi start 04122022
-		if(ctBB.getManagedBean().getOutcomesFromContract() != null){
-			this.getManagedBean().setOutComes(ctBB.getManagedBean().getOutcomesFromContract());
-		} else {
-			ctBB.getManagedBean().setOutcomesFromContract(getManagedBean().getOutComes());
-		}
-		//Bug 34142, 15851 - shaqimi start 04122022
-		
-		/*#26083 start - basri*/
-		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)){
-			ctBB.getManagedBean().setNotificationSetting(true);
-		} else {
-			ctBB.getManagedBean().setNotificationSetting(false); //#28320 - related to #26083
-		}
-		setValidateContractField(reqDTO);
-		
-		//#35156 - End
-				log.info("**END preRenderView from TaskList** Check Bug #35156 :"+" ContractVer :"+ctBB.getManagedBean().getContractVer().getContractVerId() 
-						+", Contract No :"+ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		//#25406
-		if(reqDTO.getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)){
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
-					ContractManagementConst.NAV_TO_CONTRACT_OWNER_MANAGEMENT);			
-		}else{
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
-					ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
-		}
-		
+			/* #26083 start - basri */
+			if (reqDTO.getDocType().equals(ParameterConst.DOCTYPE_NOTIFICATION_SETTING)) {
+				ctBB.getManagedBean().setNotificationSetting(true);
+			} else {
+				ctBB.getManagedBean().setNotificationSetting(false); // #28320 - related to #26083
+			}
+			setValidateContractField(reqDTO);
+
+			// #35156 - End
+			//log.info("**END preRenderView from TaskList** Check Bug #35156 :" 
+			//+ " ContractVer :" + ctBB.getManagedBean().getContractVer().getContractVerId() 
+			//+ ", Contract No :" + ctBB.getManagedBean().getContractVer().getCtContract().getContractNo());
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			// #25406
+			if (reqDTO.getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_OWNER_MANAGEMENT);
+			} else {
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
+			}
+		} catch(Exception e) {
+			log.error(e.getMessage(), e);
+		}		
 	}
 
 	/**
@@ -518,6 +515,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		try {
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			log.info("code dev island cek value contract version = "+resDTO.getCtContractVer());
 			ctBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			
 			//#35156 - Start
@@ -570,14 +568,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					ctBB.getManagedBean().setOwnerOrgProfile(true);
 					for (CtAgency ctAgency : ctBB.getManagedBean().getContractVer().getCtAgencies()) {
 						ctBB.checkAgencyStatus(ctAgency);
-						if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
-							ctAgency.setAp178(false);
-							//ctBB.getManagedBean().setDisableAgent(true); //Bug #27579
-						} else {
-							ctAgency.setAp178(true);
-							ctBB.getManagedBean().setDisableAgent(false);
-							ctBB.getManagedBean().setOwnerOrgProfile(false); //Bug #27579
+						// Start Fix - #36694
+						if (!reqDTO.isViewOnly()) {
+							if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
+								ctAgency.setAp178(false);
+								// ctBB.getManagedBean().setDisableAgent(true);
+								// //Bug #27579
+							} else {
+								ctAgency.setAp178(true);
+								ctBB.getManagedBean().setDisableAgent(false);
+								ctBB.getManagedBean().setOwnerOrgProfile(false); // Bug #27579
+							}
 						}
+						// End Fix - #36694
 					}
 				}
 			}
@@ -1099,11 +1102,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			if(ctContractVer.getCtAgencies() != null){
-			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
-			}
-		}
+			//Start Fix - #36694 || #25406
+//			if(ctContractVer.getCtAgencies() != null){
+//			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
+//				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
+//			}
+//			
+//		}
+			//End Fix - #36694 || #25406
 			ctContractVer.setOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile());			
 			ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}

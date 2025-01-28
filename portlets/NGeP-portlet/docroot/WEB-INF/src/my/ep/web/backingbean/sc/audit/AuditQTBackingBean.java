@@ -27,7 +27,6 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.au.AuditQTSearchBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -63,12 +62,30 @@ import com.liferay.portal.util.PortalUtil;
 public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 
 	private static final long serialVersionUID = -5747106368235143463L;
+
 	private transient IPagingDataModel<AuditQTDTO> searchQT = new SearchQTPagingDataModel();
 
+	public static final Logger log = EpLogger.getLogger(AuditQTBackingBean.class);
+
+	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
+
 	/**
-	 * Logger instance.
+	 * Throw exception for AuditTrails
 	 */
-	public static final Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
+	public class AuditTrailRedirectException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Throw exception for AuditTrails
+		 * 
+		 * @param message
+		 * @param cause
+		 */
+		public AuditTrailRedirectException(String message, Throwable cause) {
+			super(message, cause);
+		}
+	}
 
 	/**
 	 * @param docType
@@ -78,14 +95,14 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	 * @throws SystemException
 	 * 
 	 */
-	public void redirectToAuditTrailsViews(Long docId) throws IOException, PortalException, SystemException {
-
+	public void redirectToAuditTrailsViews(Long docId) throws AuditTrailRedirectException {
 		RequestContext.getCurrentInstance().execute("blockWidget.show()");
+		int activeIndex = 0;
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
-		this.getManagedBean().setActiveIndex(0);
+		this.getManagedBean().setActiveIndex(12);
 		this.getManagedBean().setBackURL(fc.getViewRoot().getViewId());
-		navigateToGeneralInfoTab();
+		onTabMenuChangeAction(activeIndex);
 
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/sc/quatationtender/audit/auditTrailDetailsMain.xhtml");
@@ -101,10 +118,10 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
-
+	
+	
 	/**
 	 * #35500 To navigate to the selected tab
-	 * 
 	 * @param activeIndex
 	 */
 	public void onTabMenuChangeAction(Integer activeIndex) {
@@ -113,157 +130,59 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		int previousIndex = this.getManagedBean().getActiveIndex();
 
 		if (previousIndex != activeIndex) {
-			switch (activeIndex) {
+			switch (activeIndex) {			
 			case 0:
-				navigateToGeneralInfoTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 				break;
 			case 1:
-				navigateToBriefingSiteVisitTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
 				break;
 			case 2:
-				navigateToSupplierListTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
 				break;
 			case 3:
-				navigateToDeskOfficerAssistantTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
 				break;
 			case 4:
-				navigateToDeskOfficerTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
 				break;
 			case 5:
-				navigateToSpecCommitteeAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
 				break;
 			case 6:
-				navigateToEvalCommitteeAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
 				break;
 			case 7:
-				navigateToTechCommitteeAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
 				break;
 			case 8:
-				navigateToFinanceCommitteeAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
 				break;
 			case 9:
-				navigateToOpenCommitteeAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
 				break;
 			case 10:
-				navigateToQuotCommitteeAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 				break;
 			case 11:
-				navigateToProcBoardAppointTab();
+				getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
 				break;
-			default:
+			default:				
 				break;
 			}
 			this.getManagedBean().setActiveIndex(activeIndex);
+			reloadTabData();
 		} else {
 			RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
 		}
 	}
-
-	private void navigateToGeneralInfoTab() {
-		log.info("navigateToGeneralInfoTab");
+	
+	private void reloadTabData() {
 		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_GI);
 		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToBriefingSiteVisitTab() {
-		log.info("navigateToBriefingSiteVisitTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_BSV);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToSupplierListTab() {
-		log.info("navigateToSupplierListTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SL);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToDeskOfficerAssistantTab() {
-		log.info("navigateToDeskOfficerAssistantTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DOA);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToDeskOfficerTab() {
-		log.info("navigateToDeskOfficerTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_DO);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToSpecCommitteeAppointTab() {
-		log.info("navigateToSpecCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_SC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToEvalCommitteeAppointTab() {
-		log.info("navigateToEvalCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_EC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToTechCommitteeAppointTab() {
-		log.info("navigateToTechCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_TEC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-	}
-
-	private void navigateToOpenCommitteeAppointTab() {
-		log.info("navigateToOpenCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_OC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToFinanceCommitteeAppointTab() {
-		log.info("navigateToFinanceCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_FEC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToQuotCommitteeAppointTab() {
-		log.info("navigateToQuotCommitteeAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_QC);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-
-	}
-
-	private void navigateToProcBoardAppointTab() {
-		log.info("navigateToProcBoardAppointTab");
-		this.getManagedBean().getAuditQTSearchBean().setSearching(true);
-		getManagedBean().setGroupSectionId(QTAuditConstant.AU_SECTION_PB);
-		RequestContext.getCurrentInstance().execute(QTAuditConstant.BLOCK_WIDGET_HIDE);
-		searchQT.reloadData();
-	}
+		searchQT.reloadData();		
+	}	
+	
 
 	private class SearchQTPagingDataModel extends PagingDataModel<AuditQTDTO> {
 
@@ -383,7 +302,6 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		CellStyle cellStyleTitleRpt;
 		Row titleRptRow;
 		Cell cellTitleRow;
-		Row titleHeaderRow;
 		int sheetHeader = 1;
 		int titleHeader = 2;
 
@@ -443,12 +361,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 																						// Cell
 
 					// Create Row/Cell - Report Header Datatable
-					titleHeaderRow = sheetRptAudit.createRow(4);
-					for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
-						Cell cell = titleHeaderRow.createCell(i + 1);
-						cell.setCellValue(colHeaderDataTableRpt[i]);
-						cell.setCellStyle(colHeaderDataTableRptStyle);
-					}
+					createTitleHeaderRow(sheetRptAudit, colHeaderDataTableRpt, colHeaderDataTableRptStyle);
 
 					// Section: Populate Audit Trail Details Record for Request
 					// Note.Create Row/Cell - Audit Trail Details
@@ -518,73 +431,89 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 	}
 
 	/**
+	 * Create Title Header Row
+	 * 
+	 * @param sheetRptAudit
+	 * @param colHeaderDataTableRpt
+	 * @param colHeaderDataTableRptStyle
+	 */
+	public void createTitleHeaderRow(Sheet sheetRptAudit, String[] colHeaderDataTableRpt,
+			CellStyle colHeaderDataTableRptStyle) {
+		Row titleHeaderRow = sheetRptAudit.createRow(4);
+		populateHeaderRow(titleHeaderRow, colHeaderDataTableRpt, colHeaderDataTableRptStyle);
+	}
+
+	private void populateHeaderRow(Row titleHeaderRow, String[] colHeaderDataTableRpt,
+			CellStyle colHeaderDataTableRptStyle) {
+		for (int i = 0; i < colHeaderDataTableRpt.length; i++) {
+			createAndStyleCell(titleHeaderRow, i + 1, colHeaderDataTableRpt[i], colHeaderDataTableRptStyle);
+		}
+	}
+
+	private void createAndStyleCell(Row row, int columnIndex, String cellValue, CellStyle cellStyle) {
+		Cell cell = row.createCell(columnIndex);
+		cell.setCellValue(cellValue);
+		cell.setCellStyle(cellStyle);
+	}
+
+	/**
 	 * #35500, get Report Excel tab Name
 	 * 
 	 * @param groupSectionId
 	 * @return String
 	 */
+	private static Map<Long, TabHeaderPair> createSectionTabHeaderMap() {
+		Map<Long, TabHeaderPair> map = new HashMap<>();
+		map.put(QTAuditConstant.AU_SECTION_GI, new TabHeaderPair(ReportExcelAuditConstant.TAB_GENERAL_INFORMATION,
+				ReportExcelAuditConstant.TAB_GENERAL_INFORMATION));
+		map.put(QTAuditConstant.AU_SECTION_BSV, new TabHeaderPair(ReportExcelAuditConstant.TAB_BRIEF_OR_SITE_VISIT,
+				ReportExcelAuditConstant.TAB_BRIEF_OR_SITE_VISIT));
+		map.put(QTAuditConstant.AU_SECTION_SL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SUPPLIER_LIST,
+				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
+		map.put(QTAuditConstant.AU_SECTION_DOA, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT,
+				ReportExcelAuditConstant.TAB_SUPPLIER_LIST));
+		map.put(QTAuditConstant.AU_SECTION_DO, new TabHeaderPair(ReportExcelAuditConstant.TAB_DESK_OFFICER,
+				ReportExcelAuditConstant.TAB_DESK_OFFICER));
+		map.put(QTAuditConstant.AU_SECTION_SC, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_SPECIFICATION_COMMITEE_APPOINTMENT,
+				ReportExcelAuditConstant.HEADER_SPECIFICATION_COMMITEE_APPOINTMENT));
+		map.put(QTAuditConstant.AU_SECTION_EC, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_EVALUATION_COMMITTEE_APPOINMENT,
+				ReportExcelAuditConstant.HEADER_EVALUATION_COMMITTEE_APPOINMENT));
+		map.put(QTAuditConstant.AU_SECTION_OC, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_OPENING_COMMITTEE_APPOINTMENT,
+				ReportExcelAuditConstant.HEADER_OPENING_COMMITTEE_APPOINTMENT));
+		map.put(QTAuditConstant.AU_SECTION_TEC, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_TECHNICAL_COMMITTEE_APPOINTMENT,
+				ReportExcelAuditConstant.HEADER_TECHNICAL_COMMITTEE_APPOINTMENT));
+		map.put(QTAuditConstant.AU_SECTION_FEC, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_FINANCIAL_COMMITTEE_APPOINTMENT,
+				ReportExcelAuditConstant.HEADER_FINANCIAL_COMMITTEE_APPOINTMENT));
+		map.put(QTAuditConstant.AU_SECTION_QC, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_QUOTATION_COMMITTEE_APPOINTMENT,
+				ReportExcelAuditConstant.HEADER_QUOTATION_COMMITTEE_APPOINTMENT));
+		map.put(QTAuditConstant.AU_SECTION_PB, new TabHeaderPair(
+				ReportExcelAuditConstant.TAB_PROCUMENT_BOARD_APPOINTMENT,
+				ReportExcelAuditConstant.HEADER_PROCUMENT_BOARD_APPOINTMENT));
+		return map;
+	}
+
 	private String getCurrentReportTab(Long groupSectionId, Integer headerType) {
-
-		if (groupSectionId.equals(QTAuditConstant.AU_SECTION_GI)) {
-			return ReportExcelAuditConstant.TAB_GENERAL_INFORMATION;
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_BSV)) {
-			return ReportExcelAuditConstant.TAB_BRIEF_OR_SITE_VISIT;
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_SL)) {
-			return ReportExcelAuditConstant.TAB_SUPPLIER_LIST;
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_DOA)) {
-			return ReportExcelAuditConstant.TAB_DESK_OFFICER_ASSISTANT;
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_DO)) {
-			return ReportExcelAuditConstant.TAB_DESK_OFFICER;
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_SC)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_SPECIFICATION_COMMITEE_APPOINTMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_SPECIFICATION_COMMITEE_APPOINTMENT;
-			}
-
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_EC)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_EVALUATION_COMMITTEE_APPOINMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_EVALUATION_COMMITTEE_APPOINMENT;
-			}
-
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_OC)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_OPENING_COMMITTEE_APPOINTMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_OPENING_COMMITTEE_APPOINTMENT;
-			}
-
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_TEC)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_TECHNICAL_COMMITTEE_APPOINTMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_TECHNICAL_COMMITTEE_APPOINTMENT;
-			}
-
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_FEC)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_FINANCIAL_COMMITTEE_APPOINTMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_FINANCIAL_COMMITTEE_APPOINTMENT;
-			}
-
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_QC)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_QUOTATION_COMMITTEE_APPOINTMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_QUOTATION_COMMITTEE_APPOINTMENT;
-			}
-
-		} else if (groupSectionId.equals(QTAuditConstant.AU_SECTION_PB)) {
-			if (headerType == 1) {
-				return ReportExcelAuditConstant.TAB_PROCUMENT_BOARD_APPOINTMENT;
-			} else {
-				return ReportExcelAuditConstant.HEADER_PROCUMENT_BOARD_APPOINTMENT;
-			}
+		TabHeaderPair tabHeaderPair = sectionTabHeaderMap.get(groupSectionId);
+		if (tabHeaderPair == null) {
+			return null;
 		}
-		return null;
+		return headerType == 1 ? tabHeaderPair.tab : tabHeaderPair.header;
+	}
+
+	private static class TabHeaderPair {
+		final String tab;
+		final String header;
+
+		TabHeaderPair(String tab, String header) {
+			this.tab = tab;
+			this.header = header;
+		}
 	}
 
 	/**

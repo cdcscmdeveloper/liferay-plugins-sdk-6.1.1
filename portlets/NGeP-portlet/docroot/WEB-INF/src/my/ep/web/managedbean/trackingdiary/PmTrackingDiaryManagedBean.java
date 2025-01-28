@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-//import java.util.Map; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+import java.util.Map; //#25790
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -139,11 +139,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String supplierRole;
 	// end - #25396
 
+	//#25790 - start
+	private transient List<Map<String,String>> purchaseRequestMapList;
+	//#25790 - end
+
 	// 25791-start
 	private boolean isBiddingUrl=Boolean.FALSE;
 
 	// 25791-end
-
+	
+	private String selectedDocNo;//Fix - #36608
+	
 	public String getBackURL() {
 		return backURL;
 	}
@@ -1055,6 +1061,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 			SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",
 					SearchOperator.OPERATOR_EQUALS.value(), getSelectedDocId(), SearchCondition.CONDITION_AND.value());
+			//Start Fix - #36608
+			SearchFilterBean searchFilterBean5 = new SearchFilterBean("docNo", 
+					SearchOperator.OPERATOR_EQUALS.value(), getSelectedDocNo(), SearchCondition.CONDITION_AND.value());
 
 			BaseSearchFilterBean searchFilterBeanAnd1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);
 			BaseSearchFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(searchFilterBean3, searchFilterBean4);
@@ -1062,7 +1071,10 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(searchFilterBeanAnd1, searchFilterBeanAnd2));
- 
+			if(getSelectedDocNo() != null){
+				searchBean.getDataFilterBeans().add(searchFilterBean5);
+			}
+			//End Fix - #36608
 			setSearchBeanDescription(searchBean, searchFilterBean1, searchFilterBean2);
 			
 			if (isSearchBeanEmpty) {
@@ -1117,7 +1129,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
 				return resDTO.getResultBean();
 			} else {
 				return new SearchResultBean<PmTrackingDiary>();
@@ -1255,14 +1266,42 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public boolean isBiddingUrl() {
 		return isBiddingUrl;
 	}
-
+	//25791-end
 	/**
 	 * @param isBiddingUrl the isBiddingUrl to set
 	 */
 	public void setBiddingUrl(boolean isBiddingUrl) {
 		this.isBiddingUrl = isBiddingUrl;
 	}
+	//Start Fix - #36608
+	public String getSelectedDocNo() {
+		return selectedDocNo;
+	}
+
+	public void setSelectedDocNo(String selectedDocNo) {
+		this.selectedDocNo = selectedDocNo;
+	}
+	//End Fix - #36608
 	
-	//25791-end
-	
+	//#25790 - start
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<>();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	 * Sets the purchase Request Map List.
+	 * 
+	 * @param purchaseRequestMapList
+	 *            the purchase Request Map List
+	 */
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+	//#25790 - end
 }

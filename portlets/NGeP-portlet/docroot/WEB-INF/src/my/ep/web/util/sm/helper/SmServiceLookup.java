@@ -2,7 +2,6 @@ package my.ep.web.util.sm.helper;
 
 //#30457 - Start
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-//#30457 - Start
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -31,6 +30,7 @@ import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.common.spki.ISpkiSO;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -53,7 +53,6 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-// #29617
 import my.ep.biz.service.sm.sme.ISupplierSmeSO;
 import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -690,4 +689,9 @@ public class SmServiceLookup {
 		return (ISmAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmAddressSO.class);
 	}
 	//#34159 - END
+	
+	public static ISpkiSO getSpkiSO() {
+		return (ISpkiSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISpkiSO.class);
+	}
 }

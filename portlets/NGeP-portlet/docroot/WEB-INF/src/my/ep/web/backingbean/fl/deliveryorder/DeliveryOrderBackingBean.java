@@ -197,7 +197,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * navigate to acknowledge page.
 	 */
 	public String createDeliveryOrder(String action) {
-		FacesScopes facesScopes = new FacesScopes();
+//		FacesScopes facesScopes = new FacesScopes();//36534
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		IUserGroupSO userGroupSO = null;
@@ -219,7 +219,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			reqDTO.setSupplier(hasSupplierRole());
-			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());//36534
 			
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
@@ -860,7 +860,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -880,28 +880,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
 		return pendingStatusIds.contains(statusId);
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 
 	/**
@@ -1709,20 +1687,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end
@@ -1843,23 +1819,26 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 
 		for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-			for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+			if (flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+				for (FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+					if (itemAddr.getDeliveredQty().doubleValue() > 0) {
+						FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+						reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
+						reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
 
-				reqDTO.setFlFulfilmentItemAddr(itemAddr.getFulfilmentItemAddrId());
-				reqDTO.setFulfilmentItemId(itemAddr.getFlFulfilmentItem().getFulfilmentItemId());
+						FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
+						sumDeliveredQty = resDTO.getTotalDelOrderQty();
 
-				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveTotalDelQty(reqDTO);
-				sumDeliveredQty = resDTO.getTotalDelOrderQty();
+						remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
+						if (itemAddr.getDeliveredQty() == null) {
+							itemAddr.setDeliveredQty(new BigDecimal(0));
+						}
 
-				remainingQty = itemAddr.getOrderedQty().subtract(sumDeliveredQty);
-				if (itemAddr.getDeliveredQty() == null) {
-					itemAddr.setDeliveredQty(new BigDecimal(0));
-				}
-
-				if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
-					throw new EpException(MessageConst.ERROR_740071);
+						if (itemAddr.getDeliveredQty().doubleValue() > remainingQty.doubleValue()) {
+							throw new EpException(MessageConst.ERROR_740071);
+						}
+					}
 				}
 			}
 		}
@@ -1892,6 +1871,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		String newSupplierDoRef = null;
 		String oldSupplierDoRef = null;
 		String fieldAuditCode = null;
+		String roleCode = null;
 
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 			// audit fl supplier
@@ -1902,6 +1882,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			orgName = fldo.getFlRequest().getSmSupplier().getCompanyName();
 			statusId = FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL;
 			fieldAuditCode = AuditFLConst.FL_AU_DO_NO_FIELDLABELCODE;
+			roleCode = getUserRole();
 		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			// audit fl approver
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1918,12 +1899,13 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			orgName = pmOrgAudit.getOrgName();
 			statusId = FulfilmentStatusConst.DO_SUBMITTED;
 			fieldAuditCode = null;
+			roleCode = RoleCode.FL_APPROVER.value();
 		}
 		// insert for DO audit
 		if (orgProfileId != null) {
 			FlAuditTrail auFLSPDTO = new FlAuditTrail();
 			auFLSPDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-			auFLSPDTO.setRoleCode(getUserRole());
+			auFLSPDTO.setRoleCode(roleCode);
 			auFLSPDTO.setOrgProfileId(orgProfileId);
 			auFLSPDTO.setOrgName(orgName);
 			auFLSPDTO.setDocId(fldo.getDeliveryOrderId());

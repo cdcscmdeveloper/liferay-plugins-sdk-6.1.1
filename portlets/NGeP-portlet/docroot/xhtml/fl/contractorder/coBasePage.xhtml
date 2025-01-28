@@ -18,13 +18,23 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{flOrderBB.managedBean.fulfilmentOrder.status.statusId.longValue() == FulfilmentStatusCont.coPendingCancellationSubmission.longValue() 
-		and not empty flOrderBB.managedBean.disciplinaryActionMessage}">
-		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
-		<h:outputText class="ui-messages-info-icon" /><ul><li>
-		<h:outputText class="ui-messages-info-detail" /> #{flOrderBB.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{flOrderBB.viewDisciplinaryAction(flOrderBB.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		<!--#26279 Start-->
+		<h:panelGroup layout="block" class="ui-messages ui-widget"
+			rendered="#{not empty flOrderBB.managedBean.disciplinaryActionMessage}">
+			<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+				<h:outputText class="ui-messages-info-icon" />
+				<ul>
+					<li><h:outputText class="ui-messages-info-detail" />
+						#{flOrderBB.managedBean.disciplinaryActionMessage} <p:commandLink
+							id="sharedcommand" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							action="#{flOrderBB.viewDisciplinaryAction(flOrderBB.managedBean.smDisciplinaryAction)}"
+							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
+						#{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li>
+				</ul>
+			</h:panelGroup>
 		</h:panelGroup>
-		</h:panelGroup>
+		<!--#26279 End-->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -225,6 +235,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();" />
 			</div>
 		</p:dialog>
+		
 		<ui:remove>#34443 start</ui:remove>
 		<p:confirmDialog
 			message="#{lbl['lbl.fl.confirmation.cancel.dialogue.po']}"
@@ -241,7 +252,8 @@
 			</div>
 		</p:confirmDialog>
 		<ui:remove>#34443 end</ui:remove>
-		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplineVO}" 
+		
+		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
 	</ui:define>
 </ui:composition>
