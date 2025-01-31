@@ -3482,52 +3482,52 @@ public class SupplierFinalizationBackingBean extends
 		return streamContent;
     }	
     
-	//36715 START
+    //36715 START
     /**
-	 *Get the Documents Report Information.
-	 * 
-	 *@return the ScQtFinalizationReportAttachment instance.
-	 *             
-	 */
-	public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
-			ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
-		log.info("generateDocumentAttachment");
-		String definitionType = scQtFinalizationReport.getDefinationType()
-				.getParameterCode();
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
+ *Get the Documents Report Information.
+ * 
+ *@return the ScQtFinalizationReportAttachment instance.
+ *             
+ */
+public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
+		ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
+	log.info("generateDocumentAttachment");
+	String definitionType = scQtFinalizationReport.getDefinationType()
+			.getParameterCode();
+	ScQtFinalization scQtFinalization = getManagedBean()
+			.getScQtFinalization();
 
-		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
-			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-					.getDocDefinitionKey();
-			ScQt scQt = getManagedBean().getScQt();
-			reportAttachment = new ScQtFinalizationReportAttachment();
-			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
-			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
-			ScAttachment attachment = (ScAttachment) reportAttachment;
-			StringBuilder filename = new StringBuilder();
-			// replace white space due to firefox
-			filename.append(scQtFinalizationReport.getTitle()
-					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
-					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
+	ScQtFinalizationReportAttachment reportAttachment = null;
+	if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+			.equals(definitionType)) {
+		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+				.getDocDefinitionKey();
+		ScQt scQt = getManagedBean().getScQt();
+		reportAttachment = new ScQtFinalizationReportAttachment();
+		reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
+		ScAttachment attachment = (ScAttachment) reportAttachment;
+		StringBuilder filename = new StringBuilder();
+		// replace white space due to firefox
+		filename.append(scQtFinalizationReport.getTitle()
+				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
+				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
 			
-			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-				filename.append(".rtf");
-				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
+		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+			filename.append(".rtf");
+			reportAttachment.setFileName(filename.toString());
+			generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
 
-			} else {
-				debugLogger("No document type is exists with the key "
-						+ docDefinitionKey);
-				reportAttachment = null;
-			}
+		} else {
+			debugLogger("No document type is exists with the key "
+					+ docDefinitionKey);
+			reportAttachment = null;
+		}
 
-		} 
+	} 
 		
-		return reportAttachment;
-	}
+	return reportAttachment;
+}
 	//36715 END
      
     /**
@@ -7102,30 +7102,6 @@ public class SupplierFinalizationBackingBean extends
 				} finally {
 					qtSuppFinalizationSO = null;
 				}
-				
-				/*List<ScQtEvaluationResultDtl> shortListedSupplierList 
-								= scQtRecommend.getShortListedSupplierList();
-				if (CollectionUtils.isNotEmpty(shortListedSupplierList)) {
-					for (ScQtEvaluationResultDtl evalResultDtl 
-											: shortListedSupplierList) {
-						String suppId = String.valueOf(evalResultDtl
-								.getQtEvaluationResult().getScQtProposal()
-								.getScQtSupplier().getSmSupplier().getSupplierId());
-						if (suppId.equals(selectedCommSupplier.getScQtProposal()
-								.getScQtSupplier().getSmSupplier().getSupplierId())) {
-							evalResultDtl.setAwareded(isAwarded);
-							evalResultDtl.setShortListed(isShortlisted);
-							this.getManagedBean().setRecommendedSupplier(null);
-							
-							// If finalization method is award, remove
-							// the previously recommended supplier details
-							if (isAwarded) {
-								prepareToDeleteRecommendDtls(scQtRecommend);
-							}
-							break;
-						}
-					}
-				}*/
 			}
 			if (removableItem != null) {
 				selectedItemSet.remove(removableItem);
@@ -7626,11 +7602,8 @@ public class SupplierFinalizationBackingBean extends
 		 */
 		public void setEmpty(boolean empty) {
 			this.empty = empty;
-		}
-		
-		
+		}		
 	}	
-	
 	
 	// this method checking two meeting dates or equal or not.
 	private void compareMeetingDates(ScQtMeeting scqtMeeting,
@@ -8354,10 +8327,10 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	
-			/**
-			 * The method  used to get the shortListed suppliers list.
-			 * @return the list of PagingDataModel objects.
-			 */		
+	/**
+	 * The method  used to get the shortListed suppliers list.
+	 * @return the list of PagingDataModel objects.
+	 */		
 	public IPagingDataModel<Object[]> getShortlistedCommomSupplier() {
 		log.info("getShortlistedCommomSupplier");
 		IPagingDataModel<Object[]> shortlistedCommomSupplier = getManagedBean()
@@ -9725,10 +9698,8 @@ public class SupplierFinalizationBackingBean extends
 
 				if (null != meeting.getMeetingStatus()
 						&& null != meeting.getMeetingStatus().getStatusId()
-						&& QTStatusConst.MS_DONE.equals(meeting
-								.getMeetingStatus().getStatusId())
-						&& meeting.getRecordStatusFlg().equals(
-								DbValueConst.RECORD_STATUS_ACTIVE)) {
+						&& QTStatusConst.MS_DONE.equals(meeting.getMeetingStatus().getStatusId())
+						&& meeting.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					hidden = true;
 
 					this.getManagedBean().setDisableBfButton(true);
@@ -10486,15 +10457,13 @@ public class SupplierFinalizationBackingBean extends
 	 * Check for duplicate report related to UUM Definiation Key Report This
 	 * issue occur in production Bug #34720
 	 */
-	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport,
+	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport, 
 			List<ScQtFinalizationReport> titleList) {
-		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument()
-				.getDocDefinitionKey() : "";
+		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument().getDocDefinitionKey() : "";
 		if (titleList != null && titleList.size() > 0) {
 			for (ScQtFinalizationReport sfReportTemp : titleList) {
-				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument()
-						.getDocDefinitionKey() : "";
-				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim())
+				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument().getDocDefinitionKey() : "";
+				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim()) 
 						&& defKey.equalsIgnoreCase(defKeyTemp)
 						&& defKey.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
 					return true;
@@ -10538,8 +10507,7 @@ public class SupplierFinalizationBackingBean extends
 	// 6906 - start - note 117
 	private void evaluateDecisionList() {
 		ScQt scQt = this.getManagedBean().getScQt();
-		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTProposalSO.class);
+		IQTProposalSO proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 
 		reqDTO.setQtId(scQt.getQtId());
@@ -10553,8 +10521,10 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setDisqualifiedStages(disqualifiedStages);
 		}
 
-		boolean disabledSelection = !((this.getManagedBean().isInitialDecisionFwdToBPK() && !this.getManagedBean()
-				.isReadOnly()) || this.getManagedBean().isSecretaryUser()) || this.isQTMaintenanceScreen();
+		boolean disabledSelection = !((this.getManagedBean().isInitialDecisionFwdToBPK() 
+				&& !this.getManagedBean().isReadOnly()) 
+				|| this.getManagedBean().isSecretaryUser()) 
+				|| this.isQTMaintenanceScreen();
 
 		this.getManagedBean().setDisabledSelection(disabledSelection);
 
@@ -10568,8 +10538,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
 		}
 
-		if (this.getManagedBean().getDecisionDropdown() != null
-				&& this.getManagedBean().getDecisionDropdown().length > 0) {
+		if (this.getManagedBean().getDecisionDropdown() != null && this.getManagedBean().getDecisionDropdown().length > 0) {
 			for (SelectItem item : this.getManagedBean().getDecisionDropdown()) {
 				if (item.getValue() != null && ParameterConst.DECISION_RECOMMEND_SUPPLIER.equals(item.getValue())) {
 					this.getManagedBean().setSupplierFinalizationReadOnly(false);
@@ -10579,19 +10548,18 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// 6906 - end - note 117
+	
 	// #30567 - Start.
 	/**
 	 * @param scQtFinalizationReport
 	 * @return
 	 * @throws Exception
 	 */
-	public ScQtFinalizationReportAttachment downloadBriefingPaperReportForBidding(
-			ScQtFinalizationReport scQtFinalizationReport) throws Exception {
+	public ScQtFinalizationReportAttachment downloadBriefingPaperReportForBidding(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		ScQtFinalizationReportAttachment reportAttachment = null;
 		if (null != getManagedBean().getCurrentStatusId()
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION
-						.longValue() || getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION
-						.longValue())) {
+				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION.longValue() 
+				|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue())) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 		} else {
 			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
