@@ -692,6 +692,13 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 			//#34209 - END
+			// #34031 Start
+			if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
+				this.getManagedBean().getSmRevisit().setSmSupplier(this.getManagedBean().getSmSupplier());
+				this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
+				reqDTO.setSmRevisit(this.getManagedBean().getSmRevisit());
+			}
+			// #34031 End
 			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
