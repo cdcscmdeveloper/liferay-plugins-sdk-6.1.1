@@ -127,11 +127,10 @@ public class QTCommitteBackingBean extends
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant logger. */
-	private static final Logger logger = EpLogger
-			.getLogger(QTCommitteBackingBean.class);
+	private static final Logger logger = EpLogger.getLogger(QTCommitteBackingBean.class);
 	
-	private ScWorkFlowStatus ocWorkFlowStatus;
-	private ScWorkFlowStatus tecWorkFlowStatus;
+	//private ScWorkFlowStatus ocWorkFlowStatus;
+	//private ScWorkFlowStatus tecWorkFlowStatus;
 
 	/**
 	 * Debug logger.
@@ -184,8 +183,7 @@ public class QTCommitteBackingBean extends
 		 * @param userCommitteeSearchBean
 		 *            the user committee search bean
 		 */
-		public UserCommitteePagingDataModel(String componentId,
-				UserCommitteeSearchBean userCommitteeSearchBean) {
+		public UserCommitteePagingDataModel(String componentId, UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
 		}
@@ -198,23 +196,20 @@ public class QTCommitteBackingBean extends
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		protected ISearchResultBean<PmUser> pageChangeListener(
-				ISearchBean<PmUser> searchBean) {
+		protected ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("pageChangeListener");
 			}
 
 			ICommitteSO committeSO;
 			try {
-				committeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
-				return committeSO.retrieveUserListByCommType(committeReqDTO)
-						.getUserResultBean();
+				return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
 			} finally {
 				committeSO = null;
 			}
@@ -229,32 +224,20 @@ public class QTCommitteBackingBean extends
 	 * @param userSearchBean
 	 *            the user search bean
 	 */
-	private void populateUserSearchCriteria(
-			UserCommitteeSearchBean userCommitteeSearchBean,
-			ISearchBean<PmUser> userSearchBean) {
+	private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean, ISearchBean<PmUser> userSearchBean) {
 		if (userCommitteeSearchBean != null) {
 
 			String name = userCommitteeSearchBean.getName();
 			if (!StringUtils.isBlank(name)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.USER_NAME,
-								SearchOperator.OPERATOR_LIKE.value(), name,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
 			}
 			String idno = userCommitteeSearchBean.getIdentificationNo();
 			if (!StringUtils.isBlank(idno)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.IDENTIFICATION_NO,
-								SearchOperator.OPERATOR_LIKE.value(), idno,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.IDENTIFICATION_NO, SearchOperator.OPERATOR_LIKE.value(), idno, true));
 			}
 			String idtype = userCommitteeSearchBean.getIdentificationType();
 			if (!StringUtils.isBlank(idtype)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"identificationCode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), idtype,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), idtype, true));
 			}
 		}
 	}

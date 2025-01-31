@@ -2000,5 +2000,4 @@ public class ViewApplHistoryBackingBean extends
 		reqSO.saveSmApplSectionReview(reqDTO);
 	
 	} //#35759 --END
-		
 }

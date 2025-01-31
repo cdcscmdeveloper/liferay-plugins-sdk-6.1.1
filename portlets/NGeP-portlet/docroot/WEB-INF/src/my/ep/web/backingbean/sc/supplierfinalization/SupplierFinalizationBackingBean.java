@@ -6486,7 +6486,7 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setSelectedItemList(
 					new ArrayList<ScQtRecommend>());
 		}
-		
+
 		// 33380 - start
 		int recommendCount = 0;
 		boolean multipleLOIandRefinalized = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean()

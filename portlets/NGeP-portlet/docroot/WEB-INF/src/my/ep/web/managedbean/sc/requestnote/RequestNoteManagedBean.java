@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -359,6 +360,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private Long purchaseRequestId;
 	//28878 - End
 	
+	//#28895#35492 - Start
+    private PurchaseRequestResDTO purchaseRequestResDTO;
+    //#28895#35492 - End
+    
 	// #36119 - start
 	/** The new sourcing dp bpm version flag */
 	private boolean sourcingDpNewBpmVer = Boolean.FALSE;
@@ -2094,6 +2099,16 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	//28878 - End
 	
+	// #28895#35492 - Start
+	public PurchaseRequestResDTO getPurchaseRequestResDTO() {
+		return purchaseRequestResDTO;
+	}
+
+	public void setPurchaseRequestResDTO(PurchaseRequestResDTO purchaseRequestResDTO) {
+		this.purchaseRequestResDTO = purchaseRequestResDTO;
+	}
+	// #28895#35492 - End
+		
 	// #36119 - start
 	/**
 	 * @return the sourcingDpNewVerBpm
