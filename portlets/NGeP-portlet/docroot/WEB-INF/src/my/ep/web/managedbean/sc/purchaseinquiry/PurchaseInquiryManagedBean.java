@@ -877,7 +877,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemTierStandardPrices() {
 		if (supplierItemTierStandardPrices == null)
-			supplierItemTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemTierStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemTierStandardPrices;
 	}
@@ -899,7 +899,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemTierPromotionPrices() {
 		if (supplierItemTierPromotionPrices == null)
-			supplierItemTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemTierPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemTierPromotionPrices;
 	}
@@ -921,7 +921,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalStandardPrices() {
 		if (supplierItemZonalStandardPrices == null)
-			supplierItemZonalStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalStandardPrices;
 	}
@@ -943,7 +943,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalPromotionPrices() {
 		if (supplierItemZonalPromotionPrices == null)
-			supplierItemZonalPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalPromotionPrices;
 	}
@@ -965,7 +965,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalTierStandardPrices() {
 		if (supplierItemZonalTierStandardPrices == null)
-			supplierItemZonalTierStandardPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalTierStandardPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalTierStandardPrices;
 	}
@@ -987,7 +987,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public List<ScSupplierItemPrice> getSupplierItemZonalTierPromotionPrices() {
 		if (supplierItemZonalTierPromotionPrices == null)
-			supplierItemZonalTierPromotionPrices = new ArrayList<ScSupplierItemPrice>();
+			supplierItemZonalTierPromotionPrices = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 
 		return supplierItemZonalTierPromotionPrices;
 	}

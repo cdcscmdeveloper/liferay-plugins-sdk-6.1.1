@@ -134,7 +134,7 @@
 									style="width : 12%;"
 									rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 									<ui:repeat var="applDocsFile"
-										value="#{inquirytbl.smApplInquiryDocFiles}">
+										value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}"
 												rendered="#{not empty applDocsFile.fileName and applDocsFile.fileName ne ' '}"
@@ -239,7 +239,7 @@
 									style="width : 12%;"
 									rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 									<ui:repeat var="applDocsFileNonMandatory"
-										value="#{inquirytbl.smApplInquiryDocFiles}">
+										value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFileNonMandatory.fileName}"
 												rendered="#{not empty applDocsFileNonMandatory.fileName and applDocsFileNonMandatory.fileName ne ' '}"

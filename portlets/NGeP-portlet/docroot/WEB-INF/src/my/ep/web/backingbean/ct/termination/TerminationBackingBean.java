@@ -175,6 +175,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		reqDTO.setContractId(new Long(dataType.getContractId()));
 		reqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
 		reqDTO.setDocType(dataType.getDocType());
+		ctBB.getManagedBean().setContractVerIdFromTaskList(new Long(dataType.getLatestVersionId())); //#15851
 		getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
 		if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_UPDATE_HT_NAME)){
 			getManagedBean().setDisableField(true);
@@ -492,13 +493,17 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 
-				if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null
-						|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().isEmpty()) {
+				if ((getManagedBean().getContractVer().getCtTermination().getRecommendedAgency() == null
+						|| getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().isEmpty())
+						&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase( //bug #36707 
+								ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 
-				if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate() == null) {
+				if (getManagedBean().getContractVer().getCtTermination().getRecommendedAgencyDate() == null
+						&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+								ParameterConst.CONTRACT_TYPE_MINISTRY)) { //bug #36707
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.recommended.agency.date", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
@@ -1050,6 +1055,15 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				reqDTO.setCtAgencySearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchRecommendedAgency(reqDTO);
 				if (resDTO.isSuccessful()) {
+					// #36707 - Start
+					if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						List<CtAgency> resultList = new ArrayList<CtAgency>();
+						resultList.add(new CtAgency());
+						resultList.get(0).setOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile());
+						resDTO.getCtAgencyResultBean().setTotalRecord(1);
+						resDTO.getCtAgencyResultBean().setResultList(resultList);
+					}
+					// #36707 - End
 					return resDTO.getCtAgencyResultBean();
 				}
 			} catch (Exception e) {
@@ -1357,25 +1371,39 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	}
 
 	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract/loa details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
 	@Override
 	public void goToLoaView(ScLoa scLoa) {
-		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
-		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+		String slLoaNo = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContractValue().getLoaNo() : this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer()==null?
+				ctBB.getManagedBean().getContractVer().getCtContract().getContractId() : this.getManagedBean().getContractVer().getCtContract().getContractId();
+		Long statusId = null;
+		String docType = null;
 		
+		if(!ctBB.getManagedBean().isViewContract()){
+			statusId = this.getManagedBean().getContractVer()==null?
+					ctBB.getManagedBean().getContractVer().getStatus().getStatusId() : this.getManagedBean().getContractVer().getStatus().getStatusId();
+			docType = ParameterConst.DOCTYPE_CONTRACT_TERMINATION;
+		}
+				
 		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
 			AmendmentBackingBean abb = new AmendmentBackingBean();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
 			abb.getManagedBean().setTrackingDairyView(true);
-			ctBB.getManagedBean().setViewSCL(true);
-	
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			
-			//To reset status from FU, NT, FW
-			ctBB.getManagedBean().setDocTypeFromTaskList(null);
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(docType);
+			ctBB.getManagedBean().setStatusIdFromTaskList(statusId);
 			ctBB.getManagedBean().setContractIdFromTaskList(null);
-			ctBB.getManagedBean().setContractVerIdFromTaskList(null);
 			ctBB.getManagedBean().setTaskNameFromTaskList(null);
 	
 			if(ctBB.getManagedBean().isViewContractFromAgreement()){
