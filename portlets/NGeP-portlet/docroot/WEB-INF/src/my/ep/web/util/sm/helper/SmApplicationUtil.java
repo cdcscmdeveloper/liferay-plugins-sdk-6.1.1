@@ -15724,4 +15724,37 @@ public class SmApplicationUtil {
         return str;
 	}
 	//#37605 END
+
+	// #37779 - Start
+	/**
+	 @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return error message
+	 */
+	public static void checkBankAccountPurpose(SmApplicationManagedBean managedBean) {
+		StringBuilder bf = new StringBuilder();
+		int index = 1;
+
+		SmAppl appl = managedBean.getSmAppl();
+
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			if (bank.getAccountPurpose().equalsIgnoreCase("O")) {
+				if (index == 1) {
+					bf.append("<br>" + index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " ("
+							+ bank.getAccountNo() + ") " + "<br>");
+				} else if (index > 1) {
+					bf.append(index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " (" + bank.getAccountNo()
+							+ ") " + "<br>");
+				}
+
+			}
+		}
+
+		if (managedBean.isSupplierUser()) {
+			throw new EpException(MessageConst.ERROR_722710, new String[] { bf.toString() });
+		} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
+			throw new EpException(MessageConst.ERROR_722709, new String[] { bf.toString() });
+		}
+	}
+	// #37779 - End
 }
