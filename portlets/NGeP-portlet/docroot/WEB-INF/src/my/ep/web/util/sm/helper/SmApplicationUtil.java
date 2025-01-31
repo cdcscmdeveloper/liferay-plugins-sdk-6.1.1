@@ -15726,6 +15726,11 @@ public class SmApplicationUtil {
 	//#37605 END
 
 	// #37779 - Start
+	/**
+	 @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return error message
+	 */
 	public static void checkBankAccountPurpose(SmApplicationManagedBean managedBean) {
 		StringBuilder bf = new StringBuilder();
 		int index = 1;
