@@ -61,7 +61,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 		try {
 			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
-			System.out.println("from Template Class !!!! ");
+					
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 			
