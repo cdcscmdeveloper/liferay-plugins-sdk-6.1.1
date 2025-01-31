@@ -363,7 +363,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	//#28895#35492 - Start
     private PurchaseRequestResDTO purchaseRequestResDTO;
     //#28895#35492 - End
-	
+    
 	// #36119 - start
 	/** The new sourcing dp bpm version flag */
 	private boolean sourcingDpNewBpmVer = Boolean.FALSE;

@@ -1623,14 +1623,14 @@ public class SupplierFinalizationBackingBean extends
 								ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
 									.equals(decisionTypeCode)) {
 						
-					// 25037 - start
-					if ((ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode) && (scQtFinalization
-							.getReason() == null || scQtFinalization.getReason().getReasonId() == null))
-							&& !skipValidation) {
-					// 25037 - end
-						navigateToSupplierFinalizationTab();
-						throw new EpException(MessageConst.ERROR_760385);
-					}
+						// 25037 - start
+						if ((ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY.equals(decisionTypeCode) && (scQtFinalization
+								.getReason() == null || scQtFinalization.getReason().getReasonId() == null))
+								&& !skipValidation) {
+						// 25037 - end
+							navigateToSupplierFinalizationTab();
+							throw new EpException(MessageConst.ERROR_760385);
+						}
 						// isBpkFinalizationReq is true for Restricted Tender whose sent for  BPK Approval
 					if (!this.getManagedBean().isInitialDecisionFwdToBPK()
 							&& this.getManagedBean().getScQt().isBpkFinalizationReq()) {
@@ -9614,7 +9614,7 @@ public class SupplierFinalizationBackingBean extends
 		}
 	}
 	// 25638 - End
-
+	
 	// Bug #32682 #27502 & #34921 - Start
 	/**
 	 * to set user id for LoiLoaById based on LoiLoaBy
