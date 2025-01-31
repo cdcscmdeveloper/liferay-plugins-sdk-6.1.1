@@ -15736,17 +15736,17 @@ public class SmApplicationUtil {
 		int index = 1;
 
 		SmAppl appl = managedBean.getSmAppl();
-		
+
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
 			if (bank.getAccountPurpose().equalsIgnoreCase("O")) {
 				if (index == 1) {
 					bf.append("<br>" + index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " ("
 							+ bank.getAccountNo() + ") " + "<br>");
 				} else if (index > 1) {
-					bf.append(index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " ("
-							+ bank.getAccountNo() + ") " + "<br>");
+					bf.append(index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " (" + bank.getAccountNo()
+							+ ") " + "<br>");
 				}
-				
+
 			}
 		}
 
