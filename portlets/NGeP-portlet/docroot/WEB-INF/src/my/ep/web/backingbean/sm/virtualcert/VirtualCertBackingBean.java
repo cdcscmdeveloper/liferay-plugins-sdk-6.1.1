@@ -39,6 +39,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "virtualCertBackingBean")
 @RequestScoped
 public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBean> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(VirtualCertBackingBean.class);
 	private final static String XHTML_VIRTUAL_DET = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
 	private final static String XHTML_QUESTIONNAIRE = "/xhtml/sm/questionnaire/questionnaireView.xhtml";
@@ -99,7 +103,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 					.getMofAccountBySuppIdAndSuppType(supp.getSupplierId(),
 							supp.getSmAppl().getSupplierType());
 			if (mofAcc != null) {
-				Date today = new Date();
+				//Date today = new Date();
 				/*if (!(today.compareTo(mofAcc.getExpDate()) < 0)) {
 					fc.addMessage(
 							null,
@@ -171,8 +175,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 * retrieve Cert Info
 	 * @param supplierId
 	 */
-	private void retrieveCertInfo(Long supplierId){
-		IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
+	private void retrieveCertInfo(Long supplierId) {
+		IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm",
+				IVirtualCertSO.class);
 		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 		reqDTO.setSupplierId(supplierId);
 		VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
@@ -180,15 +185,14 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		if (resDTO.getSmMofCerts().size() > 0) {
 			// #36401 - Start
 			if (countCerts(resDTO.getSmMofCerts())) {
-				this.getManagedBean().setMofCertLs(
-						getLatestSmMofCertsIfDuplicate(resDTO.getSmMofCerts()));
+				this.getManagedBean().setMofCertLs(getLatestSmMofCertsIfDuplicate(resDTO.getSmMofCerts()));
 			} else {
 				this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
 			}
 			// #36401 - End
 		}
 	}
-	
+
 	// #36401 - Start
 	private boolean countCerts(List<SmMofCert> certs) {
 		int countCert = 0;
@@ -205,8 +209,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	}
 
 	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
-	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
-			List<SmMofCert> mofCerts) {
+	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(List<SmMofCert> mofCerts) {
 		List<SmMofCert> cert = new ArrayList<>();
 		List<SmMofCert> bumiCert = new ArrayList<>();
 

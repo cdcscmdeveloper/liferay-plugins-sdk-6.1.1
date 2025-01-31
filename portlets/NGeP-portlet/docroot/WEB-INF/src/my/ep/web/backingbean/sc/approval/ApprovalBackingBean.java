@@ -139,7 +139,7 @@ import org.primefaces.event.FileUploadEvent;
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
 public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
-
+	
 	/**
 	 * 
 	 */
@@ -894,10 +894,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			qtDetailBB.getManagedBean().setReadOnly(readOnlyOri);
 			
-			ScQt mb1 = this.getManagedBean().getQt();
-			ScQt mb2 = qtDetailBB.getManagedBean().getQt();
-			ScQtApproval mbAppr1 = this.getManagedBean().getScQtApproval();
-			ScQtApproval mbAppr2 = qtDetailBB.getManagedBean().getScQtApproval();
+			//ScQt mb1 = this.getManagedBean().getQt();
+			//ScQt mb2 = qtDetailBB.getManagedBean().getQt();
+			//ScQtApproval mbAppr1 = this.getManagedBean().getScQtApproval();
+			//ScQtApproval mbAppr2 = qtDetailBB.getManagedBean().getScQtApproval();
 			
 			if (page.equalsIgnoreCase(QTConstants.MAINTANANCE_PAGE)) {
 				page = QTConstants.MAINTANANCE_PAGE_FULL;				
