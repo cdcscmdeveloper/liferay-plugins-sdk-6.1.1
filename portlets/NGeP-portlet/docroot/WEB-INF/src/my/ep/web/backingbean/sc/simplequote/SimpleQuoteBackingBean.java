@@ -42,6 +42,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;//#26284
@@ -425,6 +426,14 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
 			
+			//#25886 - start
+			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+						getManagedBean().getScQuote());
+				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+			}
+			//#25886 - end
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 
@@ -5187,6 +5196,14 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		// #25886 - start
+		if (getManagedBean().getScQuote().getPurchaseInDefault() != null) {
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+					getManagedBean().getScQuote());
+			ScQuote scQt = getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+		}
+		// #25886 - end
 		
 		// Populate General Information tab details saved in session
 		// after returning from Treasury Circular Page
@@ -7434,7 +7451,18 @@ public class SimpleQuoteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
-	
+	//#25886 - start
+	/**
+	 * Gets the purchaseindefault so.
+	 *
+	 * @return the purchaseindefault so
+	 */
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+	}
+	//#25886 - end
+
 	/**
 	 * based on treenode selection button enable/disable.
 	 * 
