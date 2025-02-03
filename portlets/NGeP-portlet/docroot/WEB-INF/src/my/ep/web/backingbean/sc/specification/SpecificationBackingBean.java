@@ -2072,7 +2072,7 @@ public class SpecificationBackingBean extends
 					
 				}
 
-				
+				// 37813,35384 remove coding.
 				techWeightageSum();
 				techScoreSum();
 			}
@@ -8784,37 +8784,41 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	private void techScoreSum() {
 		try {
-			//37813 -start
+			// 37813,35384 -start
 			BigDecimal totalScore = BigDecimal.valueOf(0);
-			//37813 -end
+			// 37813,35384  -end
 			List<ScQtCheckList> weightageList = this.getManagedBean()
 					.getTechnicalScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<>();//37813 -start
+				// 37813,35384 -start 
+				weightageList = new ArrayList<>();
+				// 37813,35384 -end
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = weightageList.get(i);//37813 -start
-				if (null != weight.getQtScoreWeightage()){
-				//37813 -start	
+				// 37813,35384 -start
+				ScQtCheckList weight = weightageList.get(i);
+				if (null != weight.getQtScoreWeightage()){	
 				ScQtScoreWeightage checklistWeighatge=setWeightageScore(weight.getQtScoreWeightage());
 				weight.setQtScoreWeightage(checklistWeighatge);
 				BigDecimal checkListScore = weight.getQtScoreWeightage()
 							.getScore() != null ? weight.getQtScoreWeightage()
 							.getScore() : BigDecimal.valueOf(0);
 				totalScore = totalScore.add(checkListScore);
-				//37813 -end
+				// 37813,35384 -end
 				}
 				
 				
 			}
-			this.getManagedBean().setTechPoints(totalScore);//37813
+			// 37813,35384 -start
+			this.getManagedBean().setTechPoints(totalScore);
+			// 37813,35384 -end
 		} finally {
 
 		}
 
 	}
 	
-	// 37813 -start
+	// 37813,35384 -start
 	/**
 	 * set checkist score weight.
 	 * 
@@ -8827,7 +8831,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		return scoreWeightage;
 	}
-	// 37813 -end
+	// 37813,35384 -end
 
 	/**
 	 * Fin score sum.calculate financial score sum.

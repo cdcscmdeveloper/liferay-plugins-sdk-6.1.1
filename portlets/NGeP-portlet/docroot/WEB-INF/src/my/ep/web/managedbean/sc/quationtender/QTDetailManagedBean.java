@@ -1101,10 +1101,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
 	
-	//37813 -start
+	//37813,35384 -start
 	/** The tech points. */
 	private BigDecimal techPoints;
-	//37813 -end
+	//37813,35384 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -8212,7 +8212,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.financialScoring = financialScoring;
 	}
 
-
+	//37813,35384 remove tech setter and getter.
 	/**
 	 * @return the finPoints
 	 */
@@ -10763,7 +10763,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// #25426 - End
 	
-	//37813 -start
+	//37813,35384 -start
 	/**
 	 * @return the techPoints
 	 */
@@ -10777,7 +10777,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setTechPoints(BigDecimal techPoints) {
 		this.techPoints = techPoints;
 	}
-	//37813 -end
+	//37813,35384 -end
 	
 	
 }
