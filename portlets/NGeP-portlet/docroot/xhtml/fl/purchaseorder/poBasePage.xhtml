@@ -72,9 +72,10 @@
 			enableAutoUpdate="#{flOrderBB.enableAutoUpdate()}"/>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 					action="#{flOrderBB.backToPervious}"
 					rendered="#{flOrderBB.managedBean.taskId==null
+					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView
 					or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" />
 				</td>
 				<c:if test='#{flOrderBB.managedBean.outComes ne "null"}'>

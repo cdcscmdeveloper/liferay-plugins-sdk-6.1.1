@@ -2161,14 +2161,14 @@ public class TemplateSpecBackingBean extends
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
-								.getAnswerNumeric()).setScale(2, BigDecimal.ROUND_UP);
+								.getAnswerNumeric()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						
 					}
 				}
 
 				if (tplSpecAnswer.getAmountPerYear() != null) {
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-							.getAmountPerYear()).setScale(2, BigDecimal.ROUND_UP);
+							.getAmountPerYear()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 					
 				}
 			}
@@ -3053,7 +3053,7 @@ public class TemplateSpecBackingBean extends
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -3074,7 +3074,7 @@ public class TemplateSpecBackingBean extends
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		};
@@ -3102,7 +3102,7 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, BigDecimal.ROUND_UP);//Bug #29808
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024	//Bug #29808
 		
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
@@ -3126,7 +3126,7 @@ public class TemplateSpecBackingBean extends
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
 						.multiply(RoundIndicativePrice)
-						.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+						.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 			} else {
 				if (isItemTypeService && !isFulfilmentTypeScheduled) //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
 				{		totalIndicativePrice = totalIndicativePrice.add(clQuantity
@@ -3134,7 +3134,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
 						.multiply(RoundIndicativePrice)
-						.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+						.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 				} else {
 					if (isItemTypeService && isFulfilmentTypeScheduled) //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
 					{
@@ -3144,7 +3144,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
 								.multiply(RoundIndicativePrice)
-								.setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+								.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 					}
 				}
 			}
@@ -3622,7 +3622,7 @@ public class TemplateSpecBackingBean extends
 	
 	// #31134 Farid end 25/6/2021
 	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
-		int count = 0;
+		//int count = 0;
 		
 		for (TplSpecAnswer retrieveAns : templateSpecBean.getSpecAnswerList()) {
 			if (retrieveAns != null && retrieveAns.getTplSpecTierQty() != null) {
