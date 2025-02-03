@@ -39,7 +39,6 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.dto.sm.sme.SupplierSmeReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -105,14 +104,15 @@ import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformation
 //#34031 Start
 import java.util.Calendar;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.persistence.entity.sm.SmRvAssistOfficer;
+import my.ep.persistence.entity.sm.SmRvCatCode;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
 import org.primefaces.event.FileUploadEvent;
-import my.ep.dto.sm.revisit.SmRevisitReqDTO;
-import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 //#34031 End
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
@@ -366,7 +366,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmRevisit smRevisit = new SmRevisit();
 		this.getManagedBean().setSmRevisit(smRevisit);
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
-		List<SmRvAssistOfficer> smRvAssistOfficers = new ArrayList<SmRvAssistOfficer>();
+		List<SmRvAssistOfficer> smRvAssistOfficers = new ArrayList<>();
 		this.getManagedBean().getSmRevisit().setSmRvAssistOfficers(smRvAssistOfficers);
 		addSmRvAssistOfficer();
 		initSmRvDoc();
@@ -697,8 +697,11 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 			//#34209 - END
-			// #34031
-			saveRevisitInfo(reqDTO);
+			// #34031 Start
+			if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
+				saveRevisitInfo(reqDTO);
+			}
+			// #34031 End
 			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
@@ -1148,6 +1151,11 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 			//#28147 - end
 		}
+		// #34031 Start
+		if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
+			validateRevisit();
+		}
+		// #34031 End
 		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
@@ -2934,13 +2942,24 @@ public class SupplierDataMaintenanceBackingBean extends
 			this.getManagedBean().getSmRevisit().setSmSupplier(this.getManagedBean().getSmSupplier());
 			this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
 			this.getManagedBean().getSmRevisit().setCurrent(true);
+			this.getManagedBean().getSmRevisit().setOldPmRegStatus(this.getManagedBean().getSmAppl().getPmRegStatus());
+			if(!this.getManagedBean().getDeleteApprovedCategories().isEmpty()){
+				List<SmRvCatCode> deletedCatCode =  new ArrayList<>();
+				for(SmSupplierCategory catCode : this.getManagedBean().getDeleteApprovedCategories()){
+					SmRvCatCode smRvCoatCode = new SmRvCatCode();
+					smRvCoatCode.setSmRevisit(this.getManagedBean().getSmRevisit());
+					smRvCoatCode.setSmSupplierCategory(catCode);
+					deletedCatCode.add(smRvCoatCode);
+				}
+				this.getManagedBean().getSmRevisit().setSmRvCatCodes(deletedCatCode);
+			}
 			removeEmptyAssistOfficer();
 			reqDTO.setSmRevisit(this.getManagedBean().getSmRevisit());
 		}
 	}
 
 	private void removeEmptyAssistOfficer() {
-		List<SmRvAssistOfficer> emptySmRvAssistOfficers = new ArrayList<SmRvAssistOfficer>();
+		List<SmRvAssistOfficer> emptySmRvAssistOfficers = new ArrayList<>();
 		this.getManagedBean().setEmptyRvAssistOfficers(emptySmRvAssistOfficers);
 		for (SmRvAssistOfficer officer : this.getManagedBean().getSmRevisit().getSmRvAssistOfficers()) {
 			if (officer.getOfficerName().isEmpty()) {
@@ -2970,6 +2989,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 		}
 		return remark;
+	}
+	
+	private void validateRevisit() {
+		if (null == this.getManagedBean().getSmRevisit().getRevisitOfficer()) {
+			throw new EpException(MessageConst.ERROR_723102);
+		}
+		for (SmRvSuppDoc suppDoc : this.getManagedBean().getSmRevisit().getSmRvSuppDocs()) {
+			validateRvSuppDoc(suppDoc);
+		}
+	}
+
+	private void validateRvSuppDoc(SmRvSuppDoc suppDoc) {
+		if (null == suppDoc.getSmRvDocFiles() || suppDoc.getSmRvDocFiles().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_723103, new String[] { suppDoc.getPmDocument().getDocName() });
+		}
 	}
 	// #34031 End
 }
