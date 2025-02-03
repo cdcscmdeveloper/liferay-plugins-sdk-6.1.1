@@ -196,8 +196,12 @@ public class gpkiBackingBean implements Serializable {
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
+		String nonceNull = map.get("gpkiNonceNull");
 		if (extMsg != null && extMsg.trim().length() > 0) {
 			statusMsg = extMsg;
+		}
+		if(nonceNull != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.gpki.nonce.null", null);
 		}
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
