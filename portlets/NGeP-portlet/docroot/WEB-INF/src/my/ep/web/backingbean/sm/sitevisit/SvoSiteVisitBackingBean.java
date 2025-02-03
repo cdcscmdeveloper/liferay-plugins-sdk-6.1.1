@@ -2776,7 +2776,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	public void saveSmManufacturingDtl() {
 		SmManufacturingDtl manufacturingDtl = getManagedBean().getSelectedManufacturer();
 		SmManufacturingDtl oriManufacturingDtl = (SmManufacturingDtl) getManagedBean().getOriSelectedManufacturingDtl();
-
+		//#28775
+		if (getManagedBean().getManufacturingDtlLs() == null){
+			getManagedBean().setManufacturingDtlLs(new ArrayList<SmManufacturingDtl>());
+		}
 		if (manufacturingDtl.isBrandNew()) {
 			manufacturingDtl.setRevNo(1);
 			manufacturingDtl.setSmAppl(getManagedBean().getSmSvTask().getSmAppl());
@@ -2797,15 +2800,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * of the application.
 	 */
 	public void removeAdditionalManufacturingDtl() {
-		//CR 28774: Static Code Analysis
-		if (!getManagedBean().getSelectedManufacturingList().isEmpty()) {
-			EntityHelper.compareAndRemoveEntityFromList(getManagedBean().getSelectedManufacturingList(), getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls(),
-					"manufacturingDtlId");
-			getManagedBean().getSelectedManufacturingList().clear();
-		} else {
+		//CR 28774: Static Code Analysis, #28775
+		List<SmManufacturingDtl> manufacturingList = getManagedBean().getSelectedManufacturingList();
+		if (manufacturingList == null || manufacturingList.isEmpty()){
 			throw new EpException(MessageConst.ERROR_722534, new String[] { "Manufacturer" });
 		}
-
+		EntityHelper.compareAndRemoveEntityFromList(manufacturingList, 
+				getManagedBean().getSmSvTask().getSmAppl().getSmManufacturingDtls(), "manufacturingDtlId");
+		
+		for (SmManufacturingDtl manufac : manufacturingList){
+			getManagedBean().getManufacturingDtlLs().remove(manufac);
+		}
+		getManagedBean().getSelectedManufacturingList().clear();
 	}
 	
 	
