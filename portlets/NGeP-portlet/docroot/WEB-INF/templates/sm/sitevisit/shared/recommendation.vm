@@ -74,7 +74,6 @@
 
 #if($templateCode == "M")
 <table>
-	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
 	<tr><td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.officeloc.operation.stage')</td></tr>
 	#if($review) 
 		<tr><td>$!svTask.smSvTemplate.smSvComment.operationStage</td></tr>
@@ -97,17 +96,6 @@
 		<br />
 	#end
 </table>
-#else
-<table>
-	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
-	#if($review)
-		<tr><td>$!svTask.officerComment</td></tr>
-		<br />
-	#else
-		<tr><br /><br /><br /><br /><br /></tr>
-	#end
-</table>
-#end
 
 #if(!$svTask.smAppl.siteVisitGroup)
 	<table>
@@ -125,6 +113,16 @@
 	<br /><br />
     #parse("templates/sm/sitevisit/shared/premiseLocation.vm")
 #end
+
+<table>
+	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.comments')</u></td></tr>
+	#if($review)
+		<tr><td>$!svTask.officerComment</td></tr>
+		<br />
+	#else
+		<tr><br /><br /><br /><br /><br /></tr>
+	#end
+</table>
 
 <table>
 	<tr><td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.recommdeclaration')</u></td></tr>

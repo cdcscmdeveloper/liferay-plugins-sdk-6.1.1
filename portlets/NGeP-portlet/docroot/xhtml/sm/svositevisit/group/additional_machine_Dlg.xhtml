@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="adtMachineDlg" header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}" widgetVar="adtMacDlg" 
+	<p:dialog id="adtMachineDlg" header="#{lbl['lbl.sm.sitevisit.additional.machine']}" widgetVar="adtMacDlg" 
 		modal="true" width="600" dynamic="true" cache="false">
 		<p:messages id="dlgMessages" showDetail="true" autoUpdate="#{!empty param['disableMsgAutoUpdate']}" closable="true" showSummary="false" />
 		<table>
@@ -93,13 +93,19 @@
 		</table>
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" update="@([id$=categoryTypeGroupPanel])" rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" 
+				update="@([id$=addMachTbl])" 
+				process="adtMachineDlg"
+				rendered="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
 				action="#{svoSiteVisitBackingBean.addAdditionalMachineToList}" >
 				<!-- update form -->
 				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>
 			
-			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@([id$=categoryTypeGroupPanel])" rendered="#{!svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" 
+				update="@([id$=addMachTbl])" 
+				process="adtMachineDlg"
+				rendered="#{!svoSiteVisitBackingBean.managedBean.selectedAdtMachine.newMachine}"
 				action="#{svoSiteVisitBackingBean.saveAdditionalMachine}" >
 				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>

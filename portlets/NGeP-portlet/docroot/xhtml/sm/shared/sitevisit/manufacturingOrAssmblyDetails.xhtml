@@ -80,7 +80,7 @@
 		dynamic="true" closable="true">
 
 		<p:messages id="manufacturingDialogMsg" showDetail="true"
-			autoUpdate="#{!empty param['disableMsgAutoUpdateMac']}"
+			autoUpdate="#{!empty param['disableMsgAutoUpdate']}"
 			closable="true" showSummary="false" />
 
 		<table style="width: 100%">
@@ -89,7 +89,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.manufacture.prdType']}"
 						id="smManuDtlProdType" size="35" maxlength="50"
-						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						required="#{!empty param['disableMsgAutoUpdate']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.goodsType}" />
 					<p:message id="smManuDtlProdTypeMsg" for="smManuDtlProdType"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -100,7 +100,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.manufacture.brand']}"
 						id="smManuDtlBrdType" size="35" maxlength="50"
-						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						required="#{!empty param['disableMsgAutoUpdate']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.brand}" />
 					<p:message id="smManuDtlBrdTypeMsg" for="smManuDtlBrdType"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -112,7 +112,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.manufacture.prodCap']}"
 						id="smManuDtlProdCap" size="35" maxlength="6"
-						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						required="#{!empty param['disableMsgAutoUpdate']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.productionCapacity}" />
 					<p:message id="smManuDtlProdCapMsg" for="smManuDtlProdCap"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -124,7 +124,7 @@
 				<td valign="top"><p:inputText
 						label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuDtlMesUnit"
 						maxlength="20"
-						required="#{!empty param['disableMsgAutoUpdateMac']}"
+						required="#{!empty param['disableMsgAutoUpdate']}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedManufacturer.uom}" />
 					<p:message id="smManuDtlMesUnitMsg" for="smManuDtlMesUnit"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -135,8 +135,9 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				update="smManufacturingDtl"
+				process="manufacturingDlg"
 				action="#{svoSiteVisitBackingBean.saveSmManufacturingDtl}">
-				<f:param name="disableMsgAutoUpdateMac" value="true" />
+				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>
 
 		</div>
