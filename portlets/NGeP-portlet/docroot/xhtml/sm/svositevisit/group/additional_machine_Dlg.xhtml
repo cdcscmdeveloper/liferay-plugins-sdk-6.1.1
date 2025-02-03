@@ -16,17 +16,17 @@
 				</td>
 			</tr>
 			
-			<tr>	
+			<tr><!-- 14686 - Site Visit Grouping Enhancement -28775 -->
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.brand']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.brandName}" />
+				<td><p:inputText maxlength="250" size="50" label="#{lbl['lbl.sm.machine.brand']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.brandName}" />
 				</td>
 			</tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputTextarea  maxlength="100" style="width:75;" label="#{lbl['lbl.sm.machine.function']}" 
+				<td><p:inputTextarea  maxlength="250" style="width:75;" label="#{lbl['lbl.sm.machine.function']}" 
 				required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.machineFunction}">
-					<f:validateLength maximum="100" />
+					<f:validateLength maximum="250" />
 				</p:inputTextarea></td>
 			</tr>
 			
@@ -79,7 +79,7 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
-				<td><p:inputText maxlength="50" size="50" label="#{lbl['lbl.sm.machine.guarnName']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.guarantorName}" />
+				<td><p:inputText maxlength="250" size="50" label="#{lbl['lbl.sm.machine.guarnName']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.guarantorName}" />
 				</td>
 			</tr>
 			
