@@ -443,6 +443,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
 				// #29800 - end
+				// #25790 - start
+				if (getManagedBean().isSqEditableMode()) {
+					sqbb.getManagedBean().setTrackingDairyView(false);
+					sqbb.getManagedBean().setEditableFlag(true);
+				} else {
+					sqbb.getManagedBean().setTrackingDairyView(true);
+					sqbb.getManagedBean().setEditableFlag(false);
+				}
+				// #25790 - end
 				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
 				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
 			}

@@ -4011,8 +4011,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
-									
-									iterator.remove();
+//									iterator.remove();// 37622 - remove code
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 								// #28784 -start-
@@ -4027,8 +4026,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 								// #28784 -end-
 								{
 									getManagedBean().getEvaluationReportList().add(report);
-									
-									iterator.remove();
+//									iterator.remove();// 37622 - remove code
 								}
 							}
 						}
@@ -4649,29 +4647,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
+		
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
-
-		if ("createQt".equals(ScreenType)) {
+		if ("createQt".equals(ScreenType) && !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) { //36678 add condition status id related to 35061
 			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-		} else {
-			actualIntendedPrice = scQt.getEstimatedAmount();
+			
 		}
-
+		else {
+			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0) ;
+			//36678 related to 35061
+		}
+		
+		
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
 			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
 			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
-
-			// #25729 #174			 
-			// Bug #35061 - asyrafhaziq
+	 
+			// #25729 #174
+			//BugBug #35061 - asyrafhaziq
 			// get total indicative price threshold validation value
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+			
+			if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
 
-			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0)) {
-				// Bug #35061 -end-
+			{
 				return Boolean.TRUE;
 			}
 		}
-
+		//#36678 set null if user change above 50k. related to 35061
+		if(scQt.getJustificationProcValue() != null && scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+			scQt.setJustificationProcValue(null);
+		}
 		return Boolean.FALSE;
 	}
 	// #25729 #142 end
@@ -6976,4 +6982,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return Boolean.FALSE;
 	}
 	// 11104-end
+	
+	// 37622 - start
+	/**
+	 * Create a new list for displaying briefing paper report and filter
+	 * evaluation report form getting displayed
+	 * 
+	 * @param briefingPaperList
+	 * @return report list
+	 */
+	public List<ScQtFinalizationReport> briefingPaperDisplayFilter(List<ScQtFinalizationReport> briefingPaperList) {
+		List<ScQtFinalizationReport> reportList = new ArrayList<>();
+		if (CollectionUtils.isEmpty(briefingPaperList)) {
+			return reportList;
+		}
+		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
+			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
+					.getDocDefinitionKey() : "";
+			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
+					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
+					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+				reportList.add(briefingPaperReport);
+			}
+		}
+		return reportList;
+	}
 }

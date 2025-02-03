@@ -92,11 +92,13 @@
 			</c:if>
 		</c:if>
 		<div class="ppRightBtn">
+			<ui:remove>#25790 - start - add new parameter</ui:remove>
 			<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 				style="float:right;"
-				action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
-				immediate="true" 
+				action="#{pmTrackingDiaryBackingBean.redirectToRnContinuityTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier(), requestNoteBackingBean.managedBean.purchaseRequestMapList)}"
+				immediate="true"
 				rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+			<ui:remove>#25790 - end</ui:remove>
 			&#160;
 			<ui:remove>START : #28895#35492</ui:remove>
 			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
@@ -141,7 +143,7 @@
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
 				<div class="ppRightBtn">
-					<c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
+					<c:if test="#{!isPurchaseInquiryContinuity and (isPendingSubmissionStatus or isPendingRevisionStatus)}"> <!-- #29557 -->
 						<p:commandButton value="#{lbl['lbl.btn.item.search']}"
 							process="@this" partialSubmit="true" style="float:left;"
 							immediate="true"
