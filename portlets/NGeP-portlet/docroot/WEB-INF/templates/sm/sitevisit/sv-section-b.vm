@@ -57,7 +57,6 @@
 		<td valign="top">
 		<table>
 			<tr><td>$velocityCount.</td></tr>
-			<tr><td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td></tr>
 		</table>
 		</td>
 		

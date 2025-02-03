@@ -1114,6 +1114,8 @@ public class SmPersonnelBackingBean extends
 		
 		if(!destAddr.isSameAsPerm()) return;
 		if (srcAddr == null || StringUtils.isBlank(srcAddr.getAddress1())
+				|| srcAddr.getPmCountry() == null //#36717
+				|| srcAddr.getPmCountry().getCountryId() == null //#36717
 				|| srcAddr.getPmState() == null
 				|| srcAddr.getPmState().getStateId() == null
 				|| srcAddr.getPmDistrict() == null

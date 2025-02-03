@@ -48,7 +48,10 @@
 								<p:inputText id="svAOfficerName" value="#{svAOfficer.name}" readonly="#{viewFlag}" size="40" maxlength="50" disabled="#{viewFlag}" required="true" requiredMessage="#{lbl['lbl.sm.sv.visiting.officer.required']}">
 									<p:ajax event="keyup" update="deleteSvAObtnId" />
 								</p:inputText>
-								<p:commandButton rendered="#{!viewFlag}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" disabled="#{svAOfficer.name eq null}"/>
+								<p:commandButton rendered="#{!viewFlag}" value="#{lbl['lbl.btn.delete']}" update="@this" id="deleteSvAObtnId" 
+									action="#{svoSiteVisitBackingBean.selectSvAssistantOfficer(svAOfficer)}" 
+									disabled="#{svAOfficer.name eq null}" process=":#{p:component('pnlSiteVisitOffer')}"/>
+									<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 								<br/>
 							</ui:repeat>
 						</p:column>
