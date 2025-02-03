@@ -272,7 +272,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE, SourcingConstants.MALAYSIA_COUNTRY_CODE);
 	// 26226 - end
 	
-	private static final String UTF = "UTF-8";
+	//private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
 	protected static final String  UNDER_SCORE = "_";
@@ -2093,7 +2093,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		BigDecimal overallCtAmount = offerPrice;
 		if (gstAmount != null) {
 			overallCtAmount = overallCtAmount.add(gstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
@@ -2111,7 +2111,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		BigDecimal overallCtAmount = offerPrice;
 		if (sstAmount != null) {
 			overallCtAmount = overallCtAmount.add(sstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
