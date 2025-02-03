@@ -1161,9 +1161,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
-
+	
+	//37813 -start
 	/** The tech points. */
-	private int techPoints;
+	private BigDecimal techPoints;
+	//37813 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -8429,20 +8431,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the techPoints
-	 */
-	public int getTechPoints() {
-		return techPoints;
-	}
-
-	/**
-	 * @param techPoints the techPoints to set
-	 */
-	public void setTechPoints(int techPoints) {
-		this.techPoints = techPoints;
-	}
-
-	/**
 	 * @return the finPoints
 	 */
 	public int getFinPoints() {
@@ -12153,4 +12141,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
 		this.isFieldProcurementJustification = isFieldProcurementJustification;
 	}
+	
+	//37813 -start
+	/**
+	 * @return the techPoints
+	 */
+	public BigDecimal getTechPoints() {
+		return techPoints;
+	}
+
+	/**
+	 * @param techPoints the techPoints to set
+	 */
+	public void setTechPoints(BigDecimal techPoints) {
+		this.techPoints = techPoints;
+	}
+	//37813 -end
 }
