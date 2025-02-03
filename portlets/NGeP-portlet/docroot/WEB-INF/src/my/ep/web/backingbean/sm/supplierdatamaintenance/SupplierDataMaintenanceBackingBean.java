@@ -39,6 +39,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.sme.SupplierSmeReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -110,6 +111,8 @@ import my.ep.persistence.entity.sm.SmRvAssistOfficer;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
 import org.primefaces.event.FileUploadEvent;
+import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 //#34031 End
 
 @ManagedBean(name = "supplierDataMaintenanceBackingBean")
@@ -367,6 +370,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().getSmRevisit().setSmRvAssistOfficers(smRvAssistOfficers);
 		addSmRvAssistOfficer();
 		initSmRvDoc();
+		initSmRvHistory();
+		this.getManagedBean().getSmRevisit().setRevisitPrevRemark(getPrevRevisitRemark());
 		// #34031 End
 	}
 	
@@ -692,13 +697,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 			}
 			//#34209 - END
-			// #34031 Start
-			if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
-				this.getManagedBean().getSmRevisit().setSmSupplier(this.getManagedBean().getSmSupplier());
-				this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
-				reqDTO.setSmRevisit(this.getManagedBean().getSmRevisit());
-			}
-			// #34031 End
+			// #34031
+			saveRevisitInfo(reqDTO);
 			
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
@@ -2828,6 +2828,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	// #34031 Start
 	public void addSmRvAssistOfficer() {
 		SmRvAssistOfficer smRvAssistOfficer = new SmRvAssistOfficer();
+		smRvAssistOfficer.setSmRevisit(this.getManagedBean().getSmRevisit());
 		this.getManagedBean().getSmRevisit().getSmRvAssistOfficers().add(smRvAssistOfficer);
 		this.getManagedBean().setDisableAddSmRvAssistOfficerBtn(true);
 	}
@@ -2917,6 +2918,49 @@ public class SupplierDataMaintenanceBackingBean extends
 			suppDoc.getSmRvDocFiles().remove(this.getManagedBean().getSmRvDocFile());
 		}
 		this.getManagedBean().setSmRvDocFile(null);
+	}
+
+	private void saveRevisitInfo(SupplierDataMaintenanceReqDTO reqDTO) {
+		if (this.getManagedBean().getSmRevisit().getRevisitDate() != null) {
+			this.getManagedBean().getSmRevisit().setSmSupplier(this.getManagedBean().getSmSupplier());
+			this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
+			this.getManagedBean().getSmRevisit().setCurrent(true);
+			removeEmptyAssistOfficer();
+			reqDTO.setSmRevisit(this.getManagedBean().getSmRevisit());
+		}
+	}
+
+	private void removeEmptyAssistOfficer() {
+		List<SmRvAssistOfficer> emptySmRvAssistOfficers = new ArrayList<SmRvAssistOfficer>();
+		this.getManagedBean().setEmptyRvAssistOfficers(emptySmRvAssistOfficers);
+		for (SmRvAssistOfficer officer : this.getManagedBean().getSmRevisit().getSmRvAssistOfficers()) {
+			if (officer.getOfficerName().isEmpty()) {
+				this.getManagedBean().getEmptyRvAssistOfficers().add(officer);
+			}
+		}
+		for (SmRvAssistOfficer emptyOfficer : this.getManagedBean().getEmptyRvAssistOfficers()) {
+			this.getManagedBean().getSmRevisit().getSmRvAssistOfficers().remove(emptyOfficer);
+		}
+	}
+	
+	private void initSmRvHistory() {
+		SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
+		reqDTO.setSmSupplier(this.getManagedBean().getSmSupplier());
+		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
+		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
+		this.getManagedBean().setSmRevisitList(revisitList);
+	}
+
+	private String getPrevRevisitRemark() {
+		String remark = null;
+		if(!this.getManagedBean().getSmRevisitList().isEmpty()){
+			for(SmRevisit revisit : this.getManagedBean().getSmRevisitList()){
+				if(revisit.isCurrent()){
+					remark = revisit.getRevisitRemark();
+				}
+			}
+		}
+		return remark;
 	}
 	// #34031 End
 }
