@@ -2737,8 +2737,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 			ScQtFinalizationReport coverReport = null;
 			List<ScQtFinalizationReport> endorsementReports = 
 								new ArrayList<ScQtFinalizationReport>();
+			//#29702					
+			List<ScQtFinalizationReport> inputReport = new ArrayList<>();
+					new ArrayList<ScQtFinalizationReport>();
 			for (ScQtFinalizationReport report : finalizationReports) {
 				String docCategory = report.getDocCategory();
+			   //#29702
+				String docDefinitionType = report.getDefinationType().getParameterCode();
 				String docDefinitionKey = null;
 				if (report.getPmDocument() != null) {
 					docDefinitionKey = report.getPmDocument()
@@ -2752,6 +2757,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 					endorsementReports.add(report);
 					++endorsementReportCount;
 				}
+				// #29702 - start
+				else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_USER_INPUT.equals(docDefinitionType)) {
+					inputReport.add(report);
+				}
+				// #29702 - end
 			}
 			if (coverReport != null && 
 					getManagedBean().isBpkUser()) {
@@ -2823,7 +2833,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 					finalizationReports.addAll(endorsementReports);
 				}
 			}
-			
+			//#29702 - start
+			if (inputReport != null ) {
+				finalizationReports.removeAll(inputReport);
+			}
+			//#29702 - end
 			if (finalizationReports != null) {
 				getManagedBean().setDocumentList(finalizationReports);
 			}
@@ -2906,15 +2920,30 @@ public class SupplierFinalizationBiddingBackingBean extends
 	 *             the exception that would be thrown in case of any error while
 	 *             downloading the report
 	 */
-	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport)
-			throws Exception {
+	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		debugLogger("downloadReport");
 
+		// #30567 - Start.
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
 				.getScQtFinalizationReportAttachment();
+		if (null == reportAttachment && scQtFinalizationReport.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+			reportAttachment = generateBriefingPaperAttachment(scQtFinalizationReport);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		}
+		// #30567 - End.
 		downloadFile(reportAttachment);
 	}
 	
+	// 30567 - start
+	private ScQtFinalizationReportAttachment generateBriefingPaperAttachment(ScQtFinalizationReport scQtFinalizationReport) throws Exception{
+		SupplierFinalizationBackingBean supplierFinalizationBackingBean = new SupplierFinalizationBackingBean();
+		supplierFinalizationBackingBean.renewSesionObject();
+		supplierFinalizationBackingBean.getManagedBean().setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		supplierFinalizationBackingBean.getManagedBean().setScQtFinalization(this.getManagedBean().getScQtFinalization());
+		supplierFinalizationBackingBean.getManagedBean().setScQt(this.getManagedBean().getScQt());
+		return supplierFinalizationBackingBean.downloadBriefingPaperReportForBidding(scQtFinalizationReport);
+	}
+	// 30567 - end
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
 	 * 
@@ -2927,13 +2956,19 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean()
 				.getScQtFinalization().getScQtFinalizationReports();
-		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-
-		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-					.get(i).getScQtFinalizationReportAttachment();
-			scAttachments.add(attachment);
-		}
+		// 37623 - start
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
+			if (attachment == null && report.getTitle().contains(QTConstants.QT_REPORT_BRIEFING_PAPER)) {
+				attachment = generateBriefingPaperAttachment(report);
+			}
+			if (attachment != null) {
+				attachment.setTempFileName(report.getTitle());
+			}
+			scAttachments.add(attachment); 
+		} 
+		// 37623 - end
 		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
 
 	}
