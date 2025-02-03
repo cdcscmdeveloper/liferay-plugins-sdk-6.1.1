@@ -15742,18 +15742,22 @@ public class SmApplicationUtil {
 				if (index == 1) {
 					bf.append("<br>" + index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " ("
 							+ bank.getAccountNo() + ") " + "<br>");
+					index++;
 				} else if (index > 1) {
 					bf.append(index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " (" + bank.getAccountNo()
 							+ ") " + "<br>");
+					index++;
 				}
 
 			}
 		}
 
-		if (managedBean.isSupplierUser()) {
-			throw new EpException(MessageConst.ERROR_722710, new String[] { bf.toString() });
-		} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
-			throw new EpException(MessageConst.ERROR_722709, new String[] { bf.toString() });
+		if (index > 1) {
+			if (managedBean.isSupplierUser()) {
+				throw new EpException(MessageConst.ERROR_722710, new String[] { bf.toString() });
+			} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
+				throw new EpException(MessageConst.ERROR_722709, new String[] { bf.toString() });
+			}	
 		}
 	}
 	// #37779 - End
