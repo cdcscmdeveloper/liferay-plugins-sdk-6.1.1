@@ -10015,7 +10015,7 @@ public class SpecificationBackingBean extends
 			if (weightageList == null) {
 				// 37813,35384 -start
 				weightageList = new ArrayList<>();
-				// 37813,35384 -start
+				// 37813,35384 -end
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
 				// 37813,35384 -start
@@ -10027,14 +10027,14 @@ public class SpecificationBackingBean extends
 							.getScore() != null ? weight.getQtScoreWeightage()
 							.getScore() : BigDecimal.valueOf(0);
 				totalScore = totalScore.add(checkListScore);
-				// 37813,35384 -start
+				// 37813,35384 -end
 				}
 				
 				
 			}
 			// 37813,35384 -start
 			this.getManagedBean().setTechPoints(totalScore);
-			// 37813,35384 -start
+			// 37813,35384 -end
 		} finally {
 
 		}
