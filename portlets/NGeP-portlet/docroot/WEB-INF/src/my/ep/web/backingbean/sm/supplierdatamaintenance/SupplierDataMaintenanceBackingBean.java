@@ -2943,9 +2943,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
 			this.getManagedBean().getSmRevisit().setCurrent(true);
 			this.getManagedBean().getSmRevisit().setOldPmRegStatus(this.getManagedBean().getSmAppl().getPmRegStatus());
-			if(!this.getManagedBean().getDeleteApprovedCategories().isEmpty()){
-				List<SmRvCatCode> deletedCatCode =  new ArrayList<>();
-				for(SmSupplierCategory catCode : this.getManagedBean().getDeleteApprovedCategories()){
+			if (!this.getManagedBean().getDeleteApprovedCategories().isEmpty()) {
+				List<SmRvCatCode> deletedCatCode = new ArrayList<>();
+				for (SmSupplierCategory catCode : this.getManagedBean().getDeleteApprovedCategories()) {
 					SmRvCatCode smRvCoatCode = new SmRvCatCode();
 					smRvCoatCode.setSmRevisit(this.getManagedBean().getSmRevisit());
 					smRvCoatCode.setSmSupplierCategory(catCode);
@@ -2970,27 +2970,31 @@ public class SupplierDataMaintenanceBackingBean extends
 			this.getManagedBean().getSmRevisit().getSmRvAssistOfficers().remove(emptyOfficer);
 		}
 	}
-	
+
 	private void initSmRvHistory() {
 		SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupplier());
 		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
 		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
-		this.getManagedBean().setSmRevisitList(revisitList);
+		if (!revisitList.isEmpty()) {
+			this.getManagedBean().setSmRevisitList(revisitList);
+			for (SmRevisit revisit : revisitList) {
+				if (revisit.isCurrent()) {
+					this.getManagedBean().setCurrentSmRevisit(revisit);
+					break;
+				}
+			}
+		}
 	}
 
 	private String getPrevRevisitRemark() {
 		String remark = null;
-		if(!this.getManagedBean().getSmRevisitList().isEmpty()){
-			for(SmRevisit revisit : this.getManagedBean().getSmRevisitList()){
-				if(revisit.isCurrent()){
-					remark = revisit.getRevisitRemark();
-				}
-			}
+		if (this.getManagedBean().getCurrentSmRevisit() != null) {
+			remark = this.getManagedBean().getCurrentSmRevisit().getRevisitRemark();
 		}
 		return remark;
 	}
-	
+
 	private void validateRevisit() {
 		if (null == this.getManagedBean().getSmRevisit().getRevisitOfficer()) {
 			throw new EpException(MessageConst.ERROR_723102);
@@ -3003,6 +3007,30 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void validateRvSuppDoc(SmRvSuppDoc suppDoc) {
 		if (null == suppDoc.getSmRvDocFiles() || suppDoc.getSmRvDocFiles().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_723103, new String[] { suppDoc.getPmDocument().getDocName() });
+		}
+	}
+
+	public void onClickRevisitHistoryList() {
+		this.getManagedBean().setSmRevisitList(updateCreatedUserName(this.getManagedBean().getSmRevisitList()));
+		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
+	}
+
+	private List<SmRevisit> updateCreatedUserName(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
+			revisit.setActionedBy(user.getUserName());
+		}
+		return revisitList;
+	}
+
+	public void downloadRevisitHistory() {
+		try {
+			Map<String, String> paramMap = new HashMap<>();
+			paramMap.put("paramConst", "value");
+			generateReport("reportName", paramMap);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	// #34031 End

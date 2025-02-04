@@ -186,6 +186,7 @@ public class ViewSuppProfileManagedBean extends
 	private SmRvDocFile smRvDocFile;
 	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
 	private List<SmRevisit> smRevisitList;
+	private SmRevisit currentSmRevisit;
 	// #34031 End
 		
 	public ViewSuppProfileManagedBean() {
@@ -1093,6 +1094,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
 		this.smRevisitList = smRevisitList;
+	}
+
+	public SmRevisit getCurrentSmRevisit() {
+		return currentSmRevisit;
+	}
+
+	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+		this.currentSmRevisit = currentSmRevisit;
 	}
 	// #34031 End
 }
