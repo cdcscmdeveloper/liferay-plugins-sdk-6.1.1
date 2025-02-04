@@ -18,7 +18,9 @@
 
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
 						style="white-space: normal;">
-						<h:outputText value="#{specification.clSpecDetail}" />
+						<ui:remove> #36950 start @zaim</ui:remove>
+						 <h:outputText value="#{requestNoteBackingBean.handleSpecialCharacterForView(specification.clSpecDetail)}" escape="false" />
+						<ui:remove> #36950 end @zaim</ui:remove> 
 						<p:spacer width="2px;" />
 					</p:column>
 				</p:dataTable>

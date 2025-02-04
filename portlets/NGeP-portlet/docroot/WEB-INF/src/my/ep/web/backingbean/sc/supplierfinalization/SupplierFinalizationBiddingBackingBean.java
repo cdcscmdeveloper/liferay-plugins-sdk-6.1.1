@@ -3159,22 +3159,6 @@ public class SupplierFinalizationBiddingBackingBean extends
     	  
     	return supplierBranchList;
 	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRadioButtonIfSupplierBranchDeleted(SmSupplier smSupplier){
-	
-		Long supplierId = smSupplier.getSupplierId();
-		ScQt scQt = this.getManagedBean().getScQt();
-		
-		if(supplierId != null && scQt != null){
-			return Boolean.TRUE;
-	    }
-		return Boolean.FALSE;
-	}
 	//#28777 & #29729 - End
 	
 	//#21692 - Start
