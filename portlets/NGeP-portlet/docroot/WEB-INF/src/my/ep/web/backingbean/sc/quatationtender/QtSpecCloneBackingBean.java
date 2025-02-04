@@ -118,6 +118,11 @@ public class QtSpecCloneBackingBean extends
 	 * test only
 	 */
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
 			.getLogger(QTCloneBackingbean.class);
@@ -1960,7 +1965,7 @@ public class QtSpecCloneBackingBean extends
 					}
 					
 				}
-				this.getManagedBean().setTechPoints(score);
+				this.getManagedBean().setTechPoints(BigDecimal.valueOf(score));
 				techWeightageSum();
 				techScoreSum();
 				if(!isTechnicalItemExist){//35113-start
@@ -2209,7 +2214,7 @@ public class QtSpecCloneBackingBean extends
 									.intValue();
 				}
 				BigDecimal techScore = new BigDecimal(total);
-				this.getManagedBean().setTechPoints(techScore.intValue());
+				this.getManagedBean().setTechPoints(BigDecimal.valueOf(techScore.intValue()));
 			}
 		} finally {
 
