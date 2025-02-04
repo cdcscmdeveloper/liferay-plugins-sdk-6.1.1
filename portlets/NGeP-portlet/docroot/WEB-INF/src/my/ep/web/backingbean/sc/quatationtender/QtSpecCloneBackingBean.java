@@ -1965,7 +1965,7 @@ public class QtSpecCloneBackingBean extends
 					}
 					
 				}
-				this.getManagedBean().setTechPoints(BigDecimal.valueOf(score));
+				// 37813,35384,25635 remove coding.
 				techWeightageSum();
 				techScoreSum();
 				if(!isTechnicalItemExist){//35113-start
@@ -2195,27 +2195,34 @@ public class QtSpecCloneBackingBean extends
 	
 	private void techScoreSum() {
 		try {
-			int total = 0;
+			// 37813,35384,25635 -start
+			BigDecimal totalScore = BigDecimal.valueOf(0);
+			// 37813,35384,25635 -end
 			List<ScQtCheckList> weightageList = this.getManagedBean()
 					.getTechnicalScoring();
 			if (weightageList == null) {
-				weightageList = new ArrayList<>();//SonarQubeIssuesFixed25635
+				// 37813,35384,25635 -start
+				weightageList = new ArrayList<>();
+				// 37813,35384,25635 -end
 			}
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight =  weightageList.get(i);//SonarQubeIssuesFixed25635
+				// 37813,35384,25635 -start
+				ScQtCheckList weight = weightageList.get(i);
 				if (null != weight.getQtScoreWeightage()
 						&& weight.getQtScoreWeightage().getWeightage() == null) {
 					weight.getQtScoreWeightage()
 							.setWeightage(new BigDecimal(0));
 				}
-				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getScore()
-									.intValue();
-				}
-				BigDecimal techScore = new BigDecimal(total);
-				this.getManagedBean().setTechPoints(BigDecimal.valueOf(techScore.intValue()));
+				BigDecimal checkListScore = weight.getQtScoreWeightage()
+						.getScore() != null ? weight.getQtScoreWeightage()
+						.getScore() : BigDecimal.valueOf(0);
+				totalScore = totalScore.add(checkListScore);
+				// 37813,35384,25635 -end
+
 			}
+			// 37813,35384,25635 -start
+			this.getManagedBean().setTechPoints(totalScore);
+			// 37813,35384,25635 -end
 		} finally {
 
 		}
