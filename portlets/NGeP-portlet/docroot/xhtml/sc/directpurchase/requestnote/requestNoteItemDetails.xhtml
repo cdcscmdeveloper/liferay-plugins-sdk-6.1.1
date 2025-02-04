@@ -59,11 +59,14 @@
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}"
 					style="white-space: normal;">
-					<p:commandLink value="#{requestNoteDtl.requestItem.itemName}"
-						styleClass="command-link"
+					<ui:remove> #36950 start @zaim</ui:remove>
+					<p:commandLink styleClass="command-link"
 						actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 						update=":form:itemDtlPopup" partialSubmit="true" process="@this"
-						oncomplete="itemDtlPopup.show();" />
+						oncomplete="itemDtlPopup.show();">
+						 <h:outputText value="#{requestNoteBackingBean.handleSpecialCharacterForView(requestNoteDtl.requestItem.itemName)}" escape="false" />
+					</p:commandLink>
+					<ui:remove> #36950 end @zaim</ui:remove>	
 					<p:spacer width="2px;" />
 					<p:commandLink partialSubmit="true" process="@this"
 						styleClass="command-link"

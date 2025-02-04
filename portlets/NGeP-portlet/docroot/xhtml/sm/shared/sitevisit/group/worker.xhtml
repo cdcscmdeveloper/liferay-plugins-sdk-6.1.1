@@ -15,7 +15,7 @@
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
 			<p:ajax event="rowSelectCheckbox" update="@parent" />
 			<p:ajax event="rowUnselectCheckbox" update="@parent" />
-			<p:ajax event="rowSelect" update="@parent" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
 	        <p:ajax event="rowUnselect" update="@parent" />
 	        <p:ajax event="toggleSelect" update="@parent" />
 			<p:column>
@@ -37,7 +37,8 @@
 					#{lbl['lbl.sm.employee.idtype']}
 				</f:facet>
 				<p:selectOneMenu id="empIdTypeId" size="50" disabled="#{viewFlag}" label="#{lbl['lbl.sm.employee.idtype']}"
-						required="#{isRequired}" value="#{svWorker.identificationTypeId}">
+						required="#{isRequired}" value="#{svWorker.identificationTypeId}"
+						style="width: 90%;margin-bottom: 5px;background-color:white;">
 						<f:selectItems value="#{svoSiteVisitBackingBean.managedBean.identificationTypes}" />
 						<p:ajax event="change" process="@this" update="@this,pnlIdentType"/>
 				</p:selectOneMenu>
@@ -87,6 +88,7 @@
 				action="#{svoSiteVisitBackingBean.addWorkshopWorker()}" 
 				update="@parent" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				id="deleteEmpBtnId"
 				rendered="#{!viewFlag}" oncomplete="workerDeletePopUp.show();"
 				update="@parent" action="#{svoSiteVisitBackingBean.setSelectedTemplate(template)}"
 				disabled="#{empty template.selectedWorkers}">

@@ -1351,7 +1351,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("newBusinessRegistrationNo",svTask.getSmAppl().getSmSupplier().getSsmNewRegNo());
 		context.put("visitingPurpose", templateDesc.toUpperCase());
 		context.put("catApplicable", getManagedBean().getSupplierCategory());
-		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneNo());
+		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneFull());	//#28775
 		context.put("latitude", svTask.getSmSvAddress().getAddress().getMapLatitude());
 		context.put("longitute", svTask.getSmSvAddress().getAddress().getMapLongitude());
 		
@@ -2108,13 +2108,6 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param SmSvAdtMachine adtMachine
 	 */
 	public void editMachine(Object obj){
-		/**
-		getManagedBean().setOriAdtMachine(adtMachine);
-		
-		SmSvAdtMachine svAdtMachine = (SmSvAdtMachine) adtMachine.cloneEntity();
-		this.getManagedBean().setSelectedAdtMachine(svAdtMachine);
-		this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);**/
-		
 		if(obj instanceof SmSvAdtMachine){
 			getManagedBean().setOriSelectedMachine((SmSvAdtMachine) obj);
 			SmSvAdtMachine svAdtMachine = (SmSvAdtMachine) ((SmSvAdtMachine) obj).cloneEntity();
@@ -2122,7 +2115,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			this.getManagedBean().getSelectedAdtMachine().setNewMachine(false);
 		}else if (obj instanceof SmSvMachine) {
 			getManagedBean().setOriSelectedMachine((SmSvMachine) obj);
-			this.getManagedBean().setSelectedSvMachine((SmSvMachine) obj);
+			//#28775
+			SmSvMachine mach = (SmSvMachine) ((SmSvMachine) obj).cloneEntity();
+			mach.setSmMachineDtl((SmMachineDtl) mach.getSmMachineDtl().cloneEntity());
+			this.getManagedBean().setSelectedSvMachine(mach);
 		} else {
 			getManagedBean().setOriSelectedManufacturingDtl((SmManufacturingDtl) obj);
 			SmManufacturingDtl manufacDtl = (SmManufacturingDtl) ((SmManufacturingDtl) obj).cloneEntity();
