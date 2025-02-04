@@ -162,8 +162,7 @@ public class QTFieldMapper {
         // Pending QT Publication
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { 
-						QTFieldConst.FIELD_QT_TITLE,
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
+						QTFieldConst.FIELD_QT_TITLE,//#21692 remove Proposal Validity
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
 						QTFieldConst.FIELD_QT_DOCUMENTS,

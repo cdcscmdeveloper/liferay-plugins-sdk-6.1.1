@@ -136,7 +136,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	//28775 - Site Visit Grouping Enhancement - 28775 - end	
 	//29379 - Site Visit Grouping Enhancement - 28775
 	private SmFacility workerFacility;
-	
+	// 34795 -start
+	private String zoneCode;
 
 	public Object getBpmPojo() {
 		return bpmPojo;
@@ -762,4 +763,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.workerFacility = workerFacility;
 	}
 	//29379 - Site Visit Grouping Enhancement - 28775 - end
+	// 34795 -start
+	public String getZoneCode() {
+		return zoneCode;
+	}
+
+	public void setZoneCode(String zoneCode) {
+		this.zoneCode = zoneCode;
+	}
+	// 34795 -end
 }

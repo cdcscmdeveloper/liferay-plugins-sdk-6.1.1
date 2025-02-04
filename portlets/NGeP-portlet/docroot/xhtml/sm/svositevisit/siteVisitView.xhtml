@@ -95,8 +95,11 @@
 					escape="false" style="float : left" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">			
+			<!-- #28775 -->	
+			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}"
+				style="width: 520px !important; white-space: normal !important;">		
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
+					style="width: 500px !important; white-space: normal !important;"
 					locationName="#{task.smAppl.smCompanyBasic.companyName}"
 					latitude="#{task.smSvAddress.address.mapLatitude}" 
 					longitude="#{task.smSvAddress.address.mapLongitude}" 

@@ -429,4 +429,9 @@ public interface QTConstants {
 	// 6906 - end
 	
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
+	
+	//36678
+	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+		
+	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
 }
