@@ -8,6 +8,7 @@
 	<p:dialog id="dlSuppTaskReassignment" position="top"
 		header="#{lbl['lbl.pm.ta.task.reassignment']}" modal="true"
 		widgetVar="dlSuppTaskReassignment" dynamic="true" width="700">
+	<p:outputPanel id="dlSuppTaskReassignmentPnl"><!-- #34400 -->
 		<!-- Validation Message -->
 		<p:messages id="messagesRole" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -87,14 +88,25 @@
 					<tr>
 						<td style="text-align: right;">
 								<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}"
-									oncomplete="dlSuppTaskReassignment.hide()"
-									action="#{supplierTaskReassignmentBackingBean.confirmReassignTask()}"
-									update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,messagesRole" immediate="true" />
+									onclick="confirmDlg.show()" immediate="true" /> <!-- #34400 -->
 							<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}"
 								oncomplete="dlSuppTaskReassignment.hide()" immediate="true" /></td>
 					</tr>
 					</table>
 			</h:panelGroup>
 		</p:panel>
+	<!-- #34400 - start -->
+	</p:outputPanel>
+	<p:blockUI block="dlSuppTaskReassignmentPnl" widgetVar="blockWidget" />
 	</p:dialog>
+	
+	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		bean="#{supplierTaskReassignmentBackingBean}"
+		okAction="confirmReassignTask"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.task']}" 
+		update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,:form:messagesRole"
+		loadingWidget="blockWidget" />
+	<!-- #34400 - end -->
 </ui:composition>
