@@ -2615,4 +2615,31 @@
 		</property>
 	</bean>
 	<!-- 29554 - end-->
+	<!-- 36719 - Start -->
+	<bean id="PM_FIN_SVC_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="financialOrgId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.financialorg.FinancialOrgDAO" />
+		<property name="searchMethod" value="searchFinancialOrgSrv" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="finOrgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.financialorg.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="bizRegNumber" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.txt.business.reg.no" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 36719 - End -->
 </beans>
