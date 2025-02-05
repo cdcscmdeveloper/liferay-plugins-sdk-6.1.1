@@ -25,6 +25,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -184,6 +185,11 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Map<Long,Boolean> committeeFormed;
 	private boolean navigateFromMobileView;
 	private ScWorkFlowStatus workflowStatus;
+	
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	// #29732 End
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1286,13 +1292,30 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param workflowStatus the workflowStatus to set
+	 * @param workflowStatus
+	 *            the workflowStatus to set
 	 */
 	public void setWorkflowStatus(ScWorkFlowStatus workflowStatus) {
 		this.workflowStatus = workflowStatus;
 	}
 
-	
+	// #29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	}
+
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	}
+
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+	// #29732 End
 
 
 }

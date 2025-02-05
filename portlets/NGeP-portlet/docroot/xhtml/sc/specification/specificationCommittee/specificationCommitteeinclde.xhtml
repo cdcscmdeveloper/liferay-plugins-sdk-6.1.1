@@ -20,4 +20,10 @@
 					src="/xhtml/sc/specification/specificationCommittee/specificationCommitteeMenu.xhtml" /></td>
 		</tr>
 	</table>
+	
+	<ui:remove> #29732 Start </ui:remove>
+	<ac:qtCategoryChangeAlertPopup
+		catCodeList="#{specificationBackingBean.managedBean.catCodeList}"
+		widget="catCodeChangeAlert" />
+	<ui:remove> #29732 End </ui:remove>
 </ui:composition>

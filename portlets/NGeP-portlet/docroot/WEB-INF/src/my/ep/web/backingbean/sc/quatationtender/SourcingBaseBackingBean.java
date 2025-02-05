@@ -272,7 +272,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE, SourcingConstants.MALAYSIA_COUNTRY_CODE);
 	// 26226 - end
 	
-	private static final String UTF = "UTF-8";
+	//private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
 	protected static final String  UNDER_SCORE = "_";
@@ -2093,7 +2093,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		BigDecimal overallCtAmount = offerPrice;
 		if (gstAmount != null) {
 			overallCtAmount = overallCtAmount.add(gstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
@@ -2111,7 +2111,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		BigDecimal overallCtAmount = offerPrice;
 		if (sstAmount != null) {
 			overallCtAmount = overallCtAmount.add(sstAmount);
-			overallCtAmount.setScale(2, BigDecimal.ROUND_UP);
+			overallCtAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 		}
 
 		return overallCtAmount;
@@ -4011,8 +4011,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
-									
-									iterator.remove();
+//									iterator.remove();// 37622 - remove code
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 								// #28784 -start-
@@ -4027,8 +4026,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 								// #28784 -end-
 								{
 									getManagedBean().getEvaluationReportList().add(report);
-									
-									iterator.remove();
+//									iterator.remove();// 37622 - remove code
 								}
 							}
 						}
@@ -6984,4 +6982,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return Boolean.FALSE;
 	}
 	// 11104-end
+	
+	// 37622 - start
+	/**
+	 * Create a new list for displaying briefing paper report and filter
+	 * evaluation report form getting displayed
+	 * 
+	 * @param briefingPaperList
+	 * @return report list
+	 */
+	public List<ScQtFinalizationReport> briefingPaperDisplayFilter(List<ScQtFinalizationReport> briefingPaperList) {
+		List<ScQtFinalizationReport> reportList = new ArrayList<>();
+		if (CollectionUtils.isEmpty(briefingPaperList)) {
+			return reportList;
+		}
+		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
+			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
+					.getDocDefinitionKey() : "";
+			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
+					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
+					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+				reportList.add(briefingPaperReport);
+			}
+		}
+		return reportList;
+	}
 }
