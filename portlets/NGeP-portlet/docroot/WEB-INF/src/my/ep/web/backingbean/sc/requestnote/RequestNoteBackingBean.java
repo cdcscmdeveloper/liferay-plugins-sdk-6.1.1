@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -5557,6 +5558,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			reqDTO.setSpecQuestionId(parentSpecQuestion.getSpecQuestionId());
 			TemplateSpecResDTO resDTO = getTemplateSpecSO().getSpecificationsByQuestionId(reqDTO);
 			List<TplSpecQuestion> specList = resDTO.getSpecQuestionList();
+			//36950 - start @zaim filter only spec 
+			Iterator<TplSpecQuestion> iterator = specList.iterator();
+			while (iterator.hasNext()) {
+			    TplSpecQuestion question = iterator.next();
+			    if (question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
+			        iterator.remove(); // Safe removal
+			    }
+			}
+			//36950 - end @zaim
 			getManagedBean().getSpecificationMap().put(requestItem.getRequestNoteItemId(), specList);
 			getManagedBean().setSpecificationList(specList);
 		} else {
