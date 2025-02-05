@@ -39,8 +39,8 @@
 		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<!-- #37605 -->
-			<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;"
-				style="word-wrap:break-word !important;white-space: normal !important;">
+			<p:column headerText="#{lbl['lbl.sm.category.description']}" 
+				style="word-wrap:break-word !important;white-space: normal !important;width: 88%;">
 				<!-- #28175 start -->
 				<h:outputText value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(tmp)}" />
 				<!-- #28175 end -->
