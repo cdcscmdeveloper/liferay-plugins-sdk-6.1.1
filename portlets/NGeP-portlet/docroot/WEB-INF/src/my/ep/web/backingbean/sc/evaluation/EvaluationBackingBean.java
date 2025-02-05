@@ -7228,6 +7228,7 @@ public class EvaluationBackingBean extends
 
 			if (!this.getManagedBean().isReadOnly()) {
 				//saveQtReportDtls();
+				retriveSummaryEvaluationStage();	// Bug #36747@Syazani 20/01/2025
 				saveEvaluationReportsDtls();
 				setReportAttachment();
 			}

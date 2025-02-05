@@ -152,7 +152,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTDocumentsBackingBean.
  * 
@@ -160,8 +159,12 @@ import org.primefaces.event.SelectEvent;
  */
 @ManagedBean(name = "qTDocumentsBackingBean")
 @RequestScoped
-public class QTDocumentsBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -1175,7 +1178,6 @@ public class QTDocumentsBackingBean extends
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
 					.equals(docDefinitionKey)) {
-				// TODO put attachment in repository folder
 				generateSamplesamplesalinankontrakPdfFromVelocity(
 						(ScAttachment) scQtDocReportAttachment,
 						getManagedBean().getQt(),prefixFileName);
@@ -2132,64 +2134,58 @@ public class QTDocumentsBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment,
-			ScQt qt) throws Exception {
+	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
-		log.debug("start generateSpesifikasiPdfFromVelocity" );
+		log.debug("start generateSpesifikasiPdfFromVelocity");
 		VelocityContext context = new VelocityContext();
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQTSpecSO specSO;
 		try {
-			specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
 			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
-			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
-					.getResultList()) {
+			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean().getResultList()) {
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-				
+
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-					TplSpecQuestion parentQuestion = question
-							.getParentSpecQuestion();
-                    if(null!=master.getSpecName()){
-                   String specTitle= master.getSpecName();
-                   specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-                   master.setSpecName(specTitle);
-                    	
-                    }
+					TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
+					if (null != master.getSpecName()) {
+						String specTitle = master.getSpecName();
+						specTitle = specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+						master.setSpecName(specTitle);
+
+					}
 					if (question.getClItem() == null) {
 						question.setClItem("");
-					}else{
+					} else {
 						// Bug #36702@Syazani 28/11/2024 -- Start
-						String clItem = VmUtil.getInstance().splitText(question.getClItem(),
-								QTConstants.QT_VM_SPLIT_MAXLENGTH);
+						String clItem = VmUtil.getInstance().splitText(question.getClItem(), QTConstants.QT_VM_SPLIT_MAXLENGTH);
 						// Bug #36702@Syazani 28/11/2024 -- End
-						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 						question.setClItem(clItem);
 					}
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
-					} else{
+					} else {
 						// Bug #36702@Syazani 28/11/2024 -- Start
-						String clSpecDetail = VmUtil.getInstance().splitText(question.getClSpecDetail(),
-								QTConstants.QT_VM_SPLIT_MAXLENGTH);
+						String clSpecDetail = VmUtil.getInstance().splitText(question.getClSpecDetail(), QTConstants.QT_VM_SPLIT_MAXLENGTH);
 						// Bug #36702@Syazani 28/11/2024 -- End
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-						 //end Bug #28274
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						// end Bug #28274
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 						question.setClSpecDetail(clSpecDetail);
 					}
 					if (question.getClUom() != null) {
@@ -2236,9 +2232,7 @@ public class QTDocumentsBackingBean extends
 		} finally {
 			specSO = null;
 		}
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_QT_SPECIFICATION, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SPECIFICATION, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**

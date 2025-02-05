@@ -462,8 +462,7 @@ public class RuleCatalogueBackingBean extends
 			this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
 			resFDTO = feeSO.getFeeExemptionsForOrgAndItem(reqFDTO);
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
+				if (exemption.getItemId() == null) {
 					exemption.setItemId(new CmItem());
 				}
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -507,14 +506,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
+					exemption.setRequestItemId(new ScRequestItem());
 				}
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
@@ -603,7 +595,6 @@ public class RuleCatalogueBackingBean extends
 					.getLanguage();
 			reqRDTO.setLanguageCode(languageCode);
 			ISearchBean<PmConfigRuleDesc> searchBean = new SearchBean<PmConfigRuleDesc>();
-			//TODO - data restriction on next round (16/2/2017)
 //			ISearchBean<PmConfigRuleDesc> searchBean = super.createSearchBean(PmConfigRuleDesc.class,
 //					"ruleTypeTableID");
 			// Filter By - status
@@ -2102,8 +2093,7 @@ public class RuleCatalogueBackingBean extends
 			reqDTO = new FeeExemptionReqDTO();
 			resDTO = exemptionSO.getFeeExemptionsForOrgAndItem(reqDTO);
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-				if (exemption.getItemId() == null) {// TODO: clear it before
-													// updating the fee list
+				if (exemption.getItemId() == null) {
 					exemption.setItemId(new CmItem());
 				}
 				this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -2407,14 +2397,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
-					exemption.setRequestItemId(new ScRequestItem());// TODO:
-																	// clear
-																	// it
-																	// before
-																	// updating
-																	// the
-																	// fee
-																	// list
+					exemption.setRequestItemId(new ScRequestItem());
 				}
 				this.getManagedBean().getFeeExemptionsForContract()
 						.add(exemption);
@@ -2821,133 +2804,70 @@ public class RuleCatalogueBackingBean extends
 	public void fillTrackingDairyForThreshold(int type, ThresholdReqDTO reqDTO) {
 		log.info("Tracking diary for Threshold :");
 		log.info("type" + type);
-		PmThreshold centralizedLevelThreshold = this.getManagedBean()
-				.getThreshold();
+		PmThreshold centralizedLevelThreshold = this.getManagedBean().getThreshold();
 		log.info("centralizedLevelThreshold" + centralizedLevelThreshold);
-		log.info("centralizedLevelThreshold.isModified()="
-				+ centralizedLevelThreshold.isModified());
+		log.info("centralizedLevelThreshold.isModified()=" + centralizedLevelThreshold.isModified());
 		log.info("this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId())="
-				+ this.getManagedBean()
-						.getThresholdIdToS2UnplannedMap()
-						.get(this.getManagedBean().getThreshold()
-								.getThresholdId()));
+				+ this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId()));
 		// 1 - unplanned
 		// 2 - budget
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
-		StatusReqDTO statusReqDTO = null;
+		// IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+		// StatusReqDTO statusReqDTO = null;
 		if (type == 1) {
-
 			if (centralizedLevelThreshold.isModified()) {
-				Integer originalUnplanndthreshold = this
-						.getManagedBean()
-						.getThresholdIdToS2UnplannedMap()
-						.get(this.getManagedBean().getThreshold()
-								.getThresholdId());
-				if (originalUnplanndthreshold != null
-						&& !originalUnplanndthreshold
-								.equals(centralizedLevelThreshold
-										.getS2Unplanned())) {// track change
+				Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId());
+				if (originalUnplanndthreshold != null && !originalUnplanndthreshold.equals(centralizedLevelThreshold.getS2Unplanned())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized Unplanned changed");
 					String messageId = MessageConst.TD_80203;
-					String[] msgParam = new String[] {
-							originalUnplanndthreshold.toString(),
-							centralizedLevelThreshold.getS2Unplanned()
-									.toString() };
+					String[] msgParam = new String[] { originalUnplanndthreshold.toString(), centralizedLevelThreshold.getS2Unplanned().toString() };
 					reqDTO.setTrackingStatus(true);
 
 					reqDTO.getTrackDairyVOs().add(
-							PmCommonUtil
-									.assignTrackingDairyForUnplannedThreshold(
-											centralizedLevelThreshold,
-											getActionDesc(messageId, msgParam),
-											centralizedLevelThreshold
-													.getRecordStatusFlg()
-													.longValue()));
+							PmCommonUtil.assignTrackingDairyForUnplannedThreshold(centralizedLevelThreshold, getActionDesc(messageId, msgParam), 
+									centralizedLevelThreshold.getRecordStatusFlg().longValue()));
 				}
 			}
-			for (PmThreshold threshold : this.getManagedBean()
-					.getUnplannedThresholdList()) {
+			for (PmThreshold threshold : this.getManagedBean().getUnplannedThresholdList()) {
 				if (threshold.isModified()) {
-					Integer originalUnplanndthreshold = this.getManagedBean()
-							.getThresholdIdToS2UnplannedMap()
-							.get(threshold.getThresholdId());
-					if (originalUnplanndthreshold != null
-							&& !originalUnplanndthreshold.equals(threshold
-									.getS2Unplanned())) {// track change
+					Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(threshold.getThresholdId());
+					if (originalUnplanndthreshold != null && !originalUnplanndthreshold.equals(threshold.getS2Unplanned())) {// track change
 						log.info("Tracking diary for Threshold : ministery Unplanned changed");
 						String messageId = MessageConst.TD_80202;
-						String[] msgParam = new String[] {
-								threshold.getOrgProfileId().getPmOrgValidity()
-										.getOrgName(),
-								originalUnplanndthreshold.toString(),
+						String[] msgParam = new String[] { threshold.getOrgProfileId().getPmOrgValidity().getOrgName(), originalUnplanndthreshold.toString(),
 								threshold.getS2Unplanned().toString() };
 						reqDTO.setTrackingStatus(true);
 
-						reqDTO.getTrackDairyVOs()
-								.add(PmCommonUtil
-										.assignTrackingDairyForUnplannedThreshold(
-												threshold,
-												getActionDesc(messageId,
-														msgParam), threshold
-														.getRecordStatusFlg()
-														.longValue()));
+						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForUnplannedThreshold(threshold, getActionDesc(messageId, msgParam), 
+								threshold.getRecordStatusFlg().longValue()));
 					}
 				}
 			}
 		} else if (type == 2) {
 			if (centralizedLevelThreshold.isModified()) {
-				Integer originalBudgetThreshold = this
-						.getManagedBean()
-						.getThresholdIdToBudgetSpentMap()
-						.get(this.getManagedBean().getThreshold()
-								.getThresholdId());
-				if (originalBudgetThreshold != null
-						&& !originalBudgetThreshold
-								.equals(centralizedLevelThreshold
-										.getBudgetSpent())) {// track change
+				Integer originalBudgetThreshold = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(this.getManagedBean().getThreshold().getThresholdId());
+				if (originalBudgetThreshold != null && !originalBudgetThreshold.equals(centralizedLevelThreshold.getBudgetSpent())) {// track change
 					log.info("Tracking diary for Threshold : Centeralized BudgetVsSpent changed");
 					String messageId = MessageConst.TD_80205;
-					String[] msgParam = new String[] {
-							originalBudgetThreshold.toString(),
-							centralizedLevelThreshold.getBudgetSpent()
-									.toString() };
+					String[] msgParam = new String[] { originalBudgetThreshold.toString(), centralizedLevelThreshold.getBudgetSpent().toString() };
 					reqDTO.setTrackingStatus(true);
 
 					reqDTO.getTrackDairyVOs().add(
-							PmCommonUtil.assignTrackingDairyForBudgetThreshold(
-									centralizedLevelThreshold,
-									getActionDesc(messageId, msgParam),
-									centralizedLevelThreshold
-											.getRecordStatusFlg().longValue()));
+							PmCommonUtil.assignTrackingDairyForBudgetThreshold(centralizedLevelThreshold, getActionDesc(messageId, msgParam), 
+									centralizedLevelThreshold.getRecordStatusFlg().longValue()));
 				}
 			}
-			for (PmThreshold threshold : this.getManagedBean()
-					.getBudgetThresholdList()) {
+			for (PmThreshold threshold : this.getManagedBean().getBudgetThresholdList()) {
 				if (threshold.isModified()) {
-					Integer originalUnplanndthreshold = this.getManagedBean()
-							.getThresholdIdToBudgetSpentMap()
-							.get(threshold.getThresholdId());
-					if (originalUnplanndthreshold != null
-							&& !originalUnplanndthreshold.equals(threshold
-									.getBudgetSpent())) {// track change
+					Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(threshold.getThresholdId());
+					if (originalUnplanndthreshold != null && !originalUnplanndthreshold.equals(threshold.getBudgetSpent())) {// track change
 						log.info("Tracking diary for Threshold : ministery BudgetVsSpent changed");
 						String messageId = MessageConst.TD_80204;
-						String[] msgParam = new String[] {
-								threshold.getOrgProfileId().getPmOrgValidity()
-										.getOrgName(),
-								originalUnplanndthreshold.toString(),
+						String[] msgParam = new String[] { threshold.getOrgProfileId().getPmOrgValidity().getOrgName(), originalUnplanndthreshold.toString(), 
 								threshold.getBudgetSpent().toString() };
 						reqDTO.setTrackingStatus(true);
 
-						reqDTO.getTrackDairyVOs().add(
-								PmCommonUtil
-										.assignTrackingDairyForBudgetThreshold(
-												threshold,
-												getActionDesc(messageId,
-														msgParam), threshold
-														.getRecordStatusFlg()
-														.longValue()));
+						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForBudgetThreshold(threshold, getActionDesc(messageId, msgParam), 
+								threshold.getRecordStatusFlg().longValue()));
 					}
 				}
 			}
@@ -3653,7 +3573,6 @@ public class RuleCatalogueBackingBean extends
 		getManagedBean().getTaxableItemsForG2G().clear();
 		getManagedBean().getDeletedTaxableItemsForG2G().clear();
 
-		// TODO init exemption type tabs
 		// hide GstItemTabs
 		// for (int exemptionType : ProfileManagementConst.GST_EXEMPTION_LIST) {
 		// initGstTabsItems(exemptionType);
@@ -3665,27 +3584,21 @@ public class RuleCatalogueBackingBean extends
 	private void initGstTabsItems(int exemptionType) {
 		IGstItemSO gstItemSO = null;
 		try {
-			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IGstItemSO.class);
+			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
 			ISearchBean<PmGstItem> searchBean = new SearchBean<PmGstItem>();
 
 			GstItemReqDTO reqDTO = new GstItemReqDTO();
 			reqDTO.setSearchBean(searchBean);
 			reqDTO.setExemptionType(exemptionType);
 
-			GstItemResDTO resDTO = gstItemSO
-					.retrieveGstItemsBySearchBean(reqDTO);
+			GstItemResDTO resDTO = gstItemSO.retrieveGstItemsBySearchBean(reqDTO);
 			if (resDTO.isSuccessful() && resDTO.getResultBean() != null) {
 				if (ProfileManagementConst.EXEMPTION_GENERAL == exemptionType) {
-					getManagedBean().setTaxableItems(
-							resDTO.getResultBean().getResultList());
+					getManagedBean().setTaxableItems(resDTO.getResultBean().getResultList());
 				} else if (ProfileManagementConst.EXEMPTION_DA == exemptionType) {
-					getManagedBean().setTaxableItemsForDA(
-							resDTO.getResultBean().getResultList());
+					getManagedBean().setTaxableItemsForDA(resDTO.getResultBean().getResultList());
 				} else if (ProfileManagementConst.EXEMPTION_G2G == exemptionType) {
-					getManagedBean().setTaxableItemsForG2G(
-							resDTO.getResultBean().getResultList());
+					getManagedBean().setTaxableItemsForG2G(resDTO.getResultBean().getResultList());
 				}
 			}
 
@@ -3702,20 +3615,15 @@ public class RuleCatalogueBackingBean extends
 		IDesignatedAreaSO designatedAreaSO = null;
 		try {
 
-			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT,
-							IDesignatedAreaSO.class);
+			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
 			ISearchBean<PmDesignatedArea> searchBean = new SearchBean<PmDesignatedArea>();
 
 			DesignatedAreaReqDTO reqDTO = new DesignatedAreaReqDTO();
 			reqDTO.setSearchBean(searchBean);
 
-			DesignatedAreaResDTO resDTO = designatedAreaSO
-					.retrieveDesignatedAreaBySearchBean(reqDTO);
+			DesignatedAreaResDTO resDTO = designatedAreaSO.retrieveDesignatedAreaBySearchBean(reqDTO);
 			if (resDTO.isSuccessful() && resDTO.getResultBean2() != null) {
-				getManagedBean().setDaValidityList(
-						resDTO.getResultBean2().getResultList());
+				getManagedBean().setDaValidityList(resDTO.getResultBean2().getResultList());
 			}
 		} finally {
 			designatedAreaSO = null;
@@ -4961,7 +4869,11 @@ public class RuleCatalogueBackingBean extends
 	
 	
 	public void saveQtValues() {
+
 		log.info("saveQtValues");
+		/*
+		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
+		 *
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
@@ -4976,18 +4888,60 @@ public class RuleCatalogueBackingBean extends
 					result = isDateOverlaped(approval.getEffDate(), approval.getExpDate(),
 							compare.getEffDate(), compare.getExpDate());
 				}
-				
-				log.info("....result=" + result);
-
-				if (result == true) {
+				//#29166 - CR 27827: Static Code Analysis Start - Remove the literal "true" boolean value
+				if (result) {
 					// hit error and return
 					this.getManagedBean().setDisabledSelectedMinistryId(false);
 					this.getManagedBean().setMinistryProfileId(null);
 					throw new EpException("QT Values : Date Overlapping - " + approval.getPmOrgProfile().getOrgName());
 				}
 			}// end of second loop
+		}// end of first loop*/
 
-		}// end of first loop
+		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
+
+	    // Group approvals by OrgProfileId using a HashMap
+	    Map<Long, List<PmPtjSpecialApproval>> groupedApprovals = new HashMap<>();
+	    for (PmPtjSpecialApproval approval : approvals) {
+	        Long orgProfileId = approval.getPmOrgProfile().getOrgProfileId();
+	        if (!groupedApprovals.containsKey(orgProfileId)) {
+	            groupedApprovals.put(orgProfileId, new ArrayList<PmPtjSpecialApproval>());
+	        }
+	        groupedApprovals.get(orgProfileId).add(approval);
+	    }
+
+	    // Iterate through each group and check for overlapping dates
+	    for (Map.Entry<Long, List<PmPtjSpecialApproval>> entry : groupedApprovals.entrySet()) {
+	        List<PmPtjSpecialApproval> group = entry.getValue();
+
+	        // Sort the group by effective date using Collections.sort
+	        Collections.sort(group, new Comparator<PmPtjSpecialApproval>() {
+	            @Override
+	            public int compare(PmPtjSpecialApproval a1, PmPtjSpecialApproval a2) {
+	                return a1.getEffDate().compareTo(a2.getEffDate());
+	            }
+	        });
+
+	        // Check for overlapping dates in the sorted list
+	        for (int i = 0; i < group.size() - 1; i++) {
+	        	PmPtjSpecialApproval current = group.get(i);
+	        	PmPtjSpecialApproval next = group.get(i + 1);
+
+	            // Check for date overlap
+	            boolean isOverlapping = isDateOverlaped(
+	                current.getEffDate(), current.getExpDate(),
+	                next.getEffDate(), next.getExpDate()
+	            );
+
+	            if (isOverlapping) {
+	                // Handle overlap
+	                this.getManagedBean().setDisabledSelectedMinistryId(false);
+	                this.getManagedBean().setMinistryProfileId(null);
+
+	                throw new EpException("QT Values: Date Overlapping - " + current.getPmOrgProfile().getOrgName());
+	            }
+	        }
+	    }
 		
 		IPtjSpecialApprovalSO approvalSO = null;
 		try{
@@ -5015,7 +4969,7 @@ public class RuleCatalogueBackingBean extends
 		}catch(Exception e){
 			this.getManagedBean().setDisabledSelectedMinistryId(false);
 			this.getManagedBean().setMinistryProfileId(null);
-			throw e;
+			throw new EpException(MessageConst.ERROR_000001);
 		}finally{
 			approvalSO = null;
 		}

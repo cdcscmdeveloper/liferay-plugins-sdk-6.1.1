@@ -10845,6 +10845,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						checkZoneLocationChange(this.getManagedBean().getQt());
 					}
 					//20210621@asyrafhaziq_Bug #30914 - End
+					validateSupplierCriteriaIntegrity(this.getManagedBean().getQt());	// Bug #36730@Syazani 07/01/2025
 					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -15818,7 +15819,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					}
 
 					newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
-
+					
 					if (newTotalSpecEstimatedAmount.compareTo(indPriceThreshold) > 0) {
 						throw new EpException(MessageConst.ERROR_760504,
 								new String[] { SourcingConstants.DF_AMOUNT.format(indPriceThreshold) });

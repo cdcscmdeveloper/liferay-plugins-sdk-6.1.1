@@ -4912,9 +4912,13 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 180) { //#36391
+							//#36594 - Start
+							int renewMinTime = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl("");
+							int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+							if (diffDays > renewMinTime) { //#36391
 								result = true;
-								throw new EpException(MessageConst.ERROR_722501);
+								throw new EpException(MessageConst.ERROR_722501, new String[] { String.valueOf(renewalPeriod), String.valueOf(renewMinTime)});
+							//#36594 - End
 							} else if (diffDays < -365) {
 								result = true;
 								throw new EpException(MessageConst.ERROR_722502);

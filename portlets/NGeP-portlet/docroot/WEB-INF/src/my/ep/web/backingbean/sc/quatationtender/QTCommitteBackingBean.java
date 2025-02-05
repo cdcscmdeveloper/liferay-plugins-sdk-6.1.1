@@ -127,11 +127,10 @@ public class QTCommitteBackingBean extends
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant logger. */
-	private static final Logger logger = EpLogger
-			.getLogger(QTCommitteBackingBean.class);
+	private static final Logger logger = EpLogger.getLogger(QTCommitteBackingBean.class);
 	
-	private ScWorkFlowStatus ocWorkFlowStatus;
-	private ScWorkFlowStatus tecWorkFlowStatus;
+	//private ScWorkFlowStatus ocWorkFlowStatus;
+	//private ScWorkFlowStatus tecWorkFlowStatus;
 
 	/**
 	 * Debug logger.
@@ -184,8 +183,7 @@ public class QTCommitteBackingBean extends
 		 * @param userCommitteeSearchBean
 		 *            the user committee search bean
 		 */
-		public UserCommitteePagingDataModel(String componentId,
-				UserCommitteeSearchBean userCommitteeSearchBean) {
+		public UserCommitteePagingDataModel(String componentId, UserCommitteeSearchBean userCommitteeSearchBean) {
 			super(componentId, false);
 			this.userCommitteeSearchBean = userCommitteeSearchBean;
 		}
@@ -198,23 +196,20 @@ public class QTCommitteBackingBean extends
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		protected ISearchResultBean<PmUser> pageChangeListener(
-				ISearchBean<PmUser> searchBean) {
+		protected ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("pageChangeListener");
 			}
 
 			ICommitteSO committeSO;
 			try {
-				committeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 				committeReqDTO.setUserSearchBean(searchBean);
 				committeReqDTO.setPtjMinistryAdmin(Boolean.TRUE);
-				return committeSO.retrieveUserListByCommType(committeReqDTO)
-						.getUserResultBean();
+				return committeSO.retrieveUserListByCommType(committeReqDTO).getUserResultBean();
 			} finally {
 				committeSO = null;
 			}
@@ -229,32 +224,20 @@ public class QTCommitteBackingBean extends
 	 * @param userSearchBean
 	 *            the user search bean
 	 */
-	private void populateUserSearchCriteria(
-			UserCommitteeSearchBean userCommitteeSearchBean,
-			ISearchBean<PmUser> userSearchBean) {
+	private void populateUserSearchCriteria(UserCommitteeSearchBean userCommitteeSearchBean, ISearchBean<PmUser> userSearchBean) {
 		if (userCommitteeSearchBean != null) {
 
 			String name = userCommitteeSearchBean.getName();
 			if (!StringUtils.isBlank(name)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.USER_NAME,
-								SearchOperator.OPERATOR_LIKE.value(), name,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
 			}
 			String idno = userCommitteeSearchBean.getIdentificationNo();
 			if (!StringUtils.isBlank(idno)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(QTConstants.IDENTIFICATION_NO,
-								SearchOperator.OPERATOR_LIKE.value(), idno,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.IDENTIFICATION_NO, SearchOperator.OPERATOR_LIKE.value(), idno, true));
 			}
 			String idtype = userCommitteeSearchBean.getIdentificationType();
 			if (!StringUtils.isBlank(idtype)) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"identificationCode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(), idtype,
-								true));
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), idtype, true));
 			}
 		}
 	}
@@ -1069,13 +1052,13 @@ public class QTCommitteBackingBean extends
 		if (Arrays.asList(specDisabledRoleStatusArr).contains(qtStatus) || isReevaluation(qtStatus, committee)) {
 			List<String> list = new ArrayList<>();
 			if (QTStatusConst.QT_EVALUATION_PROPOSAL.equals(qtStatus)) {
-
-				String taskName = currentTaskName == null ? "" : currentTaskName;
-				if (!Arrays
-						.asList(new String[] { SCProcessNameConst.ASSIGN_FEC_COMMITTEE,
-								SCProcessNameConst.ASSIGN_TEC_COMMITTEE }).contains(taskName)) {
+				// 36695 - start
+				Long currentCMTStatus = getCurrentCMTStatusId();
+				if (!Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_PENDING_APPROVAL,
+						QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REVISION_APPROVAL).contains(currentCMTStatus)) {
 					list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 				}
+				// 36695 - end
 			} else {
 				list.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
 			}
@@ -2587,8 +2570,19 @@ public class QTCommitteBackingBean extends
 				}
 			} else {
 				if (status.equals(QTStatusConst.QT_EVALUATION_PROPOSAL)) {
-					return Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
-							ParameterConst.COMMITTEE_ROLE_MEMBER).contains(role.getParameterCode());
+					// 36695 - start
+					Long currentCMTStatus = getCurrentCMTStatusId();
+					List<String> allowedRoles = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON,
+							ParameterConst.COMMITTEE_ROLE_MEMBER);
+					allowedRoles = new ArrayList<>(allowedRoles);
+
+					if (Arrays.asList(QTStatusConst.CMT_PENDING_SUBMISSION, QTStatusConst.CMT_PENDING_APPROVAL,
+							QTStatusConst.CMT_PENDING_REVISION, QTStatusConst.CMT_PENDING_REVISION_APPROVAL).contains(
+							currentCMTStatus)) {
+						allowedRoles.add(ParameterConst.COMMITTEE_ROLE_SECRETARY);
+					}
+					return allowedRoles.contains(role.getParameterCode());
+					// 36695 - end
 				} else if (status.equals(QTStatusConst.QT_RE_EVALUATION) && getManagedBean().getQt() != null) {
 					ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(committeeType, getManagedBean().getQt()
 							.getQtId());
@@ -2660,4 +2654,17 @@ public class QTCommitteBackingBean extends
 		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value());
 	}
 	// #25426#36 ruzaimah - end
+	
+	// 36695 - start
+	private Long getCurrentCMTStatusId(){
+		ScQt scQt = getManagedBean().getQt();
+		if (this.getManagedBean().getCurrentCMTStatus() == null && scQt != null) {
+			ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_COMMITTE_APROVAL, scQt.getQtId());
+			if (wfStatus != null) {
+				this.getManagedBean().setCurrentCMTStatus(wfStatus.getPmStatus().getStatusId());
+			}
+		}
+		return this.getManagedBean().getCurrentCMTStatus();
+	}
+	// 36695 - end
 }

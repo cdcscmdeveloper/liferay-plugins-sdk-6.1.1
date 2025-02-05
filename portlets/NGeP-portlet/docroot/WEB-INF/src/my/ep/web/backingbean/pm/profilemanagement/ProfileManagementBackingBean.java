@@ -62,7 +62,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -622,6 +621,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("loadUserInfo - End");
 	}
 
+	/*
 	private void clearUserOrgInfo(PmUserOrg userOrg) {
 		userOrg.setDesignation(null);
 		userOrg.setGrade(null);
@@ -630,6 +630,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		userOrg.setFaxNo(null);
 		userOrg.setMobileNo(null);
 	}
+	*/
 
 	/**
 	 * initial new pmUser object
@@ -713,6 +714,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * 
 	 * @param pmUser
 	 */
+	/*
 	private void populateUserAddress(PmUser pmUser) {
 		logger.info("populateUserAddress");
 		try {
@@ -725,6 +727,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			throw new EpException(MessageConst.ERROR_770017, new String[] { e.getMessage() });
 		}
 	}
+	*/
 
 	/**
 	 * retrieve salutation list
@@ -737,7 +740,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 
 	/**
-	 * get YES & NO options //TODO: to load dynamically
+	 * get YES & NO options
 	 * 
 	 * @return SelectItem[]
 	 */
@@ -746,7 +749,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 
 	/**
-	 * get record status options //TODO: to load dynamically
+	 * get record status options
 	 * 
 	 * @return SelectItem[]
 	 */
@@ -1252,20 +1255,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param searchDB
 	 * @return boolean
 	 */
+	/*
 	private boolean checkUniqueRole(String orgTypeCode, String roleCode, boolean searchDB) {
 		boolean isExist = false;
 		if (searchDB) {
 			SearchBean<PmUser> userSearchBean = new SearchBean<PmUser>();
 
-			userSearchBean.getDataFilterBeans().add(new SearchFilterBean("pmUserOrgs.pmUserRoles.pmRole.roleCode",
-					SearchOperator.OPERATOR_EQUALS.value(), roleCode, true));
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmUserRoles.pmRole.roleCode", SearchOperator.OPERATOR_EQUALS.value(), roleCode, true));
 
-			userSearchBean.getDataFilterBeans().add(new SearchFilterBean("pmUserOrgs.pmUserRoles.recordStatusFlg",
-					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmUserRoles.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 
-			userSearchBean.getDataFilterBeans()
-					.add(new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
-							SearchOperator.OPERATOR_EQUALS.value(), orgTypeCode, true));
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), orgTypeCode, true));
 
 			List<PmUser> users = PmCommonUtil.searchUsersBySearchBean(userSearchBean);
 			if (users != null && !users.isEmpty()) {
@@ -1291,6 +1294,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return isExist;
 	}
+	*/
 
 	/*
 	 * Add new selected role (single) to user role list
@@ -1507,11 +1511,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * 
 	 * @return boolean
 	 */
+	/*
 	private boolean isUniqueRoles() {
 		logger.info("isUniqueRoles");
 		boolean isUnique = true;
-		if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
-				&& !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()) {
+		if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()) {
 			List<PmRole> oriPmRoles = new ArrayList<PmRole>();
 
 			for (PmUserRole obj : this.getManagedBean().getSelectedUserOrg().getPmUserRoles()) {
@@ -1526,6 +1530,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		return isUnique;
 	}
+	*/
 
 	/**
 	 * Track user role status
@@ -2053,6 +2058,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
 				roleReqDTO.setAssignRole(true);
+				
+				logger.info("..getFacesScopes().getUserSessionBean().getUserId()=" + getFacesScopes().getUserSessionBean().getUserId());
+
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				roleReqDTO.setRoleName(getManagedBean().getSearchRoleName());
 				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -2071,13 +2079,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
+	/*
 	private void markupRoleResult(ISearchResultBean<PmRoleDesc> searchRoleResultBean) {
 		logger.info("markupRoleResult");
 		// disabled selected roles
-		if (searchRoleResultBean != null && searchRoleResultBean.getResultList() != null
-				&& !searchRoleResultBean.getResultList().isEmpty()) {
-			if (getManagedBean().getSelectedUserOrg() != null
-					&& getManagedBean().getSelectedUserOrg().getPmUserRoles() != null) {
+		if (searchRoleResultBean != null && searchRoleResultBean.getResultList() != null && !searchRoleResultBean.getResultList().isEmpty()) {
+			if (getManagedBean().getSelectedUserOrg() != null && getManagedBean().getSelectedUserOrg().getPmUserRoles() != null) {
 				List<PmRole> selectedRoles = new ArrayList<PmRole>();
 				// selected roles
 				for (PmUserRole obj : getManagedBean().getSelectedUserOrg().getPmUserRoles()) {
@@ -2093,6 +2100,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 	}
+	*/
 	/** Roles & Paging - End */
 
 	/** User Search & Paging - Start */
@@ -2363,19 +2371,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
+	/*
 	private void markupUserResult(ISearchResultBean<PmUserOrg> userResultBean) {
 		logger.info("markupUserResult");
-		if (userResultBean != null && userResultBean.getResultList() != null
-				&& !userResultBean.getResultList().isEmpty()) {
+		if (userResultBean != null && userResultBean.getResultList() != null && !userResultBean.getResultList().isEmpty()) {
 
 			for (PmUserOrg pmUserOrg : userResultBean.getResultList()) {
-				List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(
-						pmUserOrg.getPmUser().getUserId(), ProfileManagementConst.ADDRESS_USER);
-				pmUserOrg.getPmUser().setAddressTypeC(
-						(addressTypes != null && !addressTypes.isEmpty()) ? addressTypes.get(0) : new PmAddressType());
+				List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUserOrg.getPmUser().getUserId(), 
+						ProfileManagementConst.ADDRESS_USER);
+				pmUserOrg.getPmUser().setAddressTypeC((addressTypes != null && !addressTypes.isEmpty()) ? addressTypes.get(0) : new PmAddressType());
 			}
 		}
 	}
+	*/
 
 	/** User Search & Paging - End */
 
@@ -2384,6 +2392,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * 
 	 * @param user
 	 */
+	/*
 	private void loadUserAddress(PmUser user, boolean isAddressEntered) {
 		logger.info("loadUserAddress");
 		if (!user.isBrandNew()) {
@@ -2397,8 +2406,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 							if (isAddressEntered) {
 								logger.info("update address");
 								addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
-								if (addressTypeObj.getPmAddress().getPmDivision() != null
-										&& addressTypeObj.getPmAddress().getPmDivision().getDivisionId() == null) {
+								if (addressTypeObj.getPmAddress().getPmDivision() != null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId() == null) {
 									addressTypeObj.getPmAddress().setPmDivision(null);
 								}
 							} else {
@@ -2417,8 +2425,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					PmAddressType pmAddressType = new PmAddressType();
 					pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
 					pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
-					if (pmAddressType.getPmAddress().getPmDivision() != null
-							&& pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
+					if (pmAddressType.getPmAddress().getPmDivision() != null && pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
 						pmAddressType.getPmAddress().setPmDivision(null);
 					}
 					pmAddressType.setPmOrgProfile(null);
@@ -2434,8 +2441,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				PmAddressType pmAddressType = new PmAddressType();
 				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
 				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
-				if (pmAddressType.getPmAddress().getPmDivision() != null
-						&& pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
+				if (pmAddressType.getPmAddress().getPmDivision() != null && pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
 					pmAddressType.getPmAddress().setPmDivision(null);
 				}
 				pmAddressType.setPmOrgProfile(null);
@@ -2443,12 +2449,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 	}
+	*/
 
 	/**
 	 * load user address - C
 	 * 
 	 * @param user
 	 */
+	/*
 	private void cloneUserAddress(PmUser user) {
 		logger.info("cloneUserAddress");
 		// getting current active org's address
@@ -2463,8 +2471,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 			}
 			// search address type B and orgProfileId
-			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByOrgId(orgProfileId,
-					ProfileManagementConst.ADDRESS_BILLING);
+			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByOrgId(orgProfileId, ProfileManagementConst.ADDRESS_BILLING);
 			orgAddress = (addressTypes != null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : null;
 			logger.info(orgAddress != null ? "orgAddress exist: YES" : "orgAddress exist: NO");
 		}
@@ -2481,8 +2488,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 								logger.info("update address");
 								// copy orgAddress and update address
 								addressTypeObj.setPmAddress(orgAddress);
-								if (addressTypeObj.getPmAddress().getPmDivision() != null
-										&& addressTypeObj.getPmAddress().getPmDivision().getDivisionId() == null) {
+								if (addressTypeObj.getPmAddress().getPmDivision() != null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId() == null) {
 									addressTypeObj.getPmAddress().setPmDivision(null);
 								}
 							} else {
@@ -2502,8 +2508,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						PmAddressType pmAddressType = new PmAddressType();
 						pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
 						pmAddressType.setPmAddress(orgAddress);
-						if (pmAddressType.getPmAddress().getPmDivision() != null
-								&& pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
+						if (pmAddressType.getPmAddress().getPmDivision() != null && pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
 							pmAddressType.getPmAddress().setPmDivision(null);
 						}
 						pmAddressType.setPmOrgProfile(null);
@@ -2521,8 +2526,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				PmAddressType pmAddressType = new PmAddressType();
 				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
 				pmAddressType.setPmAddress(orgAddress);
-				if (pmAddressType.getPmAddress().getPmDivision() != null
-						&& pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
+				if (pmAddressType.getPmAddress().getPmDivision() != null && pmAddressType.getPmAddress().getPmDivision().getDivisionId() == null) {
 					pmAddressType.getPmAddress().setPmDivision(null);
 				}
 				pmAddressType.setPmOrgProfile(null);
@@ -2530,6 +2534,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 	}
+	*/
 
 	/**
 	 * load user org type with the last PmUserOrgs
@@ -2579,7 +2584,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 					// }
 				} else if (pmUserOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-					// TODO : remove role.brandNew first!
 					logger.info("pmUserOrg : RECORD_STATUS_SUSPENDED -> deleteRoleList :");
 					for(PmUserRole role : pmUserOrg.getPmUserRoles()){		
 						role.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -2626,6 +2630,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param pmUserOrg
 	 * @return
 	 */
+	/*
 	private boolean checkEffDate(PmUserOrg pmUserOrg) {
 		logger.info("checkEffDate");
 		Date currentDate = new Date();
@@ -2641,6 +2646,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return isActive;
 	}
+	*/
 
 	/**
 	 * Validation for Responsible Org. Unit date range
@@ -2693,6 +2699,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * 
 	 * @param user
 	 */
+	/*
 	private void oneActiveResponsibleOrg(PmUser user) {
 		int activeOrgNumber = 0;
 		int activeRoleNumber = 0;
@@ -2724,6 +2731,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			throw new EpException(MessageConst.ERROR_770029);
 		}
 	}
+	*/
 
 	/**
 	 * validate unique role for each org type
@@ -3495,7 +3503,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if (resDTO != null && resDTO.getUserResultBean().getResultList() != null
 						&& resDTO.getUserResultBean().getResultList().size() > 0) {
 					PmUser user = resDTO.getUserResultBean().getResultList().get(0);
-					// TODO set current user info
 					// check for any active org
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
 
@@ -3601,7 +3608,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					//#35562 - Start (Checking identification no same with login id)
 					if (getManagedBean().getSelectedUser().getIdentificationNo().compareTo(user.getLoginId()) == 0) {
 				
-					// TODO set current user info
 					// check for any active org
 					List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
 

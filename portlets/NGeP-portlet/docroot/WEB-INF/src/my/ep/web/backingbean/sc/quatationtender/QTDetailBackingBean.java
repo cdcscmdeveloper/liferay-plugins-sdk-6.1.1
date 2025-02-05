@@ -144,7 +144,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -900,6 +899,8 @@ public class QTDetailBackingBean extends
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435, Enhancement #25077 - end
+			
+			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
@@ -3330,6 +3331,7 @@ public class QTDetailBackingBean extends
 			// #30477, #25426 Start
 			validateUserInactive(taskName, currentStatus, outcome);
 			// #30477, #25426 End
+			validateSupplierCriteriaIntegrity(qt);	// Bug #36730@Syazani 07/01/2025 -- Start
 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
@@ -3532,9 +3534,11 @@ public class QTDetailBackingBean extends
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
 						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
 
-				if ((valCondition && approval.getApprovalCategory().getParameterCode()
-						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
-						|| valConditionOthers) {
+				// #37632 - Check only for CAA - Start
+				if ((valConditionOthers || valCondition)
+						&& approval.getApprovalCategory().getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
+				// #37632 - Check only for CAA - End
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174); // #11299 Start Vinod
 					// #11299 End Vinod
