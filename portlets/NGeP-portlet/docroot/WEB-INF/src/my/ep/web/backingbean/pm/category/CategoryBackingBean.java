@@ -4372,11 +4372,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 */
 	private boolean validateCategoryDescAndName() {
 		return !this.descriptionEditDisable
-				&& this.getManagedBean()
-						.getUpdatedCategoryDesc()
-						.compareTo(
-								this.getManagedBean().getOldCategoryL1()
-										.getCategoryName()) != 0;
+				&& this.getManagedBean().getUpdatedCategoryDesc()
+						.compareTo(this.getManagedBean().getOldCategoryL3().getCategoryName()) != 0; //#29665
 	}
 	//Bug #37757 - End
 }
