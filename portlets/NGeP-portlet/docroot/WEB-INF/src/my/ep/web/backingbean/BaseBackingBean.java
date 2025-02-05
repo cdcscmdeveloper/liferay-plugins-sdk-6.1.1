@@ -4254,7 +4254,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    logger.logCodeCoverage("Test Case 3: disallowEditApplType = " + disallowEditApplType);
 
 	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
-	    reqDto.setApplId(smAppl.getApplId());
+	    reqDto.setApplId(smAppl.getSmSupplier().getSmAppl().getApplId());
 	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
 
 	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
