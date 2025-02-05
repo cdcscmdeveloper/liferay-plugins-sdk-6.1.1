@@ -16,18 +16,21 @@
 					value="#{pmReportsBackingBean.managedBean.serviceType}">
 					<f:selectItems
 						value="#{pmReportsBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
-					<!-- 34299 - START -reendorse -->
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
-					<!-- 34299 - END -reendorse -->
+					<!-- 34299, 36719 - START -reendorse -->
+					<p:ajax event="change" partialSubmit="true" update="@form" />
+					<!-- 34299 36719 - END -reendorse -->
 				</p:selectOneMenu></td>
 		</tr>
 		<tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.financialorg.name']}" /></td>
-		<td><ac:lov id="pmFinOrgName" lovId="PM_ORG_PROFILE_FFC_REPORT"
+		<!-- 36719 - Start -->
+		<td><ac:lov id="pmFinOrgName" lovId="PM_FIN_SVC_REPORT"
 				size="50" update="@this,:form:regNoIt"
 				headerText="#{lbl['lbl.pm.header.general.finance']}" readonly="true"
 				value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
-				saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" /></td>
+				saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" 
+				conditionField="#{pmReportsBackingBean.constructConditionFieldForFinSvc()}"/></td>
+		<!-- 36719 - End -->		
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /></td>
@@ -44,7 +47,7 @@
 						itemValue="#{null}" />
 					<f:selectItems
 						value="#{pmReportsBackingBean.getStatusOptions()}" />
-					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+					<p:ajax event="change" partialSubmit="true" update="@form" /> 	<!-- 36719 -->
 				</p:selectOneMenu></td>
 		</tr>
 	</table>
