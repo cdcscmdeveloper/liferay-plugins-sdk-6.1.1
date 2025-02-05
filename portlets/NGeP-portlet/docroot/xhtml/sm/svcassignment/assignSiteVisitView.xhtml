@@ -42,7 +42,9 @@
 			value="#{svcSiteAssignBackingBean.getsupplierApplTypeDesc(svcSiteAssignBackingBean.managedBean.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+		<!-- #34400 -->
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500"
+			header="#{lbl['lbl.btn.dialog.cofirm.header']}">
    			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
    			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"

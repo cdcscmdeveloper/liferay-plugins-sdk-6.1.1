@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 	
@@ -15,10 +16,22 @@
 			rendered="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.newComplaintReject and 
 			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewByPtpkReject and 
 			complaintBackingBean.managedBean.smComplaint.pmStatus.statusId != DisciplinaryActionConst.reviewSuppRespReject}"
-			action="#{complaintBackingBean.updateComplaint}">
+			onclick="blockWidget.show()" oncomplete="blockWidget.hide(); if (!args.validationFailed) confirmDlg.show();" > <!-- #34400 -->
 			<f:param name="disableValidation" value="true" />	
 		</p:commandButton>
 	</div>
+	<!-- #34400 -->
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:blockUI>
+	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		bean="#{complaintBackingBean}"
+		okAction="updateComplaint"
+		width="400" height="100" 
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.complaint']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
 	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />	
 		<c:if test="#{complaintBackingBean.managedBean.smComplaint.pmStatus.statusId == DisciplinaryActionConst.newComplaint}">
