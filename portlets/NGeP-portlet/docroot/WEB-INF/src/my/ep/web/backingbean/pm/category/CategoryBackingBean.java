@@ -1890,6 +1890,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 
 		// start #29665
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList())) {
 			for (PmMachineCategory cat : this.getManagedBean().getPmMachineCategoryList()) {
 				if (cat.getPmMachineCategorySectionList().contains(String.valueOf(ParameterConst.DOCKYARD_TYPEID))) {
@@ -1905,7 +1908,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 
 				if (cat.getPmMachineCategorySectionList().contains(String.valueOf(ParameterConst.PRINTING_TYPEID))) {
-					cat.setPrintingSiteVisit(ParameterConst.PRINTING_TYPEID);
+					String languageCode = new FacesScopes().getUserLocale().getLanguage();
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					
+					reqDTO.setLanguageCode(languageCode);
+					reqDTO.setCodeName(ParameterConst.ACCESSORIES_TYPE);
+					ParameterResDTO resDTO = parameterSO.retrieveParameterDescByCodeNameAndLanguage(reqDTO);
+					cat.setPrintingSiteVisit(resDTO.getPmParameterDesc().getPmParameter().getParameterId());
 				} else {
 					cat.setPrintingSiteVisit(null);
 				}
