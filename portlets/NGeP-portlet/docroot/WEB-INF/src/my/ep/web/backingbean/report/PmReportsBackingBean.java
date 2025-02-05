@@ -1502,7 +1502,27 @@ public class PmReportsBackingBean extends
 		sb.append("|smSupplier.recordStatus^1*smSupplier.recordStatus^0");
 		return sb.toString();
 	}
-	
 	//#29991 end---
+	
+	// #36719 - Start
+	/**
+	 * filter services Type
+	 * 
+	 * @return sb.toString()
+	 */
+	public String constructConditionFieldForFinSvc() {
+		StringBuilder sb = new StringBuilder();
+
+		if (this.getManagedBean().getServiceType() == null) {
+			sb.append("pmFinancialSvcs.serviceTypeCode.parameterCode^");
+			sb.append(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
+		} else {
+			sb.append("pmFinancialSvcs.serviceTypeCode.parameterCode^");
+			sb.append(this.getManagedBean().getServiceType());
+		}
+
+		return sb.toString();
+	}
+	// #36719 - End
 
 }
