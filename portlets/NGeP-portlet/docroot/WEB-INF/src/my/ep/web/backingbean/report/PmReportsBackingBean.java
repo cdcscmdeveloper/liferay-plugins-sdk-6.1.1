@@ -1511,7 +1511,7 @@ public class PmReportsBackingBean extends
 	 * 
 	 * @return sb.toString()
 	 */
-	public String constructConditionFieldsForFinancial() {
+	public String constructConditionFieldForFinSvc() {
 		StringBuilder sb = new StringBuilder();
 
 		if (this.getManagedBean().getServiceType() == null) {
