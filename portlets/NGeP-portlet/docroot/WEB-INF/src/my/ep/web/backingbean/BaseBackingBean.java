@@ -4157,7 +4157,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
 
 	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
-	    reqDto.setApplId(smAppl.getApplId());
+	    reqDto.setApplId(smAppl.getSmSupplier().getSmAppl().getApplId());
 	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
 
 	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
