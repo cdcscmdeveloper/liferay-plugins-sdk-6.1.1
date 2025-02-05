@@ -4393,19 +4393,19 @@ public class QTDetailBackingBean extends
 					List<ScQtCategory> categoryResults = tenderResDTO
 							.getCategories();
 
-					
-					//29732 fix duplicate issues
+					// 29732 fix duplicate issues
 					List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
-					
-						if(null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes && !removeCategoryCodes.isEmpty()){
+					if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
+							&& !removeCategoryCodes.isEmpty()) {
+						for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
 							for (int i = 0; i < categoryResults.size(); i++) {
-								for (int i2 = 0; i2 < removeCategoryCodes.size(); i++) {
-								if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2).getQtCategoryId()) {
+								if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2)
+										.getQtCategoryId()) {
 									removeCategoryCodes.remove(removeCategoryCodes.get(i2));
-								}
 								}
 							}
 						}
+					}
 					
 					this.getManagedBean().setQtCategoryList(categoryResults);
 				}
