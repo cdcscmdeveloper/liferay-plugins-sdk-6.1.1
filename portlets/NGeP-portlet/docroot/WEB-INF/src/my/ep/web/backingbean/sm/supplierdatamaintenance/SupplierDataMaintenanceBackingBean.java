@@ -102,7 +102,6 @@ import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategory
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
 //#28895_35501 End
 //#34031 Start
-import java.util.Calendar;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.revisit.SmRevisitReqDTO;
 import my.ep.biz.service.sm.revisit.ISmRevisitSO;
@@ -2896,7 +2895,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
 			if (this.getManagedBean().getSmRevisit().getSmRvSuppDocs().contains(this.getManagedBean().getSmRvSuppDoc())) {
-				String filePath = Calendar.getInstance().get(Calendar.YEAR) + "/SM/REVISIT/" + getManagedBean().getSmAppl().getApplNo() + "/";
+				String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SME_FILE_PATH)
+						+ this.getManagedBean().getSmAppl().getApplId() + "/" + System.currentTimeMillis() + "/";
 				SmRvSuppDoc doc = this.getManagedBean().getSmRvSuppDoc();
 				SmRvDocFile docFile = new SmRvDocFile();
 				docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
@@ -2906,11 +2906,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					doc.setSmRvDocFiles(new ArrayList<SmRvDocFile>());
 				}
 				doc.getSmRvDocFiles().add(docFile);
-				for (int i = 0; i < doc.getSmRvDocFiles().size(); i++) {
-					if (doc.getSmRvDocFiles().get(i).getFileName() == null || doc.getSmRvDocFiles().get(i).getFileName().equalsIgnoreCase(" ")) {
-						doc.getSmRvDocFiles().remove(i);
-					}
-				}
+				cleanFileName(doc);
 				doc.getSmRvDocFiles().get(0).setFilePath(filePath);
 				this.getManagedBean()
 						.getSmRevisit()
@@ -2918,6 +2914,14 @@ public class SupplierDataMaintenanceBackingBean extends
 						.set(this.getManagedBean().getSmRevisit().getSmRvSuppDocs().indexOf(this.getManagedBean().getSmRvSuppDoc()),
 								this.getManagedBean().getSmRvSuppDoc());
 				commonUploadFile(event, filePath);
+			}
+		}
+	}
+
+	private void cleanFileName(SmRvSuppDoc doc) {
+		for (int i = 0; i < doc.getSmRvDocFiles().size(); i++) {
+			if (doc.getSmRvDocFiles().get(i).getFileName() == null || " ".equalsIgnoreCase(doc.getSmRvDocFiles().get(i).getFileName())) {
+				doc.getSmRvDocFiles().remove(i);
 			}
 		}
 	}
@@ -2976,14 +2980,24 @@ public class SupplierDataMaintenanceBackingBean extends
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupplier());
 		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
 		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
-		if (!revisitList.isEmpty()) {
-			this.getManagedBean().setSmRevisitList(revisitList);
+		if (revisitList.isEmpty()) {
+			this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
+		} else {
 			for (SmRevisit revisit : revisitList) {
 				if (revisit.isCurrent()) {
 					this.getManagedBean().setCurrentSmRevisit(revisit);
 					break;
 				}
 			}
+			if (!EntityHelper.isCollectionEmpty(revisitList)) {
+				Collections.sort(revisitList, new Comparator<SmRevisit>() {
+					@Override
+					public int compare(SmRevisit a, SmRevisit b) {
+						return a.getCreatedDate().compareTo(b.getCreatedDate());
+					}
+				});
+			}
+			this.getManagedBean().setSmRevisitList(updateCreatedUserName(revisitList));
 		}
 	}
 
@@ -3011,7 +3025,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	public void onClickRevisitHistoryList() {
-		this.getManagedBean().setSmRevisitList(updateCreatedUserName(this.getManagedBean().getSmRevisitList()));
 		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
 	}
 
