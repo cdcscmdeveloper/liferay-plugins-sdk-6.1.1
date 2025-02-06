@@ -2977,7 +2977,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	private void initSmRvHistory() {
 		SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
-		reqDTO.setSmSupplier(this.getManagedBean().getSmSupplier());
+		reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
 		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
 		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
 		if (revisitList.isEmpty()) {

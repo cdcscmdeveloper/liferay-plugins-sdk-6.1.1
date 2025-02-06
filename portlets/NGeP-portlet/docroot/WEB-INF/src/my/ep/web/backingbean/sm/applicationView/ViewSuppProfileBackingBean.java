@@ -50,6 +50,13 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import javax.servlet.http.HttpServletRequest;
 import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 End
+//#34031 Start
+import java.util.HashMap;
+import java.util.Map;
+import my.ep.biz.service.sm.revisit.ISmRevisitSO;
+import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+import my.ep.persistence.entity.sm.SmRevisit;
+//#34031 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -91,6 +98,8 @@ public class ViewSuppProfileBackingBean extends
 		getManagedBean().setViewApplicationHistory(false);
 		// #28175
 		getManagedBean().setHistoryList(new ArrayList<PmRemarkCategory>());
+		// #34031
+		initSmRvHistory();
 		logger.info("[preRenderViewSupplierProfile] #31754 getManagedBean().isSupplierUser(): " + getManagedBean().isSupplierUser());
 		if (getManagedBean().isSupplierUser()) {
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
@@ -428,4 +437,50 @@ public class ViewSuppProfileBackingBean extends
 		return remarkList;
 	}
 	// #28175 end
+	// #34031 Start
+	private void initSmRvHistory() {
+		SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
+		if (this.getManagedBean().isSupplierUser()) {
+			reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
+		} else {
+			reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
+		}
+		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
+		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
+		if (revisitList.isEmpty()) {
+			this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
+		} else {
+			for (SmRevisit revisit : revisitList) {
+				if (revisit.isCurrent()) {
+					this.getManagedBean().setCurrentSmRevisit(revisit);
+					break;
+				}
+			}
+			this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
+		}
+	}
+
+	private List<SmRevisit> updateSmRvCreatedUserName(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
+			revisit.setActionedBy(user.getUserName());
+		}
+		return revisitList;
+	}
+
+	public void onClickRevisitHistoryList() {
+		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
+	}
+
+	public void downloadRevisitHistory() {
+		try {
+			Map<String, String> paramMap = new HashMap<>();
+			paramMap.put("paramConst", "value");
+			generateReport("reportName", paramMap);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #34031 End
 }

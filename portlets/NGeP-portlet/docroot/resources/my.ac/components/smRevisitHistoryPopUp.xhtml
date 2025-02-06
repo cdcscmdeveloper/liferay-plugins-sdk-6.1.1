@@ -9,7 +9,7 @@
 		<cc:attribute name="dialogName" required="true" />
 		<cc:attribute name="smRevisitList" required="true" />
 		<cc:attribute name="backingBean" required="true" />
-		<cc:attribute name="officerView" default="true" />
+		<cc:attribute name="officerView" default="false" />
 	</cc:interface>
 	<cc:implementation>
 		<p:dialog id="#{cc.attrs.dialogName}Id"
@@ -76,9 +76,12 @@
 						</ui:repeat>
 					</ui:repeat>
 				</p:column>
-				<p:column
+				<p:column rendered="#{cc.attrs.officerView}"
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{revisit.revisitRemark}" />
+				</p:column>
+				<p:column rendered="#{!cc.attrs.officerView}"
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 				</p:column>
 				<p:column rendered="#{cc.attrs.officerView}">
 					<h:outputText value="#{revisit.actionedBy}" />
@@ -90,9 +93,10 @@
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
-			<div align="right" rendered="#{cc.attrs.officerView}">
+			<div align="right">
 				<p:commandButton id="downloadRevisitHistoryId"
-					value="#{lbl['lbl.sm.rv.history.btn.download']}">
+					value="#{lbl['lbl.sm.rv.history.btn.download']}"
+					rendered="#{cc.attrs.officerView}">
 					<p:fileDownload
 						value="#{cc.attrs.backingBean.downloadRevisitHistory()}" />
 				</p:commandButton>
