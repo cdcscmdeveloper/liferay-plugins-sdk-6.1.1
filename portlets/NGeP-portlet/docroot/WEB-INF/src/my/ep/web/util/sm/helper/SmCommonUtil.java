@@ -203,6 +203,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.PagingConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.DateUtils;
@@ -229,6 +230,7 @@ import org.primefaces.model.StreamedContent;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -1370,7 +1372,8 @@ public class SmCommonUtil {
 			SmPersonnleCalcVO persCalcVo, BigDecimal bumiPercentage) {
 		persCalcVo.setBumiStatus(false);
 		if (bumiPercentage != null
-				&& bumiPercentage.compareTo(new BigDecimal(50)) == 1) {
+				//SQ change from == 1 to GT > 0
+				&& bumiPercentage.compareTo(new BigDecimal(50)) > 0) {
 			persCalcVo.setBumiStatus(true);
 		}
 		return persCalcVo;
@@ -1820,7 +1823,8 @@ public class SmCommonUtil {
 	 *            - SmAddress defaultAddr
 	 * @return SmAddress object
 	 */
-	public static SmAddress getDefaultAddress(SmAddress defaultAddr) {
+	//SQ comment this method because unused any more
+	/*public static SmAddress getDefaultAddress(SmAddress defaultAddr) {
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
@@ -1832,7 +1836,7 @@ public class SmCommonUtil {
 		defaultAddr.setPmState(new PmState());
 		return defaultAddr;
 	}
-
+*/
 	/**
 	 * Gets the country id for Malaysia.
 	 * 
@@ -2738,7 +2742,7 @@ public class SmCommonUtil {
 	/**
 	 * Get Liferay Portal Base URL
 	 * 
-	 * @return String
+	 * @return String the server domain name ex : http://ngepdevwps01.eperolehan.com.my:8888
 	 */
 	public static String getBasePortalUrl() {
 		FacesContext fCtx = FacesContext.getCurrentInstance();
@@ -3600,9 +3604,6 @@ public class SmCommonUtil {
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setAppl(latestAppl);
-		//#32510 - start
-		latestAppl.setApplNo("");
-		//#32510 - end
 		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
 				.getSoftcertDocNo();
 	}
@@ -3742,7 +3743,8 @@ public class SmCommonUtil {
 		if (divisionId != null) {
 			DivisionReqDTO reqDTO = new DivisionReqDTO();
 			reqDTO.setDivisionId(divisionId);
-			return SmServiceLookup.getDivisionSO().retriveDivisionListByState(reqDTO)
+			//#35086
+			return SmServiceLookup.getDivisionSO().retriveDivisionByID(reqDTO)
 					.getPmDivision();
 		} else {
 			return null;
@@ -4071,11 +4073,11 @@ public class SmCommonUtil {
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getMachineItemsByCatTypeCode(String catTypeCode) {
-		List<SelectItem> machineItems = new ArrayList<SelectItem>();
+		List<SelectItem> machineItems = new ArrayList<>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
-				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442
-				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442 - Site Visit Grouping Enhancement -28775
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442 - Site Visit Grouping Enhancement -28775
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
@@ -4221,6 +4223,12 @@ public class SmCommonUtil {
 			SmAddress smAddress) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//#36718 - START
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		item.setValue(null);
+		items.add(item);
+		//#36718 - END
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
 				.contains(businessType)) {
@@ -4242,11 +4250,13 @@ public class SmCommonUtil {
 							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
 							.getOrgProfileList();
 					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
-						item = new SelectItem();
+						//#36718 - START
+						/*item = new SelectItem();
 						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
 								null));
 						item.setValue(null);
-						items.add(item);
+						items.add(item);*/
+						//#36718 - END
 						for (PmOrgProfile orgProfile : orgProfileList) {
 							item = new SelectItem();
 							item.setLabel(orgProfile.getPmOrgValidity()
@@ -4436,6 +4446,12 @@ public class SmCommonUtil {
 	}
 	
 	//29379 - Site Visit Grouping Enhancement - 28775 -start
+	/**
+	 * Verify MyIdentity with IC only
+	 * @param name
+	 * @param identificationNo
+	 * @return status code
+	 */
 	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
@@ -4458,7 +4474,6 @@ public class SmCommonUtil {
 				case "70031":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
 				case "70004":
-					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70005":
 					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
 				case "70039":
@@ -4473,8 +4488,9 @@ public class SmCommonUtil {
 			String msg = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale());
 			if (msg != null) {
-				throw new EpException(msg + "(ERR-"+ ex.getMessage().toString() + ")");
+				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
 			} else {
+				log.error(ex);
 				throw new EpException(ex.getMessage() + "(ERR-729999)");
 			}
 		}
@@ -4519,7 +4535,7 @@ public class SmCommonUtil {
 			//set default parameter
 			PmParameter identificationType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 			PmParameter passportType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_PASSPORT);
-			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
+			PmParameter permanentResidenceType = ParameterHelper.getInstance().getParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES_SSM, ParameterConst.PERMANENT_RESIDENCE_TYPES); //#30064
 			ssmReqDTO.setPmParameter(identificationType);
 			ssmReqDTO.setPmParameterIdTypeP(passportType);
 			ssmReqDTO.setPmParameterIdTypePR(permanentResidenceType); //#30064
@@ -4550,41 +4566,6 @@ public class SmCommonUtil {
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
 				}
 			}//END 27329
-			//#29582- Start
-			log.info("ssm status: "+ resDTO.getStatusCode());
-			if (resDTO.getSmPersonnelAll() != null && resDTO.getSmPersonnelAll().size()>0 ) {
-				boolean errMsg = false;
-				int i = 0;
-				for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
-					if (per.getIdentificationTypeSsm() != null) {
-						String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
-								ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
-						if (ssmTypeDesc == null){
-							ssmTypeDesc =ParameterHelper.getInstance().getParameterDesc(
-									ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
-						}
-						sb.append("<br/>");
-						sb.append(++i + ". ");
-						sb.append(per.getName() + " ");
-						sb.append("("
-								+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
-								+ " ");
-						sb.append(per.getIdentificationNo() + ", ");
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
-						sb.append(per.getIdentificationTypeSsm() + " = ");
-						sb.append(ssmTypeDesc + ")");
-						sb.append("<br/>");
-						errMsg = true;
-					}
-				}
-				if (errMsg) {
-					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
-				}
-			}//#29582- end
-			
-			
 			return resDTO;
 		} catch (Exception ex) {
 			String message = MessageUtils.getMessage(ex.getMessage(),
@@ -4594,10 +4575,6 @@ public class SmCommonUtil {
 				//27329
 				if(MessageConst.ERROR_721085.equalsIgnoreCase(ex.getMessage()) && sb != null){
 					throw new EpException(MessageConst.ERROR_721085,new String[] { sb.toString() });
-				}
-				//#29582
-				if(MessageConst.ERROR_721088.equalsIgnoreCase(ex.getMessage()) && sb != null){
-					throw new EpException(MessageConst.ERROR_721088,new String[] { sb.toString() });
 				}else{
 					//27225
 					throw new EpException(message + "("
@@ -4813,25 +4790,20 @@ public class SmCommonUtil {
 	 */
 	public static void setDefaultPersonnelNationality(SmPersonnel per) {
 		if (per.getPmCountry() != null) {
+			//29582, 30064, 35300 start
+			PmParameter ic = retrieveParameterByTypeAndCode(
+					ParameterTypeConst.IDENTIFICATION_TYPES,
+					SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
 			if (per.getPmCountry().getCountryCode()
-					.equals(SupplierManagementConst.MALAYSIA_CODE)
-					|| (per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per // start #30064
-							.getIdentificationType().getParameterCode()
-							.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES))) { // end #30064
-				PmParameter ic = retrieveParameterByTypeAndCode(
-						ParameterTypeConst.IDENTIFICATION_TYPES,
-						SupplierManagementConst.NEW_IC, StringUtils.EMPTY);
+					.equals(SupplierManagementConst.MALAYSIA_CODE)) {
 				per.setIdentificationTypeId(ic.getParameterId());
-				//start #30064
-				if(per.getIdentificationType() != null && per.getIdentificationType().getParameterCode() != null && per 
-						.getIdentificationType().getParameterCode()
-						.equals(ParameterConst.PERMANENT_RESIDENCE_TYPES)){
-					per.setIdentificationType(per.getIdentificationType());
-				}else{
-					per.setIdentificationType(ic);
-				}
-				//end #30064
-			} else {
+				per.setIdentificationType(ic);
+			}	else if (!per.getPmCountry().getCountryCode().equals(SupplierManagementConst.MALAYSIA_CODE) 
+					&& per.isPermanentResident()){
+				per.setIdentificationType(per.getIdentificationType());
+				per.setIdentificationType(ic);
+			}//29582, 30064, 35300 end
+		else {
 				PmParameter passport = retrieveParameterByTypeAndCode(
 						ParameterTypeConst.IDENTIFICATION_TYPES, "P",
 						StringUtils.EMPTY);
@@ -5586,6 +5558,12 @@ public class SmCommonUtil {
 	}
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param applId
+	 * @param categoryL3Id
+	 * @param applType
+	 * @return supplier categories
+	 */
 	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
 			Long applId, Long categoryL3Id, String applType){
 	
@@ -6464,24 +6442,29 @@ public class SmCommonUtil {
 	 */
 	public static List<SmAppl> getCancelledBumiApplList(boolean isSVC){
 		List<SmAppl> list;
+		FacesScopes fc = new FacesScopes();
+		Long userId = fc.getUserSessionBean().getUserId();
 		if(isSVC){
 			list = SmServiceLookup.getMofRegistrationSO().
-					retrieveAutoCancelledBumiAppl(null, false, false).getApplList();
+					retrieveAutoCancelledBumiAppl(userId, false, false).getApplList();
 		} else {
-			FacesScopes fc = new FacesScopes();
+			boolean isPOorApprover = fc.hasRoleUser(RoleCode.UPS_PO.value()) 
+					|| fc.hasRoleUser(RoleCode.UPS_APPROVER.value());
 			list = SmServiceLookup.getMofRegistrationSO().retrieveAutoCancelledBumiAppl(
-					fc.getUserSessionBean().getUserId(), fc.hasRoleUser(RoleCode.UPS_SDO.value()), 
-					fc.hasRoleUser(RoleCode.UPS_APPROVER.value()) || fc.hasRoleUser(RoleCode.UPS_PO.value()))
-					.getApplList();
+					userId, fc.hasRoleUser(RoleCode.UPS_SVO.value()), isPOorApprover).getApplList();
 		}
-		if(list.isEmpty()) return null;
+		if(list.isEmpty()){
+			return list;
+		}
 		
 		StatusReqDTO statReqDTO = new StatusReqDTO();
 		statReqDTO.setStatusId(SupplierManagementConst.PM_STATUS_BUMI_CANCELLED_FROM_BUSSTYPE);
-		statReqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		statReqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
 		PmStatusDesc statDesc = SmServiceLookup.getStatusSO()
 				.retrieveStatusDescById(statReqDTO).getPmStatusDesc();
-		if(statDesc == null) return list;
+		if(statDesc == null){
+			return list;
+		}
 		
 		SmWorkFlowStatusReqDTO wfDTO = new SmWorkFlowStatusReqDTO();
 		for(SmAppl smAppl : list){
@@ -6489,43 +6472,88 @@ public class SmCommonUtil {
 			wfDTO.setApplId(smAppl.getApplId());
 			SmWorkflowStatus wf = SmServiceLookup.getSmWorkFlowStatusSO()
 				.retrieveCurrentWorkFlowStatusByDocId(wfDTO).getWorkflowStatus();
-			if(wf != null)	//set cancelled date
+			if(wf != null){	//set cancelled date
 				smAppl.setChangedDate(wf.getCreatedDate());
+			}
 		}
 		return list;
 	}
 	
 	/**
-	 * Download report of a list of Bumi applications cancelled by system (status: 20210)
-	 */
-	public static void downloadCancelledBumiAppl(){
-		//report
-		log.info("32304 dload btn test");
-	}
-	
-	/**
-	 * Cancel Bumi application if supplier has other active application
+	 * Cancel Bumiputera application if Bumiputera status was revoked in other recently approved application.
 	 * @param smAppl bumi Appl
 	 * @return true if bumi Appl is cancelled
 	 */
-	public static boolean checkCancelBumiApplFromNewAppl(SmAppl smAppl){
-		if(smAppl == null || smAppl.isActiveAppl() || 
-				!smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)) 
+	public static boolean checkCancelBumiApplFromBumiStatus(SmAppl smAppl){
+		if(smAppl == null || smAppl.isActiveAppl() 
+				|| smAppl.getSmSupplier() == null || smAppl.getSmSupplier().isBumi() 
+				|| !smAppl.getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)){
 			return false;
-		
-		SmAppl activeAppl = SmServiceLookup.getReviewApplicationSO()
-				.retrieveActiveSmApplBySupp(smAppl.getSmSupplier().getSupplierId()).getSmAppl();
-		if(activeAppl == null) return false;
-		if(!activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-			&& !activeAppl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
-			return false;
-		
-		//cancel bumi if sv after approval && supplier create new KR/KU/KA
-		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
-		reqDTO.setPendingKBAppl(smAppl);
-		reqDTO.setSmAppl(activeAppl);
-		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromOtherAppl(reqDTO);
+		}
+		return SmServiceLookup.getReviewApplicationSO().cancelBumiApplicationFromBumiStatus(smAppl);
 	}
 	//#32304 - end
+	//#29582- start
+	public static void ssmIdentificationTypeError(SsmResDTO resDTO) {
+		if (resDTO.getSmPersonnelAll() != null) {
+			boolean hasMykadOwnerOrDirector = false;
+			StringBuilder sb = new StringBuilder();
+			int i = 0;
+
+			for (SmPersonnel per : resDTO.getSmPersonnelAll()) {
+				if (per.getIdentificationTypeSsm() != null) {
+					String ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+							ParameterConst.IDENTIFICATION_TYPES_SSM, per.getIdentificationTypeSsm());
+					if (ssmTypeDesc == null) {
+						ssmTypeDesc = ParameterHelper.getInstance().getParameterDesc(
+								ParameterConst.IDENTIFICATION_TYPES_SSM, "NA");
+					}
+
+					sb.append("<br/>");
+					sb.append(++i + ". ");
+					sb.append(per.getName() + " ");
+					sb.append("("
+							+ ResourceBundleUtils.getMessage("lbl.sm.register.identification.no.ssm",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationNo() + ", ");
+					sb.append(ResourceBundleUtils.getMessage("lbl.sm.register.identification.type.ssm",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) + " ");
+					sb.append(per.getIdentificationTypeSsm() + " = ");
+					sb.append(ssmTypeDesc + ")");
+					sb.append("<br/>");
+				}
+
+				// Check for MYKAD owner/director and break if found
+				if (per.getIdentificationTypeSsm() != null
+						&& per.getIdentificationType().equals(ParameterConst.IDENTIFICATION_TYPES_MYKAD)) {
+					hasMykadOwnerOrDirector = true;
+					break;
+				}
+			}
+
+			// Handle error based on application type
+			if (hasMykadOwnerOrDirector) {
+				if (resDTO.isBasicAcc() || SupplierManagementConst.ACC_BASIC.equals(resDTO.getSmAppl().getApplType())) {
+					throw new EpException(MessageConst.ERROR_775196); 
+				} else {
+					throw new EpException(MessageConst.ERROR_721088, new String[] { sb.toString() });
+				}
+			}
+		}//#29582- start
+	}
+	
+	/**
+	 * 
+	 * Gets the server IP.
+	 *
+	 * @return the server IP ex:http://192.168.120.15:8621
+	 */
+	public static String getServerIP() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil
+				.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		return requestURL.substring(0, requestURL.length() - httpServletRequest.getRequestURI().length());
+	}
 }

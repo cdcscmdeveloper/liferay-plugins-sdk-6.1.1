@@ -140,8 +140,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmWorkflowStatus rejectedWf = rejectedApplExist(supplier.getSupplierId());
 			boolean isRejectedApplExist = (rejectedWf == null) ? false : true;
-			//30713 - Start
-			SmWorkflowStatus currWorkflowStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
+			//30713 & 36474 - Start 
 			//31792 - START
 			Boolean resubmitExpired = false;
 			if(rejectedWf != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(supplier.getSmAppl().getApplType())){
@@ -158,7 +157,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				}
 			}
 			//31792 - END
-			//30713 - End
+			//30713 & 36474- End
 			boolean successPayment = checkSuccessPaymentBySupplierId(supplier.getSupplierId());
 			
 			//Self Request Supplier Admin
@@ -256,7 +255,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							SmWorkflowStatus wfStatus = isLatestActiveWorkFlow(supplier.getSupplierId());
 							if(wfStatus != null){
 								PmStatus wfStat = wfStatus.getPmStatus();
-								//31792
+								//31792 & 36474
 								//32627 START
 								if(wfStat != null && !resubmitExpired &&
 									(wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION || 
@@ -287,9 +286,20 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
 									
-									if(rejectedWf != null && !resubmitExpired){
+									if(rejectedWf != null && !resubmitExpired){ //#36474
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+								//#35579 --start--
+										if(wfStat != null &&
+												wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT){
+											getManagedBean().setFlowStatus(8);
+										}
+									}else{
+										if(wfStat != null &&
+												wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT){
+											getManagedBean().setFlowStatus(7);
+										}
 									}
+								//#35579 --end--
 								}
 							}else{
 								path = MOF_REG_PATH;
@@ -341,17 +351,14 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						this.getManagedBean().setResubmitAppl(true);
 					}
 					log.info("pageNavigate------------"+path1);
-					checkSSMValid(supplier,this.getManagedBean());
-					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
-					//start #29956
-					if(!this.getManagedBean().getPersonnelsRole().isEmpty()){
-						String epRole = getEpRoleDowngradePopupByPersonnel(this.getManagedBean().getPersonnelsRole());
-						this.getManagedBean().setTermAndConditionCheckOwner(
-								SmCommonUtil.getMessage("lbl.sm.term.and.condition.pre.checkowner", new String[]{epRole}));
+					//#35115 - START
+					if(MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION)){
+						checkSSMValid(supplier,this.getManagedBean());
 					}
-					//end #29956
+					//#35115 - END
+					
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
-					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
+					if(!getManagedBean().getPersonnelsRole().isEmpty()){
 						proceed =false;
 						//Start 27951
 						if(this.getManagedBean().getSmSupplier().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
@@ -360,8 +367,6 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 							this.getManagedBean().setPreRegistration(false);
 						}
 						//End 27951
-						RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-						RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
 						SmCommonUtil.redirectToPage(
 								CONTENT_PAGE,
 								"",new String[] {""});
@@ -1293,6 +1298,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		//32627 START
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
 		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
+		//33778 & 35979 - add new status 20400
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
 		//32627 END
 		reqDTO.setSupplierId(supplierId);
 		

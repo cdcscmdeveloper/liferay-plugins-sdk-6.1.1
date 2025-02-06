@@ -28,7 +28,10 @@
 		<ui:param name="validityDaysExpiredQt"
 			value="#{lOIDetailBackingBean.checkProposalValidityDateReach(
 		     				lOIDetailBackingBean.managedBean.scQt.proposalValidityEndDate)}" />
-
+		     				
+		<ui:remove>#30008</ui:remove>     				
+		<ui:param name="isNotReachAgreement" value="#{lOIDetailBackingBean.managedBean.negoDecisitionReadOnly}" />
+		
 		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="#{lOIDetailBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
 
@@ -131,6 +134,10 @@
 					src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
 			</c:if>
 		</p:panel>
+		
+		<ui:remove> #28777#29729 - Start </ui:remove>
+		<ui:include src="/xhtml/sc/loi/mutipleLoi/supplierBranchListPopup.xhtml" />
+		<ui:remove> #28777#29729 - End </ui:remove>
 
 		<ac:scSingleFileUploadPopup widgetVar="loiReportAttWidget"
 			fileUploadListener="lOIDetailBackingBean.handleFileUpload"

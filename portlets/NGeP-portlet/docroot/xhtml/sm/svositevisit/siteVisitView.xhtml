@@ -24,10 +24,13 @@
 
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<!-- 32963 -->
-				<p:commandButton value="#{lbl['lbl.btn.download']}" ajax="false"
+				<!-- #34166 - Start -->
+				<p:commandButton style="display:none;" id="buttonToClick" binding="#{button}" value="#{lbl['lbl.btn.download']}" ajax="false"
 					action="#{svoSiteVisitBackingBean.downloadSiteVisitTemplate(cTask,true)}">
 					<p:fileDownload value="#{svoSiteVisitBackingBean.file}" />
 				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.download']}" action="#{svoSiteVisitBackingBean.validateBeforeDownloadSVReport(button.clientId, cTask, false)}" ajax="true" process="@this" update="buttonToClick"/>
+				<!-- #34166 - End  -->
 			</p:column>
 
 		</p:dataTable>
@@ -36,28 +39,13 @@
 		<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
 		<p:dataTable var="tmp" value="#{svoSiteVisitBackingBean.managedBean.templates}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<!-- #28175 start -->
-			<c:choose>
-				<c:when
-					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')}">
-					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
-				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
-						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
-						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
-					</p:column>
-				</c:when>
-				<c:otherwise>
-					<p:column headerText="#{lbl['lbl.sm.category.description']}">
-						<h:outputText value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}
-				 			- #{tmp.suppCategory.categoryL1Name} / #{tmp.suppCategory.categoryL2Name}"/><br/>
-						<h:outputText value="/ #{tmp.suppCategory.categoryL3Name}"/>
-						<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}"/>
-					</p:column>
-				</c:otherwise>
-			</c:choose>
-			<!-- #28175 end -->
+			<!-- #37605 -->
+			<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;">
+				<!-- #28175 start -->
+				<h:outputText value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(tmp)}" />
+				<!-- #28175 end -->
+				<h:outputText value="  (#{tmp.suppCategory.otherDesc})" rendered="#{tmp.suppCategory.otherDesc != null}" />
+			</p:column>
 		</p:dataTable>
 	</p:panel>
 
@@ -108,25 +96,11 @@
 					escape="false" style="float : left" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}">
-				<ui:remove><table>
-					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.latitude']}" style="float:left"
-							styleClass="outputLabel-view-label" /></td>
-						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
-							value="#{svTask.smSvAddress.address.mapLatitude}" /></td>
-					</tr>
-		
-					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.longitude']}" style="float:left"
-							styleClass="outputLabel-view-label" /></td>
-						<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" style="float:left"
-							value="#{svTask.smSvAddress.address.mapLongitude}" /></td>
-					</tr>
-				</table>
-				</ui:remove>
-			
+			<!-- #28775 -->	
+			<p:column headerText="#{lbl['lbl.sm.latitude.longitude']}"
+				style="width: 520px !important; white-space: normal !important;">			
 				<ac:gmap id="gmap" disabled="#{viewFlag}"
+					style="width: 500px !important; white-space: normal !important;"
 					locationName="#{task.smAppl.smCompanyBasic.companyName}"
 					latitude="#{task.smSvAddress.address.mapLatitude}" 
 					longitude="#{task.smSvAddress.address.mapLongitude}" 

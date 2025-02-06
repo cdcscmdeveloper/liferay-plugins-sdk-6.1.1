@@ -45,20 +45,24 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<!-- 16052019 - SSM INTEGRATION CR - Fahmi-->
+				<!-- Disable for UPS 32008 - START -->
 				<td style="word-wrap: break-word"> 
 				<!-- 32304 - start-->
 					<p:outputLabel
 							rendered="#{empty backingBean.managedBean.businessTypeLs}"
 							styleClass="outputLabel-view"
-							value="#{backingBean.getParameterDesc(backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smAppl.smCompanyBasic.businessType)}" />
+							value="#{backingBean.getParameterDesc(
+							backingBean.managedBean.businessTypeParamCode,backingBean.managedBean.smAppl.smCompanyBasic.businessType)}" />
 						<p:selectOneMenu id="smBusTypeId" required="true"
 							label="#{lbl['lbl.sm.regtype']}"
 							rendered="#{not empty backingBean.managedBean.businessTypeLs}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}"
-							style="width:310px">
+							style="width:310px"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 							<!-- 32304 -->
-							<p:ajax event="change" process="@this" update="@this,:#{p:component('changeBussTypeConfirmDialog')}" partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
+							<p:ajax event="change" process="@this" update="@this,:#{p:component('changeBussTypeConfirmDialog')}" 
+								partialSubmit="true" listener="#{backingBean.onChangeBussType}"/>
 						</p:selectOneMenu> <p:message id="smBusTypeIdMsg" for="smBusTypeId"
 							showSummary="true" showDetail="false" display="icon" />
 				<!-- 32304 - end-->
@@ -88,7 +92,8 @@
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
-						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType}"/>
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" 
+							rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType}"/>
 						<ui:param name="lblRegNoTlTip" value="tt.sm.business.type.#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
 						<p:tooltip id="regNott" for="regNoti" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType}" >
 							<p:outputLabel escape="false" value="#{lbl[lblRegNoTlTip]}"  />
@@ -98,48 +103,53 @@
 					</p:outputPanel>
 				</td>
 			</tr>
-			
-						<!-- #24819 -->
-		<c:if test="#{backingBean.managedBean.smAppl.applValidWithSsm}">
+
+			<!-- #24819 - start -->
 			<tr>
-			<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" />
-				</td>
-				
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
+
 				<td class="tdContent">
 					<p:outputPanel id="newRegNoPanelId">
-					<p:inputText id="newregNo1" required="#{!empty param['disableValidation']}" maxlength="30"
-							value="#{backingBean.managedBean.smSupplier.ssmNewRegNo}"  rendered="#{not empty backingBean.managedBean.smSupplier.ssmNewRegNo}" converter="toUpperCaseConverter"
-							disabled="#{backingBean.managedBean.smSupplier.brandNew || !backingBean.managedBean.smSupplier.brandNew || backingBean.managedBean.smAppl.applValidWithSsm || backingBean.managedBean.activeDisicplinaryAction}"
-							size="40" label="#{lbl['lbl.sm.new.business.regNo']}" >
-							</p:inputText>	
-					<p:inputText id="newregNo2" required="#{!empty param['disableValidation']}" maxlength="30"
-							value="#{lbl['lbl.sm.no.available']}"  rendered="#{empty backingBean.managedBean.smSupplier.ssmNewRegNo}" converter="toUpperCaseConverter"
-							disabled="#{backingBean.managedBean.smSupplier.brandNew || !backingBean.managedBean.smSupplier.brandNew || backingBean.managedBean.smAppl.applValidWithSsm || backingBean.managedBean.activeDisicplinaryAction}"
-							size="40" label="#{lbl['lbl.sm.new.business.regNo']}" >
-							</p:inputText>	
-							&#160;
-				<!-- 32304 - start-->
-						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType and backingBean.managedBean.smAppl.smCompanyBasic.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}"/>
-						<ui:param name="lblnewRegNoTlTip" value="tt.sm.business.type.#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
-						<p:tooltip id="newRegNott" for="newRegNoti" rendered="#{not empty backingBean.managedBean.smAppl.smCompanyBasic.businessType and backingBean.managedBean.smAppl.smCompanyBasic.businessType != SupplierManagementConst.INDIVIDUAL_FLAG}" >
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
+						<p:inputText id="newregNo1" required="#{!empty param['disableValidation']}" maxlength="30"
+							value="#{backingBean.managedBean.smSupplier.ssmNewRegNo}"
+							rendered="#{not empty backingBean.managedBean.smSupplier.ssmNewRegNo}"
+							converter="toUpperCaseConverter"
+							disabled="#{backingBean.managedBean.smSupplier.brandNew || !backingBean.managedBean.smSupplier.brandNew 
+							|| backingBean.managedBean.smAppl.applValidWithSsm || backingBean.managedBean.activeDisicplinaryAction 
+							|| backingBean.managedBean.upsCannotEdit}"
+							size="40" label="#{lbl['lbl.sm.new.business.regNo']}">
+						</p:inputText>
+						<p:inputText id="newregNo2" required="#{!empty param['disableValidation']}" maxlength="30"
+							value="#{lbl['lbl.sm.no.available']}"
+							rendered="#{empty backingBean.managedBean.smSupplier.ssmNewRegNo}"
+							converter="toUpperCaseConverter"
+							disabled="#{backingBean.managedBean.smSupplier.brandNew || !backingBean.managedBean.smSupplier.brandNew 
+							|| backingBean.managedBean.smAppl.applValidWithSsm || backingBean.managedBean.activeDisicplinaryAction 
+							|| backingBean.managedBean.upsCannotEdit}"
+							size="40" label="#{lbl['lbl.sm.new.business.regNo']}">
+						</p:inputText>	
+						&#160;
+						<!-- 32304 - start-->
+						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" />
+						<ui:param name="lblnewRegNoTlTip"
+							value="tt.sm.business.type.#{backingBean.managedBean.smAppl.smCompanyBasic.businessType}" />
+						<p:tooltip id="newRegNott" for="newRegNoti" >
+							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
 						</p:tooltip>&#160;
-				<!-- 32304 - end-->
-						<p:message id="newRegNoMsg" for="regNo" display="icon" />	
-					</p:outputPanel>
-						</td>
-			
+						<!-- 32304 - end-->
+						<p:message id="newRegNoMsg" for="regNo" display="icon" />
+					</p:outputPanel></td>
 			</tr>
+				
 			<tr>
-			<td class="tdTitle">
-			</td>
-			<td class = "tdContent">
-			<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
-			</td>
+				<td class="tdTitle"></td>
+				<td class="tdContent">
+					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" /> <!-- Disable for UPS 32008 - END -->
+				</td>
 			</tr>
-		</c:if>
-		<!-- #24819 -->
+		<!-- #24819 - end -->
 		</table>
 	</p:panel>
 </ui:composition>

@@ -316,7 +316,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<String> availableNoList;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -359,7 +359,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int deleteItem;
     private int deleteOverallItem;
   //11076 - end
-    
+    private boolean bondIncomplete = false;//35024
+        
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3137,12 +3138,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -3398,4 +3399,16 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			this.deleteOverallItem = deleteOverallItem;
 		}
 		//11076 - end
+
+		//35024-Start
+		public boolean isBondIncomplete() {
+			return bondIncomplete;
+		}
+
+		public void setBondIncomplete(boolean bondIncomplete) {
+			this.bondIncomplete = bondIncomplete;
+		}
+		
+		//35024-End		
+		
 }

@@ -2,7 +2,6 @@ package my.ep.web.util.sm.helper;
 
 //#30457 - Start
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-//#30457 - Start
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -25,11 +24,13 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.address.ISmAddressSO;
 import my.ep.biz.service.sm.application.ISupplierApplicationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.common.spki.ISpkiSO;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -47,11 +48,11 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.rule.ISmRuleSO;
 import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.search.ISupplierCategorySO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.selfrequestsupplieradmin.ISelfRequestSupplierAdminSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
-// #29617
 import my.ep.biz.service.sm.sme.ISupplierSmeSO;
 import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -671,4 +672,26 @@ public class SmServiceLookup {
 	}
 	//#30457-end
 
+	//#34209 - START
+	/**
+	 * Get ISupplierCategorySO
+	 * 
+	 * @return ISupplierCategorySO
+	 */
+	public static ISupplierCategorySO getSupplierCategorySO() {
+		return (ISupplierCategorySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierCategorySO.class);
+	}
+	//#34209 - END
+	//#34159 - START
+	public static ISmAddressSO getSmAddressSO() {
+		return (ISmAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmAddressSO.class);
+	}
+	//#34159 - END
+	
+	public static ISpkiSO getSpkiSO() {
+		return (ISpkiSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISpkiSO.class);
+	}
 }

@@ -30,8 +30,14 @@
 			<ac:paginator for="evaluationpreparecommittee" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText
-					value="#{activity.scCommitteeMember.memberName}"></h:outputText>
+				<!-- #12471 Start -->
+				<p:commandLink
+					actionListener="#{evaluationMeetingBackingBean.onClickMemberInfo(activity.scCommitteeMember.pmUser)}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					update="@form">
+					<h:outputText value="#{activity.scCommitteeMember.memberName}"></h:outputText>
+				</p:commandLink>
+				<!-- #12471 End -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}">
@@ -72,9 +78,15 @@
 
 
 		</p:dataTable>
+		<!-- #12471 Start -->
+		<ac:qtCommitteMemberInfoPopup bBean="#{evaluationMeetingBackingBean}"
+			widget="memberInfoPopUp" />
+		<!-- #12471 End -->
 		<ui:param name="meetingBB" value="#{evaluationBackingBean.managedBean.meetingBB}"></ui:param>
-		<div align="right"> 
-			<p:commandButton value="#{lbl['lbl.sc.btn.update.committee']}" rendered="#{meetingBB.managedBean.validFor25037}"
+		<div align="right">
+			<ui:param name="actionBtnLbl"
+				value="#{evaluationBackingBean.evaluateEndorseSignoffTask(evaluationBackingBean.managedBean.taskName) ? lbl['lbl.sc.btn.view.committee']: lbl['lbl.sc.btn.update.committee']}" />
+			<p:commandButton value="#{actionBtnLbl}" rendered="#{meetingBB.managedBean.validFor25037}"
 				styleClass="BtnSpacing" action="#{meetingBB.navigateToUpdateMember('update')}"/>
 		</div>
 		<ac:confirmationPopup id="navigateConfirmationId"

@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.trackingdiary;
 
+import java.math.BigDecimal; //#25790
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,12 +26,15 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.sc.ContinuityDPConst;//#25790
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;//#25790
+import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;//#25790
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -44,8 +48,10 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.common.PmTrackingDiary;//#25790
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -55,11 +61,14 @@ import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.sc.QTConstants;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.constant.fl.FulfilmentStatusConst;//#25790
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,6 +76,14 @@ import org.apache.log4j.Logger;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
+/**
+ * @author malkan
+ *
+ */
+/**
+ * @author malkan
+ *
+ */
 @ManagedBean(name = "pmTrackingDiaryBackingBean")
 @ViewScoped
 public class PmTrackingDiaryBackingBean extends
@@ -333,10 +350,17 @@ public class PmTrackingDiaryBackingBean extends
 		paramMap.put(ReportConst.PARAM_DOC_ID, docId);
 		paramMap.put(ReportConst.PARAM_DOC_TYPE, docType);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		// Start Fix - #36608
+		if(getManagedBean().getSelectedDocNo() != null){
+			paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getSelectedDocNo());
+		}else{
+			paramMap.put(ReportConst.PARAM_DOC_NO, ReportConst.EMPTY_VAL);
+		}
+		// End Fix - #36608
 		//START -#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 		//String reportName = ReportConst.PM_TRACKING_DAIRY_REPORT_NAME;
 		String reportName = getTrackingDiaryReportName(docType,docId);
-		if(docType !=null && docId !=null & reportName!=null) {
+		if(docType !=null && docId !=null && reportName!=null) {//sqube-bug-minor-G59
 			try {
 				generateReport(reportName, paramMap);
 			} catch (IOException e) {
@@ -348,12 +372,27 @@ public class PmTrackingDiaryBackingBean extends
 		//END- #Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983
 	}
 	
+	/**
+	 * 25791
+	 * Redirect to mainPage.
+	 */
 	public void redirectToMainPage(){
 		log.info(".....redirectToMainPage.....");
-		log.info("............this.getManagedBean().getBackURL()"+this.getManagedBean().getBackURL());
+		log.info("............this.getManagedBean().getBackURL()"
+				+ this.getManagedBean().getBackURL());
+		if (this.getManagedBean().isBiddingUrl()) {// 25791-start
+			this.getManagedBean().setBackURL(
+					QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
+			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
+		}// 25791-end
+		// Start Fix - #36608
+		if (getManagedBean().getSelectedDocNo() != null) {
+			getManagedBean().setSelectedDocNo(null);
+		}
+		// End Fix - #36608
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, this.getManagedBean().getBackURL()); 
+				.handleNavigation(fc, null, this.getManagedBean().getBackURL());
 	}
 	/**
 	 * Get Role description by role code and language.
@@ -373,6 +412,21 @@ public class PmTrackingDiaryBackingBean extends
 		return PmCommonUtil.getRoleDescByRoleCodeAndLanguage(roleCode, languageCode);
 	}
 
+	/**
+	 * Fix - #36608
+	 * Add docNo / circular no for data from circular
+	 * @param docType
+	 * @param docId
+	 * @param docNo
+	 * @throws IOException
+	 * @throws PortalException
+	 * @throws SystemException
+	 */
+	public void redirectToTrackingDiaryForCircularContract(String docType, Long docId, String docNo)  throws IOException,PortalException, SystemException{
+		getManagedBean().setSelectedDocNo(docNo);
+		redirectToSupplierTrackingDiary(docType, docId, false);
+	}
+	
 	public void redirectToTrackingDiary(String docType, Long docId)  throws IOException,PortalException, SystemException{
 		redirectToSupplierTrackingDiary(docType, docId, false);
 	}
@@ -396,6 +450,114 @@ public class PmTrackingDiaryBackingBean extends
 		this.getManagedBean().setFilterBySupplier(isFilterBySupplier);
 	}
 	
+	//#25790 - start
+	/**
+	 * Redirects to the Tracking Diary page after linking to the purchase request and setting parameters.
+	 * 
+	 * @param docType Type of document (e.g., "PR").
+	 * @param docId Document ID.
+	 * @param isFilterBySupplier Whether to filter by supplier.
+	 * @param purchaseRequestMapList Purchase request data.
+	 */
+	public void redirectToRnContinuityTrackingDiary(String docType, Long docId, boolean isFilterBySupplier,
+			List<Map<String, String>> purchaseRequestMapList) {
+
+		linkRnWithPrTrackingDiary(docType, docId, purchaseRequestMapList);
+		setTrackingDiaryParam(docType, docId, isFilterBySupplier);
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		log.info("fc.getViewRoot().getViewId()=" + fc.getViewRoot().getViewId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
+	}
+
+	/**
+	 * Links a Purchase Request (PR) to a Tracking Diary.
+	 * 
+	 * This method iterates over a list of purchase requests and updates the corresponding Tracking Diary with
+	 * the provided document type and document ID if they are not already set.
+	 * 
+	 * @param docType The document type (e.g., "PR").
+	 * @param docId The document ID to link with the Tracking Diary.
+	 * @param purchaseRequestMapList A list of maps containing purchase request details.
+	 */
+	private void linkRnWithPrTrackingDiary(String docType, Long docId, List<Map<String, String>> purchaseRequestMapList) {
+		ITrackingDiarySO trackingDiarySO = BusinessDelegate.getInstance().getServiceObject("cc",
+				ITrackingDiarySO.class);
+
+		for (Map<String, String> map : purchaseRequestMapList) {
+			TrackingDiaryReqDTO trackDiaryReqDTO = new TrackingDiaryReqDTO();
+
+			String docNo = map.get(ContinuityDPConst.getPrNo());
+			trackDiaryReqDTO.setStatusId(new BigDecimal(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION));
+			trackDiaryReqDTO.setRoleCode(null);
+			trackDiaryReqDTO.setDocNo(docNo);
+
+			TrackingDiaryResDTO trackDiaryResDTO = trackingDiarySO.retrieveByDocNoAndStatusIdAndRoleCode(trackDiaryReqDTO);
+			if (trackDiaryResDTO.getPmTrackingDiary() != null && trackDiaryResDTO.isSuccessful()) {
+				PmTrackingDiary trackDiary = trackDiaryResDTO.getPmTrackingDiary();
+				trackDiary.setGroupDocType(docType);
+				trackDiary.setGroupId(docId);
+				trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
+				trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
+			}
+		}
+	}
+	
+	/**
+	 * Redirects to the Tracking Diary page after linking PO to the purchase request and setting tracking parameters.
+	 * 
+	 * @param docType Type of document (e.g., "PO").
+	 * @param docId Document ID.
+	 * @param purchaseRequestNo Purchase request number.
+	 */	
+	public void redirectToPoContinuityTrackingDiary(String docType, Long docId, String purchaseRequestNo) {
+
+		linkPoWithPrTrackingDiary(docType, docId, purchaseRequestNo);
+		setTrackingDiaryParam(docType, docId, false);
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackURL(fc.getViewRoot().getViewId());
+		log.info("fc.getViewRoot().getViewId()=" + fc.getViewRoot().getViewId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/trackingdiary/trackingDiaryView.xhtml");
+	}
+	
+	/**
+	 * Links a purchase order (PO) to a purchase request in the Tracking Diary.
+	 * Retrieves the tracking diary entry for the given purchase request number and updates it with the provided 
+	 * PO document type and ID if a valid entry is found.
+	 * 
+	 * @param docType The type of document (e.g., "PO").
+	 * @param docId The ID of the document to link.
+	 * @param purchaseRequestNo The purchase request number to associate with the PO in the Tracking Diary.
+	 */	
+	private void linkPoWithPrTrackingDiary(String docType, Long docId, String purchaseRequestNo) {
+		ITrackingDiarySO trackingDiarySO = BusinessDelegate.getInstance().getServiceObject("cc",
+				ITrackingDiarySO.class);
+
+			TrackingDiaryReqDTO trackDiaryReqDTO = new TrackingDiaryReqDTO();
+			trackDiaryReqDTO.setStatusId(new BigDecimal(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION));
+			trackDiaryReqDTO.setRoleCode(null);
+			trackDiaryReqDTO.setDocNo(purchaseRequestNo);
+
+			TrackingDiaryResDTO trackDiaryResDTO = trackingDiarySO.retrieveByDocNoAndStatusIdAndRoleCode(trackDiaryReqDTO);
+			if (trackDiaryResDTO.getPmTrackingDiary() != null && trackDiaryResDTO.isSuccessful()) {
+				PmTrackingDiary trackDiary = trackDiaryResDTO.getPmTrackingDiary();
+				trackDiary.setGroupDocType(docType);
+				trackDiary.setGroupId(docId);
+				trackDiaryReqDTO.setPmTrackingDiary(trackDiary);
+				trackingDiarySO.updateTrackingDiary(trackDiaryReqDTO);
+			}
+
+	}
+	//#25790 - end
+
 	public void onFunctionSelect() {
 		if (this.getManagedBean().getFunctionType() != null) {
 			if (this.getManagedBean().getFunctionType()
@@ -887,7 +1049,10 @@ public class PmTrackingDiaryBackingBean extends
 					reportName = ReportConst.QT_TRACKING_DIARY;
 				}
 			}catch(Exception e){
-				e.printStackTrace();
+				//START : sqube-bug-minor-#G59
+				SLAUtils.getInstance().logSLAError(SLALogConstant.COMMON_MODULE, docType, docId, 
+						"PmTrackingDiaryBackingBean.getTrackingDiaryReportName", getUserIdSessionFromLoginId(), e);
+				//END : sqube-bug-minor-#G59
 			}
 		}
 		

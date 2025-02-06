@@ -373,7 +373,8 @@ public class CancelRegistrationBackingBean extends
 	private PmStatusDesc getPmStatusDesc(Long docStatus) {
 
 		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(new Long(docStatus));
+		//SQ remove new long to docstatus
+		reqDTO.setStatusId(docStatus);
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,

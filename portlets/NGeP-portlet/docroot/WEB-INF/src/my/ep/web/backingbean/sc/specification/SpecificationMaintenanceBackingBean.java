@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -28,6 +29,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
@@ -42,6 +44,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.CreateQtBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
@@ -407,7 +410,7 @@ public String backToQtScreen(){
 	switchToOrigManagedBean();
 	FacesContext fc = FacesContext.getCurrentInstance();
 	fc.getApplication().getNavigationHandler()
-	.handleNavigation(fc, null, destPage);//29464
+	.handleNavigation(fc, null, destPage+"?faces-redirect=true");//29464 //29732 add redirect true
 	return "";
 }
 
@@ -420,29 +423,37 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 /* ***25692#95 - end */
 
 
-/**
- * The method  used to get the specificationMaintenance edit details.
- * @param ScQt scQt.
- * @param Boolean true/false.
- */
-//25037 - start - note 510
-public void editSpecificationMaintenance(ScQt scQt, boolean isEditable){
-	editSpecificationMaintenance(scQt, isEditable, false);
-}
-
-
-public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean popup){
-	editSpecificationMaintenance(scQt, isEditable, true,false, null);
-	if(popup){
-		this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
-		if(this.getManagedBean().getInactiveSCMemberStr().length()>0){
-			SpecificationBackingBean specBB = new SpecificationBackingBean();
-			specBB.qtChecklistTabChange(10);
-			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
-		}
+	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 */
+	// 25037 - start - note 510
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable) {
+		editSpecificationMaintenance(scQt, isEditable, false);
 	}
-	//25037 - end - note 510
-}
+
+
+	/**
+	 * The method used to get the specificationMaintenance edit details.
+	 * 
+	 * @param scQt
+	 * @param isEditable
+	 * @param popup
+	 */
+	public void editSpecificationMaintenance(ScQt scQt, boolean isEditable, boolean popup) {
+		editSpecificationMaintenance(scQt, isEditable, true, false, null);
+		if (popup) {
+			this.assertSpecCommitteeMaintenanceInProgress(scQt, false);
+			if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
+				SpecificationBackingBean specBB = new SpecificationBackingBean();
+				specBB.qtChecklistTabChange(10);
+				RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
+			}
+		}
+	// 25037 - end - note 510
+	}
 
 /**
  * The method  used to get the specificationMaintenance edit details.
@@ -470,6 +481,9 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 	QtnTenderSearchBean qtTnderBean=this.getManagedBean().getQtnTenderSearchBean();
 	IPagingDataModel<ScQt> qtdataModel=this.getManagedBean().getSearchQTDataModel();
 	/* ***25692#95 - start */
+	//#29732 fix null pointer currentstatus id for 1st time enter
+	
+	QTDetailManagedBean previousmanagebeanbeforeclear = this.getManagedBean();
 	if(renewSessionObject){
 		renewSesionObject();
 	}
@@ -489,6 +503,10 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
     this.getManagedBean().setChecklist(false);
 	//#28784		
 	this.getManagedBean().setQtSpecMaintanance(true);	
+	
+		// #28784 - Demo WIP
+		boolean isQtNewVersion = validateSupportedTask(scQt.getQtNo(), CompositeValidityConst.PM_COMPOSITE_VALIDITY);
+		this.getManagedBean().setNewVersion(isQtNewVersion);
    
  /* boolean isStatusPublish=  isQTStatusPublished(scQt
 			.getQtStatus().getStatusId());*/
@@ -534,12 +552,14 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		}
 		specBB.retriveTechnicalCheckList();//#11104-start
 		List<ScQtCheckList> technicalChekclist= this.getManagedBean().getScQtCheckSt2techProposal();
+		boolean isSampleWip=specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance();//11104Wip
 		if(null!=technicalChekclist && CollectionUtils.isNotEmpty(technicalChekclist)){
 		for(ScQtCheckList checkList: technicalChekclist){
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 				.equalsIgnoreCase(checkList.getDefinationType()
 						.getParameterCode())) {
 			scQt_.setSampleReq(Boolean.TRUE);//#11104
+			checkList.setSampleWip(isSampleWip);//11104Wip
 			break;
 
 		}
@@ -600,13 +620,46 @@ public void editSpecificationMaintenance(ScQt scQt,boolean isEditable, boolean p
 		//#33795 - end
 		//#15391 - end		
 		
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());//#29732 <--add this coz of impact form #35688 reseting the managebean
+		// #29732 @idham 25/07/2023 - Start
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc()) {
+			if (isSpecRoleMaintenanceValidation()) {
+				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
+				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+			}
+			String changedCatCodeList = specBB.checkCatCodeChange();
+
+			if (!changedCatCodeList.isEmpty() && !this.getManagedBean().isReadOnly()) {
+				redirect = false;
+				this.getManagedBean().setActiveIndex(1);
+				specBB.retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.1", null,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ResourceBundleUtils.getMessage(
+								"lbl.sc.category.has.changes.on.prerender.view.2", new String[] { changedCatCodeList },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			}
+		}
+		// #29732 @idham 25/07/2023 - End
+		
 		//29464-start
 		String renderPage = QTConstants.SPECIFICICATON_COMM_PREPARATION;
-		if(redirect || checkDemoRedirect()){//#28784
+		if((redirect && !this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)) || (checkDemoRedirect() && !this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE))){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
 		//29464-end
 		
+		//#29732 copy prev managebean because has null pointer on status id
+		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
+		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
+		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
+		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		
@@ -733,15 +786,16 @@ public boolean renderIcon(ScQt qt) {
 	//1873 note 125 end
 }
 
-private boolean checkStatus(Long statusId){
-	if(QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)){//#25037
-		return false;
+	private boolean checkStatus(Long statusId) {
+		// 25037 - start
+		if (QTStatusConst.QT_PENDING_PUBLICATION.equals(statusId)) {
+			return false;
+		}
+		// 25037 - end
+		return isQTStatusInBetween(statusId, QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
+				QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
+
 	}
-	return isQTStatusInBetween(statusId,
-			QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT,
-			QTStatusConst.QT_PENDING_RESCHEDULE_PUBLICATION);
-	
-}
 //#115391 - start
 public boolean isSpecCommittee() {
 	return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
@@ -768,4 +822,27 @@ public boolean isSpecCommittee() {
 		editSpecificationMaintenance(scQt, isEditable, true, true, previouPageId, redirect);
 	}
 	// 29464-end
+	
+	
+	//#29732-start
+	public boolean isSpecEndorsmentScreen() {
+		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+
+    private boolean isSpecRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
+				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+	}
+    //29732 end
+
+	private boolean isQtRevisePubNqtPendingScheDoc() {
+		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& (QTStatusConst.QT_REVISION_PUBLICATION.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+						.equals(this.getManagedBean().getCurrentStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

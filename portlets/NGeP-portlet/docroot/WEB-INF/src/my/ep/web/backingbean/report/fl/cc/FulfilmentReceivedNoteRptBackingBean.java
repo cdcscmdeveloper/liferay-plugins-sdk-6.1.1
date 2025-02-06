@@ -140,6 +140,6 @@ public class FulfilmentReceivedNoteRptBackingBean extends FlReportBackingBean<Fu
 	 */
 	public void resetAction(){
 		getManagedBean().setFrnNo(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 }

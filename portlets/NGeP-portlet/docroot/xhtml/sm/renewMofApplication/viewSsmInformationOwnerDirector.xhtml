@@ -11,11 +11,10 @@
 		toggleable="true">
 
 		<p:dataTable id="tableOwner" var="varOwner" rowIndexVar="index"
-			widgetVar="tableOwnerWidget"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			render="#{backingBean.managedBean.personnelsOwner != null and backingBean.managedBean.personnelsOwner.size() >0}"
-			value="#{backingBean.managedBean.personnelsOwner}"
-			rowKey="#{rowKeyObj}"
+			render="#{cc.attrs.bBean.managedBean.personnelsOwnerSsm != null and cc.attrs.bBean.managedBean.personnelsOwnerSsm.size() >0}"
+			value="#{cc.attrs.bBean.managedBean.personnelsOwnerSsm}"
+			rowKey="#{varOwner}"
 			sortBy="#{varOwner.name}">
 			<ac:paginator for="tableOwner" />
 
@@ -29,11 +28,11 @@
 			<p:column styleClass="column-align-center">
 				<f:facet name="header">
 					<c:if
-						test="#{backingBean.managedBean.smAppl.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
+						test="#{cc.attrs.bBean.managedBean.smAppl.smSupplier.businessType == SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
 						<h:outputText value="#{lbl['lbl.sm.directorname']}" />
 					</c:if>
 					<c:if
-						test="#{backingBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
+						test="#{cc.attrs.bBean.managedBean.smAppl.smSupplier.businessType != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN}">
 						<h:outputText value="#{lbl['lbl.sm.ownername']}" />
 					</c:if>
 				</f:facet>
@@ -59,7 +58,7 @@
 					<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
 				</f:facet>
 				<h:outputText
-					value="#{backingBean.getParameterDesc(varOwner.identificationType)}" />
+					value="#{cc.attrs.bBean.getParameterDesc(varOwner.identificationType)}" />
 			</p:column>
 
 			<p:column styleClass="column-align-center">
@@ -121,7 +120,7 @@
 				</h:outputText>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" rendered="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
+			<p:column styleClass="column-align-center" rendered="#{cc.attrs.bBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or cc.attrs.bBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.equiComp.shrAmt.roc']}" />
 					</f:facet>
@@ -133,16 +132,15 @@
 	</p:panel>
 
 	<!-- Director Information -->
-	<c:if test="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
+	<c:if test="#{cc.attrs.bBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or cc.attrs.bBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}"> <!-- #31403 -->
 		<p:panel header="#{lbl['lbl.sm.directorinfo']}" id="directorBusiness"
 			toggleable="true">
 
 			<p:dataTable id="tableDirector" var="varDirector" rowIndexVar="index"
-				widgetVar="tableDirectorWidget"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				render="#{backingBean.managedBean.personnelsDirector != null and backingBean.managedBean.personnelsDirector.size() >0}"
-				value="#{backingBean.managedBean.personnelsDirector}"
-				rowKey="#{rowKeyObj}"
+				render="#{cc.attrs.bBean.managedBean.smPersonnelDirectorSsm != null and cc.attrs.bBean.managedBean.smPersonnelDirectorSsm.size() >0}"
+				value="#{cc.attrs.bBean.managedBean.smPersonnelDirectorSsm}"
+				rowKey="#{varDirector}"
 				sortBy="#{varDirector.name}">
 				<ac:paginator for="tableDirector" />
 
@@ -179,7 +177,7 @@
 						<h:outputText value="#{lbl['lbl.sm.identificationtype']}" />
 					</f:facet>
 					<h:outputText
-						value="#{backingBean.getParameterDesc(varDirector.identificationType)}" />
+						value="#{cc.attrs.bBean.getParameterDesc(varDirector.identificationType)}" />
 				</p:column>
 
 				<p:column styleClass="column-align-center">

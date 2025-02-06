@@ -1,4 +1,3 @@
-
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
@@ -29,6 +28,9 @@
 		<ui:param name="isPendingRevisionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION}" />
 		<ui:param name="isEditableStatus" value="#{(isPendingSubmissionStatus || ((isPendingApprovalStatus|| isPendingRevisionStatus || isPendingRevApprovalStatus) and !empty lOADetailBackingBean.managedBean.taskId)) and !isTrackingDairyView}" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<!-- #25725 Start-->
+		<ui:param name="isAckReceiptSupplierActStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_ACKNOWLEDGE_RECEIPT_SUPPLIER_ACTION}" />
+		<!-- #25725 End-->
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
 		<ui:param name="isFulfilmentTypeScheduled"
@@ -87,7 +89,8 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" 
+					  actionListener="#{lOADetailBackingBean.searchSupplierItemByName}" update="@form"><ui:remove>#29007 Added actionListener Vinod</ui:remove>
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">

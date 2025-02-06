@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
@@ -36,7 +37,12 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#22211
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.bpm.vo.WorklistVO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.CompositeValidityConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -52,6 +58,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
@@ -83,6 +90,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
@@ -104,6 +112,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate; //#22211
 
 import org.apache.commons.lang3.StringUtils;
@@ -174,7 +183,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		searchApprovedCancelLoa();
 		//#22211 - Start 
 		
-		if(isGovernment()){
+		if(isGovernment() || isDeskOfficer()){ //#25790
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
@@ -318,7 +327,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				}
 
 				// Redmine 20311: remove RN search for Supplier
-				if (isGovernment()) {
+				if (isGovernment() || isDeskOfficer()) {//#25790
 					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
 				}
 
@@ -388,9 +397,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						getManagedBean().getSearchDocumentType());
 			}
 		}else{
-			return super.getStatusDropdownValues(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-					getManagedBean().getSearchDocumentType());
+			//start - 36615
+			if(StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())){
+				return super.getStatusDropdownValues(
+						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+						getManagedBean().getSearchDocumentType());
+			}
+				return null;
+			//end - 36615
 		}
 	}
 
@@ -513,7 +527,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	public void viewMaintenance(Object[] dpObj, boolean isCancel) {
 		
-		if (getManagedBean().isSearchDPM() && getManagedBean().getSearchStatusId().equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {
+		if (getManagedBean().isSearchDPM() && dpObj[4].equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)) {//#36018
 			//Start - #22211
 			/*if(isRnApprover()){
 				this.viewDpMaintenance(dpObj);
@@ -597,28 +611,33 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	@SuppressWarnings("unchecked")
 	public void viewDpMaintenance(Object[] prObj) {
+		
+		//#36119 - start
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+		//#36119 - end
+		
 		ScPurchaseRequest purchaseRequest =  (ScPurchaseRequest) prObj[2];
 		if (null != purchaseRequest) {
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
+			Long supplierId = null; //#36119
 			System.out.println("Bug 28878 : purchaseRequestId : " + purchaseRequestId);
 			List<ScRequestNoteDtl> requestNoteDtls = null;
 			ScRequestNote requestNote = null;
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
 				requestNote = (ScRequestNote) prObj[7];
-				List<Object[]> objList = getManagedBean().getDpDocumentDataModel().getList();
-				if (!CollectionUtils.isEmpty(objList)) {
-					for (Object[] obj : objList) {
-						ScPurchaseRequest purchaseRequestFromModel =  (ScPurchaseRequest) obj[2];
-						if (purchaseRequestId == purchaseRequestFromModel.getPurchaseRequestId()) {
-							requestNoteDtls = (List<ScRequestNoteDtl>) obj[6];
-							break;
-						}
-					}
-				}
+				//#36119 - start
+				supplierId = (Long) prObj[9]; 					
+				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				requestNoteReqDTO.setSupplierId(supplierId);
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
+						requestNoteReqDTO);
+				rnBackingBean.reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
+				requestNoteDtls = rnBackingBean.getManagedBean().getRequestNoteDtls();
+				//#36119 - end
 			}
 			
-			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 
-				RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
+			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 				
 				rnBackingBean.getManagedBean().setSelectedPrDtls(prObj);
 				rnBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				rnBackingBean.getManagedBean().setCancel(true);
@@ -627,6 +646,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				//28878 - Start
 				rnBackingBean.getManagedBean().setPurchaseRequestId(purchaseRequestId);
 				//28878 - End
+				//#36119 - start
+				rnBackingBean.getManagedBean().setSourcingDpNewBpmVer(validateSupportedTask(requestNote.getRequestNoteNo(), SourcingConstants.DP_MAINTENANCE_CANCEL_CODIFY_PR));
+				rnBackingBean.getManagedBean().setSupplierId(supplierId);
+				//#36119 - end
 				if (null != requestNote.getCreatedBy()) {
 					rnBackingBean.getManagedBean().setCreatedBy(rnBackingBean.getUserById(requestNote.getCreatedBy()).getUserName());
 				}
@@ -637,13 +660,68 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 				PmStatus requestNoteStatus = new PmStatus();
 				requestNoteStatus.setStatusId((Long) prObj[4]);
-				rnBackingBean.getManagedBean().setRequestNoteStatus(requestNoteStatus );
+				rnBackingBean.getManagedBean().setRequestNoteStatus(requestNoteStatus);
 				rnBackingBean.getManagedBean().setRequestNote(requestNote);
 				rnBackingBean.viewRequestNote();
 			}
 		}
 	}
-
+	
+	//start -  #36018
+	/**
+	 * Loads and retrieves the list of ScRequestNoteDtl associated with a
+	 * specific purchase request ID from objList.
+	 * 
+	 * @param purchaseRequestId
+	 *            The ID of the purchase request to match.
+	 * @param objList
+	 *            The list of objects containing purchase request and associated
+	 *            details.
+	 * @return The updated list of ScRequestNoteDtl associated with the
+	 *         specified purchase request ID.
+	 */
+	private List<ScRequestNoteDtl> loadScPurchaseRequest(Long purchaseRequestId, List<Object[]> objList) {
+		List<ScRequestNoteDtl> requestNoteDtls = null;
+		if (!CollectionUtils.isEmpty(objList)) {
+			requestNoteDtls = loadScPurchaseRequestDtl(purchaseRequestId, objList);
+		}
+		return requestNoteDtls;
+	}
+	
+	/**
+	 * Loads and retrieves the list of ScRequestNoteDtl associated with a
+	 * specific purchase request ID from objList.
+	 * 
+	 * @param purchaseRequestId
+	 *            The ID of the purchase request to match.
+	 * @param objList
+	 *            The list of objects containing purchase request and associated
+	 *            details.
+	 * @param requestNoteDtls
+	 *            The list of ScRequestNoteDtl to populate with matching
+	 *            details.
+	 * @return The updated list of ScRequestNoteDtl associated with the
+	 *         specified purchase request ID.
+	 */
+	private List<ScRequestNoteDtl> loadScPurchaseRequestDtl(Long purchaseRequestId, List<Object[]> objList) {
+		List<ScRequestNoteDtl> requestNoteDtls = null;
+		for (Object[] obj : objList) {
+			if (obj.length > 6 && obj[2] instanceof ScPurchaseRequest) {
+				ScPurchaseRequest purchaseRequestFromModel = (ScPurchaseRequest) obj[2];
+				// Check if the purchase request IDs match
+				if (purchaseRequestId.equals(purchaseRequestFromModel.getPurchaseRequestId())
+						&& obj[6] instanceof List<?>) {
+					@SuppressWarnings("unchecked")
+					List<ScRequestNoteDtl> castedList = (List<ScRequestNoteDtl>) obj[6];
+					requestNoteDtls = castedList;
+					break;
+				}
+			}
+		}
+		return requestNoteDtls;
+	}
+	//end - #36018
+	
 	public void viewDoc(Object[] dpObj){
 		debugLogger("viewDoc");
 		long docId = (long) dpObj[0];
@@ -658,7 +736,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-			rnBackingBean.viewRequestNote(docId);
+			rnBackingBean.viewRequestNote(docId,true); //#25790
 			rnBackingBean.getManagedBean().setDpObj(dpObj);
 			rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 
@@ -667,7 +745,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-			reset(false);
+			//reset(false); #36502 - remove this code
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
@@ -835,7 +913,10 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 		searchReqDTO.setDocType(docType);
-		searchReqDTO.setDocId(Long.valueOf(docId));
+		//start - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+		searchReqDTO.setDocId(docId);
+		//stop - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
+
 
 		Long groupDocId = docId;
 		String groupDocType = docType;
@@ -1535,5 +1616,43 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			}
 			
 			// end 25396
+			
+	// #36119 - start
+	/**
+	 * To validate supported task
+	 * 
+	 * @param String docNo
+	 * @param Long validityId
+	 * 
+	 * @return boolean
+	 */
+	public boolean validateSupportedTask(String docNo, Long validityId) {
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		ICompositeValiditySO compositeSO = (ICompositeValiditySO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+		cReqDTO.setCompositeValidityId(validityId);
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setDocNumber(docNo);
+		WorklistVO worklist = bpmSO.getTasksByDocNumber(reqDTO).getWorklistVO();
+		worklist = worklist == null ? new WorklistVO() : worklist;
+		String version = null;
+		if (!CollectionUtils.isEmpty(worklist.getWorklistItem())) {
+			for (WorklistItemVO i : worklist.getWorklistItem()) {
+				if (StringUtils.isNotEmpty(i.getInstanceVersion())) {
+					version = i.getInstanceVersion();
+					break;
+				}
+			}
+		}
+		if (version != null) {
+			return CustomUtils.compositeVersionComparator(version, minVersion) >= 0;
+		}
+		return false;
+	}
+	// #36199 - end
 }
 

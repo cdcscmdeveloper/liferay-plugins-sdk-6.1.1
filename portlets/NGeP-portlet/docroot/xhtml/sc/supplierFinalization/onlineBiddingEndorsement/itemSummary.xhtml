@@ -54,6 +54,7 @@
 			value="#{lbl['lbl.sc.sf.meeting.decision.instrn']}" />
 			
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
+	    <h:outputText styleClass="instruction" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pmlb']} " escape="false" /> <ui:remove> #28777#29729 </ui:remove>	
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
 			escape="false" />
@@ -61,6 +62,8 @@
 			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">
 			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 		</h:outputText>	
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" /> <ui:remove>21692</ui:remove>	
 		<p:dataTable id="supplierItemTbl" var="itemSupplier"
 			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10" rowKey="#{itemSupplier}" rowIndexVar="rowIndex" 
@@ -82,7 +85,15 @@
 					<f:setPropertyActionListener value="#{itemSupplier.scQtProposal}"
 							   target="#{supplierDetailBackingBean.scQtProposal}" />
 					<h:outputText value="#{itemSupplier.scQtProposal.supplierNo}" />
-				</p:commandLink>				
+				</p:commandLink>		
+				
+				<ui:remove> #28777#29729 - Start </ui:remove>
+				 <p:spacer width="15" height="15"/>
+                     <p:commandLink  process="@this"  action="#{suppFinalBiddingBackingBean.showSupplierBranchList(itemSupplier.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+		         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+						<h:graphicImage value="/css/images/exclam-info.png" />
+	         		</p:commandLink> 
+				<ui:remove> #28777#29729 - End </ui:remove>				
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
@@ -147,7 +158,8 @@
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or 
-					  									itemSupplier.supplier.disciplinaryActions)}" />				
+					  									itemSupplier.supplier.disciplinaryActions) or 
+					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />	<ui:remove> 21692 </ui:remove>			
 		</p:dataTable>
 	</p:panel>
 

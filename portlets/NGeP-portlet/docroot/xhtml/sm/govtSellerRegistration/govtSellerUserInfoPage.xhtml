@@ -108,12 +108,43 @@
 	</script>
 	
 	<div align="right">
+		<!-- #34400 - start -->
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@form" 
-				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{bb.submitRegistration}">
+				oncomplete="if (!args.validationFailed) firstUserTncDialog.show();" >
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
 	</div>
+	
+	<p:dialog id="firstUserTncDialog" header="#{lbl['lbl.sm.suppadmin.appointment.header']}"
+		widgetVar="firstUserTncDialog" modal="true" width="600px" height="500px">
+		<h:outputText value="#{lbl['lbl.sm.confirm.supp.register']}"/>
+		<p:panel id="firstUserTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
+			
+			<p:scrollPanel style="height:350px;border:0;" mode="native">
+				<h:outputText escape="false" value="#{lbl['lbl.sm.suppadmin.appointment.msg']}" style="white-space : normal !important"/>
+			</p:scrollPanel>
+	
+			<table>
+				<tr>
+					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+							value="#{bb.managedBean.aggreeDeclareAdmin}">
+							<p:ajax event="change" update=":form:basCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+			</table>
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
+					action="#{bb.submitRegistration}" 
+					update="@form" onclick="firstUserTncDialog.hide();"
+					disabled="#{!bb.managedBean.aggreeDeclareAdmin}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="firstUserTncDialog.hide();" />
+			</div>
+		</p:panel>
+	</p:dialog>
+	<!-- #34400 - end -->	
 
 		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" >
 			<table class="customTbl">
@@ -326,7 +357,8 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionUserInfoDropdownPanelId" rendered="#{bb.managedBean.smPermenantAdd.pmState.adoptDivision}">
-						<p:selectOneMenu id="cmbPermDivision"
+						<!-- #34159 - START -->
+						<p:selectOneMenu id="cmbPermDivision" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.smPermenantAdd.pmDivision.divisionId}"
 						style="width:80%">
@@ -339,6 +371,8 @@
 							listener="#{bb.onChangeDivision(bb.managedBean.smPermenantAdd.pmDivision,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
+					<p:message id="cmbPermDivisionMsg" for="cmbPermDivision" display="icon" />
+					<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>
@@ -567,7 +601,8 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionUserDropdownPanelId">
-						<p:selectOneMenu id="cmbResDivision"
+					<!-- #34159 - START -->
+						<p:selectOneMenu id="cmbResDivision" required="#{!bb.managedBean.sameAddress and !empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{bb.managedBean.smResAdd.pmDivision.divisionId}"
 						style="width:80%"
@@ -581,6 +616,8 @@
 							listener="#{bb.onChangeDivision(bb.managedBean.smResAdd.pmDivision,'USER_RESIDENTIAL_ADDRESS')}"
 							update="cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu>
+					<p:message id="cmbResDivisionMsg" for="cmbResDivision" display="icon" />
+					<!-- #34159 - END -->
 					</h:panelGroup>
 				</td>
             </tr>

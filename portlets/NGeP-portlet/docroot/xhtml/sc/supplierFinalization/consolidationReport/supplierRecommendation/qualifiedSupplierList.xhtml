@@ -17,9 +17,16 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<c:if test="#{!consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.select.disagree.proposal.validity.period.extension.package']} " escape="false" />
-			<!-- #29729 Start -->
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
-			<!-- #29729 End -->
+			<ui:remove> #28777#29729 - Start </ui:remove>
+			  <c:if test="#{consolidationReportBackingBean.checkInstructionSupplierBranchDeleted(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+			      <h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pr']}" /> 
+			  </c:if>
+			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:remove>#21692 - start</ui:remove>
+			<c:forEach var="instruc" items="#{consolidationReportBackingBean.qualifiedSupplierInstructionList(consolidationReportBackingBean.managedBean.scQt.qtId)}">
+				<h:outputText styleClass="instruction" escape="false" value="#{instruc}" />
+			</c:forEach>
+			<ui:remove>#21692 - end</ui:remove>
 		</c:if>
 		<c:if test="#{consolidationReportBackingBean.managedBean.itemized}">
 			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} " escape="false" />
@@ -27,11 +34,6 @@
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 			</h:outputText>
 		</c:if>
-		<ui:remove>#21692 - start</ui:remove>
-		<c:if test="#{approvalBackingBean.isEPVApprovalRequestAccepted(consolidationReportBackingBean.managedBean.scQt.qtId) and !consolidationReportBackingBean.managedBean.itemized}">
-			<h:outputText styleClass="instruction" escape="false" value="#{lbl['lbl.sc.qt.pending.rec.instruction']}" />
-		</c:if>
-		<ui:remove>#21692 - end</ui:remove>
 		<p:outputPanel id="supplierListTblPanel" styleClass="header-spacing">
 		<p:remoteCommand name="fetchQualifiedSuppliers" actionListener="#{consolidationReportBackingBean.retrieveQualifiedSuppliersInfoByEvalStage}" 
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
@@ -49,7 +51,7 @@
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"/>
-		               	<p:column rowspan="2" style="width:5%; text-align:center;">
+		               	<p:column rowspan="2" style="width:5%; text-align:center;" rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
 		               		<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.rating']}" />
 								<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -57,13 +59,13 @@
 		               	</p:column>
 		               	<p:column rowspan="2" style="width:5%; text-align:center;white-space:normal;">
 		               	<f:facet name="header">
-								<p:outputLabel value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
+								<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.eval.ranking']}" /><br/>
 								<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'1'}]);"  
 									rendered="#{isOneTierWithTechnical or isTwoTier}" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
-								</p:commandLink>		               		
+									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.technical']}" styleClass="commandLink" />
+								</p:commandLink><br/>		               		
 			               		<p:commandLink oncomplete="fetchQualifiedSuppliers([{name:'evaluationStageId', value:'2'}]);" process="@this">
-									<p:outputLabel value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
+									<ui:remove> #34840 </ui:remove><h:outputText value="#{lbl['lbl.sc.financial']}" styleClass="commandLink" />
 									<!--  #29466 - START -->
 									<f:setPropertyActionListener value="#{consolidationReportBackingBean.managedBean.scQt}"
 												   	 target="#{suppFinalizationBackingBean.managedBean.checkCategoryCodeQt}" />
@@ -90,7 +92,7 @@
 		           	<p:row>
 		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;" />
 		               	<p:column colspan="1" headerText="#{lbl['lbl.sc.remarks']}" style="width:10%;" />
-		           	</p:row>
+		           	</p:row>		          
 		       	</p:columnGroup>
 				
 				<p:column style="text-align:center;">
@@ -102,13 +104,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
-					<!-- #29729 Start -->
-					<p:spacer width="15" height="15"/>
-						<p:commandLink action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"  
-			         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
-							<h:graphicImage value="/css/images/exclam-info.png" />
-		         		</p:commandLink> 
-		         	<!-- #29729 End -->
+					<ui:remove> #28777#29729 - Start </ui:remove>
+						<p:spacer width="15" height="15"/>
+							<p:commandLink action="#{consolidationReportBackingBean.showSupplierBranchList(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"  
+				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+								<h:graphicImage value="/css/images/exclam-info.png" />
+			         		</p:commandLink> 
+		         	<ui:remove> #28777#29729 - End </ui:remove>
 				</p:column>
 	
 				<p:column>
@@ -149,7 +151,7 @@
 					</h:outputText>
 				</p:column>
 	
-				<p:column style="text-align:center;">
+				<p:column style="text-align:center;" rendered="#{!consolidationReportBackingBean.evaluateWIP(consolidationReportBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty qualifiedSupp.totalRating? 0: qualifiedSupp.totalRating}"/>
 				</p:column>
 				<p:column style="text-align:center;">
@@ -211,7 +213,7 @@
 					<p:inputText id="deskOfficerRankInput" value="#{qualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}">
+								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or (qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or consolidationReportBackingBean.checkDisableRankSupplierBranchDeleted(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier)}"> <ui:remove> #28777#29729 </ui:remove>
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />
@@ -224,14 +226,14 @@
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks" value="#{qualifiedSupp.deskOfficerRemark}" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 required="false" size="20" autocomplete="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" 
 								listener="#{consolidationReportBackingBean.updateCachedData(qualifiedSupp)}" />
 					</p:inputText>
-					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected}" 
+					<p:inputText rendered="#{qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 id="deskOfficerRemarks2" value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}"  
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 size="20" autocomplete="false" disabled="true">

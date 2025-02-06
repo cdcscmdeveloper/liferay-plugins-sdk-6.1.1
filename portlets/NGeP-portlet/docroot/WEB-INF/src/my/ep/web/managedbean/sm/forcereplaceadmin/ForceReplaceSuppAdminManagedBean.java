@@ -31,10 +31,12 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private List<SelectItem> nationalities;
 	private List<SelectItem> permCountries;
 	private List<SelectItem> permStates;
+	private List<SelectItem> permDivisions; //#34159
 	private List<SelectItem> permDistricts;
 	private List<SelectItem> permCities;
 	private List<SelectItem> mailCountries;
 	private List<SelectItem> mailStates;
+	private List<SelectItem> mailDivisions; //#34159
 	private List<SelectItem> mailDistricts;
 	private List<SelectItem> mailCities;
 	private List<SelectItem> salutationItems;
@@ -87,6 +89,10 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disabledRoleSemiPro = false;
 	private boolean disabledRoleClericalStaff = false;
 	//33563 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private String oldIdentification;
+	private String newIdentifiction;
+	// #28895_35501 End
 	
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -504,4 +510,39 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	public void setDisplayRolePanel(boolean displayRolePanel) {
 		this.displayRolePanel = displayRolePanel;
 	}
+	
+	//#34159 - START
+	public List<SelectItem> getPermDivisions() {
+		return permDivisions;
+	}
+
+	public void setPermDivisions(List<SelectItem> permDivisions) {
+		this.permDivisions = permDivisions;
+	}
+
+	public List<SelectItem> getMailDivisions() {
+		return mailDivisions;
+	}
+
+	public void setMailDivisions(List<SelectItem> mailDivisions) {
+		this.mailDivisions = mailDivisions;
+	}
+	//#34159 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getOldIdentification() {
+		return oldIdentification;
+	}
+
+	public void setOldIdentification(String oldIdentification) {
+		this.oldIdentification = oldIdentification;
+	}
+
+	public String getNewIdentifiction() {
+		return newIdentifiction;
+	}
+
+	public void setNewIdentifiction(String newIdentifiction) {
+		this.newIdentifiction = newIdentifiction;
+	}
+	// #28895_35501 End
 }

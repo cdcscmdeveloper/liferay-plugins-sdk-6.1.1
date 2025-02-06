@@ -3,7 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc" 
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
@@ -16,7 +16,7 @@
 		<p:blockUI block="conformDlgId" widgetVar="blockWidgeDeliveryTerm">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		
+
 		<p:panel id="conformDlgId">
 			<table>
 				<tr>
@@ -46,24 +46,22 @@
 			</div>
 		</p:panel>
 	</p:dialog>
-	
+
 	<!-- 20190417@asyrafhaziq_12095 - Start -->
 	<ui:param name="cancel" value="CANCEL" />
 	<ui:param name="cancelRN" value="cancelRN" />
 	<ac:cancelRejectPopup id="#{cancelRN}" widget="cancelRN" width="30%"
-		height="100"
-		okAction="#{requestNoteBackingBean.submitAction(cancel)}"
+		height="100" okAction="#{requestNoteBackingBean.submitAction(cancel)}"
 		title="#{lbl['lbl.cancel.details']}"
 		content="#{lbl['lbl.cancel.dialog.confirm.message']}" update="@this" />
-		
+
 	<ui:param name="reject" value="REJECT" />
 	<ui:param name="rejectRN" value="rejectRN" />
 	<ac:cancelRejectPopup id="#{rejectRN}" widget="rejectRN" width="30%"
-		height="100"
-		okAction="#{requestNoteBackingBean.submitAction(reject)}"
+		height="100" okAction="#{requestNoteBackingBean.submitAction(reject)}"
 		title="#{lbl['lbl.reject.details']}"
-		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />	
-     <!-- 20190417@asyrafhaziq_12095 - End -->
+		content="#{lbl['lbl.reject.dialog.confirm.message']}" update="@this" />
+	<!-- 20190417@asyrafhaziq_12095 - End -->
 
 	<div>
 		<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -91,15 +89,25 @@
 				</p:confirmDialog>
 			</c:if>
 		</c:if>
-
-		<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-			style="float:right;"
-			action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier())}"
-			immediate="true" 
-			rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+		<div class="ppRightBtn">
+			<ui:remove>#25790 - start - add new parameter</ui:remove>
+			<p:commandLink value="  #{lbl['lbl.td.doc.trackingDiary']}"
+				style="float:right;"
+				action="#{pmTrackingDiaryBackingBean.redirectToRnContinuityTrackingDiary(ParameterConst.doctypeRequestNote, requestNoteBackingBean.managedBean.requestNote.requestNoteId, requestNoteBackingBean.isSupplier(), requestNoteBackingBean.managedBean.purchaseRequestMapList)}"
+				immediate="true"
+				rendered="#{requestNoteBackingBean.managedBean.trackingDairyView}" />
+			<ui:remove>#25790 - end</ui:remove>
+			&#160;
+			<ui:remove>START : #28895#35492</ui:remove>
+			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+				action="#{auditSearchDPRequestNoteBackingBean.redirectToAudittrailView(requestNoteBackingBean.managedBean.requestNote.requestNoteId)}"
+				immediate="true"
+				rendered="#{auditSearchDPRequestNoteBackingBean.getRoleCode() and requestNoteBackingBean.managedBean.trackingDairyView}" />
+			&#160;
+			<ui:remove>END : #28895#35492</ui:remove>
+		</div>
 	</div>
-	<h:panelGroup
-		rendered="#{!isViewOnly}">
+	<h:panelGroup rendered="#{!isViewOnly}">
 		<div class="ppRightBtn">
 			<c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
 				<p:commandButton value="#{lbl['lbl.btn.item.search']}"
@@ -132,21 +140,23 @@
 		<div>
 			<c:if test="#{!empty requestNoteBackingBean.managedBean.taskId}">
 				<div class="ppRightBtn">
-					<c:if test="#{!isPurchaseInquiryContinuity and (isPendingSubmissionStatus or isPendingRevisionStatus)}"> <!-- #29557 -->
+					<c:if
+						test="#{!isPurchaseInquiryContinuity and (isPendingSubmissionStatus or isPendingRevisionStatus)}">
+						<!-- #29557 -->
 						<p:commandButton value="#{lbl['lbl.btn.item.search']}"
 							process="@this" partialSubmit="true" style="float:left;"
 							immediate="true"
 							action="#{requestNoteBackingBean.backToPrevious}"
 							rendered="#{isSourceMethodSC and requestNoteBackingBean.managedBean.itemSearchBackBtn}" />
 					</c:if>
-					
+
 					<p:commandButton value="#{lbl['lbl.btn.clone.requote']}"
 						rendered="#{requestNoteBackingBean.managedBean.cloneReQuote}"
 						action="#{requestNoteBackingBean.cloneAction()}"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						process="@this" />				
+						process="@this" />
 
-					<p:commandButton value="#{lbl['lbl.btn.save']}"						
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						rendered="#{!isPidExpired and (requestNoteBackingBean.managedBean.assignedState or empty requestNoteBackingBean.managedBean.taskId)
 									and isSqStillValid}"
 						action="#{requestNoteBackingBean.saveAction('Save')}"
@@ -162,12 +172,13 @@
 						<ui:param name="isReject" value="${bpmAction == 'REJECT'}" />
 						<ui:param name="isCancelReject" value="${ isCancel || isReject}" />
 						<!-- 20190417@asyrafhaziq_12095 - End -->
-						
+
 						<p:commandButton value="#{lbl[buttonLabel]}" partialSubmit="true"
-							onstart="#{isCancelReject ? '' : 'blockWidget.show();'}" oncomplete="#{isCancelReject ? '' : 'blockWidget.hide();'}" 
+							onstart="#{isCancelReject ? '' : 'blockWidget.show();'}"
+							oncomplete="#{isCancelReject ? '' : 'blockWidget.hide();'}"
 							process="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
 							update="#{isCancel ? '@this,  @([id$= remark])' : '@form'}"
-							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />	
+							actionListener="#{requestNoteBackingBean.cancelRejectAction(bpmAction)}" />
 					</ui:repeat>
 				</div>
 			</c:if>

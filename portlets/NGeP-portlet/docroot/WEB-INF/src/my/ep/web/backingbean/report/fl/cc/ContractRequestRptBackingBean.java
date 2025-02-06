@@ -118,7 +118,7 @@ public class ContractRequestRptBackingBean extends FlReportBackingBean<ContractR
 	 * reset action
 	 */
 	public void resetAction(){
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 	
 	

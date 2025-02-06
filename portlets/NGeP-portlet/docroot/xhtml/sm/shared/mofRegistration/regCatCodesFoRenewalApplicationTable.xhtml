@@ -13,28 +13,31 @@
 		<ac:paginator for="catDtR" />
 		<p:columnGroup type="header">
 
-			<p:row>
-				<p:column selectionMode="multiple" style="width:2%"
-					rendered="#{!backingBean.managedBean.approverUser}" />
+			<p:row> <!-- #32008 -->
+				<p:column selectionMode="multiple" style="width:2%" 
+					rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 					style="width : 2%;" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
-				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
-				<p:column headerText="#{lbl['lbl.sm.status']}"
+				<!-- 30766 START - adjust width to be dynamic -->
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" width="#{backingBean.dynamicTableColumnWidth('20%', 'auto', 'auto')}"/>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" width="#{backingBean.dynamicTableColumnWidth('16%', 'auto', 'auto')}"/>
+				<p:column headerText="#{lbl['lbl.sm.status']}" width="#{backingBean.dynamicTableColumnWidth('20%', 'auto', 'auto')}"
 					rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
 					rendered="#{backingBean.managedBean.approverUser}" />
-				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
+				<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}" style="width:24%"
 					rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 				<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
 					headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" />
+				<!-- 30766 END - adjust width to be dynamic -->
 			</p:row>
 		</p:columnGroup>
+		<!-- #32008 -->
 		<p:column selectionMode="multiple" style="width:2%"
-			rendered="#{!backingBean.managedBean.approverUser}" />
+			rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 			style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
@@ -54,7 +57,7 @@
 			<p:inputTextarea id="otherDescR" maxlength="100"
 				label="#{lbl['lbl.sm.catCodes.othDesc']}"
 				value="#{catBeanR.otherDesc}" style="width : auto;" rows="5"
-				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}">
+				cols="20" rendered="#{catBeanR.pmCategoryL3.otherDescReq eq 1}" > <!-- #36289 -->
 				<p:ajax event="blur" process="@this" partialSubmit="true"
 					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
 					update=":form:tt:catCodeInfPan" />
@@ -105,7 +108,8 @@
 					itemValue="0" />
 				<p:ajax event="change" process="@this" update="poCatRDecisionRmrk"
 					partialSubmit="true"
-					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</p:selectOneRadio>
 
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
@@ -131,8 +135,8 @@
 						<td
 							style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<p:scrollPanel mode="native" style="height:100px; width:auto;">
-								<h:outputText value="#{catBean.poRemarks}"
-									rendered="#{not empty catBean.poRemarks}" />
+								<h:outputText value="#{catBeanR.poRemarks}"
+									rendered="#{not empty catBeanR.poRemarks}" />
 							</p:scrollPanel>
 						</td>
 					</tr>
@@ -160,7 +164,8 @@
 					itemValue="0" />
 				<p:ajax event="change" process="@this"
 					update="apprvrCatRDecisionRmrk" partialSubmit="true"
-					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" />
+					listener="#{backingBean.assignCategoryApproveOrRejectDate(catBeanR)}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			</p:selectOneRadio>
 			<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
@@ -330,10 +335,13 @@
 			</h:panelGroup>
 			
 			#{lbl['lbl.sm.download.categorycode']}
+			<!-- 32008 - START -->
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				partialSubmit="true" process="@this"
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
+			<!-- 32008 - END -->
 			
 			<!-- 30865 Start -->
 			<ac:lookupCategoryCode okAction="backingBean.addNewCategoryAction"
@@ -348,8 +356,9 @@
 					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
 					special="#{backingBean.managedBean.smAppl.supplierType}" />
 			<!-- 30865 End -->
-			
+			<!-- #32008 -->
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
 				update=":form:tt:catCodeInfPan" partialSubmit="true"
 				process=":form:tt:catCodeInfPan">

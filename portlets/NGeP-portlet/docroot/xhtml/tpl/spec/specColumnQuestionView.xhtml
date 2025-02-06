@@ -8,10 +8,12 @@
 
 	<ui:param name="isRepeated"
 		value="#{prevSpecQuestion != null ? prevSpecQuestion.specQuestionId == question.specQuestionId : false}" />
-		<ui:param name="isRenderUOMandQuantity" value="#{evaluationBackingBean.checkUOMandQuantityRender()}" /> <!-- #29187 Added Vinod -->
+		<ui:remove>#29187 Start Vinod</ui:remove>
+		<ui:param name="isRenderUOMandQuantity" value="#{evaluationBackingBean.checkUOMandQuantityRender()}" />
+		<ui:remove>#29187 End Vinod</ui:remove>
  <!-- #32952 remove here -->
-	<p:column style="width: 25%;white-space: normal;word-break:normal;"><!-- #29006 word-break:normal -->
-		<!-- #29187 Start Vinod -->
+	<p:column style="width: 25%;white-space: normal;"><!-- #29006 word-break:normal | #36103-remove word-break:normal-->
+		<ui:remove>#29187 Start Vinod</ui:remove>
 		<p:commandLink value="#{fn:replace(question.clItem,',',',  ')}"
 					   rendered="#{!isRepeated and !isRenderUOMandQuantity}" process="@this" partialSubmit="true"
 					   update="@([id$=viewUOMQuantityDetailsId])"
@@ -20,13 +22,29 @@
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.questionForItemHlink}" value="#{question}"></f:setPropertyActionListener>
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.zoneForItemHlink}" value="#{isZonal}"></f:setPropertyActionListener>
 		</p:commandLink>
-		<!-- #29187 End Vinod -->
+		<ui:remove>#29187 End Vinod</ui:remove>
+		<ui:remove>#29187 Start Vinod Added condition Vinod</ui:remove>
+		<ui:remove> 36950 - start - remove this line of code.
+		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="true"
+				rendered="#{!isRepeated and isRenderUOMandQuantity and !templateSpecBean.wordBreakForQT}" 
+				style="word-break:normal;"/> <!-- #36103 - add style word-break:normal --><!-- #29007 Added wordBreakForDLOA condition Vinod-->
+				36950 - end - remove this line of code.
+		</ui:remove>	
+		<ui:remove> #36950 start @zaim</ui:remove>	
+		<ui:param name="itemName" value="#{fn:replace(question.clItem,',',',  ')}" />
+		<h:outputText value="#{templateSpecBackingBean.replaceWithBR(itemName)}" escape="false"
+				rendered="#{!isRepeated and isRenderUOMandQuantity and !templateSpecBean.wordBreakForQT}" 
+				style="white-space: normal;word-wrap:break-word; word-break:break-word; " /> 		
+		<ui:remove> #36950 end @zaim</ui:remove>		
+		<ui:remove>#29187 End Vinod</ui:remove>
+		<!-- #29007 Start Vinod -->
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
-				rendered="#{!isRepeated and isRenderUOMandQuantity}" /> <!-- #29187 Added condition Vinod-->
-			<!-- #29007 Start Vinod -->
+				rendered="#{!isRepeated and isRenderUOMandQuantity and templateSpecBean.wordBreakForQT}" 
+				style="word-break:break-all;"/>
 		<p:spacer width="5" />
 		<ui:fragment rendered="#{!empty question.cmItem.extensionCode and directLOABackingBean.managedBean.iconForDL}">
 		<p:commandLink id="itemName"
+						rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}"
 						action="#{directLOABackingBean.searchSupplierSpecification(question,true)}"
 						partialSubmit="true" process="@this">
 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
@@ -55,7 +73,7 @@
 			<ui:param name="clspecDetail" value="#{fn:replace(question.clSpecDetail,',',',  ')}"></ui:param>
 			<h:outputText value="#{templateSpecBackingBean.replaceWithBR(clspecDetail)}" escape="false"
 				rendered="#{!isRepeated}"
-				style="white-space: normal;word-wrap: break-word;" />
+				style="white-space: normal;word-wrap:break-word; word-break:break-word; " />  <!-- #36103 - add style word-break:break-word -->
 		</c:if>
 		</ui:fragment>
 	</p:column>
@@ -68,7 +86,9 @@
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
 	</p:column>
 	 <!-- #32952 remove here -->
-	<c:if test="#{!isContentTypeScore or isRenderUOMandQuantity}"> <!-- #29187 Added Vinod -->
+	 <ui:remove>#29187 Start Vinod</ui:remove>
+	<c:if test="#{!isContentTypeScore or isRenderUOMandQuantity}"> 
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<p:column style="width:8%;white-space:normal;">
 		<h:outputText value="#{question.clUom.uomName}"
 			rendered="#{isQuestionTypeItem and !isRepeated}" />
@@ -157,12 +177,12 @@
 			</p:commandButton>
 		</p:column>
 	</ui:insert>
-	<!-- #29187 Start Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
 	</c:if>
 	<p:column style="width:5%;text-align:right;" rendered="#{isManSpecAndCompliance}">
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
 	</p:column>
-	<!-- #29187 End Vinod -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<!-- #29007 Start Vinod -->
 	<!-- Bug #31733 Related to #21695 12/10/2021 rendered-->
 	<c:if test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">

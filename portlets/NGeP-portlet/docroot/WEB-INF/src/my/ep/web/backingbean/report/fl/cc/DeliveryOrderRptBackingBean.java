@@ -117,6 +117,6 @@ public class DeliveryOrderRptBackingBean extends FlReportBackingBean<DeliveryOrd
 		getManagedBean().setItemName(null);
 		getManagedBean().setDeliveryOrderNo(null);
 		getManagedBean().setSupplierDoRefNo(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 }

@@ -37,7 +37,7 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{mcSuppTransRptBB.disablePtjGroupLov()}"
+					disabled="#{mcSuppTransRptBB.disablePtjGroupLovByReportCode()}"
 					value="#{mcSuppTransRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="mcSuppTransRptBB.resetPtjProfile()"
 					update=":form"
@@ -48,13 +48,13 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{mcSuppTransRptBB.disablePtjLov()}"
+					disabled="#{mcSuppTransRptBB.disablePtjLovByReportCode()}"
 					value="#{mcSuppTransRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="mcSuppTransRptBB.managedBean.ptj"
@@ -72,7 +72,7 @@
 					value="#{mcSuppTransRptBB.managedBean.physicalContractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}" />
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no.fact.user']}" />
 				<p:message id="flphycontractIdMsg" for="flphycontractId" display="icon" />
 			</td>
 			<td>
@@ -83,7 +83,7 @@
 					value="#{mcSuppTransRptBB.managedBean.contractNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no.fact.user']}"/> 
 			</td>
 		</tr>
 		<tr>
@@ -94,7 +94,7 @@
 				<p:inputText maxlength="20" value="#{mcSuppTransRptBB.managedBean.loaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa.fact.user']}"/>
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
@@ -105,7 +105,7 @@
 					value="#{mcSuppTransRptBB.managedBean.physicalLoaNo}">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText> 
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.file.ref.no.fact.user']}"/> 
 				<p:message id="flphyloaIdMsg" for="flphyloaId" display="icon" />
 			</td>
 		</tr>
@@ -202,23 +202,23 @@
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+						itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-      				<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.businessRegNo']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.businessRegNo']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.mofNo']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.mofNo']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.epNo']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.epNo']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.financialYear']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.financialYear']}"></f:selectItem>	
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.poOrderStatus']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.poOrderStatus']}"></f:selectItem>
+      				<f:selectItem itemLabel="#{lbl['lbl.rpt.business.registrationNo']}"
+						itemValue="#{lbl['lbl.rpt.business.registrationNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.mofNo']}"
+						itemValue="#{lbl['lbl.rpt.mofNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.epNo']}"
+						itemValue="#{lbl['lbl.rpt.epNo']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.financial.year']}"
+						itemValue="#{lbl['lbl.fl.financial.year']}"></f:selectItem>	
+					<f:selectItem itemLabel="#{lbl['lbl.fl.purchaseorder.status']}"
+						itemValue="#{lbl['lbl.fl.purchaseorder.status']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />

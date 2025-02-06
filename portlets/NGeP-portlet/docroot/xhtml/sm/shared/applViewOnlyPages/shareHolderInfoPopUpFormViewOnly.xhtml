@@ -11,17 +11,51 @@
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.name']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.name}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.name}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.name}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.name}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.name}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.nationality']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryName}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.pmCountry.countryId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestPersonnel and 
+							 not empty viewSmApplBackingBean.managedBean.latestPersonnel.pmCountry) ?
+							 viewSmApplBackingBean.getCountryLabelById(viewSmApplBackingBean.managedBean.latestPersonnel.pmCountry.countryId) 
+							 : lbl['lbl.txt.na']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" styleClass="outputLabel-view-label"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view" rendered="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.title}"
-						value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.title.salutationName}" /></td>
+						value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.title.salutationName}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.title.salutationId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.title.salutationId}" 
+							alertValue="#{(not empty viewSmApplBackingBean.managedBean.latestPersonnel and 
+							 not empty viewSmApplBackingBean.managedBean.latestPersonnel.title) ?
+							 viewSmApplBackingBean.managedBean.latestPersonnel.title.salutationName
+							 : lbl['lbl.txt.na']}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.race']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" rendered="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace}"
-						value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace.raceName}" /></td>
+						value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace.raceName}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.pmRace.raceId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace.raceId}" 
+							alertValue="#{viewSmApplBackingBean.getRaceLabel(viewSmApplBackingBean.managedBean.latestPersonnel.pmRace.raceId)}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.identificationtype']}" /></td>
@@ -37,29 +71,85 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.dob']}" /></td>
 				<td>
 					<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.birthDate}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}" 
+							alertValue="#{viewSmApplBackingBean.getDateFormat(viewSmApplBackingBean.managedBean.latestPersonnel.birthDate)}"/>
 				</td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.designation']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.designation}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.designation}"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.epfNo']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epfNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epfNo}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.epfNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epfNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.epfNo}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.exp']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.workExperienceYear}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.workExperienceYear}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.workExperienceYear}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.workExperienceYear}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.workExperienceYear}"/></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.email']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.email}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.email}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mobileNo']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileFull}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileFull}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.mobileNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.mobileNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneFull}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneFull}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.phoneNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.phoneNo}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxFull}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxFull}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.faxNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.faxNo}"/></td>
 			</tr>
 
 			<tr>
@@ -67,6 +157,14 @@
 				<td>
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '1'}" />
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '0'}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel and not empty viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry 
+								and viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.bumiFlg}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.bumiFlg eq '1' ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
 				</td>
 			<!-- #29856 - Start -->		
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryCode == SupplierManagementConst.COUNTRY_MALAYSIA_CODE}">
@@ -76,6 +174,15 @@
 					rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
 					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.non.muslim']}"
 					 rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel and not empty viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry 
+								and viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY'}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.muslimFlg}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.muslimFlg eq '1' ? 
+								lbl['lbl.sm.person.religion.muslim'] : lbl['lbl.sm.person.religion.non.muslim']}"/>
 				</td>
 			</c:if>
 			<!-- #29856 - End -->
@@ -141,6 +248,14 @@
 								rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" 
 								rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '0'}" />
+							<!-- #32008 -->
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+									and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.authorizedFlg}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.authorizedFlg eq '1' ? 
+									lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
 						</td>
 					</tr>
 					<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}">
@@ -148,6 +263,13 @@
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
 							<td>
 								<ac:smRoleDesc backingBean="#{viewSmApplBackingBean}" roleCode="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/>
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.epRole}" 
+									currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}" 
+									alertValue="#{viewSmApplBackingBean.getEpRoleDescByRoleCode(viewSmApplBackingBean.managedBean.latestPersonnel.epRole)}"/>
 							</td>
 						</tr>
 					</c:if>
@@ -187,6 +309,14 @@
 							<td>
 								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '1'}" />
 								<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '0'}" />
+								<!-- #32008 -->
+								<ac:smFieldChangeAlertView 
+									isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+									oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.contractSignerFlg}" 
+									currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg}" 
+									alertValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.contractSignerFlg eq '1' 
+										? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"/>
 							</td>
 						</tr>
 					</c:if>
@@ -208,7 +338,14 @@
 		<table style="width: 100%;table-layout:fixed">
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.shrAmt']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.shareAmt}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.shareAmt}"/>
+					<!-- #32008 -->
+					<ac:smFieldChangeAlertView 
+						isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+							and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+						oriValue="#{viewSmApplBackingBean.managedBean.latestPersonnel.shareAmt}" 
+						currValue="#{viewSmApplBackingBean.managedBean.selectedShareHolder.shareAmt}" 
+						alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestPersonnel.shareAmt)}"/></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.sharePercentage}" /></td>
 
@@ -252,13 +389,15 @@
 				<h:outputText value="#{jf.toYear}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 -->
 				<p:commandLink update=":#{p:component('equiJobFunctionInfo')}" onstart="blockWidget.show()"
-					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show()" 
+					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show(); blockWidget.hide()" 
 					partialSubmit="true" process="@this">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
-
+				<ac:smFieldChangeTableAlertView object="#{jf}" />
+				<!-- #32008 -->
 			</p:column>
 
 		</p:dataTable>
@@ -271,15 +410,39 @@
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.companyName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.companyName}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedJobFunction.staffExperienceId 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.companyName}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedJobFunction.companyName}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.companyName}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.designation']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedJobFunction.staffExperienceId 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.designation}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.designation}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.year.from']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/>
+						<!-- #35086 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedJobFunction.staffExperienceId 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.fromYear}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.fromYear}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.year.to']}" /></td>
@@ -325,12 +488,15 @@
 				<h:outputText value="#{relCom.mofNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 - START -->
 				<p:commandLink update=":#{p:component('equiRelCompInfo')}" onstart="blockWidget.show()"
-					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show()"
+					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show(); blockWidget.hide()"
 					partialSubmit="true" process="@this">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				<ac:smFieldChangeTableAlertView object="#{relCom}" />
+				 <!-- #32008 - END -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -342,27 +508,75 @@
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+									and not empty viewSmApplBackingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.companyName}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.companyName}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.reg.no']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}"/>
+						<!-- #32008 -->
+							<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+									and not empty viewSmApplBackingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.regNo}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.regNo}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.designation']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.designation}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.designation}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+									and not empty viewSmApplBackingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+									and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.designation}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.designation}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.designation}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.shrAmt']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.shareAmt}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}" 
+								alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestRelatedCompany.shareAmt)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.sharePercentage}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}" 
+								alertValue="#{viewSmApplBackingBean.getPriceAmountFormat(viewSmApplBackingBean.managedBean.latestRelatedCompany.sharePercentage)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.reg.no']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+								isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+										and not empty viewSmApplBackingBean.managedBean.selectedRelatedCompany.relatedCompanyId
+										and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+								oriValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.mofNo}" 
+								currValue="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}" 
+								alertValue="#{viewSmApplBackingBean.managedBean.latestRelatedCompany.mofNo}" /></td>
 				</tr>
 			</table>
 		</p:scrollPanel>
@@ -384,12 +598,15 @@
 				<ac:labelDate value="#{profBean.expDate}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 - START -->
 				<p:commandLink update=":#{p:component('equiShrProfBeanInfo')}" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrProfBody(profBean)}"
-					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show()">
+					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show(); blockWidget.hide()">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				<ac:smFieldChangeTableAlertView object="#{profBean}" />
+				 <!-- #32008 - END -->
 			</p:column>
 
 		</p:dataTable>
@@ -402,16 +619,40 @@
 			<table style="width: 100%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.profBody']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.bodyName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.bodyName}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.pmCertBody.certBodyId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.pmCertBody.bodyName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.profBody.regNo']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.regNo}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.regNo}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.regNo}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.regNo}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.regNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.prof.enddate']}" /></td>
 					<td>
 						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.expDate}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedStfPrfBdy.associationBodyId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStfPrfBdy.expDate}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.expDate}" 
+							alertValue="#{viewSmApplBackingBean.getDateFormat(viewSmApplBackingBean.managedBean.latestStfPrfBdy.expDate)}" />
 					</td>
 				</tr>
 			</table>
@@ -452,12 +693,15 @@
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+			 <!-- #32008 - START -->
 				<p:commandLink update=":#{p:component('equiAcadInfo')}" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrAcademics(aq)}"
-					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show()">
+					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show(); blockWidget.hide()">
 					<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
+				<ac:smFieldChangeTableAlertView object="#{aq}" />
+				 <!-- #32008 - END -->
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -473,20 +717,52 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.institute']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.instituteName}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.instituteName}" /></td>
 				</tr>
 				<tr>
 					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.qualification.level']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getParameterDesc(viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationId,null)}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.getParameterDesc(viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationId,null)}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.qualificationId.parameterId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationId.parameterId}" 
+							alertValue="#{viewSmApplBackingBean.getParameterDesc(viewSmApplBackingBean.managedBean.latestStaffAcademic.qualificationId,null)}" /></td>
 				</tr>
 				<tr>
 					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.education.field']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.fieldName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.fieldName}" />
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}" 
+							alertValue="#{viewSmApplBackingBean.getParameterDesc(viewSmApplBackingBean.managedBean.latestStaffAcademic.pmEduField.eduFieldId,null)}" /></td>
 				</tr>
 	
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.major.in']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}"/>
+						<!-- #32008 -->
+						<ac:smFieldChangeAlertView 
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.latestStaffAcademic.staffAcademicId
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.fieldMajor}" 
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}" 
+							alertValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.fieldMajor}" /></td>
 				</tr>
 			</table>
 		</p:scrollPanel>

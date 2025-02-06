@@ -1,0 +1,190 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.dockyard.details']}" toggleable="true" id="smDocDtPanel">
+		
+		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}">
+			<h:outputText value="#{lbl['lbl.sm.dockyard.notApplicable']}" />
+		</p:outputPanel>
+		
+		<ui:repeat var="dockyardCatVar" value="#{viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
+			<table style="width: 100%;">
+				<tr>
+					<td>
+					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
+					</td>
+				</tr>
+				<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
+					<tr>
+						<td style="white-space: nowrap; float: left;">
+						<p:outputLabel value="#{viewSmApplBackingBean.getCategoryCodeOtherDesc(dockyardCatVar)}" 
+							style="text-indent: 10px;"/>
+						</td>
+					</tr>
+				<!-- 29380 - Site Visit Grouping Enhancement -28775 - end -->
+			</table>
+			<br />
+			
+			
+			<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{dockyardCatVar.facilityList}"
+				rowKey="#{doc}" rowIndexVar="index" id="docDt">
+				<ac:paginator for="docDt" />
+
+				<p:column headerText="#{lbl['lbl.sm.facility.dockyard.name']}">
+					<p:outputPanel rendered="#{not empty doc.smSupplierCategoryFacilities and doc.smSupplierCategoryFacilities.size() gt 1}">
+						<p:graphicImage value="/css/images/design/ico-same-with.png" 
+							title="#{lbl['lbl.sm.facility.address.attach.more.than.one.category']}" />&#160;
+					</p:outputPanel>
+					<h:outputText value="#{doc.facilityName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.dockyard.address']}"
+					style="width :60%;white-space : normal">
+					<h:outputText value="#{viewSmApplBackingBean.getFullAddress(doc.smAddress)}"
+						style="float : left" />
+						
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
+					<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="viewDockYardDialog.show()"
+						process="@this" partialSubmit="true" onstart="blockWidget.show()"
+						update=":#{p:component('viewDockYardDialog')}" style="padding-right:5px">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable><br />
+		</ui:repeat>
+	</p:panel>
+	
+	<p:dialog style="max-height:450px;width:500px" header="#{lbl['lbl.sm.dockyard.information']}"
+		widgetVar="viewDockYardDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" id="viewDockYardDialog">
+		
+		<p:scrollPanel mode="native" style="max-height:400px;width:450px;border:none">
+			<table style="width: 100%;table-layout:fixed">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.name']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.facilityName}" /></td>
+				</tr>
+				<tr>
+					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.category']}" /></td>
+					<td>
+						<ui:repeat var="catFac" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smSupplierCategoryFacilities}">
+							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
+										#{catFac.pmCategoryL3.categoryL3Code}
+									 	(#{catFac.pmCategoryL3.categoryName})" 
+								styleClass="outputLabel-view" /><br />
+						</ui:repeat>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address1}" /></td>
+				</tr>
+	
+				<tr>
+					<td></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address2}" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address3}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryName}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmState.stateName}" /></td>
+				</tr>
+				
+				<tr><!-- #13320 - added division -->
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" 
+										rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmState.adoptDivision}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmDivision.divisionName}" 
+										rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmState.adoptDivision}"/></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict.districtName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmCity.cityName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.postcode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.phoneno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.phoneFull}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.faxno']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.faxFull}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sc.spec.area.feat']}" /></td>
+					<td>
+						<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.areaSquareFeet}" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.ownerType']}" /></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.facility.own']}" styleClass="outputLabel-view"
+								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" styleClass="outputLabel-view"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:outputPanel id="docPanLbl">
+							<p:outputLabel value="#{lbl['lbl.cm.price']}" styleClass="outputLabel-view-label"
+								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
+							<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}" styleClass="outputLabel-view-label"
+								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+						</p:outputPanel>
+					</td>
+					<td>
+						<p:outputPanel id="docPan">
+							<ui:fragment
+								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
+								<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.purchasePrice}" />
+							</ui:fragment>
+							<ui:fragment
+								rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
+								<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.rentalRate}" />
+							</ui:fragment>
+						</p:outputPanel>
+					</td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.ownername']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownerName}" /></td>
+				</tr>
+	
+			</table>
+		</p:scrollPanel>
+	</p:dialog>
+</ui:composition>

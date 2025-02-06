@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:panel header="#{lbl['lbl.sm.workshop.details']}" toggleable="true"
 		id="smWorkShopDtPanel">
@@ -12,27 +13,20 @@
 		<p:outputPanel rendered="#{empty viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}">
 			<h:outputText value="#{lbl['lbl.sm.workShop.notApplicable']}" />
 		</p:outputPanel>
+		<!-- #28175 -->
+		<ui:param name="isSuppProfile" 
+			value="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}"/>
 		
 		<ui:repeat var="workshopCatVar" value="#{viewSmApplBackingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 			<table style="width: 100%;">
-				<!-- 29380 - Site Visit Grouping Enhancement -28775 -Start -->
 				<tr>
-					<td style="float: left;">
-					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} (#{workshopCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{workshopCatVar.pmCategoryL2.categoryName}/#{workshopCatVar.categoryName})" 
-					    style="text-align:left;"/>
+					<td>
+						<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
+					    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(workshopCatVar, isSuppProfile, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
-					<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" >
-					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.pmCategoryL3.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99 and workshopCatVar.categoryL3Code eq SupplierManagementConst.CATEGORY_CODE_L3_99
-						    and categoryVar.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS
-						    and categoryVar.pmCategoryL3.categoryL3Id eq workshopCatVar.categoryL3Id}"/>
-						</td>
-					</tr>
-					</ui:repeat>
-				<!-- 29380 - Site Visit Grouping Enhancement -28775 -End -->
 			</table>
 			<br />
 			
@@ -91,8 +85,8 @@
 							<p:outputLabel value="#{catFac.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 										#{catFac.pmCategoryL3.pmCategoryL2.categoryL2Code}
 										#{catFac.pmCategoryL3.categoryL3Code}
-									 	(#{catFac.pmCategoryL3.categoryName})" 
-								styleClass="outputLabel-view" /><br />
+									 	(#{viewSmApplBackingBean.getSupplierCategoryName(catFac.pmCategoryL3, isSuppProfile, false)})" 
+								styleClass="outputLabel-view" /><br /> <!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						</ui:repeat>
 					</td>
 				</tr>
@@ -185,7 +179,7 @@
 				</tr>
 	
 			</table>
-			<!-- 29379 - Site Visit Grouping Enhancement - 28775 - start -->
+			<!-- 29379 - Site Visit Grouping Enhancement -28775 - start -->
 			<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true">
 				<p:dataTable var="empInfo" id="empInfoId" rowKey="#{empInfo}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -200,7 +194,7 @@
 					<p:column headerText="#{lbl['lbl.sm.employee.icno']}">
 						<p:outputLabel value="#{empInfo.identificationNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sm.employee.specialization']}">
+					<p:column headerText="#{lbl['lbl.sm.employee.specialization']}" style="white-space:normal;">
 						<p:outputLabel value="#{empInfo.expertise}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.employee.experience']}">
@@ -208,7 +202,7 @@
 					</p:column>
 				</p:dataTable>
 			</p:panel>
-			<!-- 29379 - Site Visit Grouping Enhancement - 28775 - end -->
+			<!-- 29379 - Site Visit Grouping Enhancement -28775 - end -->
 		</p:scrollPanel>
 	</p:dialog>
 </ui:composition>

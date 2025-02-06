@@ -55,6 +55,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.util.SLAUtils;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -300,8 +301,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 					try {
 						uploadAttachment(att,attachment);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+						SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_MULTIPLE_CLONE_BACKINGBEAN, scQt.getQtNo(),
+								SLALogConstant.QT_POPULATE_APPROVALS, getUserIdSessionFromLoginId(), e);
+						//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 					}
 					approverAttachments.add(att);
 				}
@@ -412,7 +415,10 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 										.cloneBean(source);
 							} catch (IllegalAccessException | InstantiationException
 									| InvocationTargetException | NoSuchMethodException e) {
-								e.printStackTrace();
+								//Sonarqub QT Vulnerability Minor Danial [3/8/2023] START			 
+								SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_MULTIPLE_CLONE_BACKINGBEAN, scQt.getQtNo(),
+										SLALogConstant.QT_POPULATE_COMMITTEE, getUserIdSessionFromLoginId(), e);
+								//Sonarqube QT Vulnerability Minor Danial [3/8/2023] END
 							}
 							if(null!=cloned){
 								cloned.setBrandNew(true);
@@ -691,6 +697,7 @@ SourcingBaseBackingBean<QTDetailManagedBean>{
 			scQt.setOrgProfileId(pmOrgProfile.getOrgProfileId());
 			scQt.setOwnerOrgProfileId(pmOrgProfile.getOrgProfileId());
 		}
+		scQt.setJustificationProcValue(copyScqt.getJustificationProcValue());//25635&34545
 		
 		
 		return scQt;

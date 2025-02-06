@@ -35,20 +35,27 @@
 				
 					<p:column style="width:3px;text-align:center;" rendered="#{isEnablChkBoxes}">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(qTCommitteBackingBean.getParameterByTypeAndCode('CR','S'))}" 
+					<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(qTCommitteBackingBean.getParameterByTypeAndCode('CR','S')) or !isCommitteeInfoEditable}" 
 						value="#{qTCommitteBackingBean.managedBean.templateSpecBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@form"
 							listener="#{qTCommitteBackingBean.selectAll(qTCommitteBackingBean.managedBean.templateSpecBean.selectAll, committe.scCommitteeMembers)}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole)}" value="#{specificationcommittee.selected}">
+				<p:selectBooleanCheckbox disabled="#{!qTCommitteBackingBean.isCommitteeRoleEditable(specificationcommittee.memberRole) or !isCommitteeInfoEditable}" value="#{specificationcommittee.selected}">
 					<p:ajax partialSubmit="true" process="@this" update="@form" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<h:outputText value="#{specificationcommittee.memberName}"
-					style="white-space: normal;" />
+					<!-- #12471 Start -->
+					<p:commandLink
+						actionListener="#{qTCommitteBackingBean.onClickMemberInfo(specificationcommittee.pmUser)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						update="@form">
+						<h:outputText value="#{specificationcommittee.memberName}"
+							style="white-space: normal;" />
+					</p:commandLink>
+					<!-- #12471 End -->
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
@@ -105,6 +112,10 @@
 				</ui:fragment>
 			</p:column>
 		</p:dataTable>
+		<!-- #12471 Start -->
+		<ac:qtCommitteMemberInfoPopup bBean="#{qTCommitteBackingBean}"
+			widget="memberInfoPopUp" />
+		<!-- #12471 End -->
 		</ui:fragment>
 		<ui:fragment rendered="#{showHistory}">
 			<ui:include src="committeeHistory.xhtml" />

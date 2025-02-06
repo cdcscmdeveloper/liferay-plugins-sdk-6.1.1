@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-    <ui:param name="isMandatoryDocument" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION}" />  
+    <ui:param name="isMandatoryDocument" value="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_REVISION_PUBLICATION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_BPK_APPROVAL}" />  
 	
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable

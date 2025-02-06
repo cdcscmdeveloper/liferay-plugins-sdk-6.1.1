@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<!-- Bug #33178 adding noSupplierPackageExist-->
-
+<!-- #34588 start cater WIP -->
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%;" class="sidemenutd" valign="top"><p:tabMenu
@@ -16,18 +16,28 @@
 
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
+						<c:choose>
+						<c:when test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.itemized']}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
 							update="@form" />
+						</c:when>
+						<c:otherwise>
+							<p:menuitem value="#{lbl['lbl.sc.financial']}"
+							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
+							update="@form" />
+						</c:otherwise>
+						</c:choose>
 					</c:if>
 					<!-- Bug #33178 adding noSupplierPackageExist-->
 					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist}"
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq
+						and evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.financial.package']}"  disabled="#{evaluationBackingBean.managedBean.singleSpecQuestion or evaluationBackingBean.managedBean.noSupplierPackageExist ne null and evaluationBackingBean.managedBean.noSupplierPackageExist}"
 							action="#{evaluationBackingBean.retriveFinancialEvaluationStagePackage}"
 							update="@form" />
 					</c:if>
-
+<!-- #34588 end cater WIP -->
 					<c:if
 						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.financial.summary']}" process="@this" partialSubmit="true" 
@@ -53,8 +63,18 @@
 						src="/xhtml/sc/evaluation/evaluationStage/financial/financialEvaluation.xhtml"></ui:include>
 				</c:if> <c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '1'}">
-					<ui:include
-						src="/xhtml/sc/evaluation/evaluationStage/financial/financialEvaluationPackage.xhtml"></ui:include>
+					<!-- #34588 start cater WIP -->
+					<c:choose>
+						<c:when
+							test="#{evaluationBackingBean.managedBean.wipStatusMax gt ParameterConst.flagWipStatus3serangkaiBefore}">
+							<ui:include
+								src="/xhtml/sc/evaluation/evaluationStage/financial/financialEvaluationPackage.xhtml"></ui:include>
+						</c:when>
+						<c:otherwise>
+							<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
+						</c:otherwise>
+					</c:choose>
+					<!-- #34588 end cater WIP -->
 				</c:if> <c:if
 					test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.oneTierFinancialActiveIndex eq '2'}">
 					<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
@@ -108,6 +128,7 @@
 
 		</tr>
 	</table>
+<!-- #34588 end cater WIP -->
 
 
 </ui:composition>

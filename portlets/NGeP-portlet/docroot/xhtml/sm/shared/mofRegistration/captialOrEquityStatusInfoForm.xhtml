@@ -6,6 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- #33783 -->
+	<h:outputText value="#{lbl['lbl.sm.equistatus.clbg.note']}" 
+		rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.companyTypeSSM == SupplierManagementConst.COMPANY_TYPE_CLBG}" />
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sm.equiStatus.panHdr']}" />
@@ -18,7 +21,8 @@
 			</p:tooltip>
 		</f:facet>
 		<table style="width: 100%">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<!-- Disable for UPS 32008 - START -->
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.captialVerified}"
@@ -33,7 +37,7 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.captialVerified}"
@@ -50,7 +54,7 @@
 		</table>
 
 		<p:outputPanel id="capInfPan" layout="block">
-			<p:blockUI block=":form:tt:capInfPan" widgetVar="buiPoCap"
+			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:capInfPan" widgetVar="buiPoCap"
 				id="poCapBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.captialVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.captialVerified : false)}" />
 
@@ -88,7 +92,8 @@
 								label="#{lbl['lbl.sm.equiStatus.authCap']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}"
 								validatorMessage="#{lbl['lbl.sm.equiStatus.authCap']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
-								required="true">
+								required="true"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:validateDoubleRange
 									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
@@ -114,7 +119,7 @@
 								readonly="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT
 											or backingBean.managedBean.disAllowOwnerEdit}" 
 								disabled="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT
-											or backingBean.managedBean.disAllowOwnerEdit}">
+											or backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax event="blur"
@@ -142,7 +147,8 @@
 								label="#{lbl['lbl.sm.equiStatus.ttlShare']}"
 								validatorMessage="#{lbl['lbl.sm.equiStatus.ttlShare']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalShare}"
-								required="true">
+								required="true"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:validateDoubleRange
 									maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 								<f:convertNumber
@@ -180,7 +186,8 @@
 								value="#{lbl['lbl.sm.equiStatus.members']}" /></td>
 						<td><p:inputText size="10" maxlength="6"
 								label="#{lbl['lbl.sm.equiStatus.members']}"
-								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalMember}">
+								value="#{backingBean.managedBean.smAppl.smCompanyBasic.totalMember}"
+								disabled="#{backingBean.managedBean.upsCannotEdit}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText>
@@ -223,7 +230,7 @@
 											label="#{lbl['lbl.sm.equiStatus.bumi']} #{lbl['lbl.sm.person.shrAmt']}"
 											validatorMessage="#{lbl['lbl.sm.equiStatus.bumi']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}"
-											disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+											disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 											<f:validateDoubleRange
 												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
@@ -255,7 +262,7 @@
 											label="#{lbl['lbl.sm.equiStatus.nonBumi']} #{lbl['lbl.sm.person.shrAmt']}"
 											validatorMessage="#{lbl['lbl.sm.equiStatus.nonBumi']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}"
-											disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+											disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 											<f:validateDoubleRange
 												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
@@ -287,7 +294,7 @@
 											validatorMessage="#{lbl['lbl.sm.equiStatus.nonMy']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}"
 											id="frgAmt"
-											disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+											disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 											<f:validateDoubleRange
 												maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 											<f:convertNumber
@@ -324,7 +331,7 @@
 												validatorMessage="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
 												id="gvtUtAmt"
-												disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+												disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 												<p:ajax event="blur" process="@this"
 													update=":form:tt:capInfPan,@(.shareHolderInfPanelClass)"
 													listener="#{backingBean.onCallEquityChangeAlert(backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity,backingBean.managedBean.currGovtUnitrustEquity)}" />
@@ -357,7 +364,7 @@
 												validatorMessage="#{lbl['lbl.sm.equiStatus.govtEquity']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquity}"
 												id="gvtEquAmt"
-												disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+												disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 												<f:validateDoubleRange
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
@@ -390,7 +397,7 @@
 												validatorMessage="#{lbl['lbl.sm.equiStatus.frgComp']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}"
 												id="lclAmt"
-												disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+												disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
 												<f:validateDoubleRange
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber
@@ -423,7 +430,8 @@
 												validatorMessage="#{lbl['lbl.sm.equiStatus.lclComp']} #{lbl['lbl.sm.person.shrAmt']} - #{lbl['lbl.sm.maxAmt.validMsg']}"
 												value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}"
 												id="frgCmpAmt"
-												disabled="#{backingBean.managedBean.disAllowOwnerEdit}">
+												disabled="#{backingBean.managedBean.disAllowOwnerEdit or backingBean.managedBean.upsCannotEdit}">
+												<!-- Disable for UPS 32008 - END -->
 												<f:validateDoubleRange
 													maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" />
 												<f:convertNumber

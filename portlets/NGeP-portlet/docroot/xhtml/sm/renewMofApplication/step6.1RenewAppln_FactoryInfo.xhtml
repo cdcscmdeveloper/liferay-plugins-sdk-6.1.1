@@ -3,20 +3,203 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 100%">
-		<tr>
-			<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
-					src="smRenewApplnSideMenuItem.xhtml" /></td>
-			<td style="vertical-align: top;">
-				<!-- #12483 - START -->
-				<c:if test="#{backingBean.renderRevisedReason()}"> 
-					<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
-					<br/> 
-				</c:if>
-				<!-- #12483 - END -->
+	<!-- 32008 - START -->
+	<c:if test="#{backingBean.managedBean.upsCannotEdit}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
+						src="smRenewApplnSideMenuItem.xhtml" /></td>
+				<td style="vertical-align: top;">
+					<!-- #12483 - START, #34892 -->
+					<ac:smReviseReason bBean="#{backingBean}"/><br/>
+					<!-- #12483 - END -->
+					 <p:outputPanel id="facInfPan">
+
+						<ac:gmapDialog id="gmapDialog" latitude="#{cc.attrs.latitude}"
+							longitude="#{cc.attrs.longitude}"
+							locationName="#{cc.attrs.locationName}" />
+
+						<ac:gmapScript />
+						<h:inputHidden
+							value="#{backingBean.managedBean.smAppl.applCategoryType}" />
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/factoryOrWorkshopInfoForm.xhtml" />
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/dockyardInfoForm.xhtml" />
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/workshopInfoForm.xhtml" />
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/storeInfoForm.xhtml" />
+
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/noFacilityRequiredMsg.xhtml" />
+
+						<p:outputPanel
+							rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
+							<table style="width: 50%">
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+									<td><p:inputTextarea autoResize="false" cols="41"
+											maxlength="200" id="renewPoFactRmrk"
+											readonly="#{backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser}"
+											validatorMessage="#{lbl['lbl.sm.poRemarks.length.validMsg']}"
+											value="#{backingBean.managedBean.poSecReview.factoryRemark}">
+											<f:validateLength maximum="200" />
+										</p:inputTextarea> <p:message id="renewPoFactRmrkMsg" for="renewPoFactRmrk"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+							</table>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+							<table style="width: 100%">
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+									<td><p:inputTextarea autoResize="false" readonly="true"
+											disabled="true" cols="41" maxlength="200"
+											value="#{backingBean.managedBean.poSecReview.factoryRemark}" /></td>
+									<td><p:outputLabel
+											value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+									<td><p:inputTextarea autoResize="false" cols="41"
+											maxlength="200" id="renewAprvrFactRmrks"
+											validatorMessage="#{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
+											value="#{backingBean.managedBean.apprvrSecReview.factoryRemark}">
+											<f:validateLength maximum="200" />
+										</p:inputTextarea> <p:message id="renewAprvrFactRmrksMsg"
+											for="renewAprvrFactRmrks" showSummary="true"
+											showDetail="false" display="icon" /></td>
+
+								</tr>
+							</table>
+						</p:outputPanel>
+					</p:outputPanel> <c:choose>
+						<c:when
+							test="#{backingBean.managedBean.smAppl.applValidWithSsm and backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew}">
+							<c:choose>
+								<c:when
+									test="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}">
+									<div class="nav-wrapper">
+										<table style="width: 100%">
+											<tr>
+												<td><div align="left" style="width: 100%">
+														<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('7','6')}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+															update=":form" />
+													</div></td>
+												<td><div align="right" style="width: 100%">
+														<!-- Bug #26616 start-->
+														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('7','8')}"
+															rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+															update=":form" />
+														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('7','8')}"
+															rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+															update=":form" />
+														<!-- Bug #26616 end-->
+													</div></td>
+											</tr>
+										</table>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<div class="nav-wrapper">
+										<table style="width: 100%">
+											<tr>
+												<td><div align="left" style="width: 100%">
+														<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('6','5')}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+															update=":form" />
+													</div></td>
+												<td><div align="right" style="width: 100%">
+														<!-- Bug #26616 start-->
+														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('6','7')}"
+															rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+															update=":form" />
+														<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+															onstart="blockWidget.show()"
+															oncomplete="blockWidget.hide();scrollToTop();"
+															actionListener="#{backingBean.setTabValue('6','7')}"
+															rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+															action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+															update=":form" />
+														<!-- Bug #26616 end-->
+													</div></td>
+											</tr>
+										</table>
+									</div>
+								</c:otherwise>
+							</c:choose>
+						</c:when>
+						<c:otherwise>
+							<div class="nav-wrapper">
+								<table style="width: 100%">
+									<tr>
+										<td><div align="left" style="width: 100%">
+												<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide();scrollToTop();"
+													actionListener="#{backingBean.setTabValue('6','5')}"
+													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+													update=":form" />
+											</div></td>
+										<td><div align="right" style="width: 100%">
+												<!-- Bug #26616 start-->
+												<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide();scrollToTop();"
+													actionListener="#{backingBean.setTabValue('6','7')}"
+													rendered="#{backingBean.managedBean.showMachineryEquipmentPanel or backingBean.managedBean.showTravelSoftwarePanel}"
+													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+													update=":form" />
+												<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+													onstart="blockWidget.show()"
+													oncomplete="blockWidget.hide();scrollToTop();"
+													actionListener="#{backingBean.setTabValue('6','7')}"
+													rendered="#{!backingBean.managedBean.showMachineryEquipmentPanel and !backingBean.managedBean.showTravelSoftwarePanel}"
+													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_FACTORY,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+													update=":form" />
+												<!-- Bug #26616 end-->
+											</div></td>
+									</tr>
+								</table>
+							</div>
+						</c:otherwise>
+					</c:choose>
+				</td>
+			</tr>
+
+		</table>
+	</c:if>
+
+
+	<c:if test="#{backingBean.managedBean.supplierUser or !backingBean.managedBean.upsCannotEdit}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
+						src="smRenewApplnSideMenuItem.xhtml" /></td>
+				<td style="vertical-align: top;">
+					<!-- #12483 - START, #34892 -->
+					<ac:smReviseReason bBean="#{backingBean}"/><br/>
+					<!-- #12483 - END -->
 					<p:outputPanel id="renewStep61OnlySuppPan"
 						rendered="#{backingBean.managedBean.supplierUser}">
 						<div align="right" style="width: 99%" class="button-wrapper">
@@ -61,7 +244,7 @@
 							</tr>
 						</p:outputPanel>
 					</table>
-					<p:outputPanel id="facInfPan" layout="block">
+					<p:outputPanel id="facInfPan">
 					
 		<ac:gmapDialog id="gmapDialog" 
 			latitude="#{cc.attrs.latitude}" 
@@ -69,9 +252,6 @@
 			locationName="#{cc.attrs.locationName}" />
 	
 		<ac:gmapScript />
-						<p:blockUI block=":form:tt:facInfPan" widgetVar="buiPoFac"
-							id="poFacBlc"
-							blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.factoryVerify : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.factoryVerify : false)}" />
 						<h:inputHidden
 							value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 						<ui:include
@@ -225,5 +405,8 @@
 		</tr>
 
 	</table>
+	</c:if>
+	<!-- 32008 - END -->
+
 
 </ui:composition>

@@ -38,20 +38,6 @@
 			
 			<!-- #28175 start -->
 			<c:choose>
-				<c:when test="#{(fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'application-history') or 
-					fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-application-search')) and 
-					viewSmApplBackingBean.managedBean.smAppl.workflowStatusDesc eq 'Registered'}">
-					<p:column style="width :350px;white-space : normal">
-						<h:outputText
-							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
-						<br />
-						<h:outputText
-							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.categoryL2Name}" />
-						<br />
-						<h:outputText
-							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.categoryL3Name}" />
-					</p:column>
-				</c:when>
 				<c:when
 					test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
 					<p:column style="width :350px;white-space : normal">
@@ -63,11 +49,13 @@
 							<span style="color: red;">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.lv1.first']}" />&#160;
 								<h:outputText value="#{aprvdCatBean.pmCategoryL1.changedDate}">
-									<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+									<!-- #28175 ReOpen note110 -->
+									<f:convertDateTime pattern="dd/MM/YYYY hh:mm a" />
 								</h:outputText>
 								<br />
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.second']}" />&#160;
-								<p:commandLink style="color: red;" 
+								<!-- #28175 ReOpen -->
+								<p:commandLink style="color: red; text-decoration: underline;" 
 									action="#{viewSmApplBackingBean.onClickCatCodesHistory(aprvdCatBean.pmCategoryL1.categoryL1Code, 1, aprvdCatBean.pmCategoryL1.categoryL1Id)}"
 									value="#{lbl['lbl.sm.catCodes.change.alert.here']}" 
 									update="@form" />&#160;
@@ -82,11 +70,13 @@
 							<span style="color: red;">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.lv2.first']}" />&#160;
 								<h:outputText value="#{aprvdCatBean.pmCategoryL2.changedDate}">
-									<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+									<!-- #28175 ReOpen note110 -->
+									<f:convertDateTime pattern="dd/MM/YYYY hh:mm a" />
 								</h:outputText>
 								<br />
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.second']}" />&#160;
-								<p:commandLink style="color: red;" 
+								<!-- #28175 ReOpen -->
+								<p:commandLink style="color: red; text-decoration: underline;" 
 									action="#{viewSmApplBackingBean.onClickCatCodesHistory(aprvdCatBean.pmCategoryL2.categoryL2Code, 2, aprvdCatBean.pmCategoryL2.categoryL2Id)}"
 									value="#{lbl['lbl.sm.catCodes.change.alert.here']}" 
 									update="@form" />&#160; 
@@ -101,17 +91,33 @@
 							<span style="color: red;">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.lv3.first']}" />&#160;
 								<h:outputText value="#{aprvdCatBean.pmCategoryL3.changedDate}">
-									<f:convertDateTime pattern="dd/mm/yyyy h:mm a" />
+									<!-- #28175 ReOpen note110 -->
+									<f:convertDateTime pattern="dd/MM/YYYY hh:mm a" />
 								</h:outputText>
 								<br />
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.second']}" />&#160;
-								<p:commandLink style="color: red;" 
+								<!-- #28175 ReOpen -->
+								<p:commandLink style="color: red; text-decoration: underline;" 
 									action="#{viewSmApplBackingBean.onClickCatCodesHistory(aprvdCatBean.pmCategoryL3.categoryL3Code, 3, aprvdCatBean.pmCategoryL3.categoryL3Id)}"
 									value="#{lbl['lbl.sm.catCodes.change.alert.here']}" 
 									update="@form" />&#160; 
 								<h:outputText value="#{lbl['lbl.sm.catCodes.change.alert.third']}" />
 							</span>
 						</p:outputPanel>
+					</p:column>
+				</c:when>
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{!viewSmApplBackingBean.isLatestCatCodeDesc(false)}">
+		        <!-- #28175 Reopen #94 End -->
+			    	<p:column style="width :350px;white-space : normal">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.categoryL1Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.categoryL2Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.categoryL3Name}" />
 					</p:column>
 				</c:when>
 				<c:otherwise>
@@ -174,7 +180,9 @@
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 						<p:scrollPanel mode="native" style="height:100px;">
 							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
-							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
+							<!-- #34549 Start -->
+							<!-- <h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" /> -->
+							<!-- #34549 end -->
 						</p:scrollPanel></td>
 					</tr>
 				</table>
@@ -224,8 +232,8 @@
 	</p:panel>
 	<!-- #28175 start -->
 	<p:outputPanel id="popUpPanel" rendered="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
-		<ac:pmCategoryHistoryPopup catCode="#{viewSmApplBackingBean.managedBean.catCode}" 
-			historyList="#{viewSmApplBackingBean.managedBean.historyList}" widget="remarkHisCatCodePopup"/>
+		<!-- #28175 ReOpen -->
+		<ac:smCategoryHistoryPopup bbean="#{viewSmApplBackingBean}" widget="remarkHisCatCodePopup"/>
 	</p:outputPanel>
 	<!-- #28175 end -->
 	

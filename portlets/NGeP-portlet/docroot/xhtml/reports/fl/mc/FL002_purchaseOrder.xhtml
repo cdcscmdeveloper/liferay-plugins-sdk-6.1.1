@@ -48,7 +48,16 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+			<!-- 29550 - Start (add condition to display PTJ label)-->
+				<c:choose>
+					<c:when test="#{flReportBB.hasFactoringUserRole()}">
+						<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
+					</c:when>
+					<c:otherwise>
+						<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+					</c:otherwise>
+				</c:choose>
+			<!-- 29550 - End -->
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
@@ -80,7 +89,7 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 				<!-- 29550 - start -->
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcntrctno.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/> 
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/> 
 				<!-- 29550 - end -->
 			</td>
 		</tr>
@@ -99,7 +108,7 @@
 				<!-- 29550 - start -->
 				<c:choose>
 					<c:when test="#{flReportBB.hasFactoringUserRole()}">
-						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract.fact.user']}"/> 
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no.fact.user']}"/> 
 					</c:when>
 					<c:otherwise>
 						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphycontract']}" />
@@ -121,7 +130,7 @@
 				<!-- 29550 - start -->
 				<c:choose>
 					<c:when test="#{flReportBB.hasFactoringUserRole()}">
-						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst.fact.user']}"/> 
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.file.ref.no.fact.user']}"/> 
 					</c:when>
 					<c:otherwise>
 						<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforphysst']}"/>
@@ -141,7 +150,7 @@
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
 				</p:inputText>
 				<!-- 29550 - start -->
-				<ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforlaono']}" rendered="#{flReportBB.hasFactoringUserRole()}"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa.fact.user']}" rendered="#{flReportBB.hasFactoringUserRole()}"/>
 				<!-- 29550 - end -->
 			</td>
 			<td>
@@ -166,8 +175,10 @@
 				<p:selectOneMenu value="#{mcPoRptBB.managedBean.approver}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}"></f:selectItem>
+					<!-- 29550 - start (change backing bean name from poRptBB to mcPoRptBB -->
 					<f:selectItems
-						value="#{poRptBB.retrieveApproverList()}"></f:selectItems>
+						value="#{mcPoRptBB.retrieveApproverList()}"></f:selectItems>
+					<!-- 29550 - end -->
 					<p:ajax event="change" partialSubmit="true"
 						update="@([id$=Msg])" />
 				</p:selectOneMenu>
@@ -186,24 +197,42 @@
 				<p:outputLabel value="#{lbl['lbl.rpt.group']}" />
 			</td>
 			<td>
+				<!-- 29550 - start(to cater option displayed by factoring user)-->
 				<p:selectOneMenu value="#{mcPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcPoRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
-						itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cntrctno']}"
 						itemValue="#{lbl['lbl.rpt.cntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycntrctno']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycntrctno']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phycloano']}"
 						itemValue="#{lbl['lbl.rpt.drpdown.phycloano']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+					<c:choose>
+						<c:when test="#{flReportBB.hasFactoringUserRole()}">
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.loa.no']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.loa.no']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.itmName']}"
+								itemValue="#{lbl['lbl.rpt.itmName']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.approverName']}"
+								itemValue="#{lbl['lbl.rpt.approverName']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"
+								itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.fl.doc.maintain.doc.status']}"
+								itemValue="#{lbl['lbl.fl.doc.maintain.doc.status']}"></f:selectItem>
+						</c:when>
+						<c:otherwise>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.sstScreen']}"
+								itemValue="#{lbl['lbl.rpt.sstnospace']}"></f:selectItem>
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.treasurycrclr']}"
+								itemValue="#{lbl['lbl.rpt.drpdown.treasurycrclrvalue']}"></f:selectItem>
+						</c:otherwise>
+					</c:choose>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
+				<!-- 29550 - End -->
 			</td>
 			<td>
 				<p:outputLabel

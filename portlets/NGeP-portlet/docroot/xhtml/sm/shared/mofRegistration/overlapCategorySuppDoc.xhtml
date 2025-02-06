@@ -50,6 +50,7 @@
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
 						</c:otherwise>
 					</c:choose>
+					<h:panelGroup>
 					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
@@ -58,8 +59,13 @@
 						partialSubmit="true" update=":form">
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
 					</p:commandLink>
-					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/><br />
+					&#160;<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
+					</h:panelGroup><br />
 					
+					<!-- #31018 - START -->
+					<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.justifyLetter']}" escape="false" />
+					
+					<!-- 
 					<c:choose>
 						<c:when test="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser )
 						and (backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U')}">
@@ -68,7 +74,9 @@
 						<c:otherwise>
 							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.category.overlap.upload.doc']}" escape="false" />
 						</c:otherwise>
-					</c:choose>
+					</c:choose> 
+					-->
+					<!-- #31018 - END -->
 				</td>
 			</tr>
 		</table>	
@@ -90,7 +98,8 @@
 				</f:facet>
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="3" cols="80"
-					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId">
+					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId"
+					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<p:ajax process="@this" update="overlapCatSuppDocDtId,@this" event="blur"/>
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
@@ -102,9 +111,9 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column style="width : 10%;">
+			<p:column style="width : 10%;" rendered="#{backingBean.managedBean.supplierUser}">
 				<f:facet name="header">
-					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
+					<h:outputText value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.btn.upload.doc']}" />
 				</f:facet>
 				<p:commandLink oncomplete="overlapCatUploadDialog.show();return false;"
@@ -123,7 +132,7 @@
 				</p:commandLink>
 				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty overlap.fileName}" />
 				<p:commandLink id="deleteOverlapCatAttId" style="white-space: normal !important;"
-					partialSubmit="true" rendered="#{not empty overlap.fileName}"
+					partialSubmit="true" rendered="#{not empty overlap.fileName and backingBean.managedBean.supplierUser}"
 					process="@this" action="#{backingBean.onDeleteOverlapCatAttachment(overlap)}"
 					update="overlapCatSuppDocDtId" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()">

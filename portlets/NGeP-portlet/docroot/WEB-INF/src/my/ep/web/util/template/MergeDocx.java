@@ -112,7 +112,7 @@ public class MergeDocx {
           		elements = doc.getElementsByTag("h" + i);
 				for(Element element: elements) {
 					element.clearAttributes();
-				};
+				}
           	 }
 			
 			combinedContentHtml = doc.html().replace("<br>", "<br/>");

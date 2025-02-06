@@ -114,7 +114,7 @@ public class DeliveryOrderCancellationRptBackingBean extends FlReportBackingBean
 		getManagedBean().setItemName(null);
 		getManagedBean().setSupplierDoRefNo(null);
 		getManagedBean().setDeliveryOrderNo(null);
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 	
 }

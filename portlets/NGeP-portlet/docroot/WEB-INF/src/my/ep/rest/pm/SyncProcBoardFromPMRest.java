@@ -7,17 +7,15 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.apache.log4j.Logger;
 
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.log4j.Logger;
 
 @Path("/sync")
 public class SyncProcBoardFromPMRest {
@@ -199,7 +197,7 @@ public class SyncProcBoardFromPMRest {
 		List<String> roleCodes = new ArrayList<String>();
 		List<PmUser> chairpersonList = null;
 		try{		
-		roleCodes.add(RoleCode.PPB_CHAIRPERSON.value());;
+		roleCodes.add(RoleCode.PPB_CHAIRPERSON.value());
 		reqDTO.setRoleCodes(roleCodes);
 		resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
 		chairpersonList = resDTO.getUserList();
@@ -221,7 +219,7 @@ public class SyncProcBoardFromPMRest {
 		List<String> roleCodes = new ArrayList<String>();
 		List<PmUser> memberList = null;
 		try{		
-		roleCodes.add(RoleCode.PPB_MEMBER.value());;
+		roleCodes.add(RoleCode.PPB_MEMBER.value());
 		reqDTO.setRoleCodes(roleCodes);
 		resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
 		memberList = resDTO.getUserList();
@@ -242,7 +240,7 @@ public class SyncProcBoardFromPMRest {
 		List<String> roleCodes = new ArrayList<String>();
 		List<PmUser> secretaryList = null;
 		try{		
-		roleCodes.add(RoleCode.PPB_SECRETARY.value());;
+		roleCodes.add(RoleCode.PPB_SECRETARY.value());
 		reqDTO.setRoleCodes(roleCodes);
 		resDTO = SmServiceLookup.getUserSO().retrieveUserListByRole(reqDTO);
 		secretaryList = resDTO.getUserList();
@@ -299,18 +297,23 @@ public class SyncProcBoardFromPMRest {
 			reqDTO = new UserReqDTO();
 			reqDTO.setLoginId(loginId);
 			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
+			log.info("TB DEV ISLAND: AFTER GET USER");
 			if(resDTO.getPmUser() == null){
+				log.info("TB DEV ISLAND: GET USER INACTIVE");
 				resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginIdInactive(reqDTO);
 			}
 			if(resDTO.isSuccessful() && resDTO.getPmUser()!=null)
-			{
-				userId = resDTO.getPmUser().getUserId();
+			{	
+				userId = resDTO.getPmUser().getUserId();log.info("TB DEV ISLAND:USERID="+userId);
 				reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
 				reqDTO.setUserId(userId);
 				reqDTO.setSupplierUser(false);
+				log.info("TB DEV ISLAND:START TO SYNC");
 				resDTO = SmServiceLookup.getUserSO().createnSyncLiferayAndOimRoleFromPm(reqDTO);
 				log.info("End Sync user by login Id: " + resDTO.isSuccessful());
+			}else{
+				log.info("TB DEV ISLAND:RESPONS IS FAIL TO GET USER OR USER IS NULL");
 			}
 			
 			log.info("Finished Sync By Login Id");			

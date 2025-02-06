@@ -51,7 +51,6 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
-import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -991,6 +990,13 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
+		
+		//#29417 start
+		Date signDate = getManagedBean().getAgreementContractVer()!=null ? getManagedBean().getAgreementContractVer().getSignedDate() : null;
+		Date expDate = getManagedBean().getCtAgreement().getExpDate();
+		getManagedBean().setButtonProcess(outcome);
+		//#29417 end
+		
 		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
 			validateAgreement(outcome);
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -1012,15 +1018,18 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			getManagedBean().setTextBeforeSign(sb.toString());	
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			
+			//#29417 start
+			if(signDate != null && expDate != null && signDate.after(expDate)){	
+				RequestContext.getCurrentInstance().execute("dateValidationExpGpki.show()");				
+			}else{
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
+			//#29417 end
 			return null;
 		}
 		// 29417 - START
-		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){
-			getManagedBean().setButtonProcess(outcome);
-			Date signDate = getManagedBean().getAgreementContractVer().getSignedDate();
-			Date expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
-			
+		else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) ){			
 			if(signDate != null && expDate != null && signDate.after(expDate)){	
 				RequestContext.getCurrentInstance().execute("dateValidationExp.show()");				
 			}
@@ -1313,10 +1322,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
 		ctBB.getManagedBean().setContractVerIdFromAgreementTaskList(contractVerId);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
+		contractDetailsBB.getManagedBean().setLoaContractVerList(null); //#15851
+		contractDetailsBB.getManagedBean().setLoaContractVerId(null); //#15851
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId());
+		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 		return CONTRACT_PAGE;
 	}
 
@@ -1345,10 +1356,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			getManagedBean().setFromViewSCL(true);
 			
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true"); //#15851 
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
-			abb.getManagedBean().setViewSclFromAgreement(true);
+			ctBB.getManagedBean().setViewSclFromAgreement(true); //#15851
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end
@@ -2418,7 +2429,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		String portletTitle = StringUtils.EMPTY;
 		if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.supp.agreement.creation",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());;
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.contract.agreement.creation",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -2897,8 +2908,6 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			newAdditionAmt = additionContract;
 		}else if(contractAmtChange.equals(ContractConst.DEDUCT_AMOUNT)){
 			newAdditionAmt = ctContractAmount.getContractAmount().add(additionContract);
-		}else{
-			newAdditionAmt = ctContractAmount.getContractAmount();
 		}
 		
 		if (gstAmtChange.equals(ContractConst.ADD_AMOUNT)) {

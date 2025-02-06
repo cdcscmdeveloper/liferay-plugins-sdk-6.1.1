@@ -19,6 +19,7 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
@@ -221,7 +222,7 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}
 		//#32304 - start
-		if(SmCommonUtil.checkCancelBumiApplFromNewAppl(getManagedBean().getSmAppl())){
+		if(SmCommonUtil.checkCancelBumiApplFromBumiStatus(getManagedBean().getSmAppl())){
 			RequestContext.getCurrentInstance().execute("smBumiCancelAlert.show()");
 			return;
 		}
@@ -344,63 +345,48 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	/**
+	 * Get a list of all non-duplicate category codes for site visit
+	 */
 	private void getAllSiteVisitCategoryCode(){
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
 		getManagedBean().setCategoryLs(new ArrayList<SmSupplierCategory>());
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
-		List<SmSupplierCategory> tempL = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> tempL = new ArrayList<>();
+		//max loop: 39
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
-			if(svTask.getPmCategoryL3() == null) continue;
-			tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-					(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id(), smAppl.getApplType()));
-			if(!smAppl.isSiteVisitGroup() || svTask.getSmSvTaskGroups() == null)
-				continue;
-			for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
-				tempL.addAll(SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId
-						(smAppl.getApplId(), svTGroup.getPmCategoryL3().getCategoryL3Id(), smAppl.getApplType()));
+			tempL.addAll(getSiteVisitCategoryCode(smAppl, svTask.getPmCategoryL3()));
+			if(smAppl.isSiteVisitGroup() && svTask.getSmSvTaskGroups() != null){
+				for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
+					tempL.addAll(getSiteVisitCategoryCode(smAppl, svTGroup.getPmCategoryL3()));
+				}
 			}
 		}
 		for(SmSupplierCategory catTemp : tempL){
-			boolean dupe = false;
+			boolean duplicate = false;
 			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
 				if(catTemp.getPmCategoryL3().getCategoryL3Id().equals(
 						catBean.getPmCategoryL3().getCategoryL3Id())){
-					dupe = true;
+					duplicate = true;
 					break;
 				}
 			}
-			if(!dupe)	
+			if(!duplicate){
 				getManagedBean().getCategoryLs().add(catTemp);
-		}
-		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
-		/*
-		List<String> tempCatLs = new ArrayList<String>();
-		for(SmSvTask svTask : smAppl.getSmSvTasks()){
-			if(svTask.getPmCategoryL3() != null){
-				List<SmSupplierCategory> suppCatLs = SmCommonUtil.getInstance().
-						retrieveSupplierCategoryByApplIdAndCategoryId(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id());
-				//CR 28774: Static Code Analysis
-				if(!suppCatLs.isEmpty()){
-					for(SmSupplierCategory suppCat : suppCatLs){
-						StringBuilder catrStr = new StringBuilder();
-						catrStr.append(suppCat.getPmCategoryL1().getCategoryL1Code());
-						catrStr.append(suppCat.getPmCategoryL2().getCategoryL2Code());
-						catrStr.append(suppCat.getPmCategoryL3().getCategoryL3Code());
-						
-						if(!tempCatLs.contains(catrStr.toString())){
-							if(suppCat != null){
-								getManagedBean().getCategoryLs().add(suppCat);
-							}
-							tempCatLs.add(catrStr.toString());
-						}
-					}
-				}
 			}
 		}
-		*/
-		//28775 - Site Visit Grouping Enhancement - 28775 - end
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
 	}
+	
+	private List<SmSupplierCategory> getSiteVisitCategoryCode(SmAppl appl, PmCategoryL3 l3){
+		if(appl == null || l3 == null || appl.getApplId() == null || l3.getCategoryL3Id() == null){
+			return new ArrayList<>();
+		}
+		return SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId(
+				appl.getApplId(), l3.getCategoryL3Id(), appl.getApplType());
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 	
 	private PmUser getSupplierMOFAdmin(){
 		PmUser pmUser = null;
@@ -428,25 +414,36 @@ public class SvcSiteAssignBackingBean extends
 	} 
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param svTask
+	 * @return facility type and category code(s)
+	 */
 	public String getFacilityType(SmSvTask svTask){
-		String s = svTask.getSmSvAddress().getFacilityType();
+		if(svTask == null || svTask.getSmSvAddress() == null){
+			return "";
+		}
+		String facTypes = "";
+		if(svTask.getSmSvAddress().getFacilityType() != null){
+			facTypes = svTask.getSmSvAddress().getFacilityType();
+		}
 		if(svTask.getPmCategoryL3() != null){
-			s = s.concat("<br/>"
-					+ svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+			facTypes += "<br/>" + svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
-					+ svTask.getPmCategoryL3().getCategoryL3Code());
+					+ svTask.getPmCategoryL3().getCategoryL3Code();
 		}		
-		if(!getManagedBean().getSmAppl().isSiteVisitGroup()) 
-			return s;
+		if(!getManagedBean().getSmAppl().isSiteVisitGroup()){
+			return facTypes;
+		}
 		
 		for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
 			String catCode = svTGroup.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
 					+ svTGroup.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
 					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
-			if(!s.contains(catCode))
-				s = s.concat("<br/>"+catCode);
+			if(!facTypes.contains(catCode)){
+				facTypes = facTypes.concat("<br/>"+catCode);
+			}
 		}
-		return s;
+		return facTypes;
 	}
 	//28775 - Site Visit Grouping Enhancement - 28775 - end
 }

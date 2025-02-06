@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{viewSmApplBackingBean.managedBean.smAppl.supplierType ne 'G' ? 
+		lbl['lbl.sm.branch.panHdr'] : lbl['lbl.branch.info.hdr']}" toggleable="true"
+		id="sample" >
+		<p:outputPanel id="brnInfPan" layout="block">
+			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar" 
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
+				rowKey="#{branchBean}" rowIndexVar="index">
+				<ac:paginator for="dt" />
+
+				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}" >
+					<table style="width: 100%">
+						<tr>
+							<td colspan="2" style="border-style: none !important;">
+								<h:outputText value="#{branchBean.branchName}" />
+							</td>
+						</tr>
+						<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType ne 'G'}">
+						<tr>
+							<td style="border-style: none !important; width: 40%;"><h:outputText
+									value="#{lbl['lbl.sm.gstNo']}" /></td>
+							<td style="border-style: none !important; width: 5%;">:</td>
+							<td style="border-style: none !important;; width: 55%;">
+								<h:outputText value="#{branchBean.gst.gstRegNo}" rendered="#{not empty branchBean.gst.gstRegNo}"/>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstRegNo}"/>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+							<td style="border-style: none !important;">:</td>
+							<td style="border-style: none !important;">
+								<h:outputText value="#{branchBean.gst.gstEffDate}" rendered="#{not empty branchBean.gst.gstEffDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstEffDate}"/>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+							<td style="border-style: none !important;">:</td>
+							<td style="border-style: none !important;">
+								<h:outputText value="#{branchBean.gst.gstEndDate}" rendered="#{not empty branchBean.gst.gstEndDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstEndDate}"/>
+							</td>
+						</tr>
+						</p:outputPanel>						
+					</table>
+				</p:column>
+				<!-- #34135 START -->
+				<p:column headerText="#{lbl['lbl.sm.branch.address']}" style="width :40%;white-space : normal">
+					<h:outputText
+						value="#{viewSmApplBackingBean.getFullBranchAddress(branchBean.smAddress)}"
+						style="float : left" />
+				</p:column>
+				<!-- #34135 START -->
+				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"
+					style="width :150px;white-space : normal" 
+					rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType ne 'G'}">
+					<h:outputText value="#{branchBean.smPersonnel.name}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}" style="text-align: center  !important;">
+					<p:commandLink id="selectButton"
+						partialSubmit="true" process="@this" onstart="blockWidget.show()"
+						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}" 
+						update=":#{p:component('viewBranchDialogId')}" oncomplete="banchDialog.show()">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}"
+							style="margin-right:2px;" />
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+			
+			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.branchRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.branchRemark}" />
+			
+		</p:outputPanel>
+	</p:panel>
+	
+	<p:dialog style="max-height:600px;width:700px"
+		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
+		id="viewBranchDialogId" resizable="false" showEffect="fade" hideEffect="fade">
+		
+		<p:scrollPanel mode="native" style="max-height:400px;width:550px;border:none">
+			<ui:fragment
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' 
+				or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J' 
+				or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'G'}">
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/branchDetailsTablePageViewOnly.xhtml" />
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' 
+				or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/gstBranchInfoFormViewOnly.xhtml" />
+			</ui:fragment>
+			<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'MKM'}">
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/branchDetailsTablePageConsultantViewOnly.xhtml" />
+			</p:panel>
+		</p:scrollPanel>
+	</p:dialog>
+	
+</ui:composition>

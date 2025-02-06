@@ -139,6 +139,6 @@ public class LateDeliveryRptBackingBean extends FlReportBackingBean<LateDelivery
 	 * reset action
 	 */
 	public void resetAction(){
-		resetSearchCriteriaValues();;
+		resetSearchCriteriaValues();
 	}
 }

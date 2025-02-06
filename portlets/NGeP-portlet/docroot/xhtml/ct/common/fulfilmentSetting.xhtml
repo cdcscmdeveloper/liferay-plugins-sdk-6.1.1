@@ -23,12 +23,12 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.notification']}" />
 			</h:panelGrid>
 	             
-	     	<p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  styleClass="required" />  
+	     	<p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  styleClass="required" style="padding-top: 15px"/>  
 	     	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
 	        	value="#{ctBackingBean.managedBean.contractVer.ctSetting.agNotifyDaysB4Ag}"
 	         	style="width:50px;" label="#{lbl['lbl.ct.agreement.notify']}"   required="true" />  
-	     	<h:panelGrid columns="3">
-				<p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float:left;text-align:left;width:400px;"/>
+	     	<h:panelGrid columns="3" >
+				<p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float: left; text-align: left; max-width: 300px; word-wrap: break-word;"/>
 		   		<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.notification']}" />
 			</h:panelGrid>
@@ -63,14 +63,14 @@
 		<h:outputText value="#{lbl['lbl.ct.panel.fulfilment.management.notification.setting']}"/>
 		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.notificationSetting']}"/>
    	</f:facet>
-		<h:panelGrid columns="3" style="width:100%;" columnClasses="columnWidth240">  
+		<h:panelGrid columns="3" style="width:80%;" columnClasses="columnWidth240">  
 				
 			<p:outputLabel value="#{lbl['lbl.ct.do.notify']}"  styleClass="required"/>  
 	     	<p:inputText maxlength="4" disabled="#{ctBackingBean.managedBean.viewContract}"
 	     		value="#{ctBackingBean.managedBean.contractVer.ctSetting.supplierDoDays}"
 	        	style="width:50px;" label="#{lbl['lbl.ct.do.notify']}"  required="true" />  
-	    	<h:panelGrid columns="3">
-	       		<p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;text-align:left;width:400px;"/>
+	    	<h:panelGrid columns="3" >
+	       		<p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;text-align:left;"/>
 	         	<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.order.notification']}" />
 			</h:panelGrid>	

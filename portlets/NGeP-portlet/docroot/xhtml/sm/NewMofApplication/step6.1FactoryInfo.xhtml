@@ -21,14 +21,12 @@
 					<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
 							src="smMofApplnSideMenuItem.xhtml" /></td>
 					<td style="vertical-align: top;">
-						<!-- #12483 - START -->
-						<c:if test="#{backingBean.renderRevisedReason()}"> 
-							<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
-							<br/> 
-						</c:if>
+						<!-- #12483 - START, #34892 -->
+						<ac:smReviseReason bBean="#{backingBean}"/><br/>
 						<!-- #12483 - END -->
 						<table style="width: 350px">
-							<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+							<!-- #32008 -->
+							<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 								<tr>
 									<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.poSecReview.factoryVerify}"
@@ -43,7 +41,8 @@
 
 								</tr>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+							<!-- #32008 -->
+							<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 								<tr>
 									<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.apprvrSecReview.factoryVerify}"
@@ -61,7 +60,9 @@
 						
 							<p:blockUI block=":form:tt:facInfPan" widgetVar="buiPoFac"
 								id="poFacBlc"
-								blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.factoryVerify : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.factoryVerify : false)}" />
+								blocked="#{!backingBean.managedBean.upsCannotEdit and 
+									((backingBean.managedBean.poUser and backingBean.managedBean.poSecReview.factoryVerify)
+									or (backingBean.managedBean.approverUser and backingBean.managedBean.apprvrSecReview.factoryVerify))}" /><!-- #32008 -->
 
 							<h:inputHidden
 								value="#{backingBean.managedBean.smAppl.applCategoryType}" />

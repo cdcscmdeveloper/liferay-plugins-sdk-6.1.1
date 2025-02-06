@@ -4,19 +4,128 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<p:panel id="technicalEvaluationSpecSuppliersTechnicalTemplateSpecSuppliers" header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:remove>
+		<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+	</ui:remove>
+	<p:panel
+		id="technicalEvaluationSpecSuppliersTechnicalTemplateSpecSuppliers"
+		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}"
 			escape="false" />
-
-		<p:dataTable var="finSpec" editable="true" lazy="true"
+			<ui:remove>
+				<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+			</ui:remove>
+	<c:choose>
+	<c:when test="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+						<p:dataTable var="finSpec" editable="true" lazy="true"
 			    emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				id="financialSpecEvaluationStage" rows="10"
 				value="#{finSpecsupplierList}" rowIndexVar="index"
 				style="width:100%" rowKey="#{finSpec}">
-			
+
+				<ac:paginator for="financialSpecEvaluationStage"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+					style="width:10%; text-align:center;">
+
+					<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
+
+
+				</p:column>
+				
+			  <p:column headerText="#{lbl['lbl.sc.bumiputra.status']}"
+					style="width:10%">
+					<h:outputText value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+																	  		fn:toUpperCase(finSpec.scQtProposal.bumi))}" />
+				</p:column> 
+				<p:column headerText="#{lbl['lbl.sc.eva.package.offered.price']}"
+					style="width:15%;text-align:right;">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.proposalAmt}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.package.score']}"
+					style="width:10%;text-align:right;">
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.totalScore}"></h:outputText>
+				</p:column>
+
+				<p:column style="width:15%;text-align:right;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
+						<ac:iconTooltip id="priceDiff#{index}FECSS"
+							value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+
+				</p:column>
+
+				<p:column style="width:15%;text-align:right;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
+						<ac:iconTooltip id="prefMargin#{index}FEC"
+							value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
+					</f:facet>
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.pref.margin']}"
+					style="width:10%;text-align:right;">
+
+					<h:outputText
+						value="#{finSpec.scQtProposal.proposalAmount.preferenceMargin}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
+
+
+				</p:column>
+
+
+
+				<p:column style="width:15%;text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.action']}" />
+						
+					</f:facet>
+
+					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
+						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus eq null or finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61600'}"
+						process="@this"
+						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
+						partialSubmit="true" />
+					<p:commandButton value="#{lbl['lbl.btn.view']}"
+						rendered="#{finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus ne null and finSpec.scQtProposal.proposalAmount.pmSpecEvalStatus.statusId eq '61601'}"
+						process="@this"
+						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
+						partialSubmit="true" />
+				</p:column>
+			</p:dataTable>
+	</c:when>
+	<c:otherwise>
+	<p:dataTable var="finSpec" editable="true" lazy="true"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			id="financialSpecEvaluationStage" rows="10"
+			value="#{finSpecsupplierList}" rowIndexVar="index" style="width:100%"
+			rowKey="#{finSpec}">
+
 			<ac:paginator for="financialSpecEvaluationStage"></ac:paginator>
 			<ui:remove><!-- 6906 - start --></ui:remove>
 			<ui:param name="isRejected" value="#{not empty finSpec.scQtProposal.supplierRejectionRemark}"/>
@@ -71,5 +180,116 @@
 						disabled="#{isRejected}"/>  <ui:remove><!-- 6906 --></ui:remove>
 				</p:column>
 		</p:dataTable>
+	</c:otherwise>
+	</c:choose>
+<ui:remove>
+	<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+</ui:remove>		
 	</p:panel>
+	<ui:fragment rendered="#{evaluationBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
+		<p:panel
+			id="evaluationStageSpecificationCommitteeBypackageofferPrice#{evaluationBackingBean.managedBean.specZoneTabIndex}"
+			toggleable="true"
+			header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
+			<!-- ahmaa-#25138 - start -->
+			<h:panelGrid
+				rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1'}"
+				styleClass="instruction">
+				<h:outputText
+					value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}"
+					escape="false">
+				</h:outputText>
+			</h:panelGrid>
+			<!-- ahmaa-#25138 - end -->
+			<table>
+				<tr>
+					<td><h:outputLabel style="text-align:left"
+							value="#{lbl['lbl.sc.spec.est.price']}"></h:outputLabel></td>
+					<!-- ahmaa-#25138 -->
+					<td><p:inputText disabled="true" style="text-align:right"
+							value="#{evaluationBackingBean.managedBean.finSpecZoneEstimatedPrice}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+			</table>
+			<h:panelGrid
+				rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '2'}"
+				columns="4">
+				<!-- ahmaa-#25138 - start -->
+				<h:outputLabel style="text-align:left"
+					value="#{lbl['lbl.sc.spec.max.score']}">
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.spec.user.score.max.tooltip']}" />
+				</h:outputLabel>
+				<p:spacer width="63" height="20" />
+				<h:inputText disabled="true" style="text-align:right"
+					value="#{evaluationBackingBean.managedBean.withInVarieance}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:inputText>
+			</h:panelGrid>
+			<!-- ahmaa-#25138 - end -->
+			<!-- ahmaa-#25138 - start -->
+			<p:panelGrid
+				rendered="#{evaluationBackingBean.managedBean.offerScoreType eq '1' or evaluationBackingBean.managedBean.offerScoreType eq null}"
+				style="margin-top:5px;width:100%;"
+				styleClass="panelGridBorders tr, panelGridBorders td">
+				<!-- ahmaa-#25138 - end -->
+				<f:facet name="header">
+					<p:row>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.offered.price']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}</p:column>
+						<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}</p:column>
+						<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.eva.from.varience.ringgit']}</p:column>
+						<p:column styleClass="panelGridHeaders">#{lbl['lbl.sc.eva.to.varience.ringgit']}</p:column>
+						<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}</p:column>
+						<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.within.score']}</p:column>
+						<p:column styleClass="panelGridHeaders">#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}</p:column>
+					</p:row>
+				</f:facet>
+				<p:row>
+					<p:column style="font-weight: bold;width:14%;">
+						<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+						<ac:iconTooltip
+							value="#{lbl['lbl.sc.by.package.evaluation.tooltip']}" />
+					</p:column>
+					<p:column style="text-align:right">
+
+						<h:outputText value="#{finSpecofferPrice.fromVariance}"></h:outputText>
+					</p:column>
+
+					<p:column colspan="1" style="text-align:right">
+						<h:outputText value="#{finSpecofferPrice.toVariance}"></h:outputText>
+					</p:column>
+
+					<p:column colspan="1" style="text-align:right">
+						<h:outputText
+							value="#{evaluationBackingBean.managedBean.packageFromVarieance}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column colspan="1" style="text-align:right">
+						<h:outputText
+							value="#{evaluationBackingBean.managedBean.packageToVarieance}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column colspan="1" style="text-align:right">
+						<h:outputText value="#{finSpecofferPrice.belowScore}"></h:outputText>
+					</p:column>
+					<p:column colspan="1" style="text-align:right">
+						<h:outputText
+							value="#{evaluationBackingBean.managedBean.withInVarieance}"></h:outputText>
+					</p:column>
+					<p:column colspan="1" style="text-align:right">
+						<h:outputText value="#{finSpecofferPrice.aboveScore}"></h:outputText>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+	</ui:fragment>
 </ui:composition>

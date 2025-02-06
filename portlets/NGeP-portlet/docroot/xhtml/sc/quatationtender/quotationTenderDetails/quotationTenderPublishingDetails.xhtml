@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+     <ui:param name="isSampleExist" value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(qTScheduleDetailBackingBean.managedBean.qt)}"></ui:param><!-- #11104 Reendorse -->
 	<ui:include src="quotationTenderScheduleDetails.xhtml" />
 	<ui:include src="quotationTenderScheduleAddress.xhtml" />
 </ui:composition>

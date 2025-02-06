@@ -18,22 +18,22 @@
 			<br />
 			<ui:repeat var="factoryCatVar" value="#{backingBean.managedBean.factoryFacilitiesVOList}" varStatus="factoryCatVarStatus">
 				<table style="width: 100%;">
-				<!-- 29380 - Site Visit Grouping Enhancement -28775 - Start -->
+					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
-						<td style="float: left;">
-						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} (#{factoryCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{factoryCatVar.pmCategoryL2.categoryName}/#{factoryCatVar.categoryName})" 
-						    style="text-align:left;"/>
+						<td>
+							<!-- #28175 -->
+						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
+						    	(#{backingBean.getSupplierCategoryName(factoryCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
-					<ui:repeat var="categoryVar" value="#{backingBean.managedBean.smAppl.smSupplierCategories}" >
 					<tr>
-						<td style="white-space: nowrap; float: left;" >
-						    <p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-						    rendered="#{categoryVar.otherDesc != null and categoryVar.pmCategoryL3.categoryL3Id eq factoryCatVar.categoryL3Id}"/>
+						<td style="white-space: nowrap; float: left;">
+							<p:outputLabel value="#{backingBean.getCategoryCodeOtherDesc(factoryCatVar)}" 
+								style="text-indent: 10px;"/>
 						</td>
 					</tr>
-					</ui:repeat>
-				<!-- 29380 - Site Visit Grouping Enhancement -28775 -End -->
+					<!-- 29380 - Site Visit Grouping Enhancement -28775 - end -->
 				</table>
 				<br />
 				
@@ -43,7 +43,7 @@
 					rowKey="#{fac}" rowIndexVar="index" id="facDt">
 					<ac:paginator for="facDt" />
 					
-					<p:column style="width: 5% !important;" rendered="#{not empty factoryCatVar.facilityList}">
+					<p:column style="width: 5% !important;" rendered="#{not empty factoryCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
 						<f:facet name="header">
 				          <p:selectBooleanCheckbox value="#{factoryCatVar.selected}" >
 				          	<p:ajax event="change" update=":#{p:component('smFacilityFactoryDtPanel')}" 
@@ -93,14 +93,15 @@
 								longitude="#{fac.smAddress.mapLongitude}" 
 								address="getAddress2('#{fac.smAddress.address1}', '#{fac.smAddress.address2}', '#{fac.smAddress.address3}', '#{fac.smAddress.pmCity.cityName}', '#{fac.smAddress.pmDistrict.districtName}', '#{fac.smAddress.pmState.stateName}', '#{fac.smAddress.pmCountry.countryName}')"
 								showButton="true"
-								disabled="false" />
+								disabled="#{backingBean.managedBean.upsCannotEdit}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.action']}" style="text-align: center  !important;">
 						<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
 							partialSubmit="true" process="@this"
 							update=":form:tt:factoryDialog" style="padding-right:5px" 
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" >
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							<p:graphicImage rendered="#{!backingBean.managedBean.upsCannotEdit}" value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
+							<p:graphicImage rendered="#{backingBean.managedBean.upsCannotEdit}" value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
 						</p:commandLink>
 					</p:column>
 	
@@ -111,11 +112,13 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignNewFactoryBean}"
 					update=":form:tt:factoryDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="factoryPan"
 					id="delFactoryBtnId" disabled="#{backingBean.disableDeleteBtn(factoryCatVar.facilityList)}"
 					update=":#{p:component('smFacilityFactoryDtPanel')},@this" 
@@ -128,7 +131,7 @@
 	<p:dialog width="700px" height="500px"
 		header="#{lbl['lbl.sm.factory.information']}"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
-		closable="false" hideEffect="fade" modal="true" id="factoryDialog">
+		closable="true" hideEffect="fade" modal="true" id="factoryDialog">
 		
 		<p:outputPanel layout="block" id="factoryBlockPanel">
 			<p:messages id="factoryDialogMsg" showSummary="false"
@@ -137,9 +140,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.factory.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
-							required="#{backingBean.managedBean.valueReqd}" label="Name"
-							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" >
+							required="#{backingBean.managedBean.valueReqd}" 
+							label="#{lbl['lbl.sm.facility.factory.name']}"
+							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
 						</p:inputText>
 						<p:message id="smFacFactorNameMsg" for="smFacFactorName"
@@ -156,21 +161,32 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.category']}" id="factoryCategoryId"
 							value="#{backingBean.managedBean.selectedSuppCategoryFacilityIds}"
-							style="height:100px;width: 200px;">
+							style="height:100px;width: 200px;"
+							rendered="#{!backingBean.managedBean.upsCannotEdit}">
 							<f:selectItems
 								value="#{backingBean.getSelectedCategoryItemsByFacilityType(backingBean.managedBean.selectedFactoryFacility.facilityType)}" />
 							<p:ajax event="change" update="@this" process="@this" partialSubmit="true" />
 						</p:selectManyMenu>
+						<p:outputPanel rendered="#{backingBean.managedBean.upsCannotEdit}">
+							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedFactoryFacility.smSupplierCategoryFacilities}">
+								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
+									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
+									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3, false, false)})" style="float:left"/><br/> 
+							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
+							</ui:repeat>
+						</p:outputPanel>
 						<p:message id="factoryCategoryIdMsg" for="factoryCategoryId"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>
 				
+				<!-- #34159 - add disableValidation attribute-->
 				<ac:smFacilityAddress backingBean="#{backingBean}" facility="#{backingBean.managedBean.selectedFactoryFacility}"
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.factoryFacilityStates}"
 					divisionItems="#{backingBean.managedBean.factoryFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.factoryFacilityDistricts}" cityItems="#{backingBean.managedBean.factoryFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryBlockPanel"/>
+					facilityPanel="#{SupplierManagementConst.SM_FACTORY_FACILITY_PANEL}" panelId="factoryBlockPanel"
+					disableValidation="#{param['disableValidation']}"/>
 				
 				
 				<tr>
@@ -180,7 +196,8 @@
 						countryCode="#{backingBean.managedBean.selectedFactoryFacility.phoneCountry}" 
 						areaCode="#{backingBean.managedBean.selectedFactoryFacility.phoneArea}" 
 						number="#{backingBean.managedBean.selectedFactoryFacility.phoneNo}"  
-						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" />
 					</td>
 				</tr>
 				<tr>
@@ -190,7 +207,8 @@
 						countryCode="#{backingBean.managedBean.selectedFactoryFacility.faxCountry}" 
 						areaCode="#{backingBean.managedBean.selectedFactoryFacility.faxArea}" 
 						number="#{backingBean.managedBean.selectedFactoryFacility.faxNo}"  
-						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}" />
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
+						disabled="#{backingBean.managedBean.upsCannotEdit}" />
 					</td>
 				</tr>
 				<tr>
@@ -198,7 +216,8 @@
 					<td><p:inputText id="smFacFactoryArea"
 							label="#{lbl['lbl.sc.spec.area.feat']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
-							size="35">
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> <p:message id="smFacFactoryAreaMsg" for="smFacFactoryArea"
@@ -211,7 +230,8 @@
 					<td><p:selectOneRadio id="smOwnerType"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.facility.ownerType']}"
-							value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
+							value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}"
+							disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}"
 								itemValue="R" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}"
@@ -238,7 +258,7 @@
 							<ui:fragment
 								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
 								<p:inputText id="smFacFactoryPrice"
-									disabled="#{!backingBean.managedBean.valueReqd}"
+									disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
 									label="#{lbl['lbl.cm.price']}" maxlength="17"
 									validatorMessage="#{lbl['lbl.cm.price']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
@@ -285,7 +305,8 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.ownername']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
-							size="35" /> <p:message id="smFacFactoryOwnNameMsg"
+							size="35"
+							disabled="#{backingBean.managedBean.upsCannotEdit}" /> <p:message id="smFacFactoryOwnNameMsg"
 							for="smFacFactoryOwnName" showSummary="true" showDetail="false"
 							display="icon" /></td>
 				</tr>
@@ -293,12 +314,18 @@
 			</table>
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateFactoryToSmAppl}"
 					partialSubmit="true" process="factoryDialog"
 					onclick="factoryBlockWidget.show();" oncomplete="factoryBlockWidget.hide();"
-					update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smFacilityFactoryDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.cancelFactorySaveorUpdate}"
 					update=":form:tt:factoryDialog, @([id$=Msg])" />

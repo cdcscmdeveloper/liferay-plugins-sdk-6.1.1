@@ -24,6 +24,7 @@
     	</tr>
     	
     	<tr>
+    		<!-- #24819 - start -->
 	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.businessregno')</b></td>
 	        <td>$busRegNo</td>
     	</tr>
@@ -35,6 +36,7 @@
 	      	#else
 	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
 	      	#end
+	      	<!-- #24819 - end -->
     	</tr>
     	
     	<tr>
@@ -46,6 +48,13 @@
 	        <td><br /></td>
     	</tr>
     	
+    	<!--#34159 - START -->
+		<tr>
+    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
+    		<td>$districtDtls</td>
+    	</tr>
+		<!--#34159 - END -->
+    	
         <tr>
 	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.postal.code')</b></td>
 	        <td>$postCode</td>
@@ -56,18 +65,22 @@
 	        <td>$townDtls</td>
     	</tr>
     	
+    	<!--#34159 - START -->
+		#if($isStateAdoptDivision)
+		<tr>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.division')</b></td>
+	        <td>$divisionDtls</td>
+    	</tr>
+		#end
+		<!--#34159 - END -->
+    	
     	<tr>
 	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.state')</b></td>
 	        <td>$stateDtls</td>
     	</tr>
     	
-    	<tr>
-    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
-    		<td>$districtDtls</td>
-    	</tr>
-    	
    	    <tr>
-	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no').</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no')</b></td>
 	        <td>$mofNo</td>
     	</tr>
     	

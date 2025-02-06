@@ -49,13 +49,13 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 212 --></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
-				style="text-align:right">
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical.package']} (#{evaluationBackingBean.managedBean.maxPackageTsScore})"
+				style="text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
-				style="text-align:right">
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.other.elements.package']} (#{evaluationBackingBean.managedBean.maxPackageOtherElementsScore})"
+				style="text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(finEvaluationqualifiedSupplier)}"></h:outputText>
 			</p:column>
 
@@ -67,7 +67,7 @@
 				<h:outputText value="#{finEvaluationqualifiedSupplier.totalScore}"></h:outputText>
 			</p:column>
 			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
-			<p:column style="width:15%;white-space: normal;text-align:center;">
+			<p:column style="width:15%;white-space: normal;text-align:center;" rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />
@@ -140,13 +140,13 @@
 			</p:column> 
 			<ui:remove><!-- 6906 - end note 233--></ui:remove>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical']}"
-				style="text-align:right">
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.technical.package']} (#{evaluationBackingBean.managedBean.maxPackageTsScore})"
+				style="text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalTechnicalScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.presentation']}"
-				style="text-align:right">
+			<p:column headerText="#{lbl['lbl.sc.eva.technical.presentation.demo.score.other.elements.package']} (#{evaluationBackingBean.managedBean.maxPackageOtherElementsScore})"
+				style="text-align:center">
 				<h:outputText value="#{evaluationBackingBean.retriveTotalDemolScore(disQualifiedSupplier)}"></h:outputText>
 			</p:column>
 
@@ -159,7 +159,7 @@
 			</p:column>
 			
 			<ui:remove>28784 - note 122 - add column rating - start</ui:remove>
-			<p:column style="width:15%;white-space: normal;text-align:center;">
+			<p:column style="width:15%;white-space: normal;text-align:center;" rendered="#{!evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.rating']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tec.rating.tooltip']}" />

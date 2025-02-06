@@ -7,7 +7,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<!-- <p:panel id="pnlPremiseLocation" header="#{lbl['lbl.sm.sitevisit.premiselocation']}" toggleable="true"> -->
 	<table class="customTbl">
 		<tr>
 			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.ownership']}" /></td>
@@ -19,16 +18,19 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.docs']}" /></td>
+			<td class="tdTitle" valign="top">
+				<p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.docs']}" /></td>
 			<td class="tdContent">
-			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvFacility.document}" />
+			<p:selectBooleanCheckbox disabled="#{viewFlag}" 
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvFacility.document}" />
 			</td>
 			
-			<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.aggrmnt.lttr']}" /></td>
+			<td class="tdTitle" valign="top">
+				<p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.aggrmnt.lttr']}" /></td>
 			<td class="tdContent">
-			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvFacility.agreementLetter}" />
+			<p:selectBooleanCheckbox disabled="#{viewFlag}" 
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplate.smSvFacility.agreementLetter}" />
 			</td>
 		</tr>
 	</table>
-	<!-- </p:panel> -->
 </ui:composition>

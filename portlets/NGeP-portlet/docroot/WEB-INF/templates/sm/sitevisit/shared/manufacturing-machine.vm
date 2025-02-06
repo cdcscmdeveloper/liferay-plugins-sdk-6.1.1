@@ -1,3 +1,4 @@
+
 <u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.equipmnt.mchne')</u>
 <br /><br />
 
@@ -9,7 +10,7 @@
 			<th width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.type.machine')</th>
 			<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.brand')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.function')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.quantity')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.qty')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purMthd')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchase.year')</th>
@@ -17,8 +18,10 @@
 		</tr>
 		
 		#if($machineLs.size() > 0)
-			#foreach($smSvMachine in $machineLs)
-				#set($machine = $smSvMachine.smMachineDtl)
+			#foreach($machine in $machineLs)
+			#if($machine && $machine.getClass().getName().contains("SmSvMachine"))
+				#set($machine = $machine.smMachineDtl)
+			#end
 			<tr>
 				<td>$velocityCount</td>
 				<td align="center">#if($!smSvMachine.valid) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes')  #end</td>

@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
@@ -90,7 +91,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			getManagedBean().setBackToPreviousPage(prevPageUrl); 
 			
 			boolean fromBpmTaskList = false;
-			Long sourceId = Long.valueOf(scQt.getQtId());
+			Long sourceId = scQt.getQtId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
 			//Long sourceId = 146L;//LOA record Existed
 			//Long sourceId = 3762L; // no LOA record
@@ -487,11 +488,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-	}
-	
 	/**
 	 * Page navigation from qt loa screen to qtLoaManagedBean.backToPreviousPage
 	 */
@@ -510,48 +506,20 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	//#28777 & #29729 - Start
-    /**
-  	 * Method to return true, if branch in supplier has been deleted (LOA)
-  	 * @param supplier id 
-  	 * @return	true or false
-  	 **/
-	public boolean displaySupplierBranchListDeletedForLOA(Long supplierId){
-		IQTAwardSO qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
-		boolean isSupplierBranchDeleted = false;
-		ScQt scQt = this.getManagedBean().getQt();
-		if(supplierId != null && scQt != null){
-			if(qtAwardSO.isCheckLOIorLOASupplierBranchDeleted(supplierId, scQt.getQtId())){
-				isSupplierBranchDeleted = true;
-		    }
-		}
-	    return isSupplierBranchDeleted;
-	}
-	
-    /**
-	* Method to display message info for supplier branch has been deleted (LOA)
-	**/
-	public void infoBranchSupplierListDeletedForLOA(){
-		 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_760523, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-	}
-	//#28777 & #29729 - End
-	
-
-	
 	//#21692 - start
+	/**
+	 * Check If Supplier EPV Status Is Rejected
+	 * 
+	 * @return
+	 */
 	public boolean isSupplierEPVStatusRejected() {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
 		
 		if (null != getManagedBean().getScLoiLoaList()) {
 			
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
+				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				
 				List<Long> suppList = new ArrayList<>();
@@ -564,8 +532,9 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
 				}
 				
-			} finally {
-				detailSO = null;
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("QTLOA", "CheckIfSupplierEPVStatusIsRejected", getManagedBean().getScLoiLoaList().get(0).getDocId().toString(), "isSupplierEPVStatusRejected",
+						getUserIdSessionFromLoginId(), e);
 			}
 			
 			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
@@ -574,6 +543,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					&& isValidFor21692
 					) ? true : false;
 		}
+		getManagedBean().setAbleToCancelLOA(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}

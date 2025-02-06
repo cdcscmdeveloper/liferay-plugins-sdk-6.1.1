@@ -166,6 +166,7 @@ public class FlReportConst implements Serializable {
 	public static final String FL_RPT_BUSINESS_REG_NO = "PBUSREGNO"; //business registration no.
 	public static final String FL_RPT_MOF_NO = "PMOFNO";
 	public static final String FL_RPT_EP_NO = "PEPNO";
+	public static final String FL_RPT_PURCHASE_GROUP_STATUS = "PGSTATUS";
 	//29550 - End
 	
 	public FlReportConst(){}
@@ -412,6 +413,10 @@ public class FlReportConst implements Serializable {
 		return FL_084_SUPPLIER_TRANSACTION;
 	}
 	//29550 - end
+
+	public static String getFlRptPurchaseGroupStatus() {
+		return FL_RPT_PURCHASE_GROUP_STATUS;
+	}
 	
 	
  }

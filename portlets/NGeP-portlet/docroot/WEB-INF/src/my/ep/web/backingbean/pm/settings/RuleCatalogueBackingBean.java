@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;	//#34397, #34398
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -161,7 +162,6 @@ public class RuleCatalogueBackingBean extends
 
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
-
 
 	public String getDupplicateOrgTypeName() {
 		return dupplicateOrgTypeName;
@@ -1135,6 +1135,11 @@ public class RuleCatalogueBackingBean extends
 			// 29669,29641,30672 start 
 			if (ruleTypeDesc.getRuleType().getRuleDataTypeId().getParameterCode().matches("A|N|M|P") 
 					&& ruleTypeDesc.getRuleType().getRangeType() != 2) {
+				//#34397, #34398 - start
+				if (isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())){
+					validateRenewMOFParams(ruleTypeDesc);
+				}
+				//#34397, #34398 - end
 				for (PmConfigRuleValue ruleTypeValue : ruleTypeDesc.getRuleType().getConfigRuleValues()) {
 					if (ruleTypeValue.getRuleValue() == null) {
 						throw new EpException(MessageConst.ERROR_770133,
@@ -1200,8 +1205,13 @@ public class RuleCatalogueBackingBean extends
 				if (ruleTypeDesc.getRuleType().getRangeType() != 1
 						|| (ruleTypeDesc.getRuleType().getRangeType() == 1 && baseValueToCompare.isShowFlag())) {
 					if (baseValueToCompare.isErrorExpDate()) {
-						if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
+						//#34397, #34398 - start
+						if (isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())) {
+							throw new EpException(MessageConst.ERROR_770257, 
+									new String[] {ruleTypeDesc.getRuleDesc(), getZoneName(baseValueToCompare.getZoneId())});
+						} else if (!this.getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()
 								.equals(ruleTypeDesc.getRuleType().getRuleType())) {
+						//#34397, #34398 - end
 							throw new EpException(MessageConst.ERROR_770111,
 									new String[] { ruleTypeDesc.getRuleDesc() });
 						} else {
@@ -1229,8 +1239,12 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
 					}
 					// 29669 - end
-					if (!ruleValueValidation(baseValueToCompare, value,
-							ruleTypeDesc.getRuleType())) {
+					//#34397, #34398 - start
+					if(isRenewTypes(ruleTypeDesc.getRuleType().getRuleType())){
+						validateRenewMOFDate(baseValueToCompare, value, ruleTypeDesc.getRuleDesc());
+					
+					} else if (!ruleValueValidation(baseValueToCompare, value, ruleTypeDesc.getRuleType())) {
+						//#34397, #34398 - end
 
 						// hit error and return
 						switch (ruleTypeDesc.getRuleType().getValidationType()) {
@@ -4399,6 +4413,9 @@ public class RuleCatalogueBackingBean extends
 	
 	
 	public void saveQtValues() {
+		/*
+		 * 030125: Urgent fixing issue, re-factoring code to cater only check overlapping date range group by orgProfileID
+		 * 
 		boolean result = false;
 		PmPtjSpecialApproval approval = null;
 		PmPtjSpecialApproval compare = null;
@@ -4419,8 +4436,51 @@ public class RuleCatalogueBackingBean extends
 					throw new EpException("QT Values : Date Overlapping - " + approval.getPmOrgProfile().getOrgName());
 				}
 			}// end of second loop
+		}// end of first loop*/
+		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
 
-		}// end of first loop
+	    // Group approvals by OrgProfileId using a HashMap
+	    Map<Long, List<PmPtjSpecialApproval>> groupedApprovals = new HashMap<>();
+	    for (PmPtjSpecialApproval approval : approvals) {
+	        Long orgProfileId = approval.getPmOrgProfile().getOrgProfileId();
+	        if (!groupedApprovals.containsKey(orgProfileId)) {
+	            groupedApprovals.put(orgProfileId, new ArrayList<PmPtjSpecialApproval>());
+	        }
+	        groupedApprovals.get(orgProfileId).add(approval);
+	    }
+
+	    // Iterate through each group and check for overlapping dates
+	    for (Map.Entry<Long, List<PmPtjSpecialApproval>> entry : groupedApprovals.entrySet()) {
+	        List<PmPtjSpecialApproval> group = entry.getValue();
+
+	        // Sort the group by effective date using Collections.sort
+	        Collections.sort(group, new Comparator<PmPtjSpecialApproval>() {
+	            @Override
+	            public int compare(PmPtjSpecialApproval a1, PmPtjSpecialApproval a2) {
+	                return a1.getEffDate().compareTo(a2.getEffDate());
+	            }
+	        });
+
+	        // Check for overlapping dates in the sorted list
+	        for (int i = 0; i < group.size() - 1; i++) {
+	        	PmPtjSpecialApproval current = group.get(i);
+	        	PmPtjSpecialApproval next = group.get(i + 1);
+
+	            // Check for date overlap
+	            boolean isOverlapping = isDateOverlaped(
+	                current.getEffDate(), current.getExpDate(),
+	                next.getEffDate(), next.getExpDate()
+	            );
+
+	            if (isOverlapping) {
+	                // Handle overlap
+	                this.getManagedBean().setDisabledSelectedMinistryId(false);
+	                this.getManagedBean().setMinistryProfileId(null);
+
+	                throw new EpException("QT Values: Date Overlapping - " + current.getPmOrgProfile().getOrgName());
+	            }
+	        }
+	    }
 		
 		IPtjSpecialApprovalSO approvalSO = null;
 		try{
@@ -4448,9 +4508,8 @@ public class RuleCatalogueBackingBean extends
 		}catch(Exception e){
 			this.getManagedBean().setDisabledSelectedMinistryId(false);
 			this.getManagedBean().setMinistryProfileId(null);
-			log.error(e);
+			throw new EpException(MessageConst.ERROR_000001);
 		}
-
 	}
 	
 	private void sortPmOrgProfileByName(List<PmOrgProfile> list) {
@@ -4872,10 +4931,30 @@ public class RuleCatalogueBackingBean extends
 		log.info("end addPTJCRValues");
 	}
 	
+	//#34397, #34398
+	/**
+	 * Retrieve zones
+	 */
 	public void retrievePmZoneList() {
-		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveActiveZoneList();
 		this.getManagedBean().setZoneList(resDTO.getZoneList());
+		
+		List<PmZone> zones = new ArrayList<>();
+		//semenanjung, sabah, sarawak
+		List<String> mainCodes = Arrays.asList("1", "2", "3");
+		for (PmZone zone : getManagedBean().getZoneList()) {
+			if (mainCodes.contains(zone.getZoneCode())) {
+				zones.add(zone);
+			}
+		}
+		Collections.sort(zones, new Comparator<PmZone>(){
+			@Override
+			public int compare(final PmZone s1, final PmZone s2) {
+				return s1.getZoneCode().compareTo(s2.getZoneCode());
+			}
+		});
+		getManagedBean().setMainZones(zones);
 	}
 	/* 27827 - END */
 	
@@ -4970,6 +5049,82 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	// 29650 - end
+	//#34397, #34398 - start
+	/**
+	 * @param type
+	 * @return true for MOF renew period rule types
+	 */
+	public boolean isRenewTypes(String type) {
+		return RuleTypeConst.RENEW_PERIOD_UPDATE.equals(type) || RuleTypeConst.RENEW_PERIOD_ADD_CAT.equals(type)
+			|| RuleTypeConst.RENEW_PERIOD_BUMI.equals(type) || RuleTypeConst.RENEW_PERIOD_CANCEL_CAT.equals(type)
+			|| RuleTypeConst.RENEW_PERIOD.equals(type);
+	}
+	
+	public List<PmZone> getZones() {
+		return isRenewTypes(getManagedBean().getSelectedRuleDescType().getRuleType().getRuleType()) ? 
+				getManagedBean().getMainZones() : getManagedBean().getZoneList();
+	}
+	
+	private void validateRenewMOFParams(PmConfigRuleDesc ruleDesc){
+		for (PmConfigRuleValue val : ruleDesc.getRuleType().getConfigRuleValues()) {
+			if (val.getZoneId() == null && val.isBrandNew()) {
+				throw new EpException(MessageConst.ERROR_770253,
+						new String[] {getLabel("lbl.pm.zone"), ruleDesc.getRuleDesc()});
+			} else if (val.getRuleValue() == null) {
+				throw new EpException(MessageConst.ERROR_770254,
+						new String[] {getLabel("lbl.pm.value"), ruleDesc.getRuleDesc(), getZoneName(val.getZoneId())});
+			}
+		}
+	}
+	
+	private void validateRenewMOFDate(PmConfigRuleValue baseVal, PmConfigRuleValue value, String desc){
+		if (baseVal.getZoneId() != value.getZoneId()) {
+			return;
+		}
+		if (value.getEffDate() == null) {
+			throw new EpException(MessageConst.ERROR_770254,
+					new String[] {getLabel("lbl.pm.as.effdate"), desc, getZoneName(value.getZoneId())});
+		}
+		if (baseVal.getExpDate() == null) {
+			throw new EpException(MessageConst.ERROR_770255,
+					new String[] {desc, getZoneName(value.getZoneId())});
+		}
+		long baseExp = baseVal.getExpDate().getTime();
+		long valEff = value.getEffDate().getTime();
+		if (baseExp == valEff) {
+			throw new EpException(MessageConst.ERROR_770256,
+					new String[] {desc, getZoneName(value.getZoneId())});
+		}
+		if (baseExp > valEff) {
+			throw new EpException(MessageConst.ERROR_770257,
+					new String[] {desc, getZoneName(value.getZoneId())});
+		}
+	}
+	
+	/**
+	 * @param label
+	 * @param params
+	 * @return label based on user locale
+	 */
+	public String getLabel(String label, String... params){
+		if (params != null) {
+			return ResourceBundleUtils.getMessage(label, params, 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+		}
+		return ResourceBundleUtils.getMessage(label, 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale());
+	}
+	
+	/**
+	 * @param zoneId
+	 * @return zone name
+	 */
+	public String getZoneName(Long zoneId){
+		PmZone zone = (PmZone) my.ep.helper.EntityHelper.getEntityBySinglePropertyFromList(
+				zoneId, getManagedBean().getZoneList(), "zoneId");
+		return zone != null ? zone.getZoneName() : "";
+	}
+	//#34397, #34398 - end
 	
 	// #30672, #29669 - 29/01/2023 - Remove this code
 }

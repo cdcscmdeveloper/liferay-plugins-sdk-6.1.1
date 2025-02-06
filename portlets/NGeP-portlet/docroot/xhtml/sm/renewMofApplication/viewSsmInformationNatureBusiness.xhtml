@@ -13,14 +13,14 @@
 		<p:outputPanel>
 			
 			<h:outputLabel escape="false"  styleClass="outputLabel-view" value="#{lbl['lbl.sm.business.desc']}"/><br />
-			<h:outputText escape="false"  styleClass="instruction" value="#{backingBean.managedBean.smAppl.smCompanyBasic.businessDesc}"/>
+			<h:outputText escape="false"  styleClass="instruction" value="#{cc.attrs.bBean.managedBean.smAppl.smCompanyBasic.businessDesc}"/>
 			<br />
 		</p:outputPanel>
 		
 		<p:dataTable var="suppBizNature"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			render="#{backingBean.managedBean.smSupplierBusinessSsm != null and backingBean.managedBean.smSupplierBusinessSsm.size() >0}"
-			value="#{backingBean.managedBean.smSupplierBusinessSsm}"
+			render="#{cc.attrs.bBean.managedBean.smSupplierBusinessSsm != null and cc.attrs.bBean.managedBean.smSupplierBusinessSsm.size() >0}"
+			value="#{cc.attrs.bBean.managedBean.smSupplierBusinessSsm}"
 			rowIndexVar="index" id="suppBizNatureId" rowKey="#{suppBizNature}"
 			rows="10">
 			<ac:paginator for="suppBizNatureId" />
@@ -37,7 +37,7 @@
 					<h:outputText value="#{lbl['lbl.sm.businessnature.code']}" />
 				</f:facet>
 				<h:outputText
-					value="#{backingBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
+					value="#{cc.attrs.bBean.getBusinessNatureSection(suppBizNature)} - #{suppBizNature.pmBusinessNature.levelCode}" />
 			</p:column>
 
 			<p:column>

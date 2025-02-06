@@ -54,6 +54,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
@@ -199,7 +200,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	
 	// #27397 - start
 	public void validateMofRegNo(String mofNo) {
-		if (StringUtils.isEmpty(mofNo)) {
+		if (mofNo == null && StringUtils.isEmpty(mofNo)) {
 			throw new EpException(MessageConst.ERROR_REPORT_780029);
 		}
 	}
@@ -215,13 +216,16 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 				throw new EpException(MessageConst.ERROR_REPORT_780062);
 			} else {
 				if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
-					validateMofRegNo(getManagedBean().getMofNo());
+					if(getManagedBean().getSelectedMofAccount() == null){
+						throw new EpException(MessageConst.ERROR_REPORT_780029);
+					}
+					validateMofRegNo(getManagedBean().getSelectedMofAccount().getMofNo()); //30824
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_BASIC)) {
-					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedSupplier());
-					if (getManagedBean().getSelectedSupplier() == null) {
+					System.out.println("getSelectedSupplier ==> " + getManagedBean().getSelectedBasicAccount());
+					if (getManagedBean().getSelectedBasicAccount() == null) {
 						throw new EpException(MessageConst.ERROR_REPORT_780044);
 					} else {
-						System.out.println("getCompanyName ==> " + getManagedBean().getSelectedSupplier().getCompanyName());
+						System.out.println("getCompanyName ==> " + getManagedBean().getSelectedBasicAccount().getCompanyName());
 					}
 				} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
 					if (getManagedBean().getSelectedOrgProfile() == null) {
@@ -3427,4 +3431,19 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return getManagedBean().getApplStatusList();
 	}
 	//#32521 - END
+	
+	////#7754_#35984 - Start
+	public String getZoneByUser(){
+		PmZone zone = SmCommonUtil.getInstance().getUserZone();
+		
+		if(zone != null){
+			getManagedBean().setZone(zone.getZoneName());
+		}else{
+			getManagedBean().setZone(null);
+		}
+		
+		log.info("User Zone>>>>>" + getManagedBean().getZone());
+		return getManagedBean().getZone();
+	}
+	//#7754_#35984 - End
 }

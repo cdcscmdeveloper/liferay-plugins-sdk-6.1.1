@@ -37,7 +37,7 @@
 				<ac:lov id="searchJabatan"
 					lovId="PM_ORG_PROFILE_PTJ_GROUP" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.jabatan']}"
-					disabled="#{poSumTotalNumValofPoRptBB.disablePtjGroupLov()}"
+					disabled="#{poSumTotalNumValofPoRptBB.disablePtjGroupLovByReportCode()}"
 					value="#{poSumTotalNumValofPoRptBB.managedBean.ptjGroup.orgName}"
 					postUpdateListener="poSumTotalNumValofPoRptBB.resetPtjProfile()"
 					update=":form"
@@ -48,13 +48,13 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.ptj.name']}"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.fl.ptj']}"></p:outputLabel>
 			</td>
 			<td colspan="3">
 				<ac:lov id="searchPtj"
 					lovId="PM_ORG_PROFILE_PTJ" size="131" readonly="true"
 					headerText="#{lbl['lbl.fl.ptj']}"
-					disabled="#{poSumTotalNumValofPoRptBB.disablePtjLov()}"
+					disabled="#{poSumTotalNumValofPoRptBB.disablePtjLovByReportCode()}"
 					value="#{poSumTotalNumValofPoRptBB.managedBean.ptj.orgName}"
 					update=":form"
 					saveObject="poSumTotalNumValofPoRptBB.managedBean.ptj"
@@ -75,11 +75,11 @@
 				</p:inputText><ac:iconTooltip value="#{lbl['lbl.rpt.tooltipforcc']}"/>
 			</td>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.fl.sistem.panel.name']}" />
+				<p:outputLabel value="#{lbl['lbl.fl.central.contract.panel.name']}" />
 			</td>
 
 			<td><p:inputText maxlength="30" id="panelNameId"
-					label="#{lbl['lbl.fl.sistem.panel.name']}"
+					label="#{lbl['lbl.fl.central.contract.panel.name']}"
 					value="#{poSumTotalNumValofPoRptBB.managedBean.panelName}"
 					style="margin-top:5px;width:268px;">
 					<p:ajax event="blur" partialSubmit="true" update="@([id$=Msg])" />
@@ -105,17 +105,8 @@
 				<p:outputLabel value="#{lbl['lbl.fl.purchaseorder.status']}"/>
 			</td>
 			<td>
-				<p:selectOneMenu value="#{poSumTotalNumValofPoRptBB.managedBean.purchaseOrderStatus}">
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.beforePendingInv']}" 
-      					itemValue="#{lbl['lbl.rpt.drpdown.beforePendingInv']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentMatch']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.pendingPaymentClosed']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.cancelledLabel']}"></f:selectItem>
+				<p:selectOneMenu value="#{poSumTotalNumValofPoRptBB.managedBean.groupStatus}">
+					<f:selectItems value="#{poSumTotalNumValofPoRptBB.getGroupStatusDropdown()}"/>
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>
@@ -128,12 +119,12 @@
 				<p:selectOneMenu value="#{poSumTotalNumValofPoRptBB.managedBean.group}">
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.nonelabel']}"
 						itemValue="#{null}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.phyTreasuryCrclrNo']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.centralCntrctPanel']}"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.poOrderStatus']}"
-						itemValue="#{lbl['lbl.rpt.drpdown.poOrderStatus']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.physical.treasury.circular']}"
+						itemValue="#{lbl['lbl.fl.physical.treasury.circular']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.central.contract.panel.name']}"
+						itemValue="#{lbl['lbl.fl.central.contract.panel.name']}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.fl.purchaseorder.status']}"
+						itemValue="#{lbl['lbl.fl.purchaseorder.status']}"></f:selectItem>
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.supplierName']}" 
 						itemDisabled="#{mcCrGenAsPoRptBB.hasSupplierRole()}"
       					itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>

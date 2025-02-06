@@ -36,14 +36,16 @@
 				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
 						<td style="width: 235px;">
-							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" /> 
-							<p:outputLabel value="*" styleClass="mandatory"/>
+							<span class="noWrap">
+							<p:outputLabel> 
+							<b style='color:red'>* </b>#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']} </p:outputLabel>
+							</span>
 						</td>
 						<td>
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
 								disabled="#{approvalBackingBean.managedBean.readOnly}"
 								value="#{approvalBackingBean.managedBean.qt.chmnFinalizationDate}"
-								id="approvalDateChairperson" required="true"
+								id="approvalDateChairperson"
 								maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 								readonlyInput="true"
@@ -56,17 +58,20 @@
 								style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
-							<p:message id="approvalDateChairpersonMsg" for="approvalDateChairperson" display="icon" />
 						</td>
-						<c:if test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true}"> 
+						<c:if test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true
+										and approvalBackingBean.managedBean.chmnFinalizationRejectEPV eq false}"> 
 							<td style="width: 235px;">
-								<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /> 
-								<p:outputLabel value="*" styleClass="mandatory"/></td>
+								<span class="noWrap">
+								<p:outputLabel> 
+								<b style='color:red'>* </b>#{lbl['lbl.sc.qt.proposal.approval.date.mof']} </p:outputLabel>
+								</span>
+							</td>
 							<td>
 								<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									value="#{approvalBackingBean.managedBean.qt.mofDate}"
-									id="approvalDateMof" required="true"
+									id="approvalDateMof"
 									maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}"
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 									readonlyInput="true"
@@ -79,7 +84,6 @@
 									style="width: 65px;margin-top: 1px;margin-bottom: 0px;">
 									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 								</p:inputText>
-								<p:message id="approvalDateMofMsg" for="approvalDateMof" display="icon" />
 							</td>
 						</c:if>
 					</tr>
@@ -87,7 +91,7 @@
 			</c:if>
 			</table>
 			<table
-			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse; margin-top: 1em;">
 			<tr
 				style="background-color: #F0EFEF; text-align: left; font-size: 12px; text-indent: 0.5em;">
 				<th
@@ -103,14 +107,19 @@
 					<h:outputText value="#{lbl['lbl.sc.to.value']}" />
 				</th>
 				<th
-					style="width: 50%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					style="width: 20%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
 					<h:outputText value="* " styleClass="mandatory" /> <h:outputText
 						value="#{lbl['lbl.sc.decision']}" />
+				</th>
+				<th
+					style="width: 30%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+					<h:outputText value="* " styleClass="mandatory" /> <h:outputText
+						value="#{lbl['lbl.fl.attach.files']}" />
 				</th>
 			</tr>
 			<c:if
 				test="#{approvalBackingBean.managedBean.scQtApprovalRequestList.size() == 0}">
-				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em;">
+				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em; border: 1px solid #dddddd;">
 					<td style="padding: 5px;"><h:outputText
 							value="#{lbl['lbl.datatable.msg.no.records.found']}" /></td>
 				</tr>
@@ -118,7 +127,7 @@
 			<c:if
 				test="#{approvalBackingBean.managedBean.scQtApprovalRequestList.size() > 0 }">
 				<c:if test="#{approvalBackingBean.managedBean.qt.chmnFinalizationDate eq null}">
-				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em;">
+				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em; border: 1px solid #dddddd;">
 					<td style="padding: 5px;"><h:outputText
 							value="#{lbl['lbl.datatable.msg.no.records.found']}" /></td>
 				</tr>
@@ -151,16 +160,30 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeid"
-									value="#{requestdetails.decessionType.parameterId}"
+									value="#{requestdetails.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" 
+										update="requestDetailsId"/>
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;">
+								<h:panelGroup id="epvAttachmentEV1">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV1Id"
+										popupWidgetVar="epvAttachmentEV1UploadDlg"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR1}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="#{approvalBackingBean.managedBean.readOnly}">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest1)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup>
+							</td>
 						</tr>
 					</c:if>
 					<c:if
@@ -198,6 +221,19 @@
 										update="requestDetailsId"/>
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq2" for="decisiontypeidRq2"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;">
+								<h:panelGroup id="epvAttachmentEV2">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV2Id"
+										popupWidgetVar="epvAttachmentEV2UploadDlg"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR2}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="#{approvalBackingBean.managedBean.readOnly}">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest2)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup>
+							</td>
 						</tr>
 						<c:if test="#{requestdetails.decisionCertPBM != null and requestdetails.decisionCertPBM.parameterCode == ParameterConst.tr2Acknowledge}">
 						<tr
@@ -223,16 +259,30 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeidRq3"
-									value="#{requestdetails.decessionType.parameterId}"
+									value="#{requestdetails.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}"
+										update="requestDetailsId" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 									display="icon" /></td>
+							<td style="padding: 5px; border: 1px solid #dddddd;">
+								<h:panelGroup id="epvAttachmentEV3">
+									<ac:scSingleFileUploadButton id="epvAttachmentEV3Id"
+										popupWidgetVar="epvAttachmentEV3UploadDlg"
+										attachment="#{requestdetails.epvApprovalReqAttachmentR3}"
+										deleteFileUploadListener="approvalBackingBean.deleteEpvUploadFile"
+										readonly="#{approvalBackingBean.managedBean.readOnly}">
+											<f:setPropertyActionListener for="actionEvent"
+												value="#{approvalBackingBean.assignValueForEpvAttachment(ParameterConst.epvTypeRequest3)}"
+												target="#{approvalBackingBean.managedBean.epvAttachmentValue}" />
+									</ac:scSingleFileUploadButton>
+								</h:panelGroup>
+							</td>
 						</tr>
 						</c:if>
 					</c:if>
@@ -254,8 +304,12 @@
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.response.period']}" />
 					</td>
-					<td>
-						<p:inputText value="#{scQt.responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" />
+					<td><ui:remove>21692 - Start</ui:remove>
+						<p:inputText value="#{approvalBackingBean.managedBean.scQtApprovalRequestList.get(0).responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" >
+						<p:ajax event="change"
+							listener="#{approvalBackingBean.replaceResponsePeriodValue()}" />
+						</p:inputText>
+						<ui:remove>21692 - End</ui:remove>
 						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip5']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 					</td>
 					<td>

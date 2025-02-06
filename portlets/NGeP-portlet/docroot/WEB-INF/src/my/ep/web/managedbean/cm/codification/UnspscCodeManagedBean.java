@@ -20,6 +20,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class UnspscCodeManagedBean extends BaseManagedBean {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private CmRequestCode requestCode;
 	private String segmentTitle;
 	private String segmentDesc;
@@ -134,25 +138,36 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private boolean daCancelReg;
 	private boolean daBlacklistOwner;
 	//[#26282] disciplinary action - end
+	
+	// 35503 start
+	private transient List<List<String>> auditCommodityList;
+	private transient List<List<String>> auditClassList;
+	private transient List<List<String>> auditFamilyList;
+	private transient List<List<String>> auditSegmentList;
+	private String auditCommodityCode;
+	private String auditClassCode;
+	private String auditFamilyCode;
+	private String auditSegmentCode;
+	// 35503 end
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
-	};
+	}
 	public void setRecommendExtension(boolean recommendExtension){
 		this.recommendExtension = recommendExtension;
-	};
+	}
 	
 	public void toggleShowRecommend(){
 		this.showRecommend = !this.showRecommend;
-	};
+	}
 
 	public boolean isShowRecommend(){
 		return this.showRecommend;
-	};
+	}
 	
 	public boolean isCodeExtension(){
 		return this.requestCode.getDocNo().indexOf("RNE")>=0;
-	};
+	}
 	
 	
 	public CmBrand getSelectedBrand() {
@@ -819,29 +834,112 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	public void setShowRecommend(boolean showRecommend) {
 		this.showRecommend = showRecommend;
 	}
+
+	// [#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
+
 	public void setDaWarning(boolean daWarning) {
 		this.daWarning = daWarning;
 	}
+
 	public boolean isDaSuspendReg() {
 		return daSuspendReg;
 	}
+
 	public void setDaSuspendReg(boolean daSuspendReg) {
 		this.daSuspendReg = daSuspendReg;
 	}
+
 	public boolean isDaCancelReg() {
 		return daCancelReg;
 	}
+
 	public void setDaCancelReg(boolean daCancelReg) {
 		this.daCancelReg = daCancelReg;
 	}
+
 	public boolean isDaBlacklistOwner() {
 		return daBlacklistOwner;
 	}
+
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
+	// [#26282] disciplinary action - End
+	
+	// 35503 start
+	public List<List<String>> getAuditCommodityList() {
+		if (auditCommodityList == null)
+			auditCommodityList = new ArrayList<>();
+		return auditCommodityList;
+	}
 
+	public void setAuditCommodityList(List<List<String>> auditCommodityList) {
+		this.auditCommodityList = auditCommodityList;
+	}
+
+	public List<List<String>> getAuditClassList() {
+		if (auditClassList == null)
+			auditClassList = new ArrayList<>();
+		return auditClassList;
+	}
+
+	public void setAuditClassList(List<List<String>> auditClassList) {
+		this.auditClassList = auditClassList;
+	}
+
+	public List<List<String>> getAuditFamilyList() {
+		if (auditFamilyList == null)
+			auditFamilyList = new ArrayList<>();
+		return auditFamilyList;
+	}
+
+	public void setAuditFamilyList(List<List<String>> auditFamilyList) {
+		this.auditFamilyList = auditFamilyList;
+	}
+
+	public List<List<String>> getAuditSegmentList() {
+		if (auditSegmentList == null)
+			auditSegmentList = new ArrayList<>();
+		return auditSegmentList;
+	}
+
+	public void setAuditSegmentList(List<List<String>> auditSegmentList) {
+		this.auditSegmentList = auditSegmentList;
+	}
+
+	public String getAuditCommodityCode() {
+		return auditCommodityCode;
+	}
+
+	public void setAuditCommodityCode(String auditCommodityCode) {
+		this.auditCommodityCode = auditCommodityCode;
+	}
+
+	public String getAuditClassCode() {
+		return auditClassCode;
+	}
+
+	public void setAuditClassCode(String auditClassCode) {
+		this.auditClassCode = auditClassCode;
+	}
+
+	public String getAuditFamilyCode() {
+		return auditFamilyCode;
+	}
+
+	public void setAuditFamilyCode(String auditFamilyCode) {
+		this.auditFamilyCode = auditFamilyCode;
+	}
+
+	public String getAuditSegmentCode() {
+		return auditSegmentCode;
+	}
+
+	public void setAuditSegmentCode(String auditSegmentCode) {
+		this.auditSegmentCode = auditSegmentCode;
+	}
+	// 35503 end
 }

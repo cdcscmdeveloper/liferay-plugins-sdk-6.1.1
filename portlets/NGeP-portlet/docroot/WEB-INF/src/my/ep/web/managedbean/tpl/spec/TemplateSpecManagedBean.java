@@ -87,6 +87,12 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
 	/** from specification bean */
+	// #29187 Start Vinod
+	private List<SelectItem> mandatorySpecList;
+	private boolean zoneForItemHlink;
+	private TplSpecQuestion questionForItemHlink;
+	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	// #29187 End Vinod
 	
 	/** for specification Zonal ****************************/
 	/** The total suppliers spec loc. */
@@ -147,7 +153,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	/** The qt. */
 	private ScQt qt;
-	
 	/**
 	 * @return the beans
 	 */
@@ -164,12 +169,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	/** Import & Export */
 	private boolean enableImportExport;//#25633
 	
-	//#29187 Start Vinod
-	List<SelectItem> mandatorySpecList;
-	private boolean zoneForItemHlink;
-	private TplSpecQuestion questionForItemHlink;
-	private List<TplSpecZoneQty> zoneQtyForItemHlink;
-	//#29187 End Vinod
 	
 	/**
 	 * @return the statecode

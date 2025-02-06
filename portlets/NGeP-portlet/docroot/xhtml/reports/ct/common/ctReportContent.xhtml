@@ -26,7 +26,7 @@
 				<ac:lov id="lovCtKumpulanPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" size="100" update="@form"
 					headerText="#{lbl['lbl.ct.jabatan']}" readonly="true"
-					disabled="#{(ctReportBB.managedBean.selectedMinistry==null or ctReportBB.managedBean.disableOrgField) and !ctReportBB.managedBean.factoringUser}" 
+					disabled="#{(ctReportBB.managedBean.disableOrgField) and !ctReportBB.managedBean.factoringUser}" 
 					value="#{ctReportBB.managedBean.selectedKumpulanPTJ.pmOrgValidity.orgName}"
 					saveObject="ctReportBB.managedBean.selectedKumpulanPTJ"
 					conditionField="#{ctReportBB.constructKumpulanPTJConditionFields()}"
@@ -40,7 +40,7 @@
 				<ac:lov id="lovCtPTJ"
 					lovId="PM_ORG_PROFILE_REPORT" readonly="true" size="100"
 					headerText="#{lbl['lbl.ct.ptj']}" update="@form"
-					disabled="#{(ctReportBB.managedBean.selectedMinistry==null or ctReportBB.managedBean.disableOrgField) and !ctReportBB.managedBean.factoringUser}"
+					disabled="#{(ctReportBB.managedBean.disableOrgField) and !ctReportBB.managedBean.factoringUser}"
 					value="#{ctReportBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 					saveObject="ctReportBB.managedBean.selectedPTJ"
 					conditionField="#{ctReportBB.constructPTJConditionFields()}" /></td>
@@ -112,7 +112,7 @@
 					<p:ajax event="change" partialSubmit="true" />
 				</p:selectOneMenu>		
 			</td>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.eff.date.from']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.eff.date.from.2']}" /></td>
 			<td>
 				<table><tr>
 					<td class="columnDateFromClass">

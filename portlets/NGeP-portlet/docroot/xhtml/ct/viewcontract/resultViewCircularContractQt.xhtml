@@ -1,0 +1,115 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<script>
+			$('#portlet_ctContractMaintenance_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					'#{contractDetailsBackingBean.getPortletTitle()}');
+		</script>
+		<style>
+.column-align-center {
+	text-align: center !important;
+}
+
+.ui-menu.ui-menu-dynamic.ui-widget.ui-widget-content.ui-corner-all.ui-helper-clearfix.ui-shadow
+	{
+	width: 250px;
+}
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
+</style>
+
+		<p:blockUI block=":form" widgetVar="blkCircularContractSearchTable">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<ui:fragment>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{circularBackingBean.backAction()}" />
+		</ui:fragment>
+		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}"
+			toggleable="true">
+			<p:dataTable id="resultViewPqQuotation"
+				value="#{circularBackingBean.managedBean.circularPqQtList}"
+				var="pQqdata" lazy="true" rows="10" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:column headerText="#{lbl['lbl.ct.circular.no']}"
+					style="width:15%;white-space:normal;"
+					styleClass="column-align-center">
+					<div class="left-align">
+						<p:commandLink value="#{pQqdata.ctCircular.circularNo}"
+							styleClass="blue_font"
+							style="color:#009ae5 !important;"
+							action="#{circularBackingBean.gotoPage(pQqdata.circularVerId, pQqdata.docType)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"
+					style="width:15%;white-space:normal;"
+					styleClass="column-align-center">
+					<div class="left-align">
+						<h:outputText value="#{pQqdata.circularNo}" />
+					</div>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}"
+					style="width:25%;white-space:normal;"
+					styleClass="column-align-center">
+					<div class="left-align">
+						<h:outputText value="#{pQqdata.name}" />
+					</div>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.ct.circular.start.date']}"
+					style="width:10%;white-space:normal;"
+					styleClass="column-align-center">
+					<div class="left-align">
+						<h:outputText value="#{pQqdata.startDate}" >
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
+					</div>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.ct.circular.end.date']}"
+					style="width:10%;white-space:normal;"
+					styleClass="column-align-center">
+					<div class="left-align">
+						<h:outputText value="#{pQqdata.endDate}" >
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
+					</div>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.ct.status']}"
+					style="width:15%;white-space:normal;"
+					styleClass="column-align-center">
+					<div class="left-align">
+						<h:outputText
+							value="#{circularBackingBean.getStatusDescById(pQqdata.status.statusId)}" />
+					</div>
+				</p:column>
+			</p:dataTable>
+			<p:outputPanel>
+				<ui:include src="/xhtml/ct/viewcontract/subTableCcQt.xhtml" />
+			</p:outputPanel>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

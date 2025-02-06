@@ -36,6 +36,7 @@ import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -596,6 +597,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					//#29481 - Start
 					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
+					
+					if (!isSoftcertCurrentUserOnly(reqDTO.getFreeSofcertPersonnelList())
+							&& getManagedBean().getSupplierTmpPersonnel() == null){
+						msgKey = MessageConst.INFO_721068;
+						params = getSoftCertNameEmailMulti(reqDTO.getFreeSofcertPersonnelList());
+					}
 					//#29481 - End
 					
 				} else {
@@ -625,6 +632,32 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 	}
+	
+	//#29481 - start
+	private boolean isSoftcertCurrentUserOnly(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels) || freeSoftcertPersonnels.size() > 1){
+			return false;
+		}
+		Long currentUserId = (new FacesScopes()).getUserSessionBean().getUserId();
+		SmPersonnel per = freeSoftcertPersonnels.get(0);
+		if (per.getPmUser() != null){
+			return per.getPmUser().getUserId().equals(currentUserId);
+		}
+		return false;
+	}
+	
+	private String[] getSoftCertNameEmailMulti(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels)){
+			return new String[] { StringUtils.EMPTY, StringUtils.EMPTY }; 
+		}
+		int count = 1;
+		StringBuilder sb = new StringBuilder();
+		for (SmPersonnel per : freeSoftcertPersonnels){
+			sb.append(count++ +". " + per.getName() + " (" + per.getEmail() + ")<br />");
+		}
+		return new String[]{sb.toString()};
+	}
+	//#29481 - end
 
 	/**
 	 * Remove check box tick from data table
@@ -1186,10 +1219,15 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 							int count = SmServiceLookup.getPersonnelSO()
 									.countPersonnelSoftcertBill(reqDTO);
+							
+							//#34964 - start
+							int countBillDtl = SmServiceLookup.getPersonnelSO()
+									.countPersonnelSoftcertBillDtl(reqDTO);
 
-							if (count > 0) {
+							if (count > 0 && countBillDtl == 0) {
 								smPersonnel.setDisableRowSelection(true);
 							}
+							//#34964 - end
 						}
 					}
 				}
@@ -1248,11 +1286,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									.equals(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || softcertUploadSuppDocVO
 							.getPersonnel().getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())) ? true : false);
 					// #31462 - end
-					reqDTO.setForeigner(softcertUploadSuppDocVO
-							.getPersonnel()
-							.getPmCountry()
-							.getCountryCode()
-							.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ? false
+					
+					PmParameter paramID = SmCommonUtil.retrieveParameterById(softcertUploadSuppDocVO.getPersonnel().getIdentificationTypeId());
+					reqDTO.setForeigner(paramID
+							.getParameterCode()
+							.equals(SupplierManagementConst.IDENTIFICATION_TYPE_IC) ? false
 							: true);
 					softcertSuppDocList = SmServiceLookup.getDocumentSO()
 							.retrieveSoftcertSuppDocuments(reqDTO)
@@ -1577,6 +1615,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 						count++;
 					}
+					//35033-start
+					if(personnelAddress.getSmAddress().getPostcode() == null || personnelAddress.getSmAddress().getPostcode().isEmpty()){
+						throw new EpException(MessageConst.ERROR_722682,
+								new String[] { personnel.getName() });
+					}//35033-end
 				}
 				if (personnel.getSmAppl().getSupplierType().equals(SupplierManagementConst.ACC_BASIC)){
 					if (count != 2){
@@ -1640,7 +1683,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					&& (my.ep.constant.sm.SupplierManagementConst.SUPPLIER_ADMIN_ROLES
 							.contains(getManagedBean()
 									.getLoginUserPersonnelInfo().getEpRole()))
-					&& getManagedBean().getRevokePersonnelList().size() >= 1) {//29616
+					&& !getManagedBean().getRevokePersonnelList().isEmpty()) {//#29616
 				getManagedBean().setRenderRevokeButton(true);
 			} else {
 				getManagedBean().setRenderRevokeButton(false);

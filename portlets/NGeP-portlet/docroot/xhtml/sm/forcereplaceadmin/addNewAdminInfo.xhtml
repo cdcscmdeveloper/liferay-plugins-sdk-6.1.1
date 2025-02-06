@@ -19,7 +19,9 @@
 
 	<ui:define name="contentSection">
 		<p:outputPanel id="verification2Panel">
-		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
+		<!-- #34159 - START -->
+		<p:messages id="addInfoPopupMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>
+		<!-- #34159 - END -->
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -33,17 +35,23 @@
 				</td>
 				<td style="white-space: nowrap; float: right;">
 				<!-- #28765 -->
+					<!-- #34159 - START - add param disablevalidation -->
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="verification2Panel" 
-					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
-					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+						disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
+						update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+					<!-- #34159 - END -->
+					<!-- #33129 - START --><!-- #34400 -->
 					<ac:confirmationPopup id="declareDeletePopUpId"
-		widget="declareDeletePopUp"
-		okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
-		width="400" height="150"
-		title="#{lbl['lbl.msg.confirm.declare.header']}"
-		content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
-		update=":form"/>
+						widget="declareDeletePopUp"
+						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
+						width="400" height="auto"
+						title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
+						update=":form"/>
+					<!-- #33129 - END -->
 				 <p:confirmDialog id="declareAlertPopUpId" widgetVar="declareAlertPopUp" 
 			 closable="true"  header="#{lbl['lbl.txt.alert']}"  styleClass="splNotesFontBank" >
 			<div class="ppLeftBtn">
@@ -136,12 +144,29 @@
 							value="*" styleClass="mandatory" /></td>
 
 					<td>
-						<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}" id="newAdminIdNo"
-							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}"
-							size="35" disabled="false" required="true" styleClass="mandatory" >
-							<p:ajax event="change" partialSubmit="true" process="@this" />
+						<p:inputText 
+							label="#{lbl['lbl.sm.forcereplaceadmin.newAdmin.idno']}" 
+							required="true" id="newAdminIcNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.NEW_IC}" 
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" 
+							size="35" maxlength="12" 
+							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
 						</p:inputText>
-						<p:message id="newAdminIdNoMsg" for="newAdminIdNo"
+						<p:message id="newAdminIcNoMsg" for="newAdminIcNo" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.NEW_IC}"
+							showSummary="true" showDetail="false" display="icon" />
+							
+						<p:inputText 
+							label="#{lbl['lbl.sm.userprofile.idno']}" 
+							required="true" id="newAdminPasptNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}" 
+							value="#{forceReplaceSuppAdminBackingBean.managedBean.newAdmin.identificationNo}" 
+							size="35" maxlength="15">
+							<p:ajax event="blur" process="@this" partialSubmit="true"/>
+						</p:inputText>
+						<p:message id="newAdminPasptNoMsg" for="newAdminPasptNo" 
+							rendered="#{forceReplaceSuppAdminBackingBean.managedBean.identificationType.parameterCode eq SupplierManagementConst.IDENTIFICATION_TYPE_PASSPORT}"
 							showSummary="true" showDetail="false" display="icon" />
 					</td>
 				</tr>

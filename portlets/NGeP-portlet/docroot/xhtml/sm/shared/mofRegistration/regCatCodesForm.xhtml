@@ -1,10 +1,12 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
+<!-- #28175 Reopen #141 Start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<!-- #28175 Reopen #141 End -->
 	<!-- 30865 Starts -->
 	<table>
 		<tr>
@@ -20,20 +22,36 @@
 			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprDt" />
-			
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
+			<!-- #37605 -->
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;vertical-align: top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal">
-				<h:outputText
-					value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{empty aprvdCatBean.categoryL1Name ? aprvdCatBean.pmCategoryL1.categoryName : aprvdCatBean.categoryL1Name}" />
-				<br />
-				<h:outputText
-					value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{empty aprvdCatBean.categoryL2Name ? aprvdCatBean.pmCategoryL2.categoryName : aprvdCatBean.categoryL2Name}" />
-				<br />
-				<h:outputText
-					value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{empty aprvdCatBean.categoryL3Name ? aprvdCatBean.pmCategoryL3.categoryName : aprvdCatBean.categoryL3Name}" />
+			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal;vertical-align: top;">
+				<!-- #28175 Reopen #141 Start -->
+				<c:choose>
+					<c:when	test="#{not backingBean.managedBean.smAppl.activeAppl}">
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} - #{aprvdCatBean.categoryL1Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} - #{aprvdCatBean.categoryL2Name}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} - #{aprvdCatBean.categoryL3Name}" />
+					</c:when>
+					<c:otherwise>
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} - #{aprvdCatBean.pmCategoryL1.categoryName}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} - #{aprvdCatBean.pmCategoryL2.categoryName}" />
+						<br />
+						<h:outputText
+							value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} - #{aprvdCatBean.pmCategoryL3.categoryName}" />
+					</c:otherwise>
+				</c:choose>
+				<!-- #28175 Reopen #141 End -->
 				<!-- 30865,32298 Start -->
 				<p:outputLabel rendered="#{aprvdCatBean.cancelCategory and aprvdCatBean.typeDisciplinaryAction eq 'C'}" styleClass="warning" style="color:red !important; text-align:left;">
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
@@ -43,19 +61,19 @@
 				</p:outputLabel>
 				<!-- 30865,32298 End -->
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					rendered="#{empty aprvdCatBean.otherDesc}" />
 				<h:outputText value="#{aprvdCatBean.otherDesc}"
 					rendered="#{not empty aprvdCatBean.otherDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!aprvdCatBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{aprvdCatBean.specialCategory}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal">
+			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal;vertical-align: top;">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}"
@@ -74,7 +92,7 @@
 				<ui:include src="overlapCategorySuppDoc.xhtml" />
 		</c:if>
 		<c:if test="#{backingBean.managedBean.smAppl.applType ne 'B' and backingBean.managedBean.smAppl.applType ne 'U'}">
-			<p:panel header="#{lbl['lbl.sm.addtnl.catCodes.panHdr']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sm.bulk.applied.category']}" toggleable="true">
 			
 			<c:choose>
 				<c:when
@@ -83,7 +101,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
 							<td><p:selectOneRadio
-									value="#{backingBean.managedBean.smAppl.applCategoryType}">
+									value="#{backingBean.managedBean.smAppl.applCategoryType}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 										itemValue="N" />
 									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
@@ -115,7 +133,7 @@
 										<c:choose>
 											<c:when test="#{backingBean.managedBean.supplierUser}">
 												<td><p:selectOneRadio
-													value="#{backingBean.managedBean.physicalConsulting}">
+													value="#{backingBean.managedBean.physicalConsulting}" disabled="#{backingBean.managedBean.upsCannotEdit}">
 													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
 														itemValue="33" />
 													<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
@@ -203,7 +221,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.catCodes.mainCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id}"
-							style="width: 680px;margin-bottom: 5px;">
+							style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierParentCatList}"
@@ -227,7 +245,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.catCodes.subCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id}"
-							id="child" style="width: 680px;margin-bottom: 5px;">
+							id="child" style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierChildCatList}"
@@ -247,7 +265,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label=" #{lbl['lbl.sm.catCodes.subCatDiv']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Id}"
-							id="subChild" style="width: 680px;margin-bottom: 5px;">
+							id="subChild" style="width: 680px;margin-bottom: 5px;" disabled="#{backingBean.managedBean.upsCannotEdit}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierSubChildCatList}"

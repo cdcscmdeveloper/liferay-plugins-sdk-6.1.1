@@ -157,8 +157,10 @@
 					
 				<!-- 32304 - start-->
 					<p:outputPanel 
-						rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
-							or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}">
+						rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'D' 
+							or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'E'
+							or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'G' 
+							or viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.businessType eq 'H'}">
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.local.authority']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.localAuthority}" /></td>
 					</p:outputPanel>

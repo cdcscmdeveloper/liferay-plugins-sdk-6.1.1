@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -33,6 +34,9 @@ import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+//#34392 - Start
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
+//#34392 - End
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supportingdocinquiry.SupportingDocInquiryManagedBean;
@@ -165,7 +169,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 		//this.getManagedBean().setAppId(1258837L);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
-		
+		//#37775 - Start
+		reqSO.recheckSupportDocFileAndDocFileInquiry(reqDTO.getAppId());
+		//#37775 - End
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
 		this.getManagedBean().setSmApplInquiry(resDTO.getSmApplInquiry());
 		//#11641 - START
@@ -580,12 +586,16 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 						smApplSupportDoc.setNewAddedFiles(smApplDocFiles);
 					}
 				}
-				if(this.getManagedBean().getUpdatedSupportDocs() != null){
-					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
-				}else{
+				//#34392 - start
+				if (this.getManagedBean().getUpdatedSupportDocs() != null) {
+					if (!this.getManagedBean().getUpdatedSupportDocs().contains(doc)) {
+						this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
+					}
+				} else {
 					this.getManagedBean().setUpdatedSupportDocs(new ArrayList<SmApplSupportDoc>());
 					this.getManagedBean().getUpdatedSupportDocs().add(this.getManagedBean().getSupportDoc());
 				}
+				//#34392 - end
 			}
 		}
 	}
@@ -605,6 +615,28 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
 			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
 			this.getManagedBean().getAddedDocFile().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
+		
+		//#34392 - start
+		Iterator<SmApplSupportDoc> suppDocIter = this.getManagedBean()
+				.getUpdatedSupportDocs().iterator();
+		while (suppDocIter.hasNext()) {
+			SmApplSupportDoc suppDoc = suppDocIter.next();
+			if (suppDoc.getNewAddedFiles().isEmpty()
+					&& suppDoc.getApplSupportDocId().equals(
+							smApplSupportDoc.getApplSupportDocId())) {
+				suppDocIter.remove();
+			}
+		}
+		//#34392 - end
+	}
+	
+	public void deleteInquirySupDocFileAttachment() {
+		SmApplSupportDoc smApplSupportDoc = getManagedBean().getSupportDoc();
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
 		}
 		this.getManagedBean().setSmApplDocFile(null);
 	}
@@ -657,5 +689,19 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 	}
 	//#11641 - END
+	
+	//#34392 - Start
+	public void downloadSignatureSuppDoc(String docDefinitionKey) throws Exception {
+		if (org.apache.commons.lang.StringUtils.isNotBlank(docDefinitionKey)) {
+			SmApplicationBackingBean SmApplicationBackingBean = new SmApplicationBackingBean();
+			if (docDefinitionKey.equals("SBP")) {
+				SmApplicationBackingBean.getManagedBean().setSmAppl(getManagedBean().getSmApplInquiry().getSmAppl());
+				SmApplicationBackingBean.printDeclarationForm();
+			} else if (docDefinitionKey.equals("SBV")) {
+				SmApplicationBackingBean.printBankVerificationForm();
+			}
+		}
+	}
+	// #34392 - END
 }
 

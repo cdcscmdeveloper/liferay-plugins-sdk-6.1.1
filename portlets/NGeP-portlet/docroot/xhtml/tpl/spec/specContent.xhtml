@@ -82,6 +82,8 @@
 			<ui:param name="isDurationYear" value="#{templateSpecBean.specMaster.durationMonth ge 12}"/>
 			<ui:param name="isSqSpec" value="#{templateSpecBean.specMaster.specCreatedBySQ}"/>
 			<ui:param name="isPackageItemSpec" value="#{templateSpecBean.evaluatioStageActiveIndex == 1}" />
+			<ui:param name="isPartialQt" value="#{templateSpecBean.specMaster.scQtDoc.scQt.partial eq null ? 'false': templateSpecBean.specMaster.scQtDoc.scQt.partial}" />
+			<ui:param name="isWeightageReq" value="#{templateSpecBean.specMaster.weightageReq}" />	<!-- Bug #35307@Syazani 12/12/2023 -->
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion and !isContentTypeQuestionAndAnswer and isSpecTypeFinancial and durationMonth ne null}">
 				<table style="width:100%">
@@ -253,14 +255,24 @@
 			
 					
 			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
-				<h:outputText rendered="#{isContentTypeScore and isSpecTypeTechnical}" styleClass="instruction" value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
-				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
+			<ui:fragment
+				rendered="#{isContentTypeScore and isSpecTypeTechnical and !evaluationBackingBean.evaluateWIP(evaluationBackingBean.managedBean.scQt)}">
+				<h:outputText rendered="#{!isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.rating.instruction']}" escape="false" />
+				<h:outputText rendered="#{isPartialQt}" styleClass="instruction"
+					value="#{lbl['lbl.sc.tec.partialoffer.instruction']}"
+					escape="false" />
+				<br />
+			</ui:fragment>
+			<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
 				<ui:param name="filterList" value="#{!isSqSpec and isZonal and !templateSpecBackingBean.filterAllitemQtyZero(templateSpecBean.specAnswerList) and isSpecTypeFinancial and isContentTypeAnswer ? null : templateSpecBean.specAnswerList}">
 				
 				</ui:param>
 				<ui:remove> #32110 related to #21695 Farid End 30/11/2021</ui:remove>
 				<ui:remove> #32110 related to #21695 Farid Start 30/11/2021</ui:remove>
-				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" /><!-- #29187 Added Vinod -->
+				<ui:remove>#29187 Start Vinod</ui:remove>
+				<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+				<ui:remove>#29187 End Vinod</ui:remove>
 				<!-- #33859 - start -->
 				<!-- SHAFFUL (START HERE)UOM oncomplete="blockWidget.hide();" -->
 			    <p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row" 
@@ -299,8 +311,10 @@
 					</c:if>
 				</p:dataTable>
 				<!-- SHAFFUL (END HERE)UOM -->
-			<!--  #21695 REMOVE TOTAL SCORE START	
-				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
+				<ui:remove>
+						<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
+				</ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeFinancial and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:spacer height="10" />
 					<table style="width:100%">
 					<tr>
@@ -314,10 +328,9 @@
 						</td>
 					</tr>
 					</table>
-				</c:if>-->
-				<!--#25138 total score for technical -start-->
-				<!-- 
-				<c:if test="#{isContentTypeScore and isSpecTypeTechnical}">
+				</c:if>
+				<ui:remove><!--#25138 total score for technical --></ui:remove>
+				<c:if test="#{isContentTypeScore and isSpecTypeTechnical and templateSpecBackingBean.managedBean.wipStatusMax lt ParameterConst.flagWipStatus3serangkaiCurrent}">
 					<p:spacer height="10" />
 					<table style="width:100%">
 					<tr>
@@ -331,9 +344,10 @@
 						</td>
 					</tr>
 					</table>
-				</c:if> 
-				 #21695 REMOVE TOTAL SCORE START END-->
-				<!--#25138 - total score for technical - end -->
+				</c:if>
+				<ui:remove>
+					<!-- //#25138(wip 4serangkai) bug -End 8/6/2023 -->
+				</ui:remove>
 				<c:if test="#{isContentTypeUpdateSpec}">
 					<ui:include src="tierQtyPopup.xhtml" />
 				</c:if>
