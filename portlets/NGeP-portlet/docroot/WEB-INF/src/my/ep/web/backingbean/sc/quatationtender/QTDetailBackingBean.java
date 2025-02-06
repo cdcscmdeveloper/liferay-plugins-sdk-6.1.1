@@ -13014,59 +13014,68 @@ public void retrieveDemoQtDetails(Long qtId) {
 	
 // #29732 Start - reOpen Fix
 	public String checkCatCodeChange() {
-		// check submit empty category code
-		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
-				&& this.getManagedBean().isFromSubmitCatChange()) {
+		//check submit empty category code
+		if(CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
+				&& this.getManagedBean().isFromSubmitCatChange()){
 			IQTSpecSO specSo = getQtSpecSO();
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 		}
-		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt().getScQtCategorys();
+		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt()
+				.getScQtCategorys();
+// #29732 Start - reOpen Fix
 		String catCodeList = "";
 		Integer recordstatusInactive = 0;// #29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
-				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-				PmCategoryL1 catCodeL1;
+				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICategoryCodeSO.class);
+				PmCategoryL1 catCodeL1 = new PmCategoryL1();
 				CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
 				reqDTO1.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
 				CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO1);
-
+				
 				catCodeL1 = resDTO1.getCategoryL1();
-				PmCategoryL2 catCodeL2;
+				PmCategoryL2 catCodeL2 = new PmCategoryL2();
 				CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
 				reqDTO2.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
 				CategoryCodeResDTO resDTO2 = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO2);
-
+				
 				catCodeL2 = resDTO2.getCategoryL2();
-				PmCategoryL3 catCodeL3;
+				PmCategoryL3 catCodeL3 = new PmCategoryL3();
 				CategoryCodeReqDTO reqDTO3 = new CategoryCodeReqDTO();
-				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
-				CategoryCodeResDTO resDTO3 = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO3);
+				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3()
+						.getCategoryL3Id());
+				CategoryCodeResDTO resDTO3 = categoryCodeSO
+						.retrieveCategoryL3DtlById(reqDTO3);
 				catCodeL3 = resDTO3.getCategoryL3();
-				
-				// Group category name comparisons together
-				boolean categoryMismatch = !catCodeL1.getCategoryName().equals(catCode.getPmCategoryL1Name())
-				    || !catCodeL2.getCategoryName().equals(catCode.getPmCategoryL2Name())
-				    || !catCodeL3.getCategoryName().equals(catCode.getPmCategoryL3Name());
-
-				// Group record status checks together
-				boolean recordStatusInactive = catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)
-				    || catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)
-				    || catCodeL3.getRecordStatusFlg().equals(recordstatusInactive);
-				
-				if (categoryMismatch || recordStatusInactive) {
+				if (!catCodeL1.getCategoryName().equals(
+						catCode.getPmCategoryL1Name())
+						|| !catCodeL2.getCategoryName().equals(
+								catCode.getPmCategoryL2Name())
+						|| !catCodeL3.getCategoryName().equals(
+								catCode.getPmCategoryL3Name())
+								|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+								) {
+// #29732 reOpen Fix - remove code
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
 					}
-					catCodeList = catCodeList.concat(catCode.getPmCategoryL1().getCategoryL1Code()
+					catCodeList = catCodeList.concat(catCode.getPmCategoryL1()
+							.getCategoryL1Code().toString()
 							+ catCode.getPmCategoryL2().getCategoryL2Code()
-							+ catCode.getPmCategoryL3().getCategoryL3Code());
+									.toString()
+							+ catCode.getPmCategoryL3().getCategoryL3Code()
+									.toString());
 				}
 			}
+// #29732 reOpen Fix - remove code
 		}
+// #29732 reOpen Fix
 		return catCodeList;
 	}
 	// #29732 End
