@@ -2989,14 +2989,6 @@ public class SupplierDataMaintenanceBackingBean extends
 					break;
 				}
 			}
-			if (!EntityHelper.isCollectionEmpty(revisitList)) {
-				Collections.sort(revisitList, new Comparator<SmRevisit>() {
-					@Override
-					public int compare(SmRevisit a, SmRevisit b) {
-						return a.getCreatedDate().compareTo(b.getCreatedDate());
-					}
-				});
-			}
 			this.getManagedBean().setSmRevisitList(updateCreatedUserName(revisitList));
 		}
 	}

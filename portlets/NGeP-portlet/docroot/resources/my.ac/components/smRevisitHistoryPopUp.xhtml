@@ -9,7 +9,7 @@
 		<cc:attribute name="dialogName" required="true" />
 		<cc:attribute name="smRevisitList" required="true" />
 		<cc:attribute name="backingBean" required="true" />
-		<cc:attribute name="download" default="false" />
+		<cc:attribute name="officerView" default="true" />
 	</cc:interface>
 	<cc:implementation>
 		<p:dialog id="#{cc.attrs.dialogName}Id"
@@ -26,15 +26,19 @@
 						<p:column headerText="#{lbl['lbl.sm.rv.history.visiting.date']}"
 							style="text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.rv.history.svo']}"
-							style="text-align: center !important;" />
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
 						<p:column headerText="#{lbl['lbl.sm.rv.history.assist.officer']}"
-							style="text-align: center !important;" />
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
 						<p:column headerText="#{lbl['lbl.sm.rv.history.supp.doc']}"
-							style="text-align: center !important;" />
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
 						<p:column headerText="#{lbl['lbl.sm.rv.history.visit.remark']}"
 							style="text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.rv.history.action.by']}"
-							style="text-align: center !important;" />
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
 						<p:column headerText="#{lbl['lbl.sm.rv.history.action.date']}"
 							style="text-align: center !important;" />
 					</p:row>
@@ -48,10 +52,10 @@
 							pattern="#{CommonConstants.getDEFAULT_DATE_FORMAT()}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
 					<h:outputText value="#{revisit.revisitOfficer.userName}" />
 				</p:column>
-				<p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
 					<ui:repeat var="rvAssistOfficer"
 						value="#{revisit.smRvAssistOfficers}">
 						<h:outputText value="#{rvAssistOfficer.officerName}" />
@@ -60,7 +64,7 @@
 					<h:outputText rendered="#{empty revisit.smRvAssistOfficers}"
 						value="#{lbl['lbl.txt.na']}" />
 				</p:column>
-				<p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
 					<ui:repeat var="suppDoc" value="#{revisit.smRvSuppDocs}">
 						<ui:repeat var="docFile" value="#{suppDoc.smRvDocFiles}">
 							<h:commandLink
@@ -76,7 +80,7 @@
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{revisit.revisitRemark}" />
 				</p:column>
-				<p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
 					<h:outputText value="#{revisit.actionedBy}" />
 				</p:column>
 				<p:column>
@@ -86,7 +90,7 @@
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
-			<div align="right" rendered="#{cc.attrs.download}">
+			<div align="right" rendered="#{cc.attrs.officerView}">
 				<p:commandButton id="downloadRevisitHistoryId"
 					value="#{lbl['lbl.sm.rv.history.btn.download']}">
 					<p:fileDownload
