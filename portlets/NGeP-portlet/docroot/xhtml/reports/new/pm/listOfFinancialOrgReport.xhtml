@@ -27,18 +27,18 @@
 		<td><ac:lov id="pmFinOrgName" lovId="PM_FIN_SVC_REPORT"
 				size="50" update="@this,:form:regNoIt"
 				headerText="#{lbl['lbl.pm.header.general.finance']}" readonly="true"
-				value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
-				saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" 
+				value="#{pmReportsBackingBean.managedBean.selectedFinancialOrg.finOrgName}"
+				saveObject="pmReportsBackingBean.managedBean.selectedFinancialOrg" 
 				conditionField="#{pmReportsBackingBean.constructConditionFieldForFinSvc()}"/></td>
-		<!-- 36719 - End -->		
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /></td>
 			<td><p:inputText id="regNoIt" maxlength="50" readonly="true"
 				  size="50"
-					value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.bizRegNumber}">
+					value="#{pmReportsBackingBean.managedBean.selectedFinancialOrg.bizRegNumber}">
 				</p:inputText></td>
 		</tr>
+		<!-- 36719 - End -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}" /></td>
 			<td><p:selectOneMenu
