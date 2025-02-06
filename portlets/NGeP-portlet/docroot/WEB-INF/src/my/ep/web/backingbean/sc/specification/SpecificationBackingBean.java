@@ -12558,6 +12558,9 @@ if (null != checklist && !checklist.isEmpty()) {
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
 			// category
+			if(this.getManagedBean().getQtCategoryList().isEmpty()){
+				throw new EpException(MessageConst.ERROR_760062);
+			}
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			this.getManagedBean().setFromSubmitCatChange(true);
@@ -22636,72 +22639,58 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	public String checkCatCodeChange() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
 				&& !this.getManagedBean().isFromSubmitCatChange()) {
-				QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-				qtBackingBean.retrieveSuppQualificationTabDtl();
-		}else if(CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
-				&& this.getManagedBean().isFromSubmitCatChange()){
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.retrieveSuppQualificationTabDtl();
+		} else if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())
+				&& this.getManagedBean().isFromSubmitCatChange()) {
 			IQTSpecSO specSo = getSpecSO();
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
-			retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);	
+			retriveSupplierQualificationCriteria(QTConstants.SUPPLIER_CRITERIA);
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			specReqDTOCatChange.getScQt().setScQtCategorys(this.getManagedBean().getQtCategoryList());
 			specSo.validateSupplierQulificationInfo(specReqDTOCatChange);
 		}
-		
-		List<ScQtCategory> qtCatCodeList = this.getManagedBean()
-				.getQtCategoryList();
+
+		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQtCategoryList();
 		if (CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())) {
 			retriveSupplierQualificationCriteria("SC");
 			qtCatCodeList = this.getManagedBean().getQtCategoryList();
 		}
-		
+
 		String catCodeList = "";
-		Integer recordstatusInactive = 0; //#29732(#221)
+		Integer recordstatusInactive = 0; // #29732(#221)
 		if (CollectionUtils.isNotEmpty(qtCatCodeList)) {
 			for (ScQtCategory catCode : qtCatCodeList) {
-				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICategoryCodeSO.class);
+				ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 				PmCategoryL1 catCodeL1 = new PmCategoryL1();
 				CategoryCodeReqDTO reqDTO1 = new CategoryCodeReqDTO();
-				reqDTO1.setCategoryL1Id(catCode.getPmCategoryL1()
-						.getCategoryL1Id());
-				CategoryCodeResDTO resDTO1 = categoryCodeSO
-						.retrieveCategoryL1DtlById(reqDTO1);
+				reqDTO1.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
+				CategoryCodeResDTO resDTO1 = categoryCodeSO.retrieveCategoryL1DtlById(reqDTO1);
 				catCodeL1 = resDTO1.getCategoryL1();
 				PmCategoryL2 catCodeL2 = new PmCategoryL2();
 				CategoryCodeReqDTO reqDTO2 = new CategoryCodeReqDTO();
-				reqDTO2.setCategoryL2Id(catCode.getPmCategoryL2()
-						.getCategoryL2Id());
-				CategoryCodeResDTO resDTO2 = categoryCodeSO
-						.retrieveCategoryL2DtlById(reqDTO2);
+				reqDTO2.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
+				CategoryCodeResDTO resDTO2 = categoryCodeSO.retrieveCategoryL2DtlById(reqDTO2);
 				catCodeL2 = resDTO2.getCategoryL2();
 				PmCategoryL3 catCodeL3 = new PmCategoryL3();
 				CategoryCodeReqDTO reqDTO3 = new CategoryCodeReqDTO();
-				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3()
-						.getCategoryL3Id());
-				CategoryCodeResDTO resDTO3 = categoryCodeSO
-						.retrieveCategoryL3DtlById(reqDTO3);
+				reqDTO3.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
+				CategoryCodeResDTO resDTO3 = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO3);
 				catCodeL3 = resDTO3.getCategoryL3();
-				if (!catCodeL1.getCategoryName().equals(
-						catCode.getPmCategoryL1Name())
-						|| !catCodeL2.getCategoryName().equals(
-								catCode.getPmCategoryL2Name())
-						|| !catCodeL3.getCategoryName().equals(
-								catCode.getPmCategoryL3Name()) 
-								|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
-								|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
-								|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
-								) {
+				if (!catCodeL1.getCategoryName().equals(catCode.getPmCategoryL1Name())
+						|| !catCodeL2.getCategoryName().equals(catCode.getPmCategoryL2Name())
+						|| !catCodeL3.getCategoryName().equals(catCode.getPmCategoryL3Name())
+						|| catCodeL1.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL2.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+						|| catCodeL3.getRecordStatusFlg().equals(recordstatusInactive)// #29732(#221)
+				) {
 					if (catCodeList != "") {
 						catCodeList = catCodeList.concat(", ");
 					}
-					catCodeList = catCodeList.concat(catCode.getPmCategoryL1()
-							.getCategoryL1Code().toString()
-							+ catCode.getPmCategoryL2().getCategoryL2Code()
-									.toString()
-							+ catCode.getPmCategoryL3().getCategoryL3Code()
-									.toString());
+					catCodeList = catCodeList.concat(catCode.getPmCategoryL1().getCategoryL1Code().toString()
+							+ catCode.getPmCategoryL2().getCategoryL2Code().toString()
+							+ catCode.getPmCategoryL3().getCategoryL3Code().toString());
 				}
 			}
 		}
