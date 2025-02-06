@@ -2824,18 +2824,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 			}
 			public boolean businessTypeIsROB(String businessType){
-				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+				//#36710 --START
+				if(businessType != null && (businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-																				){
+																				)){
+					//#36710 --END
 					return true;
 				}else{
 					return false;
 				}
 			}
 			public boolean businessTypeIsROC(String businessType){
-				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+				//#36710 --START
+				if(businessType != null && (businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
 						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
-																				){
+																				)){
+					//#36710 --END
 					return true;
 				}else{
 					return false;
@@ -3440,19 +3444,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		return retVal;
-	}	
-	
-	//29956 START
-	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
-		Boolean retVal = false;
-		if (supplier != null && supplier.getSupplierId() != null) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
-		}
-		return retVal;
 	}
-	//29956 END
 		
 	public static void checkEquityOwnerUpdateAllowance(
 			BaseManagedBean managedBean) {
@@ -3494,6 +3486,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("ssmNewRegNo", this.getManagedBean().getSmSupplier().getSsmNewRegNo());	//#24819
 		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
 		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
@@ -4027,32 +4020,99 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
-	//#28175 - start
+	//#28175 - start, 29380 - Site Visit Grouping Enhancement -28775
+	//28175 Refactor start
 	/**
+	 * Returns the supplier category name based on the provided parameters.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
 	 * @param isSupplierProfile
-	 * @return latest or old category code description
+	 *            whether it's a supplier profile
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the supplier category name
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile){
-		if(catL3 == null){
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile, boolean isFullName) {
+		if (catL3 == null) {
 			return null;
 		}
+
 		SmAppl appl = getManagedBean().getSmAppl();
-		if(appl == null || isLatestCatCodeDesc(isSupplierProfile)
-				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
-			return catL3.getCategoryName();
+		String categoryName = getCategoryName(catL3, isFullName);
+
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile)
+				|| EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return categoryName;
 		}
-		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(
-				catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
-		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();	
+
+		SmSupplierCategory supplierCategory = getSupplierCategory(appl, catL3);
+		if (supplierCategory == null) {
+			return categoryName;
+		}
+
+		return isFullName ? getFullSupplierCategoryName(supplierCategory) : supplierCategory.getCategoryL3Name();
 	}
-	
+
 	/**
+	 * Returns the category name based on the provided PmCategoryL3 object and
+	 * whether to return the full name.
+	 * 
 	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @param isFullName
+	 *            whether to return the full category name
+	 * @return the category name
+	 */
+	private String getCategoryName(PmCategoryL3 catL3, boolean isFullName) {
+		String categoryName = catL3.getCategoryName();
+		if (isFullName) {
+			categoryName = String.format("%s / %s / %s", catL3.getPmCategoryL2().getPmCategoryL1().getCategoryName(),
+					catL3.getPmCategoryL2().getCategoryName(), categoryName);
+		}
+		return categoryName;
+	}
+
+	/**
+	 * Returns the SmSupplierCategory object based on the provided SmAppl object
+	 * and PmCategoryL3 object.
+	 * 
+	 * @param appl
+	 *            the SmAppl object
+	 * @param catL3
+	 *            the PmCategoryL3 object
+	 * @return the SmSupplierCategory object
+	 */
+	private SmSupplierCategory getSupplierCategory(SmAppl appl, PmCategoryL3 catL3) {
+		return (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(),
+				appl.getSmSupplierCategories(), "pmCategoryL3");
+	}
+
+	/**
+	 * Returns the full supplier category name based on the provided
+	 * SmSupplierCategory object.
+	 * 
+	 * @param supplierCategory
+	 *            the SmSupplierCategory object
+	 * @return the full supplier category name
+	 */
+	private String getFullSupplierCategoryName(SmSupplierCategory supplierCategory) {
+		return String.format("%s / %s / %s", supplierCategory.getCategoryL1Name(),
+				supplierCategory.getCategoryL2Name(), supplierCategory.getCategoryL3Name());
+	}
+	//28175 Refactor end
+	/**
+	 * @param cat
+	 * @param appl
 	 * @return latest or old category code description
 	 */
-	public String getSupplierCategoryName(PmCategoryL3 catL3){
-		return getSupplierCategoryName(catL3, false);
+	public String getSupplierCategoryName(SmSupplierCategory cat, SmAppl appl){
+		String catName1 = cat.getPmCategoryL1().getCategoryName();
+		String catName2 = cat.getPmCategoryL2().getCategoryName();
+		String catName3 = cat.getPmCategoryL3().getCategoryName();
+		return isLatestCatCodeDesc(false, appl) ?  
+				String.format("%s / %s / %s",catName1,catName2,catName3)
+				: getFullSupplierCategoryName(cat);
 	}
 	
 	/**
@@ -4069,64 +4129,72 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @return
 	 */
 	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
-		if(appl == null || appl.getPmStatus() == null){
+		if(appl == null){
 			return false;
+		}
+		if (appl.getPmStatus() == null) {
+			return isSupplierProfile || appl.isActiveAppl();
 		}
 		Long status = appl.getPmStatus().getStatusId();
 		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
 				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
 		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
 	}
-	//#28175 - end
+	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
-		getManagedBean().getPersonnelsRole().clear();
-		getManagedBean().setDowngradeRole(false);
-		getManagedBean().setDisAllowOwnerEdit(false);
-		
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
-		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
-		
-		PersonnelReqDTO reqDto = new PersonnelReqDTO();
-		reqDto.setApplId(smAppl.getApplId());
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
-			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
-				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
-				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+	    getManagedBean().getPersonnelsRole().clear();
+	    getManagedBean().setDowngradeRole(false);
+	    getManagedBean().setDisAllowOwnerEdit(false);
 
-				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
-				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
-				
-				if(shouldAddPersonnel){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				}
-				
-				if(isPersonnelAdminRole
-						&& !isMofAccEffDatePassed6MonthCurrDate
-						&& !isBasicAccount){
-					getManagedBean().setDisAllowOwnerEdit(true);
-					break;
-				}
-			}
-		}
-		if(getManagedBean().getPersonnelsRole() != null 
-				&& !getManagedBean().getPersonnelsRole().isEmpty()) {
-			getManagedBean().setDowngradeRole(true);
-			
-			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
-			getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-		}
-		return getManagedBean().isDowngradeRole();
+	    SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+	    Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
+
+	    String applType = smAppl.getApplType();
+	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+
+	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
+	    reqDto.setApplId(smAppl.getSmSupplier().getSmAppl().getApplId());
+	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+
+	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
+	        for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
+	            SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+	            SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+	            Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+	            Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+
+	            Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull && (!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+
+	            if (shouldAddPersonnel) {
+	                getManagedBean().getPersonnelsRole().add(personnel);
+	            }
+
+	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
+	                getManagedBean().setDisAllowOwnerEdit(true);
+	                break;
+	            }
+	        }
+	    }
+
+	    if (getManagedBean().getPersonnelsRole() != null && !getManagedBean().getPersonnelsRole().isEmpty()) {
+	        getManagedBean().setDowngradeRole(true);
+
+	        String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
+	        getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+
+	        RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+	        RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+	    }
+
+	    return getManagedBean().isDowngradeRole();
 	}
 	
 	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
@@ -4147,7 +4215,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	/**
 	 * Processes the given string by replacing newline characters with HTML line
 	 * break tags and encoding the < and > characters to their HTML entity
-	 * equivalents. If the string is null or empty, it returns null.
+	 * equivalents. If the string is null, empty or contains only whitespace, it returns null.
 	 * 
 	 * @param value
 	 *            the string to be processed; may be null
@@ -4156,13 +4224,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 *         respectively; {@code null} if the input is null or empty
 	 */
 	public String encodeHtmlStringOrNull(String value) {
-		if (value == null || value.isEmpty()) {
+		if (value == null || value.trim().isEmpty()) {
 			return null;
 		}
 		// Replace < and > with their HTML entity equivalents
 		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
 		// Replace any newline characters (\r\n or \n) with <br/>
-		return formatted.replaceAll("(\r\n|\n)", "<br />");
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
 	// #28854 - End
 }

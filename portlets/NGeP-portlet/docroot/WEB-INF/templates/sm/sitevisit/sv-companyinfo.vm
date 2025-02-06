@@ -2,7 +2,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;font-weight: bold;font-size: 12pt;'>$templateType - Company Information</font>
+	            <font style='color:#ffffff;font-weight: bold;font-size: 12pt;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.compinfo')</font>
 	        </td>
     	</tr>
 	</table>
@@ -30,7 +30,7 @@
     	</tr>
     	
     	<tr>
-    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+	       <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
 	        #if($newBusinessRegistrationNo != $null)
 	      	<td>$newBusinessRegistrationNo</td>
 	      	#else
@@ -80,7 +80,7 @@
     	</tr>
     	
    	    <tr>
-	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no').</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no')</b></td>
 	        <td>$mofNo</td>
     	</tr>
     	
@@ -88,16 +88,6 @@
 	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.appl.ref.no')</b></td>
 	        <td>$applNo</td>
     	</tr>
-    	
-       #*	<tr>
-	        <td width="30%"><b>Scheduled Date of Visit</b></td>
-	        <td></td>
-    	</tr>*#
-    	
-    	#*<tr>
-	        <td width="30%"><b>Visiting Date</b></td>
-	        <td></td>
-    	</tr>*#
     	
     	<tr>
     		<td width="30%" valign="top"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.visiting.officer')</b></td>
@@ -125,12 +115,12 @@
     				#end
     				</table>
     			#else
-	    			<p class="txtBold">Name</p>
-	    			<p class="txtBold">Designation</p><br />
-	    			<p class="txtBold">Name</p>
-	    			<p class="txtBold">Designation</p><br />
-	    			<p class="txtBold">Name</p>
-	    			<p class="txtBold">Designation</p><br />
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</p>
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</p><br />
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</p>
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</p><br />
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.name')</p>
+	    			<p class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.designation')</p><br />
     			#end
     		</td>
     	</tr>

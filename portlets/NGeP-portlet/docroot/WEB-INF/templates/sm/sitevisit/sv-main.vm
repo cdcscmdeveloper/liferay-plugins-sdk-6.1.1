@@ -3,7 +3,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>$templateType - Site Visit Checklist</font>
+	            <font style='color:#ffffff;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.checklist')</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>
@@ -11,7 +11,7 @@
 	
 	<table style="border: 1px solid black;">
 		<tr align="center" style="background-color: #99ccff;">
-			<td>File Name</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.file')</td>
 		</tr>
 		<tr align="center">
 			<td>K/KEW/PK/PS/1100/000000/165/47-(<span style="padding-left:150px" />)</td>
@@ -36,70 +36,70 @@
 	</tr>
 	
 	<tr align='center'>
-		 <td>SENARAI SEMAK LAWATAN PEMERIKSAAN DAN PENGESAHAN</td>
+		 <td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.title')</td>
 	</tr>
 	</table>
 	
 	<table>
 	<tr align="center" width="30%">
-		<td width="10%" style="border: 1px solid black; background-color:#99ccff;">Lembah Klang</td>
-		<td width="2%" style="border: 1px solid black;"><input type="checkbox" /></td>
+		<td width="10%" style="border: 1px solid black; background-color:#99ccff;">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.klang')</td>
+		<td width="2%" style="border: 1px solid black;">#if($isKlang) X #end</td>
 		
 		<td width="5%"></td>
 		
-		<td width="10%" style="border: 1px solid black;background-color:#99ccff;">Luar Lembah Klang</td>
-		<td width="2%" style="border: 1px solid black;"><input type="checkbox" /></td>
+		<td width="10%" style="border: 1px solid black;background-color:#99ccff;">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.outklang')</td>
+		<td width="2%" style="border: 1px solid black;">#if(!$isKlang) X  #end</td>
 	</tr>
 	</table>
 	<br />
 	
 	<table width="80%" align="center">
 		<tr align="left">
-			<td width="25%"><b>Company Name</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.company.name')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$companyName</td>
 		</tr>
 		
 		<tr align="left">
-			<td width="25%"><b>MOF Registration No.</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$!mofRegistrationNo</td>
 		</tr>
 
 		<tr align="left">
-			<td width="25%"><b>Application Reference</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.appl.ref.no')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$!applNo</td>
 		</tr>
 		
 		<tr align="left">
-			<td width="25%"><b>Processing Officer</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.po')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$!poName</td>
 		</tr>
 		
 		<tr align="left">
-			<td width="25%"><b>Site Visit Address</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.address')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$addressFormatter.getAddress($compAddress)</td>
 		</tr>
 		
 		<!--#34159 - START - Re-Order Address based on format in log #36-->
 		<tr align="left">
-			<td width="25%"><b>District</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmDistrict.districtName</td>
 		</tr>
 		<!--#34159 - END -->
 		
 		<tr align="left">
-			<td width="25%"><b>Post Code</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.postal.code')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.postcode</td>
 		</tr>
 		
 		<tr align="left">
-			<td width="25%"><b>Town/City</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.town.city')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmCity.cityName</td>
 		</tr>
@@ -107,7 +107,7 @@
 		<!--#34159 - START -->
 		#if($compAddress.pmState.adoptDivision)
 		<tr align="left">
-			<td width="25%"><b>Division</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.division')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmDivision.divisionName</td>
 		</tr>
@@ -115,19 +115,19 @@
 		<!--#34159 - END -->
 		
 		<tr align="left">
-			<td width="25%"><b>State</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.state')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmState.stateName</td>
 		</tr>
-		
+				
 		<tr align="left">
-			<td width="25%"><b>Application Type</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.type')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$applType</td>
 		</tr>
 		
 		<tr align="left">
-			<td width="25%"><b>Site Visit No</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.no')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$siteVisitNo</td>
 		</tr>
@@ -136,10 +136,10 @@
 	<br /><br />
 	<table width="100%"  class="descTable">
 		<tr  style="background-color:#99ccff;">
-			<th>NO</th>
-			<th>DESCRIPTION</th>
-			<th>DATE (IF APPLICABLE)</th>
-			<th>REMARKS</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.num').</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.desc')</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date.if')</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remarks')</th>
 		</tr>
 		
 		<tr>
@@ -168,10 +168,6 @@
 			<td>Pegawai Pelawat: 
 				<br />
 				##29781 - Start - Display names of Site Visit Officers 
-				<!-- 
-				<b> i. $svOfficers </b><br/>
-				<b> ii. $svAOfficer </b><br/>
-				-->
 				#foreach($svOfficer in $svOfficers)
 					<b> $velocityCount. $svOfficer </b><br/>
 				#end
@@ -243,15 +239,21 @@
 	
 	<table width="100%">
 		<tr align="left">
-			<td>Processing Officer</td>
-			<td>Site Visit Officer</td>
-			<td>Approver</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.po')</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.svo')</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.approver')</td>
 		</tr>
 		
 		<tr align="left">
-			<td>Date:</td>
-			<td>Date:</td>
-			<td>Date:</td>
+			<td>$!poName</td>
+			<td></td>
+			<td></td>
+		</tr>
+		
+		<tr align="left">
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date'):</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date'):</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date'):</td>
 		</tr>
 	</table>
 #include("templates/sm/sitevisit/shared/footer.vm")
