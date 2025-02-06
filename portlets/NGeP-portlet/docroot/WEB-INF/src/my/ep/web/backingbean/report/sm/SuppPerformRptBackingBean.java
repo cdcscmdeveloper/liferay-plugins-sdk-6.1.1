@@ -52,7 +52,11 @@ public class SuppPerformRptBackingBean extends
 		boolean isSprMv = false;
 		// #31893 - end
 		
-		if (getManagedBean().getSelectedOrgProfile() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) {
+		//#36125 - START
+		ValidateSupplierPerformanceReport();
+		//#36125 - END
+		
+		if (getManagedBean().getSelectedSupplierPerformance() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) { //36125 - Change to view table
 				throw new EpException(MessageConst.ERROR_REPORT_780044);		
 		} 
 		if(getManagedBean().getDateFrom() != null && getManagedBean().getDateTo() != null) {
@@ -65,22 +69,21 @@ public class SuppPerformRptBackingBean extends
 		}
 		// #33741 - start
 		// reset selectedOrgProfile if user select supplierId = 2
-		if (getManagedBean().getSelectedOrgProfile() != null
-				&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null
-				&& getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId() == 2) {
-			getManagedBean().setSelectedOrgProfile(null);
+		if (getManagedBean().getSelectedSupplierPerformance() != null //36125 - Change to view table
+				&& getManagedBean().getSelectedSupplierPerformance().getSupplierId() == 2) { //36125 - Change to view table
+			getManagedBean().setSelectedSupplierPerformance(null); //36125 - Change to view table
 		}
 		// #33741 - end
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		retrieveReportValueFromDb();
-		if (getManagedBean().getSelectedOrgProfile() != null) {
-			if (getManagedBean().getSelectedOrgProfile().getSmSupplier() != null) {
+		if (getManagedBean().getSelectedSupplierPerformance() != null) { //36125 - Change to view table
+			if (getManagedBean().getSelectedSupplierPerformance().getCompanyName() != null) { //36125 - Change to view table
 				params.put(SmReportConst.PARAM_COMPANY_NAME, getManagedBean()
-						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+						.getSelectedSupplierPerformance().getCompanyName()); //36125 - Change to view table
 				supplierSearchReqDTO.setCompanyName(getManagedBean()
-						.getSelectedOrgProfile().getSmSupplier().getCompanyName());
+						.getSelectedSupplierPerformance().getCompanyName()); //36125 - Change to view table
 				// #33741 - start
 				// #31893 - start
 				/*
@@ -99,8 +102,11 @@ public class SuppPerformRptBackingBean extends
 				*/
 				// #31893 - end
 				
-				supplierId = getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId();
-				isSprMv = getManagedBean().getSelectedOrgProfile().getSmSupplier().isSprMv();
+				//36125 - START Change to view table
+				supplierId = getManagedBean().getSelectedSupplierPerformance().getSupplierId();
+				SupplierSearchResDTO suResDTO = ValidateSupplier(supplierSearchReqDTO);
+				isSprMv = suResDTO.getSmSupplier().isSprMv();
+				//36125 - END Change to view table
 				// #33741 - end
 			}
 		}else{
@@ -247,4 +253,16 @@ public class SuppPerformRptBackingBean extends
 		}
 	}
 	//#33741 - END
+	//#36125 - START
+	public void ValidateSupplierPerformanceReport(){
+		SupplierSearchReqDTO ssReqDTO = new SupplierSearchReqDTO();
+		ssReqDTO.setMofAccountNo(getManagedBean().getMofNo());
+		ssReqDTO.setEpNo(getManagedBean().getEpNo());
+		ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+		Boolean ssResDTO = supplierSearchSO.isSupplierPerformanceReportExist(ssReqDTO);
+		if(!ssResDTO){
+			throw new EpException(MessageConst.ERROR_REPORT_780056);
+		}
+	}
+	//#36125 - END
 }
