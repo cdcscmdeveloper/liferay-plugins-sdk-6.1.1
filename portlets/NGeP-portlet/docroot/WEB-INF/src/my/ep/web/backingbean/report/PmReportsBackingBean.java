@@ -261,9 +261,14 @@ public class PmReportsBackingBean extends
 					.getServiceType());
 		}
         //#36719 - Start
-		if (getManagedBean().getSelectedFinancialOrg() != null) {
+		if (getManagedBean().getSelectedFinancialOrg() != null &&
+				getManagedBean().getSelectedFinancialOrg().getFinOrgName() != null) {
 			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean().
 					getSelectedFinancialOrg().getFinOrgName());
+		}
+		
+		if (getManagedBean().getSelectedFinancialOrg() != null &&
+				getManagedBean().getSelectedFinancialOrg().getBizRegNumber() != null) {
 			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean().
 					getSelectedFinancialOrg().getBizRegNumber());
 		}
