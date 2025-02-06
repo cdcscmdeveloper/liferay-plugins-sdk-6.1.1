@@ -29,8 +29,7 @@
 				headerText="#{lbl['lbl.pm.header.general.finance']}" readonly="true"
 				value="#{pmReportsBackingBean.managedBean.selectedFinancialOrg.finOrgName}"
 				saveObject="pmReportsBackingBean.managedBean.selectedFinancialOrg" 
-				conditionField="#{pmReportsBackingBean.constructConditionFieldForFinSvc()}"/></td>
-		<!-- 36719 - End -->		
+				conditionField="#{pmReportsBackingBean.constructConditionFieldForFinSvc()}"/></td>		
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /></td>
@@ -39,6 +38,7 @@
 					value="#{pmReportsBackingBean.managedBean.selectedFinancialOrg.bizRegNumber}">
 				</p:inputText></td>
 		</tr>
+		<!-- 36719 - End -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.rpt.profilestatus']}" /></td>
 			<td><p:selectOneMenu
