@@ -315,10 +315,10 @@
 		<p:outputPanel layout="block" id="poEnquiryBlockPanel">
 			<ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 			<div align="right">
-				<!-- #12483 - START -->
-				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
-					update="@([id$=Msg])" process="poEnquiryBlockPanel"
-					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+				<!-- #12483 - START, #34400 -->
+				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}" 
+					partialSubmit="true" process="poEnquiryBlockPanel"
+					oncomplete="if (!args.validationFailed) confirmInquiryDlg.show();" />
 				<!-- #12483 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
 					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
@@ -352,9 +352,10 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();" 
-					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
+					oncomplete="if (!args.validationFailed) confirmRecommendDlg.show();" 
+					update="@([id$=confirmRecommendDlg])" process="poEscalateBlockPanel"/>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelPOEscalationToApprover}"
 					partialSubmit="true" process="@this" />
@@ -385,8 +386,9 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-					onclick="poApprovedBlockWidget.show()" oncomplete="poApprovedBlockWidget.hide()" 
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="poApprovedBlockWidget.show()"
+					oncomplete="poApprovedBlockWidget.hide(); if (!args.validationFailed) confirmApproveDlg.show();" 
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
 					partialSubmit="true" process="poApprovedBlockPanel" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
@@ -405,9 +407,10 @@
 		modal="true">
 		<ac:smSearchRejectReasons>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
-					update="@([id$=Msg])" partialSubmit="true" process="rejectBlockPanel"
+			<!-- #34400 -->
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()"
+					oncomplete="rejectBlockPanelWidget.hide(); confirmRejectDlg.show();"
+					partialSubmit="true" process="@([id$=rejectDialogId])"
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
@@ -429,4 +432,37 @@
 		</div>
 	</p:confirmDialog>
 	<!-- 32304 - end -->
+	<!-- #34400 - start -->
+	<ac:confirmationPopup id="confirmRecommendDlg" widget="confirmRecommendDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' ? lbl['lbl.sm.confirm.recc.reject'] : lbl['lbl.sm.confirm.recc.approve']}" 
+		update="@([id$=Msg])"
+		loadingWidget="poEscalateBlockWidget" />
+		
+	<ac:confirmationPopup id="confirmApproveDlg" widget="confirmApproveDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.approve']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+		
+	<ac:confirmationPopup id="confirmRejectDlg" widget="confirmRejectDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.reject']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+
+	<ac:confirmationPopup id="confirmInquiryDlg" widget="confirmInquiryDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.enquiry.po']}" 
+		update="@([id$=Msg])"
+		loadingWidget="poEnquiryBlockWidget" />
+	<!-- #34400 - end -->
 </ui:composition>

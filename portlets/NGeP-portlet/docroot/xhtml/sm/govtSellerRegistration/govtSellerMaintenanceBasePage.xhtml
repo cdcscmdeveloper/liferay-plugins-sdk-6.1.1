@@ -28,13 +28,23 @@
 		<ui:param name="registrationBackingBean" value="#{govtSellerBackingBean}" />
 		
 		<div align="right">
-		<!--#12492-START-->
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}" actionListener="#{bb.CheckBankAccount('fromNext')}" action="#{bb.submitMaintenance}" update="@([id$=Msg])" 
-					onclick="blockWidget.show()" oncomplete="blockWidget.hide()" process="@form">
+		<!--#12492-START, #34400 -->
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{bb.CheckBankAccount('fromNext')}"  
+					process="@form" onclick="blockWidget.show()" 
+					oncomplete="blockWidget.hide(); if (!args.validationFailed) confirmDlg.show();" >
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
 		<!--#12492-END-->
 		</div>
+		<!-- #34400 -->
+		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+			bean="#{bb}"
+			okAction="submitMaintenance"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.g2g.maintenance']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
 		
 		<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerCompanyInfoPage.xhtml" />
 		<ui:include src="/xhtml/sm/govtSellerRegistration/govtSellerBranchInfoPage.xhtml" />

@@ -16,10 +16,12 @@ import org.apache.log4j.Logger;
 public class SPKIHelper {
 	public static Logger log = Logger.getLogger(SPKIHelper.class);
 	private static SPKIHelper instance;
-	private static String SPKI_TLS_LATEST = EpPropertiesUtils.getInstance().getProperty("spki.tls.on");
+	private static String SPKI_TLS_LATEST = EpPropertiesUtils.getInstance()
+			.getProperty("spki.tls.on");
 
 	public boolean isUsingSpkiTLSLatest() {
-		return (SPKI_TLS_LATEST != null && SPKI_TLS_LATEST.trim().equalsIgnoreCase("1")) ? true : false;
+		return (SPKI_TLS_LATEST != null && SPKI_TLS_LATEST.trim()
+				.equalsIgnoreCase("1")) ? true : false;
 	}
 
 	public static SPKIHelper getInstance() {
@@ -33,11 +35,12 @@ public class SPKIHelper {
 		return instance;
 
 	}
-	
-	public SpkiVO getSignedData(String provider,String identificationNo, String epNo,
-			String pin, Map<Object, Object> challenges, String dataForSigning) {
-		log.info("BEFORE SIGNING:" + identificationNo + "||" + epNo
-				+ "||" + pin + "||" + dataForSigning+"||"+provider);
+
+	public SpkiVO getSignedData(String provider, String identificationNo,
+			String epNo, String pin, Map<Object, Object> challenges,
+			String dataForSigning) {
+		log.info("BEFORE SIGNING:" + identificationNo + "||" + epNo + "||"
+				+ pin + "||" + dataForSigning + "||" + provider);
 		SpkiResDTO resDTO = null;
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
@@ -50,26 +53,28 @@ public class SPKIHelper {
 			resDTO = SmServiceLookup.getSpkiSO().signData(reqDTO);
 			signedData = resDTO.getSignedData();
 		} catch (Exception e) {
-			log.info("SIGNING:" + identificationNo + "||" + epNo
-					+ "||" + pin + "||" + dataForSigning + "  ERROR MSG:"
-					+ e.getMessage());
+			log.info("SIGNING:" + identificationNo + "||" + epNo + "||" + pin
+					+ "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
 			vo.setErrMsg(resDTO.getErrorMessage());
 		}
 		vo.setSignedData(signedData);
 		return vo;
 	}
-	
-	public String generateSecurityToken(String provider, String identificationNo, String epNo) {
+
+	public String generateSecurityToken(String provider,
+			String identificationNo, String epNo) {
 		String tok = null;
 		SpkiReqDTO reqDTO = new SpkiReqDTO();
 		reqDTO.setEpNo(epNo);
 		reqDTO.setIdentificationNo(identificationNo);
 		reqDTO.setSoftCertProvider(provider);
 		try {
-			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO().generateSecurityToken(reqDTO);
+			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO()
+					.generateSecurityToken(reqDTO);
 			tok = resDTO.getToken();
 		} catch (Exception ex) {
-			log.info("Error call generateSecurityToken for:" + identificationNo + "||" + epNo + "||" + " ERROR MSG:" + ex.getMessage());
+			log.info("Error call generateSecurityToken for:" + identificationNo
+					+ "||" + epNo + "||" + " ERROR MSG:" + ex.getMessage());
 			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 
@@ -77,7 +82,10 @@ public class SPKIHelper {
 		return tok;
 	}
 
-	public List<String> getChallengeQuestion(String provider, String identificationNo, String epNo, String selectedQuest) {
+	public List<String> getChallengeQuestion(String provider,
+			String identificationNo, String epNo, String selectedQuest) {
+		log.info("get challenge qestion for provider:" + provider + " idno:"
+				+ identificationNo + " epNo:" + epNo);
 		SpkiReqDTO reqDTO = new SpkiReqDTO();
 		reqDTO.setEpNo(epNo);
 		reqDTO.setIdentificationNo(identificationNo);
@@ -85,10 +93,13 @@ public class SPKIHelper {
 		reqDTO.setSoftCertProvider(provider);
 		List<String> retVal = new ArrayList<String>();
 		try {
-			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO().retrieveChallengeQuestions(reqDTO);
+			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO()
+					.retrieveChallengeQuestions(reqDTO);
 			retVal = resDTO.getChallQuestions();
 		} catch (Exception ex) {
-			log.info("Error call chall question for:" + identificationNo + "||" + epNo + "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
+			log.info("Error call chall question for:" + identificationNo + "||"
+					+ epNo + "||" + selectedQuest + " ERROR MSG:"
+					+ ex.getMessage());
 			ex.printStackTrace();
 			throw new EpException(ex.getMessage());
 
