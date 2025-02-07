@@ -23107,4 +23107,43 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 	// 11104 -end-
 	
+	/**
+	 * #28784 - Move scoringOkActionDemo from templateSpecBb to specBB due
+	 * to demo scoring
+	 * 
+	 * @param templateSpecBean
+	 * @return void
+	 */
+	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
+		ITemplateSpecSO templateSpecSO = null;
+		BigDecimal demoNewScore = null;
+		try {
+			TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+			List<TplSpecScoring> specScorings = selectedSpecQuestion.getTplSpecScorings();
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+					ITemplateSpecSO.class);
+
+			BigDecimal demoScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings,
+					new FacesScopes().getUserLocale());
+			demoNewScore = this.getManagedBean().getTemplateSpecBean().getSelectedSpecQuestion().getDemoScore();
+
+			if (demoScore != null && demoScore.equals(new BigDecimal(0))) {
+				throw new EpException(MessageConst.ERROR_760476);
+			}
+			if (demoScore != null) {
+				selectedSpecQuestion.setDemoScore(demoScore);
+			}
+
+		} finally {
+			templateSpecSO = null;
+		}
+		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setTemplateSpecBean(templateSpecBean);
+
+		if (demoNewScore != null) {
+			RequestContext.getCurrentInstance().execute("scoringSetPopup.hide()");
+		}
+
+	}
+	
 }
