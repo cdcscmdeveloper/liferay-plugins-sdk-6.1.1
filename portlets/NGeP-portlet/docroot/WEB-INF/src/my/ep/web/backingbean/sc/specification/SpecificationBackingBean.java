@@ -12615,7 +12615,7 @@ public class SpecificationBackingBean extends
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
 
-			if(this.getManagedBean().getQtCategoryList().isEmpty()){
+			if (null == this.getManagedBean().getQtCategoryList() || this.getManagedBean().getQtCategoryList().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760062);
 			}
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
