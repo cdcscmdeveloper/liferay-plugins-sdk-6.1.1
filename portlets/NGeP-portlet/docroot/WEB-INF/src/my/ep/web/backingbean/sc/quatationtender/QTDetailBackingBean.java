@@ -901,6 +901,8 @@ public class QTDetailBackingBean extends
 			}
 			//bug #30435, Enhancement #25077 - end
 			
+			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
@@ -3330,6 +3332,7 @@ public class QTDetailBackingBean extends
 			// #30477, #25426 Start
 			validateUserInactive(taskName, currentStatus, outcome);
 			// #30477, #25426 End
+			validateSupplierCriteriaIntegrity(qt);	// Bug #36730@Syazani 07/01/2025 -- Start
 
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
 					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)
