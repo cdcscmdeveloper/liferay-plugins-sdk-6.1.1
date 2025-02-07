@@ -225,7 +225,9 @@
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
 							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="O" />
+							<!--#37779-START-->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<!--#37779-End-->
 							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.registration']}"
 								itemValue="R" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.paymentLbl']}"
