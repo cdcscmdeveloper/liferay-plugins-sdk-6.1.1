@@ -3689,24 +3689,8 @@ public class QTDetailBackingBean extends
 								procurementMode, qtNo }, true);
 					}
 				}else{
-					FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													getMsgCodeByTaskName(taskName),
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.DOCUMENT_TYPES,
-																	ParameterConst.DOCTYPE_QUOTATION),
-															qt.getQtNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+					successMessage(getMsgCodeByTaskName(taskName), ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_QUOTATION, qt.getQtNo(), Boolean.TRUE);
 				}
 				renewSesionObject();			
 				//#25037 end
