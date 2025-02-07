@@ -602,7 +602,8 @@ private class SpecMaintenanceSearchQtDataModel extends
 		// #29732 @idham 25/07/2023 - Start
 		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
 				&& !isQtRevisePubNqtPendingScheDoc()) {
-			if (isSpecRoleMaintenanceValidation()) {
+			if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+					&& !isQtRevisePubNqtPendingScheDoc()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
 				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
 			}
@@ -636,6 +637,7 @@ private class SpecMaintenanceSearchQtDataModel extends
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
 		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
+		
 		// 11104_Start
 		this.getManagedBean().setSampleShowHide(isSampleWip);
 		// 11104_end
