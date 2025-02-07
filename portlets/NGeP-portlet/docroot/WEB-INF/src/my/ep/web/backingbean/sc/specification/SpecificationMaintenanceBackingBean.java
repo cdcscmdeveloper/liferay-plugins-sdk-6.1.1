@@ -599,13 +599,12 @@ private class SpecMaintenanceSearchQtDataModel extends
 		// #15391 - end
 
 		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());// #29732
-		
 		// #29732 @idham 25/07/2023 - Start
 		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
 				&& !isQtRevisePubNqtPendingScheDoc()) {
 			if (isSpecRoleMaintenanceValidation()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime specmaint
+				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
 			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
 
@@ -633,11 +632,10 @@ private class SpecMaintenanceSearchQtDataModel extends
 		if (redirect|| checkDemoRedirect()){//#28784
 			renderPage = renderPage.concat("?faces-redirect=true");
 		}
-		
-		//#29732 copy prev managebean because has null pointer on status id
+		//#29732
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
-		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
+		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
 		// 11104_Start
 		this.getManagedBean().setSampleShowHide(isSampleWip);
 		// 11104_end
