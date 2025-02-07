@@ -17201,17 +17201,25 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		//#15391 - end
-
+		
 		// #29732(#232) - start
+		List<ScQtCategory> categoryResults = spReqDTO.getScQt().getScQtCategorys();
+
+		// 29732 fix duplicate issues -start-
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
-		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
-			for (int i = 0; i < removeCategoryCodes.size(); i++) {
-				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
-					removeCategoryCodes.remove(removeCategoryCodes.get(i));
+		if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
+				&& !removeCategoryCodes.isEmpty()) {
+			for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
+				for (int i = 0; i < categoryResults.size(); i++) {
+					if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2)
+							.getQtCategoryId()) {
+						removeCategoryCodes.remove(removeCategoryCodes.get(i2));
+					}
 				}
 			}
 		}
+		// 2973
 		// #29732(#232) - end
 
 		signoffCommitteeActivity(spReqDTO,action);
