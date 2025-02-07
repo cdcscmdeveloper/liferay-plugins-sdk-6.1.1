@@ -261,15 +261,18 @@ public class PmReportsBackingBean extends
 					.getServiceType());
 		}
 
-		if (getManagedBean().getSelectedOrgProfile() != null
-				&& getManagedBean().getSelectedOrgProfile().getPmFinancialOrg() != null) {
+		// #36719 - Start
+		if (getManagedBean().getSelectedFinancialOrg() != null
+				&& getManagedBean().getSelectedFinancialOrg().getFinOrgName() != null) {
 			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean()
-					.getSelectedOrgProfile().getPmFinancialOrg()
-					.getFinOrgName());
-			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
-					.getSelectedOrgProfile().getPmFinancialOrg()
-					.getBizRegNumber());
+					.getSelectedFinancialOrg().getFinOrgName());
 		}
+		if (getManagedBean().getSelectedFinancialOrg() != null
+				&& getManagedBean().getSelectedFinancialOrg().getBizRegNumber() != null) {
+			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
+					.getSelectedFinancialOrg().getBizRegNumber());
+		}
+		// #36719 - End
 
 		if (getManagedBean().getStatus() != null) {
 			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
@@ -721,6 +724,7 @@ public class PmReportsBackingBean extends
 		//#29486 - START
 		getManagedBean().setMonthlyDate(null);
 		//#29486 - END
+		getManagedBean().setSelectedFinancialOrg(null); //#36719
 	}
 
 	public void autoSelectOrgType() {
@@ -1502,7 +1506,27 @@ public class PmReportsBackingBean extends
 		sb.append("|smSupplier.recordStatus^1*smSupplier.recordStatus^0");
 		return sb.toString();
 	}
-	
 	//#29991 end---
+	
+	// #36719 - Start
+	/**
+	 * filter services Type
+	 * 
+	 * @return sb.toString()
+	 */
+	public String constructConditionFieldForFinSvc() {
+		StringBuilder sb = new StringBuilder();
+
+		if (this.getManagedBean().getServiceType() == null) {
+			sb.append("pmFinancialSvcs.serviceTypeCode.parameterCode^");
+			sb.append(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
+		} else {
+			sb.append("pmFinancialSvcs.serviceTypeCode.parameterCode^");
+			sb.append(this.getManagedBean().getServiceType());
+		}
+
+		return sb.toString();
+	}
+	// #36719 - End
 
 }
