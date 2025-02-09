@@ -17497,6 +17497,8 @@ if (null != checklist && !checklist.isEmpty()) {
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());// #29732
+
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
 			//#29732 issue submit specification maintenance(allow submit without popup validation
@@ -18137,12 +18139,17 @@ if (null != checklist && !checklist.isEmpty()) {
 		}
 		
 		// #29732(#232) - start
+		List<ScQtCategory> categoryResults = spReqDTO.getScQt().getScQtCategorys();
+
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean()
 				.getTobeRemoveCategoryCodes();
 		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
-			for (int i = 0; i < removeCategoryCodes.size(); i++) {
-				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
-					removeCategoryCodes.remove(removeCategoryCodes.get(i));
+			for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
+				for (int i = 0; i < categoryResults.size(); i++) {
+					if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2)
+							.getQtCategoryId()) {
+						removeCategoryCodes.remove(removeCategoryCodes.get(i2));
+					}
 				}
 			}
 		}		

@@ -622,7 +622,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		
 		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());//#29732 <--add this coz of impact form #35688 reseting the managebean
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+		if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
 				&& !isQtRevisePubNqtPendingScheDoc()) {
 			if (isSpecRoleMaintenanceValidation()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
