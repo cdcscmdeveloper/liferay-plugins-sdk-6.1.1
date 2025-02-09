@@ -17522,7 +17522,8 @@ public class SpecificationBackingBean extends
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
-		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());// #29732
+
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys()); // #29732
 
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
@@ -18167,7 +18168,7 @@ public class SpecificationBackingBean extends
 		// #29732(#232) - start
 		List<ScQtCategory> categoryResults = spReqDTO.getScQt().getScQtCategorys();
 
-		// 29732 fix duplicate issues -start-
+		// 29732 fix duplicate issues
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
 		if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
@@ -18180,7 +18181,6 @@ public class SpecificationBackingBean extends
 				}
 			}
 		}
-		// 2973
 		// #29732(#232) - end
 		
 		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);// #29732(#232)
