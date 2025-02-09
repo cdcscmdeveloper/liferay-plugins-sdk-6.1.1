@@ -12617,9 +12617,6 @@ public class SpecificationBackingBean extends
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
 
-			if(this.getManagedBean().getQtCategoryList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_760062);
-			}
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 			this.getManagedBean().setFromSubmitCatChange(true);
@@ -17525,6 +17522,9 @@ public class SpecificationBackingBean extends
 		specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
 		specSo.validateSupplierQulificationInfoCatChange(specReqDTOCatChange);
 		String changedCatCodeList = checkCatCodeChange();
+
+		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys()); // #29732
+
 		if (!changedCatCodeList.isEmpty()) {
 			this.getManagedBean().setCatCodeList(changedCatCodeList);
 			//#29732 issue submit specification maintenance(allow submit without popup validation
@@ -18166,11 +18166,18 @@ public class SpecificationBackingBean extends
 		}
 
 		// #29732(#232) - start
+		List<ScQtCategory> categoryResults = spReqDTO.getScQt().getScQtCategorys();
+
+		// 29732 fix duplicate issues
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
-		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
-			for (int i = 0; i < removeCategoryCodes.size(); i++) {
-				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
-					removeCategoryCodes.remove(removeCategoryCodes.get(i));
+
+		if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
+				&& !removeCategoryCodes.isEmpty()) {
+			for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
+				for (int i = 0; i < categoryResults.size(); i++) {
+					if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2).getQtCategoryId()) {
+						removeCategoryCodes.remove(removeCategoryCodes.get(i2));
+					}
 				}
 			}
 		}
