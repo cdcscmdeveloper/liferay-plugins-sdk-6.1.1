@@ -488,34 +488,46 @@ public class ViewSuppProfileBackingBean extends
 
 	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
 		List<String> remarks = new ArrayList<>();
-		String remarkOne = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())
-				+ " "
-				+ revisit.getRevisitPrevRemark()
-				+ " "
-				+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()) + " " + revisit.getRevisitRemark();
-		remarks.add(remarkOne);
-		if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
-			List<PmStatusDesc> descList;
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-			descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
-			String remarkTwo = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale())
-					+ " "
-					+ getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId())
-					+ " "
-					+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale())
-					+ " "
-					+ getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId());
-			remarks.add(remarkTwo);
-		}
-		if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
-			String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale());
-			remarks.add(remarkThree);
+		if (null != revisit) {
+			String remarkOne = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) + " ";
+			if (null != revisit.getRevisitPrevRemark()) {
+				remarkOne += revisit.getRevisitPrevRemark();
+			} else {
+				remarkOne += ResourceBundleUtils
+						.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+			remarkOne += " "
+					+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) + " ";
+			if (null != revisit.getRevisitRemark()) {
+				remarkOne += revisit.getRevisitRemark();
+			} else {
+				remarkOne += ResourceBundleUtils
+						.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			}
+			remarks.add(remarkOne);
+			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
+				List<PmStatusDesc> descList;
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+				String remarkTwo = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())
+						+ " "
+						+ getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId())
+						+ " "
+						+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())
+						+ " "
+						+ getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId());
+				remarks.add(remarkTwo);
+			}
+			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
+				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				remarks.add(remarkThree);
+			}
 		}
 		return remarks;
 	}
