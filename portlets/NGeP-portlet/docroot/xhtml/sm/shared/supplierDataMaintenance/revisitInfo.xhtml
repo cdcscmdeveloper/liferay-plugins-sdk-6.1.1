@@ -106,10 +106,7 @@
 											style="width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 											<p:outputLabel styleClass="outputLabel-view"
 												value="#{remark}" /> <p:outputPanel
-												rendered="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvCatCodes ne null and 
-												((viewSmApplBackingBean.managedBean.currentSmRevisit.oldPmRegStatus eq null and 
-												viewSmApplBackingBean.managedBean.currentSmRevisit.newPmRegStatus eq null and 
-												index.index+1 eq 2) or index.index+1 eq 3)}">
+												rendered="#{index.last}">
 												<br />
 												<table>
 													<ui:repeat var="catCode" varStatus="sub"

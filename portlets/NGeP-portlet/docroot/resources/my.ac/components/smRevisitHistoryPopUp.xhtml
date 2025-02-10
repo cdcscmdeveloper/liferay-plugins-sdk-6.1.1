@@ -98,8 +98,7 @@
 											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 											<p:outputLabel styleClass="outputLabel-view"
 												value="#{remark}" /> <p:outputPanel
-												rendered="#{revisit.smRvCatCodes ne null and ((revisit.oldPmRegStatus eq null and 
-												revisit.newPmRegStatus eq null and index.index+1 eq 2) or index.index+1 eq 3)}">
+												rendered="#{index.last}">
 												<br />
 												<table>
 													<ui:repeat var="catCode" varStatus="sub"
