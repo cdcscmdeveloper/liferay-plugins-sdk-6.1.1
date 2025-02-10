@@ -54,8 +54,11 @@ import com.liferay.compat.portal.util.PortalUtil;
 import java.util.HashMap;
 import java.util.Map;
 import my.ep.biz.service.sm.revisit.ISmRevisitSO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.util.ResourceBundleUtils;
 //#34031 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
@@ -481,6 +484,54 @@ public class ViewSuppProfileBackingBean extends
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
 					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
 		}
+	}
+
+	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
+		List<String> remarks = new ArrayList<>();
+		String remarkOne = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale())
+				+ " "
+				+ revisit.getRevisitPrevRemark()
+				+ " "
+				+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) + " " + revisit.getRevisitRemark();
+		remarks.add(remarkOne);
+		if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
+			List<PmStatusDesc> descList;
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+			String remarkTwo = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale())
+					+ " "
+					+ getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId())
+					+ " "
+					+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())
+					+ " "
+					+ getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId());
+			remarks.add(remarkTwo);
+		}
+		if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
+			String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+			remarks.add(remarkThree);
+		}
+		return remarks;
+	}
+
+	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
+		String statusName = "";
+
+		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			for (PmStatusDesc status : statusList) {
+				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
+					statusName = status.getStatusName();
+					break;
+				}
+			}
+		}
+		return statusName;
 	}
 	// #34031 End
 }

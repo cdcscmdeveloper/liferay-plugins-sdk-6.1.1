@@ -26,11 +26,13 @@
 			<br />
 			<p:spacer height="2" />
 		</p:outputPanel>
-		<table style="width: 50%; table-layout: fixed">
+		<table style="width: 100%; table-layout: fixed">
 			<tr>
-				<td><p:outputLabel styleClass="outputLabel-view-label"
+				<td style="width: 25%"><p:outputLabel
+						styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.rv.visiting.date']}" /></td>
-				<td><h:outputLabel styleClass="outputLabel-view"
+				<td style="width: 75%"><h:outputLabel
+						styleClass="outputLabel-view"
 						value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.getDEFAULT_DATE_FORMAT()}" />
@@ -39,30 +41,36 @@
 			<p:outputPanel
 				rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label"
+					<td style="width: 25%"><p:outputLabel
+							styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.rv.history.svo']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view"
+					<td style="width: 75%"><p:outputLabel
+							styleClass="outputLabel-view"
 							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitOfficer.userName}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label"
+					<td style="width: 25%; vertical-align: top"><p:outputLabel
+							styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.rv.history.assist.officer']}" /></td>
-					<td><ui:repeat var="rvAssistOfficer"
+					<td style="width: 75%; font-size: 12px; font-family: Arial"><ui:repeat
+							var="rvAssistOfficer"
+							rendered="#{not empty viewSmApplBackingBean.managedBean.currentSmRevisit.smRvAssistOfficers}"
 							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvAssistOfficers}">
-							<p:outputLabel styleClass="outputLabel-view"
-								value="#{rvAssistOfficer.officerName}" />
+							<h:outputText value="#{rvAssistOfficer.officerName}" />
 							<br />
 						</ui:repeat> <p:outputLabel styleClass="outputLabel-view"
 							rendered="#{empty viewSmApplBackingBean.managedBean.currentSmRevisit.smRvAssistOfficers}"
 							value="#{lbl['lbl.txt.na']}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label"
+					<td style="width: 25%; vertical-align: top;"><p:outputLabel
+							styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.rv.history.supp.doc']}" /></td>
-					<td><ui:repeat var="suppDoc"
+					<td style="width: 75%; font-size: 12px; font-family: Arial"><ui:repeat
+							var="suppDoc"
 							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvSuppDocs}">
 							<ui:repeat var="docFile" value="#{suppDoc.smRvDocFiles}">
-								<h:commandLink styleClass="outputLabel-view"
+								<h:commandLink
 									value="#{viewSmApplBackingBean.getShortFileName(docFile.fileName)}">
 									<p:fileDownload
 										value="#{viewSmApplBackingBean.commonDownload(docFile.filePath,docFile.fileName)}" />
@@ -73,31 +81,47 @@
 				</tr>
 			</p:outputPanel>
 			<tr>
-				<td><p:outputLabel styleClass="outputLabel-view-label"
+				<td style="width: 25%; vertical-align: top"><p:outputLabel
+						styleClass="outputLabel-view-label" style="vertical-align:top"
 						value="#{lbl['lbl.sm.rv.history.visit.remark']}" /></td>
 				<td
-					style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+					style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 					<p:outputLabel styleClass="outputLabel-view"
 						rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}"
 						value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
-					<p:outputLabel styleClass="outputLabel-view"
+					<ui:repeat
 						rendered="#{viewSmApplBackingBean.managedBean.supplierUser}"
-						value="" />
+						var="remark" varStatus="index"
+						value="#{viewSmApplBackingBean.getSupplierRvRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}">
+						<table>
+							<tr>
+								<td style="vertical-align: top"><h:outputText
+										value="#{index.index+1}." /></td>
+								<td style="font-size: 12px; font-family: Arial"><h:outputText
+										value="#{remark}" />
+									<c:when test="index.last">#{index}</c:when></td>
+							</tr>
+						</table>
+					</ui:repeat>
 				</td>
 			</tr>
 			<p:outputPanel
 				rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label"
+					<td style="width: 25%;"><p:outputLabel
+							styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.rv.history.action.by']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view"
+					<td style="width: 75%"><p:outputLabel
+							styleClass="outputLabel-view"
 							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.actionedBy}" /></td>
 				</tr>
 			</p:outputPanel>
 			<tr>
-				<td><p:outputLabel styleClass="outputLabel-view-label"
+				<td style="width: 25%"><p:outputLabel
+						styleClass="outputLabel-view-label"
 						value="#{lbl['lbl.sm.rv.history.action.date']}" /></td>
-				<td><h:outputLabel styleClass="outputLabel-view"
+				<td style="width: 75%"><h:outputLabel
+						styleClass="outputLabel-view"
 						value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.getDEFAULT_DATETIME_WITH_SECONDS_FORMAT()}" />
