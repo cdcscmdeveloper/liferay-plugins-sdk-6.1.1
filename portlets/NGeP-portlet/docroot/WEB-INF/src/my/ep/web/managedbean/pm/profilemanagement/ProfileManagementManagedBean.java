@@ -93,6 +93,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isOrgUnitStatusChange = false;
 	private boolean isUserStatusChange = false;
 	//#35489 - End
+	private boolean suppGovSellerUser = false; // #36489
 
 	public ProfileManagementManagedBean(){}
 	
@@ -822,5 +823,22 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.isUserStatusChange = isUserStatusChange;
 	}
 	//#35489 - End
+	
+	//#36489 - Start
+	/**
+	 * @return the suppGovSellerUser
+	 */
+	public boolean isSuppGovSellerUser() {
+		return suppGovSellerUser;
+	}
+
+	/**
+	 * @param suppGovSellerUser
+	 *            the suppGovSellerUser to set
+	 */
+	public void setSuppGovSellerUser(boolean suppGovSellerUser) {
+		this.suppGovSellerUser = suppGovSellerUser;
+	}
+	//#36489 - End
 
 }

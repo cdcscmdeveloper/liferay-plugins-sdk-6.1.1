@@ -234,9 +234,9 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" /></td>
 				</tr> 
-				<tr> 
+				<tr> <!-- #36718 - change to backingBean for divisionName -->
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
 				</tr> 
 				<tr> 
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
@@ -675,7 +675,6 @@
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
 			<!-- #34159 - END -->
-				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"

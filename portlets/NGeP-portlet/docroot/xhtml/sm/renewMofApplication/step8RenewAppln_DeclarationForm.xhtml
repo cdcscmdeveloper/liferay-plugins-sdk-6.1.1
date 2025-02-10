@@ -28,7 +28,8 @@
 					src="/xhtml/sm/shared/mofRegistration/supplierDeclarationForm.xhtml" />
 				<!-- #26671 - Site Visit Grouping Enhancement -28775 - start -->
 				<c:set var="showEquipSection" value="#{backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showMachineryEquipmentPanel}" />
-				<c:set var="isROC" value="#{backingBean.managedBean.smSupplier.businessType eq 'I' or backingBean.managedBean.smSupplier.businessType eq 'J'}" />
+				<c:set var="isROC" value="#{backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD 
+					or backingBean.managedBean.smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD}" />
 				<c:choose>
 					<c:when test="#{backingBean.managedBean.smAppl.applCategoryType == 'S' or backingBean.managedBean.specialCategoryRechecked}">
 						<div class="nav-wrapper">
@@ -51,21 +52,22 @@
 												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 												update=":form" />
 										</c:when>
+										<!-- #34303 Start -->
+										<c:when test="#{backingBean.managedBean.showTravelSoftwarePanel or backingBean.managedBean.showMachineryEquipmentPanel}">
+											<p:commandButton value="#{lbl['lbl.sm.prev.section']}" 
+												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+												actionListener="#{backingBean.setTabValue('9','8')}"
+												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+												update=":form" />
+										</c:when>
 										<c:otherwise>
 											<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
 												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-												actionListener="#{backingBean.setTabValue('9','8')}"
-												rendered="#{!backingBean.managedBean.editVO.disciplinary and showEquipSection}"
-												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
-												update=":form" />
-												
-											<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
-												onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 												actionListener="#{backingBean.setTabValue('8','7')}"
-												rendered="#{!backingBean.managedBean.editVO.disciplinary and !showEquipSection}"
 												action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_DECLARATION,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 												update=":form" />
 										</c:otherwise>
+										<!-- #34303 End -->
 									</c:choose>
 									</div></td>
 								</tr>

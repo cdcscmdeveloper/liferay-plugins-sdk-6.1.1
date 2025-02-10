@@ -183,7 +183,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		searchApprovedCancelLoa();
 		//#22211 - Start 
 		
-		if(isGovernment()){
+		if(isGovernment() || isDeskOfficer()){ //#25790
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
@@ -327,7 +327,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				}
 
 				// Redmine 20311: remove RN search for Supplier
-				if (isGovernment()) {
+				if (isGovernment() || isDeskOfficer()) {//#25790
 					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
 				}
 
@@ -397,9 +397,14 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						getManagedBean().getSearchDocumentType());
 			}
 		}else{
-			return super.getStatusDropdownValues(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-					getManagedBean().getSearchDocumentType());
+			//start - 36615
+			if(StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())){
+				return super.getStatusDropdownValues(
+						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
+						getManagedBean().getSearchDocumentType());
+			}
+				return null;
+			//end - 36615
 		}
 	}
 
@@ -740,7 +745,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-			reset(false);
+			//reset(false); #36502 - remove this code
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166

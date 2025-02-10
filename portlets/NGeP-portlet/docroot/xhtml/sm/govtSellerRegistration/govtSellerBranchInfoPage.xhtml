@@ -173,7 +173,7 @@
 								value="#{bb.managedBean.countryLs}" />
 							<p:ajax event="change" process="@this"
 								listener="#{bb.onChangeCountry(bb.managedBean.selectedBranch.smAddress.pmCountry,'BRANCH_ADDRESS')}"
-								update="supBrnCntry,branchState,branchDist,branchDivision,branchCity,postCodeBranchPanelId" />
+								update="supBrnCntry,branchState,branchDist,divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu> 
 						<!-- #34159 - END -->
 						<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
@@ -355,12 +355,16 @@
 	
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					id="branchPopUpSaveBtn"
 					action="#{bb.addOrUpdateBranchToSmAppl}"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
 					partialSubmit="true" process="banchDialog"
-					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" />
+					update=":form:dt,@([id$=Msg]),:#{p:component('pnlBankInfo')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					partialSubmit="true" process="@this"
 					action="#{bb.assignCancelBranchBean}" />

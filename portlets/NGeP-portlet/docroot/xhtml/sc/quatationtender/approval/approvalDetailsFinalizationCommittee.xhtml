@@ -32,6 +32,8 @@
 
 	<p:panel id="fcappoint" header="#{lbl['lbl.sc.qt.approver.selection']}"
 		toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.approval.menu.instruction']}" escape="false" /><ui:remove>#21692</ui:remove>
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"

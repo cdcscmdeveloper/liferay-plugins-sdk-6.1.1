@@ -24,7 +24,18 @@
 					#{biddingBB.managedBean.scheduledBid.bidNo}</td>
 				<td><p:outputLabel id="docNoLbl"
 						value="#{lbl['lbl.sc.document.no']}" /></td>
-				<td style="width: 14%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.docNo}
+				<td style="width: 14%" class="header-info-text">
+					<ui:remove> #25791 start </ui:remove> 
+					<p:commandLink process="@this" partialSubmit="true"
+						immediate="true" rendered="#{biddingBB.isQTMaintenanceScreen()}"
+						action="#{qTDetailBB.editQuationTenderDetails(biddingBB.managedBean.scQt, false, true, view.viewId)}">
+						<h:outputText
+							value="#{biddingBB.managedBean.scheduledBid.scBid.docNo}"
+							escape="false" />
+					</p:commandLink> 
+					<h:outputText rendered="#{!biddingBB.isQTMaintenanceScreen()}"
+						value="#{biddingBB.managedBean.scheduledBid.scBid.docNo}" />
+					<ui:remove> #25791 end </ui:remove>
 				</td>
 
 				<td><p:outputLabel id="ptjNameLbl" value="#{lbl['lbl.sc.ptj']}" /></td>

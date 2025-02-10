@@ -13,10 +13,11 @@
 			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(workshopCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(workshopCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 				</table>
@@ -125,9 +126,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.workshop.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smWrkShpName"
+							label="#{lbl['lbl.sm.facility.workshop.name']}" id="smWrkShpName"
 							value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>

@@ -428,12 +428,14 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
+			getManagedBean().setTrackingDairyView(Boolean.TRUE);//#25790
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote != null ? scQuote.getCreatedBy():null).getUserName());//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
 			
 			//#25886 - start
 			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
-				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+						getManagedBean().getScQuote());
 				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
 			}
@@ -5128,7 +5130,8 @@ public class SimpleQuoteBackingBean extends
 		
 		//#25886 - start
 		if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
-			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault());
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+					getManagedBean().getScQuote());
 			ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
 		}
@@ -5164,6 +5167,7 @@ public class SimpleQuoteBackingBean extends
 	 * render the supplier view based on the task id from notification.
 	 */
 	public void supplierView() {
+		int isSpCompleted = 0; //36301 @zaim
 		TplSpecMaster serviceMaster = null;
 		TplSpecMaster productMaster = null;
 		HttpServletRequest servletRequest = new FacesScopes()
@@ -5195,9 +5199,16 @@ public class SimpleQuoteBackingBean extends
 				Long supplierId = getSupplierId();
 				quoteReqDTO.setSupplierId(supplierId);
 				
+				//36301 - start
+				boolean isContainDraft = isQuoteDocContainDraft(scQuote.getQuoteDocs());
+				if (isContainDraft && scQuote.getQuoteId() != null){
+					isSpCompleted = getQuoteSO().executeSPFortemplateStatusDraft(scQuote.getQuoteId());
+				}
+				//36301 - end
+				
 				// clear session data.
 				renewSesionObject();
-
+				
 				if (CollectionUtils.isNotEmpty(scQuote.getQuoteDocs())) {//sonarQubeIssue25#84
 					for (ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
 						// adding selected product or service question only
@@ -5359,7 +5370,9 @@ public class SimpleQuoteBackingBean extends
 			// #28199 - Start : Remove back button from SQ Response Screen
 						getManagedBean().setSqAuditFlg(Boolean.FALSE);
 			// #28199 - End
-			
+			//36301 - start
+			reloadSupplierView(isSpCompleted);			
+			//36301 - end			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplerView");
@@ -8188,6 +8201,12 @@ public class SimpleQuoteBackingBean extends
 				ppBB.getManagedBean().setFromCircularNotice(false);
 				ppBB.getManagedBean().setDifferentModule(false);
 				ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
+				
+				//25790 - start
+				if(getManagedBean().isEditableFlag()){
+					ppBB.getManagedBean().setSqEditableMode(true);
+				}
+				//25790 - end
 				ppBB.getManagedBean().setSupplierItemDocId(getManagedBean().getSupplierItemDocId());
 				final TemplateSpecBean ptsb = new TemplateSpecBean();
 				try {
@@ -8507,4 +8526,40 @@ public class SimpleQuoteBackingBean extends
 		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
 	}
 	// end - #25790
+	
+	//36301 - start
+	/**
+	 * To validate if tpl spec master contain template status draft after submit.
+	 * @param list
+	 * @return
+	 */
+	public boolean isQuoteDocContainDraft(List<ScQuoteDoc> list) {
+		boolean isContainDraft = Boolean.FALSE;
+
+		if (list != null && CollectionUtils.isNotEmpty(list)) {
+			for (ScQuoteDoc doc : list) {
+				if ((doc.getSpecMaster() != null && StringUtils.isNotEmpty(doc.getSpecMaster().getTemplateStatus()))
+						&& doc.getSpecMaster().getTemplateStatus()
+								.equalsIgnoreCase(TemplateSpecConst.TEMPLATE_STATUS_DRAFT)) {
+					isContainDraft = Boolean.TRUE;
+				}
+			}
+		}
+
+		return isContainDraft;
+	}
+	
+	
+	
+	/**
+	 * Reload supplierView() method.
+	 * @param isSpCompleted
+	 */
+	public void reloadSupplierView(int isSpCompleted){
+		if (isSpCompleted == 1){
+			supplierView();
+		}
+		
+	}
+	//36301 - end
 }

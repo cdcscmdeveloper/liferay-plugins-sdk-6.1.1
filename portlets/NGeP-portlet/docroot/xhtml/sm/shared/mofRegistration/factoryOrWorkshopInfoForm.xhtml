@@ -20,10 +20,11 @@
 				<table style="width: 100%;">
 					<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175 -->
 						    <p:outputLabel value="#{factoryCatVarStatus.index + 1}. #{factoryCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(factoryCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(factoryCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 					<tr>
@@ -139,8 +140,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.factory.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
-							required="#{backingBean.managedBean.valueReqd}" label="Name"
+							required="#{backingBean.managedBean.valueReqd}" 
+							label="#{lbl['lbl.sm.facility.factory.name']}"
 							value="#{backingBean.managedBean.selectedFactoryFacility.facilityName}" disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
 						</p:inputText>

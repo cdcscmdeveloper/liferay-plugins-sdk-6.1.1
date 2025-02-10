@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.govtsellerregistration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,6 +70,15 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import org.apache.log4j.Logger;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+//#28895_35501 End
 
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
@@ -158,6 +168,10 @@ public class GovtSellerRegistrationBackingBean extends
 		initBankBranches();
 		//START 17906
 		if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
+			// #28895_35501 Start - AUDIT TRAIL SM
+			this.getManagedBean().setOldBanks(
+					CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+			// #28895_35501 End
 			StringBuilder sb = new StringBuilder();
 			for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 				if(bank.getAccountNo() != null){
@@ -1112,6 +1126,13 @@ public class GovtSellerRegistrationBackingBean extends
 				//SmCommonUtil.redirectToPage(
 				//		"/xhtml/sm/onlinereg/outputMsg.xhtml",
 				//		MessageConst.INFO_721013, null, null);
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
 						MessageConst.INFO_721016, null, null);
@@ -1261,10 +1282,16 @@ public class GovtSellerRegistrationBackingBean extends
 	 *            address
 	 */
 	private void initBranchAddressSelectItems(SmAddress address) {
-		onChangeCountry(address.getPmCountry(), "BRANCH_ADDRESS");
-		onChangeState(address.getPmState(), "BRANCH_ADDRESS");
-		onChangeDivision(address.getPmDivision(), "BRANCH_ADDRESS");//13320
-		onChangeDistrict(address.getPmDistrict(), "BRANCH_ADDRESS");
+		//#34159 - START - refactor this method
+		getManagedBean().setBranchCompanyStates(SmCommonUtil.getStateList(address.getPmCountry().getCountryId()));
+		if(address.getPmDivision() != null && address.getPmDivision().getDivisionId() != null){
+			getManagedBean().setBranchCompanyDivisions(SmCommonUtil.getDivisionList(address.getPmState().getStateId()));
+			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictListByID(address.getPmDivision().getDivisionId()));
+		} else {
+			getManagedBean().setBranchCompanyDistricts(SmCommonUtil.getDistrictList(address.getPmState().getStateId()));
+		}
+		getManagedBean().setBranchCompanyCities(SmCommonUtil.getCityList(address.getPmDistrict().getDistrictId()));
+		//#34159 - END
 	}
 
 	/**
@@ -1436,6 +1463,7 @@ public class GovtSellerRegistrationBackingBean extends
 			onChangeDistrict(addr.getPmDistrict(), "COMPANY_ADDRESS");
 		}
 	}
+	//#34159 - END
 
 	/**
 	 * Initialized user permanent address drop down values
@@ -1523,6 +1551,8 @@ public class GovtSellerRegistrationBackingBean extends
 		smPersonnel
 				.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 		smPersonnel.setClerical(true);
+		smPersonnel.setActivationDate(new Timestamp(System.currentTimeMillis())); //32040
+		
 		if (smPersonnel.getTitle() != null
 				&& smPersonnel.getTitle().getSalutationId() == null) {
 			smPersonnel.setTitle(null);

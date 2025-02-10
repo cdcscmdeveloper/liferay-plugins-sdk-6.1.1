@@ -16,14 +16,16 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.basic.msg.account.confirm.deactivate']}
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{registrationBackingBean.updateBasicAccountStatus()}" 
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();" />
-			</div>
-		</p:dialog>
+		<!-- #34400 - start -->
+		<ac:confirmationPopup id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			bean="#{registrationBackingBean}"
+			okAction="updateBasicAccountStatus"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.basic.msg.account.confirm.deactivate']}" 
+			update="@form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}" action="#{registrationBackingBean.saveBasicAccountStatus()}" >
