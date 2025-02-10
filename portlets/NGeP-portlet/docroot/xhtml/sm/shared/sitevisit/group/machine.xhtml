@@ -12,7 +12,7 @@
 	<p:panel header="#{cat.pmCategoryL3.categoryTypeCode.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING ? 
 			printingCodeDesc : machineHeader}">
 		<!-- panel: id="pnlMachine" -->
-		<p:dataTable value="#{template.smSvMachines}" var="svMachine" id="machTbl#{catCode}"
+		<p:dataTable value="#{template.smSvMachines}" var="svMachine" id="a#{catCode}machTbl"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" rowKey="#{machineDtl}">
 			<p:column>
 					<f:facet name="header">
