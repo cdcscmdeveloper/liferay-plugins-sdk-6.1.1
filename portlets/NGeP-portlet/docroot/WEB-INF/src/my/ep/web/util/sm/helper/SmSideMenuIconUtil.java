@@ -1396,13 +1396,6 @@ public class SmSideMenuIconUtil {
 						}
 					}
 				}
-				log.info("33783__currCat:"+currCatList.size()+"\tprevCat:"+prevCatList.size());
-				for(SmSupplierCategory c : currCatList){
-					log.info("catcode_curr_id:"+c.getPmCategoryL3().getCategoryL3Id());
-				}
-				for(SmSupplierCategory c : prevCatList){
-					log.info("catcode_prev_id:"+c.getPmCategoryL3().getCategoryL3Id());
-				}
 
 				retVal = EntityHelper.hasDiffBetweenList(prevCatList,
 						currCatList, null, new String[] { "pmCategoryL3" },
