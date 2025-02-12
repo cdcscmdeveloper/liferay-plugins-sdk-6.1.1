@@ -359,11 +359,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private List<String> loginIdAssignees;
 	private Long purchaseRequestId;
 	//28878 - End
-    
+	
 	//#28895#35492 - Start
     private PurchaseRequestResDTO purchaseRequestResDTO;
     //#28895#35492 - End
-        
+    
 	// #36119 - start
 	/** The new sourcing dp bpm version flag */
 	private boolean sourcingDpNewBpmVer = Boolean.FALSE;
@@ -2108,7 +2108,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.purchaseRequestResDTO = purchaseRequestResDTO;
 	}
 	// #28895#35492 - End
-	
+		
 	// #36119 - start
 	/**
 	 * @return the sourcingDpNewVerBpm
