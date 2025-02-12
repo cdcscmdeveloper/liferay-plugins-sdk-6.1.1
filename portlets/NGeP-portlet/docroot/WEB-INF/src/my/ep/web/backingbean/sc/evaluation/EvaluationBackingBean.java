@@ -2425,7 +2425,13 @@ public void saveComplianceSample() {
 					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
 					this.getManagedBean().setNoSupplierPackageExist(false);
 				}
-				
+				//36228 fixing index -issue if No suppliers qualified in package, summary tec next button effected to click two times to proceed to next train station. 
+				if(null != this.getManagedBean().getWipStatusMax() && this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+						&& this.getManagedBean().getScQt().getEvaluateBy().equals(SourcingConstants.EVALUATE_BY__ITEM)
+						&& !this.getManagedBean().getScQt().isPartial()){
+					this.getManagedBean().setNoSupplierPackageExist(true);
+				}
+				//#33178 related to #21695 End
 			}
 			//#33178 related to #21695 End
 			checkTechnicalSuppliersQualified();
