@@ -636,7 +636,9 @@ private class SpecMaintenanceSearchQtDataModel extends
 		//#29732
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
-		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
+		if(isSpecRoleMaintenanceCheckBox() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+			previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
+		}
 		
 		// 11104_Start
 		this.getManagedBean().setSampleShowHide(isSampleWip);
@@ -783,4 +785,10 @@ private class SpecMaintenanceSearchQtDataModel extends
 		}
 	}
 	// 29732 end
+	
+	private boolean isSpecRoleMaintenanceCheckBox() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
 }
