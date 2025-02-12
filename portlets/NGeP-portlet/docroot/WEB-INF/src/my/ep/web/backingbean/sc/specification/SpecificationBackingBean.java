@@ -17550,10 +17550,8 @@ public class SpecificationBackingBean extends
 		//1873 - start - note 52
 		boolean popupShown = assertPendingFinancialSubmission(); 
 		//#28784 - checking for pending spec before submit
-		if (this.getManagedBean().getQt().isDemoRequired() && 
-				ParameterConst.EVALUATION_TYPES_TWO_TIER.equalsIgnoreCase(this.getManagedBean().getQt().getEvaluationType())){
-			checkTechnicalAndFinancialSpec(this.getManagedBean().getQt());
-		}
+		checkTechnicalAndFinancialSpec(this.getManagedBean().getQt()); //Bug #37612 - Remove condition
+		
 		if(!popupShown){
 			SpecificationResDTO resDTO = updateSpecCommitteMaintenaceDtls(action,
 					null);
