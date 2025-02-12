@@ -786,9 +786,11 @@ private class SpecMaintenanceSearchQtDataModel extends
 	}
 	// 29732 end
 	
+	//29732 -Start
 	private boolean isSpecRoleMaintenanceCheckBox() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
 				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
 	}
+	//29732 -End
 }
