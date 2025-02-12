@@ -6,6 +6,7 @@ package my.ep.web.backingbean.sc.directpurchase;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -129,6 +130,15 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	/** The direct purchase search page nav. */
 	private String DIRECT_PURCHASE_SEARCH_PAGE_NAV = "directPurchaseSearch";
 	private String DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV = "directPurchaseMaintenance";
+	// 25790 - start
+	/**
+	 * List of Goverment role code
+	 */
+	private static final List<String> ALLOWED_ROLES = Arrays.asList(RoleCode.REQUISITIONER.value(),
+			RoleCode.FL_APPROVER.value(), RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(),
+			RoleCode.PAY_OFFICER.value(), RoleCode.DESK_OFFICER.value());
+
+	// 25790 - end
 	
 	public void preRenderDirectPurchaseMaintenance() {
 		debugLogger("preRenderDirectPurchaseMaintenance");
@@ -174,12 +184,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		searchApprovedCancelLoa();
 		//#22211 - Start 
 		
-		if(isGovernment()){
+		if(isGovernment() || isDeskOfficer()){ //#25790
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
 			//#25396 - Start
-			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){ //25790
 				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
 			}
 			//#25396 - End
@@ -320,7 +331,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				}
 
 				// Redmine 20311: remove RN search for Supplier
-				if (isGovernment()) {
+				if (isGovernment() || isDeskOfficer()) {//#25790
 					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
 				}
 
@@ -390,9 +401,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 						getManagedBean().getSearchDocumentType());
 			}
 		}else{
-			return super.getStatusDropdownValues(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-					getManagedBean().getSearchDocumentType());
+			// start - 36615 & 25790
+			if (StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())) {
+				return super.getStatusDropdownValues(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), getManagedBean()
+						.getSearchDocumentType());
+			}
+			return null;
+			// end - 36615 & 25790
 		}
 	}
 
@@ -657,7 +672,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_REQUEST_NOTE)){
 			RequestNoteBackingBean rnBackingBean = new RequestNoteBackingBean();
-			rnBackingBean.viewRequestNote(docId);
+			rnBackingBean.viewRequestNote(docId,true); //#25790
 			rnBackingBean.getManagedBean().setDpObj(dpObj);
 			rnBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 
@@ -666,7 +681,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			prInqBackingBean.viewPurchaseInquiry(docId);
 			prInqBackingBean.getManagedBean().setDpObj(dpObj);
 			prInqBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
-			reset(false); //#25396
+			//reset(false); #36502 & #25790 - remove this code
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT)){
 			PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
 			pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE); //9133 - reopen 166
@@ -1626,5 +1641,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	}
 
 	// end - #36018
+	// 25790 - start
+	/**
+	 * Check is it login user is Government User
+	 * 
+	 * @return true, if user is Government User
+	 */
+	@Override
+	protected boolean hasGovernmentUserRole() {
+		for (String role : ALLOWED_ROLES) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+	// 25790 - end
 }
 
