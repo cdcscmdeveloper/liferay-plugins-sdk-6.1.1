@@ -660,7 +660,8 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
 		if(isSpecRoleMaintenanceCheckBox() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
 			previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
-		}		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
+		}		
+		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
 		
