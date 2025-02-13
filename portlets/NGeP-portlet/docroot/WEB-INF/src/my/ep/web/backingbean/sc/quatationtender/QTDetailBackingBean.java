@@ -5156,7 +5156,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 										.getQtCategoryId()) {
 									removeCategoryCodes.remove(removeCategoryCodes.get(i2));
 								}
-							} 
+							}
 						}
 					}
 				}// 29732 -end-
