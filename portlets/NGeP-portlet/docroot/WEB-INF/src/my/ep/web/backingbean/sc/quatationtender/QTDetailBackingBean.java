@@ -4394,6 +4394,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							approvalCategory);
 				}
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+				
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+				// 29732 fix duplicate issues while deleting the category and add the same id -start-
+				if(null != removeCategoryCodes){
+					List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+					qt.setScQtCategorys(categoryResults);
+				}
+				// 29732 -end-
+				
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
