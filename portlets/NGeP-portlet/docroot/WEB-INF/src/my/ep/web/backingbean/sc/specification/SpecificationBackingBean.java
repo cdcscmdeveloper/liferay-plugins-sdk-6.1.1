@@ -16651,7 +16651,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		// 29732 fix duplicate issues while deleting the category and add the same id -start-
 		if (null != removeCategoryCodes) {
+<<<<<<< HEAD
 			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+=======
+			List<ScQtCategory> categoryResultsnew = new ArrayList<ScQtCategory>();
+>>>>>>> refs/remotes/origin/release-prd-uat
 			categoryResultsnew = this.getManagedBean().getQtCategoryList();
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
@@ -17210,7 +17214,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		// 29732 fix duplicate issues while deleting the category and add the same id -start-
 		if(null != removeCategoryCodes){
+<<<<<<< HEAD
 			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+=======
+			List<ScQtCategory> categoryResultsnew = new ArrayList<ScQtCategory>();
+>>>>>>> refs/remotes/origin/release-prd-uat
 			categoryResultsnew = this.getManagedBean().getQtCategoryList();
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
