@@ -13,18 +13,28 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
 
+/**
+ * @author firdaus.omar
+ * Backing bean for the revisit report functionality.
+ */
 @ManagedBean(name = "smRevisitRptBB")
 @ViewScoped
 public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptManagedBean> {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructor for the SmRevisitRptBackingBean class.
+	 */
 	public SmRevisitRptBackingBean() {
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
 		resetSearch();
 	}
 
+	/**
+	 * Generates a report based on the current search parameters.
+	 */
 	public void generateReport() {
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> params = new LinkedHashMap<>();
 		params.put(SmReportConst.PARAM_ZONE, this.getManagedBean().getZone());
 		if (null != this.getManagedBean().getSelectedOrgProfile()) {
 			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
@@ -38,6 +48,9 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 		generateSmReport(params);
 	}
 
+	/**
+	 * Resets the search parameters to their default values.
+	 */
 	public void resetSearch() {
 		this.getManagedBean().setZone(null);
 		this.getManagedBean().setRevisitOfficer(null);

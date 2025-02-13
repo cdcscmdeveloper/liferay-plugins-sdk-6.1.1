@@ -2843,6 +2843,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//32792 - END
 	// #34031 Start
+	/**
+	 * Adds a new assist officer to the current revisit.
+	 */
 	public void addSmRvAssistOfficer() {
 		SmRvAssistOfficer smRvAssistOfficer = new SmRvAssistOfficer();
 		smRvAssistOfficer.setSmRevisit(this.getManagedBean().getSmRevisit());
@@ -2850,6 +2853,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setDisableAddSmRvAssistOfficerBtn(true);
 	}
 
+	/**
+	 * Enables the button for adding assist officers if all current officers
+	 * have names.
+	 */
 	public void enableAddSmRvAssistOfficerBtn() {
 		this.getManagedBean().setDisableAddSmRvAssistOfficerBtn(false);
 		for (SmRvAssistOfficer officer : this.getManagedBean().getSmRevisit().getSmRvAssistOfficers()) {
@@ -2860,11 +2867,19 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
+	/**
+	 * Opens a confirmation popup for deleting the selected assist officer.
+	 * 
+	 * @param selectedRvAssistOfficer
+	 */
 	public void onDeleteRvAssistOfficer(SmRvAssistOfficer selectedRvAssistOfficer) {
 		this.getManagedBean().setSelectedRvAssistOfficer(selectedRvAssistOfficer);
 		RequestContext.getCurrentInstance().execute("rvAssistOfficerDeletePopUpWV.show()");
 	}
 
+	/**
+	 * Removes the selected assist officer from the current revisit.
+	 */
 	public void removeSelectedSmRvAssistOfficer() {
 		if (this.getManagedBean().getSelectedRvAssistOfficer() != null) {
 			this.getManagedBean().getSmRevisit().getSmRvAssistOfficers().remove(this.getManagedBean().getSelectedRvAssistOfficer());
@@ -2888,34 +2903,43 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
+	/**
+	 * Assigns the selected support document and its index to the managed bean.
+	 * 
+	 * @param doc
+	 * @param index
+	 */
 	public void assignSelectedSupportDocIndex(SmRvSuppDoc doc, int index) {
 		this.getManagedBean().setSmRvAttachedFileIndex(index);
 		this.getManagedBean().setSmRvSuppDoc(doc);
 	}
 
+	/**
+	 * Handles the file upload event for attaching a support document.
+	 * 
+	 * @param event
+	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
-		if (event.getFile() != null) {
-			if (this.getManagedBean().getSmRevisit().getSmRvSuppDocs().contains(this.getManagedBean().getSmRvSuppDoc())) {
-				String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SME_FILE_PATH)
-						+ this.getManagedBean().getSmAppl().getApplId() + "/" + System.currentTimeMillis() + "/";
-				SmRvSuppDoc doc = this.getManagedBean().getSmRvSuppDoc();
-				SmRvDocFile docFile = new SmRvDocFile();
-				docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
-				docFile.setSmRvSuppDoc(doc);
-				docFile.setFilePath(filePath);
-				if (doc.getSmRvDocFiles() == null) {
-					doc.setSmRvDocFiles(new ArrayList<SmRvDocFile>());
-				}
-				doc.getSmRvDocFiles().add(docFile);
-				cleanFileName(doc);
-				doc.getSmRvDocFiles().get(0).setFilePath(filePath);
-				this.getManagedBean()
-						.getSmRevisit()
-						.getSmRvSuppDocs()
-						.set(this.getManagedBean().getSmRevisit().getSmRvSuppDocs().indexOf(this.getManagedBean().getSmRvSuppDoc()),
-								this.getManagedBean().getSmRvSuppDoc());
-				commonUploadFile(event, filePath);
+		if (event.getFile() != null && this.getManagedBean().getSmRevisit().getSmRvSuppDocs().contains(this.getManagedBean().getSmRvSuppDoc())) {
+			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SME_FILE_PATH) + this.getManagedBean().getSmAppl().getApplId()
+					+ "/" + System.currentTimeMillis() + "/";
+			SmRvSuppDoc doc = this.getManagedBean().getSmRvSuppDoc();
+			SmRvDocFile docFile = new SmRvDocFile();
+			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+			docFile.setSmRvSuppDoc(doc);
+			docFile.setFilePath(filePath);
+			if (doc.getSmRvDocFiles() == null) {
+				doc.setSmRvDocFiles(new ArrayList<SmRvDocFile>());
 			}
+			doc.getSmRvDocFiles().add(docFile);
+			cleanFileName(doc);
+			doc.getSmRvDocFiles().get(0).setFilePath(filePath);
+			this.getManagedBean()
+					.getSmRevisit()
+					.getSmRvSuppDocs()
+					.set(this.getManagedBean().getSmRevisit().getSmRvSuppDocs().indexOf(this.getManagedBean().getSmRvSuppDoc()),
+							this.getManagedBean().getSmRvSuppDoc());
+			commonUploadFile(event, filePath);
 		}
 	}
 
@@ -2927,6 +2951,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
+	/**
+	 * Opens a confirmation dialog for deleting a support document file
+	 * attachment.
+	 * 
+	 * @param doc
+	 * @param index
+	 * @param file
+	 */
 	public void onDeleteSupDocFileAttachment(SmRvSuppDoc doc, int index, SmRvDocFile file) {
 		this.getManagedBean().setSmRvSuppDoc(doc);
 		this.getManagedBean().setSmRvAttachedFileIndex(index);
@@ -2934,6 +2966,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		RequestContext.getCurrentInstance().execute("confirmDelRvSuppDocDialogWV.show();");
 	}
 
+	/**
+	 * Deletes the selected support document file attachment.
+	 */
 	public void delRvSuppDocFileAttachment() {
 		SmRvSuppDoc suppDoc = this.getManagedBean().getSmRvSuppDoc();
 		if (this.getManagedBean().getSmRvDocFile() != null) {
@@ -3017,6 +3052,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
+	/**
+	 * Displays the revisit history dialog.
+	 */
 	public void onClickRevisitHistoryList() {
 		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
 	}
@@ -3029,6 +3067,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		return revisitList;
 	}
 
+	/**
+	 * Downloads the revisit history report for the current supplier.
+	 */
 	public void downloadRevisitHistory() {
 		try {
 			Map<String, String> paramMap = new HashMap<>();

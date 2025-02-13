@@ -471,10 +471,16 @@ public class ViewSuppProfileBackingBean extends
 		return revisitList;
 	}
 
+	/**
+	 * Displays the revisit history dialog
+	 */
 	public void onClickRevisitHistoryList() {
 		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
 	}
 
+	/**
+	 * Downloads the revisit history report.
+	 */
 	public void downloadRevisitHistory() {
 		try {
 			Map<String, String> paramMap = new HashMap<>();
@@ -486,6 +492,11 @@ public class ViewSuppProfileBackingBean extends
 		}
 	}
 
+	/**
+	 * Retrieves remarks related to a given revisit.
+	 * @param revisit
+	 * @return List<String>
+	 */
 	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
 		List<String> remarks = new ArrayList<>();
 		if (null != revisit) {
