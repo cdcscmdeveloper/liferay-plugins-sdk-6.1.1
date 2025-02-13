@@ -4511,18 +4511,18 @@ public class QTDetailBackingBean extends
 				
 				// 29732 fix duplicate issues while deleting the category and add the same id -start-
 				List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
-				if (!CollectionUtils.isEmpty(categoryResults)) {
+				if (null != categoryResults && !CollectionUtils.isEmpty(categoryResults)) {
 					List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
-					if (null != removeCategoryCodes
-							&& !CollectionUtils.isEmpty(removeCategoryCodes)) {
+					if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
+							&& !removeCategoryCodes.isEmpty()) {
 						for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
 							for (int i = 0; i < categoryResults.size(); i++) {
 								if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2)
 										.getQtCategoryId()) {
 									removeCategoryCodes.remove(removeCategoryCodes.get(i2));
 								}
-							}
+							} 
 						}
 					}
 				}// 29732 -end-
