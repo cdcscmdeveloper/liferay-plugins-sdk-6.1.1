@@ -25,7 +25,8 @@
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierQualificationCriteriaNonpanelDeleteCategoryBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=supplierQualificationCriteriaNonpanelDeleteCategoryBtnId])" />
 			<p:column selectionMode="multiple" style="width:1%"
-				rendered="#{!categoryCodeReadonly or qTDetailBB.managedBean.currentInSpecMaint or qTDetailBB.managedBean.categoryDescriptionChange and !specCommitteeReadOnly}" /><ui:remove>#29732 first time spec maint</ui:remove>
+				rendered="#{!categoryCodeReadonly or qTDetailBB.managedBean.categoryDescriptionChange and !specCommitteeReadOnly
+				or qTDetailBB.managedBean.currentInSpecMaint}" /><ui:remove>#29732 first time spec maint</ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
