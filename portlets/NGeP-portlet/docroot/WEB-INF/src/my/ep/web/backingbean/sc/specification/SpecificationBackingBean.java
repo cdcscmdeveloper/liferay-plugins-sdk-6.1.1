@@ -12011,7 +12011,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
-
+			
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() 
+					|| BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())){
+				throw new EpException(MessageConst.ERROR_760025);
+			}
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
@@ -17203,35 +17207,19 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		//#15391 - end
+
+		//#29732-Start fix duplicate & error merge persistance if user delete and add the same category(ID)
+		List<ScQtCategory> categoryResultsnew = new ArrayList<ScQtCategory>();
+		categoryResultsnew = this.getManagedBean().getQtCategoryList();
+		this.getManagedBean().setQtCategoryList(categoryResultsnew);
+		//29732- End
 		
-		// #29732(#232) - start
-		List<ScQtCategory> categoryResults = spReqDTO.getScQt().getScQtCategorys();
-
-		// 29732 fix duplicate issues -start-
-		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
-
-		if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
-				&& !removeCategoryCodes.isEmpty()) {
-			for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
-				for (int i = 0; i < categoryResults.size(); i++) {
-					if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2)
-							.getQtCategoryId()) {
-						removeCategoryCodes.remove(removeCategoryCodes.get(i2));
-					}
-				}
-			}
-		}
-		// 2973
-		// #29732(#232) - end
-
 		signoffCommitteeActivity(spReqDTO,action);
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
 					scQt.getQtNo());
 		}
-
-		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); // #29732(#232)
 
 		//#15391 - start
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
