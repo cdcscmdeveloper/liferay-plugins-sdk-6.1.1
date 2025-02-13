@@ -293,6 +293,7 @@ public class gpkiBackingBean implements Serializable {
 		pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		pmDigiSign.setOriginalData(map.get("textBeforeSign"));
 		pmDigiSign.setGpkiSignedData(map.get("signedText"));
+		pmDigiSign.setGpkiMedium(isMediumTypeOTP ? "5" : "4");
 		
 		Object returnObj = null;
 		try {
