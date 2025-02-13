@@ -1913,7 +1913,7 @@
 			</list>
 		</property>
 	</bean>
-	<!--shafie #28833 -start  -->
+
 	<bean id="PM_ORG_PROFILE_KUMPULAN_PTJ" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
 		<property name="daoClass"
@@ -1936,7 +1936,6 @@
 			</list>
 		</property>
 	</bean>
-	<!--shafie #28833 -end  -->
 	<bean id="PM_ORG_PROFILE_PTJ_GROUP" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="orgProfileId" />
 
@@ -2471,7 +2470,6 @@
 	<!-- 36719 - Start -->
 	<bean id="PM_FIN_SVC_REPORT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="financialOrgId" />
-
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.common.financialorg.FinancialOrgDAO" />
 		<property name="searchMethod" value="searchFinancialOrgSrv" />
