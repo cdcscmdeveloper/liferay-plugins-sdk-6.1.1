@@ -41,11 +41,11 @@
 						src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
 					<!-- 16052019 - SSM INTEGRATION CR - Fahmi--> 
 					<div align="left">
-						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="registrationBackingBean.managedBean.ssmIntegrationActive"
-						action="#{registrationBackingBean.returnToCompanyValidation}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="#{registrationBackingBean.managedBean.ssmIntegrationActive}"
+						action="#{registrationBackingBean.returnToCompanyValidation}"> <!-- #36710 -->
 						</p:commandButton>
-						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="!registrationBackingBean.managedBean.ssmIntegrationActive"
-						action="#{registrationBackingBean.returnToTermAndCondition}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" rendered="#{!registrationBackingBean.managedBean.ssmIntegrationActive}"
+						action="#{registrationBackingBean.returnToTermAndCondition}"> <!-- #36710 -->
 						</p:commandButton>
 					</div>
 				</c:when>

@@ -2425,7 +2425,13 @@ public void saveComplianceSample() {
 					//if there is supplier qualified to evaluate by package --> enable tab package evaluation
 					this.getManagedBean().setNoSupplierPackageExist(false);
 				}
-				
+				//36228 fixing index -issue if No suppliers qualified in package, summary tec next button effected to click two times to proceed to next train station. 
+				if(null != this.getManagedBean().getWipStatusMax() && this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+						&& this.getManagedBean().getScQt().getEvaluateBy().equals(SourcingConstants.EVALUATE_BY__ITEM)
+						&& !this.getManagedBean().getScQt().isPartial()){
+					this.getManagedBean().setNoSupplierPackageExist(true);
+				}
+				//#33178 related to #21695 End
 			}
 			//#33178 related to #21695 End
 			checkTechnicalSuppliersQualified();
@@ -16721,7 +16727,13 @@ private void retriveCommitteeRemarksList(){
 		
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
+		//#36226 denominator bug #30 - Start
+		reqDTO.setQtproposalId(proposalId);
+		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+		int onlyUsedOncePerSupplier = 1;
+		int includeNonApplicableScore = 0;
+		//#36226 denominator bug #30 - End
 		List<Object[]> findSupplierProposal = new ArrayList<>();
 		List<Long> specQuestionIds = new ArrayList<>();
 		if (this.getManagedBean().getScQt().isZonal() && wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
@@ -16730,6 +16742,8 @@ private void retriveCommitteeRemarksList(){
 			for (Object[] specZoneId : findSupplierProposal) {
 				specQuestionIds.add((Long) specZoneId[3]);
 			}
+			includeNonApplicableScore = this.getManagedBean().getScQt().isPartial() ? evaluationSO.retriveNotApplicableSupplierScore(reqDTO).getNotApplicableScore().intValue()
+					: 0;//#36226 denominator bug #30
 		}
 		//#36226 denominator bug - End
 		
@@ -16760,6 +16774,10 @@ private void retriveCommitteeRemarksList(){
 					if (this.getManagedBean().getScQt().isZonal() && CollectionUtils.isNotEmpty(findSupplierProposal)
 							&& wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 						sumMaxScore = specQuestionIds.contains(specQuestion.getParentSpecQuestion().getSpecQuestionId()) ? sumMaxScore + maxScore : sumMaxScore;
+						//#36226 denominator bug #30 - Start
+						sumMaxScore = onlyUsedOncePerSupplier == 1 ? sumMaxScore + includeNonApplicableScore : sumMaxScore;
+						onlyUsedOncePerSupplier++;
+						//#36226 denominator bug #30 - End
 					} else {
 						sumMaxScore = sumMaxScore + maxScore;
 					}

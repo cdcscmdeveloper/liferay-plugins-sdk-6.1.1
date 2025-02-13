@@ -61,9 +61,11 @@
 					<p:outputLabel value="#{lbl['lbl.sm.correspondenceadd']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
+				<!-- #36718 - add listener to ajax -->
 				<td class="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
 						value="#{registrationBackingBean.managedBean.sameAddress}">
-						<p:ajax event="change" update="pnlContactInfo"  />
+						<p:ajax event="change" update="pnlContactInfo"  
+						listener="#{registrationBackingBean.onTickSameAddress()}" />
 					</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.sm.sameasabove']}"></h:outputText></td>
 				<td class="tdTitle">&#160;</td>
 				<td class="tdContent">&#160;</td>

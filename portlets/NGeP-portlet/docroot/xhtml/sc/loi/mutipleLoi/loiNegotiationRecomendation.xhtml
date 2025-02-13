@@ -204,7 +204,7 @@
 														or lOIDetailBackingBean.managedBean.readOnly
 														or item.noReachAgreement
 														or (recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions and !recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}"
-											style="margin-right:1px !important;"> <ui:remove> #28777#29729,#30008- End </ui:remove>
+											style="margin-right:1px !important;"> <ui:remove> #30008- End </ui:remove>
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(

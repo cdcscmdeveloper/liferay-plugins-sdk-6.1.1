@@ -9047,13 +9047,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (scLoiLoa.getSmSupplier() != null) {
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
 			// 29819 - start
-			if (smSupplier.getSmMofAccount() != null && !smSupplier.getSmMofAccounts().isEmpty()) {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSmMofAccounts().get(0).getMofNo());
-			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getSsmNewRegNo());
-			} else {
-				context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, smSupplier.getRegNo());
+			String mofNo = null;
+			String contextMofNo = smSupplier.getRegNo();
+			if (Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+					scLoiLoa.getDocType())) {
+				if (StringUtils.isNotBlank(scLoiLoa.getMofNo())) {
+					mofNo = scLoiLoa.getMofNo();
+				} else if (CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+					mofNo = smSupplier.getSmMofAccounts().get(0).getMofNo();
+				}
+			} else if (smSupplier.getSmMofAccount() != null
+					&& CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+				mofNo = smSupplier.getSmMofAccounts().get(0).getMofNo();
 			}
+
+			if (null != mofNo) {
+				contextMofNo = mofNo;
+			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
+				contextMofNo = smSupplier.getSsmNewRegNo();
+			}
+			context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, contextMofNo);
 			// 29819 - end
 		}
 		//#25025 - start
