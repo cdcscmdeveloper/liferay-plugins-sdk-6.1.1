@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode; // Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -154,8 +155,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 
 	/** The flag. */
 	private boolean flag;
-	private boolean sqExpiredMessageFlag = false;
-
+//	private boolean sqExpiredMessageFlag = false; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 
 	private static final String MALAY_NA = "T/B";
@@ -307,7 +307,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
 					.getPayLoad();
 
-			if (awardDataType != null) 
+			if (awardDataType != null){ //20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 				letterCreator = awardDataType.getLetterCreator();
 				
 				if (scLoa != null && ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
@@ -344,7 +344,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 						}
 					}
 				}
-			
+			}//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 			getManagedBean().setPayLoad(awardDataType);
 			
 			String language = new FacesScopes().getUserLocale().getLanguage();
@@ -811,9 +811,12 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				updateContractDetails(scLoa);
 				validateContractDetails(scLoa);
 	
-				scLoa.setScLoaWorkFlowStatuses(null);
+				//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
+				if(scLoa!=null) 
+				   scLoa.setScLoaWorkFlowStatuses(null);
+
 				// To avoid insert workflow status when direct submit without save.
-				if (scLoa.isBrandNew()) {
+				if (scLoa != null && scLoa.isBrandNew()) {//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 					List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
 					if (CollectionUtils.isNotEmpty(remarks)) {
 						for (ScLoaRemark remark : remarks) {
@@ -827,7 +830,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 				reqDTO.setPayLoad(getManagedBean().getPayLoad());
 				reqDTO.setOutcome(outcome);
 				reqDTO.setSourceId(getManagedBean().getSourceId());
-				reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+				reqDTO.setRoleCode(getUserRoleCode(scLoa != null ? scLoa.getScLoiLoa().getDocType():null));//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setUserLocale(new FacesScopes().getUserLocale());
@@ -2123,7 +2126,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 							ScQtProgressivePayment payment = new ScQtProgressivePayment();
 							payment.setStartYear(String.valueOf(year));
 							payment.setEndYear(String.valueOf(year));
-							payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+							//start - Sonarqube DP Bug Minor Zairul Rizwan [12/7/2023]
+							payment.setPhaseNo(BigDecimal.valueOf((long)i + 1));
+							//stop - Sonarqube DP Bug Minor Zairul Rizwan [12/7/2023]
 							payment.setScLoa(scLoa);
 							setUserDetails(payment);
 							progressivePayList.add(payment);
@@ -2323,9 +2328,7 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		userReqDTO.setUserId(approverUserId);
-		PmUser approverUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
-		
-		return approverUser;
+		return userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser(); //return the current Approval User Profile //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 	}
 
 	/**
@@ -2758,9 +2761,11 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 		}else{
 			totalAmount = loaAmount;
 		}
-		minSL1M = integerDF.format(((totalAmount)
-				.divide(hundred))
-				.divide(value,0, BigDecimal.ROUND_HALF_UP));
+		//[Start] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+		minSL1M = integerDF.format(
+				  (totalAmount.divide(hundred))
+				  .divide(value, RoundingMode.HALF_UP));
+		//[End] - Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		context.put("minSL1M", minSL1M);
 	}
 
@@ -3289,21 +3294,21 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
 				if(currentDate.compareTo(cal.getTime()) >= 0){
 					validDate = false;
-					sqExpiredMessageFlag = true;
+					//sqExpiredMessageFlag = true; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				}
 			}	
 		}			
 		return validDate;	
 	}
 	
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event) throws IOException { //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		if (event.getFile() != null) {
 			ScLoa scLoa = getManagedBean().getScLoa();
 			ScLoaCancelAttachment attachment = new ScLoaCancelAttachment();
 
 			List<ScLoaCancelAttachment> attachments = scLoa.getScLoaCancelAttachments();
 			if (null == attachments) {
-				attachments = new ArrayList<ScLoaCancelAttachment>();
+				attachments = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 				scLoa.setScLoaCancelAttachments(attachments);
 			}
 			attachment.setScLoa(scLoa);

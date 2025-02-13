@@ -334,6 +334,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			reqDTO.setSqNumber(getManagedBean().getSqNumber());
 			reqDTO.setRequestNoteId(getManagedBean().getRequestNoteId());
 			// 12177 - End
+			// start - #25790
+			if (BpmOutcomeConst.BPM_DRAFT.equals(action) && flFulfilmentRequest.getCreatedOrgProfile() != null) {
+				reqDTO.setPtjOfOrgProfileId(retrievePTJByOrgProfileId(flFulfilmentRequest.getCreatedOrgProfile()
+						.getOrgProfileId(), flFulfilmentRequest.getCreatedOrgProfile().getCreatedDate()));
+			}// end - #25790
 			if(isFlFulfilmentRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 				if(getManagedBean().getSelectedApprover() != null){
@@ -3270,8 +3275,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * Page navigation to FLDoc search page in PR.
 	 *
 	 * @return the string
+	 * @throws IOException //36519
+	 * 
 	 */
-	public String backToPervious() {
+	public String backToPervious() throws IOException{//36519
 		if(getManagedBean().getBackToDocument() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -3279,11 +3286,17 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToDocument();
 		}
-		else{
-			return "flDocSearch";
+		// 36519-Start
+		else {
+			FacesContext
+					.getCurrentInstance()
+					.getExternalContext()
+					.redirect(
+							EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL)
+									+ "notifications");
+			return null;
 		}
-		
-		
+		// 36519-End
 	}
 	
 	/**
@@ -3896,7 +3909,10 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		RequestNoteBackingBean reqNoteBB = new RequestNoteBackingBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		// start - #25790
+		reqNoteBB.getManagedBean().setTrackingDairyView(Boolean.TRUE);
 		reqNoteBB.viewRequestNote(requestNoteId);
+		// end - #25790
 	}
 	
 	/**
@@ -4426,8 +4442,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
-			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35357
+//			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_PR);
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -4437,6 +4453,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			setFulfilmentRequestField(resDTO);
 			getManagedBean().setBackToDocument(null);
+			getManagedBean().setBackToNtf("notifications");//35357
 			flBB.getManagedBean().setHideRemarks(true);
 			getManagedBean().setDeclarationCheck(true);
 			FacesContext fc = FacesContext.getCurrentInstance();

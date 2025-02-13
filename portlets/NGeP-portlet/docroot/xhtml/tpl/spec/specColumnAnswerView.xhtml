@@ -6,10 +6,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<!-- #29187 Start Vinod -->
+	<ui:remove>#29187 Start Vinod</ui:remove>
 	<ui:param name="isManSpecAndCompliance" value="#{evaluationBackingBean.displayMandatorySpecAndComplianceColumn(templateSpecBean)}" /> 
 	<ui:param name="isRenderZone" value="#{evaluationBackingBean.renderZoneForFinancial()}" /> 
-	<!-- #29187 End Vinod -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<!-- Bug #32378 Farid Start related to #21695-->
@@ -17,8 +17,10 @@
 	<!-- Bug #32378 Farid End related to #21695--> 
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
 	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.answer'}" />
+		<ui:remove>#29187 Start Vinod Added isRenderZone Vinod</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and isRenderZone}" headerText="#{lbl['lbl.sc.zone']}">
-		</p:column><!-- #29187 Added isRenderZone Vinod -->
+		</p:column>
+		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px;white-space:normal;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.total']}" />
@@ -33,10 +35,10 @@
 		</p:column>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:normal; text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		</p:column>
-		<!-- #29187 Start Vinod -->
+		<ui:remove>#29187 Start Vinod</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" rendered="#{isScoringReq and isManSpecAndCompliance}">
 		</p:column>
-		<!-- #29187 End Vinod -->
+		<ui:remove>#29187 End Vinod</ui:remove>
 	<!-- #33859 - start -->
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:82px; white-space:pre-line !important; #{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : remarklbl]}">
 		</p:column>
@@ -54,15 +56,15 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
 		</f:facet>
 		</p:column>
-		<!-- #29187 Start Vinod -->
-		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;" rendered="#{isScoringReq and isManSpecAndCompliance}">
+		<ui:remove>#29187 End Vinod</ui:remove>
+		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:10%; white-space:normal;" rendered="#{isScoringReq and isManSpecAndCompliance}">
 			<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.tec.compliance']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.tpl.spec.content.scoring.compliance.tooltip']}" />
 			</f:facet>
 		</p:column>
-		<!-- #29187 End Vinod -->
+		<ui:remove>#29187 End Vinod</ui:remove>
 		<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
 		</p:column>
 	</ui:define>
@@ -111,6 +113,7 @@
 				</h:panelGroup>
 			</p:column>
 			
+			<ui:remove>#29187 Start Vinod Added isRenderZone</ui:remove>
 			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal and isRenderZone}">
 				<p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
@@ -118,7 +121,8 @@
 					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl}" />
 					<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName}" />
 				</p:commandLink>
-			</p:column> <!-- #29187 Added isRenderZone Vinod -->
+			</p:column> 
+			<ui:remove>#29187 End Vinod</ui:remove>
 		</ui:define>
 	</ui:decorate>
 	

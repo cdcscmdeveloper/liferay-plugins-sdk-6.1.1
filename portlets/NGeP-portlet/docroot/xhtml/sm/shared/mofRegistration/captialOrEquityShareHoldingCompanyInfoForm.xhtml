@@ -230,9 +230,9 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" /></td>
 				</tr> 
-				<tr> 
+				<tr> <!-- #36718 - change to backingBean for divisionName -->
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
 				</tr> 
 				<tr> 
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
@@ -408,8 +408,10 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<!-- #30660 start - fix reopen -->
-					<td><p:selectOneMenu 
-							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+					<td>
+					<!-- #34159 - START -->
+						<p:selectOneMenu 
+							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.countryId}" 
 							disabled ="#{(backingBean.managedBean.selectedEquityCompany.smAddress.ssmData and not empty backingBean.managedBean.selectedEquityCompany.smAddress.countryId) or backingBean.managedBean.upsCannotEdit}"
@@ -420,8 +422,9 @@
 								value="#{backingBean.managedBean.countryItems}" />
 							<p:ajax event="change" process="@this"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
-								update="equiState,equiDivision,equiDist,equiCity,postCodeSuppEquiPanelId" />
+								update="equiState,divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDivision,equiDist,equiCity,postCodeSuppEquiPanelId" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 								and not empty backingBean.managedBean.selectedEquityCompany.equityCompanyId}"
@@ -439,8 +442,10 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<!-- #30660 start - fix reopen -->
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
-							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+					<td>
+					<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.state']}" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.stateId}" 
 							id="equiState" disabled="#{backingBean.managedBean.upsCannotEdit}"> 
@@ -452,6 +457,7 @@
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 								update="divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDist,equiCity" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmState.stateId}" 
@@ -474,9 +480,11 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionCapitalDropdownPanelId" >
+					<!-- #34159 - START -->
 						<p:selectOneMenu id="equiDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.divisionId}"
+						required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
 						rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}"
 						disabled="#{backingBean.managedBean.upsCannotEdit}">
@@ -489,6 +497,7 @@
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 							update="equiDist,equiCity"/>
 					</p:selectOneMenu>
+					<!-- #34159 - END -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmDivision.divisionId}" 
@@ -507,8 +516,10 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<!-- #30660 start - fix reopen -->
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
-							id="equiDist" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+					<td>
+					<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							id="equiDist" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.district']}" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.districtId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}"> 
@@ -520,6 +531,7 @@
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 								update="equiCity" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmDistrict.districtId}" 
@@ -535,8 +547,10 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<!-- #30660 start - fix reopen -->
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
-							id="equiCity" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit}"
+					<td>
+					<!-- #34159 - START -->
+						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;" 
+							id="equiCity" required="#{backingBean.managedBean.valueReqd and not backingBean.managedBean.disAllowOwnerEdit and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.towncity']}" 
 							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.cityId}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}"> 
@@ -548,6 +562,7 @@
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 								update="equiCity" />
 						</p:selectOneMenu> 
+					<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges}"
 							oriValue="#{backingBean.managedBean.latestEquityCompany.smAddress.pmCity.cityId}" 
@@ -645,6 +660,7 @@
 			<!-- </p:panel> -->
 			<br />
 			<div align="right">
+			<!-- #34159 - START - add param disable valiadtion -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
@@ -652,7 +668,9 @@
 					onclick="equiCompBlockWidget.show();" oncomplete="equiCompBlockWidget.hide();"
 					update=":form:tt:eqiComDt, @([id$=Msg])" >
 					<f:param name="validate" value="true" />
+					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
+			<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"

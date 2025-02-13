@@ -38,7 +38,7 @@
 			
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;white-space:normal;" value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td class="header-info-text" style="word-break: keep-all;" colspan="3">
+				<td class="header-info-text" style="word-break: break-word;" colspan="3">
 					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.companyAddress}" />
 				</td>
 			</tr>
@@ -50,17 +50,18 @@
 				<td class="header-info-text"><h:outputText value="#{applInfo.smCompanyBasic.phoneFull}" /></td>
 			</tr>
 			
+			<!-- #24819 - start -->
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 				<td class="header-info-text">
-					<h:outputText value="#{applInfo.smSupplier.ssmNewRegNo}" rendered="#{!empty applInfo.smSupplier.ssmNewRegNo}"/>
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty applInfo.smSupplier.ssmNewRegNo}"/>
-					&#160;
+					<h:outputText value="#{applInfo.smSupplier.ssmNewRegNo}"
+						rendered="#{!empty applInfo.smSupplier.ssmNewRegNo}" />
+					<h:outputText value="#{lbl['lbl.sm.no.available']}"
+						rendered="#{empty applInfo.smSupplier.ssmNewRegNo}" /> &#160;
 						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
 						<p:tooltip id="newRegNott" for="newRegNoti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
-						</p:tooltip>&#160;
-				</td>
+					</p:tooltip>&#160;</td>
 				
 				<td></td>
 				<td></td>
@@ -69,12 +70,11 @@
 			<tr>
 				<td></td>
 				<td  class="header-info-text">
-				<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
-				</td>
+					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
 				<td></td>
 				<td></td>
 			</tr>
-			
+			<!-- #24819 - end -->
 			<tr>
 				<td><p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.sm.mofno']}" /></td>
 				<td class="header-info-text">

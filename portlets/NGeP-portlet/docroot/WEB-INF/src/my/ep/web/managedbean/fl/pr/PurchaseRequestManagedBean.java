@@ -311,6 +311,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean isBranchNeedToBeChanged;
 	private Long branchCode;
 	//29728 - end
+	
+	 private String backToNtf; //35357
 
 /**
  * Gets the charge line item root.
@@ -3414,5 +3416,15 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.branchCode = branchCode;
 	}
 	//29728 - end
+	
+	//35357-Start
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	//35357-Start
 	
 }

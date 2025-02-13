@@ -21,9 +21,11 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -172,54 +174,14 @@ public class TemplateSpecBackingBean extends
 		TplSpecZoneDtl speczoneDtl = templateSpecBean.getTplSpecZoneDtl();
 
 		try {
-			templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
+			templateSpecSO = BusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SERVICE_OBJECT_CC, ITemplateSpecSO.class);
 
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setContentType(contentType);
 			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
 				SmSupplier smSupplier = templateSpecBean.getSupplier();
-
-				// if (smSupplier == null) {
-				// IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				// .getServiceObject(
-				// ModuleCodeConst.PROFILE_MANAGEMENT,
-				// IOrgProfileSO.class);
-				// OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-				// profileReqDTO.setUserId(/*new FacesScopes()
-				// .getUserSessionBean().getUserId()*/81569L);
-				// profileReqDTO.setOrgType(OrganizationType.SUPPLIER.value());
-				// OrgProfileResDTO profileResDTO = orgProfileSO
-				// .retrieveOrgProfileListByOrgType(profileReqDTO);
-				//
-				// if (profileResDTO.getOrgProfileList().size() > 0) {
-				// IRegistrationSO registrationSO = BusinessDelegate
-				// .getInstance().getServiceObject(
-				// ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				// IRegistrationSO.class);
-				// RegistrationReqDTO registrationReqDTO = new
-				// RegistrationReqDTO();
-				// registrationReqDTO.setSupplierId(profileResDTO
-				// .getOrgProfileList().get(0).getOrgProfileId());
-				// RegistrationResDTO registrationResDTO = registrationSO
-				// .retrieveSuppOnlineAcc(registrationReqDTO);
-				// smSupplier = registrationResDTO.getSmSupp();
-				// } else {
-				// IRegistrationSO registrationSO = BusinessDelegate
-				// .getInstance().getServiceObject(
-				// ModuleCodeConst.SUPPLIER_MANAGEMENT,
-				// IRegistrationSO.class);
-				// RegistrationReqDTO registrationReqDTO = new
-				// RegistrationReqDTO();
-				// registrationReqDTO.setSupplierId(27L);
-				// RegistrationResDTO registrationResDTO = registrationSO
-				// .retrieveSuppOnlineAcc(registrationReqDTO);
-				// smSupplier = registrationResDTO.getSmSupp();
-				// }
-				//
-				// templateSpecBean.setSupplier(smSupplier);
-				// }
 
 				reqDTO.setSupplier(smSupplier);
 			}
@@ -238,42 +200,36 @@ public class TemplateSpecBackingBean extends
 				}
 
 				templateSpecBean.setSpecMaster(specMaster);
-				if(QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())){//32453-start
-					
-					if(CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())){
-						//for(TplSpecAnswer specAnswer: resDTO.getSpecAnswerList()){
-						
-							IQTEvaluationSO	evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-									ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-							EvaluationReqDTO evalReqDTO=new EvaluationReqDTO();
-							evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
-							evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
-							int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
-							//#25138(wip 4serangkai) bug -Start 8/6/2023
-							this.getManagedBean().setWipStatusMax(wipstatus);
-							//#25138 for demo
-							if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
-								if (CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
-							evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
-							evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
-						EvaluationResDTO evalResDTO=evaluationSO.technicalItemSupplierQualified(evalReqDTO);
+				if (QTConstants.FINANCIAL_ITEM_SPEC_ANSWER.equalsIgnoreCase(templateSpecBean.getAnswerRemove())
+						&& CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {// 32453-start
+
+					IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+					EvaluationReqDTO evalReqDTO = new EvaluationReqDTO();
+					evalReqDTO.setQtId(templateSpecBean.getQt().getQtId());
+					evalReqDTO.setProposalChecklist(templateSpecBean.getQtProposalChecklist());
+					int wipstatus = evaluationSO.checkWipScoreSetting(evalReqDTO);
+					// #25138(wip 4serangkai) bug -Start 8/6/2023
+					this.getManagedBean().setWipStatusMax(wipstatus);
+					// #25138 for demo
+					if (wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM
+							&& CollectionUtils.isNotEmpty(resDTO.getSpecAnswerList())) {
+						evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION_BY_ITEM);
+						evalReqDTO.setFinSpecAnswerList(resDTO.getSpecAnswerList());
+						EvaluationResDTO evalResDTO = evaluationSO.technicalItemSupplierQualified(evalReqDTO);
 						templateSpecBean.setSpecAnswerList(evalResDTO.getSpecAnswers());
 						templateSpecBean.setHideanswerList(evalResDTO.getHideanswerList());
+					} else {
+						templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 					}
-							}//#25138 add start
-							else{
-								templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-							}
-							//#25138 add end
-					}
-					//templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());	
-				}else{//32453-End
-					
-				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
+					//#25138 add end
+				} else {// 32453-End
+					templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				}//32453-End
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
 				this.getManagedBean().setTemplateSpecBean(templateSpecBean);
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 				// #21695 - Farid
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())
@@ -1343,7 +1299,9 @@ public class TemplateSpecBackingBean extends
 								.getRoleCode());
 					}
 					
-					RoleCode[] r = {RoleCode.SC_SECRETARY};
+					RoleCode[] r = { RoleCode.SC_SECRETARY, 
+									RoleCode.SC_CHAIRPERSON, 
+									RoleCode.SC_MEMBER };
 					if (userHasRole(r)){
 						getManagedBean().setSecretaryValidate(true);
 					};
@@ -2253,14 +2211,14 @@ public class TemplateSpecBackingBean extends
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
-								.getAnswerNumeric()).setScale(2, BigDecimal.ROUND_UP);
+								.getAnswerNumeric()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						
 					}
 				}
 
 				if (tplSpecAnswer.getAmountPerYear() != null) {
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-							.getAmountPerYear()).setScale(2, BigDecimal.ROUND_UP);
+							.getAmountPerYear()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 					
 				}
 			}
@@ -2954,9 +2912,12 @@ public class TemplateSpecBackingBean extends
 	}
 	
 	public String replaceWithBR(String specDetails) {
-		
-		return specDetails.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
-				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		// 35521 @zaim - start
+		String spec = specDetails.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY); //36103 @zaim
+		spec = spec.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		spec = spec.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER); //36103 @zaim
+		return spec;
+		// 35521 @zaim - end
 	}
 	
 	/**
@@ -3146,7 +3107,7 @@ public class TemplateSpecBackingBean extends
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
 						totalEstAmount = totalEstAmount.add(specEstimation
-										.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+										.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					}
 				}
 				else {
@@ -3167,7 +3128,7 @@ public class TemplateSpecBackingBean extends
 
 					if (specEstimation.getEstimatedCost() != null) { // bugs #26234 
 						totalEstAmount = totalEstAmount.add(specEstimation
-								.getEstimatedCost()).setScale(2, BigDecimal.ROUND_UP); // bugs #26234 add decimal point
+								.getEstimatedCost()).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point
 					} // bugs #26234 
 				}
 		};
@@ -3196,7 +3157,8 @@ public class TemplateSpecBackingBean extends
 
 			BigDecimal totalIndicativePrice = new BigDecimal("0.00");//Bug #29808
 			BigDecimal zeroChangeTo1 = new BigDecimal("1.00");//Bug #29808
-			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, BigDecimal.ROUND_UP);//Bug #29808
+			//Bug #35600 - These code not in DEV
+			BigDecimal RoundIndicativePrice = BigDecimal.valueOf(indicativeUnitPrice).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 22/11/2024	//Bug #29808
 			
 			if (clUomFrequency.intValue() == 0 )
 			{ clUomFrequency=clUomFrequency.add(zeroChangeTo1);}
@@ -3220,7 +3182,7 @@ public class TemplateSpecBackingBean extends
 			if (!isItemTypeService)  //Product - input indicative unit price and autocalculate estimated cost
 			{
 				totalIndicativePrice = totalIndicativePrice.add(clQuantity
-						.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 			} 
 			else {
 				if (isItemTypeService && !(isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with non periodic Fulfillment Type(OneOff & As and When)  - input indicative unit price and autocalculate estimated cost
@@ -3228,7 +3190,7 @@ public class TemplateSpecBackingBean extends
 						.multiply(clUomFrequency)
 						.multiply(clUomPerDay)
 						.multiply(clUomPerMonth)
-						.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+						.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 				} 
 				else {
 					if (isItemTypeService && (isFulfilmentTypeScheduled || isFulfilmentTypeNonPeriodicScheduled))//#25726 Add condition for non periodic schedule //Service with periodic Fulfillment Type - input indicative unit price and autocalculate estimated cost
@@ -3238,7 +3200,7 @@ public class TemplateSpecBackingBean extends
 								.multiply(clUomFrequency)
 								.multiply(clUomPerDay)
 								.multiply(clUomPerMonth)
-								.multiply(RoundIndicativePrice).setScale(2, BigDecimal.ROUND_UP)); // bugs #26234 add decimal point //Bug #29808
+								.multiply(RoundIndicativePrice).setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024 // bugs #26234 add decimal point //Bug #29808
 					}
 				}
 			}
@@ -3273,7 +3235,7 @@ public class TemplateSpecBackingBean extends
 				// #34656 add checking not null
 				if(tplSpecEstimation.getEstimatedCost() != null && 
 						tplSpecEstimation.getEstimatedCost().compareTo(BigDecimal.ZERO) == 0){
-					tplSpecEstimation.setIndicativeUnitPrice(new BigDecimal(0.00));
+					tplSpecEstimation.setIndicativeUnitPrice(BigDecimal.valueOf(0.00));
 				}
 				// #21695 fix #32130 - end
 				if (tplSpecEstimation.getTplSpecZoneDtl() == null) {
@@ -3665,23 +3627,22 @@ public class TemplateSpecBackingBean extends
 							specAns.setAnswerCompliance(null);
 						// Bug #32015 Farid start 5/11/2021
 							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null &&
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((User))){
 								specAns.setUserScore(new BigDecimal(0));
 							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals((Auto))){
 								specAns.setAutoScore(new BigDecimal(0));
 							}
 							
 						}
 						else{
-							if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(User))){
-								specAns.setUserScore(null);
-							}else if(specAns.getTplSpecQuestion().getScoreTypeCode() != null && 
-									specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId().equals(new Long(Auto))){
+							if (specAns.getTplSpecQuestion().getScoreTypeCode() != null
+									&& (specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId()
+											.equals((User))
+											|| specAns.getTplSpecQuestion().getScoreTypeCode().getParameterId()
+											.equals((Auto)))) {
 								specAns.setUserScore(null);
 							}
-							
 						}
 						// Bug #32015 Farid end 5/11/2021
 					}
@@ -3712,31 +3673,11 @@ public class TemplateSpecBackingBean extends
 	}
 //#21695 Farid end 2/4/2021
 	
-	//#28784 - Start
-	public void scoringOkActionDemo(TemplateSpecBean templateSpecBean) {
-		ITemplateSpecSO templateSpecSO = null;
-		try {
-			TplSpecQuestion selectedSpecQuestion = templateSpecBean
-					.getSelectedSpecQuestion();
-			List<TplSpecScoring> specScorings = selectedSpecQuestion
-					.getTplSpecScorings();
-			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-			BigDecimal demoScore = templateSpecSO.validateScoring(
-					selectedSpecQuestion, specScorings, new FacesScopes().getUserLocale());
-			if(demoScore != null && demoScore.equals(new BigDecimal(0))){
-				throw new EpException(MessageConst.ERROR_760476);
-			}
-			if (demoScore != null) {
-				selectedSpecQuestion.setDemoScore(demoScore);
-			}
-		} finally {
-			templateSpecSO = null;
-		}
-		templateSpecBean.setSelectedSpecQuestion(null);
-		getManagedBean().setTemplateSpecBean(templateSpecBean);
-	}
-
+	
+	/**
+	 * #28784 - Demo scoring cancle
+	 * @param templateSpecBean
+	 */
 	public void scoringCancelActionDemo(TemplateSpecBean templateSpecBean) {
 		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
@@ -3911,6 +3852,7 @@ public class TemplateSpecBackingBean extends
 			RequestContext.getCurrentInstance().execute("zoneQtyPopup.show()");
 
 		}
+
 	// #29187 Start Vinod
 	/**
 	 * Gets the score Mandatory Spec Dropdown Values.display in dropdown.
@@ -3950,17 +3892,20 @@ public class TemplateSpecBackingBean extends
 
 			this.getManagedBean().setMandatorySpecList(selectItems);
 		} catch (Exception e) {
+			String qtNo = this.getManagedBean().getQt().getQtNo();
 			SLAUtils.getInstance()
 					.logSLAError(
 							SLALogConstant.QT_MODULE,
 							SLALogConstant.QT_TEMPLATESPEC_BACKINGBEAN,
-							this.getManagedBean().getQt().getQtNo(),
+							qtNo,
 							SLALogConstant.QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES,
 							getUserIdSessionFromLoginId(), e);
 		}
 		return this.getManagedBean().getMandatorySpecList();
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * checking for displaying mandatory specification column.
 	 * 
@@ -3969,17 +3914,23 @@ public class TemplateSpecBackingBean extends
 	 */
 	public boolean displayMandatorySpecColumn(TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if (null != this.getManagedBean().getScQt()
+		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 				&& null != this.getManagedBean().getScQt().getQtStatus()
-						.getStatusId()
-				&& this.getManagedBean().getScQt().getQtStatus().getStatusId()
-						.longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION) {
-			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
-					.getSpecAnswerList()) {
-				if (tplSpecAnswer.getTplSpecQuestion().getQuestionType()
+						.getStatusId() ? this.getManagedBean().getScQt()
+				.getQtStatus().getStatusId() : Long.MIN_VALUE;
+		if (statusId
+				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+			List<TplSpecAnswer> answerList = templateSpecBean
+					.getSpecAnswerList();
+			for (TplSpecAnswer tplSpecAnswer : answerList) {
+				String questionType = tplSpecAnswer.getTplSpecQuestion()
+						.getQuestionType();
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion()
+						.isMandatorySpec();
+				if (questionType
 						.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-						&& tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+						&& isMandatorySpec) {
 					manSpec = true;
 					break;
 				}
@@ -3988,6 +3939,8 @@ public class TemplateSpecBackingBean extends
 		return manSpec;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for UOM and quantity details.
 	 * 
@@ -3999,6 +3952,8 @@ public class TemplateSpecBackingBean extends
 				QTConstants.VIEW_UOM_QUANTITY_DETAILS);
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * to show popup for zone quantity details.
 	 * 
@@ -4010,6 +3965,8 @@ public class TemplateSpecBackingBean extends
 				QTConstants.VIEW_ZONE_QUANTITY_POPUP);
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * update user score based on compliance.
 	 * 
@@ -4017,16 +3974,13 @@ public class TemplateSpecBackingBean extends
 	 * @return
 	 */
 	public void onchangeCompliance(TplSpecAnswer ans) {
-		for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean()
-				.getSpecAnswerList()) {
+		List<TplSpecAnswer> answerList = this.getManagedBean()
+				.getTemplateSpecBean().getSpecAnswerList();
+		for (TplSpecAnswer answer : answerList) {
 			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
 					&& ans.getCompliance() != null) {
 				if (ans.getCompliance() == Boolean.FALSE) {
 					answer.setUserScore(BigDecimal.ZERO);
-				} else if (ans.getCompliance() == Boolean.TRUE
-						&& ans.getUserScore() != null
-						&& ans.getUserScore().compareTo(BigDecimal.ZERO) == 0) {
-					answer.setUserScore(null);
 				}
 			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
 					&& ans.getCompliance() == null) {
@@ -4034,5 +3988,25 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
+
 	// #29187 End Vinod
+	//#36248_haziq - start
+	/**
+	 * #36248
+	 * To validate Wieghtage input value
+	 * @param context
+	 * @param component
+	 * @param value
+	 */
+	public void validateWeightage(FacesContext context, UIComponent component, Object value) {
+		BigDecimal weightage = (BigDecimal) value;
+
+		if (weightage.compareTo(BigDecimal.valueOf(100)) > 0) {
+			String errMsg = ResourceBundleUtils.getMessage("lbl.pm.settings.threshod.percentage.validation",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+		}
+	}
+	//#36248_haziq - End
+
 }

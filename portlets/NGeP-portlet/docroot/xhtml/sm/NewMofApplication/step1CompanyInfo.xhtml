@@ -14,11 +14,8 @@
 						src="smMofApplnSideMenuItem.xhtml" /></td>
 				<td style="vertical-align: top;">
 				<!-- #16052019 - SSM INTEGRATION CR -->
-				<!-- #12483 - START -->
-				<c:if test="#{backingBean.renderRevisedReason()}"> 
-					<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" styleClass="splNotesFonts" escape="false"/>
-				<br/>
-				</c:if>
+				<!-- #12483 - START, #34892 -->
+				<ac:smReviseReason bBean="#{backingBean}"/><br/>
 				<!-- #12483 - END -->
 				<ui:include
 						src="/xhtml/sm/shared/mofRegistration/AccountInfoDetail.xhtml" />
@@ -85,11 +82,15 @@
 					<td></td>
 					<td>
 						<div align="right" style="width: 99%" class="button-wrapper">
+						<!-- #34159 - START - add param disablevalidation -->
 							<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide();scrollToTop();"
 								actionListener="#{backingBean.setTabValue(0,1)}"
 								action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
-								update=":form" />
+								update=":form" >
+								<f:param name="disableValidation" value="true" />
+							</p:commandButton>
+						<!-- #34159 - END -->
 						</div>
 					</td>
 				</tr>

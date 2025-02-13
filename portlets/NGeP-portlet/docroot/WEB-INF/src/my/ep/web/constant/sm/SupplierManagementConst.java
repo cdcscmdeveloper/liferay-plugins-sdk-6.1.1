@@ -140,6 +140,12 @@ public class SupplierManagementConst {
 	public static final String SM_FACILITY_TYPE_HOMEOFFICE = "H";
 	public static final String SM_FACILITY_TYPE_BUSSINESSOFFICE = "B";
 
+	//#34711 - START
+	// Facility Ownership
+	public static final String SM_FACILITY_OWNERSHIP_OWN = "O";
+	public static final String SM_FACILITY_OWNERSHIP_RENTED = "R";
+	//#34711 - END
+		
 	// Facility Type Map
 	public static final Map<String, String> FACILITY_TYPE_MAP;
 	static {
@@ -212,6 +218,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
+	public static final String IDENTIFICATION_TYPE_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	//30865 Start & #34098 - START
@@ -502,6 +509,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -560,6 +568,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -645,6 +654,11 @@ public class SupplierManagementConst {
 	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
 	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
 	// #12483 - END
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -712,6 +726,12 @@ public class SupplierManagementConst {
 	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
 	public static final int NOTIFICATION_ID_401189 = 401189;
 	public static final int NOTIFICATION_ID_401190 = 401190;
+	
+	//28775 - Site Visit Grouping Enhancement - 28775
+	public static final long STATE_SELANGOR = 11L;
+	public static final long STATE_KL = 15L;
+	public static final List<Long> KLANG_VALLEY = Collections.unmodifiableList(Arrays.asList(STATE_SELANGOR, STATE_KL));
+	public static final int IC_NO_LENGTH = 12;
 
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
@@ -720,6 +740,18 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
+	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
+	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
+	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
+	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
+	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
+	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
+	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
+	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
+	// #28895_35501 End
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1405,4 +1437,68 @@ public class SupplierManagementConst {
 		return PM_STATUS_REGISTRATION_STATUS_FOREIGN;
 	}
 	// #28175 Reopen End
+	
+	//#34711 - START
+	public String getSM_FACILITY_OWNERSHIP_OWN(){
+		return SM_FACILITY_OWNERSHIP_OWN;
+	}
+	public String getSM_FACILITY_OWNERSHIP_RENTED(){
+		return SM_FACILITY_OWNERSHIP_RENTED;
+	}
+	//#34711 - END
+
+	public static String getIdentificationTypeIc() {
+		return IDENTIFICATION_TYPE_IC;
+	}
+	
+	// #34392 - Start
+	public String getPENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL;
+	}
+	
+	public String getPENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM;
+	}
+	// #34392 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
+		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
+	}
+	
+	public String getAuTabIdBankInfo() {
+		return AU_TAB_ID_BANK_INFO;
+	}
+
+	public String getAuTabIdCategoryCodeInfo() {
+		return AU_TAB_ID_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdSupplierInfo() {
+		return AU_TAB_ID_SUPPLIER_INFO;
+	}
+
+	public String getAuTabIdApprovedCategoryCodeInfo() {
+		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdOverlappingRemarkInfo() {
+		return AU_TAB_ID_OVERLAPPING_REMARK_INFO;
+	}
+
+	public String getAuTabIdApproverRemarkInfo() {
+		return AU_TAB_ID_APPROVER_REMARK_INFO;
+	}
+
+	public String getAuTabIdUserInfo() {
+		return AU_TAB_ID_USER_INFO;
+	}
+
+	public String getAuTabIdAdminInfo() {
+		return AU_TAB_ID_ADMIN_INFO;
+	}
+
+	public static String getSupplierApplSearchUrl() {
+		return SUPPLIER_APPL_SEARCH_URL;
+	}
+	// #28895_35501 End
 }

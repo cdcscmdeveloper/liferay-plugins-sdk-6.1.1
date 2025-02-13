@@ -163,13 +163,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
-					 <!-- #29729 Start -->
+					  <ui:remove> #28777#29729 - Start </ui:remove>
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					 <!-- #29729 End -->
+					  <ui:remove> #28777#29729 - End </ui:remove>
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
 					<p:column style="text-align:center;">
@@ -296,7 +296,7 @@
 					<h:outputText value="#{shortlistedSupp.supplierRejectionRemark.remark}"/>
 				</p:column>			
 								
-				<p:column selectionMode="single" rendered="#{showSelectionColumn}" disabledSelection="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" /><ui:remove>#25157 - move logic to bb, #21692 <!-- #28777 & #29729 --> </ui:remove>
+				<p:column selectionMode="single" rendered="#{showSelectionColumn}" disabledSelection="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" /><ui:remove>#25157 - move logic to bb, #21692 </ui:remove>
 
 			</p:dataTable>		 	    
 
@@ -400,13 +400,13 @@
 												   	 target="#{supplierDetailBackingBean.scQtProposal}" />
 						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.supplierNo}" />
 					</p:commandLink>
-					 <!-- #29729 Start -->
+					  <ui:remove> #28777#29729 - Start </ui:remove>
 						 <p:spacer width="15" height="15"/>
 		                     <p:commandLink  process="@this"  action="#{suppFinalizationBackingBean.showSupplierBranchList(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
 				         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
 								<h:graphicImage value="/css/images/exclam-info.png" />
 			         		</p:commandLink> 
-					 <!-- #29729 End -->
+					  <ui:remove> #28777#29729 - End </ui:remove>
 				</p:column>
 				<c:if test="#{canShowSupplierProposal}">
 					<p:column style="text-align:center;">
@@ -539,7 +539,7 @@
 				</ui:remove>				
 				<p:column style="text-align:center;" rendered="#{showSelectionColumn}">
 					<!-- #30999 Start -->
-					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" disabled="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" ><ui:remove>#25157 - move logic to bb, #21692 <!-- #28777 & #29729 --></ui:remove>
+					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" disabled="#{suppFinalizationBackingBean.evaluateSupplierDisabled(shortlistedSupp)}" ><ui:remove>#25157 - move logic to bb, #21692 </ui:remove>
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}" />
 					</p:selectBooleanCheckbox>	

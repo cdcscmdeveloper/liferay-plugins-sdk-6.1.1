@@ -24,7 +24,12 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
+//Start - #30866
+import my.ep.util.SLAUtils;
+import my.ep.persistence.entity.ct.circular.VCcCt;
+import my.ep.persistence.entity.ct.circular.VCcDp;
+import my.ep.persistence.entity.ct.circular.VCcQt;
+//End - #30866
 /**
  * Circular Managed Bean
  * 
@@ -50,8 +55,24 @@ public class CircularManagedBean extends BaseManagedBean {
 	private Date searchEndDate;
 	private Long searchStatusId;
 	private int searchCircularStatus;
+	// Start - #30866
+	private String procurementMode;
+	private String procurementModeCode;
+	private Long pmParameterId;
+	private boolean isPqCircularType = false;
+	private boolean isContinuityCircularAuditSearch = false;
+	private String externalPageUrlForAudit;
+	private String circularDocType;
+	private CtCircularVer circularCqCentralContractList;
+	private CtCircularVer circularPqDirectPurchaseList;
+	private CtCircularVer circularPqQtList;
+	// End - #30866
 	private IPagingDataModel<CtCircularVer> circularListingPagingDataModel = new CircularListingPagingDataModel();
-
+	// Start - #30866
+	private transient IPagingDataModel<VCcCt> circularCtListingDataModel = new CircularCtListingPagingDataModel();
+	private transient IPagingDataModel<VCcDp> circularDpListingDataModel = new CircularDpListingPagingDataModel();
+	private transient IPagingDataModel<VCcQt> circularQtListingDataModel = new CircularQtListingPagingDataModel();
+	// End - #30866
 	private class CircularListingPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
@@ -120,6 +141,8 @@ public class CircularManagedBean extends BaseManagedBean {
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
 				reqDTO.setFilterStatusId(getSearchStatusId());
+				reqDTO.setProcModeIdCheck(getPmParameterId()); //Fix - #30866
+				reqDTO.setProcurementModeCode(getProcurementModeCode()); //Fix - #30866
 				reqDTO.setSearchCircularStatus(getSearchCircularStatus());
 
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
@@ -139,6 +162,135 @@ public class CircularManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
+	
+	// Start - #30866
+	private class CircularCtListingPagingDataModel extends PagingDataModel<VCcCt> {
+		private static final long serialVersionUID = 1L;
+
+		public CircularCtListingPagingDataModel() {
+			super("subTableCcContract", isReadOnly());
+		}
+
+		@Override
+		public ISearchResultBean<VCcCt> pageChangeListener(ISearchBean<VCcCt> searchBean) {
+			try {
+
+				if (getSearchCircularNo() != null && getSearchCircularNo().length() > 0) {
+					SearchFilterBean filterBean = new SearchFilterBean("ccr.CIRCULAR_NO",
+							SearchOperator.OPERATOR_EQUALS.value(), getSearchCircularNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+
+				if (getCircularDocType() != null) {
+					SearchFilterBean filterBean = new SearchFilterBean("ccws.DOC_TYPE",
+							SearchOperator.OPERATOR_EQUALS.value(), getCircularDocType());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+				}
+
+				CircularReqDTO reqDTO = new CircularReqDTO();
+				reqDTO.setCtCircularVerSearchBean(searchBean);
+				reqDTO.setFilterStatusId(getSearchStatusId());
+				reqDTO.setProcModeIdCheck(getPmParameterId());
+				reqDTO.setSearchCircularStatus(getSearchCircularStatus());
+				searchBean.setUseEntityClass(true);
+
+				ICircularSO circularSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+				CircularResDTO resDTO = null;
+				resDTO = circularSO.getCircularContractSearchAudit(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					return resDTO.getCtCircularVerResultBean();
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularManagedBean", null,
+						"CircularManagedBean.CircularCtListingPagingDataModel", null, e);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));	
+			}
+			return null;
+		}
+	}
+
+	// End - #30866
+	
+	// Start - #30866
+	private class CircularDpListingPagingDataModel extends PagingDataModel<VCcDp> {
+		private static final long serialVersionUID = 1L;
+
+		public CircularDpListingPagingDataModel() {
+			super("subTableCcDirectPurchase", isReadOnly());
+		}
+
+		@Override
+		public ISearchResultBean<VCcDp> pageChangeListener(ISearchBean<VCcDp> searchBean) {
+			try {
+
+				CircularReqDTO reqDTO = new CircularReqDTO();
+				reqDTO.setDpCircularVerSearchBean(searchBean);
+				reqDTO.setProcModeIdCheck(getPmParameterId());
+				reqDTO.setProcurementModeCode(getProcurementMode());
+				reqDTO.setCircularNo(getSearchCircularNo());
+				searchBean.setUseEntityClass(true);
+
+				ICircularSO circularSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+				CircularResDTO resDTO = null;
+				resDTO = circularSO.getCircularContractSearchAudit(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					return resDTO.getDpCircularVerResultBean();
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularManagedBean", null,
+						"CircularManagedBean.CircularDpListingPagingDataModel", null, e);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			}
+			return null;
+		}
+	}
+
+	// End - #30866
+		
+	// Start - #30866
+	private class CircularQtListingPagingDataModel extends PagingDataModel<VCcQt> {
+		private static final long serialVersionUID = 1L;
+
+		public CircularQtListingPagingDataModel() {
+			super("subTableCcQt", isReadOnly());
+		}
+
+		@Override
+		public ISearchResultBean<VCcQt> pageChangeListener(ISearchBean<VCcQt> searchBean) {
+			try {
+				CircularReqDTO reqDTO = new CircularReqDTO();
+				reqDTO.setQtCircularVerSearchBean(searchBean);
+				reqDTO.setProcModeIdCheck(getPmParameterId());
+				reqDTO.setProcurementModeCode(getProcurementMode());
+				reqDTO.setCircularNo(getSearchCircularNo());
+				searchBean.setUseEntityClass(true);
+
+				ICircularSO circularSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
+				CircularResDTO resDTO = null;
+				resDTO = circularSO.getCircularContractSearchAudit(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getQtCircularVerResultBean();
+				}
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "CircularManagedBean", null,
+						"CircularManagedBean.CircularDpListingPagingDataModel", null, e);
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			}
+			return null;
+		}
+	}
+
+	// End - #30866
 
 	/**
 	 * @return the searchCircularNo
@@ -342,5 +494,111 @@ public class CircularManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchCircularStatus(int searchCircularStatus) {
 		this.searchCircularStatus = searchCircularStatus;
-	}	
+	}
+	
+	// Start - #30866
+	public Long getPmParameterId() {
+		return pmParameterId;
+	}
+
+	public void setPmParameterId(Long pmParameterId) {
+		this.pmParameterId = pmParameterId;
+	}
+
+	public boolean isPqCircularType() {
+		return isPqCircularType;
+	}
+
+	public void setPqCircularType(boolean isPqCircularType) {
+		this.isPqCircularType = isPqCircularType;
+	}
+
+	public String getProcurementModeCode() {
+		return procurementModeCode;
+	}
+
+	public void setProcurementModeCode(String procurementModeCode) {
+		this.procurementModeCode = procurementModeCode;
+	}
+
+	public String getProcurementMode() {
+		return procurementMode;
+	}
+
+	public void setProcurementMode(String procurementMode) {
+		this.procurementMode = procurementMode;
+	}
+
+	public IPagingDataModel<VCcDp> getCircularDpListingDataModel() {
+		return circularDpListingDataModel;
+	}
+
+	public void setCircularDpListingDataModel(IPagingDataModel<VCcDp> circularDpListingDataModel) {
+		this.circularDpListingDataModel = circularDpListingDataModel;
+	}
+
+	public IPagingDataModel<VCcCt> getCircularCtListingDataModel() {
+		return circularCtListingDataModel;
+	}
+
+	public void setCircularCtListingDataModel(IPagingDataModel<VCcCt> circularCtListingDataModel) {
+		this.circularCtListingDataModel = circularCtListingDataModel;
+	}
+
+	public IPagingDataModel<VCcQt> getCircularQtListingDataModel() {
+		return circularQtListingDataModel;
+	}
+
+	public void setCircularQtListingDataModel(IPagingDataModel<VCcQt> circularQtListingDataModel) {
+		this.circularQtListingDataModel = circularQtListingDataModel;
+	}
+
+	public boolean isContinuityCircularAuditSearch() {
+		return isContinuityCircularAuditSearch;
+	}
+
+	public void setContinuityCircularAuditSearch(boolean isContinuityCircularAuditSearch) {
+		this.isContinuityCircularAuditSearch = isContinuityCircularAuditSearch;
+	}
+
+	public String getExternalPageUrlForAudit() {
+		return externalPageUrlForAudit;
+	}
+
+	public void setExternalPageUrlForAudit(String externalPageUrlForAudit) {
+		this.externalPageUrlForAudit = externalPageUrlForAudit;
+	}
+
+	public String getCircularDocType() {
+		return circularDocType;
+	}
+
+	public void setCircularDocType(String circularDocType) {
+		this.circularDocType = circularDocType;
+	}
+
+	public CtCircularVer getCircularCqCentralContractList() {
+		return circularCqCentralContractList;
+	}
+
+	public void setCircularCqCentralContractList(CtCircularVer circularCqCentralContractList) {
+		this.circularCqCentralContractList = circularCqCentralContractList;
+	}
+
+	public CtCircularVer getCircularPqDirectPurchaseList() {
+		return circularPqDirectPurchaseList;
+	}
+
+	public void setCircularPqDirectPurchaseList(CtCircularVer circularPqDirectPurchaseList) {
+		this.circularPqDirectPurchaseList = circularPqDirectPurchaseList;
+	}
+
+	public CtCircularVer getCircularPqQtList() {
+		return circularPqQtList;
+	}
+
+	public void setCircularPqQtList(CtCircularVer circularPqQtList) {
+		this.circularPqQtList = circularPqQtList;
+	}
+	// End - #30866
 }

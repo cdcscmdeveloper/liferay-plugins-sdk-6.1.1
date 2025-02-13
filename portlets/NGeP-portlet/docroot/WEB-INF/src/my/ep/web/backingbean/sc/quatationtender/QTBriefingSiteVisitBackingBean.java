@@ -546,8 +546,8 @@ public class QTBriefingSiteVisitBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			reqDTO.setSupplierId(briefingRegistration.getSupplier()
-					.getSupplierId());
+			reqDTO.setSupplierId(briefingRegistration != null ?briefingRegistration.getSupplier()
+					.getSupplierId():null); //20230712@asyrafhaziq- SQUBE Bug NullPointer#3
 			BriefingResDTO resDTO = briefingSO
 					.retrieveAuthriozesPersonalBySupplierId(reqDTO);
 			List<SmPersonnel> personals = resDTO.getPersonals();

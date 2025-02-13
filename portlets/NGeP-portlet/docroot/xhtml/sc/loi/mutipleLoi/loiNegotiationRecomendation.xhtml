@@ -41,6 +41,7 @@
 						</td>
 					</c:if>
 					<td class="tdWidth">
+					    <h:outputText styleClass="instruction" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pmlb']} " escape="false" /> <ui:remove> #28777#29729 </ui:remove>
 						<h:outputText styleClass="instruction"
 							value="#{lbl['lbl.sc.sf.finalization.supplier.selection.bumistatus.instruction']} "
 							escape="false" />
@@ -80,7 +81,15 @@
 										value="#{supplierDtl.qtEvaluationResult.scQtProposal}"
 										target="#{supplierDetailBackingBean.scQtProposal}" />
 									<h:outputText value="#{supplierDtl.qtEvaluationResult.scQtProposal.supplierNo}" />
-								</p:commandLink>									
+								</p:commandLink>
+								
+								<ui:remove> #28777#29729 - Start </ui:remove>
+								 <p:spacer width="15" height="15"/>
+				                     <p:commandLink  process="@this"  action="#{lOIDetailBackingBean.showSupplierBranchList(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+						         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+										<h:graphicImage value="/css/images/exclam-info.png" />
+					         		</p:commandLink> 
+								<ui:remove> #28777#29729 - End </ui:remove>											
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
@@ -147,7 +156,7 @@
 												  or !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) 
 												  or lOIDetailBackingBean.managedBean.readOnly 
 												  or (supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions 
-												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" />
+												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" /> 
 							<ui:remove>
 								#31061 - SHAFFUL (END)
 							</ui:remove>
@@ -208,6 +217,14 @@
 												target="#{supplierDetailBackingBean.scQtProposal}" />
 											<h:outputText value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.supplierNo}" />
 										</p:commandLink>
+										
+										<ui:remove> #28777#29729 - Start </ui:remove>
+										 <p:spacer width="15" height="15"/>
+						                     <p:commandLink  process="@this"  action="#{lOIDetailBackingBean.showSupplierBranchList(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+								         		update="@([id$=suppBranchListPopupId])" oncomplete="suppBranchListPopup.show();">
+												<h:graphicImage value="/css/images/exclam-info.png" />
+							         		</p:commandLink> 
+										<ui:remove> #28777#29729 - End </ui:remove>	
 										<br />
 									</p:column>
 								</p:dataList>

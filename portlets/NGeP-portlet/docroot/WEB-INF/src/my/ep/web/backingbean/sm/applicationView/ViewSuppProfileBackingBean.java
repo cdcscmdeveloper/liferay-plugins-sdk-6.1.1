@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -30,6 +31,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -42,8 +44,13 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+
+import com.liferay.compat.portal.util.PortalUtil;
+//#28175 start
 //#28175 ReOpen
-import my.ep.web.constant.sm.SupplierManagementConst;
+//#28175 end
+//#28895_35501 Start - AUDIT TRAIL SM
+//#28895_35501 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -67,6 +74,16 @@ public class ViewSuppProfileBackingBean extends
 		long subStartTime = 0L;
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 Start - AUDIT TRAIL SM
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String isAudit = originalServletRequest.getParameter("isAudit");
+		if (SmCommonUtil.md5("true").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(true);
+		} else if (SmCommonUtil.md5("false").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(false);
+		}
+		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
@@ -588,8 +605,18 @@ public class ViewSuppProfileBackingBean extends
 	//#29482 - End
 	
 	// #28175 start
+	/**
+	 * Handles the click event for the category codes history.
+	 * 
+	 * This method retrieves the category code details based on the provided category code level and ID.
+	 * It then updates the managed bean with the retrieved details and shows the remark history popup.
+	 * 
+	 * @param catCode the category code
+	 * @param catCodeLevel the category code level (1, 2, or 3)
+	 * @param catCodeID the category code ID
+	 */
 	public void onClickCatCodesHistory(String catCode, int catCodeLevel, Long catCodeID) {
-		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		CategoryCodeResDTO resDTO = new CategoryCodeResDTO();
 		if(catCodeLevel == 1){
@@ -603,22 +630,29 @@ public class ViewSuppProfileBackingBean extends
 			resDTO = categoryCodeSO.retrieveCategoryL3DtlById(reqDTO);
 		}
 		// #28175 ReOpen - start
-		if (getFacesScopes().hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
-				|| getFacesScopes().hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
-				|| getFacesScopes().hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
-				|| getFacesScopes().hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)
-				|| getFacesScopes().hasRoleUser(RoleCode.FL_USER.value())
-				|| getFacesScopes().hasRoleUser(SupplierManagementConst.SUPPLIER_ADMIN)
-				|| getFacesScopes().hasRoleUser(SupplierManagementConst.SUPPLIER_USER)
-				|| getFacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value())) {
+		if (hasSupplierRole()) {
 			getManagedBean().setSupplierUser(true);
 		}
 		// #28175 ReOpen - End
 		getManagedBean().setHistoryList(updateCreatedUserName(resDTO.getRemarkList()));
 		getManagedBean().setCatCode(catCode);
 		RequestContext.getCurrentInstance().execute("remarkHisCatCodePopup.show()");
+	}
+	//28175
+	private boolean hasSupplierRole() {
+		String[] roles = { SupplierManagementConst.BASIC_SUPPLIER_ADMIN, SupplierManagementConst.BASIC_SUPPLIER_USER,
+				SupplierManagementConst.MOF_SUPPLIER_ADMIN, SupplierManagementConst.MOF_SUPPLIER_USER,
+				RoleCode.FL_USER.value(), SupplierManagementConst.SUPPLIER_ADMIN,
+				SupplierManagementConst.SUPPLIER_USER, RoleCode.SUPPLIER_TEMP.value(),
+				RoleCode.G2G_SUPPLIER_ADMIN.value(), RoleCode.G2G_SUPPLIER_USER.value() };
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
 	private List<PmRemarkCategory> updateCreatedUserName(List<PmRemarkCategory> remarkList) {
@@ -682,4 +716,21 @@ public class ViewSuppProfileBackingBean extends
 		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	} 
 	//31033 end
+	//35336 START
+	/**
+	 * Check whether the rejected application was expired
+	 * compare to no. of days allowed to resubmit after rejected
+	 * @param SmAppl appl
+	 * @return Boolean
+	 */
+	public Boolean checkRejectedApplExpired(SmAppl appl){
+		Boolean isExpired = false;
+		if(appl.getApplId() != null) {
+			if(!SmApplicationUtil.isRejectedApplValidForResubmission(appl)) {
+				isExpired = true;
+			}
+		}		
+		return isExpired;
+	}
+	//35336 END
 }

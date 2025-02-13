@@ -69,6 +69,7 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_EVALUATION_TYPE,
 						QTFieldConst.FIELD_QT_CONTRACT_TYPE,
 						QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+						QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
 						QTFieldConst.FIELD_QT_ZONE_COVERAGE,
 						QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 						QTFieldConst.FIELD_QT_REQUIRED_MINIS_SPEC_APPROVAL,
@@ -87,7 +88,10 @@ public class QTFieldMapper {
 						QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 						QTFieldConst.FIELD_QT_ZONE_COVERAGE,
 						QTFieldConst.FIELD_QT_EVALUATION_TYPE,
-						QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+						//Reopen #25726 note 286 - issue 1
+						//remove because it will impact calculation for estimation price
+						//QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+						//QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
 						QTFieldConst.FIELD_QT_REQUIRED_MINIS_SPEC_APPROVAL,
 						QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FIELD_QT_DOCUMENTS}),
@@ -101,7 +105,10 @@ public class QTFieldMapper {
 				QTFieldConst.FIELD_QT_PROCUREMENT_TYPE_CAT_ID,
 				QTFieldConst.FIELD_QT_EXISTING_CONTRACT,
 				QTFieldConst.FIELD_QT_EVALUATION_TYPE,
-				QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+				//Reopen #25726 note 286 - issue 1
+				//remove because it will impact calculation for estimation price
+				//QTFieldConst.FIELD_QT_FULFILMENT_TYPE,
+				//QTFieldConst.FIELD_QT_CONTRACT_DURATION,// Reopen 25726 note 271- Issue 6 
 				QTFieldConst.FIELD_QT_DEDUCTIONPAYMENT,
 				QTFieldConst.FIELD_QT_DOCUMENTS}),
 							      
@@ -155,8 +162,7 @@ public class QTFieldMapper {
         // Pending QT Publication
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { 
-						QTFieldConst.FIELD_QT_TITLE,
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
+						QTFieldConst.FIELD_QT_TITLE,//#21692 remove Proposal Validity
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
 						QTFieldConst.FIELD_QT_DOCUMENTS,
@@ -190,8 +196,7 @@ public class QTFieldMapper {
         //Proposal Preparation 
 		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
 				new String[] { 
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
-						QTFieldConst.FIELD_QT_PUBLISH_PERIOD}),
+						QTFieldConst.FIELD_QT_PUBLISH_PERIOD}),//#21692 remove Proposal Validity
 					
 		// QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE
 		QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE,
@@ -212,6 +217,10 @@ public class QTFieldMapper {
 			
 		// Pending Consolidation Report
 		QT_CONSOLIDATION_REPORT(QTStatusConst.QT_CONSOLIDATION_REPORT,
+						QT_CLOSED.value() ),
+						
+		// Pending Recommendation (Revise Briefing Paper)
+		QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER,
 						QT_CLOSED.value() ),
 
 		// Supplier Finalization
@@ -264,15 +273,18 @@ public class QTFieldMapper {
 			}
 			return null;
 		}
-		private static String[] merge(String[] arr1, String[] arr2){//#25037
-			List<String> merged = new ArrayList<String>(Arrays.asList(arr1));
+
+		// 25037 - start
+		private static String[] merge(String[] arr1, String[] arr2) {
+			List<String> merged = new ArrayList<>(Arrays.asList(arr1));
 			merged.addAll(Arrays.asList(arr2));
 			String[] mergedArr = new String[merged.size()];
-			for(int i=0;i<mergedArr.length;i++){
+			for (int i = 0; i < mergedArr.length; i++) {
 				mergedArr[i] = merged.get(i);
 			}
 			return mergedArr;
 		}
+		// 25037 - end
 	}
 
 	/**

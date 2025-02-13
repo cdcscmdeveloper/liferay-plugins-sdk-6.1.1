@@ -29,8 +29,8 @@
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
 			<td>
-				<!-- #12483 - START -->
-				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
+				<!-- #12483 - START, #34892 -->
+				<ac:smReviseReason bBean="#{backingBean}"/>
 				<!-- #12483 - END -->
 				<h:inputHidden value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
@@ -38,7 +38,7 @@
 						partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						update=":form:tt:approverAppDialog"
-						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
+						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 						action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approverAppDialog')}" /> <!-- 29727 -->
 					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 						update=":form:tt:approverRejDialog" partialSubmit="true"
@@ -46,15 +46,18 @@
 						oncomplete="blockWidget.hide()"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 					<!-- #12483 - START -->
+					<!-- #31043 - START -->
 						<ui:repeat var="bpmAction" value="#{backingBean.managedBean.bpmActions}">
 							<h:panelGroup rendered="#{bpmAction == 'REVISE'}">
 								<p:commandButton value="#{lbl['lbl.sm.button.revise']}"
 								update=":form:tt:approverRevDialog" partialSubmit="true"
+								disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
 								process="@this" onstart="blockWidget.show()"
 								oncomplete="blockWidget.hide()"
 								action="#{backingBean.assignFinalApproveOrReject('approverRevDialog')}" />
 							</h:panelGroup>	
 						</ui:repeat>
+					<!-- #31043 - END -->
 					<!-- #12483 - END -->
 				</div> <c:if
 					test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
@@ -236,7 +239,7 @@
 		okAction="backingBean.assignFinalApproveOrReject('approverAppDialog')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approverAppDialog"/>
 	<!-- END #29727 -->
 </ui:composition>

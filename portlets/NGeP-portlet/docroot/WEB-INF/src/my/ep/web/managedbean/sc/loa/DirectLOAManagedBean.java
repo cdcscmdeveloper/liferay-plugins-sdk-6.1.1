@@ -361,11 +361,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	Map<String, Map<Long, Map<Long, Map<Long, String>>>> mapCatCode;
 	// #29468 
 	
-	// #25726 START
-	public BigDecimal limit = new BigDecimal(500000);
-	public boolean AgreementReqChange = false;
-	public boolean above500K = true;
-	// #25726 END
+	// #25726 START #Sqube Vulnerability Minor G47 start
+	private BigDecimal limit = new BigDecimal(500000);
+	private boolean AgreementReqChange = false;
+	private boolean above500K = true;
+	private boolean fullfilmentTypeChange = false; 
+	private boolean requiredAgreementChange = false; 
+	// #25726 END #Sqube Vulnerability Minor G47 end
 	
 	// Bug #33674@Syazani - Start
 	private Long supplierBankId = null;
@@ -2054,6 +2056,22 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	public void setAbove500K(boolean above500k) {
 		above500K = above500k;
+	}
+	
+	public boolean isFullfilmentTypeChange() {
+		return fullfilmentTypeChange;
+	}
+
+	public void setFullfilmentTypeChange(boolean fullfilmentTypeChange) {
+		this.fullfilmentTypeChange = fullfilmentTypeChange;
+	}
+
+	public boolean isRequiredAgreementChange() {
+		return requiredAgreementChange;
+	}
+
+	public void setRequiredAgreementChange(boolean requiredAgreementChange) {
+		this.requiredAgreementChange = requiredAgreementChange;
 	}
 	
 	// #25726 END

@@ -47,8 +47,9 @@
 			<p:tab title="#{lbl['lbl.sm.catCodeStepLbl']}">
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</p:tab>
-			<c:if
-				test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<!-- #26671 - Site Visit Grouping Enhancement - 28775 -->
+			<c:if test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S' 
+						or backingBean.managedBean.specialCategoryRechecked}">
 				<p:tab title="#{lbl['lbl.sm.factoryStepLbl']}">
 					<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 				</p:tab>

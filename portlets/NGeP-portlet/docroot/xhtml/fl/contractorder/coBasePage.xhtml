@@ -68,9 +68,10 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
+		<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null
+						or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmView
 						or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" /></td>
 				<td colspan="4" style="text-align: right">
 				<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
@@ -118,7 +119,8 @@
 						value="#{lbl['lbl.fl.yep.proceed']}" 
 						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
-						disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}">
+						disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
 					</p:commandButton>
 					<!-- 28375 end -->
@@ -127,7 +129,8 @@
 						value="#{lbl['lbl.fl.yep.carryForward']}"
 						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
-						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
+						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" 
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
 					<!-- 29387 start -->

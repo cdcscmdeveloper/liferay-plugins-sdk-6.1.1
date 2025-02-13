@@ -94,7 +94,7 @@
 							value="#{registrationBackingBean.managedBean.smSupp.regNo}" converter="toUpperCaseConverter"
 							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew or registrationBackingBean.managedBean.companyValidWithSSM}"
 							size="40" label="#{lbl['lbl.sm.businessregno']}" >
-							<p:ajax event="blur" update="regNoPanelId" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" />
+							<p:ajax event="change" update="@form" process="@form" listener="#{registrationBackingBean.removeRegNoWhiteSpace}" /> <!-- #36710 -->
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
@@ -155,7 +155,8 @@
 			<p:commandButton id="btnNext" value="#{lbl['lbl.sm.next']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="float:right;"
 			disabled="#{registrationBackingBean.managedBean.applType == null}"
-				action="#{registrationBackingBean.validateWithSSM}" update="@all" rendered="#{!registrationBackingBean.managedBean.companyValidWithSSM}"/>
+				action="#{registrationBackingBean.validateWithSSM}" update="@all" rendered="#{!registrationBackingBean.managedBean.companyValidWithSSM}"
+				listener="#{registrationBackingBean.regNoValidity}"/>
 		
 			<p:commandButton value="#{lbl['lbl.sm.prev']}" style="float:left;"
 			action="#{registrationBackingBean.returnToTermAndCondition}"
@@ -191,8 +192,10 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.new.business.regNo']}" />
 				</f:facet>
-				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" rendered ="#{!empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"/> 
-				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered ="#{empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" /> 
+				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" 
+					rendered ="#{!empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"/> 
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" 
+					rendered ="#{empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" /> 
 			</p:column>
 			
 			<p:column  styleClass="column-align-center">

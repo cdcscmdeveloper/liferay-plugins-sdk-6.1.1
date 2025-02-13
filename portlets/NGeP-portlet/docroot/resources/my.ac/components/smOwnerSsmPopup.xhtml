@@ -26,7 +26,7 @@
 				style="overflow-wrap: break-word;">
 				
  				<c:choose>
-					<c:when test="#{!cc.attrs.bBean.managedBean.dontGetSsmData}"> 
+					<c:when test="#{!cc.attrs.bBean.managedBean.disAllowOwnerEdit}"> 
 						<h:outputText value="#{cc.attrs.bBean.managedBean.termAndConditionCheckOwner}" escape="false" />
 						<br /> &#160;&#160;&#160;&#160;&#160;a.
 						<p:commandLink update="#{cc.attrs.btnOkUpdate}"
@@ -47,7 +47,7 @@
  				</c:when>
 				<c:otherwise>
 					<h:outputText
-							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}" rendered="#{!cc.attrs.bBean.managedBean.preRegistration}"
+							value="#{lbl['lbl.sm.term.and.condition.checkowner.new']}"
 							escape="false" />
 				</c:otherwise>
 				</c:choose> 

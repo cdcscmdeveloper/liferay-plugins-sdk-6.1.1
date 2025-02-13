@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -161,6 +162,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//25638 - Start.
 	private List<ScQtFinalizationRemarks> finalizationRemarks;
 	//25638 - End.
+	
+	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -1299,4 +1302,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.finalizationRemarks = finalizationRemarks;
 	}
 	//25638 - End.
+	
+	//#28777 & #29729 - Start
+	public List<SmSupplierBranch> getSupplierBranchList() {
+		return supplierBranchList;
+	}
+
+	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
+		this.supplierBranchList = supplierBranchList;
+	}
+	//#28777 & #29729 - End
 }

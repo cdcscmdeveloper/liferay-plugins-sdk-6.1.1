@@ -69,6 +69,9 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_SUBMIT_TO_DT = "SUBMITTODT";
 	public static final String PARAM_LOGIN = "LOGIN";
 	public static final String PARAM_DECISION_TYPE = "PSTATUSID";//#21692
+	public static final String QUOTATION_TENDER_TITLE ="PQTTITLE";//#21692
+	
+	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
 
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
@@ -179,31 +182,35 @@ public class QtReportConst implements Serializable {
 	
 	//#35015-start
 	/**
-	 * @return the SC_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 * @return the scEvaluationCommitteeRptValWip
 	 */
-	public String getSC_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
-		return SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	public String getScEvaluationCommitteeRptValWip() {
+	    return SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
 	}
+
 	/**
-	 * @return the SC_OPENING_COMMITTEE_RPT_VAL_WIP
+	 * @return the scOpeningCommitteeRptValWip
 	 */
-	public String getSC_OPENING_COMMITTEE_RPT_VAL_WIP() {
-		return SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+	public String getScOpeningCommitteeRptValWip() {
+	    return SC_OPENING_COMMITTEE_RPT_VAL_WIP;
 	}
+
 	/**
-	 * @return the SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 * @return the scTechinicalEvaluationCommitteeRptValWip
 	 */
-	public String getSC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
-		return SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	public String getScTechinicalEvaluationCommitteeRptValWip() {
+	    return SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
 	}
+
 	/**
-	 * @return the SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 * @return the scFinancialEvaluationCommitteeRptValWip
 	 */
-	public String getSC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
-		return SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	public String getScFinancialEvaluationCommitteeRptValWip() {
+	    return SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
 	}
 	//#35015 -end
-	public String getSC_BRIEFING_PAPER_RPT_VAL_WIP() {
-		return SC_BRIEFING_PAPER_RPT_VAL_WIP;
+
+	public String getScBriefingPaperRptValWip() {
+	    return SC_BRIEFING_PAPER_RPT_VAL_WIP;
 	}
 }
