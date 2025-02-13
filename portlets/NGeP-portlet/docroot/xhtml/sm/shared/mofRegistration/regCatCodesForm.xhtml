@@ -22,12 +22,12 @@
 			rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<ac:paginator for="catApprDt" />
-			<!-- #37605 -->
-			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;vertical-align: top;">
+			
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal;vertical-align: top;">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal">
 				<!-- #28175 Reopen #141 Start -->
 				<c:choose>
 					<c:when test="#{not backingBean.managedBean.smAppl.activeAppl}">
@@ -61,19 +61,19 @@
 				</p:outputLabel>
 				<!-- 30865,32298 End -->
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.no.available']}"
 					rendered="#{empty aprvdCatBean.otherDesc}" />
 				<h:outputText value="#{aprvdCatBean.otherDesc}"
 					rendered="#{not empty aprvdCatBean.otherDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal;vertical-align: top;">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" style="width : 15%;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!aprvdCatBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{aprvdCatBean.specialCategory}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal;vertical-align: top;">
+			<p:column headerText="#{lbl['lbl.sm.status']}" style="width : 10%;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}"
