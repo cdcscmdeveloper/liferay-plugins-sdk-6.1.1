@@ -111,6 +111,7 @@ import my.ep.persistence.entity.sm.SmRvAssistOfficer;
 import my.ep.persistence.entity.sm.SmRvCatCode;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
+import my.ep.web.constant.report.SmReportConst;
 import org.primefaces.event.FileUploadEvent;
 //#34031 End
 
@@ -3031,7 +3032,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void downloadRevisitHistory() {
 		try {
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put("paramConst", "value");
+			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
 			generateReport("reportName", paramMap);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",

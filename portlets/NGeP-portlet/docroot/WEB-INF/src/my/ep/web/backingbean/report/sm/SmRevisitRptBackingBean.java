@@ -26,8 +26,8 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	public void generateReport() {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		params.put(SmReportConst.PARAM_ZONE, this.getManagedBean().getZone());
-		if (null != this.getManagedBean().getSelectedSupplier()) {
-			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedSupplier().getSupplierId()));
+		if (null != this.getManagedBean().getSelectedOrgProfile()) {
+			params.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId()));
 		}
 		if (null != this.getManagedBean().getRevisitOfficer()) {
 			params.put(SmReportConst.PARAM_SVO_USER, String.valueOf(this.getManagedBean().getRevisitOfficer().getUserId()));
@@ -41,7 +41,7 @@ public class SmRevisitRptBackingBean extends SmReportBackingBean<SmRevisitRptMan
 	public void resetSearch() {
 		this.getManagedBean().setZone(null);
 		this.getManagedBean().setRevisitOfficer(null);
-		this.getManagedBean().setSelectedSupplier(null);
+		this.getManagedBean().setSelectedOrgProfile(null);
 		Calendar fromVisitDate = Calendar.getInstance();
 		fromVisitDate.set(fromVisitDate.get(Calendar.YEAR), 00, 01, 0, 00, 0);
 		this.getManagedBean().setVisitDateFrom(fromVisitDate.getTime());
