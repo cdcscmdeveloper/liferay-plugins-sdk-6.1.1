@@ -344,9 +344,5 @@
 		btnView="true"
 		startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
 		endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-		isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"
-		rendered="#{isHiddenDownloadButtonDAHistory}" />
-	<ac:disciplinaryActionHistory
-		voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"
-		rendered="#{!isHiddenDownloadButtonDAHistory}" />
+		isWarning="#{viewSuppProfileBackingBean.managedBean.warning}" />
 </ui:composition>

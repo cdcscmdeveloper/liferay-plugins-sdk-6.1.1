@@ -112,7 +112,7 @@
 					style="color:red; font-weight:bold;"
 					rendered="#{item.scBidSupplier.smSupplier.disciplinaryActions}"
 					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(item.scBidSupplier.smSupplier)}"
-					process="@this" partialSubmit="true" update=":form">
+					process="@this" update="@([id$=disciplinaryActionHistoryDlgId])">
 					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 						styleClass="warning" />
 				</p:commandLink>

@@ -151,6 +151,7 @@
 			<ui:remove>
 				31101 - Added Disciplinary Action validation
 			</ui:remove>
+			<ui:param name="isDisciplinaryAction" value="#{itemSupplier.supplier.disciplinaryActions and !itemSupplier.supplier.warningDA}"/>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
@@ -158,9 +159,8 @@
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or 
-					  									itemSupplier.supplier.disciplinaryActions) or 
-					  									suppFinalBiddingBackingBean.disableRadioButtonIfSupplierBranchDeleted(itemSupplier.supplier)
-					  									or suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />	<ui:remove> #28777#29729, 21692 </ui:remove>			
+					  									isDisciplinaryAction) or 
+					  									suppFinalBiddingBackingBean.supplierRejectEPV(itemSupplier.scQtProposal)}" />	<ui:remove> 21692 </ui:remove>			
 		</p:dataTable>
 	</p:panel>
 

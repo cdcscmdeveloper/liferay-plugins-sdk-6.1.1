@@ -155,15 +155,15 @@
 			<ui:remove>
 				31101 - Added Disciplinary Action filter
 			</ui:remove>
+			<ui:param name="isDisciplinaryAction" value="#{price.scBidSupplier.smSupplier.disciplinaryActions and !price.scBidSupplier.smSupplier.warningDA}"/>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
 					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions) or 
-					  									suppFinalBiddingBackingBean.disableRadioButtonIfSupplierBranchDeleted(price.scBidSupplier.smSupplier)
-					  										or suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />	<ui:remove> #28777#29729, 21692 </ui:remove>	
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or isDisciplinaryAction) or 
+					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />	<ui:remove> 21692 </ui:remove>	
 		</p:dataTable>
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
