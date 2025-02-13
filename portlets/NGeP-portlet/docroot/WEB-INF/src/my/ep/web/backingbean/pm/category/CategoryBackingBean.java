@@ -1720,7 +1720,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
-					returnUrl = "/xhtml/pm/category/search.xhtml";
+					returnUrl = "/xhtml/pm/category/search.xhtml?faces-redirect=true"; //#29665
 					result = resDTO.isSuccessful();
 					FacesContext
 							.getCurrentInstance()
