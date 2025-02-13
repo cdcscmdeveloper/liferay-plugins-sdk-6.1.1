@@ -371,10 +371,98 @@
 
 	   	<p:spacer width="2" />	
 		<!-- END LOG : 24333, by Putra 08082019 -->	
-	<!-- #13847 start -->
+				
+		<!-- START LOG : 13847, by Fahmi 22032019 -->
+		<!-- START TABLE WAIVER -->
+		<ui:include	src="defermentBond.xhtml" />
+		<!-- END TABLE WAIVER -->
+		<!-- END LOG : 13847, by Fahmi 22032019 -->
+
+		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="true" resizable="false"
+			width="700px" height="350px" styleClass="pop_up_top"
+			header="#{lbl['lbl.txt.choose.files']}"
+			onShow="singleUploadListener(performanceBondUploadWV);">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"  dragDropSupport="false"
+			   	fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
+			    mode="advanced" id="performanceFileuploadId" multiple="false"
+			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="performanceBondUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"  
+				update=":form:tableBond" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadBondDlg.hide();" >
+			</p:fileUpload>
+			<f:facet name="footer">
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadBondDlg.hide();" />
+	   		</div>
+	   		</f:facet>
+		</p:dialog>
+	    <p:confirmDialog id="dlgPerformDel" widgetVar="dlgPerformDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+	   		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableBond, :form:delPdBtn" partialSubmit="true"
+	         process="@this" actionListener="#{ctBackingBean.removePerformanceBond()}" oncomplete="dlgPerformDel.hide();">
+	         <f:setPropertyActionListener
+				target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+			
+	   <p:confirmDialog id="deleteBondAttachmentDlg" widgetVar="deleteBondAttachmentDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true" update=":form:tableBond"
+		    	actionListener="#{ctBackingBean.deleteBondAttachement()}" immediate="true"
+		    	oncomplete="deleteBondAttachmentDlg.hide();"/>
+		 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteBondAttachmentDlg.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+				<!-- START Bond Supplemental, by Putra 10112019 -->
+		
+		<p:dialog id="uploadBondSplDlg" widgetVar="uploadBondSplDlg" modal="true" resizable="false"
+			width="700px" height="350px" styleClass="pop_up_top"
+			header="#{lbl['lbl.txt.choose.files']}"
+			onShow="singleUploadListener(performanceBondUploadWV);">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"  dragDropSupport="false"
+			   	fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
+			    mode="advanced" id="performanceFileuploadSplId" multiple="false"
+			 	sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"  showButtons="false"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}" widgetVar="performanceBondUploadWV"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"  
+				update=":form:tableBondsupplemental" label="#{lbl['lbl.btn.choose']}" oncomplete="uploadBondSplDlg.hide();" >
+			</p:fileUpload>
+			<f:facet name="footer">
+			<div class="ppRightBtn">
+			    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadBondSplDlg.hide();" />
+	   		</div>
+	   		</f:facet>
+		</p:dialog>
+	    <p:confirmDialog id="dlgPerformSplDel" widgetVar="dlgPerformSplDel" message="#{lbl['lbl.msg.confirm.delete']}" 	
+	   		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:tableBondsupplemental, :form:delPdBtnSpl" partialSubmit="true"
+	         process="@this" actionListener="#{ctBackingBean.removePerformanceBond()}" oncomplete="dlgPerformSplDel.hide();">
+	         <f:setPropertyActionListener
+				target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" /></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformSplDel.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+			
+	   <p:confirmDialog id="deleteBondAttachmentSplDlg" widgetVar="deleteBondAttachmentSplDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
+			severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+		    <p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this" partialSubmit="true" update=":form:tableBondsupplemental"
+		    	actionListener="#{ctBackingBean.deleteBondAttachement()}" immediate="true"
+		    	oncomplete="deleteBondAttachmentSplDlg.hide();"/>
+		 	<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteBondAttachmentSplDlg.hide();" type="button" />
+		</div>
+		</p:confirmDialog>
+		
 	</p:panel>
-	<ui:include	src="defermentBond.xhtml" />
-	<!-- #13847 end -->
+	
 </ui:composition>
 
 

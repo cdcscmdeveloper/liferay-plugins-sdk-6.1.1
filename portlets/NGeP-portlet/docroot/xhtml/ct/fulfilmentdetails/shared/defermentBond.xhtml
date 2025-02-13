@@ -11,8 +11,6 @@
 }
 </style>
 
-	<!-- START LOG : 13847, by Fahmi 22032019 -->
-	<!-- START TABLE WAIVER -->
 	<p:panel id="historyPanel" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.pb.waiver.table.title']}" />
@@ -33,7 +31,6 @@
 				<p:ajax event="change" update="@all"
 					listener="#{ctBackingBean.chkBondWaiverAction}" process="@this" />
 
-				<!--  update=":form:waiverPanelId" -->
 			</p:selectBooleanCheckbox>
 			<h:outputFormat id="waiverId"
 				value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
@@ -42,7 +39,6 @@
 			</h:outputFormat>
 		</h:panelGrid>
 
-		<!-- 13847 start -->
 		<p:outputPanel id="waiverPanelId"
 			rendered="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}">
 			<p:dataGrid id="dataGridId"
@@ -55,8 +51,6 @@
 								value="#{lbl['lbl.ct.pb.waiver.start.date']}"
 								styleClass="required" /></td>
 						<td><c:choose>
-								<!-- <c:when test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"> -->
-								<!-- Enhancement 13847 - start -->
 								<c:when
 									test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting 
 								or ctBackingBean.managedBean.disableDeferment}">
@@ -72,7 +66,6 @@
 								</c:when>
 								<c:otherwise
 									test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
-									<!-- Enhancement 13847 - shaqimi start 28/10/2021 -->
 									<p:calendar id="startDate"
 										value="#{bondDeferment.waiverStartDate}"
 										styleClass="calendarDateField" size="9" showOn="button"
@@ -83,7 +76,6 @@
 										<p:ajax event="dateSelect"
 											listener="#{ctBackingBean.checkPerformanceBondExceedDate}" />
 									</p:calendar>
-									<!-- Enhancement 13847 - shaqimi end 28/10/2021 -->
 								</c:otherwise>
 							</c:choose> <ac:iconTooltip
 								value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}" />
@@ -92,12 +84,9 @@
 								value="#{lbl['lbl.ct.pb.waiver.end.date']}"
 								styleClass="required" /></td>
 						<td colspan="2"><c:choose>
-								<!-- <c:when test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"> -->
-								<!-- Enhancement 13847 - start -->
 								<c:when
 									test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting 
 								or ctBackingBean.managedBean.disableDeferment}">
-									<!-- Enhancement 13847 - end -->
 									<p:calendar id="endDate" value="#{bondDeferment.waiverEndDate}"
 										styleClass="calendarDateField" size="9" readonlyInput="true"
 										navigator="true" disabled="true"
@@ -117,7 +106,7 @@
 											listener="#{ctBackingBean.checkPerformanceBondExceedDate}" />
 									</p:calendar>
 								</c:otherwise>
-							</c:choose> <!-- #13847 - start --> <ac:iconTooltip
+							</c:choose> <ac:iconTooltip
 								value="#{lbl['lbl.ct.tooltip.waiver.pb.end.date']}" /> <!-- #13847 - start -->
 						</td>
 					</tr>
@@ -125,22 +114,14 @@
 						<td><p:outputLabel id="waiverReferenceNo"
 								value="#{lbl['lbl.ct.pb.waiver.reference.no']}"
 								styleClass="required" /></td>
-						<td>
-							<!-- #13847 - start --> <p:inputText id="referenceNo"
-								maxlength="20" style="width:130px;"
-								value="#{bondDeferment.referenceNo}"
+						<td><p:inputText id="referenceNo" maxlength="20"
+								style="width:130px;" value="#{bondDeferment.referenceNo}"
 								disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 			  				or ctBackingBean.managedBean.disableDeferment}">
-								<!-- #13847 - end -->
-							</p:inputText>
-						</td>
-						<td>
-							<!-- <h:outputLabel value="#{lbl['lbl.ct.bond.waiver.letter']}"  styleClass="required" /> -->
-							<h:outputLabel value="#{lbl['lbl.ct.pb.waiver.letter']}"
-								styleClass="required" /> <!-- Enhancement 13847 - shaqimi -->
-						</td>
+							</p:inputText></td>
+						<td><h:outputLabel value="#{lbl['lbl.ct.pb.waiver.letter']}"
+								styleClass="required" /></td>
 						<td><p:outputPanel id="uploadDocWaiver">
-								<!-- #13847 - start -->
 
 								<p:commandButton
 									oncomplete="uploadWaiverDlg.show();return false;"
@@ -150,10 +131,8 @@
 									and ctBackingBean.managedBean.ctContractAmount.bondReq}"
 									disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
 										or ctBackingBean.managedBean.disableDeferment}" />
-								<!-- #13847 - end -->
 								<ac:iconTooltip
 									value="#{lbl['lbl.ct.tooltip.pb.waiver.letter']}" />
-								<!-- Enhancement 13847 - shaqimi -->
 							</p:outputPanel></td>
 						<td>
 							<table>
@@ -178,8 +157,7 @@
 								</tr>
 							</table>
 						</td>
-						<td>
-							<!-- #13847 - start --> <p:commandButton id="addwaiverBtn"
+						<td><p:commandButton id="addwaiverBtn"
 								value="#{lbl['lbl.btn.add']}" process="@all"
 								action="#{ctBackingBean.validationBondDefermentBeforeHistory()}"
 								update="@all" partialSubmit="true"
@@ -190,13 +168,11 @@
 				</table>
 			</p:dataGrid>
 		</p:outputPanel>
-		<!-- 13847 end -->
 		<br></br>
 
 	</p:panel>
 	<br></br>
 
-	<!-- Enhancement 13847 start -->
 	<p:panel id="newHistoryPanel" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText
@@ -295,128 +271,7 @@
 		</p:dataTable>
 	</p:panel>
 	<br />
-	<!-- Enhancement 13847 end -->
 
-
-	<!-- END TABLE WAIVER -->
-	<!-- END LOG : 13847, by Fahmi 22032019 -->
-
-	<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="true"
-		resizable="false" width="700px" height="350px" styleClass="pop_up_top"
-		header="#{lbl['lbl.txt.choose.files']}"
-		onShow="singleUploadListener(performanceBondUploadWV);">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" dragDropSupport="false"
-			fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
-			mode="advanced" id="performanceFileuploadId" multiple="false"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			showButtons="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			widgetVar="performanceBondUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-			update=":form:tableBond" label="#{lbl['lbl.btn.choose']}"
-			oncomplete="uploadBondDlg.hide();">
-		</p:fileUpload>
-		<f:facet name="footer">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
-					ajax="false" onclick="uploadBondDlg.hide();" />
-			</div>
-		</f:facet>
-	</p:dialog>
-	<p:confirmDialog id="dlgPerformDel" widgetVar="dlgPerformDel"
-		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
-		closable="true" appendToBody="true"
-		header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				update=":form:tableBond, :form:delPdBtn" partialSubmit="true"
-				process="@this"
-				actionListener="#{ctBackingBean.removePerformanceBond()}"
-				oncomplete="dlgPerformDel.hide();">
-				<f:setPropertyActionListener
-					target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" />
-			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="dlgPerformDel.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
-
-	<p:confirmDialog id="deleteBondAttachmentDlg"
-		widgetVar="deleteBondAttachmentDlg"
-		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
-		closable="true" appendToBody="true"
-		header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-				partialSubmit="true" update=":form:tableBond"
-				actionListener="#{ctBackingBean.deleteBondAttachement()}"
-				immediate="true" oncomplete="deleteBondAttachmentDlg.hide();" />
-			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="deleteBondAttachmentDlg.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
-	<!-- START Bond Supplemental, by Putra 10112019 -->
-
-	<p:dialog id="uploadBondSplDlg" widgetVar="uploadBondSplDlg"
-		modal="true" resizable="false" width="700px" height="350px"
-		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-		onShow="singleUploadListener(performanceBondUploadWV);">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;" dragDropSupport="false"
-			fileUploadListener="#{ctBackingBean.fileUploadPerformance}"
-			mode="advanced" id="performanceFileuploadSplId" multiple="false"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			showButtons="false"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			widgetVar="performanceBondUploadWV"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-			update=":form:tableBondsupplemental" label="#{lbl['lbl.btn.choose']}"
-			oncomplete="uploadBondSplDlg.hide();">
-		</p:fileUpload>
-		<f:facet name="footer">
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
-					ajax="false" onclick="uploadBondSplDlg.hide();" />
-			</div>
-		</f:facet>
-	</p:dialog>
-	<p:confirmDialog id="dlgPerformSplDel" widgetVar="dlgPerformSplDel"
-		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
-		closable="true" appendToBody="true"
-		header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}"
-				update=":form:tableBondsupplemental, :form:delPdBtnSpl"
-				partialSubmit="true" process="@this"
-				actionListener="#{ctBackingBean.removePerformanceBond()}"
-				oncomplete="dlgPerformSplDel.hide();">
-				<f:setPropertyActionListener
-					target="#{ctBackingBean.managedBean.selectAll}" value="#{false}" />
-			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="dlgPerformSplDel.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
-
-	<p:confirmDialog id="deleteBondAttachmentSplDlg"
-		widgetVar="deleteBondAttachmentSplDlg"
-		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
-		closable="true" appendToBody="true"
-		header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@this"
-				partialSubmit="true" update=":form:tableBondsupplemental"
-				actionListener="#{ctBackingBean.deleteBondAttachement()}"
-				immediate="true" oncomplete="deleteBondAttachmentSplDlg.hide();" />
-			<p:commandButton value="#{lbl['lbl.btn.no']}"
-				onclick="deleteBondAttachmentSplDlg.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
-
-	<!-- Enhancement 13847 - start -->
 	<p:dialog id="uploadWaiverDlg" widgetVar="uploadWaiverDlg" modal="true"
 		resizable="false" width="700px" height="350px" styleClass="pop_up_top"
 		header="#{lbl['lbl.txt.choose.files']}"
@@ -515,5 +370,4 @@
 				onclick="addPBConfirmDlg.hide()" type="button" />
 		</div>
 	</p:confirmDialog>
-	<!-- Enhancement 13847 - end -->
 </ui:composition>
