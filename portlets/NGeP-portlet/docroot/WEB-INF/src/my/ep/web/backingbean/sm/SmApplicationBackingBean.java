@@ -4673,6 +4673,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		// #37779 - Start
 		if (getManagedBean().isSupplierUser()) {
+			SmApplicationUtil.validateBankBeforeSave(true,
+					getManagedBean(), currentTab);
 			SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 		}
 		// #37779 - End
