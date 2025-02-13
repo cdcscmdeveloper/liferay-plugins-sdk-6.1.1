@@ -48,21 +48,21 @@
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td>
 					<!-- START 27465 : Disciplinary Action 26238 -->
-					<p:calendar showOn="button" navigator="true"
+			<!-- 	<p:calendar showOn="button" navigator="true"
 							display="inline" required="true" readonlyInput="true"
 							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							mindate="#{supplierDataMaintenanceBackingBean.getMinDate(supplierDataMaintenanceBackingBean.managedBean.smMofAccount)}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
 							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate ge CommonConstants.CURRENT_DATE}" >
 							<p:ajax event="change" process="@this" partialSubmit="true"/>
-					</p:calendar>
+					</p:calendar>  -->	
 					<p:calendar navigator="true"
 							display="inline" required="true" readonlyInput="true" disabled="true"
-							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDateexp"
+							label="#{lbl['lbl.sm.mofacc.expiry.date']}" id="expDate"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							mindate="#{CommonConstants.CURRENT_DATE}"
-							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}"
-							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate lt CommonConstants.CURRENT_DATE}" >
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smMofAccount.expDate}">
 							<p:ajax event="change" process="@this" partialSubmit="true"/>
 					</p:calendar>
 						<!-- END START 27465 : Disciplinary Action 26238 -->
@@ -99,8 +99,7 @@
 					<!-- 27857: Disciplinary Action - start - 26238 --><!-- #34626 - disabled -->
 					<p:selectBooleanCheckbox  value="#{supplierDataMaintenanceBackingBean.managedBean.warning}"
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.warningExist
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.warningExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -112,9 +111,7 @@
 					<!-- #32827 - disabled, #34626 -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCode}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or (supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCodeExist 
-							and !supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryActionCheckBox)
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.cancelCategoryCodeExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -126,8 +123,7 @@
 					<!-- #34626 - disabled -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.suspendRegistrationExist
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.suspendRegistrationExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -142,8 +138,7 @@
 					<!-- #34626 - disabled -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelRegistration}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -155,8 +150,7 @@
 					<!-- #34626 - disabled -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -168,8 +162,7 @@
 					<!-- #34626 - disabled -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancel}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancelExist
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.bumiputeraStatusCancelExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -186,7 +179,7 @@
 					<!-- #34626 - disabled -->
 					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.manufacturerStatusCancel}" 
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
-						or supplierDataMaintenanceBackingBean.managedBean.hasActiveDA}" style="float:left">
+						or supplierDataMaintenanceBackingBean.managedBean.manufacturerStatusCancelExist}" style="float:left">
 			            <p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 							update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -259,7 +252,7 @@
 				<td><p:inputTextarea autoResize="false" cols="100" rows="10" id="suspendRemark" 
 						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
 						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
-						maxlength="2500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
+						maxlength="2600" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
 						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" >
 					<!-- 26238: Disciplinary Action - start -->
 					<p:ajax process="@this" partialSubmit="true" update="@this"/>

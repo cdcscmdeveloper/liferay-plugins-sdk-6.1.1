@@ -109,6 +109,8 @@ public class QtReportConst implements Serializable {
 	public static final String LABEL_PROPOSAL_SUBMITTED  = "lbl.rpt.proposal.submitted";
 	// 14306 - End (Harun)
 	
+	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
+
 	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
@@ -218,38 +220,42 @@ public class QtReportConst implements Serializable {
 	//#21692 - end
 	
 	//#29580_14306 - start
-	public String getSC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL() {
+	public String getScQuotTenderProposalOfferSubmRptBySupplierVal() {//Changes by Idham(Sonarqube issue55)
 		return SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL;
 	}
 	//#29580_14306 - end
 	
 	//#35015-start
 	/**
-	 * @return the SC_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 * @return the scEvaluationCommitteeRptValWip
 	 */
-	public String getSC_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
-		return SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	public String getScEvaluationCommitteeRptValWip() {
+	    return SC_EVALUATION_COMMITTEE_RPT_VAL_WIP;
 	}
+
 	/**
-	 * @return the SC_OPENING_COMMITTEE_RPT_VAL_WIP
+	 * @return the scOpeningCommitteeRptValWip
 	 */
-	public String getSC_OPENING_COMMITTEE_RPT_VAL_WIP() {
-		return SC_OPENING_COMMITTEE_RPT_VAL_WIP;
+	public String getScOpeningCommitteeRptValWip() {
+	    return SC_OPENING_COMMITTEE_RPT_VAL_WIP;
 	}
+
 	/**
-	 * @return the SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 * @return the scTechinicalEvaluationCommitteeRptValWip
 	 */
-	public String getSC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
-		return SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	public String getScTechinicalEvaluationCommitteeRptValWip() {
+	    return SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
 	}
+
 	/**
-	 * @return the SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP
+	 * @return the scFinancialEvaluationCommitteeRptValWip
 	 */
-	public String getSC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP() {
-		return SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
+	public String getScFinancialEvaluationCommitteeRptValWip() {
+	    return SC_FINANCIAL_EVALUATION_COMMITTEE_RPT_VAL_WIP;
 	}
 	//#35015 -end
-	public String getSC_BRIEFING_PAPER_RPT_VAL_WIP() {
-		return SC_BRIEFING_PAPER_RPT_VAL_WIP;
+
+	public String getScBriefingPaperRptValWip() {
+	    return SC_BRIEFING_PAPER_RPT_VAL_WIP;
 	}
 }

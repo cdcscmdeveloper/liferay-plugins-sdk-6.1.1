@@ -11,7 +11,6 @@ import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.ProfileOfRegCompanyRptManagedBean;
@@ -63,12 +62,12 @@ public class ProfileOfRegCompanyRptBackingBean extends
 				// #32564 & #26238, #30824 - End
 			}
 		} else {
-			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getSmMofAccount().getMofNo()); //#30824
+			params.put(SmReportConst.PARAM_MOF_NO, getManagedBean().getSelectedMofAccount().getMofNo()); //#30824
 			params.put(SmReportConst.PARAM_SUPPLIER_TYPE, getManagedBean().getSupplierType());
 			// #32564 & #26238 & #30824 - Start
-			if(getManagedBean().getSmMofAccount().getSmSupplier() != null){
+			if(getManagedBean().getSelectedMofAccount().getSupplierId() != null){
 				params.put(SmReportConst.PARAM_SUPPLIER_ID,
-						String.valueOf(getManagedBean().getSmMofAccount().getSmSupplier().getSupplierId()));	
+						String.valueOf(getManagedBean().getSelectedMofAccount().getSupplierId()));	
 			}
 			// #32564 & #26238 & #30824 - End
 		}
@@ -93,6 +92,8 @@ public class ProfileOfRegCompanyRptBackingBean extends
 		// #23080 - end
 		// #29712 & #30824, #32564 - start
 		this.getManagedBean().setSelectedSupplier(null);
+		this.getManagedBean().setSelectedMofAccount(null);
+		this.getManagedBean().setSelectedBasicAccount(null);
 		// #29712 & #30824, #32564 - end
 	}
 	
@@ -107,9 +108,9 @@ public class ProfileOfRegCompanyRptBackingBean extends
 
 		if (StringUtils.isNotEmpty(getManagedBean().getRegType()) || getManagedBean().getRegType() != null) {
 			if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_G2G)) {
-				sb.append("recordStatus^1");
-				sb.append("|pmOrgValidity.recordStatus^1");
-				sb.append("|orgTypeCode.parameterType^");
+//				sb.append("recordStatus^1");  -- #30824
+//				sb.append("|pmOrgValidity.recordStatus^1"); -- #30824
+				sb.append("orgTypeCode.parameterType^");
 				sb.append(ParameterTypeConst.ORGANISATION_TYPES);
 
 				if (this.getManagedBean().getOrgTypeCode() != null) {
@@ -153,21 +154,21 @@ public class ProfileOfRegCompanyRptBackingBean extends
 			} else if (getManagedBean().getRegType().equalsIgnoreCase(SmReportConst.SM_REG_TYPE_MOF)) {
 				if (this.getManagedBean().getZone() != null) {
 					if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SEMENANJUNG")) {
-						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1"); //#30824
+						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^1"); //#30824
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SABAH")) {
-						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2"); //#30824
+						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^2"); //#30824
 					} else if (getManagedBean().getZone().toUpperCase().equalsIgnoreCase("SARAWAK")) {
-						sb.append("smSupplier.smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3"); //#30824
+						sb.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.pmZoneStates.pmZone.zoneId^3"); //#30824
 					}
 				}
 				//#32564 - start - ac:smReportSupplierType
 				if (getManagedBean().getSupplierType() != null && !getManagedBean().getSupplierType().equals("all")){
 					if(sb.length() != 0) sb.append("|");
-					sb.append("supplierType^" + this.getManagedBean().getSupplierType()); //#30824
+					sb.append("smAppl.supplierType^" + this.getManagedBean().getSupplierType()); //#30824
 				} else {
 					if(sb.length() != 0) sb.append("|");
-					sb.append("smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT //#30824
-							+ "*smSupplier.smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);//#30824
+					sb.append("smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONSULTANT //#30824
+							+ "*smAppl.supplierType^" + SupplierManagementConst.SUPP_TYPE_CONTRACTOR);//#30824
 				}
 				//#32564 - end
 			}

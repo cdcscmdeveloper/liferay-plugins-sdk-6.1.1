@@ -85,6 +85,7 @@
 							cols="170" rows="3" style=" margin-bottom:5px; width:866px;"
 							disabled="true" /></td>
 				</tr>
+				<c:if test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType != null}">
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.qt.old.validity.days']}" /></td>
@@ -100,11 +101,14 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 						</p:inputText></td>
 				</tr>
+				</c:if>
 			</table>
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true"
 			id="requestDetailsId">
+			<c:choose>
+			<c:when test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType != null}">
 			<table
 				style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
 
@@ -145,7 +149,7 @@
 								pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 						</p:inputText> <p:message id="approvalDateChairpersonMsg"
 							for="approvalDateChairperson" display="icon" /></td>
-					<c:if test="#{renderMOF eq true}">
+					<c:if test="#{renderMOF eq true and qTDetailBB.managedBean.scQtApprovalRequest.mofDate != null}">
 						<td style="width: 235px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /></td>
 						<td><p:calendar
@@ -225,7 +229,7 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeid"
-									value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}" disabled="true"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
@@ -328,7 +332,7 @@
 									</c:if></td>
 								<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 										id="decisiontypeidRq3"
-										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
+										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType.parameterId}"
 										label="#{lbl['lbl.sc.decision']}"
 										disabled="true"
 										style="width: 178px;margin-bottom: 5px;">
@@ -384,6 +388,39 @@
 						</p:inputText></td>
 				</tr>
 			</table>
+			</c:when>
+				<c:otherwise>
+					<table
+						style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+						<tr
+							style="background-color: #F0EFEF; text-align: left; font-size: 12px; text-indent: 0.5em;">
+							<th
+								style="width: 28%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+								<h:outputText value="#{lbl['lbl.sc.qt.type.reqdtls']}" />
+							</th>
+							<th
+								style="width: 11%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+								<h:outputText value="#{lbl['lbl.sc.from.value']}" />
+							</th>
+							<th
+								style="width: 11%; padding: 8px; font-weight: bold; border: 1px solid #dddddd;">
+								<h:outputText value="#{lbl['lbl.sc.to.value']}" />
+							</th>
+						</tr>
+						<tr>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{approvalBackingBean.getParameterDesc(qTDetailBB.managedBean.scQtApprovalRequest.approvalType)}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.originalValue}" />
+							</td>
+							<td style="padding: 5px; border: 1px solid #dddddd;"><h:outputText
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.changedValue}" />
+							</td>
+						</tr>
+					</table>
+				</c:otherwise>
+			</c:choose>
 		</p:panel>
 	</ui:define>
 </ui:composition>

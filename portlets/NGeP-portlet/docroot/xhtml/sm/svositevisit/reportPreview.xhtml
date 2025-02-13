@@ -4,12 +4,14 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:param name="viewFlag" value="true" />
 	
-	<!-- #12483 - START -->
-	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500">
+	<!-- #12483 - START, #34400 -->
+	<p:dialog widgetVar="submissionConfirmDlg" id="submissionConfirmDlg" modal="true" height="100" width="500"
+		header="#{lbl['lbl.btn.dialog.cofirm.header']}">
    			 #{lbl['lbl.sm.rptpreview.want.proceed/download.qmark']}	
    			<div align="right">
    			<!-- #32963 - start -->
@@ -17,13 +19,19 @@
 					<p:fileDownload value="#{svoSiteVisitBackingBean.downloadPOApprovalSiteVisitReport(null)}" />
 			</p:commandButton>
 			<!-- #32963 - end -->
-			<!--28775 - Site Visit Grouping Enhancement - 28775 -->
-			<p:commandButton value="#{lbl['lbl.btn.proceed']}" 
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide();submissionConfirmDlg.hide()"
-				action="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+			<!--28775 - Site Visit Grouping Enhancement - 28775, #34400 -->
+			<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="submissionConfirmDlg.hide(); confirmProceedDlg.show();"/>
 		</div>
 	</p:dialog>
 	<!-- #12483 - END -->
+	<ac:confirmationPopup id="confirmProceedDlg" widget="confirmProceedDlg"
+		okParam="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.sitevisit']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+	<!-- #34400 - end -->
 	
 	<p:dialog widgetVar="attachmentDeleteDlg" id="attachmentDeleteDlg" modal="true" height="100" width="500">
    			 #{svoSiteVisitBackingBean.managedBean.attachmentDeleteMsg}
@@ -45,7 +53,8 @@
 	
 			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
 				<!--28775 - Site Visit Grouping Enhancement - 28775 -->
-				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" oncomplete="rptDlg.show();" id="btnPreview" 
+					action="#{svoSiteVisitBackingBean.rptPreview(svTask.smSvTemplate)}" />
 			</p:column>
 			
 			<p:column>
@@ -143,32 +152,6 @@
 		</c:if>							
 	</p:dialog>
 	
-	<!-- 
-	<p:panel header="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}">
-		<table class="customTbl">
-				<tr>
-					<td class="tdTitle">
-						<p:outputLabel
-							value="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td class="tdContent">
-						<p:calendar showOn="button" id="actualSvDate" required="#{!empty param['disableValidation']}"
-							label="#{lbl['lbl.sm.rptpreview.actual.site.visit.date']}"
-							maxdate="#{CommonConstants.CURRENT_DATE}" readonlyInput="true"
-							value="#{svoSiteVisitBackingBean.managedBean.smSvTask.actualVisitDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-					</td>
-					
-					<td class="tdTitle">
-					</td>
-					
-					<td class="tdContent">
-					</td>
-				</tr>
-		</table>
-	</p:panel>
-	-->
 	<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 	<ui:include src="/xhtml/sm/shared/sitevisit/recommendation.xhtml" />
 	

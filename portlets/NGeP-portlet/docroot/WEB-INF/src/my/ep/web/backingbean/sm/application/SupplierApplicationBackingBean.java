@@ -4550,6 +4550,7 @@ public class SupplierApplicationBackingBean extends
 			SmApplicationUtil.checkOverLappingCategories(getManagedBean());
 			SmApplicationUtil.initOverlapCategoryDocs(getManagedBean()
 					.isOverLappedCategoryExists(), getManagedBean());
+			SmSideMenuIconUtil.setAllSectionEditorVO(getManagedBean(), false, getManagedBean().getCurrentPageType()); //#31018
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}

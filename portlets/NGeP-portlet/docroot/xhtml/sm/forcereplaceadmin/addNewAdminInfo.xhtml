@@ -35,16 +35,20 @@
 				</td>
 				<td style="white-space: nowrap; float: right;">
 				<!-- #28765 -->
+					<!-- #34159 - START - add param disablevalidation -->
 					<p:commandButton value="#{lbl['lbl.sm.declare']}"  partialSubmit="true" process="verification2Panel" 
-					disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
-					update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-					<!-- #33129 - START -->
+						disabled="#{!forceReplaceSuppAdminBackingBean.managedBean.agreeTnc or empty forceReplaceSuppAdminBackingBean.managedBean.smReplaceSupplierAdminDocs[0].smReplacesupplieradminDocFiles[0].fileName}" 
+						update=":#{p:component('declareAlertPopUpId')},@this" id="declareBtnId" action="#{forceReplaceSuppAdminBackingBean.checkingBeforeDeclare}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<f:param name="disableValidation" value="true" />
+					</p:commandButton>
+					<!-- #34159 - END -->
+					<!-- #33129 - START --><!-- #34400 -->
 					<ac:confirmationPopup id="declareDeletePopUpId"
 						widget="declareDeletePopUp"
 						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
 						width="400" height="auto"
-						title="#{lbl['lbl.msg.confirm.declare.header']}"
+						title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
 						update=":form"/>
 					<!-- #33129 - END -->

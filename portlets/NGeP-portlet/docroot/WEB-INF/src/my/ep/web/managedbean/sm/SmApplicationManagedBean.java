@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -572,8 +573,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	// #29315
 	private boolean flagMandatoryEpfNo;
@@ -613,25 +612,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSvWorker> deletedWorkers;
 	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
-	// #28778 - Start
+	// #28778 -28775 - Start
 	private boolean specialCategoryRechecked;
 	// #28778 - End
 	
 	//29727
 	private String deleteBranchMsg;
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
 	
 	//13362
 	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
-	
-	//#31043 START
-	private boolean categoryCodeVerified;
-	private boolean documentVerified;
-	private boolean updateSuppDoc;
-	//#31043 END
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -666,6 +656,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverPersonnelRoleMsg;
 	private String personnelRoleMsg; 
 	//#30762 -End 
+	
+	//#34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
+	//#34393 - end
+	//#31043 START
+	private boolean allowedToSiteVisit;
+	//#31043 END
+	//#34831 - Start
+	private boolean basicSupplier;
+	//#34831 - End
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -746,6 +750,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			//#34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			//#34831 - End
 		}
 
 		defaultAddr = new SmAddress();
@@ -4092,15 +4102,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 
-	// 26238 - start
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} // 26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4441,15 +4442,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
-
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 
 	//13362 START
 	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
@@ -4478,32 +4470,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
 	}
 	//30974 - end
-
-	//#31043 START
-	public boolean isCategoryCodeVerified() {
-		return categoryCodeVerified;
-	}
-
-	public void setCategoryCodeVerified(boolean categoryCodeVerified) {
-		this.categoryCodeVerified = categoryCodeVerified;
-	}
-
-	public boolean isDocumentVerified() {
-		return documentVerified;
-	}
-
-	public void setDocumentVerified(boolean documentVerified) {
-		this.documentVerified = documentVerified;
-	}
-	
-	public boolean isUpdateSuppDoc() {
-		return updateSuppDoc;
-	}
-
-	public void setUpdateSuppDoc(boolean updateSuppDoc) {
-		this.updateSuppDoc = updateSuppDoc;
-	}
-	//#31043 END
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
 		return selectedInquiryResponse;
@@ -4655,4 +4621,62 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//#30762 -End 
+	//#34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
+	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
+	//#31043 START
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
 }

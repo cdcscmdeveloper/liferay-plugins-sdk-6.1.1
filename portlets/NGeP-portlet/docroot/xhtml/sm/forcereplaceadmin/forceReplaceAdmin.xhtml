@@ -45,7 +45,7 @@
 			
 			<p:outputPanel rendered="#{not empty forceReplaceSuppAdminBackingBean.managedBean.accType}">
 				<tr>
-					<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register']}. " /> <h:outputText styleClass="instruction" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC}" value="(#{lbl['lbl.sm.key.in.info.during.register.individual.note']})." /></td>
+					<td colspan="2"><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.key.in.info.during.register']} " /><br /><h:outputText styleClass="instruction" rendered="#{forceReplaceSuppAdminBackingBean.managedBean.accType eq SupplierManagementConst.ACC_BASIC}" value="(#{lbl['lbl.sm.key.in.info.during.register.individual.note']})." /></td>
 				</tr>
 			</p:outputPanel>
 			
@@ -247,11 +247,11 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #28765 Start -->
-		<!-- #33589 Start -->
+		<!-- #33589 Start, #34400 -->
 		<ac:confirmationPopup id="declareDeletePopUpBeforeId"
 			widget="declareDeletePopUpBeforeId"
 			okAction="#{forceReplaceSuppAdminBackingBean.declare()}" width="400"
-			height="150" title="#{lbl['lbl.msg.confirm.declare.header']}"
+			height="150" title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}"
 			update=":form" />
 		<p:confirmDialog id="declareAlertPopUpBeforeId"
