@@ -16646,17 +16646,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		//#15391 - end
 
-		// #29732 -Start
+		// 29732 fix duplicate issues -start-
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
-		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
-			for (int i = 0; i < removeCategoryCodes.size(); i++) {
-				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
-					removeCategoryCodes.remove(removeCategoryCodes.get(i));
-				}
-			}
+		// 29732 fix duplicate issues while deleting the category and add the same id -start-
+		if (null != removeCategoryCodes) {
+			List<ScQtCategory> categoryResultsnew = new ArrayList<ScQtCategory>();
+			categoryResultsnew = this.getManagedBean().getQtCategoryList();
+			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
-		// #29732 -End
+		// 29732 -end-
 
 		spReqDTO.setOutcome(action);
 		
@@ -16667,8 +16666,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
 					scQt.getQtNo());
 		}
-
-		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); // #29732
 
 		//#15391 - start
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
@@ -17208,11 +17205,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		//#15391 - end
 
-		//#29732-Start fix duplicate & error merge persistance if user delete and add the same category(ID)
-		List<ScQtCategory> categoryResultsnew = new ArrayList<ScQtCategory>();
-		categoryResultsnew = this.getManagedBean().getQtCategoryList();
-		this.getManagedBean().setQtCategoryList(categoryResultsnew);
-		//29732- End
+		// 29732 fix duplicate issues -start-
+		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+		// 29732 fix duplicate issues while deleting the category and add the same id -start-
+		if(null != removeCategoryCodes){
+			List<ScQtCategory> categoryResultsnew = new ArrayList<ScQtCategory>();
+			categoryResultsnew = this.getManagedBean().getQtCategoryList();
+			this.getManagedBean().setQtCategoryList(categoryResultsnew);
+		}
+		// 29732 -end-
 		
 		signoffCommitteeActivity(spReqDTO,action);
 		if (null != digiSign) {
