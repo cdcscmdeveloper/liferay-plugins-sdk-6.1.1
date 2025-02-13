@@ -4400,7 +4400,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				// 29732 fix duplicate issues while deleting the category and add the same id -start-
 				if(null != removeCategoryCodes){
-					List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
+					List<ScQtCategory> categoryResults = new ArrayList<>();
 					categoryResults = this.getManagedBean().getQtCategoryList();
 					this.getManagedBean().setQtCategoryList(categoryResults);
 					qt.setScQtCategorys(categoryResults);
