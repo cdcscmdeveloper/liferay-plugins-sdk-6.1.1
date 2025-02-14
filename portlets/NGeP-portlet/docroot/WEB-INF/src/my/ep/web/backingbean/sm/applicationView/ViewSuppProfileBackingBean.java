@@ -441,57 +441,6 @@ public class ViewSuppProfileBackingBean extends
 	}
 	// #28175 end
 	// #34031 Start
-	private void initSmRvHistory() {
-		SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
-		if (this.getManagedBean().isSupplierUser()) {
-			reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
-		} else {
-			reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
-		}
-		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
-		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
-		if (revisitList.isEmpty()) {
-			this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
-		} else {
-			for (SmRevisit revisit : revisitList) {
-				if (revisit.isCurrent()) {
-					this.getManagedBean().setCurrentSmRevisit(revisit);
-					break;
-				}
-			}
-			this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
-		}
-	}
-
-	private List<SmRevisit> updateSmRvCreatedUserName(List<SmRevisit> revisitList) {
-		for (SmRevisit revisit : revisitList) {
-			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
-			revisit.setActionedBy(user.getUserName());
-		}
-		return revisitList;
-	}
-
-	/**
-	 * Displays the revisit history dialog
-	 */
-	public void onClickRevisitHistoryList() {
-		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
-	}
-
-	/**
-	 * Downloads the revisit history report.
-	 */
-	public void downloadRevisitHistory() {
-		try {
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put("paramConst", "value");
-			generateReport("reportName", paramMap);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
-					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
-		}
-	}
-
 	/**
 	 * Retrieves remarks related to a given revisit.
 	 * @param revisit
@@ -500,39 +449,42 @@ public class ViewSuppProfileBackingBean extends
 	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
 		List<String> remarks = new ArrayList<>();
 		if (null != revisit) {
-			String remarkOne = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) + " ";
+			StringBuilder remarkOne = new StringBuilder();
+			remarkOne.append(
+					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())).append(" ");
 			if (null != revisit.getRevisitPrevRemark()) {
-				remarkOne += revisit.getRevisitPrevRemark();
+				remarkOne.append(revisit.getRevisitPrevRemark());
 			} else {
-				remarkOne += ResourceBundleUtils
-						.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				remarkOne.append(ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
 			}
-			remarkOne += " "
-					+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) + " ";
+			remarkOne.append(
+					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())).append(" ");
 			if (null != revisit.getRevisitRemark()) {
-				remarkOne += revisit.getRevisitRemark();
+				remarkOne.append(revisit.getRevisitRemark());
 			} else {
-				remarkOne += ResourceBundleUtils
-						.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+				remarkOne.append(ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
 			}
-			remarks.add(remarkOne);
+			remarks.add(remarkOne.toString());
 			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
 				List<PmStatusDesc> descList;
 				StatusReqDTO reqDTO = new StatusReqDTO();
 				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
-				String remarkTwo = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())
-						+ " "
-						+ getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId())
-						+ " "
-						+ ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())
-						+ " "
-						+ getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId());
-				remarks.add(remarkTwo);
+				StringBuilder remarkTwo = new StringBuilder();
+				remarkTwo
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()))
+						.append(" ")
+						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
+						.append(" ")
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())).append(" ")
+						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
+				remarks.add(remarkTwo.toString());
 			}
 			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
 				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,

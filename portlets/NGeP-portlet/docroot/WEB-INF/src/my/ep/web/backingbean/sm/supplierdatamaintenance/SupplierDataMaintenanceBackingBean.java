@@ -3011,24 +3011,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
-	private void initSmRvHistory() {
-		SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
-		reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
-		ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
-		List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
-		if (revisitList.isEmpty()) {
-			this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
-		} else {
-			for (SmRevisit revisit : revisitList) {
-				if (revisit.isCurrent()) {
-					this.getManagedBean().setCurrentSmRevisit(revisit);
-					break;
-				}
-			}
-			this.getManagedBean().setSmRevisitList(updateCreatedUserName(revisitList));
-		}
-	}
-
 	private String getPrevRevisitRemark() {
 		String remark = null;
 		if (this.getManagedBean().getCurrentSmRevisit() != null) {
@@ -3049,35 +3031,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	private void validateRvSuppDoc(SmRvSuppDoc suppDoc) {
 		if (null == suppDoc.getSmRvDocFiles() || suppDoc.getSmRvDocFiles().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_723103, new String[] { suppDoc.getPmDocument().getDocName() });
-		}
-	}
-
-	/**
-	 * Displays the revisit history dialog.
-	 */
-	public void onClickRevisitHistoryList() {
-		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
-	}
-
-	private List<SmRevisit> updateCreatedUserName(List<SmRevisit> revisitList) {
-		for (SmRevisit revisit : revisitList) {
-			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
-			revisit.setActionedBy(user.getUserName());
-		}
-		return revisitList;
-	}
-
-	/**
-	 * Downloads the revisit history report for the current supplier.
-	 */
-	public void downloadRevisitHistory() {
-		try {
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
-			generateReport("reportName", paramMap);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
-					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	// #34031 End
