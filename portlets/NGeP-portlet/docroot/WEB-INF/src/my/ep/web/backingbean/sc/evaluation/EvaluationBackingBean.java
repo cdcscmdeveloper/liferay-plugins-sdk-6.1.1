@@ -7242,7 +7242,6 @@ public class EvaluationBackingBean extends
 
 			if (!this.getManagedBean().isReadOnly()) {
 				//saveQtReportDtls();
-				retriveSummaryEvaluationStage();	// Bug #36747@Syazani 20/01/2025
 				saveEvaluationReportsDtls();
 				setReportAttachment();
 			}
@@ -12911,6 +12910,7 @@ private void retriveCommitteeRemarksList(){
 	
 	// Bug #36747@Syazani 20/01/2025 -- Start
 	private int evaluationStageSummaryForceViewCheck(int currentTab, int outputTab) throws Exception {
+		int outputTabEval = outputTab;
 		boolean isEvaluationCommittee = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this
 				.getManagedBean().getCommitteeType())
 				&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION
@@ -12927,89 +12927,128 @@ private void retriveCommitteeRemarksList(){
 				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL) || this
 						.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION));
+		
+		boolean isOcCommittee = this.getManagedBean().getCurrentStatusId()
+				.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
 
-		boolean isCommittee2TierPass = isTecCommittee || isFecCommittee;
+		boolean isCommittee2TierPass = isTecCommittee || isFecCommittee || isOcCommittee;
 
 		boolean isDemoRequired = isTecCommittee && this.getManagedBean().getScQt().isDemoRequired();
 
 		if (!isEvaluationCommittee) {
-			//Tier 2
-			//Financial & Technical Evaluation
-			if (isCommittee2TierPass && currentTab == 2 && !this.getManagedBean().isReadOnly() && !isDemoRequired) {
-
-				if (this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
-					retriveSummaryEvaluationStage();
-					// this.getManagedBean().setComplianceActiveIndex(2);
-					outputTab = 2;
-				}
-
-			} else if (isCommittee2TierPass && currentTab == 3 && !this.getManagedBean().isReadOnly() && isDemoRequired) {
-				if (this.getManagedBean().getPresentationDemoActiveIndex() < 1) {
-					retrivePresentationDemoSummary();
-					outputTab = 3;
-				}
-			}
+			outputTabEval = tier2EvaluationSummaryCheck(isCommittee2TierPass, isDemoRequired, currentTab, outputTabEval, isOcCommittee);
 		} else {
-			//Tier 1
-			//Compliance Stage
-			if (currentTab == 1) {
-				if (!this.getManagedBean().getScQt().isSampleReq()) {
-					if (this.getManagedBean().getComplianceActiveIndex() < 2) {
-						retriveComplianceSummary();
-						// this.getManagedBean().setComplianceActiveIndex(2);
-						outputTab = 1;
-					}
-				} else {
-					sampleClosingDateCountDays();
-
-					if (// #25638 -Start.
-					(this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL) || this
-							.getManagedBean().getCurrentStatusId()
-							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
-					// #25638 - End.
-					) {
-
-						if (this.getManagedBean().getCountDays() > 0
-								|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() < 12)) {
-							throw new EpException(MessageConst.ERROR_760261);
-						}
-					}
-					if (this.getManagedBean().getCountDays() < 0
-							|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() >= 12)) {
-						if (// #25638 -Start.
-						(this.getManagedBean().getCurrentStatusId()
-								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL) || this.getManagedBean()
-								.getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
-						// #25638 - End.
-						) {
-							checkSampleComplianceCompleted();
-						}
-					}
-
-					if (this.getManagedBean().getComplianceActiveIndex() < 3) {
-						// this.getManagedBean().setComplianceActiveIndex(3);
-						retriveComplianceSummary();
-						outputTab = 1;
-					}
-				}
-			//Technical Evaluation
-			} else if (currentTab == 2) {
-				if (this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
-					retriveSummaryEvaluationStage();
-					// this.getManagedBean().setComplianceActiveIndex(2);
-					outputTab = 2;
-
-				}
-			//Financial Evaluation
-			} else if (currentTab == 3) {
-				if (this.getManagedBean().getOneTierFinancialActiveIndex() < 1) {
-					retriveOneTierFinancialSupplierSummary();
-					// this.getManagedBean().setComplianceActiveIndex(2);
-					outputTab = 3;
-				}
-			}
+			outputTabEval = tier1EvaluationSummaryCheck(currentTab, outputTabEval);
 		}
-		return outputTab;
+		return outputTabEval;
+	}
+
+	private int tier2EvaluationSummaryCheck(boolean isCommittee2TierPass, boolean isDemoRequired, int currentTab,
+			int outputTabEval, boolean isOcCommittee) throws Exception {
+		int outputTabEvalTier2 = outputTabEval;
+		boolean isWithoutDemo = isWithoutDemoTier2(isCommittee2TierPass, isDemoRequired, currentTab);
+		boolean isDemo = isDemoTier2(isCommittee2TierPass, isDemoRequired, currentTab);
+		// Tier 2
+		// Opening, Financial & Technical Evaluation
+		if (isOcTier2(isOcCommittee, currentTab)) {
+			if (!this.getManagedBean().getScQt().isSampleReq()) {
+				if (this.getManagedBean().getComplianceActiveIndex() < 2) {
+					retriveComplianceSummary();
+					outputTabEvalTier2 = 1;
+				}
+			} else {
+				outputTabEvalTier2 = sampleReqComplianceStageCheck(outputTabEvalTier2);
+			}
+		} else if (isWithoutDemo) {
+			if (this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
+				retriveSummaryEvaluationStage();
+				outputTabEvalTier2 = 2;
+			}
+
+		} else if (isDemo && this.getManagedBean().getPresentationDemoActiveIndex() < 1) {
+			retrivePresentationDemoSummary();
+			outputTabEvalTier2 = 3;
+		}
+		return outputTabEvalTier2;
+	}
+	
+	private boolean isOcTier2(boolean isOcCommittee, int currentTab) {
+		return isOcCommittee && currentTab == 1;
+	}
+
+	private boolean isWithoutDemoTier2(boolean isCommittee2TierPass, boolean isDemoRequired, int currentTab) {
+		return isCommittee2TierPass && currentTab == 2 && !this.getManagedBean().isReadOnly() && !isDemoRequired;
+	}
+
+	private boolean isDemoTier2(boolean isCommittee2TierPass, boolean isDemoRequired, int currentTab) {
+		return isCommittee2TierPass && currentTab == 3 && !this.getManagedBean().isReadOnly() && isDemoRequired;
+	}
+
+	private int tier1EvaluationSummaryCheck(int currentTab, int outputTabEval) {
+		int outputTabEvalTier1 = outputTabEval;
+		// Tier 1
+		// Compliance Stage
+		if (currentTab == 1) {
+			if (!this.getManagedBean().getScQt().isSampleReq()) {
+				if (this.getManagedBean().getComplianceActiveIndex() < 2) {
+					retriveComplianceSummary();
+					outputTabEvalTier1 = 1;
+				}
+			} else {
+				outputTabEvalTier1 = sampleReqComplianceStageCheck(outputTabEvalTier1);
+			}
+			// Technical Evaluation
+		} else if (currentTab == 2 && this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
+			retriveSummaryEvaluationStage();
+			outputTabEvalTier1 = 2;
+			// Financial Evaluation
+		} else if (currentTab == 3 && this.getManagedBean().getOneTierFinancialActiveIndex() < 1) {
+			retriveOneTierFinancialSupplierSummary();
+			outputTabEvalTier1 = 3;
+		}
+		return outputTabEvalTier1;
+	}
+
+	private int sampleReqComplianceStageCheck(int outputTabEvalTier1) {
+		int outputTabEvalTier1SampleReq = outputTabEvalTier1;
+		sampleClosingDateCountDays();
+
+		if (ecPendingComplianceFailedCheck()) {
+			throw new EpException(MessageConst.ERROR_760261);
+		}
+		if (ecPendingComplianceCheck()) {
+			checkSampleComplianceCompleted();
+		}
+
+		if (this.getManagedBean().getComplianceActiveIndex() < 3) {
+			retriveComplianceSummary();
+			outputTabEvalTier1SampleReq = 1;
+		}
+		return outputTabEvalTier1SampleReq;
+	}
+
+	private boolean ecPendingComplianceFailedCheck() {
+		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId()
+				.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+				|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+
+		boolean isDaysCheck = this.getManagedBean().getCountDays() > 0
+				|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() < 12);
+
+		return isEcPendingComplianceCheck && isDaysCheck;
+	}
+
+	private boolean ecPendingComplianceCheck() {
+		boolean isDaysCheck = this.getManagedBean().getCountDays() < 0
+				|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() >= 12);
+
+		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId()
+				.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+				|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+
+		return isDaysCheck && isEcPendingComplianceCheck;
 	}
 	// Bug #36747@Syazani 20/01/2025 -- End
 }
