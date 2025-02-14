@@ -6708,9 +6708,11 @@ public class EvaluationBackingBean extends
 				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
+					// Bug #36747@Syazani 20/01/2025 -- Start
+					if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)
+							|| this.getManagedBean().getCurrentStatusId()
+									.equals(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION)) {
+						// Bug #36747@Syazani 20/01/2025 -- End
 						complianceStageStatusCheck();
 					}
 					if (currentTab == 1) {
@@ -12928,8 +12930,11 @@ private void retriveCommitteeRemarksList(){
 						.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION));
 		
-		boolean isOcCommittee = this.getManagedBean().getCurrentStatusId()
-				.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL);
+		boolean isOcCommittee = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
+				.getCommitteeType())
+				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL) || this
+						.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION));
 
 		boolean isCommittee2TierPass = isTecCommittee || isFecCommittee || isOcCommittee;
 
