@@ -5032,7 +5032,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				if (CollectionUtils.isEmpty(this.getManagedBean()
 						.getQtCategoryList())) {
 					
-					
 					// 29732 fix duplicate issues -start-
 					List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 					// 29732 fix duplicate issues while deleting the category
