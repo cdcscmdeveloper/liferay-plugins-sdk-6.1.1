@@ -17,9 +17,12 @@
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
 		
-		<ui:fragment rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
-			<ui:include	src="amendmentInfo.xhtml" />
-		</ui:fragment>
+	<!--#26186 start-->
+	<ui:fragment
+		rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
+		<ui:include src="amendmentInfo.xhtml" />
+	</ui:fragment>
+	<!--#26186 start-->
 
 		<h:panelGrid columns="1" rendered="#{ctBackingBean.isPendingSupplementalContractLetter() and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 		and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq and ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend
