@@ -61,17 +61,16 @@
 				</p:row>
 			</p:columnGroup>
 			<!-- 1 -->
-			<!-- #37605 -->
-			<p:column selectionMode="multiple" style="width:2%;vertical-align: top;"
+			<p:column selectionMode="multiple" style="width:2%"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
 							or (catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or not empty catBean.approvedDate)}" />
 			<!-- 2 -->
-			<p:column style="width : 2%;vertical-align: top;">
+			<p:column style="width : 2%;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<!-- 3 -->
-			<p:column style="width :350px;white-space : normal;vertical-align: top;"
+			<p:column style="width :350px;white-space : normal"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText
@@ -85,7 +84,7 @@
 			</p:column>
 			
 			<!-- 4 -->
-			<p:column style="width : 10% !important;vertical-align: top;"
+			<p:column style="width : 10% !important;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
@@ -95,10 +94,10 @@
 			</p:column>
 			
 			<!-- 5 -->
-			<p:column style="width : 25% !important;vertical-align: top;"
+			<p:column style="width : 25% !important;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
-				<p:inputTextarea id="otherDesc" maxlength="5000"
+				<p:inputTextarea id="otherDesc" maxlength="100"
 					style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
 					value="#{catBean.otherDesc}" rows="5" cols="40"
 					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
@@ -120,7 +119,7 @@
 			</p:column>
 
 			<!-- 6 -->
-			<p:column style="vertical-align: top;"
+			<p:column
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
