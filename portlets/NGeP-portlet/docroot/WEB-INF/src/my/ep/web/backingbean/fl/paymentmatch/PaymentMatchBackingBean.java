@@ -1552,6 +1552,13 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
+			
+			//36754-Start
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				validateOrderFulfiledAndDOFRNPendingCancellation();
+			}
+			//36754-End
+			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
 				calPmSummary();
 			}
@@ -2645,4 +2652,29 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			return items;
 	}
 	//28221 -end
+	
+	// 36754 -Start
+	/**
+	 * Validates if an order can proceed based on the following checks: 
+	 * 1. Check quantities of ordered and received items fully fulfilled 
+	 * 2. Check Stop Delivery Instruction (SDI) with approval status if Quantities is not fully fulfilled 
+	 * 3. Check if any Pending cancellations for Delivery Orders (DO) or Fulfilment Notes (FRN).
+	 * 
+	 * @throws EpException
+	 *             if the order validation fails with a specific error code.
+	 */
+	private void validateOrderFulfiledAndDOFRNPendingCancellation() {
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setFlRequestId(getManagedBean().getPaymentAdvice().getFlRequest().getFulfilmentReqId());
+		reqDTO.setFlOrderId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getFulfilmentOrderId());
+		FulfilmentResDTO resDTO = orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
+		Boolean allowToProceed = resDTO.isAllowToProceed();
+		if (!allowToProceed) {
+			throw new EpException(MessageConst.ERROR_740069);
+		}
+	}
+	// 36754 -End
 }
