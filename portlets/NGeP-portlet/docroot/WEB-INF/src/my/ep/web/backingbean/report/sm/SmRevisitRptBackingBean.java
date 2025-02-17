@@ -14,7 +14,7 @@ import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SmRevisitRptManagedBean;
 
 /**
- * @author firdaus.omar
+ * @author firdaus.omar 
  * Backing bean for the revisit report functionality.
  */
 @ManagedBean(name = "smRevisitRptBB")

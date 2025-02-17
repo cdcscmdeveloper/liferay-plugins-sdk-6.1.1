@@ -88,10 +88,6 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	//#34392 - end
-	// #34031 Start
-	private List<SmRevisit> smRevisitList;
-	private SmRevisit currentSmRevisit;
-	// #34031 End
 	
 	public ViewApplHistoryManagedBean() {
 
@@ -469,21 +465,4 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
 	}
 	//#34392 - end
-	// #34031 Start
-	public List<SmRevisit> getSmRevisitList() {
-		return smRevisitList;
-	}
-
-	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
-		this.smRevisitList = smRevisitList;
-	}
-
-	public SmRevisit getCurrentSmRevisit() {
-		return currentSmRevisit;
-	}
-
-	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
-		this.currentSmRevisit = currentSmRevisit;
-	}
-	// #34031 End
 }
