@@ -12011,7 +12011,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
-
+			
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() 
+					|| BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())){
+				throw new EpException(MessageConst.ERROR_760025);
+			}
 			SpecificationReqDTO specReqDTOCatChange = new SpecificationReqDTO();
 
 			specReqDTOCatChange.setScQt(this.getManagedBean().getQt());
@@ -12124,6 +12128,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						checkZoneLocationChange(this.getManagedBean().getQt());
 					}
 					//20210621@asyrafhaziq_Bug #30914 - End
+					validateSupplierCriteriaIntegrity(this.getManagedBean().getQt());	// Bug #36730@Syazani 07/01/2025
 					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -16641,17 +16646,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 		//#15391 - end
 
-		// #29732 -Start
+		// 29732 fix duplicate issues -start-
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
-		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
-			for (int i = 0; i < removeCategoryCodes.size(); i++) {
-				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
-					removeCategoryCodes.remove(removeCategoryCodes.get(i));
-				}
-			}
+		// 29732 fix duplicate issues while deleting the category and add the same id -start-
+		if (null != removeCategoryCodes) {
+			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+			categoryResultsnew = this.getManagedBean().getQtCategoryList();
+			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
-		// #29732 -End
+		// 29732 -end-
 
 		spReqDTO.setOutcome(action);
 		
@@ -16662,8 +16666,6 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
 					scQt.getQtNo());
 		}
-
-		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); // #29732
 
 		//#15391 - start
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
@@ -17202,35 +17204,24 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			}
 		}
 		//#15391 - end
-		
-		// #29732(#232) - start
-		List<ScQtCategory> categoryResults = spReqDTO.getScQt().getScQtCategorys();
 
 		// 29732 fix duplicate issues -start-
 		List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
 
-		if (null != categoryResults && !categoryResults.isEmpty() && null != removeCategoryCodes
-				&& !removeCategoryCodes.isEmpty()) {
-			for (int i2 = 0; i2 < removeCategoryCodes.size(); i2++) {
-				for (int i = 0; i < categoryResults.size(); i++) {
-					if (categoryResults.get(i).getQtCategoryId() == removeCategoryCodes.get(i2)
-							.getQtCategoryId()) {
-						removeCategoryCodes.remove(removeCategoryCodes.get(i2));
-					}
-				}
-			}
+		// 29732 fix duplicate issues while deleting the category and add the same id -start-
+		if(null != removeCategoryCodes){
+			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+			categoryResultsnew = this.getManagedBean().getQtCategoryList();
+			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
-		// 2973
-		// #29732(#232) - end
-
+		// 29732 -end-
+		
 		signoffCommitteeActivity(spReqDTO,action);
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
 					ParameterConst.DOCTYPE_SPECIFICATION_ENDORSMENT, scQt.getQtId(),
 					scQt.getQtNo());
 		}
-
-		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); // #29732(#232)
 
 		//#15391 - start
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
