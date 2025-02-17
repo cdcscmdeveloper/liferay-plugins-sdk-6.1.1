@@ -36,9 +36,6 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-//#34031 Start
-import my.ep.persistence.entity.sm.SmRevisit;
-//#34031 End
 
 @ManagedBean(name = "viewApplHistoryMB")
 @SessionScoped
