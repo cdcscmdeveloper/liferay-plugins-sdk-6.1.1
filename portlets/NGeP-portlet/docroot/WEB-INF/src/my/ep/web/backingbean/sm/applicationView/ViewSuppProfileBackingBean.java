@@ -51,11 +51,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 End
 //#34031 Start
-import java.util.HashMap;
-import java.util.Map;
-import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.sm.revisit.SmRevisitReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.util.ResourceBundleUtils;
@@ -499,6 +495,7 @@ public class ViewSuppProfileBackingBean extends
 		String statusName = "";
 
 		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			// Expected Max Size in loop (5) based on NGEP_PDS database
 			for (PmStatusDesc status : statusList) {
 				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
 					statusName = status.getStatusName();

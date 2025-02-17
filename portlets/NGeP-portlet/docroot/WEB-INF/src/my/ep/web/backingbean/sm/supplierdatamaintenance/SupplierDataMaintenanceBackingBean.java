@@ -103,15 +103,12 @@ import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformation
 //#28895_35501 End
 //#34031 Start
 import my.ep.dto.pm.common.document.DocumentReqDTO;
-import my.ep.dto.sm.revisit.SmRevisitReqDTO;
-import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.persistence.entity.sm.SmRvAssistOfficer;
 import my.ep.persistence.entity.sm.SmRvCatCode;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
-import my.ep.web.constant.report.SmReportConst;
 import org.primefaces.event.FileUploadEvent;
 //#34031 End
 

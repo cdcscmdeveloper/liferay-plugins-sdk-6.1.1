@@ -170,6 +170,7 @@ import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 import my.ep.biz.service.sm.revisit.ISmRevisitSO;
 import my.ep.dto.sm.revisit.SmRevisitReqDTO;
 import my.ep.persistence.entity.sm.SmRevisit;import my.ep.util.SLAUtils;
+import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 //#34031 End
 
@@ -5171,8 +5172,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
 			if (this.getManagedBean().isSupplierUser()) {
 				reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
-			} else {
+			} else if (null != getSupplierIdParam()) {
 				reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
+			} else {
+				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
 			}
 			ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
 			List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
@@ -5218,7 +5221,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void downloadRevisitHistory() {
 		try {
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put("paramConst", "value");
+			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
 			generateReport("reportName", paramMap);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
