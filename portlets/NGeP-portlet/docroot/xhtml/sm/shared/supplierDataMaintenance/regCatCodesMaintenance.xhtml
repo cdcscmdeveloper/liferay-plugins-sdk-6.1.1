@@ -43,18 +43,16 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.applCatType']}" /></td>
 							<td>
-								<td>
-									<p:selectOneRadio value="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}">
-										<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
-											itemValue="33" />
-										<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
-											itemValue="34" />
-										<p:ajax event="change" oncomplete="typeConfirmation.show()"
-											listener="#{supplierDataMaintenanceBackingBean.applicationCategorySelected}"
-											update="@([id$=typeConfirmationId])" process="@this"/>
-									</p:selectOneRadio>
-								</td>
-							</td>
+								<p:selectOneRadio value="#{supplierDataMaintenanceBackingBean.managedBean.physicalConsulting}">
+									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.physical.service']}"
+										itemValue="33" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.non.physical.service']}"
+										itemValue="34" />
+									<p:ajax event="change" oncomplete="typeConfirmation.show()"
+										listener="#{supplierDataMaintenanceBackingBean.applicationCategorySelected}"
+										update="@([id$=typeConfirmationId])" process="@this"/>
+								</p:selectOneRadio>
+							</td>							
 						</tr>
 					</c:when>
 					<c:otherwise>

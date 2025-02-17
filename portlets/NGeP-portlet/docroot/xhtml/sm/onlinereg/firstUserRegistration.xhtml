@@ -378,6 +378,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.country']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />	
 					</td>
+					<!-- #34159 - START - add update division panel -->
 					<td id="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}" 
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
@@ -389,8 +390,10 @@
 								itemValue="#{counLs.countryId}" />
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateStateByAddType('permenant',false)}"
-								update="cmbPermState,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
-						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
+								update="cmbPermState,divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
+						</p:selectOneMenu> 
+						<!-- #34159 - END -->
+						<p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
 							display="icon" /></td>
 				</tr>
 
@@ -411,11 +414,12 @@
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-							<!-- #34159 - START - change reset value to true -->
+							<!-- #34159 - START - change reset value to true & #36718-->
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',true)}"
-								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
-							<!-- #34159 - END -->
+								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" 
+								process="@this @([id$=pnlUsrInfo])" />
+							<!-- #34159 & #36718 - END -->
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 					<!--#30936-END-->

@@ -517,7 +517,7 @@
 				<td width="75%">
 					<h:outputText rendered="#{!isMultipleSuppOffer}"
 					value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
-					style="font-weight:bold" />
+					style="font-weight:bold; white-space: pre-wrap;" /> <ui:remove>#36634 - add white-space: pre-wrap;</ui:remove>
 					<h:outputText rendered="#{isMultipleSuppOffer}" escape="false"
 					value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 					style="font-weight:bold;float:left;" />

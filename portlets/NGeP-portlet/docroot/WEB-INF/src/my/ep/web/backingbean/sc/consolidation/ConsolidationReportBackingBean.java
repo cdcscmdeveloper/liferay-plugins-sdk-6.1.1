@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -77,6 +78,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
+import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean;
@@ -151,6 +153,7 @@ public class ConsolidationReportBackingBean extends
 			loadInitialData();
 			// #18685 - Start.
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			getManagedBean().setAllSupplierDisagreeEPV(allSupplierDisagreeEPV(qtId));//#21692
 			// #18685 - End.
 			fc.getApplication()
 					.getNavigationHandler()
@@ -543,7 +546,8 @@ public class ConsolidationReportBackingBean extends
 		// #28834 - Start.
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
-		for (ScQtFinalizationReport report: getManagedBean().getScQtFinalization().getScQtFinalizationReports()) {
+		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization()
+				.getScQtFinalizationReports())) { // 37623
 			  if (report.getTitle().contains("Kertas Taklimat")) {
 				  if (briefingPaperList == null) {
 					  briefingPaperList = new ArrayList<>();
@@ -652,19 +656,20 @@ public class ConsolidationReportBackingBean extends
 		debugLogger("downloadAllEvaluationReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
-		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-
-		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-					.get(i).getScQtFinalizationReportAttachment();
+		// 37622 - start
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
 			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtFinalizationReports
-						.get(i));
-				scQtFinalizationReports.get(i)
-						.setScQtFinalizationReportAttachment(attachment);
+				attachment = generateDocumentAttachment(report);
+				report.setScQtFinalizationReportAttachment(attachment);
+			}
+			if (attachment != null) {
+				attachment.setTempFileName(report.getTitle());
 			}
 			scAttachments.add(attachment);
 		}
+		// 37622 - end
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
@@ -2634,4 +2639,52 @@ public class ConsolidationReportBackingBean extends
 		}
 		//#32401 - end
 		//#21695 Fix bug 32401 add qualifiedSupplierBeans end	
+		
+		//#21692 - Start
+		/**
+		 * Created to make sure new instructions in Consolidation Report status
+		 * start with 4 and in sequence.
+		 * 
+		 * Each TRUE condition is a + 1, meaning, first TRUE condition is 4, second is 5
+		 * and so on.
+		 * 
+		 * @param qtId
+		 * @return
+		 */
+		public List<String> qualifiedSupplierInstructionList(Long qtId) {
+			Locale locale = new FacesScopes().getUserLocale();
+			List<String> instructionList = new ArrayList<>();
+			int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
+			
+			//#28777#29729 condition
+			condition = condition + 1;
+			
+			//#21692 condition, should be 5th instruction if above condition is TRUE, else 4th
+			if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {
+				condition = condition + 1;
+				instructionList.add(SourcingConstants.BREAK_LINE + condition + SourcingConstants.DOT
+						+ ResourceBundleUtils.getMessage("lbl.sc.qt.pending.rec.instruction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			}
+			
+			//Will be the list of instruction(s) above, can be empty if no condition met.
+			return instructionList;
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		/**
+		 * @return String Warning message for no supplier accept Extend Proposal Validity
+		 */
+		public String getNoSupplierWarningMessage() {
+			return MessageUtils.getMessage(MessageConst.WARN_7602693, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		private boolean allSupplierDisagreeEPV(Long qtId) {		
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.allSupplierDisagreeEPV(qtId);
+		}
+		//#21692 - End
 }
