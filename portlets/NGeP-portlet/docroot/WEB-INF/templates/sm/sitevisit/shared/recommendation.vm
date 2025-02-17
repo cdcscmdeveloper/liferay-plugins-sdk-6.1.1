@@ -113,6 +113,34 @@
 #elseif($templateCode == "L" || $templateCode == "B")
 	<br /><br />
     #parse("templates/sm/sitevisit/shared/premiseLocation.vm")
+    
+#elseif($templateCode == "PC")
+<br /><br />
+#set($printFacility = $svTask.smSvTemplate.smSvFacility)
+<table>
+	<tr>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.ownership')</td>
+		<td>
+			#if($!printFacility)
+				#if($printFacility.ownershipType == "O") $smVmUtil.getDescByLabel('lbl.sm.facility.own') #end
+				#if($printFacility.ownershipType == "R") $smVmUtil.getDescByLabel('lbl.sm.facility.rent') #end
+			#end
+		</td>
+	</tr>
+	<tr>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.premiseloc.docs')</td>
+		<td>
+			#if($printFacility.document) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end
+		</td>
+		<td class="txtBold" width="40%">$smVmUtil.getDescByLabel('lbl.sm.sitevisit.printing.premiseloc.aggrmnt.lttr')</td>
+		<td>
+			#if($printFacility.agreementLetter) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+			#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end
+		</td>
+	</tr>
+</table>
+<br /><br />
 #end
 
 <table>
