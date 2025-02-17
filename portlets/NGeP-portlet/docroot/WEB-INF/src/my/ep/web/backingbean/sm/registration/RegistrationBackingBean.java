@@ -3918,18 +3918,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setBusinessStateLs(new ArrayList<SelectItem>());
 		}
 		
-		//#36718 - START
-		if(this.getManagedBean().getSmSupp().getBusinessType() == null){
-			getManagedBean().setSabahSarawakType(false);
-			getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
-			getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
-			getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
-			getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
-			getManagedBean().setBusinessDistrictLs(null);
-			getManagedBean().setBusinessCityLs(null);
-		}
-		//#36718 - END
-				
+
 		if(this.getManagedBean().getSmSupp().getBusinessType() != null && !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase("")){
 			if(SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE.contains(this.getManagedBean().getSmSupp().getBusinessType())){
 				
