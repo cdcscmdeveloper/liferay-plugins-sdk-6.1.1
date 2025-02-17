@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="ctReportMsgId" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false"></p:messages>
+			closable="true" showSummary="false" escape="false"></p:messages>
 		<table style="margin-top: 10px; width: 100%;">
 			<tr>
 				<td style="width:20%">
@@ -106,11 +106,17 @@
 			<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractManagementRptMcVal}">
 				<ui:include src="/xhtml/reports/ct/mc/CT_037_ContractManagementReport.xhtml"></ui:include>
 			</c:if>	
-			<!-- #30918 - end -->	
-				
-
-								
+			<!-- #30918 - end -->						
 		</p:panel>
-		<ac:lovPopup />
+		<ui:remove> Start - #29416 </ui:remove>
+		<h:panelGroup
+			rendered="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal}">
+			<ac:lovPopupItemName />
+		</h:panelGroup>
+		<h:panelGroup
+			rendered="#{!ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal or !ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal or ctReportBB.managedBean.reportCode eq null}">
+			<ac:lovPopup />
+		</h:panelGroup>
+		<ui:remove> Start - #29416 </ui:remove>
 	</ui:define>
 </ui:composition>
