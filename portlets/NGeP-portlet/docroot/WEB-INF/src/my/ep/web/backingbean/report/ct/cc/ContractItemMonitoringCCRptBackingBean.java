@@ -6,9 +6,12 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import my.ep.biz.bean.search.ISearchBean;//#29416
+import my.ep.biz.bean.search.SearchBean;//#29416
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
+import my.ep.web.backingbean.components.lov.LovBackingBean;//#29416
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.panel.ContractItemMonitoringCCRptManagedBean;
@@ -17,6 +20,7 @@ import my.ep.web.util.DateUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext; //#29416
 
 @ManagedBean(name = "ccContractItemMonitoringRptBB")
 @ViewScoped
@@ -37,6 +41,7 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 		
 		log.debug("resetSearch: ccContractItemMonitoringRptBB");
+		LovBackingBean lovBean = new LovBackingBean();//#29416
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);
@@ -56,7 +61,19 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		getManagedBean().setCircularNo(null);
 		getManagedBean().setCircularName(null);
 		getManagedBean().setCircularEffFromDate(null);
-		getManagedBean().setCircularEffToDate(null);		
+		getManagedBean().setCircularEffToDate(null);
+		// Start fix- #29416
+		lovBean.setPersistedEntities(null);
+		lovBean.setSelectedEntities(null);
+		lovBean.setBackupSelectedEntities(null);
+		if (getManagedBean().isLovItemReportNameTriggered()) {
+			getManagedBean().setLovItemReportNameTriggered(false);
+			RequestContext.getCurrentInstance().execute("resetAllData();");
+		}
+		getManagedBean().setFormattedSelectedItems(null);
+		getManagedBean().setLovSelectedItemList(null);
+		getManagedBean().setSelectedSupplier(null);	
+		// End fix- #29416
 		
 	}
 	@Override
@@ -135,7 +152,15 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 			map.put(CtReportConst.PARAM_KEY_CIRCULAR_TO_DATE, df.format(
 					getManagedBean().getCircularEffToDate()));
 		}
-		
+		// Start - #29416
+		if (getManagedBean().getSelectedSupplier() != null) {
+			map.put(CtReportConst.PARAM_KEY_SUPPLIER_NAME, getManagedBean()
+					.getSelectedSupplier().getOrgProfileId().toString());
+		}
+		if (getManagedBean().getContractItemId() != null) {
+			map.put(CtReportConst.PARAM_KEY_ITEM_NAME, getManagedBean().getContractItemId());
+		}
+		// End - #29416
 		if (MapUtils.isNotEmpty(map)) {
 			// mandatory map values
 			map.put(CtReportConst.PARAM_KEY_REPORT, getManagedBean()
