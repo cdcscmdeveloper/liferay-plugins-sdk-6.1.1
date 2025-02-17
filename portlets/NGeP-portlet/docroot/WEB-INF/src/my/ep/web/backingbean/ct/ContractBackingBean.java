@@ -388,11 +388,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		} else if (event.getComponent().getId().equalsIgnoreCase("mofDecisionLetterId")){
 			getManagedBean().getContractVer().setMofDecisionLetterAttachment(attachment);
 		} 
-		//26186 start
-		else if (event.getComponent().getId().equalsIgnoreCase("disciplinaryAttachmentId")){
-			getManagedBean().getContractVer().getDisciplinaryActionAttachments().add(attachment);
-		} 
-		//26186 end
 		
 		//#29549 start
 		else if(event.getComponent().getId().equalsIgnoreCase("meetingAmendmendAttachmentId")){
@@ -425,15 +420,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 				this.getManagedBean().getContractVer().getItemAttachments().remove(getManagedBean().getAttachFileIndex());
 		}
-		//#26186 start
-		else if(event.getComponent().getId().equalsIgnoreCase("delDisciplinaryAttachmentId")){
-			attachment = getManagedBean().getContractVer().getDisciplinaryActionAttachments().get(this.getManagedBean().getAttachFileIndex());
-			if(attachment.getAttachmentId() != null){
-				getManagedBean().getDeleteAttachmentList().add(attachment);
-			}
-			getManagedBean().getContractVer().getDisciplinaryActionAttachments().remove(this.getManagedBean().getAttachFileIndex());
-		}
-		//#26186 end
 		//#29549 start
 		else if(event.getComponent().getId().equalsIgnoreCase("delMeetingAmendmentAttachId")){
 			attachment = getManagedBean().getContractVer().getCtAmendment().getCtMeetings().get(this.getManagedBean().getAttachFileIndex()).getMeetingAmendmentAttachment();
