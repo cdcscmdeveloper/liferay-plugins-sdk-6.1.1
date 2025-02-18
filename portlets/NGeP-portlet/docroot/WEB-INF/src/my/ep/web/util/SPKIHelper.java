@@ -19,8 +19,7 @@ public class SPKIHelper {
 	private static String SPKI_TLS_LATEST = EpPropertiesUtils.getInstance().getProperty("spki.tls.on");
 
 	public boolean isUsingSpkiTLSLatest() {
-		return true;
-//		return (SPKI_TLS_LATEST != null && SPKI_TLS_LATEST.trim().equalsIgnoreCase("1")) ? true : false;
+		return (SPKI_TLS_LATEST != null && SPKI_TLS_LATEST.trim().equalsIgnoreCase("1")) ? true : false;
 	}
 
 	public static SPKIHelper getInstance() {
