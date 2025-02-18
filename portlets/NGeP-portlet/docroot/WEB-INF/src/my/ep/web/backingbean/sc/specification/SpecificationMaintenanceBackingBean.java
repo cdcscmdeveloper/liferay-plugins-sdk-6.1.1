@@ -598,14 +598,18 @@ private class SpecMaintenanceSearchQtDataModel extends
 		}
 		// #15391 - end
 
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus().getStatusId() : null; //#29732
 		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());// #29732
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-				&& !isQtRevisePubNqtPendingScheDoc()) {
-			if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-					&& !isQtRevisePubNqtPendingScheDoc()) {
+		if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc() && status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
+			if (isSpecRoleMaintenanceValidation()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+				if(this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(this.getManagedBean().getCurrentStatusId()) 
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(this.getManagedBean().getCurrentStatusId())
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())){
+					this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+				}
 			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
 
@@ -768,11 +772,10 @@ private class SpecMaintenanceSearchQtDataModel extends
 				.getDisplayPortletId());
 	}
 
-	private boolean isSpecRoleMaintenanceValidation() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
-				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+    private boolean isSpecRoleMaintenanceValidation(){
+    	FacesScopes facesScopes = new FacesScopes();
+		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
 	}
 
 	private boolean isQtRevisePubNqtPendingScheDoc() {
