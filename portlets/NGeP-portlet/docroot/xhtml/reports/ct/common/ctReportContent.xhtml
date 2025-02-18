@@ -50,7 +50,7 @@
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 			<td>
 				<p:inputText value="#{ctReportBB.managedBean.contractNo}"  maxlength="17" style="width:300px">
-					<p:ajax event="blur" partialSubmit="true" />
+					<p:ajax event="change" partialSubmit="true" process="@this" listener="#{ctReportBB.onChangeContractNo()}"/>
 				</p:inputText>
 				<!-- Enhancement 32675 - shaqimi start -->		
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.report.contract.no']}" />
@@ -139,6 +139,30 @@
 				</tr></table>
 			</td>
 		</tr>
+		<ui:remove> Start - #29416 </ui:remove>
+		<h:panelGroup rendered="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+		
+		<tr>	
+				<td><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
+				<td style="width: 50%"><ac:lov id="ctSupplierName" readonly="true"
+						size="40" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
+						headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
+						value="#{ctReportBB.managedBean.selectedSupplier.smSupplier.companyName}"
+						saveObject="ctReportBB.managedBean.selectedSupplier" /></td>
+						
+			    <td><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
+				<td><ac:lovItemName id="ctReportItemName"
+						lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true"
+						size="60" headerText="#{lbl['lbl.rpt.itmName']}"
+						value="#{ctReportBB.managedBean.formattedSelectedItems}"
+						saveObject="ctReportBB.managedBean.lovSelectedItemList"
+						selectionMode="multiple"
+						postUpdateListener="ctReportBB.checkValue()"
+						update="@form"
+						flagBean="ctReportBB" /></td>
+		 </tr> 		
+		 </h:panelGroup> 
+		 <ui:remove> End - #29416 </ui:remove>
 	</table>
 	<br/>
 	<ac:generateReport bBean="#{ctReportBB}"

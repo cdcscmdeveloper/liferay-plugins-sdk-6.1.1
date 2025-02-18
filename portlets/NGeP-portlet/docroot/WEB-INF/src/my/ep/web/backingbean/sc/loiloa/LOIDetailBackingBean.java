@@ -1742,11 +1742,6 @@ public class LOIDetailBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
-	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-	}
 
 	/**
 	 * getting Approver drop down listing in approval details.
@@ -7035,22 +7030,6 @@ public class LOIDetailBackingBean extends
     	  
     	return suppSearchResDTO.getSmSupplierBranchList();
 	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
-	
-		Long supplierId = qtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
-		ScQt scQt = this.getManagedBean().getScQt();
-		
-		if(supplierId != null && scQt != null){
-		    return Boolean.TRUE;
-	    }
-		return Boolean.FALSE;
-	}
 	//#28777 & #29729 - End
 	
 	/**
@@ -7058,27 +7037,34 @@ public class LOIDetailBackingBean extends
 	 * @param bpmAction
 	 * @return void
 	 */
-	public void validateNegoDecisionAction() {
+	public void validateNegoDecisionAction(String outcome) {
 		try {
+			ScLoi scLoi = getManagedBean().getScLoi();
+			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
+			String bpmAction = outcome;
 
-			String decision = this.getManagedBean().getDecisionCode();
-			String justification = this.getManagedBean().getJustification();
-			String bpmAction = BpmOutcomeConst.BPM_SUBMIT;
+			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+				String decision = this.getManagedBean().getDecisionCode();
+				String justification = this.getManagedBean().getJustification();
+				bpmAction = BpmOutcomeConst.BPM_SUBMIT;
 
-			if (decision == null) {
-				throw new EpException(MessageConst.ERROR_775194);
-			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
-				throw new EpException(MessageConst.ERROR_775193);
-			} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
-				RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
-			} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+				if (decision == null) {
+					throw new EpException(MessageConst.ERROR_775194);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification == "") {
+					throw new EpException(MessageConst.ERROR_775193);
+				} else if (decision.equals(ParameterConst.NOT_REACH_AGREEMENT) && justification != "") {
+					RequestContext.getCurrentInstance().execute("submitNegoConfirmPopUp.show()");
+				} else if (decision.equals(ParameterConst.REACHED_AGREEMENT)) {
+					updateBpmTaskAction(bpmAction);
+				}
+			} else {
 				updateBpmTaskAction(bpmAction);
 			}
 
 		} finally {
 		}
 
-	}//#30008 - end
+	}// #30008 - end
 	
 	//20230111@Haziq - #12487
 	/**

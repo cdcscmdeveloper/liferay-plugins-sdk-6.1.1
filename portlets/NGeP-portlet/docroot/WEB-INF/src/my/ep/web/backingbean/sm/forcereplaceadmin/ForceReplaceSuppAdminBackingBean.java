@@ -1578,11 +1578,15 @@ public class ForceReplaceSuppAdminBackingBean extends
 				//#34159 - END
 				PmDistrict district = new PmDistrict();
 				PmCity city = new PmCity();
-
-				country.setCountryId(refAddress.getPmCountry().getCountryId());
-				address.setPmCountry(country);
 				
 				//#36716 - START
+				if (refAddress.getPmCountry().getCountryId() != null) {
+					country = SmCommonUtil.getInstance().getCountryById(refAddress.getPmCountry().getCountryId());
+				}
+
+				address.setPmCountry(country);
+				onChangeCountry(address, "M");
+				
 				if(refAddress.getPmState().getStateId() != null){
 					state = SmCommonUtil.getInstance().getStateById(refAddress.getPmState().getStateId());
 				}

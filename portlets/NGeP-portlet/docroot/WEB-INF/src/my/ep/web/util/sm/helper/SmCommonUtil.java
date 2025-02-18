@@ -4223,6 +4223,12 @@ public class SmCommonUtil {
 			SmAddress smAddress) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//#36718 - START
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		item.setValue(null);
+		items.add(item);
+		//#36718 - END
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
 				.contains(businessType)) {
@@ -4244,11 +4250,13 @@ public class SmCommonUtil {
 							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
 							.getOrgProfileList();
 					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
-						item = new SelectItem();
+						//#36718 - START
+						/*item = new SelectItem();
 						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
 								null));
 						item.setValue(null);
-						items.add(item);
+						items.add(item);*/
+						//#36718 - END
 						for (PmOrgProfile orgProfile : orgProfileList) {
 							item = new SelectItem();
 							item.setLabel(orgProfile.getPmOrgValidity()

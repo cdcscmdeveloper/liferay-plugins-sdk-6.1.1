@@ -528,14 +528,18 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		Long curStatusId = getManagedBean().getSmComplaint().getPmStatus().getStatusId();
 		Long nextStatusId = getNextStatus(curStatusId);
 		
-		if(nextStatusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK){
+		//37832 - START
+		if(nextStatusId != null && nextStatusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK){
 			getManagedBean().getSmComplaint().setCaseConfirmDate(new Date());
 		}
 		
 		log.info("***nextStatusId***" + nextStatusId);
-		PmStatus nextStatus = SmCommonUtil.getInstance().retrievePmStatusById(nextStatusId);
-
-		getManagedBean().getSmComplaint().setPmStatus(nextStatus);
+		
+		if(nextStatusId != null){
+			PmStatus nextStatus = SmCommonUtil.getInstance().retrievePmStatusById(nextStatusId);
+			getManagedBean().getSmComplaint().setPmStatus(nextStatus);
+		}
+		//37832 - END
 	}
 
 	public String issueShowCauseLetter() {

@@ -65,25 +65,10 @@
 				<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.activation.loginid.instruction']}"></h:outputText>
 			</td>
 		</tr>
-		<ui:remove>
-			<tr>
-				<td>
-				</td>
-				<td>
-					<ac:captcha id="accaptcha" 
-						label="Captcha" 
-						language="en" 
-						theme="white"/> 
-				</td>
-			</tr>
-		</ui:remove>
 		<tr>
 			<td>
-				<p:commandButton 
-					value="#{lbl['lbl.btn.submit']}" onclick="submissionDialog.show();"  
-					oncomplete="submissionDialog.hide();"
-					action="#{supplierUserActivationBackingBean.activateSupplierUser}"
-					ajax="false" />
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" oncomplete="if (!args.validationFailed) confirmDlg.show();" />
 			</td>
 			<td />
 		</tr>
@@ -94,7 +79,15 @@
 				closable="false" resizable="false" showHeader="false">
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:dialog>
-
+	<!-- #34400 -->
+	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		okAction="supplierUserActivationBackingBean.activateSupplierUser"
+		okProcess="@form"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.user.activate']}" 
+		update="@form"
+		loadingWidget="submissionDialog"/>
 	</ui:define>
 
 

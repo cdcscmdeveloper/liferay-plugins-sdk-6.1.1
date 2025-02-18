@@ -560,11 +560,40 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 				}
 				
 				PmUser approver = null;
-				if(hasSupplierRole() && !getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())) {
-					approver = fulfilmentSO.retrieveFlActors(getManagedBean().getStopInstr().getFlRequest().getDocType(), getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(), RoleCode.FL_APPROVER.value()).getUser();
-				} else {
-					approver = getFacesScopes().getUserSessionBean();
+				
+				// 36386-start
+				String functionType = getManagedBean().getSearchFunctionType();
+				IFulfilmentSO flfulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+				PmUser approverCreatedSdi = null;
+				if (getManagedBean().getStopInstr() != null && getManagedBean().getStopInstr().getStopInstrId() != null) {
+					FlActor flactor = flfulfilmentSO.retrieveFlActors(ParameterConst.DOCTYPE_STOP_DELIVERY,
+							getManagedBean().getStopInstr().getStopInstrId(), RoleCode.FL_APPROVER.toString());
+					if (flactor != null && flactor.getUserName() != null) {
+						approverCreatedSdi = flactor.getUser();
+					}
 				}
+				if (functionType != null) { // from maintenance
+					if (functionType.equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+						approver = getFacesScopes().getUserSessionBean();
+					} else if (functionType.equalsIgnoreCase(ParameterConst.ORG_TYPE_SUPPLIER)) {
+						approver = fulfilmentSO.retrieveFlActors(
+								getManagedBean().getStopInstr().getFlRequest().getDocType(),
+								getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(),
+								RoleCode.FL_APPROVER.value()).getUser();
+					}
+				} else {
+					if (approverCreatedSdi != null || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) { // from task list
+						approver = getFacesScopes().getUserSessionBean();
+					} else {
+						approver = fulfilmentSO.retrieveFlActors(
+								getManagedBean().getStopInstr().getFlRequest().getDocType(),
+								getManagedBean().getStopInstr().getFlRequest().getFulfilmentReqId(),
+								RoleCode.FL_APPROVER.value()).getUser();
+					}
+				}
+				// 36386-end
+				
 				List<PmUser> approverUserList = sortApproverUserList(userGroupResDTO.getUserGroupUserList(), approver, getManagedBean().getStopInstr().getFlRequest().getPmUserGroup().getUserGroupId());
 				getManagedBean().getApproverList().addAll(approverUserList);
 			}
@@ -964,9 +993,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 			
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}

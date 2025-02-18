@@ -13,7 +13,7 @@
 		<cc:attribute name="content" default="" />
 		<!-- <cc:attribute name="postSignAction" method-signature="void action()" /> -->
 		<cc:attribute name="widget" default="" />
-		<cc:attribute name="okAction" required="true" default="" />
+		<cc:attribute name="okAction" default="" /> <!-- #34400 -->
 		<cc:attribute name="cancelAction" default="" />
 		<cc:attribute name="width" default="auto" />
 		<cc:attribute name="height" default="auto" />
@@ -23,6 +23,11 @@
 		<cc:attribute name="style" default="" />
 		<cc:attribute name="dialogCSS" default="" />
 		<cc:attribute name="loadingWidget" default=""/>
+		<!-- #34400 - start -->
+		<cc:attribute name="bean" type="java.lang.Object" />
+		<cc:attribute name="hasParam" default="false" />
+		<cc:attribute name="okParam" method-signature="java.lang.String action(java.lang.String)" />
+		<!-- #34400 - end -->
 	</cc:interface>
 
 	<cc:implementation>
@@ -73,6 +78,22 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<c:choose>
+					<!-- #34400 - start -->
+					<c:when test="#{cc.attrs.hasParam}">
+						<p:commandButton id="yesWithParamId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							action="#{cc.attrs.okParam}"
+							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+					</c:when>
+					<c:when test="#{not empty cc.attrs.bean}">
+						<p:commandButton id="yesWithBeanId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
+							partialSubmit="true" 
+							onstart="#{cc.attrs.widget}.hide();#{cc.attrs.loadingWidget}.show();"
+							action="#{cc.attrs.bean[cc.attrs.okAction]}"
+							oncomplete="#{cc.attrs.loadingWidget}.hide();" update="#{cc.attrs.update}" />
+					</c:when>
+					<!-- #34400 - end -->
 					<c:when test="#{not empty cc.attrs.loadingWidget}">
 						<ui:remove><!--trigger external blockwidget, TODO: maybe refactor this conditional fragment --></ui:remove>
 						<p:commandButton id="yesWithLoadId" value="#{lbl['lbl.btn.yes']}" process="#{cc.attrs.okProcess}"
