@@ -6032,7 +6032,7 @@ public class EvaluationBackingBean extends
 						//#32089
 						/*#29187 Start Vinod*/
 						if (this.getManagedBean().getScQt().isZonal()
-								&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+								&& Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
 										this.getManagedBean().getScQt().getQtStatus().getStatusId())
 								&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 							this.getManagedBean().setTplSpecZoneDtl(
@@ -18859,7 +18859,7 @@ private void retriveCommitteeRemarksList(){
 				.getManagedBean().getScQt().getQtStatus().getStatusId()
 				: Long.MIN_VALUE;
 
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
 				statusId)) {
 			render = false;
 		}
@@ -18882,7 +18882,7 @@ private void retriveCommitteeRemarksList(){
 				&& null != this.getManagedBean().getScQt().getQtStatus() ? this
 				.getManagedBean().getScQt().getQtStatus().getStatusId()
 				: Long.MIN_VALUE;
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
 				statusId)) {
 			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
 					.getSpecAnswerList()) {
@@ -18951,7 +18951,7 @@ private void retriveCommitteeRemarksList(){
 				.getManagedBean().getScQt().getQtStatus().getStatusId()
 				: Long.MIN_VALUE;
 		String checklistType = getManagedBean().getCheckListType();
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
 				statusId)
 				&& (QTConstants.FINANCIAL_EVALUATION
 						.equalsIgnoreCase(checklistType) || QTConstants.TECHNICAL_EVALUATION
