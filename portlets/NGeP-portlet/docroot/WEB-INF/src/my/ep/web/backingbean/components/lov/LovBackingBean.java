@@ -490,15 +490,14 @@ public class LovBackingBean implements Serializable {
 	// Start - #29416
 	public void resetAction() {
 		if (getLovBean().getItemUsageMonitoringReport()) {
-			log.info("resetAction() ::::::::::::::::::: getLovBean().getItemUsageMonitoringReport() ::: "
-					+ getLovBean().getItemUsageMonitoringReport());
 			this.getSearchDataModelMultiSelection().resetData();
+			this.setLovSearchBean(new SearchBean());
 		} else {
-			log.info("resetAction()  getLovBean().getItemUsageMonitoringReport() = false ");
 			// getLovBean().setConditionField("");
 			// lovSearchBean.getDataFilterBeans().clear();
 			// this.setResultList(new ArrayList());
 			this.getSearchDataModel().resetData();
+			this.getSearchDataModelMultiSelection().resetData();
 			this.setLovSearchBean(new SearchBean());
 			// this.setLovBean(new LovBean());
 			// 20200909@akmal - Enhancement28951 - Start
@@ -522,13 +521,10 @@ public class LovBackingBean implements Serializable {
 		if (getLovBean() != null) {
 			if (getLovBean().getItemUsageMonitoringReport() && (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId()))
 					&& (ctReportBB.getManagedBean().isLovItemReportNameTriggered() || ccContractItemMonitoringRptBB.getManagedBean().isLovItemReportNameTriggered())) {
-				log.info("inside resetAll() getLovBean().getItemUsageMonitoringReport() ");
 				lovBean.setResetFlag(true);
 				this.getSearchDataModelMultiSelection().resetData();
 
 			} else {
-				log.info("else resetAll() getLovBean().getItemUsageMonitoringReport() "
-						+ getLovBean().getItemUsageMonitoringReport());
 				lovBean.setResetFlag(true);
 				this.getSearchDataModel().resetData();
 				this.getSearchDataModelMultiSelection().resetData();
