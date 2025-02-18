@@ -57,7 +57,6 @@
 		<td valign="top">
 		<table>
 			<tr><td>$velocityCount.</td></tr>
-			<tr><td><p style="width: 10px;height: 10px;background: white;border:solid thin black;" /></td></tr>
 		</table>
 		</td>
 		
@@ -124,7 +123,7 @@
 <table class="sTable">
 	#if($review)
 		<tr>
-			<td class="txtBold" width="40%"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.acc.no')</u></td>
+			<td class="txtBold" width="40%"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.check.list')</u></td>
 			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.availableLbl')</u></td>
 			<td class="txtBold"><u>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remark')</u></td>
 		</tr>

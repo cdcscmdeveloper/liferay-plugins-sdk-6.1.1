@@ -6,6 +6,7 @@ package my.ep.web.backingbean.sc.directpurchase;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -132,6 +133,16 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	private String DIRECT_PURCHASE_SEARCH_PAGE_NAV = "directPurchaseSearch";
 	private String DIRECT_PURCHASE_MAINTENANCE_PAGE_NAV = "directPurchaseMaintenance";
 	
+	// 25790 - start
+	/**
+	 * List of Goverment role code
+	 */
+	private static final List<String> ALLOWED_ROLES = Arrays.asList(RoleCode.REQUISITIONER.value(),
+			RoleCode.FL_APPROVER.value(), RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(),
+			RoleCode.PAY_OFFICER.value(), RoleCode.DESK_OFFICER.value());
+
+	// 25790 - end
+	
 	public void preRenderDirectPurchaseMaintenance() {
 		debugLogger("preRenderDirectPurchaseMaintenance");
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -176,12 +187,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		searchApprovedCancelLoa();
 		//#22211 - Start 
 		
-		if(isGovernment()){
+		if(isGovernment() || isDeskOfficer()){//#25790
 			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
 			getManagedBean().setGovernment(Boolean.TRUE);
 			
 			//#25396 - Start
-			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())){
+			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
+					|| getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){ //25790
 				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
 			}
 			//#25396 - End
@@ -320,7 +332,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				}
 
 				// Redmine 20311: remove RN search for Supplier
-				if (isGovernment()) {
+				if (isGovernment() || isDeskOfficer()) {//#25790
 					docTypeList.add(ParameterConst.DOCTYPE_REQUEST_NOTE);
 				}
 
@@ -1646,5 +1658,22 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		return false;
 	}
 	// #36199 - end
+	// 25790 - start
+	/**
+	 * Check is it login user is Government User
+	 * 
+	 * @return true, if user is Government User
+	 */
+	@Override
+	protected boolean hasGovernmentUserRole() {
+		for (String role : ALLOWED_ROLES) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+	// 25790 - end
 }
 

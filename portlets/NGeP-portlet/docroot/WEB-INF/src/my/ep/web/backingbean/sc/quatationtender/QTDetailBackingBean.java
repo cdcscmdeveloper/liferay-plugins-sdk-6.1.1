@@ -984,6 +984,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//bug #30435 - end
 			
+			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
@@ -4210,6 +4212,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#25077 End 
 			//#30477 Start Vinod
 			validateUserInactive(taskName, currentStatus, outcome);
+			validateSupplierCriteriaIntegrity(qt);	// Bug #36730@Syazani 07/01/2025 -- Start
 			
 			//#30477 End Vinod
 			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)
@@ -4350,6 +4353,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							approvalCategory);
 				}
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+				
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+				// 29732 fix duplicate issues while deleting the category and add the same id -start-
+				if(null != removeCategoryCodes){
+					List<ScQtCategory> categoryResults = new ArrayList<>();
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+					qt.setScQtCategorys(categoryResults);
+				}
+				// 29732 -end-
+				
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
@@ -4427,9 +4443,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.equals(ParameterConst.DOCTYPE_BPK_APPROVAL)
 						&& (CollectionUtils.isEmpty(approval.getApproverSettings()));
 				
-				if ((valCondition && approval.getApprovalCategory().getParameterCode()
-						.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT))
-						|| valConditionOthers) {
+				// #37632 - Check only for CAA - Start
+				if ((valConditionOthers || valCondition)
+						&& approval.getApprovalCategory().getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
+				// #37632 - Check only for CAA - End
 					// #11299 Start Vinod
 					throw new EpException(MessageConst.ERROR_775174);
 					// #11299 End Vinod
@@ -5013,10 +5031,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (!this.getManagedBean().getQt().isPanel()) {
 				if (CollectionUtils.isEmpty(this.getManagedBean()
 						.getQtCategoryList())) {
-					List<ScQtCategory> categoryResults = tenderResDTO
-							.getCategories();
+					
+					// 29732 fix duplicate issues -start-
+					List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+					// 29732 fix duplicate issues while deleting the category
+					// and add the same id -start-
+					if (null != removeCategoryCodes) {
+						List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+						categoryResultsnew = this.getManagedBean().getQtCategoryList();
+						if (null == categoryResultsnew || CollectionUtils.isEmpty(categoryResultsnew)) {
+							this.getManagedBean().setQtCategoryList(this.getManagedBean().getTobeRemoveCategoryCodes());
+							this.getManagedBean().setTobeRemoveCategoryCodes(null);
+						} else {
+							this.getManagedBean().setQtCategoryList(categoryResultsnew);
+						}
 
-					this.getManagedBean().setQtCategoryList(categoryResults);
+					} else {
+						List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
+
+						this.getManagedBean().setQtCategoryList(categoryResults);
+					}
+					// 29732 -end-
 
 				}
 
@@ -5122,6 +5157,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 				}
+				
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+				// 29732 fix duplicate issues while deleting the category and add the same id -start-
+				if(null != removeCategoryCodes){
+					List<ScQtCategory> categoryResults = new ArrayList<>();
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+				}
+				// 29732 -end-
+				
 			} else {
 				this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 				if(CollectionUtils.isNotEmpty(tenderResDTO.getPanelItems())){

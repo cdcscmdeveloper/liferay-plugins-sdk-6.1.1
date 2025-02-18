@@ -24,9 +24,18 @@
 		</p:commandLink>
 		<ui:remove>#29187 End Vinod</ui:remove>
 		<ui:remove>#29187 Start Vinod Added condition Vinod</ui:remove>
-		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
+		<ui:remove> 36950 - start - remove this line of code.
+		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="true"
 				rendered="#{!isRepeated and isRenderUOMandQuantity and !templateSpecBean.wordBreakForQT}" 
 				style="word-break:normal;"/> <!-- #36103 - add style word-break:normal --><!-- #29007 Added wordBreakForDLOA condition Vinod-->
+				36950 - end - remove this line of code.
+		</ui:remove>	
+		<ui:remove> #36950 start @zaim</ui:remove>	
+		<ui:param name="itemName" value="#{fn:replace(question.clItem,',',',  ')}" />
+		<h:outputText value="#{templateSpecBackingBean.replaceWithBR(itemName)}" escape="false"
+				rendered="#{!isRepeated and isRenderUOMandQuantity and !templateSpecBean.wordBreakForQT}" 
+				style="white-space: normal;word-wrap:break-word; word-break:break-word; " /> 		
+		<ui:remove> #36950 end @zaim</ui:remove>
 		<ui:remove>#29187 End Vinod</ui:remove>
 		<!-- #29007 Start Vinod -->
 		<h:outputText value="#{fn:replace(question.clItem,',',',  ')}"  escape="false"
