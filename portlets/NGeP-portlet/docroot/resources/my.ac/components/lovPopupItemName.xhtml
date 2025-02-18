@@ -43,22 +43,36 @@
                                 lbl['lbl.cm.search']}" />
 				</f:facet>
 
+				<h:outputText
+					rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}"
+					styleClass="instruction"
+					value="#{lbl['lbl.ct.instruction.report.item.usage.monitoring']}"
+					escape="false" style="color: blue" />
+				<br />
+				<br />
 				<h:panelGroup style="width:100%;">
-					<ui:include
-						src="#{lovBackingBean.lovBean.itemUsageMonitoringReport ? 
-                           'lovItemNameSearchPanel.xhtml' : 
-                           'lovSearchPanel.xhtml'}" />
+					<h:panelGroup rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}">
+						<ui:include src="lovSearchPanel.xhtml" />
+					</h:panelGroup>
 
-					<div style="text-align: right; width: 100%;">
-						<p:commandButton id="lovSearchBtn"
-							value="#{lbl['lbl.btn.search']}"
-							action="#{lovBackingBean.searchAction}" partialSubmit="true"
-							process="searchPanel" update="resultPanel" widgetVar="lovSearch" />
+					<h:panelGroup rendered="#{lovBackingBean.lovBean.itemUsageMonitoringReport}">
+						<ui:include src="lovItemNameSearchPanel.xhtml" />
+					</h:panelGroup>
+					
 
-						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							action="#{lovBackingBean.resetAction}" partialSubmit="true"
-							process="searchPanel" update="searchPanel resultPanel" />
-					</div>
+					<table style="width: 100%;">
+						<tr>
+							<TD style="text-align: right;"><p:commandButton
+									id="lovSearchBtn" value="#{lbl['lbl.btn.search']}"
+									action="#{lovBackingBean.searchAction}" partialSubmit="true"
+									process="searchPanel" update="resultPanel"
+									widgetVar="lovSearch">
+								</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.reset']}"
+									action="#{lovBackingBean.resetAction}" partialSubmit="true"
+									process="searchPanel" update="searchPanel resultPanel">
+								</p:commandButton></TD>
+						</tr>
+					</table>
 				</h:panelGroup>
 			</p:panel>
 
