@@ -231,6 +231,8 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
 				templateSpecBean.setSpecAnswersToDelete(null);
+				
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 
 				if (specMaster.getSpecTypeCode() != null &&
 						ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())

@@ -16,4 +16,16 @@ public class SSTConstant {
 	public static String itemType = "itemType";
 	public static String EMPTY_STRING = "";
 	// 26226 - end 
+
+	// #29007 - start 
+	public static final String LESS_THAN_SYMBOL = "&#60;";
+	public static final String GREATER_THAN_SYMBOL = "&#62;";
+	public static final String PROTEGE_UPPERCASE_E = "&#201;";
+	public static final String PROTEGE_LOWERCASE_E = "&#233;";
+	// 36122 - start
+	/**
+	 * Add whitespace to the text
+	 */
+	public static final String ADD_WHITESPACE = " ";
+	// 36122 - end
 }

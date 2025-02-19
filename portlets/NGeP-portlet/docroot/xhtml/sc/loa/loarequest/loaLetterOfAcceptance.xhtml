@@ -134,7 +134,7 @@
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="scDocUploadDlg"
 					rendered="#{(isEditableStatus and !lOADetailBackingBean.managedBean.readOnly) and (scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or 
-						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload)}"
+						scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUploadAndDownload and !scLoaReport.uploadlampiranA3)}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
 					update=":#{p:component('contentsTbl')}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
@@ -145,7 +145,7 @@
 					<f:setPropertyActionListener for="actionEvent"
 						target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
 						value="LAR" />
-				</ac:scSingleFileUploadButton>
+				</ac:scSingleFileUploadButton><!-- #29007 vinod Added uploadlampiranA3 -->
 			</p:column>
 		</p:dataTable>
 

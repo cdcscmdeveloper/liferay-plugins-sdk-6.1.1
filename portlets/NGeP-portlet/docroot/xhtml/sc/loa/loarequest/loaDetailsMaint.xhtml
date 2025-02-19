@@ -81,7 +81,11 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
+					<ui:remove>#29007 Added actionListener Vinod start</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+							actionListener="#{lOADetailBackingBean.searchSupplierItemByName}"
+							update="@form">
+							<ui:remove>#29007 Added actionListener Vinod end</ui:remove>
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">

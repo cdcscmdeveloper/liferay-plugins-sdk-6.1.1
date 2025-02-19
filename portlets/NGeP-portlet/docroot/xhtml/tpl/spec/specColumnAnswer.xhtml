@@ -182,6 +182,9 @@
 				<f:validateLength for="answerText" maximum="1000" />
 			</p:inputTextarea>
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText}" />
+			<!-- #29007	Vinod Added -start- -->
+			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeText}"/>
+			<!-- #29007	Vinod Added -end- -->
 			<!-- 25201 -start- -->
 			<p:inputText id="answerNumeric" style="width:calc(100% - 40px); text-align:right;" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
@@ -192,6 +195,9 @@
 				<p:ajax partialSubmit="true" process="@this" update="@this, answerNumericMsg" />
 			</p:inputText>
 			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" />
+			<ui:remove> #29007	Vinod Added -start- </ui:remove>
+			<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplSpecAnswer.tplSpecQuestion.answerTypeCode)}" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}"/>
+			<ui:remove> #29007	Vinod Added -end- </ui:remove>
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">

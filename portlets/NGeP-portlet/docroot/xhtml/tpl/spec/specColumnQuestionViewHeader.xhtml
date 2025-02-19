@@ -85,6 +85,29 @@
 
 			</p:column>
 			<ui:insert name="otherHeaderSection" />
+			<ui:remove> #29007 Start Vinod </ui:remove>
+			<c:if
+				test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
+				<ui:param name="specificationRequired1"
+					value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+				<p:column rowspan="#{specificationRequired ? 2 : 1}"
+					style="width:97px; white-space:normal;word-break:normal;"
+					headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+				</p:column>
+				<!-- #29006 add CSS property -->
+				<p:column rowspan="#{specificationRequired ? 2 : 1}"
+					style="width:90px;white-space:normal;word-break:normal;text-align:right;"
+					rendered="#{isItemTypeService}"
+					headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+				</p:column>
+				<!-- #29006 add CSS property -->
+				<p:column rowspan="#{specificationRequired ? 2 : 1}"
+					style="width:115px; text-align:right; white-space:normal;word-break:normal;"
+					headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+				</p:column>
+				<!-- #29006 add CSS property -->
+			</c:if>
+			<ui:remove> #29007 End Vinod </ui:remove>
 		</p:row>
 		<p:row rendered="#{specificationRequired}">
 			<p:column colspan="1" style="width: 30%;white-space: normal;"
