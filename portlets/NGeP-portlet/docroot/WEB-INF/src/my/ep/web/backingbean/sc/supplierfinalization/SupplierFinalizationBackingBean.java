@@ -11188,21 +11188,19 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			
 			 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 			 searchReqDTO.setDocId(qtId);
-			 if(sourcingIntegrationSO.checkListQualifiedSupplierBranchDeleted(qtId)){
+			 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
 				 return Boolean.TRUE;
 			 }
 			 return Boolean.FALSE;
 		}
 		
 	    /**
-	    * Method to check had disqualified supplier
+	    * Method to check had disqualified supplier list
 	    **/
 		public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId){
 			ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 			
-			 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-			 searchReqDTO.setDocId(qtId);
 			 if(sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)){
 				 return Boolean.TRUE;
 			 }
