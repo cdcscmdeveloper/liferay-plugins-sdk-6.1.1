@@ -1116,18 +1116,13 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	private void populateInfoByStatus(){
 		Long currentStatus = getManagedBean().getSmComplaint().getPmStatus().getStatusId();
 		log.info("*****currentStatus*****" + currentStatus);
-		//37855 - START
 		if(currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT.longValue() || 
 				currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT_REJECT.longValue() ||
-				currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue() ||
-				currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT.longValue()){
+				currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK.longValue()){
 
-			if (currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT_REJECT.longValue()
-					|| currentStatus.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT.longValue()){
+			if(currentStatus.longValue() == DisciplinaryActionConst.NEW_COMPLAINT_REJECT.longValue()){
 				SmComplaintReview complReview = getFirstReview();
 				getManagedBean().setSmComplReview(complReview);
-				populateAttachedDocsByReviewIdAndStatus(getManagedBean().getSmComplReview().getComplaintReviewId(), currentStatus);
-				//37855 - END
 			}else{
 				getManagedBean().setSmComplReview(new SmComplaintReview());
 				getManagedBean().getSmComplReview().setSmComplaint(getManagedBean().getSmComplaint());
@@ -1213,8 +1208,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	
 	
 	private void populateAttachedDocsByReviewIdAndStatus(Long reviewId, Long statusId){
-		if (statusId.longValue() == DisciplinaryActionConst.PREPARE_SC_LETTER.longValue()
-				|| statusId.longValue() == DisciplinaryActionConst.REVIEW_BY_PTPK_REJECT.longValue()) { // 37855
+		if(statusId.longValue() == DisciplinaryActionConst.PREPARE_SC_LETTER.longValue()){
 			getManagedBean().setPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.FIRST_PTPK_REVIEW_DOC_TYPE, reviewId));
 		}else if(statusId.longValue() == DisciplinaryActionConst.UPDATE_SC_RECEIVE_DATE.longValue()){
 			getManagedBean().setPtpkDecisionDocs(getDocumentsByTypeAndId(DisciplinaryActionConst.FIRST_PTPK_REVIEW_DOC_TYPE, reviewId));
