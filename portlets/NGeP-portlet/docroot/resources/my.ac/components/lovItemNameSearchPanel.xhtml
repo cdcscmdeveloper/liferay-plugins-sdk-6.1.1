@@ -5,7 +5,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
    	xmlns:p="http://primefaces.org/ui">
    	
-	<h:panelGrid columns="2" id="lovCriteriaContractNo" cellpadding="50" cellspacing="0">
+	<h:panelGrid columns="2" id="lovCriteriaContractNo" cellpadding="5" cellspacing="0">
 		<!-- Label for mcContractNo -->
 		<p:outputLabel for="mcContractNo" value="#{lbl['lbl.ct.contract.no']}"
 			style="font-weight:bold; margin-bottom: 5px; margin-right: 10px;"
@@ -27,7 +27,7 @@
 			rendered="#{not empty ccContractItemMonitoringRptBB.managedBean.contractNo}" />
 	</h:panelGrid>
 
-	<h:panelGrid columns="2" id="lovCriteriaItem" cellpadding="50" cellspacing="0">		
+	<h:panelGrid columns="2" id="lovCriteriaItem" cellspacing="0">		
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchField}">
 			<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />

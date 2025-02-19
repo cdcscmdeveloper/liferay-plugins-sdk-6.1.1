@@ -125,7 +125,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.crclrnolabel']}" /></td>
 			<td>
 				<p:inputText value="#{ccContractItemMonitoringRptBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
 					<p:ajax event="blur" partialSubmit="true" />
@@ -171,7 +171,7 @@
 						value="#{ccContractItemMonitoringRptBB.managedBean.selectedSupplier.smSupplier.companyName}"
 						saveObject="ccContractItemMonitoringRptBB.managedBean.selectedSupplier" /></td>
 						
-			    <td><p:outputLabel value="my item name test" /></td>
+			    <td><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
 				<td style="width: 60%"><ac:lovItemName id="ctReportItemName"
 						lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true"
 						size="60" headerText="#{lbl['lbl.rpt.itmName']}"
