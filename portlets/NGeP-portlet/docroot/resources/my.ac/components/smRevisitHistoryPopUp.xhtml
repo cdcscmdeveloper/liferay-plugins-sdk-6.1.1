@@ -91,9 +91,10 @@
 									value="#{cc.attrs.backingBean.getSupplierRvRemarks(revisit)}">
 									<tr>
 										<td
-											style="border: 0 !important; padding-right: 0 !important; width: 3%; vertical-align: top"><p:outputLabel
-												styleClass="outputLabel-view" style="vertical-align:top"
-												value="#{index.index+1}." /></td>
+											style="border: 0 !important; padding-right: 0 !important; width: 3%; vertical-align: top">
+											<p:outputLabel styleClass="outputLabel-view"
+												style="vertical-align:top" value="#{index.index+1}." />
+										</td>
 										<td
 											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 											<p:outputLabel styleClass="outputLabel-view"
@@ -112,7 +113,9 @@
 															<td
 																style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 																<p:outputLabel styleClass="outputLabel-view">
-																#{catCode.smSupplierCategory.pmCategoryL1.categoryL1Code}#{catCode.smSupplierCategory.pmCategoryL2.categoryL2Code}#{catCode.smSupplierCategory.pmCategoryL3.categoryL3Code}
+																#{catCode.smSupplierCategory.pmCategoryL1.categoryL1Code}
+																#{catCode.smSupplierCategory.pmCategoryL2.categoryL2Code}
+																#{catCode.smSupplierCategory.pmCategoryL3.categoryL3Code}
 																-
 																#{catCode.smSupplierCategory.categoryL3Name}
 															</p:outputLabel>

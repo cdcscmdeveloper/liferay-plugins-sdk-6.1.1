@@ -40,9 +40,7 @@
 				</c:if>
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationApprovedRptVal}">
-					<!-- ui:include src="/xhtml/reports/new/sm/SM_006_appl_approved_rpt.xhtml"></ui:include -->
-					<ui:include
-						src="/xhtml/reports/new/sm/SM_098_revisit_rpt.xhtml" />
+					<ui:include src="/xhtml/reports/new/sm/SM_006_appl_approved_rpt.xhtml"></ui:include>
 				</c:if>
 				
 				<c:if test="#{smReportBB.managedBean.reportCode eq SmReportConst.smApplicationRejectedRptVal}">
@@ -265,12 +263,12 @@
 				</c:if>
 				<!-- 32521 - END -->
 				<ui:remove>#34031 Start</ui:remove>
-				<!-- c:if
+				<c:if
 					test="#{smReportBB.managedBean.reportCode eq SmReportConst.smRevisitRptVal}">
 					<ui:include
 						src="/xhtml/reports/new/sm/SM_098_revisit_rpt.xhtml"></ui:include>
 				</c:if>
-				<ui:remove>#34031 End</ui:remove -->
+				<ui:remove>#34031 End</ui:remove>
 			</p:panel>
 		</p:outputPanel>
 	</ui:define>
