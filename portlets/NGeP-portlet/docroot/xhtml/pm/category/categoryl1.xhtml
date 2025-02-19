@@ -27,12 +27,14 @@
 					<td style="display: #{!categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
 						<p:commandButton value="#{lbl['lbl.btn.update']}"
 							oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
-							style="float:right;width: auto;" /></td>
+							style="float:right;width: auto;" />
+					</td>
 					<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}"> 
 						<p:commandButton partialSubmit="true"
 							value="#{lbl['lbl.btn.save']}"		
 							action="#{categoryBackingBean.saveCategory}"
-							update=":form" style="float:right;width: auto;" /></td>				
+							update=":form" style="float:right;width: auto;" />
+					</td>				
 					<ui:remove>END : #29665 Add Style for button</ui:remove>
 					<!-- End #29665 change update button behaviour -->
 			</tr>
