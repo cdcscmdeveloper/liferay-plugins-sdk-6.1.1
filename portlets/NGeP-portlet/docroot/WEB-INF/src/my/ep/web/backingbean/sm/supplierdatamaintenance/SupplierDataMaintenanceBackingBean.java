@@ -2866,7 +2866,6 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	/**
 	 * Opens a confirmation popup for deleting the selected assist officer.
-	 * 
 	 * @param selectedRvAssistOfficer
 	 */
 	public void onDeleteRvAssistOfficer(SmRvAssistOfficer selectedRvAssistOfficer) {
@@ -2902,7 +2901,6 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	/**
 	 * Assigns the selected support document and its index to the managed bean.
-	 * 
 	 * @param doc
 	 * @param index
 	 */
@@ -2913,7 +2911,6 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	/**
 	 * Handles the file upload event for attaching a support document.
-	 * 
 	 * @param event
 	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
@@ -2949,9 +2946,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
-	 * Opens a confirmation dialog for deleting a support document file
-	 * attachment.
-	 * 
+	 * Opens a confirmation dialog for deleting a support document file attachment.
 	 * @param doc
 	 * @param index
 	 * @param file
