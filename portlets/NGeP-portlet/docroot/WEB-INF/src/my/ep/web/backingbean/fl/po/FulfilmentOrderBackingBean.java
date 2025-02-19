@@ -2472,21 +2472,23 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				  validateApprovalLetter();
 			  }
 	  }
-	  public void submitAP58(){
-			  if(this.getManagedBean().getAttachment().getFileName() != null){
-				  try {
-					signingAction(BpmOutcomeConst.BPM_AP58_PROCEED);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			  }else{
-				  validateApprovalLetter();
-			  }
-	  }
-	  
-	  private void validateApprovalLetter() {
-		throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.ap58letter",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+
+	// #34443 start - change ap58 logic
+	public void submitAP58() {
+		try {
+			signingAction(BpmOutcomeConst.BPM_AP58_PROCEED);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
+	private void validateApprovalLetter() {
+		if (this.getManagedBean().getAttachment().getFileName() == null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.fl.ap58letter", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
+		}
+	}
+	// #34443 end
 	
 //	28377 - end
 	  //29440 start
@@ -2718,6 +2720,45 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 		} else {
 			return signingAction(action);
 		}
+	}
+	
+	/**
+	 * to trigger confirm dialogue for yep process
+	 * 
+	 * @param action
+	 *            the action button
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	public String confirmDialogueTriggerForYEPProcess(String action) throws Exception {
+		String dialogCommand = null;
+		switch (action) {
+		case BpmOutcomeConst.BPM_AP58_PROCEED:
+			validateApprovalLetter();
+			dialogCommand = "ap58ProceedConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_CLOSE_MANUAL:
+			validateCloseManualRequest();
+			dialogCommand = "closeManualConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_PROCEED:
+			dialogCommand = "cfProceedConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_CARRYFORWARD:
+			dialogCommand = "cfConfirmDlg.show()";
+			break;
+		case BpmOutcomeConst.BPM_CANCEL_YEP:
+			dialogCommand = "yepCancelConfirmDlg.show()";
+			break;
+		default:
+			return signingAction(action);
+		}
+		if (dialogCommand != null) {
+			RequestContext.getCurrentInstance().execute(dialogCommand);
+		}
+
+		return null;
 	}
 	// #34443 end
 }

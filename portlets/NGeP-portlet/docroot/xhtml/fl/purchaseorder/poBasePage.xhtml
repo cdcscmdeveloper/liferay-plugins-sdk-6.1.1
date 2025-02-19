@@ -107,32 +107,32 @@
 					<!-- #28375- Beginning - Logan-->
 					
 				<!-- 28375 start -->		
-				<p:commandButton
-						value="#{lbl['lbl.fl.yep.proceed']}" 
-						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
-						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
-                        disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}"
-                        onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form">
-						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
+				   <p:commandButton value="#{lbl['lbl.fl.yep.proceed']}"
+							rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
+							action="#{flOrderBB.confirmDialogueTriggerForYEPProcess(BpmOutcomeConstant.proceed)}"
+							disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}"
+							onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form">
+							<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
+							<ui:remove>#34443 update action</ui:remove>
 					</p:commandButton>
-				<!-- 28375 end -->
 					
-									<p:commandButton
-						value="#{lbl['lbl.fl.yep.carryForward']}" 
-						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
-						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
-						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}"
-						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form">
-						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
-					</p:commandButton>
+					<p:commandButton value="#{lbl['lbl.fl.yep.carryForward']}"
+							rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
+							action="#{flOrderBB.confirmDialogueTriggerForYEPProcess(BpmOutcomeConstant.carryForward)}"
+							disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}"
+							onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form">
+							<f:param name="actionName"
+								value="#{BpmOutcomeConstant.carryForward}" />
+							<ui:remove>#34443 update action</ui:remove>
+					</p:commandButton> 
 					<!-- 29387 start -->
-					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" 
-					rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
-					immediate="true"  
-					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"/>
-					<!-- 29387 end -->
-					
-					
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}"
+							rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
+							immediate="true"
+							action="#{flOrderBB.confirmDialogueTriggerForYEPProcess(BpmOutcomeConstant.bpmCancelYEP)}" />
+					<ui:remove>#34443 update action</ui:remove> <!-- 29387 end -->
 					<!-- #28375- Ending -->
 					<!-- #28374	Vinod Start -->
 					<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}'>
@@ -147,21 +147,31 @@
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- end 29442 -->
 					<!-- #28375- Ending -->
-					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
-					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
+					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}"
+							immediate="true"
+							action="#{flOrderBB.confirmDialogueTriggerForYEPProcess(BpmOutcomeConstant.bpmCloseManual)}"
+							process="@form" partialSubmit="true"
+							rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
 					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)
 					and (flOrderBB.managedBean.yepButtonFlag == 1)}'
-					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+							onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" />
+					<ui:remove>#34443 update action</ui:remove> 
 					<!-- edit render -->
 					
 					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 
 					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					
-					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.submitAP58}" 
-					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
-					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}"
+							immediate="true"
+							action="#{flOrderBB.confirmDialogueTriggerForYEPProcess(BpmOutcomeConstant.AP58Proceed)}"
+							process="@form" partialSubmit="true"
+							rendered='#{flOrderBB.managedBean.buttonVal eq "AP58"}'
+							onclick="blockWidget.show();" oncomplete="blockWidget.hide();"
+							update="@form" />
+					<ui:remove>#34443 update action</ui:remove>  
 					<!-- end 28377 -->
 					<!-- start 29440 -->
 					<p:commandButton value="#{lbl['lbl.fl.general.proceed']}" immediate="true" action="#{flOrderBB.proceedNonAP58}" 
@@ -268,6 +278,70 @@
 					oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
 					onclick="cancelConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.ap58.proceed']}"
+			severity="alert" widgetVar="ap58ProceedConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form" action="#{flOrderBB.submitAP58}"
+					onstart="ap58ProceedConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="ap58ProceedConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.close.manual']}"
+			severity="alert" widgetVar="closeManualConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form" action="#{flOrderBB.closeManualPayment}"
+					onstart="closeManualConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="closeManualConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.cf.proceed']}"
+			severity="alert" widgetVar="cfProceedConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}"
+					onstart="cfProceedConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="cfProceedConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog
+			message="#{lbl['lbl.fl.confirmation.cf.carry.forward']}"
+			severity="alert" widgetVar="cfConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}"
+					onstart="cfConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="cfConfirmDlg.hide();" />
+			</div>
+		</p:confirmDialog>
+		<p:confirmDialog message="#{lbl['lbl.fl.confirmation.cf.cancel']}"
+			severity="alert" widgetVar="yepCancelConfirmDlg" closable="true"
+			appendToBody="true" header="#{lbl['lbl.msg.confirm.header']}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+					update="@form"
+					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"
+					onstart="yepCancelConfirmDlg.hide();blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+					onclick="yepCancelConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>
 		<ui:remove>#34443 end</ui:remove>	
