@@ -634,6 +634,13 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
+			//#35508 fl audit trail
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) && invBB.getManagedBean().getInvoice() != null){
+				String originalBankAccNoName = invBB.getManagedBean().getInvoice().getAccountNo()+" "+invBB.getManagedBean().getInvoice().getPaymentBankName();
+				invBB.getManagedBean().setOriginalBankAccNoName(originalBankAccNoName);
+				invBB.getManagedBean().setOriginalSupplierInvRef(invBB.getManagedBean().getInvoice().getSupplierInvoiceRef());
+			}
+			//#35508 fl audit trail
 			resDTO = invoiceSO.isInvoiceTaxable(reqDTO);
 			if(resDTO.isTaxable()){
 				invBB.getManagedBean().setTaxable(true);
