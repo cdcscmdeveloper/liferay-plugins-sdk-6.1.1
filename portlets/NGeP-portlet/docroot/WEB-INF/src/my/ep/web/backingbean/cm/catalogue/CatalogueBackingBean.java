@@ -735,18 +735,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		codeReqDTO.setPojo(obj);
 
 		codificationSO.updateExtensionRequest(codeReqDTO);
-		
-		// #30878- start
-		log.info("DA CMCD 1 " + action);
-		if (action.equalsIgnoreCase(CmConst.ACTIONSTATUS)) {
-			ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject("cm",
-					ICodificationSO.class);
-			CodificationReqDTO cdReqDTO = new CodificationReqDTO();
-			log.info("DA CMCD 1 IN");
-			cdReqDTO.setDocId(bb.getManagedBean().getRequestCode().getRequestId());
-			unspscSO.updateIsCompletedTaskWorkflowStatus(cdReqDTO);
-		}
-		// #30878- end
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -945,18 +933,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		codeReqDTO.setPojo(obj);
 
 		codificationSO.updateExtensionRequest(codeReqDTO);
-		
-		// #30878 - start
-		log.info("DA CMCD 2 " + action);
-		if (action.equalsIgnoreCase(CmConst.ACTIONSTATUS)) {
-			ICodificationSO unspscSO = BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-			CodificationReqDTO reqCodeDTO1 = new CodificationReqDTO();
-			UnspscCodeBackingBean cd = new UnspscCodeBackingBean();
-			log.info("DA CMCD 2 IN ");
-			reqCodeDTO1.setDocId(cd.getManagedBean().getRequestCode().getRequestId());
-			unspscSO.updateIsCompletedTaskWorkflowStatus(reqCodeDTO1);
-		}
-		// #30878 - end
 
 		facesContext.addMessage(
 				null,
