@@ -37,7 +37,7 @@ public class AgreementCancelRest {
 			if (resDTO != null && resDTO.getCtAgreementCancelTemp() != null) {
 				for (CtAgreementCancelTemp task : resDTO.getCtAgreementCancelTemp()) {
 					try {
-						log.info("Processing Task: " + task.getDocNo());
+						log.info("Processing Task: " + task.getDocNo() +" Batch NO :"+task.getBatchNo());
 
 						if (task.getCreatorBy() == null && task.getAcquiredBy() == null) {
 							log.warn("Skipping Task due to missing user data: " + task.getDocNo());
@@ -46,19 +46,19 @@ public class AgreementCancelRest {
 
 						CtServiceLookup.getAgreementAutoCancelSO().initiateAgreementTask(task);
 					} catch (Exception e) {
-						log.error("Error processing task: " + task.getDocNo(), e);
+						log.error("Error processing task: " + task.getDocNo()+" Batch NO :"+task.getBatchNo(), e);
 					}
 				}
 			} else {
-				log.info("No pending tasks to process.");
+				log.info("No pending tasks to process for >>> "+batchNo);
 			}
 
 			long endTime = System.currentTimeMillis();
-			log.info("Execution time: " + (endTime - startTime) + " ms");
+			log.info("Execution time: " +"for Batch NO :"+batchNo + (endTime - startTime) + " ms");
 
-			return Response.ok("Success calling retrievePendingInitiateTask!!").build();
+			return Response.ok("Success calling retrievePendingInitiateTask!!"+"Execution time: " +"for Batch NO :"+batchNo + (endTime - startTime) + " ms").build();
 		} catch (Exception e) {
-			log.error("Error in retrievePendingInitiateTask", e);
+			log.error("Error in retrievePendingInitiateTask "+"for Batch NO :"+batchNo, e);
 			return Response.status(Response.Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
 		}
 	}
@@ -78,7 +78,7 @@ public class AgreementCancelRest {
 
 			long endTime = System.currentTimeMillis();
 			log.info("#This function takes " + (endTime - startTime) + " milliseconds");
-			return Response.status(200).entity("Success calling updateProgressStatusTask!!").build();
+			return Response.status(200).entity("Success calling updateProgressStatusTask!!"+"Execution time: " +"for Batch NO : "+batch_no ).build();
 		} catch (Exception e) {
 			return Response.status(406).entity(e.getMessage()).build();
 		}
