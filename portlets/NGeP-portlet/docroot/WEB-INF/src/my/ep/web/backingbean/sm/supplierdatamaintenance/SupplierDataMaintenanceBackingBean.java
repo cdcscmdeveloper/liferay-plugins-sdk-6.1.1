@@ -362,12 +362,16 @@ public class SupplierDataMaintenanceBackingBean extends
 		// #34031 Start
 		SmRevisit smRevisit = new SmRevisit();
 		this.getManagedBean().setSmRevisit(smRevisit);
+		
 		this.getManagedBean().setSvoRoleCode(RoleCode.UPS_SVO.value());
+		
 		List<SmRvAssistOfficer> smRvAssistOfficers = new ArrayList<>();
 		this.getManagedBean().getSmRevisit().setSmRvAssistOfficers(smRvAssistOfficers);
 		addSmRvAssistOfficer();
+		
 		initSmRvDoc();
 		initSmRvHistory();
+		
 		this.getManagedBean().getSmRevisit().setRevisitPrevRemark(getPrevRevisitRemark());
 		// #34031 End
 	}
