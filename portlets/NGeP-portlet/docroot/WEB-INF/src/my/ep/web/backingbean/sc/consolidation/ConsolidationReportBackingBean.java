@@ -251,6 +251,7 @@ public class ConsolidationReportBackingBean extends
 			navigateToPackagewiseTab();
 		} else {
 			getManagedBean().setQualifiedSuppliersDataModel(null);
+			getManagedBean().setDisqualifiedSuppliersDataModel(null);//#28777 & #29729 
 			populateScQtRecommendsByZone();
 		}
 	}
@@ -318,7 +319,17 @@ public class ConsolidationReportBackingBean extends
 				new QualifiedSuppliersPagingDataModel("qualifiedSuppliers",
 						scQt.getQtId(),
 						SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM,
-						selectedZoneId, scQtRecommend));
+						selectedZoneId, scQtRecommend, false)); //#28777 & #29729 
+		
+		//#28777 & #29729 - Start
+		if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())){
+			getManagedBean().setDisqualifiedSuppliersDataModel(
+					new QualifiedSuppliersPagingDataModel("disqualifiedSuppliers",
+							scQt.getQtId(),
+							SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM,
+							selectedZoneId, scQtRecommend, true));
+		}
+		//#28777 & #29729 - End
 	}
 
 	/**
@@ -1873,6 +1884,7 @@ public class ConsolidationReportBackingBean extends
 		getManagedBean().setItemized(true);
 		getManagedBean().setActiveIndex(ITEMIZED_TYPE_TAB_INDEX);
 		getManagedBean().setQualifiedSuppliersDataModel(null);
+		getManagedBean().setDisqualifiedSuppliersDataModel(null);//#28777 & #29729 
 		//#21695 START - Fix bug reload data changing tab package and item
 		if(getManagedBean().getScQt().isZonal()){
 			TplSpecZoneDtl selectedZone = getManagedBean().getZoneDetails().get(0);
@@ -1895,7 +1907,18 @@ public class ConsolidationReportBackingBean extends
 				new QualifiedSuppliersPagingDataModel("qualifiedSuppliers",
 						getManagedBean().getScQt().getQtId(),
 						SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG,
-						selectedZoneId, null));
+						selectedZoneId, null, false));//#28777 & #29729
+		
+		//#28777 & #29729 - Start
+		if(checkListDisqualifiedSupplierBranchDeleted(getManagedBean().getScQt().getQtId())){
+			getManagedBean().setDisqualifiedSuppliersDataModel(
+					new QualifiedSuppliersPagingDataModel("disqualifiedSuppliers",
+							getManagedBean().getScQt().getQtId(),
+							SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG,
+							selectedZoneId, null, true));
+		}
+		//#28777 & #29729 - End
+		
 
 		getManagedBean().setActiveIndex(PACKAGE_TYPE_TAB_INDEX);
 	}
@@ -2024,23 +2047,26 @@ public class ConsolidationReportBackingBean extends
 			PagingDataModel<ScQtEvaluationResultDtl> {
 
 		private static final long serialVersionUID = 1L;
+		private static final String RECORD_STATUS_FLAG = "qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg";//#28777 & #29729 
 
 		private Long qtId;
 		private String evaluationStage;
 		private Long selectedZoneId;
 		private ScQtRecommend selectedItem;
+		private boolean isDisqualified;//#28777 & #29729 
 
 		/**
 		 * Constructor for Summary Supplier Paging Data Model
 		 */
 		public QualifiedSuppliersPagingDataModel(String componentId, Long qtId,
 				String evaluationStage, Long selectedZoneId,
-				ScQtRecommend selectedItem) {
+				ScQtRecommend selectedItem, boolean isDisqualified) {//#28777 & #29729 
 			super(componentId);
 			this.qtId = qtId;
 			this.evaluationStage = evaluationStage;
 			this.selectedZoneId = selectedZoneId;
 			this.selectedItem = selectedItem;
+			this.isDisqualified = isDisqualified;//#28777 & #29729 
 
 			this.resetData();
 		}
@@ -2065,6 +2091,18 @@ public class ConsolidationReportBackingBean extends
 					new SearchFilterBean("qtEvaluationResult.evaluationStage",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							evaluationStage));
+			
+			//#28777 & #29729 - Start
+			if(isDisqualified){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(RECORD_STATUS_FLAG,
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED));	
+			}else{
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(RECORD_STATUS_FLAG,
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));	
+			}
+			//#28777 & #29729 - End
 
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 			try {
@@ -2436,18 +2474,6 @@ public class ConsolidationReportBackingBean extends
 	
 	//#28777 & #29729 - Start
     /**
-	  * Method disable rank if record status is disqualified
-	  **/
-	public Boolean checkDisableRankSupplierBranchDeleted(ScQtSupplier scQtSupplier){
-		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-	//#28777 & #29729 - End
-	
-	//#28777 & #29729 - Start
-    /**
 	  * Method to display instruction when had supplier deleted branch
 	  **/
 	public Boolean checkInstructionSupplierBranchDeleted(Long qtId){
@@ -2456,7 +2482,20 @@ public class ConsolidationReportBackingBean extends
 		
 		 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 		 searchReqDTO.setDocId(qtId);
-		 if(sourcingIntegrationSO.checkListQualifiedSupplierBranchDeleted(qtId)){
+		 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
+			 return Boolean.TRUE;
+		 }
+		 return Boolean.FALSE;
+	}
+	
+    /**
+    * Method to check had disqualified supplier list
+    **/
+	public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId){
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		
+		 if(sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)){
 			 return Boolean.TRUE;
 		 }
 		 return Boolean.FALSE;

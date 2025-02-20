@@ -103,7 +103,8 @@
 			<!--#29908 -start -->
 			<ui:remove><!-- #28784 - start --></ui:remove>
 			<ui:remove>#29187 Start Vinod Added Compliance checking</ui:remove>
-			<p:inputText id="userScore" style="min-width:0px !important;width:30px; text-align:right;"
+			<ui:remove>#35293 - Change the width size based on length maxvalue</ui:remove>
+			<p:inputText id="userScore" style="min-width:0px !important; text-align:right; width: #{empty tplSpecAnswer.tplSpecQuestion.maxScore ? 30 : ((tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString().length() * 6)}px;"
 				value="#{tplSpecAnswer.userScore}"
 				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"

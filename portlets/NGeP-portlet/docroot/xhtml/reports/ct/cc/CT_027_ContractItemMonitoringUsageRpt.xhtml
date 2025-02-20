@@ -42,6 +42,7 @@
 					saveObject="ccContractItemMonitoringRptBB.managedBean.selectedPTJ"
 					conditionField="#{ccContractItemMonitoringRptBB.constructPTJConditionFields()}" /></td>
 		</tr>
+		<ui:remove> Start - #29416 </ui:remove>
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 			<td>
@@ -57,6 +58,7 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 			</td>
 		</tr>
+		<ui:remove> End - #29416 </ui:remove>
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
 			<td>
@@ -124,8 +126,9 @@
 				</tr></table>
 			</td>
 		</tr>
+		<ui:remove> Start - #29416 </ui:remove>
 		<tr>
-			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" /></td>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.crclrnolabel']}" /></td>
 			<td>
 				<p:inputText value="#{ccContractItemMonitoringRptBB.managedBean.circularNo}"  maxlength="60" style="width:300px">
 					<p:ajax event="blur" partialSubmit="true" />
@@ -138,6 +141,7 @@
 				</p:inputText>
 			</td>
 		</tr>
+		<ui:remove> End - #29416 </ui:remove>
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.circular.eff.date.from.2']}" /></td>
 			<td>
@@ -160,29 +164,27 @@
 					</td>
 				</tr></table>
 			</td>
+			<ui:remove> Start - #29416 </ui:remove>
+			<td style="width: 20%"><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
+			<td colspan="2"><ac:lovItemName id="ctReportItemName"
+					lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true" size="60"
+					headerText="#{lbl['lbl.rpt.itmName']}"
+					value="#{ccContractItemMonitoringRptBB.managedBean.formattedSelectedItems}"
+					saveObject="ccContractItemMonitoringRptBB.managedBean.lovSelectedItemList"
+					selectionMode="multiple"
+					postUpdateListener="ccContractItemMonitoringRptBB.checkValue()"
+					update="@form" flagBean="ccContractItemMonitoringRptBB" /></td>
 		</tr>
-		<ui:remove> Start - #29416 </ui:remove>
-		<tr>	
-				<td style="width: 20%"><p:outputLabel
-						value="#{lbl['lbl.ct.name.supplier']}" /></td>
-				<td style="width: 20%"><ac:lov id="ctSupplierName" readonly="true"
-						size="40" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
-						headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
-						value="#{ccContractItemMonitoringRptBB.managedBean.selectedSupplier.smSupplier.companyName}"
-						saveObject="ccContractItemMonitoringRptBB.managedBean.selectedSupplier" /></td>
-						
-			    <td><p:outputLabel value="my item name test" /></td>
-				<td style="width: 60%"><ac:lovItemName id="ctReportItemName"
-						lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true"
-						size="60" headerText="#{lbl['lbl.rpt.itmName']}"
-						value="#{ccContractItemMonitoringRptBB.managedBean.formattedSelectedItems}"
-						saveObject="ccContractItemMonitoringRptBB.managedBean.lovSelectedItemList"
-						selectionMode="multiple"
-						postUpdateListener="ccContractItemMonitoringRptBB.checkValue()"
-						update="@form"
-						flagBean="ccContractItemMonitoringRptBB" /></td>
-		 </tr>
-		 <ui:remove> End - #29416 </ui:remove> 		
+		<tr>
+			<td style="width: 20%"><p:outputLabel
+					value="#{lbl['lbl.ct.name.supplier']}" /></td>
+			<td colspan="2"><ac:lov id="ctSupplierName" readonly="true"
+					size="40" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
+					headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
+					value="#{ccContractItemMonitoringRptBB.managedBean.selectedSupplier.smSupplier.companyName}"
+					saveObject="ccContractItemMonitoringRptBB.managedBean.selectedSupplier" /></td>
+		</tr>
+		<ui:remove> End - #29416 </ui:remove> 		
 	</table>
 	<br/>
 	<ac:generateReport bBean="#{ccContractItemMonitoringRptBB}"

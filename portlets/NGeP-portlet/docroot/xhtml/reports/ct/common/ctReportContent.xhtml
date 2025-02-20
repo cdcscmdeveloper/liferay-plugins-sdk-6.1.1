@@ -140,18 +140,17 @@
 			</td>
 		</tr>
 		<ui:remove> Start - #29416 </ui:remove>
-		<h:panelGroup rendered="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
-		
+		<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">	
 		<tr>	
-				<td><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
-				<td style="width: 50%"><ac:lov id="ctSupplierName" readonly="true"
+				<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
+				<td><ac:lov id="ctSupplierName" readonly="true"
 						size="40" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
 						headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
 						value="#{ctReportBB.managedBean.selectedSupplier.smSupplier.companyName}"
 						saveObject="ctReportBB.managedBean.selectedSupplier" /></td>
 						
-			    <td><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
-				<td><ac:lovItemName id="ctReportItemName"
+			    <td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
+				<td colspan="2"><ac:lovItemName id="ctReportItemName"
 						lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true"
 						size="60" headerText="#{lbl['lbl.rpt.itmName']}"
 						value="#{ctReportBB.managedBean.formattedSelectedItems}"
@@ -161,7 +160,7 @@
 						update="@form"
 						flagBean="ctReportBB" /></td>
 		 </tr> 		
-		 </h:panelGroup> 
+		 </c:if> 
 		 <ui:remove> End - #29416 </ui:remove>
 	</table>
 	<br/>
