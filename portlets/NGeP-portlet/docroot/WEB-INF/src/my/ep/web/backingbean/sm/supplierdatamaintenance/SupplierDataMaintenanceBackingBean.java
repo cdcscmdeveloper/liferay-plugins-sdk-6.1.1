@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm.supplierdatamaintenance;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -2891,7 +2892,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	private void initSmRvDoc() {
-		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO().retrieveSmeSuppDocuments(new DocumentReqDTO()).getDocumentList();
+		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO().retrieveSmRvSuppDocuments(new DocumentReqDTO()).getDocumentList();
 		if (suppDocList != null && !suppDocList.isEmpty()) {
 			this.getManagedBean().getSmRevisit().setSmRvSuppDocs(new ArrayList<SmRvSuppDoc>());
 			for (PmDocument doc : suppDocList) {
@@ -2919,8 +2920,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null && this.getManagedBean().getSmRevisit().getSmRvSuppDocs().contains(this.getManagedBean().getSmRvSuppDoc())) {
-			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SME_FILE_PATH) + this.getManagedBean().getSmAppl().getApplId()
-					+ "/" + System.currentTimeMillis() + "/";
+			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_REVISIT_FILE_PATH)
+					+ this.getManagedBean().getSmAppl().getApplId() + "/"
+					+ DateUtils.dateToString("yyyyMMdd_HHmmss", Calendar.getInstance().getTime()) + "/";
 			SmRvSuppDoc doc = this.getManagedBean().getSmRvSuppDoc();
 			SmRvDocFile docFile = new SmRvDocFile();
 			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));

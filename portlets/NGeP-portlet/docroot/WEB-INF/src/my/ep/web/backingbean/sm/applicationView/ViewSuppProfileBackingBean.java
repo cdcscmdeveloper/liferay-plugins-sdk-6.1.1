@@ -452,8 +452,9 @@ public class ViewSuppProfileBackingBean extends
 			if (null != revisit.getRevisitPrevRemark()) {
 				remarkOne.append(revisit.getRevisitPrevRemark());
 			} else {
-				remarkOne.append(ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				remarkOne.append(
+						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+						.append(" ");
 			}
 			remarkOne.append(
 					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -461,8 +462,9 @@ public class ViewSuppProfileBackingBean extends
 			if (null != revisit.getRevisitRemark()) {
 				remarkOne.append(revisit.getRevisitRemark());
 			} else {
-				remarkOne.append(ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+				remarkOne.append(
+						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+						.append(" ");
 			}
 			remarks.add(remarkOne.toString());
 			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
