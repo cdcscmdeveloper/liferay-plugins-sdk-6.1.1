@@ -30,11 +30,14 @@
 	<p:messages id="DOChangepprovalMessages" showDetail="true"
 		autoUpdate="#{DOMaintenanceBackingBean.managedBean.autoUpdate}"
 		closable="true" showSummary="false" severity="error, info" />
-	<!-- 36466 -->	
-	<ac:gpkiPopup textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
-				postSignAction="#{DOMaintenanceBackingBean.postGPKISignAction(gpkiBackingBean.pmDigiSign)}"
-				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
-				
+
+		<!-- 36466 -start- -->
+		<ac:gpkiPopup
+			textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
+			postSignAction="#{DOMaintenanceBackingBean.postGPKISignAction(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
+		<!-- 36466 -end- -->
+
 	<div class="ppRightBtn">
 		<h:panelGroup id="approverBtns">
 			<ui:decorate template="/WEB-INF/facelets/templates/claim_template.xhtml">

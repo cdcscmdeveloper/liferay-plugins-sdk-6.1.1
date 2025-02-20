@@ -21,11 +21,13 @@
 	<p:blockUI block=":form" widgetVar="doSearchBlockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
-	<ac:lovPopup />	
-	<!-- 36466 -->	
-	<ac:gpkiPopup textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
-				postSignAction="#{DOMaintenanceBackingBean.submitReassignmentForApproval(gpkiBackingBean.pmDigiSign)}"
-				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
+	<ac:lovPopup />
+		<!-- 36466 -start- -->
+		<ac:gpkiPopup
+			textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
+			postSignAction="#{DOMaintenanceBackingBean.submitReassignmentForApproval(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
+		<!-- 36466 -end- -->
 	<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true"
 			id="qtsearchid">		
 		<ui:param name="screenName" value="QT"></ui:param>
