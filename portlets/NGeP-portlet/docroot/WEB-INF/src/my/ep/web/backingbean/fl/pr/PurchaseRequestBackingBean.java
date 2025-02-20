@@ -160,6 +160,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -190,6 +191,7 @@ import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLSupplierItemVO;
 
@@ -5240,18 +5242,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//#21416 end
 		
 		//29728  - start
-		private void resetSupplierInfo(){
-			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+		private void resetSupplierInfo() {
+			log.info("******* ENTER resetSupplierInfo METHOD ***********");
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
-			SmSupplier supplier = resDTO.getSmSupplier();
-			
+			reqDTO.setApplId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSmAppl().getApplId());
+			List<SmCompanyBasic> compBasicList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmCompanyBasicByApplId(reqDTO).getCompanyBasicList();
+	
 			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
-			supplierDtl.setSupplierName(supplier.getCompanyName());		
+			supplierDtl.setSupplierName(getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName());
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(null);
-			updateSupplierHqAddress(supplierDtl,supplier);
+			updateSupplierHqAddress(supplierDtl, getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId(),
+					compBasicList);
 		}
 		//29728 -end
 		
