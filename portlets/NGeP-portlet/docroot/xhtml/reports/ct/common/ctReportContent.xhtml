@@ -140,7 +140,7 @@
 			</td>
 		</tr>
 		<ui:remove> Start - #29416 </ui:remove>
-		<h:panelGroup style="width:20%" rendered="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">	
+		<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">	
 		<tr>	
 				<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
 				<td><ac:lov id="ctSupplierName" readonly="true"
@@ -160,7 +160,7 @@
 						update="@form"
 						flagBean="ctReportBB" /></td>
 		 </tr> 		
-		 </h:panelGroup> 
+		 </c:if> 
 		 <ui:remove> End - #29416 </ui:remove>
 	</table>
 	<br/>
