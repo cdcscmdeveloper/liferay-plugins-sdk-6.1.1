@@ -32,11 +32,11 @@
 					<!-- 26238 -->
 					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/disciplinaryActionInfo.xhtml" />
 					<ui:remove>#34031 Start</ui:remove>
-					<c:if test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile')}">
+					<c:if test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile') and 
+						!empty viewSmApplBackingBean.managedBean.smRevisitList}">
 						<ui:include
 							src="/xhtml/sm/shared/supplierDataMaintenance/revisitInfo.xhtml" />
-					</c:if>
-					<ui:remove>#34031 End</ui:remove>
+				</c:if> <ui:remove>#34031 End</ui:remove>
 				</td>
 			</tr>
 
