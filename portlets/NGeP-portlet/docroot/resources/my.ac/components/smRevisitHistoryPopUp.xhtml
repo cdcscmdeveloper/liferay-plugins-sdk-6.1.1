@@ -17,9 +17,10 @@
 			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"
 			resizable="true" width="700px" styleClass="pop_up_top"
 			header="#{lbl['lbl.sm.rv.history.title']}">
-			<p:dataTable id="revisitHistoryId" var="revisit"
+			<p:dataTable id="revisitHistoryId" var="revisit" rows="10"
 				value="#{cc.attrs.smRevisitList}" rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<ac:paginator for="#{cc.attrs.dialogName}Id"></ac:paginator>
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.rv.history.no']}"
@@ -96,9 +97,8 @@
 												style="vertical-align:top" value="#{index.index+1}." />
 										</td>
 										<td
-											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-											<p:outputLabel styleClass="outputLabel-view"
-												value="#{remark}" /> <p:outputPanel
+											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
+												styleClass="outputLabel-view" value="#{remark}" /> <p:outputPanel
 												rendered="#{index.last}">
 												<br />
 												<table>
@@ -111,20 +111,16 @@
 																	style="vertical-align:top"
 																	value="#{index.index+1}.#{sub.index+1}." /></td>
 															<td
-																style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-																<p:outputLabel styleClass="outputLabel-view">
-																#{catCode.smSupplierCategory.pmCategoryL1.categoryL1Code}
-																#{catCode.smSupplierCategory.pmCategoryL2.categoryL2Code}
-																#{catCode.smSupplierCategory.pmCategoryL3.categoryL3Code}
+																style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
+																	styleClass="outputLabel-view">
+																#{catCode.smSupplierCategory.pmCategoryL1.categoryL1Code}#{catCode.smSupplierCategory.pmCategoryL2.categoryL2Code}#{catCode.smSupplierCategory.pmCategoryL3.categoryL3Code}
 																-
 																#{catCode.smSupplierCategory.categoryL3Name}
-															</p:outputLabel>
-															</td>
+															</p:outputLabel></td>
 														</tr>
 													</ui:repeat>
 												</table>
-											</p:outputPanel>
-										</td>
+											</p:outputPanel></td>
 									</tr>
 								</ui:repeat>
 							</table>
