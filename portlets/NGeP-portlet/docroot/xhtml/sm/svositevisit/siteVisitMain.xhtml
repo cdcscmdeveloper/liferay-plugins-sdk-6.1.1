@@ -59,7 +59,8 @@
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{svoSiteVisitBackingBean.validateBeforeSubmitDialog()}"
 							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 'S'}" 
-							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}">
+							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}"
+							process="@this @([id$=recommendationId])">
 							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
 						

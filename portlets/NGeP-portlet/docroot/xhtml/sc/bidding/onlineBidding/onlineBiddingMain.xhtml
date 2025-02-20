@@ -14,7 +14,11 @@
 	<ui:define name="contentSection">
 		<p:messages id="obMessage" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" severity="error, info" />
-
+			
+		<ui:remove> #28777#29729 - Start </ui:remove>	
+		<ui:param name="isDisqualified" value="#{onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}"/>	
+		<ui:remove> #28777#29729 - End </ui:remove>	
+			  
 		<h:panelGroup id="pollPanelGroup"
 			rendered="#{(onlineBiddingBB.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_PENDING_BIDDING) or (onlineBiddingBB.scBidSchedule.pmStatus.statusId eq BidStatusConst.BID_IN_PROGRESS)}">
 			<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
@@ -167,7 +171,8 @@
 							stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
 							update=":form:itemWiseBidListOB"
-							postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener">
+							postUpdateListener="onlineBiddingBB.decrementAmountValueChangeListener" 
+							disabled="#{isDisqualified}"> <ui:remove> #28777#29729 </ui:remove>	
 							<f:attribute name="scBidPrice" value="#{bidPriceItem}" />
 						</ac:spinner>
 					</h:panelGroup>
@@ -288,7 +293,7 @@
 		<h:panelGroup id="packageRankingPanelOB" style="width : 100%">
 
 			<h:panelGroup style="width : 100% ; align: right;"
-				rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypePackage) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING)}">
+				rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypePackage) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}"> <ui:remove> #28777#29729 </ui:remove>	
 
 				<div style="align: right">
 					<TABLE style="width: 100%">
