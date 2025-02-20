@@ -30,8 +30,8 @@
 	<p:messages id="DOChangepprovalMessages" showDetail="true"
 		autoUpdate="#{DOMaintenanceBackingBean.managedBean.autoUpdate}"
 		closable="true" showSummary="false" severity="error, info" />
-		
-	<ac:gpkiPopup beforeSignText="#{DOMaintenanceBackingBean.textBeforeSign}"
+	<!-- 36466 -->	
+	<ac:gpkiPopup textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
 				postSignAction="#{DOMaintenanceBackingBean.postGPKISignAction(gpkiBackingBean.pmDigiSign)}"
 				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
 				
