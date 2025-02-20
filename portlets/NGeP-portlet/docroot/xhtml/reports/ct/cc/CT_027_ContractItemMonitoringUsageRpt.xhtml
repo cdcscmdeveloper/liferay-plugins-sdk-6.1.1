@@ -55,10 +55,9 @@
 				<p:inputText value="#{ccContractItemMonitoringRptBB.managedBean.contractPhysicalNo}"  maxlength="100" style="width:300px">
 					<p:ajax event="blur" partialSubmit="true" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no.item.monitoring']}" />
 			</td>
 		</tr>
-		<ui:remove> End - #29416 </ui:remove>
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
 			<td>
@@ -71,9 +70,10 @@
 				<p:inputText value="#{ccContractItemMonitoringRptBB.managedBean.loaPhysicalNo}"  maxlength="100" style="width:300px">					
 					<p:ajax event="blur" partialSubmit="true" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.reference.no.item.monitoring']}" />
 			</td>
 		</tr>
+		<ui:remove> End - #29416 </ui:remove>
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.agreement']}" /></td>
 			<td>
