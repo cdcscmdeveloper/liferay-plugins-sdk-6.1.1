@@ -402,8 +402,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	/**
 	 * Update Supplier Hq Address
 	 */
-	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl,Long supplierId, List<SmCompanyBasic> compBasicList ){
+	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl,Long supplierId, List<SmCompanyBasic> compBasicList ){//29728
 		FlAddress flAddress = supplierDtl.getFlAddress();
+		//29728-Start
 		for (SmCompanyBasic companyBasic : compBasicList) {
 			for(SmCompanyAddress smCompanyAddress : companyBasic.getSmCompanyAddresses()){
 				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
@@ -438,25 +439,22 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		reqDTO.setSmSupplierId(supplierId);
 		PersonnelResDTO personnelResDTO = personnelSO.retrieveContactPersonBySupplierId(reqDTO);
 
-		if (!personnelResDTO.getSmPersonnelList().isEmpty() && personnelResDTO.getSmPersonnelList().size() == 1) {
-			for(SmPersonnel smPersonnel: personnelResDTO.getSmPersonnelList()){
-				//#31920 filter active user
-				if(smPersonnel.isContactPerson() 
-						&& smPersonnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
-					flAddress.setContactEmail(smPersonnel.getEmail());
-					flAddress.setContactFaxNo(smPersonnel.getFaxNo());
-					flAddress.setContactMobileNo(smPersonnel.getMobileNo());
-					flAddress.setContactPerson(smPersonnel.getName());
-					flAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
-					flAddress.setContactFaxArea(smPersonnel.getFaxArea());
-					flAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
-					flAddress.setContactMobileArea(smPersonnel.getMobileArea());
-					flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
-					flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
-					flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-					
-				}
+		if (!personnelResDTO.getSmPersonnelList().isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {
+				flAddress.setContactEmail(smPersonnel.getEmail());
+				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
+				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
+				flAddress.setContactPerson(smPersonnel.getName());
+				flAddress.setContactPhoneNo(smPersonnel.getPhoneNo());
+				flAddress.setContactFaxArea(smPersonnel.getFaxArea());
+				flAddress.setContactFaxCountry(smPersonnel.getFaxCountry());
+				flAddress.setContactMobileArea(smPersonnel.getMobileArea());
+				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
+				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
+				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
+
 			}
+			//29728-End
 		}
 	}
 	
