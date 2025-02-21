@@ -1657,6 +1657,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
 					}
+					if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null || getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+						PmUserGroup pmUserGroup = new PmUserGroup();
+						getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
+						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					}
 					
 				}
 			}
@@ -2724,6 +2729,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
+		initializeApproverGroup();
 		initializeDelAddr();
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
@@ -2906,10 +2912,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//28718 - start
 		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
 		//28718 - end
-		
+		if(selectedTabIndex==0){
+			initializeApproverGroup();
+		}
 		if(selectedTabIndex==1){
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
+			initializeApproverGroup();
 		}
 		if(selectedTabIndex==2){
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null) { 
