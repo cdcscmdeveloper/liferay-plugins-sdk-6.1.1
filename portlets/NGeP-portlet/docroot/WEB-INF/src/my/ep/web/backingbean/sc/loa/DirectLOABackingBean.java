@@ -4744,6 +4744,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setIconForDL(true);
 
 		}// 29007&31423-End
+		// #32119 - Missing icon from Contract Maintenance
+		if (isCTMaintenanceScreen()
+				&& (QTStatusConst.LOA_PENDING_VERIFICATION.equals(scLoa
+						.getPmStatus().getStatusId().longValue()) || QTStatusConst.LOA_COMPLETED
+						.equals(scLoa.getPmStatus().getStatusId().longValue()))) {
+			getManagedBean().setIconForDL(true);
+
+		}
+		// #32199 - end
 		
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
