@@ -27,7 +27,11 @@
 	</style>
 
 	<ui:param name="isRefinalizedAndBiddingAward" 
-			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>			  
+			  value="#{suppFinalizationBackingBean.managedBean.refinalizedAndBiddingAward}"/>	
+			  
+	<ui:remove> #28777#29729 - Start </ui:remove>	
+    <ui:param name="isDisqualified" value="#{suppFinalizationBackingBean.checkListDisqualifiedSupplierBranchDeleted(suppFinalizationBackingBean.managedBean.scQt.qtId)}"></ui:param> 
+    <ui:remove> #28777#29729 - End </ui:remove>			  
 	
 		<p:spacer height="15px" rendered="#{suppFinalizationBackingBean.managedBean.itemize}"/>	
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
@@ -55,9 +59,7 @@
 							 process="@this" update="@([id$=qualSuppDetailsPopupId])" oncomplete="qualSuppDetailsPopup.show(); return false;"/>
 			
 			<ui:remove> #28777#29729 - Start </ui:remove>				 
-		    <c:if test="#{suppFinalizationBackingBean.checkListDisqualifiedSupplierBranchDeleted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
-		      <h:outputText escape="false" value="#{lbl['lbl.sc.list.qualified.supplier']}" style="font-weight:bold; font-size: 15px;" /> 
-			</c:if>	
+		    <h:outputText escape="false" value="#{lbl['lbl.sc.list.qualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}"/> 
 			<ui:remove> #28777#29729 - End</ui:remove>
 			
 			<p:dataTable id="supplierListTblSingle" var="shortlistedSupp" 
@@ -579,15 +581,13 @@
 			</p:dataTable>
 			
 			<ui:remove> #28777#29729 - Start </ui:remove>				 
-		    <c:if test="#{suppFinalizationBackingBean.checkListDisqualifiedSupplierBranchDeleted(suppFinalizationBackingBean.managedBean.scQt.qtId)}">
-		   
-				<h:outputText escape="false" value="#{lbl['lbl.sc.list.disqualified.supplier']}" style="font-weight:bold; font-size: 15px;" /> 
+				<h:outputText escape="false" value="#{lbl['lbl.sc.list.disqualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}"/> 
 				<p:dataTable id="supplierListTblDisqualified" var="shortlistedSuppDisqualified" 
 							 value="#{suppFinalizationBackingBean.managedBean.disqualifiedSuppliersByRecommendType}"
 							 editable="true" lazy="true" rows="10" rowIndexVar="index" rowKey="#{shortlistedSuppDisqualified}" 
 							 style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							 selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
-							
+							 selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}" 
+							 rendered="#{isDisqualified}"
 							 styleClass="shortlistedTableClass">
 					
 					<ac:paginator for="supplierListTblDisqualified" />
@@ -804,8 +804,6 @@
 					</p:column>
 				
 				</p:dataTable>	
-				
-			</c:if>	
 			<ui:remove> #28777#29729 - End</ui:remove>	
 			
 		</p:outputPanel>

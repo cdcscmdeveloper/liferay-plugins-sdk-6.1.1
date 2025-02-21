@@ -6047,7 +6047,7 @@ public void saveComplianceSample() {
 						//#32089
 						/*#29187 Start Vinod*/
 						if (this.getManagedBean().getScQt().isZonal()
-								&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+								&& Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
 										this.getManagedBean().getScQt().getQtStatus().getStatusId())
 								&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 							this.getManagedBean().setTplSpecZoneDtl(
@@ -10691,6 +10691,10 @@ private void retriveCommitteeRemarksList(){
 				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), evalResDTO.getCheckList());
 				// Bug #33249@Syazani 03/08/2022 -- End
 			}
+			
+			// #29187 Start moved update to backingbean for note #582 Vinod
+			RequestContext.getCurrentInstance().update(QTConstants.REQUESTCONTEXT_INSTANCE_UPDATE_ALL);
+			// #29187 End Vinod
 
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
@@ -18866,7 +18870,7 @@ private void retriveCommitteeRemarksList(){
 				&& null != this.getManagedBean().getScQt().getQtStatus() ? this.getManagedBean().getScQt()
 				.getQtStatus().getStatusId() : Long.MIN_VALUE;
 
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(statusId)) {
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(statusId)) {
 			render = false;
 		}
 		return render;
@@ -18886,7 +18890,7 @@ private void retriveCommitteeRemarksList(){
 		Long statusId = null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getQtStatus() ? this.getManagedBean().getScQt()
 				.getQtStatus().getStatusId() : Long.MIN_VALUE;
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(statusId)) {
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(statusId)) {
 			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
 				String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
 				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
@@ -18945,7 +18949,7 @@ private void retriveCommitteeRemarksList(){
 				&& null != this.getManagedBean().getScQt().getQtStatus() ? this.getManagedBean().getScQt()
 				.getQtStatus().getStatusId() : Long.MIN_VALUE;
 		String checklistType = getManagedBean().getCheckListType();
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(statusId)
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(statusId)
 				&& (QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(checklistType) || QTConstants.TECHNICAL_EVALUATION
 						.equalsIgnoreCase(checklistType))) {
 			return false;
