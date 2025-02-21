@@ -1,0 +1,182 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+		<p:remoteCommand name="postSignAction"
+			onstart="setRunGPKIEnableAutoUpdate(false);"
+			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction, cc.attrs.enableAutoUpdate)}" />
+		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
+		
+		<script>
+			function DigiSign() {
+				gpkiBlockWidget.show();
+				var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
+						.val();
+				var plainText = encodeURIComponent(Gpki.hash(textBeforeSign));
+				var pin = $("[id='#{pin.clientId}']").val();
+// 				var SignMethod = $("[id='#{r1.clientId}']").checked.val();
+				// 				Gpki.alert("This SignMethod :"	+ SignMethod);
+// 				alert($('input[name="SignMethod"]:checked').val());
+// 				if($("[id='#{SignMethod.clientId}']:checked").val()){alert("SignMethod");
+// 				}
+// 				alert($("input:radio[name='#{SignMethod.clientId}']:checked").val());
+				sign_st(pin, plainText);
+
+			}
+			function parseVerifyResult(msg) {
+				$(document).ready(
+						function() {
+							var obj = jQuery.parseJSON(msg);
+							var statusCode = obj.status_code;
+							var statusMsg = obj.status_message;
+							//         		$("#gpki-data").html(statusMsg);
+							if (statusCode == "0") {
+								var serialNo = obj.serial_no;
+								var validity = obj.cert_validity;
+								var subjectDn = obj.subject_dn;
+
+								msg = "This signature is *VALID*" + "\n"
+										+ "serialNo = " + serialNo + "\n"
+										+ "validity = " + validity + "\n"
+										+ "subjectDn = " + subjectDn;
+								// 								Gpki.alert(msg);
+							} else {
+								Gpki.alert("This signature is *INVALID* :"
+										+ statusMsg);
+							}
+
+						});
+
+			}
+			
+			function parseTimeout(msg){
+				$(document).ready(
+						function() {
+							var obj = jQuery.parseJSON(msg);
+							var statusCode = obj.status_code;
+							var statusMsg = obj.status_message;
+							var extMsg = obj.status_ext_message;
+							//         		$("#gpki-data").html(statusMsg);
+							if (statusCode == "0") {
+								var serialNo = obj.serial_no;
+								var validity = obj.cert_validity;
+								var subjectDn = obj.subject_dn;
+
+								msg = "This signature is *VALID*" + "\n"
+										+ "serialNo = " + serialNo + "\n"
+										+ "validity = " + validity + "\n"
+										+ "subjectDn = " + subjectDn;
+								// 								Gpki.alert(msg);
+							} else {
+								errorAction([ {
+									name : 'statusCode',
+									value : statusCode
+								}, {
+									name : 'statusMsg',
+									value : statusMsg
+								}, {
+									name : 'extMsg',
+									value : extMsg
+								} ]);
+								gpkiBlockWidget.hide();
+							}
+						});
+
+			}
+
+			function parseSignResult(msg) {
+				$(document)
+						.ready(
+								function() {
+									var obj = jQuery.parseJSON(msg);
+									var statusCode = obj.status_code;
+									var statusMsg = obj.status_message;
+									var startDate = obj.start_date;
+									var endDate = obj.end_date;
+									var subjectDN = obj.subject_dn;
+									var serialNo = obj.serial_no;
+									var ic = obj.ic_no;
+									var signedText = encodeURIComponent(obj.signed_data);
+									if (statusCode == "0") {
+
+										var textBeforeSign = $(
+												"[id='#{textBeforeSign.clientId}']")
+												.val();
+										var originalText = encodeURIComponent(Gpki
+												.hash(textBeforeSign));
+										//var signedText = encodeURIComponent(signedData);
+										//verify(originalText, signedText);
+										// 										Gpki.alert(signedText);
+
+										// 										Gpki.alert(signedData);
+										postSignAction([ {
+											name : 'textBeforeSign',
+											value : textBeforeSign
+										}, {
+											name : 'signedText',
+											value : signedText
+										}, {
+											name : 'serialNo',
+											value : serialNo
+										}, {
+											name : 'subjectDN',
+											value : subjectDN
+										} ]);
+										//gpkiBlockWidget.hide();
+										//blockWidget.show();
+										/* put your logic to handle the result here */
+										// 									} else if (statusCode == "50") {
+										// 										Gpki.alert("Wrong PIN");
+										// 									} else if (statusCode == "40") {
+										// 										Gpki.alert("CERT_EXPIRED");
+										// 									} else if (statusCode == "41") {
+										// 										Gpki.alert("CERT_REVOKED");
+										// 									} else if (statusCode == "43") {
+										// 										Gpki.alert("CERT_NOT_YET_VALID");
+									} else {
+										errorAction([ {
+											name : 'statusCode',
+											value : statusCode
+										}, {
+											name : 'statusMsg',
+											value : statusMsg
+										} ]);
+										gpkiBlockWidget.hide();
+									}
+								});
+			}
+		</script>
+
+	<p:dialog header="#{lbl['lbl.cc.gpki.title']}" widgetVar="gpki_dlg"
+		resizable="false" modal="true">
+		
+<!-- 		<p:ajax event="close" listener="#{gpkiBackingBean.onDialogCloseAction()}"  -->
+<!-- 			onstart="gpkiBlockWidget.show();return isRunGPKIEnableAutoUpdate()"  -->
+<!-- 			oncomplete="setRunGPKIEnableAutoUpdate(true);gpkiBlockWidget.hide();"  -->
+<!-- 			disabled="#{empty cc.getValueExpression('enableAutoUpdate')}" /> -->
+				
+		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
+		<p:panel id="gpkiPopup" >
+			<p:messages id="dlgMessages" for="gpki" showDetail="true"
+				autoUpdate="true" closable="true" />
+
+			<h:panelGrid columns="5" cellpadding="5">
+				<h:outputLabel value="*" styleClass="mandatory" />
+				<h:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" />
+				<p:password binding="#{pin}" id="password" />
+				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="DigiSign();" />
+				
+				
+			</h:panelGrid>
+		</p:panel>
+	</p:dialog>
+</ui:composition>
