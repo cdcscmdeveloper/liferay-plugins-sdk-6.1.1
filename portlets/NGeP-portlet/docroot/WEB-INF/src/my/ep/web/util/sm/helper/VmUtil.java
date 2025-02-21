@@ -383,8 +383,6 @@ public class VmUtil {
 		return checkProtege;
 		// 35295 - end
 	}
-<<<<<<< HEAD
-=======
 
 	// #29007 - note 724 Vinod start
 	/**
@@ -424,5 +422,4 @@ public class VmUtil {
 		return localKey;
 	}
 	// #29007 - note 724 Vinod End
->>>>>>> refs/remotes/origin/release-prd-uat
 }
