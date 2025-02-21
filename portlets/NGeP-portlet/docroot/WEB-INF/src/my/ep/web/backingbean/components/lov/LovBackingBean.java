@@ -831,7 +831,7 @@ public class LovBackingBean implements Serializable {
 				if (getSelectedEntity() != null) {
 					return false;
 				}
-			} else if ("multiple".equalsIgnoreCase(getLovBean().getSelectionMode())) {
+			} else if ("multiple".equalsIgnoreCase(getLovBean().getSelectionMode()) && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 				if (getSelectedEntity() != null) {
 					return false;
 				}
