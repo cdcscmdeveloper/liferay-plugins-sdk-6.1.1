@@ -518,24 +518,13 @@ public class LovBackingBean implements Serializable {
 	 * Reset all.
 	 */
 	public void resetAll() {
-		if (getLovBean() != null) {
-			if (getLovBean().getItemUsageMonitoringReport() && (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId()))
-					&& (ctReportBB.getManagedBean().isLovItemReportNameTriggered() || ccContractItemMonitoringRptBB.getManagedBean().isLovItemReportNameTriggered())) {
-				lovBean.setResetFlag(true);
-				this.getSearchDataModelMultiSelection().resetData();
-
-			} else {
-				lovBean.setResetFlag(true);
-				this.getSearchDataModel().resetData();
-				this.getSearchDataModelMultiSelection().resetData();
-				this.setLovSearchBean(new SearchBean());
-				this.setLovBean(new LovBean());
-
-				// 9442 - start
-				persistedEntities.clear();
-				// 9442 - end
-			}
-		}
+		lovBean.setResetFlag(true);
+		this.getSearchDataModel().resetData();
+		this.setLovSearchBean(new SearchBean());
+		this.setLovBean(new LovBean());
+		//9442 - start
+		persistedEntities.clear();
+		//9442 - end
 	}	
 	// End - #29416
 	
@@ -764,7 +753,7 @@ public class LovBackingBean implements Serializable {
 			debugLogger("this.getSelectedEntities().size(): " + this.getSelectedEntities().size());
 			debugLogger("this.getSelectedEntities(): " + this.getSelectedEntities());
 			// Start - #29416
-			if (this.getSelectedEntities().size() <= 0) {
+			if (this.getSelectedEntities().size() <= 0 && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 				ctReportBB.resetSearch();
 				ccContractItemMonitoringRptBB.resetSearch();
 			}
@@ -928,7 +917,7 @@ public class LovBackingBean implements Serializable {
 	}
 	//Start - #29416
 	public void populateSelectedItems(){
-		if (lovBean.isUnSelectAndCancel()) {
+		if (lovBean.isUnSelectAndCancel() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 			selectedEntities = new ArrayList<>(backupSelectedEntities);
 		} else {
 			selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
