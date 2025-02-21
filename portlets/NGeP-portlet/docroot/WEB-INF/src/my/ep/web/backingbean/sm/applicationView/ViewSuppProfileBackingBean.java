@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -26,6 +28,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -424,8 +427,20 @@ public class ViewSuppProfileBackingBean extends
 		for(PmRemarkCategory rc: remarkList){
 			PmUser user = PmCommonUtil.retrieveUserById(rc.getCreatedBy(),true);
 			rc.setCreatedUsername(user.getUserName());
-		}
+		} 
 		return remarkList;
 	}
 	// #28175 end
+	/**
+	 * Evaluate suspension status based on supplier
+	 * 
+	 * @param supplier
+	 * @return
+	 */
+	public String evaluateSuspensionStatus(SmSupplier supplier) {
+		Locale locale = new FacesScopes().getUserLocale();
+		String uuid = UUID.randomUUID().toString();
+		return ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				locale).concat(uuid);
+	}
 }
