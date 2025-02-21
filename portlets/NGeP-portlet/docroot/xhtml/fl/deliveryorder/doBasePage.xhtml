@@ -72,7 +72,8 @@
 		 enableAutoUpdate="#{createDOBackingBean.enableAutoUpdate()}" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
+	<!--#36519--><td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null 
+	or createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}" 
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup
@@ -117,8 +118,16 @@
 							<f:param name="actionName" value="#{BpmOutcomeConstant.bpmCancel}" />
 						</p:commandButton></td>
 				</h:panelGroup>
-				<c:if test='#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
-					<td colspan="4" style="text-align: right"><p:commandLink 
+				<c:if
+					test='#{createDOBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView}'>
+					<td colspan="4" style="text-align: right"><ui:remove>START : #35508</ui:remove>
+						<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+							action="#{auditFulfilmentBackingBean.redirectToAuditTrailView(createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId,
+							ParameterConst.doctypeDeliveryOrder)}"
+							immediate="true" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
+							rendered="#{!createDOBackingBean.managedBean.isHyperLinkPage() and auditFulfilmentBackingBean.isAuditTrailView()}" />
+						&#160; <ui:remove>END : #35508</ui:remove> <p:commandLink
 							rendered="#{!createDOBackingBean.managedBean.isHyperLinkPage()}"
 							value="#{lbl['lbl.td.doc.trackingDiary']}"
 							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeDeliveryOrder,createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderId)}"

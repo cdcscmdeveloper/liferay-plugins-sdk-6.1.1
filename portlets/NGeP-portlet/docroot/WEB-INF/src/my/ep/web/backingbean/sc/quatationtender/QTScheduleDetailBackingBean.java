@@ -537,8 +537,9 @@ public class QTScheduleDetailBackingBean extends
 		debugLogger("okSubmission");
 		
 		// 11104-start
-		List<BriefingZoneBean> zoneBean = this.getManagedBean().getSampleAddressBean();
-		
+		List<BriefingZoneBean> zoneBean = this.getManagedBean()
+				.getSampleAddressBean();
+
 		if (null == zoneBean) {
 			zoneBean = new ArrayList<BriefingZoneBean>();
 			this.getManagedBean().setSampleAddressBean(zoneBean);
@@ -557,45 +558,60 @@ public class QTScheduleDetailBackingBean extends
 			this.getManagedBean().setScQtSampleSubmissionList(submissionList);
 			
 			// 11104-start
-			ScAddress address = this.getManagedBean().getScQtSampleSubmission().getScAddress();
-			
+			ScAddress address = this.getManagedBean().getScQtSampleSubmission()
+					.getScAddress();
+
 			if (CollectionUtils.isEmpty(zoneBean)) {
-				BriefingZoneBean briefBean = new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission()
-						.getTplSpecZoneDtl(), address.getPmState().getStateId(), address.getPmDivision()
-						.getDivisionId(), address.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
+				BriefingZoneBean briefBean = new BriefingZoneBean(this
+						.getManagedBean().getScQtSampleSubmission()
+						.getTplSpecZoneDtl(),
+						address.getPmState().getStateId(), address
+								.getPmDivision().getDivisionId(), address
+								.getPmDistrict().getDistrictId(), address
+								.getPmCity().getCityId());
 				zoneBean.add(briefBean);
 			} else {
 				int index = 0;
 				int equalindex = 0;
 				BriefingZoneBean bean = null;
-				
+
 				for (BriefingZoneBean mainBean : zoneBean) {
-					if (mainBean.getTplSpecZoneDtl().getSpecZoneId()
-							.equals(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl().getSpecZoneId())
-							|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == this.getManagedBean()
-									.getScQtSampleSubmission().getTplSpecZoneDtl().getSpecZoneId()) {
+					if (mainBean
+							.getTplSpecZoneDtl()
+							.getSpecZoneId()
+							.equals(this.getManagedBean()
+									.getScQtSampleSubmission()
+									.getTplSpecZoneDtl().getSpecZoneId())
+							|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == this
+									.getManagedBean().getScQtSampleSubmission()
+									.getTplSpecZoneDtl().getSpecZoneId()) {
 						equalindex = index;
-						
-						bean = new BriefingZoneBean(
-								this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(), address
-										.getPmState().getStateId(), address.getPmDivision().getDivisionId(), address
-										.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
+
+						bean = new BriefingZoneBean(this.getManagedBean()
+								.getScQtSampleSubmission().getTplSpecZoneDtl(),
+								address.getPmState().getStateId(), address
+										.getPmDivision().getDivisionId(),
+								address.getPmDistrict().getDistrictId(),
+								address.getPmCity().getCityId());
 					}
-					
+
 					index++;
 				}
-				
+
 				if (null != bean) {
 					zoneBean.remove(equalindex);
 					zoneBean.add(equalindex, bean);
 				} else {
-					bean = new BriefingZoneBean(this.getManagedBean().getScQtSampleSubmission().getTplSpecZoneDtl(),
-							address.getPmState().getStateId(), address.getPmDivision().getDivisionId(), address
-									.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
+					bean = new BriefingZoneBean(this.getManagedBean()
+							.getScQtSampleSubmission().getTplSpecZoneDtl(),
+							address.getPmState().getStateId(), address
+									.getPmDivision().getDivisionId(), address
+									.getPmDistrict().getDistrictId(), address
+									.getPmCity().getCityId());
 					zoneBean.add(bean);
 				}
 			}
-			
+
 			this.getManagedBean().setSampleAddressBean(zoneBean);
 			// 11104-End
 		} else {
@@ -609,40 +625,53 @@ public class QTScheduleDetailBackingBean extends
 				sampleSubmission.setScAddress(this.getManagedBean().getScQtSampleSubmission().getScAddress());
 				
 				// 11104-start
-				ScAddress address = this.getManagedBean().getScQtSampleSubmission().getScAddress();
-				
+				ScAddress address = this.getManagedBean()
+						.getScQtSampleSubmission().getScAddress();
+
 				if (CollectionUtils.isEmpty(zoneBean)) {
-					BriefingZoneBean briefBean = new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(), address
-							.getPmState().getStateId(), address.getPmDivision().getDivisionId(), address
-							.getPmDistrict().getDistrictId(), address.getPmCity().getCityId());
+					BriefingZoneBean briefBean = new BriefingZoneBean(
+							sampleSubmission.getTplSpecZoneDtl(), address
+									.getPmState().getStateId(), address
+									.getPmDivision().getDivisionId(), address
+									.getPmDistrict().getDistrictId(), address
+									.getPmCity().getCityId());
 					zoneBean.add(briefBean);
 				} else {
 					int index = 0;
 					int equalindex = 0;
 					BriefingZoneBean bean = null;
-					
+
 					for (BriefingZoneBean mainBean : zoneBean) {
-						if (mainBean.getTplSpecZoneDtl().getSpecZoneId()
-								.equals(sampleSubmission.getTplSpecZoneDtl().getSpecZoneId())
-								|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == sampleSubmission.getTplSpecZoneDtl()
-										.getSpecZoneId()) {
+						if (mainBean
+								.getTplSpecZoneDtl()
+								.getSpecZoneId()
+								.equals(sampleSubmission.getTplSpecZoneDtl()
+										.getSpecZoneId())
+								|| mainBean.getTplSpecZoneDtl().getSpecZoneId() == sampleSubmission
+										.getTplSpecZoneDtl().getSpecZoneId()) {
 							equalindex = index;
-							
-							bean = new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(), address.getPmState()
-									.getStateId(), address.getPmDivision().getDivisionId(), address.getPmDistrict()
-									.getDistrictId(), address.getPmCity().getCityId());
+
+							bean = new BriefingZoneBean(
+									sampleSubmission.getTplSpecZoneDtl(),
+									address.getPmState().getStateId(), address
+											.getPmDivision().getDivisionId(),
+									address.getPmDistrict().getDistrictId(),
+									address.getPmCity().getCityId());
 						}
-						
+
 						index++;
 					}
-					
+
 					if (null != bean) {
 						zoneBean.remove(equalindex);
 						zoneBean.add(equalindex, bean);
 					} else {
-						bean = new BriefingZoneBean(sampleSubmission.getTplSpecZoneDtl(), address.getPmState()
-								.getStateId(), address.getPmDivision().getDivisionId(), address.getPmDistrict()
-								.getDistrictId(), address.getPmCity().getCityId());
+						bean = new BriefingZoneBean(
+								sampleSubmission.getTplSpecZoneDtl(), address
+										.getPmState().getStateId(), address
+										.getPmDivision().getDivisionId(),
+								address.getPmDistrict().getDistrictId(),
+								address.getPmCity().getCityId());
 						zoneBean.add(bean);
 					}
 				}

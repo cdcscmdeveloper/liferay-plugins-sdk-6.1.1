@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.dan;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -61,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -392,8 +395,9 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 	 * Page navigation to FLDoc search page in DAN.
 	 *
 	 * @return the string
+	 * @throws IOException 
 	 */
-	public String backToPervious() {
+	public String backToPervious() throws IOException {//36519
 		if(getManagedBean().getBackToPrevious() !=null){
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(getManagedBean().getPreviousRemarkList());
@@ -401,9 +405,13 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			flBB.getManagedBean().setHideRemarks(getManagedBean().isPrevHideRemarks());
 			return getManagedBean().getBackToPrevious();
 		}
+		//36519-Start
 		else{
-			return "flDocSearch";
+			FacesContext.getCurrentInstance().getExternalContext().redirect(
+					 EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL) + "notifications");
+			return null;
 		}
+		//36519-End
 	}
 	
 	/**
@@ -566,12 +574,22 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		
+		// 36519-start
 		String danId = originalServletRequest.getParameter("danId");
+		String canId = originalServletRequest.getParameter("canId");
+		String adjustmentId;
+
+		if (danId != null) {
+			adjustmentId = danId;
+		} else {
+			adjustmentId = canId;
+		}
+		// 36519-end
+		
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		if(danId!=null) {
-			reqDTO.setDanId(Long.valueOf(danId));
+		if(adjustmentId!=null) {//36519
+			reqDTO.setDanId(Long.valueOf(adjustmentId));//36519
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			reqDTO.setDocType(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 			reqDTO.setPoLink(Boolean.TRUE);
 			renewSesionObject();
 			try {
@@ -587,7 +605,8 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
+//			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button. //36519
 			flBB.getManagedBean().setHideRemarks(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "danBasePage?faces-redirect=true");

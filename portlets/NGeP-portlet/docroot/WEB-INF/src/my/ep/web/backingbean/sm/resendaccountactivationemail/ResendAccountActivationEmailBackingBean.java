@@ -40,16 +40,14 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "resendAccountActivationEmailBackingBean")
 @ViewScoped
-public class ResendAccountActivationEmailBackingBean extends
-		BaseBackingBean<BaseManagedBean> {
+public class ResendAccountActivationEmailBackingBean extends BaseBackingBean<BaseManagedBean> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8242421500840047056L;
 
-	public static Logger log = Logger
-			.getLogger(ResendAccountActivationEmailBackingBean.class);
+	public static Logger log = Logger.getLogger(ResendAccountActivationEmailBackingBean.class);
 
 	private String businessRegNo;
 	private String companyName;
@@ -127,7 +125,7 @@ public class ResendAccountActivationEmailBackingBean extends
 							.add(Calendar.DAY_OF_MONTH, SmRuleHelper
 									.getInstance().getEmailActivationDays());
 
-					Calendar today = new GregorianCalendar();
+					//Calendar today = new GregorianCalendar();
 
 					if (accType.equals(SupplierManagementConst.ACC_GOVT_SELLER)
 							&& resDTO.getSmSupplier().getSmAppl() != null
@@ -208,9 +206,9 @@ public class ResendAccountActivationEmailBackingBean extends
 		//#35442 START
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		if (supplier.getSmAppl() != null) {
-			reqDTO.setApplNo(supplier.getSmAppl().getApplNo());
+			reqDTO.setApplId(supplier.getSmAppl().getApplId());
 		}
-		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
+		List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelListByApplId(reqDTO).getSmPersonnelList();
 
 		if (personnels != null && !EntityHelper.isCollectionEmpty(personnels)) {
 			for (SmPersonnel per : personnels) { //#35442 END

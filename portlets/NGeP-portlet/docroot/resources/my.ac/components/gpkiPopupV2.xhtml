@@ -80,7 +80,7 @@
 				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="token()" />
 				
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-				<p:commandButton id="skipBtn1" value="Sign W/O Token"  
+				<p:commandButton id="skipBtn1" value="Sign W/O GPKI"  
 					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 			
@@ -96,7 +96,7 @@
 					disabled="#{gpkiBackingBean.getBtn()}"/>
 				
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-				<p:commandButton id="skipBtn2" value="Sign W/O Token"  
+				<p:commandButton id="skipBtn2" value="Sign W/O GPKI"  
 					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 		</p:panel>

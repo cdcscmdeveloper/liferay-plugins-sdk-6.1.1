@@ -1,9 +1,12 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<!-- #28175 start -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+<!-- #28175 end -->	
 
 	<p:panel header="#{lbl['lbl.sm.svo.sitevisit.report']}">
 
@@ -18,12 +21,27 @@
 					value="#{lbl['lbl.sm.sitevisit.category.categorycode_BP']}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
-				style="white-space: normal; width:30%;">
-				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-					value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-			#{svTask.pmCategoryL3.categoryName}" />
-			</p:column>
+			<!-- #28175 start -->
+			<c:choose>
+				<!-- #28175 Reopen #94 Start -->
+				<c:when test="#{!viewSmApplBackingBean.isLatestCatCodeDesc(false)}">
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
+						style="white-space: normal; width:30%;">
+						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
+							value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
+							#{svoSiteVisitBackingBean.getSmCategoryL3(svTask.pmCategoryL3.categoryL3Id, svoSiteVisitBackingBean.managedBean.smAppl.applId)}" />
+					</p:column>
+				</c:when>
+				<c:otherwise>
+					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
+						style="white-space: normal; width:30%;">
+						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
+							value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
+							#{svTask.pmCategoryL3.categoryName}" />
+					</p:column>
+				</c:otherwise>
+			</c:choose>
+			<!-- #28175 end -->
 
 			<p:column headerText="#{lbl['lbl.sm.address']}"
 				style="white-space: pre;">

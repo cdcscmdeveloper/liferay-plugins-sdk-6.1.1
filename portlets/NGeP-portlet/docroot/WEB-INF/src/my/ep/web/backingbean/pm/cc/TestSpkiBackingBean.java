@@ -104,7 +104,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	 * Submit to get Challenge Question
 	 */
 	public void submit(){
-		log.info("testSPKI-submit:\t_"+idNo+"_\t_"+epNo);
+		log.info("testSPKI-submit:\t_"+idNo+"_\t_"+epNo+"_ "+helpClass());
 		try {
 			 setChallengeQues1(instance.getChallengeQuestion().get(0));
 		} catch (Exception e){
@@ -183,13 +183,13 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			msg += "OPERATION SUCCESSFUL";
 			break;
 		case "12":
-			msg = "ERROR USER INVALID";
+			msg += "ERROR USER INVALID";
 			break;
 		case "14":
-			msg = "ERROR USER SUSPENDED";
+			msg += "ERROR USER SUSPENDED";
 			break;
 		case "15":
-			msg = "ERROR USER INACTIVE";
+			msg += "ERROR USER INACTIVE";
 			break;
 		case "43":
 			msg += "ERROR CERT REVOKED";
@@ -207,6 +207,12 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			msg += "";
 		}
 		return msg;
+	}
+	
+	private String helpClass(){
+		String s = instance.getClass().toString();
+		int i = s.indexOf('$');
+		return i != -1 ? s.substring(i) : s;
 	}
 	
 	//wrapper
@@ -343,6 +349,7 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		} else {
 			this.instance = digicert;
 		}
+		log.info("testSPKI-setCert: "+cert+"\t"+helpClass());
 	}
 
 	public String getIdNo() {

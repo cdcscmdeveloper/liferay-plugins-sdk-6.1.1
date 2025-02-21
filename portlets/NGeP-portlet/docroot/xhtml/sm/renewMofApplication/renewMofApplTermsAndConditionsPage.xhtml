@@ -22,9 +22,11 @@
 		
 		<p:panel id="renewMofTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
 			
+			<!--#36594-Start-->
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
-				<h:outputText escape="false" value="#{lbl['lbl.sm.renewMof.descData']}" style="white-space : normal !important"/>
+				<h:outputText escape="false" value="#{backingBean.setRenewalTnc('R')}" style="white-space : normal !important"/>
 			</p:scrollPanel>
+			<!--#36594-End-->
 
 			<table>
 				<tr>

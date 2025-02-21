@@ -55,6 +55,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
+import my.ep.comparator.ct.CtContractZoneComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -134,6 +135,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -591,22 +593,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//Bug 34142, 15851 - shaqimi end 04/12/2022
 			
-			if(contractVerId!=null) {
+			// #25956 - Start (view Contract Amendment url from notification)
+			if (contractVerId != null) {
+
 				ctReqDTO = new ContractReqDTO();
 				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 				ctReqDTO.setUpdateAction(false);
-				getManagedBean().setBackToNtf("notifications"); //25956
-				ctBackingBean.getManagedBean().setViewContract(true); //25956
-				
-				setAmendmentContractVer(ctReqDTO);
-				ConstructTabSideMenu();
-				ctBackingBean.getManagedBean().setDisableAmendDetails(true); //25956
+				ctReqDTO.setViewOnly(true);
+				getManagedBean().setBackToNtf("notifications"); // 25956
 				getManagedBean().setViewOnly(true);
+				getManagedBean().setSelectedTabIndex(0);
+
+				setAmendmentContractVer(ctReqDTO);
+				ctBackingBean.getManagedBean().setViewContract(true); // 25956
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); // 25956
+				ConstructTabSideMenu();
 				getManagedBean().setTaskId(taskId);
 				return;
 			}
-			//#25956 - End (view Contract Amendment url from notification)
+			// #25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				ConstructTabSideMenu();
 
@@ -1108,6 +1114,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @param resDTO  the response data transfer object for contract
 	 */
+	@SuppressWarnings("unchecked") //#36726
 	public void setAmendmentContractVer(ContractReqDTO reqDTO) {
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractResDTO resDTO = null;
@@ -1332,7 +1339,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			// Retrieve Zone
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null && ctBackingBean.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
-				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+				CustomUtils.sort(ctBackingBean.getManagedBean().getContractVer().getCtContractZones(), new CtContractZoneComparator()); //#36726
 				ctBackingBean.retriveZonesByContractVer();
 			}
 
@@ -1350,7 +1357,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Retrieve Schedules
 			if (ctBackingBean.getManagedBean().getContractVer().getCtSchedules() != null && !ctBackingBean.getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
 				ctBackingBean.getManagedBean().setChkSchedule(true);
-				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
+				CustomUtils.sort(ctBackingBean.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule()); //#36726
 				for (CtSchedule ctSchedule : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()) {
 					if (ctSchedule.isUseInFulfilment()) {
 						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
@@ -1362,7 +1369,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
+				CustomUtils.sort(ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment()); //#36726
 				for (CtProgressivePayment ctProgressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (ctProgressivePayment.isUseInFulfilment()) {
 						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
@@ -1606,6 +1613,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			}
 			// #29403 end
+			
+			// #25956 start
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(
+							CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(
+									CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME) || getManagedBean()
+							.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME))) {
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+			}
+			// #25956 end
 
 			//Enhancement 15851 - Prefix for supplemental contract letter
 			//start
@@ -2156,8 +2175,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& (supplierRemark == null || supplierRemark.length() == 0)) {
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); //#25956
 			}
 		}/*Remark validation end*/
 
@@ -6672,7 +6691,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public boolean isContractAmountAmend() {
 		boolean isContractAmountAmend = false;
-		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() < 20000L){
+		if(ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getContractAmount().longValue() <= 20000L){//#36635
 			isContractAmountAmend = true;
 		}
 		return isContractAmountAmend;
@@ -7743,8 +7762,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (message != null
 				&& ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0))) {
 			setTabValue("AD");
-			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) }); //#25956
 		}
 		// #26688 end
 	}
@@ -7944,7 +7963,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	// Start Fix - #34110 , #34950
 	public void sortItemPriceForTier(List<CtItemPrice> list) {
-		Collections.sort(list, new Comparator<CtItemPrice>() {
+		CustomUtils.sort(list, new Comparator<CtItemPrice>() { //#36726
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
 				BigDecimal z1 = o1.getFromQty();
@@ -7973,7 +7992,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	public void sortItemPriceForZonalTier(List<CtItemPrice> list) {
-		Collections.sort(list, new Comparator<CtItemPrice>() {
+		CustomUtils.sort(list, new Comparator<CtItemPrice>() { //#36726
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 				String x1 = o1.getCtContractZone().getZoneName();
 				String x2 = o2.getCtContractZone().getZoneName();
@@ -8009,7 +8028,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	public void sortItemMaxQtyForZonal (List<CtItemMaxQty> list){
 		if(list!=null){
-			Collections.sort(list, new Comparator<CtItemMaxQty>() {	
+			CustomUtils.sort(list, new Comparator<CtItemMaxQty>() {	//#36726
 				public int compare(CtItemMaxQty o1, CtItemMaxQty o2) {
 					String x1 = o1.getCtContractZone().getZoneName();
 					String x2 = o2.getCtContractZone().getZoneName();
@@ -8026,7 +8045,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	public void sortItemPriceForZonal(List<CtItemPrice> list){
-		Collections.sort(list, new Comparator<CtItemPrice>() {
+		CustomUtils.sort(list, new Comparator<CtItemPrice>() { //#36726
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
 				String x1 = o1.getCtContractZone().getZoneName();

@@ -21,6 +21,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg; //#36719
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.bean.pm.ProfileManagementSearchBean; //#28833 -shafie
@@ -77,6 +78,7 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String smCompanyName;
 	private String smSupplierName;
 	//29991 end
+	private PmFinancialOrg selectedFinancialOrg; //#36719
 	
 	public PmReportsManagedBean(){}
 
@@ -676,4 +678,20 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	}
 	//#29991 end--
 	
+	// #36719 - Start
+	/**
+	 * @return the selectedFinancialOrg
+	 */
+	public PmFinancialOrg getSelectedFinancialOrg() {
+		return selectedFinancialOrg;
+	}
+
+	/**
+	 * @param selectedFinancialOrg
+	 *            the selectedFinancialOrg to set
+	 */
+	public void setSelectedFinancialOrg(PmFinancialOrg selectedFinancialOrg) {
+		this.selectedFinancialOrg = selectedFinancialOrg;
+	}
+	// #36719 - End	
 }

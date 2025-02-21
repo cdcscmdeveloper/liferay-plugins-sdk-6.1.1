@@ -6,9 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-import org.primefaces.component.log.Log;
-
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -16,12 +14,13 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
+
+import org.apache.log4j.Logger;
 
 public class VmUtil {
 	
@@ -143,6 +142,42 @@ public class VmUtil {
 	public String getCompleteAddress(SmAddress smAdd) {
 		return AddressUtils.getFullAddress(smAdd);
 	}
+	
+	// Bug #36702@Syazani 28/11/2024 -- Start
+	/**
+	 * This method will split Long words to display properly in velocity
+	 * template.
+	 * 
+	 * @param key
+	 * @param maxLength
+	 * @return the updatedKey
+	 */
+	public String splitText(String key, int maxLength) {
+		if (null == key) {
+			return key;
+		}
+		String[] words = key.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder subSb;
+		for (String word : words) {
+			int length = word.length();
+			if (length >= maxLength) {
+				subSb = new StringBuilder();
+				String newWord;
+				String subWord;
+				for (int i = 0; i < length; i += maxLength) {
+					subWord = word.substring(i, Math.min(length, i + maxLength));
+					subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+				}
+				newWord = subSb.toString();
+				sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+			} else {
+				sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+			}
+		}
+		return sb.toString();
+	}
+	// Bug #36702@Syazani 28/11/2024 -- End
 	
 	// 36122 - start
 	/**
@@ -348,4 +383,46 @@ public class VmUtil {
 		return checkProtege;
 		// 35295 - end
 	}
+<<<<<<< HEAD
+=======
+
+	// #29007 - note 724 Vinod start
+	/**
+	* This method will replace following special characters from the string to HTML keys
+	* '<' to "&#60;" , '>' to "&#62;" and  '\r\n' to "<br />"
+	* to avoid errors and achieve line spacing in VM report.
+	* 
+	* @param key
+	* @return updated String
+	*/
+	public String replaceAllSpecialCharactersToHTML(String key) {
+		if (key == null || key == "") {
+			return key;
+		}
+		String localKey = key;
+
+		if (localKey.contains(TemplateSpecConst.LESS_THEN_SYMBOL)) {
+			localKey = localKey.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+					TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		}
+		if (localKey.contains(TemplateSpecConst.GREATER_THEN_SYMBOL)) {
+			localKey = localKey.replaceAll(
+					TemplateSpecConst.GREATER_THEN_SYMBOL,
+					TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		}
+		if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER)) {
+			localKey = localKey.replaceAll(
+					TemplateSpecConst.NEW_LINE_CHARACTER,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+		if (localKey.contains(TemplateSpecConst.NEW_LINE_CHARACTER_R)) {
+			localKey = localKey.replaceAll(
+					TemplateSpecConst.NEW_LINE_CHARACTER_R,
+					TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		}
+
+		return localKey;
+	}
+	// #29007 - note 724 Vinod End
+>>>>>>> refs/remotes/origin/release-prd-uat
 }

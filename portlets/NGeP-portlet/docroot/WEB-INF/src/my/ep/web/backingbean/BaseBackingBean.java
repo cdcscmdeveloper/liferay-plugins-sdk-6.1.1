@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection; //#29253 #25037
-import java.util.Collections; //#29253 #25037
-import java.util.Comparator; //#29253 #25037
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -168,7 +166,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
@@ -182,6 +179,10 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+//#29253 #25037
+//#29253 #25037
+// #28175
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 
 /**
  * @author siew mei
@@ -1461,9 +1462,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param messageCode
 	 * @param params
 	 */
+	//#25037-START
 	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
+	//#25037-END
 
 	/**
 	 * Return success message by message code. Navigate to acknowledgment page
@@ -1477,19 +1480,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
 		// 25037 - end
-
 	}
 
 	/**
@@ -2322,33 +2320,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
-	private String[] sortOutcomes(String[] outcomes) {
-		// 25037(29253) - start
-		if (null == outcomes) {
-			return ArrayUtils.EMPTY_STRING_ARRAY;
-		}
-		List<String> bpmActions = new ArrayList<>(Arrays.asList(outcomes));
-		Collections.sort(bpmActions, new Comparator<String>() {
-			String[] orderedAction = new String[] { BpmOutcomeConst.BPM_ENDORSE, BpmOutcomeConst.BPM_CANCEL };
-			// last index will appear on the far right,
-			// if outcome not ranked, order come as is,
-			// existed ordered outcome will take precedent
-			List<String> sortOrder = Arrays.asList(orderedAction);
+	private String[] sortOutcomes(String[] outComes) {
+		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
-			@Override
-			public int compare(String s1, String s2) {
-				return Integer.valueOf(sortOrder.indexOf(s2)).compareTo(Integer.valueOf(sortOrder.indexOf(s1)));
-			}
-		});
-		String[] bpmOutcomes = new String[bpmActions.size()];
-		return bpmActions.toArray(bpmOutcomes);
-		// 25037(29253) - end
+		// Move 'Cancel' button to the last
+		if (bpmActions.contains(BpmOutcomeConst.BPM_CANCEL)
+				&& !bpmActions.get(bpmActions.size() - 1).equalsIgnoreCase(
+						BpmOutcomeConst.BPM_CANCEL)) {
+			bpmActions.remove(BpmOutcomeConst.BPM_CANCEL);
+			bpmActions.add(BpmOutcomeConst.BPM_CANCEL);
+		}
+
+		outComes = new String[bpmActions.size()];
+		return bpmActions.toArray(outComes);
 	}
 
 	/**
@@ -2841,6 +2825,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(smSupplier.getRegNo());
 			ssmReqDTO.setBusinessType(smSupplier.getBusinessType());
+			//#29582
+			ssmReqDTO.setSmSupp(smSupplier);
 			//27329
 			ssmReqDTO.setPreRegistration(true);
 			//ssmReqDTO.setCheckOnly(true);
@@ -2868,6 +2854,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 					}
 					this.getManagedBean().setStatusDescFromSSM(sb.toString());
 					throw new EpException(MessageConst.ERROR_721085,new String[] {sb.toString() });
+				}// #29582-start
+				else if (ssmResDTO.getSmPersonnelAll() != null && ssmResDTO.getSmPersonnelAll().size() > 0) {
+					SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+				// #29582- end
 				}else if(postRegBean.isResubmitAppl() && !this.getManagedBean().isCheckRoleSSM()){
 					//START NEW CHANGES POPUP OWNER UPDATE ROLE		
 					SmAppl appl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(postRegBean.getSmSupplier().getSupplierId(), "N");
@@ -3206,6 +3196,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("ssmNewRegNo", this.getManagedBean().getSmSupplier().getSsmNewRegNo());	//#24819
 		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
 		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
@@ -3787,6 +3778,56 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//#21387 - End
 	
+	//#28175 - start
+	/**
+	 * @param catL3
+	 * @param isSupplierProfile
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3, boolean isSupplierProfile) {
+		if (catL3 == null) {
+			return null;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if (appl == null || isLatestCatCodeDesc(isSupplierProfile) || EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
+			return catL3.getCategoryName();
+		}
+		SmSupplierCategory sCat = (SmSupplierCategory) EntityHelper.getEntityBySinglePropertyFromList(catL3.getCategoryL3Id(), appl.getSmSupplierCategories(), "pmCategoryL3");
+		return sCat != null ? sCat.getCategoryL3Name() : catL3.getCategoryName();
+	}
+	
+	/**
+	 * @param catL3
+	 * @return latest or old category code description
+	 */
+	public String getSupplierCategoryName(PmCategoryL3 catL3){
+		return getSupplierCategoryName(catL3, false);
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile){
+		return isLatestCatCodeDesc(isSupplierProfile, getManagedBean().getSmAppl());
+	}
+	
+	/**
+	 * @param isSupplierProfile
+	 * @param appl
+	 * @return
+	 */
+	public boolean isLatestCatCodeDesc(boolean isSupplierProfile, SmAppl appl){
+		if(appl == null || appl.getPmStatus() == null){
+			return false;
+		}
+		Long status = appl.getPmStatus().getStatusId();
+		boolean isRegFee = status.equals(SupplierManagementConst.PM_STATUS_PENDING_PAYMENT)
+				|| (status.equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) && appl.getPmRegStatus() != null);
+		return isSupplierProfile || appl.isActiveAppl() && !isRegFee;
+	}
+	//#28175 - end
+	
 	//29956 START
     	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
 		Boolean retVal = false;
@@ -3976,4 +4017,29 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return isPersonnelOwnerDirectorNull;
 	}
 	//END #29956
+	
+	// #28854 - Start
+	/**
+	 * Processes the given string by replacing newline characters with HTML line
+	 * break tags and encoding the < and > characters to their HTML entity
+	 * equivalents. If the string is null, empty or contains only whitespace, it
+	 * returns null.
+	 * 
+	 * @param value
+	 *            the string to be processed; may be null
+	 * @return the processed string value with newline characters replaced by
+	 *         &lt;br/&gt; and <, > characters encoded to &lt; and &gt;
+	 *         respectively; {@code null} if the input is null or empty
+	 */
+	public String encodeHtmlStringOrNull(String value) {
+		if (value == null || value.trim().isEmpty()) {
+			return null;
+		}
+		// Replace < and > with their HTML entity equivalents
+		String formatted = value.replace("<", "&lt;").replace(">", "&gt;");
+		// Replace any newline characters (\r\n or \n) with <br/>
+		return formatted.replaceAll("(\r\n|\n)", "<br/>");
+	}
+	// #28854 - End
+	
 }

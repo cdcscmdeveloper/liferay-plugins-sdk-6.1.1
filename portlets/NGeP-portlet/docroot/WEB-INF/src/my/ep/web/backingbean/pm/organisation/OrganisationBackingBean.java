@@ -3984,7 +3984,28 @@ public class OrganisationBackingBean extends
 		
 		return newOrgCode;
 	}
-	
 	//END #3790
+	
+	// #36489 - Start
+	public void checkUserProfile(Long userId, Integer index) {
 
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile()
+				.getOrgProfileId());
+
+		UserResDTO resDTO = userSO
+				.findInactiveUserIdByUserIdAndOrgProfileId(reqDTO);
+
+		if (resDTO.isSuccessful() && resDTO.getUserId().longValue() > 0) {
+			this.getManagedBean().getSmPersonnels().get(index)
+					.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+			throw new EpException(MessageConst.ERROR_775220);
+		}
+	}
+	// #36489 - End
 }

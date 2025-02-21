@@ -41,7 +41,7 @@ public class gpkiBackingBean implements Serializable {
 	private PmDigiSign pmDigiSign = new PmDigiSign();
 	private Exception nonSigningException;
 	//#35488 - start
-	private boolean isMediumTypeOTP = false;
+	private boolean isMediumTypeOTP = true;
 	private String nric = "";
 	private static String gpkiEnabled = EpPropertiesUtils.getInstance().getProperty("gpki.enabled");
 	private static String gpkiNewRoaming = EpPropertiesUtils.getInstance().getProperty("mygpki.new.roaming");
@@ -196,8 +196,12 @@ public class gpkiBackingBean implements Serializable {
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
+		String nonceNull = map.get("gpkiNonceNull");
 		if (extMsg != null && extMsg.trim().length() > 0) {
 			statusMsg = extMsg;
+		}
+		if(nonceNull != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.gpki.nonce.null", null);
 		}
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
@@ -231,7 +235,9 @@ public class gpkiBackingBean implements Serializable {
 	public void setMediumType(){
 		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("mediumTypeId");
-		isMediumTypeOTP = "5".equals(id);
+		//isMediumTypeOTP = "5".equals(id)
+		// popup default to OTP for any error
+		isMediumTypeOTP = !"4".equals(id);
 	}
 	
 	
@@ -287,6 +293,7 @@ public class gpkiBackingBean implements Serializable {
 		pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		pmDigiSign.setOriginalData(map.get("textBeforeSign"));
 		pmDigiSign.setGpkiSignedData(map.get("signedText"));
+		pmDigiSign.setGpkiMedium(isMediumTypeOTP ? "5" : "4");
 		
 		Object returnObj = null;
 		try {
