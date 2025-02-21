@@ -107,19 +107,8 @@
 							<ac:iconTooltip
 								value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 						</f:facet>
-						<p:commandLink onstart="blockWidget.show()"
-							oncomplete="blockWidget.hide()"
-							style="color:red; font-weight:bold;"
-							rendered="#{bidPriceItem.supplier.disciplinaryActions}"
-							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(bidPriceItem.supplier)}"
-							process="@this" update="@([id$=disciplinaryActionHistoryDlgId])">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-								styleClass="warning" />
-						</p:commandLink>
-						<p:spacer width="2" />
-						<h:outputText
-							rendered="#{!bidPriceItem.supplier.disciplinaryActions}"
-							value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+						<ac:disciplinaryActionYesNo
+							supplier="#{bidPriceItem.supplier}" index="#{index}"/>
 					</p:column>
 					<p:column style="align : center; width : 14%"
 						headerText="#{lbl['lbl.sc.starting.price']}">

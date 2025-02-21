@@ -274,17 +274,8 @@
 				<ui:remove> #26247 - #32687 - End </ui:remove>
 						
 				<p:column>
-				<!-- #31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo
+						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}" />
 				</p:column>
 				
 				<p:column rendered="#{false}">
@@ -532,17 +523,8 @@
 				<ui:remove> #26247 - #32687 - End </ui:remove>
 						
 				<p:column>
-				<!-- #31033 Start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo
+						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}"/>
 				</p:column>
 				
 				<p:column  rendered="#{false}">
@@ -784,17 +766,8 @@
 					<ui:remove> #26247 - #32687 - End </ui:remove>
 							
 					<p:column>
-					<!-- #31033 start -->
-						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-							rendered="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-							process="@this" partialSubmit="true" update=":form">
-								<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-						</p:commandLink><p:spacer width="2"/>
-						<!-- #31033 End -->
-						
-						<h:outputText rendered="#{!shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+						<ac:disciplinaryActionYesNo
+							supplier="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}"/>
 					</p:column>
 					
 					<p:column rendered="#{false}}">
@@ -838,10 +811,4 @@
 		</p:outputPanel>
 		
 	</p:panel>
-	<!-- #30823, #31033 #32560 Start -->
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<!-- #30823, #31033, #32560 End -->
 </ui:composition>

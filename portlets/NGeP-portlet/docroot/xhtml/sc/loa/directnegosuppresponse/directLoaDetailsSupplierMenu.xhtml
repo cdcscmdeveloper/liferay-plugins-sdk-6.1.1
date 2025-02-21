@@ -42,20 +42,9 @@
 						disabled="true" /></td>
 				<td width="18%"><p:outputLabel
 						value="#{lbl['lbl.sc.discipline.action']}" /></td>
-				<td>
-				<p:commandLink onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()"
-						style="color:red; font-weight:bold;"
-						rendered="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier)}"
-						process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-							styleClass="warning" />
-					</p:commandLink> <p:spacer width="2" /> <h:outputText
-						rendered="#{!directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier.disciplinaryActions}"
-						value="#{lbl['lbl.cm.dialog.cofirm.no']}" /> <ac:iconTooltip
-						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-				</td>
+				<td><ac:disciplinaryActionYesNo
+						supplier="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
+						showTooltip="true" /></td>
 			</tr>
 
 			<tr>
@@ -339,10 +328,4 @@
 	</p:outputPanel>
 
 	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
-	<ac:disciplinaryActionActiveQT
-		voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"
-		btnView="true"
-		startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-		endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-		isWarning="#{viewSuppProfileBackingBean.managedBean.warning}" />
 </ui:composition>

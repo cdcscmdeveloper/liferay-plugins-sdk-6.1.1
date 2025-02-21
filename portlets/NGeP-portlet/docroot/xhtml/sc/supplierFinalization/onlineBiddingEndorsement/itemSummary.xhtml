@@ -107,15 +107,8 @@
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
 				</f:facet>
-				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-					rendered="#{itemSupplier.supplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(itemSupplier.supplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				
-				<h:outputText rendered="#{!itemSupplier.supplier.disciplinaryActions}"
-				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
+				<ac:disciplinaryActionYesNo
+					supplier="#{itemSupplier.supplier}" index="#{rowIndex}"/>
 			</p:column>
 			
 			<ui:remove>

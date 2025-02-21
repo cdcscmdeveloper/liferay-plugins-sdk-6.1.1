@@ -76,7 +76,7 @@
 
 		<p:dataTable id="bidPackagesListForBMBP"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{biddingBB.managedBean.bidPackages}" var="item">
+			value="#{biddingBB.managedBean.bidPackages}" var="item" rowIndexVar="index">
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">
 				<p:outputLabel value="#{item.ranking}" />
@@ -107,19 +107,8 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
-				<p:commandLink onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()"
-					style="color:red; font-weight:bold;"
-					rendered="#{item.scBidSupplier.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(item.scBidSupplier.smSupplier)}"
-					process="@this" update="@([id$=disciplinaryActionHistoryDlgId])">
-					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						styleClass="warning" />
-				</p:commandLink>
-				<p:spacer width="2" />
-				<h:outputText
-					rendered="#{!item.scBidSupplier.smSupplier.disciplinaryActions}"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+				<ac:disciplinaryActionYesNo
+					supplier="#{item.scBidSupplier.smSupplier}" index="#{index}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
 				<h:outputText style="float : right"

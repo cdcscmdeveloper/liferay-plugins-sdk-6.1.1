@@ -139,15 +139,8 @@
 									<ac:iconTooltip
 										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
 								</f:facet>
-								<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-									rendered="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-									action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-									process="@this" partialSubmit="true" update=":form">
-										<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-								</p:commandLink><p:spacer width="2"/>
-								
-								<h:outputText rendered="#{!supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-								 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
+								<ac:disciplinaryActionYesNo
+									supplier="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{rowIndex}"/>
 							</p:column>
 							<ui:remove>#30008 - Start</ui:remove>
 							<p:column selectionMode="single"
@@ -274,36 +267,22 @@
 									<ac:iconTooltip
 										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
 								</f:facet>
-								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
-											rendered="#{isPendingNegotiationStatus}">
-									<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-													rendered="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-													action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-													process="@this" partialSubmit="true" update=":form">
-											<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-										</p:commandLink>							
-										<h:outputText rendered="#{!recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-										 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-										 <h:outputText escape="false" value="&#60;br &#47;&#62;"
+								<p:dataList var="recommendedSuppl"
+									value="#{item.awardSupplierList}" type="none"
+									rendered="#{isPendingNegotiationStatus}" rowIndexVar="index">
+									<ac:disciplinaryActionYesNo
+										supplier="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{rowIndex}" childIndex="#{index}"/>
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</p:dataList>
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
-									rendered="#{!isPendingNegotiationStatus}">
+									rendered="#{!isPendingNegotiationStatus}" rowIndexVar="index">
 									<p:column
 										rendered="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
-										<p:commandLink onstart="blockWidget.show()"
-											oncomplete="blockWidget.hide()"
-											style="color:red; font-weight:bold;"
-											rendered="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-											action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
-											process="@this" partialSubmit="true" update=":form">
-											<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-												styleClass="warning" />
-										</p:commandLink>
-										<h:outputText
-											rendered="#{!recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-											value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+										<ac:disciplinaryActionYesNo
+											supplier="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+											index="#{rowIndex}" childIndex="#{index}"/>
 										<h:outputText escape="false" value="&#60;br &#47;&#62;"
 											rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 
@@ -473,14 +452,5 @@
 		remarkList="#{lOIDetailBackingBean.managedBean.scQtCommittee.qtCommitteRemarks}"
 		showAttachment="false"
 		readonly="#{lOIDetailBackingBean.managedBean.readOnly}" />
-	<ui:remove>
-		#31061 #32560 - SHAFFUL 
-	</ui:remove>
-	<ac:disciplinaryActionActiveQT voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}"  btnView="true" 
-				startDate="#{viewSuppProfileBackingBean.managedBean.startDate}"
-				endDate="#{viewSuppProfileBackingBean.managedBean.endDate}"
-				isWarning="#{viewSuppProfileBackingBean.managedBean.warning}"/>
-	<ui:remove>
-		#31061  #32560- END
-	</ui:remove>
+	
 </ui:composition>

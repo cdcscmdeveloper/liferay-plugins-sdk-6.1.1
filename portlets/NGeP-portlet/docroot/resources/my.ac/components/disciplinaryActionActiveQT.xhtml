@@ -22,7 +22,7 @@
 	<cc:implementation>
 	<ui:remove>Bug #32759, change resizable to false 
 	</ui:remove>
-	<p:dialog id="disciplinaryActionHistoryDlgId" header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" closable="true"
+	<p:dialog id="disciplinaryActionHistoryDlgId" dynamic="true" header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" resizable="false">		
 		<p:outputPanel id="disciplinaryActionMsgOP" rendered="#{not empty cc.attrs.dialogMessage}">     
 			<h:outputText value = "#{cc.attrs.dialogMessage}" style="color:red;" escape="false" />

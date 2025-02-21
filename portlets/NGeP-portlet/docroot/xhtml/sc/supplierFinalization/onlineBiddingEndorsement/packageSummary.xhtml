@@ -80,19 +80,11 @@
 			</ui:remove>
 			<p:column>
 				<f:facet name="header">
-									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
-								</f:facet>
-				<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-					rendered="#{price.scBidSupplier.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(price.scBidSupplier.smSupplier)}" 
-					process="@this" partialSubmit="true" update=":form">
-						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-				</p:commandLink><p:spacer width="2"/>
-				
-				<h:outputText rendered="#{!price.scBidSupplier.smSupplier.disciplinaryActions}"
-				 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />								
+					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+				</f:facet>
+				<ac:disciplinaryActionYesNo
+					supplier="#{price.scBidSupplier.smSupplier}" index="#{rowIndex}"/>
 			</p:column>
 			
 			<ui:remove>
@@ -162,11 +154,7 @@
 					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-<<<<<<< HEAD
 					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or isDisciplinaryAction) or 
-=======
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions) or 
->>>>>>> refs/remotes/origin/master
 					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />	<ui:remove> 21692 </ui:remove>	
 		</p:dataTable>
 	</p:panel>
