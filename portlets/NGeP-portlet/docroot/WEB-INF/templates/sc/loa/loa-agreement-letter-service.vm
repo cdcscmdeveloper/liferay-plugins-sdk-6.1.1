@@ -343,16 +343,6 @@ u.underline {
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(b)</td>
 									<td>suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (RM______________) dan resit premium; </td>
-			  
-								
-																  
-											 
-																														  
-			  
-																														  
-			 
-		 
-		 
 								</tr>
 								## #25025 #478 - start	
 								<tr class="text_family_red">
@@ -380,16 +370,9 @@ u.underline {
 						<span class="text_family_red">
 										   
 							*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> 
-																																			 
-																																							   
-																					  
-		   
-																											   
 							(PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 							dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 							peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
-		  
-	 
 					</p>
 					<p>
 						<table width="25%" align="center" style="border-collapse: collapse;">
@@ -431,29 +414,16 @@ u.underline {
 																			 
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
 					untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
-		  
-																																		  
-																				  
-		 
 				</p>
 				##26770 - end
 				#else
 				<p>
-																			
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
-																				  
-		 
-																																	   
-																				 
-		
-	 
 				</p>
 				#end
-				
 				<p>
 					<span class="text_family">7.&#160;&#160;&#160;&#160;&#160;Bagi tujuan program PROT&Eacute;G&Eacute;-RTW ini, syarikat tuan adalah dikehendaki untuk:</span>
 				</p>
-				
 				<div class="text_indent">
 					## 25025- start
 						<table class="text_family" style="text-align:justify;">
@@ -627,9 +597,6 @@ u.underline {
 				## #25025 #478 - end	
 			</td>
 		</tr>
-		
-
-
 		 <tr>
 			<td>
 				<p>
@@ -723,7 +690,6 @@ u.underline {
 	
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	
 	    <tr>
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A</i></b></span></td>
 		</tr>
@@ -734,7 +700,6 @@ u.underline {
 		<tr>
 			<td align="center"><span class="text_family"> $loaTitle</span> <br /> <br /></td>
 		</tr>
-
 		<tr>
 			<table width="100%">
 				<tr>
@@ -742,12 +707,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
-											 
-																																														   
-			  
 									<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
-			 
-		 
 								</tr>
 						</table>		
 					</td>
@@ -764,7 +724,6 @@ u.underline {
 					<td class="text_family">:</td>
 					<td class="text_family">$ssmExpired</td>
 				</tr>
-
 				<tr>
 					<td colspan="3">
 						<table>
@@ -805,7 +764,6 @@ u.underline {
 					<td class="text_family">:</td>
 					<td class="text_family">$mofCertValidityDuration</td>
 				</tr>
-
 				<tr>
 					<td colspan="3">
 						<table >
@@ -845,12 +803,7 @@ u.underline {
 						## #25025-start
 						<table class="text_family">
 							<td align="center" style="vertical-align: top;">4.1 </td>
-																			   
 							<td>Harga $docType (butiran harga seperti di <b><i>Lampiran A1</i></b>)</td>
-			
-																				   
-		   
-	   
 						</table>
 						## #25025-end	
 					</td>
@@ -924,11 +877,7 @@ u.underline {
 							perkhidmatan dan/atau tempoh serta jadual penyempurnaan perkhidmatan yang
 							ditetapkan seperti di <b><i>Lampiran A2</i></b></span>
 							<br/>
-										   
-																																												   
-			
 								<span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual perkhidmatan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span>
-	   
 					</td>
 				</tr>
 				<tr>
@@ -1010,16 +959,12 @@ u.underline {
 				</tr>
 				## #25025-start				
 				<tr>
-					
 					<td colspan="3">
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
 																				 
 										<td class ="text_header_submenu">No Kod Majikan PERKESO/No. Pendaftaran KWSP/<span class="text_header_submenu_red">*Polisi Insurans (jika berkaitan)</span></td>
-			  
-																																										   
-			 
 								</tr>
 						</table>
 					</td>
@@ -1028,7 +973,6 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">8.1 No. Kod Majikan PERKESO </span></td>
 					<td class="text_family">:</td>
-					
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
@@ -1039,7 +983,6 @@ u.underline {
 						      </tr>
 						</table>
 					</td>
-					
 				</tr>
 				<tr valign="top">
 					<td align="left" class="submenu_padding"><span
@@ -1312,7 +1255,6 @@ u.underline {
 										<td valign="top" class="text_family_red">:</td>
 										<td class="text_family_red" style="text-align:justify;">Dari tarikh kuat kuasa kontrak sehingga 12 bulan selepas tarikh tamat kontrak atau tarikh obligasi terakhir mengikut mana yang terkemudian.</td>
 									</tr>
-						
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding"><span
@@ -1365,20 +1307,8 @@ u.underline {
 			<td align="left">
 				<span class="underline"><b>Salinan Kepada :</b></span>
 				<br/><br/>
-				
 				<p style="text-align:left;">
 					<span class="text_family">
-										  
-									  
-															
-															
-								 
-										   
-			
-		
-	
-								
-							   
 						Ketua Pegawai Eksekutif<br/>
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
@@ -1387,7 +1317,6 @@ u.underline {
 						(u.p.: Pengarah Jabatan Pematuhan Cukai)
 					</span>
 				</p>
-				
 				<p style="text-align:left;">
 					<span class="text_family">
 						Ketua Pengarah Kastam<br/>
@@ -1400,16 +1329,6 @@ u.underline {
 					</span>
 				</p>
 				## #25025 #478 - start
-								
-							   
-					  
-										 
-									 
-									  
-								 
-			
-		
-	
 				<p style="text-align:left;">
 					<span class="text_family">
 						Sekretariat Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>

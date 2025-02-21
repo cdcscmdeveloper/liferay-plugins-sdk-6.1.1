@@ -307,20 +307,10 @@ u.underline {
 					Pembayaran cukai jualan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
 					kuasa pendaftaran syarikat tuan dengan JKDM. </span>
 				</p>
-						   
-					 
-										
-		
-																							
-																							   
-		
-		 
 				<p>
 					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk syarikat yang
 					berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018)</span>
 				</p>
-		
-				
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan
@@ -332,20 +322,16 @@ u.underline {
 					syarikat tuan dengan JKDM. </span>
 				</p>
 				## #25025 & #26770 -end
-	
 				<p>
 					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak
 					berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018)</span>
 				</p>
-				
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family">4. &#160;&#160;&#160;&#160;&#160;Adalah dimaklumkan bahawa tiada pembekalan barang boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
 				</p>
 				## #25025 & #26770 -end
-
 				<div class="text_indent">
-				
 						## #25025-start
 							<table>
 								<tr class="text_family_red">
@@ -373,28 +359,16 @@ u.underline {
 									<td style="text-align:justify;">Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP),</td>
 								</tr>
 								## #25025 #579 - end
-								
-																  
-																										
-			 
 							</table
-							
 							## #25025- end
 				</div>
-				
 				<p><span class="text_family">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi bekalan barang yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
-				
 				## #25025 & #26770 -start
 				<p>
-																			 
 					<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/Tolakan/<i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
-		  
-																																																																																																																																																																  
-		 
 				</p>
 				## #25025 & #26770 -end
 				#if($isSL1M == "true")
-							 
 					<p>
 						<span class="text_family_red">
 									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> 
@@ -402,8 +376,6 @@ u.underline {
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 					</p>
-							
-					  
 					<p>
 						<table width="25%" align="center" style="border-collapse: collapse;">
 							<tr>
@@ -446,34 +418,21 @@ u.underline {
 				#if($isSL1M == "true")
 				##26770 - start
 				<p>													 
-																			 
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-																				   
-		  
-																																		  
 					untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
-		 
 				</p>
 				##26770 - end
 				#else
 				<p>
 				##26770 - start															
-																			
-																																	   
-																				  
-		 
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
 					untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
-		
 				##26770 - end	
 				</p>
 				#end
-	
-	
 				<p>
 					<span class="text_family">7.&#160;&#160;&#160;&#160;&#160;Bagi tujuan program PROT&Eacute;G&Eacute;-RTW ini, syarikat tuan adalah dikehendaki untuk:</span>
 				</p>
-	
 				<div class="text_indent">
 					## 25025- start
 						<table class="text_family" style="text-align:justify;">
@@ -502,7 +461,6 @@ u.underline {
 				</div>
 				## #25025 & #26770 -start
 				#set($numberCount = 7)
-				
 					#if($isSL1M == "true")
 					#set($numberCount = $numberCount+1)
 						<p>
@@ -1406,17 +1364,6 @@ u.underline {
 				
 				<p style="text-align:left;">
 					<span class="text_family">
-										  
-									  
-															
-															
-								 
-										   
-			
-		
-	
-								
-							   
 						Ketua Pegawai Eksekutif<br/>
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
@@ -1425,7 +1372,6 @@ u.underline {
 						(u.p.: Pengarah Jabatan Pematuhan Cukai) 
 					</span>
 				</p>
-				
 				<p style="text-align:left;">
 					<span class="text_family">
 						Ketua Pengarah Kastam<br/>

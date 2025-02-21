@@ -2267,17 +2267,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// ##25025 #509 -start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
-		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
-		// ##25025 #509 -end		context.put("loaNo", scLoa.getLoaNo());
+		context.put(SSTConstant.FILE_NO, fileNo + "-" + scLoa.getFileExtNo());
+		// ##25025 #509 -end
 
 
-		String issueDate = "______________";
+		String issueDate = SSTConstant.UNDERLINE;
 		if (scLoa.getIssueDate() != null) {
 			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
 		context.put("issueDate", issueDate);
 
-		String govtSignDate = "______________";
+		String govtSignDate = SSTConstant.UNDERLINE_SHORT; //25025 Code Inspection
 		if (scLoa.getGovtSignDate() != null) {
 			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
 		}
@@ -2288,8 +2288,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		if (scLoa.getScSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
-		//log.info("supplierAddress" + supplierAddress);
-		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
 			String[] address = supplierAddress.split(System.getProperty("line.separator"));
@@ -2299,37 +2297,35 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				supplierAddressTable.append("<br />");
 			}
 		}
-		//log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
 
 
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; //25025 Code Inspection
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			//#25025 - start
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 Code Inspection
 			//#25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; //25025 Code Inspection
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; //25025 Code Inspection
 			}
 
 		}
-		context.put("headerTitle", headerTitle); 
-		context.put("subTitle", headerTitle.toLowerCase()); 
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); //25025 Code Inspection
+		context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase()); //25025 Code Inspection
 
 		// loa title
 		String title = scLoiLoa.getTitle();
 		if (title == null) {
-			title = "";
+			title = SSTConstant.EMPTY_STRING; //25025 Code Inspection
 		}
 		title = title.trim();
 
 		//replace all special characters
-		//title = title.replaceAll("\\W", ""); 
 		// 25025 - note 436 start
 		title = title.replaceAll("&", SSTConstant.AND_SYMBOL);
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
@@ -2361,7 +2357,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put(SSTConstant.BOND_PERCENTAGE_TEXT, bondPercentageText); 
 		context.put(SSTConstant.BOND_PERCENTAGE, bondPercentage);
 		//25025 - end
-		String bondExpDate = "______________";
+		String bondExpDate = SSTConstant.UNDERLINE_SHORT; //25025 Code Inspection
 		//bond exp date should be one year after the end of the contract period
 		if(scLoa.getContractExpDate() != null){
 			Calendar cal = Calendar.getInstance();
@@ -2400,17 +2396,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		context.put("isAgreementReq", scLoa.isAgreementReq());
 
-		String LoaSigner = "______________";
-		String loaSignerDesig = "______________";
+		String loaSigner = SSTConstant.UNDERLINE_SHORT; //25025 Code Inspection
 		if(getManagedBean().getContractSignerUser() != null){
 			PmUser contractSigner = getManagedBean().getContractSignerUser();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-				LoaSigner = contractSigner.getUserName();
+				loaSigner = contractSigner.getUserName(); //25025 Code Inspection
 			}
 		}
-		context.put("loaSigner", LoaSigner);	
-
-		loaSignerDesig = scLoa.getLoaSignerDesig();
+		context.put("loaSigner", loaSigner); //25025 Code Inspection
+		
+		String loaSignerDesig = StringUtils.isNotEmpty(scLoa.getLoaSignerDesig())?  scLoa.getLoaSignerDesig(): SSTConstant.UNDERLINE_SHORT; //25025 Code Inspection
 		if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
 			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
 		}
@@ -2464,14 +2459,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else {
 				qtNo = rnNo;
 			}
-			context.put("docType", "Pembelian Terus"); 
+			context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_PEMBELIAN_TERUS); //25025 Code Inspection
 		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
 			// #26770 - Start.
 			if (isQuotationOrTender(scQt)) {
-				context.put("docType", "Sebut Harga"); 
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_SEBUT_HARGA); //25025 Code Inspection
 			} else {
-				context.put("docType", "Tender"); 
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_TENDER); //25025 Code Inspection
 			}
 			// #26770 - End.
 		} 
@@ -2735,18 +2730,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//log.info("SupplierAddressTable" + supplierAddressTable);
 
 		// #25025 - start
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; //25025 Code Inspection
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; //25025 Code Inspection
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; //25025 Code Inspection
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; //25025 Code Inspection
 			}
 
 		}
-		context.put("headerTitle", headerTitle);
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); //25025 Code Inspection
 		// #25025 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
@@ -2963,20 +2958,20 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("loaNo", loaNo);
 
 		// #25025 - start
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; //25025 Code Inspection
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 			// #25025 - start
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; //25025 Code Inspection
 			// #25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; //25025 Code Inspection
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; //25025 Code Inspection
 			}
 
 		}
-		context.put("headerTitle", headerTitle);
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); //25025 Code Inspection
 		// #25025 - end
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
@@ -4128,21 +4123,31 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//20190405@asyrafhaziq - CR25062 - End
 	
 	// #26770 - Start.
-    /**
-    * 
-    */
-   private void validateReportAttachment() {
-     if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-                 if (report.getScLoaReportAttachment() == null) {
-                   throw new EpException(MessageConst.ERROR_775159);
-                 }
-                break;
-            }
-         }
-      }
-   }
+	/**
+	 * To validate Report attachment. Throw error if LOA Report attachment is null
+	 */
+	private void validateReportAttachment() {
+	    if (this.getManagedBean().getScLoa() == null) {
+	        return;
+	    }
+
+	    List<ScLoaReport> reports = this.getManagedBean().getScLoa().getScLoaReports();
+	    if (CollectionUtils.isEmpty(reports)) {
+	        return;
+	    }
+
+	    for (ScLoaReport report : reports) {
+	        if (report != null && 
+	            "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
+
+	            if (report.getScLoaReportAttachment() == null) {
+	                throw new EpException(MessageConst.ERROR_775159);
+	            }
+	            break; // Exit the loop once we find the first matching report
+	        }
+	    }
+	}
+
    // #26770 - End.
    
 	// #22211 - Start
@@ -6817,6 +6822,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //
 //	}	
 	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param amountDF
+	 * @param myLocale
+	 */
 	private void setSstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,	DecimalFormat amountDF, Locale myLocale) {
 
 		// #25025,#26770 -start-
@@ -6828,8 +6839,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// #25025,#26770 -end-
 		context.put("gstEffectiveDate", gstEffectiveDate);
 
-		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
-				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
+		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ?  DateUtils
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : SSTConstant.UNDERLINE_SHORT; //25025 Code Inspection
 		context.put("gstDeclaredDate", gstDeclaredDate);
 
 		// #25025,#26770 -start-
@@ -6939,38 +6950,33 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				isBumi = "Bukan Bumiputera";
 			}
 
-			/*if(scQt != null) {
-				if(!CollectionUtils.isEmpty(scQt.getScQtCategorys())) {
-					List<String> categoryCodes = new ArrayList<String>();
-					for(ScQtCategory category : scQt.getScQtCategorys()) {
-						String l1Code = category.getPmCategoryL1().getCategoryL1Code();
-						String l2Code = category.getPmCategoryL2().getCategoryL2Code();
-						String l3Code = category.getPmCategoryL3().getCategoryL3Code();
-						String categoryCode = new StringBuilder().append(l1Code).append(l2Code).append(l3Code).toString();
-						categoryCodes.add(categoryCode);
-					}
-					kodBidang = StringUtils.join(categoryCodes, ",");
-				}
-			}*/
 			// #26770 new kod bidang
-			if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
-					&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
+			if (smSupplier.getSmAppl() == null || smSupplier.getSmAppl().getSmSupplierCategories() == null ||
+				    smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
+				    return;
+				}
+
 				int counter = 0;
 				StringBuilder categoryCode = new StringBuilder();
-				for (SmSupplierCategory category : smSupplier.getSmAppl().getSmSupplierCategories()) {
-					String l1Code = category.getPmCategoryL1().getCategoryL1Code();
-					String l2Code = category.getPmCategoryL2().getCategoryL2Code();
-					String l3Code = category.getPmCategoryL3().getCategoryL3Code();
-					String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
 
-					counter++;
-					if (counter % 4 == 0 && counter < smSupplier.getSmAppl().getSmSupplierCategories().size()) {
-						catcode = catcode + SSTConstant.LINE_BREAK;
-					}
-					categoryCode.append(catcode);
+				List<SmSupplierCategory> categories = smSupplier.getSmAppl().getSmSupplierCategories();
+				int totalCategories = categories.size();
+
+				for (SmSupplierCategory category : categories) {
+				    String l1Code = category.getPmCategoryL1().getCategoryL1Code();
+				    String l2Code = category.getPmCategoryL2().getCategoryL2Code();
+				    String l3Code = category.getPmCategoryL3().getCategoryL3Code();
+				    String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
+
+				    counter++;
+				    if (counter % 4 == 0 && counter < totalCategories) {
+				        catcode += SSTConstant.LINE_BREAK;
+				    }
+				    categoryCode.append(catcode);
 				}
+
 				kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
-			}
+
 			
 			//26770 - end	
 		}
@@ -6980,9 +6986,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("kodBidang", kodBidang);
 		// #25025 - Start.
 		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
-			context.put("mofNo", scLoiLoa.getMofNo());
+			context.put(SSTConstant.MOF_NO, scLoiLoa.getMofNo()); //25025 Code Inspection
 		} else {
-			context.put("mofNo", SSTConstant.UNDERLINE);
+			context.put(SSTConstant.MOF_NO, SSTConstant.UNDERLINE); //25025 Code Inspection
 		}
 		// #25025 - End.
 	}
@@ -7006,13 +7012,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put(SSTConstant.REGISTRATION_NO, regNo);
 		
 		//#26770 - start
-		if (null != smSupplier.getSmAppl()){
-			if (null != smSupplier.getSmAppl().getSmCompanyBasic()){
+		if (null != smSupplier.getSmAppl() && null != smSupplier.getSmAppl().getSmCompanyBasic()){
 				if (null != smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){		
 					context.put(SSTConstant.SSM_EXPIRED,new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));							   
 				}else{
 					context.put(SSTConstant.SSM_EXPIRED,SSTConstant.UNDERLINE); 
-				}
 			}
 		}
 		//#26770 - end
@@ -11340,13 +11344,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#32280 - end
 	
 	//#25025 - start
+	/**
+	 * @param text
+	 * @param index
+	 * @return
+	 */
 	public String setValueLowercase(String text, int index){
 		//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
-		if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+		if ("SuratSetujuterima(TermasukLampiranA)".equalsIgnoreCase(text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, ""))) {
 			char[] arr = text.toCharArray();
 			arr[index] = Character.toLowerCase(arr[index]);
-			String newPrefixName = new String(arr);
-			return newPrefixName;
+			return new String(arr);
 		}
 		return text;	
 	}
