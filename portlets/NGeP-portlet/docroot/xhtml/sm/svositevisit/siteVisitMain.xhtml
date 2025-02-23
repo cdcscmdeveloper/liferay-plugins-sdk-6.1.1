@@ -54,7 +54,8 @@
 						update="@form"/>
 
 						<!-- 29430,28775 - Site Visit Grouping Enhancement - 28775 -->
-						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" onclick="submissionConfirmDlg.show()" 
+						<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" 
+							oncomplete="if(!args.validationFailed)submissionConfirmDlg.show()" 
 							rendered="#{svoSiteVisitBackingBean.managedBean.activePage eq 'S'}" 
 							disabled="#{!svoSiteVisitBackingBean.managedBean.claimTask}"
 							process="@this @([id$=recommendationId])">
