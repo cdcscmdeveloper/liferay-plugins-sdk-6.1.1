@@ -255,7 +255,9 @@ public class gpkiBackingBean implements Serializable {
 				log.info("35488 - different IC: "+nric+"  new IC: "+user.getIdentificationNo().trim());
 			}
 			nric = user.getIdentificationNo().trim();
-			email = user.getEmail().trim();
+			if(user.getEmail() != null){
+				email = user.getEmail().trim();
+			}
 		}
 		RequestContext.getCurrentInstance().addCallbackParam("nric", nric);
 		RequestContext.getCurrentInstance().addCallbackParam("email", email);
