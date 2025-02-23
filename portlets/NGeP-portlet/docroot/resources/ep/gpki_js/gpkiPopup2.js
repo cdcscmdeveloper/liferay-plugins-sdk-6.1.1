@@ -51,13 +51,14 @@ var gpkiRequestTime = 0;
 
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = encodeURIComponent(Gpki.hash(a[0]));
+    text = a[0];
+    data = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
       return;
     }
-    sign("token", nric, pin, text, "false", "data");
+    sign("token", nric, pin, data, "false", "data");
   };
 
   this.signRoam = function (a) {
