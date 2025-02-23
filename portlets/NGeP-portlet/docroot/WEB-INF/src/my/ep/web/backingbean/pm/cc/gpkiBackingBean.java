@@ -250,6 +250,13 @@ public class gpkiBackingBean implements Serializable {
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if(user != null){
 			nric = user.getIdentificationNo().trim();
+		}
+		user = getPmUserFromLoginId();
+		if(user != null){
+			if (!nric.equals(user.getIdentificationNo().trim())){
+				log.info("35488 - different IC: "+nric+"  new IC: "+user.getIdentificationNo().trim());
+			}
+			nric = user.getIdentificationNo().trim();
 			email = user.getEmail().trim();
 		}
 		RequestContext.getCurrentInstance().addCallbackParam("nric", nric);
@@ -403,6 +410,20 @@ public class gpkiBackingBean implements Serializable {
 		
 		new LogKey(userIdSession);
 		return userIdSession;
+	}
+	
+	private PmUser getPmUserFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			pmUser = facesScopes.getUserSessionBean();
+		} 
+		return pmUser;
 	}
 	
 	public void saveNonce(){
