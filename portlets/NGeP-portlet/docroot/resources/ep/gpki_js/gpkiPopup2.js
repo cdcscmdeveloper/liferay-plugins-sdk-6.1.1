@@ -122,19 +122,19 @@ function parseResultMedium(msg) {
         }
         setMediumType([{ name: 'message', value: obj.message },
                        { name: 'mediumTypeId', value: mediumTypeId },
-                       { name: 'response', value: response },
+                       { name: 'response', value: msg },
                        { name: 'js_nric', value: gpki.nric()} ]);
         if (mediumTypeId === 5) {
           gpki.requestOtp();
         } else if (mediumTypeId !== 4) {
           gpki_dlg.hide();
           gpki_dlg2.show();
-          showError(obj.status, "Medium Token atau Roaming OTP sahaja", obj);
+          showError(obj.status, "Medium Token atau Roaming OTP sahaja", msg);
         }
       } else {
         gpki_dlg.hide();
         gpki_dlg2.show();
-        showError(obj.status, obj.message, obj);
+        showError(obj.status, obj.message, msg);
       }
     });
 }
@@ -155,7 +155,7 @@ function parseTxResultRequestOTP(msg) {
         saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
       } else {
     	disableOtpTimeout();
-        showError(obj.status, obj.message, obj);
+        showError(obj.status, obj.message, msg);
       }
     });
 }
@@ -173,9 +173,9 @@ function parseSignResult(msg) {
                       { name: 'subjectDN', value: obj.subject_dn },
                       { name: 'textBeforeSign', value: gpki.textBeforeSign() },
                       { name: 'signedText', value: obj.signed_data },
-                      { name: 'response', value: response }]);
+                      { name: 'response', value: msg }]);
       } else {
-        showError(obj.status_code, obj.status_message, obj);
+        showError(obj.status_code, obj.status_message, msg);
       }
       gpkiBlockWidget.hide();
     });
@@ -196,9 +196,9 @@ function parseTxResultSigningRoaming(msg) {
 			         { name: 'subjectDN', value: response.subject_dn },
 			         { name: 'textBeforeSign', value: gpki.textBeforeSign() },
 			         { name: 'signedText', value: response.signed_data },
-			         { name: 'response', value: response }]);
+			         { name: 'response', value: msg }]);
       } else {
-        showError(obj.status, obj.message, obj);
+        showError(obj.status, obj.message, msg);
       }
       gpkiBlockWidget.hide();
     });

@@ -246,7 +246,7 @@ public class gpkiBackingBean implements Serializable {
 		log.info("--35488--JS-nric "+map.get("js_nric")+" -- "+isMediumTypeOTP);
 		PmUser user = getPmUserFromLoginId();
 		if(user != null){
-			log.info("--35488--"+user.getUserId()+"  "+user.getIdentificationNo());
+			log.info("--35488--Request IC:"+user.getUserId()+"  "+user.getIdentificationNo());
 		}
 	}
 	
