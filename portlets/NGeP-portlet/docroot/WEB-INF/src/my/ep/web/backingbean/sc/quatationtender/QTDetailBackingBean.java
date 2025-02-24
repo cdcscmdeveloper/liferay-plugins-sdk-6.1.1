@@ -4359,7 +4359,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				// 29732 fix duplicate issues while deleting the category and add the same id -start-
 				if(null != removeCategoryCodes){
-					List<ScQtCategory> categoryResults = new ArrayList<>();
+					List<ScQtCategory> categoryResults;
 					categoryResults = this.getManagedBean().getQtCategoryList();
 					this.getManagedBean().setQtCategoryList(categoryResults);
 					qt.setScQtCategorys(categoryResults);
@@ -5037,7 +5037,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					// 29732 fix duplicate issues while deleting the category
 					// and add the same id -start-
 					if (null != removeCategoryCodes) {
-						List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+						List<ScQtCategory> categoryResultsnew;
 						categoryResultsnew = this.getManagedBean().getQtCategoryList();
 						if (null == categoryResultsnew || CollectionUtils.isEmpty(categoryResultsnew)) {
 							this.getManagedBean().setQtCategoryList(this.getManagedBean().getTobeRemoveCategoryCodes());
@@ -5163,7 +5163,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 				// 29732 fix duplicate issues while deleting the category and add the same id -start-
 				if(null != removeCategoryCodes){
-					List<ScQtCategory> categoryResults = new ArrayList<>();
+					List<ScQtCategory> categoryResults;
 					categoryResults = this.getManagedBean().getQtCategoryList();
 					this.getManagedBean().setQtCategoryList(categoryResults);
 				}
