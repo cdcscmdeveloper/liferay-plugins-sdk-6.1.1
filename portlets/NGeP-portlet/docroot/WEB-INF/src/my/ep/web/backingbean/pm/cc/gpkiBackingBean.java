@@ -194,6 +194,7 @@ public class gpkiBackingBean implements Serializable {
 	 */
 	public void showError() {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		log.info("--35488--err- "+map.get("response"));
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
@@ -207,6 +208,7 @@ public class gpkiBackingBean implements Serializable {
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
+		log.info("#35488 MyGPKI: "+statusMsg);
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
@@ -236,8 +238,12 @@ public class gpkiBackingBean implements Serializable {
 	public void setMediumType(){
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String id = map.get("mediumTypeId");
-		isMediumTypeOTP = !"4".equals(id);
+		isMediumTypeOTP = true;
+		if("4".equals(id)){
+			isMediumTypeOTP = false;
+		}
 		log.info("--35488--"+map.get("response"));
+		log.info("--35488--JS-nric "+map.get("js_nric")+" -- "+isMediumTypeOTP);
 		PmUser user = getPmUserFromLoginId();
 		if(user != null){
 			log.info("--35488--"+user.getUserId()+"  "+user.getIdentificationNo());
@@ -313,6 +319,7 @@ public class gpkiBackingBean implements Serializable {
 			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
 		} catch (Exception e){
 			nonSigningException = e;
+			log.info("--35488--"+map.get("response"));
 			log.error(e);
 		}
 		if (enableAutoUpdateMtd != null) {
@@ -421,9 +428,9 @@ public class gpkiBackingBean implements Serializable {
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		
 		if (pmUser == null) {
 			pmUser = facesScopes.getUserSessionBean();
+			log.info("--35488--bean user id: "+pmUser.getUserId()+" -- "+facesScopes.getUserScreenName());
 		} 
 		return pmUser;
 	}
