@@ -73,7 +73,7 @@
 								<h:commandLink
 									value="#{viewSmApplBackingBean.getShortFileName(docFile.fileName)}">
 									<p:fileDownload
-										value="#{viewSmApplBackingBean.commonDownload(docFile.filePath,docFile.fileName)}" />
+										value="#{supplierDataMaintenanceBackingBean.downloadSelectedSuppDoc(docFile.fileName,docFile.filePath)}" />
 								</h:commandLink>
 								<br />
 							</ui:repeat>
@@ -96,26 +96,26 @@
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser}">
 							<table>
-								<ui:repeat var="remark" varStatus="index"
+								<ui:repeat var="remark" varStatus="remarkIndex"
 									value="#{viewSmApplBackingBean.getSupplierRvRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}">
 									<tr>
 										<td style="width: 3%; vertical-align: top"><p:outputLabel
 												styleClass="outputLabel-view" style="vertical-align:top"
-												value="#{index.index+1}." /></td>
+												value="#{remarkIndex.index+1}." /></td>
 										<td
 											style="width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 											<p:outputLabel styleClass="outputLabel-view"
 												value="#{remark}" /> <p:outputPanel
-												rendered="#{index.last}">
+												rendered="#{remarkIndex.last}">
 												<br />
-												<table>
+												<table align="left">
 													<ui:repeat var="catCode" varStatus="sub"
 														value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvCatCodes}">
 														<tr>
 															<td style="width: 3%; vertical-align: top"><p:outputLabel
 																	styleClass="outputLabel-view"
 																	style="vertical-align:top"
-																	value="#{index.index+1}.#{sub.index+1}." /></td>
+																	value="#{remarkIndex.index+1}.#{sub.index+1}." /></td>
 															<td
 																style="width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
 																<p:outputLabel styleClass="outputLabel-view">

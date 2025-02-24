@@ -15,7 +15,7 @@
 	<cc:implementation>
 		<p:dialog id="#{cc.attrs.dialogName}Id"
 			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"
-			resizable="true" width="700px" styleClass="pop_up_top"
+			resizable="true" height="700px" width="100%" styleClass="pop_up_top"
 			header="#{lbl['lbl.sm.rv.history.title']}">
 			<p:dataTable id="revisitHistoryId" var="revisit" rows="10"
 				value="#{cc.attrs.smRevisitList}" rowIndexVar="index"
@@ -72,7 +72,7 @@
 							<h:commandLink
 								value="#{supplierDataMaintenanceBackingBean.getShortFileName(docFile.fileName)}">
 								<p:fileDownload
-									value="#{supplierDataMaintenanceBackingBean.commonDownload(docFile.filePath,docFile.fileName)}" />
+									value="#{supplierDataMaintenanceBackingBean.downloadSelectedSuppDoc(docFile.fileName,docFile.filePath)}" />
 							</h:commandLink>
 							<br />
 						</ui:repeat>
@@ -88,18 +88,18 @@
 						</c:when>
 						<c:when test="#{!cc.attrs.officerView}">
 							<table>
-								<ui:repeat var="remark" varStatus="index"
+								<ui:repeat var="remark" varStatus="remarkIndex"
 									value="#{cc.attrs.backingBean.getSupplierRvRemarks(revisit)}">
 									<tr>
 										<td
 											style="border: 0 !important; padding-right: 0 !important; width: 3%; vertical-align: top">
 											<p:outputLabel styleClass="outputLabel-view"
-												style="vertical-align:top" value="#{index.index+1}." />
+												style="vertical-align:top" value="#{remarkIndex.index+1}." />
 										</td>
 										<td
 											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
 												styleClass="outputLabel-view" value="#{remark}" /> <p:outputPanel
-												rendered="#{index.last}">
+												rendered="#{remarkIndex.last}">
 												<br />
 												<table>
 													<ui:repeat var="catCode" varStatus="sub"
@@ -109,7 +109,7 @@
 																style="border: 0 !important; padding-left: 0 !important; padding-right: 0 !important; width: 3%; vertical-align: top"><p:outputLabel
 																	styleClass="outputLabel-view"
 																	style="vertical-align:top"
-																	value="#{index.index+1}.#{sub.index+1}." /></td>
+																	value="#{remarkIndex.index+1}.#{sub.index+1}." /></td>
 															<td
 																style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
 																	styleClass="outputLabel-view">

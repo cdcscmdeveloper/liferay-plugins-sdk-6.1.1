@@ -51,13 +51,14 @@ var gpkiRequestTime = 0;
 
   this.signToken = function (a) {
     gpkiBlockWidget.show();
-    text = encodeURIComponent(Gpki.hash(a[0]));
+    text = a[0];
+    data = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
       return;
     }
-    sign("token", nric, pin, text, "false", "data");
+    sign("token", nric, pin, data, "false", "data");
   };
 
   this.signRoam = function (a) {
@@ -86,6 +87,8 @@ var gpkiRequestTime = 0;
   this.otpExp = function () { return otpExp; };
   
   this.textBeforeSign = function () { return text; };
+  
+  this.nric = function () { return nric; };
 
   this.mandatoryError = function (f) {
     errorAction([{ name: 'field', value: f }]);
@@ -119,18 +122,19 @@ function parseResultMedium(msg) {
         }
         setMediumType([{ name: 'message', value: obj.message },
                        { name: 'mediumTypeId', value: mediumTypeId },
-                       { name: 'response', value: response }]);
+                       { name: 'response', value: msg },
+                       { name: 'js_nric', value: gpki.nric()} ]);
         if (mediumTypeId === 5) {
           gpki.requestOtp();
         } else if (mediumTypeId !== 4) {
           gpki_dlg.hide();
           gpki_dlg2.show();
-          showError(obj.status, "Medium Token atau Roaming OTP sahaja");
+          showError(obj.status, "Medium Token atau Roaming OTP sahaja", msg);
         }
       } else {
         gpki_dlg.hide();
         gpki_dlg2.show();
-        showError(obj.status, obj.message);
+        showError(obj.status, obj.message, msg);
       }
     });
 }
@@ -151,7 +155,7 @@ function parseTxResultRequestOTP(msg) {
         saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
       } else {
     	disableOtpTimeout();
-        showError(obj.status, obj.message);
+        showError(obj.status, obj.message, msg);
       }
     });
 }
@@ -168,9 +172,10 @@ function parseSignResult(msg) {
         postSignOTP([ { name: 'message', value: obj.message },
                       { name: 'subjectDN', value: obj.subject_dn },
                       { name: 'textBeforeSign', value: gpki.textBeforeSign() },
-                      { name: 'signedText', value: obj.signed_data }]);
+                      { name: 'signedText', value: obj.signed_data },
+                      { name: 'response', value: msg }]);
       } else {
-        showError(obj.status_code, obj.status_message);
+        showError(obj.status_code, obj.status_message, msg);
       }
       gpkiBlockWidget.hide();
     });
@@ -190,17 +195,19 @@ function parseTxResultSigningRoaming(msg) {
         postSignOTP([{ name: 'message', value: obj.message },
 			         { name: 'subjectDN', value: response.subject_dn },
 			         { name: 'textBeforeSign', value: gpki.textBeforeSign() },
-			         { name: 'signedText', value: response.signed_data }]);
+			         { name: 'signedText', value: response.signed_data },
+			         { name: 'response', value: msg }]);
       } else {
-        showError(obj.status, obj.message);
+        showError(obj.status, obj.message, msg);
       }
       gpkiBlockWidget.hide();
     });
 }
 
-function showError(code, msg) {
+function showError(code, msg, response) {
   errorAction([{ name: 'statusCode', value: code },
-               { name: 'statusMsg', value: msg }]);
+               { name: 'statusMsg', value: msg },
+               { name: 'response', value: response }]);
 }
 
 /**
