@@ -131,7 +131,7 @@
 		    	<td>
 		    		$codeL1$codeL2$codeL3 : $catApplicable.pmCategoryL3.categoryName
 					<!-- 37878 -->
-		    		#if($catApplicable.pmCategoryL3.categoryL3Code == "99" && $!catApplicable.otherDesc != "")
+		    		#if($catApplicable.pmCategoryL3.categoryL3Code == "99" && $catApplicable.otherDesc)
 		    			($catApplicable.otherDesc)
 		    		#end
 		    	</td>
