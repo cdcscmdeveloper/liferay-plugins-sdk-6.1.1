@@ -531,10 +531,10 @@ public class LovBackingBean implements Serializable {
 		//9442 - end
 		
 		// Start - #29416
-		if ((backupSelectedEntities != null || selectedEntities != null)) {
-			backupSelectedEntities.clear();
-			selectedEntities.clear();
-		}
+//		if ((backupSelectedEntities != null || selectedEntities != null)) {
+//			backupSelectedEntities.clear();
+//			selectedEntities.clear();
+//		}
 		// End - #29416
 	}	
 	// End - #29416
