@@ -238,6 +238,10 @@ public class gpkiBackingBean implements Serializable {
 		String id = map.get("mediumTypeId");
 		isMediumTypeOTP = !"4".equals(id);
 		log.info("--35488--"+map.get("response"));
+		PmUser user = getPmUserFromLoginId();
+		if(user != null){
+			log.info("--35488--"+user.getUserId()+"  "+user.getIdentificationNo());
+		}
 	}
 	
 	
