@@ -245,9 +245,14 @@ public class gpkiBackingBean implements Serializable {
 		log.info("--35488--"+map.get("response"));
 		log.info("--35488--JS-nric "+map.get("js_nric")+" -- "+isMediumTypeOTP);
 		PmUser user = getPmUserFromLoginId();
+		String idNo = "...";
 		if(user != null){
 			log.info("--35488--Request IC:"+user.getUserId()+"  "+user.getIdentificationNo());
+			idNo = user.getIdentificationNo();
 		}
+		log.info("35488 TB GPKI: Login IC eP: " + idNo
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 	}
 	
 	
