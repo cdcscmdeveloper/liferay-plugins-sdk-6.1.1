@@ -6,12 +6,9 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import my.ep.biz.bean.search.ISearchBean;//#29416
-import my.ep.biz.bean.search.SearchBean;//#29416
 import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
 import my.ep.exception.EpException;
-import my.ep.web.backingbean.components.lov.LovBackingBean;//#29416
 import my.ep.web.backingbean.report.ct.CtReportBaseBackingBean;
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.managedbean.report.ct.panel.ContractItemMonitoringCCRptManagedBean;
@@ -41,7 +38,6 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		// Sonarqube DP Code Smell Info Muhamad Za'im [26/4/2024]
 		
 		log.debug("resetSearch: ccContractItemMonitoringRptBB");
-		LovBackingBean lovBean = new LovBackingBean();//#29416
 		getManagedBean().setPopUpMsg(null);
 		getManagedBean().setReportUrl(null);
 		getManagedBean().setDisableMinistryField(false);
@@ -63,9 +59,6 @@ public class ContractItemMonitoringCCRptBackingBean extends CtReportBaseBackingB
 		getManagedBean().setCircularEffFromDate(null);
 		getManagedBean().setCircularEffToDate(null);
 		// Start fix- #29416
-		lovBean.setPersistedEntities(null);
-		lovBean.setSelectedEntities(null);
-		lovBean.setBackupSelectedEntities(null);
 		if (getManagedBean().isLovItemReportNameTriggered()) {
 			getManagedBean().setLovItemReportNameTriggered(false);
 			RequestContext.getCurrentInstance().execute("resetAllData();");
