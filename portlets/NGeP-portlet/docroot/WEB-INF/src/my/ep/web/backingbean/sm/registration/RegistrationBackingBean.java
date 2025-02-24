@@ -286,6 +286,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		// 27691 - End
 	}
 	public String validateWithSSM() {
+		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37876
 		this.getManagedBean().setHideButton(false);
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
 		//30987 - start
