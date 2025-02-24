@@ -615,5 +615,4 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.selectedFinancialOrg = selectedFinancialOrg;
 	}
 	// #36719 - End
-	
 }
