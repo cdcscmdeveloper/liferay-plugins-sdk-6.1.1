@@ -1758,20 +1758,20 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * set preparedby for managedbean by retrieving requistioner and docid
 	 */
 	public void getPreparedByName() {
-		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		FlActor actor = null;
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		FlActor actor;
 
 		actor = fulfilmentSO.retrieveFlActors(
 				getManagedBean().getFulfilmentRequest().getDocType(),
 				getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
-				FulfilmentConst.Requistioner_Role_Code);
+				FulfilmentConst.ROLE_CODE_REQUISITIONER);
 
 		if(actor != null){
 			getManagedBean().setPreparedBy(actor.getUserName());
 		}else{
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
+			userReqDTO.setUserId(getUserIdSessionFromLoginId());
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 			if(userResDTO.getPmUser().getUserName() != null){
 				getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());

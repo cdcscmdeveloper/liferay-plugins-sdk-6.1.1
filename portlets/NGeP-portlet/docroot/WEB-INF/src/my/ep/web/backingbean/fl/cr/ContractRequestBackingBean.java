@@ -2066,27 +2066,27 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * set preparedby for managedbean by retrieving requistioner and docid
 	 */
 	public void getPreparedByName() {
-		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		FlActor actor = null;
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		FlActor actor;
 		
 		actor = fulfilmentSO.retrieveFlActors(
 				getManagedBean().getFlRequest().getDocType(),
 				getManagedBean().getFlRequest().getFulfilmentReqId(),
-				FulfilmentConst.Requistioner_Role_Code);
+				FulfilmentConst.ROLE_CODE_REQUISITIONER);
 		
 		if(actor != null){
-			getManagedBean().setpreparedBy(actor.getUserName());
+			getManagedBean().setPreparedBy(actor.getUserName());
 		}else{
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			if(getManagedBean().getFlRequest().getCreatedBy() != null){
-				userReqDTO.setUserId(getManagedBean().getFlRequest().getCreatedBy());
+				userReqDTO.setUserId(getUserIdSessionFromLoginId());
 				UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 				if(userResDTO.getPmUser().getUserName() != null){
-					getManagedBean().setpreparedBy(userResDTO.getPmUser().getUserName());
+					getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
 				}
 			}else{
-				getManagedBean().setpreparedBy(null);
+				getManagedBean().setPreparedBy(null);
 			}
 		}
 	}
