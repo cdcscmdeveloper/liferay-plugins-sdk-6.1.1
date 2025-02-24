@@ -139,7 +139,7 @@ import org.primefaces.event.FileUploadEvent;
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
 public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
-	
+
 	/**
 	 * 
 	 */
