@@ -7286,9 +7286,9 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 
@@ -7408,15 +7408,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	//29728 - Start
 	private void resetSupplierInfo() {
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
-		MofRegistrationReqDTO reqDTOMof = new MofRegistrationReqDTO();
-		reqDTOMof.setSupplierId(getManagedBean().getFlRequest().getSmSupplier().getSupplierId());
-		
-		MofRegistrationResDTO resDTOMof = mofRegistrationSO.retrieveSupplierProfile(reqDTOMof);
-		SmSupplier supplier = resDTOMof.getSmSupplier();
-		
 		FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
-		supplierDtl.setSupplierName(supplier.getCompanyName());		
+		supplierDtl.setSupplierName(getManagedBean().getFlRequest().getSmSupplier().getCompanyName());		
 //		updateSupplierHqAddress(supplierDtl,supplier);
 		
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);

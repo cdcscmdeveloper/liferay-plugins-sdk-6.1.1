@@ -4394,6 +4394,19 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							approvalCategory);
 				}
 				this.getManagedBean().setResetBpkCurrentArea(false); //#25077
+				
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+				// 29732 fix duplicate issues while deleting the category and add the same id -start-
+				if(null != removeCategoryCodes){
+					List<ScQtCategory> categoryResults = new ArrayList<>();
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+					qt.setScQtCategorys(categoryResults);
+				}
+				// 29732 -end-
+				
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
 			}
@@ -5064,10 +5077,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (!this.getManagedBean().getQt().isPanel()) {
 				if (CollectionUtils.isEmpty(this.getManagedBean()
 						.getQtCategoryList())) {
-					List<ScQtCategory> categoryResults = tenderResDTO
-							.getCategories();
+					
+					// 29732 fix duplicate issues -start-
+					List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+					// 29732 fix duplicate issues while deleting the category
+					// and add the same id -start-
+					if (null != removeCategoryCodes) {
+						List<ScQtCategory> categoryResultsnew;
+						categoryResultsnew = this.getManagedBean().getQtCategoryList();
+						if (null == categoryResultsnew || CollectionUtils.isEmpty(categoryResultsnew)) {
+							this.getManagedBean().setQtCategoryList(this.getManagedBean().getTobeRemoveCategoryCodes());
+							this.getManagedBean().setTobeRemoveCategoryCodes(null);
+						} else {
+							this.getManagedBean().setQtCategoryList(categoryResultsnew);
+						}
 
-					this.getManagedBean().setQtCategoryList(categoryResults);
+					} else {
+						List<ScQtCategory> categoryResults = tenderResDTO.getCategories();
+
+						this.getManagedBean().setQtCategoryList(categoryResults);
+					}
+					// 29732 -end-
 
 				}
 
@@ -5173,6 +5203,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 					}
 				}
+				// 29732 fix duplicate issues -start-
+				List<ScQtCategory> removeCategoryCodes = this.getManagedBean().getTobeRemoveCategoryCodes();
+
+				// 29732 fix duplicate issues while deleting the category and add the same id -start-
+				if(null != removeCategoryCodes){
+					//#29732-Start fix duplicate & error merge persistance if user delete and add the same category(ID)
+					List<ScQtCategory> categoryResults;
+					categoryResults = this.getManagedBean().getQtCategoryList();
+					this.getManagedBean().setQtCategoryList(categoryResults);
+					//29732- End
+				}
+				// 29732 -end-
 			} else {
 				this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 				if(CollectionUtils.isNotEmpty(tenderResDTO.getPanelItems())){

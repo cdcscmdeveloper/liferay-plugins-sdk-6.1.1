@@ -22,6 +22,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -229,15 +230,18 @@ public class gpkiBackingBean implements Serializable {
 	}
 	
 	/**
-	 * Set medium type, roaming OTP or token -
+	 * Set medium type, roaming OTP or token -default to OTP for any error:
 	 * id 2: softcert, 3: roaming, 4: token, 5: roaming OTP
 	 */
 	public void setMediumType(){
-		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("mediumTypeId");
-		//isMediumTypeOTP = "5".equals(id)
-		// popup default to OTP for any error
+		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String id = map.get("mediumTypeId");
 		isMediumTypeOTP = !"4".equals(id);
+		log.info("--35488--"+map.get("response"));
+		PmUser user = getPmUserFromLoginId();
+		if(user != null){
+			log.info("--35488--"+user.getUserId()+"  "+user.getIdentificationNo());
+		}
 	}
 	
 	
@@ -247,7 +251,16 @@ public class gpkiBackingBean implements Serializable {
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if(user != null){
 			nric = user.getIdentificationNo().trim();
-			email = user.getEmail().trim();
+		}
+		user = getPmUserFromLoginId();
+		if(user != null){
+			if (!nric.equals(user.getIdentificationNo().trim())){
+				log.info("35488 - different IC: "+nric+"  new IC: "+user.getIdentificationNo().trim());
+			}
+			nric = user.getIdentificationNo().trim();
+			if(user.getEmail() != null){
+				email = user.getEmail().trim();
+			}
 		}
 		RequestContext.getCurrentInstance().addCallbackParam("nric", nric);
 		RequestContext.getCurrentInstance().addCallbackParam("email", email);
@@ -293,6 +306,7 @@ public class gpkiBackingBean implements Serializable {
 		pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		pmDigiSign.setOriginalData(map.get("textBeforeSign"));
 		pmDigiSign.setGpkiSignedData(map.get("signedText"));
+		pmDigiSign.setGpkiMedium(isMediumTypeOTP ? "5" : "4");
 		
 		Object returnObj = null;
 		try {
@@ -398,6 +412,20 @@ public class gpkiBackingBean implements Serializable {
 		
 		new LogKey(userIdSession);
 		return userIdSession;
+	}
+	
+	private PmUser getPmUserFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		
+		if (pmUser == null) {
+			pmUser = facesScopes.getUserSessionBean();
+		} 
+		return pmUser;
 	}
 	
 	public void saveNonce(){
