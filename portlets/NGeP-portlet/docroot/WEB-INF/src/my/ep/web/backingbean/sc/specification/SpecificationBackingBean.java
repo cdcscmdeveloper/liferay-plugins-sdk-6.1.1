@@ -17225,12 +17225,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					scQt.getQtNo());
 		}
 
-		//#15391 - start
 		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); 
 		//29732 add here, issue could need to delete in dao those category has been delete in managebean
 		//Status : Pending document preparation
 		//Screen : Pending spec preparation (Revision)
-		
+		//#15391 - start
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 		//#15391 - end
