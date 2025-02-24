@@ -230,15 +230,14 @@ public class gpkiBackingBean implements Serializable {
 	}
 	
 	/**
-	 * Set medium type, roaming OTP or token -
+	 * Set medium type, roaming OTP or token -default to OTP for any error:
 	 * id 2: softcert, 3: roaming, 4: token, 5: roaming OTP
 	 */
 	public void setMediumType(){
-		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("mediumTypeId");
-		//isMediumTypeOTP = "5".equals(id)
-		// popup default to OTP for any error
+		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String id = map.get("mediumTypeId");
 		isMediumTypeOTP = !"4".equals(id);
+		log.info("--35488--"+map.get("response"));
 	}
 	
 	
