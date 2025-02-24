@@ -34,10 +34,14 @@ import my.ep.dto.cc.lov.LovResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.aut.AutUser;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem; //#29416
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+
 import my.ep.util.ResourceBundleUtils;
+import my.ep.web.backingbean.report.ct.CtReportBackingBean; //#29416
+import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean; //#29416
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
@@ -49,6 +53,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent; //#29416
 import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.event.data.PageEvent;
@@ -78,6 +84,7 @@ public class LovBackingBean implements Serializable {
 //	private ILovEvent ?ookupEvent = null;
 	
 	private IPagingDataModel searchDataModel = new SearchPagingDataModel();
+	private transient IPagingDataModel searchDataModelMultiSelection = new SearchPagingDataModelMultiSelection(); //Fix - #29416
 	private SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private String lovId = null;
 	private ISearchBean lovSearchBean = new SearchBean();
@@ -90,11 +97,16 @@ public class LovBackingBean implements Serializable {
 	private List<BaseEntity> selectedEntities;
 	//20200909@akmal - Enhancement28951 - Start
 	private Map<Long,BaseEntity> persistedEntities = new HashMap<Long,BaseEntity>();
+	private List<BaseEntity> backupSelectedEntities; //#29416
 	//20200909@akmal - Enhancement28951 - End
 //	private BaseEntity[] selectedEntities;
 	
 	private List<LovColumnBean> columnsToDisplay = new ArrayList<LovColumnBean>();
-	
+	//Start - #29416
+	CtReportBackingBean ctReportBB = new CtReportBackingBean();
+	ContractItemMonitoringCCRptBackingBean ccContractItemMonitoringRptBB = new ContractItemMonitoringCCRptBackingBean();
+	private final String itemUsageMonitoringBeanId = "CT_CONTRACT_ITEM_USAGE_MONITORING";
+	//End - #29416
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
@@ -137,7 +149,42 @@ public class LovBackingBean implements Serializable {
 			return searchAction(searchBean, false);
 		}
 	}
+	// Start - #29416
+	private class SearchPagingDataModelMultiSelection extends PagingDataModel<AutUser> {
+		private static final long serialVersionUID = 1L;
 
+		public SearchPagingDataModelMultiSelection() {
+			super("lovTb3", true);
+			
+		}
+		
+		@Override
+		public ISearchResultBean pageChangeListener(ISearchBean searchBean) {
+			
+			if(getLovBean() == null) {
+				return new SearchResultBean();
+			}
+			
+			if(getLovBean().getLovId() == null) {
+				debugLogger("=======================lovId null, return empty result ===========================");
+				SearchResultBean srb = new SearchResultBean();
+				srb.setResultList(new ArrayList());
+				return srb;
+			}
+			
+			if(!getLovBean().isDisplayResultWhenFirstLoad()) {
+				enableDisplayResult();
+				SearchResultBean srb = new SearchResultBean();
+				srb.setResultList(new ArrayList());
+				return srb;
+			}
+			debugLogger("pageChangeListener");
+			
+			searchBean.getDataFilterBeans().clear();
+			return searchAction(searchBean, false);
+		}
+	}
+	// End - #29416
 	protected ISearchResultBean searchAction(ISearchBean searchBean, boolean isThis) {
 		ILovSO lovSO = null;
 		try {				
@@ -174,7 +221,21 @@ public class LovBackingBean implements Serializable {
 			
 			debugLogger("searchBean.getDataFilterBeans(): " + searchBean.getDataFilterBeans());
 			debugLogger("searchBean.getDataFilterBeans().size(): " + searchBean.getDataFilterBeans().size());
-			
+			// Start - #29416
+			if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+				if (ctReportBB.getManagedBean().getContractNo() != null) {
+					searchBean.setDocNo(ctReportBB.getManagedBean().getContractNo());
+				} else if (ccContractItemMonitoringRptBB.getManagedBean().getContractNo() != null) {
+					searchBean.setDocNo(ccContractItemMonitoringRptBB.getManagedBean().getContractNo());
+				}
+
+				if (lovBean.isResetFlag()) {
+					searchBean.setResetAction(true);
+				}
+				
+				populatedBackupSelectedItems();
+			}
+			// End - #29416
 			reqDTO.setSearchBean(searchBean);
 			reqDTO.setDaoClass(getLovBean().getDaoClass());
 			reqDTO.setSearchMethod(getLovBean().getSearchMethod());
@@ -276,6 +337,7 @@ public class LovBackingBean implements Serializable {
 		String autoUpdateValue = facesScopes.getParameter("autoUpdateValue");
 		String displayResultWhenFirstLoad = facesScopes.getParameter("displayResultWhenFirstLoad");
 		String displayResultWhenReset = facesScopes.getParameter("displayResultWhenReset");
+		String backingBean = facesScopes.getParameter("flagBean");
 		
 		debugLogger("headerText: " + headerText);
 		debugLogger("saveObject: " + saveObject);
@@ -287,7 +349,7 @@ public class LovBackingBean implements Serializable {
 		debugLogger("autoUpdateValue: " + autoUpdateValue);
 		debugLogger("displayResultWhenFirstLoad: " + displayResultWhenFirstLoad);
 		debugLogger("displayResultWhenReset: " + displayResultWhenReset);
-
+		debugLogger("backingBean check : " + backingBean); // #29416
 //		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
 //			
 //		} else if(lovId == null || !lovId.equals(facesScopes.getParameter("lovId"))) {
@@ -306,11 +368,12 @@ public class LovBackingBean implements Serializable {
 			lovBean.setAutoUpdateValue(autoUpdateValue);
 			lovBean.setDisplayResultWhenFirstLoad(Boolean.valueOf(displayResultWhenFirstLoad));
 			lovBean.setDisplayResultWhenReset(Boolean.valueOf(displayResultWhenReset));
-			
+			//Start - #29416
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
-			if(lovBean.getSelectionMode().equals("single")) {
+			if(lovBean.getSelectionMode().equals("single") || (lovBean.getSelectionMode().equals("multiple") && getLovBean().getItemUsageMonitoringReport())) {
 				lovBean.setClientId("@(:input[id*=" + StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":", "\\\\:") + "])");
 			}
+			//End - #29416
 			debugLogger("client id: " + lovBean.getClientId());
 			
 			prepareColumnTitle(lovBean);
@@ -348,6 +411,24 @@ public class LovBackingBean implements Serializable {
 			removeSelectedBusinessNature();
 		}
 		//#29832 - end
+		//Start - #29416
+		if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+			boolean handledError = false;
+			if ("ctReportBB".equalsIgnoreCase(backingBean)) {
+				handledError = ctReportBB.getManagedBeanFromLovBBean(ctReportBB);
+			} else if ("ccContractItemMonitoringRptBB".equalsIgnoreCase(backingBean)) {
+				handledError = ccContractItemMonitoringRptBB.getManagedBeanFromLovBBean(ccContractItemMonitoringRptBB);
+			}
+
+			if (handledError) {
+				// Set a callback parameter to indicate an error
+				RequestContext.getCurrentInstance().addCallbackParam("lovValidationError", true);
+			} else {
+				// Set success flag
+				RequestContext.getCurrentInstance().addCallbackParam("lovValidationError", false);
+			}
+		}
+		//End - #29416
 	}
 	
 	/**
@@ -358,6 +439,7 @@ public class LovBackingBean implements Serializable {
 		validateBeforeSearch();
 		
 		searchDataModel.reloadData();
+		searchDataModelMultiSelection.reloadData(); //#29416
 	}
 	
 	/** 
@@ -407,40 +489,55 @@ public class LovBackingBean implements Serializable {
 			}
 		}*/
 	}
-
+	// Start - #29416
 	public void resetAction() {
-//		this.setResultList(new ArrayList());
-		this.getSearchDataModel().resetData();
-		this.setLovSearchBean(new SearchBean());
-//		this.setLovBean(new LovBean());
-		//20200909@akmal - Enhancement28951 - Start
-		if(this.getSelectedEntities() != null){
-			this.getSelectedEntities().clear();
-			
-		}		
-		//20200909@akmal - Enhancement28951 - End
-		if(!getLovBean().isDisplayResultWhenReset()) {
-			disableDisplayResult();
+		if (getLovBean().getItemUsageMonitoringReport()) {
+			this.getSearchDataModelMultiSelection().resetData();
+			this.setLovSearchBean(new SearchBean());
+		} else {
+			// getLovBean().setConditionField("");
+			// lovSearchBean.getDataFilterBeans().clear();
+			// this.setResultList(new ArrayList());
+			this.getSearchDataModel().resetData();
+			this.getSearchDataModelMultiSelection().resetData();
+			this.setLovSearchBean(new SearchBean());
+			// this.setLovBean(new LovBean());
+			// 20200909@akmal - Enhancement28951 - Start
+			if (this.getSelectedEntities() != null) {
+				this.getSelectedEntities().clear();
+			}
+			// 20200909@akmal - Enhancement28951 - End
+			if (!getLovBean().isDisplayResultWhenReset()) {
+				disableDisplayResult();
+			}
+			// 9442 - start
+			persistedEntities.clear();
+			// 9442 - end
 		}
-		
-		//9442 - start
-		persistedEntities.clear();
-		//9442 - end
 	}
-	
 
 	/**
 	 * Reset all.
 	 */
 	public void resetAll() {
+		lovBean.setResetFlag(true); //#29416
 		this.getSearchDataModel().resetData();
+		this.getSearchDataModelMultiSelection().resetData(); //#29416
 		this.setLovSearchBean(new SearchBean());
 		this.setLovBean(new LovBean());
-		
+
 		//9442 - start
 		persistedEntities.clear();
 		//9442 - end
-	}
+		
+		// Start - #29416
+//		if ((backupSelectedEntities != null || selectedEntities != null)) {
+//			backupSelectedEntities.clear();
+//			selectedEntities.clear();
+//		}
+		// End - #29416
+	}	
+	// End - #29416
 	
 	//OR: columnName1^value1*columnName1^value2
 	private void constructSearchBean(String conditionField, boolean isThis) {
@@ -610,7 +707,12 @@ public class LovBackingBean implements Serializable {
 		if(!FacesScopes.isValueReference(expressionString)) {
 			expressionString = "#{" + expressionString + "}";
 		}
-		
+		// Start - #29416
+		if (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+			ctReportBB.getManagedBean().setLovItemReportNameTriggered(true);
+			ccContractItemMonitoringRptBB.getManagedBean().setLovItemReportNameTriggered(true);
+		}
+		// End - #29416
 		if(this.getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
 			
 			debugLogger("this.getSelectedEntity(): " + this.getSelectedEntity());
@@ -654,13 +756,19 @@ public class LovBackingBean implements Serializable {
 				this.resetAction();
 	
 			}
-		} else	if(this.getLovBean().getSelectionMode().equalsIgnoreCase("multiple")) {
+		} else	if("multiple".equalsIgnoreCase(this.getLovBean().getSelectionMode())) {
+			lovBean.setUnSelectAndCancel(false);
 			//20200909@akmal - Enhancement28951 - Start
 			if(!persistedEntities.isEmpty()) selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
 			//20200909@akmal - Enhancement28951 - End
 			debugLogger("this.getSelectedEntities().size(): " + this.getSelectedEntities().size());
 			debugLogger("this.getSelectedEntities(): " + this.getSelectedEntities());
-			
+			// Start - #29416
+			if (this.getSelectedEntities().isEmpty() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+				ctReportBB.resetSearch();
+				ccContractItemMonitoringRptBB.resetSearch();
+			}
+			// End - #29416
 			if(selectedEntities != null && !selectedEntities.isEmpty()) {
 				
 				ValueExpression valueExpression = context.getApplication().getExpressionFactory()
@@ -716,11 +824,15 @@ public class LovBackingBean implements Serializable {
 			}	
 		}
 	}
-	
+	//Start - #29416
 	public boolean isSelectButtonDisable() {
-		if(getLovBean()!=null && getLovBean().getSelectionMode()!=null) {
-			if(getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
-				if(getSelectedEntity()!=null) {
+		if (getLovBean() != null && getLovBean().getSelectionMode() != null) {
+			if (getLovBean().getSelectionMode().equalsIgnoreCase("single")) {
+				if (getSelectedEntity() != null) {
+					return false;
+				}
+			} else if ("multiple".equalsIgnoreCase(getLovBean().getSelectionMode()) && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+				if (getSelectedEntity() != null) {
 					return false;
 				}
 			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
@@ -741,6 +853,7 @@ public class LovBackingBean implements Serializable {
 		}
 		return true;
 	}
+	//End - #29416
 	
 	private void prepareColumnTitle(LovBean lovBean) {
 		ResourceBundle bundle = null;
@@ -751,15 +864,33 @@ public class LovBackingBean implements Serializable {
 	}
 	
 	//20200909@akmal - Enhancement28951 - Start
+	//Start - #29416
 	public void onUnselectRow(UnselectEvent event){
+		lovBean.setUnSelectAndCancel(true);
 		Object value = event.getObject();
 		if(value instanceof PmBusinessNature){
 			Long key = ((PmBusinessNature) value).getBusinessNatureId();
 			if(persistedEntities.containsKey(key)) 
 				persistedEntities.remove(key);
 		}
+		if (value instanceof CtContractItem) {
+			Long key = ((CtContractItem) value).getContractItemId();
+			if (persistedEntities.containsKey(key)) {
+				persistedEntities.remove(key);
+			}
+		}
 	}
 	
+	public void onSelectRow(SelectEvent event) {
+		CtContractItem value = (CtContractItem) event.getObject();
+		Long key = value.getContractItemId();
+		if (!persistedEntities.containsKey(key)) {
+			persistedEntities.put(key, value);
+			backupSelectedEntities = new ArrayList<>(persistedEntities.values());
+		}
+
+	}
+	// End - #29416
 	@SuppressWarnings("unchecked")
 	public void onToggleSelect(ToggleSelectEvent event){
 		List<BaseEntity> templist = !selectedEntities.isEmpty() ? selectedEntities : searchDataModel.getList();
@@ -795,12 +926,23 @@ public class LovBackingBean implements Serializable {
 		}
 		
 	}
-	
+	//Start - #29416
 	public void populateSelectedItems(){
-		selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values()); 
+		if (lovBean.isUnSelectAndCancel() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+			selectedEntities = new ArrayList<>(backupSelectedEntities);
+		} else {
+			selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
+		}
 	}
+	//End - #29416
 	//20200909@akmal - Enhancement28951 - End
-	
+	//Start - #29416
+	public void populatedBackupSelectedItems() {
+		if (selectedEntities != null && backupSelectedEntities != null) {
+			selectedEntities = new ArrayList<>(backupSelectedEntities);
+		}
+	}
+	//End - #29416
 	private void enableDisplayResult() {
 		getLovBean().setDisplayResultWhenFirstLoad(true);
 	}
@@ -922,4 +1064,23 @@ public class LovBackingBean implements Serializable {
 		}
 	}
 	// #29832 end
+	
+	// Start - #29416
+	public IPagingDataModel<AutUser> getSearchDataModelMultiSelection() {
+		return searchDataModelMultiSelection;
+	}
+
+	public void setSearchDataModelMultiSelection(IPagingDataModel<AutUser> searchDataModelMultiSelection) {
+		this.searchDataModelMultiSelection = searchDataModelMultiSelection;
+	}
+	
+
+	public List<BaseEntity> getBackupSelectedEntities() {
+		return backupSelectedEntities;
+	}
+
+	public void setBackupSelectedEntities(List<BaseEntity> backupSelectedEntities) {
+		this.backupSelectedEntities = backupSelectedEntities;
+	}
+	// End - #29416
 }

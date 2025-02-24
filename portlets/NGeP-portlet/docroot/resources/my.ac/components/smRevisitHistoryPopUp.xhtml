@@ -1,0 +1,149 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<cc:interface>
+		<cc:attribute name="dialogName" required="true" />
+		<cc:attribute name="smRevisitList" required="true" />
+		<cc:attribute name="backingBean" required="true" />
+		<cc:attribute name="officerView" default="false" />
+	</cc:interface>
+	<cc:implementation>
+		<p:dialog id="#{cc.attrs.dialogName}Id"
+			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"
+			resizable="true" height="700px" width="100%" styleClass="pop_up_top"
+			header="#{lbl['lbl.sm.rv.history.title']}">
+			<p:dataTable id="revisitHistoryId" var="revisit" rows="10"
+				value="#{cc.attrs.smRevisitList}" rowIndexVar="index"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<ac:paginator for="#{cc.attrs.dialogName}Id"></ac:paginator>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.rv.history.no']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.visiting.date']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.svo']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.assist.officer']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.supp.doc']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.visit.remark']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.action.by']}"
+							style="text-align: center !important;"
+							rendered="#{cc.attrs.officerView}" />
+						<p:column headerText="#{lbl['lbl.sm.rv.history.action.date']}"
+							style="text-align: center !important;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{revisit.revisitDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.getDEFAULT_DATE_FORMAT()}" />
+					</h:outputText>
+				</p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
+					<h:outputText value="#{revisit.revisitOfficer.userName}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
+					<ui:repeat var="rvAssistOfficer"
+						value="#{revisit.smRvAssistOfficers}">
+						<h:outputText value="#{rvAssistOfficer.officerName}" />
+						<br />
+					</ui:repeat>
+					<h:outputText rendered="#{empty revisit.smRvAssistOfficers}"
+						value="#{lbl['lbl.txt.na']}" />
+				</p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
+					<ui:repeat var="suppDoc" value="#{revisit.smRvSuppDocs}">
+						<ui:repeat var="docFile" value="#{suppDoc.smRvDocFiles}">
+							<h:commandLink
+								value="#{supplierDataMaintenanceBackingBean.getShortFileName(docFile.fileName)}">
+								<p:fileDownload
+									value="#{supplierDataMaintenanceBackingBean.downloadSelectedSuppDoc(docFile.fileName,docFile.filePath)}" />
+							</h:commandLink>
+							<br />
+						</ui:repeat>
+					</ui:repeat>
+				</p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+					<c:choose>
+						<c:when test="#{cc.attrs.officerView}">
+							<h:outputText value="#{revisit.revisitRemark}" />
+							<h:outputText rendered="#{empty revisit.revisitRemark}"
+								value="#{lbl['lbl.txt.na']}" />
+						</c:when>
+						<c:when test="#{!cc.attrs.officerView}">
+							<table>
+								<ui:repeat var="remark" varStatus="remarkIndex"
+									value="#{cc.attrs.backingBean.getSupplierRvRemarks(revisit)}">
+									<tr>
+										<td
+											style="border: 0 !important; padding-right: 0 !important; width: 3%; vertical-align: top">
+											<p:outputLabel styleClass="outputLabel-view"
+												style="vertical-align:top" value="#{remarkIndex.index+1}." />
+										</td>
+										<td
+											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
+												styleClass="outputLabel-view" value="#{remark}" /> <p:outputPanel>
+												<br />
+												<table>
+													<ui:repeat var="catCode" varStatus="sub"
+														value="#{revisit.smRvCatCodes}">
+														<tr>
+															<td
+																style="border: 0 !important; padding-left: 0 !important; padding-right: 0 !important; width: 3%; vertical-align: top"><p:outputLabel
+																	styleClass="outputLabel-view"
+																	style="vertical-align:top"
+																	value="#{remarkIndex.index+1}.#{sub.index+1}." /></td>
+															<td
+																style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
+																	styleClass="outputLabel-view">
+																#{catCode.smSupplierCategory.pmCategoryL1.categoryL1Code}#{catCode.smSupplierCategory.pmCategoryL2.categoryL2Code}#{catCode.smSupplierCategory.pmCategoryL3.categoryL3Code}
+																-
+																#{catCode.smSupplierCategory.categoryL3Name}
+															</p:outputLabel></td>
+														</tr>
+													</ui:repeat>
+												</table>
+											</p:outputPanel></td>
+									</tr>
+								</ui:repeat>
+							</table>
+						</c:when>
+					</c:choose>
+				</p:column>
+				<p:column rendered="#{cc.attrs.officerView}">
+					<h:outputText value="#{revisit.actionedBy}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{revisit.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonConstants.getDEFAULT_DATETIME_WITH_SECONDS_FORMAT()}" />
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			<div align="right">
+				<p:commandButton id="downloadRevisitHistoryId"
+					value="#{lbl['lbl.sm.rv.history.btn.download']}"
+					rendered="#{cc.attrs.officerView}">
+					<p:fileDownload
+						value="#{cc.attrs.backingBean.downloadRevisitHistory()}" />
+				</p:commandButton>
+			</div>
+		</p:dialog>
+	</cc:implementation>
+</ui:component>
