@@ -548,7 +548,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if(scLoa.getScLoaAttachment()!= null){				
 				if(null != scLoa.getScQt().getQtNo())
 				scLoa.getScLoaAttachment().setDocNo(scLoa.getScQt().getQtNo());
-			}				
+			}	
+			
+			//Bug #37791@Syazani -- 04/02/2025 -- Start
+			if (scLoa.getScLoaApproval() != null && !scLoa.isApprovalReq()) {
+				scLoa.setScLoaApproval(null);
+			}
+			//Bug #37791@Syazani -- 04/02/2025 -- End
 					
 			// #25726 END
 			
