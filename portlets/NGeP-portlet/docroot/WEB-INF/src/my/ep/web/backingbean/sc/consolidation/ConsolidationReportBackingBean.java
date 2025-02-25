@@ -2219,11 +2219,7 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtEvaluationResultDtl> disqualifiedSuppliers = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 				for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
-					if (selectedItem != null) {
-						calculateOfferedPrice(qualSupplier,
-								selectedItem, zoneId);
-					}
-					if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
+ 					if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
 						QtEvaluationResultDtlBean recommendationBean = getCachedBeanFromList(
 								cachedSuppliers,
 								qualSupplier.getEvaluationResultDtlId());
