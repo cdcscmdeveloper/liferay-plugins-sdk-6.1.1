@@ -1641,6 +1641,8 @@ public class ConsolidationReportBackingBean extends
 					}
 
 					if (epException == null) {
+						log.info(" hatta doRank "+doRank);
+						log.info(" hatta currentRank "+currentRank);
 						if (doRank == currentRank) {
 							epException = new EpException(
 									MessageConst.ERROR_760381, new String[] {
@@ -2212,8 +2214,6 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtEvaluationResultDtl> disqualifiedSuppliers = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 				for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
-					qualSupplier.getDeskOfficerRank();	
-					qualSupplier.getDeskOfficerRemark();
 					disqualifiedSuppliers.add(qualSupplier);
 				}
 			}
