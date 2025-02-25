@@ -1899,6 +1899,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					scQt=checkProcuremntCategoryMedicine(scQt);
 					scQt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
+					updatePublishClosingDate(scQt); //Bug_37764
 					
 				} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD.equalsIgnoreCase(approvalType)) {
 					if (isFinalApproval) {
