@@ -187,7 +187,7 @@
 					    	<p:selectOneMenu id="show" value="#{ctBackingBean.managedBean.showItem}" style="width:200px;">
 					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList(
 					           		amendmentBackingBean.managedBean.selectedItem.itemType.parameterCode)}" />
-						        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeShowItem}" process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeShowItem}" process="@this"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /> <!-- #33287 -->
 					       	</p:selectOneMenu>
 					       	<p:spacer width="1"/>
 				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
@@ -295,23 +295,7 @@
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 										<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.ct.delete']}" />
 									</p:commandLink>
-								</p:column>			        
-								<p:column	headerText="Flag check" styleClass="column-align-center" style="width:10%; white-space:normal;">
-										    <h:outputText value="Edit icon rendering : " />
-											<h:outputText value=" #{!itemPriceVar.changePrice and itemPriceVar.editable ? 'Rendered' : 'Not Rendered'}" />
-											<br/>
-											<h:outputText value="Delete icon rendering :  " />
-											<h:outputText value="#{itemPriceVar.changePrice ? 'Rendered' : 'Not Rendered'}" />
-											<br/>
-											<h:outputText value="Edit : !ChangePrice : " />
-											<h:outputText value="#{!itemPriceVar.changePrice ? 'True' : 'False'}" />
-											<br/>
-											<h:outputText value="Edit : editable : " />
-											<h:outputText value="#{itemPriceVar.editable ? 'True' : 'False'}" />
-											<br/>
-											<h:outputText value="Delete : changePrice : " />
-											<h:outputText value="#{itemPriceVar.changePrice ? 'True' : 'False'}" />	
-							   </p:column>		        
+								</p:column>			        	        
 				        </p:dataTable>
 				        <p:confirmDialog id="dlgItemPrices" widgetVar="dlgItemPrices" message="#{lbl['lbl.msg.confirm.delete']}" 	
                              severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">

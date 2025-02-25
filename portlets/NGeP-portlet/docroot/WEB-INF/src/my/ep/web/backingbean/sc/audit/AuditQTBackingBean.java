@@ -100,7 +100,7 @@ public class AuditQTBackingBean extends BaseBackingBean<AuditQTManagedBean> {
 		int activeIndex = 0;
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setQtId(docId);
-		this.getManagedBean().setActiveIndex(0);
+		this.getManagedBean().setActiveIndex(12);
 		this.getManagedBean().setBackURL(fc.getViewRoot().getViewId());
 		onTabMenuChangeAction(activeIndex);
 

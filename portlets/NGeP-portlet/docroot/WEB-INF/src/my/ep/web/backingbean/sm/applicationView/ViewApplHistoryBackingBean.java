@@ -112,10 +112,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.util.PortalUtil;
-//#28895_35501 Start - AUDIT TRAIL SM
-import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
-import javax.servlet.http.HttpServletRequest;
-//#28895_35501 End
 @ManagedBean(name = "viewApplHistoryBackingBean")
 @RequestScoped
 //#29759 - Searching application status supporting doc loading
@@ -417,12 +413,13 @@ public class ViewApplHistoryBackingBean extends
 		this.getManagedBean().setPreRegistration(true);
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
-			//start #29956
-			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			//start #29956 && #37598
+			getManagedBean().setResubmitAppl(resubmission);
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(getManagedBean().getSmAppl(), getManagedBean().getSsmResDTO());
 			if(displayPopupDowngradeSSMOwner){
 				proceed = false;
 			}
-			//end #29956
+			//end #29956 && #37598
 		}
 		if(proceed){
 			if(resubmission){

@@ -94,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
@@ -1165,9 +1166,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
-
+	
+	//37813,35384 -start
 	/** The tech points. */
-	private int techPoints;
+	private BigDecimal techPoints;
+	//37813,35384 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -1672,6 +1675,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean chmnFinalizationRejectEPV;
 	private boolean proposalValidityRevised;
 	private boolean nullEPVRemark;
+	private List<String> toBeRemoveEPVAttachments;
+	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
 	//#21692 - End
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
@@ -1901,6 +1906,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private boolean auditViewRole;
 	//#28895 - 35500 end
+	
+	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
+
 	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
@@ -8433,21 +8441,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
 		this.financialScoring = financialScoring;
 	}
-
-	/**
-	 * @return the techPoints
-	 */
-	public int getTechPoints() {
-		return techPoints;
-	}
-
-	/**
-	 * @param techPoints the techPoints to set
-	 */
-	public void setTechPoints(int techPoints) {
-		this.techPoints = techPoints;
-	}
-
+	
+	//37813,35384 remove tech setter and getter.
 	/**
 	 * @return the finPoints
 	 */
@@ -11872,22 +11867,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
 		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
 	}
-	
-	public List<ScQtContactPerson> getPmuserDeletedContactpersonList() {
-		return pmUserDeletedContactPersonList;
-	}
-
-	public void setPmuserDeletedContactpersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
-		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
-	}
-
-	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
-		return newScCommitteeMemberAuditTrailList;
-	}
-
-	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
-		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
-	}
 
 	/**
 	 * @return the isFromSubmitCatChange
@@ -11967,6 +11946,26 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.nullEPVRemark = nullEPVRemark;
 	}
 	//#21692 - End
+
+	//#21692 #note-504 - Start
+	public List<String> getToBeRemoveEPVAttachments() {
+		return toBeRemoveEPVAttachments;
+	}
+
+	public void setToBeRemoveEPVAttachments(List<String> toBeRemoveEPVAttachments) {
+		this.toBeRemoveEPVAttachments = toBeRemoveEPVAttachments;
+	}
+	//#21692 #note-504 - End
+
+	//#21692 #note-504 - Start
+	public List<ScQtEpvApprovalReqAttachment> getAllEPVAttachments() {
+		return allEPVAttachments;
+	}
+
+	public void setAllEPVAttachments(List<ScQtEpvApprovalReqAttachment> allEPVAttachments) {
+		this.allEPVAttachments = allEPVAttachments;
+	}
+	//#21692 #note-504 - End
 	
 	
 	
@@ -12142,12 +12141,28 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// 25791-End
 
 	//#28895 - 35500 start
+	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
+		return newScCommitteeMemberAuditTrailList;
+	}
+
+	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
+		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
+	}
+
 	public List<ScCommitteeMember> getDeletedScCommitteeMemberAuditTrailList() {
 		return deletedScCommitteeMemberAuditTrailList;
 	}
 
 	public void setDeletedScCommitteeMemberAuditTrailList(List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList) {
 		this.deletedScCommitteeMemberAuditTrailList = deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public List<ScQtContactPerson> getPmUserDeletedContactPersonList() {
+		return pmUserDeletedContactPersonList;
+	}
+
+	public void setPmUserDeletedContactPersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
 	}
 
 	public boolean isAuditViewRole() {
@@ -12158,4 +12173,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.auditViewRole = auditViewRole;
 	}
 	//#28895 - 35500 end
+	
+	/** #36678 related to #35061
+	 * 
+	 * @return
+	 */
+	public boolean isFieldProcurementJustification() {
+		return isFieldProcurementJustification;
+	}
+
+	/** #36678 related to #35061
+	 * @param
+	 */
+	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
+		this.isFieldProcurementJustification = isFieldProcurementJustification;
+	}
+	
+	//37813,35384 -start
+	/**
+	 * @return the techPoints
+	 */
+	public BigDecimal getTechPoints() {
+		return techPoints;
+	}
+
+	/**
+	 * @param techPoints the techPoints to set
+	 */
+	public void setTechPoints(BigDecimal techPoints) {
+		this.techPoints = techPoints;
+	}
+	//37813,35384 -end
 }

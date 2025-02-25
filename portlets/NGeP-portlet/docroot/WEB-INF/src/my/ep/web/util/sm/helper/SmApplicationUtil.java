@@ -1547,6 +1547,18 @@ public class SmApplicationUtil {
 		validateRenewalApplTypeForSpecialCategory(appl);
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
+			//#37605 START
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
+				        && !convertToAscii(cat.getOtherDesc())) {
+				    throw new EpException(MessageConst.ERROR_760555);
+				}
+
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
+				    cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+				}
+	        }
+			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
 			if (!StringUtils.isBlank(errMsg)) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -3314,6 +3326,7 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean checkValidUser(SmPersonnel pers, SmAppl appl) {
+		log.info("SM DEV ISLAND TESTING: Enter SmApplicationUtil.checkValidUser");
 		boolean validUser = true;
 		if (pers.getIdentificationType().getParameterCode()
 				.equalsIgnoreCase("I")) {
@@ -3379,6 +3392,7 @@ public class SmApplicationUtil {
 						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
 						.equalsIgnoreCase(RoleCode.CM_USER.value())))
 			validatePersonnelICandEmailLiferayAndPm(pers);
+		log.info("SM DEV ISLAND TESTING: Exit SmApplicationUtil.checkValidUser");
 		return validUser;
 	}
 
@@ -4665,13 +4679,12 @@ public class SmApplicationUtil {
 		}
 		managedBean.getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories().removeAll(delCatList);
 		//#34209 END
+		//28775 - Site Visit Grouping Enhancement -28775
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE,
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
-			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0
-					&& cat.getPmCategoryL3() != null) {
+			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
 				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
 						.getEntityBySinglePropertyFromList(cat
@@ -7908,10 +7921,7 @@ public class SmApplicationUtil {
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			//26671 - Site Visit Grouping Enhancement -28775 - start
-			boolean validStatus = cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
-					|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
-					|| isActiveCategoryAfterApproval(cat, managedBean.getSmAppl().getApplId());
-			
+			boolean validStatus = isValidCategory(cat, managedBean.getSmAppl());
 			if (cat.getPmCategoryL3().getCategoryTypeCode() != null	&& validStatus	&& !isCategoryRejected(cat)) {
 				//26671 - Site Visit Grouping Enhancement -28775 - end
 				String catType = cat.getPmCategoryL3().getCategoryTypeCode().getParameterCode();
@@ -10879,10 +10889,8 @@ public class SmApplicationUtil {
 		List<SelectItem> categoryTypeItems = new ArrayList<>();
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				boolean validStatus = cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-						//26671 - Site Visit Grouping Enhancement -28775
-						|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
-						|| isActiveCategoryAfterApproval(cat, appl.getApplId()); //#32008 - after approval bug
+				//26671 - Site Visit Grouping Enhancement -28775, //#32008 - after approval bug
+				boolean validStatus = isValidCategory(cat, appl);
 				validStatus &= !isCategoryRejected(cat);
 				if (validStatus && cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
@@ -11897,10 +11905,8 @@ public class SmApplicationUtil {
 				&& !EntityHelper.isCollectionEmpty(smAppl
 						.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-				//#32008 - after approval bug
-				if ((cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_ACT_STATUS 
-						|| cat.getRecordStatusFlg().intValue() == SupplierManagementConst.PENDING_RE_APPROVAL_STATUS
-						|| isActiveCategoryAfterApproval(cat, smAppl.getApplId()))
+				//#32008 - after approval bug, #28775
+				if (isValidCategory(cat, smAppl)
 						&& (cat.getPmCategoryL3() != null
 								&& !StringUtils.isBlank(cat.getPmCategoryL3()
 										.getFacilityType()) && cat
@@ -15533,7 +15539,21 @@ public class SmApplicationUtil {
 		String otherLbl = SmCommonUtil.getMessage("lbl.sm.catCodes.othDesc", null)+": ";
 		return sCat != null ? otherLbl + sCat.getOtherDesc() : null;
 	}
-	//29380 - Site Visit Grouping Enhancement -28775 - end
+	
+	private static boolean isValidCategory(SmSupplierCategory suppCat, SmAppl appl){
+		if (suppCat == null || appl == null){
+			return false;
+		}
+		int status = suppCat.getRecordStatusFlg().intValue();
+		boolean isValid = status == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL
+				|| status == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				|| isActiveCategoryAfterApproval(suppCat, appl.getApplId());
+		if (appl.getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			isValid |= status == DbValueConst.RECORD_STATUS_ACTIVE;
+		}
+		return isValid;
+	}
+	//29380, 26671 - Site Visit Grouping Enhancement -28775 - end
 	
 	// #34303 - start
 	public static void setFacilityTypeNotInTheSameCategoryFacType(SmApplicationManagedBean smApplicationManagedBean) {
@@ -15656,4 +15676,89 @@ public class SmApplicationUtil {
 		return false;
 	}
 	//#26238 - end
+	//#37605 START
+	/*
+	 * Validate string using ASCII character
+	 */
+	public static boolean convertToAscii(String input) {
+        log.info("ASCII values for the string: \"" + input + "\"");
+        boolean isValid = true;
+        for (char character : input.toCharArray()) {
+            int asciiValue = (int) character; 
+            log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
+            if(asciiValue > 127){
+            	isValid = false;
+            }
+        }
+        return isValid;
+    }
+	
+	/*
+	 * Replace tab with a space
+	 */
+	public static String replaceTabWSpace(String input){
+		String str = null;
+		Map<String, String> documents = new HashMap<>();
+        documents.put("input", input);
+
+        log.info("Before Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        }
+
+        // Replace tabs with spaces in all values
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+            String value = entry.getValue();
+            if (value != null) {
+                // Replace tabs with 1 space
+                value = value.replace("\t", " ");
+                entry.setValue(value); 
+            }
+        }
+        
+        log.info("After Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        	str = entry.getValue();
+        }
+        return str;
+	}
+	//#37605 END
+
+	// #37779 - Start
+	/**
+	 @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return error message
+	 */
+	public static void checkBankAccountPurpose(SmApplicationManagedBean managedBean) {
+		StringBuilder bf = new StringBuilder();
+		int index = 1;
+
+		SmAppl appl = managedBean.getSmAppl();
+
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			if (bank.getAccountPurpose().equalsIgnoreCase("O")) {
+				if (index == 1) {
+					bf.append("<br>" + index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " ("
+							+ bank.getAccountNo() + ") " + "<br>");
+					index++;
+				} else if (index > 1) {
+					bf.append(index++ + ". " + bank.getPmFinancialOrg().getFinOrgName() + " (" + bank.getAccountNo()
+							+ ") " + "<br>");
+					index++;
+				}
+
+			}
+		}
+
+		if (index > 1) {
+			if (managedBean.isSupplierUser()) {
+				throw new EpException(MessageConst.ERROR_722710, new String[] { bf.toString() });
+			} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
+				throw new EpException(MessageConst.ERROR_722709, new String[] { bf.toString() });
+			}	
+		}
+	}
+	// #37779 - End
 }

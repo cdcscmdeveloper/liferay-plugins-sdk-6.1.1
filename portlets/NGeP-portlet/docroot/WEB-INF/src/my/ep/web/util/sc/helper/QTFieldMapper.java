@@ -162,8 +162,7 @@ public class QTFieldMapper {
         // Pending QT Publication
 		QT_PENDING_PUBLICATION(QTStatusConst.QT_PENDING_PUBLICATION,
 				new String[] { 
-						QTFieldConst.FIELD_QT_TITLE,
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
+						QTFieldConst.FIELD_QT_TITLE,//#21692 remove Proposal Validity
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
 						QTFieldConst.FIELD_QT_DOCUMENTS,
@@ -197,8 +196,7 @@ public class QTFieldMapper {
         //Proposal Preparation 
 		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
 				new String[] { 
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
-						QTFieldConst.FIELD_QT_PUBLISH_PERIOD}),
+						QTFieldConst.FIELD_QT_PUBLISH_PERIOD}),//#21692 remove Proposal Validity
 					
 		// QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE
 		QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE(QTStatusConst.QT_PENDING_RESCEDULE_PROPOSAL_CLOSING_DATE,
