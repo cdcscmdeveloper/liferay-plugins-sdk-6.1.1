@@ -3,6 +3,8 @@
  */
 package my.ep.web.constant.sc;
 
+import java.math.RoundingMode;
+
 
 /**
  * QTConstants for constants for sourcing.
@@ -280,10 +282,6 @@ public interface QTConstants {
 	// 19287#91, 17376#104 -start-
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
-	// 25037 - start
-	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
-	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
-	// 25037 - end
 
 	//#15391 #11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
@@ -301,10 +299,10 @@ public interface QTConstants {
 	// 9019 - Start (Harun) WIP transaction Pending QT Submission
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
 	// 9019 - End (Harun)
-	
+
 	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
-	
+
 	// Bug #35485@Syazani 08/02/2024 -- Start
 	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
 	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
@@ -318,6 +316,15 @@ public interface QTConstants {
 	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
 	// Bug #35485@Syazani 08/02/2024 -- End
 	
+	// 25037 - start
+	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
+	public static final String QT_GPKI_DLG_SHOW = "gpki_dlg.show()";
+	// 25037 - end
+
+	// 36671, 25037 - start
+	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
+	// 36671, 25037 - end
+
 	// Bug #35688@Syazani 10/07/2024 -- Start
 	public static final String TAB_SC_GENERAL_INFORMATION = "0";
 	public static final String TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA = "1";
@@ -377,8 +384,27 @@ public interface QTConstants {
 	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
 	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
 	//#10542 End Dayan
+	// 6906 - start
+	public static final String SELECTION_MODE_MULTIPLE = "multiple";
+	public static final String SELECTION_MODE_SINGLE = "single";
+	// 6906 - end
 	
-	// 36671 - start
-	public static final String QT_CMT_APPROVER_PANEL = "/xhtml/sc/quatationtender/Approver/approverPanel.xhtml";
-	// 36671 - end
+	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
+	
+	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
+	
+	//36678
+	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+	
+		
+	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
+	
+	//#29732 -Start
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_1 = "lbl.sc.category.has.changes.on.prerender.view.1";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2 = "lbl.sc.category.has.changes.on.prerender.view.2";
+	public static final String LBL_SC_CATEGORY_HAS_CHANGES_ON_PRERENDER_VIEW_2_A = "lbl.sc.category.has.changes.on.prerender.view.2.a";
+	public static final String QT_CAT_CODE_CHANGE_ALERT_SHOW = "catCodeChangeAlert.show()";
+	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
+	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
+	//#29732 -End
 }

@@ -120,6 +120,18 @@ public class SSTConstant {
 	 * Setuju Terima
 	 */
 	public static final String LIST_PURCHASE_REQUEST_SST = "PRSSTList";
+	/**
+	 * Represent temporary string before replace with <br>
+	 */
+	public static final String WORD_BREAK_TO_REMOVE = "/AddBreakLineHere/";
+	/**
+	 * Represent PDF file format
+	 */
+	public static final String FILE_TYPE_PDF = ".pdf";
+	/**
+	 * Represent Microsoft Word Document file format
+	 */
+	public static final String FILE_TYPE_DOC = ".doc";
 	// 35295 @zaim - end
 	// 36122 - start
 	/**

@@ -2308,6 +2308,13 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			}
 			//#33178 related to #21695 End
 			
+			//36228 fixing index -issue if No suppliers qualified in package, summary tec next button effected to click two times to proceed to next train station. 
+			if(null != this.getManagedBean().getWipStatusMax() && this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& this.getManagedBean().getScQt().getEvaluateBy().equals(SourcingConstants.EVALUATE_BY__ITEM)
+					&& !this.getManagedBean().getScQt().isPartial()){
+				this.getManagedBean().setNoSupplierPackageExist(true);
+			}
+			//#33178 related to #21695 End
 			checkTechnicalSuppliersQualified();
 			localCheckList=null;
 			evalstage=null;
@@ -8596,7 +8603,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						}//#34741
 						//sonarqube issue (#35)
 						else if (this.getManagedBean().getOneTierFinancialActiveIndex() == 2
-								&& this.getManagedBean().isReadOnly()) {
+								&& !this.getManagedBean().isReadOnly()) {//#36444
 							checkMeetingDetailsAndStatus(this.getManagedBean().getScQtMeetings());
 						}// #34741
 						
@@ -11383,22 +11390,36 @@ private void retriveCommitteeRemarksList(){
 		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = null;
+		ScAttachment commReportAttachment = null; // 37617
 		ScQt scQt = getManagedBean().getScQt();
 		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScEvaluationCommitteeReportAttachment(); // 37617
 			reportAttachment = new ScEvaluationCommitteeReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScOpenCommitteeReportAttachment(); // 37617
 			reportAttachment = new ScOpenCommitteeReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScTechnicalEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScTechnicalEvaluationReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScFinancialEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScFinancialEvaluationReportAttachment();
 		}	
-		
+		// 37617 - end
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = null != taskName ? taskName : "";
+		boolean isFetchReportOnly = Arrays.asList(SCProcessNameConst.EVAL_COMM_ENDORSE_GROUP).contains(taskName)
+				|| Arrays.asList(SCProcessNameConst.EVAL_COMM_SIGNOFF_GROUP).contains(taskName);
+		if (null != commReportAttachment && isFetchReportOnly) {
+			return commReportAttachment;
+		}
+		// 37617 - end
+
 		StringBuilder fileName = new StringBuilder(
 				getManagedBean().getReportDownloadFileName());
 		fileName.append(".pdf");
