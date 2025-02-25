@@ -405,22 +405,22 @@ public class LOIDetailBackingBean extends
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		preRenderViewPriv(null, null);
+
 		// #29007 Vinod Start
-		String message = ResourceBundleUtils.getMessage(
-				"lbl.sc.loiloa.suppliers.proposal.specification.update",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale());
+		String message = ResourceBundleUtils.getMessage("lbl.sc.loiloa.suppliers.proposal.specification.update",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		getManagedBean().setLoiSupplierProposalspec(message);
 		ScLoi scLoi = getManagedBean().getScLoi();
-		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
-				.longValue();
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 
 		List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
+
 		if (null == scNegoTerms) {
 			scNegoTerms = new ArrayList<ScLoiTerm>();
 		}
 
 		int record = 0;
+		
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 			if (scNegoTerms.size() > 0) {
 				for (ScLoiTerm scLoiTerm : scNegoTerms) {
@@ -429,6 +429,7 @@ public class LOIDetailBackingBean extends
 					}
 				}
 			}
+
 			if (record > 0) {
 				this.getManagedBean().setRenderInstruction(true);
 			} else {
@@ -1780,12 +1781,11 @@ public class LOIDetailBackingBean extends
 
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+
 			// #29007 Vinod Start
-			String message = ResourceBundleUtils
-					.getMessage(
-							QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007 Vinod End
 		} finally {
@@ -1827,12 +1827,11 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSelectedTabIndex(0);
 			// QT Proposal validity expired
 			getQtProposalValidExpiredMessage(getManagedBean().getScQt());
+
 			// #29007 Vinod Start
-			String message = ResourceBundleUtils
-					.getMessage(
-							QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007 Vinod End
 		
@@ -1859,12 +1858,11 @@ public class LOIDetailBackingBean extends
 
 			populateLOIDetails(resDTO);
 			getManagedBean().setButtonFlag(Boolean.TRUE);
+
 			// #29007 Vinod Start
-			String message = ResourceBundleUtils
-					.getMessage(
-							QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
+			String message = ResourceBundleUtils.getMessage(
+					QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			getManagedBean().setLoiSupplierProposalspec(message);
 			// #29007 Vinod End
 
@@ -6383,7 +6381,6 @@ public class LOIDetailBackingBean extends
 	 * Adds the negotiation term in negotiation details.
 	 */
 	public void addSuppliersProposalSpecificationUpdate() {
-		debugLogger("addSuppliersProposalSpecificationUpdate");
 		ScLoi scLoi = getManagedBean().getScLoi();
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();
 
@@ -6393,19 +6390,18 @@ public class LOIDetailBackingBean extends
 		}
 		ScLoiTerm negoTerm = new ScLoiTerm();
 
-		String message = ResourceBundleUtils
-				.getMessage(
-						QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
+		String message = ResourceBundleUtils.getMessage(
+				QTConstants.LBL_SC_LOILOA_SUPPLIERS_PROPOSAL_SPECIFICATION_UPDATE,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		boolean alredyAdded = false;
+
 		for (ScLoiTerm scLoiTerm : scNegoTerms) {
-			if (null != scLoiTerm.getTermDesc()
-					&& scLoiTerm.getTermDesc().equals(message)) {// 29007
+			if (null != scLoiTerm.getTermDesc() && scLoiTerm.getTermDesc().equals(message)) {
 				alredyAdded = true;
 				break;
 			}
 		}
+
 		if (!alredyAdded) {
 			if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 				negoTerm.setSelectedTerm(Boolean.FALSE);
@@ -6414,15 +6410,16 @@ public class LOIDetailBackingBean extends
 				negoTerm.setSelected(true);
 			}
 			negoTerm.setTermDesc(message);
-			negoTerm.setSelectTerm(Boolean.TRUE);// 29007
+			negoTerm.setSelectTerm(Boolean.TRUE);
 			negoTerm.setScLoi(scLoi);
 			negoTerm.setModified(true);
 			scNegoTerms.add(negoTerm);
 			scLoi.setScNegoTerms(scNegoTerms);
 		}
-
 	}
+	// 29007-End
 
+	// 29007 -start-
 	/**
 	 * Method to Reset NegotiationTerms
 	 **/

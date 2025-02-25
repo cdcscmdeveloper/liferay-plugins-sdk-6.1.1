@@ -9973,13 +9973,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * 
 	 * @return
 	 */
-	public void searchSupplierItemByName(){
-		if(this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != ""){
+	public void searchSupplierItemByName() {
+		if (this.getItemNameSearchCriteria() != null && this.getItemNameSearchCriteria() != "") {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			
+
 			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster().isBrandNew()) {
 				reqDTO.setTplSpecMaster(this.getManagedBean().getProdscQtDoc().getTplSpecMaster());
 				reqDTO.setItemName(this.getItemNameSearchCriteria());
+
 				AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
 
 				TemplateSpecBean bean = this.getManagedBean().getTemplateSpecBean();
@@ -9987,67 +9988,64 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				bean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
 				bean.setSelectedSpecQuestion(null);
 				bean.setSpecAnswersToDelete(null);
+
 				this.getManagedBean().setSearchItemForDL(true);
+
 				bean.setWordBreakForQT(true);
+
 				this.getManagedBean().setProdTemplateSpecBean(bean);
-			}// 29007
+			}
+
 			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster().isBrandNew()) {
 				reqDTO.setTplSpecMaster(this.getManagedBean().getServicescQtDoc().getTplSpecMaster());
 				reqDTO.setItemName(this.getItemNameSearchCriteria());
+
 				AwardSupplierResDTO resDTO = getQtAwardSO().searchSupplierItemByIDforDL(reqDTO);
 				TemplateSpecBean serviceBean = new TemplateSpecBean(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 				serviceBean.setSpecMaster(resDTO.getTplSpecMaster());
 				serviceBean.setSpecAnswerList(resDTO.getTplSpecAnswerList());
 				serviceBean.setSelectedSpecQuestion(null);
 				serviceBean.setSpecAnswersToDelete(null);
+
 				this.getManagedBean().setSearchItemForDL(true);
+
 				serviceBean.setWordBreakForQT(true);
+
 				this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 			}
-		}else{
+		} else {
 			this.getManagedBean().setSearchItemForDL(false);
-			TemplateSpecBean bean = new TemplateSpecBean(
-					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 
-			bean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
-					.getTplSpecMaster());
+			TemplateSpecBean bean = new TemplateSpecBean(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+			bean.setSpecMaster(this.getManagedBean().getProdscQtDoc().getTplSpecMaster());
 			bean.setWordBreakForQT(true);
 
 			this.getManagedBean().setProdTemplateSpecBean(bean);
 			this.getManagedBean().setProdFirst(0);
-			bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
-					.getSmSupplier());
-			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
-					.isBrandNew()) {
 
-				this.getManagedBean()
-						.getProdscQtDoc()
-						.setTplSpecMaster(
-								this.getManagedBean().getProdTemplateSpecBean()
-										.getSpecMaster());
+			bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
+
+			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster().isBrandNew()) {
+
+				this.getManagedBean().getProdscQtDoc()
+						.setTplSpecMaster(this.getManagedBean().getProdTemplateSpecBean().getSpecMaster());
 			}
 
-			TemplateSpecBean serviceBean = new TemplateSpecBean(
-					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
-			serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
-					.getTplSpecMaster());
-
-			serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
-					.getSmSupplier());
+			TemplateSpecBean serviceBean = new TemplateSpecBean(TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+			serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc().getTplSpecMaster());
+			serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
 			serviceBean.setWordBreakForQT(true);
+
 			this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 			this.getManagedBean().setServFirst(0);
 
-			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
-					.isBrandNew()) {
-
+			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster().isBrandNew()) {
 				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+
 				backingBean.calcGrandTotalAmount(serviceBean);
-				this.getManagedBean()
-						.getServicescQtDoc()
-						.setTplSpecMaster(
-								this.getManagedBean().getSpecTemplateSpecBean()
-										.getSpecMaster());
+
+				this.getManagedBean().getServicescQtDoc()
+						.setTplSpecMaster(this.getManagedBean().getSpecTemplateSpecBean().getSpecMaster());
 			}
 		}
 	}
@@ -10064,7 +10062,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void searchSupplierSpecification(TplSpecQuestion tplSpecQuestion1, boolean mainSearch) {
-		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
 		ScLoiLoaItem loiLoaItem = new ScLoiLoaItem();
 
@@ -10075,8 +10074,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			String requestItemQuestionName = scloiloaitem.getScRequestItem().getTplSpecQuestion().getClItem();
 			String specQuestionName = tplSpecQuestion1.getClItem();
 
-			if (scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId().equals(tplSpecQuestion1.getSpecQuestionId())
-					|| scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId() == tplSpecQuestion1.getSpecQuestionId()
+			if (scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId()
+					.equals(tplSpecQuestion1.getSpecQuestionId())
+					|| scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId() == tplSpecQuestion1
+							.getSpecQuestionId()
 					|| scloiloaitem.getScRequestItem().getTplSpecQuestion().getClItem().trim().replaceAll("\\s", "")
 							.equals(tplSpecQuestion1.getClItem().trim().replaceAll("\\s", ""))) { // 29007&31423&31638
 				loiLoaItem = scloiloaitem;
@@ -10107,9 +10108,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		boolean qtMaint = isQTMaintenanceScreen();
 
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint) {
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
 			getManagedBean().setSupPropSpecDisable(false);
-		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint) {
+		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
 			getManagedBean().setSupPropSpecDisable(false);
 		} else {
 			getManagedBean().setSupPropSpecDisable(true);
@@ -10129,7 +10132,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
 
 				if (awardResDTOnew.isSuccessful()) {
-					// log.info("WIP data Saved :"+templateSpecResDTO.getSpecAnswerList().size());
 					this.getManagedBean().getScLoa().setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
 				}
 			}
@@ -10146,26 +10148,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 
 			for (TplSpecAnswer answer : afterTierCheckAnswerList) {
-				if (answer.getTplSpecQuestion() != null && tplSpecAnswer.getTplSpecQuestion() != null
-						&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId()) {
+				if (answer.getTplSpecQuestion() != null
+						&& tplSpecAnswer.getTplSpecQuestion() != null
+						&& answer.getTplSpecQuestion().getSpecQuestionId() == tplSpecAnswer.getTplSpecQuestion()
+								.getSpecQuestionId()) {
 					contains++;
 					break;
 				}
 			}
 
-			boolean qtMaintCheck = qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-					&& !qtMaint);
-			if(qtMaintCheck
-				&& (afterTierCheckAnswerList.isEmpty()
-						|| !afterTierCheckAnswerList.isEmpty()
-						   && contains==0)){
+			boolean qtMaintCheck = qtMaint
+					|| (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint);
+			if (qtMaintCheck
+					&& (afterTierCheckAnswerList.isEmpty() || !afterTierCheckAnswerList.isEmpty() && contains == 0)) {
 				afterTierCheckAnswerList.add(tplSpecAnswer);
 			} else {
 				continue;
 			}
 		}
 
-		if (qtMaint || (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint)) {
+		if (qtMaint
+				|| (QTStatusConst.LOA_COMPLETED.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint)) {
 			this.getManagedBean().setTplSpecAnswerList(afterTierCheckAnswerList);
 		} else {
 			this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
@@ -10176,11 +10179,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (mainSearch) {
 			this.getManagedBean().setTplSpecQuestion(tplSpecQuestion1);
 
-			PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+			PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext()
+					.getSession(false);
 			portletSession.setAttribute(QTConstants.PORTLET_ATTRIBUTE_NEW_OFFERED_SPECIFICATION, loiLoaItem);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.REDIRECT_URL_NEW_OFFERED_SPECIFICATION);
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.REDIRECT_URL_NEW_OFFERED_SPECIFICATION);
 		}
 	}
 	// #29007 -end-
@@ -10200,42 +10205,54 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		IQTAwardSO iQTAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTAwardSO.class);
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-		
+
 		if (this.getManagedBean().getTplSpecAnswerList() != null
 				|| this.getManagedBean().getNewSupplierJustification() != null) {
-			if(this.getManagedBean().getScQt().isZonal()){
-				for(ScLoiLoaItem zoneLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
-					if(null!=this.getManagedBean().getScLoiLoaItem()
-						&& zoneLoiLoaItem.getLoiLoaItemId()==this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId()
-						|| zoneLoiLoaItem.getLoiLoaItemId().equals(this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId())){
+			if (this.getManagedBean().getScQt().isZonal()) {
+				for (ScLoiLoaItem zoneLoiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+					if (null != this.getManagedBean().getScLoiLoaItem()
+							&& zoneLoiLoaItem.getLoiLoaItemId() == this.getManagedBean().getScLoiLoaItem()
+									.getLoiLoaItemId()
+							|| zoneLoiLoaItem.getLoiLoaItemId().equals(
+									this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId())) {
 						zoneLoiLoaItem.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
 					}
 				}
+
 				reqDTO.setScLoiLoaItemList(this.getManagedBean().getScLoa().getScLoiLoaItems());
-				AwardSupplierResDTO resDTOLatest  = getQtAwardSO().saveZoneItemListForResetAll(reqDTO);
-				if(resDTOLatest.isSuccessful()){
-					ScLoa scLoa= this.getManagedBean().getScLoa();
+
+				AwardSupplierResDTO resDTOLatest = getQtAwardSO().saveZoneItemListForResetAll(reqDTO);
+
+				if (resDTOLatest.isSuccessful()) {
+					ScLoa scLoa = this.getManagedBean().getScLoa();
 					scLoa.setScLoiLoaItems(resDTOLatest.getScLoiLoaItemList());
 				}
-				for(ScLoiLoaItem updatedLoiLoaItem:this.getManagedBean().getScLoa().getScLoiLoaItems()){
-					if(updatedLoiLoaItem.getLoiLoaItemId()==this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId()
-						|| updatedLoiLoaItem.getLoiLoaItemId().equals(this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId())){
+
+				for (ScLoiLoaItem updatedLoiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
+					if (updatedLoiLoaItem.getLoiLoaItemId() == this.getManagedBean().getScLoiLoaItem()
+							.getLoiLoaItemId()
+							|| updatedLoiLoaItem.getLoiLoaItemId().equals(
+									this.getManagedBean().getScLoiLoaItem().getLoiLoaItemId())) {
 						this.getManagedBean().setScLoiLoaItem(updatedLoiLoaItem);
 						break;
 					}
 				}
+
 				reqDTO = new AwardSupplierReqDTO();
 			}
-			
-			ScLoiLoaItem  scLoiLoaItem  = this.getManagedBean().getScLoiLoaItem();
-			AwardSupplierReqDTO reqDTOLatest=new AwardSupplierReqDTO();
+
+			ScLoiLoaItem scLoiLoaItem = this.getManagedBean().getScLoiLoaItem();
+			AwardSupplierReqDTO reqDTOLatest = new AwardSupplierReqDTO();
 			reqDTOLatest.setScLoiLoaItem(scLoiLoaItem);
-			AwardSupplierResDTO resDTOLatest  = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest);
-			if(resDTOLatest.getScLoiLoaItem()!=null){
-				scLoiLoaItem=resDTOLatest.getScLoiLoaItem();
+
+			AwardSupplierResDTO resDTOLatest = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest);
+
+			if (resDTOLatest.getScLoiLoaItem() != null) {
+				scLoiLoaItem = resDTOLatest.getScLoiLoaItem();
 			}
+
 			scLoiLoaItem.setComplete(isComplete);
-			
+
 			if (isComplete) {
 				if (null == this.getManagedBean().getNewSupplierJustification()
 						|| StringUtils.isBlank(this.getManagedBean().getNewSupplierJustification())
@@ -10249,38 +10266,38 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			if (this.getManagedBean().getNewSupplierJustification() != null
 					&& this.getManagedBean().getNewSupplierJustification() != "") {
 				int newoffered = 0;
-				
+
 				for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
 					if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 						newoffered++;
 					}
 				}
-				
+
 				if (isComplete && newoffered < 1) {
 					int index = 0;
-					
+
 					for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 						if (loiLoaItem.getLoiLoaItemId() == scLoiLoaItem.getLoiLoaItemId()
 								|| loiLoaItem.getLoiLoaItemId().equals(scLoiLoaItem.getLoiLoaItemId())) {
 							this.getManagedBean().getScLoa().getScLoiLoaItems().set(index, scLoiLoaItem);
 							break;
 						}
-						
+
 						index++;
 					}
-					
+
 					throw new EpException(MessageConst.ERROR_775170);
 				}
 			}
-			
+
 			scLoiLoaItem.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
-			
+
 			reqDTO.setTplSpecAnswerList(this.getManagedBean().getTplSpecAnswerList());
 			reqDTO.setScLoiLoaItem(scLoiLoaItem);
 
 			AwardSupplierResDTO resDTO = iQTAwardSO.saveSupplierSpecification(reqDTO);
 			int index = 0;
-			
+
 			for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (loiLoaItem.getLoiLoaItemId() == resDTO.getScLoiLoaItem().getLoiLoaItemId()
 						|| loiLoaItem.getLoiLoaItemId().equals(resDTO.getScLoiLoaItem().getLoiLoaItemId())) {
@@ -10288,39 +10305,53 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					this.getManagedBean().getScLoa().getScLoiLoaItems().add(index, resDTO.getScLoiLoaItem());
 					break;
 				}
-				
+
 				index++;
 			}
+
 			List<ScLoiLoaItem> items = new ArrayList<>();
 			AwardSupplierReqDTO reqDTONew = new AwardSupplierReqDTO();
+
 			for (ScLoiLoaItem item : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (!scLoiLoaItem.getLoiLoaItemId().equals(item.getLoiLoaItemId())
 						&& scLoiLoaItem.getScRequestItem().getRequestNoteItemId()
 								.equals(item.getScRequestItem().getRequestNoteItemId())) {
 					reqDTOLatest.setScLoiLoaItem(item);
+
 					item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
+
 					reqDTONew.setTplSpecAnswerList(null);
+
 					item.setLoaSpecJustification(this.getManagedBean().getNewSupplierJustification());
 					item.setComplete(resDTO.getScLoiLoaItem().isComplete());
+
 					reqDTONew.setScLoiLoaItem(item);
+
 					getQtAwardSO().saveSupplierSpecification(reqDTONew);
+
 					items.add(item);
 				}
 			}
+
 			for (ScLoiLoaItem item : items) {
 				int indexNew = 0;
+
 				reqDTOLatest.setScLoiLoaItem(item);
+
 				item = getQtAwardSO().retriveLatestLoiLoaItemDetails(reqDTOLatest).getScLoiLoaItem();
+
 				for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 					if (loiLoaItem.getLoiLoaItemId() == item.getLoiLoaItemId()
 							|| loiLoaItem.getLoiLoaItemId().equals(item.getLoiLoaItemId())) {
 						if (null != this.getManagedBean().getScLoa() && this.getManagedBean().getScLoa().isBrandNew()) {
 							resDTO.getScLoiLoaItem().setScLoa(this.getManagedBean().getScLoa());
 						}
+
 						this.getManagedBean().getScLoa().getScLoiLoaItems().remove(indexNew);
 						this.getManagedBean().getScLoa().getScLoiLoaItems().add(indexNew, item);
 						break;
 					}
+
 					indexNew++;
 				}
 			}
@@ -10340,7 +10371,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			if (resDTO.isSuccessful()) {
 				createLampiranA3forQT(isComplete);
-				
+
 				if (isComplete) {
 					onBackToZoneItemDetailsTab();
 				} else {
@@ -10370,12 +10401,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 
 					this.getManagedBean().setTplSpecAnswerList(templateSpecResDTO.getSpecAnswerList());
-					for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
-						if(tplSpecAnswer.getNewSupplierOffer()!=null && tplSpecAnswer.getNewSupplierOffer()!=""){
+
+					for (TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()) {
+						if (tplSpecAnswer.getNewSupplierOffer() != null && tplSpecAnswer.getNewSupplierOffer() != "") {
 							tplSpecAnswer.setRenderNewSpec(true);
 						}
 					}
-					successMessage(MessageConst.INFO_700004, getMessageCommon("lbl.sc.loiloa.supplier.specification.save"), "", Boolean.FALSE);
+
+					successMessage(MessageConst.INFO_700004,
+							getMessageCommon("lbl.sc.loiloa.supplier.specification.save"), "", Boolean.FALSE);
 				}
 			}
 		}
@@ -10385,9 +10419,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/* #29007 Start Vinod */
 	public String populateLabelLampiranA3(String dateOfUpdate, String deskOfficerName) {
 		FacesScopes facesScopes = new FacesScopes();
-		return ResourceBundleUtils.getMessage(QTConstants.LAMPIRAN_A3_LBL, new String[] {
-				dateOfUpdate, deskOfficerName }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				facesScopes.getUserLocale()); 
+		return ResourceBundleUtils.getMessage(QTConstants.LAMPIRAN_A3_LBL,
+				new String[] { dateOfUpdate, deskOfficerName }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				facesScopes.getUserLocale());
 	}
 	// #29007 -end-
 
@@ -10405,14 +10439,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								CommonConstants.DEFAULT_DATETIME_FORMAT).format(DateUtils.getCurrentDate()),
 								SmCommonUtil.getUserByUserId(getManagedBean().getScLoa().getCreatedBy()).getUserName()));
 						report.setIslampiranA3(true);
-						
+
 						recordCount++;
 					}
-					
+
 					oldLampiranA3List.add(report);
 				}
 			}
-			
+
 			if (recordCount > 0) {
 				getManagedBean().getScLoa().setScLoaReports(oldLampiranA3List);
 
@@ -10420,10 +10454,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLampiranA3Report(awardReqDTO);
 				List<ScLoaReport> scLoaReports = resDTO.getScLoa().getScLoaReports();
-				
+
 				ScLoa scLoa = getManagedBean().getScLoa();
 				scLoa.setScLoaReports(scLoaReports);
-				
+
 				getManagedBean().setScLoa(scLoa);
 			} else {
 				ScLoaReport lampiranA3 = getQtAwardSO()
@@ -10438,7 +10472,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				lampiranA3.setScLoa(getManagedBean().getScLoa());
 
 				IParameterSO parameterSO = null;
-				
+
 				try {
 					parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IParameterSO.class);
@@ -10446,9 +10480,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
 					reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
 					reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_SUPPLIER_UPLOAD_AND_DOWNLOAD);
-					
+
 					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-					
+
 					lampiranA3.setDefinationType(resDTO.getPmParameter());
 					lampiranA3.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
 				} finally {
@@ -10461,10 +10495,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				AwardSupplierResDTO resDTO = getQtAwardSO().saveLampiranA3Report(awardReqDTO);
 				List<ScLoaReport> scLoaReports = resDTO.getScLoa().getScLoaReports();
-				
+
 				ScLoa scLoa = getManagedBean().getScLoa();
 				scLoa.setScLoaReports(scLoaReports);
-				
+
 				getManagedBean().setScLoa(scLoa);
 			}
 		} else {
@@ -10472,16 +10506,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				for (ScLoaReport report : getManagedBean().getScLoa().getScLoaReports()) {
 					if (StringUtils.isNotBlank(report.getTitle()) && report.getTitle().contains(lampiranA3SubStr)) {
 						report.setDeleted(true);
-						
+
 						oldLampiranA3List.add(report);
-						
+
 						recordCount++;
 					}
 				}
 			}
 
 			int loaItemslampirian = 0;
-			
+
 			for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (loiLoaItem.isComplete()) {
 					loaItemslampirian++;
@@ -10491,12 +10525,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			if (recordCount > 0 && loaItemslampirian == 0) {
 				getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
-				
+
 				ScLoa scLoa = new ScLoa();
 				scLoa.setScLoaReports(oldLampiranA3List);
-				
+
 				awardReqDTO.setScLoa(scLoa);
-				
+
 				getQtAwardSO().deleteLampiranA3Report(awardReqDTO);
 			}
 		}
@@ -10517,21 +10551,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<Long> itemIds = new ArrayList<>();
 
 		populateAttachmentDetails(attachment);
-		
+
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
 		String dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
 		FacesScopes facesScopes = new FacesScopes();
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
+
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+
 		if (ReportConst.ENG_LANGUAGE_CODE.equals(pmUser.getPreferredLanguage())) {
-			dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;//29007
+			dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
 		}
+
 		if (!scLoa.getScLoiLoaItems().isEmpty()) {
 			scLoiLoaItemsList = new ArrayList<>();
+
 			for (ScLoiLoaItem scLoiLoaItem : scLoa.getScLoiLoaItems()) {
 				DateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATETIME_FORMAT);
 				String date = df.format(scLoiLoaItem.getChangedDate());
@@ -10539,7 +10578,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				if (this.getManagedBean().getScQt().isZonal()) {
 					List<ScLoiLoaItem> zonalItemList = new ArrayList<>();
-					
+
 					for (ScLoiLoaItem loacalloiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 						if (scLoiLoaItem.getLoiLoaItemId() == loacalloiLoaItem.getLoiLoaItemId()
 								|| scLoiLoaItem.getLoiLoaItemId().equals(loacalloiLoaItem.getLoiLoaItemId())
@@ -10550,12 +10589,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							zonalItemList.add(loacalloiLoaItem);
 						}
 					}
-					
+
 					if (zonalItemList.size() > 1) {
 						checkItemSorting(zonalItemList);
-						
+
 						ScLoiLoaItem latestChangedItem = zonalItemList.get(zonalItemList.size() - 1);
-						
+
 						if (latestChangedItem.getLoaSpecJustification() != null
 								&& StringUtils.isNotBlank(latestChangedItem.getLoaSpecJustification())
 								&& StringUtils.isNotEmpty(latestChangedItem.getLoaSpecJustification())) {
@@ -10566,37 +10605,26 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						}
 					} else {
 						scLoiLoaItem.setLatestChangedDate(scLoiLoaItem.getChangedDate());
-						
+
 						date = df.format(scLoiLoaItem.getLatestChangedDate());
 					}
 				}
-				
-				if (scLoiLoaItem.getScRequestItem() != null
-						&& scLoiLoaItem.getScRequestItem().getItemName() != null
-						&& StringUtils.isNotBlank(scLoiLoaItem
-								.getScRequestItem().getItemName())
-						&& StringUtils.isNotEmpty(scLoiLoaItem
-								.getScRequestItem().getItemName())) {
-					String itemName = VmUtil.getInstance()
-							.replaceAllSpecialCharactersToHTML(
-									scLoiLoaItem.getScRequestItem()
-											.getItemName());
-					scLoiLoaItem.setItemNameForVelocity(VmUtil.getInstance()
-							.addLineBreaks(itemName, 60));
+
+				if (scLoiLoaItem.getScRequestItem() != null && scLoiLoaItem.getScRequestItem().getItemName() != null
+						&& StringUtils.isNotBlank(scLoiLoaItem.getScRequestItem().getItemName())
+						&& StringUtils.isNotEmpty(scLoiLoaItem.getScRequestItem().getItemName())) {
+					String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+							scLoiLoaItem.getScRequestItem().getItemName());
+					scLoiLoaItem.setItemNameForVelocity(VmUtil.getInstance().addLineBreaks(itemName, 60));
 				}
 				if (scLoiLoaItem.getLoaSpecJustification() != null
-						&& StringUtils.isNotBlank(scLoiLoaItem
-								.getLoaSpecJustification())
-						&& StringUtils.isNotEmpty(scLoiLoaItem
-								.getLoaSpecJustification())) {
-					finalMsg.append(QTConstants.LAMPIRAN_A3_JUSTIFICATION
-							+ scLoiLoaItem.getLoaSpecJustification() + " "
-							+ date);
-					String finalMessage = VmUtil.getInstance()
-							.replaceAllSpecialCharactersToHTML(
-									finalMsg.toString());
-					scLoiLoaItem.setLoaSpecJustificationForVelocity(VmUtil
-							.getInstance().addLineBreaks(finalMessage, 60));
+						&& StringUtils.isNotBlank(scLoiLoaItem.getLoaSpecJustification())
+						&& StringUtils.isNotEmpty(scLoiLoaItem.getLoaSpecJustification())) {
+					finalMsg.append(QTConstants.LAMPIRAN_A3_JUSTIFICATION + scLoiLoaItem.getLoaSpecJustification()
+							+ " " + date);
+					String finalMessage = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(finalMsg.toString());
+					scLoiLoaItem.setLoaSpecJustificationForVelocity(VmUtil.getInstance()
+							.addLineBreaks(finalMessage, 60));
 				}
 
 				specReqDto.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa().getSmSupplier());
@@ -10606,26 +10634,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 				List<Long> replacedQuestionIds = new ArrayList<>();
+
 				if (this.getManagedBean().getScQt().isZonal()) {// 29007&31423-start
 					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();
 					boolean newOfferedSpecification = false;
-					
+
 					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
 								.getQuestionType())) {
 							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
-									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion().getSpecQuestionId());
+									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
+											.getSpecQuestionId());
 							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
 									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
-							if (specAnswer.getTplSpecQuestion() != null
-									&& isItemNotNull && isReplaceSpChar) {
-								String itemName = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClItem());
+
+							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {
+								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClItem());
 								specAnswer.getTplSpecQuestion().setClItem(
 										VmUtil.getInstance().addLineBreaks(itemName, 30));
-								replacedQuestionIds.add(specAnswer
-										.getTplSpecQuestion().getSpecQuestionId());
+								replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 							}
 
 							if (scLoiLoaItem.getTplSpecZoneDtl().getSpecZoneId()
@@ -10655,67 +10684,55 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
 									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {
 								newOfferedSpecification = true;
-								String newSupplierOffered = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getNewSupplierOffer());
-								specAnswer.setNewSupplierOffer(VmUtil
-										.getInstance().addLineBreaks(newSupplierOffered, 25));
+								String newSupplierOffered = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getNewSupplierOffer());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,
+										25));
 							} else if (specAnswer.getTplSpecQuestion().getClSpecDetail() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())) {
-								String spec = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion()
-										.getClSpecDetail());
+								String spec = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClSpecDetail());
 								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec, 25));
 							}
-							
+
 							if (specAnswer.getAnswerRemark() != null
 									&& StringUtils.isNotBlank(specAnswer.getAnswerRemark())
 									&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())) {
-								String ansRemark = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
-								specAnswer.setAnswerRemark(VmUtil.getInstance()
-										.addLineBreaks(ansRemark, 25));
+								String ansRemark = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getAnswerRemark());
+								specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark, 25));
 							}
 
 							zoneSpecAnswerList.add(specAnswer);
 						}
 					}
-					
+
 					if (!newOfferedSpecification) {
 						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);
 					}
-					
+
 					scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);// 29007&31423
 				} else {// 29007&31423_End
 					List<TplSpecAnswer> zoneSpecAnswerList = new ArrayList<>();// 29007&31423-Start
 					boolean newOfferedSpecification = false;
-					
-					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
-						if (TemplateSpecConst.QUESTION_TYPE_ITEM
-								.equalsIgnoreCase(specAnswer.getTplSpecQuestion().getQuestionType())) {
 
-							boolean isReplaceSpChar = replacedQuestionIds
-									.isEmpty()
-									|| !replacedQuestionIds.contains(specAnswer
-											.getTplSpecQuestion()
+					for (TplSpecAnswer specAnswer : templateSpecResDTO.getSpecAnswerList()) {
+						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specAnswer.getTplSpecQuestion()
+								.getQuestionType())) {
+
+							boolean isReplaceSpChar = replacedQuestionIds.isEmpty()
+									|| !replacedQuestionIds.contains(specAnswer.getTplSpecQuestion()
 											.getSpecQuestionId());
-							boolean isItemNotNull = specAnswer
-									.getTplSpecQuestion().getClItem() != null
-									&& StringUtils.isNotBlank(specAnswer
-											.getTplSpecQuestion().getClItem())
-									&& StringUtils.isNotEmpty(specAnswer
-											.getTplSpecQuestion().getClItem());
-							if (specAnswer.getTplSpecQuestion() != null
-									&& isItemNotNull && isReplaceSpChar) {
-								String itemName = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(
-												specAnswer.getTplSpecQuestion()
-														.getClItem());
+							boolean isItemNotNull = specAnswer.getTplSpecQuestion().getClItem() != null
+									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClItem())
+									&& StringUtils.isNotEmpty(specAnswer.getTplSpecQuestion().getClItem());
+
+							if (specAnswer.getTplSpecQuestion() != null && isItemNotNull && isReplaceSpChar) {
+								String itemName = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClItem());
 								specAnswer.getTplSpecQuestion().setClItem(
-										VmUtil.getInstance().addLineBreaks(
-												itemName, 30));
-								replacedQuestionIds.add(specAnswer
-										.getTplSpecQuestion()
-										.getSpecQuestionId());
+										VmUtil.getInstance().addLineBreaks(itemName, 30));
+								replacedQuestionIds.add(specAnswer.getTplSpecQuestion().getSpecQuestionId());
 							}
 
 							if (null != scLoiLoaItem.getTplSpecTierQty()) {
@@ -10734,36 +10751,35 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							if (!scLoiLoaItem.isComplete()) {
 								specAnswer.setNewSupplierOffer(null);
 							}
-							
+
 							if (specAnswer.getNewSupplierOffer() != null
 									&& StringUtils.isNotBlank(specAnswer.getNewSupplierOffer())
 									&& StringUtils.isNotEmpty(specAnswer.getNewSupplierOffer())) {
 								newOfferedSpecification = true;
-								
-								String newSupplierOffered = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getNewSupplierOffer());
-								specAnswer.setNewSupplierOffer(VmUtil.getInstance()
-										.addLineBreaks(newSupplierOffered, 25));
+
+								String newSupplierOffered = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getNewSupplierOffer());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(newSupplierOffered,
+										25));
 							} else if (specAnswer.getTplSpecQuestion().getClSpecDetail() != null
 									&& StringUtils.isNotBlank(specAnswer.getTplSpecQuestion().getClSpecDetail())) {
-								String spec = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getTplSpecQuestion().getClSpecDetail());
-								specAnswer.setNewSupplierOffer(VmUtil.getInstance()
-										.addLineBreaks(spec, 25));
+								String spec = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getTplSpecQuestion().getClSpecDetail());
+								specAnswer.setNewSupplierOffer(VmUtil.getInstance().addLineBreaks(spec, 25));
 							}
+
 							if (specAnswer.getAnswerRemark() != null
 									&& StringUtils.isNotBlank(specAnswer.getAnswerRemark())
 									&& StringUtils.isNotEmpty(specAnswer.getAnswerRemark())) {
-								String ansRemark = VmUtil.getInstance()
-										.replaceAllSpecialCharactersToHTML(specAnswer.getAnswerRemark());
-								specAnswer.setAnswerRemark(VmUtil.getInstance()
-										.addLineBreaks(ansRemark, 25));
+								String ansRemark = VmUtil.getInstance().replaceAllSpecialCharactersToHTML(
+										specAnswer.getAnswerRemark());
+								specAnswer.setAnswerRemark(VmUtil.getInstance().addLineBreaks(ansRemark, 25));
 							}
 
 							zoneSpecAnswerList.add(specAnswer);
 						}
 					}// 29007&31423-End
-					
+
 					if (!newOfferedSpecification) {
 						scLoiLoaItem.setLoaSpecJustificationForVelocity(null);
 					}
@@ -10771,19 +10787,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					scLoiLoaItem.setTplSpecAnswerList(zoneSpecAnswerList);// 29007&31423
 				}// 29007&31423_End
 
-				if (itemIds.isEmpty()
-						|| !itemIds.contains(scLoiLoaItem.getScRequestItem()
-								.getRequestNoteItemId())) {
+				if (itemIds.isEmpty() || !itemIds.contains(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())) {
 					scLoiLoaItemsList.add(scLoiLoaItem);
-					itemIds.add(scLoiLoaItem.getScRequestItem()
-							.getRequestNoteItemId());
+					itemIds.add(scLoiLoaItem.getScRequestItem().getRequestNoteItemId());
 				}
 			}
 		}
+
 		sortLoiLoaItemsBasedOnQuestionOrder(scLoiLoaItemsList);
 
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_SERVICE_SCOPE, dafaltValue);
-		context.put(QTConstants.LAMPIRAN_A3_TEXT_ITEMS_LIST, scLoiLoaItemsList); 
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_ITEMS_LIST, scLoiLoaItemsList);
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_IS_ZONAL, scLoa.getScLoiLoa().isZonal());
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_BEAN, this);
 
@@ -10791,68 +10805,65 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		try {
 			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-					SourcingConstants.LOA_LAMPIRAN_A3, context, fos);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOA_LAMPIRAN_A3, context, fos);
 		} catch (FileNotFoundException e) {
 			// Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
-					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN,
-					this.getManagedBean().getScQt().getQtNo(),
-					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY,
-					getUserIdSessionFromLoginId(), e);
+					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), e);
 			// Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 
 		} catch (Exception ex) {
 			// Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] START
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
-					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN,
-					this.getManagedBean().getScQt().getQtNo(),
-					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY,
-					getUserIdSessionFromLoginId(), ex);
+					SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN, this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY, getUserIdSessionFromLoginId(), ex);
 			// Sonarqube QT Vulnerability Minor Vinod #53 [15/8/2023] END
 		}
 	}
 	// #29007 -end-
 	
 	/* #29007 Start Vinod */
-	private void sortLoiLoaItemsBasedOnQuestionOrder(List<ScLoiLoaItem> scLoiLoaItemsList){
-		List<ScLoiLoaItem> productItemsList =  new ArrayList<>();
-		List<ScLoiLoaItem> serviceItemsList =  new ArrayList<>();
-		for (ScLoiLoaItem item : scLoiLoaItemsList) {
-			String itemType = getParameterDesc(item.getScRequestItem()
-					.getItemType());
+	private void sortLoiLoaItemsBasedOnQuestionOrder(List<ScLoiLoaItem> scLoiLoaItemsList) {
+		List<ScLoiLoaItem> productItemsList = new ArrayList<>();
+		List<ScLoiLoaItem> serviceItemsList = new ArrayList<>();
 
-			if (itemType
-					.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUK_STRING)
-					|| itemType
-							.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+		for (ScLoiLoaItem item : scLoiLoaItemsList) {
+			String itemType = getParameterDesc(item.getScRequestItem().getItemType());
+
+			if (itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUK_STRING)
+					|| itemType.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 				productItemsList.add(item);
 			} else {
 				serviceItemsList.add(item);
 			}
 		}
+
 		Collections.sort(productItemsList, new Comparator<ScLoiLoaItem>() {
 			@Override
 			public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-				return Long.compare(s1.getScRequestItem().getTplSpecQuestion().getQuestionOrder(), s2.getScRequestItem().getTplSpecQuestion().getQuestionOrder());
+				return Long.compare(s1.getScRequestItem().getTplSpecQuestion().getQuestionOrder(), s2
+						.getScRequestItem().getTplSpecQuestion().getQuestionOrder());
 			}
 		});
-		
+
 		Collections.sort(serviceItemsList, new Comparator<ScLoiLoaItem>() {
 			@Override
 			public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
-				return Long.compare(s1.getScRequestItem().getTplSpecQuestion().getQuestionOrder(), s2.getScRequestItem().getTplSpecQuestion().getQuestionOrder());
+				return Long.compare(s1.getScRequestItem().getTplSpecQuestion().getQuestionOrder(), s2
+						.getScRequestItem().getTplSpecQuestion().getQuestionOrder());
 			}
 		});
+
 		scLoiLoaItemsList.clear();
-		scLoiLoaItemsList.addAll(productItemsList);//Add all product list after sorting
-		scLoiLoaItemsList.addAll(serviceItemsList);//Add all service list after sorting
+		scLoiLoaItemsList.addAll(productItemsList);// Add all product list after sorting
+		scLoiLoaItemsList.addAll(serviceItemsList);// Add all service list after sorting
 	}
 	/* #29007 End Vinod */
 
 	/* #29007 Start Vinod */
 	/**
-	 * This method will be clled when user click on verify button and do the
+	 * This method will be called when user click on verify button and do the
 	 * validations for LampiranA3.
 	 * 
 	 * @param bpmAction
@@ -10878,6 +10889,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				specReqDto.setScQt(this.getManagedBean().getScQt());
 				specReqDto.setScLoiLoaItem(loiLoaItem);
 				specReqDto.setSpecSearchForApp(true);
+				
 				TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 
 				int newSupplierOffer = checkSupplierOffered(templateSpecResDTO);
@@ -10898,11 +10910,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								.getRequestNoteItemId(), loiLoaItem.getTplSpecZoneDtl().getSpecZoneId()))) {
 					itemZoneMap.put(loiLoaItem.getScRequestItem().getRequestNoteItemId(), loiLoaItem
 							.getTplSpecZoneDtl().getSpecZoneId());
+
 					Long zoneIdAdded = null != zoneloiLoaItem ? new Long(zoneloiLoaItem.getTplSpecZoneDtl()
 							.getSpecZoneId()) : null;
 					Long zoneIdNew = null != loiLoaItem ? new Long(loiLoaItem.getTplSpecZoneDtl().getSpecZoneId())
 							: null;
 					boolean addZoneName = null == zoneloiLoaItem || zoneIdAdded.compareTo(zoneIdNew) != 0;
+
 					if (addZoneName) {
 						zoneloiLoaItem = loiLoaItem;
 						itemsList.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE)
@@ -10910,6 +10924,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 								.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
 						zoneitemCount = 0;
 					}
+
 					zoneitemCount++;
 					itemsList.append(zoneitemCount).append(". ").append(loiLoaItem.getScRequestItem().getItemName())
 							.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
@@ -10917,7 +10932,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 		}
-		
+
 		if (itemCount > 0) {
 			itemsList.append(QTConstants.NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE);
 			throw new EpException(MessageConst.ERROR_776000, new String[] { itemsList.toString() });
@@ -10930,7 +10945,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 		}
-		
+
 		if (recordCount > 0
 				&& this.getManagedBean().getScLoa().getScLoiLoa().getDocType()
 						.equals(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
@@ -10978,16 +10993,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29007 -end-
 	
 	// #29007 -start-
-	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap,Long itemId,Long specZoneId){
+	private boolean checkItemAndZoneAdded(HashMap<Long, Long> itemZoneMap, Long itemId, Long specZoneId) {
 		for (Map.Entry<Long, Long> itemZone : itemZoneMap.entrySet()) {
 			Long eItemId = itemZone.getKey();
 			Long eZoneId = itemZone.getValue();
-			boolean alreadyAdded=(eItemId.equals(itemId) || eItemId==itemId)
-					 && (eZoneId==specZoneId || eZoneId.equals(specZoneId));
-			if(alreadyAdded){
+			boolean alreadyAdded = (eItemId.equals(itemId) || eItemId == itemId)
+					&& (eZoneId == specZoneId || eZoneId.equals(specZoneId));
+
+			if (alreadyAdded) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 	// #29007 -end-
@@ -11015,8 +11032,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	// #29007 -end-
 
 	//#32119 - start	
-	public boolean isCTMaintenanceScreen() {				
-		return QTConstants.PORTLET_NAME_CT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) || QTConstants.PORTLET_NAME_CT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());		
+	public boolean isCTMaintenanceScreen() {
+		return QTConstants.PORTLET_NAME_CT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_CT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#32119 - end
 
@@ -11118,8 +11136,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public String replaceAllSpecialCharactersAndNewline(String str) {
 		String updatedStr = str.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
 		updatedStr = updatedStr.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL, TemplateSpecConst.LESS_THEN_HTML_ENTITY);
-		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
-		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		updatedStr = updatedStr.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER_R,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
 		return updatedStr;
 	}
 	/*#29007 End Vinod*/
@@ -11151,9 +11171,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& StringUtils.isNotEmpty(supplierRemarks)) {
 			return this.replaceAllSpecialCharactersAndNewline(supplierRemarks);
 		}
+
 		if (ReportConst.ENG_LANGUAGE_CODE.equals(new FacesScopes().getUserLocale().getLanguage())) {
 			remarks = QTConstants.LAMPIRAN_A3_TEXT_NA;
 		}
+
 		return remarks;
 	}
 	// 29007-End
