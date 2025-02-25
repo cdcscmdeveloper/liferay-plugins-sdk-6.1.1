@@ -190,24 +190,31 @@
 					</p:panelGrid>
 				</p:column>
 				
-				<!-- 26284 Start -->
+				<ui:remove>#26284 - Start</ui:remove>
 				<p:column style="white-space:normal;text-align:center;">
 					<f:facet name="header" style="white-space:normal;">
 						<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}"/>
-						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.sc.tooltip.disciplinary.action']}"/>
 					</f:facet>	
-					<h:panelGroup rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}">
+					<h:panelGroup rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier ne null and requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}">
 						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" styleClass="command-link"
 							rendered="#{requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
 							action="#{requestNoteBackingBean.supplierDisciplinaryActionInfo(requestNoteDtl.scRequestSupplierItem.smSupplier)}" 
-							process="@this" partialSubmit="true" update=":form">
+							process="@this" partialSubmit="true" update=":form" style="width: 100%;">
 							<h:outputText value="#{lbl['lbl.sc.da.yes']}" style="color:red;"/>
 						</p:commandLink>
-						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>	
+						<h:outputText rendered="#{!requestNoteBackingBean.getDisciplinaryActionActive(requestNoteDtl.scRequestSupplierItem.smSupplier)}" value="#{lbl['lbl.sc.da.no']}"/>
+						<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+							rendered="#{requestNoteBackingBean.getDisciplinaryActionCancelOrBlacklist(requestNoteDtl.scRequestSupplierItem.smSupplier)}"
+							action="#{requestNoteBackingBean.supplierDisciplinaryActionStatus()}" 
+							process="@this" partialSubmit="true" update="@([id$=disciplinaryActionRequestNoteDlgId])">
+							<p:graphicImage id="daSupplierAlertGI"
+								value="/css/images/design/exclamation.png" />
+						</p:commandLink>
 					</h:panelGroup>	
 					<h:outputText rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId eq null}" value="#{lbl['lbl.sc.no.available']}"/>																			   
 				</p:column>
-				<!-- 26284 End -->
+				<ui:remove>#26284 - End</ui:remove>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"
 					style="width: 45px;white-space: normal;">
@@ -513,8 +520,9 @@
 		</p:panel>
 	</p:dialog>
 	
-	<!-- 26284 Start -->
+	<ui:remove>#26284 - Start</ui:remove>
+	<ac:scRequestNotePopupMessage voObject="#{requestNoteBackingBean.managedBean.popupMessage}"/>
 	<ac:disciplinaryActionHistory voList="#{requestNoteBackingBean.managedBean.disciplineVOs}" btnView="true"/>
-	<!-- 26284 End -->
+	<ui:remove>#26284 - End</ui:remove>
 				
 </ui:composition>
