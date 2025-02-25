@@ -2207,31 +2207,13 @@ public class ConsolidationReportBackingBean extends
 
 		if (resDTO.isSuccessful() && resDTO.getQualifiedSuppliersByEvalStage() != null) {
 			ISearchResultBean<ScQtEvaluationResultDtl> resultBean = resDTO.getQualifiedSuppliersByEvalStage();
-			List<ScQtEvaluationResultDtl> qualifiedSuppliers = resultBean
-					.getResultList();
-			Long zoneId = (selectedZoneId == null ? DEFAULT_ZONE
-					: selectedZoneId);
-			Long itemId = (selectedItemId == null ? DEFAULT_ITEM
-					: selectedItemId);
-			List<QtEvaluationResultDtlBean> cachedSuppliers = getCachedSuppliersFromMap(
-					zoneId, itemId);
+			List<ScQtEvaluationResultDtl> qualifiedSuppliers = resultBean.getResultList();
 
 			List<ScQtEvaluationResultDtl> disqualifiedSuppliers = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 				for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
- 					if (CollectionUtils.isNotEmpty(cachedSuppliers)) {
-						QtEvaluationResultDtlBean recommendationBean = getCachedBeanFromList(
-								cachedSuppliers,
-								qualSupplier.getEvaluationResultDtlId());
-						if (recommendationBean != null) {
-							qualSupplier
-									.setDeskOfficerRank(recommendationBean
-											.getDeskOfficerRank());
-							qualSupplier
-									.setDeskOfficerRemark(recommendationBean
-											.getDeskOfficerRemark());
-						}
-					}
+					qualSupplier.getDeskOfficerRank();	
+					qualSupplier.getDeskOfficerRemark();
 					disqualifiedSuppliers.add(qualSupplier);
 				}
 			}
