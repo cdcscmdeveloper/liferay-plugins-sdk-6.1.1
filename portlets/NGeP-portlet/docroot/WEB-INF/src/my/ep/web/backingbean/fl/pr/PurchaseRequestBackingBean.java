@@ -536,9 +536,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 			getManagedBean().setEspkb(true);
 		}
-		//29555 start
-		getPreparedByName();
-	    //29555 end
+
 	}
 
 	/**
@@ -4863,6 +4861,8 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
 		getManagedBean().setDeleteButtonHide(true);
+		
+		getPreparedByName(); //29555
 	}
 	
 	/**
