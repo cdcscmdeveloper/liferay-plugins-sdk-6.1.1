@@ -424,24 +424,24 @@
 						ADDED : disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0}
 					</ui:remove>
 					<ui:remove>#21692 - start</ui:remove>
-					<p:inputText value="#{disqualifiedSupp.deskOfficerRank}" 
+					<h:outputText value="#{disqualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
 								 disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or (disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or isDisqualified}"> 				
-					</p:inputText>				
+					</h:outputText>			
 				</p:column>
 				
 				<p:column style="text-align:left;">
-					<p:inputText rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
+					<h:outputText rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodRejected and disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod ne SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 value="#{disqualifiedSupp.deskOfficerRemark}" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
-								 required="false" size="20" autocomplete="false" disabled="#{isDisqualified}">
-					</p:inputText>
-					<p:inputText rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}" 
+								 required="false" size="20" autocomplete="false">
+					</h:outputText>
+					<h:outputText rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified}" 
 								 value="#{lbl['lbl.sc.qt.proposal.evaluation.remark']}"  
 								 label="#{lbl['lbl.sc.consolidation.report.do.remarks']}" 
 								 size="20" autocomplete="false" disabled="true">
-					</p:inputText>
+					</h:outputText>
 					<ui:remove>#21692 - end</ui:remove>				
 				</p:column>
 				
