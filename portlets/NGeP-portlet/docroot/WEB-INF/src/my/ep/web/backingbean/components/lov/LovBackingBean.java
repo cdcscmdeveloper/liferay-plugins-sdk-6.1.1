@@ -839,10 +839,10 @@ public class LovBackingBean implements Serializable {
 					return false;
 				}
 			} else if ("multiple".equalsIgnoreCase(getLovBean().getSelectionMode()) && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
-				if (getSelectedEntity() != null) {
+				if (getSelectedEntities() != null && !getSelectedEntities().isEmpty()) {
 					return false;
 				}
-			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
+			} else if(getSelectedEntities()!=null && !getSelectedEntities().isEmpty() && !itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())){
 				// #29832 & #9442 added if else to make sure the selected cb save after tick. 
 				// Default save after click next page onPageChange listener
 				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
