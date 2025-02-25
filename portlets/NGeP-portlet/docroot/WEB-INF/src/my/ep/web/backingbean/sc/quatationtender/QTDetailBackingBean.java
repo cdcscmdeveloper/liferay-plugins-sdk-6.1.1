@@ -4403,7 +4403,7 @@ public class QTDetailBackingBean extends
 					// 29732 fix duplicate issues while deleting the category
 					// and add the same id -start-
 					if (null != removeCategoryCodes) {
-						List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+						List<ScQtCategory> categoryResultsnew;
 						categoryResultsnew = this.getManagedBean().getQtCategoryList();
 						if (null == categoryResultsnew || CollectionUtils.isEmpty(categoryResultsnew)) {
 							this.getManagedBean().setQtCategoryList(this.getManagedBean().getTobeRemoveCategoryCodes());
@@ -4531,7 +4531,7 @@ public class QTDetailBackingBean extends
 				// 29732 fix duplicate issues while deleting the category and add the same id -start-
 				if(null != removeCategoryCodes){
 					//#29732-Start fix duplicate & error merge persistance if user delete and add the same category(ID)
-					List<ScQtCategory> categoryResults = new ArrayList<>();
+					List<ScQtCategory> categoryResults;
 					categoryResults = this.getManagedBean().getQtCategoryList();
 					this.getManagedBean().setQtCategoryList(categoryResults);
 					//29732- End
