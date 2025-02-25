@@ -62,7 +62,8 @@
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
 					value="#{cc.attrs.facility.smAddress.address1}" size="35"
 					disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
-				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" />
+				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" display="icon"/>
+				<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -134,7 +135,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.stateItems}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - add more id to process in ajax -->
+					<p:ajax event="change" process="@this @([id$=divisionId])"
 						listener="#{cc.attrs.backingBean.onChangeState(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="divisionLabelPanelId,divisionDropdownPanelId,districtId,cityId" />
 				</p:selectOneMenu> 
@@ -165,7 +167,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.divisionItems}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - add more id to process in ajax -->
+					<p:ajax event="change" process="@this @([id$=districtId])"
 					listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
 	                 update="districtId,cityId"/>
 				</p:selectOneMenu>
@@ -195,7 +198,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.districtItems}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - add more id to process in ajax -->
+					<p:ajax event="change" process="@this @([id$=cityId])"
 						listener="#{cc.attrs.backingBean.onChangeDistrict(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
 				</p:selectOneMenu> 
@@ -222,6 +226,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{cc.attrs.cityItems}" />
+					<!-- #36718 - add more id to process in ajax -->
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeCity(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
