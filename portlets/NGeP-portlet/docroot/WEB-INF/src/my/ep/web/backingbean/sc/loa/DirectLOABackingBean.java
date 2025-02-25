@@ -453,6 +453,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
+			
+			//Bug #37791@Syazani -- 04/02/2025 -- Start
+			if (scLoa.getScLoaApproval() != null && !scLoa.isApprovalReq()) {
+				scLoa.setScLoaApproval(null);
+			}
+			//Bug #37791@Syazani -- 04/02/2025 -- End
+			
 			// To avoid insert workflow status when direct submit without save.
 			if (scLoa.isBrandNew()) {
 				List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
