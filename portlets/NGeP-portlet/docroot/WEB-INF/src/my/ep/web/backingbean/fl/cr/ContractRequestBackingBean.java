@@ -520,6 +520,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		}
 		getEspkbCommitmentNo();
 		
+		getPreparedByName(); // 29555
 	}
 	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
@@ -1733,6 +1734,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				//#14650 - End
 			}
 			//35024-end
+			getPreparedByName(); // 29555
 		}
 		 
 		checkDisciplinaryAction(); //26279
@@ -7053,8 +7055,6 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(null);
 			getManagedBean().setFeeVoteFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
 		}
-		
-		getPreparedByName(); //29555
 	
 	}
 	
