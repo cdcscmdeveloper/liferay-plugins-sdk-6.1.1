@@ -3417,6 +3417,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//29728 - end
 
+	// 29555-Start
 	public String getPreparedBy() {
 		return preparedBy;
 	}
@@ -3424,5 +3425,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
+	// 29555-End
 
 }

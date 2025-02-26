@@ -73,7 +73,7 @@
 								<h:commandLink
 									value="#{viewSmApplBackingBean.getShortFileName(docFile.fileName)}">
 									<p:fileDownload
-										value="#{viewSmApplBackingBean.commonDownload(docFile.filePath,docFile.fileName)}" />
+										value="#{supplierDataMaintenanceBackingBean.downloadSelectedSuppDoc(docFile.fileName,docFile.filePath)}" />
 								</h:commandLink>
 								<br />
 							</ui:repeat>
