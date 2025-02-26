@@ -1188,7 +1188,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			//#21692 05/02/2024 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
-			if (!enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD)) {//#21692 note-#418 issue 2
+			if (this.getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) == null) {//#21692 note-#418 issue 2/note #469
 				//Reopen #452 remove null checking
 				selectedScQt.setResponsePeriod(result);
 			}
