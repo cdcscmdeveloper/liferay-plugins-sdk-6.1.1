@@ -8,8 +8,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.bean.search.ISearchBean; //#29416
-import my.ep.biz.bean.search.SearchBean; //#29416
 import my.ep.biz.service.rpt.IRPTRequestSO; 	//#32675 - shaqimi
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -24,7 +22,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;//#32675 - shaqimi
-import my.ep.web.backingbean.components.lov.LovBackingBean; //#29416
 import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ContractManagementReportBackingBean;
 import my.ep.web.backingbean.report.ct.cc.ListOfCircularRptBackingBean;
@@ -376,7 +373,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 	@Override
 	public void resetSearch() {
 		log.info("resetSearch: ctReportBB :::::::::::::::::::::::::::::::::::::::::: ");
-		LovBackingBean lovBean = new LovBackingBean();//#29416
 		//#29416 Nordin start
 		if (!getManagedBean().isDisableMinistryField()) 
 		{
@@ -410,8 +406,6 @@ public class CtReportBackingBean extends CtReportBaseBackingBean<CtReportManaged
 		getManagedBean().setFromDate(DateUtils.getFirstDateOfTheYear());
 		getManagedBean().setToDate(DateUtils.getCurrentDateWithoutTime());
 		// Start fix- #29416
-		lovBean.setPersistedEntities(null);
-		lovBean.setSelectedEntities(null);
 		if (getManagedBean().isLovItemReportNameTriggered()) {
 			getManagedBean().setLovItemReportNameTriggered(false);
 			RequestContext.getCurrentInstance().execute("resetAllData();");

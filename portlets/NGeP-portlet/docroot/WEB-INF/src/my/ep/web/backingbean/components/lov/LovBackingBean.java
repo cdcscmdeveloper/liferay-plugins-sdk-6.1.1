@@ -97,7 +97,7 @@ public class LovBackingBean implements Serializable {
 	private List<BaseEntity> selectedEntities;
 	//20200909@akmal - Enhancement28951 - Start
 	private Map<Long,BaseEntity> persistedEntities = new HashMap<Long,BaseEntity>();
-	private List<BaseEntity> backupSelectedEntities; //#29416
+	private List<BaseEntity> backupSelectedEntities = new ArrayList<>(); //#29416
 	//20200909@akmal - Enhancement28951 - End
 //	private BaseEntity[] selectedEntities;
 	
@@ -232,6 +232,11 @@ public class LovBackingBean implements Serializable {
 				if (lovBean.isResetFlag()) {
 					searchBean.setResetAction(true);
 				}
+				if(backupSelectedEntities != null && !backupSelectedEntities.isEmpty()){
+					//lovBean.setUnSelectAndCancel(false);
+					populatedBackupSelectedItems();
+				}
+				
 			}
 			// End - #29416
 			reqDTO.setSearchBean(searchBean);
@@ -490,15 +495,14 @@ public class LovBackingBean implements Serializable {
 	// Start - #29416
 	public void resetAction() {
 		if (getLovBean().getItemUsageMonitoringReport()) {
-			log.info("resetAction() ::::::::::::::::::: getLovBean().getItemUsageMonitoringReport() ::: "
-					+ getLovBean().getItemUsageMonitoringReport());
 			this.getSearchDataModelMultiSelection().resetData();
+			this.setLovSearchBean(new SearchBean());
 		} else {
-			log.info("resetAction()  getLovBean().getItemUsageMonitoringReport() = false ");
 			// getLovBean().setConditionField("");
 			// lovSearchBean.getDataFilterBeans().clear();
 			// this.setResultList(new ArrayList());
 			this.getSearchDataModel().resetData();
+			this.getSearchDataModelMultiSelection().resetData();
 			this.setLovSearchBean(new SearchBean());
 			// this.setLovBean(new LovBean());
 			// 20200909@akmal - Enhancement28951 - Start
@@ -519,27 +523,26 @@ public class LovBackingBean implements Serializable {
 	 * Reset all.
 	 */
 	public void resetAll() {
-		if (getLovBean() != null) {
-			if (getLovBean().getItemUsageMonitoringReport() && (itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId()))
-					&& (ctReportBB.getManagedBean().isLovItemReportNameTriggered() || ccContractItemMonitoringRptBB.getManagedBean().isLovItemReportNameTriggered())) {
-				log.info("inside resetAll() getLovBean().getItemUsageMonitoringReport() ");
-				lovBean.setResetFlag(true);
-				this.getSearchDataModelMultiSelection().resetData();
+		lovBean.setResetFlag(true); //#29416
+		this.getSearchDataModel().resetData();
+		this.getSearchDataModelMultiSelection().resetData(); //#29416
+		this.setLovSearchBean(new SearchBean());
+		this.setLovBean(new LovBean());
 
-			} else {
-				log.info("else resetAll() getLovBean().getItemUsageMonitoringReport() "
-						+ getLovBean().getItemUsageMonitoringReport());
-				lovBean.setResetFlag(true);
-				this.getSearchDataModel().resetData();
-				this.getSearchDataModelMultiSelection().resetData();
-				this.setLovSearchBean(new SearchBean());
-				this.setLovBean(new LovBean());
-
-				// 9442 - start
-				persistedEntities.clear();
-				// 9442 - end
-			}
+		//9442 - start
+		persistedEntities.clear();
+		//9442 - end
+		
+		// Start - #29416
+//		log.info(" backupSelectedEntities "+backupSelectedEntities.size());
+//		log.info(" selectedEntities "+selectedEntities.size());
+		if (!backupSelectedEntities.isEmpty()) {
+			backupSelectedEntities.clear();		
 		}
+		if(selectedEntities != null && !selectedEntities.isEmpty()){
+			selectedEntities.clear();
+		}
+		// End - #29416
 	}	
 	// End - #29416
 	
@@ -768,7 +771,7 @@ public class LovBackingBean implements Serializable {
 			debugLogger("this.getSelectedEntities().size(): " + this.getSelectedEntities().size());
 			debugLogger("this.getSelectedEntities(): " + this.getSelectedEntities());
 			// Start - #29416
-			if (this.getSelectedEntities().size() <= 0) {
+			if (this.getSelectedEntities().isEmpty() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
 				ctReportBB.resetSearch();
 				ccContractItemMonitoringRptBB.resetSearch();
 			}
@@ -835,11 +838,11 @@ public class LovBackingBean implements Serializable {
 				if (getSelectedEntity() != null) {
 					return false;
 				}
-			} else if ("multiple".equalsIgnoreCase(getLovBean().getSelectionMode())) {
-				if (getSelectedEntity() != null) {
+			} else if ("multiple".equalsIgnoreCase(getLovBean().getSelectionMode()) && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {
+				if (getSelectedEntities() != null && !getSelectedEntities().isEmpty()) {
 					return false;
 				}
-			} else if(getSelectedEntities()!=null && getSelectedEntities().size()>0){
+			} else if(getSelectedEntities()!=null && !getSelectedEntities().isEmpty() && !itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())){
 				// #29832 & #9442 added if else to make sure the selected cb save after tick. 
 				// Default save after click next page onPageChange listener
 				if(getLovBean().getLovId().equalsIgnoreCase("PM_BUSINESS_NATURE")){
@@ -932,9 +935,9 @@ public class LovBackingBean implements Serializable {
 	}
 	//Start - #29416
 	public void populateSelectedItems(){
-		if (lovBean.isUnSelectAndCancel()) {
+		if (lovBean.isUnSelectAndCancel() && itemUsageMonitoringBeanId.equalsIgnoreCase(getLovBean().getLovId())) {		
 			selectedEntities = new ArrayList<>(backupSelectedEntities);
-		} else {
+		}else{
 			selectedEntities = new ArrayList<BaseEntity>(persistedEntities.values());
 		}
 	}
@@ -942,7 +945,12 @@ public class LovBackingBean implements Serializable {
 	//20200909@akmal - Enhancement28951 - End
 	//Start - #29416
 	public void populatedBackupSelectedItems() {
-		if (selectedEntities != null && backupSelectedEntities != null) {
+		if (selectedEntities != null && backupSelectedEntities != null && lovBean.isUnSelectAndCancel()) {
+			selectedEntities = new ArrayList<>(backupSelectedEntities);
+		}else{
+			// Ensure restoreSelectedEntities only contains updated values from persistedEntities
+			backupSelectedEntities.clear();
+			backupSelectedEntities.addAll(persistedEntities.values());
 			selectedEntities = new ArrayList<>(backupSelectedEntities);
 		}
 	}
@@ -1087,4 +1095,5 @@ public class LovBackingBean implements Serializable {
 		this.backupSelectedEntities = backupSelectedEntities;
 	}
 	// End - #29416
+
 }

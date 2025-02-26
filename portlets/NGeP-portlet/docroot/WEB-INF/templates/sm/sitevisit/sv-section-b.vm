@@ -100,6 +100,12 @@
 				<td valign="top">$!bank.smSupplierBank.signatureInstruction</td>
 			</tr>
 			
+			<tr>
+				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.verifyLbl')</td>
+				<td>#if($bank.valid) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes') 
+						#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no') #end</td>
+			</tr>
+			
 			##14055 start - change placement of the Remarks
 			<tr>
 				<td class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.remark'):</td>
