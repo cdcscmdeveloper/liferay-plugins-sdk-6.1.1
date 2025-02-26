@@ -104,13 +104,14 @@
 					<h:outputText value="#{lbl['lbl.sm.cancellation.of.category.code.by.disciplinary.action']}"/>
 				</p:outputLabel>
 			</p:column>
-			<p:column style="white-space:normal;vertical-align: top;"
+			<p:column style="white-space:normal;vertical-align: top;width: 500px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<p:inputTextarea id="otherDesc" maxlength="5000"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-					value="#{catBean.otherDesc}" rows="5" cols="20"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" ><!-- #36289 -->
+					value="#{catBean.otherDesc}" rows="5" cols="80"
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" 
+					autoResize="false" ><!-- #36289, #37605 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
@@ -127,7 +128,7 @@
 				<p:message for="otherDesc" showDetail="false" showSummary="true"
 					display="icon" />
 			</p:column>
-			<p:column style="white-space:normal;vertical-align: top;"
+			<p:column style="white-space:normal;vertical-align: top;width: 100px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
@@ -135,7 +136,7 @@
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{catBean.specialCategory}" />
 			</p:column>
-			<p:column style="white-space:normal;vertical-align: top;"
+			<p:column style="white-space:normal;vertical-align: top;width: 100px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}"
 				rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
