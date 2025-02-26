@@ -202,6 +202,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private boolean assignCodeFlg = false;
 	
+	//#31503
+	private String itemCodeDesc;
+	private Object [] objSelected;
+	
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -1514,4 +1518,20 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+
+	public String getItemCodeDesc() {
+		return itemCodeDesc;
+	}
+
+	public void setItemCodeDesc(String itemCodeDesc) {
+		this.itemCodeDesc = itemCodeDesc;
+	}
+
+	public Object [] getObjSelected() {
+		return objSelected;
+	}
+
+	public void setObjSelected(Object [] objSelected) {
+		this.objSelected = objSelected;
+	}
 }

@@ -115,7 +115,7 @@
 				<c:if test="#{isContentTypeQuestion and editable and isScoringReq}">
 					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
 				</c:if>
-				
+			
 			
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
@@ -362,7 +362,6 @@
 			</c:if>
 			
 			<c:if test="#{isContentTypeQuestionAndAnswer}">
-				
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsAndAnswers" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"
@@ -409,8 +408,12 @@
 				<c:if test="#{isZonal}">
 					<ui:include src="zoneQtyPopup.xhtml" />
 				</c:if>
-				
-				<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
+
+			<!-- #31503 Start -->
+			<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+			<!-- #31503 End -->
+
+			<p:dialog id="zoneTierPricePopup" header="#{lbl['lbl.sc.offered.price']}" widgetVar="#{zoneTierPricePopup}" modal="true" width="450" height="290" closable="false">
 			
 					<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 						<div style="height:250px;">
