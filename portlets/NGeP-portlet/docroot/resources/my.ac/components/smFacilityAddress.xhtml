@@ -47,8 +47,6 @@
 			</p:tooltip>
 		</td>
 	</tr>
-	
-	
 	<tr>
 		<td>
 			<p:outputPanel id="addr1LabelId">
@@ -62,7 +60,8 @@
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
 					value="#{cc.attrs.facility.smAddress.address1}" size="35"
 					disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
-				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" />
+				<p:message id="addr1IdMsg" for="addr1Id" showSummary="true" showDetail="false" display="icon"/>
+				<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 			</p:outputPanel>
 		</td>
 	</tr>
@@ -95,8 +94,9 @@
 		</td>
 		<td>
 			<p:outputPanel id="countryInputId">
+				<!-- #34159 - START - change required condition, update division panel -->
 				<p:selectOneMenu id="countryId"
-					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+					required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.country']}"
 					value="#{cc.attrs.facility.smAddress.countryId}"
 					style="width: 207px;margin-bottom: 5px;background-color:white;"
@@ -108,6 +108,7 @@
 						listener="#{cc.attrs.backingBean.onChangeCountry(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="stateId,divisionId,districtId,cityId,postCodeInputId" />
 				</p:selectOneMenu> 
+				<!-- #34159 - END -->
 				<p:message id="countryIdMsg" for="countryId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
@@ -122,8 +123,9 @@
 		</td>
 		<td>
 			<p:outputPanel id="stateInputId">
+				<!-- #34159 - START - change required condition -->
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+					required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.state']}"
 					value="#{cc.attrs.facility.smAddress.stateId}"
 					id="stateId"
@@ -131,11 +133,12 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.stateItems}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - add more id to process in ajax -->
+					<p:ajax event="change" process="@this @([id$=divisionId])"
 						listener="#{cc.attrs.backingBean.onChangeState(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="divisionLabelPanelId,divisionDropdownPanelId,districtId,cityId" />
-	
 				</p:selectOneMenu> 
+				<!-- #34159 - END -->
 				<p:message id="stateIdMsg" for="stateId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
@@ -153,18 +156,18 @@
 		<td>
 				<p:outputPanel id="divisionDropdownPanelId">
 				<ui:fragment rendered="#{cc.attrs.facility.smAddress.pmState.adoptDivision}">
-				<!-- #34159 - START -->
+				<!-- #34159 - START - change required condition -->
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					id="divisionId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+					id="divisionId" required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.division']}"
 					value="#{cc.attrs.facility.smAddress.divisionId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems 
-						value="#{cc.attrs.divisionItems}" />
-					<p:ajax event="change" process="@this"
-					listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
-	                 update="districtId,cityId"/>
+					<f:selectItems value="#{cc.attrs.divisionItems}" />
+					<!-- #36718 - add more id to process in ajax -->
+					<p:ajax event="change" process="@this @([id$=districtId])"
+						listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
+	                 	update="districtId,cityId"/>
 				</p:selectOneMenu>
 				<p:message id="divisionIdMsg" for="divisionId" showSummary="true" showDetail="false" display="icon" />
 				<!-- #34159 - END -->
@@ -183,18 +186,20 @@
 		</td>
 		<td>
 			<p:outputPanel id="districtInputId">
+				<!-- #34159 - START - change required condition -->
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					id="districtId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+					id="districtId" required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.district']}"
 					value="#{cc.attrs.facility.smAddress.districtId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems 
-						value="#{cc.attrs.districtItems}" />
-					<p:ajax event="change" process="@this"
+					<f:selectItems value="#{cc.attrs.districtItems}" />
+					<!-- #36718 - add more id to process in ajax -->
+					<p:ajax event="change" process="@this @([id$=cityId])"
 						listener="#{cc.attrs.backingBean.onChangeDistrict(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
 				</p:selectOneMenu> 
+				<!-- #34159 - END -->
 				<p:message id="districtIdMsg" for="districtId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>
@@ -208,18 +213,20 @@
 		</td>
 		<td>
 			<p:outputPanel id="cityInputId">
+				<!-- #34159 - START - change required condition -->
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					id="cityId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+					id="cityId" required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.towncity']}"
 					value="#{cc.attrs.facility.smAddress.cityId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems
-						value="#{cc.attrs.cityItems}" />
+					<f:selectItems value="#{cc.attrs.cityItems}" />
+					<!-- #36718 - add more id to process in ajax -->
 					<p:ajax event="change" process="@this"
 						listener="#{cc.attrs.backingBean.onChangeCity(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
 						update="cityId" />
 				</p:selectOneMenu> 
+				<!-- #34159 - END -->
 				<p:message id="cityIdMsg" for="cityId" showSummary="true" showDetail="false" display="icon" />
 			</p:outputPanel>
 		</td>

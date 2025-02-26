@@ -15,22 +15,20 @@
 		<ui:repeat var="dockyardCatVar" value="#{viewSmApplBackingBean.managedBean.dockYardFacilitiesVOList}" varStatus="dockyardCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 - Start -->
-					<td style="float: left;">
+					<td>
 					    <p:outputLabel value="#{dockyardCatVarStatus.index + 1}. #{dockyardCatVar.fullCatcode} 
-						(#{dockyardCatVar.pmCategoryL2.pmCategoryL1.categoryName}/#{dockyardCatVar.pmCategoryL2.categoryName}/#{dockyardCatVar.categoryName})" 
-						style="text-align:left;"/>
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(dockyardCatVar, false, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 					</td>
 				</tr>
-					<ui:repeat var="categoryVar" value="#{viewSmApplBackingBean.managedBean.suppProfileOrHistoryCategoryList}" >
+				<!-- 29380 - Site Visit Grouping Enhancement -28775 - start -->
 					<tr>
 						<td style="white-space: nowrap; float: left;">
-							<p:outputLabel style="text-indent: 10px;" value="#{lbl['lbl.sm.catCodes.othDesc']}: #{categoryVar.otherDesc}" 
-							rendered="#{viewSmApplBackingBean.checkOtherDescDockyard(dockyardCatVar,categoryVar)}" />
+						<p:outputLabel value="#{viewSmApplBackingBean.getCategoryCodeOtherDesc(dockyardCatVar)}" 
+							style="text-indent: 10px;"/>
 						</td>
 					</tr>
-					</ui:repeat>
-				<!-- 29380  - Site Visit Grouping Enhancement -28775 -End -->
+				<!-- 29380 - Site Visit Grouping Enhancement -28775 - end -->
 			</table>
 			<br />
 			

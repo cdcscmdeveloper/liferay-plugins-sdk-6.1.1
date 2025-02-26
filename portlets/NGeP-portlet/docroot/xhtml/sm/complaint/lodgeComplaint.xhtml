@@ -33,12 +33,23 @@
 		</div>
 		
 		<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])" id="btnSubmitCompl" 
-			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			disabled="#{!complaintBackingBean.managedBean.complaintTerm}" action="#{complaintBackingBean.lodgeComplaint}">
+		<!-- #34400 - start -->
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmitCompl" 
+			onclick="blockWidget.show()"
+			oncomplete="blockWidget.hide();if (!args.validationFailed) confirmDlg.show();"
+			disabled="#{!complaintBackingBean.managedBean.complaintTerm}" >
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
 		</div>
+		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+			bean="#{complaintBackingBean}"
+			okAction="lodgeComplaint"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.complaint']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 
 		<br />
 		<hr />

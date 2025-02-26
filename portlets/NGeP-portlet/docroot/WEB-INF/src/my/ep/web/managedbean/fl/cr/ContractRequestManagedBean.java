@@ -89,9 +89,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
   	private boolean isBranchNeedToBeChanged;
   	private Long branchCode;
   	//29728 - end
-	public ContractRequestManagedBean(){
-
-	}
 	
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
 	private FlShippingInstr shippingInstr;
@@ -316,7 +313,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<String> availableNoList;
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -329,9 +326,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static String catalogueFlag;
     //13984-end
     
-  //29555 start
-    private String preparedBy;
-    //29555 end
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
     
  // 28855 - Start
  	private boolean dpFlag;
@@ -361,8 +358,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
   //11076 - end
     private boolean bondIncomplete = false;//35024
     
-    private String backToNtf; //35357
-    
+    public ContractRequestManagedBean(){
+
+	}
+        
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
 		/** The Constant serialVersionUID. */
@@ -3140,12 +3139,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -3310,11 +3309,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//29728 - end
 	
 	//29555 start
-	public String getpreparedBy() {
+	public String getPreparedBy() {
 		return preparedBy;
 	}
 
-	public void setpreparedBy(String preparedBy) {
+	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
 	//29555 end
@@ -3412,13 +3411,5 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		}
 		
 		//35024-End		
-		//35357-Start
-		public String getBackToNtf() {
-			return backToNtf;
-		}
-
-		public void setBackToNtf(String backToNtf) {
-			this.backToNtf = backToNtf;
-		}
-		//35357-Start
+		
 }

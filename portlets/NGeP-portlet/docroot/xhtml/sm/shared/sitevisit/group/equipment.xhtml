@@ -8,9 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.equipment.maintnce.ovrhl']}">
-		<p:dataTable value="#{template.equipmentMain}" var="equipMaint"
+		<p:dataTable value="#{template.equipmentMain}" var="equipMaint" id="maintTbl#{catCode}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column>
+			<p:column style="width:65%;">
 				<f:facet name="header">
 					#{lbl['lbl.sm.machine.equiType']}
 				</f:facet>
@@ -18,20 +18,21 @@
 				<h:outputText value="#{equipMaint.pmMachine.machineDesc}" />
 			</p:column>
 			
-			<p:column>
+			<p:column style="width:10%;">
 				<f:facet name="header">
 					#{lbl['lbl.sm.availableLbl']}
 				</f:facet>
 					
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}" disabled="#{viewFlag}">
-					<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" update="@form" />
+					<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" 
+						update="maintTbl#{catCode}" />
 				</p:selectBooleanCheckbox>
 				</div>
 					
 			</p:column>
 			
-			<p:column>
+			<p:column style="width:25%;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.equipment.qtty.set']}
@@ -40,35 +41,37 @@
 					converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 					validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
 					disabled="#{viewFlag || !equipMaint.equipmentAvailable}" 
-					required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" >
-					<f:validateLongRange minimum="1" />
+					required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate'] 
+						and empty param['disabledValidation']}" >
+						<f:validateLongRange minimum="1" />
 				</p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.equipment.pnl.beat.spray.paint']}">
-		<p:dataTable value="#{template.equipmentBeating}" var="equipBinding"
+		<p:dataTable value="#{template.equipmentBeating}" var="equipBinding" id="bindTbl#{catCode}"
 		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-			<p:column>
+			<p:column style="width:65%;">
 				<f:facet name="header">
 					#{lbl['lbl.sm.machine.equiType']}
 				</f:facet>
 				<h:outputText value="#{equipBinding.pmMachine.machineDesc}" />
 			</p:column>
 			
-			<p:column>
+			<p:column style="width:10%;">
 				<f:facet name="header">
 					#{lbl['lbl.sm.availableLbl']}
 				</f:facet>
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}" disabled="#{viewFlag}">
-					<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}" update="@form" />
+					<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}" 
+						update="bindTbl#{catCode}" />
 				</p:selectBooleanCheckbox>
 				</div>
 			</p:column>
 			
-			<p:column>
+			<p:column style="width:25%;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.equipment.qtty.set']}
@@ -77,7 +80,8 @@
 					converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 					validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
 					disabled="#{viewFlag || !equipBinding.equipmentAvailable}" 
-					required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}">
+					required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate'] 
+						and empty param['disabledValidation']}">
 						<f:validateLongRange minimum="1" />
 				</p:inputText>
 			</p:column>

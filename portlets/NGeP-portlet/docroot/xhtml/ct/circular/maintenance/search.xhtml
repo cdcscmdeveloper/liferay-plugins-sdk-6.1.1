@@ -16,7 +16,7 @@
 			<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth25, columnWidth30, columnWidth25,columnWidth20">
 				<h:outputLabel value="#{lbl['lbl.ct.circular.type']}" styleClass="required" />
 				<p:selectOneMenu value="#{circularBackingBean.managedBean.searchCircularDocType}" style="width:380px;" >
-					<p:ajax event="change" process="@this" update="searchPanel" />
+					<p:ajax event="change" process="@this" update="searchPanel, procModeForm, procModeFormMenu" listener="#{circularBackingBean.getCircularTypeOnChange()}"/> <!-- #30866 -->
 					<f:selectItems value="#{circularBackingBean.getCircularDocTypeValues()}" />
 				</p:selectOneMenu>			
 				<h:outputLabel value="#{lbl['lbl.ct.circular.maintenance.name']}" />
@@ -48,6 +48,17 @@
 		   	   			style="width:200px;">
 					<f:selectItems value="#{circularBackingBean.getSearchCircularStatusDropdown()}" />
 		   		</p:selectOneMenu>
+		   		<!-- Start #30866 -->
+				<h:outputLabel id ="procModeForm" value="#{lbl['lbl.ct.audit.circular.procurement.method']}" styleClass="required" rendered="#{circularBackingBean.isPqCircularCheck()}" />
+		   		<p:selectOneMenu id ="procModeFormMenu"
+								value="#{circularBackingBean.managedBean.procurementMode}"
+								style="margin-bottom:5px;width:246px;"
+								rendered="#{circularBackingBean.isPqCircularCheck()}">
+								<f:selectItems value="#{circularBackingBean.getProcurementModeDropdownValues()}" />
+								<p:ajax event="change" 
+									process="@this" partialSubmit="true" listener="#{circularBackingBean.procurementModeChanged()}"/>
+				</p:selectOneMenu>
+				<!-- End #30866 -->
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
 				<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}" action="#{circularBackingBean.searchCircular}"
@@ -56,6 +67,8 @@
 			</div>		
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
+		<h:outputText rendered="#{circularBackingBean.isAuditCheck()}"
+				styleClass="instruction" value="#{lbl['lbl.ct.instruction.audit.contractsearch']}" escape="false" style="color: blue"/><br /><br />	<!-- #30866 -->
 			<p:dataTable id="circularVerDt" value="#{circularBackingBean.managedBean.circularListingPagingDataModel}"
 				var="data" lazy="true" rows="10" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
@@ -87,9 +100,11 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:10%;white-space:normal;">
 					<p:menuButton id="menuButtonId" value="#{lbl['lbl.btn.option']}">
-						<p:menuitem id="menuItemId3" value="#{lbl['lbl.ct.view']}" icon="ui-icon-view"
+						<p:menuitem id="menuItemId3" 
+							rendered="#{!circularBackingBean.isAuditCheck()}" 
+						    value="#{lbl['lbl.ct.view']}" icon="ui-icon-view"
 							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();"
-							action="#{circularBackingBean.gotoPage('view', data.circularVerId)}">
+							action="#{circularBackingBean.gotoPage('view', data.circularVerId)}"><!-- #30866 -->
 						</p:menuitem>
 						<p:menuitem id="menuItemId4" value="#{lbl['lbl.ct.update']}" icon="ui-icon-update"
 							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();" process="@all"
@@ -102,6 +117,14 @@
 									 or data.status.statusId == CtStatusConst.cqCancelRequestRejected))) }"
 							action="#{circularBackingBean.gotoPage('update', data.ctCircular.latestCircularVer.circularVerId)}">
 						</p:menuitem>
+						<!-- Start #30866 -->
+						<p:menuitem id="menuItemId5" 
+						    rendered="#{circularBackingBean.isAuditCheck()}" 
+						    value="#{lbl['lbl.ct.view']}" icon="ui-icon-view"
+							onstart="circularSearchBlk.show();" oncomplete="circularSearchBlk.hide();"							
+							action="#{circularBackingBean.searchCircularContractAudit(data.ctCircular.circularNo , data)}">
+						</p:menuitem>
+						<!-- End #30866 -->
 					</p:menuButton>
 				</p:column>											
 			</p:dataTable>		

@@ -30,6 +30,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtContract;//25791
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -93,6 +94,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEpvApprovalReqAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtEpvSupplierResponse;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtHistory;
@@ -1164,9 +1166,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	/** The financial scoring. */
 	private List<ScQtCheckList> financialScoring;
-
+	
+	//37813,35384 -start
 	/** The tech points. */
-	private int techPoints;
+	private BigDecimal techPoints;
+	//37813,35384 -end
 
 	/** The fin points. */
 	private int finPoints;
@@ -1664,8 +1668,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// #29468 Vinod End
 	private boolean isFromSpecEndorse = false; // Bug #33661@Syazani 06/10/2022
 	
+	//#21692 - Start
 	private boolean proposalValidityChangeValue; //#21692//#sqube qt vulnerability minor idham @03 aug 2023
 	private String epvAttachmentValue;//#21692 for EPV attachment usage only
+	private ScQtEpvSupplierResponse suppResp;
+	private boolean chmnFinalizationRejectEPV;
+	private boolean proposalValidityRevised;
+	private boolean nullEPVRemark;
+	private List<String> toBeRemoveEPVAttachments;
+	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
+	//#21692 - End
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
@@ -1691,21 +1703,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/**
 	 * Instantiates a new QT detail managed bean.
 	 */
-	//#25037-START
+	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
 	private String currentCommitteeDesc;
 	private ScCommitteeMemberHistory selectedCommitteeHistory;
 	private Paginator selectedHistoryMember;
 	private boolean committeeReviseFlow;
-	private List<QtCommitteeMemberBean>memberHistoryList;
+	private List<QtCommitteeMemberBean> memberHistoryList;
 	private ScQtApprovalRequest scQtApprovalRequest;
 	private boolean specUpdateInProgress;
 	private ScQtApprovalRequest doaaRequest;
 	private boolean doaRequestEditable;
 	private List<ScQtContactPerson> newDoaList;
 	private List<ScQtContactPerson> prevDoaList;
-	private List<PmUser> deskOfficerAssistantList; 
+	private List<PmUser> deskOfficerAssistantList;
 	private ScQtRequestContent requestContent;
 	private boolean reapproval;
 	private String prevDOAs;
@@ -1715,7 +1727,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean committeeUpdateFlow;
 	private List<String> mainTaskNames;
 
-	//#25037-END
+	// 25037 - end
 	//#25077 - Start
 	private ScQtApprovalRequest historyApprovalRequests;
 	private boolean showPopUpBPKApprovalNeeded=false;
@@ -1742,7 +1754,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		
 	// #15391 - start
 	private boolean isChecklist;
-	private boolean isGenInfo;
+	private boolean isGenInfo = Boolean.FALSE; //Reopen #25726 note 187 - issue 2,4,5
 
 	// #15391 - end
 
@@ -1801,10 +1813,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String hisCatCode;
 	private List<PmRemarkCategory> historyList;
 	private String catCodeList;
+	private boolean currentInSpecMaint;//#29732 first time spec maint
+	private boolean categoryDescriptionChange;//#29732 flag to check category has change
 	// #29732 End
 	
 	//====#31913 bug related to #25138==== start
-	private BigDecimal totalmaxscore;
+	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
 	
 	private List<BriefingZoneBean> sampleAddressBean;//11104-start
@@ -1847,45 +1861,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCategory> backupCategoryCode;
 	private List<TplSpecZoneDtl> backupZoneList;
 	private List<Long> listCategory;
-	private ScQtEpvSupplierResponse suppResp;//#21692
 				
 	// #29521 - end
-	// #12471 Start
-	/** The organization category ptj constant. */
-	private String orgCatPTJ;
-
-	/** The organization category others constant. */
-	private String orgCatOther;
-
-	/** The ministry dropdown list. */
-	private SelectItem[] ministryDDList;
-
-	/** The ptj group dropdown list. */
-	private SelectItem[] ptjGroupDDList;
-
-	/** The ptj dropdown list. */
-	private SelectItem[] ptjDDList;
-
-	/** The organization type dropdown list. */
-	private SelectItem[] orgTypeDDList;
-
-	/** The organization name dropdown list. */
-	private SelectItem[] orgNameDDList;
-
-	/** The popup member name. */
-	private String memberName;
-
-	/** The popup member ministry or organization. */
-	private String memberMinOrg;
-
-	/** The popup member ptj or organization code. */
-	private String memberPtjOrgCode;
-
-	/** The popup member ptj or organization name. */
-	private String memberPtjOrgName;
-
-	// #12471 End
-	
 	//Bug #35061 - asyrafhaziq 
 	private String msgConfirmBelowIndi;
 	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;//11104
@@ -1900,6 +1877,39 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<String, String> committeeMembersTypeMap; 
 	//12471 - end
 
+	//#29732
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+
+	private boolean isSampleShowHide;// 11104wip
+
+	// 25791-start
+	private List<ScQt> qtTrackingdiaryView;
+	private String qtAuditORMaintenanceView;
+	private List<ScLoa> qtLoaTrackingDtls;
+	private ScQt viewTrackingDiaryQTDL;
+	private List<ScLoaForQt> loaContractTrackingDtls;
+	private ScLoaForQt loaContractTrackingDtl;
+	private List<VCtContract> loaContractListTracking;
+	private IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls;
+	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
+	private Map<Long, VCtContract> checkLoaContract;
+	// 25791-End
+
+	//28895 - 35500 start
+	/** The newly added sc qt committee */
+	private List<ScCommitteeMember> newScCommitteeMemberAuditTrailList;
+	/** The deleted sc qt committee */
+	private List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList;
+	/** The pmuser contactperson list that had been deleted */
+	private List<ScQtContactPerson> pmUserDeletedContactPersonList;
+	
+	private boolean auditViewRole;
+	//#28895 - 35500 end
+	
+	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
+
+	
 	public QTDetailManagedBean() {
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
@@ -8431,21 +8441,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
 		this.financialScoring = financialScoring;
 	}
-
-	/**
-	 * @return the techPoints
-	 */
-	public int getTechPoints() {
-		return techPoints;
-	}
-
-	/**
-	 * @param techPoints the techPoints to set
-	 */
-	public void setTechPoints(int techPoints) {
-		this.techPoints = techPoints;
-	}
-
+	
+	//37813,35384 remove tech setter and getter.
 	/**
 	 * @return the finPoints
 	 */
@@ -11316,24 +11313,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			this.qtRemarksIdRemove = qtRemarksIdRemove;
 		}
 		//#9019 - End (Harun)
-		
-		// #21692 - start
-		/**
-		 * @return the proposalValidityChangeValue
-		 */
-		public boolean isProposalValidityChangeValue() {
-			return proposalValidityChangeValue;
-		}
-
-		/**
-		 * @param proposalValidityChangeValue
-		 *            the proposalValidityChangeValue to set
-		 */
-		public void setProposalValidityChangeValue(
-				boolean proposalValidityChangeValue) {
-			this.proposalValidityChangeValue = proposalValidityChangeValue;
-		}
-		// #21692 - end
 		//#29468 Vinod Start
 		public TreeNode getRootCategoryTree() {
 			return rootCategoryTree;
@@ -11792,16 +11771,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	// Bug #33661@Syazani 07/10/2022 -- End
 
-	//#21692 - Start
-	public ScQtEpvSupplierResponse getSuppResp() {
-		return suppResp;
-	}
-
-	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
-		this.suppResp = suppResp;
-	}
-	//#21692 - End
-
 	public String getEpvAttachmentValue() {
 		return epvAttachmentValue;
 	}
@@ -11809,216 +11778,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
-	// #12471 Start
-	/**
-	 * Gets the organization category ptj constant.
-	 * 
-	 * @return the organization category ptj constant.
-	 */
-	public String getOrgCatPTJ() {
-		return orgCatPTJ;
-	}
-
-	/**
-	 * Sets the organization category ptj constant.
-	 * 
-	 * @param orgCatPTJ
-	 *            the new organization category ptj constant.
-	 */
-	public void setOrgCatPTJ(String orgCatPTJ) {
-		this.orgCatPTJ = orgCatPTJ;
-	}
-
-	/**
-	 * Gets the organization category others.
-	 * 
-	 * @return the organization category others.
-	 */
-	public String getOrgCatOther() {
-		return orgCatOther;
-	}
-
-	/**
-	 * Sets the organization category others.
-	 * 
-	 * @param orgCatOther
-	 *            the new organization category others.
-	 */
-	public void setOrgCatOther(String orgCatOther) {
-		this.orgCatOther = orgCatOther;
-	}
-
-	/**
-	 * Gets the ministry dropdown list.
-	 * 
-	 * @return the ministry dropdown list.
-	 */
-	public SelectItem[] getMinistryDDList() {
-		return ministryDDList;
-	}
-
-	/**
-	 * Sets the ministry dropdown list.
-	 * 
-	 * @param ministryDDList
-	 *            the new ministry dropdown list.
-	 */
-	public void setMinistryDDList(SelectItem[] ministryDDList) {
-		this.ministryDDList = ministryDDList;
-	}
-
-	/**
-	 * Gets the ptj group dropdown list.
-	 * 
-	 * @return the ptj group dropdown list.
-	 */
-	public SelectItem[] getPtjGroupDDList() {
-		return ptjGroupDDList;
-	}
-
-	/**
-	 * Sets the ptj group dropdown list.
-	 * 
-	 * @param ptjGroupDDList
-	 *            the new ptj group dropdown list.
-	 */
-	public void setPtjGroupDDList(SelectItem[] ptjGroupDDList) {
-		this.ptjGroupDDList = ptjGroupDDList;
-	}
-
-	/**
-	 * Gets the ptj dropdown list.
-	 * 
-	 * @return the ptj dropdown list.
-	 */
-	public SelectItem[] getPtjDDList() {
-		return ptjDDList;
-	}
-
-	/**
-	 * Sets the ptj dropdown list.
-	 * 
-	 * @param ptjDDList
-	 *            the new ptj dropdown list.
-	 */
-	public void setPtjDDList(SelectItem[] ptjDDList) {
-		this.ptjDDList = ptjDDList;
-	}
-
-	/**
-	 * Gets the organization type dropdown list.
-	 * 
-	 * @return the organization type dropdown list.
-	 */
-	public SelectItem[] getOrgTypeDDList() {
-		return orgTypeDDList;
-	}
-
-	/**
-	 * Sets the organization type dropdown list.
-	 * 
-	 * @param orgTypeDDList
-	 *            the new organization type dropdown list.
-	 */
-	public void setOrgTypeDDList(SelectItem[] orgTypeDDList) {
-		this.orgTypeDDList = orgTypeDDList;
-	}
-
-	/**
-	 * Gets the organization name dropdown list.
-	 * 
-	 * @return the organization name dropdown list.
-	 */
-	public SelectItem[] getOrgNameDDList() {
-		return orgNameDDList;
-	}
-
-	/**
-	 * Sets the organization name dropdown list.
-	 * 
-	 * @param orgNameDDList
-	 *            the new organization name dropdown list.
-	 */
-	public void setOrgNameDDList(SelectItem[] orgNameDDList) {
-		this.orgNameDDList = orgNameDDList;
-	}
-
-	/**
-	 * Gets the member name.
-	 * 
-	 * @return the member name.
-	 */
-	public String getMemberName() {
-		return memberName;
-	}
-
-	/**
-	 * Sets the member name.
-	 * 
-	 * @param memberName
-	 *            the new member name.
-	 */
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
-	}
-
-	/**
-	 * Gets the member ministry or organization.
-	 * 
-	 * @return the member ministry or organization.
-	 */
-	public String getMemberMinOrg() {
-		return memberMinOrg;
-	}
-
-	/**
-	 * Sets the member ministry or organization.
-	 * 
-	 * @param memberMinOrg
-	 *            the new member ministry or organization.
-	 */
-	public void setMemberMinOrg(String memberMinOrg) {
-		this.memberMinOrg = memberMinOrg;
-	}
-
-	/**
-	 * Gets the member ptj or organization code.
-	 * 
-	 * @return the member ptj or organization code.
-	 */
-	public String getMemberPtjOrgCode() {
-		return memberPtjOrgCode;
-	}
-
-	/**
-	 * Sets the member ptj or organization code.
-	 * 
-	 * @param memberPtjOrgCode
-	 *            the new member ptj or organization code.
-	 */
-	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
-		this.memberPtjOrgCode = memberPtjOrgCode;
-	}
-
-	/**
-	 * Gets the member ptj or organization name.
-	 * 
-	 * @return the member ptj or organization name.
-	 */
-	public String getMemberPtjOrgName() {
-		return memberPtjOrgName;
-	}
-
-	/**
-	 * Sets the member ptj or organization name.
-	 * 
-	 * @param memberPtjOrgName
-	 *            the new member ptj or organization name.
-	 */
-	public void setMemberPtjOrgName(String memberPtjOrgName) {
-		this.memberPtjOrgName = memberPtjOrgName;
-	}
-	// #12471 End
 
 	//#9019 - Start
 	/**
@@ -12092,7 +11851,357 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCommitteeMembersTypeMap(Map<String, String> committeeMembersTypeMap) {
 		this.committeeMembersTypeMap = committeeMembersTypeMap;
 	}
-	
-}
 
-// ***25201
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean categoryDescriptionChange) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
+	
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange; //#29732(#232)
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;//#29732(#232)
+	}
+
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+
+	//#21692 - Start
+	public boolean isChmnFinalizationRejectEPV() {
+		return chmnFinalizationRejectEPV;
+	}
+
+	public void setChmnFinalizationRejectEPV(boolean chmnFinalizationRejectEPV) {
+		this.chmnFinalizationRejectEPV = chmnFinalizationRejectEPV;
+	}
+
+	public boolean isProposalValidityRevised() {
+		return proposalValidityRevised;
+	}
+
+	public void setProposalValidityRevised(boolean proposalValidityRevised) {
+		this.proposalValidityRevised = proposalValidityRevised;
+	}
+
+	public ScQtEpvSupplierResponse getSuppResp() {
+		return suppResp;
+	}
+
+	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
+		this.suppResp = suppResp;
+	}
+	
+	/**
+	 * @return the proposalValidityChangeValue
+	 */
+	public boolean isProposalValidityChangeValue() {
+		return proposalValidityChangeValue;
+	}
+
+	/**
+	 * @param proposalValidityChangeValue
+	 *            the proposalValidityChangeValue to set
+	 */
+	public void setProposalValidityChangeValue(
+			boolean proposalValidityChangeValue) {
+		this.proposalValidityChangeValue = proposalValidityChangeValue;
+	}
+
+	public boolean isNullEPVRemark() {
+		return nullEPVRemark;
+	}
+
+	public void setNullEPVRemark(boolean nullEPVRemark) {
+		this.nullEPVRemark = nullEPVRemark;
+	}
+	//#21692 - End
+
+	//#21692 #note-504 - Start
+	public List<String> getToBeRemoveEPVAttachments() {
+		return toBeRemoveEPVAttachments;
+	}
+
+	public void setToBeRemoveEPVAttachments(List<String> toBeRemoveEPVAttachments) {
+		this.toBeRemoveEPVAttachments = toBeRemoveEPVAttachments;
+	}
+	//#21692 #note-504 - End
+
+	//#21692 #note-504 - Start
+	public List<ScQtEpvApprovalReqAttachment> getAllEPVAttachments() {
+		return allEPVAttachments;
+	}
+
+	public void setAllEPVAttachments(List<ScQtEpvApprovalReqAttachment> allEPVAttachments) {
+		this.allEPVAttachments = allEPVAttachments;
+	}
+	//#21692 #note-504 - End
+	
+	
+	
+	
+	
+
+	
+	
+	/**11104-start
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+
+	/**
+	 * @param isSampleShowHide the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}//11104-end
+
+	// 25791-start
+	/**
+	 * @return the qtTrackingdiaryView
+	 */
+	public List<ScQt> getQtTrackingdiaryView() {
+		return qtTrackingdiaryView;
+	}
+
+	/**
+	 * @param qtTrackingdiaryView
+	 *            the qtTrackingdiaryView to set
+	 */
+	public void setQtTrackingdiaryView(List<ScQt> qtTrackingdiaryView) {
+		this.qtTrackingdiaryView = qtTrackingdiaryView;
+	}
+
+	/**
+	 * @return the qtAuditORMaintenanceView
+	 */
+	public String getQtAuditORMaintenanceView() {
+		return qtAuditORMaintenanceView;
+	}
+
+	/**
+	 * @param qtAuditORMaintenanceView
+	 *            the qtAuditORMaintenanceView to set
+	 */
+	public void setQtAuditORMaintenanceView(String qtAuditORMaintenanceView) {
+		this.qtAuditORMaintenanceView = qtAuditORMaintenanceView;
+	}
+
+	/**
+	 * @return the qtLoaTrackingDtls
+	 */
+	public List<ScLoa> getQtLoaTrackingDtls() {
+		return qtLoaTrackingDtls;
+	}
+
+	/**
+	 * @param qtLoaTrackingDtls
+	 *            the qtLoaTrackingDtls to set
+	 */
+	public void setQtLoaTrackingDtls(List<ScLoa> qtLoaTrackingDtls) {
+		this.qtLoaTrackingDtls = qtLoaTrackingDtls;
+	}
+
+	/**
+	 * @return the viewTrackingDiaryQTDL
+	 */
+	public ScQt getViewTrackingDiaryQTDL() {
+		return viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @param viewTrackingDiaryQTDL
+	 *            the viewTrackingDiaryQTDL to set
+	 */
+	public void setViewTrackingDiaryQTDL(ScQt viewTrackingDiaryQTDL) {
+		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtls
+	 */
+	public List<ScLoaForQt> getLoaContractTrackingDtls() {
+		return loaContractTrackingDtls;
+	}
+
+	/**
+	 * @param loaContractTrackingDtls
+	 *            the loaContractTrackingDtls to set
+	 */
+	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
+		this.loaContractTrackingDtls = loaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtl
+	 */
+	public ScLoaForQt getLoaContractTrackingDtl() {
+		return loaContractTrackingDtl;
+	}
+
+	/**
+	 * @param loaContractTrackingDtl
+	 *            the loaContractTrackingDtl to set
+	 */
+	public void setLoaContractTrackingDtl(ScLoaForQt loaContractTrackingDtl) {
+		this.loaContractTrackingDtl = loaContractTrackingDtl;
+	}
+
+	/**
+	 * @return the loaContractListTracking
+	 */
+	public List<VCtContract> getLoaContractListTracking() {
+		return loaContractListTracking;
+	}
+
+	/**
+	 * @param loaContractListTracking
+	 *            the loaContractListTracking to set
+	 */
+	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
+		this.loaContractListTracking = loaContractListTracking;
+	}
+
+	/**
+	 * @return the viewQtDlLoaContractTrackingDtls
+	 */
+	public IPagingDataModel<ScLoa> getViewQtDlLoaContractTrackingDtls() {
+		return viewQtDlLoaContractTrackingDtls;
+	}
+
+	/**
+	 * @param viewQtDlLoaContractTrackingDtls
+	 *            the viewQtDlLoaContractTrackingDtls to set
+	 */
+	public void setViewQtDlLoaContractTrackingDtls(IPagingDataModel<ScLoa> viewQtDlLoaContractTrackingDtls) {
+		this.viewQtDlLoaContractTrackingDtls = viewQtDlLoaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the viewLoaContractDataModel
+	 */
+	public IPagingDataModel<VCtContract> getViewLoaContractDataModel() {
+		return viewLoaContractDataModel;
+	}
+
+	/**
+	 * @param viewLoaContractDataModel
+	 *            the viewLoaContractDataModel to set
+	 */
+	public void setViewLoaContractDataModel(IPagingDataModel<VCtContract> viewLoaContractDataModel) {
+		this.viewLoaContractDataModel = viewLoaContractDataModel;
+	}
+
+	/**
+	 * @return the checkLoaContract
+	 */
+	public Map<Long, VCtContract> getCheckLoaContract() {
+		return checkLoaContract;
+	}
+
+	/**
+	 * @param checkLoaContract
+	 *            the checkLoaContract to set
+	 */
+	public void setCheckLoaContract(Map<Long, VCtContract> checkLoaContract) {
+		this.checkLoaContract = checkLoaContract;
+	}
+	// 25791-End
+
+	//#28895 - 35500 start
+	public List<ScCommitteeMember> getNewScCommitteeMemberAuditTrailList() {
+		return newScCommitteeMemberAuditTrailList;
+	}
+
+	public void setNewScCommitteeMemberAuditTrailList(List<ScCommitteeMember> newScCommitteeMemberAuditTrailList) {
+		this.newScCommitteeMemberAuditTrailList = newScCommitteeMemberAuditTrailList;
+	}
+
+	public List<ScCommitteeMember> getDeletedScCommitteeMemberAuditTrailList() {
+		return deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public void setDeletedScCommitteeMemberAuditTrailList(List<ScCommitteeMember> deletedScCommitteeMemberAuditTrailList) {
+		this.deletedScCommitteeMemberAuditTrailList = deletedScCommitteeMemberAuditTrailList;
+	}
+
+	public List<ScQtContactPerson> getPmUserDeletedContactPersonList() {
+		return pmUserDeletedContactPersonList;
+	}
+
+	public void setPmUserDeletedContactPersonList(List<ScQtContactPerson> pmUserDeletedContactPersonList) {
+		this.pmUserDeletedContactPersonList = pmUserDeletedContactPersonList;
+	}
+
+	public boolean isAuditViewRole() {
+		return auditViewRole;
+	}
+
+	public void setAuditViewRole(boolean auditViewRole) {
+		this.auditViewRole = auditViewRole;
+	}
+	//#28895 - 35500 end
+	
+	/** #36678 related to #35061
+	 * 
+	 * @return
+	 */
+	public boolean isFieldProcurementJustification() {
+		return isFieldProcurementJustification;
+	}
+
+	/** #36678 related to #35061
+	 * @param
+	 */
+	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
+		this.isFieldProcurementJustification = isFieldProcurementJustification;
+	}
+	
+	//37813,35384 -start
+	/**
+	 * @return the techPoints
+	 */
+	public BigDecimal getTechPoints() {
+		return techPoints;
+	}
+
+	/**
+	 * @param techPoints the techPoints to set
+	 */
+	public void setTechPoints(BigDecimal techPoints) {
+		this.techPoints = techPoints;
+	}
+	//37813,35384 -end
+}

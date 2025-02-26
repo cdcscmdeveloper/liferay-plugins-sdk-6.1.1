@@ -16,11 +16,26 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
-		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
-			rendered="#{lOIDetailBackingBean.managedBean.editFlag or lOIDetailBackingBean.isQtMaintenanceScreen}"
-			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
-			<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
+		<ui:remove> #25791 start </ui:remove>
+		<table style="width: 100%">
+			<tr>
+				<td><ui:remove> #25791 end </ui:remove> 
+				<p:commandButton
+						immediate="true" value="#{lbl['lbl.btn.back']}"
+						rendered="#{lOIDetailBackingBean.managedBean.editFlag or lOIDetailBackingBean.isQtMaintenanceScreen}"
+						style="float:left;"
+						action="#{lOIDetailBackingBean.backToPrevious}" /> 
+				<ui:remove> #25791 start </ui:remove>
+				</td>
+				<td style="vertical-align: bottom;" align="right"><p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, lOIDetailBackingBean.managedBean.scQt.qtId)}"
+						immediate="true"
+						rendered="#{lOIDetailBackingBean.isQtMaintenanceScreen}" /></td>
+			</tr>
+		</table>
+		<ui:remove> #25791 end </ui:remove>
+		<ui:param name="readOnlyTask" value="#{lOIDetailBackingBean.managedBean.readOnly}" />
 		<ui:decorate
 			template="/WEB-INF/facelets/templates/claim_template.xhtml">
 			<ui:define name="outComeSection">
@@ -49,18 +64,18 @@
 					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					process="@form" update="@form" />
-
-				<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>					
+					
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
-					action="#{lOIDetailBackingBean.validateNegoDecisionAction}" process="@form"
-					update="@form" />
-				<ui:remove>#30008 - End</ui:remove>
-					
+					action="#{lOIDetailBackingBean.submitAction}" process="@form"
+					update="@form" /><ui:remove>#21692</ui:remove>
+
+				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					oncomplete="cancelPopup.show();"
-					rendered="#{lOIDetailBackingBean.isSupplierEPVStatusRejected()}"
-					process="@form" update="@form" /><ui:remove>#21692</ui:remove>
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI}"
+					process="@form" update="@form" />
+				<ui:remove>36339, 21692</ui:remove>
 
 				<c:choose>
 					<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
@@ -70,7 +85,7 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 
-							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>								
+							<ui:remove>#30008 - Change Submit button to validate nego decision - Start</ui:remove>							
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									rendered="#{validityDaysExpiredQt}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

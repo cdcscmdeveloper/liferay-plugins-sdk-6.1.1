@@ -216,11 +216,13 @@ u.underline {
 		</tr>
 		<tr>
 			<table align="right" class="text_family">
+				## #25025 #509 -start
 				<tr style="margin-bottom:1px;">
 					<td valign="top"> Rujukan Kami</td>
 					<td valign="top">:</td>
 					<td valign="top">$fileNo</td>
 				</tr>
+				## #25025 #509 -end
 				<tr>
 					<td valign="top">Tarikh</td>
 					<td valign="top">:</td>
@@ -281,19 +283,25 @@ u.underline {
 				</p>
 				## #25025 & #26770 -end
 				## #25025 & #26770 -start
+				## #25025 #478 - start
 				<p>
-					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak ______________% cukai
-					perkhidmatan memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam
-					Diraja Malaysia (JKDM). Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
-					kuasa pendaftaran syarikat tuan dengan JKDM.</span>
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga Kontrak adalah tidak termasuk cukai perkhidmatan selaras dengan Perintah Cukai Perkhidmatan 2018. </span>
 				</p>
 				## #25025 & #26770 -end
 				
 				<p>
-					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di 
-					bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah  Akta Cukai Perkhidmatan 2018) </span>
+					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk perolehan Perkhidmatan yang tidak dikenakan cukai di bawah Perintah Cukai Perkhidmatan 2018) </span>
 				</p>
+				## #25025 #478 - end
 				## #25025 & #26770 -start
+				<p>
+					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah termasuk peruntukan Kerajaan sebanyak ______________% cukai
+					perkhidmatan memandangkan perkhidmatan ini dikenakan cukai dan syarikat tuan berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). 
+					Pembayaran cukai perkhidmatan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat kuasa pendaftaran syarikat tuan dengan JKDM.</span>
+				</p>
+				<p>
+					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk perolehan dengan syarikat yang berdaftar di bawah JKDM dan Perkhidmatan Dikenakan Cukai di bawah Akta Cukai Perkhidmatan 2018) </span>
+				</p>
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan sebanyak ______________% cukai
 					perkhidmatan memandangkan syarikat tuan tidak berdaftar dengan Jabatan Kastam Diraja Malaysia (JKDM). Sekiranya syarikat
@@ -333,16 +341,18 @@ u.underline {
 								</tr>
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(b)</td>
-									<td style="text-align:justify;">suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (RM______________) dan resit premium; </td>
-								</tr>	
-								<tr class="text_family">
-									<td align="center" style="vertical-align: top;"> (c)</td>
+									<td>suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (RM______________) dan resit premium; </td>
+								</tr>
+								## #25025 #478 - start	
+								<tr class="text_family_red">
+									<td align="center" style="vertical-align: top;">*(c)</td>
 										<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja; </td>									
 								</tr>
-								<tr class="text_family">
-									<td align="center" style="vertical-align: top;"> (d)</td>
-									<td style="text-align:justify;">Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP). </td>
+								<tr class="text_family_red">
+									<td align="center" style="vertical-align: top;">*(d)</td>
+									<td style="text-align:justify;">Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP),</td>
 								</tr>
+								## #25025 #478 - end
 							</table
 							
 							## #25025- end
@@ -357,7 +367,7 @@ u.underline {
 				#if($isSL1M == "true")
 					<p>
 						<span class="text_family_red">
-									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs- Ready To Work </i> 
+									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> 
 									(PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan berdasarkan harga kontrak
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
@@ -390,7 +400,7 @@ u.underline {
 					<p>
 						<span class="text_family">
 						## #25025 & #26770 -start
-						6.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah digalakkan  melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs- Ready To Work </i> (PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan.</span>
+						6.&#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah digalakkan  melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> (PROT&Eacute;G&Eacute;-RTW) seperti yang ditetapkan oleh Kerajaan.</span>
 						
 						## #25025 & #26770 -end
 					</p>
@@ -449,16 +459,17 @@ u.underline {
 						</p>
 						## #25025 & #26770 -end
 						<p>
-							<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi Harga Kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+							<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 						</p>
 					#end
 					
 					<p>
 					## 8
+					## #25025 #478 - start
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan Program Kolaborasi Industri (Industrial Collaboration Program (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
 					</p>
-					
+					## #25025 #478 - end
 					<p>
 					## 9
 						#set ($numberCount = $numberCount+1)
@@ -468,15 +479,17 @@ u.underline {
 					<p>
 					## 10
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan sekurang-kurangnya seratus peratus (100%) daripada Nilai Kontrak Perolehan Utama.</span>
+						##25025 note 579 - start
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan nilai seperti termaktub di bawah PP/PK 1.7.</span>
+						##25025 note 579 - end
 					</p>
 					<p style="padding-bottom:110px; margin-bottom:0px">
 					## 11
 						#set ($numberCount = $numberCount+1)
-						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kontrak Perolehan Utama dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP</span>								
+						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah mengemukakan kepada Kerajaan, suatu Bon Pelaksanaan yang tidak boleh dibatalkan dalam bentuk Jaminan Bank bagi pelaksanaan ICP yang bersamaan dengan lima peratus (5%) daripada Nilai Kredit ICP Mandatori dalam tempoh empat belas (14) hari dari tarikh Perjanjian ICP Utama ditandatangani. Tempoh sah laku Bon Pelaksanaan tersebut hendaklah bermula dari tarikh ianya dikeluarkan sehingga dua belas (12) bulan selepas pelaksanaan penuh Program ICP</span>								
 					</p>
 					<span class="text_family_red">dan penyempumaan sepenuhnya jumlah Nilai Kredit ICP Mandatori.</span>
-					<br/><span class="text_family_small">(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
+					<br/><span class="text_family_small">*(Perenggan #if ($isSL1M == "true")9 #else 8 #end hingga perenggan #if ($isSL1M == "true")12 #else 11 #end  terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki untuk melaksanakan Program ICP berdasarkan PP/PK1.7. Bagi harga kontrak di bawah nilai ambang, perenggan ini hendaklah dipotong)</span>
 					
 					<p>
 						#set ($numberCount = $numberCount+1)
@@ -517,7 +530,7 @@ u.underline {
 							</tr>
 							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(g)</td>
-									<td>syarikat tuan gagal <span class="text_family_red"> *menyempurnakan perkhidmatan/membekalkan barang </span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
+									<td>syarikat tuan gagal <span class="text_family_red"> *membekalkan barang/menyempurnakan perkhidmatan</span> dalam tempoh yang ditetapkan seperti di <b><i>Lampiran A</i></b>; </td>
 							</tr>
 							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(h)</td>
@@ -554,10 +567,14 @@ u.underline {
 					</div>
 
 					## #25025 & #26770 -start
+					## #25025 #478 - start
 					#set ($numberCount = $numberCount+1)				
 					#set ($prevNumberCount = $numberCount - 1)		
 					<p>
-						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9 #{else}8 #end (sekiranya perolehan tidak melibatkan ICP)/*perenggan #if ($isSL1M == "true")13 #{else}12 #end (sekiranya perolehan melibatkan ICP)</span>, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+						## #25025 #509 - start
+						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Sekiranya Surat ini dibatalkan atas alasan seperti yang ditetapkan di <span class="text_family_red">*perenggan #if ($isSL1M == "true")9/#{else} 8/#end*perenggan #if ($isSL1M == "true")13#{else} 12#end</span>, Kerajaan tidak akan bertanggungan terhadap apa-apa kerugian syarikat tuan termasuk kerugian masa hadapan.  </span>
+						<br/><span class="text_family_small">*perenggan #if ($isSL1M == "true")9#{else} 8#end sekiranya perenggan berkaitan ICP dipotong kerana perolehan tidak melibatkan ICP, manakala perenggan #if ($isSL1M == "true")13#{else} 12#end sekiranya perolehan melibatkan ICP.</span>
+						## #25025 #509 - end
 					</p>
 
 					#set ($numberCount = $numberCount+1)
@@ -569,7 +586,8 @@ u.underline {
 						<span class="text_family">$numberCount.&#160;&#160;&#160;&#160;&#160;Surat ini dihantar kepada syarikat tuan dalam tiga (3) salinan. Sila kembalikan ke pejabat ini salinan asal dan kedua berserta lampiran yang berkaitan yang telah ditandatangani dengan sempurna oleh syarikat tuan dan saksi syarikat tuan tidak melebihi <span class="text_family_red">*3/7/14 </span> hari dari tarikh Surat ini diterima untuk tindakan kami selanjutnya. 
 						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
 					</p>
-				## #25025 & #26770 -end		
+				## #25025 & #26770 -end	
+				## #25025 #478 - end	
 			</td>
 		</tr>
 		
@@ -588,7 +606,7 @@ u.underline {
 		</tr>
 		<tr>
 			## #25025 & #26770 -start		
-			<td>Saya yang menjalankan amanah, <br /> <br />
+			<td class="text_family">Saya yang menjalankan amanah, <br /> <br />
 			## #25025 & #26770 -end		
 				<p class="text_family">
 					<span class="text_family_small">Tandatangan Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak <br /> <br /> </span>
@@ -791,7 +809,7 @@ u.underline {
 					</td>
 					<td class="text_family" valign="top">:</td>
 					<td class="text_family" valign="top">RM $offerPrice <br/>
-					<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
+					##<span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding" valign="top">
@@ -868,7 +886,9 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
-									<td class="text_header_submenu">Skop Perkhidmatan/Service Level Agreement (SLA) <i>(sekiranya berkaitan)</i></td>
+									##25025 note 579 - start
+									<td class="text_header_submenu">Spesifikasi/Skop Perkhidmatan/<i>Service Level Agreement</i> (SLA) (sekiranya berkaitan)</td>
+									##25025 note 579 - end
 								</tr>
 						</table>
 					</td>
@@ -902,7 +922,9 @@ u.underline {
 						class="text_family_red">7.2 Formula Bon Pelaksanaan </span></td>
 					<td class="text_family_red">:</td>
 					## #34168 - start
-					<td class="text_family">Formula</td>
+					## #25025 #478 - start
+					<td class="text_family_red">2.5% atau 5% daripada nilai kontrak setahun </td>
+					## #25025 #478 - end
 					## #34168 - end
 				</tr>
 				<tr>
@@ -1149,6 +1171,46 @@ u.underline {
 									</tr>
 						
 				</tr>
+				<tr>
+					<td align="left" class="submenu_padding"><span
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
+				</tr>
+				##25025 & 26770 add point 12
+				<tr>
+						<td colspan="3">
+						<br/><br/>
+						<table>
+									<tr>
+										<td align="center" style="vertical-align: top;" class="text_sub_header_red">12. </td>
+										<td class="text_header_submenu_red">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)
+											<br/>
+											<span class="text_family_small">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span>
+										</td>
+									</tr>
+						</table>
+						</td>	
+				</tr>
+				<tr>	
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">12.1 Nama</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">12.2 Nombor Telefon</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">12.3 Alamat E-mel</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+				</tr>	
+				 ##25025 & 26770 end point 12
 			#else
 				<tr>
 						<td colspan="3">
@@ -1188,13 +1250,47 @@ u.underline {
 									</tr>
 						
 				</tr>
-					
-			 #end	
 				<tr>
 					<td align="left" class="submenu_padding"><span
-						class="text_family_red"><i>*potong mana yang tidak berkenaan</i></span></td>
+						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
 				</tr>
-				
+				##25025 & 26770 add point 12
+				<tr>
+						<td colspan="3">
+						<br/><br/>
+						<table>
+									<tr>
+										<td align="center" style="vertical-align: top;" class="text_sub_header_red">11. </td>
+										<td class="text_header_submenu_red">Pegawai Yang Boleh Dihubungi (Pentadbir Kontrak)
+											<br/>
+											<span class="text_family_small">*sebarang perubahan perlu dimaklumkan kepada pihak yang berkenaan</span>
+										</td>
+									</tr>
+						</table>
+						</td>	
+				</tr>
+				<tr>	
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">11.1 Nama</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">11.2 Nombor Telefon</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+									<tr style="page-break-inside: avoid;">
+										<td valign="top" align="left" class="submenu_padding"><span
+											class="text_family_red">11.3 Alamat E-mel</span></td>
+										<td valign="top" class="text_family_red">:</td>
+										<td class="text_family_red">_______________________________</td>
+									</tr>
+				</tr>	
+				 ##25025 & 26770 end point 12	
+			 #end	
 			</table>
 		</tr>
 	</table>
@@ -1228,10 +1324,10 @@ u.underline {
 						(u.p.: Pengarah Bahagian Cukai Dalam Negeri (SST)) 
 					</span>
 				</p>
-				
+				## #25025 #478 - start
 				<p style="text-align:left;">
 					<span class="text_family">
-						Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>
+						Sekretariat Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>
 						Aras 2, Blok E4/5, Parcel E<br/>
 						Kementerian Pembangunan Usahawan<br/>
 						Pusat Pentadbiran Kerajaan Persekutuan<br/>
@@ -1239,6 +1335,7 @@ u.underline {
 						(u.p.: Ketua Sekretariat PROT&Eacute;G&Eacute;) 
 					</span>
 				</p>
+				## #25025 #478 - end
 				## #25025 - start
 				<p style="text-align:left;">
 				   <span class="text_family">
@@ -1733,14 +1830,20 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" ) 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
+																#set ($feedback = $specCombine.feedback)
+																#set($feedback = $feedback.replace(">", "&#62;"))
+																#set($feedback = $feedback.replace("<", "&#60;"))
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 															#end
 														
 															#if ($specCombine.answerRemark == "&nbsp;" || $specCombine.answerRemark == " " ) 
 																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#else
 																#if ($specCombine.answerRemark)
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																	#set ($answerRemark = $specCombine.answerRemark)
+																	#set($answerRemark = $answerRemark.replace(">", "&#62;"))
+																	#set($answerRemark = $answerRemark.replace("<", "&#60;"))
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$answerRemark</td>
 																#else 
 																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
@@ -1758,7 +1861,10 @@ u.underline {
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+																#set ($specVal = $combine.specVal)
+																#set($specVal = $specVal.replace(">", "&#62;"))
+																#set($specVal = $specVal.replace("<", "&#60;"))
+																<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 												
 															##feedback
 															
@@ -1767,10 +1873,16 @@ u.underline {
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																#end
 																			
@@ -1781,7 +1893,10 @@ u.underline {
 																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																	#set ($remark = $combine.remark)
+																	#set($remark = $remark.replace(">", "&#62;"))
+																	#set($remark = $remark.replace("<", "&#60;"))
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																	
 																#else 
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -1814,7 +1929,10 @@ u.underline {
 													#if ($specCombine.feedback == "&nbsp" || $specCombine.feedback == " ")
 														<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 													#else
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
+														#set ($feedback = $specCombine.feedback)
+														#set($feedback = $feedback.replace(">", "&#62;"))
+														#set($feedback = $feedback.replace("<", "&#60;"))
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 													#end
 												#end						
 																				
@@ -1822,7 +1940,10 @@ u.underline {
 													<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 												#else
 													#if ($specCombine.remark)
-														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.remark</td>
+														#set ($remark = $specCombine.remark)
+														#set($remark = $remark.replace(">", "&#62;"))
+														#set($remark = $remark.replace("<", "&#60;"))
+														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 													#else 
 														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#end
@@ -1843,7 +1964,10 @@ u.underline {
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 												<tr style="border-bottom: 1px solid black;">
-												<td valign="top" colspan="4" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+												#set ($specVal = $combine.specVal)
+												#set($specVal = $specVal.replace(">", "&#62;"))
+												#set($specVal = $specVal.replace("<", "&#60;"))
+												<td valign="top" colspan="4" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 											
 														##feedback
 														
@@ -1851,10 +1975,16 @@ u.underline {
 																#set($count = 1)
 
 																	#if ($combine.feedback)
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																	#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																		
 																	#end
 																		
@@ -1865,7 +1995,10 @@ u.underline {
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 														#else
 															#if ($combine.remark)
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																#set ($remark = $combine.remark)
+																#set($remark = $remark.replace(">", "&#62;"))
+																#set($remark = $remark.replace("<", "&#60;"))
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																
 															#else 
 																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -2298,7 +2431,10 @@ u.underline {
 															#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " " ) 
 																<td rowspan="$rowSpanSizeForItem" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whitespace</td>
 															#else
-																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.feedback</td>
+																#set ($feedback = $specCombine.feedback)
+																#set($feedback = $feedback.replace(">", "&#62;"))
+																#set($feedback = $feedback.replace("<", "&#60;"))
+																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 															#end
 															
 															
@@ -2306,7 +2442,10 @@ u.underline {
 																<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#else
 																#if ($specCombine.answerRemark)
-																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.answerRemark</td>
+																	#set ($answerRemark = $specCombine.answerRemark)
+																	#set($answerRemark = $answerRemark.replace(">", "&#62;"))
+																	#set($answerRemark = $answerRemark.replace("<", "&#60;"))
+																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$answerRemark</td>
 																#else 
 																	<td valign="top" rowspan="$rowSpanSizeForItem" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 																#end
@@ -2323,7 +2462,10 @@ u.underline {
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+																#set ($specVal = $combine.specVal)
+																#set($specVal = $specVal.replace(">", "&#62;"))
+																#set($specVal = $specVal.replace("<", "&#60;"))
+																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 												
 															##feedback
 															
@@ -2332,10 +2474,16 @@ u.underline {
 
 																#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																	#set($count = $count + 1)
-																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																				
 																#else
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																#end
 																			
@@ -2346,7 +2494,10 @@ u.underline {
 																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>		
 															#else
 																#if ($combine.remark)
-																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																		#set ($remark = $combine.remark)
+																		#set($remark = $remark.replace(">", "&#62;"))
+																		#set($remark = $remark.replace("<", "&#60;"))
+																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																	
 																#else 
 																	<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -2394,7 +2545,10 @@ u.underline {
 														#if ($specCombine.feedback == "&nbsp;" || $specCombine.feedback == " ")
 															<td  class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 														#else
-															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$specCombine.feedback</td>
+															#set ($feedback = $cspecCombine.feedback)
+															#set($feedback = $feedback.replace(">", "&#62;"))
+															#set($feedback = $feedback.replace("<", "&#60;"))
+															<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 														#end					
 													#end
 
@@ -2402,7 +2556,10 @@ u.underline {
 														<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 													#else
 														#if ($specCombine.remark)
-															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specCombine.remark</td>
+															#set ($remark = $specCombine.remark)
+															#set($remark = $remark.replace(">", "&#62;"))
+															#set($remark = $remark.replace("<", "&#60;"))
+															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 														#else 
 															<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 														#end
@@ -2420,7 +2577,10 @@ u.underline {
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
+														#set ($specVal = $combine.specVal)
+														#set($specVal = $specVal.replace(">", "&#62;"))
+														#set($specVal = $specVal.replace("<", "&#60;"))
+												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 											
 														##feedback
 														
@@ -2429,13 +2589,19 @@ u.underline {
 
 																	#if ($combine.feedback == "&nbsp;" && $tplspecQuestion.tplSpecZoneQties.size() != $count ) 
 																			#set($count = $count + 1)
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																			
 																	#else
 																		#if(!$combine.feedback)
 																			<td class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$whitespace</td>
 																		#else
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
+																			#set ($feedback = $combine.feedback)
+																			#set($feedback = $feedback.replace(">", "&#62;"))
+																			#set($feedback = $feedback.replace("<", "&#60;"))
+																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																		#end
 																	#end
 																		
@@ -2446,7 +2612,10 @@ u.underline {
 																	<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>	
 														#else
 															#if ($combine.remark)
-																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.remark</td>
+																#set ($remark = $combine.remark)
+																#set($remark = $remark.replace(">", "&#62;"))
+																#set($remark = $remark.replace("<", "&#60;"))
+																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$remark</td>
 																
 															#else 
 																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
@@ -2476,395 +2645,159 @@ u.underline {
 		#end
 #else	
 	#if ($scLoa.scLoiLoa.docType == "PR")
-	  #set($rowCount = 0)
-	  #foreach( $tplspecMaster in $masters )
-
-				#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
-					#if ($itemType == "Perkhidmatan" || $itemType == "Service")
-			      
-			       
-						<table width="100%" border="1" cellpadding="0" cellspacing="-1">
-							<tbody>
-					        #if ($isZonal)
-							   <tr>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Zon</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
-									#*-- comment out for 31552  <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
-								</tr>
-								
-								<tr>	
-									<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="8" style="text-align: center;">Spesifikasi</th>
-								</tr>
-							
-							#else
-									<tr>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
-									<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
-								</tr>
-								
-								<tr>	
-									<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="7" style="text-align: center;">Spesifikasi</th>
-								</tr>
-								
-							  #end
-					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-						#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
-						#set($isSameItem = 'false') 
-						
-						#foreach( $scLoiLoaItem in $scLoa.scLoiLoaItems )
-							#if($scLoiLoaItem.scRequestItem.tplSpecQuestion.specQuestionId == $tplspecQuestion.specQuestionId)
-								#set($isSameItem = 'true') 
-							#end										
-						#end
-						
+	  ##35295 - @zaim start
+	 #if($PRSSTList.size() > 0)
+	<table width="100%" border="1" cellpadding="0" cellspacing="-1">
+		<body>
+		
+			#if ($isZonal)
+				<tr>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Zon</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
+					#*-- comment out for 31552  <th bgcolor="#6d839b" class="title border left" rowspan="2" style="text-align: center; padding-left: 5px; font-size:10px;">Catatan</th> *#
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
+				</tr>
+				<tr>	
+					<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="8" style="text-align: center;">Spesifikasi</th>
+				</tr>
+			#else
+				<tr>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Item</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Jenis Pemenuhan</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">UOM</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kekerapan / <br/>Unit Ukuran</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sehari</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Bil. Unit <br/>Ukuran Sebulan</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Tempoh (Bulan)</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR">Kuantiti</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Tawaran Pembekal</th>
+					<th valign="top" bgcolor="#6d839b" class="tableHeaderPR" rowspan="2">Skop Perkhidmatan / SLA</th>
+				</tr>
+				<tr>	
+					<th valign="top"  bgcolor="#6d839b" class="tableHeaderPR" colspan="7" style="text-align: center;">Spesifikasi</th>
+				</tr>
+			#end
+		#end	
+			#if($PRSSTList.size() > 0)
+				#foreach($listPrQuestion in $PRSSTList) 
+				#set($execOnce = 0)
+					#foreach($map in $listPrQuestion)
+						#set ($rowSpanSize = $map.rowSpanItem)
 						#if ($isZonal)
-						
-							#if ($tplspecQuestion.questionType == "I" && $isSameItem == 'true')
-							 
-							<tr>							 
-								
-								<td valign="top" class="tableDataPR" rowspan="2">$tplspecQuestion.clItem</td>
-								<td valign="top" class="tableDataPR">
-								
-									#if($tplspecQuestion.clFulfilmentTypeCode)
-										$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
-									#end
-									
-								</td>
-							
-									
-								<td valign="top"  class="tableDataPR">
-								
-								#if($tplspecQuestion.clUom)
-								$tplspecQuestion.clUom.uomName
-								#end
-								
-								</td>
-								<td valign="top" class="tableDataPR">
-									#if ($tplspecQuestion.clUomFrequency)
-										$tplspecQuestion.clUomFrequency
-									#end
-								</td>
-								<td valign="top" class="tableDataPR">
-									#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
-									$serviceScope 
+						#set ($zoneSize = $map.rowSpanZone)
+							#if($map.questionType.toLowerCase() == "i")
+								<tr>
+									#if ($map.clItem == "&nbsp")
 									#else
-									 $tplspecQuestion.clUomPerDay
+										<td valign="top" class="tableDataPR" rowspan="$rowSpanSize">$map.clItem</td>
 									#end
-								</td>
-								<td valign="top" class="tableDataPR">
-									#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
-									$serviceScope 
-									#else	
-									$tplspecQuestion.clUomPerMonth 
+									#if ($map.clFulfilmentTypeCode == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.clFulfilmentTypeCode</td>
 									#end
-								</td>
-								<td valign="top" class="tableDataPR">
-									#if($tplspecQuestion.clDurationMonth)
-										$tplspecQuestion.clDurationMonth
-									#else	
-										$serviceScope
+									#if ($map.uomName == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.uomName</td>
 									#end
-								</td>
-								
-								<td>
-									#set($countZoneList = 1)
-									#foreach( $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-									<table width="100%">
-										<tbody>
-										<tr >
-											#if ($tplSpecZoneDtls.zoneName)
-												#if ($countZoneList == $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls.size())
-													<td valign="top" rowspan="$tplSpecZoneDtls.specCount" class="tableDataPR" style="height: 80px;">$tplSpecZoneDtls.zoneName</td>
-												#else
-													<td valign="top" rowspan="$tplSpecZoneDtls.specCount" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">$tplSpecZoneDtls.zoneName</td>
-												#end
-											#else
-												<td valign="top" rowspan="$tplSpecZoneDtls.specCount" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">$serviceScope</td>
-											#end
-										</tr>
-										</tbody>
-										</table>
-									#set($countZoneList = $countZoneList + 1)
+									#if ($map.clUomFrequency == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.clUomFrequency</td>
 									#end
-								</td>
-								
-								<td valign="top"  class="tableDataPR">
-									#set($maxQty = 0)
-									#set($minQty = 0)
-									#set($currentValue = 0)								
-									#foreach(  $tplSpecZoneDtls in $tplspecQuestion.tplSpecMaster.tplSpecZone.tplSpecZoneDtls )
-											#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
-												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
- 											  		#set($currentValue = $scLoiLoaItem.itemQty)
-												   #if($currentValue == 0)
-													   	#if($tplspecQuestion.clQuantity)
-												   			#set($currentValue = $tplspecQuestion.clQuantity)												
-												  	   	#else
-													   		#if($tplSpecZoneQtie.qty)
-													   			#set($currentValue = $tplSpecZoneQtie.qty) 
-															#end
-												   		#end									   
-												   #end	
-											  	 #end
-											#end
+									#if ($map.clUomPerDay == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.clUomPerDay</td>
 									#end
-									<span>$currentValue</span>
-										
-								</td>
-
-								<td valign="top"  class="tableDataPR" rowspan="2">							
-										#set($rowCount = 0)							
-										#if ($isWipData)											
-											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-											<table width="100%" border="0" cellspacing="0" cellpadding="0">
-											<tbody>
-											<tr>
-												#if ($tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-													<td valign="top" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $tplSpecAnswer.answerRemark</td>
-												#else
-													<td valign="top" class="tableDataPR" style="border-bottom: 1px solid black; height: 80px;">Zone $tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName : $serviceScope</td>
-												#end
-											</tr>
-											</tbody>
-											</table>
-													
-											#end
-										#else				
-											#set($flagShowed = 0)										
-											#foreach( $tplSpecAnswer in $tplspecQuestion.tplSpecAnswers )
-												#if($supplierId  == $tplSpecAnswer.tplSpecSuppAnswer.smSupplier.supplierId)
-														#if ($flagShowed != 1 && $tplSpecAnswer.answerRemark != $null && $tplSpecAnswer.answerRemark != "" )
-															#set($suppRespon = $tplSpecAnswer.answerRemark)
-															#set($suppRespon = $suppRespon.replace("<", "&#60;"))
-															#set($suppRespon = $suppRespon.replace(">", "&#62;"))
-															#set($rowCount = $rowCount + 1)
-															#set($flagShowed = 1)
-															<span> $suppRespon </span>
-														#end
-												#end
-											#end
-											#if($flagShowed == 0)
-												<span>$serviceScope</span>
-											#end
-										#end
-									
-								</td>
-								
-								#* -- comment out for  31552 <td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="2"  style="text-align: left; padding-left: 5px; font-size:12px;">
-										#if(($tplspecQuestion.clReviewRemark == "" ))
-										 $serviceScope 
-										#else
-											 $tplspecQuestion.clReviewRemark							
-										#end
-								</td> *#
-								
-								<td valign="top" class="tableDataPR" rowspan="2">
-								#if($serviceScope)
-								 $serviceScope 
-								 #end
-								</td>
-								
-								
+									#if ($map.clUomPerMonth == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.clUomPerMonth</td>
+									#end
+									#if ($map.clDurationMonth == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.clDurationMonth</td>
+									#end
+									#if ($map.zoneName == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.zoneName</td>
+									#end
+									#if ($map.qty == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$zoneSize">$map.qty</td>
+									#end
+									#if ($execOnce == 0)
+										<td valign="top" class="tableDataPR" rowspan="$rowSpanSize">$map.answerRemark</td>
+										<td valign="top" class="tableDataPR" rowspan="$rowSpanSize">T/B</td>
+										#set($execOnce = 1)
+									#end
 								</tr>
-							
+							#else 
+								<tr>
+									<td colspan="8" valign="top" class="tableDataPR">$map.specVal</td>
 								</tr>
-								<td valign="top" colspan="8">
-										#if ($tplspecQuestion.specList)
-										#set($specList = $tplspecQuestion.specList)
-										#set($uniquePosts = [])
-										#foreach($specVal in $specList) 
-										    #set($exists = false)
-										    #foreach($uniquePost in $uniquePosts)
-										        #if($uniquePost == $specVal)
-										            #set($exists = true)
-										            #break
-										        #end
-										    #end
-										
-										    #if(!$exists)
-										        #set($added = $uniquePosts.add($specVal))
-										    #end
-										
-										    #set($specList = $uniquePosts)
-										#end
-																								
-											#set($countSpecList = 1)
-											#foreach( $specVal in $specList )
-												#set($specVal = $specVal.replace("#60;", "&#60;"))
-												#set($specVal = $specVal.replace("#62;", "&#62;"))
-												#set($specVal = $specVal.replace("#and;", "&"))
-											
-												
-												<table width="100%">
-													<tbody>
-													<tr>
-														#if ($countSpecList == $specList.size())
-															<td valign="top" class="tableDataPR" style="text-align: justify;">$specVal</td>
-														#else
-															<td valign="top" class="tableDataPR" style="text-align: justify; border-bottom: 1px solid black;">$specVal</td>
-														#end
-														
-													</tr>
-													</tbody>
-												</table>
-											#set($countSpecList = $countSpecList + 1)	
-											#end
-										#end
-								</td>
-								</tr>
-							
-								
-							
-								#end
-								
+							#end
 							
 						#else
-							#if ($tplspecQuestion.questionType == "I" && $isSameItem == 'true')
-						 
+							#if($map.questionType.toLowerCase() == "i")
 								<tr>
-								
-								
-								<td valign="top" class="tableDataPR" rowspan="2">
-										$tplspecQuestion.clItem
-								</td>
-								 <td valign="top" class="tableDataPR">
-									
-										#if($tplspecQuestion.clFulfilmentTypeCode)
-											$bean.getParameterDescForVelocityReport($tplspecQuestion.clFulfilmentTypeCode)
-										#end
-									
-									</td>
-							
-									
-									<td valign="top"  class="tableDataPR">
-									
-									#if($tplspecQuestion.clUom)
-									$tplspecQuestion.clUom.uomName
+									#if ($map.clItem == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR" rowspan="$rowSpanSize">$map.clItem</td>
 									#end
-									
-									</td>
-									<td valign="top" class="tableDataPR">
-										#if ($tplspecQuestion.clUomFrequency)
-											$tplspecQuestion.clUomFrequency
-										#end
-									</td>
-									<td valign="top" class="tableDataPR">
-										#if (($tplspecQuestion.clUomPerDay == "") || ($tplspecQuestion.clUomPerDay == 0))
-										$serviceScope 
-										#else
-										 $tplspecQuestion.clUomPerDay
-										#end
-									</td>
-									<td valign="top" class="tableDataPR">
-										#if(($tplspecQuestion.clUomPerMonth =="") || ($tplspecQuestion.clUomPerMonth == 0))
-										$serviceScope 
-										#else	
-										$tplspecQuestion.clUomPerMonth 
-										#end
-									</td>
-									<td valign="top" class="tableDataPR">
-										#if($tplspecQuestion.clDurationMonth)
-											$tplspecQuestion.clDurationMonth
-										#else	
-											$serviceScope
-										#end
-									</td>
-									<td valign="top" class="tableDataPR">
-										#set($currentValue = 0)										
-										#foreach( $scLoiLoaItem in $scLoiLoaItemList )												
-												#if($scLoiLoaItem.itemName.trim() == $tplspecQuestion.clItem.trim())
- 											  		#set($currentValue = $scLoiLoaItem.itemQty)
-											  	#end
-										#end
-										
-										#if($currentValue == 0)
-											#if($tplspecQuestion.clQuantity)
-											   	#set($currentValue = $tplspecQuestion.clQuantity)												
-											#else
-												#if($tplSpecZoneQtie.qty)
-												   	#set($currentValue = $tplSpecZoneQtie.qty) 
-												#end
-											#end									   
-									  #end	
-										
-										$currentValue								
-									</td>
-									
-									<td valign="top" class="tableDataPR" rowspan="2">
-										#if(($tplspecQuestion.answerRemarks == "" ))
-										 $serviceScope 
-										#else
-											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks)
-											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace("<", "&#60;"))
-											#set($tplspecQuestion.answerRemarks = $tplspecQuestion.answerRemarks.replace(">", "&#62;"))
-											 
-											$tplspecQuestion.answerRemarks
-										#end
-									</td>
-									<td valign="top" class="tableDataPR" rowspan="2">
-										#if($serviceScope)
-										 $serviceScope 
-										 #end
-									</td>
-						
+									#if ($map.clFulfilmentTypeCode == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.clFulfilmentTypeCode</td>
+									#end
+									#if ($map.uomName == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.uomName</td>
+									#end
+									#if ($map.clUomFrequency == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.clUomFrequency</td>
+									#end
+									#if ($map.clUomPerDay == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.clUomPerDay</td>
+									#end
+									#if ($map.clUomPerMonth == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.clUomPerMonth</td>
+									#end
+									#if ($map.clDurationMonth == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.clDurationMonth</td>
+									#end
+									#if ($map.qty == "&nbsp")
+									#else
+										<td valign="top" class="tableDataPR">$map.qty</td>
+									#end
+									#if ($execOnce == 0)
+										<td valign="top" class="tableDataPR" rowspan="$rowSpanSize">$map.answerRemark</td>
+										<td valign="top" class="tableDataPR" rowspan="$rowSpanSize">T/B</td>
+										#set($execOnce = 1)
+									#end
 								</tr>	
-								
-								<td valign="top" colspan="7">						
-										#if ($tplspecQuestion.specList)
-											#set($countSpecList = 1)
-											#foreach( $specVal in $tplspecQuestion.specList )
-												#set($specVal = $specVal.replace("#60;", "&#60;"))
-												#set($specVal = $specVal.replace("#62;", "&#62;"))
-												#set($specVal = $specVal.replace("#and;", "&"))
-											
-												
-												<table width="100%">
-													<tbody>
-													<tr>
-														#if ($countSpecList == $tplspecQuestion.specList.size())
-															<td valign="top" class="tableDataPR"  style="text-align: justify;">$specVal</td>
-														#else
-															<td valign="top" class="tableDataPR" style="text-align: justify; border-bottom: 1px solid black;">$specVal</td>
-														#end
-													</tr>
-													</tbody>
-												</table>
-											#set($countSpecList = $countSpecList + 1)			
-											#end
-										#end
-								</td>
-								#end	
-								
-								</tr>	
+							#else 
+								<tr>
+									<td colspan="7" valign="top" class="tableDataPR">$map.specVal</td>
+								</tr>
+							#end		
 						#end
-					    	
-
-					
-				      #end 
-						</tbody>
-					</table>
-					
+					#end
+				#end
 			#end
-			 #set($rowCount = $rowCount + 1)
-		#end
+		 #if($PRSSTList.size() > 0)	
+		</body>
+	</table>
+	#end
+	##35295 - @zaim end 
  
 	 #else
      

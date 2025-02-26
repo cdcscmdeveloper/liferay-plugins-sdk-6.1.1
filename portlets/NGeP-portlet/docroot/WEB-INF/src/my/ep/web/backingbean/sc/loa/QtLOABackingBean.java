@@ -488,11 +488,6 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-	}
-	
 	/**
 	 * Page navigation from qt loa screen to qtLoaManagedBean.backToPreviousPage
 	 */
@@ -548,6 +543,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					&& isValidFor21692
 					) ? true : false;
 		}
+		getManagedBean().setAbleToCancelLOA(supplierStatus);//#36339, #21692
 		
 		return supplierStatus;
 	}

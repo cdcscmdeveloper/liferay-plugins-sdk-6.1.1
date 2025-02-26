@@ -109,6 +109,8 @@ public class QtReportConst implements Serializable {
 	public static final String LABEL_PROPOSAL_SUBMITTED  = "lbl.rpt.proposal.submitted";
 	// 14306 - End (Harun)
 	
+	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
+
 	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL
@@ -218,7 +220,7 @@ public class QtReportConst implements Serializable {
 	//#21692 - end
 	
 	//#29580_14306 - start
-	public String getScQuotTenderProposalOfferSubmRptBySupplierVal() {
+	public String getScQuotTenderProposalOfferSubmRptBySupplierVal() {//Changes by Idham(Sonarqube issue55)
 		return SC_QUOT_TENDER_PROPOSAL_OFFER_SUBM_RPT_BY_SUPPLIER_VAL;
 	}
 	//#29580_14306 - end

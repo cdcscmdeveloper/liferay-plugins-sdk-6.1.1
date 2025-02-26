@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -414,21 +415,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 * Enhancement #21694
 	 */
 	private String loiTaskId;
-	// #12471 Start
-	/** The popup member name. */
-	private String memberName;
-
-	/** The popup member ministry or organization. */
-	private String memberMinOrg;
-
-	/** The popup member ptj or organization code. */
-	private String memberPtjOrgCode;
-
-	/** The popup member ptj or organization name. */
-	private String memberPtjOrgName;
-
-	// #12471 End
-	
 	//#30008 - Start
 	private PmParameter decision;
 	private String justification;
@@ -438,7 +424,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#30008 - end
 	
 	
+	//#12487 start
+    private Map<String, Object> loiObj;
+    private PmUserOrg selectedUserPtj;
+    private PmOrgProfile ministryOrgProfile;
+	//#12487 end
+    
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+
+	private boolean ableToCancelLOI;//#36339, #21692
+
+	
+	
 	
     /**
      * Gets the spki backing bean.
@@ -2400,84 +2397,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.supplierBranchList = supplierBranchList;
 	}
 	//#28777 & #29729 - End
-	// #12471 Start
-	/**
-	 * Gets the member name.
-	 * 
-	 * @return the member name.
-	 */
-	public String getMemberName() {
-		return memberName;
-	}
-
-	/**
-	 * Sets the member name.
-	 * 
-	 * @param memberName
-	 *            the new member name.
-	 */
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
-	}
-
-	/**
-	 * Gets the member ministry or organization.
-	 * 
-	 * @return the member ministry or organization.
-	 */
-	public String getMemberMinOrg() {
-		return memberMinOrg;
-	}
-
-	/**
-	 * Sets the member ministry or organization.
-	 * 
-	 * @param memberMinOrg
-	 *            the new member ministry or organization.
-	 */
-	public void setMemberMinOrg(String memberMinOrg) {
-		this.memberMinOrg = memberMinOrg;
-	}
-
-	/**
-	 * Gets the member ptj or organization code.
-	 * 
-	 * @return the member ptj or organization code.
-	 */
-	public String getMemberPtjOrgCode() {
-		return memberPtjOrgCode;
-	}
-
-	/**
-	 * Sets the member ptj or organization code.
-	 * 
-	 * @param memberPtjOrgCode
-	 *            the new member ptj or organization code.
-	 */
-	public void setMemberPtjOrgCode(String memberPtjOrgCode) {
-		this.memberPtjOrgCode = memberPtjOrgCode;
-	}
-
-	/**
-	 * Gets the member ptj or organization name.
-	 * 
-	 * @return the member ptj or organization name.
-	 */
-	public String getMemberPtjOrgName() {
-		return memberPtjOrgName;
-	}
-
-	/**
-	 * Sets the member ptj or organization name.
-	 * 
-	 * @param memberPtjOrgName
-	 *            the new member ptj or organization name.
-	 */
-	public void setMemberPtjOrgName(String memberPtjOrgName) {
-		this.memberPtjOrgName = memberPtjOrgName;
-	}
-	// #12471 End
-	
 	//#30008 - Start
 	public String getJustification() {
 		return justification;
@@ -2519,5 +2438,44 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.decisionCode = decisionCode;
 	}
 	//#30008 - end
+	
+	//#12487 start
+	public Map <String, Object> getLoiObj() {
+		return loiObj;
+	}
+
+	public void setLoiObj(Map <String, Object> loiObj) {
+		this.loiObj = loiObj;
+	}
+	
+
+	public PmUserOrg getSelectedUserPtj() {
+		return selectedUserPtj;
+	}
+
+	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
+		this.selectedUserPtj = selectedUserPtj;
+	}
+
+	public PmOrgProfile getMinistryOrgProfile() {
+		return ministryOrgProfile;
+	}
+
+	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
+		this.ministryOrgProfile = ministryOrgProfile;
+	}
+	//#12487 end
+
+	//#36339, #21692 - Start
+	public boolean isAbleToCancelLOI() {
+		return ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#36339, #21692 - Start
+	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
+		this.ableToCancelLOI = ableToCancelLOI;
+	}
+	//#36339, #21692 - End
 	
 }

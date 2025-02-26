@@ -21,44 +21,23 @@
 					value="#{lbl['lbl.sm.sitevisit.category.categorycode_BP']}" />
 			</p:column>
 
-			<!-- #28175 start -->
-			<!-- #28175 Reopen Start -->
-			<c:choose>
-				<!-- #28175 Reopen #94 Start -->
-				<c:when test="#{!viewSmApplBackingBean.isLatestCatCodeDesc(false)}">
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
-						style="white-space: normal; width:30%;">
-						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-							value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-							#{svoSiteVisitBackingBean.getSmCategoryL3(svTask.pmCategoryL3.categoryL3Id, svoSiteVisitBackingBean.managedBean.smAppl.applId)}" />
-					</p:column>
-				</c:when>
-				<c:otherwise>
-					<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}"
-						style="white-space: normal; width:30%;">
-						<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-							value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} : 
-							#{svTask.pmCategoryL3.categoryName}" />
-					</p:column>
-				</c:otherwise>
-			</c:choose>
-			<!-- #28175 Reopen End -->
-			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - start -->
-			<!-- Conclict<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
+			<!-- #28175 start, 28775 - Site Visit Grouping Enhancement - 28775 -->
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space: normal; width:30%;">
 				<h:outputText rendered="#{!empty svTask.pmCategoryL3}"
-					value="#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{svTask.pmCategoryL3.pmCategoryL2.categoryL2Code}#{svTask.pmCategoryL3.categoryL3Code} - 
-					#{svTask.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{svTask.pmCategoryL3.pmCategoryL2.categoryName} / #{svTask.pmCategoryL3.categoryName}"/>
-				<h:outputText rendered="#{svTask.smSvTemplate.suppCategory.otherDesc != null}"
+					value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svTask.smSvTemplate)}" />
+				<h:outputText rendered="#{svTask.smSvTemplate.suppCategory.otherDesc != null}" 
 					value=" (#{svTask.smSvTemplate.suppCategory.otherDesc})"/>
-				<ui:repeat var="taskGroup" value="#{svTask.smSvTaskGroups}">
+				
+				<h:panelGroup rendered="#{svTask.smSvTaskGroups.size() > 0}">
+				<ui:repeat var="svGroup" value="#{svTask.smSvTaskGroups}">
 					<br/>
-					<h:outputText rendered="#{!taskGroup.redundant}"
-						value="#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}#{taskGroup.pmCategoryL3.pmCategoryL2.categoryL2Code}#{taskGroup.pmCategoryL3.categoryL3Code} - 
-						#{taskGroup.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName} / #{taskGroup.pmCategoryL3.pmCategoryL2.categoryName} / #{taskGroup.pmCategoryL3.categoryName}"/>
-					<h:outputText rendered="#{!taskGroup.redundant and taskGroup.smSvTemplate.suppCategory.otherDesc != null}"
-						value=" (#{taskGroup.smSvTemplate.suppCategory.otherDesc})"/>
+					<h:outputText rendered="#{!svGroup.redundant}"
+						value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svGroup.smSvTemplate)}"/>
+					<h:outputText rendered="#{!svGroup.redundant and svGroup.smSvTemplate.suppCategory.otherDesc != null}"
+						value=" (#{svGroup.smSvTemplate.suppCategory.otherDesc})"/>
 				</ui:repeat>
-			</p:column> -->
+				</h:panelGroup>
+			</p:column>
 			<!-- 28775 - Site Visit Grouping Enhancement - 28775 - end -->
 			<!-- #28175 end -->
 

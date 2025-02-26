@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
@@ -12,7 +13,9 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:panel header="#{lbl['lbl.sm.questionaire.answer.header']}" id="questionPanel">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<!-- #35070 - Start  -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<!-- #35070 - End -->
 			<table style="width: 100%">
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sm.questionaire.feedback.note1']}" escape="false"/></td>
@@ -101,10 +104,16 @@
 		 		value="#{lbl['lbl.btn.print']}" ajax="false" >
 				<p:fileDownload value="#{questionnaireBackingBean.downloadQuestionnaire()}"/>
 			</p:commandButton> <!-- END #12768-->
-			<p:commandButton
-				action="#{questionnaireBackingBean.submitQuestionnaire}"
-				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-				update="@form" value="#{lbl['lbl.btn.submit']}" />
+			<!-- #34400 - start -->
+			<p:commandButton oncomplete="if (!args.validationFailed) confirmDlg.show()" value="#{lbl['lbl.btn.submit']}" />
 		</div>
+		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+			okAction="questionnaireBackingBean.submitQuestionnaire"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.questionnaire']}" 
+			update="@form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 	</ui:define>
 </ui:composition>

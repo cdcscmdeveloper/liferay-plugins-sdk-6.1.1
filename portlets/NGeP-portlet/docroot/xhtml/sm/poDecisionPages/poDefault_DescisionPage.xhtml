@@ -53,8 +53,8 @@
 								oncomplete="blockWidget.hide()" update=":form:tt:submitApprvrDialog"
 								value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 								partialSubmit="true" process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #29727 -->
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+								action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- #29727, 32304 -->
 							<!-- #32008 - START -->
 							<p:commandButton onstart="blockWidget.show()"
 								rendered="#{!backingBean.managedBean.upsCannotEdit}"
@@ -80,7 +80,7 @@
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>
@@ -92,8 +92,8 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:approveDialog" partialSubmit="true"
 								process="@this"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}" 
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" />  <!-- #29727 -->
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}" 
+								action="#{backingBean.validateBeforeSubmitDialog('approveDialog')}" />  <!-- #29727, 32304 -->
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialogId" partialSubmit="true"
@@ -102,7 +102,9 @@
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
-							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+							or backingBean.managedBean.specialCategoryRechecked}">
+							<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 							
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -113,8 +115,8 @@
 								<p:commandButton value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
-									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- #27297 -->
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- #27297, 32304 -->
 							</c:if>
 
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
@@ -130,69 +132,19 @@
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
 								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								partialSubmit="true" process="@this"
 								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
 								update=":form:tt:sendInqDialog" />
-						</c:when>
-						
-						<!-- #28778 - Site Visit Grouping Enhancement - 28775 - Start -->
-						<c:when
-							test="#{ backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL and  
-													backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew  and 
-													backingBean.managedBean.specialCategoryRechecked and backingBean.managedBean.showFacilityMachine}">
-
-							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								update=":form:tt:rejectDialogId" partialSubmit="true"
-								process="@this"
-								action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
-
-							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton
-									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this"
-									update=":form:tt:submitApprvrDialog"
-									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" />
-								<!-- #27297 -->
-							</c:if>
-
-							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-								<p:commandButton
-									value="#{lbl['lbl.sm.button.recommend.to.reject']}"
-									rendered="#{!backingBean.managedBean.upsCannotEdit}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									partialSubmit="true" process="@this"
-									update=":form:tt:submitApprvrDialog"
-									action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
-							</c:if>
-
-							<p:commandButton
-								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
-								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
-
-							<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								partialSubmit="true" process="@this"
-								action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-								update=":form:tt:sendInqDialog" />
-
-						</c:when>
-						<!-- #28778 - Site Visit Grouping Enhancement - 28775 - End -->
-						
+						</c:when>						
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 								update=":form:tt:approveDialog" partialSubmit="true"
 								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
-								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}" 
-								action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'approveDialog')}" /> <!-- #27297 -->
+								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}" 
+								action="#{backingBean.validateBeforeSubmitDialog('approveDialog')}" /> <!-- #27297, 32304 -->
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:rejectDialogId" partialSubmit="true" process="@this"
@@ -202,8 +154,8 @@
 									value="#{lbl['lbl.sm.button.recommend.to.approve']}"
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									partialSubmit="true" process="@this" update=":form:tt:submitApprvrDialog"
-									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified or !backingBean.managedBean.allowedToApprove}"
-									action="#{backingBean.validateCompanyBranch(backingBean.managedBean,'APPROVE')}" /> <!-- 29727 -->
+									disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}"
+									action="#{backingBean.validateBeforeSubmitDialog('APPROVE')}" /> <!-- 29727, 32304 -->
 							</c:if>
 							<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 								<p:commandButton rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
@@ -223,7 +175,7 @@
 											partialSubmit="true" process="@this"
 											update=":form:tt:svcDialog"
 											action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
-											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}" />
+											disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToSiteVisit}" />
 									</c:if>
 								</c:if>
 							</c:if>
@@ -237,7 +189,7 @@
 						</c:otherwise>
 					</c:choose>
 
-					<c:if test="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.categoryCodeVerified or !backingBean.managedBean.documentVerified}">
+					<c:if test="#{!backingBean.managedBean.poSecReview.verifiedAll}">
 						<div>
 							<h:outputText value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
 								escape="false" />
@@ -335,8 +287,9 @@
 										
 										<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 										<c:when
-											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
-											or backingBean.managedBean.showFacilityMachine}">
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
+												or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+												or backingBean.managedBean.specialCategoryRechecked}">
 											<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
 											
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
@@ -362,10 +315,10 @@
 		<p:outputPanel layout="block" id="poEnquiryBlockPanel">
 			<ui:include src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 			<div align="right">
-				<!-- #12483 - START -->
-				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}"
-					update="@([id$=Msg])" process="poEnquiryBlockPanel"
-					action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
+				<!-- #12483 - START, #34400 -->
+				<p:commandButton value="#{lbl['lbl.sm.button.submit.enquiry']}" 
+					partialSubmit="true" process="poEnquiryBlockPanel"
+					oncomplete="if (!args.validationFailed) confirmInquiryDlg.show();" />
 				<!-- #12483 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this"
 					onclick="sendInqDialog.hide();" action="#{backingBean.cancelInquiry}" />
@@ -399,9 +352,10 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-					onclick="poEscalateBlockWidget.show()" oncomplete="poEscalateBlockWidget.hide();" 
-					action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" process="poEscalateBlockPanel"/>
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
+					oncomplete="if (!args.validationFailed) confirmRecommendDlg.show();" 
+					update="@([id$=confirmRecommendDlg])" process="poEscalateBlockPanel"/>
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelPOEscalationToApprover}"
 					partialSubmit="true" process="@this" />
@@ -414,20 +368,12 @@
 	</p:dialog>
 	
 	<!-- #29727 START -->
-	<ac:confirmationPopup id="pendingQTPopUpApprovePoId"
-		widget="pendingQTPopUpApprovePo"
-		okAction="backingBean.assignFinalApproveOrReject('approveDialog')"
-		width="400" height="100"
-		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
-		update=":form:tt:approveDialog"/>
-		
 	<ac:confirmationPopup id="pendingQTPopUpRecommendApprovePoId"
 		widget="pendingQTPopUpRecommendApprovePo"
 		okAction="backingBean.submitPOEscalationToApprover('APPROVE')"
 		width="400" height="100"
 		title="#{lbl['lbl.sm.approve.application']}"
-		content="#{backingBean.managedBean.deleteBranchMsg}" 
+		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approveDialog"/>
 	<!-- #29727 END -->
 		
@@ -440,8 +386,9 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" update="@([id$=Msg])"
-					onclick="poApprovedBlockWidget.show()" oncomplete="poApprovedBlockWidget.hide()" 
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="poApprovedBlockWidget.show()"
+					oncomplete="poApprovedBlockWidget.hide(); if (!args.validationFailed) confirmApproveDlg.show();" 
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
 					partialSubmit="true" process="poApprovedBlockPanel" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
@@ -460,9 +407,10 @@
 		modal="true">
 		<ac:smSearchRejectReasons>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
-					update="@([id$=Msg])" partialSubmit="true" process="rejectBlockPanel"
+			<!-- #34400 -->
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()"
+					oncomplete="rejectBlockPanelWidget.hide(); confirmRejectDlg.show();"
+					partialSubmit="true" process="@([id$=rejectDialogId])"
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
@@ -484,4 +432,37 @@
 		</div>
 	</p:confirmDialog>
 	<!-- 32304 - end -->
+	<!-- #34400 - start -->
+	<ac:confirmationPopup id="confirmRecommendDlg" widget="confirmRecommendDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' ? lbl['lbl.sm.confirm.recc.reject'] : lbl['lbl.sm.confirm.recc.approve']}" 
+		update="@([id$=Msg])"
+		loadingWidget="poEscalateBlockWidget" />
+		
+	<ac:confirmationPopup id="confirmApproveDlg" widget="confirmApproveDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.approve']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+		
+	<ac:confirmationPopup id="confirmRejectDlg" widget="confirmRejectDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.reject']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+
+	<ac:confirmationPopup id="confirmInquiryDlg" widget="confirmInquiryDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}"
+		width="400" height="100" hasParam="true"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.sm.confirm.enquiry.po']}" 
+		update="@([id$=Msg])"
+		loadingWidget="poEnquiryBlockWidget" />
+	<!-- #34400 - end -->
 </ui:composition>

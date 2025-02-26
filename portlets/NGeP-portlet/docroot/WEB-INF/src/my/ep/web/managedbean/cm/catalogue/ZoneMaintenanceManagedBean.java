@@ -985,7 +985,8 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	public void setDisabledDistrictId(List<Long> disabledDistrictId) {
 		this.disabledDistrictId = disabledDistrictId;
 	}
-
+    
+	// [#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1017,5 +1018,5 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
-
+	// [#26282] disciplinary action - end
 }
