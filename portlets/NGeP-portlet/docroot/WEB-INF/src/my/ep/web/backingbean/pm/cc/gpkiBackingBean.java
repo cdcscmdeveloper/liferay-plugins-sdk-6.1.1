@@ -22,6 +22,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -196,12 +197,17 @@ public class gpkiBackingBean implements Serializable {
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
+		String nonceNull = map.get("gpkiNonceNull");
 		if (extMsg != null && extMsg.trim().length() > 0) {
 			statusMsg = extMsg;
+		}
+		if(nonceNull != null){
+			statusMsg = SmCommonUtil.getMessage("lbl.gpki.nonce.null", null);
 		}
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
+		log.info("#35488 MyGPKI: "+statusMsg + " -ResponseGPKI: "+map.get("response"));
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
@@ -225,15 +231,27 @@ public class gpkiBackingBean implements Serializable {
 	}
 	
 	/**
-	 * Set medium type, roaming OTP or token -
+	 * Set medium type, roaming OTP or token -default to OTP for any error:
 	 * id 2: softcert, 3: roaming, 4: token, 5: roaming OTP
 	 */
 	public void setMediumType(){
-		String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
-				.get("mediumTypeId");
-		//isMediumTypeOTP = "5".equals(id)
-		// popup default to OTP for any error
-		isMediumTypeOTP = !"4".equals(id);
+		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String id = map.get("mediumTypeId");
+		isMediumTypeOTP = true;
+		if("4".equals(id)){
+			isMediumTypeOTP = false;
+		}
+		log.info("--35488--"+map.get("response"));
+		log.info("--35488--JS-nric "+map.get("js_nric")+" -- "+isMediumTypeOTP);
+		PmUser user = getPmUserFromLoginId();
+		String idNo = "...";
+		if(user != null){
+			log.info("--35488--Request IC:"+user.getUserId()+"  "+user.getIdentificationNo());
+			idNo = user.getIdentificationNo();
+		}
+		log.info("35488 TB GPKI: Login IC eP: " + idNo
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 	}
 	
 	
@@ -243,7 +261,16 @@ public class gpkiBackingBean implements Serializable {
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if(user != null){
 			nric = user.getIdentificationNo().trim();
-			email = user.getEmail().trim();
+		}
+		user = getPmUserFromLoginId();
+		if(user != null){
+			if (!nric.equals(user.getIdentificationNo().trim())){
+				log.info("35488 - different IC: "+nric+"  new IC: "+user.getIdentificationNo().trim());
+			}
+			nric = user.getIdentificationNo().trim();
+			if(user.getEmail() != null){
+				email = user.getEmail().trim();
+			}
 		}
 		RequestContext.getCurrentInstance().addCallbackParam("nric", nric);
 		RequestContext.getCurrentInstance().addCallbackParam("email", email);
@@ -280,6 +307,9 @@ public class gpkiBackingBean implements Serializable {
 			ContextualCompositeMethodExpression enableAutoUpdateMtd){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		log.info("35488 TB GPKI Sign: Login IC eP: " + nric
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 		if(!isValidNric(map)){
 			fc.addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
 					"Token's certificate not match with signer identity."));
@@ -289,12 +319,14 @@ public class gpkiBackingBean implements Serializable {
 		pmDigiSign.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		pmDigiSign.setOriginalData(map.get("textBeforeSign"));
 		pmDigiSign.setGpkiSignedData(map.get("signedText"));
+		pmDigiSign.setGpkiMedium(isMediumTypeOTP ? "5" : "4");
 		
 		Object returnObj = null;
 		try {
 			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
 		} catch (Exception e){
 			nonSigningException = e;
+			log.info("--35488--"+map.get("response"));
 			log.error(e);
 		}
 		if (enableAutoUpdateMtd != null) {
@@ -396,6 +428,20 @@ public class gpkiBackingBean implements Serializable {
 		return userIdSession;
 	}
 	
+	private PmUser getPmUserFromLoginId(){
+		FacesScopes facesScopes = new FacesScopes();
+		
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setLoginId(facesScopes.getUserScreenName());
+		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
+		if (pmUser == null) {
+			pmUser = facesScopes.getUserSessionBean();
+			log.info("--35488--bean user id: "+pmUser.getUserId()+" -- "+facesScopes.getUserScreenName());
+		} 
+		return pmUser;
+	}
+	
 	public void saveNonce(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
@@ -405,6 +451,16 @@ public class gpkiBackingBean implements Serializable {
 	
 	public String getNotes(){
 		return SmCommonUtil.getMessage("lbl.gpki.otp.notes", new String[] {otpExp});
+	}
+	
+	/**
+	 * Log request OTP
+	 */
+	public void logOTP(){
+		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		log.info("35488 TB GPKI OTP: Login IC eP: " + nric
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 	}
 	//#35488 - end
 }

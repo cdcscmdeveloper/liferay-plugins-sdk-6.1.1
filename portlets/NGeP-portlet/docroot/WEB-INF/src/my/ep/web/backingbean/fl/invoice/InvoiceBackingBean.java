@@ -208,6 +208,11 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			//36754 -start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				validateOrderFulfiledAndDOFRNPendingCancellation();
+			}
+			//36754 -end
 			if(!getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){//33238
 				//32967-start
 				if(null != getManagedBean().getAccountNo()){
@@ -1810,11 +1815,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 			}
 		}
-		//36754 -start
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-			validateOrderFulfiledAndDOFRNPendingCancellation();
-		}
-		//36754 -end
+		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){			
 			if(null == getManagedBean().getInvoice().getAccountNo() || getManagedBean().getInvoice().getAccountNo().length()==0 || getManagedBean().getInvoice().getPaymentBank() == null ) {
 				getManagedBean().setSelectedTabIndex(0);
@@ -2674,9 +2675,9 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}
@@ -2824,15 +2825,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * @throws EpException if the order validation fails with a specific error code.
 	 */
 	private void validateOrderFulfiledAndDOFRNPendingCancellation() {
-		Boolean allowToProceed = true;
-		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = null;
 		
 		reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
 		reqDTO.setFlOrderId(getManagedBean().getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
-		resDTO= orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
-		allowToProceed = resDTO.isAllowToProceed();		
+		FulfilmentResDTO resDTO= orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
+		Boolean allowToProceed = resDTO.isAllowToProceed();		
 		if(!allowToProceed){
 			throw new EpException(MessageConst.ERROR_740069);
 		}	

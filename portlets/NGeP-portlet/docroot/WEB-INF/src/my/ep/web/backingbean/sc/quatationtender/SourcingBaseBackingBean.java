@@ -214,6 +214,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
@@ -222,6 +223,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -892,6 +894,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
+	// 12471 - start
+	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+	}
+	// 12471 - end
 	/**
 	 * To initialize remarks.
 	 * 
@@ -5255,7 +5262,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							if (SourcingConstants.EVALUATION_TYPE_TIER1.equals(evaluationType)) {
 								if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
 									getManagedBean().getEvaluationReportList().add(report);
-									iterator.remove();
+//									iterator.remove();// 37622 - remove code
 								}
 							} else if (SourcingConstants.EVALUATION_TYPE_TIER2.equals(evaluationType)) {
 								//#28784
@@ -5265,7 +5272,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 										|| SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 										|| SourcingConstants.DEMO_EVALUATION_REPORT.equalsIgnoreCase(report.getTitle())) {//#28784
 									getManagedBean().getEvaluationReportList().add(report);
-									iterator.remove();
+//									iterator.remove();// 37622 - remove code
 								}
 							}
 						// 18685 - END.	
@@ -7269,4 +7276,101 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return "";
 	}
 	// 25791-End
+	
+	// Bug #36730@Syazani 07/01/2025 -- Start
+	protected void validateSupplierCriteriaIntegrity(ScQt scQt) {
+		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
+		if (null == supplierCriteria) {
+			return;
+		}
+
+		Long locLevel = null != supplierCriteria.getLocationLevel()
+				&& null != supplierCriteria.getLocationLevel().getParameterId() ? supplierCriteria.getLocationLevel()
+				.getParameterId() : 0L;
+
+		if (!scQt.isZonal()) {
+			validateSupplierCriteriaIntegrityNonZonal(supplierCriteria, locLevel);
+		} else {
+			validateSupplierCriteriaIntegrityZonal(supplierCriteria, scQt);
+		}
+	}
+	
+	private void validateSupplierCriteriaIntegrityNonZonal(ScQtSupplierCriteria supplierCriteria, Long locLevel) {
+		if (!CollectionUtils.isEmpty(supplierCriteria.getScQtLocCriteria())) {
+			for (ScQtLocCriteria sqlc : supplierCriteria.getScQtLocCriteria()) {
+				if ((null == sqlc.getPmDistrict() && locLevel
+						.equals(ParameterConst.SUPPLIER_CRITERIA_LOCATION_LEVEL_DISTRICT))
+						|| (null != sqlc.getPmDistrict() && locLevel
+								.equals(ParameterConst.SUPPLIER_CRITERIA_LOCATION_LEVEL_STATE))) {
+					((QTDetailManagedBean) getManagedBean()).setZoneTrees(null);
+					throw new EpException(MessageConst.ERROR_760067);
+				}
+			}
+		}
+	}
+	
+	private void validateSupplierCriteriaIntegrityZonal(ScQtSupplierCriteria supplierCriteria, ScQt scQt) {
+		String zoneLocationLevel;
+		List<TplSpecZoneDtl> zoneDetails = null;
+		if (null != supplierCriteria.getQtZoneCriterias() && null != supplierCriteria.getQtZoneCriterias().getTplSpecZoneDtls()) {
+			zoneDetails = supplierCriteria.getQtZoneCriterias().getTplSpecZoneDtls();
+		}
+
+		if (null != scQt.getZoneLocationLevel() && null != scQt.getZoneLocationLevel().getParameterId()
+				&& !CollectionUtils.isEmpty(zoneDetails)) {
+			zoneLocationLevel = null != scQt.getZoneLocationLevel().getParameterCode() ? scQt.getZoneLocationLevel()
+					.getParameterCode() : "";
+			List<TplSpecZoneLoc> locDetails;
+			for (TplSpecZoneDtl zoneDtl : zoneDetails) {
+				locDetails = zoneDtl.getTplSpecZoneLocs();
+				if (!CollectionUtils.isEmpty(locDetails)) {
+					validateSupplierCriteriaIntegrityZonalLoopLocDetails(locDetails, zoneLocationLevel);
+				}
+			}
+		}
+	}
+
+	private void validateSupplierCriteriaIntegrityZonalLoopLocDetails(List<TplSpecZoneLoc> locDetails,
+			String zoneLocationLevel) {
+		for (TplSpecZoneLoc locDetail : locDetails) {
+			boolean isDistrictProb = zoneLocationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)
+					&& (null == locDetail.getPmDistrict() && locDetail.isZonalLocation());
+			boolean isStateProb = zoneLocationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)
+					&& (null != locDetail.getPmDistrict() && locDetail.isZonalLocation());
+			if (isDistrictProb || isStateProb) {
+				((QTDetailManagedBean) this.getManagedBean()).setZoneGeneralTrees(null);
+				((QTDetailManagedBean) this.getManagedBean()).setBeans(new ArrayList<ZonesBean>());
+				throw new EpException(MessageConst.ERROR_760067);
+			}
+		}
+	}
+	// Bug #36730@Syazani 07/01/2025 -- End
+	
+	// 37622 - start
+	/**
+	 * Create a new list for displaying briefing paper report and filter
+	 * evaluation report form getting displayed
+	 * 
+	 * @param briefingPaperList
+	 * @return report list
+	 */
+	public List<ScQtFinalizationReport> briefingPaperDisplayFilter(List<ScQtFinalizationReport> briefingPaperList) {
+		List<ScQtFinalizationReport> reportList = new ArrayList<>();
+		if (CollectionUtils.isEmpty(briefingPaperList)) {
+			return reportList;
+		}
+		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
+			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
+					.getDocDefinitionKey() : "";
+			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
+					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
+					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+				reportList.add(briefingPaperReport);
+			}
+		}
+		return reportList;
+	}
+	// 37622 - end
 }
