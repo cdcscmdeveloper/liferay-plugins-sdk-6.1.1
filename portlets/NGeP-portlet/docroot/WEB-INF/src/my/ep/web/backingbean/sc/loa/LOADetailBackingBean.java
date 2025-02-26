@@ -10308,11 +10308,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				
 				if (this.getManagedBean().getScQt().isZonal() && !isComplete) {
 					for (ScLoiLoaItem loacalloiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
-						if (resDTO.getScLoiLoaItem().getLoiLoaItemId() == loacalloiLoaItem.getLoiLoaItemId()
-								|| resDTO.getScLoiLoaItem().getLoiLoaItemId()
+						if (resDTO.getScLoiLoaItem().getLoiLoaItemId()
 										.equals(loacalloiLoaItem.getLoiLoaItemId())
-								|| resDTO.getScLoiLoaItem().getScRequestItem().getRequestNoteItemId() == loacalloiLoaItem
-										.getScRequestItem().getRequestNoteItemId()
 								|| resDTO.getScLoiLoaItem().getScRequestItem().getRequestNoteItemId()
 										.equals(loacalloiLoaItem.getScRequestItem().getRequestNoteItemId())) {
 							loacalloiLoaItem.setComplete(isComplete);
@@ -10517,14 +10514,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
-		String dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
+		String defaultValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
 		FacesScopes facesScopes = new FacesScopes();
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 		if (ReportConst.ENG_LANGUAGE_CODE.equals(pmUser.getPreferredLanguage())) {
-			dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;//29007
+			defaultValue = QTConstants.LAMPIRAN_A3_TEXT_TB;//29007
 		}
 		
 		
@@ -10669,7 +10666,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 
-		context.put(QTConstants.LAMPIRAN_A3_TEXT_SERVICE_SCOPE, dafaltValue);
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_SERVICE_SCOPE, defaultValue);
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_ITEMS_LIST, scLoiLoaItemsList); 
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_IS_ZONAL, scLoa.getScLoiLoa().isZonal());
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_BEAN, this);
@@ -10794,7 +10791,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	// #29007 -end-
 	
 	// #29007 -start-
-	public void verifyConformationForLampiranA3(String bpmAction) {
+	public void verifyConfirmationForLampiranA3(String bpmAction) {
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
@@ -11304,16 +11301,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}
 			}
 
-			int loaItemslampirian = 0;
+			int loaItemsLampiran = 0;
 
 			for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (loiLoaItem.isComplete()) {
-					loaItemslampirian++;
+					loaItemsLampiran++;
 					break;
 				}
 			}
 
-			if (recordCount > 0 && loaItemslampirian == 0) {
+			if (recordCount > 0 && loaItemsLampiran == 0) {
 				getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
 				
 				if (null != this.getManagedBean().getScLoa() && !this.getManagedBean().getScLoa().isBrandNew()) {
