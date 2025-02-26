@@ -108,7 +108,9 @@
 		
 		<ac:lovPopup />
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+		<!-- #34400 -->
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500"
+			header="#{lbl['lbl.btn.dialog.cofirm.header']}">
    			 #{lbl['lbl.sm.supplier.businessnature.confirm.declare']}
    			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{supplierBusinessNatureBackingBean.updateBusinessNature}" oncomplete="submissionConfirmDlg.hide();"></p:commandButton>

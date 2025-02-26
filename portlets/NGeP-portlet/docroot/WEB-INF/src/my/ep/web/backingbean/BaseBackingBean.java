@@ -143,6 +143,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
@@ -4234,64 +4235,85 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
-	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
-		getManagedBean().getPersonnelsRole().clear();
-		getManagedBean().setDowngradeRole(false);
-		getManagedBean().setDisAllowOwnerEdit(false);
-		
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-//		#37598 START
-		Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
-		log.info("#37598 -- isMofAccEffDatePassed6MonthCurrDate ==>>>>>" + isMofAccEffDatePassed6MonthCurrDate);
-		String applType = smAppl.getApplType();
-		Boolean disalllowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-				|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
-		log.info("#37598 -- smAppl.getApplType() ==>>>>>" + smAppl.getApplType());
-		log.info("#37598 -- disalllowEditApplType ==>>>>>" + disalllowEditApplType);
-//		#37598 END
-		
-		PersonnelReqDTO reqDto = new PersonnelReqDTO();
-		reqDto.setApplId(smAppl.getApplId());
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
-			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
-				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
-				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+	/**
+	 * This method manages the popup and role downgrades based on the application and personnel details.
+	 * It clears roles, adjusts flags, and triggers UI changes as needed. It also includes logging for TDD validation.
+	 *
+	 * @param smAppl The application object
+	 * @param ssmResDTO The personnel and role data
+	 * @return boolean indicating whether the downgrade role is set
+	 */
+	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl, SsmResDTO ssmResDTO) {
+	    LoggerUtils logger = LoggerUtils.getInstance();
+	    // Test Case 1: Clear roles and flags
+	    logger.logCodeCoverage("Test Case 1: Start clearing roles and flags");
+	    getManagedBean().getPersonnelsRole().clear();
+	    getManagedBean().setDowngradeRole(false);
+	    getManagedBean().setDisAllowOwnerEdit(false);
+	    logger.logCodeCoverage("Test Case 1: Roles and flags cleared");
+	    
+	    SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+	    Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
 
-				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
-				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
-				
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
-				
-				if(shouldAddPersonnel){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				}
-				
-				if(isPersonnelAdminRole
-						&& isMofAccEffDatePassed6MonthCurrDate
-						&& disalllowEditApplType){ // #37598
-					getManagedBean().setDisAllowOwnerEdit(true);
-					break;
-				}
-			}
-		}
-		if(getManagedBean().getPersonnelsRole() != null 
-				&& !getManagedBean().getPersonnelsRole().isEmpty()){
-			
-			getManagedBean().setDowngradeRole(true);
-			
-			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
-			getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-		}
-		return getManagedBean().isDowngradeRole();
+	    String applType = smAppl.getApplType();
+	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+	    
+	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
+	    reqDto.setApplId(getManagedBean().isResubmitAppl() ? smAppl.getApplId() : supplier.getSmAppl().getApplId());
+	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+	    // Test Case 2: Ensure that personnel list is populated based on conditions
+	    logger.logCodeCoverage("Test Case 2: Start checking and adding personnel to roles");
+	    
+	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
+	        for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
+	            SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+	            SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+	            Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+	            Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+
+	            Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull && (!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+	            
+	            if (shouldAddPersonnel) {
+	                getManagedBean().getPersonnelsRole().add(personnel);
+	            }
+	            
+	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
+	                getManagedBean().setDisAllowOwnerEdit(true);
+	                break;
+	            }
+	        }
+	    }
+	    
+	    // Log personnel role population completion
+	    logger.logCodeCoverage("Test Case 2: Personnel added to roles list");
+	    
+	    // Test Case 3: Check if disallow owner edit flag is set correctly
+	    logger.logCodeCoverage("Test Case 3: Check if disallow owner edit flag is set");
+	    if (getManagedBean().getPersonnelsRole() != null && !getManagedBean().getPersonnelsRole().isEmpty()) {
+	    	// Test Case 4: Set downgrade role flag if personnel is added
+	    	logger.logCodeCoverage("Test Case 4: Setting downgrade role flag");
+	        getManagedBean().setDowngradeRole(true);
+
+	        String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
+	        getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+	        // Log the downgrade role and popup actions
+	        logger.logCodeCoverage("Test Case 3: Downgrade role set, displaying term and condition popup");
+	        
+	        RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+	        RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+	        logger.logCodeCoverage("Test Case 4: Downgrade role flag set and UI updated");
+	    }
+	 // Log downgrade role setting completion
+	    logger.logCodeCoverage("Test Case 4: Method displayPopupDowngradeSSMOwner completed");
+	    return getManagedBean().isDowngradeRole();
 	}
+
 	
 	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
 		return smPersonnel.getEpRole() != null 

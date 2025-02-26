@@ -1742,11 +1742,6 @@ public class LOIDetailBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
-	
-	private IScWorkFlowStatusSO getScWorkflowStatusSO(){
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-	}
 
 	/**
 	 * getting Approver drop down listing in approval details.
@@ -7034,22 +7029,6 @@ public class LOIDetailBackingBean extends
     	SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(suppSearchReqDTO);
     	  
     	return suppSearchResDTO.getSmSupplierBranchList();
-	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
-	
-		Long supplierId = qtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
-		ScQt scQt = this.getManagedBean().getScQt();
-		
-		if(supplierId != null && scQt != null){
-		    return Boolean.TRUE;
-	    }
-		return Boolean.FALSE;
 	}
 	//#28777 & #29729 - End
 	

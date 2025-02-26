@@ -26,17 +26,16 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #34159 - START - add param disablevalidation -->
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.save}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" >
+				<!-- #34159 - START - add param disablevalidation, #34400 -->
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 				<!-- #34159 - END -->
 				</td>
 			</tr>
 		</table>
-
-
+		
 		<p:panel id="UserProfile" toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sm.userprofile.add.new']}" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
@@ -554,12 +553,14 @@
 									<td><p:outputLabel
 											value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 											styleClass="mandatory" /></td>
-									<td  ><p:inputText
+									<td  >
+										<!-- #36717 - add !empty param['disableValidation'] to required condition -->
+										<p:inputText
 											maxlength="100" label="#{lbl['lbl.sm.address']}"
 											id="mailAdd1"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.address1}"
 											size="35"
-											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}" />
 										<p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
@@ -746,7 +747,8 @@
 										<p:outputPanel id="basicMailAddPostCodePanelId">
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId==smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="5" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+												<!-- #36717 - add !empty param['disableValidation'] in required condition -->
+												<p:inputText maxlength="5" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeMy"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
 													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -797,6 +799,14 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
+		<!-- #34400 -->
+		<ac:confirmationPopup id="confirmSaveDlg" widget="confirmSaveDlg"
+			okAction="smPersonnelBackingBean.save"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
 		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
 		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>

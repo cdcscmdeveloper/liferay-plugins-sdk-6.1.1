@@ -307,6 +307,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//#27691 - End
 	}
 	public String validateWithSSM() {
+		this.getManagedBean().setSmSuppOwners(new ArrayList<SmSupplierOwner>()); //#37876
 		this.getManagedBean().setHideButton(false);
 		String regNo = this.getManagedBean().getSmSupp().getRegNo();
 		//30987 - start
@@ -5751,4 +5752,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		return items;
 	} //#36710 --END
+	
+	//#36718 START
+	/**
+	 * To reset correspondence address
+	 * 
+	 */
+	public void onTickSameAddress(){
+		if(!getManagedBean().isSameAddress()){
+			getManagedBean().setSmResAdd(SmApplicationUtil.setDefaultAddr(null));
+		}
+	}
+	//#36718 END
 }

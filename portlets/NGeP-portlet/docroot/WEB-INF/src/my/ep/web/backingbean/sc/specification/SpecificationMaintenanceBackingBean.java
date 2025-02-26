@@ -620,13 +620,18 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		//#33795 - end
 		//#15391 - end		
 		
+		Long status = this.getManagedBean().getQt().getQtStatus() != null ? this.getManagedBean().getQt().getQtStatus().getStatusId() : null; //#29732
 		this.getManagedBean().setQtCategoryList(this.getManagedBean().getQt().getScQtCategorys());//#29732 <--add this coz of impact form #35688 reseting the managebean
 		// #29732 @idham 25/07/2023 - Start
-		if (this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
-				&& !isQtRevisePubNqtPendingScheDoc()) {
+		if (isSpecRoleMaintenanceValidation() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)
+				&& !isQtRevisePubNqtPendingScheDoc() && status.equals(QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL)) {
 			if (isSpecRoleMaintenanceValidation()) {
 				this.getManagedBean().setCategoryDescriptionChange(true); // 29732
-				this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+				if(this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE) && !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(this.getManagedBean().getCurrentStatusId()) 
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(this.getManagedBean().getCurrentStatusId())
+						&& !QTStatusConst.QT_PENDING_CHECKLIST_SCORING_REVISION.equals(this.getManagedBean().getCurrentStatusId())){
+					this.getManagedBean().setCurrentInSpecMaint(true);// #29732 firsttime spec maint
+				}
 			}
 			String changedCatCodeList = specBB.checkCatCodeChange();
 
@@ -658,10 +663,21 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		//#29732 copy prev managebean because has null pointer on status id
 		previousmanagebeanbeforeclear.setCurrentStatusId(this.getManagedBean().getCurrentStatusId());
 		previousmanagebeanbeforeclear.setQt(this.getManagedBean().getQt());
-		previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());//#29732 first time spec maint
+		if(isSpecRoleMaintenanceCheckBox() && this.getManagedBean().getSpecMaintenanceScreen().equals(QTConstants.SPEC_MAINTENANCE)){
+			previousmanagebeanbeforeclear.setCurrentInSpecMaint(this.getManagedBean().isCurrentInSpecMaint());// #29732 first time spec  maint
+		}		
 		this.getManagedBean().setSampleShowHide(isSampleWip);//11104Wip
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, renderPage);//29464
+		// #10141 Start Vinod
+		boolean isReadOnly = this.getManagedBean().isReadOnly();
+		if (!isReadOnly
+				&& Arrays.asList(QTStatusConst.QT_SPEC_MAINTENANCE_INACTIVE_CHECKLIST_UPDATE_GROUP).contains(
+						this.getManagedBean().getCurrentStatusId())) {
+			specBB.checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),
+					QTConstants.SPEC_MAINTENANCE);
+		}
+		// #10141 End Vinod
 		
 	log.debug("end editSpecificationMaintenance");
 }
@@ -831,8 +847,8 @@ public boolean isSpecCommittee() {
 
     private boolean isSpecRoleMaintenanceValidation(){
     	FacesScopes facesScopes = new FacesScopes();
-		return  facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value())
-				|| facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value()); 
+		return  facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value()); 
 	}
     //29732 end
 
@@ -845,4 +861,12 @@ public boolean isSpecCommittee() {
 			return false;
 		}
 	}
+	
+	//29732 -Start
+	private boolean isSpecRoleMaintenanceCheckBox() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.PUBLICATION_APPROVER.value())
+				|| facesScopes.hasRoleUser(RoleCode.SC_SECRETARY.value());
+	}
+	//29732 -End
 }

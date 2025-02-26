@@ -85,9 +85,19 @@
 	</table>
 	
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
-					action="#{reactivateBasicBackingBean.reactivateBasic}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+		<!-- #34400 - start -->
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form" 
+			oncomplete="if (!args.validationFailed) confirmDlg.show();" />
 	</div>
+	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+			bean="#{reactivateBasicBackingBean}"
+			okAction="reactivateBasic"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.reactivate']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+	<!-- #34400 - end -->
 	<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
 		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
