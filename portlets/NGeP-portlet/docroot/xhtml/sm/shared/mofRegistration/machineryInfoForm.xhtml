@@ -239,7 +239,8 @@
 							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedMachine.smMachineCategories}">
 								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code} 
-									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br />
+									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3, false, false)})" style="float:left"/><br />
+								<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 							</ui:repeat>
 						</p:outputPanel>
 							<!-- style="float: left;white-space: normal;" -->
