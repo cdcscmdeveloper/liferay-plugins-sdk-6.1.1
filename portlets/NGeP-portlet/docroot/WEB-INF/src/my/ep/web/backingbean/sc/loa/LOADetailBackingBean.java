@@ -2035,7 +2035,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							&&	scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
 							filename.append(QTConstants.LAMPIRAN_A3_FILE_EXTENSION_PDF);
 							scLoaReportAttachment.setFileName(filename.toString().replaceAll("/",""));
-							log.info("filename--->    "+scLoaReportAttachment.getFileName());
 							generateLampiranA3PdfFromVelocity(scLoaReportAttachment, scLoa);
 						}else{
 						//#29007 End Vinod
@@ -10578,7 +10577,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		this.getManagedBean().setNewSupplierJustification(
 				loiLoaItem.getLoaSpecJustification());
 		if (this.getManagedBean().getScQt().isZonal() && mainSearch) {// 29007-start
-			log.info("===========zonalcodesexecuted=====");
 			List<ScLoiLoaItem> zonalItemList = new ArrayList<>();
 			for (ScLoiLoaItem loacalloiLoaItem : this.getManagedBean()
 					.getScLoa().getScLoiLoaItems()) {
@@ -11337,8 +11335,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @param bpmAction
 	 * @return 
 	 */
-	public void verifyCinformationForLampiranA3(String bpmAction){
-		log.info("verifyConfirmationForLampiranA3");
+	public void verifyConfirmationForLampiranA3(String bpmAction){
 		ITemplateSpecSO templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto=new TemplateSpecReqDTO();
 		int recordCount = 0;
@@ -11514,7 +11511,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return 
 	 */
 	public void addNewOfferedSpec(TplSpecAnswer spec){
-		log.info("addNewOfferedSpec");
 		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
 		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
 			if(tplSpecAnswer.getTplSpecQuestion().getClSpecDetail().equals(specDet)){
@@ -11528,7 +11524,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return 
 	 */
 	public void refreshNewOfferedSpec(TplSpecAnswer spec){
-		log.info("refreshNewOfferedSpec");
 		String specDet = spec.getTplSpecQuestion().getClSpecDetail();
 		for(TplSpecAnswer tplSpecAnswer : this.getManagedBean().getTplSpecAnswerList()){
 			if(tplSpecAnswer.getTplSpecQuestion().getClSpecDetail().equals(specDet)){
@@ -11933,7 +11928,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				}//29007-End
 			}
 		}
-		log.info("==============endcreateLampiranA3forQTVerification=============");
 	}//29007-End
 	
 	//#25025 - start

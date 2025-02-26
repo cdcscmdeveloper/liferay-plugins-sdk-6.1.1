@@ -1711,7 +1711,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 		if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)){//29007-Start
-			log.info("==========29007VerificationCodesExecutedSaveAndVerify========");
 			TemplateSpecBean bean = new TemplateSpecBean(
 					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
 			bean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
@@ -4572,7 +4571,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if (StringUtils.isNotBlank(scLoaReport.getTitle()) && scLoaReport.getTitle().contains(lampiranA3SubStr)) {
 							filename.append(QTConstants.LAMPIRAN_A3_FILE_EXTENSION_PDF);
 							scLoaReportAttachment.setFileName(filename.toString().replaceAll("/",""));
-							log.info("filename--->    "+scLoaReportAttachment.getFileName());
 							generateLampiranA3PdfFromVelocity(scLoaReportAttachment, scLoa);
 						}else{
 						//#29007 End Vinod
@@ -10530,14 +10528,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			String requestItemQuestionName = scloiloaitem.getScRequestItem()
 					.getTplSpecQuestion().getClItem();
 			String specQuestionName = tplSpecQuestion1.getClItem();
-			log.info("==========searchSupplierSpecificationrequestItemQuestionId========="
-					+ requestItemQuestionId);
-			log.info("==========searchSupplierSpecificationspecQuestionId========="
-					+ specQuestionId);
-			log.info("==========searchSupplierSpecificationrequestItemQuestionName========="
-					+ requestItemQuestionName);
-			log.info("==========searchSupplierSpecificationspecQuestionName========="
-					+ specQuestionName);// 29007-End
 			if (scloiloaitem.getScRequestItem().getTplSpecQuestion()
 					.getSpecQuestionId()
 					.equals(tplSpecQuestion1.getSpecQuestionId())
@@ -10601,8 +10591,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO()
 						.saveScloiloaitemforDirectLOA(awardReqDTOnew);
 				if (awardResDTOnew.isSuccessful()) {
-					log.info("WIP data Saved :"
-							+ templateSpecResDTO.getSpecAnswerList().size());
 					this.getManagedBean()
 							.getScLoa()
 							.setScLoiLoaItems(

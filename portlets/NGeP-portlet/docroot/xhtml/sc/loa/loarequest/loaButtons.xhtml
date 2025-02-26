@@ -164,7 +164,7 @@
 									rendered="#{isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
 									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.verifyCinformationForLampiranA3(bpmAction)}"
+									action="#{lOADetailBackingBean.verifyConfirmationForLampiranA3(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" />
 								<ui:remove> #29007 End Vinod </ui:remove>
