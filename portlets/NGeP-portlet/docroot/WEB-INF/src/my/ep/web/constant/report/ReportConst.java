@@ -1181,6 +1181,15 @@ public class ReportConst implements Serializable{
 	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
 	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
 	// Bug #34996@Syazani 16/08/2023 -- End
+	// #10141 Start Vinod
+	public static final String SC_PVW_TECH_CHECKLIST_SUMMARY_JSP = "SC_PVW_TECH_CHECKLIST_SUMMARY.jsp";
+	public static final String SC_PVW_TECH_CHECKLIST_DTL_JSP = "SC_PVW_TECH_CHECKLIST_DTL.jsp";
+	public static final String SC_PVW_FIN_CHECKLIST_SUMMARY_JSP = "SC_PVW_FIN_CHECKLIST_SUMMARY.jsp";
+	public static final String SC_PVW_FIN_CHECKLIST_DTL_JSP = "SC_PVW_FIN_CHECKLIST_DTL.jsp";
+	public static final String SC_PVW_TECH_SCORING_JSP = "SC_PVW_TECH_SCORING.jsp";
+	public static final String SC_PVW_FIN_SCORING_JSP = "SC_PVW_FIN_SCORING.jsp";
+	public static final String SC_PVW_OVERALL_SCORING_JSP = "SC_PVW_OVERALL_SCORING.jsp";
+	// #10141 End Vinod
 	
 	public ReportConst(){}
 	

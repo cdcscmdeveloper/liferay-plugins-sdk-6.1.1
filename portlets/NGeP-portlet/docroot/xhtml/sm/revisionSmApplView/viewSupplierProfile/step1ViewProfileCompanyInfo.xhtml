@@ -3,8 +3,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ui:remove>#34031</ui:remove>
 	<table style="width: 100%">
 			<tr>
 				<td style="width: 20%; vertical-align: top;" class="sidemenutd"><ui:include
@@ -30,6 +31,13 @@
 					<!-- #27481 - end -->
 					<!-- 26238 -->
 					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/disciplinaryActionInfo.xhtml" />
+					<ui:remove>#34031 Start</ui:remove>
+					<c:if test="#{fn:containsIgnoreCase(requestScope['javax.servlet.forward.request_uri'], 'supplier-profile') and 
+						!empty viewSmApplBackingBean.managedBean.smRevisitList}">
+						<ui:include
+							src="/xhtml/sm/shared/supplierDataMaintenance/revisitInfo.xhtml" />
+					</c:if>
+					<ui:remove>#34031 End</ui:remove>
 				</td>
 			</tr>
 
