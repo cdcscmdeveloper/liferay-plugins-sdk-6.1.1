@@ -5422,7 +5422,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 																&& ans.getTplSpecSuppAnswer().getTplSpecZoneDtl()
 																		.getSpecZoneId()
 																		.equals(zoneDtl.getSpecZoneId())) {
-															map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); //35295 #124 @zaim
+															//35295 #124 @zaim start
+															answerRemark = ans.getAnswerRemark() == null ? SSTConstant.TB
+																	: ans.getAnswerRemark();
+															map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answerRemark, 13,SSTConstant.FILE_TYPE_DOC)); 
+															//35295 #124 @zaim end
 														}
 													}
 													isZonalAdded = Boolean.TRUE;
