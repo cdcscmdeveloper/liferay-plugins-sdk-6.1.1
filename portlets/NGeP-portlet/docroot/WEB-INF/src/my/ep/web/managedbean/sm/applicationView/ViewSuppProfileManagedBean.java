@@ -182,6 +182,7 @@ public class ViewSuppProfileManagedBean extends
 	private SmRvAssistOfficer selectedRvAssistOfficer;
 	private boolean disableAddSmRvAssistOfficerBtn;
 	private int smRvAttachedFileIndex;
+	private String smRvFilePath;
 	private SmRvSuppDoc smRvSuppDoc;
 	private SmRvDocFile smRvDocFile;
 	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
@@ -1060,6 +1061,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSmRvAttachedFileIndex(int smRvAttachedFileIndex) {
 		this.smRvAttachedFileIndex = smRvAttachedFileIndex;
+	}
+	
+	public String getSmRvFilePath() {
+	    return smRvFilePath;
+	}
+
+	public void setSmRvFilePath(String smRvFilePath) {
+	    this.smRvFilePath = smRvFilePath;
 	}
 
 	public SmRvSuppDoc getSmRvSuppDoc() {

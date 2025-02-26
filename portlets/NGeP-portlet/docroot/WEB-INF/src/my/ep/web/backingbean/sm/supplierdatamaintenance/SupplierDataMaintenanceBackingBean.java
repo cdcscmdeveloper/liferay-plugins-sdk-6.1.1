@@ -371,8 +371,12 @@ public class SupplierDataMaintenanceBackingBean extends
 		addSmRvAssistOfficer();
 		
 		initSmRvDoc();
-		initSmRvHistory();
+		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_REVISIT_FILE_PATH)
+				+ this.getManagedBean().getSmAppl().getApplId() + "/" + DateUtils.dateToString("yyyyMMdd_HHmmss", Calendar.getInstance().getTime())
+				+ "/";
+		this.getManagedBean().setSmRvFilePath(filePath);
 		
+		initSmRvHistory();
 		this.getManagedBean().getSmRevisit().setRevisitPrevRemark(getPrevRevisitRemark());
 		// #34031 End
 	}
@@ -2920,9 +2924,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null && this.getManagedBean().getSmRevisit().getSmRvSuppDocs().contains(this.getManagedBean().getSmRvSuppDoc())) {
-			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_REVISIT_FILE_PATH)
-					+ this.getManagedBean().getSmAppl().getApplId() + "/"
-					+ DateUtils.dateToString("yyyyMMdd_HHmmss", Calendar.getInstance().getTime()) + "/";
+			String filePath = this.getManagedBean().getSmRvFilePath();
 			SmRvSuppDoc doc = this.getManagedBean().getSmRvSuppDoc();
 			SmRvDocFile docFile = new SmRvDocFile();
 			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
