@@ -24,10 +24,10 @@
 				escape="false" />
 
 			<div align="right">
+				<ui:remove>action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.download']}"
-					partialSubmit="true" ajax="false"
-					action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
-					styleClass="BtnSpacing" process="@this" />
+					partialSubmit="true" ajax="false" styleClass="BtnSpacing"
+					process="@this" />
 			</div>
 		</p:panel>
 
@@ -71,10 +71,10 @@
 
 			</p:dataTable>
 			<div align="right">
+				<ui:remove>action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.download']}"
-					partialSubmit="true" ajax="false"
-					action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"
-					styleClass="BtnSpacing" process="@this" />
+					partialSubmit="true" ajax="false" styleClass="BtnSpacing"
+					process="@this" />
 			</div>
 		</p:panel>
 		<div align="right">
