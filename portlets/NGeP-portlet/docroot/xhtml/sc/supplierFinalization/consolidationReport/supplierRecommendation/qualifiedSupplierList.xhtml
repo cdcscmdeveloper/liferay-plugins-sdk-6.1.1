@@ -163,28 +163,18 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
-				
-				<ui:remove> #26247 - #32687 - Start </ui:remove>
-				<p:column rendered="#{!empty qualifiedSupp.smMofAccount and qualifiedSupp.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{qualifiedSupp.smMofAccount.mofRegStatus}"/>							  	 
+				<ui:param name="supplier"
+					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-					 rendered="#{!empty qualifiedSupp.smMofAccount and qualifiedSupp.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{qualifiedSupp.smMofAccount.mofRegStatus}"/>							  	 
-				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty qualifiedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
-				</p:column>
-				<ui:remove> #26247 - #32687 - End </ui:remove>
-						
 				<p:column>
-					<ac:disciplinaryActionYesNo
-						supplier="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}"/>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
-				
 				<p:column rendered="#{false}" >
 					<h:outputText value="" />
 				</p:column>
@@ -366,37 +356,20 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
 				</p:column>
-				
-				<ui:remove> #26247 - #32687 - Start </ui:remove>
-				<p:column rendered="#{!empty disqualifiedSupp.smMofAccount and disqualifiedSupp.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{qualifiedSupp.smMofAccount.mofRegStatus}"/>							  	 
+
+				<ui:param name="supplier"
+					value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-					 rendered="#{!empty disqualifiedSupp.smMofAccount and disqualifiedSupp.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{disqualifiedSupp.smMofAccount.mofRegStatus}"/>							  	 
-				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty disqualifiedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
-				</p:column>
-				<ui:remove> #26247 - #32687 - End </ui:remove>
-						
 				<p:column>
-				<!-- #31033 start -->
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;" 
-						rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
-						process="@this" partialSubmit="true" update=":form">
-							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}" styleClass="warning" />
-					</p:commandLink><p:spacer width="2"/>
-					<!-- #31033 End -->
-					
-					<h:outputText rendered="#{!disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
-					 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
-				
+
 				<p:column rendered="#{false}" >
 					<h:outputText value="" />
 				</p:column>
@@ -420,7 +393,9 @@
 					<p:inputText id="deskOfficerRankInput" value="#{disqualifiedSupp.deskOfficerRank}" 
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
-								 disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0 or disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or (disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or isDisqualified}"> 
+								 disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0 
+								 or consolidationReportBackingBean.disabledQTProcess(consolidationReportBackingBean.managedBean.scQt, disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
+								 or disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or (disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or isDisqualified}"> 
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 							maxIntegerDigits="4" integerOnly="true"  />

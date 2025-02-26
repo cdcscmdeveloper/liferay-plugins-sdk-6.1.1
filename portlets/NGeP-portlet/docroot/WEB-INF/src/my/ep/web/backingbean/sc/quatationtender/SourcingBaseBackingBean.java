@@ -214,6 +214,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
@@ -277,7 +278,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
-	
+	private final Map<String, String> recordStatusParamMap = new HashMap<>();
 	/**
 	 * Logger instance.
 	 */
@@ -7373,4 +7374,49 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
+	/**
+	 * Retrieve mof status descriptions
+	 * @param object
+	 * @return mof status description
+	 */
+	public String evaluateMOFStatus(Object object) {
+		if (recordStatusParamMap.isEmpty()) {
+			List<PmParameterDesc> paramDescs = this.getParameterDescsByTypeAndSearchBean(
+					ParameterTypeConst.RECORD_STATUS, null);
+			for (PmParameterDesc paramDesc : paramDescs) {
+				recordStatusParamMap.put(
+						paramDesc.getPmParameter().getParameterCode().concat(paramDesc.getLanguageCode()),
+						paramDesc.getCodeName());
+			}
+		}
+
+		SmMofAccount mofAccount = (SmMofAccount) object;
+		Locale locale = new FacesScopes().getUserLocale();
+		String mofStatus = "0";
+		if (null != mofAccount) {
+			mofStatus = mofAccount.getRecordStatusFlg().toString();
+		}
+		return recordStatusParamMap.get(mofStatus.concat(locale.getLanguage()));
+	}
+	
+	/**
+	 * Evaluate if qt is disabled for futher action
+	 * @param scQt
+	 * @param supplier
+	 * @return
+	 */
+	public boolean disabledQTProcess(ScQt scQt, SmSupplier supplier) {
+		
+		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
+		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
+		List<String> statusKeys = Arrays.asList("suspendedCancel", "suspendedBlacklist", "deletedCancel",
+				"deletedBlacklist");
+		for (String statusKey : statusKeys) {
+			if (viewSuppProfileBean.evaluateAccountStatus(statusKey, supplier)) {
+				return true;
+			}
+		}
+
+		return isDisciplinaryAction;
+	}
 }

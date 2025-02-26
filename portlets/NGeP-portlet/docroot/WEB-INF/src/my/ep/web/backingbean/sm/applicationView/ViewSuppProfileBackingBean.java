@@ -3,11 +3,11 @@ package my.ep.web.backingbean.sm.applicationView;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
-
+import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
@@ -16,6 +16,8 @@ import javax.portlet.PortletRequest;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -28,6 +30,7 @@ import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
@@ -57,8 +60,6 @@ import com.liferay.compat.portal.util.PortalUtil;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmRevisit;
-import my.ep.util.ResourceBundleUtils;
-//#34031 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -72,7 +73,7 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	private static final long serialVersionUID = 377766773512626830L;
 	private static final String SHOW_DA = "disciplinaryActionHistoryDlg.show();";
-
+	private final Map<String, String> accountStatusMap = new HashMap<>();
 	/**
 	 * Pre - render for View Supplier Profile
 	 */
@@ -512,17 +513,94 @@ public class ViewSuppProfileBackingBean extends
 		return statusName;
 	}
 	// #34031 End
+
+	private void initAccountStatusMap() {
+		if (!accountStatusMap.isEmpty()) {
+			return;
+		}
+		Locale localeEn = new Locale(CommonConstants.DEFAULT_USER_LANGUAGE_CODE,
+				CommonConstants.DEFAULT_USER_COUNTRY_CODE);
+		Locale localeMs = new Locale(CommonConstants.TRACKING_DIARY_LANGUAGE_CODE,
+				CommonConstants.TRACKING_DIARY_COUNTRY_CODE);
+		List<Locale> locales = Arrays.asList(localeEn, localeMs);
+		for (Locale locale : locales) {
+			String languageCode = locale.getLanguage();
+			String deletedPreStatement = ResourceBundleUtils.getMessage("lbl.sm.mof.status.deleted1",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale).concat(" (");
+			String suspendedPreStatement = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale).concat(" (");
+
+			accountStatusMap.put("active".concat(languageCode), ResourceBundleUtils.getMessage(
+					"lbl.sm.mof.status.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			accountStatusMap.put("expired".concat(languageCode), ResourceBundleUtils.getMessage(
+					"lbl.sm.mof.status.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			accountStatusMap.put(
+					"suspendedCancel".concat(languageCode),
+					suspendedPreStatement.concat(ResourceBundleUtils.getMessage(
+							"lbl.sm.disciplinary.jktt.cancel.registration", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale).concat(")")));
+			accountStatusMap.put(
+					"deletedCancel".concat(languageCode),
+					deletedPreStatement.concat(ResourceBundleUtils.getMessage(
+							"lbl.sm.disciplinary.jktt.cancel.registration", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale).concat(")")));
+			accountStatusMap.put(
+					"suspendedBlacklist".concat(languageCode),
+					suspendedPreStatement.concat(ResourceBundleUtils.getMessage(
+							"lbl.sm.disciplinary.jktt.blacklist.owner", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale).concat(")")));
+			accountStatusMap.put(
+					"deletedBlacklist".concat(languageCode),
+					deletedPreStatement.concat(ResourceBundleUtils.getMessage(
+							"lbl.sm.disciplinary.jktt.blacklist.owner", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale).concat(")")));
+
+		}
+	}
+
+	/**
+	 * Evaluate account status state
+	 * @param key
+	 * @param supplier
+	 * @return boolean flag if supplier in the give state
+	 */
+	public boolean evaluateAccountStatus(String key, SmSupplier supplier) {
+		initAccountStatusMap();
+		System.out.println("---> t30tjar4p5 1014823");
+		Locale locale = new FacesScopes().getUserLocale();
+		String keyLocale = key.concat(locale.getLanguage());
+		if (!accountStatusMap.containsKey(keyLocale)) {
+			throw new IllegalArgumentException("Key was not defined!");
+		}
+		String status = StringUtils.deleteWhitespace(accountStatusMap.get(keyLocale));
+		return status.equalsIgnoreCase(StringUtils.deleteWhitespace(supplier.getSupplierStatus()));
+	}
 	
 	/**
-	 * Evaluate suspension status based on supplier
+	 * Evaluate suspension status based on supplier. 
+	 * This supposed to be from SM. 
 	 * 
 	 * @param supplier
 	 * @return
 	 */
-	public String evaluateSuspensionStatus(SmSupplier supplier) {
+	public String evaluateQTWarningMessage(SmSupplier supplier) {
+		initAccountStatusMap();
 		Locale locale = new FacesScopes().getUserLocale();
-		String uuid = UUID.randomUUID().toString();
-		return ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				locale).concat(uuid);
+		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
+		String message = StringUtils.EMPTY;
+		if (ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus)
+				&& (evaluateAccountStatus("suspendedCancel", supplier) || evaluateAccountStatus("deletedCancel",
+						supplier)) && !supplier.isDisciplinaryActions()) {
+			message = message
+					+ MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { supplier.getSupplierStatus() },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
+		}
+		if (true) {
+			if (StringUtils.isNotEmpty(message)) {
+				message = message + "<br/><br/>";
+			}
+			message = message + message;
+		}
+		return message;
 	}
 }

@@ -20,10 +20,11 @@
 		<cc:attribute name="smAppl" type="my.ep.persistence.entity.sm.SmAppl" />
 		<!-- 30842 End -->
 		<cc:attribute name="btnView" default="false" />
+		<cc:attribute name="dynamic" default="false" />
 	</cc:interface>
 	<cc:implementation>
 	<p:dialog id="disciplinaryActionHistoryDlgId" 
-		header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" 
+		header="#{!cc.attrs.btnView ? cc.attrs.dialogHeader : cc.attrs.dialogHeader1}" dynamic="#{cc.attrs.dynamic}"
 		closable="true"
 		widgetVar="disciplinaryActionHistoryDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="auto"
 		resizable="false" style="display: block; overflow: hidden;">		
