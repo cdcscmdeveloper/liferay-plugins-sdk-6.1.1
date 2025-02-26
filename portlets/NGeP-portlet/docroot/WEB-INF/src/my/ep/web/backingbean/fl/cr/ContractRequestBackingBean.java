@@ -2070,22 +2070,33 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				IFulfilmentSO.class);
 		FlActor actor = null;
 
-		if (getManagedBean().getFlRequest() != null && getManagedBean().getFlRequest().getFulfilmentReqId() != null) {
+		if (getManagedBean().getFlRequest() != null && getManagedBean().getFlRequest().getDocType() != null
+				&& getManagedBean().getFlRequest().getFulfilmentReqId() != null) {
 			actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFlRequest().getDocType(), getManagedBean()
 					.getFlRequest().getFulfilmentReqId(), FulfilmentConst.ROLE_CODE_REQUISITIONER);
-		}
-		if (actor != null) {
-			getManagedBean().setPreparedBy(actor.getUserName());
-		} else {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getUserIdSessionFromLoginId());
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-			if (userResDTO.getPmUser().getUserName() != null) {
-				getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
-			}
 
+			if (actor != null) {
+				Long userId = actor.getUser().getUserId();
+				if (CommonConstants.TRACKING_DIARY_SYSTEM_USER_ID.equals(userId) 
+	                    || CommonConstants.SYSTEM_USER_ID.equals(userId)) {
+					getManagedBean().setPreparedBy(
+							ResourceBundleUtils.getMessage("lbl.pm.system", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									getFacesScopes().getUserLocale()));
+				} else {
+					getManagedBean().setPreparedBy(actor.getUserName());
+				}
+				return;
+			}
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getUserIdSessionFromLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+
+		if (userResDTO.getPmUser().getUserName() != null) {
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
 		}
 	}
 
