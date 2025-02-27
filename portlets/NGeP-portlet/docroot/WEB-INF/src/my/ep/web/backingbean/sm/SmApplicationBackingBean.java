@@ -4072,6 +4072,7 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
 			// #37779 - Start
 			if (getManagedBean().isSupplierUser()) {
+				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 				validSave = SmApplicationUtil.validateBankBeforeSave(validSave,
 						getManagedBean(), currentTab);
 			}
