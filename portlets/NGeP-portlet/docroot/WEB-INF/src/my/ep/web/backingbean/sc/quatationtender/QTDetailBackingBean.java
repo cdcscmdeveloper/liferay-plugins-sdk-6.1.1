@@ -2679,23 +2679,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-		
+			//25791 -start
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>();
+			//25791 -end
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
-				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)
-						// ***19336#99 - start
-						&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) 
-						// ***19336#99 - end
-						) {
-					if (!StringUtils.isBlank(docNo)) {
-						SearchFilterBean bean = new SearchFilterBean();
-						bean.setSearchField("loiNo");
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);	
-					}
+				// 25791-start-
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+					searchFilterBean = setDocNumBean(docNo, searchFilterBean,
+							SourcingConstants.LOI_NO);
+					// 25791-end-
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
@@ -2731,24 +2725,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-		
+			//25791 -start-
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>();
+			//25791 -end-
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
+				// 25791 -start-
 				if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
-					if (!StringUtils.isBlank(docNo) 
-							// ***19336#99 - start
-							&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) 
-							// ***19336#99 - end
-						)
-							{
-						SearchFilterBean bean = new SearchFilterBean();
-						bean.setSearchField("loaNo");
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);	
-					}
+					searchFilterBean = setDocNumBean(docNo, searchFilterBean,
+							SourcingConstants.LOA_NUMBER);
+					// 25791-end-
+
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
@@ -2770,10 +2758,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//30418-START
 			//Special Case for LOA Doctype QT Maintenance Search, procurement mode is search against SC_LOA instead of SC_QT
 			if (StringUtils.isNotEmpty(qtnTenderSearchBean.getProcurementMode())) {
+				// 25791 -start-
 				searchFilterBean.add(new SearchFilterBean(
-						"procurementMode.parameterCode",
+						SourcingConstants.LOA_PROCUREMNT_MODE,
 						SearchOperator.OPERATOR_EQUALS.value(),
 						qtnTenderSearchBean.getProcurementMode()));
+				// 25791 -end-
 			}
 			//30418-END
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -14024,4 +14014,30 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * set document number during LOI or LOA seach in qtmaintenance and Audit
+	 * screen.
+	 * 
+	 * @param docNum
+	 * @param searchFilterBean
+	 * @param serachField
+	 * @return List<SearchFilterBean>
+	 */
+	private List<SearchFilterBean> setDocNumBean(String docNum,
+			List<SearchFilterBean> searchFilterBean, String serachField) {
+		if (StringUtils.isNotBlank(docNum) || StringUtils.isNotEmpty(docNum)) {
+			SearchFilterBean docNumBean = new SearchFilterBean();
+			docNumBean.setSearchField(serachField);
+			docNumBean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			docNumBean.setSearchValue(docNum);
+			searchFilterBean.add(docNumBean);
+		}
+		return searchFilterBean;
+	}
+
+	// 25791 -end-
+
+
 }
