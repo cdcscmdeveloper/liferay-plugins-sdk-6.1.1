@@ -46,6 +46,7 @@ public class SPKIHelper {
 		reqDTO.setIdentificationNo(identificationNo);
 		reqDTO.setSoftCertProvider(provider);
 		reqDTO.setDataForSigning(dataForSigning);
+		reqDTO.setPin(pin);
 		try {
 			resDTO = SmServiceLookup.getSpkiSO().signData(reqDTO);
 			signedData = resDTO.getSignedData();

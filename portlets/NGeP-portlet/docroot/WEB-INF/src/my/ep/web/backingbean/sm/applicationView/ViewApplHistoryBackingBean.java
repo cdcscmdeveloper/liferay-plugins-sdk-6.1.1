@@ -626,8 +626,7 @@ public class ViewApplHistoryBackingBean extends
 
 	// #36401 - Start
 	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
-	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
-			List<SmMofCert> mofCerts) {
+	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(List<SmMofCert> mofCerts) {
 		List<SmMofCert> cert = new ArrayList<>();
 		List<SmMofCert> bumiCert = new ArrayList<>();
 

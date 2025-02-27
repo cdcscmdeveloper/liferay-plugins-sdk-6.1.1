@@ -863,7 +863,7 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public void setOpenFor(ScQt scQt, BigDecimal amount) {
 		debugLogger("setOpenFor,@qtNo = " + scQt.getQtNo());
 
-		boolean isQuotationThresHold = isQuotationThresHold(amount);
+		//boolean isQuotationThresHold = isQuotationThresHold(amount);
 		boolean isPanel = scQt.isPanel();
 
 		if (amount != null) {

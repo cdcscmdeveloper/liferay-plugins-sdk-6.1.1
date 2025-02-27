@@ -12846,6 +12846,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		return toBeRemovedList;
 	}
 
+	/*
 	private void removeDuplicateFinancialSpec(String flowType,
 			List<ScQtCheckList> toBeRemoveCheckLists) {
 		IQTSpecSO specSo = null;
@@ -12868,6 +12869,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 			specSo = null;
 		}
 	}
+	*/
 
 	/**
 	 * Creates the template spec.user clicks on create or clone buttons in template spec popup screen.
@@ -15341,7 +15343,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				
 				if (null != remarks) {
 					for (int i = 0; i < remarks.size(); i++) {
-						ScQtSpecificationRemark Remark = remarks.get(0);
+						//ScQtSpecificationRemark Remark = remarks.get(0);
 						String userRemark = remarks.get(i).getRemark();
 						
 						if (null == userRemark || "".equals(userRemark)) {
