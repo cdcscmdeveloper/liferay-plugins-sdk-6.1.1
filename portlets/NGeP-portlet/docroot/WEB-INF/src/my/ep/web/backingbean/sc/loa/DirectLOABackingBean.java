@@ -8711,25 +8711,32 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public SelectItem[] getQTTypesDropdownValues() {
 		ScLoa scLoa = getManagedBean().getScLoa();
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> qtTypes = new ArrayList<String>();
-		
-		/*#34162 Start Vinod
-		if (null != scLoa &&null != scLoa.getProcurementMode()
-				&& ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scLoa
-						.getProcurementMode().getParameterCode())) {*/
-			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode",
-							SearchOperator.OPERATOR_NOT_IN.value(), qtTypes));
-		//}
-		if (null != scLoa
-			&& scLoa.getQtType()!= null 
-			&& scLoa.getQtType().getParameterCode()!=null
-			&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
-				searchBean = new SearchBean<PmParameterDesc>();
+		// #29766 Start Vinod - code refactoring also.
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
+		List<String> qtTypes = new ArrayList<>();
+
+		/* #34162 Start Vinod */
+		String qtType = null != scLoa && scLoa
+				.getQtType() != null && scLoa.getQtType()
+				.getParameterCode() != null ? scLoa
+				.getQtType().getParameterCode() : StringUtils.EMPTY;
+		// Added to remove "PK7" from QT Types Dropdown list if user not selectd already.
+		if (StringUtils.isNotEmpty(qtType) && !qtType
+				.equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)) {
+			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		}
+
+		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(QTSearchBeanConst
+						.SEARCH_PMPARAMETER_PARAMETERCODE, SearchOperator.OPERATOR_NOT_IN
+						.value(), qtTypes));
+		if (StringUtils.isNotEmpty(qtType) && qtType
+				.equals(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER)) {
+			searchBean = new SearchBean<>();
+		}
+		// #29766 End Vinod
 		//#34162 End Vinod
 
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.QUOTATION_TENDER_TYPE,
