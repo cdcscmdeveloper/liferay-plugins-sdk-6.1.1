@@ -137,7 +137,7 @@
 									rendered="#{isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
 									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.verifyConformationForLampiranA3(bpmAction)}"
+									action="#{lOADetailBackingBean.verifyConfirmationForLampiranA3(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" />
 								 <!-- 20190405@asyrafhaziq - CR(25062)- End -->

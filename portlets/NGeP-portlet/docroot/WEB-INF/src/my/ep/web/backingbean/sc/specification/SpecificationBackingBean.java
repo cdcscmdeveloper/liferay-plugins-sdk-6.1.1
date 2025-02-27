@@ -16653,7 +16653,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		// 29732 fix duplicate issues while deleting the category and add the same id -start-
 		if (null != removeCategoryCodes) {
-			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+			List<ScQtCategory> categoryResultsnew;
 			categoryResultsnew = this.getManagedBean().getQtCategoryList();
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
@@ -17212,7 +17212,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		// 29732 fix duplicate issues while deleting the category and add the same id -start-
 		if(null != removeCategoryCodes){
-			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+			List<ScQtCategory> categoryResultsnew;
 			categoryResultsnew = this.getManagedBean().getQtCategoryList();
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
@@ -17225,6 +17225,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					scQt.getQtNo());
 		}
 
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); 
+		//29732 add here, issue could need to delete in dao those category has been delete in managebean
+		//Status : Pending document preparation
+		//Screen : Pending spec preparation (Revision)
 		//#15391 - start
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
