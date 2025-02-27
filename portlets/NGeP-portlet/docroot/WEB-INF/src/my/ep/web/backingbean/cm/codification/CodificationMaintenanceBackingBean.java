@@ -53,6 +53,12 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+//35503 Start
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.cm.AuditCMConst;
+import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBean;
+import my.ep.web.backingbean.cm.audit.AuditCodificationManagementBackingBeanTemplate;
+//35503 End
 
 @ManagedBean(name = "codificationMaintenanceBackingBean")
 @ViewScoped
@@ -673,6 +679,27 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				this.getManagedBean().setSegmentTitleEng(
 						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 						.getUnspscTitleEng());
+				
+				// 35503 Start
+				this.getManagedBean().setAuditCommodityCode(commodity.getUnspscCode());
+				this.getManagedBean().setAuditCommodityTitle(commodity.getUnspscTitle());
+				this.getManagedBean().setAuditCommodityTitleEng(commodity.getUnspscTitleEng());
+
+				this.getManagedBean().setAuditClassCode(commodity.getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
+
+				this.getManagedBean().setAuditFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+
+				this.getManagedBean().setAuditSegmentCode(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditSegmentTitle(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditSegmentTitleEng(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+				// 35503 End
 
 			}
 
@@ -688,6 +715,13 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		this.getManagedBean().setCommodityTitle("");
 		this.getManagedBean().setCommodityTitleEng("");
 
+		// 35503 Start - To set null for all list
+		this.getManagedBean().setAuditTypeExtList(null);
+		this.getManagedBean().setAuditBrandExtList(null);
+		this.getManagedBean().setAuditMeasurementExtList(null);
+		this.getManagedBean().setAuditColourExtList(null);
+		// 35503 End
+				
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
@@ -728,7 +762,28 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				this.getManagedBean().setSegmentTitleEng(
 						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
 						.getUnspscTitleEng());
-				 		
+				
+				// 35503 Start - To get code and title for all code
+				this.getManagedBean().setAuditCommodityCode(commodity.getUnspscCode());
+				this.getManagedBean().setAuditCommodityTitle(commodity.getUnspscTitle());
+				this.getManagedBean().setAuditCommodityTitleEng(commodity.getUnspscTitleEng());
+
+				this.getManagedBean().setAuditClassCode(commodity.getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditClassTitleEng(commodity.getCmUnspsc().getUnspscTitleEng());
+
+				this.getManagedBean().setAuditFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditFamilyTitleEng(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+
+				this.getManagedBean().setAuditSegmentCode(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+				this.getManagedBean().setAuditSegmentTitle(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+				this.getManagedBean().setAuditSegmentTitleEng(
+						commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitleEng());
+				// 35503 End
+				
 		//20200406@azza - CR25551 - Start
 		this.getManagedBean().setExtension(null);
 		this.getManagedBean().setStatus(null);
@@ -925,6 +980,17 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		    }
 		}
 		
+		// 35503 Start - for audit trail required
+		if (resDTO.isSuccessful()) {
+			IAuditTrailSO auditCodificationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+
+			if (auditCodificationSO.isAuditConfig(AuditCMConst.CM_AU_CONF)) {
+				AuditCodificationManagementBackingBeanTemplate auTemplate = new AuditCodificationManagementBackingBean();
+				auTemplate.saveAuditItemCodeMaintenance();
+			}
+		}
+		// 35503 End - for audit trail required
 		
 		renewSesionObject(); 
 		
@@ -1303,6 +1369,13 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 
 		CodificationResDTO resDTO = null;
 		
+		// 35503 Start
+		this.getManagedBean().setAuditTypeExtList(null);
+		this.getManagedBean().setAuditBrandExtList(null);
+		this.getManagedBean().setAuditMeasurementExtList(null);
+		this.getManagedBean().setAuditColourExtList(null);
+		// 35503 End
+				
 		log.info("Data Type " + this.getManagedBean().getData());
 		
 		if(this.getManagedBean().getData().equals("t")){
@@ -1338,6 +1411,10 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 		     }
 	             
 		       log.info("------ start to update ------");
+		       
+			// 35503 Start
+			this.getManagedBean().getAuditTypeExtList().addAll(reqDTO.getExtensionStatusList());
+			// 35503 End
 		        
 			   resDTO = unspscSO.updateTypeExtensionStatus(reqDTO);
 	}
@@ -1374,6 +1451,10 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					
 			}
 			      log.info("------ start to update Brand ------");
+			      
+			// 35503 Start
+			this.getManagedBean().getAuditBrandExtList().addAll(reqDTO.getBrandExtensionStatusList());
+			// 35503 End
 	  		  
 				 resDTO = unspscSO.updateBrandExtensionStatus(reqDTO);
         }
@@ -1404,11 +1485,16 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 				log.info("Measurement id for CmMeasurement " + resDTO.getCmMeasurement().getMeasurementId());
 				  
 			}
-				
+				// 35503 Start - Fix as-is bug
+				reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
+				// 35503 End - Fix as-is bug
 		}
 		
 		 log.info("------ start to update measurment ------");
-		 reqDTO.getMeasurementExtensionStatusList().add(resDTO.getCmMeasurement());
+
+			// 35503 Start
+			this.getManagedBean().getAuditMeasurementExtList().addAll(reqDTO.getMeasurementExtensionStatusList());
+			// 35503 End
 			
 		 resDTO = unspscSO.updateMeasurementExtensionStatus(reqDTO);
 	  } 
@@ -1433,19 +1519,36 @@ public class CodificationMaintenanceBackingBean extends BaseBackingBean<Codifica
 					resDTO.getCmColor().getColorId();
 					resDTO.getCmColor().getColorCode();
 						
-					log.info("Color id for CmColor " + resDTO.getCmColor().getColorId());
-					
-					reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
-					    
+					log.info("Color id for CmColor " + resDTO.getCmColor().getColorId());    
 				}
-					
-					 log.info("------ start to update color ------");
-					 
-				
-				     resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
-			} 
+				// 35503 Start - Fix as-is bug
+				reqDTO.getColorExtensionStatusList().add(resDTO.getCmColor());
+				// 35503 End - Fix as-is bug
+			}
+			
+			log.info("------ start to update color ------");
+			 
+			// 35503 Start
+			this.getManagedBean().getAuditColourExtList().addAll(reqDTO.getColorExtensionStatusList());
+			// 35503 End
+			
+			// 35503 Start - Fix as-is bug
+			resDTO = unspscSO.updateColorExtensionStatus(reqDTO);
+			// 35503 End - Fix as-is bug
 		  }
-		   	 	
+		   
+		// 35503 Start - for audit trail required
+		if (resDTO.isSuccessful()) {
+			IAuditTrailSO auditCodificationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT,
+					IAuditTrailSO.class);
+
+			if (auditCodificationSO.isAuditConfig(AuditCMConst.CM_AU_CONF)) {
+				AuditCodificationManagementBackingBeanTemplate auTemplate = new AuditCodificationManagementBackingBean();
+				auTemplate.saveAuditExtensionCodeMaintenance();
+			}
+		}
+		// 35503 End - for audit trail required
+			
 				renewSesionObject(); 
 						
 				FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
