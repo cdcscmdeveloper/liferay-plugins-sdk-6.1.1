@@ -899,6 +899,9 @@ public class QTCloneBackingbean extends
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 					retriveFulfilmentDtls(copyScqt);//33916
+					//37892,25635 -start-
+					setOtherApprovalLoaded();
+					//37892,25635 -end-
 				}
 				
 			}
@@ -5193,4 +5196,18 @@ public class QTCloneBackingbean extends
 		}
 		return startMonth;
 	}//33916
+	
+	// 37892,25635 -start-
+	/**
+	 * check other approval tab loaded during clone.
+	 */
+	private void setOtherApprovalLoaded() {
+		List<TabBean> approvalOthersTab = this.getManagedBean()
+				.getTabOtherApproval();
+		if (CollectionUtils.isEmpty(approvalOthersTab)) {
+			this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+		}
+	}
+	// 37892,25635 -end-
+	
 }
