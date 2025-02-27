@@ -1659,6 +1659,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						}
 						//#21692 - end
 						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
+						this.getManagedBean().setNoSupplierExistForEPV(CollectionUtils.isEmpty(dataType.getSupplierList()));//#21692 note-569
 						
 						approvalTypes = approveApprovalRequests(qt, 
 								approvalRequests, 
@@ -3526,7 +3527,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (outCome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				msgCode = this.getManagedBean().isProposalValidityRevised() ? MessageConst.INFO_790104 : MessageConst.INFO_790103;
 			} else {
-				msgCode = MessageConst.INFO_790102;
+				msgCode = this.getManagedBean().isNoSupplierExistForEPV() ? MessageConst.INFO_790105 : MessageConst.INFO_790102;
 			}
 			
 			return msgCode;
