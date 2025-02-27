@@ -10344,23 +10344,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			return true;
 		}
 		//#34413 - End
-		
-		if (null != qtType && null != fulfilmentType 
-				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
-				&& ((ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-						&& ParameterConst.FULFILMENT_TYPE_SCHEDULED.equals(fulfilmentType.getParameterCode()))
-				|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-						&& ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN.equals(fulfilmentType.getParameterCode())
-				|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-						&& ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType.getParameterCode()))		
-				|| (ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
-								&& ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType.getParameterCode()))))) {
-				if (null == getManagedBean().getScLoa().getJustificationType()) {
-					getManagedBean().getScLoa().setJustificationType(new PmReason());
-				}
-				return true;
+		//#29766 Start Vinod refactored and added new PK7/WP QT type.
+		boolean isQTtypePK7 = null != qtType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+		boolean isFulfilmentTypeInPK7 = null != fulfilmentType
+				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
+				&& ParameterConst.getFulfilmentTypeCodesForQtTypePK7Checking().contains(
+						fulfilmentType.getParameterCode());
+
+		if (isQTtypePK7 && isFulfilmentTypeInPK7) {
+			if (null == getManagedBean().getScLoa().getJustificationType()) {
+				getManagedBean().getScLoa().setJustificationType(new PmReason());
+			}
+			return true;
 		}
+		//#29766 End Vinod
 		return false;
 	}
 	
@@ -13120,4 +13119,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return false;
 	}
 	// #36757 Start Vinod 05/12/2024
+	// #29766 Start Vinod
+	/**
+	 * This method will check QT Type ’PK 7/WP Item’ and will show warning.
+	 * 
+	 * @param 
+	 * @return 
+	 */
+	public void checkQtTypePk7WpItem() {
+		PmParameter qtType = null;
+		if (null != getManagedBean().getScLoa().getQtType()) {
+			qtType = getManagedBean().getScLoa().getQtType();
+		}
+		boolean isQTtypePK7 = null != qtType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+
+		if (isQTtypePK7) {
+			String procurementType = null != this.getManagedBean()
+					.getScLoa().getProcurementType() ? getParameterDesc(this
+					.getManagedBean().getScLoa().getProcurementType())
+					: "";
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(
+							MessageConst.WARN_7602694, new String[] { procurementType },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+	}
+	// #29766 End Vinod
 }

@@ -312,6 +312,11 @@
 									listener="#{directLOABackingBean.isPk7Periodic()}"
 									partialSubmit="true" 
 									update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 Start Vinod</ui:remove>
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.checkQtTypePk7WpItem()}"
+									update="@all" />
+								<ui:remove>#29766 End Vinod</ui:remove>
 							</p:selectOneMenu>
 							<p:message id="qtTypeMsg" for="qtType" display="icon" />
 						</c:when>
