@@ -255,6 +255,11 @@ public class SupplierDataMaintenanceBackingBean extends
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 					if (cat.getOtherDesc() != null) {
 						isCategoryDescriptionHasChanged = true;
+						//#37605
+						if(!SmApplicationUtil.convertToAscii(cat.getOtherDesc())){
+							throw new EpException(MessageConst.ERROR_760555);
+						}
+						cat.setOtherDesc(SmApplicationUtil.replaceTabWSpace(cat.getOtherDesc()));
 					}
 				}
 			}

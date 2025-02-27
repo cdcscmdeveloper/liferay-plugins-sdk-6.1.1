@@ -1541,6 +1541,18 @@ public class SmApplicationUtil {
 		validateRenewalApplTypeForSpecialCategory(appl);
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
+			//#37605 START
+			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
+				        && !convertToAscii(cat.getOtherDesc())) {
+				    throw new EpException(MessageConst.ERROR_760555);
+				}
+
+				if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
+				    cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+				}
+	        }
+			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
 			if (!StringUtils.isBlank(errMsg)) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -15125,4 +15137,53 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37779 - End
+	
+	//#37605 START
+	/*
+	 * Validate string using ASCII character
+	 */
+	public static boolean convertToAscii(String input) {
+        log.info("ASCII values for the string: \"" + input + "\"");
+        boolean isValid = true;
+        for (char character : input.toCharArray()) {
+            int asciiValue = (int) character; 
+            log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
+            if(asciiValue > 127){
+            	isValid = false;
+            }
+        }
+        return isValid;
+    }
+	
+	/*
+	 * Replace tab with a space
+	 */
+	public static String replaceTabWSpace(String input){
+		String str = null;
+		Map<String, String> documents = new HashMap<>();
+        documents.put("input", input);
+
+        log.info("Before Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        }
+
+        // Replace tabs with spaces in all values
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+            String value = entry.getValue();
+            if (value != null) {
+                // Replace tabs with 1 space
+                value = value.replace("\t", " ");
+                entry.setValue(value); 
+            }
+        }
+        
+        log.info("After Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        	str = entry.getValue();
+        }
+        return str;
+	}
+	//#37605 END
 }
