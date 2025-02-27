@@ -11301,7 +11301,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			try {
 				String techInactive = inactiveChecklistsForError(this.getManagedBean().getScQtCheckSt2techProposal());
 
-				if (techInactive != null && techInactive != "") {
+				if (StringUtils.isNotEmpty(techInactive) || StringUtils.isNotBlank(techInactive)) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
 					throw new EpException(MessageConst.ERROR_775250, new String[] { techInactive });
 				}
@@ -11317,7 +11317,7 @@ if (null != checklist && !checklist.isEmpty()) {
 				String finInactive = inactiveChecklistsForError(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList());
 
-				if (finInactive != null && finInactive != "") {
+				if (StringUtils.isNotEmpty(finInactive) || StringUtils.isNotBlank(finInactive)) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
 					throw new EpException(MessageConst.ERROR_775251, new String[] { finInactive });
 				}
