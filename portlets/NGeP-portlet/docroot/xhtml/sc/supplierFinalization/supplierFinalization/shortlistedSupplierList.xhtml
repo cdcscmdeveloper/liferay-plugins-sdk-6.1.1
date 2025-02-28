@@ -258,28 +258,23 @@
 						</c:otherwise>
 					</c:choose>
 				</p:column>
-				
-				<ui:remove> #26247 - #32687 - Start </ui:remove>
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
+
+				<ui:param name="supplier"
+					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-					 rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
-				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
-				</p:column>
-				<ui:remove> #26247 - #32687 - End </ui:remove>
-						
+
 				<p:column>
 					<ac:disciplinaryActionYesNo
-						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}" />
+						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+						index="#{index}" />
 				</p:column>
-				
+
 				<p:column rendered="#{false}">
 					<h:outputText value="" />
 				</p:column>
@@ -507,28 +502,21 @@
 						</c:otherwise>
 					</c:choose>
 				</p:column>
-				
-				<ui:remove> #26247 - #32687 - Start </ui:remove>
-				<p:column rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
+
+				<ui:param name="supplier"
+					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+				<ui:param name="mofExpired"
+					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+				<p:column
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-					 rendered="#{!empty shortlistedSupp.smMofAccount and shortlistedSupp.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
-					<h:outputText value="#{shortlistedSupp.smMofAccount.mofRegStatus}"/>							  	 
-				</p:column>
-				
-				<p:column style="background-color:red; color:white; font-weight:bold;" 
-						  rendered="#{empty shortlistedSupp.smMofAccount}">
-					<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
-				</p:column>
-				<ui:remove> #26247 - #32687 - End </ui:remove>
-						
+
 				<p:column>
-					<ac:disciplinaryActionYesNo
-						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}"/>
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 				</p:column>
-				
+
 				<p:column  rendered="#{false}">
 					<h:outputText value="" />
 				</p:column>
@@ -748,28 +736,20 @@
 							</c:otherwise>
 						</c:choose>
 					</p:column>
-					
-					<ui:remove> #26247 - #32687 - Start </ui:remove>
-					<p:column rendered="#{!empty shortlistedSuppDisqualified.smMofAccount and shortlistedSuppDisqualified.smMofAccount.mofRegStatus ne lbl['lbl.sc.mof.status.expired']}">
-						<h:outputText value="#{shortlistedSuppDisqualified.smMofAccount.mofRegStatus}"/>							  	 
+					<ui:param name="supplier"
+						value="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+					<ui:param name="mofExpired"
+						value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+					<p:column
+						style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+						<h:outputText
+							value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 					</p:column>
-					
-					<p:column style="background-color:red; color:white; font-weight:bold;" 
-						 rendered="#{!empty shortlistedSuppDisqualified.smMofAccount and shortlistedSuppDisqualified.smMofAccount.mofRegStatus eq lbl['lbl.sc.mof.status.expired']}">
-						<h:outputText value="#{shortlistedSuppDisqualified.smMofAccount.mofRegStatus}"/>							  	 
-					</p:column>
-					
-					<p:column style="background-color:red; color:white; font-weight:bold;" 
-							  rendered="#{empty shortlistedSuppDisqualified.smMofAccount}">
-						<h:outputText value="#{lbl['lbl.sc.mof.status.expired']}"/>
-					</p:column>
-					<ui:remove> #26247 - #32687 - End </ui:remove>
-							
+	
 					<p:column>
-						<ac:disciplinaryActionYesNo
-							supplier="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{index}"/>
+						<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
 					</p:column>
-					
+	
 					<p:column rendered="#{false}}">
 						<h:outputText value="" />
 					</p:column>

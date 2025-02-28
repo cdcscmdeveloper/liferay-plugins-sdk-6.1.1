@@ -52,20 +52,13 @@
 					fn:toUpperCase((suppInfo[2] eq 0)?'false':'true'))}" />
 				</p:column>
 
-				<p:column rendered="#{suppInfo[3] eq true}" style="text-align:center;">
-					<h:outputText value="#{lbl['lbl.pm.status.active']}" />
-				</p:column>
-
+				<ui:param name="mofExpired"
+					value="#{suppInfo[3] == null or suppInfo[3].recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
 				<p:column
-					style="white-space:nowrap; text-align:center;background-color:red; color:white; font-weight:bold;"
-					rendered="#{suppInfo[3] eq false}">
-					<h:outputText value="#{lbl['lbl.sm.status.expired']}" />
+					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+					<h:outputText
+						value="#{consolidationReportBackingBean.evaluateMOFStatus(suppInfo[3])}" />
 				</p:column>
-				<!-- 34746 start -->
-				<p:column rendered="#{suppInfo[3] ne false and suppInfo[3] ne true}"> >
-					<h:outputText value="" />
-				</p:column>
-				<!-- 34746 end -->
 
 			</p:dataTable>
 
