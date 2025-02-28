@@ -144,7 +144,6 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private String auditClassCode;
 	private String auditFamilyCode;
 	private String auditSegmentCode;
-
 	// 35503 end
 
 	public boolean isRecommendExtension(){
