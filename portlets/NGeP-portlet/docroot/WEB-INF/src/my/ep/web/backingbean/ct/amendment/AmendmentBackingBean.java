@@ -7823,24 +7823,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * Method to check is in PBQC authority and DA date has been pass or not
 	 */
 	private boolean isPbqcAuthorityDA() {
-	    return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
-				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()!= null
-				&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()
-						.equals(getManagedBean().getDisciplinaryActionStartDate())
-					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getPbqcDecisionDate()
-						.after(getManagedBean().getDisciplinaryActionStartDate()));
+		Date pbqcDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
+				"contractVer.ctAmendment.pbqcDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
+				.getCtAmendment().getPbqcDecisionDate() : null;
+		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isPbqcAuthorityReq()
+				&& pbqcDate != null
+				&& (pbqcDate.equals(getManagedBean().getDisciplinaryActionStartDate()) || 
+						pbqcDate.after(getManagedBean().getDisciplinaryActionStartDate()));
 	}
 	
 	/**
 	 * Method to check is in MOF authority and DA date has been pass or not
 	 */
 	private boolean isMofAuthorityDA() {
-	    return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()
-				&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()!= null
-				&& (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()
-						.equals(getManagedBean().getDisciplinaryActionStartDate())
-					|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getMofDecisionDate()
-						.after(getManagedBean().getDisciplinaryActionStartDate()));
+		Date mofDate = StringUtils.isNotBlank(EntityHelper.getStringNestedProperty(ctBackingBean.getManagedBean(),
+				"contractVer.ctAmendment.mofDecisionDate")) ? ctBackingBean.getManagedBean().getContractVer()
+				.getCtAmendment().getMofDecisionDate() : null;
+		return ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isMofAuthorityReq()
+				&& mofDate != null
+				&& (mofDate.equals(getManagedBean().getDisciplinaryActionStartDate()) || 
+						mofDate.after(getManagedBean().getDisciplinaryActionStartDate()));
 	}
 
 	

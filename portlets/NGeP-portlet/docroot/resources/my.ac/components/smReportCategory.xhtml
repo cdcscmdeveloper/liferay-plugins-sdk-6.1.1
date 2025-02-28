@@ -1,4 +1,5 @@
-<ui:composition xmlns:cc="http://java.sun.com/jsf/composite"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -13,6 +14,30 @@
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- #37874 -->
+		<script>
+		function fixCatcodeMenu(){
+			var panels = document.getElementsByClassName('ui-selectonemenu-panel');
+			if (!panels || panels.length === 0) { return; }
+			
+			for (var i = 0; i &lt; panels.length; i++) {
+				var panel = panels[i];
+				if (!panel || !panel.id || panel.id.indexOf('catCodeLvl1_panel') === -1) continue;
+				if (!panel.style || panel.style.display === 'none') continue;
+		
+				var left = parseInt(panel.style.left);
+				if (isNaN(left) || left &gt;= 0) continue;
+		
+				panel.style.left = '3px';
+	  		}
+		}
+		
+		jQuery(document).ready(function() {
+			jQuery(document).on('mousedown', '.ui-selectonemenu', function() {
+				setTimeout(fixCatcodeMenu, 200);
+		  });
+		});
+		</script>
 		<p:dataTable var="cat" widgetVar="category"
 			selection="#{cc.attrs.bBean.managedBean.selectedCategoryLs}"
 			value="#{cc.attrs.bBean.managedBean.categoryLs}" rows="10"
