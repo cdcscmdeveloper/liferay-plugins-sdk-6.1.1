@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -31,11 +33,13 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.py.PyBillDtl;
 import my.ep.persistence.entity.py.PyPayment;
+import my.ep.persistence.entity.py.PyPaymentDtl;
 import my.ep.persistence.entity.py.PyPaymentOrder;
 import my.ep.persistence.entity.py.PyPaymentResponse;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -237,7 +241,21 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 						if(resDTO.getPyPayment() != null){
 							billType = resDTO.getPyPayment().getPyBill().getBillType();
 						}
+						//#29481 - Start
+						//if(appl != null && (appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+								//appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+								//(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+						if(billType.equalsIgnoreCase("S")){
+							log.info("Testing 29481 Multi response --in init--");
+							//params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
+							//msgCode = MessageConst.INFO_721068;
+							showPaymentResponseMulti(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls()) ;
+						} else {
+						//#29481 - End
 						showPaymentResponse(status, resDTO.getPyPayment().getPaymentId(), errorDesc, billType, resDTO.getPyPayment().getPyBill().getPyBillDtls().get(0)) ;
+						//#29481 - Start
+						}
+						//#29481 - End
 					}else{
 						showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 					}
@@ -679,7 +697,21 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 			if(resDTO.getPyPayment() != null){
 				billType = resDTO.getPyPayment().getPyBill().getBillType();
 			}
+			//#29481 - Start
+			//if(appl.getSupplierType().equals(SupplierManagementConst.STYPE_BASIC) || 
+					//appl.getSupplierType().equals(SupplierManagementConst.STYPE_GOVT_SELLER) || 
+					//(appl.getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR) && appl.getSmCompanyBasic().isWithFederal()==true)) {
+			if(billType.equalsIgnoreCase("S")){
+				log.info("Testing 29481 Multi response --in responsePreRender--");
+				//params = new String[] {getSoftCertNameEmailMulti(this.getManagedBean().getNewPyBillDtlLs())};
+				//msgCode = MessageConst.INFO_721068;
+				showPaymentResponseMulti(status,Long.valueOf(orderId),errorDesc,billType,resDTO.getPyPayment().getPyBill().getPyBillDtls());
+			} else {
+			//#29481 - End
 			showPaymentResponse(status,Long.valueOf(orderId),errorDesc,billType,resDTO.getPyPayment().getPyBill().getPyBillDtls().get(0));
+			//#29481 - Start
+			}
+			//#29481 - End
 		}else{
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null,null,null);
 		}
@@ -758,7 +790,68 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		log.info("Payment Status >>>>>>>>" + getManagedBean().isPaymentStatus());
 
 	}
+	//#29481 - Start
+	public void showPaymentResponseMulti(String status, Long paymentId, String errorDesc, String billType, List<PyBillDtl> billDtl) {
+		log.info(">>>>showPaymentResponseMULTI<<<<<<<<<<" + status);
+		
+		boolean paymentStatus = false;
+		switch (status) {
+		case SupplierManagementConst.MOL_SUCCESS:
+			log.info(">>>>MOL_SUCCESS<<<<<<<<<<" + status);
 
+			if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_PROCESS_FEE)){
+				getManagedBean().setMessageId(MessageConst.INFO_721058);
+			}else if(billType.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.BILL_TYPE_SOFTCERT)){
+				setMessageSoftcert(paymentId, billDtl);
+			}else{
+				getManagedBean().setMessageId(MessageConst.INFO_721064);
+			}
+			
+			PaymentAcknowledgeBackingBean pymtAckBB = new PaymentAcknowledgeBackingBean();
+			pymtAckBB.getManagedBean().setPaymentId(paymentId);
+			
+			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
+			paymentStatus = true;
+			break;
+
+		case SupplierManagementConst.MOL_FAIL:
+			log.info(">>>>MOL_FAIL<<<<<<<<<<" + status);
+			getManagedBean().setMessageId(MessageConst.ERROR_721051);
+			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
+			getManagedBean().setErrDesc(getPaymentMsgLabel(billType,true));
+			break;
+
+		case SupplierManagementConst.MOL_PENDING:
+			log.info(">>>>MOL_PENDING<<<<<<<<<<" + status);
+			getManagedBean().setMessageId(MessageConst.INFO_721055);
+			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_INFO);
+			break;
+
+		case SupplierManagementConst.PAYMENT_INVALID_RES:
+			log.info(">>>>PAYMENT_INVALID_RES<<<<<<<<<<" + status);
+			getManagedBean().setMessageId(MessageConst.EP_MAJ_00001);
+			getManagedBean().setMessageSeverity(FacesMessage.SEVERITY_ERROR);
+			break;
+
+		}
+
+		
+		
+		if (paymentStatus && paymentId != null) {
+			getManagedBean().setPaymentId(paymentId);
+			getManagedBean().setPaymentStatus(true);
+		}else{
+			getManagedBean().setPaymentId(null);
+			getManagedBean().setPaymentStatus(false);
+		}
+		
+		log.info("Severity >>>>>>>>" + getManagedBean().getMessageSeverity().toString());
+		log.info("Message Id >>>>>>>>" + getManagedBean().getMessageId());
+		log.info("Payment Id >>>>>>>>" + getManagedBean().getPaymentId());
+		log.info("Payment Status >>>>>>>>" + getManagedBean().isPaymentStatus());
+
+	}
+	//#29481 - End
 	/**
 	 * get Payment Msg Label
 	 * @param paymentType
@@ -818,7 +911,10 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		if(fc.getMessageList().size() < 1){
 			String[] msgParam = null;
 			
-			if(getManagedBean().getMessageId().equalsIgnoreCase(MessageConst.INFO_721065)){
+			//#29481 - Start - added INFO_721068
+			List<String> msgIds = Arrays.asList(MessageConst.INFO_721065, MessageConst.INFO_721067, MessageConst.INFO_721068);
+			if(getManagedBean().getMessageId() != null && msgIds.contains(getManagedBean().getMessageId())){
+			//#29481 - End
 				msgParam = getManagedBean().getMsgParam();
 			}else{
 				msgParam = new String[]{errorDesc};
@@ -885,6 +981,54 @@ public class PaymentResponseBackingBean extends BaseBackingBean<PaymentResponseM
 		return null;
 	}
 	
+	//#29481 - Start
+
+	private String[] getSoftCertNameEmailMulti(Long paymentId) {
+		
+		StringBuilder sbName = new StringBuilder();
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		
+		IPaymentSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+		PaymentReqDTO reqDTO2 = new PaymentReqDTO();
+		reqDTO2.setPaymentId(paymentId);
+		PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO2);
+		
+		int count = 1;
+		for (PyPaymentDtl paymentDtl : resDTO.getPyPayment().getPyPaymentDtls()) {
+			if (paymentDtl.getPyBillDtl().getItemCode().getParameterCode().equals(SupplierManagementConst.SOFTCERT_PAYMENT)) {
+				reqDTO.setPersonnelId(paymentDtl.getPyBillDtl().getBillDtlRefId());
+				SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+				
+				if(personnel!=null) {
+					sbName.append(count).append(". ").append(personnel.getName()).append(" (").append(personnel.getEmail()).append(")<br />");
+				}
+			}
+		}
+		String[] strArr = new String[]{sbName.toString()};
+		return strArr;
+	}
+
+	private void setMessageSoftcert(Long paymentId, List<PyBillDtl> bills){
+		FacesScopes fs = new FacesScopes();
+		boolean isAdmin = fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value())
+				    || fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+					|| fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) 
+					|| fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value());
+		if(bills != null && bills.size() == 1 && isAdmin){
+			Long currentUserId = fs.getUserSessionBean().getUserId();
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setPersonnelId(bills.get(0).getBillDtlRefId());
+			SmPersonnel personnel = SmServiceLookup.getPersonnelSO().retrievePersonnelById(reqDTO).getSmPersonnel();
+			if(personnel != null && personnel.getPmUser().getUserId().equals(currentUserId)){
+				getManagedBean().setMessageId(MessageConst.INFO_721067);
+				getManagedBean().setMsgParam(new String[] {personnel.getName(), personnel.getEmail()});
+			}
+		} else {
+			getManagedBean().setMessageId(MessageConst.INFO_721068);
+			getManagedBean().setMsgParam(getSoftCertNameEmailMulti(paymentId));
+		}
+	}
+	//#29481 - End
 /*	public static void main(String args[]){
 		String tranID = "355374";
 		String orderId = "215";

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -32,7 +31,6 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmDigiCert;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -43,12 +41,10 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
-import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
 import my.ep.web.util.DateUtils;
@@ -65,7 +61,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
-import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -581,12 +576,22 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 
 					}
+					
+					//#29481 - Start
+					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
+					if (!isSoftcertCurrentUserOnly(reqDTO.getFreeSofcertPersonnelList())
+							&& getManagedBean().getSupplierTmpPersonnel() == null){
+						msgKey = MessageConst.INFO_721068;
+						params = getSoftCertNameEmailMulti(reqDTO.getFreeSofcertPersonnelList());
+					}
+					//#29481 - End
+					
 				} else {
+					sbName = new StringBuilder();
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
 						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
-							sbName = new StringBuilder();
 							sbName.append(per.getName()).append(",");
 						}
 						name = sbName.toString();
@@ -609,6 +614,32 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 	}
+	
+	//#29481 - start
+	private boolean isSoftcertCurrentUserOnly(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels) || freeSoftcertPersonnels.size() > 1){
+			return false;
+		}
+		Long currentUserId = (new FacesScopes()).getUserSessionBean().getUserId();
+		SmPersonnel per = freeSoftcertPersonnels.get(0);
+		if (per.getPmUser() != null){
+			return per.getPmUser().getUserId().equals(currentUserId);
+		}
+		return false;
+	}
+	
+	private String[] getSoftCertNameEmailMulti(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels)){
+			return new String[] { StringUtils.EMPTY, StringUtils.EMPTY }; 
+		}
+		int count = 1;
+		StringBuilder sb = new StringBuilder();
+		for (SmPersonnel per : freeSoftcertPersonnels){
+			sb.append(count++ +". " + per.getName() + " (" + per.getEmail() + ")<br />");
+		}
+		return new String[]{sb.toString()};
+	}
+	//#29481 - end
 
 	/**
 	 * Remove check box tick from data table
