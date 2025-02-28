@@ -8720,13 +8720,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.getQtType() != null && scLoa.getQtType()
 				.getParameterCode() != null ? scLoa
 				.getQtType().getParameterCode() : StringUtils.EMPTY;
-		// Added to remove "PK7" from QT Types Dropdown list if user not selectd already.
-		if (StringUtils.isNotEmpty(qtType) && !qtType
-				.equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)) {
-			qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
-		}
 
+		// Added to remove "PK7" from QT Types Dropdown list if user not selectd
+		// already.
+		//qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
+		
+		// if the LOA already added ITEM IN PK7 we remove the code from the list 
+		// to display in dropdown.
+		if (StringUtils.isNotEmpty(qtType) && qtType
+				.equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)) {
+			qtTypes.remove(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
+		}
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean(QTSearchBeanConst
@@ -13136,13 +13141,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
 
 		if (isQTtypePK7) {
-			String procurementType = null != this.getManagedBean()
-					.getScLoa().getProcurementType() ? getParameterDesc(this
-					.getManagedBean().getScLoa().getProcurementType())
-					: "";
+			PmParameter pmProcurementType = this.getManagedBean().getScLoa().getProcurementTypeCatId();
+			String procurementType = null != pmProcurementType ? getParameterDesc(pmProcurementType) : "";
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 							MessageConst.WARN_7602694, new String[] { procurementType },
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
