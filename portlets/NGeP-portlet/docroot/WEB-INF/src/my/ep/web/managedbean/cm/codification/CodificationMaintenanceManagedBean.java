@@ -122,7 +122,6 @@ public class CodificationMaintenanceManagedBean extends BaseManagedBean {
 	private List<CmBrand> auditBrandExtList;
 	private List<CmMeasurement> auditMeasurementExtList;
 	private List<CmColor> auditColourExtList;
-
 	// 35503 End
 	
 	public CmUnspsc getAutoCompleteUnspscCode() {
