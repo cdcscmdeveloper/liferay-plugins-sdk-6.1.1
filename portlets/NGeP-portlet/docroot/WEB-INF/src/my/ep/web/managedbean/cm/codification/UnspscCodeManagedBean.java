@@ -148,7 +148,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public boolean isRecommendExtension(){
 		return this.recommendExtension;
-	};
+	}
 	public void setRecommendExtension(boolean recommendExtension){
 		this.recommendExtension = recommendExtension;
 	}
