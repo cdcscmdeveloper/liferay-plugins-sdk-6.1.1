@@ -66,6 +66,7 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -895,6 +896,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
+	// 26247 - start
+	protected IQTSuppFinalizationSO getQtSuppFinalizationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSuppFinalizationSO.class);
+	}
+
+	protected IQTBriefingSO getQtBriefingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTBriefingSO.class);
+	}
+
+	// 26247 - end
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -7406,7 +7419,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return
 	 */
 	public boolean disabledQTProcess(ScQt scQt, SmSupplier supplier) {
-		
 		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
 		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
 		List<String> statusKeys = Arrays.asList("suspendedCancel", "suspendedBlacklist", "deletedCancel",
@@ -7415,6 +7427,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (viewSuppProfileBean.evaluateAccountStatus(statusKey, supplier)) {
 				return true;
 			}
+		}
+		
+		if(CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())){
+			return true;
+		}
+		
+		if(ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor()) && !supplier.isBumi()){
+			return true;
 		}
 
 		return isDisciplinaryAction;

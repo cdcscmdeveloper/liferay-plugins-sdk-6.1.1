@@ -888,7 +888,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
-			checkDA(this.getManagedBean().getScLoa());
+			setDisciplinaryAction(this.getManagedBean().getScLoa());
 			this.getManagedBean().setValidatewitness(Boolean.TRUE); //#17376-144
 
 		} catch (Exception e) {
@@ -2590,7 +2590,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		// #29451 -- #26247 -- Start.
-		checkDA(scLoa);
+		setDisciplinaryAction(scLoa);
 		// #29451 -- #26247 -- End.
 	}
 
@@ -2598,22 +2598,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/**
 	 * @param scLoa
 	 */
-	private void checkDA(ScLoa scLoa) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			if (null != qtSuppFinalizationSO) {
-				SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-				scLoa.getScLoiLoa().setSmSupplier(smSupplier);
-			}
-		} finally {
-			qtSuppFinalizationSO = null;
-		}
-		
+	private void setDisciplinaryAction(ScLoa scLoa) {
+		SmSupplier smSupplier = this.getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+				scLoa.getScLoiLoa().getSmSupplier(), scLoa.getScLoiLoa().getDocId());
+		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
 	}
 	// #29451 -- #26247 -- End.
 	
@@ -5280,7 +5268,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		// #29451 -- #26247 -- Start.
-		checkDA(scLoa);
+		setDisciplinaryAction(scLoa);
 		// #29451 -- #26247 -- End.
 		
 		this.getManagedBean().setContractSignerList(

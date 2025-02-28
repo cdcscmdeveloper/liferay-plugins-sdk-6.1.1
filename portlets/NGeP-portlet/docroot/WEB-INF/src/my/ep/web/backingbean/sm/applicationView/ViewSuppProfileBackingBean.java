@@ -40,6 +40,8 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -514,6 +516,7 @@ public class ViewSuppProfileBackingBean extends
 	}
 	// #34031 End
 
+	// 26247 - start
 	private void initAccountStatusMap() {
 		if (!accountStatusMap.isEmpty()) {
 			return;
@@ -566,7 +569,6 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public boolean evaluateAccountStatus(String key, SmSupplier supplier) {
 		initAccountStatusMap();
-		System.out.println("---> t30tjar4p5 1014823");
 		Locale locale = new FacesScopes().getUserLocale();
 		String keyLocale = key.concat(locale.getLanguage());
 		if (!accountStatusMap.containsKey(keyLocale)) {
@@ -589,18 +591,34 @@ public class ViewSuppProfileBackingBean extends
 		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
 		String message = StringUtils.EMPTY;
 		if (ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus)
-				&& (evaluateAccountStatus("suspendedCancel", supplier) || evaluateAccountStatus("deletedCancel",
+				&& (evaluateAccountStatus("suspendedCancel", supplier) || evaluateAccountStatus("suspendedBlacklist",
 						supplier)) && !supplier.isDisciplinaryActions()) {
 			message = message
 					+ MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { supplier.getSupplierStatus() },
 							MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
 		}
-		if (true) {
+
+		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
 			if (StringUtils.isNotEmpty(message)) {
-				message = message + "<br/><br/>";
+				message = message + "<br/><br/> ";
 			}
-			message = message + message;
+			message = message
+					+ "<span style='color: red !important'>"
+					+ MessageUtils.getMessage(MessageConst.INFO_760554,
+							new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray()) },
+							MessageUtils.BUNDLE_COMMON_MESSAGES, locale) + "</span";
 		}
 		return message;
 	}
+	
+	/**
+	 * Retrieve message and set message to QT DA warning popup
+	 * @param supplier
+	 */
+	public void onViewQTAlertMessage(SmSupplier supplier) {
+		String message = evaluateQTWarningMessage(supplier);
+		this.getManagedBean().setDisciplinaryActionMsg(message);
+		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
+	}
+	// 26247 - end
 }

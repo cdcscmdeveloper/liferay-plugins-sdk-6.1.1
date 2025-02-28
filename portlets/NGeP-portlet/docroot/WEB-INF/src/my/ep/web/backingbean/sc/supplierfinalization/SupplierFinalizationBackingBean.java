@@ -9963,10 +9963,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 				IBpmSO.class);
 	}
 	
-	private IQTSuppFinalizationSO getQtSuppFinalizationSO(){
-		return BusinessDelegate.getInstance().getServiceObject(IQTSuppFinalizationSO.class);
-	}
-	
 	/**
 	 * 
 	 * @return 

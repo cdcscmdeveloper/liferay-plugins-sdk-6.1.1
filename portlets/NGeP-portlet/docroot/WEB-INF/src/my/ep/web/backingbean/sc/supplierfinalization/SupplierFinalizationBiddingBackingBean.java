@@ -785,8 +785,8 @@ public class SupplierFinalizationBiddingBackingBean extends
                         && null != bidPackage.getScQtProposal().getScQtSupplier().getScQt()) {
                       qtId = bidPackage.getScQtProposal().getScQtSupplier().getScQt().getQtId();
                     }
+					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.evaluateDisciplinaryActions(bidPackage.getScBidSupplier().getSmSupplier(), qtId));
 					// #26247 - 32802 - End.
-					bidPackage.getScBidSupplier().setSmSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage.getScBidSupplier().getSmSupplier(), qtId));
 				}
 				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
 			}else{
@@ -796,8 +796,8 @@ public class SupplierFinalizationBiddingBackingBean extends
                         && null != bidItem.getScQtProposal().getScQtSupplier().getScQt()) {
                       qtId = bidItem.getScQtProposal().getScQtSupplier().getScQt().getQtId();
                     }
+					bidItem.setSupplier(qtDetailSO.evaluateDisciplinaryActions(bidItem.getSupplier(), qtId));
 					// #26247 - 32802 - End.
-					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidItem.getSupplier(), qtId));
 				}
 			}
 		} finally {
