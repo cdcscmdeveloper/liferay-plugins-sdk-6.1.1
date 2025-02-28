@@ -93,6 +93,16 @@
 										
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
+					<ui:remove>#10141 Start Vinod</ui:remove>
+					<p:commandButton
+						value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
+						id="sendNotificationApprove" process="@this" 
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@all"
+						action="#{qTDetailBB.sendNotificationForInactiveChecklist()}"
+						rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+						disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
+						title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
+					<ui:remove>#10141 End Vinod</ui:remove>
 					<ui:remove>
 						START Bug #28932					
 					</ui:remove>						
@@ -104,10 +114,13 @@
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 									
+									<ui:remove>#10141 Start Vinod added disable</ui:remove>
 									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 										styleClass="ui-button" onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();"
+										disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+									<ui:remove>#10141 End Vinod</ui:remove>
 								</ui:repeat>
 							</ui:define>
 						</ui:decorate>						
