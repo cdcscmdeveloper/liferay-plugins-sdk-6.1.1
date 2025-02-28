@@ -872,6 +872,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 * */
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
 			
+			validateQtDetails();
+			//#29521-start
+			retrieveScQtHist();
+			validateIsSupplierQualificationCriteriaChange();
+			validateIsZonalAdded();
+			//#29521-end
+			//#28784
+			checkDemoPresentationByStatus();
 			//#10141 Start Vinod
 			if(isSendNotificationButton){
 				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
@@ -887,14 +895,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return;
 			}
 			//#10141 End Vinod
-			validateQtDetails();
-			//#29521-start
-			retrieveScQtHist();
-			validateIsSupplierQualificationCriteriaChange();
-			validateIsZonalAdded();
-			//#29521-end
-			//#28784
-			checkDemoPresentationByStatus();
 			
 			if(isFirstSave){								
 				 /* 
@@ -7229,7 +7229,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
-			detailSO.validateQTDetails(reqDTO);
+			// #10141 Start Vinod added condition to ignore validation for send
+			// notification button.
+			if (!this.getManagedBean().isSaveForSendNotification()) {
+				detailSO.validateQTDetails(reqDTO);
+			}
+			// #10141 End Vinod
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) Reopen reset to null as remarks that initialize empty will cause error while save
