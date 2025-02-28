@@ -1696,6 +1696,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean nullEPVRemark;
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
+	private boolean noSupplierExistForEPV;
 	//#21692 - End
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
@@ -12093,9 +12094,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setNullEPVRemark(boolean nullEPVRemark) {
 		this.nullEPVRemark = nullEPVRemark;
 	}
-	//#21692 - End
 
-	//#21692 #note-504 - Start
+	public boolean isNoSupplierExistForEPV() {
+		return noSupplierExistForEPV;
+	}
+
+	public void setNoSupplierExistForEPV(boolean noSupplierExistForEPV) {
+		this.noSupplierExistForEPV = noSupplierExistForEPV;
+	}
+
 	public List<String> getToBeRemoveEPVAttachments() {
 		return toBeRemoveEPVAttachments;
 	}
@@ -12103,9 +12110,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setToBeRemoveEPVAttachments(List<String> toBeRemoveEPVAttachments) {
 		this.toBeRemoveEPVAttachments = toBeRemoveEPVAttachments;
 	}
-	//#21692 #note-504 - End
 
-	//#21692 #note-504 - Start
 	public List<ScQtEpvApprovalReqAttachment> getAllEPVAttachments() {
 		return allEPVAttachments;
 	}
@@ -12113,7 +12118,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setAllEPVAttachments(List<ScQtEpvApprovalReqAttachment> allEPVAttachments) {
 		this.allEPVAttachments = allEPVAttachments;
 	}
-	//#21692 #note-504 - End
+	//#21692 - End
 	
 	
 	
