@@ -15,31 +15,38 @@
 		<cc:attribute name="prefix" default="" />
 	</cc:interface>
 	<cc:implementation>
-		<p:commandLink onstart="blockWidget.show()"
-			oncomplete="blockWidget.hide()" style="color:red; font-weight:bold;"
-			rendered="#{cc.attrs.supplier.disciplinaryActions}"
-			action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
-			update="@([id$=disciplinaryActionHistoryDlgId])">
-			<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-				styleClass="warning" />
-		</p:commandLink>
-		<p:spacer width="2" />
-		<ui:fragment rendered="#{!cc.attrs.supplier.disciplinaryActions}">
-			<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
-			<p:spacer width="4" />
-			<ui:param name="message" value="#{viewSuppProfileBackingBean.evaluateQTWarningMessage(cc.attrs.supplier)}"/>
-			<ui:fragment rendered="#{not empty message and not cc.attrs.showTooltip}">
-				<p:commandLink onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide(); suspendAlertWidget.show();"
-					update="@([id$=suspendAlertWidgetId])">
-					<p:graphicImage id="imageId"
-						value="/css/images/design/icon_error.png" />
-				</p:commandLink>
-			</ui:fragment>
-		</ui:fragment>
-		<p:spacer width="2" />
-		<ac:iconTooltip rendered="#{cc.attrs.showTooltip}"
-			value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
+		<table>
+			<tr style="border: 0 !important;">
+				<td style="width: 18px !important; border: 0 !important; padding: 0;"><p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						style="color:red; font-weight:bold;"
+						rendered="#{cc.attrs.supplier.disciplinaryActions}"
+						action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
+						update="@([id$=disciplinaryActionHistoryDlgId])">
+						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
+							styleClass="warning" />
+					</p:commandLink> <ui:fragment rendered="#{!cc.attrs.supplier.disciplinaryActions}">
+						<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
+					</ui:fragment></td>
+				<td style="width: 18px !important; border: 0 !important; padding: 0; text-align: left;"><p:spacer width="4" /> <ui:param name="message"
+						value="#{viewSuppProfileBackingBean.evaluateQTWarningMessage(cc.attrs.supplier)}" />
+					<ui:fragment
+						rendered="#{not empty message and not cc.attrs.showTooltip}">
+						<p:commandLink onstart="blockWidget.show()"
+							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(cc.attrs.supplier)}"
+							oncomplete="blockWidget.hide();"
+							update="@([id$=suspendAlertWidgetId])">
+							<p:graphicImage id="imageId"
+								value="/css/images/design/icon_error.png" style="margin-top: 4px;"/>
+						</p:commandLink>
+					</ui:fragment> <p:spacer width="2" /> <ac:iconTooltip
+						rendered="#{cc.attrs.showTooltip}"
+						value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" /></td>
+<!-- 				<td style="width: 18px !important; border: 0 !important; padding: 0;"><h:outputText value="#{cc.attrs.supplier.companyName}" -->
+<!-- 						styleClass="warning" /></td> -->
+			</tr>
+		</table>
+
 		<ui:fragment rendered="#{(cc.attrs.index + cc.attrs.childIndex) == 0}">
 			<style>
 				[id*="disciplinaryActionHistoryDlgId"].ui-dialog {
@@ -61,8 +68,8 @@
 							<td style="border: none !important;"><p:spacer width="2" /> <h:graphicImage
 									value="/css/images/design/icon_error.png" /> <p:spacer
 									width="2" /></td>
-							<td style="border: none !important;"><p:outputLabel style="text-align: left; color: red;"
-									value="#{viewSuppProfileBackingBean.evaluateQTWarningMessage(cc.attrs.supplier)}"
+							<td style="border: none !important;"><p:outputLabel style="text-align: left;"
+									value="#{viewSuppProfileBackingBean.managedBean.disciplinaryActionMsg}"
 									escape="false" /></td>
 						</tr>
 					</table>
