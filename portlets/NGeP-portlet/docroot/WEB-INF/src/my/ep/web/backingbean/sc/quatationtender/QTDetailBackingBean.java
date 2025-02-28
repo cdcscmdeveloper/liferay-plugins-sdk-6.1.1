@@ -874,15 +874,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			//#10141 Start Vinod
 			if(isSendNotificationButton){
-			validateQtDetails();
-			//#29521-start
-			retrieveScQtHist();
-			validateIsSupplierQualificationCriteriaChange();
-			validateIsZonalAdded();
-			//#29521-end
-			//#28784
-			checkDemoPresentationByStatus();
-			
 				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
 				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
@@ -896,6 +887,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				return;
 			}
 			//#10141 End Vinod
+			validateQtDetails();
+			//#29521-start
+			retrieveScQtHist();
+			validateIsSupplierQualificationCriteriaChange();
+			validateIsZonalAdded();
+			//#29521-end
+			//#28784
+			checkDemoPresentationByStatus();
 			
 			if(isFirstSave){								
 				 /* 
