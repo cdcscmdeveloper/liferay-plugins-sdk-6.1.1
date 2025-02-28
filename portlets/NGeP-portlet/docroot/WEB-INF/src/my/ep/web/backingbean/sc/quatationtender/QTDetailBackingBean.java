@@ -872,6 +872,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			 * */
 			boolean isFirstSave = scQt.getQtNo() == null && scQt.isBrandNew() ? true : false;
 			
+			//#10141 Start Vinod
+			if(isSendNotificationButton){
 			validateQtDetails();
 			//#29521-start
 			retrieveScQtHist();
@@ -880,8 +882,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#29521-end
 			//#28784
 			checkDemoPresentationByStatus();
-			//#10141 Start Vinod
-			if(isSendNotificationButton){
+			
 				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
 				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
 				this.getManagedBean().setSaveForSendNotification(false);
