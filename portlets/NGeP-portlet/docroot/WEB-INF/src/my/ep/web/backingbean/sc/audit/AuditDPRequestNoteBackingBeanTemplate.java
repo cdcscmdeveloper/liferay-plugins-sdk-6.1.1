@@ -59,11 +59,11 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 
 	private void dpAuditSO(AuDPRequestNoteDTO dtlObjList) {
 		try {
-			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, 
-					IAuditDPRequestNoteSO.class);
-
-			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(), dtlObjList.getAuDPRequestNoteDetailSPDTOList());
-
+			IAuditDPRequestNoteSO auditDPRequestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IAuditDPRequestNoteSO.class);
+			
+			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
+					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
 		} catch (Exception ex) {
 			log.info("Catch Exception from TEMPLATE Send TO SO : " + ex);
 		}
