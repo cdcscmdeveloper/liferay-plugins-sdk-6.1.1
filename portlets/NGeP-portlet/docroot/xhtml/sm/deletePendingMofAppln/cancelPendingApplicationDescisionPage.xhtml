@@ -14,6 +14,10 @@
 		<p:messages id="messages" showDetail="true"
 			autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true"
 			showSummary="false" />
+		<!-- #34400 -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
 
 		<ui:include
 			src="/xhtml/sm/approverDecisionPages/approverCompanyInfo.xhtml" />
@@ -83,9 +87,9 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/approveDelPendingApplPopUpForm.xhtml" />
 			<div align="center">
+				<!-- #34400 -->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="approveAppCanDialog.hide();"
-					action="#{backingBean.approveOrRejectPendingApplicationCancellation('APPROVE')}" />
+					onclick="approveAppCanDialog.hide(); confirmApproveDlg.show();"  />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					onclick="approveAppCanDialog.hide();" />
 			</div>
@@ -98,13 +102,30 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedDelPendingApplPopUpForm.xhtml" />
 			<div align="center">
+				<!-- #34400 -->
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					partialSubmit="true" process="rejectAppCanDialog"
-					action="#{backingBean.finalDecisionDeletePendingAppln('rejectAppCanDialog','REJECT')}" />
+					oncomplete="if (!args.validationFailed){rejectAppCanDialog.hide(); confirmRejectDlg.show();}" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{backingBean.resetMofCancellationFinalApproveOrReject('rejectAppCanDialog')}"
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
+		<!-- #34400 -->
+		<ac:confirmationPopup id="confirmApproveDlg" widget="confirmApproveDlg"
+			okParam="#{backingBean.approveOrRejectPendingApplicationCancellation('APPROVE')}"
+			width="400" height="100" hasParam="true"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.approve']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
+			
+		<ac:confirmationPopup id="confirmRejectDlg" widget="confirmRejectDlg"
+			okParam="#{backingBean.approveOrRejectPendingApplicationCancellation('REJECT')}"
+			width="400" height="100" hasParam="true"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.sm.confirm.reject']}" 
+			update="@([id$=Msg])"
+			loadingWidget="blockWidget" />
 	</ui:define>
 </ui:composition>

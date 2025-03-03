@@ -14,7 +14,7 @@
 			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 		</p:blockUI>
 		<!-- 6906 note 263 start -->
-		<c:if test="#{evaluationBackingBean.managedBean.noProposalSubmitted}">
+		<c:if test="#{evaluationBackingBean.managedBean.noProposalSubmitted or evaluationBackingBean.managedBean.allSupplierRejectEpv}"><ui:remove>21692</ui:remove>
 			<div class="ui-messages ui-widget">
 				<div class="ui-messages-warn ui-corner-all">
 					<span class="ui-messages-warn-icon"></span>
@@ -96,7 +96,7 @@
 		<ui:fragment rendered="#{evaluationBackingBean.managedBean.tabActiveIndex ne 5}">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified or evaluationBackingBean.managedBean.noProposalSubmitted}"
+			disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationMeetingBackingBean.managedBean.committeeModified}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 		</ui:fragment>

@@ -526,6 +526,10 @@ public class ReportConst implements Serializable{
 	public static final String SM_SUPPLIER_UNREGIS_REPORT = "SM_APPL_DETAILS_UNREGIS.jsp";
 	public static final String SM_SUPPLIER_PAYMENT_ACK_REPORT  = "SM_PAYMENT_ACK.jsp";
 	public static final String SM_SUPPLIER_PAYMENT_DETAILS_REPORT  = "SM_PAYMENT_DETAILS.jsp";
+	//32304 - start
+	public static final String SM_BUMI_APPL_CANCELLED_SVC = "SM_LIST_OF_APPL_BPCANCELLED_SVC.jsp";
+	public static final String SM_BUMI_APPL_CANCELLED = "SM_LIST_OF_APPL_BPCANCELLED_TSKLIST.jsp";
+	//32304 - end
 	
 	//SM - Rejection Acknlowledgement Letter
 	public static final String SM_REJECTION_ACK_LETTER = "SM_ACK_REJECT.jsp";
@@ -1140,8 +1144,8 @@ public class ReportConst implements Serializable{
 	public static final String ERR_999000_MORTHAN_TEN = "lbl.rpt.ERR_999000_MORTHAN_TEN";
 	public static final String TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR = "lbl.rpt.ERR_999001_TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR";
 	//26238 : Disciplinary Action
-	public static final String SM_DISCIPLINARY_ACTION_HISTORY_ENG = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
-	public static final String SM_DISCIPLINARY_ACTION_HISTORY_MALAY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
+	public static final String SM_DISCIPLINARY_ACTION_HISTORY_BASIC = "SM_DISCIPLINARY_ACTION_HISTORY_BASIC.jsp";
 	
 	// YEP
 	public static final String FL_DOCTYPE_CO = "CR";
@@ -1177,6 +1181,15 @@ public class ReportConst implements Serializable{
 	public static final String AUDITOR_INTERNAL = "AUDITOR_INTERNAL";
 	public static final String AUDITOR_GENERAL = "AUDITOR_GENERAL";
 	// Bug #34996@Syazani 16/08/2023 -- End
+	// #10141 Start Vinod
+	public static final String SC_PVW_TECH_CHECKLIST_SUMMARY_JSP = "SC_PVW_TECH_CHECKLIST_SUMMARY.jsp";
+	public static final String SC_PVW_TECH_CHECKLIST_DTL_JSP = "SC_PVW_TECH_CHECKLIST_DTL.jsp";
+	public static final String SC_PVW_FIN_CHECKLIST_SUMMARY_JSP = "SC_PVW_FIN_CHECKLIST_SUMMARY.jsp";
+	public static final String SC_PVW_FIN_CHECKLIST_DTL_JSP = "SC_PVW_FIN_CHECKLIST_DTL.jsp";
+	public static final String SC_PVW_TECH_SCORING_JSP = "SC_PVW_TECH_SCORING.jsp";
+	public static final String SC_PVW_FIN_SCORING_JSP = "SC_PVW_FIN_SCORING.jsp";
+	public static final String SC_PVW_OVERALL_SCORING_JSP = "SC_PVW_OVERALL_SCORING.jsp";
+	// #10141 End Vinod
 	
 	public ReportConst(){}
 	

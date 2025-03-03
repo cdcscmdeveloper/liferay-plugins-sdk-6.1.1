@@ -88,14 +88,16 @@
 						escape="false" />
 				</p:tooltip>
 				<!-- Enhancement #22211 END -->
-				
+
+				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
-					rendered="#{qtLOABackingBean.isSupplierEPVStatusRejected() and !lOADetailBackingBean.managedBean.scLoa.brandNew
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and !lOADetailBackingBean.managedBean.scLoa.brandNew
 					and lOADetailBackingBean.isLOAStatusAbleToCancel()}"
-					oncomplete="cancelLoaPopup.show();"
-					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+					oncomplete="cancelLoaPopup.show();" partialSubmit="true"
+					process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" />
+				<ui:remove>36339, 21692</ui:remove>
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
@@ -158,14 +160,16 @@
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" /><ui:remove>#21692</ui:remove>
 	
+								<ui:remove> #29007 Vinod Start changed action </ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onstart="blockWidget.show();"
 									rendered="#{isPendingVerification and isSqStillValid}"
 									oncomplete="blockWidget.hide();"
 									disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-									action="#{lOADetailBackingBean.verifyConformationForLampiranA3(bpmAction)}"
+									action="#{lOADetailBackingBean.verifyConfirmationForLampiranA3(bpmAction)}"
 									partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 									update="#{isReject ? '@this' : '@form'}" />
+								<ui:remove> #29007 End Vinod </ui:remove>
 								 <!-- 20190405@asyrafhaziq - CR(25062)- End -->
 							</h:panelGroup>	
 							
@@ -192,7 +196,7 @@
 		</h:panelGroup>
 
 	</div>
-	<!-- #29007 Start Vinod -->
+	<ui:remove> #29007 Start Vinod </ui:remove>
 	<p:dialog id="submitConfirmId" widgetVar="submitConfirmPopUp"
 			header="#{lbl['lbl.sc.loiloa.supplier.specification.approval.confirm']}" resizable="false"
 			width="35%" height="100" closable="false">
@@ -233,7 +237,7 @@
 					onclick="verifyConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
 	</p:dialog>
-	<!-- #29007 End Vinod -->
+	<ui:remove> #29007 End Vinod </ui:remove>
 	<ui:remove>#21692</ui:remove>
 	<p:dialog id="submissionPopupId" widgetVar="cancelLoaPopup"
 		header="#{lbl['lbl.sc.cancel.confirm']}"

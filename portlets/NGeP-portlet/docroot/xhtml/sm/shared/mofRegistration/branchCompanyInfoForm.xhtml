@@ -28,8 +28,8 @@
 			</p:tooltip>
 		</f:facet>
 		<!-- Disable for ups 32008 -->
-		<!-- table style="width: 100%">
-			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+		<table style="width: 100%">
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.branchVerified}"
@@ -44,7 +44,8 @@
 
 				</tr>
 			</p:outputPanel>
-			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<!-- #32008 -->
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.branchVerified}"
@@ -58,7 +59,7 @@
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
-		</table -->
+		</table>
 		<p:outputPanel id="brnInfPan" layout="block">
 			<p:blockUI rendered="#{!backingBean.managedBean.upsCannotEdit}" block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
@@ -149,14 +150,12 @@
 					process="@this" update=":form:tt:banchDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					<!-- #27297 START -->
-					<!-- #28777 START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCompanyBranch(backingBean.managedBean)}"
-					partialSubmit="true" process="brnInfPan, pendingQTPopUpId, pendingQTPopUpIdAndClosedQTSubmitProposalId"
+					partialSubmit="true" process="brnInfPan, pendingQTPopUpId"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
-					update=":form:tt:dt, pendingQTPopUpId, pendingQTPopUpIdAndClosedQTSubmitProposalId" />
+					update=":form:tt:dt, pendingQTPopUpId" />
 					<!-- #27297 END -->
-					<!-- #28777 END -->
 
 			</div>
 			<br />
@@ -219,12 +218,16 @@
 	
 			<br />
 			<div align="right">
+			<!-- #34159 - START - add param disableValidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="branchPopUpSaveBtn"
 					action="#{backingBean.addOrUpdateBranchToSmAppl}"
 					partialSubmit="true" process="banchDialog"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
-					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
+					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+			<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignCancelBranchBean}" />
@@ -259,23 +262,13 @@
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
 		
 	<!-- #29727 -->
-	<!-- #28777 START -->
 	<ac:confirmationPopup id="pendingQTPopUpId"
 		widget="pendingQTPopUp"
 		okAction="backingBean.deleteSelectedBranches"
 		width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
-		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
+		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
+		
 	<!-- #29727 END -->
-	
-	<ac:confirmationPopup id="pendingQTPopUpIdAndClosedQTSubmitProposalId"
-		widget="pendingQTPopUpIdAndClosedQTSubmitProposal"
-		okAction="backingBean.deleteSelectedBranches"
-		width="400" height="100"
-		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt;&lt;br&gt; #{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}" 
-		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')}"/>
-	<!-- #28777 END -->
-	
 </ui:composition>

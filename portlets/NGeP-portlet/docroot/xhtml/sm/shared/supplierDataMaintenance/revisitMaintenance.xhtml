@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel header="#{lbl['lbl.sm.rv.section.name']}" toggleable="true"
+		id="revisitPanelId">
+		<p:outputPanel>
+			<h:outputText value="#{lbl['lbl.sm.rv.history.link.part.one']}"
+				escape="false" />
+			<p:commandLink onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				action="#{supplierDataMaintenanceBackingBean.onClickRevisitHistoryList()}"
+				process="@this" partialSubmit="true" update=":form">
+				<u><h:outputText
+						value="#{lbl['lbl.sm.rv.history.link.part.two']}"
+						style="color:blue;" escape="false" /></u>
+			</p:commandLink>
+			<p:spacer width="2" />
+			<h:outputText value="#{lbl['lbl.sm.rv.history.link.part.three']}"
+				escape="false" />
+			<br />
+			<p:spacer height="2" />
+		</p:outputPanel>
+		<table style="width: 50%; table-layout: fixed">
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.rv.visiting.date']}" /></td>
+				<td><p:calendar showOn="button" readonlyInput="true"
+						value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect" process="@this" update="revisitPanelId" />
+					</p:calendar></td>
+			</tr>
+		</table>
+		<p:outputPanel
+			rendered="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitDate != null}">
+			<table style="width: 50%; table-layout: fixed">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.sv.officer']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><ac:lov id="lovUser" lovId="PM_USER_ID" readonly="true"
+							size="40" headerText="#{lbl['lbl.sm.rv.sv.officer']}"
+							conditionField="pmUserOrgs.pmUserRoles.pmRole.roleCode^#{supplierDataMaintenanceBackingBean.managedBean.svoRoleCode}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitOfficer.userName}"
+							saveObject="supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitOfficer" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.assist.officer']}" /></td>
+					<td><ui:repeat var="rvAssistOfficer"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.smRvAssistOfficers}">
+							<p:inputText id="rvAssistOfficerName"
+								value="#{rvAssistOfficer.officerName}" size="30" maxlength="80">
+								<p:ajax event="keyup"
+									update="deleteRvAssistOfficerbtnId,:#{p:component('addRvAssistOfficerbtnId')}"
+									listener="#{supplierDataMaintenanceBackingBean.enableAddSmRvAssistOfficerBtn}" />
+							</p:inputText>
+							<p:commandButton value="#{lbl['lbl.sm.rv.btn.delete']}"
+								update="@this" id="deleteRvAssistOfficerbtnId"
+								action="#{supplierDataMaintenanceBackingBean.onDeleteRvAssistOfficer(rvAssistOfficer)}"
+								disabled="#{empty rvAssistOfficer.officerName}" />
+							<br />
+						</ui:repeat></td>
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton id="addRvAssistOfficerbtnId"
+					value="#{lbl['lbl.sm.rv.btn.add']}" update="revisitPanelId"
+					action="#{supplierDataMaintenanceBackingBean.addSmRvAssistOfficer}"
+					disabled="#{supplierDataMaintenanceBackingBean.managedBean.disableAddSmRvAssistOfficerBtn}" />
+			</div>
+			<p:dataTable id="revisitSuppDocId" var="suppDoc"
+				value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.smRvSuppDocs}"
+				rowIndexVar="index"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.rv.supp.doc.header.no']}"
+							style="width : 5%;text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.rv.supp.doc.header.doc.desc']}"
+							style="width : 55%;text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.rv.supp.doc.header.upload.doc']}"
+							style="width : 20%;text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.rv.supp.doc.header.doc.name']}"
+							style="width : 20%;text-align: center !important;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+				<p:column style="overflow: hidden !important;">
+					<h:outputText value="#{suppDoc.pmDocument.docName}" />
+				</p:column>
+				<p:column>
+					<p:commandLink
+						oncomplete="rvSuppDocUploadDialogWV.show();return false;"
+						process="@this" partialSubmit="true" update="revisitSuppDocId"
+						action="#{supplierDataMaintenanceBackingBean.assignSelectedSupportDocIndex(suppDoc,index)}">
+						<p:graphicImage value="/css/images/design/upload.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+				<p:column style="overflow: hidden !important;">
+					<ui:repeat var="docFile" value="#{suppDoc.smRvDocFiles}">
+						<h:commandLink id="file"
+							value="#{supplierDataMaintenanceBackingBean.getShortFileName(docFile.fileName)}">
+							<p:fileDownload
+								value="#{supplierDataMaintenanceBackingBean.commonDownload(docFile.filePath,docFile.fileName)}" />
+						</h:commandLink>
+						<p:tooltip for="file" value="#{docFile.fileName}" position="top" />
+						<p:spacer width="10" />
+						<p:commandLink
+							action="#{supplierDataMaintenanceBackingBean.onDeleteSupDocFileAttachment(suppDoc,index,docFile)}"
+							update="@form">
+							<p:graphicImage value="/css/images/design/trash.png" />
+						</p:commandLink>
+						<br />
+					</ui:repeat>
+				</p:column>
+			</p:dataTable>
+			<table style="width: 50%; table-layout: fixed">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.rv.visiting.remark']}" /></td>
+					<td><p:inputTextarea autoResize="false" cols="40"
+							id="revisitRemark" maxlength="3500"
+							label="#{lbl['lbl.sm.rv.visiting.remark']}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitRemark}" />
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
+	</p:panel>
+	<ac:lovPopup />
+	<ac:confirmationPopup id="rvAssistOfficerDeletePopUpId"
+		widget="rvAssistOfficerDeletePopUpWV"
+		okAction="supplierDataMaintenanceBackingBean.removeSelectedSmRvAssistOfficer()"
+		width="400" height="100" title="#{lbl['lbl.sm.rv.txt.delete']}"
+		content="#{lbl['lbl.sm.rv.content.delete']}"
+		update=":#{p:component('revisitPanelId')}" />
+	<p:dialog id="rvSuppDocUploadDialogId"
+		widgetVar="rvSuppDocUploadDialogWV" modal="true" dynamic="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}"
+		onShow="singleUploadListener(uploadWV);"
+		onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
+		<p:fileUpload widgetVar="uploadWV"
+			allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
+			sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+			invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
+			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+			fileUploadListener="#{supplierDataMaintenanceBackingBean.handleSupDocFileAttachment}"
+			update=":#{p:component('revisitSuppDocId')}"
+			uploadLabel="#{lbl['lbl.btn.upload']}"
+			label="#{lbl['lbl.btn.addfile']}"
+			cancelLabel="#{lbl['lbl.btn.cancel']}" multiple="true"
+			showButtons="false" />
+	</p:dialog>
+	<p:confirmDialog id="confirmDelRvSuppDocDialogId" closable="true"
+		message="#{lbl['lbl.sm.upload.delete.message']}"
+		header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+		severity="alert" widgetVar="confirmDelRvSuppDocDialogWV">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				onclick="confirmDelRvSuppDocDialogWV.hide();"
+				action="#{supplierDataMaintenanceBackingBean.delRvSuppDocFileAttachment}"
+				update=":#{p:component('revisitSuppDocId')}" partialSubmit="true"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				process="@this" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="confirmDelRvSuppDocDialogWV.hide();" />
+		</div>
+	</p:confirmDialog>
+	<ac:smRevisitHistoryPopUp dialogName="revisitHistoryDialog"
+		smRevisitList="#{supplierDataMaintenanceBackingBean.managedBean.smRevisitList}"
+		backingBean="#{supplierDataMaintenanceBackingBean}" officerView="true"/>
+</ui:composition>

@@ -85,13 +85,24 @@
 							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
-					<c:otherwise>
+					<!--#36710-START-->
+					<c:when test="#{registrationBackingBean.managedBean.smAppl.brandNew and !registrationBackingBean.managedBean.smAppl.applValidWithSsm and !registrationBackingBean.managedBean.ssmIntegrationActive}">
 						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
 							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px"
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
+						</p:selectOneMenu>
+					</c:when> <!--#36710-END-->
+					<c:otherwise>
+						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
+							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
+							style="width:310px"
+							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
+							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDownAccountInfo()}"/> <!-- #36710 -->
 							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:otherwise>
@@ -171,43 +182,44 @@
 				</c:choose>
 			</tr>
 			<!-- #24819 -->
-			<c:if test="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}">
 			<tr>
-			<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" />
-				</td>
+				<td class="tdTitle">
+					<p:outputLabel value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
 				<td class="tdContent">
 					<p:outputPanel id="newRegNoPanelId">
-					<p:inputText id="newregNo1"  maxlength="30"
-							value="#{registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"  rendered="#{not empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" converter="toUpperCaseConverter"
-							disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}"
-							size="40" label="#{lbl['lbl.sm.new.business.regNo']}" >
-						</p:inputText>	
+					<p:inputText id="newregNo1" maxlength="30"
+						value="#{registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"
+						rendered="#{not empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"
+						converter="toUpperCaseConverter"
+						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew 
+						|| registrationBackingBean.managedBean.smAppl.applValidWithSsm 
+						|| registrationBackingBean.managedBean.activeDisicplinaryAction}"
+						size="40" label="#{lbl['lbl.sm.new.business.regNo']}">
+					</p:inputText>
 					<p:inputText id="newregNo2" maxlength="30"
-							value="#{lbl['lbl.sm.no.available']}" converter="toUpperCaseConverter" rendered="#{empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"
-							disabled="#{registrationBackingBean.managedBean.smSupp.brandNew || !registrationBackingBean.managedBean.smSupp.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}"
-							size="40" label="#{lbl['lbl.sm.new.business.regNo']}" >
-							</p:inputText>	
-							&#160;
-						<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png"/>
-						<p:tooltip id="newRegNott" for="newRegNoti"  >
-							<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}"  />
-						</p:tooltip>&#160;
-						<p:message id="newRegNoMsg" for="regNo" display="icon" />	
-					</p:outputPanel>
-						</td>
-			
+						value="#{lbl['lbl.sm.no.available']}"
+						converter="toUpperCaseConverter"
+						rendered="#{empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"
+						disabled="#{registrationBackingBean.managedBean.smSupp.brandNew 
+						|| !registrationBackingBean.managedBean.smSupp.brandNew 
+						|| registrationBackingBean.managedBean.smAppl.applValidWithSsm 
+						|| registrationBackingBean.managedBean.activeDisicplinaryAction}"
+						size="40" label="#{lbl['lbl.sm.new.business.regNo']}">
+					</p:inputText>&#160;
+					<p:graphicImage id="newRegNoti" value="/css/images/design/tooltips.png" />
+					<p:tooltip id="newRegNott" for="newRegNoti">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.new.business.regNo']}" />
+					</p:tooltip>&#160;
+					<p:message id="newRegNoMsg" for="regNo" display="icon" />
+					</p:outputPanel></td>
 			</tr>
-		
+
 			<tr>
-			<td class="tdTitle">
-			</td>
-			<td class = "tdContent">
-			<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" />
-			</td>
+				<td class="tdTitle"></td>
+				<td class="tdContent">
+					<ac:instructionText value="#{lbl['lbl.sm.new.business.regNo.notes']}" /></td>
 			</tr>
-			</c:if>
-		<!-- #24819 -->
+			<!-- #24819 -->
 		</table>
 	</p:panel>
 

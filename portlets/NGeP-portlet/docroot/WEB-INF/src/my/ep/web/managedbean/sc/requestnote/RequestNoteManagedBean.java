@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -342,9 +343,13 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	//26284 - Start
 	private List<DisciplinaryActionVO> disciplineVOs;
-	private String disciplinaryActionstartDate;
+	private List<DisciplinaryActionVO> disciplineVOListDp;
+	private String disciplinaryActionStartDate;
 	private String disciplinaryActionEndDate;
 	private boolean disciplinaryActionWarning = false;
+	private boolean disciplinaryActionCancelRegistration = false;
+	private boolean disciplinaryActionBlacklist = false;
+	private String popupMessage;
 	//26284 - End
 	
 	//12183 - Start
@@ -376,6 +381,30 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     //29557 - Start
     private boolean purchaseInquiryContinuity = Boolean.FALSE;
     //29557 - End
+    
+    private PurchaseRequestResDTO purchaseRequestResDTO;
+    
+    //#25790 - start
+    /** The continuity page session */
+    private String continuityPageSession = "";
+    
+    /** The purchase request map list */
+    private List<Map<String,String>> purchaseRequestMapList;
+    
+    /** The loa map list */
+    private List<Map<String,String>> loaMapList;
+    
+    /** The pid flag */
+    private boolean showPurchaseInDefault = Boolean.FALSE;
+    
+    /** The request note dtl. */
+    private ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
+    //#25790 - end
+    
+    //#36119 - start
+    /** The new sourcing dp bpm version flag */
+    private boolean sourcingDpNewBpmVer = Boolean.FALSE;
+    //#36119 - end
     
     /**
      * Instantiates a new request note managed bean.
@@ -515,6 +544,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 *
 	 * @return the smSupplier
 	 */
+	@Override
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
@@ -524,6 +554,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 *
 	 * @param smSupplier the smSupplier to set
 	 */
+	@Override
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
@@ -2010,40 +2041,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.selectedCondition = selectedCondition;
 	}
 	
-	//26284 - Start
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
-	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
-	}
 
-	public String getDisciplinaryActionStartDate() {
-		return disciplinaryActionstartDate;
-	}
-
-	public void setDisciplinaryActionStartDate(String disciplinaryActionstartDate) {
-		this.disciplinaryActionstartDate = disciplinaryActionstartDate;
-	}
-
-	public String getDisciplinaryActionEndDate() {
-		return disciplinaryActionEndDate;
-	}
-
-	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
-		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
-	}
-		
-	public boolean isDisciplinaryActionWarning() {
-		return disciplinaryActionWarning;
-	}
-
-	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
-		this.disciplinaryActionWarning = disciplinaryActionWarning;
-	}
-	//26284 - End
-	
 	//12183 - Start
 	public boolean isPidValidityExpired() {
 		return pidValidityExpired;
@@ -2178,4 +2177,232 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
 	}
 	//29557 - End	
+	public PurchaseRequestResDTO getPurchaseRequestResDTO() {
+		return purchaseRequestResDTO;
+	}
+
+	public void setPurchaseRequestResDTO(PurchaseRequestResDTO purchaseRequestResDTO) {
+		this.purchaseRequestResDTO = purchaseRequestResDTO;
+	}
+	
+	//#25790 - start
+	/**
+	 * @return the continuityPageSession
+	 */
+	public String getContinuityPageSession() {
+		return continuityPageSession;
+	}
+
+	/**
+	* Sets the continuity Page Session.
+	*
+	* @param continuityPageSession the continuity Page Session
+	*/
+	public void setContinuityPageSession(String continuityPageSession) {
+		this.continuityPageSession = continuityPageSession;
+	}
+
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<> ();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	* Sets the purchase Request Map List.
+	*
+	* @param purchaseRequestMapList the purchase Request Map List
+	*/
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+
+	/**
+	 * @return the loaMapList
+	 */
+	public List<Map<String, String>> getLoaMapList() {
+		if (loaMapList == null) {
+			loaMapList = new ArrayList<> ();
+		}
+		return loaMapList;
+	}
+
+	/**
+	* Sets the loa Map List.
+	*
+	* @param loaMapList the loa Map List
+	*/
+	public void setLoaMapList(List<Map<String, String>> loaMapList) {
+		this.loaMapList = loaMapList;
+	}
+	
+	/**
+	 * @return the showPurchaseInDefault
+	 */
+	public boolean isShowPurchaseInDefault() {
+		return showPurchaseInDefault;
+	}
+
+	/**
+	* Sets the purchase in default flag.
+	*
+	* @param showPurchaseInDefault the purchase in default flag
+	*/
+	public void setShowPurchaseInDefault(boolean showPurchaseInDefault) {
+		this.showPurchaseInDefault = showPurchaseInDefault;
+	}
+
+	/**
+	 * @return the scRequestNoteDtl
+	 */
+	public ScRequestNoteDtl getScRequestNoteDtl() {
+		return scRequestNoteDtl;
+	}
+
+	/**
+	* Sets the scRequestNoteDtl.
+	*
+	* @param scRequestNoteDtl the scRequestNoteDtl to set
+	*/
+	public void setScRequestNoteDtl(ScRequestNoteDtl scRequestNoteDtl) {
+		this.scRequestNoteDtl = scRequestNoteDtl;
+	}
+	//#25790 - end
+	
+	//#36119 - start
+	/**
+	 * @return the sourcingDpNewVerBpm
+	 */
+	public boolean isSourcingDpNewBpmVer() {
+		return sourcingDpNewBpmVer;
+	}
+
+	/**
+	* Sets the new sourcingdp bpm version flag.
+	*
+	* @param sourcingDpNewVerBpm the purchase in default flag
+	*/
+	public void setSourcingDpNewBpmVer(boolean sourcingDpNewBpmVer) {
+		this.sourcingDpNewBpmVer = sourcingDpNewBpmVer;
+	}
+	//#36119 - end
+
+	
+	//#26284 - Start
+	/**
+	 * @return the disciplinaryActionCancelRegistration
+	 */
+	public boolean isDisciplinaryActionCancelRegistration() {
+		return disciplinaryActionCancelRegistration;
+	}
+	
+	/**
+	 * @param disciplinaryActionCancelRegistration the disciplinaryActionCancelRegistration to set
+	 */
+	public void setDisciplinaryActionCancelRegistration(boolean disciplinaryActionCancelRegistration) {
+		this.disciplinaryActionCancelRegistration = disciplinaryActionCancelRegistration;
+	}
+
+	/**
+	 * @return the disciplinaryActionBlacklist
+	 */
+	public boolean isDisciplinaryActionBlacklist() {
+		return disciplinaryActionBlacklist;
+	}
+
+	/**
+	 * @param disciplinaryActionBlacklist the disciplinaryActionBlacklist to set
+	 */
+	public void setDisciplinaryActionBlacklist(boolean disciplinaryActionBlacklist) {
+		this.disciplinaryActionBlacklist = disciplinaryActionBlacklist;
+	}
+
+	/**
+	 * @return the disciplineVOListDp
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOListDp() {
+		return disciplineVOListDp;
+	}
+
+	/**
+	 * @param disciplineVOListDp the disciplineVOListDp to set
+	 */
+	public void setDisciplineVOListDp(List<DisciplinaryActionVO> disciplineVOListDp) {
+		this.disciplineVOListDp = disciplineVOListDp;
+	}
+	
+	/**
+	 * @return the popupMessage
+	 */
+	public String getPopupMessage() {
+		return popupMessage;
+	}
+
+	/**
+	 * @param popupMessage the popupMessage to set
+	 */
+	public void setPopupMessage(String popupMessage) {
+		this.popupMessage = popupMessage;
+	}
+
+	/**
+	 * @return the disciplineVOs
+	 */
+	public List<DisciplinaryActionVO> getDisciplineVOs() {
+		return disciplineVOs;
+	}
+
+	/**
+	 * @param disciplineVOs the disciplineVOs to set
+	 */
+	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
+		this.disciplineVOs = disciplineVOs;
+	}
+
+	/**
+	 * @return the disciplinaryActionStartDate
+	 */
+	public String getDisciplinaryActionStartDate() {
+		return disciplinaryActionStartDate;
+	}
+
+	/**
+	 * @param disciplinaryActionStartDate the disciplinaryActionStartDate to set
+	 */
+	public void setDisciplinaryActionStartDate(String disciplinaryActionStartDate) {
+		this.disciplinaryActionStartDate = disciplinaryActionStartDate;
+	}
+
+	/**
+	 * @return the disciplinaryActionEndDate
+	 */
+	public String getDisciplinaryActionEndDate() {
+		return disciplinaryActionEndDate;
+	}
+	
+	/**
+	 * @param disciplinaryActionEndDate the disciplinaryActionEndDate to set
+	 */
+	public void setDisciplinaryActionEndDate(String disciplinaryActionEndDate) {
+		this.disciplinaryActionEndDate = disciplinaryActionEndDate;
+	}
+
+	/**
+	 * @return the disciplinaryActionWarning
+	 */
+	public boolean isDisciplinaryActionWarning() {
+		return disciplinaryActionWarning;
+	}
+	
+	/**
+	 * @param disciplinaryActionWarning the disciplinaryActionWarning to set
+	 */
+	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
+		this.disciplinaryActionWarning = disciplinaryActionWarning;
+	}
+	//#26284 - End
 }
