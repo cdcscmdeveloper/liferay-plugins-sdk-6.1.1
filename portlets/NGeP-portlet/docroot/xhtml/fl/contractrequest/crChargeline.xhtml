@@ -519,7 +519,7 @@
             	      <p:ajax process="@this"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
-                 <p:inputText id="ptjCodeVaue"  style="width:300px;" 
+                 <p:inputText id="ptjCodeVaue"  style="width:300px;" onkeypress="if (event.keyCode == 13) { dlgChargedPtj.jq.click(); return false; }"
                      value="#{contractRequestBackingBean.managedBean.ptjCodeNameSearchValues}" >
                      <p:ajax process="@this"/></p:inputText>
 			  </h:panelGrid>
