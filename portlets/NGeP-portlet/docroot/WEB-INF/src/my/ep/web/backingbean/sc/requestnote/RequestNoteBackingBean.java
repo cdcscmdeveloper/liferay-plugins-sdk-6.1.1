@@ -1,5 +1,4 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.requestnote;
 
@@ -3773,7 +3772,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		boolean audit = false;
 		PurchaseRequestResDTO auditResponse = null;
 		//End: #35492#58
-				
+		
 		Object[] prObj = getManagedBean().getSelectedPrDtls();
 		if (null != prObj) {
 			log.info("Getting count for docNo: " + getManagedBean().getRequestNote() + " status: " + DPStatusConstants.RN_PENDING_ITEM_CODIFICATION + " docType : " + ParameterConst.DOCTYPE_REQUEST_NOTE);

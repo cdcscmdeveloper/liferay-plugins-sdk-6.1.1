@@ -163,8 +163,9 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							&& (getSearchStatusId() != null && getSearchStatusId().equals(
 									DPStatusConstants.RN_PENDING_ITEM_CODIFICATION))) {// #36018
 						paramPtj = "requestNote.pmOrgProfile.orgProfileId";
-						paramTitle = "requestNote.title";
+						paramTitle ="requestNote.title";
 					}
+					
 					paramPtjGroupAndMinistry = "pmOrgProfile";
 				} else if(ParameterConst.DOCTYPE_SIMPLE_QUOTE.equals(getSearchDocumentType())){
 					paramPtj = "requestNotes.pmOrgProfile.orgProfileId";
@@ -313,6 +314,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			}
 			return null;
 		}
+		
 		// start - 36018
 		/**
 		 * Checks if the maintenance list is empty in the given Sourcing
@@ -583,8 +585,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							SearchOperator.OPERATOR_EQUALS.value(), getSearchMinistryProfile().getOrgProfileId()));
 		}
 	}
-
-	// end - #36018
+	// end - #36018	
 	
     /**
      * Checks if is requisitioner or approver.
