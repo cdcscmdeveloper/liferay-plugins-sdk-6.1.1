@@ -46,7 +46,7 @@
 					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<ui:remove> #19287 - start </ui:remove>
 						<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
-							size="50" style="color:black;"
+							size="50" style="color:black"
 							required="#{!meetingAttDtl.selected}"
 							label="#{lbl['lbl.sc.name']}"
 							disabled="#{!isSecretaryUser or 
@@ -60,17 +60,16 @@
 					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
 						<ui:remove> #19287 - start </ui:remove>
 						<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
-							style="color:black;" size="15"
+							style="color:black" size="15"
 							required="#{!meetingAttDtl.selected}"
 							label="#{lbl['lbl.sc.identification.no']}"
 							disabled="#{!isSecretaryUser or 
 								meetingAttDtl.recordStatusFlg ne DbValueConst.recordStatusActive or suppFinalizationBackingBean.managedBean.readOnly}">
-							<ui:remove> #19287 - end </ui:remove>ui:remove>#35360 - End</ui:remove>
+							<ui:remove> #19287 - end </ui:remove>
 
 							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 						</h:inputText>
 					</p:column>
-					<ui:remove>#35360 - Start </ui:remove>
 				</c:when>
 				<c:otherwise>
 					<p:column headerText="#{lbl['lbl.sc.name']}">
