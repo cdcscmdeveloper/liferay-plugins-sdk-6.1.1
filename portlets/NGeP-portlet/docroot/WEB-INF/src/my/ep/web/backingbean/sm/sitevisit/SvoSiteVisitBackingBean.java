@@ -98,6 +98,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
+import my.ep.persistence.entity.sm.SmSvAddress;
 import my.ep.persistence.entity.sm.SmSvAdtMachine;
 import my.ep.persistence.entity.sm.SmSvAssistantOfficer;
 import my.ep.persistence.entity.sm.SmSvBankInfo;
@@ -195,7 +196,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	private void setSelectedSmSvFacility(SmSvTemplate svTemplate){
 		if(getManagedBean().getSelectedSvTemplate().getSmSvFacility() == null){
-			SmFacility smFacility = retrieveFacilityByAddress(getManagedBean().getSmSvTask().getSmSvAddress().getSiteRefId());
+			SmSvAddress svAddress = getManagedBean().getSmSvTask().getSmSvAddress();
+			//#28775 - start
+			if(svAddress.getAddress() == null){
+				SmCommonUtil.getInstance().setSmSvAddressInfoBySiteTypeAndRefId(
+						svAddress.getSiteType(), svAddress.getSiteRefId(), svAddress, 
+						getManagedBean().getSmSvTask().getSmAppl().getApplId());
+			}
+			SmFacility smFacility = null;
+			if(svAddress.getAddress() != null){
+				smFacility = retrieveFacilityByAddress(svAddress.getAddress().getAddressId());
+			}
+			//#28775 - end
 			SmSvFacility smSvFacility = getManagedBean().getSelectedSvTemplate().getSmSvFacility();
 
 			if(smFacility != null){
