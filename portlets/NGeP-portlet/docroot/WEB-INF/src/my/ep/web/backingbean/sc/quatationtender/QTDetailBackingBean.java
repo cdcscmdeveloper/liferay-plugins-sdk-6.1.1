@@ -7229,7 +7229,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
-			detailSO.validateQTDetails(reqDTO);
+			// #10141 Start Vinod added condition to ignore validation for send
+			// notification button.
+			if (!this.getManagedBean().isSaveForSendNotification()) {
+				detailSO.validateQTDetails(reqDTO);
+			}
+			// #10141 End Vinod
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) Reopen reset to null as remarks that initialize empty will cause error while save
@@ -7475,6 +7480,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.getQtdetail().setFCApproval(true);
+				// #10141 Start Vinod added condition to ignore validation for send
+				// notification button.
+				if (this.getManagedBean().isSaveForSendNotification()) {
+					List<ScQtApproval> approvers = new ArrayList<>();
+					approvers.add(this.getManagedBean().getScQtApproval());
+					reqDTO.getQtdetail().setScQtApprovals(approvers);
+				}
+				// #10141 End Vinod
 				detailSO.validateApprovalDetails(reqDTO);
 				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -13140,6 +13153,10 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt()
 				.getScQtCategorys();
+		//suspected session were renew, set back list.
+		if(null == qtCatCodeList || qtCatCodeList.isEmpty()){
+			qtCatCodeList = this.getManagedBean().getQtCategoryList();
+		}
 // #29732 Start - reOpen Fix
 		String catCodeList = "";
 		Integer recordstatusInactive = 0;// #29732(#221)
@@ -13212,11 +13229,16 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 *            .
 	 * @return
 	 */
-	private void checkInactiveChecklistAndDisplayWarning(String status) {
+	public void checkInactiveChecklistAndDisplayWarning(String status) {
 		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
-		if (SCProcessNameConst.PREPARE_QT_SCHEDULE.equals(status)
-				|| SCProcessNameConst.REVISE_QT_SCHEDULE.equals(status)
-				|| SCProcessNameConst.APPROVE_PUBLICATION.equals(status)) {
+		List<String> checkStatus = new ArrayList<>();
+		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
+		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
+		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
+		checkStatus.add(SCProcessNameConst.REVISE_BPK);
+		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
+		
+		if (checkStatus.contains(status)) {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTSpecSO.class);

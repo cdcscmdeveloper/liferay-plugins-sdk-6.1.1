@@ -12766,7 +12766,13 @@ if (null != checklist && !checklist.isEmpty()) {
 
 					}
 					// #10141 Start Vinod
-					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),action);
+					boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+							.getManagedBean().isShowInactiveChecklistPopup(), action);
+
+					if (isInactiveChecklistPopup) {
+						RequestContext.getCurrentInstance()
+						.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+					}
 					// #10141 End Vinod
 					// 25638 - Start
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
@@ -17605,7 +17611,13 @@ if (null != checklist && !checklist.isEmpty()) {
 		checkTechnicalAndFinancialSpec(this.getManagedBean().getQt()); //Bug #37612 - Remove condition
 		
 		// #10141 Start Vinod
-		checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), action);
+		boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+				.getManagedBean().isShowInactiveChecklistPopup(), action);
+
+		if (isInactiveChecklistPopup) {
+			RequestContext.getCurrentInstance()
+			.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+		}
 		if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
 			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
 		}
@@ -18230,7 +18242,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
 		// 29732 -end-
-		
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); 
+		//29732 add here, issue could need to delete in dao those category has been delete in managebean
+		//Status : Pending document preparation
+		//Screen : Pending spec preparation (Revision)
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -23388,7 +23403,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 *            maintenance screen to show the warning.
 	 * 
 	 */
-	public void checkInactiveChecklistForPopup(boolean isShowInactiveChecklistPopup, String action) {
+	public boolean checkInactiveChecklistForPopup(boolean isShowInactiveChecklistPopup, String action) {
 		if (!isShowInactiveChecklistPopup) {
 			List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 
@@ -23410,9 +23425,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								new String[] { confirmationMsg }));
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
-				RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return true;
 			}
 		}
+		
+		return false;
 	}
 
 	// #10141 End Vinod
