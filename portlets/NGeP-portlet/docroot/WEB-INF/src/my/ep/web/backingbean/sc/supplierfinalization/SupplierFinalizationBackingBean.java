@@ -3482,52 +3482,52 @@ public class SupplierFinalizationBackingBean extends
 		return streamContent;
     }	
     
-    //36715 START
+	//36715 START
     /**
- *Get the Documents Report Information.
- * 
- *@return the ScQtFinalizationReportAttachment instance.
- *             
- */
-public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
-		ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
-	log.info("generateDocumentAttachment");
-	String definitionType = scQtFinalizationReport.getDefinationType()
-			.getParameterCode();
-	ScQtFinalization scQtFinalization = getManagedBean()
-			.getScQtFinalization();
+	 *Get the Documents Report Information.
+	 * 
+	 *@return the ScQtFinalizationReportAttachment instance.
+	 *             
+	 */
+	public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
+			ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
+		log.info("generateDocumentAttachment");
+		String definitionType = scQtFinalizationReport.getDefinationType()
+				.getParameterCode();
+		ScQtFinalization scQtFinalization = getManagedBean()
+				.getScQtFinalization();
 
-	ScQtFinalizationReportAttachment reportAttachment = null;
-	if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-			.equals(definitionType)) {
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
-		ScQt scQt = getManagedBean().getScQt();
-		reportAttachment = new ScQtFinalizationReportAttachment();
-		reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
-		reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
-		ScAttachment attachment = (ScAttachment) reportAttachment;
-		StringBuilder filename = new StringBuilder();
-		// replace white space due to firefox
-		filename.append(scQtFinalizationReport.getTitle()
-				.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
-				.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
+		ScQtFinalizationReportAttachment reportAttachment = null;
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+					.getDocDefinitionKey();
+			ScQt scQt = getManagedBean().getScQt();
+			reportAttachment = new ScQtFinalizationReportAttachment();
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			reportAttachment.setDocNo(scQtFinalization.getScQt().getQtNo());
+			ScAttachment attachment = (ScAttachment) reportAttachment;
+			StringBuilder filename = new StringBuilder();
+			// replace white space due to firefox
+			filename.append(scQtFinalizationReport.getTitle()
+					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
+					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
 			
-		if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
-			filename.append(".rtf");
-			reportAttachment.setFileName(filename.toString());
-			generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
+			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
+				filename.append(".rtf");
+				reportAttachment.setFileName(filename.toString());
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
 
-		} else {
-			debugLogger("No document type is exists with the key "
-					+ docDefinitionKey);
-			reportAttachment = null;
-		}
+			} else {
+				debugLogger("No document type is exists with the key "
+						+ docDefinitionKey);
+				reportAttachment = null;
+			}
 
-	} 
+		} 
 		
-	return reportAttachment;
-}
+		return reportAttachment;
+	}
 	//36715 END
      
     /**
@@ -10457,13 +10457,13 @@ public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
 	 * Check for duplicate report related to UUM Definiation Key Report This
 	 * issue occur in production Bug #34720
 	 */
-	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport, 
+	private boolean duplicateCheckFinalizationReportList(ScQtFinalizationReport finalizationReport,
 			List<ScQtFinalizationReport> titleList) {
 		String defKey = finalizationReport.getPmDocument() != null ? finalizationReport.getPmDocument().getDocDefinitionKey() : "";
 		if (titleList != null && titleList.size() > 0) {
 			for (ScQtFinalizationReport sfReportTemp : titleList) {
 				String defKeyTemp = sfReportTemp.getPmDocument() != null ? sfReportTemp.getPmDocument().getDocDefinitionKey() : "";
-				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim()) 
+				if (finalizationReport.getTitle().trim().equalsIgnoreCase(sfReportTemp.getTitle().trim())
 						&& defKey.equalsIgnoreCase(defKeyTemp)
 						&& defKey.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT)) {
 					return true;
