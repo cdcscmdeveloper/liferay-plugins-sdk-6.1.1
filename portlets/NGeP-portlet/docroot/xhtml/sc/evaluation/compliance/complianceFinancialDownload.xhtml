@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<h:panelGroup>
+
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+			</p:blockUI>
+			<p:messages id="financialCompliance" showDetail="true"
+				autoUpdate="true" closable="true" severity="error,info"
+				showSummary="false" />
+			<table width="100%" class="BtnSpacing">
+				<tr>
+					<td align="right"><p:commandButton
+							value="#{lbl['lbl.btn.back']}" style="float:left;"
+							immediate="true"
+							action="#{evaluationBackingBean.evaluationBackaction}" /></td>
+				</tr>
+			</table>
+
+			<p:panel id="financialDocumentCompliance"
+				header="#{lbl['lbl.sc.eva.compliance.financial.document.compliance']}">
+
+				<table>
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.sc.eva.compliance.download.by']}  " /> <h:outputLabel
+								value="*" styleClass="mandatory" /></td>
+
+						<td><p:selectOneMenu
+								value="#{evaluationBackingBean.managedBean.downloadBy}"
+								style="width: 178px;margin-bottom: 5px;" update="@form">
+								<f:selectItems
+									value="#{evaluationBackingBean.downloadByDropDownValues()}"></f:selectItems>
+								<p:ajax 
+									listener="#{evaluationBackingBean.onSelectDownloadByValue}"
+									update="@([id$=downloadButtonComplianceFinancial])"></p:ajax>
+
+							</p:selectOneMenu></td>
+
+						<td><ac:iconTooltip id="technicalDocumentComplianceToolTips"
+								value="#{lbl['lbl.sc.eva.compliance.download.tooltips']}" /></td>
+					</tr>
+				</table>
+			</p:panel>
+
+			<h:panelGroup id="downloadButtonComplianceFinancial" style="display: inline-block; width: 16.5%;">
+				<table width="100%" class="BtnSpacing">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.downloadBy ne null}">
+						<tr>
+							<c:if test="#{evaluationBackingBean.managedBean.downloadBy eq SourcingConstants.DOWNLOADBY_DOCUMENT}">
+								<p:commandButton value="#{lbl['lbl.btn.preparezip']}"
+									style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									process="@this" update="@form @([id$=downloadButtonComplianceFinancial])"
+									actionListener="#{evaluationBackingBean.generateAllDocumentComplianceZip}"
+									rendered="#{empty evaluationBackingBean.managedBean.financialZipFileDownloadByDocument}" />
+								<p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	style="float:right;"
+							    	ajax="false"
+							    	rendered="#{not empty evaluationBackingBean.managedBean.financialZipFileDownloadByDocument}"
+							    	action="#{evaluationBackingBean.downloadZippedFile}" />
+							</c:if>
+							<c:if test="#{evaluationBackingBean.managedBean.downloadBy eq SourcingConstants.DOWNLOADBY_SUPPLIER}">
+								<p:commandButton value="#{lbl['lbl.btn.preparezip']}"
+									style="float:left;" ajax="true" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									process="@this" update="@form @([id$=downloadButtonComplianceFinancial])"
+									actionListener="#{evaluationBackingBean.generateAllDocumentComplianceZip}"
+									rendered="#{empty evaluationBackingBean.managedBean.financialZipFileDownloadBySupplier}" />
+								<p:commandButton value="#{lbl['lbl.btn.download']}"
+							    	style="float:right;"
+							    	ajax="false"
+							    	rendered="#{not empty evaluationBackingBean.managedBean.financialZipFileDownloadBySupplier}"
+							    	action="#{evaluationBackingBean.downloadZippedFile}" />
+							</c:if>
+						</tr>
+					</c:if>
+				</table>
+			</h:panelGroup>
+
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

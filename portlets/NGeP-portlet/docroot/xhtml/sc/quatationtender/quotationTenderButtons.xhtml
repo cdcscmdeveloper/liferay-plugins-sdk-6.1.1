@@ -416,21 +416,21 @@
 			width="30%" height="100" closable="false">
 			<table>
 				<tr>
-					<td style="float: left;"><p:outputLabel
-							value="#{lbl['lbl.sc.popup.checkBeforePublish2']}" /></td>
+					<td style="float: left;">
+						<p:outputLabel value="#{lbl['lbl.sc.popup.checkBeforePublish2']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="OK" onclick="specCommAlert.hide();"
-					 partialSubmit="true" process="@this" />
+				<p:commandButton value="OK" onclick="specCommAlert.hide();" partialSubmit="true" process="@this" />
 			</div>
 		</p:dialog>
 		<!-- 15391 End  -->
 
 	<!-- 25077, 32376, 34694 - Start -->
 	<c:if
-		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || isCommitteeApprovalTask}">
+		test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.qtPendingPublicationApprovalReschedule || isCommitteeApprovalTask}"> <ui:remove>#35527</ui:remove>
 		<!-- #34694 -end- -->
 		<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
 			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"

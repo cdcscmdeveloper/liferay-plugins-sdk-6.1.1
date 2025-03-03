@@ -227,10 +227,11 @@
 						label="#{lbl['lbl.sc.title']}" required="#{not empty param['skipvalidation'] and qTDetailBB.isProcurementTitleMandatory(scQt) or not empty param['skipmenuvalidation'] or not empty param['skipsaveclonevalidation']}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
 						valueChangeListener="#{createQtBB.qtTitleValueChanged}"
-						onkeyup="limitTextArea(this,500);"
-						onkeydown="limitTextArea(this,500);"
-						onmouseout="limitTextArea(this,500);"
-						style=" margin-bottom:5px; width: 714px;" maxlength="500">
+						onkeyup="limitTextArea(this,1000);"
+						onkeydown="limitTextArea(this,1000);"
+						onmouseout="limitTextArea(this,1000);"
+						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
+						<!-- #34163  Changed maxlength to 1000 Vinod -->						
 					<ui:remove>9019 -end</ui:remove>
 						<f:ajax></f:ajax>
 					</p:inputTextarea> <p:message id="title1Msg" for="title1" display="icon" /></td>

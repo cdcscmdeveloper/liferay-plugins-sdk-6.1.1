@@ -97,9 +97,12 @@
 		</p:outputPanel>
 		<br />
 		<!-- #29006 - end -->
-		
-		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
-			value="#{lbl['lbl.sc.item.codification.instruction']}" />
+
+		<ui:remove>#34757,29007 -start-</ui:remove>
+		<h:outputText styleClass="instruction"
+			rendered="#{isSupplierAckStatus}" escape="false"
+			value="#{lbl['lbl.sc.qt.pending.qt.loa.submission.zone.item.instruction']}" />
+		<ui:remove>#34757,29007 -end-</ui:remove>
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -136,7 +139,10 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
-				#{scLoiLoaItem.scRequestItem.itemName} 
+				<ui:remove>Bug #34757, 29007 -start-</ui:remove>
+				<h:outputText value="#{scLoiLoaItem.scRequestItem.itemName}"
+					rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" />
+				<ui:remove>Bug #34757, 29007 -end-</ui:remove>
 				<p:spacer width="10" />
 				<!-- #29006 - start -->
 				<c:if
@@ -183,8 +189,13 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-				<h:outputText value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" />
-				
+				<ui:remove>Bug #34757, 29007 -start-</ui:remove>
+				<h:outputText
+					value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
+					rendered="#{scLoiLoaItem.scRequestItem.cmItem != null
+				 and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" />
+				<ui:remove>Bug #34757, 29007 -end-</ui:remove>
+
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
@@ -263,9 +274,12 @@
 				<f:facet name="header">
 					#{lbl['lbl.sc.action']}
 				</f:facet>
-				<p:commandButton value="#{lbl['lbl.btn.assign']}" 
+				<ui:remove>Bug #34757, 35284, 29007 -start-</ui:remove>
+				<p:commandButton value="#{lbl['lbl.btn.assign']}"
 					disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}" />
+					action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
+					rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" />
+				<ui:remove>Bug #34757, 35284, 29007 -end-</ui:remove>
 			</p:column>
 			<ui:remove>#34242, #29007 -start-</ui:remove>
 			<p:ajax event="page"
@@ -273,6 +287,7 @@
 				update="@this" />
 			<ui:remove>#34242, #29007 -end-</ui:remove>
 		</p:dataTable>
+		<!-- 29006, 29007 -start- -->
 		<c:if test=	"#{isZonalWithPaOrPs}">
 		<table
 			style="border: 1px solid #e8e8e8; width: 100%; border-collapse: collapse;">
@@ -336,49 +351,62 @@
 
 					<c:if
 						test="#{scLoiLoaItem.scRequestItem.requestNoteItemId ne lOADetailBackingBean.getScRequestSession(scLoiLoaItem.scRequestItem.requestNoteItemId,varStatus.index)}">
-						<td style="border: 1px solid #e8e8e8; border-collapse: collapse;"
-							rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}"><h:outputText
-								value="#{scLoiLoaItem.scRequestItem.itemName}" /> <p:spacer
-								width="10" /> <c:if
-								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}">
+							<td style="border: 1px solid #e8e8e8; border-collapse: collapse;"
+								rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}">
+								<ui:remove>Bug #34757, 29007 -start-</ui:remove> 
+								<h:outputText
+									value="#{scLoiLoaItem.scRequestItem.itemName}"
+									rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" />
+								<ui:remove>Bug #34757, 29007 -end-</ui:remove> 
+								<p:spacer
+									width="10" /> <c:if
+									test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlag &amp;&amp; !isDocTypeQuotation}">
 
-								<p:commandLink id="specAndSupplierOfferLink#{varStatus.index}" process="@this"
-									update="@([id$=specAndSupplierOfferDlg])"
-									action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
-									oncomplete="specAndSupplierOfferDlgVar.show();">
-									<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-								</p:commandLink>
-								<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}"
-									for="specAndSupplierOfferLink#{varStatus.index}"
-									value="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-									trackMouse="true" hideEvent="mouseleave click" />
+									<p:commandLink id="specAndSupplierOfferLink#{varStatus.index}"
+										process="@this" update="@([id$=specAndSupplierOfferDlg])"
+										action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
+										oncomplete="specAndSupplierOfferDlgVar.show();">
+										<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}"
+										for="specAndSupplierOfferLink#{varStatus.index}"
+										value="#{lbl['lbl.sc.spec.and.supplier.offer']}"
+										trackMouse="true" hideEvent="mouseleave click" />
 
-							</c:if> <c:if
-								test="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag and !isDocTypeQuotation}">
-								<p:commandLink id="supplierProposalUpdateLink#{varStatus.index}"
-									process="@this" partialSubmit="true"
-									action="#{lOADetailBackingBean.onClickSupplierProposalUpdateLink(scLoiLoaItem)}">
-									<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-								</p:commandLink>
-								<p:tooltip id="toolTipSupplierProposalUpdate#{varStatus.index}"
-									for="supplierProposalUpdateLink#{varStatus.index}"
-									value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
-									trackMouse="true" hideEvent="mouseleave click" />
-							</c:if> <br /> <br /> <!-- #29006 - end --> <h:outputText
-								value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}"
-								rendered="#{scLoiLoaItem.scRequestItem.cmItem != null}" /> <!-- #29007 Start Vinod -->
-							<p:spacer width="5" /> <c:if
-								test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
-								<p:commandLink id="itemName#{varStatus.index}"
-									action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
-									partialSubmit="true" process="@this">
-									<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-								</p:commandLink>
-								<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}" for="itemName#{varStatus.index}"
-									value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}"
-									trackMouse="true" hideEvent="mouseleave click" />
-							</c:if></td>
-					</c:if>
+								</c:if> <c:if
+									test="#{lOADetailBackingBean.managedBean.updateSupplierInstructionFlag and !isDocTypeQuotation}">
+									<p:commandLink
+										id="supplierProposalUpdateLink#{varStatus.index}"
+										process="@this" partialSubmit="true"
+										action="#{lOADetailBackingBean.onClickSupplierProposalUpdateLink(scLoiLoaItem)}">
+										<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipSupplierProposalUpdate#{varStatus.index}"
+										for="supplierProposalUpdateLink#{varStatus.index}"
+										value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
+										trackMouse="true" hideEvent="mouseleave click" />
+								</c:if> <br /> <br /> <!-- #29006 - end --> 
+								<ui:remove>Bug #34757, 29007 -start-</ui:remove>
+								<h:outputText
+									value="#{scLoiLoaItem.scRequestItem.cmItem.extensionCode}"
+									rendered="#{scLoiLoaItem.scRequestItem.cmItem != null and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" />
+								<!-- #29007 Start Vinod -->
+								<ui:remove>Bug #34757, 29007 -end-</ui:remove> 
+								<p:spacer
+									width="5" /> <c:if
+									test="#{lOADetailBackingBean.managedBean.specificationAndSupplierDialogFlagQT &amp;&amp; isDocTypeQuotation &amp;&amp; lOADetailBackingBean.managedBean.supPropSpecUpdate}">
+									<p:commandLink id="itemName#{varStatus.index}"
+										action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
+										partialSubmit="true" process="@this">
+										<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
+									</p:commandLink>
+									<p:tooltip id="toolTipSpecAndSupplierOffer#{varStatus.index}"
+										for="itemName#{varStatus.index}"
+										value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}"
+										trackMouse="true" hideEvent="mouseleave click" />
+								</c:if>
+							</td>
+						</c:if>
 
 					<td style="border: 1px solid #e8e8e8; border-collapse: collapse;text-align: right;"><h:outputText
 							value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency}">
@@ -460,14 +488,18 @@
 					<c:if test=	"#{isSupplierAckStatus}">
 					<!-- #32280 - start -->
 						<c:if test="#{scLoiLoaItem.scRequestItem.requestNoteItemId ne lOADetailBackingBean.getScRequestAssignButtonSession(scLoiLoaItem.scRequestItem.requestNoteItemId,varStatus.index)}">
-							<td style="border: 1px solid #e8e8e8; border-collapse: collapse;text-align: right;"
-							rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}">
-								<p:commandButton
-								value="#{lbl['lbl.btn.assign']}"
-								disabled="#{lOADetailBackingBean.managedBean.readOnly}"
-								action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}" />
-							</td>
-						</c:if>
+								<td
+									style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: right;"
+									rowspan="#{lOADetailBackingBean.getScRequestRowCount(scLoiLoaItem.scRequestItem.requestNoteItemId)}">
+									<ui:remove>Bug #34757,35284, 29007 -start-</ui:remove> 
+									<p:commandButton
+										value="#{lbl['lbl.btn.assign']}"
+										disabled="#{lOADetailBackingBean.managedBean.readOnly}"
+										action="#{lOADetailBackingBean.assignProductCode(scLoiLoaItem)}"
+										rendered="#{lOADetailBackingBean.isShowAssignButton(scLoiLoaItem)}" />
+									<ui:remove>Bug #34757, 35284, 29007 -end-</ui:remove>
+								</td>
+							</c:if>
 					<!-- #32280 - end -->
 					</c:if>
 				</tr>
@@ -486,6 +518,7 @@
 			</tr>
 		</table>
 		</c:if>
+		<!-- 29006, 29007 -end- -->
 	</p:panel>
 	
 	<c:if test="#{isZonal}">
@@ -496,8 +529,8 @@
 	<p:dialog id="specAndSupplierOfferDlg"
 		widgetVar="specAndSupplierOfferDlgVar"
 		header="#{lbl['lbl.sc.spec.and.supplier.offer']}"
-		styleClass="pop_up_top" modal="true" width="500" resizable="false">
-		<p:spacer height="20" />
+		styleClass="pop_up_top" modal="true" resizable="false">
+		<p:scrollPanel mode="native" style="width:450px;height:500px; border:none !important" >
 		<table>
 			<tr valign="top">
 			<td width="30%">
@@ -554,6 +587,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.close']}"
 				onclick="itemSpecificationDlgVar.hide();" />
 		</div>
+		</p:scrollPanel>
 	</p:dialog>
 	<!-- #29006 - end -->
 	

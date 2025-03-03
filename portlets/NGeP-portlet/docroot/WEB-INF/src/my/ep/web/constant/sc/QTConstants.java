@@ -3,7 +3,6 @@
  */
 package my.ep.web.constant.sc;
 
-import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 
 /**
  * QTConstants for constants for sourcing.
@@ -26,7 +25,9 @@ public interface QTConstants {
 	public static final String FINALIZATION_HIGH_AUTH_SECRETARY_LOGIN_ID = "finalization.higherSecretary.loginId";
 	/*  Enhancement 27668 END */
 
+	// #25692 -start-
 	public static final String MAINTANANCE_PAGE_FULL = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
+	// #25692 -end-
 	public static final String MAINTANANCE_PAGE = "quatationtendercreation";
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
 	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/quatationtendersearch.xhtml";
@@ -95,10 +96,13 @@ public interface QTConstants {
 	public static final String PENDING_RESPONSE_DP_QT = "/xhtml/sc/pendingresponsefordpandqt/prerenderresponsedpqtmain.xhtml";
 	public static final String ONLINE_BIDDING_STATUS_COUNT = "/xhtml/sc/bidding/onlinebiddingstatus/onlinebiddingstatusmain.xhtml";
 	public static final String VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/viewQtDetailsGeneralInfoMain.xhtml";
-	// bug #33090,#19287 -start-
+
+	// #33090, #19287 -start-
 	public static final String SUPPLIER_VIEW_QTDETAILS_GENERAL_INFO = "/xhtml/sc/viewqtdetailsgeneralinfo/supplierViewQtDetailsGeneralInfoMain.xhtml";
-	// bug #33090,#19287 -end-
-	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";  // ***25201
+	// #33090, #19287 -end-
+	// #19336, #25201, #17376, #19287 -start-
+	public static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/proposalcommon/supplierProposalMain.xhtml";
+	// #19336, #25201, #17376, #19287 -end-
 
 	public static final String SC_LOI_TAB = "LOI";
 	public static final String SC_AWARD_TAB = "Award Details";
@@ -212,21 +216,21 @@ public interface QTConstants {
 	public static final int ACTIVE_TAB_INDEX = 8;
 	
 	
-	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; // TODO
-	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; // TODO
-	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_FED_GOV = 10; 
+	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_FED_GOV = 11; 
+	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_FED_GOV = 12; 
 	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV = 15;
 	public static final int CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV = 16;
 	public static final int CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV = 17;
-	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; // TODO
+	public static final int CRITERIA_TYPE_TOTAL_YEAR_EXPERIENCE = 20; 
 	public static final int CRITERIA_TYPE_TOTAL_EMPLOYEE = 21;
-	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; // TODO
-	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; // TODO
+	public static final int CRITERIA_TYPE_NO_OF_YEARS_WARRANTY = 30; 
+	public static final int CRITERIA_TYPE_NO_OF_MONTH_OF_TRAINING = 40; 
 	public static final int CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT = 50;
 	public static final int CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES = 51;
 	public static final int CRITERIA_TYPE_TOTAL_CASH_ON_HAND = 52;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO = 60;
-	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; // TODO
+	public static final int CRITERIA_TYPE_PAID_UP_CAPITAL_AMOUNT = 70; 
 	public static final int CRITERIA_TYPE_SUPPLIER_DETAILS = 30;
 	public static final int CRITERIA_TYPE_ASSETS_AND_LIABILITIES_CURRENT_RATIO = 61;
 	public static final String NEW_LINE_CHARACTER = "\r\n";
@@ -244,8 +248,12 @@ public interface QTConstants {
 	//#32199 - end
 	
 	public static final String PORTLET_NAME_QT_MAINTENANCE = "scQuotationTender_WAR_NGePportlet";
+
+	// 17376#61 -start-
 	public static final String PORTLET_NAME_QT_SEARCH = "scQuotationTenderSearch_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_TECHSUPP = "scQuotationTenderSearchTechSupp_WAR_NGePportlet";
+	// 17376#61 -end-
+	
 	// ***25692#19 - start
 	public static final String PORTLET_NAME_APPROVAL = "QTApproval_WAR_NGePportlet";
 	// ***25692#19 - end
@@ -269,15 +277,15 @@ public interface QTConstants {
 	public static final String SPEC_MAINTENANCE = "SM"; 
 	public static final String SPEC_MAINTENANCE_SEARCH_PAGE = "/xhtml/sc/speccommitteemaintenance/specificationCommitteeMaintenanceSearch.xhtml";
 	
-	
+	// 19287#91, 17376#104 -start-
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
-	
+	// 19287#91, 17376#104 -end-
 	//25037 QT Bpm Composite Version Validity ID -start-
 	public static final Long ALLOW_COMMITTEE_REASSIGNMENT = 25037L;
 	//25037 -end-
-	
+
 	//#15391 #11104 -start-
-	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
 	//#15391 #11104 -end-
 
 	//#11104
@@ -292,9 +300,22 @@ public interface QTConstants {
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
 	// 9019 - End (Harun)
 	
-	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648
+	public static final String PORTLET_NAME_DL_CREATE = "scCreateManualSourcing_WAR_NGePportlet";//#32648 #35227@Syazani 20/10/2022
 	public static final String PORTLET_NAME_QT_LIST = "scQtLoaList_WAR_NGePportlet";//#32648
 	
+	// Bug #35485@Syazani 08/02/2024 -- Start
+	public static final String EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Evaluation-Committee-Report";
+	public static final String OPENING_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-Opening-Committee-Report";
+	public static final String TECHNICAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-TechnicalEvaluation-Committee-Report";
+	public static final String FINANCIAL_EVALUATION_COMMITTEE_REPORT_ZIP_TITLE = "NGeP-QT-FinancialEvaluation-Committee-Report";
+
+	public static final String DOC_TYPE_SC_EVALUATION_COMMITTEE_REPORT_ATTACHMENT = "ECR";
+	public static final String DOC_TYPE_SC_OPEN_COMMITTEE_REPORT_ATTACHMENT = "OCR";
+	public static final String DOC_TYPE_SC_TECHNICAL_EVALUATION_REPORT_ATTACHMENT = "TCR";
+	public static final String DOC_TYPE_SC_FINANCIAL_EVALUATION_REPORT_ATTACHMENT = "FCR";
+	public static final String DOC_TYPE_SC_QT_FINALIZATION_ATTACHMENT = "KTR";
+	// Bug #35485@Syazani 08/02/2024 -- End
+
 	// #33831, #21695, #25138 - Start
 	public static final String PORTLET_NAME_SUPPLIER_PROPOSAL = "scSupplierProposal_WAR_NGePportlet";
 	// #33831, #21695, #25138 - End
@@ -313,5 +334,13 @@ public interface QTConstants {
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148
 
 	public static final String SERVICE_OBJECT_CC = "cc";
+
+	//#10542 Start Dayan
+	public static final String COMPLIANCE_DOCUMENT_SUPPLIER_NO = "Supplier ";
+	public static final String FINANCIAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Financial-BySupplier";
+	public static final String FINANCIAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Financial-ByTitleDocument";
+	public static final String TECHNICAL_DOWNLOADBY_SUPPLIER_ZIP_TITLE = "NGEP-Technical-BySupplier";
+	public static final String TECHNICAL_DOWNLOADBY_DOCUMENT_ZIP_TITLE = "NGEP-Technical-ByTitleDocument";
+	//#10542 End Dayan
 
 }

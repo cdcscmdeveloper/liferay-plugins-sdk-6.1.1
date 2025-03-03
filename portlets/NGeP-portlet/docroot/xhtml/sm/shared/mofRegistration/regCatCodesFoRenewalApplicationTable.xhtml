@@ -14,8 +14,9 @@
 		<p:columnGroup type="header">
 
 			<p:row>
+				<!-- #32008 -->
 				<p:column selectionMode="multiple" style="width:2%" 
-					rendered="#{!backingBean.managedBean.approverUser}"/>
+					rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 					style="width : 2%;" />
 				<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" style="width :350px;white-space : normal" />
@@ -33,8 +34,9 @@
 					headerText="#{lbl['lbl.sm.catCodes.prevDecision']}" />
 			</p:row>
 		</p:columnGroup>
+		<!-- #32008 -->
 		<p:column selectionMode="multiple" style="width:2%"
-			rendered="#{!backingBean.managedBean.approverUser}"/>
+			rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"/>
 		<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 			style="width : 2%;">
 			<p:outputLabel value="#{index + 1}"
@@ -353,8 +355,9 @@
 					businessTypeCode="#{backingBean.managedBean.smSupplier.businessType}"
 					special="#{backingBean.managedBean.smAppl.supplierType}" />
 			<!-- 30865 End -->
-			
+			<!-- #32008 -->
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				oncomplete="addtnlCatCodeRenewDeletePopUp.show()"
 				update=":form:tt:catCodeInfPan" partialSubmit="true"
 				process=":form:tt:catCodeInfPan">

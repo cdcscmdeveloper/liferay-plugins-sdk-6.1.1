@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -21,7 +20,6 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.biz.service.sm.upgraderole.IUpgradeRoleSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
@@ -29,7 +27,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.osb.sm.SMOsbReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -57,7 +54,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistrationManagedBean;
@@ -81,6 +77,10 @@ import com.liferay.portal.theme.ThemeDisplay;
 @ManagedBean (name = "postSupplierRegBB")
 @RequestScoped
 public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSupplierRegistrationManagedBean>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
 	private static final String CATALOGUE_UPLOAD_PATH = "supptemp-codification-search";
 	private static final String CATALOGUE_MAINT = "supptemp-catalogue-maint";
@@ -116,7 +116,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	public String currentStatusAndPath(){
-		log.info("Here Enter Funtion currentStatusAndPath ===>");
+		//log.info("Here Enter Funtion currentStatusAndPath ===>");
 		SmSupplier userSupplier = getSupplierProfileByUserId();
 		String path = null;
 		String desc = null;
@@ -279,15 +279,24 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 											getManagedBean().setDisplayRejectLabel(true);
 										}
 									}
-								}else{
+								} else {
 									getManagedBean().setRejectedApplExist(false);
 									log.info("*******Not Resubmit********");
 									path = MOF_REG_PATH;
 									getManagedBean().setFlowStatus(1);
-									
-									if(rejectedWf != null){
+
+									if (rejectedWf != null) {
 										path = validPaymentForResubmission(supplier.getSupplierId(), rejectedWf.getDocId());
+										//#35579 --start--
+										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
+											getManagedBean().setFlowStatus(8);
+										}
+									} else {
+										if (wfStat != null && wfStat.getStatusId().longValue() == SupplierManagementConst.PM_STATUS_PENDING_PAYMENT_SOFT_CERT) {
+											getManagedBean().setFlowStatus(7);
+										}
 									}
+									//#35579 --end--
 								}
 							}else{
 								path = MOF_REG_PATH;
@@ -324,6 +333,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, pageRedirect);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void pageNavigate() throws Exception{
 		SmSupplier supplier = getSupplierProfileByUserId();
 		//START 27264
@@ -339,7 +349,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 						this.getManagedBean().setResubmitAppl(true);
 					}
 					log.info("pageNavigate------------"+path1);
-					checkSSMValid(supplier,this.getManagedBean());
+					//#35115 - START
+					if(MOF_REG_PATH.equalsIgnoreCase(path1) || path1.contains(RESUBMIT_APPLICATION)){
+						checkSSMValid(supplier,this.getManagedBean());
+					}
+					//#35115 - END
 					log.info("this.getManagedBean().getPersonnelsRole()------------"+this.getManagedBean().getPersonnelsRole());
 					log.info("this.getManagedBean().isCheckRoleSSM()------------"+this.getManagedBean().isCheckRoleSSM());
 					if(this.getManagedBean().getPersonnelsRole()!= null && this.getManagedBean().getPersonnelsRole().size() > 0 && !this.getManagedBean().isCheckRoleSSM()){
@@ -391,7 +405,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	
-/*	public String getStatusDesc(){
+	/*public String getStatusDesc(){
 		return getManagedBean().getStatusDesc();
 	}*/
 	
@@ -553,210 +567,210 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @param labelStr
 	 * @return String
 	 */
+	/*
 	private String getLabelFromProperties(String labelStr){
 		Locale locale = new FacesScopes().getUserLocale();
 		String label = ResourceBundleUtils.getMessage(labelStr, ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		
 		return label;
 	}
-	
+	*/	
 	
 	/**
 	 * show/ Hide the hyperlink based on statusCode
 	 * @param statusCode
 	 */
-	private void showHyperlink(Long statusCode, boolean isRejected, boolean isResubmit){
+	private void showHyperlink(Long statusCode, boolean isRejected, boolean isResubmit) {
 		Integer sc = statusCode.intValue();
-		
-		switch(sc){
-		case 20100 : //Pending Application Declaration
+
+		switch (sc) {
+		case 20100: // Pending Application Declaration
 			getManagedBean().setFlowStatus(1);
 			getManagedBean().setHyperlink(true);
-			
-			if(isRejected){
+
+			if (isRejected) {
 				getManagedBean().setFlowStatus(3);
 				getManagedBean().setHyperlink(true);
 			}
 			break;
 
-		case 20114 : //Pending Payment (Processing fee)
+		case 20114: // Pending Payment (Processing fee)
 			getManagedBean().setFlowStatus(2);
 			getManagedBean().setHyperlink(true);
 			break;
 
-		case 20200 : //Pending Application Inquiry
+		case 20200: // Pending Application Inquiry
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(true);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
 
-		case 20251 : //Pending Payment
+		case 20251: // Pending Payment
 			getManagedBean().setFlowStatus(4);
 			getManagedBean().setHyperlink(true);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
-				}
-			}
-			break;
-			
-			
-		case 20101 : //Pending Supporting Document Verification
-			getManagedBean().setFlowStatus(3);
-			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
-				}
-			}
-			break;
-		
-		case 20102 : //Pending Application Verification
-			getManagedBean().setFlowStatus(3);
-			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
-				}
-			}
-			break;
-		
-		case 20103 : //Pending Review Site Visit Report - Before Approval
-			getManagedBean().setFlowStatus(3);
-			getManagedBean().setHyperlink(false);
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
 
-		case 20104 : //Pending Review Application
+		case 20101: // Pending Supporting Document Verification
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-			
-		case 20105 : //Pending Site Visit
+
+		case 20102: // Pending Application Verification
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-		
-		case 20106 : //Pending Re-Site Visit
+
+		case 20103: // Pending Review Site Visit Report - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-			
-		case 20107 : //Pending Reply Inquiry by Processing Officer
+
+		case 20104: // Pending Review Application
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
+				}
+			}
+			break;
+
+		case 20105: // Pending Site Visit
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
+				}
+			}
+			break;
+
+		case 20106: // Pending Re-Site Visit
+			getManagedBean().setFlowStatus(3);
+			getManagedBean().setHyperlink(false);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
+				}
+			}
+			break;
+
+		case 20107: // Pending Reply Inquiry by Processing Officer
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(true);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-		
-		case 20108 : //Pending Application Approval
+
+		case 20108: // Pending Application Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-			
-		case 20109 : //Pending Application Re-Approval
+
+		case 20109: // Pending Application Re-Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-		
-		case 20110 : //Pending Site Visit Assignment - Before Approval
+
+		case 20110: // Pending Site Visit Assignment - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-		
-		case 20111 : //Pending Site Visit Assignment - Before Approval
+
+		case 20111: // Pending Site Visit Assignment - Before Approval
 			getManagedBean().setFlowStatus(3);
 			getManagedBean().setHyperlink(false);
-			
-			if(isRejected){
-				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() +1);
-				
-				if(!isResubmit){
-					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() -1);
+
+			if (isRejected) {
+				getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() + 1);
+
+				if (!isResubmit) {
+					getManagedBean().setFlowStatus(getManagedBean().getFlowStatus() - 1);
 				}
 			}
 			break;
-			
-		default :
+
+		default:
 			getManagedBean().setHyperlink(false);
 			break;
-		}	
+		}
 	}
 	
 	/**
@@ -929,35 +943,31 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		try {
 			pageRedirect(SOFT_CERT_PATH);
 		} catch (PortalException | SystemException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 	
 	/**
 	 * preRender of supplier promotion banner
 	 */
-	public void supplierPromotion(){
+	public void supplierPromotion() {
 		SmSupplier userSupplier = getSupplierProfileByUserId();
-		if(userSupplier != null){
+		if (userSupplier != null) {
 			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
 			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
 			suppSearchReqDTO.setSupplierId(userSupplier.getSupplierId());
 			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
-			
-			if(validMofUser()){
-				log.info("MOF_SUPPLIER_ADMIN>>>>");
+
+			if (validMofUser()) {
+				// log.info("MOF_SUPPLIER_ADMIN>>>>");
 				mofUserAction(suppSearchResDTO.getSmSupplier());
 				setMofExpiryMsg(userSupplier);
 
-			}else
-				if(validBasicSupplier()){
+			} else if (validBasicSupplier()) {
 				basicSupplierAction(userSupplier.getSupplierId());
-
 			}
 		}
-		
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROMO_PAGE);
 	}
@@ -967,18 +977,14 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @param SmSupplier supp
 	 */
 	private void setMofExpiryMsg(SmSupplier supp) {
-		SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
-				supp.getSupplierId(), supp.getSmAppl().getSupplierType());
-		if (acc != null
-				&& acc.getExpDate() != null
-				&& acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+		SmMofAccount acc = SmCommonUtil.getMofAccountBySuppIdAndSuppType(supp.getSupplierId(), supp.getSmAppl().getSupplierType());
+		if (acc != null && acc.getExpDate() != null && acc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			Date currDate = new Date();
 			Calendar currDateAfterThreeMonths = Calendar.getInstance();
 			currDateAfterThreeMonths.setTime(currDate);
 			currDateAfterThreeMonths.add(Calendar.MONTH, 3);
 			if (currDateAfterThreeMonths.getTime().after(acc.getExpDate())) {
-				getManagedBean().setMofExpDateMsg(DateUtils.dateToString("dd-MM-yyyy",
-						acc.getExpDate()));
+				getManagedBean().setMofExpDateMsg(DateUtils.dateToString("dd-MM-yyyy", acc.getExpDate()));
 			}
 		}
 	}

@@ -83,7 +83,6 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -517,6 +516,9 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(resDTO.getFlAttachment());
+			//#34686 end
 			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
@@ -544,7 +546,11 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+			}
+			//#34686 start
+			flOrderBB.getManagedBean().setAttachment(coResDTO.getFlAttachment());
+			//#34686 end
+			
 			if(!isGovtSeller()){
 				flOrderBB.getManagedBean().setSupplier(hasSupplierRole());
 			}

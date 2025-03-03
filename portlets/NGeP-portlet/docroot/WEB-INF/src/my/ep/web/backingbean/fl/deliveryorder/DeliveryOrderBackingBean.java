@@ -188,6 +188,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		try {
 			String actionName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
 			Long flOrderId;
+			BigDecimal delAmtCal= BigDecimal.ZERO; //34881
 			if(actionName != null && actionName != ""){
 				flOrderId = this.getManagedBean().getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId();
 			}else{
@@ -236,6 +237,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 								flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
 								flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
 								flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+								
+								//34881-start
+								if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+									delAmtCal =itemAddress.getDeliveredQty().multiply(itemAddress.getDoGstUnitPrice());
+									flDelOrderItem.setDeliveredAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
+								}								
+								//34881-end	
+								
 								flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
 								flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
 								delOrderList.add(flDelOrderItem);
@@ -258,6 +267,14 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 						itemAddress.getFlTempDoItem().setFlFulfilmentItemAddr(itemAddress);
 						itemAddress.getFlTempDoItem().setDeliveryQty(itemAddress.getDeliveredQty());
 						itemAddress.getFlTempDoItem().setDeliveryAmt(itemAddress.getDeliveredAmt());
+						
+						//34881-start
+						if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+							delAmtCal =itemAddress.getDeliveredQty().multiply(itemAddress.getDoGstUnitPrice());
+							itemAddress.getFlTempDoItem().setDeliveryAmt(delAmtCal.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, RoundingMode.HALF_UP));
+						}								
+						//34881-end	
+						
 					}
 				}
 			}
@@ -282,8 +299,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				userGroupSO = (IUserGroupSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 			
 				if(null == getManagedBean().getSupplierDoRef()){
-					//TODO
-					// do valudation
+
 				}else{
 					getManagedBean().getFlDeliveryOrder().setSupplierDoRef(getManagedBean().getSupplierDoRef());
 				}
@@ -701,7 +717,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			
 			//#34178 Remove space for WIP process name to cater after upgrading to Oracle BPM 12C
 			if (FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())
-					|| this.getManagedBean().getProcessName().equals(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", ""))) {
+					|| getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.replaceAll("\\s", "")+"Submition")){
 				FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
 				if(doModDataType.getErrorId() != null && doModDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -716,8 +732,8 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doModDataType.getDoId()));
-			} else if (FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName())
-					|| this.getManagedBean().getProcessName().equals(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))) {
+			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(this.getManagedBean().getProcessName()) 
+					|| getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))){
 				FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
 				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
 					getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -732,6 +748,18 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
 				reqDTO.setDeliveryOrderId(Long.valueOf(doCancelDataType.getDoId()));
+				
+				//35429-Start
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus()!=null){
+					if(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus().getStatusId().longValue() == FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION){
+						String[] outcome = new String[1];
+						outcome[0] = BpmOutcomeConst.BPM_APPROVE;
+						this.getManagedBean().setOutComes(outcome);
+					}
+				}
+				//35429-End
+				
 			}
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -1118,7 +1146,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				reqDTO.setAddressId(addressId);
 				reqDTO.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveReceivingOfficerList(reqDTO);
-				if(resDTO.getAddressTypeList().isEmpty()){//TODO others as well needed to throw if list is empty
+				if(resDTO.getAddressTypeList().isEmpty()){
 					throw new EpException(MessageConst.ERROR_740020, new String[]{ResourceBundleUtils.getMessage("lbl.txt.receivingOfficer",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
 			}

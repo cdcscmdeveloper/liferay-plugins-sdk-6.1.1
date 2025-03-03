@@ -1050,7 +1050,11 @@ public class ReportConst implements Serializable{
 	//Enhancement #19056 To replace Receipt document format for SPKI purchase to Tax Invoice format
 	public static final String SM_TAX_INVOICE_JSP = "SM_TAX_INVOICE.jsp";
 	//end of Enhancement #19056
-
+	
+	//START 35182
+	public static final String SM_TAX_INVOICE_SST = "SM_TAX_INVOICE_SST.jsp";
+	//END 35182
+		
 	// SM - Report Parameter Key
 	public static final String PARAM_PAYMENT_ID = "pmntid";
 	public static final String URL_NOT_CONNECTED = "lbl.rpt.search.URL_NOT_CONNECTED";

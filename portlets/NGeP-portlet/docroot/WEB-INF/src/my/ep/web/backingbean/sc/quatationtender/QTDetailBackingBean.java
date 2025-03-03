@@ -3268,35 +3268,14 @@ public class QTDetailBackingBean extends
 	 *            the outcome
 	 * @return the string
 	 */
-	public String updateBpmTask(String outcome){
-
+	public String updateBpmTask(String outcome) {
+		
 		ScQt scQt = this.getManagedBean().getQt();
 		debugLogger("updateBpmTask");
 
 		updateApprovalDetails(scQt);
-		
-		// #14398 - Start
-		if (null != getManagedBean().getPublicationApproval()
-				&& CollectionUtils.isNotEmpty(getManagedBean().getPublicationApproval().getScQtApprovalRemarks())
-				&& getManagedBean().getPublicationApproval().getScQtApprovalRemarks().size() > 0) {
-			boolean remarkNotEmpty = true;
-			
-			for (ScQtApprovalRemark approvalRemark : getManagedBean().getPublicationApproval().getScQtApprovalRemarks()) {
-				if (StringUtils.isEmpty(approvalRemark.getRemark())) {
-					remarkNotEmpty = false;
-			
-					break;
-				}
-			}
 
-			if (remarkNotEmpty) {
-				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setApproval(getManagedBean().getPublicationApproval());
-				
-				getQTDetailSO().updateScQtApproval(reqDTO);
-			}
-		}
-		// #14398 - End
+		// Bug #35395 - Remove code #14398 - cater remark by publication approval to void duplicate
 
 		// #28644-start
 		if (null != this.getManagedBean().getTaskName() && !SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
@@ -4392,12 +4371,10 @@ public class QTDetailBackingBean extends
 										ICircularDetailSO.class);
 						CircularDetailResDTO cirresDTO = circularDetailSO
 							.getPanelItemsByCircularVerId(cirreqDTO);
-						if(CollectionUtils.isNotEmpty(cirresDTO.getPanelItemList())){
-						Long panelItemId=cirresDTO.getPanelItemList().get(0)
-							.getPanelItemId();
-//						log.info("=======qtCircularQTNUMBER========"+this.getManagedBean().getQt().getQtNo()+"=======qtCircularVersionId========"+panelItemId);
-						supplierReqDTO.setPanelItemId(cirresDTO.getPanelItemList().get(0)
-									.getPanelItemId());
+					if (CollectionUtils.isNotEmpty(cirresDTO.getPanelItemList())) {
+						//Long panelItemId = cirresDTO.getPanelItemList().get(0).getPanelItemId();
+						// log.info("=======qtCircularQTNUMBER========"+this.getManagedBean().getQt().getQtNo()+"=======qtCircularVersionId========"+panelItemId);
+						supplierReqDTO.setPanelItemId(cirresDTO.getPanelItemList().get(0).getPanelItemId());
 					}
 				}
 				// #34220-end
@@ -7202,15 +7179,12 @@ public class QTDetailBackingBean extends
 				// null remark in UI it showing two editable textarea to prevent that only value be pass to below method 
 				List<ScQtRemark> remarks = null;
 
-				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks())
-						&& StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
+				if (CollectionUtils.isNotEmpty(scQt.getScQtRemarks()) && StringUtils.isNotEmpty(scQt.getScQtRemarks().get(0).getRemark())) {
 					remarks = scQt.getScQtRemarks();
 				}
 				// #9019 -end-
 
-				scQt.setScQtRemarks(initializeRemarks(scQt, this
-						.getManagedBean().getQt().getCurrentWorkFlowStatus(),
-						scQt.getScQtRemarks(), ScQtRemark.class));
+				scQt.setScQtRemarks(initializeRemarks(scQt, this.getManagedBean().getQt().getCurrentWorkFlowStatus(), remarks, ScQtRemark.class));
 			}
 			return "/xhtml/sc/quatationtender/cancelqtdetails.xhtml";
 
@@ -7228,14 +7202,13 @@ public class QTDetailBackingBean extends
 	 */
 	public void changePbSecretaryCommType(ScQtApproverSettings approverSettings) {
 		debugLogger("changePbSecretaryCommType");
-		
+
 		Long commTypeId = approverSettings.getCommitteeType().getParameterId();
 		if (null != commTypeId) {
 			PmParameter commTypeCode = ParameterHelper.getInstance().getPmParameterById(commTypeId);
 			approverSettings.setCommitteeType(commTypeCode);
-			
-			getManagedBean().getSelectedApprovalTabBean().getScQtApproval()
-					.getApproverSettings().get(0).setPmUser(new PmUser());
+
+			getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getApproverSettings().get(0).setPmUser(new PmUser());
 		}
 	}
 											 

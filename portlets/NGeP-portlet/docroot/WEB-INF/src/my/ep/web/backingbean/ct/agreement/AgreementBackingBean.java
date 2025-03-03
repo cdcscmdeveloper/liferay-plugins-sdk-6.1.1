@@ -1263,11 +1263,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctBB.getManagedBean().setViewContract(true);
 		ctBB.getManagedBean().setViewContractFromAgreement(true);//Bug 34142 - shaqimi 16112022
 		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
+		ctBB.getManagedBean().setContractVerIdFromAgreementTaskList(contractVerId); //15851
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId());
+		contractDetailsBB.getManagedBean().setExternalPageUrl(FacesContext.getCurrentInstance().getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 		return CONTRACT_PAGE;
 	}
 
@@ -1296,10 +1297,10 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			
 			getManagedBean().setFromViewSCL(true);
 			
-			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true"); //15851
 			abb.getManagedBean().setTrackingDairyView(true);
 			ctBB.getManagedBean().setViewSCL(true);
-			abb.getManagedBean().setViewSclFromAgreement(true);
+			ctBB.getManagedBean().setViewSclFromAgreement(true); //#15851
 			//Bug 33096 - shaqimi start
 			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
 			//Bug 33096 - shaqimi end

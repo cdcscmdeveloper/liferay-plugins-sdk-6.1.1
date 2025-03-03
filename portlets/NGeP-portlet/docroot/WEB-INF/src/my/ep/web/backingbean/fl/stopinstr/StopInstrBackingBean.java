@@ -682,6 +682,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 		orderBackingBean.getManagedBean().setPrevHideRemarks(flBB.getManagedBean().isHideRemarks());
 		flBB.getManagedBean().setHideRemarks(true);
 		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+		//#34686 start
+		orderBackingBean.getManagedBean().setAttachment(resDTO.getFlAttachment());
+		//#34686 end
 		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			return NAV_PO;
@@ -907,7 +910,7 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
-//			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//35392
 			getManagedBean().setBackToDocument(null);
 			getManagedBean().setBackToNtf("notifications");
 			getPopulateReasonList();

@@ -14,7 +14,7 @@
 			.gfmasPanelCss>.ui-panel-content {
 				background: #f2dede !important;
 			}
-		</style>	
+		</style>
 	</ui:define>
 
 	<ui:define name="contentSection">
@@ -70,7 +70,8 @@
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						action="#{flOrderBB.backToPervious}"
-						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
+						rendered="#{flOrderBB.managedBean.taskId==null
+						or flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCancelYEP}" /></td>
 				<td colspan="4" style="text-align: right">
 				<c:if test='#{flOrderBB.managedBean.buttonVal ne BpmOutcomeConstant.bpmView}'>
 				<ui:decorate template="/xhtml/fl/shared/claim_template.xhtml">
@@ -111,29 +112,32 @@
 			<td colspan="4" style="text-align: right">
 				<!-- #28375- Beginning - Logan-->
 					
-				
-					
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'>
+
 				<!-- 28375 start -->		
 				<p:commandButton
 						value="#{lbl['lbl.fl.yep.proceed']}" 
+						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.proceed)}" 
-						disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}">
+						disabled="#{!(flOrderBB.managedBean.patCheck eq 'true')}"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.proceed}" />
 					</p:commandButton>
 					<!-- 28375 end -->
 					
 									<p:commandButton
 						value="#{lbl['lbl.fl.yep.carryForward']}"
+						rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
 						action="#{flOrderBB.carryForward(BpmOutcomeConstant.carryForward)}" 
-						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" >
+						disabled="#{flOrderBB.managedBean.iscarryForward eq 'true'}" 
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form">
 						<f:param name="actionName" value="#{BpmOutcomeConstant.carryForward}" />
 					</p:commandButton>
 					<!-- 29387 start -->
-					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" immediate="true"  
+					<p:commandButton value="#{lbl['lbl.fl.yep.cancel']}" 
+					rendered='#{(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward) and (flOrderBB.managedBean.yepButtonFlag == 2)}'
+					immediate="true"  
 					action="#{flOrderBB.cancelCarryForwardAction(BpmOutcomeConstant.bpmCancelYEP)}"/>
 					<!-- 29387 end -->
-			</c:if>
 					
 					
 					<!-- #28375- Ending -->
@@ -150,11 +154,14 @@
 					process="@form" partialSubmit="true" rendered='#{flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.bpmCloseManual || flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
 					<!-- end 29442 -->
+					<!-- 34336 start -->
 					<p:commandButton value="#{lbl['lbl.btn.close.manual.pay']}" immediate="true" action="#{flOrderBB.closeManualPayment}" 
 					process="@form" partialSubmit="true" rendered='#{(flOrderBB.managedBean.yep) and !(flOrderBB.managedBean.buttonVal eq "AP58")
 					and (flOrderBB.managedBean.getButtonVal() != BpmOutcomeConstant.bpmView)
-					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)}'
+					and !(flOrderBB.managedBean.buttonVal eq "NONAP58") and !(flOrderBB.managedBean.buttonVal eq BpmOutcomeConstant.carryForward)
+					and (flOrderBB.managedBean.yepButtonFlag == 1)}'
 					onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@form"/>
+					<!-- 34336 end -->
 					<!-- edit render -->
 					
 					<p:commandButton value="#{lbl['lbl.fl.general.save']}" immediate="true" action="#{flOrderBB.saveAP58}" 

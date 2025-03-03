@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.supplieruseractivation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -9,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
@@ -32,6 +34,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -183,6 +186,19 @@ public class SupplierUserActivationBackingBean extends
 	public String activateSupplierUser() {
 		log.info("**********activateSupplierUser Start*********");
 		log.info("*********isValidActivation**********" + this.getManagedBean().isValidActivation());
+		
+		//#35515 - Start
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		if (userSO.checkDuplicateLoginId(loginId)) {
+			Locale locale = new FacesScopes().getUserLocale();
+			String fieldsName = ResourceBundleUtils.getMessage("lbl.sm.activation.loginid",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			fieldsName = fieldsName.substring(0, 1).toUpperCase() + fieldsName.substring(1).toLowerCase();
+			throw new EpException(SmCommonUtil.getOutputMsgBundle(MessageConst.ERROR_100046,
+					new String[] { fieldsName }));
+		}
+		//#35515 - End
+		
 		if(this.getManagedBean().isValidActivation()) {
 			log.info("*********Activation - is Valid**********");
 			String personnelId = String.valueOf(this.getManagedBean().getSmPersonnel().getPersonnelId());

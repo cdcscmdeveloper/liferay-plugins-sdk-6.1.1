@@ -87,7 +87,7 @@
 							value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace.raceId}"
 							rendered = "#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmRace ne null}"
 							style="width: 207px;margin-bottom: 5px;" required="true"
-							disabled="true">
+							disabled="#{!smPersonnelBackingBean.managedBean.basicSmPersonnel.otherRaceSsm}"> <!-- #35145 -->
 							<f:selectItems
 								value="#{smPersonnelBackingBean.managedBean.raceSelectItems}" />
 						</p:selectOneMenu> 

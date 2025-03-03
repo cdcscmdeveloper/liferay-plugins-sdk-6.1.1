@@ -211,6 +211,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<String> disqualifiedStages;
 	private boolean hasSupplierQualifiedForCurrentSelection;//6906 note 202
 	//6906 note 117 - end
+
+	private ScQtRecommend lastSelectedItem; // 35157, #26247
 	
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{
@@ -2456,4 +2458,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.hasSupplierQualifiedForCurrentSelection = hasSupplierQualifiedForCurrentSelection;
 	}
 	//6906 note 202 - end
+
+	// 35157, #26247 - start
+	public ScQtRecommend getLastSelectedItem() {
+		return lastSelectedItem;
+	}
+
+	public void setLastSelectedItem(ScQtRecommend lastSelectedItem) {
+		this.lastSelectedItem = lastSelectedItem;
+	}
+	// 35157, #26247 - end
 }

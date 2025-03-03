@@ -6,33 +6,22 @@ package my.ep.web.managedbean.fl.po;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -58,6 +47,11 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.vo.DisciplinaryActionVO;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean for Fulfillment Order.
@@ -190,6 +184,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String progressStatus;
 	private String iscarryForward="";
 	//#28374	Vinod End
+	
+	//34316-Start
+	private int yepButtonFlag =0;
+	//34316-End
+	
     /**
 	 * @return the pendingDoDataModel
 	 */
@@ -279,7 +278,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 					reqDTO.setDelStatusId(delOrdStatusId);
 				}
 				
-				FlDeliveryOrder deliveryReqDTO = new FlDeliveryOrder();
+				//FlDeliveryOrder deliveryReqDTO = new FlDeliveryOrder();
 				
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
@@ -1575,5 +1574,25 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setAttachment(FlAttachment attachment) {
 		this.attachment = attachment;
 	}
+	
+	//34316 - start
+	/**
+	 * Gets the yepButtonFlag.
+	 *
+	 * @return the yepButtonFlag
+	 */
+	public int getYepButtonFlag() {
+		return yepButtonFlag;
+	}
+
+	/**
+	 * Sets the yepButtonFlag.
+	 *
+	 * @param yepButtonFlag the yepButtonFlag to set
+	 */
+	public void setYepButtonFlag(int yepButtonFlag) {
+		this.yepButtonFlag = yepButtonFlag;
+	}
+	//34316 - end
 
 }

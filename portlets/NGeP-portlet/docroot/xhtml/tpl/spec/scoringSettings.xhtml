@@ -68,13 +68,13 @@
 			</h:panelGroup>
 		</td>
 		<td width="20%">
-			<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
+			<h:panelGroup rendered="#{isWeightageReq}">	<!-- Bug #35307@Syazani 12/12/2023 -->
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" style="white-space:nowrap;"/>
 			</h:panelGroup>
 		</td>
 		<td>
-			<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
+			<h:panelGroup rendered="#{isWeightageReq}">	<!-- Bug #35307@Syazani 12/12/2023 -->
 				<p:inputText id="weightage" style="text-align:right;" 
 					value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
 					required="true" size="15" maxlength="19"
