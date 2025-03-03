@@ -18,45 +18,51 @@
 			</tr>
 		</table>
 
-		<p:panel id="itemDetailPanel">			
-			<p:dataTable id="itemTableId"
-				value="#{codificationBackingBean.managedBean.tplSpecQuestion}" rows="10"
-				var="question" rowIndexVar="index" lazy="true">
+		<p:panel id="itemDetailPanel">
+			<p:dataTable id="itemTableId" value="#{codificationBackingBean}"
+				rows="10" var="cbb" rowIndexVar="index" lazy="true">
 				<ac:paginator for="measurementSR" />
 				<p:column headerText="#{lbl['lbl.sc.product.code']}"
-					style="width:15%">
-					<h:outputText value="#{question.cmItem.extensionCode}" />
+					style="width:15%; font-weight: bold; text-align: center">
+					<div align="left">
+						<h:outputText value="#{cbb.managedBean.familyCode}"
+							style="white-space: normal!important;" />
+					</div>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.qt.item.name']}"
-					style="width:50%">
-					<h:outputText value="#{question.cmItem.itemName}" />
+				<p:column headerText="
+							#{lbl['lbl.sc.qt.item.name']}"
+					style="width:50%; font-weight: bold; text-align: center">
+							<div align="left">
+								<h:outputText value="#{cbb.managedBean.familyTitle}"
+									style="white-space: normal!important;" />
+					</div>
 				</p:column>
 			</p:dataTable>
 
 			<table style="width: 100%; margin-bottom: 4px; margin-bottom: 6px;">
-				<tr>
-					<td width="15%"><p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.cm.commodity.code']}"></p:outputLabel></td>
-					<td width="30%"><h:outputText
-							style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.commodityCode}" /></td>
-					<td width="15%"><p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
-					<td><h:outputText style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.commodityTitle}" /></td>
-				</tr>
-				<tr>
-					<td width="15%"><p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.code']}"></p:outputLabel></td>
-					<td width="30%"><h:outputText
-							style="white-space: normal!important;" value="#{codificationBackingBean.managedBean.segmentCode}" /></td>
-					<td width="15%"><p:outputLabel style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.title']}"></p:outputLabel></td>
-					<td><h:outputText style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.segmentTitle}" /></td>
-				</tr>
-			</table>
-
+									<tr>
+										<td width="15%"><p:outputLabel style="font-weight: bold;"
+												value="#{lbl['lbl.cm.commodity.code']}"></p:outputLabel></td>
+										<td width="30%"><h:outputText
+												style="white-space: normal!important;"
+												value="#{codificationBackingBean.managedBean.commodityCode}" /></td>
+										<td width="15%"><p:outputLabel style="font-weight: bold;"
+												value="#{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
+										<td><h:outputText style="white-space: normal!important;"
+												value="#{codificationBackingBean.managedBean.commodityTitle}" /></td>
+									</tr>
+									<tr>
+										<td width="15%"><p:outputLabel style="font-weight: bold;"
+												value="#{lbl['lbl.sc.qt.extension.code']}"></p:outputLabel></td>
+										<td width="30%"><h:outputText
+												style="white-space: normal!important;"
+												value="#{codificationBackingBean.managedBean.segmentCode}" /></td>
+										<td width="15%"><p:outputLabel style="font-weight: bold;"
+												value="#{lbl['lbl.sc.qt.extension.title']}"></p:outputLabel></td>
+										<td><h:outputText style="white-space: normal!important;"
+												value="#{codificationBackingBean.managedBean.segmentTitle}" /></td>
+									</tr>
+									</table>
 		</p:panel>
 	</p:confirmDialog>
 

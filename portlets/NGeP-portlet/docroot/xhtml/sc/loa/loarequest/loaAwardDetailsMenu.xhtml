@@ -93,8 +93,13 @@
 		<br />
 		<!-- #29006 - end -->
 		
+		<!-- #31503 - start -->
 		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}" escape="false"
-			value="#{lbl['lbl.sc.qt.pending.qt.loa.submission.zone.item.instruction']}" /><ui:remove>#34757</ui:remove>
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction']}" /><ui:remove>#34757</ui:remove>
+		<br />
+		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}" escape="false"
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction2']}" />
+		<!-- #31503 - end -->
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -138,7 +143,7 @@
 						action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
 						oncomplete="specAndSupplierOfferDlgVar.show();">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>
+					</p:commandLink> abc
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
 						for="specAndSupplierOfferLink"
 						value="#{lbl['lbl.sc.spec.and.supplier.offer']}" trackMouse="true" hideEvent="mouseleave click" />
@@ -150,7 +155,7 @@
 						partialSubmit="true"
 						action="#{lOADetailBackingBean.onClickSupplierProposalUpdateLink(scLoiLoaItem)}">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>
+					</p:commandLink>def
 					<p:tooltip id="toolTipSupplierProposalUpdate"
 						for="supplierProposalUpdateLink#{varStatus.index}"
 						value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
@@ -166,7 +171,7 @@
 						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>
+					</p:commandLink>ghi
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
 						for="itemName"
 						value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" hideEvent="mouseleave click" />
@@ -175,9 +180,18 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null
-				 and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" /><ui:remove>Bug #34757</ui:remove>
-				
+<!-- 				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null -->
+<!-- 				 and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" /><ui:remove>Bug #34757</ui:remove> -->
+
+				<!-- #31503 Start -->
+				<p:commandLink oncomplete="itemDescDialogId.show();"
+					value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}"
+					style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{lOADetailBackingBean.showItemDescPopup(scLoiLoaItem.scRequestItem)}"
+					rendered="#{scLoiLoaItem.scRequestItem.cmItem != null and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}"
+					process="@this" update="@([id$=itemDescDialogId])" />
+				<!-- #31503 End -->
+				ghi
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
@@ -478,6 +492,10 @@
 	<c:if test="#{isZonal}">
 		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 	</c:if>
+
+	<!-- #31503 Start -->
+	<ui:include src="/xhtml/common/itemDetailsPopup.xhtml" />
+	<!-- #31503 End -->
 
 	<!-- #29006 - start -->
 	<p:dialog id="specAndSupplierOfferDlg"

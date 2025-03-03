@@ -3837,13 +3837,13 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					newItem.setCmMeasurement(meaObj);
 					newItem.setCmColor(colorObj);
 					newItem.setItemName(codeResDTO.getCommodityObj().getUnspscTitle()
-							+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA")) ? "" : " "
+							+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
 									+ typeObj.getTypeName())
-							+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA")) ? ""
+							+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? ""
 									: " " + brandObj.getBrandName())
-							+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA")) ? ""
+							+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
 									: " " + meaObj.getMeasurementName())
-							+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA")) ? ""
+							+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? ""
 									: " " + colorObj.getColorName()));
 
 					newItem.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + typeObj.getTypeCode()
@@ -3868,7 +3868,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void showItemDescPopup(TplSpecQuestion question) {
 
 		try {
-			this.getManagedBean().setTplSpecQuestion(question);
+			//this.getManagedBean().setTplSpecQuestion(question);
 
 			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
@@ -3887,6 +3887,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			this.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
 			this.getManagedBean().setCommodityTitle(codeResDTO.getCommodityObj().getUnspscTitle());
+			this.getManagedBean().setFamilyCode(item.getExtensionCode());			
 
 			typeObj = this.searchTypeOjbyTypeId(item.getCmType().getTypeId());
 
@@ -3903,20 +3904,31 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			newItem.setCmBrand(brandObj);
 			newItem.setCmMeasurement(meaObj);
 			newItem.setCmColor(colorObj);
-			newItem.setItemName(((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA")) ? "" : " "
+			newItem.setItemName(((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
 					+ typeObj.getTypeName())
-					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA")) ? "" : " "
+					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? "" : " "
 							+ brandObj.getBrandName())
-					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA")) ? ""
+					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
 							: " " + meaObj.getMeasurementName())
-					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA")) ? "" : " "
+					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? "" : " "
 							+ colorObj.getColorName()));
+			
+			String completeItemName = (codeResDTO.getCommodityObj().getUnspscTitle()
+					+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
+							+ typeObj.getTypeName())
+					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? ""
+							: " " + brandObj.getBrandName())
+					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
+							: " " + meaObj.getMeasurementName())
+					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? ""
+							: " " + colorObj.getColorName()));
 
 			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 					+ colorObj.getColorCode());
 
 			this.getManagedBean().setSegmentCode(newItem.getExtensionCode());
 			this.getManagedBean().setSegmentTitle(newItem.getItemName());
+			this.getManagedBean().setFamilyTitle(completeItemName);
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "showItemDescPopup", "showItemDescPopup", null,
