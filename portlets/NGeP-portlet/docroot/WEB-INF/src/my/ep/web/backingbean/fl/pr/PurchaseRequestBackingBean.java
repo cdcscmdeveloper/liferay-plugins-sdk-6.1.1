@@ -5245,13 +5245,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			successMessage(MessageConst.INFO_745088, param, true);
 		}
 		//#28718 - End
-		//#21416 start
-		public String filterItemName(String itemName) {
-			String filteredItemName = filterItemNameNA(itemName);
-			return filteredItemName;
-			
-		}
-		//#21416 end
 		
 		//29728  - start
 		private void resetSupplierInfo() {

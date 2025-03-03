@@ -26,8 +26,8 @@
 					rendered="#{chargeLineNode.parent == 'true'}" style="white-space:normal;"/>
 					<h:outputText value=")" rendered="#{chargeLineNode.parent == 'true'}" />		
 				<br />
-				<!--#21416 filter item name-->
-				<h:outputText value="#{stopInstrBB.filterItemName(chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;"
+				<!--#31344 filter item name-->
+				<h:outputText value="#{CommonUtils.filterItemNameNA(chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;"
 					title="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column> 
@@ -42,8 +42,8 @@
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;">
-			<!--#21416 filter item name-->
-				<h:outputText value="#{stopInstrBB.filterItemName(chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName)}"  id="itemDesc"
+			<!--#31344 filter item name-->
+				<h:outputText value="#{CommonUtils.filterItemNameNA(chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemName)}"  id="itemDesc"
 					rendered="#{chargeLineNode.parent == 'true'}" title="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">

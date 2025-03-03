@@ -111,8 +111,8 @@
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" style="float:left;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%" >
-					<!--#21416 filter item name-->
-						<h:outputText value="#{flOrderBB.filterItemName(newItems.scRequestItem.itemName)}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+					<!--#31344 filter item name-->
+						<h:outputText value="#{CommonUtils.filterItemNameNA(newItems.scRequestItem.itemName)}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>

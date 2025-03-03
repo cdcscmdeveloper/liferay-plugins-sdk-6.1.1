@@ -2683,18 +2683,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	}
 
 	// 26279 - end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getInvoice() != null){
-			if(this.getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;
-				
-	}
-	//#21416 end
 	
 	// #35508 fl audit trail - insert method
 	/**

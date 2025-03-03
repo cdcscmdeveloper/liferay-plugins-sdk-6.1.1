@@ -80,7 +80,8 @@
 					rendered="#{chargeLineNode.parent == 'true'}" style="white-space:normal;"/>
 					<h:outputText value=")" rendered="#{chargeLineNode.parent == 'true'}" />	
 				<br />
-				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left; white-space: normal;"
+				<!--#31344 filter item name-->
+				<h:outputText value="#{CommonUtils.filterItemNameNA(chargeLineNode.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left; white-space: normal;"
 					title="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
@@ -104,7 +105,8 @@
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;"
+				<!--#31344 filter item name-->
+				<h:outputText value="#{CommonUtils.filterItemNameNA(chargeLineNode.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;"
 					rendered="#{chargeLineNode.parent == 'true'}" title="#{chargeLineNode.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : chargeLineNode.scRequestItem.itemDesc}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}"  style="white-space:normal;text-align:center">

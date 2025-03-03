@@ -741,16 +741,4 @@ public class DebitAdjustmentNoteBackingBean extends FulfilmentBaseBackingBean<De
 		return totalAmt;
 	}
 	//29599-end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getAdjustment() != null){
-			if(this.getManagedBean().getAdjustment().getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;
-				
-	}
-	//#21416 end
 }

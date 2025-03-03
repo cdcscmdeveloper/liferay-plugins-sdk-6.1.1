@@ -1923,18 +1923,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		}
 	}
 	//30468-end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if(this.getManagedBean().getFulfilmentRequest() != null){
-			if(this.getManagedBean().getFulfilmentRequest().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;
-				
-	}
-	//#21416 end
 	
 	// 36247-start
 	/**

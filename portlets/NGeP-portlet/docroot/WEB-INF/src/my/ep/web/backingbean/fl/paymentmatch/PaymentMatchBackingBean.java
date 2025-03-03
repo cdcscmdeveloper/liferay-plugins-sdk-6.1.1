@@ -2787,18 +2787,6 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 		}		
     }
 	//29551 - end
-	//#21416 start
-	public String filterItemName(String itemName) {
-		if( getManagedBean().getPaymentAdvice() != null ){
-			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
-				String filteredItemName = filterItemNameNA(itemName);
-				return filteredItemName;
-			}
-		}
-		return itemName;		
-	}
-	//#21416 end
-	
 	
 	// 36754 -Start
 	/**

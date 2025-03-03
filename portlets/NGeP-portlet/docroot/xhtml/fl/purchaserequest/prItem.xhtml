@@ -203,9 +203,12 @@
 					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? lbl['lbl.fl.supp.na'] : flItem.scRequestItem.quantity}" style="text-align:left; float:left;"/>
 					<span style="white-space:pre-wrap; text-align:left; float:left;">(<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />)</span>
 							<br />
-							<!--#21416 filter item name-->
-					<h:outputText value="#{purchaseRequestBackingBean.filterItemName(flItem.scRequestItem.itemName)}" id="itemDesc" style="white-space:pre-wrap; text-align:left; float:left;" />
-							<br />
+							<!--#31344 filter item name-->
+						<h:outputText
+							value="#{CommonUtils.filterItemNameNA(flItem.scRequestItem.itemName)}"
+							id="itemDesc"
+							style="white-space:pre-wrap; text-align:left; float:left;" />
+						<br />
 <!--#16344 Display SKU-->
 					<h:outputText value="#{purchaseRequestBackingBean.getSkuDescription(flItem.scRequestItem)}"
 					style="white-space:pre-wrap; text-align:left; float:left;" />				

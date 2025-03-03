@@ -113,7 +113,8 @@
 							value="#{newItems.itemCode}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+						<!--#31344 filter item name-->
+						<h:outputText value="#{CommonUtils.filterItemNameNA(newItems.scRequestItem.itemName)}" id="itemDesc" style="float:left;text-align:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>

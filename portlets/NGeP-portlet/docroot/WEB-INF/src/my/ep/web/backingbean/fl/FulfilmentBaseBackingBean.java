@@ -829,13 +829,6 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	}
 	//29728 - end
 	
-	//21416 start
-	public String filterItemNameNA(String itemName) {
-		String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)\\b", "");
-		return filteredItemName;
-	}
-	//21416 end
-	
 	//36386 -Start
 	/**
 	 * Checks if is Government User Role

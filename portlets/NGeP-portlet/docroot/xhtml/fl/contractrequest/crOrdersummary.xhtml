@@ -107,7 +107,8 @@
 						<h:outputText value="#{newItems.scRequestItem.tempUnspscCode}" rendered="#{newItems.cmItem==null}" style="float:right;"/>	
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
-						<h:outputText value="#{newItems.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
+						<!--#31344 filter item name-->
+						<h:outputText value="#{CommonUtils.filterItemNameNA(newItems.scRequestItem.itemName)}" id="itemDesc" style="text-align:left; float:left;" title="#{newItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : newItems.scRequestItem.itemDesc}"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}" style="float:left;"/>
