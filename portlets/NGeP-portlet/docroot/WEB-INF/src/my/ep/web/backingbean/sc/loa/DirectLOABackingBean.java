@@ -5313,6 +5313,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			this.getManagedBean().setSelectedTabIndex(
 					QTConstants.TAB_MAIN_INDEX);
 		}// 25791-end
+		// #29766 Start Vinod
+		checkQtTypePk7WpItem();
+		// #29766 End Vinod
 		
 		return QTConstants.SC_DIRECT_LOA_MAIN_PAGE;
 	}
