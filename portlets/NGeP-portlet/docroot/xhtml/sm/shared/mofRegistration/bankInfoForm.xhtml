@@ -212,6 +212,9 @@
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
 		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
 		modal="true" id="bankDialog">
+		<!--#37779-START-->
+		<p:ajax event="close" listener="#{backingBean.cancelSmBankFunctions}"/>
+		<!--#37779-END-->
 		<p:outputPanel id="bankDetailsPanel" layout="block">
 		<p:messages id="msg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>				
 			<table style="width: 100%">
