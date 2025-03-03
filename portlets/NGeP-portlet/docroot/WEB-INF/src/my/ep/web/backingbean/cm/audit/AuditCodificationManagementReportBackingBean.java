@@ -70,7 +70,7 @@ public class AuditCodificationManagementReportBackingBean extends
 	 * Only this role is accessible for Audit Trail hyperlink
 	 */
 	public boolean isAuditTrailView() {
-		return hasAnyRole(RoleCode.CD_OFFICER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
+		return hasAnyRole(RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
 				RoleCode.AUDITOR_GENERAL.value(), RoleCode.EP_ADMIN.value());
 	}
 
