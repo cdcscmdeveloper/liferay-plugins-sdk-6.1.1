@@ -321,6 +321,7 @@ public class ViewApplHistoryBackingBean extends
 				//END 27951
 			}
 		} else {			
+			//#27232 - END SSM CHANGES FOR RESUBMIT
 			if (SmApplicationUtil.isRejectedApplValidForResubmission(getManagedBean().getSmAppl())) {
 				redirectToReapplyNewAppl(true); //29956
 			} else {
