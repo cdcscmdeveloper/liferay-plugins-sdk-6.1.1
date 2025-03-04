@@ -870,7 +870,10 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td style="float: left;"><p:selectBooleanCheckbox
+									<td style="float: left;">
+										<!-- #36718 - Start - add disabled option-->
+										<p:selectBooleanCheckbox
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}">
 											<p:ajax event="change"
 												update="@([id$=ResidentialAddressInfo])"
@@ -1109,7 +1112,10 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td style="float: left;"><p:selectBooleanCheckbox
+									<td style="float: left;">
+									<!-- #36718 - Start - add disabled option-->
+										<p:selectBooleanCheckbox
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsComp}">
 											<p:ajax event="change"
 												update="@([id$=officeAddressInfo])"

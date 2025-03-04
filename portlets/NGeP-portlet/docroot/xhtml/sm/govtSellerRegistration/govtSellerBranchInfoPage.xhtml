@@ -158,6 +158,8 @@
 							</p:inputText>
 					</td>
 				</tr>
+				<!-- #36718 - START - add panel for refresh address -->
+				<p:panel id="suppBrnAddrPanelId" style="border: none;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -171,7 +173,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCountry"
 								value="#{bb.managedBean.countryLs}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppBrnAddrPanelId])"
 								listener="#{bb.onChangeCountry(bb.managedBean.selectedBranch.smAddress.pmCountry,'BRANCH_ADDRESS')}"
 								update="supBrnCntry,branchState,branchDist,divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchCity,postCodeBranchPanelId" />
 						</p:selectOneMenu> 
@@ -193,7 +196,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnState"
 								value="#{bb.managedBean.branchCompanyStates}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppBrnAddrPanelId])"
 								listener="#{bb.onChangeState(bb.managedBean.selectedBranch.smAddress.pmState,'BRANCH_ADDRESS')}"
 								update="divisionBranchInfoLabelPanelId,divisionBranchInfoDropdownPanelId,branchDist,branchCity" />
 						</p:selectOneMenu>
@@ -223,8 +227,9 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDivision"
 								value="#{bb.managedBean.branchCompanyDivisions}" />
-							<p:ajax event="change" process="@this"
-							listener="#{bb.onChangeDivision(bb.managedBean.selectedBranch.smAddress.pmDivision,'BRANCH_ADDRESS')}"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppBrnAddrPanelId])"
+								listener="#{bb.onChangeDivision(bb.managedBean.selectedBranch.smAddress.pmDivision,'BRANCH_ADDRESS')}"
 								update="branchDist,branchCity" />
 						</p:selectOneMenu>
 						<p:message id="branchDivisionMsg" for="branchDivision" showSummary="true" showDetail="false" display="icon" />
@@ -248,7 +253,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="brnDist" 
 								value="#{bb.managedBean.branchCompanyDistricts}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppBrnAddrPanelId])"
 								listener="#{bb.onChangeDistrict(bb.managedBean.selectedBranch.smAddress.pmDistrict,'BRANCH_ADDRESS')}"
 								update="branchDist,branchCity" />
 						</p:selectOneMenu>
@@ -268,12 +274,15 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="branchCity"
 								value="#{bb.managedBean.branchCompanyCities}" />
-							<p:ajax event="change" process="@this" update="branchCity" />
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppBrnAddrPanelId])" update="branchCity" />
 						</p:selectOneMenu>
 						<!-- #34159 - END -->
 						<p:message id="branchCityMsg" for="branchCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
