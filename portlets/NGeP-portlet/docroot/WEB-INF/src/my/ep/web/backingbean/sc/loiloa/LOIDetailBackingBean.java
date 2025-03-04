@@ -5670,13 +5670,25 @@ public class LOIDetailBackingBean extends
 			List<Long> supplierIds = new ArrayList<Long>();
 
 			for (ScQtRecommend scQtRecommend : selectedRecommendList) {
+				// 26247 - start
+				Map<Long, SmSupplier> supplierMap = new HashMap<>();
+				for (ScQtEvaluationResultDtl resultDtl : scQtRecommend.getAwardSupplierList()) {
+					SmSupplier supplier = resultDtl.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+							.getSmSupplier();
+					supplierMap.put(supplier.getSupplierId(), supplier);
+				}
+				// 26247 - end
 				for (ScQtRecommendDtl scQtRecommendDtl 
 							: scQtRecommend.getRecommendDtls()) {
 					if (BooleanUtils.isTrue(
 							scQtRecommendDtl.getLoiAwarded())) {
 						SmSupplier smSupplier = scQtRecommendDtl.getSupplier();
 						Long supplierId = smSupplier.getSupplierId();
-	
+						// 26247 - start
+						if (this.disabledQTProcess(this.getManagedBean().getScQt(), supplierMap.get(supplierId))) {
+							continue;
+						}
+						// 26247 - end
 						if (!supplierIds.contains(supplierId)) {
 							selectItems.add(new SelectItem(supplierId, scQtRecommendDtl
 									.getScQtProposalAmount().getScQtProposal().getSupplierNo().toString()));

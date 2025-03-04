@@ -9,7 +9,21 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-
+	<ui:param name="supplier"
+		value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSupplier.smSupplier}" />
+	<ui:param name="scQt"
+		value="#{supplierProposalDetailBackingBean.managedBean.qt}" />
+	<ui:param name="disciplinaryActionMessage" value="#{viewSuppProfileBackingBean.evaluateQTWarningMessage(scQt, supplier)}"/>
+	<c:if test="#{not empty disciplinaryActionMessage}">
+		<div class="ui-messages ui-widget">
+			<div class="ui-messages-error ui-corner-all">
+				<ul style="margin: 0px !important;">
+					<li><p:outputLabel style="float: none !important; text-align: left !important;" styleClass="ui-messages-error-detail"
+							value="#{disciplinaryActionMessage}" escape="false" /></li>
+				</ul>
+			</div>
+		</div>
+	</c:if>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
 			<td><p:commandButton value="#{lbl['lbl.btn.back']}"
@@ -37,13 +51,15 @@
 				<ui:remove>
 					Bug #27412 #75 : END
 				</ui:remove>				
+				<ui:param name="isDisciplinaryAction"
+					value="#{supplierProposalDetailBackingBean.disabledQTProcess(scQt, supplier)}" />
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
 					action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 					rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
 					update="spkiOutputPanel,proposalMenuContent" process="@form"
-					disabled="#{supplierProposalDetailBackingBean.checkDisciplinaryActionForQTCat()}" />
+					disabled="#{isDisciplinaryAction}" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"

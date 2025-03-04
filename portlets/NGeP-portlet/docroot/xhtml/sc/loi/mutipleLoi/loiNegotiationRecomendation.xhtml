@@ -271,8 +271,6 @@
 									rendered="#{isPendingNegotiationStatus}" rowIndexVar="index">
 									<ac:disciplinaryActionYesNo
 										supplier="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" index="#{rowIndex}" childIndex="#{index}"/>
-									<h:outputText escape="false" value="&#60;br &#47;&#62;"
-										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</p:dataList>
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
@@ -282,9 +280,6 @@
 										<ac:disciplinaryActionYesNo
 											supplier="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 											index="#{rowIndex}" childIndex="#{index}"/>
-										<h:outputText escape="false" value="&#60;br &#47;&#62;"
-											rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
-
 									</p:column>
 								</p:dataList>
 							</p:column>

@@ -7413,30 +7413,32 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	/**
-	 * Evaluate if qt is disabled for futher action
+	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
 	 * @param scQt
 	 * @param supplier
 	 * @return
 	 */
 	public boolean disabledQTProcess(ScQt scQt, SmSupplier supplier) {
+		if (null == scQt || null == supplier) {
+			return false;
+		}
 		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
 		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
 		List<String> statusKeys = Arrays.asList("suspendedCancel", "suspendedBlacklist", "deletedCancel",
 				"deletedBlacklist");
+		boolean isCancelledOrBlacklisted = false;
 		for (String statusKey : statusKeys) {
 			if (viewSuppProfileBean.evaluateAccountStatus(statusKey, supplier)) {
-				return true;
+				isCancelledOrBlacklisted = true;
 			}
 		}
+		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor()) && !supplier.isBumi();
+		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes());
 		
-		if(CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())){
-			return true;
-		}
-		
-		if(ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor()) && !supplier.isBumi()){
-			return true;
-		}
-
-		return isDisciplinaryAction;
+		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction)
+				.contains(true)
+				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
+						mofRecordStatus);
 	}
 }

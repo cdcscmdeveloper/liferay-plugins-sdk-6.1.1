@@ -25,6 +25,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -582,43 +583,104 @@ public class ViewSuppProfileBackingBean extends
 	 * Evaluate suspension status based on supplier. 
 	 * This supposed to be from SM. 
 	 * 
+	 * @param scQt
 	 * @param supplier
 	 * @return
 	 */
-	public String evaluateQTWarningMessage(SmSupplier supplier) {
+	public String evaluateQTWarningMessage(ScQt scQt, SmSupplier supplier) {
 		initAccountStatusMap();
 		Locale locale = new FacesScopes().getUserLocale();
 		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
-		String message = StringUtils.EMPTY;
+		List<String> messages = new ArrayList<>();
+		SmDisciplinaryAction activeDisciplinaryAction = null;
+		if (supplier.isDisciplinaryActions() && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			activeDisciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+		}
+		
 		if (ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus)
 				&& (evaluateAccountStatus("suspendedCancel", supplier) || evaluateAccountStatus("suspendedBlacklist",
 						supplier)) && !supplier.isDisciplinaryActions()) {
-			message = message
-					+ MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { supplier.getSupplierStatus() },
-							MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
+			messages.add(MessageUtils.getMessage(MessageConst.INFO_760553,
+					new String[] { supplier.getSupplierStatus() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		}
+		
+		boolean isCancelCategoriesDA = null != activeDisciplinaryAction && activeDisciplinaryAction.isCancelCategory();
+		if (isCancelCategoriesDA && CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
+			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
+					new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray(), ", ") },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} else if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760557, new String[] {},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		}
 
-		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
-			if (StringUtils.isNotEmpty(message)) {
-				message = message + "<br/><br/> ";
-			}
-			message = message
-					+ "<span style='color: red !important'>"
-					+ MessageUtils.getMessage(MessageConst.INFO_760554,
-							new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray()) },
-							MessageUtils.BUNDLE_COMMON_MESSAGES, locale) + "</span";
+		boolean isCancelBumiDA = null != activeDisciplinaryAction && activeDisciplinaryAction.isBumiputeraCancel();
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor()) && !supplier.isBumi();
+		if (isCancelBumiDA && noBumiAccount) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760556, new String[] {},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} else if (noBumiAccount) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760558, new String[] {},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		}
-		return message;
+		return composeWarningMessages(messages);
 	}
 	
 	/**
-	 * Retrieve message and set message to QT DA warning popup
+	 * Retrieve message and set message to QT DA warning dialog
 	 * @param supplier
 	 */
 	public void onViewQTAlertMessage(SmSupplier supplier) {
-		String message = evaluateQTWarningMessage(supplier);
-		this.getManagedBean().setDisciplinaryActionMsg(message);
+		List<String> messages = new ArrayList<>();
+		Locale locale = new FacesScopes().getUserLocale();
+		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
+		if (ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus)
+				&& (evaluateAccountStatus("suspendedCancel", supplier) || evaluateAccountStatus("suspendedBlacklist",
+						supplier)) && !supplier.isDisciplinaryActions()) {
+			messages.add(MessageUtils.getMessage(MessageConst.INFO_760553,
+					new String[] { supplier.getSupplierStatus() }, MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		}
+		
+		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
+			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
+					new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray(), ", ") },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} 
+		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
 		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
+	}
+
+	/**
+	 * Evaluate the flag to show warning flag( for yes/no hyperlink) for
+	 * non/disciplinary action
+	 * 
+	 * @param supplier
+	 * @return flag to display alert icon
+	 */
+	public boolean showWarningTooltip(SmSupplier supplier) {
+		if(null == supplier){
+			return false;
+		}
+		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
+		boolean suspendedActiveSupplier = ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus)
+				&& (evaluateAccountStatus("suspendedCancel", supplier) || evaluateAccountStatus("suspendedBlacklist",
+						supplier)) && !supplier.isDisciplinaryActions();
+		return suspendedActiveSupplier || CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes());
+	}
+
+	private String composeWarningMessages(List<String> messages) {
+		StringBuilder messageSb = new StringBuilder();
+		int count = 0;
+		for (String message : messages) {
+			count++;
+			messageSb
+					.append("<img style='vertical-align: sub;' src='/NGeP-portlet/css/images/design/icon_error.png'>&nbsp;&nbsp;");
+			messageSb.append(message);
+			if (count < messages.size()) {
+				messageSb.append("<br/>");
+			}
+		}
+		return messageSb.toString();
 	}
 	// 26247 - end
 }
