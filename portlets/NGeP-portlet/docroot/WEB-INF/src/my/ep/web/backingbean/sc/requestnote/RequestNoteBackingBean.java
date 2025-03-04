@@ -4231,6 +4231,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
 						reqNoteReqDTO);
 				reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
+				getManagedBean().setRequestNoteDtls(requestNoteResDTO.getRequestNoteDtlList());
 				//36729 - End				
 
 				if (getManagedBean().getRequestNoteDtls().size() > 0 && null != purchaseRequestSO) {

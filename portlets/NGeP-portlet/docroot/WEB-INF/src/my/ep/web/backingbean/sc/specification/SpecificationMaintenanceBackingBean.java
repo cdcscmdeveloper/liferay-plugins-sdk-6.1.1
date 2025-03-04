@@ -674,8 +674,13 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		if (!isReadOnly
 				&& Arrays.asList(QTStatusConst.QT_SPEC_MAINTENANCE_INACTIVE_CHECKLIST_UPDATE_GROUP).contains(
 						this.getManagedBean().getCurrentStatusId())) {
-			specBB.checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),
-					QTConstants.SPEC_MAINTENANCE);
+			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
+					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
+
+			if (isInactiveChecklistPopup) {
+				RequestContext.getCurrentInstance()
+				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+			}
 		}
 		// #10141 End Vinod
 		
