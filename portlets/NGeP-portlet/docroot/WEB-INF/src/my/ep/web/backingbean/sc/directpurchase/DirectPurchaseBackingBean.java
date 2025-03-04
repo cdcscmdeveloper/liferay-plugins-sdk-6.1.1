@@ -650,13 +650,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				//#36119 - end
 				
 				//#36729 - Start
-				log.info("Bug 36729 rnDtlslist size : " + requestNoteResDTO.getRequestNoteDtlList().size());
 				List<ScRequestNoteDtl> tempRnDtls = requestNoteResDTO.getRequestNoteDtlList();
-				addSelectedRequestNoteDtls(requestNoteDtls, tempRnDtls, purchaseRequestId);												
+				requestNoteDtls = addSelectedRequestNoteDtls(tempRnDtls, purchaseRequestId);												
 				//#36729 - End					
 			}
 			
-			log.info("Bug 36729 requestNoteDtls size : " + requestNoteDtls.size());
 			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 				
 				rnBackingBean.getManagedBean().setSelectedPrDtls(prObj);
 				rnBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
@@ -1696,19 +1694,20 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	/**
 	 * Compare with selected request note details and add into the request note details selected list
 	 * 
-	 * @param requestNoteDtls
-	 *            All selected request note details will be add into the list.
 	 * @param tempRnDtls
 	 *			  Temporary store all the selected request note details for matching.
 	 * @param purchaseRequestId
 	 *            The ID of the purchase request to match with id in request note details.
+	 * @return list of selected requestNoteDtls           
 	 */
-	public void addSelectedRequestNoteDtls(List<ScRequestNoteDtl> requestNoteDtls, List<ScRequestNoteDtl> tempRnDtls, Long purchaseRequestId){
+	public List<ScRequestNoteDtl> addSelectedRequestNoteDtls(List<ScRequestNoteDtl> tempRnDtls, Long purchaseRequestId){
+		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for(ScRequestNoteDtl rnDtl : tempRnDtls){
 			if(purchaseRequestId == rnDtl.getPurchaseRequest().getPurchaseRequestId()){
 				requestNoteDtls.add(rnDtl);
 			}
 		}
+		return requestNoteDtls;
 	}
 	//36729 - End
 }
