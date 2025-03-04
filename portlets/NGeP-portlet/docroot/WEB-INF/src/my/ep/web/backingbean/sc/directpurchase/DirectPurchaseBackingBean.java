@@ -650,11 +650,13 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				//#36119 - end
 				
 				//#36729 - Start
+				log.info("Bug 36729 rnDtlslist size : " + requestNoteResDTO.getRequestNoteDtlList().size());
 				List<ScRequestNoteDtl> tempRnDtls = requestNoteResDTO.getRequestNoteDtlList();
 				addSelectedRequestNoteDtls(requestNoteDtls, tempRnDtls, purchaseRequestId);												
 				//#36729 - End					
 			}
 			
+			log.info("Bug 36729 requestNoteDtls size : " + requestNoteDtls.size());
 			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 				
 				rnBackingBean.getManagedBean().setSelectedPrDtls(prObj);
 				rnBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
