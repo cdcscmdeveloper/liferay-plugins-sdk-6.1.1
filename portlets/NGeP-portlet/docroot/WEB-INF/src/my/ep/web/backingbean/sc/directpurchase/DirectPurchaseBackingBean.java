@@ -1620,6 +1620,6 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 		}
 		return requestNoteDtls;
 	}
-	// end - #36018
+	// end - #36018	
 }
 
