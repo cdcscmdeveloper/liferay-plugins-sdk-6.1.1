@@ -59,6 +59,8 @@ public class SPKIHelper {
 		try {
 			resDTO = SmServiceLookup.getSpkiSO().signData(reqDTO);
 			signedData = resDTO.getSignedData();
+			vo.setStatusCode(resDTO.getStatusCode());
+			vo.setStatusMsg(resDTO.getStatusMsg());
 		} catch (Exception e) {
 			log.info("SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
 			vo.setErrMsg(resDTO.getErrorMessage());
