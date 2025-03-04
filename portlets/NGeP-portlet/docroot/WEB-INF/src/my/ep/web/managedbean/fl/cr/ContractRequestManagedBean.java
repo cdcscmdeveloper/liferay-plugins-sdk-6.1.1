@@ -61,6 +61,7 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -315,6 +316,15 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//24893 - start
 	private PmOrgProfile chargePTJOrg;
 	//24893 - end
+	
+	// 28855 - Start
+	private boolean dpFlag;
+	private String supplierOffer;
+	private String newOfferedSpec;
+	private String itemSpecification;
+	private List<ScRequestItemSpecOffer> specificationList;
+	private List<ScRequestItemSpecOffer> itemSpecList;
+	// 28855 - End
 	
 	//11076 - start
     private int totalExistingItem;
@@ -3148,6 +3158,58 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.catalogueFlag = catalogueFlag;
 	}
 	//end-13984 - CrList - Back Button
+	
+	// 28855 - start
+	public boolean isDpFlag() {
+		return dpFlag;
+	}
+
+	public void setDpFlag(boolean dpFlag) {
+		this.dpFlag = dpFlag;
+	}
+
+	public List<ScRequestItemSpecOffer> getSpecificationList() {
+		return specificationList;
+	}
+
+	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
+		this.specificationList = specificationList;
+	}
+
+	public List<ScRequestItemSpecOffer> getItemSpecList() {
+		return itemSpecList;
+	}
+
+	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+		this.itemSpecList = itemSpecList;
+	}
+
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}
+
+	public String getNewOfferedSpec() {
+		return newOfferedSpec;
+	}
+
+	public void setNewOfferedSpec(String newOfferedSpec) {
+		this.newOfferedSpec = newOfferedSpec;
+	}
+
+	public String getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(String itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	// 28855 - End
+			
 		
 	//11076 -start
 	public int getTotalExistingItem() {

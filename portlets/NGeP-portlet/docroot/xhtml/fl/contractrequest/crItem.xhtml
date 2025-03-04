@@ -786,6 +786,87 @@
 						size="35" /></td>					
 			</tr>
 		</table> 
+		
+		<!-- 28855 start -->
+		<h:panelGroup>
+			<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}"
+				toggleable="false">
+
+				<table style="width: 68%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+						<td><p:inputText disabled="true"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+								value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}"
+								size="35" /> <ac:iconTooltip
+								value="#{lbl['lbl.fl.supp.offer.tooltip']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+						<td><p:inputText disabled="true"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+								value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
+								size="35" /> <ac:iconTooltip
+								value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+					</tr>
+				</table>
+				<p:dataTable id="specificationDt" var="specificationList"
+					value="#{contractRequestBackingBean.managedBean.itemSpecList}"
+					width="100%">
+					<ac:paginator for="specificationDt" />
+
+					<p:column headerText="#{lbl['lbl.fl.spec']}"
+						style="text-align:center"
+						rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
+						<p:inputTextarea disabled="true"
+							rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" value="#{specificationList.itemSpec}"
+							cols="135" rows="2" style="width: 100% !important;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.fl.spec']}"
+						style="text-align:center"
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<p:inputTextarea cols="41" rows="6" id="itemSpecification"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" />
+					</p:column>
+					<p:column
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<f:facet name="header" style="text-align:center">
+							<h:outputText value="#{lbl['lbl.fl.supp.offer']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}" />
+						</f:facet>
+						<p:inputTextarea cols="41" rows="6" id="supplierOffer"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" />
+					</p:column>
+					<p:column
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<f:facet name="header" style="text-align:center">
+							<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" />
+						</f:facet>
+						<p:inputTextarea cols="41" rows="6" id="newOfferedSpec"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+		<!-- 28855 End -->
+		
 		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
