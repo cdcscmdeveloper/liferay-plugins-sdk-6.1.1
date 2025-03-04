@@ -23,6 +23,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -123,6 +124,18 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean delAddressSelected = false;
 	private List<FlDeliveryOrder> submittedDoList;
 	private String supplierUserName;
+	
+	// 28855 - Start
+	private String supplierOffer;
+	private String newOfferedSpec;
+	private String itemSpecification;
+	private String itemName;
+	private boolean dpFlag;
+	private boolean contractFlag;
+	private List<ScRequestItemSpecOffer> specificationList;
+	private List<ScRequestItemSpecOffer> itemSpecList;
+
+	// 28855 - End
     
 	/**
 	 * Gets the item selected for cal.
@@ -1253,4 +1266,69 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.prevHideRemarks = prevHideRemarks;
 	}
 	
+	// 28855 - start
+	public String getSupplierOffer() {
+		return supplierOffer;
+	}
+
+	public void setSupplierOffer(String supplierOffer) {
+		this.supplierOffer = supplierOffer;
+	}
+
+	public String getNewOfferedSpec() {
+		return newOfferedSpec;
+	}
+
+	public void setNewOfferedSpec(String newOfferedSpec) {
+		this.newOfferedSpec = newOfferedSpec;
+	}
+
+	public String getItemSpecification() {
+		return itemSpecification;
+	}
+
+	public void setItemSpecification(String itemSpecification) {
+		this.itemSpecification = itemSpecification;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	
+	public boolean isDpFlag() {
+		return dpFlag;
+	}
+
+	public void setDpFlag(boolean dpFlag) {
+		this.dpFlag = dpFlag;
+	}
+
+	public boolean isContractFlag() {
+		return contractFlag;
+	}
+
+	public void setContractFlag(boolean contractFlag) {
+		this.contractFlag = contractFlag;
+	}
+
+	public List<ScRequestItemSpecOffer> getSpecificationList() {
+		return specificationList;
+	}
+
+	public void setSpecificationList(List<ScRequestItemSpecOffer> specificationList) {
+		this.specificationList = specificationList;
+	}
+
+	public List<ScRequestItemSpecOffer> getItemSpecList() {
+		return itemSpecList;
+	}
+
+	public void setItemSpecList(List<ScRequestItemSpecOffer> itemSpecList) {
+		this.itemSpecList = itemSpecList;
+	}
+	//28855 - End
 }
