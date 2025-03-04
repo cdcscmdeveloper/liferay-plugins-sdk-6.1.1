@@ -6,7 +6,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<ui:param name="remarklbl" value="#{isSqSpec ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" />
+	<ui:remove> #29007 Vinod changed -start- </ui:remove>
+	<ui:param name="remarklbl" value="#{isSqSpec or isSpecTypeTechnical ? 'lbl.sc.supplier.offer' : 'lbl.tpl.spec.content.note'}" />
+	<ui:remove> #29007 Vinod changed -end- </ui:remove>
 	<ui:decorate template="specColumnQuestionViewHeader.xhtml">
 	<ui:define name="otherHeaderSection">
 	<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
