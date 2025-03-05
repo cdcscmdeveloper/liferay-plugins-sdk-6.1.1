@@ -68,7 +68,7 @@
 			<tr>
 				<!-- #24819 - start -->
 			<td><p:outputLabel  value="#{lbl['lbl.sm.new.business.regNo']}" /></td>
-			<td class="header-info-text">
+			<td>
 					<h:outputText value="#{svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}"
 						rendered="#{!empty svcSiteAssignBackingBean.managedBean.smAppl.smSupplier.ssmNewRegNo}" />
 					<h:outputText value="#{lbl['lbl.sm.no.available']}"
@@ -115,7 +115,16 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.category.description']}">
-					#{catApp.pmCategoryL3.categoryName}
+					<!-- #28175 - start -->
+					<c:choose>
+						<c:when test="#{not svcSiteAssignBackingBean.managedBean.smAppl.activeAppl}">
+							#{catApp.categoryL3Name}
+						</c:when>
+						<c:otherwise>
+							#{catApp.pmCategoryL3.categoryName}
+						</c:otherwise>
+					</c:choose>
+					<!-- #28175 - end -->
 					<h:outputText value="(#{catApp.otherDesc})" rendered="#{catApp.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
 				</p:column>
 			</p:dataTable>

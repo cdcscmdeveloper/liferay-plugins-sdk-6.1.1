@@ -49,6 +49,8 @@ import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
+import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -80,6 +82,9 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
+import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -175,6 +180,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
@@ -401,6 +407,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						"pmDocument");
 		doc.setFileName(StringUtils.EMPTY);
 		doc.setFilePath(StringUtils.EMPTY);
+		doc.setOverlapReason(null);
+		if(doc.getCategoryOverlapDocId() != null){ //#31018
+			SmServiceLookup.getMofRegistrationSO().deleteCategoryCodeAttachmentDoc(doc);
+		}
 	}
 
 	public void deleteBrAttachment(SmGstSupplierDoc doc) {
@@ -1082,9 +1092,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				// 25157
 				SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
 						currSupp.getSupplierId(), applicationType);
+				//#36474 - Start
+				//Add checking check expired for KN
+				SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
 				SLAUtils.getInstance().logSLASubInfo("SM", "VA", sessionId, "null",
 						"SmApplicationBackingBean.proceedToApplication", "getLatesRejectedApplicationBySuppIdAndAppType-6", 
 						subStartTime); //20211005@fadhli - #31754
+				if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+					long diff = currentDate.getTime()
+							- rejectedWf.getCreatedDate().getTime();
+					long diffDays = diff / (24 * 60 * 60 * 1000);
+					//If expired set null
+					if (diffDays >= SmRuleHelper.getInstance().getApplicationResubmissionDays()) {
+						rejectedAppl = null;
+					}
+				}
+				//#36474 - End
 				String labelNameVal = "";
 				//27951 - If from resubmit appl history/status no need display message
 				if (rejectedAppl != null && !this.getManagedBean().isPreRegistration()) {
@@ -1843,6 +1867,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SsmReqDTO ssmReqDTO = new SsmReqDTO();
 					ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 					ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+					//29582
+					ssmReqDTO.setSmSupp(this.getManagedBean().getSmSupplier());
 					if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
 						ssmReqDTO.setBasicAcc(true);
 					}else{
@@ -1879,6 +1905,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							}
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
+						SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 						// #24819
 						this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET COMPANY NAME
@@ -2617,9 +2644,40 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
 		
+		//#36483 - START
+		if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+				&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			for(SmFacility fac : getManagedBean().getSmAppl().getSmFacilities()){
+				if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+					fac.getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+					fac.getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+					
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress1());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress2());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress3());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().setCountryId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().setStateId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
+					if(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision() != null && getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId() != null){
+						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision().setDivisionId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
+					}					
+					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().setCityId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId());
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+				}
+			}
+		}
+		//#36483 - END
+				
 		// #34166 - Start
 		if (currentPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			validateText();
+			// #37779 - Start
+			if (getManagedBean().isSupplierUser()) {
+				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+			}
+			// #37779 - End
 		}
 		// #34166 - End
 
@@ -3330,15 +3388,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				log.info(" ****** REMAIN PREV VALUE ********");
 			}
 			if (valid) {
-				getManagedBean().setCurrentPageType(outputPageType);
+				getManagedBean().setCurrentPageType(outputPageType); //#36576
 				SmCommonUtil.getInstance().setUserDetails(
 						getManagedBean().getSmAppl());
 				saveOrUpdateAppl();
+				getManagedBean().setCurrentPageType(outputPageType); //#36576 & #36622
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
+			//#35086 & 36622 - start
+			SmFieldChangeUtil.setApplTableListChangeStatus(getManagedBean().getLatestAppl(), 
+					getManagedBean().getSmAppl(), getManagedBean().getCurrentPageType());
+			//#35086 & 36622 - end
 		}
 
 		finally {
@@ -3523,6 +3586,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
 					//#32236 end
+					
+					// #37779 - Start
+					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+					// #37779 - End
+					
+					setDefaultPoReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
 					//#30444 --START--  --31072021
@@ -3577,6 +3646,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
 					//#32236 - end
+					
+					// #37779 - Start
+					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+					// #37779 - End
+					
+					setDefaultApproverReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
 					log.info("******* This is site visit review page ********");
@@ -3904,8 +3979,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			calculateBumiPercentageTotals();
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
-			validSave = SmApplicationUtil.validateBankBeforeSave(validSave,
-					getManagedBean(), currentTab);
+			// #37779 - Start
+			if (getManagedBean().isSupplierUser()) {
+				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+				validSave = SmApplicationUtil.validateBankBeforeSave(validSave,
+						getManagedBean(), currentTab);
+			}
+			// #37779 - End
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 			validSave = SmApplicationUtil.validateCategoriesBeforeSave(
@@ -4051,6 +4131,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());	
 		}
 		//#32236 - End
+		
+		// #37779 - Start
+		if (getManagedBean().isSupplierUser()) {
+			SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
+			SmApplicationUtil.validateBankBeforeSave(true, getManagedBean(),
+					currentTab);
+		}
+		// #37779 - End
 	}
 
 	/**
@@ -4406,6 +4494,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
+		
+		//#36483
+		if(getManagedBean().getBasicCompanyFacility().getOwnershipType().equals(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			SmApplicationUtil.getInstance().cloneAddress(
+					getManagedBean().getBasicCompanyFacility().getSmAddress(),
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getSmCompanyAddresses().get(0).getSmAddress());
+		}
+		//#36483
+				
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		
 		// 32064 - Start
@@ -4477,6 +4575,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} else if (getManagedBean().isApproverUser()) {
 			log.info("***** APPROVER DECISION SELECTED **** "
 					+ category.getApprvrDecFlg());
+			//#36587
+			if(category.getPoDecFlg().equals(0)
+					&& category.getApprvrDecFlg().equals(0)){
+				category.setApproverRemarks(category.getPoRemarks());
+			}else{
+				category.setApproverRemarks(null);
+			}
 		}
 		category.setApprovedDate(new Date());
 		//#31043 start
@@ -5178,6 +5283,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		SmCommonUtil.getInstance().setUserDetails(getManagedBean()
 				.getSelectedCompanyExperience());
+		//#28175
+		if(getManagedBean().getSmAppl().isActiveAppl()){
+			updateCompanyExpCatNames(getManagedBean().getSelectedCompanyExperience());
+		}
 		EntityHelper.addOrUpdateEntityToList(getManagedBean()
 				.getSelectedCompanyExperience(), getManagedBean().getSmAppl()
 				.getSmCompanyExperiences());
@@ -5692,6 +5801,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					cat.setPoDecFlg(1);
 				} else if (getManagedBean().isApproverUser()) {
 					cat.setApprvrDecFlg(1);
+					cat.setApproverRemarks(null); //36587
 				}
 			}
 		}
@@ -5705,6 +5815,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					cat.setPoDecFlg(1);
 				} else if (getManagedBean().isApproverUser()) {
 					cat.setApprvrDecFlg(1);
+					cat.setApproverRemarks(null); //36587
 				}
 			}
 		}
@@ -5833,6 +5944,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
 			}
 		}
+		// #31018 check overlap category
+		int overlapCount = 0;
+		for (SmSupplierCategory smSupplierCategory : getManagedBean().getSmAppl().getSmSupplierCategories()) {
+			if (smSupplierCategory.isOverLapCategory()) {
+				overlapCount++;
+			}
+		}
+
+		if (overlapCount == 0) {
+			getManagedBean().getSmAppl().setSmCategoryOverlapDocs(null);
+		}
+		// #31018 END
 		saveOrUpdateAppl();
 		SmApplicationUtil.assignActiveAndApprovedCategoryList(getManagedBean());
 	}
@@ -7546,6 +7669,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
+			//29582
+			ssmReqDTO.setSmSupp(this.getManagedBean().getSmSupplier());
 			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
 				ssmReqDTO.setBasicAcc(true);
 			}else{
@@ -8851,14 +8976,42 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			validateSupportingDocs();
+			// 34392 - Start
+			validateMandatoryEnquirySupportingDocs();
+			// 34392 - End
 		}
 		getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
 		getManagedBean().getPoToSupplierInquiry().setResponseDate(new Date());
+
+		// #34392 - start
+		for (SmApplSupportDoc smDocu : getManagedBean().getSmAppl().getSmApplSupportDocs()) {
+			if (!smDocu.isVerified() && smDocu.getNewAddedFiles() != null) {
+				replaceNewFile(smDocu);
+			}
+		}
+		// #34392 - end
+
 		return submitSmApplToBpm(applType);
 
 	}
+	
+	// #34392 - start
+	private void replaceNewFile(SmApplSupportDoc smDocu) {
+
+		smDocu.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
+
+		List<SmApplDocFile> newDocFile = new ArrayList<>();
+
+		if (smDocu.getNewAddedFiles() != null) {
+			for (SmApplDocFile smDocFileNewAdded : smDocu.getNewAddedFiles()) {
+				newDocFile.add(smDocFileNewAdded);
+			}
+		}
+		smDocu.setSmApplDocFiles(newDocFile);
+	}
+
+	// #34392 - end
 
 	/**
 	 * Submit sm application to bpm and save the latest information to DB.
@@ -8894,7 +9047,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			validateSupportingDocs();
+			//#34392 - Start
+			if (!getManagedBean().getSmAppl().getPmStatus().getStatusId()
+					.equals(Long.valueOf(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER))) {
+				validateSupportingDocs();
+			}
+			//#34392 - end
 		} else {
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
@@ -9468,6 +9626,31 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
+			//#36483 - START
+			if(currentPageType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC) 
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+				for(SmFacility fac : reqDTO.getSmAppl().getSmFacilities()){
+					if(fac.getFacilityType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE) && fac.isHeadquarters()){
+						fac.getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+						fac.getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLatitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLatitude());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setMapLongitude(reqDTO.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getMapLongitude());
+						
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress1());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress2());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getAddress3());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().setCountryId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().setStateId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
+						if(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision() != null && getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId() != null){
+							getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision().setDivisionId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
+						}
+						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCity().setCityId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCity().getCityId());
+						getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPostcode());
+					}
+				}
+			}
+			//#36483 - END
 			log.info("******* Save as draft User List to BPM Size *******"
 					+ reqDTO.getUserList());
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
@@ -9533,6 +9716,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		boolean valid = true;
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			// #28175
+			updateCategoryCodeNames();
 			String outcome = "CANCEL";
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome, SupplierManagementConst.SUPP_SUBMIT_DELDRFT_APPL);
@@ -9642,16 +9827,58 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	public void initMissingDocs(boolean isNewInquiry, String dialogId) {
 		SmApplicationUtil.initPoInquiry(getManagedBean(), isNewInquiry);
+		// #34392 - START
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
-		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
-				.getSmApplSupportDocs()) {
-			if (doc.getPmDocument().isMandatory()
+		getManagedBean().setMissinDocsMandatory(new ArrayList<SmApplSupportDoc>());
+		getManagedBean().setMissinDocsNonMandatory(new ArrayList<SmApplSupportDoc>());
+
+		for (SmApplSupportDoc doc : getManagedBean().getSmAppl().getSmApplSupportDocs()) {
+
+			if (doc.getPmDocument().isMandatory() && (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
+				getManagedBean().getMissinDocs().add(doc);
+				getManagedBean().getMissinDocsMandatory().add(doc);
+			} else if (!doc.getPmDocument().isMandatory()
 					&& (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1)) {
 				getManagedBean().getMissinDocs().add(doc);
+				getManagedBean().getMissinDocsNonMandatory().add(doc);
 			}
 		}
-		log.info("**** Send Inquiry List Size ***** "
-				+ getManagedBean().getMissinDocs().size());
+
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getSmAppl().getSmApplSupportDocs())) {
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getMissinDocsMandatory())) {
+				Collections.sort(getManagedBean().getMissinDocsMandatory(), new Comparator<SmApplSupportDoc>() {
+					@Override
+					public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+						if (doc1.getPmDocument().getDisplaySeq() == null) {
+							return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+						}
+						if (doc2.getPmDocument().getDisplaySeq() == null) {
+							return -1;
+						}
+						return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+								.compareTo(doc2.getPmDocument().getDisplaySeq()));
+					}
+				});
+			}
+
+			if (!EntityHelper.isCollectionEmpty(getManagedBean().getMissinDocsNonMandatory())) {
+				Collections.sort(getManagedBean().getMissinDocsNonMandatory(), new Comparator<SmApplSupportDoc>() {
+					@Override
+					public int compare(SmApplSupportDoc doc1, SmApplSupportDoc doc2) {
+						if (doc1.getPmDocument().getDisplaySeq() == null) {
+							return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+						}
+						if (doc2.getPmDocument().getDisplaySeq() == null) {
+							return -1;
+						}
+						return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+								.compareTo(doc2.getPmDocument().getDisplaySeq()));
+					}
+				});
+			}
+		}
+		// #34392 - End
+		//log.info("**** Send Inquiry List Size ***** " + getManagedBean().getMissinDocs().size());
 		if (dialogId != null) {
 			RequestContext.getCurrentInstance().execute(dialogId + ".show()");
 		}
@@ -9670,14 +9897,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            - the recommendation
 	 */
 	public void submitPOEscalationToApprover(String recommendation) {
-		//#31043 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-			SmApplicationUtil.checkCategoryRemark(getManagedBean());
-		}
-		//#31043 - end
-		
 		assignValReqdToTrue();
 		// validate equity owner
 		SmApplicationUtil.validateEquityOwnerCount(getManagedBean(), -1,
@@ -10092,13 +10311,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return the redirect page.
 	 */
 	public String submitPOorApproverReviewToBPM(String res) {
-		//#31043 - start
-		if(getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
+		//#31043 & #36576 - start
+		if(!res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) 
+				&& !res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.INQUIRY)
+				&& (getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_MOF)
 				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+				|| getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) ){
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
-		//#31043 - end
+		//#31043 & #36576 - end
 		
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
@@ -10266,40 +10487,45 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			// #14530 - end
 			
 			// #14530 - Start
-						this.getManagedBean().getPoToSupplierInquiry().setApplInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_INQUIRY_SEQ"));
-						List<SmApplSupportDocInquiry> smApplSupportDocInquiries = new ArrayList<SmApplSupportDocInquiry>();
-						List<SmApplInquiryDocFile> smApplInquiryDocFiles = new ArrayList<SmApplInquiryDocFile>();
+			this.getManagedBean().getPoToSupplierInquiry().setApplInquiryId(reqSO.retrieveSeqNextVal("SM_APPL_INQUIRY_SEQ"));
+			List<SmApplSupportDocInquiry> smApplSupportDocInquiries = new ArrayList<SmApplSupportDocInquiry>();
+			List<SmApplInquiryDocFile> smApplInquiryDocFiles = new ArrayList<SmApplInquiryDocFile>();
 
-						for (SmApplSupportDoc smApplSupportDoc : getManagedBean().getMissinDocs()) {
-							SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
-							smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
-							smApplSupportDocInquiry.setPoRemarks(smApplSupportDoc.getPoRemarks());
-							smApplSupportDocInquiry.setReceived(smApplSupportDoc.isInquiryReceived());
-							smApplSupportDocInquiry.setSmApplInquiry(this.getManagedBean().getPoToSupplierInquiry());
-							smApplSupportDocInquiry.setApplSupportDocInquiryId(reqSO
-									.retrieveSeqNextVal("SM_APPL_SUPPDOC_INQUIRY_SEQ"));
+			for (SmApplSupportDoc smApplSupportDoc : getManagedBean().getMissinDocs()) {
+				SmApplSupportDocInquiry smApplSupportDocInquiry = new SmApplSupportDocInquiry();
+				smApplSupportDocInquiry.setPmDocument(smApplSupportDoc.getPmDocument());
+				smApplSupportDocInquiry.setPoRemarks(smApplSupportDoc.getPoRemarks());
+				smApplSupportDocInquiry.setReceived(smApplSupportDoc.isInquiryReceived());
+				smApplSupportDocInquiry.setSmApplInquiry(this.getManagedBean().getPoToSupplierInquiry());
+				smApplSupportDocInquiry.setApplSupportDocInquiryId(reqSO
+						.retrieveSeqNextVal("SM_APPL_SUPPDOC_INQUIRY_SEQ"));
+				
+				//#34392 - Start
+				setValueForInquiryRemarks(smApplSupportDoc);
+				smApplSupportDocInquiry.setPoRemarks(smApplSupportDoc.getPoRemarks());
+				//#34392 - End
 
-							smApplSupportDoc.setInquiryRemark("");
-							smApplSupportDoc.setInquiryReceived(false);
+				smApplSupportDoc.setInquiryRemark("");
+				smApplSupportDoc.setInquiryReceived(false);
 
-							for (SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()) {
+				for (SmApplDocFile smApplDocFile : smApplSupportDoc.getSmApplDocFiles()) {
 
-								SmApplInquiryDocFile smApplInquiryDocFile = new SmApplInquiryDocFile();
-								smApplInquiryDocFile.setApplInquiryDocFileId(reqSO.retrieveSeqNextVal("SM_APPL_INQ_FILE_SEQ"));
-								smApplInquiryDocFile.setFileName(smApplDocFile.getFileName());
-								smApplInquiryDocFile.setFilePath(smApplDocFile.getFilePath());
-								smApplInquiryDocFile.setSmApplSupportDocInquiry(smApplSupportDocInquiry);
+					SmApplInquiryDocFile smApplInquiryDocFile = new SmApplInquiryDocFile();
+					smApplInquiryDocFile.setApplInquiryDocFileId(reqSO.retrieveSeqNextVal("SM_APPL_INQ_FILE_SEQ"));
+					smApplInquiryDocFile.setFileName(smApplDocFile.getFileName());
+					smApplInquiryDocFile.setFilePath(smApplDocFile.getFilePath());
+					smApplInquiryDocFile.setSmApplSupportDocInquiry(smApplSupportDocInquiry);
 
-								smApplInquiryDocFiles.add(smApplInquiryDocFile);
-							}
+					smApplInquiryDocFiles.add(smApplInquiryDocFile);
+				}
 
-							smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
-							smApplSupportDocInquiries.add(smApplSupportDocInquiry);
-						}
-						this.getManagedBean().getPoToSupplierInquiry().setSmApplSupportDocInquiries(smApplSupportDocInquiries);
-						// #14530 - End
-						log.info("**** Send Inquiry List Size ***** "
-								+ getManagedBean().getPoToSupplierInquiry().getSmApplSupportDocInquiries().size());
+				smApplSupportDocInquiry.setSmApplInquiryDocFiles(smApplInquiryDocFiles);
+				smApplSupportDocInquiries.add(smApplSupportDocInquiry);
+			}
+			this.getManagedBean().getPoToSupplierInquiry().setSmApplSupportDocInquiries(smApplSupportDocInquiries);
+			// #14530 - End
+			log.info("**** Send Inquiry List Size ***** "
+					+ getManagedBean().getPoToSupplierInquiry().getSmApplSupportDocInquiries().size());
 
 			actionDesc = SupplierManagementConst.PO_SEND_INQUIRY_SUPP;
 			// 14530
@@ -10319,10 +10545,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				setSmApplRejectionReasons();
 				reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
 			}
-			if (StringUtils.isNotBlank(getManagedBean()
-					.getApplnRejectionRemarks())) {
-				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean()
-						.getSmAppl().getApplId(),
+			if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarks(getManagedBean().getSmAppl().getApplId(),
 						ParameterConst.SM_APPLN_RMRK_DECISION_REJECT,
 						getManagedBean().getApplnRejectionRemarks());
 			}
@@ -10352,31 +10576,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					.getSupplierRemarks(), getManagedBean()
 					.getApplnRejectionRemarks(), reqDTO);
 			//#30766 & #34209 - START
-			List<SmSupplierCategory> catList = getManagedBean().getSmAppl().getSmSupplierCategories();
-			setPOorApprDec(catList);
+			//List<SmSupplierCategory> catList = getManagedBean().getSmAppl().getSmSupplierCategories();
+			//setPOorApprDec(catList);
 			//#30766 & #34209 - END
-		} else if (res
-				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
+		} else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
 				actionDesc = SupplierManagementConst.PO_APPROVE_APPL;
 			} else if (getManagedBean().isApproverUser()) {
 				actionDesc = SupplierManagementConst.APPROVER_APPROVE_APPL;
 			}
-			if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 			} else {
-
-				regStatus = SmApplicationUtil.setApplicationApproveStatus(
-						getManagedBean().getSmAppl(), pmStatId);
-				reqDTO.setPaymentReqd(SmApplicationUtil
-						.getPaymentMode(getManagedBean().getSmAppl()));
+				regStatus = SmApplicationUtil.setApplicationApproveStatus(getManagedBean().getSmAppl(), pmStatId);
+				reqDTO.setPaymentReqd(SmApplicationUtil.getPaymentMode(getManagedBean().getSmAppl()));
 			}
 
-			if (regStatus == null
-					&& !getManagedBean().getSmAppl().getApplType()
-							.equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			if (regStatus == null && !getManagedBean().getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				throw new EpException(MessageConst.ERROR_722662);
 			}
 
@@ -10419,10 +10636,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
 						getManagedBean().getApplnApprovalRemarks());
 			}*/
-			if (StringUtils.isNotBlank(getManagedBean()
-					.getApplnApprovalRemarks())) {
-				SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
-						.getSmAppl().getApplId(),
+			if (StringUtils.isNotBlank(getManagedBean().getApplnApprovalRemarks())) {
+				SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean().getSmAppl().getApplId(),
 						ParameterConst.SM_APPLN_RMRK_DECISION_APPROVE,
 						getManagedBean().getApplnApprovalRemarks(), getManagedBean().getRoleCode());
 			}
@@ -10467,6 +10682,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				//+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 		validSiteVisit = testSmAppl(getManagedBean().getSmAppl().getApplType(),
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
+		//#28175
+		updateCategoryCodeNames();
 		if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 		}
 		if (validSiteVisit) {
@@ -10773,6 +10990,29 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		//END 12483
 		return retMsg;
 	}
+	
+	// #34392 - Start
+	private void setValueForInquiryRemarks(SmApplSupportDoc smApplSupportDoc) {
+
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getMissinDocsMandatory())
+				&& smApplSupportDoc.getPmDocument().isMandatory()) {
+			for (SmApplSupportDoc smApplSupportDocMandatory : getManagedBean().getMissinDocsMandatory()) {
+				if (smApplSupportDoc.getApplSupportDocId().equals(smApplSupportDocMandatory.getApplSupportDocId())) {
+					smApplSupportDoc.setPoRemarks(smApplSupportDocMandatory.getInquiryRemark());
+				}
+			}
+		}
+
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getMissinDocsNonMandatory())
+				&& !smApplSupportDoc.getPmDocument().isMandatory()) {
+			for (SmApplSupportDoc smApplSupportDocNonMandatory : getManagedBean().getMissinDocsNonMandatory()) {
+				if (smApplSupportDoc.getApplSupportDocId().equals(smApplSupportDocNonMandatory.getApplSupportDocId())) {
+					smApplSupportDoc.setPoRemarks(smApplSupportDocNonMandatory.getInquiryRemark());
+				}
+			}
+		}
+	}
+	// #34392 - End
 
 	private boolean showPoApprovedOrRecommendButton() {
 		boolean retVal = true;
@@ -10887,6 +11127,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * 
 	 * @return true, if successful
 	 */
+	/*
 	private boolean setPaymentMode() {
 		boolean payReq = false;
 		if (getManagedBean().getSmAppl().getApplType()
@@ -10897,6 +11138,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		return payReq;
 	}
+	*/
 
 	/**
 	 * Change all sections verification value based on selection on screen.
@@ -11489,15 +11731,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				if (doc.getApplSupportDocId().compareTo(
 						getManagedBean().getSupportDoc().getApplSupportDocId()) == 0) {
 					log.info("**** This is the selected object ***** ");
-					doc.getSmApplDocFiles()
-							.get(0)
-							.setFileName(
-									StringUtils.replace(event.getFile()
-											.getFileName(), " ", "-"));
+					//#34552 - start
+					SmApplDocFile file = new SmApplDocFile();
+					file.setFileName(StringUtils.replace(event.getFile()
+							.getFileName(), " ", "-"));
 					String filePath = Calendar.getInstance().get(Calendar.YEAR)
 							+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
 							+ "/SD/";
-					doc.getSmApplDocFiles().get(0).setFilePath(filePath);
+					file.setFilePath(filePath);
+					file.setSmApplSupportDoc(doc);
+					//#34392 - start
+					if(doc.getNewAddedFiles() == null){
+						doc.setNewAddedFiles(new ArrayList<SmApplDocFile>());
+					}
+//					doc.getSmApplDocFiles().add(file);
+					doc.getNewAddedFiles().add(file);
+					//#34392 - end
+					//#34552 - end
 					commonUploadFile(event, filePath);
 				}
 			}
@@ -11678,6 +11928,28 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.isShowWorkShopPanel());
 	}
 
+	//#36483 - START
+	public void onChangeAddress(SmAddress addr, String addrLine, String panelName){
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			if(addrLine.equals("Addr1")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress1(addr.getAddress1());
+			}
+			if(addrLine.equals("Addr2")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress2(addr.getAddress2());
+			}
+			if(addrLine.equals("Addr3")){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setAddress3(addr.getAddress3());
+			}
+		}
+	}
+	
+	public void onChangePostcode(SmAddress addr, String panelName){
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+			getManagedBean().getBasicCompanyFacility().getSmAddress().setPostcode(addr.getPostcode());
+		}
+	}
+	//#36483 - END
+
 	/**
 	 * Ajax call when select country to populate states
 	 * 
@@ -11703,6 +11975,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		SmApplicationUtil.getInstance().populateStateByCountry(addr, panelName,
 				getManagedBean());
 		setRoleStaffAddrReqd();
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)){
+			if(getManagedBean().getBasicCompanyFacility().getOwnershipType() != null 
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
+			}
+			
+			if(!addr.isSsmData()){
+				addr.setPostcode("");
+			}
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36483 - END
 	}
 
 	/**
@@ -11741,6 +12027,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					panelName, getManagedBean());
 			setRoleStaffAddrReqd();
 		}
+		
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)){
+			if(getManagedBean().getBasicCompanyFacility().getOwnershipType() != null
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+					&& addr.getStateId()!=null){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setStateId(addr.getStateId());
+				if(!addr.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)){
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(null);
+					getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
+				}
+			}
+			
+			if(!addr.isSsmData()){
+				addr.setPostcode("");
+			}
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36483 - END
 	}
 
 	/**
@@ -11760,6 +12066,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		populateLocalAuthority(getManagedBean().getSmSupplier(),
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getSmCompanyAddresses().get(0).getSmAddress());
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)){
+			if(getManagedBean().getBasicCompanyFacility().getOwnershipType() != null
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+					&& addr.getDistrictId()!=null){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
+			}
+			
+			if(!addr.isSsmData()){
+				addr.setPostcode("");
+			}
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36483 - END
 	}
 
 	/**
@@ -11772,6 +12093,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void onChangeCity(SmAddress addr, String panelName) {
 		addr.setPmCity(SmCommonUtil.getInstance().getCityById(addr.getCityId()));
 		setRoleStaffAddrReqd();
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)){
+			if(getManagedBean().getBasicCompanyFacility().getOwnershipType() != null
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+					&& addr.getCityId()!=null){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
+			}
+			
+			if(!addr.isSsmData()){
+				addr.setPostcode("");
+			}
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36483 - END
 	}
 
 	/**
@@ -12016,7 +12352,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	private void setDefaultApproverReviewSection() {
 		//#Enhancement #11765
-		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PO_APPR_DEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
+		if(!alreadyExecute && SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){ //#36576
 			List<String> catList = SmApplicationUtil.getUnverifiedCatCodes(getManagedBean().getSmAppl()
 					.getSmSupplierCategories(), getManagedBean().getSmAppl().getApplType(), getManagedBean()
 					.isApproverUser());
@@ -12030,6 +12366,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								"lbl.sm.appl.catCodes.noPoAppr.action",
 								new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
 			}
+			//#36576 START
+			if (getManagedBean().isOverLappedCategoryExists()
+					&& EntityHelper.isCollectionEmpty(getManagedBean()
+							.getSmAppl().getSmCategoryOverlapDocs())) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_ERROR,
+								null,
+								SmCommonUtil
+										.getMessage(
+												"lbl.sm.category.overlap.pleaseReject",
+												null)));
+			}//#36576 END
 		}
 		
 		boolean containsAppRev = false;
@@ -12060,7 +12411,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 */
 	private void setDefaultPoReviewSection() {
 		//#Enhancement #11765
-		if(!alreadyExecute && (SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType()) ||(SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY.equalsIgnoreCase(getManagedBean().getCurrentPageType()) && this.currentTab==7))){
+		if(!alreadyExecute && SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC.equalsIgnoreCase(getManagedBean().getCurrentPageType())){ //#36576
 			////START Bug #25676 : SM Showstopper - No Categories Appear in Processing Officer Screen
 			//Add checking category code 
 			if (!getManagedBean().isSiteVisitAfterApproval()) {
@@ -12086,6 +12437,21 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 								"lbl.sm.appl.catCodes.noPoAppr.action",
 								new String[] { catList.toString().replaceAll("[\\[\\]]", "") })));
 			}
+			//#36576 START
+			if (getManagedBean().isOverLappedCategoryExists()
+					&& EntityHelper.isCollectionEmpty(getManagedBean()
+							.getSmAppl().getSmCategoryOverlapDocs())) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_ERROR,
+								null,
+								SmCommonUtil
+										.getMessage(
+												"lbl.sm.category.overlap.pleaseReject",
+												null)));
+			}//#36576 END
 		}
 		
 		boolean containsPORev = false;
@@ -12530,6 +12896,17 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return SmApplicationUtil.validateSupportingDocs(getManagedBean()
 				.getSmAppl().getSmApplSupportDocs());
 	}
+	
+	//#34392 - Start
+	/**
+	 * Validate supporting docs.
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean validateMandatoryEnquirySupportingDocs() {
+		return SmApplicationUtil.validateSupportingDocsEnquiry(getManagedBean().getMissinDocsMandatory());
+	}
+	//#34392 - End
 
 	/**
 	 * Validate if no changes been made to application not allowed to submit
@@ -12709,7 +13086,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 
-	private void printBankVerificationForm() throws Exception {
+	// #34392 - START
+	public void printBankVerificationForm() throws Exception {
 		SmApplicationUtil.generateBankVerificationFormPdf(getManagedBean()
 				.getSmAppl());
 		String fileName = SmCommonUtil
@@ -12720,6 +13098,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		commonDownload(fileName, getManagedBean().getSmAppl().getApplNo()
 				+ SupplierManagementConst.BANK_VERIFICATION_FORM_PREFIX);
 	}
+	// #34392 - END
 
 	public void downloadSignatureSuppDoc(String docDefinitionKey)
 			throws Exception {
@@ -13531,6 +13910,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 
 	public void prerenderDirectMofRegistration() {
+		//#36474- Start
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		SmAppl rejectedAppl = SmApplicationUtil.getLatesRejectedApplicationBySuppIdAndAppType(
+				currSupp.getSupplierId(), "N");
+		//Add checking check expired for KN
+		SmWorkflowStatus rejectedWf = rejectedApplExist(currSupp.getSupplierId());
+		if (rejectedAppl != null && my.ep.constant.sm.SupplierManagementConst.APPL_TYPE_MOF.equalsIgnoreCase(currSupp.getSmAppl().getApplType())) {
+			Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+			long diff = currentDate.getTime()
+					- rejectedWf.getCreatedDate().getTime();
+			long diffDays = diff / (24 * 60 * 60 * 1000);
+			//If expired set null
+			if (diffDays >= SmRuleHelper.getInstance().getApplicationResubmissionDays()) {
+				rejectedAppl = null;
+			}
+		}
+		//#36474 - End
 
 		ISupplierSearchSO supplierSearchSO = null;
 		SmSupplier smSupplier = null;
@@ -14285,6 +14681,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						&& (suppCategory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION || suppCategory
 								.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL)) {
 					suppCategory.setApprvrDecFlg(suppCategory.getPoDecFlg());
+					setApproverRemark(suppCategory); //#36587
 				}
 			}
 		}
@@ -14507,12 +14904,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		clearPersonnelList();
 		//#27165
 		boolean showOld = true;
-		if (!this.getManagedBean().getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				&& !this.getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-				&& !this.getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+		if (!this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+				&& !this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+				&& !this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 			SmApplicationUtil.checkEquityOwnerUpdateAllowance(getManagedBean());
 		}
 		
@@ -14520,9 +14914,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SsmReqDTO ssmReqDTO = new SsmReqDTO();
 			ssmReqDTO.setRegNo(this.getManagedBean().getSmSupplier().getRegNo());
 			ssmReqDTO.setBusinessType(this.getManagedBean().getSmSupplier().getBusinessType());
-			if(SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())){
+			if (SupplierManagementConst.ACC_BASIC.equalsIgnoreCase(this.getManagedBean().getSmAppl().getApplType())) {
 				ssmReqDTO.setBasicAcc(true);
-			}else{
+			} else {
 				ssmReqDTO.setBasicAcc(false);
 			}
 			SsmResDTO ssmResDTO = SmCommonUtil.getInstance().validateWithSSM(ssmReqDTO);
@@ -14533,14 +14927,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					personnel = setDesignationSSM(personnel);
 					
 					//#30944 START
-					if(!this.getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-							&& !this.getManagedBean().getSmAppl().getApplType()
-									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
-							&& !this.getManagedBean().getSmAppl().getApplType()
-									.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
-						for(SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()){
-							if(per.getName().equals(personnel.getName())){
+					if (!this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) 
+							&& !this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)
+							&& !this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+						for (SmPersonnel per : this.getManagedBean().getSmAppl().getSmPersonnels()) {
+							if (per.getName().equals(personnel.getName())) {
 								personnel.setShareAmt(per.getShareAmt());
 							}
 						}
@@ -14622,27 +15013,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		BigDecimal bumiputeraCapital = new BigDecimal(0);
 		BigDecimal nonBumiputeraCapital = new BigDecimal(0);
 		BigDecimal nonMalaysianCapital = new BigDecimal(0);
-		/*BigDecimal govermentAgencyEquityCapital = new BigDecimal(0); // XAK,XAU
-		BigDecimal govermentEquityCapital = new BigDecimal(0);// XG
-		BigDecimal foreignCapital = new BigDecimal(0);// f
-		BigDecimal localCapital = new BigDecimal(0);// C
-*/		for(SmPersonnel personnel: personnels){
-			if(personnel.isEquityOwner() && personnel.getShareAmt() !=null){
-				if (ParameterConst.IDENTIFICATION_TYPES_PASSPORT
-						.equalsIgnoreCase(personnel.getIdentificationType()
-								.getParameterCode())
-						|| !SupplierManagementConst.COUNTRY_MALAYSIA_CODE // start - 28545
-								.equalsIgnoreCase(personnel.getPmCountry()
-										.getCountryCode())) { // end - 28545
+		/* BigDecimal govermentAgencyEquityCapital = new BigDecimal(0); // XAK,XAU BigDecimal govermentEquityCapital = new BigDecimal(0);// XG BigDecimal foreignCapital = new BigDecimal(0);// f
+		 * BigDecimal localCapital = new BigDecimal(0);// C */for (SmPersonnel personnel : personnels) {
+			if (personnel.isEquityOwner() && personnel.getShareAmt() != null && personnel.getPmCountry() != null) {//#29582 #35300
+				if (ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase(personnel.getIdentificationType().getParameterCode()) 
+						|| !SupplierManagementConst.COUNTRY_MALAYSIA_CODE.equalsIgnoreCase(personnel.getPmCountry().getCountryCode())) { //28545
 					nonMalaysianCapital = nonMalaysianCapital.add(personnel.getShareAmt());
 				} else {
-					if(personnel.getBumiFlg() != null && personnel.getBumiFlg()==1){
+					if (personnel.getBumiFlg() != null && personnel.getBumiFlg() == 1) {
 						bumiputeraCapital = bumiputeraCapital.add(personnel.getShareAmt());
-					}else {
+					} else {
 						nonBumiputeraCapital = nonBumiputeraCapital.add(personnel.getShareAmt());
 					}
 				}
-									
+
 			}
 		}
 		//set latest Value to company basic
@@ -14836,6 +15220,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
+			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
 			// #24819
 			this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 			//SET COMPANY NAME
@@ -14964,7 +15349,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			if(!businessTypeIsROB(this.getManagedBean().getSmSupplier().getBusinessType()) && ssmResDTO.getSmEquityCompanys()!=null && !dontGetSsmData){
 				this.getManagedBean().setSmEquityCompanyTemp(ssmResDTO.getSmEquityCompanys());
 				if(this.getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
 				}
 				//delete all old company share #27145
 				Iterator<SmEquityCompany> iterequityCompany = this.getManagedBean().getSmAppl().getSmEquityCompanies().iterator();
@@ -14982,7 +15367,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//SET SMPERSONNEL
 			if(ssmResDTO.getSmPersonnelAll()!=null){
 				if(this.getManagedBean().getSmAppl().getSmPersonnels()==null){
-					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
 				}
 				for(SmPersonnel personnel : ssmResDTO.getSmPersonnelAll()){
 					//#27165
@@ -15030,7 +15415,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//SET EQUITY BRANCH
 			if (ssmResDTO.getSmSupplierBranches() != null) {
 				if (this.getManagedBean().getSmAppl().getSmSupplierBranches() == null) {
-					this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList());
+					this.getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
 				}
 
 				for (SmSupplierBranch branchSSM : ssmResDTO.getSmSupplierBranches()) {
@@ -15192,6 +15577,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		setRoleStaffAddrReqd();
 		//#13320 - SmCommonUtil change method
 		addr.setPmDivision(SmCommonUtil.getInstance().getDivisionByUsingId(addr.getDivisionId()));
+		//#36483 - START
+		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL)){
+			if(getManagedBean().getBasicCompanyFacility().getOwnershipType() != null
+					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)
+					&& addr.getDivisionId()!=null){
+				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
+			}
+			
+			if(!addr.isSsmData()){
+				addr.setPostcode("");
+			}
+		}
+		
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36483 - END
 	}
 	//13320-End	
 	
@@ -15353,10 +15754,82 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * inquiry row select
 	 */
 	public void POinquiryRowSelect(SmApplInquiry applInquiry) {
+		// #34392 - START
+//		resetSmApplSupportDocInquiries(applInquiry);
 		this.getManagedBean().setPoToSupplierInquiry(applInquiry);
+		// #34392 - START
+		getManagedBean().setMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
+		getManagedBean().setNonMandatoryDocsInquiry(new ArrayList<SmApplSupportDocInquiry>());
+		for (SmApplSupportDocInquiry doc : applInquiry.getSmApplSupportDocInquiries()) {
+			doc.setSmApplInquiry(applInquiry);
+			doc.getSmApplInquiry().getSmAppl().getSupportingDocMode();
+			if (doc.getPmDocument().isMandatory()) {
+				getManagedBean().getMandatoryDocsInquiry().add(doc);
+			} else if (!doc.getPmDocument().isMandatory()) {
+				getManagedBean().getNonMandatoryDocsInquiry().add(doc);
+			}
+
+		}
+
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getMandatoryDocsInquiry())) {
+			Collections.sort(getManagedBean().getMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>() {
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if (doc1.getPmDocument().getDisplaySeq() == null) {
+						return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+					}
+					if (doc2.getPmDocument().getDisplaySeq() == null) {
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+
+		if (!EntityHelper.isCollectionEmpty(getManagedBean().getNonMandatoryDocsInquiry())) {
+			Collections.sort(getManagedBean().getNonMandatoryDocsInquiry(), new Comparator<SmApplSupportDocInquiry>() {
+				@Override
+				public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+					if (doc1.getPmDocument().getDisplaySeq() == null) {
+						return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+					}
+					if (doc2.getPmDocument().getDisplaySeq() == null) {
+						return -1;
+					}
+					return Integer.valueOf(doc1.getPmDocument().getDisplaySeq().compareTo(doc2.getPmDocument().getDisplaySeq()));
+				}
+			});
+		}
+
+		// #34392 - End
 		RequestContext.getCurrentInstance().update("inquiryDetails");
 	}
 	// 14530 - END
+	
+	// #34392 - start
+	/**
+	 * re-select inquiry before opening popup
+	 * @param applInquiry 
+	 */
+	public void resetSmApplSupportDocInquiries(SmApplInquiry applInquiry) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByApplInquiryId(applInquiry.getApplInquiryId());
+		applInquiry.setSmApplSupportDocInquiries(resDTO.getSmApplInquiry().getSmApplSupportDocInquiries());
+	}
+
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
+
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
+	}
+	// #34392 - end
 	
 	//12492 - START
 	public void CheckBankAccountInfoForm(String fromPage) {
@@ -15364,10 +15837,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		HashSet<String> hsetAccountNo = new HashSet<String>();
 		HashSet<Long> hsetAccountName = new HashSet<Long>();
 
-		boolean bankInfo = false;
-		
-		if(getManagedBean().isShowDifferenceBankInfoAction()){	
-			if(fromPage.equalsIgnoreCase("fromBankInfo")){
+		//boolean bankInfo = false;
+
+		if (getManagedBean().isShowDifferenceBankInfoAction()) {
+			if (fromPage.equalsIgnoreCase("fromBankInfo")) {
 				if (this.getManagedBean().getSmAppl().getSmSupplierBanks().size() > 0) {
 					for (SmSupplierBank bankName : this.getManagedBean().getSmAppl().getSmSupplierBanks()) {
 						if (bankName.getPmFinancialOrg().getFinancialOrgId() != null) {
@@ -15381,16 +15854,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					if (hsetAccountNo.add(getManagedBean().getSelectedBank().getAccountNo()) == false) {
 						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 					}
-				}	
+				}
 			}
-		}else{
-			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()){
-				if(getManagedBean().getSelectedBank().getSupplierBankId() != null && 
-						getManagedBean().getSelectedBank().getSupplierBankId().equals(supBank.getSupplierBankId())){
+		} else {
+			for (SmSupplierBank supBank : getManagedBean().getSmAppl().getSmSupplierBanks()) {
+				if (getManagedBean().getSelectedBank().getSupplierBankId() != null && getManagedBean().getSelectedBank().getSupplierBankId().equals(supBank.getSupplierBankId())) {
 					log.debug("**** Same Bank object edit with exisiting id ******");
-				}else{
-					if(getManagedBean().getSelectedBank().getAccountNo().equalsIgnoreCase(supBank.getAccountNo())){
-						bankInfo = true;
+				} else {
+					if (getManagedBean().getSelectedBank().getAccountNo().equalsIgnoreCase(supBank.getAccountNo())) {
+						//bankInfo = true;
 						RequestContext.getCurrentInstance().execute("bankDialogDuplicate.show()");
 					}
 				}
@@ -15398,6 +15870,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	//12492 - END
+	
 	public boolean checkSpecialCat(SmAppl smAppl){
 		if(!smAppl.getSmSupplierCategories().isEmpty()){
 			if(smAppl.getSmSupplierCategories().get(0).isSpecialCategory()){
@@ -15422,6 +15895,26 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 		}
 		//#11641 - END
+		
+		// #34392 - Start
+		if (!EntityHelper.isCollectionEmpty(this.getManagedBean().getSelectedInquiryResponse()
+				.getSmApplSupportDocInquiries())) {
+			Collections.sort(this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries(),
+					new Comparator<SmApplSupportDocInquiry>() {
+						@Override
+						public int compare(SmApplSupportDocInquiry doc1, SmApplSupportDocInquiry doc2) {
+							if (doc1.getPmDocument().getDisplaySeq() == null) {
+								return (doc2.getPmDocument().getDisplaySeq() == null) ? 0 : 1;
+							}
+							if (doc2.getPmDocument().getDisplaySeq() == null) {
+								return -1;
+							}
+							return Integer.valueOf(doc1.getPmDocument().getDisplaySeq()
+									.compareTo(doc2.getPmDocument().getDisplaySeq()));
+						}
+					});
+		}
+		// #34392 - END
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
@@ -15588,6 +16081,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	//#32014 - END
 	
 	//#30766 & #34209 - START
+	/*
 	private List<SmSupplierCategory> setPOorApprDec(List<SmSupplierCategory> catList) {
 		
 		for(SmSupplierCategory smSupplierCategory : catList){
@@ -15599,6 +16093,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 		return catList;
 	}
+	*/
 	
 	public String dynamicTableColumnWidth(String supplierUser, String poUser, String approverUser){
 		if(getManagedBean().isSupplierUser()){
@@ -15663,6 +16158,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		getManagedBean().setDisplayBranches(displayBranches);
 	}
 	//#34135 END
+	
 	//#34799 - start
 	public void onTickSameAsAddress(SmAddress srcAddr,
 			SmPersonnelAddress destAddr, String componentId, boolean isTick) {
@@ -15723,6 +16219,94 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		return sb.toString();
 	}
 	//#32008 - END
+	//#28175 - start
+	/**
+	 * @param cat
+	 * @return latest or old category code description
+	 */
+	public String getCompanyExpCatName(PmCategoryL1 cat){
+		if(cat == null){
+			return null;
+		}
+		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
+						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+			return cat.getCategoryName();
+		}
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
+				getEntityBySinglePropertyFromList(cat.getCategoryL1Id(), 
+				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL1");
+		
+		return expCat != null ? expCat.getCategoryL1Name() : cat.getCategoryName();
+	}
+	
+	/**
+	 * @param cat
+	 * @return latest or old category code description
+	 */
+	public String getCompanyExpCatName(PmCategoryL2 cat){
+		if(cat == null){
+			return null;
+		}
+		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
+						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+			return cat.getCategoryName();
+		}
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
+				getEntityBySinglePropertyFromList(cat.getCategoryL2Id(), 
+				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL2");
+		
+		return expCat != null ? expCat.getCategoryL2Name() : cat.getCategoryName();
+	}
+	
+	/**
+	 * @param cat
+	 * @return latest or old category code description
+	 */
+	public String getCompanyExpCatName(PmCategoryL3 cat){
+		if(cat == null){
+			return null;
+		}
+		if(getManagedBean().getSmAppl().isActiveAppl() || EntityHelper.isCollectionEmpty(
+						getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats())){
+			return cat.getCategoryName();
+		}
+		SmCompanyExperienceCat expCat = (SmCompanyExperienceCat) EntityHelper.
+				getEntityBySinglePropertyFromList(cat.getCategoryL3Id(), 
+				getManagedBean().getSelectedCompanyExperience().getSmCompanyExperienceCats(), "pmCategoryL3");
+		
+		return expCat != null ? expCat.getCategoryL3Name() : cat.getCategoryName();
+	}
+	
+	private void updateCategoryCodeNames(){
+		if(!getManagedBean().getSmAppl().isActiveAppl()){
+			return;
+		}
+		SmAppl appl = getManagedBean().getSmAppl();
+		if(!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())){
+			for(SmSupplierCategory cat : appl.getSmSupplierCategories()){
+				cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+			}
+		}
+		if(!EntityHelper.isCollectionEmpty(appl.getSmCompanyExperiences())){
+			for(SmCompanyExperience exp : appl.getSmCompanyExperiences()){
+				updateCompanyExpCatNames(exp);
+			}
+		}
+	}
+	
+	private void updateCompanyExpCatNames(SmCompanyExperience exp){
+		if(EntityHelper.isCollectionEmpty(exp.getSmCompanyExperienceCats())){
+			return;
+		}
+		for(SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()){
+			cat.setCategoryL1Name(cat.getPmCategoryL1().getCategoryName());
+			cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
+			cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
+		}
+	}
+	//#28175 - end
 	
 	//#35145 - start
 	/**
@@ -15742,11 +16326,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if(isROB){
 			return new String[]{"name","birthDate","nameInSsm","raceSsmNull","birthDateSsmNull",
 					"designationSsmNull","equityOwner","director","pmCountry","directorSsm",
-					"equityOwnerSsm","managementSsm","pmRace", "otherRaceSsm"};
+					"equityOwnerSsm","managementSsm","pmRace", "otherRaceSsm","permanentResident"};//35300
 		}
 		return new String[]{"name","birthDate","designation","shareAmt","nameInSsm","raceSsmNull",
 				"birthDateSsmNull","shareAmtSsmNull","shareAmtSsm","designationSsmNull",
-				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm"};
+				"equityOwner","director","directorSsm","equityOwnerSsm","managementSsm", "otherRaceSsm","permanentResident"};//35300
 	}
 	//#35145 - end
 	
@@ -15799,4 +16383,68 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	    return allDocsMap;
 	}
 	//#31043 END
+	
+	//#36474 - Start
+	private SmWorkflowStatus rejectedApplExist(Long supplierId){
+		SmWorkflowStatus wf = null;
+		ISmWorkFlowStatusSO workFlowStatusSO = SmServiceLookup.getSmWorkFlowStatusSO();
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		
+		reqDTO.setStatusIds(new ArrayList<Long>());
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_APPROVER_REJECTED_APPLICATION);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_SDO_INQUIRY);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYS_PO_INQUIRY);
+		reqDTO.getStatusIds().add(SupplierManagementConst.PM_STATUS_AUTOREJECT_UNSUBMIT_OFFLINE_DOCUMENT);
+		reqDTO.setSupplierId(supplierId);
+		
+		SmWorkFlowStatusResDTO resDTO = workFlowStatusSO.
+				retrieveWorkFlowBySuppIdAndStatusIds(reqDTO);
+		
+		if(resDTO.getWorkFlowStatusLs().size() > 0){
+			wf = resDTO.getWorkFlowStatusLs().get(0);
+		}
+		
+		return wf;
+	}
+	//#36474 - End
+	
+	//#36587 START
+	/**
+	 * To auto-populate po remark to approver remark
+	 * when po reject the category
+	 * @param cat
+	 * @return void
+	 */
+	private void setApproverRemark(SmSupplierCategory cat){
+		if(cat.getPoDecFlg().equals(0)){
+			cat.setApproverRemarks(cat.getPoRemarks() != null ? cat.getPoRemarks() : null);
+		}
+	}
+	//#36587 END
+	
+	//#36594 - Start
+	/**
+	 * Set terms and condition message with parameter.
+	 * 
+	 * @return String
+	 */
+	public String setRenewalTnc(String applicationType){
+		int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+		
+		String word = NumberWordUtil.changeNumberToWord(renewalPeriod, new FacesScopes().getUserLocale());
+		String label = "";
+		
+		if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			label = "lbl.sm.renewMof.descData";
+		}else if(applicationType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			label = "lbl.sm.upgradeMof.descData";
+		}
+		
+		return ResourceBundleUtils.getMessage(
+				label, new String[] {word , String.valueOf(renewalPeriod)},
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());		
+	}
+	//#36594 - End
 }

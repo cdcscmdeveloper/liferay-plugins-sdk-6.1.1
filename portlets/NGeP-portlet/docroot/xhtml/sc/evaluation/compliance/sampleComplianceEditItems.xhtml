@@ -74,11 +74,12 @@
 
 
 				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%;white-space: normal;">
-					<!-- 11104 -start- -->
+					<ui:remove> #11104 - start </ui:remove>
 					<h:outputText
 						value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.itemName)}"
 						escape="false" style="white-space: normal;word-wrap: break-word;" />
-					<!-- 11104 -end- -->
+					<ui:remove> #11104 - end </ui:remove>
+
 				</p:column>
 				
 				<ui:remove> #11104 - start </ui:remove>

@@ -138,7 +138,8 @@
 				</p:commandLink>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;">
+			<ui:remove>#29007 Added word-break Vinod</ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space:normal;word-break:break-all;">
 				<ui:remove>Bug #34757, 29007 -start-</ui:remove>
 				<h:outputText value="#{scLoiLoaItem.scRequestItem.itemName}"
 					rendered="#{scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1)}" />
@@ -563,7 +564,7 @@
 			<td width="75%">
 				<h:outputText rendered="#{!isMultipleSuppOffer}"
 				value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
-				style="font-weight:bold" />
+				style="font-weight:bold; white-space: pre-wrap;" /> <ui:remove>#36634 - add white-space: pre-wrap;</ui:remove>
 				<h:outputText rendered="#{isMultipleSuppOffer}" escape="false"
 				value="#{empty lOADetailBackingBean.selectedSupplierOffer ? lOADetailBackingBean.notAvailabilityStr : lOADetailBackingBean.selectedSupplierOffer}"
 				style="font-weight:bold;float:left;" />

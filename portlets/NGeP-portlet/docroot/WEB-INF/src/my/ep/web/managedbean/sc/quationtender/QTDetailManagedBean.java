@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -49,6 +50,7 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -119,6 +121,7 @@ import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.SampleQuestionBean;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
@@ -1745,6 +1748,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int sampleTotalScore;
 	private List<ScQtCheckList> sampleSpecCheckList;
 	private List<BriefingZoneBean> sampleAddressBean;
+	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;
+	private boolean isSampleShowHide;
 	//#11104-End
 
 	// #9019 (Harun) -start-
@@ -1796,6 +1801,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Long demoSampleChecklistStatusId;
 	// #28784 -end-
 
+	// #29732 Start
+	private String hisCatCode;
+	private List<PmRemarkCategory> historyList;
+	private String catCodeList;
+	private boolean currentInSpecMaint;//#29732 first time spec maint
+	private boolean categoryDescriptionChange;//#29732 flag to check category has change
+	private boolean isFromSubmitCatChange;
+	private boolean isCheckUserCanRevise;
+	// #29732 End
+	
 	//====#31913 bug related to #25138==== start
 	private BigDecimal totalmaxscore = BigDecimal.ZERO;//35539 - init with a default 0
 	//====#31913 bug related to #25138==== end
@@ -1804,6 +1819,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	//Bug #35061 - asyrafhaziq 
 	private String msgConfirmBelowIndi;
+	
+	//#25426 - Start
+	private boolean firstViewPageCAUsers = false; 
+	//#25426 - End
+	
+	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
 	
 	/**
 	 * Instantiates a new QT detail managed bean.
@@ -10793,6 +10814,35 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
 		this.sampleAddressBean = sampleAddressBean;
 	}
+	/**
+	 * 11104-StartReendose
+	 * @return the existingSampleSpecQuestions
+	 */
+	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
+		return existingSampleSpecQuestions;
+	}
+
+	/**
+	 * @param existingSampleSpecQuestions the existingSampleSpecQuestions to set
+	 */
+	public void setExistingSampleSpecQuestions(
+			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
+	}//11104-End
+	/**
+	 * 11104-Start
+	 * @return the isSampleShowHide
+	 */
+	public boolean isSampleShowHide() {
+		return isSampleShowHide;
+	}
+
+	/**
+	 * @param isSampleShowHide the isSampleShowHide to set
+	 */
+	public void setSampleShowHide(boolean isSampleShowHide) {
+		this.isSampleShowHide = isSampleShowHide;
+	}//11104-End
 	// #11104-End
 
 	public Long getCurrentCMTStatus() {
@@ -11003,6 +11053,77 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.mainTaskNames = mainTaskNames;
 	}
 	//#25037-end
+
+	// #29732 Start
+	public String getHisCatCode() {
+		return hisCatCode;
+	}
+
+	public void setHisCatCode(String hisCatCode) {
+		this.hisCatCode = hisCatCode;
+	}
+
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+
+	public String getCatCodeList() {
+		return catCodeList;
+	}
+
+	public void setCatCodeList(String catCodeList) {
+		this.catCodeList = catCodeList;
+	}
+	public boolean isCurrentInSpecMaint() {
+		return currentInSpecMaint;
+	}
+
+	public void setCurrentInSpecMaint(boolean currentInSpecMaint) {
+		this.currentInSpecMaint = currentInSpecMaint;
+	}
+	
+	public boolean isCategoryDescriptionChange() {
+		return categoryDescriptionChange;
+	}
+
+	public void setCategoryDescriptionChange(boolean categoryDescriptionChange) {
+		this.categoryDescriptionChange = categoryDescriptionChange;
+	}
+	
+	/**
+	 * @return the isFromSubmitCatChange
+	 */
+	public boolean isFromSubmitCatChange() {
+		return isFromSubmitCatChange;
+	}
+
+	/**
+	 * @param isFromSubmitCatChange
+	 *            the isFromSubmitCatChange to set
+	 */
+	public void setFromSubmitCatChange(boolean isFromSubmitCatChange) {
+		this.isFromSubmitCatChange = isFromSubmitCatChange;
+	}
+	
+	/**
+	 * @return the isCheckUserCanRevise
+	 */
+	public boolean ischeckUserCanRevise() {
+		return isCheckUserCanRevise;
+	}
+
+	/**
+	 * @param isCheckUserCanRevise
+	 *            the isCheckUserCanRevise to set
+	 */
+	public void setCheckUserCanRevise(boolean isCheckUserCanRevise) {
+		this.isCheckUserCanRevise = isCheckUserCanRevise;
+	}
+	// #29732 End
 	
 	// #9019 - Start (Harun)
 	public Long getQtRemarksIdRemove() {
@@ -11277,7 +11398,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.demoSpecialCase = demoSpecialCase;
 	}
 	// #28784 - end
-	// Bug 32277 - start
+// Bug 32277 - start
 	public List<TabBean> getReadOnlyCommitteeTabBean() {
 		return readOnlyCommitteeTabBean;
 	}
@@ -11296,4 +11417,29 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.msgConfirmBelowIndi = msgConfirmBelowIndi;
 	}
 	//Bug #35061 - asyrafhaziq - End
+	
+	//#25426 - Start
+	public boolean isFirstViewPageCAUsers() {
+		return firstViewPageCAUsers;
+	}
+
+	public void setFirstViewPageCAUsers(boolean firstViewPageCAUsers) {
+		this.firstViewPageCAUsers = firstViewPageCAUsers;
+	}
+	//#25426 - End
+
+	/** #36678 related to #35061
+	 * 
+	 * @return
+	 */
+	public boolean isFieldProcurementJustification() {
+		return isFieldProcurementJustification;
+	}
+
+	/** #36678 related to #35061
+	 * @param
+	 */
+	public void setFieldProcurementJustification(boolean isFieldProcurementJustification) {
+		this.isFieldProcurementJustification = isFieldProcurementJustification;
+	}
 }

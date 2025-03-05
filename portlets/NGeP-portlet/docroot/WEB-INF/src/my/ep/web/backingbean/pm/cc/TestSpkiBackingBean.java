@@ -183,13 +183,13 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			msg += "OPERATION SUCCESSFUL";
 			break;
 		case "12":
-			msg = "ERROR USER INVALID";
+			msg += "ERROR USER INVALID";
 			break;
 		case "14":
-			msg = "ERROR USER SUSPENDED";
+			msg += "ERROR USER SUSPENDED";
 			break;
 		case "15":
-			msg = "ERROR USER INACTIVE";
+			msg += "ERROR USER INACTIVE";
 			break;
 		case "43":
 			msg += "ERROR CERT REVOKED";

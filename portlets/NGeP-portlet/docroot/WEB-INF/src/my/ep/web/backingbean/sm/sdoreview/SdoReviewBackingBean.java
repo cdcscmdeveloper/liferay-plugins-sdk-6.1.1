@@ -2,12 +2,10 @@ package my.ep.web.backingbean.sm.sdoreview;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -16,13 +14,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.StreamedContent;
-
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -33,6 +27,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -45,7 +40,6 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplInquiryDocFile;
-import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -64,6 +58,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "sdoReviewBackingBean")
 @RequestScoped
@@ -305,8 +304,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			// 29810 - start - add new data type in SMMOFRegDataType - saufi
 			SMMOFRegDataType bpmObj = (SMMOFRegDataType) this.getManagedBean().getBpmPojo();
 			if(this.getManagedBean().getSmAppl().getSdoReceivedDate() != null){
-				SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");	
-				String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
+				//SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");	
+				//String dateStr = df.format(this.getManagedBean().getSmAppl().getSdoReceivedDate());	
 				bpmObj.setReceivedDate(BpmCommonUtils.getCalendarValue(this.getManagedBean().getSmAppl().getSdoReceivedDate()));
 			}
 			
@@ -314,7 +313,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			//29810 - end
 			
 			//29810 - to check receive date value is there
-			log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate " + ((SMMOFRegDataType) reqDTO.getBpmPojo()).getReceivedDate());
+			//log.info("29810 ====== SdoReviewBackingBean ========= getReceivedDate " + ((SMMOFRegDataType) reqDTO.getBpmPojo()).getReceivedDate());
 			
 			updateMandatoryAndNonMandatorySuppDocToApplDoc();
 			
@@ -452,6 +451,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//#11641 - START
 		this.getManagedBean().setEmptyMandatoryDocHistory(true);
 		this.getManagedBean().setEmptyNonMandatoryDocHistory(true);
+		// #34392 - start
+		resetSmApplSupportDocInquiries();
+		// #34392 - end
 		for(SmApplSupportDocInquiry historySupportDoc: this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries()){
 			if(historySupportDoc.getPmDocument().isMandatory()){
 				this.getManagedBean().setEmptyMandatoryDocHistory(false);
@@ -464,6 +466,30 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
+	
+	// #34392 - start
+	/**
+	 * re-select inquiry before opening popup
+	 */
+	public void resetSmApplSupportDocInquiries() {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByApplInquiryId(this.getManagedBean().getSelectedInquiryResponse().getApplInquiryId());
+		this.getManagedBean().getSelectedInquiryResponse().setSmApplSupportDocInquiries(resDTO.getSmApplInquiry().getSmApplSupportDocInquiries());
+	}
+	
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
+
+		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
+	}
+	// #34392 - end
 	
 /*	public void retrieveBusinessTypeList(){
 		List<PmParameterDesc> pmDesc = new ArrayList<PmParameterDesc>();
@@ -485,33 +511,33 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	 * update unselectedSuppLs when user check/ uncheck the receive status
 	 * @param SmApplSupportDoc applSuppDoc
 	 */
-	public void receiveStatusChange(SmApplSupportDoc applSuppDoc){
+	public void receiveStatusChange(SmApplSupportDoc applSuppDoc) {
 		log.debug("-----applSuppDoc----" + applSuppDoc.getPmDocument().getDocName());
 		List<SmApplSupportDoc> unselectedSuppDocLs = this.getManagedBean().getUnselectedSmApplSuppDocs();
-		
-		if(applSuppDoc.isReceived()){
+
+		if (applSuppDoc.isReceived()) {
 			unselectedSuppDocLs.remove(applSuppDoc);
 			this.getManagedBean().getSupportingDocMap().remove(applSuppDoc.getApplSupportDocId());
-		}else{
+		} else {
 			String zoneCode = this.getManagedBean().getZoneCode();
-			if(zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SABAH) 
-					|| zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SARAWAK)){
-				if(applSuppDoc.getSmApplDocFiles().size() > 0){
+			if (zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SABAH) 
+					|| zoneCode.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.PM_ZONE_SARAWAK)) {
+				if (applSuppDoc.getSmApplDocFiles().size() > 0) {
 					unselectedSuppDocLs.add(applSuppDoc);
-				}else{
-					if(applSuppDoc.getPmDocument().isMandatory()){
+				} else {
+					if (applSuppDoc.getPmDocument().isMandatory()) {
 						this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
 					}
 				}
-			}else{
-				if(applSuppDoc.getPmDocument().isMandatory()){
+			} else {
+				if (applSuppDoc.getPmDocument().isMandatory()) {
 					unselectedSuppDocLs.add(applSuppDoc);
 				}
 			}
-			
+
 			this.getManagedBean().getSupportingDocMap().put(applSuppDoc.getApplSupportDocId(), applSuppDoc);
 		}
-		
+
 		log.debug("-----applSuppDoc size----" + unselectedSuppDocLs.size());
 	}
 	
@@ -542,7 +568,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		try {
 			file = commonDownload(finalFilePath, fileName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finalFilePath = null;

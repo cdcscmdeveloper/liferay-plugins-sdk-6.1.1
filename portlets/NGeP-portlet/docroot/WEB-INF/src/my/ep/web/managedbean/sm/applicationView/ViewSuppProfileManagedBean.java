@@ -33,6 +33,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+//#28175
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -174,6 +176,10 @@ public class ViewSuppProfileManagedBean extends
 	private boolean editDisciplinaryActionCheckBox;
 	//29181: Disciplinary Action - end - 26238
 
+	// #28175 start
+	private String catCode;
+	private List<PmRemarkCategory> historyList;
+	// #28175 end
 	// #26238 start
 	private boolean cancelMofAccount;
 	// #26238 eend
@@ -969,6 +975,23 @@ public class ViewSuppProfileManagedBean extends
 	}
 	//29181: Disciplinary Action - end - 26238
 	
+	// #28175 start
+	public String getCatCode() {
+		return catCode;
+	}
+	
+	public void setCatCode(String catCode) {
+		this.catCode = catCode;
+	}
+	
+	public List<PmRemarkCategory> getHistoryList() {
+		return historyList;
+	}
+	
+	public void setHistoryList(List<PmRemarkCategory> historyList) {
+		this.historyList = historyList;
+	}
+	// #28175 end
 	// #26238 start
 	public boolean isCancelMofAccount() {
 		return cancelMofAccount;
