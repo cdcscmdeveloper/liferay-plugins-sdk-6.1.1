@@ -132,8 +132,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 									style="width : 12%;"
 									rendered="#{inquirytbl.pmDocument.mandatory and inquirytbl.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+									<!-- #34392 - Start -->
 									<ui:repeat var="applDocsFile"
-										value="#{inquirytbl.smApplInquiryDocFiles}">
+										value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFile.fileName}"
 												rendered="#{not empty applDocsFile.fileName and applDocsFile.fileName ne ' '}"
@@ -149,6 +150,7 @@
 										</h:panelGroup>
 										<br />
 									</ui:repeat>
+									<!-- #34392 - End -->
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}"
 									style="width : 30%;"
@@ -237,8 +239,9 @@
 								<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 									style="width : 12%;"
 									rendered="#{!inquirytbl.pmDocument.mandatory and inquirytbl.smApplInquiry.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
+									<!-- #34392 - Start -->
 									<ui:repeat var="applDocsFileNonMandatory"
-										value="#{inquirytbl.smApplInquiryDocFiles}">
+										value="#{backingBean.reselectDocFileValue(inquirytbl.applSupportDocInquiryId)}">
 										<ui:remove>
 											<p:commandLink value="#{applDocsFileNonMandatory.fileName}"
 												rendered="#{not empty applDocsFileNonMandatory.fileName and applDocsFileNonMandatory.fileName ne ' '}"
@@ -254,6 +257,7 @@
 										</h:panelGroup>
 										<br />
 									</ui:repeat>
+									<!-- #34392 - End -->
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}"
 									style="width : 30%;"

@@ -261,10 +261,11 @@
 											value="#{scQt.tmpExpectedIntendedPrice}" required="#{empty param['skipvalidation']}"
 											label="#{lbl['lbl.sc.spec.expected.intended.price']}"
 											disabled="#{isReadOnly}">
-											<p:ajax event="blur" partialSubmit="true" update="@form"
+											<ui:remove><!-- #35061_haziq - Start --></ui:remove>
+											<p:ajax event="change" partialSubmit="true" update="@form"
 												listener="#{createQtBB.setProcurementMode(scQt, scQt.tmpExpectedIntendedPrice, 'Y')}">
 											</p:ajax>
-
+											<ui:remove><!-- #35061_haziq - End --></ui:remove>
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 										</p:inputText> <p:message id="expIntendedPriceMsg" for="expIntendedPrice"
@@ -806,27 +807,27 @@
 	</p:dialog>
  </ui:remove>
  
- <!-- #25729 #174 START -->	
- 	<p:confirmDialog id="proceedBelowQtValueId" widgetVar="proceedBelowQtValueDlgs"
- 		header="#{lbl['lbl.sc.confirmation']}"
-		message="#{lbl['lbl.sc.spec.alert.proceed.below.quotation.value']}"
+	<!-- #25729 #174 START -->
+	<ui:remove>Bug 35061 - change message value -start-</ui:remove>
+	<p:confirmDialog id="proceedBelowQtValueId"
+		widgetVar="proceedBelowQtValueDlgs"
+		header="#{lbl['lbl.sc.confirmation']}"
+		message="#{qTDetailBB.managedBean.msgConfirmBelowIndi}"
 		resizable="false" closable="false">
+		<ui:remove>Bug 35061 - change message value -end-</ui:remove>
 		<div align="right">
-			<p:commandButton id="conf20k" 
-				value="#{lbl['lbl.btn.yes']}" 
+			<p:commandButton id="conf20k" value="#{lbl['lbl.btn.yes']}"
 				action="#{createQtBB.enableJustificationProValue(true)}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				update="@form"
-				process="@this"/>
-			<p:commandButton id="decline20k" 
-				value="#{lbl['lbl.btn.no']}" 
+				oncomplete="proceedBelowQtValueDlgs.hide()" update="@form"
+				process="@this" />
+			<p:commandButton id="decline20k" value="#{lbl['lbl.btn.no']}"
 				action="#{createQtBB.enableJustificationProValue(false)}"
-				oncomplete="proceedBelowQtValueDlgs.hide()"
-				process="@this"
-				update="@form"/>
+				oncomplete="proceedBelowQtValueDlgs.hide()" process="@this"
+				update="@form" />
 		</div>
-	</p:confirmDialog> 	
-<!-- #25729 #174 END -->
+	</p:confirmDialog>
+	<!-- #25729 #174 END -->
+
 
 <!-- #28784 Start -->
 <p:confirmDialog id="demoDialogConfirm" widgetVar="demoDialogConfirm"

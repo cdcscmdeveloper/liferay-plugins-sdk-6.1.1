@@ -78,17 +78,17 @@
 						disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:row>
 			</p:columnGroup>
-			<!-- #32008 -->
-			<p:column selectionMode="multiple" style="width:2%"
+			<!-- #32008, #37605 -->
+			<p:column selectionMode="multiple" style="width:2%;vertical-align: top;"
 				rendered="#{!backingBean.managedBean.approverUser and !backingBean.managedBean.upsCannotEdit}"
 				disabledSelection="#{backingBean.managedBean.supplierUser and 
 					(catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS or 
 					(not empty catBean.approvedDate and catBean.recordStatusFlg ne SupplierManagementConst.PENDING_ACT_STATUS))}" />
-			<p:column style="width : 2%;">
+			<p:column style="width : 2%;vertical-align: top;">
 				<p:outputLabel value="#{index + 1}"
 					style="float: left;white-space: normal;" />
 			</p:column>
-			<p:column style="width :350px;white-space : normal"
+			<p:column style="width :350px;white-space : normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText
 					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
@@ -99,14 +99,14 @@
 				<h:outputText
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;width:500px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS
 					or catBean.cancelCategory}">
-				<p:inputTextarea id="otherDesc" maxlength="100"
+				<p:inputTextarea id="otherDesc" maxlength="5000"
 					style="width : 95%;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-					value="#{catBean.otherDesc}" rows="5" cols="20"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}"
-					disabled="#{backingBean.managedBean.upsCannotEdit}" ><!-- #32008 -->
+					value="#{catBean.otherDesc}" rows="5" cols="80"
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}" 
+					autoResize="false" ><!-- #36289,#37605 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
@@ -123,14 +123,14 @@
 				<p:message for="otherDesc" showDetail="false" showSummary="true"
 					display="icon" />
 			</p:column>
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;width: 100px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 					rendered="#{!catBean.specialCategory}" />
 				<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 					rendered="#{catBean.specialCategory}" />
 			</p:column>
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;width: 100px"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}"
 				rendered="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
@@ -138,7 +138,7 @@
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 			</p:column>
-			<p:column
+			<p:column style="white-space:normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}"
 				rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}">
 
@@ -193,7 +193,7 @@
 				</p:outputPanel>
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.poUser}"
-				style="width : 25%;"
+				style="width : 25%;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea autoResize="false" value="#{catBean.poRemarks}" maxlength="2000"
 					style="white-space:normal; width: 95%" rows="6" cols="30"
@@ -204,7 +204,7 @@
 					<p:ajax process="@this" update=":form:tt:catCodeInfPan" />
 				</p:inputTextarea>
 			</p:column>
-			<p:column rendered="#{backingBean.managedBean.approverUser}"
+			<p:column rendered="#{backingBean.managedBean.approverUser}" style="white-space : normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 					value="#{catBean.apprvrDecFlg}"
@@ -222,7 +222,7 @@
 				<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 			</p:column>
-			<p:column rendered="#{backingBean.managedBean.approverUser}"
+			<p:column rendered="#{backingBean.managedBean.approverUser}" style="white-space:normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea autoResize="false" value="#{catBean.approverRemarks}" maxlength="2000"
 					style="white-space:normal;" rows="5" cols="20"
@@ -233,7 +233,7 @@
 					<f:validateLength maximum="2000" />
 				</p:inputTextarea>
 			</p:column>
-			<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}"
+			<p:column rendered="#{backingBean.managedBean.smAppl.resubmit}" style="white-space:normal;vertical-align: top;"
 				disabledSelection="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 					<p:outputPanel

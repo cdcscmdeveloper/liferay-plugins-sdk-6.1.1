@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -154,6 +156,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1380,36 +1383,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}	
 	/** #25638 - end **/
 	
+	// 25037 - start
 	/**
-	 * Success message.
+	 * Return success message by message code.
 	 * 
 	 * @param messageCode
-	 *            the message code
-	 * @param String
-	 *            [] params
+	 * @param params
 	 */
-	//#25037-START
-	public void successMessage(String messageCode, String [] params){
+	public void successMessage(String messageCode, String[] params) {
 		successMessage(messageCode, params, false);
 	}
-	//#25037-END
 
-	public void successMessage(String messageCode, String [] params, boolean isAcknowledgeRequired) {//#25037
+	/**
+	 * Return success message by message code. Navigate to acknowledgment page
+	 * if required.
+	 * 
+	 * @param messageCode
+	 * @param params
+	 * @param isAcknowledgeRequired
+	 */
+	public void successMessage(String messageCode, String[] params, boolean isAcknowledgeRequired) {
+	// 25037 - end
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(
-								messageCode,
-								params,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		//#25037-START
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(messageCode, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		// 25037 - start
 		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
-		//#25037-END
-
+		// 25037 - end
 	}
 
 	/**
@@ -2247,6 +2251,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			this.getManagedBean().setPayLoad(payLoad);
 			this.getManagedBean().setProcessName(resDTO.getProcessName());
+			// 25037 - start
+			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
+			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
+			// 25037 - end
 
 			return (BPM_DATA_TYPE) payLoad;
 
@@ -2255,12 +2263,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 
-	/**
-	 * Sort outcomes.
-	 *
-	 * @param outComes the out comes
-	 * @return the string[]
-	 */
 	private String[] sortOutcomes(String[] outComes) {
 		List<String> bpmActions = new ArrayList<String>(Arrays.asList(outComes));
 
@@ -2578,19 +2580,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	
 	public boolean businessTypeIsROB(String businessType){
-		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+		//#36710 --START
+		if(businessType != null && (businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 				|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-																		){
+																		)){
+			//#36710 --END
 			return true;
 		}else{
 			return false;
 		}
 	}
-	
 	public boolean businessTypeIsROC(String businessType){
-		if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+		//#36710 --START
+		if(businessType != null && (businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
 				|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
-																		){
+																		)){
+			//#36710 --END
 			return true;
 		}else{
 			return false;
@@ -3559,19 +3564,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	//#21387 - End
-	
-	//29956 START
-    	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
-		Boolean retVal = false;
-		if (supplier != null && supplier.getSupplierId() != null) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
-		}
-		return retVal;
-	}
-    	//29956 END
-	
 	//start #29956
 	/**
 	 * Compare all list in params with epRole
@@ -3686,54 +3678,59 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	//end #29956
 	
-	//START #29956
+	//START #29956 & #37598
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
-		getManagedBean().getPersonnelsRole().clear();
-		getManagedBean().setDowngradeRole(false);
-		getManagedBean().setDisAllowOwnerEdit(false);
-		
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
-		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
-		
-		PersonnelReqDTO reqDto = new PersonnelReqDTO();
-		reqDto.setApplId(smAppl.getApplId());
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
-			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
-				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
-				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+	    getManagedBean().getPersonnelsRole().clear();
+	    getManagedBean().setDowngradeRole(false);
+	    getManagedBean().setDisAllowOwnerEdit(false);
 
-				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
-				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
-			
-				if(shouldAddPersonnel){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				}
-				
-				if(isPersonnelAdminRole
-						&& !isMofAccEffDatePassed6MonthCurrDate
-						&& !isBasicAccount){
-					getManagedBean().setDisAllowOwnerEdit(true);
-					break;
-				}
-			}
-		}
-		if(getManagedBean().getPersonnelsRole() != null 
-				&& !getManagedBean().getPersonnelsRole().isEmpty()) {			
-			getManagedBean().setDowngradeRole(true);
-			
-			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
-			getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-		}
-		return getManagedBean().isDowngradeRole();
+	    SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+	    Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
+
+	    String applType = smAppl.getApplType();
+	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+
+	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
+	    reqDto.setApplId(getManagedBean().isResubmitAppl() ? smAppl.getApplId() : supplier.getSmAppl().getApplId());
+	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+
+	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
+	        for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
+	            SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+	            SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+	            Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+	            Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+
+	            Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull && (!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+
+	            if (shouldAddPersonnel) {
+	                getManagedBean().getPersonnelsRole().add(personnel);
+	            }
+
+	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
+	                getManagedBean().setDisAllowOwnerEdit(true);
+	                break;
+	            }
+	        }
+	    }
+
+	    if (getManagedBean().getPersonnelsRole() != null && !getManagedBean().getPersonnelsRole().isEmpty()) {
+	        getManagedBean().setDowngradeRole(true);
+
+	        String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
+	        getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+
+	        RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+	        RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+	    }
+
+	    return getManagedBean().isDowngradeRole();
 	}
 	
 	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){

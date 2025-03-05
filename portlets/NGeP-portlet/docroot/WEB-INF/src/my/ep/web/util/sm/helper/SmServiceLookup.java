@@ -2,7 +2,6 @@ package my.ep.web.util.sm.helper;
 
 //#30457 - Start
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-//#30457 - Start
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -30,6 +29,7 @@ import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.blacklistDirector.IBlacklistDirectorSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.common.spki.ISpkiSO;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -65,6 +65,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+//#30457 - Start
 
 public class SmServiceLookup {
 
@@ -660,7 +661,7 @@ public class SmServiceLookup {
 	}
 	//#30457-end
 	
-	//#34209 - START
+	//#30766 & #34209 - START
 	/**
 	 * Get ISupplierCategorySO
 	 * 
@@ -671,7 +672,7 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierCategorySO.class);
 	}
-	//#34209 - END
+	//#30766 & #34209 - END
 	
 	// #29617 start
 	/**
@@ -683,4 +684,8 @@ public class SmServiceLookup {
 		return (ISupplierSmeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSmeSO.class);
 	}
 	// #29617 end
+	
+	public static ISpkiSO getSpkiSO() {
+		return (ISpkiSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISpkiSO.class);
+	}
 }

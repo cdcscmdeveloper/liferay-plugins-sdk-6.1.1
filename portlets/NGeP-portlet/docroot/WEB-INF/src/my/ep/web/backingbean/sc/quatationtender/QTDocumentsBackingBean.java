@@ -91,10 +91,12 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.sc.common.ScAddress;	// Bug #36702@Syazani 28/11/2024
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;	// Bug #36702@Syazani 28/11/2024
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
@@ -117,6 +119,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.util.CustomUtils;	// Bug #36702@Syazani 28/11/2024
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.ResourceBundleUtils;
@@ -137,6 +140,7 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.VmUtil;	// Bug #36702@Syazani 28/11/2024
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -148,9 +152,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
-import com.liferay.portal.kernel.util.StringUtil;
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class QTDocumentsBackingBean.
  * 
@@ -158,8 +159,12 @@ import com.liferay.portal.kernel.util.StringUtil;
  */
 @ManagedBean(name = "qTDocumentsBackingBean")
 @RequestScoped
-public class QTDocumentsBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
 	private static final Logger log = EpLogger
@@ -1173,7 +1178,6 @@ public class QTDocumentsBackingBean extends
 						getManagedBean().getQt());
 			} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE
 					.equals(docDefinitionKey)) {
-				// TODO put attachment in repository folder
 				generateSamplesamplesalinankontrakPdfFromVelocity(
 						(ScAttachment) scQtDocReportAttachment,
 						getManagedBean().getQt(),prefixFileName);
@@ -2130,103 +2134,58 @@ public class QTDocumentsBackingBean extends
 	 * @throws Exception
 	 *             the exception
 	 */
-	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment,
-			ScQt qt) throws Exception {
+	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		populateAttachmentDetails(attachment);
-		log.debug("start generateSpesifikasiPdfFromVelocity" );
+		log.debug("start generateSpesifikasiPdfFromVelocity");
 		VelocityContext context = new VelocityContext();
 		List<TplSpecMaster> masters = new ArrayList<TplSpecMaster>();
 		IQTSpecSO specSO;
 		try {
-			specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
 			reqDTO.setSpecType(ParameterConst.SPECIFICATION_TYPE_TECHNICAL);
 			reqDTO.setPrepareSpec(true);
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
-			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean()
-					.getResultList()) {
+			for (ScQtCheckList scQtCheckList : resDto.getSpecResultBean().getResultList()) {
 				List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 				TplSpecMaster master = null;
 				master = scQtCheckList.getScQtDoc().getTplSpecMaster();
-				
+
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
-					TplSpecQuestion parentQuestion = question
-							.getParentSpecQuestion();
-                    if(null!=master.getSpecName()){
-                   String specTitle= master.getSpecName();
-                   specTitle=specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-                   specTitle=specTitle.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
-                   master.setSpecName(specTitle);
-                    	
-                    }
+					TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
+					if (null != master.getSpecName()) {
+						String specTitle = master.getSpecName();
+						specTitle = specTitle.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						specTitle = specTitle.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
+						master.setSpecName(specTitle);
+
+					}
 					if (question.getClItem() == null) {
 						question.setClItem("");
-					}else{
-					    String clItem = question.getClItem();
-					  //20190513@asyrafhaziq - 25812 - Start
-						// add a condition to filter the character (character after space and before space) length for data 'ITEM'.
-						    String[] words = clItem.split(" "); //get array of words
-						    StringBuilder sb = new StringBuilder(); 
-						    for(String word : words) //affect each word in string
-						    {
-						      int length = word.length();
-						      if ( length >= 20){
-						    	  StringBuilder subSb = new StringBuilder();//this is for perfomance
-								  String newWord = new String();	
-						    	  String subWord = new String();	
-						            for (int i = 0; i < length; i += 20) {
-						            	subWord = word.substring(i, Math.min(length, i + 20));
-						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-						            }
-						    		newWord = subSb.toString();	
-									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
-						    	}else{
-									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-								}
-						    }
-						    clItem =  sb.toString();
-						    //20190513@asyrafhaziq - 25812 - End
-						clItem=clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-						clItem=clItem.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+					} else {
+						// Bug #36702@Syazani 28/11/2024 -- Start
+						String clItem = VmUtil.getInstance().splitText(question.getClItem(), QTConstants.QT_VM_SPLIT_MAXLENGTH);
+						// Bug #36702@Syazani 28/11/2024 -- End
+						clItem = clItem.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						clItem = clItem.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 						question.setClItem(clItem);
 					}
 					if (question.getClSpecDetail() == null) {
 						question.setClSpecDetail("");
-					} else{
-						//Start Bug #28274
-						 String clSpecDetail = question.getClSpecDetail();
-						 String[] words = clSpecDetail.split(" ");
-						 StringBuilder sb = new StringBuilder();
-						 for(String word : words){
-							 int length = word.length();
-							 if ( length >= 20){
-								 StringBuilder subSb = new StringBuilder();
-								  String newWord = new String();	
-						    	  String subWord = new String();
-						    	  // Bug #34894@Syazani 11/07/2023 -- Start
-						            for (int i = 0; i < length; i += 61) {
-						            	subWord = word.substring(i, Math.min(length, i + 61));
-						            	// Bug #34894@Syazani 11/07/2023 -- End
-						            	subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
-						            }
-						    		newWord = subSb.toString();	
-									sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
-						    	}else{
-									sb.append(word).append(TemplateDocConst.PARAM_SPACE);
-							 }
-						 }
-						 clSpecDetail=sb.toString();
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER,TemplateDocConst.PARAM_SPACE);
-						 //end Bug #28274
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.AMBRA_SENT,TemplateDocConst.PARAM_SPACE);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.LESS_THEN,TemplateDocConst.PARAM_SPACE);
-						 clSpecDetail=clSpecDetail.replaceAll(QTConstants.GREATER_THEN,TemplateDocConst.PARAM_SPACE);
+					} else {
+						// Bug #36702@Syazani 28/11/2024 -- Start
+						String clSpecDetail = VmUtil.getInstance().splitText(question.getClSpecDetail(), QTConstants.QT_VM_SPLIT_MAXLENGTH);
+						// Bug #36702@Syazani 28/11/2024 -- End
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.NEW_LINE_CHARACTER, TemplateDocConst.PARAM_SPACE);
+						// end Bug #28274
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.AMBRA_SENT, TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.LESS_THEN, TemplateDocConst.PARAM_SPACE);
+						clSpecDetail = clSpecDetail.replaceAll(QTConstants.GREATER_THEN, TemplateDocConst.PARAM_SPACE);
 						question.setClSpecDetail(clSpecDetail);
 					}
 					if (question.getClUom() != null) {
@@ -2273,9 +2232,7 @@ public class QTDocumentsBackingBean extends
 		} finally {
 			specSO = null;
 		}
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_QT_SPECIFICATION, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SPECIFICATION, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -2619,20 +2576,22 @@ public class QTDocumentsBackingBean extends
 		if (qt.isBsvRequired()) {
 			QTDetailBackingBean backingBean = new QTDetailBackingBean();
 			backingBean.retrieveBriefingSitevisitTabDtl();
-			List<BriefingZoneBean> briefingZoneBean = this.getManagedBean()
-					.getBriefingZoneBean();
-			if (briefingZoneBean != null && !briefingZoneBean.isEmpty()) {
+			// Bug #36702@Syazani 28/11/2024 -- Start
+			List<BriefingZoneBean> briefingZoneBean = CustomUtils.getInstance().deepCopyArrayList(
+					this.getManagedBean().getBriefingZoneBean());
+			if (!CollectionUtils.isEmpty(briefingZoneBean)) {
 				isZone = true;
-				for (BriefingZoneBean zoneBean : this.getManagedBean()
-						.getBriefingZoneBean()) {
+				for (BriefingZoneBean zoneBean : briefingZoneBean) {
+					splitBriefingZoneBeanText(zoneBean);
+					// Bug #36702@Syazani 28/11/2024 -- End
 					zoneBeans.add(zoneBean);
 				}
 			} else {
-				BriefingZoneBean bsvDtlBean = this.getManagedBean()
-						.getBsvDtlBean();
-				if (null == bsvDtlBean) {
-					bsvDtlBean = this.getManagedBean().getBsvDtlBean();
-				}
+				// Bug #36702@Syazani 28/11/2024 -- Start
+				BriefingZoneBean bsvDtlBean = new BriefingZoneBean(this.getManagedBean()
+						.getBsvDtlBean());
+				splitBriefingZoneBeanText(bsvDtlBean);
+				// Bug #36702@Syazani 28/11/2024 -- End
 				zoneBeans.add(bsvDtlBean);
 			}
 			context.put("isZone", isZone);
@@ -3188,5 +3147,26 @@ public class QTDocumentsBackingBean extends
 				
 				return tplDocMaster;
 	}
+	
+	// Bug #36702@Syazani 28/11/2024 -- Start
+	private void splitBriefingZoneBeanText(BriefingZoneBean zoneBean) {
+		List<ScQtBsvDtl> briefingLst = zoneBean.getBriefingList();
+		ScAddress scAddress;
+		if (!CollectionUtils.isEmpty(briefingLst)) {
+			for (ScQtBsvDtl sqbd : briefingLst) {
+				sqbd.setBsvDesc(VmUtil.getInstance().splitText(sqbd.getBsvDesc(), QTConstants.QT_VM_SPLIT_MAXLENGTH));
+				if (null != sqbd.getAddress()) {
+					scAddress = sqbd.getAddress();
+					scAddress.setAddress1(VmUtil.getInstance().splitText(scAddress.getAddress1(),
+							QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress2(VmUtil.getInstance().splitText(scAddress.getAddress2(),
+							QTConstants.QT_VM_SPLIT_MAXLENGTH));
+					scAddress.setAddress3(VmUtil.getInstance().splitText(scAddress.getAddress3(),
+							QTConstants.QT_VM_SPLIT_MAXLENGTH));
+				}
+			}
+		}
+	}
+	// Bug #36702@Syazani 28/11/2024 -- End
 
 }

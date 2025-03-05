@@ -487,7 +487,23 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 						resDTO.getSmApplInquiry()
 								.getSmApplSupportDocInquiries());
 	}
+	
+	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+		
+		SupportingDocInquiryResDTO resDTO = reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
 
+		return resDTO.getSmApplInquiryDocFileList();
+	}
 	// #34392 - end
 	
 /*	public void retrieveBusinessTypeList(){

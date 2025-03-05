@@ -149,7 +149,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 		this.getManagedBean().setApproverRemark(null);
 		
-		//#34209 - START
+		//#30766 & #34209 - START
 		getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
 		for(SmSupplierCategory supCat : this.getManagedBean().getSmAppl().getSmSupplierCategories()){
 			if(supCat.getRecordStatusFlg().equals(SupplierManagementConst.RECORD_STATUS_ACTIVE) && supCat.isSpecialCategory()){
@@ -158,10 +158,9 @@ public class SupplierDataMaintenanceBackingBean extends
 				} else {
 					getManagedBean().getTempCategoryLs().put(supCat.getSupplierCategoryId(), "");
 				}
-				
 			}
 		}
-		//#34209 - END
+		//#30766 & #34209 - END
 	}
 
 	/**
@@ -256,6 +255,11 @@ public class SupplierDataMaintenanceBackingBean extends
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 					if (cat.getOtherDesc() != null) {
 						isCategoryDescriptionHasChanged = true;
+						//#37605
+						if(!SmApplicationUtil.convertToAscii(cat.getOtherDesc())){
+							throw new EpException(MessageConst.ERROR_760555);
+						}
+						cat.setOtherDesc(SmApplicationUtil.replaceTabWSpace(cat.getOtherDesc()));
 					}
 				}
 			}
@@ -334,7 +338,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				listSmTrackingDiary.add(smTrackingDairyVO);
 			}
 			
-			//#34209 - START
+			//#30766 & #34209 - START
 			//set tracking diary for other description if changed
 			for(SmSupplierCategory latestCat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 				if(latestCat.getOtherDesc()==null){
@@ -351,7 +355,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						listSmTrackingDiary.add(smTrackingDairyVO);
 				}
 			}
-			//#34209 - END
+			//#30766 & #34209 - END
 			
 			reqDTO.setSmTrackingDiaryVOList(listSmTrackingDiary);
 			
@@ -921,14 +925,15 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void deleteSelectedPendingApprovalCategoryCodes(
 			List<SmSupplierCategory> selectedCategories) {
 		if (selectedCategories != null && selectedCategories.size() > 0) {
-			//#34209 - START
+			//#30766 & #34209 - START
 			if(selectedCategories.size() >= getManagedBean().getApprovedCategoryList().size()){
 				throw new EpException(MessageConst.ERROR_722708);
 			} else {
 				List<SmSupplierCategory> categories = selectedCategories;
 				deleteCatCodes(categories);
 			}
-			//#34209 - END
+			//#30766 & #34209 - END
+
 			// API FOR LIST OF OVERLAPPING CATEGORIES
 			//Redmine #18959 - no need to check overlapping
 			//setOverLappingCategories();
@@ -983,7 +988,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					} else if (delCat.getRecordStatusFlg() == SupplierManagementConst.APPROVED_RECORD_STATUS) {
 						apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 						apprCat.setCancelledDate(new Date());
-						apprCat.setChangedBy(null); //#34209 - START_END
+						apprCat.setChangedBy(null); //#30766 & #34209 - START_END
 						getManagedBean().getDeleteApprovedCategories().add(apprCat);
 					}
 				}
@@ -1001,8 +1006,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setCategoryL2Name(cat.getPmCategoryL2().getCategoryName());
 				cat.setCategoryL3Name(cat.getPmCategoryL3().getCategoryName());
 				cat.setApprovedDate(new Date());
-				cat.setApprvrDecFlg(1);		//#34209 START
-				cat.setPoDecFlg(null);		//#34209 END
+				cat.setApprvrDecFlg(1);		//#30766 & #34209 - START
+				cat.setPoDecFlg(null);		//#30766 & #34209 - END
 				SmApplicationUtil.setSupplierCategoryEffectiveDate(cat,
 						getManagedBean().getSmAppl().getApplType());
 			}
@@ -1441,7 +1446,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				.append(oriPoApprOverlappedRemark).append(" kepada ")
 				.append(latestPoApprOverlappedRemark).append(" oleh ").append(user.getUserName());
 		break;
-		//#34209 - START
+		//#30766 & #34209 - START
 		case "OD": //Other Description
 			PmUser curUser = new FacesScopes().getUserSessionBean();
 			sb.append("Keterangan Lain bagi bidang ");
@@ -1452,7 +1457,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			sb.append(reqDTO.getNewDesc());
 			sb.append(" oleh ").append(curUser.getUserName());
 		break;
-		//#34209 - END
+		//#30766 & #34209 - END
+
 		default:
 			sb = new StringBuffer();
 			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);

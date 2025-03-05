@@ -60,9 +60,18 @@
 					     </p:column>
 					     
 					     <p:column style="width:15%;" styleClass="column-align-center">
+					     <!-- #26686 Start-->
 					     <f:facet name="header">
 					         <h:outputText value="#{lbl['lbl.ct.contract.signer']}" styleClass="required"/>
-					        </f:facet>
+					         &#160;
+					         <p:graphicImage id="contractsignerImg" value="/css/images/design/ico-tooltips.png" />
+					         <p:tooltip for="contractsignerImg">
+				      		 <h:outputText value="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement 
+					         ? lbl['lbl.ct.tooltip.supplemental.agreement.signer'] : lbl['lbl.ct.tooltip.agreement.signer']}" 
+					         style="max-width:400px !important; white-space:normal; display:block;; text-align: justify;"/>
+				   			 </p:tooltip>
+					      </f:facet>
+                 		 <!-- #26686 End-->
                  
                              <p:selectOneMenu id="contractSigner" style="width:180px;" value="#{agSignerVar.officer.userId}" label="#{lbl['lbl.ct.contract.signer']}">
                                  <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>

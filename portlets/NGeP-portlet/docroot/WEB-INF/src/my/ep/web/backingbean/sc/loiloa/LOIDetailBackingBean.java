@@ -82,6 +82,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -832,13 +833,13 @@ public class LOIDetailBackingBean extends
 					}
 					if (CollectionUtils.isNotEmpty(zoneDetails)) {
 						this.getManagedBean().setMultiLOIZoneDetails(zoneDetails);
+						generateZoneMenuModel();// 33380 - change position 
 						this.getManagedBean().setSelectedZone(zoneDetails.get(0));
 						this.getManagedBean().setZoneActiveIndex(
 									zoneDetails.get(0).getZoneTabIndex());
 						this.getManagedBean().setScQtRecommendsByZone(scQtRecommendsByZone);
 						processMultiLOIDetails(recommendType, 
 								scQtRecommendsByZone.get(zoneDetails.get(0).getSpecZoneId()));					
-						generateZoneMenuModel();
 					}					
 				} else {
 					processMultiLOIDetails(recommendType, scQtRecommendList);
@@ -1593,6 +1594,8 @@ public class LOIDetailBackingBean extends
 
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setButtonFlag(false);
+		getManagedBean().setReadOnly(false);// 36293
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		fc.getApplication()
@@ -1898,7 +1901,7 @@ public class LOIDetailBackingBean extends
 						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 						if(offeredPriceSubTotal != null){
 							scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
-							offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal).setScale(2, BigDecimal.ROUND_UP);
+							offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						}
 
 						// final price sub total and total - for bidding.
@@ -1909,13 +1912,13 @@ public class LOIDetailBackingBean extends
 							
 							// For bid re finalization final price as bid offer price - subtotal
 							scLoiLoaItem.setBidFinalPriceSubTotal(finalPriceSubTotal);
-							finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal).setScale(2, BigDecimal.ROUND_UP);
+							finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 						}
 
 						// after nego unit price sub total and total
 						afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), quantity);
 						if (afterNegoSubTotal != null) {
-							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal).setScale(2, BigDecimal.ROUND_UP);
+							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal).setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
 							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
 
 						}
@@ -3829,6 +3832,7 @@ public class LOIDetailBackingBean extends
 		Object payLoadData = getManagedBean().getPayLoad();
 		Long sourceId = getManagedBean().getSourceId();
 		String taskId = getManagedBean().getTaskId();
+		String taskName = getManagedBean().getTaskName();// 33380
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
 		String docType = getManagedBean().getDocType();
@@ -3847,6 +3851,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setSourceId(sourceId);
 		getManagedBean().setPayLoad(payLoadData);
 		getManagedBean().setTaskId(taskId);
+		getManagedBean().setTaskName(taskName);// 33380
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
 		getManagedBean().setBackToPreviousPage(backToPreviousPage);
@@ -5343,8 +5348,9 @@ public class LOIDetailBackingBean extends
 					}
 					offeredQuantity = offeredQuantity.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
-					BigDecimal offerPrice = proposalItem.getOfferPrice();
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					//Bug #36417 - start
+					BigDecimal finalPrice = proposalItem.getFinalPrice(); 
+					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					
 					ScRequestItem requestItem = recommendDtl
 							.getScQtRecommend().getRequestItem();
@@ -5352,7 +5358,8 @@ public class LOIDetailBackingBean extends
 					BigDecimal offeredPrice = TemplateSpecHelper
 							.getInstance().calculateTotalAmount(
 									requestItem.getTplSpecQuestion(),
-									offerPrice, offeredQuantity);
+									finalPrice, offeredQuantity);
+					//Bug #36417 - end
 					if (offeredPrice != null) {
 						offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					}
@@ -6106,6 +6113,12 @@ public class LOIDetailBackingBean extends
 	 * @return true, if is loi required disabled
 	 */
 	public boolean isLoiRequiredDisabled(ScLoiLoa scLoiLoa){
+		// 36293 - start
+		if (scLoiLoa.isLoiRequiredDisabled()) {
+			return Boolean.TRUE;
+		}
+		// 36293 - end
+
 		if(CollectionUtils.isNotEmpty(scLoiLoa.getScLois())){
 			ScLoi scLoi =  scLoiLoa.getScLois().get(0);
 			if(scLoi.getScWorkFlowStatus() != null){
@@ -6152,28 +6165,45 @@ public class LOIDetailBackingBean extends
 		return scLoiAttachment;
 	}
 	
+	// 6906 - start - fix for #436
 	private void checkIsLoiProcessRequired(List<ScLoiLoa> pendingLoiLoas) {
-		boolean isSubmitButton = true;
+		this.getManagedBean().setLoiRequired(false);
+		boolean isAllLoiRequired = true;
+
 		for (ScLoiLoa loiLoa : pendingLoiLoas) {
-
-			if (null != loiLoa.getLoiRequired()) {
-				if(loiLoa.getLoiRequired() && loiLoa.isLoiLoaActive()){
-					isSubmitButton = Boolean.FALSE;
-					break;
-				}
-
-			} else{
-				isSubmitButton = Boolean.FALSE;
-				break;
+			if (!loiLoa.isLoiLoaActive()) {
+				continue;
+			}
+			if (null == loiLoa.getLoiRequired()
+					|| (loiLoa.getLoiRequired() && (!checkIfAllLoiCompleted(loiLoa.getScLois()) || !isLoiRequiredDisabled(loiLoa)))) {
+				this.getManagedBean().setLoiRequired(false);
+				return;
+			}
+			if (!loiLoa.getLoiRequired()) {
+				isAllLoiRequired = false;
 			}
 		}
-
-		if (isSubmitButton) {
-			getManagedBean().setLoiRequired(Boolean.TRUE);
-		} else {
-			getManagedBean().setLoiRequired(Boolean.FALSE);
-		}
+		this.getManagedBean().setLoiRequired(!isAllLoiRequired);
 	}
+
+	private boolean checkIfAllLoiCompleted(List<ScLoi> lois) {
+		if (CollectionUtils.isEmpty(lois)) {
+			return false;
+		}
+		for (ScLoi loi : lois) {
+			PmStatus status = null != loi.getScWorkFlowStatus() && null != loi.getScWorkFlowStatus().getPmStatus() ? loi
+					.getScWorkFlowStatus().getPmStatus() : new PmStatus();
+			Long statusId = null != status.getStatusId() ? status.getStatusId() : 0L;
+
+			if (!QTStatusConst.LOI_COMPLETED.equals(statusId)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// 6906 - end - fix for #436
+
 	
 	//Enhancement #21573 To have confirmation box for reject/acknowledge button at document LOI/LOA		
 	/**
