@@ -1170,6 +1170,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	//#21692 - Start
+	/**
+	 * Procurement Board Secretary's Submission action for status Pending Approval.
+	 * Approval will be based on Decision column in supplierFinalizationCommitteeApproval.xhtml
+	 * it can be Approved, Rejected, Revised.
+	 * Rejected and Revised will use same flow, but different Parameters and Notifications.
+	 */
 	public void submitAction() {
 		log.info("Submit proposal validity Period (Days) extension");
 
@@ -1194,7 +1200,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		this.getManagedBean().setQt(scQt);
 
-		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecisionType().getParameterCode());
@@ -1231,33 +1237,38 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		this.getManagedBean().setScQtApprovalRequestList(scQtApprovalRequests);
 		checkNullRemark();
-		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-
-			Long decisionType = approvalRequest.getDecisionType().getParameterId();
-
-			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decisionType.longValue()
-					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decisionType.longValue()) { //1834L || 1854L
-				
-				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
-				notifyUsers(approvalRequest);
-			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decisionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decisionType.longValue()) { //1835L || 1855L
-
-				reviseRemarkMandatory();//#21692 remark is mandatory for reject.
-				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
-				notifyUsers(approvalRequest);
-//				prepareTrackingDiary(this.getManagedBean().getQt(), decisionType);//#21692 Re-open
-			} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decisionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decisionType.longValue()) {
-				reviseRemarkMandatory();
-				this.getManagedBean().setProposalValidityRevised(true);
-				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);//Revised, but use reject due to Revise flow == Reject flow
-				notifyUsers(approvalRequest);
-			}
-			
+		for (ScQtApprovalRequest request : this.getManagedBean().getScQtApprovalRequestList()) {
+			procurementBoardSecretaryDecision(request);
 		}
 	}
 	//#21692 - End
+	
+	//#21692 sonarlint - Start
+	private void procurementBoardSecretaryDecision(ScQtApprovalRequest approvalRequest) {
+
+		Long decisionType = approvalRequest.getDecisionType().getParameterId();
+
+		if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decisionType.longValue()
+				|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decisionType.longValue()) { //1834L || 1854L
+			
+			approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
+			notifyUsers(approvalRequest);
+		} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decisionType.longValue()
+				|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decisionType.longValue()) { //1835L || 1855L
+
+			reviseRemarkMandatory();//#21692 remark is mandatory for reject.
+			approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
+			notifyUsers(approvalRequest);
+			//previously line of code for Tracking Diary, removed to avoid duplication
+		} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decisionType.longValue()
+				|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decisionType.longValue()) {
+			reviseRemarkMandatory();
+			this.getManagedBean().setProposalValidityRevised(true);
+			approvalBpmTask(BpmOutcomeConst.BPM_REJECT);//Revised, but use reject due to Revise flow == Reject flow
+			notifyUsers(approvalRequest);
+		}
+	}
+	//#21692 sonarlint - End
 	
 	/**
 	 * Submit Approval Details. Event handle to submit data for bpm.
