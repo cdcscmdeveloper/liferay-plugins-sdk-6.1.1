@@ -6,20 +6,27 @@ package my.ep.web.backingbean.report.ct;
 
 import java.util.LinkedHashMap;
 
+import javax.faces.application.FacesMessage; //#29416
+import javax.faces.context.FacesContext; //#29416
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.SearchBean; //#29416
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
+import my.ep.constant.MessageConst; //#29416
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.report.RPTRequestDtlReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestReqDTO;
 import my.ep.dto.pm.common.report.RPTRequestResDTO;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;//#29416
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.MessageUtils;//#29416
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
+import my.ep.web.backingbean.report.ct.cc.ContractItemMonitoringCCRptBackingBean; //#29416
 import my.ep.web.constant.report.CtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ct.CtReportBaseManagedBean;
@@ -204,4 +211,162 @@ public abstract class CtReportBaseBackingBean<T extends CtReportBaseManagedBean>
 		}	
 		return items;
 	}
+	
+	// Start - #29416
+	public void checkValue() {
+		// Get the bean instance
+		if (getManagedBean().getLovSelectedItemList() != null) {
+			StringBuilder sb = new StringBuilder();
+			for (CtContractItem item : getManagedBean().getLovSelectedItemList()) {
+				if (sb.length() > 0) {
+					sb.append(", "); // Add comma before appending next item
+				}
+				sb.append(item.getContractItemId());
+			}
+			getManagedBean().setContractItemId(sb.toString());
+		}
+	}
+
+	/**
+	 * To set contractNo in searchbean
+	 */
+	public void onChangeContractNo() {
+		String contractNo = getManagedBean().getContractNo(); // Store value in
+																// a variable
+		if (contractNo != null) {
+			SearchBean searchbeanz = new SearchBean();
+			searchbeanz.setDocNo(contractNo);
+		}
+	}
+
+	/**
+	 * @param bean
+	 * @return boolean result based on validateBeforeExecuteLov
+	 */
+	public boolean getManagedBeanFromLovBBean(Object bean) {
+		boolean validationStatus = false;
+		if (bean == null) {
+			return validationStatus;
+		}
+		if (bean instanceof CtReportBackingBean) {
+			CtReportBackingBean mcReportBean = (CtReportBackingBean) bean;
+			validationStatus = validateBeforeExecuteLov(mcReportBean);
+		} else if (bean instanceof ContractItemMonitoringCCRptBackingBean) {
+			ContractItemMonitoringCCRptBackingBean ccReportBean = (ContractItemMonitoringCCRptBackingBean) bean;
+			validationStatus = validateBeforeExecuteLov(ccReportBean);
+		}
+		return validationStatus;
+	}
+
+	/**
+	 * Validates the contract number in the given {@link CtReportBackingBean}
+	 * before executing the LOV process.
+	 * <p>
+	 * This method checks if the contract number in the managed bean of
+	 * {@code mcReportBackingBean} is:
+	 * <ul>
+	 * <li>Null or empty: Logs a message and adds an error message to the JSF
+	 * context.</li>
+	 * <li>Not exactly 17 characters long: Logs a message and adds an error
+	 * message to the JSF context.</li>
+	 * </ul>
+	 * If any validation fails, an error message is displayed in the UI using
+	 * {@link FacesContext}.
+	 * </p>
+	 * 
+	 * @param mcReportBackingBean
+	 *            The backing bean containing the managed bean with the contract
+	 *            number.
+	 * @return {@code true} if validation fails (error detected), otherwise
+	 *         {@code false}.
+	 */
+	public boolean validateBeforeExecuteLov(CtReportBackingBean mcReportBackingBean) {
+		boolean isError = false;
+		if (mcReportBackingBean.getManagedBean().getContractNo() == null
+				|| mcReportBackingBean.getManagedBean().getContractNo().isEmpty()) {
+			isError = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_750083,
+									new String[] {
+											ResourceBundleUtils.getMessage("lbl.rpt.itmName",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()),
+											ResourceBundleUtils.getMessage("lbl.ct.contract.no",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+		} else if (mcReportBackingBean.getManagedBean().getContractNo() != null
+				&& mcReportBackingBean.getManagedBean().getContractNo().length() != 17) {
+			isError = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_750084, new String[] { ResourceBundleUtils.getMessage(
+									"lbl.ct.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+		return isError;
+	}
+
+	/**
+	 * Validates the contract number in the given {@link ccReportBackingBean}
+	 * before executing the LOV process.
+	 * <p>
+	 * This method checks if the contract number in the managed bean of
+	 * {@code ccReportBackingBean} is:
+	 * <ul>
+	 * <li>Null or empty: Logs a message and adds an error message to the JSF
+	 * context.</li>
+	 * <li>Not exactly 17 characters long: Logs a message and adds an error
+	 * message to the JSF context.</li>
+	 * </ul>
+	 * If any validation fails, an error message is displayed in the UI using
+	 * {@link FacesContext}.
+	 * </p>
+	 * 
+	 * @param ccReportBackingBean
+	 *            The backing bean containing the managed bean with the contract
+	 *            number.
+	 * @return {@code true} if validation fails (error detected), otherwise
+	 *         {@code false}.
+	 */
+	public boolean validateBeforeExecuteLov(ContractItemMonitoringCCRptBackingBean ccReportBackingBean) {
+		boolean isError = false;
+		if (ccReportBackingBean.getManagedBean().getContractNo() == null
+				|| ccReportBackingBean.getManagedBean().getContractNo().isEmpty()) {
+			isError = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(
+									MessageConst.ERROR_750083,
+									new String[] {
+											ResourceBundleUtils.getMessage("lbl.rpt.itmName",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()),
+											ResourceBundleUtils.getMessage("lbl.ct.contract.no",
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+													new FacesScopes().getUserLocale()) },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+		} else if (ccReportBackingBean.getManagedBean().getContractNo() != null
+				&& ccReportBackingBean.getManagedBean().getContractNo().length() != 17) {
+			isError = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.ERROR_750084, new String[] { ResourceBundleUtils.getMessage(
+									"lbl.ct.contract.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+		return isError;
+	}
+
+	// End - #29416
 }
