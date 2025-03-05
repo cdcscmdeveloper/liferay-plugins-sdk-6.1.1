@@ -128,9 +128,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.workshop.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smWrkShpName"
+							label="#{lbl['lbl.sm.facility.workshop.name']}" id="smWrkShpName"
 							value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
