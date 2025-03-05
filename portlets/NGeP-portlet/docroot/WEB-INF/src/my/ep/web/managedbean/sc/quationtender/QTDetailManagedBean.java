@@ -33,6 +33,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtContract;//25791
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -214,6 +215,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The circular exp date. */
 	private Date circularExpDate;
+	
+	//#29661 start
+	/** The circular exp date. */
+	private List<CtPanelCategory> ctPanelCategoryCode;
+	
+	/** The boolean determine ct panel category */
+	private boolean ctPanelCategory;
+	//#29661 end
 	
 	// Drop down Listing for Approver
 	private List<PmUser> ministrySpecApprovers; 
@@ -12204,4 +12213,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	//37813,35384 -end
+
+	//#29661 start
+	public List<CtPanelCategory> getCtPanelCategoryCode() {
+		return ctPanelCategoryCode;
+	}
+
+	public void setCtPanelCategoryCode(List<CtPanelCategory> ctPanelCategoryCode) {
+		this.ctPanelCategoryCode = ctPanelCategoryCode;
+	}
+
+	public boolean isCtPanelCategory() {
+		return ctPanelCategory;
+	}
+
+	public void setCtPanelCategory(boolean ctPanelCategory) {
+		this.ctPanelCategory = ctPanelCategory;
+	}
+	//#29661 end
 }

@@ -33,7 +33,9 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.ICtPanelCategorySO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.circular.IPanelGroupItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -210,7 +212,8 @@ public class CreateQtBackingBean extends
 			this.getManagedBean().setCircularExpDate(circular.getEndDate());
 			this.getManagedBean().setCircularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
-			
+			this.getManagedBean().setCircularVer(circular);//#29661 			
+						
 			if(null!=scQt.getItemGroup() && null!=scQt.getItemGroup().getPanelItemGroupId()){
 			deleteTemplateSpecs(getManagedBean().getQt());
 			}
@@ -3025,10 +3028,30 @@ public class CreateQtBackingBean extends
 	 * 		the scQt
 	 */
 	public void setFileNo(ScQt scQt) {
-		scQt.getFileNo();
+		//#29661 start
+		String fileNo = scQt.getFileNo();
+		fileNo = trimFileNo(fileNo);
+		scQt.setFileNo(fileNo);
+		//#29961 end
 		
 	}
 	
+	/**
+	 * #29661
+	 * trim file no from quotation tender's general details
+	 * @param fileNo
+	 * @return
+	 */
+	private String trimFileNo(String fileNo) {
+		if (!(fileNo == null || fileNo.isEmpty())){
+			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");//first character condition
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");//last character condition
+			fileNo = fileNo.trim().replaceAll(" +", " ");//one white space only condition
+		}
+		return fileNo;
+		
+	}
+
 	/**
 	 * QT Title value change listener
 	 * 

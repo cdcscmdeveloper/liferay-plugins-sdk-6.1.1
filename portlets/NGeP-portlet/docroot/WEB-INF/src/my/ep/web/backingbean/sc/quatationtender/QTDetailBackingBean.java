@@ -53,6 +53,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.bean.search.sc.QTSearchBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.ICtPanelCategorySO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -176,6 +177,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelCategory;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItemGroup;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
@@ -983,7 +985,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				retrieveApprovalTabDtl();
 			}
 			//bug #30435 - end
-			
+			convertPanelCategoryCodeToScQtCategory(this.getManagedBean().getCtPanelCategoryCode());//#29661
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
 			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
@@ -2057,7 +2059,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		scQt.setScQtCommittees(qtCommitteList);
 		// Code for to update the supplier qualification criteria
 		/* List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>(); */
-		if (!this.getManagedBean().getQt().isPanel()) {
+		//if (!this.getManagedBean().getQt().isPanel()) {//#29661 commented panel checking for inserting ct panel category
 			if (this.getManagedBean().getQt().getQtType()
 					.equals(ParameterConst.QUOTATION_TENDER_TYPE_OPEN)) {
 				List<ScQtCategory> openList = this.getManagedBean()
@@ -2098,7 +2100,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 
 			}
-		}
+		//} #29611
 		
 		if (scQt.getScQtSupplierCriteria() != null
 				&& !scQt.getScQtSupplierCriteria().isAllState()) {
@@ -14086,5 +14088,64 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//12471 - End - Dayan
 
+	/**
+	 * #29661
+	 * Get category code list 
+	 */
+	public void getPanelCategory() {
+		List<ScQtCategory> listScQtCategories = getQtSpecSO().retrieveScQtCategorytByQtID(getManagedBean().getQt().getQtId());
+		Long status = this.getManagedBean().getQt().getQtStatus().getStatusId();
+		if (CollectionUtils.isNotEmpty(listScQtCategories)){
+			this.getManagedBean().setQtCategoryList(listScQtCategories);
+			this.getManagedBean().setCtPanelCategory(false);
+		}else if (status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
+			Long circularVerId = this.getManagedBean().getQt().getCircularVer().getCircularVerId();
 
+			ICtPanelCategorySO ctPanelCategorySO = (ICtPanelCategorySO) EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICtPanelCategorySO.class);
+
+			List<CtPanelCategory> ctPanelCategorycode = new ArrayList<>();
+			ctPanelCategorycode = ctPanelCategorySO.retrievePanelCategoryCodeByCircularVerId(circularVerId);
+			this.getManagedBean().setCtPanelCategoryCode(ctPanelCategorycode);
+			this.getManagedBean().setCtPanelCategory(true);
+		}
+	}
+
+	/**
+	 * #29661
+	 * get parameter description by sc_qt_category's category type
+	 * @param categoryType
+	 * @return
+	 */
+	public String getParameterDescByString(String categoryType){
+		PmParameter pmParameter = this.retrieveParameterById(Long.valueOf(categoryType));
+		return this.getParameterDesc(pmParameter);
+	}
+	
+	/**
+	 * #29661
+	 * Convert CT panel category code data to ScQt category code data 
+	 * @param panelCategoryCodeList
+	 */
+	private void convertPanelCategoryCodeToScQtCategory(List<CtPanelCategory> panelCategoryCodeList) {
+		
+		if (CollectionUtils.isNotEmpty(panelCategoryCodeList)) {
+
+			List<ScQtCategory> scQtCategoryListNew = new ArrayList<>();
+			for (CtPanelCategory panelCategoryCode : panelCategoryCodeList) {
+				ScQtCategory scQtCategory = new ScQtCategory();
+				scQtCategory.setCategoryType(String.valueOf(panelCategoryCode.getCategoryType().getParameterId()));
+				scQtCategory.setPmCategoryL1(panelCategoryCode.getPmCategoryL1());
+				scQtCategory.setPmCategoryL2(panelCategoryCode.getPmCategoryL2());
+				scQtCategory.setPmCategoryL3(panelCategoryCode.getPmCategoryL3());
+				scQtCategory.setPmCategoryL1Name(panelCategoryCode.getPmCategoryL1Name());
+				scQtCategory.setPmCategoryL2Name(panelCategoryCode.getPmCategoryL2Name());
+				scQtCategory.setPmCategoryL3Name(panelCategoryCode.getPmCategoryL3Name());
+				scQtCategory.setMandatory(false);
+				scQtCategory.setScQt(this.getManagedBean().getQt());
+				scQtCategoryListNew.add(scQtCategory);
+			}
+			this.getManagedBean().setQtCategoryList(scQtCategoryListNew);
+		} 
+	}
 }
