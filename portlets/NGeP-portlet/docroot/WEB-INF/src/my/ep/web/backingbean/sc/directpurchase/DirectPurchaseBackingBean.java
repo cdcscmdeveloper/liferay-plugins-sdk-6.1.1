@@ -1705,8 +1705,11 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 */
 	public List<ScRequestNoteDtl> addSelectedRequestNoteDtls(List<ScRequestNoteDtl> tempRnDtls, Long purchaseRequestId){
 		log.info("Bug 36729 addSelectedRequestNoteDtls");
+		log.info("Bug 36729 tempRnDtls size2 : " + tempRnDtls.size());
+		log.info("Bug 36729 purchaseRequestId2 : " + purchaseRequestId);
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for(ScRequestNoteDtl rnDtl : tempRnDtls){
+			log.info("Bug 36729 getPurchaseRequestId : " + rnDtl.getPurchaseRequest().getPurchaseRequestId());
 			if(purchaseRequestId == rnDtl.getPurchaseRequest().getPurchaseRequestId()){
 				log.info("Bug 36729 in");
 				requestNoteDtls.add(rnDtl);
