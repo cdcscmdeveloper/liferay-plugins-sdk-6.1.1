@@ -3940,7 +3940,10 @@ public class SmApplicationBackingBean extends
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
 							if (StringUtils.isBlank(getManagedBean()
 									.getApplnRejectionRemarks())) {
-								throw new EpException("Rejection Remarks is mandatory.");
+								//#37896, 15629 - Start
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+										null));
+								//#37896,15629 - End
 							}
 						}
 						
@@ -3959,8 +3962,10 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Reject reason in mandatory."));		
+			//#37896, 15629 - Start
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+					null)); 
+			//#37896, 15629 - End
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
