@@ -208,8 +208,10 @@ public class QTCloneBackingbean extends
 		if(QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(statusId)){
 			TreeNode descendent1 = new DefaultTreeNode(new QTSelectionNode(getLabel(QT_DETAILS),1L), child);
 			descendent1.setParent(child);
-			descendent1.setSelected(true);
-			descendent1.setSelectable(false);
+			//25635-start
+			descendent1.setSelected(Boolean.TRUE);
+			descendent1.setSelectable(Boolean.TRUE);
+			//25635-end
 			TreeNode descendent2 = new DefaultTreeNode(new QTSelectionNode(getLabel(SUPPLIER_QUALIFICATION_CRITERIA),2L), child);
 			descendent2.setParent(child);
 			TreeNode descendent3 = new DefaultTreeNode(new QTSelectionNode(getLabel(COMMITTEE_APPOINTMENT),3L), child);
@@ -897,6 +899,9 @@ public class QTCloneBackingbean extends
 					retrieveDocs(copyScqt);
 					retrievePublicationApprovalTabDtl(copyScqt);
 					retriveFulfilmentDtls(copyScqt);//33916
+					//37892,25635 -start-
+					setOtherApprovalLoaded();
+					//37892,25635 -end-
 				}
 				
 			}
@@ -5191,4 +5196,18 @@ public class QTCloneBackingbean extends
 		}
 		return startMonth;
 	}//33916
+	
+	// 37892,25635 -start-
+	/**
+	 * check other approval tab loaded during clone.
+	 */
+	private void setOtherApprovalLoaded() {
+		List<TabBean> approvalOthersTab = this.getManagedBean()
+				.getTabOtherApproval();
+		if (CollectionUtils.isEmpty(approvalOthersTab)) {
+			this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+		}
+	}
+	// 37892,25635 -end-
+	
 }
