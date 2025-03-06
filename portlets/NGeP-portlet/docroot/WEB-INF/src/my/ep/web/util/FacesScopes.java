@@ -302,7 +302,6 @@ public class FacesScopes implements Serializable {
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
 		try {
-			System.out.println("---> e62nm9mdea this.getRequest().getRemoteUser() " + this.getRequest().getRemoteUser());
 			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
 			userRoleList = user.getRoles();
 			
