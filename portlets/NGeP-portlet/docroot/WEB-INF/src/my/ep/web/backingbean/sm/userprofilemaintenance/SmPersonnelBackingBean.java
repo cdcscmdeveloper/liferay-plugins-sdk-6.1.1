@@ -931,12 +931,12 @@ public class SmPersonnelBackingBean extends
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
 		}else{
-			SmAddress prevAddr = getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress();
-			Long prevCountry = getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId();
-			Long prevState = getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId();
-			PmDivision prevDivision = getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision();
-			Long prevDistrict = getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId();
-			Long prevCity = getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().getPmCity().getCityId();
+			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().cloneEntity();
+			Long prevCountry = prevAddr.getPmCountry().getCountryId();
+			Long prevState = prevAddr.getPmState().getStateId();
+			PmDivision prevDivision = prevAddr.getPmDivision();
+			Long prevDistrict = prevAddr.getPmDistrict().getDistrictId();
+			Long prevCity = prevAddr.getPmCity().getCityId();
 			//#36718 - END
 		if(prevAddr.getAddress1() == null && prevCountry == null){
 				destAddr.setSmAddress(new SmAddress());
@@ -1861,7 +1861,8 @@ public class SmPersonnelBackingBean extends
 								.setBasicSmPersonnelMailingAddress(smPA);
 						
 						//#36718 - START
-						this.getManagedBean().setLatestBasicSmPersonnelMailingAddress((SmPersonnelAddress) smPA.cloneEntity());
+						this.getManagedBean().setLatestBasicSmPersonnelMailingAddress((SmPersonnelAddress) smPA.deepCopy());
+						this.getManagedBean().setLatestBasicSmPersonnelMailingAddress((SmPersonnelAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().cloneEntity());
 						//#36718 - END
 						}
 					} else if (smPA.getAddressType().equalsIgnoreCase(

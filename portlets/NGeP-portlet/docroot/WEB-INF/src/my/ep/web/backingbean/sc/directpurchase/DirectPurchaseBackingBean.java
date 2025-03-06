@@ -651,10 +651,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				
 				//#36729 - Start
 				List<ScRequestNoteDtl> tempRnDtls = requestNoteResDTO.getRequestNoteDtlList();
-				log.info("Bug 36729 tempRnDtls  size: " + tempRnDtls.size());
-				log.info("Bug 36729 purchaseRequestId : " + purchaseRequestId);
 				requestNoteDtls = addSelectedRequestNoteDtls(tempRnDtls, purchaseRequestId);
-				log.info("Bug 36729 requestNoteDtls : " + requestNoteDtls.size());
 				//#36729 - End					
 			}
 			
@@ -1704,15 +1701,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @return list of selected requestNoteDtls           
 	 */
 	public List<ScRequestNoteDtl> addSelectedRequestNoteDtls(List<ScRequestNoteDtl> tempRnDtls, Long purchaseRequestId){
-		log.info("Bug 36729 addSelectedRequestNoteDtls");
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for(ScRequestNoteDtl rnDtl : tempRnDtls){
-			if(purchaseRequestId == rnDtl.getPurchaseRequest().getPurchaseRequestId()){
-				log.info("Bug 36729 in");
+			if(purchaseRequestId.compareTo(rnDtl.getPurchaseRequest().getPurchaseRequestId()) == 0){
 				requestNoteDtls.add(rnDtl);
 			}
 		}
-		log.info("Bug 36729 requestNoteDtlsS size : " + requestNoteDtls.size());
 		return requestNoteDtls;
 	}
 	//36729 - End
