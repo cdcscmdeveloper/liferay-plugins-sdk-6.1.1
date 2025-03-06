@@ -6,9 +6,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_updateCompExpInfo_WAR_NGePportlet').find(
+			$('#portlet_updateCompExp_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
-					"#{lbl['lbl.sm.update.comp.exp.info.draft']}");
+					"#{lbl['lbl.sm.update.comp.exp.draft']}");
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
@@ -18,71 +18,92 @@
 		<p:outputPanel>
 			<div align="left">
 				<p:commandButton
-					value="#{lbl['lbl.sm.update.comp.exp.info.draft.back.btn']}"
+					value="#{lbl['lbl.sm.update.comp.exp.draft.back.btn']}"
 					partialSubmit="true" update="@this" process="@this"
-					action="#{updateCompExpInfoBB.proceedAfterAcceptTnC}"
+					action="#{updateCompExpBB.proceedAfterAcceptTnC}"
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"></p:commandButton>
 			</div>
 		</p:outputPanel>
-		<p:panel header="#{lbl['lbl.sm.update.comp.exp.info.draft.from.sm']}"
+		<p:panel header="#{lbl['lbl.sm.update.comp.exp.draft.from.sm']}"
 			toggleable="true">
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sm.update.comp.exp.info.draft.from.sm.instruction']}" />
+				value="#{lbl['lbl.sm.update.comp.exp.draft.from.sm.instruction']}" />
 			<br />
 			<p:dataTable id="smCompExpDrafId" var="smCompExpDraf" rows="10"
-				value="#{updateCompExpInfoBB.managedbean.smCompExpDrafList}" rowIndexVar="index"
+				value="#{updateCompExpBB.managedBean.smCompExpDrafList}"
+				rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="smCompExpDrafId"></ac:paginator>
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.no']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.no']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.project.title']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.project.title']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.contract.value']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.contract.value']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.contract.eff.date']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.contract.eff.date']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.action']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.action']}"
 							style="text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column></p:column>
 			</p:dataTable>
+			<p:commandLink onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				action="#{updateCompExpBB.onClickEditAction}" process="@this"
+				partialSubmit="true" update=":form">
+				<u><h:outputText
+						value="#{lbl['lbl.sm.rv.history.link.part.two']}"
+						style="color:blue;" escape="false" /></u>
+			</p:commandLink>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sm.update.comp.exp.info.draft.from.ct']}"
+		<p:panel header="#{lbl['lbl.sm.update.comp.exp.draft.from.ct']}"
 			toggleable="true">
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sm.update.comp.exp.info.draft.from.ct.instruction']}" />
+				value="#{lbl['lbl.sm.update.comp.exp.draft.from.ct.instruction']}" />
 			<br />
 			<p:dataTable id="ctCompExpDrafId" var="ctCompExpDraf" rows="10"
-				value="#{updateCompExpInfoBB.managedbean.ctCompExpDrafList}" rowIndexVar="index"
+				value="#{updateCompExpBB.managedBean.ctCompExpDrafList}"
+				rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="ctCompExpDrafId"></ac:paginator>
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.no']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.no']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.project.title']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.project.title']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.contract.value']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.contract.value']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.contract.eff.date']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.contract.eff.date']}"
 							style="text-align: center !important;" />
 						<p:column
-							headerText="#{lbl['lbl.sm.update.comp.exp.info.draft.table.action']}"
+							headerText="#{lbl['lbl.sm.update.comp.exp.draft.table.action']}"
 							style="text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column></p:column>
+				<p:column></p:column>
 			</p:dataTable>
 		</p:panel>
+		<ac:smUpdateCompExpPopUp dialogName="updateCompExpDialog" fromSM="true" fromCT="false"/>
 	</ui:define>
 </ui:composition>

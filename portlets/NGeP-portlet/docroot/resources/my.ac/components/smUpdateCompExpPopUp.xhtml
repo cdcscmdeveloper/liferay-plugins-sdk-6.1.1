@@ -1,0 +1,118 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<cc:interface>
+		<cc:attribute name="dialogName" required="true" />
+		<cc:attribute name="fromSM" required="true" />
+		<cc:attribute name="fromCT" required="true" />
+	</cc:interface>
+	<cc:implementation>
+		<c:if test="#{cc.attrs.fromSM}">
+			<ui:param name="headerTitle"
+				value="#{lbl['lbl.sm.update.comp.exp.draft.header.sm']}" />
+		</c:if>
+		<c:if test="#{cc.attrs.fromCT}">
+			<ui:param name="headerTitle"
+				value="#{lbl['lbl.sm.update.comp.exp.draft.header.ct']}" />
+		</c:if>
+		<p:dialog id="#{cc.attrs.dialogName}Id"
+			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"
+			resizable="true" styleClass="pop_up_top" header="#{headerTitle}">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.update.comp.exp.draft.instruction']}" />
+			<table style="width: 100%; table-layout: fixed">
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.project.done.for']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<c:if test="#{cc.attrs.fromSM}">
+					<tr>
+						<td style="width: 30%"><p:outputLabel
+								styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.update.comp.exp.draft.ori.agency.name']}" /></td>
+						<td style="width: 70%"><p:outputLabel
+								styleClass="outputLabel-view" value="original">
+							</p:outputLabel></td>
+					</tr>
+				</c:if>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.agency.name']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.file.ref.no']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.loa.no']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.proc.cont.proj.title']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.value']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.pay.method']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.proc.method']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.eff.date']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.exp.date']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.status']}" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.update.comp.exp.draft.supp.doc']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td style="width: 70%"></td>
+				</tr>
+			</table>
+			
+		</p:dialog>
+	</cc:implementation>
+</ui:component>

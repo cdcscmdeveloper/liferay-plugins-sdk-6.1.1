@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.sm.updatecompexpinfo;
+package my.ep.web.managedbean.sm.updatecompexp;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.sm.SmRvAssistOfficer;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "updateCompExpInfoMB")
+@ManagedBean(name = "updateCompExpMB")
 @SessionScoped
-public class SmUpdateCompExpInfoManagedBean extends BaseManagedBean {
+public class SmUpdateCompExpManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	
