@@ -1652,8 +1652,6 @@ public class ConsolidationReportBackingBean extends
 					}
 
 					if (epException == null) {
-						log.info(" hatta doRank "+doRank);
-						log.info(" hatta currentRank "+currentRank);
 						if (doRank == currentRank) {
 							epException = new EpException(
 									MessageConst.ERROR_760381, new String[] {
@@ -2517,8 +2515,6 @@ public class ConsolidationReportBackingBean extends
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		
-		 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-		 searchReqDTO.setDocId(qtId);
 		 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
 			 return Boolean.TRUE;
 		 }
