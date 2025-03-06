@@ -1703,6 +1703,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
+	   //#37924 - Start
+	   if(this.getManagedBean().getCurrentTaskDocType()!= null){
 		//#21387 - Start
 		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
 			
@@ -1715,7 +1717,8 @@ BaseBackingBean<BPMTaskListManagedBean> {
 						 claimTaskByTaskId(getDocNumber.getTaskId());
 					 } 
 				 } 
-			}//#21387 - End			
+			}//#21387 - End	
+		  }//#37924 - End
 		}else{
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	    	reqDTO.setCtxToken(token);
