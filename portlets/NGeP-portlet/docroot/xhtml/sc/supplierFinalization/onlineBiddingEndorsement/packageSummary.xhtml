@@ -147,7 +147,7 @@
 			<ui:remove>
 				31101 - Added Disciplinary Action filter
 			</ui:remove>
-			<ui:param name="isDisciplinaryAction" value="#{suppFinalBiddingBackingBean.disabledQTProcess(suppFinalBiddingBackingBean.managedBean.scQt, price.scBidSupplier.smSupplier)}"/>
+			<ui:param name="isDisciplinaryAction" value="#{suppFinalBiddingBackingBean.disabledQTProcess(price.scBidSupplier.smSupplier)}"/>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"

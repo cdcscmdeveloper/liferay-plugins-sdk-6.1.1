@@ -149,7 +149,7 @@
 												  or !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) 
 												  or lOIDetailBackingBean.managedBean.readOnly 
 												  or supplierDtl.noReachAgreement
-												  or lOIDetailBackingBean.disabledQTProcess(lOIDetailBackingBean.managedBean.scQt, supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" />
+												  or lOIDetailBackingBean.disabledQTProcess(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" />
 							<ui:remove>
 								#31061 - SHAFFUL (END), #30008 - End
 							</ui:remove>
@@ -195,7 +195,7 @@
 														or !(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) 
 														or lOIDetailBackingBean.managedBean.readOnly
 														or item.noReachAgreement
-														or lOIDetailBackingBean.disabledQTProcess(lOIDetailBackingBean.managedBean.scQt, recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
+														or lOIDetailBackingBean.disabledQTProcess(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}"
 											style="margin-right:1px !important;"> <ui:remove> #30008- End </ui:remove>
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"

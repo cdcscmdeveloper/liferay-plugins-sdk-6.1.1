@@ -11,9 +11,7 @@
 	</p:blockUI>
 	<ui:param name="supplier"
 		value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSupplier.smSupplier}" />
-	<ui:param name="scQt"
-		value="#{supplierProposalDetailBackingBean.managedBean.qt}" />
-	<ui:param name="disciplinaryActionMessage" value="#{viewSuppProfileBackingBean.evaluateQTWarningMessage(scQt, supplier)}"/>
+	<ui:param name="disciplinaryActionMessage" value="#{viewSuppProfileBackingBean.evaluateQTWarningMessage(supplier)}"/>
 	<c:if test="#{not empty disciplinaryActionMessage}">
 		<div class="ui-messages ui-widget">
 			<div class="ui-messages-error ui-corner-all">
@@ -52,7 +50,7 @@
 					Bug #27412 #75 : END
 				</ui:remove>				
 				<ui:param name="isDisciplinaryAction"
-					value="#{supplierProposalDetailBackingBean.disabledQTProcess(scQt, supplier)}" />
+					value="#{supplierProposalDetailBackingBean.disabledQTProcess(supplier)}" />
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					styleClass="BtnSpacing" onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"

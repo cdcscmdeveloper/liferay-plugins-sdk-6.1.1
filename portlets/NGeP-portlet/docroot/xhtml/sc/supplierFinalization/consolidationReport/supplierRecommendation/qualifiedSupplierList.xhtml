@@ -199,7 +199,7 @@
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
 								 disabled="#{qualifiedSupp.qtEvaluationResult.offeredPrice eq 0 
-								 or consolidationReportBackingBean.disabledQTProcess(consolidationReportBackingBean.managedBean.scQt, qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
+								 or consolidationReportBackingBean.disabledQTProcess(qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
 								 or (qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or qualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"> 
 						<ac:validateNumber 
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
@@ -394,7 +394,7 @@
 								 size="5" maxlength="3" required="false" autocomplete="false" 
 								 label="#{lbl['lbl.sc.consolidation.report.do.ranking']}"
 								 disabled="#{disqualifiedSupp.qtEvaluationResult.offeredPrice eq 0 
-								 or consolidationReportBackingBean.disabledQTProcess(consolidationReportBackingBean.managedBean.scQt, disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
+								 or consolidationReportBackingBean.disabledQTProcess(disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)
 								 or (disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or disqualifiedSupp.qtEvaluationResult.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified) or isDisqualified}"> 				
 					</h:outputText>			
 				</p:column>

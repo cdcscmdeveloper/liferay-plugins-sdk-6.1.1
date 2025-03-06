@@ -31,10 +31,11 @@
 							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
 						</ui:fragment>
 					</div>
+					<ui:param name="warnings" value="#{viewSuppProfileBackingBean.evaluateWarningTooltip(cc.attrs.supplier)}"/>
 					<ui:fragment
-						rendered="#{viewSuppProfileBackingBean.showWarningTooltip(cc.attrs.supplier)}">
+						rendered="#{not empty warnings}">
 						<p:commandLink onstart="blockWidget.show()"
-							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(cc.attrs.supplier)}"
+							action="#{viewSuppProfileBackingBean.onViewQTAlertMessage(warnings)}"
 							oncomplete="blockWidget.hide();"
 							update="@([id$=suspendAlertWidgetId])">
 							<p:graphicImage id="imageId"

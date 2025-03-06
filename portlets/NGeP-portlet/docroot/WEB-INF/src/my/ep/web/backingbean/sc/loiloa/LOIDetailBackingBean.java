@@ -5685,7 +5685,7 @@ public class LOIDetailBackingBean extends
 						SmSupplier smSupplier = scQtRecommendDtl.getSupplier();
 						Long supplierId = smSupplier.getSupplierId();
 						// 26247 - start
-						if (this.disabledQTProcess(this.getManagedBean().getScQt(), supplierMap.get(supplierId))) {
+						if (this.disabledQTProcess(supplierMap.get(supplierId))) {
 							continue;
 						}
 						// 26247 - end

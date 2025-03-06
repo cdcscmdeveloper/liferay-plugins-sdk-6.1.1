@@ -7389,10 +7389,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 37622 - end
 	/**
 	 * Retrieve mof status descriptions
-	 * @param object
+	 * @param mofAccount
 	 * @return mof status description
 	 */
-	public String evaluateMOFStatus(Object object) {
+	public String evaluateMOFStatus(SmMofAccount mofAccount) {
 		if (recordStatusParamMap.isEmpty()) {
 			List<PmParameterDesc> paramDescs = this.getParameterDescsByTypeAndSearchBean(
 					ParameterTypeConst.RECORD_STATUS, null);
@@ -7403,7 +7403,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 		}
 
-		SmMofAccount mofAccount = (SmMofAccount) object;
 		Locale locale = new FacesScopes().getUserLocale();
 		String mofStatus = "0";
 		if (null != mofAccount) {
@@ -7418,24 +7417,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param supplier
 	 * @return
 	 */
-	public boolean disabledQTProcess(ScQt scQt, SmSupplier supplier) {
-		if (null == scQt || null == supplier) {
+	public boolean disabledQTProcess(SmSupplier supplier) {
+		if (null == supplier || null == supplier.getScQt()) {
 			return false;
 		}
 		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
 		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
-		List<String> statusKeys = Arrays.asList("suspendedCancel", "suspendedBlacklist", "deletedCancel",
-				"deletedBlacklist");
-		boolean isCancelledOrBlacklisted = false;
-		for (String statusKey : statusKeys) {
-			if (viewSuppProfileBean.evaluateAccountStatus(statusKey, supplier)) {
-				isCancelledOrBlacklisted = true;
-			}
-		}
+		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
 		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
-		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(scQt.getOpenFor()) && !supplier.isBumi();
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+				&& !supplier.isBumi();
 		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes());
-		
+
 		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction)
 				.contains(true)
 				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(

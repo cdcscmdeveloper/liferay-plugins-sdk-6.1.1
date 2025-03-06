@@ -144,7 +144,7 @@
 			<ui:remove>
 				31101 - Added Disciplinary Action validation
 			</ui:remove>
-			<ui:param name="isDisciplinaryAction" value="#{suppFinalBiddingBackingBean.disabledQTProcess(suppFinalBiddingBackingBean.managedBean.scQt, itemSupplier.supplier)}"/>
+			<ui:param name="isDisciplinaryAction" value="#{suppFinalBiddingBackingBean.disabledQTProcess(itemSupplier.supplier)}"/>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
 					  styleClass="td-check-box-spacing" selectionMode="single" 
 					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}" 
