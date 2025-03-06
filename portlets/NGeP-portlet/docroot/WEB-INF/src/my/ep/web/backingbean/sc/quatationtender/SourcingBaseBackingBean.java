@@ -5768,7 +5768,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 			//#36678 set null if user change above 50k. related to 35061
-			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
+					&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){//#37899 add null checking for Pm Status
 				scQt.setJustificationProcValue(null);
 			}
 			return Boolean.FALSE;

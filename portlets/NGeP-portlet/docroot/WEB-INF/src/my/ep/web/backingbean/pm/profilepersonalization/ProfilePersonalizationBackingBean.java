@@ -1639,7 +1639,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				SmAppl srcAppl =  SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();								
 				//26238 -  START Disciplinary Action - end
 		
-				this.getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
+				this.getManagedBean().setSmSupplier(srcAppl != null ? srcAppl.getSmSupplier() : null);
 			}
 			if (getManagedBean().getSmSupplier() == null){
 				getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
