@@ -1,0 +1,41 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_updateCompExpInfo_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					"#{lbl['lbl.sm.update.comp.exp.info']}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:panel header="#{lbl['lbl.sm.update.comp.exp.info.tnc.header']}">
+			<h:outputText escape="false"
+				value="#{lbl['lbl.sm.update.comp.exp.info.tnc.msg']}"
+				style="white-space : normal !important" />
+		</p:panel>
+		<table>
+			<tr>
+				<td><p:selectBooleanCheckbox
+						value="#{updateCompExpInfoBB.managedBean.agreeTC}">
+						<p:ajax update="btnProceed" partialSubmit="true" process="@this"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					</p:selectBooleanCheckbox></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sm.update.comp.exp.info.tnc.agree']}" /></td>
+			</tr>
+		</table>
+		<div align="right">
+			<p:commandButton id="btnProceed"
+				value="#{lbl['lbl.sm.update.comp.exp.info.action.proceed']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				disabled="#{!updateCompExpInfoBB.managedBean.agreeTC}"
+				action="#{updateCompExpInfoBB.proceedAfterAcceptTnC}" />
+		</div>
+	</ui:define>
+</ui:composition>
