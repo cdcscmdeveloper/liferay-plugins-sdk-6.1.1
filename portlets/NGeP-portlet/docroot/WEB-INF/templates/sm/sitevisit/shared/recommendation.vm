@@ -159,7 +159,7 @@
 	#if($review)
 		#if($svTask.recommended)
 			<tr><td>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.approve')</td></tr>
-		#else
+		#elseif($svTask.recommended != $null)
 			<tr><td>$smVmUtil.getDescByLabel('lbl.sm.sitevisit.reject')</td></tr>
 		#end
 		<br /><br /><br />

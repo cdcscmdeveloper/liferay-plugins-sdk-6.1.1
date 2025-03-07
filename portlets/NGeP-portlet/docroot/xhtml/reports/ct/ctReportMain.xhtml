@@ -108,15 +108,16 @@
 			</c:if>	
 			<!-- #30918 - end -->						
 		</p:panel>
-		<ui:remove> Start - #29416 </ui:remove>
-		<h:panelGroup
-			rendered="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal or ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal}">
-			<ac:lovPopupItemName />
-		</h:panelGroup>
-		<h:panelGroup
-			rendered="#{!ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal or !ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptCcVal or ctReportBB.managedBean.reportCode eq null}">
-			<ac:lovPopup />
-		</h:panelGroup>
-		<ui:remove> Start - #29416 </ui:remove>
+		<!-- Start - #29416 -->
+		<c:choose>
+			<c:when
+				test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal || ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptCcVal}">
+				<ac:lovPopupItemName />
+			</c:when>
+			<c:otherwise>
+				<ac:lovPopup />
+			</c:otherwise>
+		</c:choose>
+		<!-- End - #29416 -->
 	</ui:define>
 </ui:composition>
