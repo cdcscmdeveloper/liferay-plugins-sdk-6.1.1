@@ -1715,9 +1715,9 @@ BaseBackingBean<BPMTaskListManagedBean> {
 					for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
 						 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
 							 claimTaskByTaskId(getDocNumber.getTaskId());
-						 } 
-					 } 
-				}	
+						 }
+					 }
+				}
 			}//#21387 - End
 		//#37924: 070325 - End
 		}else{
