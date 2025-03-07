@@ -35,6 +35,9 @@
 	<!-- #12487 START -->
 	<ui:param name = "isLoaSubmissionOrApproval" value = "#{(directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION) || (directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION)}"></ui:param>
 	<!-- #12487 END -->
+	<ui:remove>#29766 Start Vinod</ui:remove>
+	<ui:param name = "ispK7WPselected" value = "#{directLOABackingBean.checkPK7WPselectedToDisable()}"/>
+	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -287,11 +290,13 @@
 				<td>
 					<c:choose>
 						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+							<ui:remove>#29766 Start Vinod added ispK7WPselected</ui:remove>
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
 								label="#{lbl['lbl.sc.qttentype']}"
-								disabled="#{directLOABackingBean.managedBean.disableFields}">
+								disabled="#{directLOABackingBean.managedBean.disableFields or ispK7WPselected}">
+								<ui:remove>#29766 End Vinod</ui:remove>
 								<f:selectItems value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
 								<p:ajax event="change" 
 									process="@this" partialSubmit="true" 
