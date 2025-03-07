@@ -3037,16 +3037,25 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 
 		}
-		//#37924 - Start
+		// #37924: 070325 - Start
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
 			statusReqDTO.setStatusId(15025L);
-			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			String actionDesc = "Kod Lanjutan "
+					+ this.getManagedBean().getReviewExtCodeList().get(0)
+							.getDocNo()
+					+ " telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
+			reqDTO.setTrackingDairyVO(CmApplicationUtil
+					.assignTrackingDiaryValuesForUNSPSCExtension(
+							actionDesc,
+							statusResDTO.getPmStatus() != null ? statusResDTO
+									.getPmStatus() : new PmStatus(),
+							CmConst.CE_DocType));
 
 		}
-		//#37924 - End
+		// #37924: 070325 - End
 	}
 	
 	private int compareFirstChoice(String code1, String code2, int last){
