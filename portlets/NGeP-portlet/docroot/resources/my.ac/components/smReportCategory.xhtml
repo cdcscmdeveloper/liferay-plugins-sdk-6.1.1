@@ -22,12 +22,24 @@
 			
 			for (var i = 0; i &lt; panels.length; i++) {
 				var panel = panels[i];
-				if (!panel || !panel.id || panel.id.indexOf('catCodeLvl1_panel') === -1) continue;
+				// Check for all category code menu
+		        if (!panel || !panel.id || panel.id.indexOf('catCodeLvl') === -1) continue;
 				if (!panel.style || panel.style.display === 'none') continue;
-		
+				
 				var left = parseInt(panel.style.left);
-				if (isNaN(left) || left &gt;= 0) continue;
-		
+				if (isNaN(left)) continue;
+				
+				
+				var windowWidth = window.innerWidth || document.documentElement.clientWidth;
+				var panelRight = panel.getBoundingClientRect().right;
+				var diff = panelRight - windowWidth;
+					
+				if (diff &gt; 0) {
+					left = left - diff - 5;
+					panel.style.left = left + 'px';
+				}
+				
+				if (left &gt;= 0) continue;
 				panel.style.left = '3px';
 	  		}
 		}
@@ -35,7 +47,7 @@
 		jQuery(document).ready(function() {
 			jQuery(document).on('mousedown', '.ui-selectonemenu', function() {
 				setTimeout(fixCatcodeMenu, 200);
-		  });
+			});
 		});
 		</script>
 		<p:dataTable var="cat" widgetVar="category"
