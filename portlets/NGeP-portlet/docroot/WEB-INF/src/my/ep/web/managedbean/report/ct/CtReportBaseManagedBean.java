@@ -4,8 +4,11 @@
 
 package my.ep.web.managedbean.report.ct;
 
+import java.util.ArrayList; //#29416
 import java.util.Date;
+import java.util.List; //#29416
 
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem; //#29416
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.web.managedbean.report.ReportBaseManagedBean;
 
@@ -33,6 +36,13 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	private Date fromDate;
 	private Date toDate;
 	private PmOrgProfile selectedSupplier;
+	// Start - #29416
+	private CtContractItem selectedItem;
+	private List<CtContractItem> lovSelectedItemList;
+	private String formattedSelectedItems; // Store the formatted string
+	private boolean isLovItemReportNameTriggered = false;
+	private String contractItemId;
+	// End - #29416
 	
 	/**
 	 * @return the disableMinistryField
@@ -213,4 +223,70 @@ public abstract class CtReportBaseManagedBean extends ReportBaseManagedBean {
 	public void setSelectedSupplier(PmOrgProfile selectedSupplier) {
 		this.selectedSupplier = selectedSupplier;
 	}	
+	
+	// Start - #29416
+	public CtContractItem getSelectedItem() {
+		if (selectedItem == null) {
+			selectedItem = new CtContractItem();
+		}
+		return selectedItem;
+	}
+
+	public void setSelectedItem(CtContractItem selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public List<CtContractItem> getLovSelectedItemList() {
+		if (lovSelectedItemList == null) {
+			this.lovSelectedItemList = new ArrayList<>();
+		}
+		return lovSelectedItemList;
+	}
+
+	public void setLovSelectedItemList(List<CtContractItem> lovSelectedItemList) {
+		this.lovSelectedItemList = lovSelectedItemList;
+		updateFormattedSelectedItems();
+	}
+
+	public String getFormattedSelectedItems() {
+		if (lovSelectedItemList == null || lovSelectedItemList.isEmpty()) {
+			return "";
+		}
+
+		StringBuilder sb = new StringBuilder();
+		for (CtContractItem item : lovSelectedItemList) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(item.getScRequestItem().getItemName());
+		}
+
+		return sb.toString();
+	}
+
+	public void setFormattedSelectedItems(String formattedSelectedItems) {
+		this.formattedSelectedItems = formattedSelectedItems;
+	}
+
+	public void updateFormattedSelectedItems() {
+		System.out.println("updateFormattedSelectedItems ::: ");
+		setFormattedSelectedItems(getFormattedSelectedItems());
+	}
+
+	public boolean isLovItemReportNameTriggered() {
+		return isLovItemReportNameTriggered;
+	}
+
+	public void setLovItemReportNameTriggered(boolean isLovItemReportNameTriggered) {
+		this.isLovItemReportNameTriggered = isLovItemReportNameTriggered;
+	}
+
+	public String getContractItemId() {
+		return contractItemId;
+	}
+
+	public void setContractItemId(String contractItemId) {
+		this.contractItemId = contractItemId;
+	}
+	// End - #29416
 }
