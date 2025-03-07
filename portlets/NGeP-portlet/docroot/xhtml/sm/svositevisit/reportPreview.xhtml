@@ -24,10 +24,9 @@
 		</div>
 	</p:dialog>
 	<!-- #12483 - END -->
-	<ac:confirmationPopup id="confirmProceedDlg" widget="confirmProceedDlg"
+	<ac:confirmationPopupSM id="confirmProceedDlg" widget="confirmProceedDlg"
 		okParam="#{svoSiteVisitBackingBean.saveSiteVisitReport(SupplierManagementConst.BPM_SUBMIT)}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.sitevisit']}" 
 		update="@([id$=Msg])"
 		loadingWidget="blockWidget" />
