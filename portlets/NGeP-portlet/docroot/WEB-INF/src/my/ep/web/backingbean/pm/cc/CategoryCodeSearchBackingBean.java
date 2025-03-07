@@ -944,12 +944,12 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		reqDTO.setCategoryL2Id(getManagedBean().getSelectedCategoryL3().getPmCategoryL2().getCategoryL2Id());
 		reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
 		reqDTO.setBusinessTypeCode(getManagedBean().getBusinessTypeCode());
-		if (getManagedBean().getCategoryType().equals("N")) {
+		if (("N").equals(getManagedBean().getCategoryType())) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {
 			reqDTO.setIsSpecialCategory(true);
 		}
-		if (getManagedBean().getFacilityType().equalsIgnoreCase("H")) {
+		if (("H").equalsIgnoreCase(getManagedBean().getFacilityType())) {
 			reqDTO.setHomeOperated(1);
 		} else {
 			reqDTO.setHomeOperated(0);
@@ -974,14 +974,14 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			List<SmSupplierCategory> apprvList = getApprovedCategories(currSupp, activeDAs);
 			getManagedBean().setApprovedCategoryList(apprvList);
 		
-			checkSelectedL3(activeDAs, apprvList, srcAppl);
+			checkSelectedL3(activeDAs, srcAppl);
 			//27738 end 
 		}
 		//27438, 27613, 27673: Disciplinary Action - end
 	}
 	//32629 - End
 	//#26238
-	private void checkSelectedL3(List<SmDisciplinaryAction> activeDAs, List<SmSupplierCategory> latestCatCodes, SmAppl srcAppl){
+	private void checkSelectedL3(List<SmDisciplinaryAction> activeDAs, SmAppl srcAppl){
 		if (getManagedBean().getSelectedCategoryL3() == null){
 			return;
 		}
