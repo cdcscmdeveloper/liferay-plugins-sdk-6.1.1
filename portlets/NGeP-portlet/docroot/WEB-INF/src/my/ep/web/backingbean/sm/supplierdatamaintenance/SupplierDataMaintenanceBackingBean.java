@@ -813,7 +813,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil
 				.retrieveActiveSmDisciplinaryActionRemarksByDA(da);
-		boolean isSameRemarks = false;
+		boolean isSameRemarks;
 		if (!EntityHelper.isCollectionEmpty(remarksList)) {
 			isSameRemarks = remarksList.get(0).getRemark().equals(da.getRemark());
 		} else {
@@ -2632,14 +2632,15 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @return List<PmState>
 	 */
 	private List<PmState> retrievePmStateList(Long countryId) {
+		List<PmState> stateList = new ArrayList<>();
 		if(countryId != null){
 			StateReqDTO reqDTO = new StateReqDTO();
 			reqDTO.setCountryId(countryId);
 			StateResDTO resDTO = SmServiceLookup.getStateSO().retriveStatesListByCountryID(reqDTO);
-			return resDTO.getStateList();
+			stateList =  resDTO.getStateList();
 		}
 
-		return null;
+		return stateList;
 	}
 	
 	public void initGstInfo(SmSupplier sup,
