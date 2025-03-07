@@ -3056,89 +3056,22 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			}
 
 		}
+		// #37924: 070325 - Start
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
 			statusReqDTO.setStatusId(15025L);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
-
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.EP_COMMITTEE.value());
-			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-			//reqDTO.getEpList().add("660508035452");
-			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
-				for(PmUser user :userResDTO.getUserList()){
-					log.info("user.getLoginId():"+user.getLoginId());
-					reqDTO.getEpList().add(user.getLoginId());
-				}
-			}else{
-				throw new EpException("No user found!");
-			}
-
+			String actionDesc = "Kod Lanjutan "
+					+ this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()
+					+ " telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
+			reqDTO.setTrackingDairyVO(CmApplicationUtil
+					.assignTrackingDiaryValuesForUNSPSCExtension(
+							actionDesc,
+							statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus(),
+							CmConst.CE_DocType));
 		}
-		else if (face.hasRoleUser(CmConst.EP_COMMITTEE)){
-			log.info("Tracking diary for Extension Code Creation or Extension Code Review by EP_COMMITTE");
-			statusReqDTO.setStatusId(15003L);
-			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			String actionDesc = "Kod Lanjutan "+this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()+" telah diperaku oleh " +reqDTO.getUserName();
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(actionDesc, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus(),CmConst.CE_DocType));
-
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setRoleCode(RoleCode.CD_OFFICER.value());
-			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-
-			if(userResDTO.getUserList()!=null && userResDTO.getUserList().size()>0){
-				for(PmUser user :userResDTO.getUserList()){
-					log.info("user.getLoginId():"+user.getLoginId());
-					reqDTO.getCdAdminList().add(user.getLoginId());
-				}
-			}else{
-				throw new EpException("No user found!");
-			}
-		}
+		// #37924: 070325 - End
 	}
-
-
-	/*public void preRenderExtensionMaintenanceView() {
-
-		log.info("**********preRenderExtensionView**************");
-		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		log.info("taskId:" + taskId);
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		FacesScopes face = new FacesScopes();
-		Object token = face.getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-		reqDTO.setCtxToken(token);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-
-		CDRequestDataType unspsc = (CDRequestDataType) obj;
-
-		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", IRequestCodeSO.class);
-		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
-		codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-		RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
-
-		UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
-		unspscBB.getManagedBean().setRequestCode(resDTO.getRequestCode());
-
-		this.getManagedBean().setAction(res.getAction());
-		this.getManagedBean().setTaskId(taskId);
-
-	}
-	 */
 	
 	private int compareFirstChoice(String code1, String code2, int last){
 		if((code1.equals("000") || code1.equals("00")) && (code2.equals("000") || code2.equals("00"))){
