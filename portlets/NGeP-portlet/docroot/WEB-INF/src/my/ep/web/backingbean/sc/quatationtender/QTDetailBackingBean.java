@@ -13060,10 +13060,6 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt()
 				.getScQtCategorys();
-		//suspected session were renew, set back list.
-		if (null == qtCatCodeList || qtCatCodeList.isEmpty()) {
-			qtCatCodeList = this.getManagedBean().getQtCategoryList();
-		}
 // #29732 Start - reOpen Fix
 		String catCodeList = "";
 		Integer recordstatusInactive = 0;// #29732(#221)
