@@ -225,7 +225,9 @@
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
 							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="O" />
+							<!--#37779-START-->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<!--#37779-End-->
 							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.registration']}"
 								itemValue="R" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.paymentLbl']}"
@@ -686,7 +688,7 @@
 				rendered="#{!backingBean.managedBean.upsCannotEdit}"
 				partialSubmit="true" process=":form:tt:bankDialog"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
-				onclick="bankDetailsPanelWidget.show();" oncomplete="bankDetailsPanelWidget.hide();"
+				onclick="bankDetailsPanelWidget.show();" oncomplete="scrollToTop();bankDetailsPanelWidget.hide();"
 				update=":form:tt:bankDt , sfieldset, @([id$=Msg])" />
 		<!--#12492-END-->
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"

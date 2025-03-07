@@ -4946,7 +4946,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void approveBeforeupdateBpmTaskAction(String outcome) {
 		/* #29007 Start Vinod */
 		if (BpmOutcomeConst.BPM_VERIFY.equals(outcome) && this.getManagedBean().getLoaBpmVerify() == null) {
-			this.verifyConformationForLampiranA3(outcome);
+			this.verifyConfirmationForLampiranA3(outcome);
 		}
 		/* #29007 End Vinod */
             
@@ -10666,10 +10666,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 			if (this.getManagedBean().getScQt().isZonal() && !isComplete) {
 				for (ScLoiLoaItem loacalloiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
-					if (resDTO.getScLoiLoaItem().getLoiLoaItemId() == loacalloiLoaItem.getLoiLoaItemId()
-							|| resDTO.getScLoiLoaItem().getLoiLoaItemId().equals(loacalloiLoaItem.getLoiLoaItemId())
-							|| resDTO.getScLoiLoaItem().getScRequestItem().getRequestNoteItemId() == loacalloiLoaItem
-									.getScRequestItem().getRequestNoteItemId()
+					if (resDTO.getScLoiLoaItem().getLoiLoaItemId().equals(loacalloiLoaItem.getLoiLoaItemId())
 							|| resDTO.getScLoiLoaItem().getScRequestItem().getRequestNoteItemId()
 									.equals(loacalloiLoaItem.getScRequestItem().getRequestNoteItemId())) {
 						loacalloiLoaItem.setComplete(isComplete);
@@ -10790,8 +10787,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					
 					lampiranA3.setDefinationType(resDTO.getPmParameter());
 					lampiranA3.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
-				} finally {
-					parameterSO = null;
+				} catch (Exception ex) {
+					SLAUtils.getInstance()
+							.logSLAError(
+									SLALogConstant.QT_MODULE,
+									SLALogConstant.QT_DIRECT_LOA_DETAIL_BACKINGBEAN,
+									this.getManagedBean().getScQt().getQtNo(),
+									SLALogConstant.QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY,
+									getUserIdSessionFromLoginId(), ex);
 				}
 
 				getManagedBean().getScLoa().getScLoaReports().add(lampiranA3);
@@ -10819,16 +10822,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				}
 			}
 
-			int loaItemslampirian = 0;
+			int loaItemsLampiran = 0;
 			
 			for (ScLoiLoaItem loiLoaItem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 				if (loiLoaItem.isComplete()) {
-					loaItemslampirian++;
+					loaItemsLampiran++;
 					break;
 				}
 			}
 
-			if (recordCount > 0 && loaItemslampirian == 0) {
+			if (recordCount > 0 && loaItemsLampiran == 0) {
 				getManagedBean().getScLoa().getScLoaReports().removeAll(oldLampiranA3List);
 				
 				ScLoa scLoa = new ScLoa();
@@ -10859,7 +10862,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		VelocityContext context = new VelocityContext();
 		List<ScLoiLoaItem> scLoiLoaItemsList = null;
-		String dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
+		String defaultValue = QTConstants.LAMPIRAN_A3_TEXT_TB;
 		FacesScopes facesScopes = new FacesScopes();
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -10867,7 +10870,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
 		if (ReportConst.ENG_LANGUAGE_CODE.equals(pmUser.getPreferredLanguage())) {
-			dafaltValue = QTConstants.LAMPIRAN_A3_TEXT_TB;//29007
+			defaultValue = QTConstants.LAMPIRAN_A3_TEXT_TB;//29007
 		}
 		if (!scLoa.getScLoiLoaItems().isEmpty()) {
 			scLoiLoaItemsList = new ArrayList<>();
@@ -11121,7 +11124,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		sortLoiLoaItemsBasedOnQuestionOrder(scLoiLoaItemsList);
 
-		context.put(QTConstants.LAMPIRAN_A3_TEXT_SERVICE_SCOPE, dafaltValue);
+		context.put(QTConstants.LAMPIRAN_A3_TEXT_SERVICE_SCOPE, defaultValue);
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_ITEMS_LIST, scLoiLoaItemsList); 
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_IS_ZONAL, scLoa.getScLoiLoa().isZonal());
 		context.put(QTConstants.LAMPIRAN_A3_TEXT_BEAN, this);
@@ -11198,7 +11201,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * 
 	 * @return
 	 */
-	public void verifyConformationForLampiranA3(String bpmAction) {
+	public void verifyConfirmationForLampiranA3(String bpmAction) {
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
