@@ -571,8 +571,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						if (!reqDTO.isViewOnly()) {
 							if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 								ctAgency.setAp178(false);
-								// ctBB.getManagedBean().setDisableAgent(true);
-								// //Bug #27579
+								//Bug #27579
 							} else {
 								ctAgency.setAp178(true);
 								ctBB.getManagedBean().setDisableAgent(false);
@@ -1229,14 +1228,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			//Start Fix - #36694 || #25406
-//			if(ctContractVer.getCtAgencies() != null){
-//			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-//				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
-//			}
-//			
-//		}
-			//End Fix - #36694 || #25406
 			ctContractVer.setOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile());			
 			ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}
