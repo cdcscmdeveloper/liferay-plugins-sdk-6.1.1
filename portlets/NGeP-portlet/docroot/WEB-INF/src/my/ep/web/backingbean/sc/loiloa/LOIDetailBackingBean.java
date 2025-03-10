@@ -1163,35 +1163,10 @@ public class LOIDetailBackingBean extends
 		if (CollectionUtils.isNotEmpty(disqualifiedSuppplierList)) {			
 			for (ScQtEvaluationResultDtl disqualifiedSupplier 
 											: disqualifiedSuppplierList) {
-				Long recommendedSupplierId = disqualifiedSupplier.getQtEvaluationResult()
-						.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
-				BigDecimal totalOfferedPrice = new BigDecimal(0);
-
-				List<ScLoiLoaItem> awardedSupplierLoiLoaItems = new ArrayList<ScLoiLoaItem>();				
-				Map<Long,List<ScLoiLoaItem>> loiLoaItemsMap 
-							= getManagedBean().getLoiLoaItemsMap();
-				
-				if (getManagedBean().isZonal()) {
-					List<ScLoiLoaItem> loiLoaItems = loiLoaItemsMap.get(
-							scQtRecommend.getTplSpecZoneDtl().getSpecZoneId());
-					for (ScLoiLoaItem scLoiLoaItem : loiLoaItems) {
-						Long itemSupplierId = scLoiLoaItem.getScQtRecommendDtl()
-													.getSupplier().getSupplierId();
-						if (recommendedSupplierId.equals(itemSupplierId)) {
-							awardedSupplierLoiLoaItems.add(scLoiLoaItem);
-						}
-					}					
-				} else {
-					
-					// Get loiLoaItems corresponding to the supplier
-					awardedSupplierLoiLoaItems = getManagedBean().getSupplierLoiLoaItemsMap()
-													.get(recommendedSupplierId);
-				}
-				totalOfferedPrice = calculateAfterNegoSubTotal(
-							awardedSupplierLoiLoaItems, scQtRecommendList);
-				totalOfferedPrice = totalOfferedPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				disqualifiedSupplier.getQtEvaluationResult()
-								   .setOfferedPrice(totalOfferedPrice);
+				BigDecimal offeredPrice = new BigDecimal(0);
+				offeredPrice = disqualifiedSupplier.getProposalAmount().getProposalAmt();
+				offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				disqualifiedSupplier.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 			}
 		}
 		//#28777 & #29729 - End
