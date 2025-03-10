@@ -4224,6 +4224,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					cancelRN(prObj, prSize);
 				}			
 				
+				//36729 - Start	
+				RequestNoteReqDTO reqNoteReqDTO = new RequestNoteReqDTO();
+				reqNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+				reqNoteReqDTO.setSupplierId(getManagedBean().getSupplierId());
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
+						reqNoteReqDTO);
+				reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
+				getManagedBean().setRequestNoteDtls(requestNoteResDTO.getRequestNoteDtlList());
+				//36729 - End				
+
 				if (getManagedBean().getRequestNoteDtls().size() > 0 && null != purchaseRequestSO) {
 					
 					rndtls = getManagedBean().getRequestNoteDtls();

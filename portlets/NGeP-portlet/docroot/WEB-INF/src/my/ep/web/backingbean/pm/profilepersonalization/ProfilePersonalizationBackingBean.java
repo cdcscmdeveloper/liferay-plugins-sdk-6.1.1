@@ -1639,16 +1639,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				SmAppl srcAppl =  SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();								
 				//26238 -  START Disciplinary Action - end
 		
-				if(srcAppl == null){
-					return;
-				}
-				this.getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
+				this.getManagedBean().setSmSupplier(srcAppl != null ? srcAppl.getSmSupplier() : null);
 			}
 			if (getManagedBean().getSmSupplier() == null){
 				getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
 			}
 			if (getManagedBean().getSmSupplier() == null){
-				loadSupplierCommonDetails(facesScopes.getUserSessionBean());
+				loadSupplierCommonDetails(getUserIdSessionFromLoginId());
 				if(getManagedBean().getCurrentProfile().getSmSupplier() != null){
 					getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
 				}
@@ -1697,15 +1694,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 	
 	//26238 -  END Disciplinary Action - 28111
-	private void loadSupplierCommonDetails(PmUser user) {
-		if (user == null || user.getUserId() == null){
+	private void loadSupplierCommonDetails(Long userId) {
+		if (userId == null){
 			return;
 		}
-		Long id = user.getUserId();
 		try {
 			long startTime = System.currentTimeMillis();
 			// load user, retrieve current active org
-			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
+			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(userId);
 			this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
 			this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
 			this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
@@ -1713,7 +1709,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			SLAUtils.getInstance().logSLAInfo("SM","DA",
 					"ProfilePersonalizationBackingBean.loadSupplierCommonDetails", startTime);				
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("SM", "DA", id.toString(), "ProfilePersonalizationBackingBean", 
+			SLAUtils.getInstance().logSLAError("SM", "DA", userId.toString(), "ProfilePersonalizationBackingBean", 
 					(new LogKey()).getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}

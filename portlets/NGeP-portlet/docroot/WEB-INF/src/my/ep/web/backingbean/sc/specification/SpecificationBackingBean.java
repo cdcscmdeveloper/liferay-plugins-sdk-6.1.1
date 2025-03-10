@@ -11296,14 +11296,19 @@ if (null != checklist && !checklist.isEmpty()) {
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
 		// #10141 Start Vinod
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)) {
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)
+				|| QTStatusConst.QT_PENDING_MSC_APPROVAL.equals(statusId)) {
 			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			try {
 				String techInactive = inactiveChecklistsForError(this.getManagedBean().getScQtCheckSt2techProposal());
 
-				if (techInactive != null && techInactive != "") {
+				if (StringUtils.isNotEmpty(techInactive) || StringUtils.isNotBlank(techInactive)) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-					throw new EpException(MessageConst.ERROR_775250, new String[] { techInactive });
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_775250, new String[] { techInactive },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			} catch (Exception e) {
 				handleException(e);
@@ -11317,9 +11322,13 @@ if (null != checklist && !checklist.isEmpty()) {
 				String finInactive = inactiveChecklistsForError(this.getManagedBean()
 						.getScQtCheckSt2financeProposalList());
 
-				if (finInactive != null && finInactive != "") {
+				if (StringUtils.isNotEmpty(finInactive) || StringUtils.isNotBlank(finInactive)) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-					throw new EpException(MessageConst.ERROR_775251, new String[] { finInactive });
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_775251, new String[] { finInactive },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			} catch (Exception e) {
 				handleException(e);
@@ -12622,9 +12631,9 @@ if (null != checklist && !checklist.isEmpty()) {
 	 */
 	public void specCommitteBpmTask(String action) {
 		// #29732 Start - reOpen Fix
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
+		if (!this.getManagedBean().getQt().isPanel() && (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise())) {
 			// category
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() 
 					|| BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())){
@@ -12766,7 +12775,14 @@ if (null != checklist && !checklist.isEmpty()) {
 
 					}
 					// #10141 Start Vinod
-					checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(),action);
+					boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+							.getManagedBean().isShowInactiveChecklistPopup(), action);
+
+					if (isInactiveChecklistPopup) {
+						RequestContext.getCurrentInstance()
+						.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+						return;
+					}
 					// #10141 End Vinod
 					// 25638 - Start
 					SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
@@ -17605,7 +17621,14 @@ if (null != checklist && !checklist.isEmpty()) {
 		checkTechnicalAndFinancialSpec(this.getManagedBean().getQt()); //Bug #37612 - Remove condition
 		
 		// #10141 Start Vinod
-		checkInactiveChecklistForPopup(this.getManagedBean().isShowInactiveChecklistPopup(), action);
+		boolean isInactiveChecklistPopup = checkInactiveChecklistForPopup(this
+				.getManagedBean().isShowInactiveChecklistPopup(), action);
+
+		if (isInactiveChecklistPopup) {
+			RequestContext.getCurrentInstance()
+			.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+			return;
+		}
 		if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
 			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
 		}
@@ -18230,7 +18253,10 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
 		// 29732 -end-
-		
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); 
+		//29732 add here, issue could need to delete in dao those category has been delete in managebean
+		//Status : Pending document preparation
+		//Screen : Pending spec preparation (Revision)
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
@@ -23388,7 +23414,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 *            maintenance screen to show the warning.
 	 * 
 	 */
-	public void checkInactiveChecklistForPopup(boolean isShowInactiveChecklistPopup, String action) {
+	public boolean checkInactiveChecklistForPopup(boolean isShowInactiveChecklistPopup, String action) {
 		if (!isShowInactiveChecklistPopup) {
 			List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
 
@@ -23410,9 +23436,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 								new String[] { confirmationMsg }));
 
 				this.getManagedBean().setShowInactiveChecklistPopup(true);
-				RequestContext.getCurrentInstance().execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return true;
 			}
 		}
+		
+		return false;
 	}
 
 	// #10141 End Vinod
@@ -23457,7 +23485,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		for (ScQtCheckList cl : checklist) {
 			if (null != cl.getPmDocument() && !cl.getPmDocument().isRecordStatus()) {
-				if (inactive.toString() != null && inactive.toString() != "") {
+				if (StringUtils.isNotEmpty(inactive.toString()) 
+						|| StringUtils.isNotBlank(inactive.toString())) {
 					inactive.append(", ");
 				}
 				inactive.append(cl.getTitle());
@@ -23516,24 +23545,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String lineBreak = QTConstants.HTML_NEW_LINE_CHARACTER;
 		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
 		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
-		int tecCheckListcount = 0;
-		int finCheckListcount = 0;
+		int checkListcount = 0;
 		for (ScQtCheckList inactive : inActiveChecklist) {
+			checkListcount++;
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
-				tecCheckListcount++;
 				confirmationMsg
-						.append(tecCheckListcount + ". " + 
+						.append(checkListcount + ". " + 
 								techCheckList + " " + 
 								inactive.getTitle() + 
 								lineBreak);
 			} else {
-				if (tecCheckListcount != 0) {
-					confirmationMsg.append(lineBreak);
-					tecCheckListcount = 0;
-				}
-				finCheckListcount++;
 				confirmationMsg
-						.append(finCheckListcount + ". " + 
+						.append(checkListcount + ". " + 
 								finCheckList + " " + 
 								inactive.getTitle() + 
 								lineBreak);

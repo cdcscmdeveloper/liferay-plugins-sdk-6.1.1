@@ -99,7 +99,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	
 	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList; 
-	private Integer countSupplierBranchDeleted = 0;
 	private List<ScQtEvaluationResultDtl> listDisqualifiedSupplier;
 	// #28777 & #29729 - End
 	
@@ -644,14 +643,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
-	}
-	
-	public Integer getCountSupplierBranchDeleted() {
-		return countSupplierBranchDeleted;
-	}
-
-	public void setCountSupplierBranchDeleted(Integer countSupplierBranchDeleted) {
-		this.countSupplierBranchDeleted = countSupplierBranchDeleted;
 	}
 	
 	public List<ScQtEvaluationResultDtl> getListDisqualifiedSupplier() {
