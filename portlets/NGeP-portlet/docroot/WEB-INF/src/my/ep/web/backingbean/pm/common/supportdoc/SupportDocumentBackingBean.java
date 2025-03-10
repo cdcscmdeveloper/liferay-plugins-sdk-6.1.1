@@ -1946,9 +1946,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			/************ AUDIT #28895_35509 - START *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
-			if (!createAction && pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
-					|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)
-					&& reqDTO.getPmDocument() != null && reqDTO.getPmDocument().getDocumentId() != null) {
+			boolean isAuditConfig = false;
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+					|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
+				isAuditConfig = true;
+			}
+			if (!createAction && isAuditConfig && reqDTO.getPmDocument() != null
+					&& reqDTO.getPmDocument().getDocumentId() != null) {
 				reqDTO.setDocumentId(reqDTO.getPmDocument().getDocumentId());
 				PmDocument pmDocumentOld = retrieveDocumentById(reqDTO.getPmDocument().getDocumentId());
 				getManagedBean().setSelectedDocumentOld(pmDocumentOld);

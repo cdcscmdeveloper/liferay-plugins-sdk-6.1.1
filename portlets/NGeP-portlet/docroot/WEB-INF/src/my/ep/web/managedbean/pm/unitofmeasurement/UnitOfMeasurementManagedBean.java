@@ -34,16 +34,20 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	private Long status;
 
 	private boolean isLazy = false;
-	
-	private PmUom oldPmUom;
-	
-	private UomResDTO uomResDTO ;
-	
-	/** The AUDIT PM UOM OLD Value. */
-	private PmUom auditUomOldVal;
 
-	public UnitOfMeasurementManagedBean(){}
-	
+	private PmUom oldPmUom;
+
+	/** The AUDIT PM UOM OLD 28895-35509 */
+	private UomResDTO UOMResDTO;
+
+	/** The AUDIT PM UOM OLD Value. */
+	private PmUom auditUOMOldVal;
+
+	/** The AUDIT PM UOM OLD 28895-35509 */
+
+	public UnitOfMeasurementManagedBean() {
+	}
+
 	/**
 	 * @return the pmUom
 	 */
@@ -120,25 +124,28 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param oldPmUom the oldPmUom to set
+	 * @param oldPmUom
+	 *            the oldPmUom to set
 	 */
 	public void setOldPmUom(PmUom oldPmUom) {
 		this.oldPmUom = oldPmUom;
 	}
 
-	public PmUom getAuditUomOldVal() {
-		return auditUomOldVal;
+	/** The AUDIT PM UOM OLD 28895-35509 */
+	public PmUom getAuditUOMOldVal() {
+		return auditUOMOldVal;
 	}
 
-	public void setAuditUomOldVal(PmUom auditUomOldVal) {
-		this.auditUomOldVal = auditUomOldVal;
+	public void setAuditUOMOldVal(PmUom auditUOMOldVal) {
+		this.auditUOMOldVal = auditUOMOldVal;
 	}
 
-	public UomResDTO getUomResDTO() {
-		return uomResDTO;
+	public UomResDTO getUOMResDTO() {
+		return UOMResDTO;
 	}
 
-	public void setUomResDTO(UomResDTO uomResDTO) {
-		this.uomResDTO = uomResDTO;
+	public void setUOMResDTO(UomResDTO UOMResDTO) {
+		this.UOMResDTO = UOMResDTO;
 	}
+	/** The AUDIT PM UOM OLD 28895-35509 */
 }

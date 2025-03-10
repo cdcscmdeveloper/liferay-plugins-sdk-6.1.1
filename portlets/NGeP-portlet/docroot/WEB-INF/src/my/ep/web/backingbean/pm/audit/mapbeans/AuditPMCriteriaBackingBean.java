@@ -46,7 +46,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 		this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedCriteria().getCriteriaId());
 		if (null != managedBeans.getPmCriteriaOld()) {
 			if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria().getRecordStatusFlg()) {
-				updateSatus(managedBeans);
+				updateStatus(managedBeans);
 			}
 			if (managedBeans.getPmCriteriaOld().getPmCriteriaDescs() != null) {
 				updateCriteriaDesc(managedBeans);
@@ -65,7 +65,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private void updateSatus(CriteriaManagedBean managedBeans) {
+	private void updateStatus(CriteriaManagedBean managedBeans) {
 		if (managedBeans.getPmCriteriaOld().getRecordStatusFlg() != managedBeans.getSelectedCriteria().getRecordStatusFlg()) {
 			this.docId = BigInteger.valueOf(managedBeans.getPmCriteriaOld().getCriteriaId());
 			detailObj(AuditConst.PM_AUD_SUPPPERFCRITERIA_STATUS_FIELDLABELID, managedBeans.getPmCriteriaOld()

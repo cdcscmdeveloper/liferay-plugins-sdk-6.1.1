@@ -41,30 +41,30 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 		UnitOfMeasurementManagedBean managedBeans = (UnitOfMeasurementManagedBean) manageBean;
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getPmUom().getUomCode();
-		if (null != managedBeans.getAuditUomOldVal() && managedBeans.getAuditUomOldVal().getUomId() > 0) {
-			if (managedBeans.getAuditUomOldVal().getRecordStatusFlg() != managedBeans.getPmUom().getRecordStatusFlg()) {
-				this.docId = BigInteger.valueOf(managedBeans.getAuditUomOldVal().getUomId());
+		if (null != managedBeans.getAuditUOMOldVal() && managedBeans.getAuditUOMOldVal().getUomId() > 0) {
+			if (managedBeans.getAuditUOMOldVal().getRecordStatusFlg() != managedBeans.getPmUom().getRecordStatusFlg()) {
+				this.docId = BigInteger.valueOf(managedBeans.getAuditUOMOldVal().getUomId());
 				detailObj(AuditConst.PM_AUD_UOM_STATUS_FIELDLABELID,
-						managedBeans.getAuditUomOldVal().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						managedBeans.getAuditUOMOldVal().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE,
-						managedBeans.getUomResDTO().getPmUom().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						managedBeans.getUOMResDTO().getPmUom().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 								: AuditConst.PM_AUD_INACTIVE, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			}
-			managedBeans.setAuditUomOldVal(null);
+			managedBeans.setAuditUOMOldVal(null);
 		} else {
-			this.docId = BigInteger.valueOf(managedBeans.getUomResDTO().getPmUom().getUomId());
+			this.docId = BigInteger.valueOf(managedBeans.getUOMResDTO().getPmUom().getUomId());
 
-			detailObj(AuditConst.PM_AUD_UOM_STATUS_FIELDLABELID, null, managedBeans.getUomResDTO().getPmUom()
+			detailObj(AuditConst.PM_AUD_UOM_STATUS_FIELDLABELID, null, managedBeans.getUOMResDTO().getPmUom()
 					.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_UOM_UOMCODE_FIELDLABELID, null, managedBeans.getUomResDTO().getPmUom().getUomCode(),
+			detailObj(AuditConst.PM_AUD_UOM_UOMCODE_FIELDLABELID, null, managedBeans.getUOMResDTO().getPmUom().getUomCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_UOM_UOMNAME_FIELDLABELID, null, managedBeans.getUomResDTO().getPmUom().getUomName(),
+			detailObj(AuditConst.PM_AUD_UOM_UOMNAME_FIELDLABELID, null, managedBeans.getUOMResDTO().getPmUom().getUomName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_UOM_NOOFDECIMAL_FIELDLABELID, null, managedBeans.getUomResDTO().getPmUom()
+			detailObj(AuditConst.PM_AUD_UOM_NOOFDECIMAL_FIELDLABELID, null, managedBeans.getUOMResDTO().getPmUom()
 					.getDecimalScale().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 		}
 		auditPMReqDTO.setObjList(objList);

@@ -66,7 +66,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 
 			if (null != managedBeans.getZoneResDTO().getPmZone().getPmZoneStates()
 					&& !managedBeans.getZoneResDTO().getPmZone().getPmZoneStates().isEmpty()) {
-				zoneStateCodeSateName(managedBeans);
+				zoneStateCodeStateName(managedBeans);
 			}
 		}
 		managedBeans.setZoneResDTO(null);
@@ -135,7 +135,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans.setZoneStateListNewAdded(new ArrayList<PmZoneState>());
 	}
 
-	private void zoneStateCodeSateName(ZoneManagedBean managedBeans) {
+	private void zoneStateCodeStateName(ZoneManagedBean managedBeans) {
 		for (PmZoneState st : managedBeans.getZoneResDTO().getPmZone().getPmZoneStates()) {
 			if (st.getPmState().getStateCode() != null) {
 				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
