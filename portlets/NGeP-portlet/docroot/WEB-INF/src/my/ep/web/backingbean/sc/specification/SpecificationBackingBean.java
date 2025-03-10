@@ -11296,14 +11296,19 @@ if (null != checklist && !checklist.isEmpty()) {
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
 		// #10141 Start Vinod
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF.equals(statusId)
-				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)) {
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT.equals(statusId)
+				|| QTStatusConst.QT_PENDING_MSC_APPROVAL.equals(statusId)) {
 			String qtNo = scQt != null ? scQt.getQtNo() : "";
 			try {
 				String techInactive = inactiveChecklistsForError(this.getManagedBean().getScQtCheckSt2techProposal());
 
 				if (StringUtils.isNotEmpty(techInactive) || StringUtils.isNotBlank(techInactive)) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-					throw new EpException(MessageConst.ERROR_775250, new String[] { techInactive });
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_775250, new String[] { techInactive },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			} catch (Exception e) {
 				handleException(e);
@@ -11319,7 +11324,11 @@ if (null != checklist && !checklist.isEmpty()) {
 
 				if (StringUtils.isNotEmpty(finInactive) || StringUtils.isNotBlank(finInactive)) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
-					throw new EpException(MessageConst.ERROR_775251, new String[] { finInactive });
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_775251, new String[] { finInactive },
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			} catch (Exception e) {
 				handleException(e);
@@ -12772,6 +12781,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					if (isInactiveChecklistPopup) {
 						RequestContext.getCurrentInstance()
 						.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+						return;
 					}
 					// #10141 End Vinod
 					// 25638 - Start
@@ -17617,6 +17627,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		if (isInactiveChecklistPopup) {
 			RequestContext.getCurrentInstance()
 			.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+			return;
 		}
 		if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
 			this.getManagedBean().getQt().setInactiveChecklistNotified(false);
@@ -23474,7 +23485,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		for (ScQtCheckList cl : checklist) {
 			if (null != cl.getPmDocument() && !cl.getPmDocument().isRecordStatus()) {
-				if (inactive.toString() != null && inactive.toString() != "") {
+				if (StringUtils.isNotEmpty(inactive.toString()) 
+						|| StringUtils.isNotBlank(inactive.toString())) {
 					inactive.append(", ");
 				}
 				inactive.append(cl.getTitle());
@@ -23533,24 +23545,18 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String lineBreak = QTConstants.HTML_NEW_LINE_CHARACTER;
 		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
 		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
-		int tecCheckListcount = 0;
-		int finCheckListcount = 0;
+		int checkListcount = 0;
 		for (ScQtCheckList inactive : inActiveChecklist) {
+			checkListcount++;
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
-				tecCheckListcount++;
 				confirmationMsg
-						.append(tecCheckListcount + ". " + 
+						.append(checkListcount + ". " + 
 								techCheckList + " " + 
 								inactive.getTitle() + 
 								lineBreak);
 			} else {
-				if (tecCheckListcount != 0) {
-					confirmationMsg.append(lineBreak);
-					tecCheckListcount = 0;
-				}
-				finCheckListcount++;
 				confirmationMsg
-						.append(finCheckListcount + ". " + 
+						.append(checkListcount + ". " + 
 								finCheckList + " " + 
 								inactive.getTitle() + 
 								lineBreak);
