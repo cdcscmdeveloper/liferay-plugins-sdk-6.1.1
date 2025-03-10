@@ -43,7 +43,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class DirectPurchaseManagedBean.
@@ -315,7 +314,6 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			return null;
 		}
 		
-		// start - 36018
 		/**
 		 * Checks if the maintenance list is empty in the given Sourcing
 		 * Integration response DTO. If the total record count is zero, reloads
@@ -332,7 +330,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 			}
 			return resDTO;
 		}
-
+		
 		/**
 		 * Assigns sourcing documents based on the search status ID. Searches
 		 * for sourcing documents using the specified integration service object

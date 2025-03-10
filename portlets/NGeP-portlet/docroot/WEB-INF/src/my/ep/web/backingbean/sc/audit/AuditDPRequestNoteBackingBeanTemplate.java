@@ -64,6 +64,7 @@ public abstract class AuditDPRequestNoteBackingBeanTemplate extends BaseBackingB
 			
 			auditDPRequestNoteSO.insertAuditDPRequestNote(dtlObjList.getAuDPRequestNoteSPDTOList(),
 					dtlObjList.getAuDPRequestNoteDetailSPDTOList());
+			
 		} catch (Exception ex) {
 			log.info("Catch Exception from TEMPLATE Send TO SO : " + ex);
 		}
