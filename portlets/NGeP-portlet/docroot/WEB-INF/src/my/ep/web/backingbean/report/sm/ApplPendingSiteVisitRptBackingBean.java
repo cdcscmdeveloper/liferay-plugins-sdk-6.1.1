@@ -36,8 +36,7 @@ public class ApplPendingSiteVisitRptBackingBean extends SmReportBackingBean<Appl
 		params.put(SmReportConst.PARAM_ZONE, getManagedBean().getZone() == null ? StringUtils.EMPTY : getManagedBean()
 				.getZone());
 		//#7754 - End
-		
-		addCategoryParam(params);
+		addCategoryParam(params);	//#37907
 
 		generateSmReport(params);
 	}
