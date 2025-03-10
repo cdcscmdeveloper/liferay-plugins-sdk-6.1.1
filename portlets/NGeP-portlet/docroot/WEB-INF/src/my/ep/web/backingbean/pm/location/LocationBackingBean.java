@@ -259,8 +259,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		Long locationId = null;
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())) {
 			StateReqDTO reqDTO = new StateReqDTO();
-			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IStateSO.class);
+			IStateSO stateSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 			PmState state = this.getManagedBean().getState();
 			state.setStateCode(state.getStateCode().toUpperCase());
 			state.setStateName(state.getStateName().trim());
@@ -300,8 +300,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			}
 		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(getManagedBean().getSelectedType())) {
 			DivisionReqDTO reqDTO = new DivisionReqDTO();
-			IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+			IDivisionSO divisionSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IDivisionSO.class);
 
 			PmDivision division = this.getManagedBean().getDivision();
 			division.setDivisionCode(division.getDivisionCode().toUpperCase());
@@ -340,8 +340,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			}
 		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(getManagedBean().getSelectedType())) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
-			IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			IDistrictSO districtSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IDistrictSO.class);
 
 			PmDistrict district = this.getManagedBean().getDistrict();
 			district.setDistrictCode(district.getDistrictCode().toUpperCase());
@@ -393,8 +393,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			}
 		} else if (ParameterConst.LOCATION_LEVEL_CITY.equals(getManagedBean().getSelectedType())) {
 			CityReqDTO reqDTO = new CityReqDTO();
-			ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ICitySO.class);
+			ICitySO citySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
 
 			PmCity city = this.getManagedBean().getCity();
 			city.setCityCode(city.getCityCode().toUpperCase());
