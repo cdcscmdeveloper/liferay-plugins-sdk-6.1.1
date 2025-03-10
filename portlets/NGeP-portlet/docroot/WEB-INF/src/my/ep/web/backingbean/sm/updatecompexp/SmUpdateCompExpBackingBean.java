@@ -1,4 +1,4 @@
-package my.ep.web.backingbean.sm.lbl.sm.updatecompexp;
+package my.ep.web.backingbean.sm.updatecompexp;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;

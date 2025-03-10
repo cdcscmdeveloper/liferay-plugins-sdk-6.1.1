@@ -53,20 +53,33 @@
 							style="text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
-				<p:column></p:column>
-				<p:column></p:column>
-				<p:column></p:column>
-				<p:column></p:column>
-				<p:column></p:column>
+				<p:column>
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{smCompExpDraf.title}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{smCompExpDraf.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{smCompExpDraf.contractStartDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{updateCompExpBB.onClickEditAction}" process="@this"
+						partialSubmit="true" update=":form">
+						<p:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
 			</p:dataTable>
-			<p:commandLink onstart="blockWidget.show()"
-				oncomplete="blockWidget.hide()"
-				action="#{updateCompExpBB.onClickEditAction}" process="@this"
-				partialSubmit="true" update=":form">
-				<u><h:outputText
-						value="#{lbl['lbl.sm.rv.history.link.part.two']}"
-						style="color:blue;" escape="false" /></u>
-			</p:commandLink>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sm.update.comp.exp.draft.from.ct']}"
 			toggleable="true">
@@ -97,13 +110,41 @@
 							style="text-align: center !important;" />
 					</p:row>
 				</p:columnGroup>
-				<p:column></p:column>
-				<p:column></p:column>
-				<p:column></p:column>
-				<p:column></p:column>
-				<p:column></p:column>
+				<p:column>
+					<h:outputText value="#{index + 1}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{ctCompExpDraf.title}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{ctCompExpDraf.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{ctCompExpDraf.contractStartDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{updateCompExpBB.onClickEditAction}" process="@this"
+						partialSubmit="true" update=":form">
+						<p:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<ac:smUpdateCompExpPopUp dialogName="updateCompExpEdit" fromSM="true" fromCT="false"/>
+		<p:commandLink onstart="blockWidget.show()"
+			oncomplete="blockWidget.hide()"
+			action="#{updateCompExpBB.onClickEditAction}" process="@this"
+			partialSubmit="true" update=":form">
+			<p:graphicImage value="/css/images/design/edit.png" />
+		</p:commandLink>
+		<ac:smUpdateCompExpPopUp dialogName="updateCompExpEdit" fromSM="true"
+			fromCT="false" />
 	</ui:define>
 </ui:composition>
