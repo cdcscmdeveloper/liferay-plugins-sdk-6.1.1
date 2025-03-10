@@ -536,9 +536,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 			getManagedBean().setEspkb(true);
 		}
-		//29555 start
-		getPreparedByName();
-	    //29555 end
+		getPreparedByName(); //29555
 	}
 
 	/**
@@ -1758,25 +1756,32 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * set preparedby for managedbean by retrieving requistioner and docid
 	 */
 	public void getPreparedByName() {
-		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		FlActor actor = null;
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		FlActor actor;
 
-		actor = fulfilmentSO.retrieveFlActors(
-				getManagedBean().getFulfilmentRequest().getDocType(),
-				getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
-				FulfilmentConst.Requistioner_Role_Code);
+		if (getManagedBean().getFulfilmentRequest() != null
+				&& getManagedBean().getFulfilmentRequest().getDocType() != null
+				&& getManagedBean().getFulfilmentRequest().getFulfilmentReqId() != null) {
+			actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(),
+					getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
+					FulfilmentConst.ROLE_CODE_REQUISITIONER);
 
-		if(actor != null){
-			getManagedBean().setPreparedBy(actor.getUserName());
-		}else{
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-			if(userResDTO.getPmUser().getUserName() != null){
-				getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+			if (actor != null) {
+				getManagedBean().setPreparedBy(actor.getUserName());
+				return;
 			}
 		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getUserIdSessionFromLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+		if (userResDTO.getPmUser().getUserName() != null) {
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+		}
+
 	}
 	//29555 end
 	

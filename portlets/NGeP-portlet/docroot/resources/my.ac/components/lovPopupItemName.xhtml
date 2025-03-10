@@ -19,7 +19,7 @@
 
 	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" 
 		onShow="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:false}]);"
-		onHide="lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData(); console.log('Dialog Closed!');" 
+		onHide="if (#{!lovBackingBean.lovBean.itemUsageMonitoringReport}){lovPopsetAutoUpdateValue([{name:'enableAutoUpdate', value:true}]); resetAllData(); console.log('Dialog Closed!');}" 
 		resizable="false">
 
 			<f:facet name="header">
@@ -224,8 +224,9 @@
 					value="#{lbl['lbl.btn.select']}"
 					action="#{lovBackingBean.populateToSaveObject}"
 					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
-					oncomplete="lovPopup.hide(); lovPopulateSelection(); resetAllData();"
+					oncomplete="lovPopup.hide();"
 					process="resultPanel"
+					disabled="#{lovBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>
 															
 			    <p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"
@@ -237,7 +238,7 @@
 				  	value="#{lbl['lbl.btn.cancel']}"
 				  	partialSubmit="true" process="@this" update="@this"
 				  	action="#{lovBackingBean.populatedBackupSelectedItems()}"
-				  	oncomplete="lovPopup.hide(); lovPopulateSelection();" styleClass="BtnSpacing"/>
+				  	oncomplete="lovPopup.hide();" styleClass="BtnSpacing"/>
 			</TD>
 			</tr></table>
 			

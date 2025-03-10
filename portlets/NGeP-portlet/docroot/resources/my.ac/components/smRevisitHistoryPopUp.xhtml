@@ -72,7 +72,7 @@
 							<h:commandLink
 								value="#{supplierDataMaintenanceBackingBean.getShortFileName(docFile.fileName)}">
 								<p:fileDownload
-									value="#{supplierDataMaintenanceBackingBean.commonDownload(docFile.filePath,docFile.fileName)}" />
+									value="#{supplierDataMaintenanceBackingBean.downloadSelectedSuppDoc(docFile.fileName,docFile.filePath)}" />
 							</h:commandLink>
 							<br />
 						</ui:repeat>
@@ -98,7 +98,8 @@
 										</td>
 										<td
 											style="border: 0 !important; padding-left: 0 !important; width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;"><p:outputLabel
-												styleClass="outputLabel-view" value="#{remark}" /> <p:outputPanel>
+												styleClass="outputLabel-view" value="#{remark}" /> <p:outputPanel
+												rendered="#{remarkIndex.last}">
 												<br />
 												<table>
 													<ui:repeat var="catCode" varStatus="sub"

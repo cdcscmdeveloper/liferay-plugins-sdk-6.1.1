@@ -107,10 +107,8 @@
 			<!-- #34400 - start -->
 			<p:commandButton oncomplete="if (!args.validationFailed) confirmDlg.show()" value="#{lbl['lbl.btn.submit']}" />
 		</div>
-		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 			okAction="questionnaireBackingBean.submitQuestionnaire"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.confirm.questionnaire']}" 
 			update="@form"
 			loadingWidget="blockWidget" />

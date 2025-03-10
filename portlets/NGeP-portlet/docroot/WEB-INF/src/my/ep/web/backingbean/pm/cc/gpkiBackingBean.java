@@ -207,6 +207,7 @@ public class gpkiBackingBean implements Serializable {
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
+		log.info("#35488 MyGPKI: "+statusMsg + " -ResponseGPKI: "+map.get("response"));
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
@@ -236,12 +237,21 @@ public class gpkiBackingBean implements Serializable {
 	public void setMediumType(){
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String id = map.get("mediumTypeId");
-		isMediumTypeOTP = !"4".equals(id);
-		log.info("--35488--"+map.get("response"));
-		PmUser user = getPmUserFromLoginId();
-		if(user != null){
-			log.info("--35488--"+user.getUserId()+"  "+user.getIdentificationNo());
+		isMediumTypeOTP = true;
+		if("4".equals(id)){
+			isMediumTypeOTP = false;
 		}
+		log.info("--35488--"+map.get("response"));
+		log.info("--35488--JS-nric "+map.get("js_nric")+" -- "+isMediumTypeOTP);
+		PmUser user = getPmUserFromLoginId();
+		String idNo = "...";
+		if(user != null){
+			log.info("--35488--Request IC:"+user.getUserId()+"  "+user.getIdentificationNo());
+			idNo = user.getIdentificationNo();
+		}
+		log.info("35488 TB GPKI: Login IC eP: " + idNo
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 	}
 	
 	
@@ -297,6 +307,9 @@ public class gpkiBackingBean implements Serializable {
 			ContextualCompositeMethodExpression enableAutoUpdateMtd){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
+		log.info("35488 TB GPKI Sign: Login IC eP: " + nric
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 		if(!isValidNric(map)){
 			fc.addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
 					"Token's certificate not match with signer identity."));
@@ -313,6 +326,7 @@ public class gpkiBackingBean implements Serializable {
 			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
 		} catch (Exception e){
 			nonSigningException = e;
+			log.info("--35488--"+map.get("response"));
 			log.error(e);
 		}
 		if (enableAutoUpdateMtd != null) {
@@ -421,9 +435,9 @@ public class gpkiBackingBean implements Serializable {
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setLoginId(facesScopes.getUserScreenName());
 		PmUser pmUser = userSO.retrieveUserByLoginId(userReqDTO).getPmUser();
-		
 		if (pmUser == null) {
 			pmUser = facesScopes.getUserSessionBean();
+			log.info("--35488--bean user id: "+pmUser.getUserId()+" -- "+facesScopes.getUserScreenName());
 		} 
 		return pmUser;
 	}
@@ -437,6 +451,16 @@ public class gpkiBackingBean implements Serializable {
 	
 	public String getNotes(){
 		return SmCommonUtil.getMessage("lbl.gpki.otp.notes", new String[] {otpExp});
+	}
+	
+	/**
+	 * Log request OTP
+	 */
+	public void logOTP(){
+		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		log.info("35488 TB GPKI OTP: Login IC eP: " + nric
+				+ "  Request eP : " + map.get("js_nric")
+				+ "  ResponseGPKI:" + map.get("response"));
 	}
 	//#35488 - end
 }
