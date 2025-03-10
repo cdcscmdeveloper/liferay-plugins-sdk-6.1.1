@@ -1984,11 +1984,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 					/************ AUDIT #28895_35509 - START **************/
 					getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
-					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
-							|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
-						getManagedBean().setResDTO(resDTO);
-						auTemplate.auditSaveData(getManagedBean(), modName);
-					}
+					isAuditConfig(resDTO, modName, isAuditConfig, auTemplate);
 					/************ END AUDIT #28895_35509 - END *************/
 
 					return redirectToSearchSupportDoc();
@@ -1999,11 +1995,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 					/************ AUDIT #28895_35509 - START *************/
 					pmDocument.getPmDocumentRestrs();
-					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
-							|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
-						getManagedBean().setResDTO(resDTO);
-						auTemplate.auditSaveData(getManagedBean(), modName);
-					}
+					isAuditConfig(resDTO, modName, isAuditConfig, auTemplate);
 					/************ END AUDIT #28895_35509 - END *************/
 
 					return null;
@@ -2019,6 +2011,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("saveSupportDoc - End");
 		return null;
 
+	}
+
+	private void isAuditConfig(DocumentResDTO resDTO, String modName, boolean isAuditConfig, AuditPMBackingBeanTemplate auTemplate) {
+		if (isAuditConfig) {
+			getManagedBean().setResDTO(resDTO);
+			auTemplate.auditSaveData(getManagedBean(), modName);
+		}
 	}
 
 	/**
