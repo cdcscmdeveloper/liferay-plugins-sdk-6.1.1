@@ -122,12 +122,36 @@
 					#{lbl['lbl.cm.unspsc.code']}
 			        	</f:facet>
 						<p:commandLink
-							action="#{codificationBackingBean.insertContractedItemCodeForService(unspscObj)}"
-							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
+							action="#{codificationBackingBean.assignCodeConfirmation(unspscObj)}"
+							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}" 
+							update="@([id$=asignCodeDialogConfirm])">
 						
 							#{unspscObj.unspscCode}
 						
 						</p:commandLink>
+
+						<!-- #31503 Start -->
+						<p:confirmDialog id="asignCodeDialogConfirm"
+							widgetVar="asignCodeDialogConfirm"
+							message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"
+							header="#{lbl['lbl.sc.item.details']}" resizable="true"
+							closable="true">
+							<p:outputLabel
+								value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
+							<br />
+							<br />
+
+							<div align="right">
+								<p:commandButton value="#{lbl['lbl.btn.ok']}"
+									onclick="asignCodeDialogConfirm.hide();"
+									action="#{codificationBackingBean.insertContractedItemCodeForService(codificationBackingBean.managedBean.selectedUNSPSCObj)}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									update="@form" />
+								<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+									onclick="asignCodeDialogConfirm.hide();" update="@form" />
+							</div>
+						</p:confirmDialog>
+						<!-- #31503 End -->
 
 						<p:commandLink
 							action="#{codificationBackingBean.selectFromExtensionToAssign(unspscObj)}"
@@ -146,7 +170,7 @@
 
 
 					</p:column>
-					
+
 					<p:column rendered="#{codificationBackingBean.managedBean.assignCodeFlg}">
 						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.type']}
@@ -191,7 +215,7 @@
 				<ui:include src="recommendSearchPopUp.xhtml"></ui:include>
 
 			</p:dialog>
-			
+
 			<!-- Item Specification PopUp -->
 			<ui:include src="/xhtml/cm/codification/itemSpecDlg.xhtml" />
 

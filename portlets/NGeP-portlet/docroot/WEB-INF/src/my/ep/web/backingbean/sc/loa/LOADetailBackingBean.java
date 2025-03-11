@@ -40,6 +40,7 @@ import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -69,6 +70,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SpecialCharacter; //# 29006 - note 702
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -97,6 +100,11 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -12402,5 +12410,84 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// #29007 End vinod
+	
+	/**
+	 * #31503 - Show Details Items in popup
+	 * @param ScRequestItem
+	 * @return void
+	 */
+	public void showItemDescPopup(ScRequestItem reqItem) {
+
+		try {
+			
+//			this.getManagedBean().setTplSpecQuestion(question);
+
+			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
+					ICodificationSO.class);
+			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+			CmType typeObj = null;
+			CmBrand brandObj = null;
+			CmMeasurement meaObj = null;
+
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			CodificationBackingBean cdbb = new CodificationBackingBean();
+			cReqDTO.setItemId(reqItem.getCmItem().getItemId());
+			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
+			CmItem item = cResDTO.getCmItem();
+
+			codeReqDTO.setUnspscCode(item.getCmUnspsc().getUnspscCode());
+			CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
+
+			cdbb.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
+			cdbb.getManagedBean().setCommodityTitle(codeResDTO.getCommodityObj().getUnspscTitle());
+			cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());			
+
+			typeObj = cdbb.searchTypeOjbyTypeId(item.getCmType().getTypeId());
+
+			brandObj = cdbb.searchBrandObjByBrandId(item.getCmBrand().getBrandId());
+
+			meaObj = cdbb.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
+
+			CmColor colorObj = cdbb.searchColorObjByColorCode(item.getCmColor().getColorCode());
+
+			CmItem newItem = new CmItem();
+
+			newItem.setCmUnspsc(codeResDTO.getCommodityObj());
+			newItem.setCmType(typeObj);
+			newItem.setCmBrand(brandObj);
+			newItem.setCmMeasurement(meaObj);
+			newItem.setCmColor(colorObj);
+			newItem.setItemName(((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
+					+ typeObj.getTypeName())
+					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? "" : " "
+							+ brandObj.getBrandName())
+					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
+							: " " + meaObj.getMeasurementName())
+					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? "" : " "
+							+ colorObj.getColorName()));
+			
+			String completeItemName = (codeResDTO.getCommodityObj().getUnspscTitle()
+					+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
+							+ typeObj.getTypeName())
+					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? ""
+							: " " + brandObj.getBrandName())
+					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
+							: " " + meaObj.getMeasurementName())
+					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? ""
+							: " " + colorObj.getColorName()));
+
+			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
+					+ colorObj.getColorCode());
+
+			cdbb.getManagedBean().setSegmentCode(newItem.getExtensionCode());
+			cdbb.getManagedBean().setSegmentTitle(newItem.getItemName());
+			cdbb.getManagedBean().setFamilyTitle(completeItemName);
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("QT", "showItemDescPopup", "showItemDescPopup", null,
+					getUserIdSessionFromLoginId(), e);
+		}
+
+	}
 }
 
