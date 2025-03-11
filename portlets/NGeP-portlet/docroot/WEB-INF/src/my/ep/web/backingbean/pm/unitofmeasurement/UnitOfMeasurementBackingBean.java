@@ -390,7 +390,7 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 					&& reqDTO.getPmUom().getUomId() != null) {
 				uomReqDTO.setUomId(reqDTO.getPmUom().getUomId());
 				UomResDTO resDTO = iUomSO.retrieveUomByUomId(uomReqDTO);
-				getManagedBean().setAuditUomOldVal(resDTO.getPmUom());
+				getManagedBean().setAuditUOMOldVal(resDTO.getPmUom());
 			}
 			/************ AUDIT **************/
 
@@ -418,7 +418,7 @@ public class UnitOfMeasurementBackingBean extends BaseBackingBean<UnitOfMeasurem
 				/************ AUDIT *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM)) {
 					uomReqDTO.setUomId(resDTO.getPmUom().getUomId());
-					getManagedBean().setUomResDTO(resDTO);
+					getManagedBean().setUOMResDTO(resDTO);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_UOM);
 				}
 				/************ END AUDIT *************/
