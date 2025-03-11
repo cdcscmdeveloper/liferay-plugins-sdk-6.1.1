@@ -430,9 +430,11 @@ public interface QTConstants {
 	public static final Long DEFINATION_TYPE_SYSTEM_DEFINED = 213L;
 	public static final Long DEFINATION_TYPE_WEB_FORM = 214L;
 	public static final Long DEFINATION_TYPE_SAMPLE = 215L;
+	public static final Long DEFINATION_TYPE_DEMO = 216L;
 	public static final Long[] DEFINATION_TYPE_LIST = new Long[]{
 		DEFINATION_TYPE_SPECIFICATION,
-		DEFINATION_TYPE_SAMPLE
+		DEFINATION_TYPE_SAMPLE,
+		DEFINATION_TYPE_DEMO
 	};
 	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TG = "TG";
 	public static final String TECH_CHECKLIST_DOC_DEFINATION_KEY_TN = "TN";
@@ -459,8 +461,10 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
-	public static final String PARAM_MAP_PKEY = "PKEY";
-	public static final String PARAM_MAP_QTID = "QT_ID";
+	public static final String PARAM_MAP_QTID = "qtid";
+	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "p_qtchecklistids";
+	public static final String PARAM_MAP_P_LANGUAGE = "p_language";
+	public static final String PARAM_MAP_PUSER = "puser";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
