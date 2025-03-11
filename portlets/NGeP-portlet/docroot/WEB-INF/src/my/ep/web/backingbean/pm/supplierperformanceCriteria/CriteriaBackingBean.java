@@ -42,6 +42,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMCriteriaBackingBean;
@@ -468,8 +469,8 @@ public class CriteriaBackingBean extends BaseBackingBean<CriteriaManagedBean> im
 			}
 		} catch (Exception e) {
 			log.info("createCriteria - fail");
-			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770004);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, MessageConst.ERROR_770004,
+					newCriteria.getCriteriaCode(), "criteriaSO.createCriteria(reqDTO)", user.getUserId(), e);
 		}
 		return null;
 	}
