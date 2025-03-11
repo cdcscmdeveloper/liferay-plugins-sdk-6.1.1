@@ -13300,19 +13300,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 		String lineBreak = QTConstants.HTML_NEW_LINE_CHARACTER;
 		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
 		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
-		int tecCLcount = 0;
-		int finCLcount = 0;
+		int checkListcount = 0;
 		for (ScQtCheckList inactive : inActiveChecklist) {
+			checkListcount++;
 			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
-				tecCLcount++;
-				confirmationMsg.append(tecCLcount + ". " + techCheckList + " " + inactive.getTitle() + lineBreak);
+				confirmationMsg
+						.append(checkListcount + ". " + 
+								techCheckList + " " + 
+								inactive.getTitle() + 
+								lineBreak);
 			} else {
-				if (tecCLcount != 0) {
-					confirmationMsg.append(lineBreak);
-					tecCLcount = 0;
-				}
-				finCLcount++;
-				confirmationMsg.append(finCLcount + ". " + finCheckList + " " + inactive.getTitle() + lineBreak);
+				confirmationMsg
+						.append(checkListcount + ". " + 
+								finCheckList + " " + 
+								inactive.getTitle() + 
+								lineBreak);
 			}
 		}
 
