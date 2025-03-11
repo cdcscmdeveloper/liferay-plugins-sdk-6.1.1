@@ -3760,99 +3760,95 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				codeReqDTO.setUnspscId(this.getManagedBean().getSelectedUNSPSCObj().getUnspscId());
 
 				CodificationResDTO codeResDTO = codificationSO.searchItem(codeReqDTO);
-				CmItem item = null;
-				if (codeResDTO.getItemList() != null && codeResDTO.getItemList().size() > 0) {
-					item = codeResDTO.getItemList().get(0);
-				} else {
-					codeReqDTO = new CodificationReqDTO();
-					codeReqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-					codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
-					CmType typeObj = null;
-					CmBrand brandObj = null;
-					CmMeasurement meaObj = null;
 
-					if (!isSelectedRequestItemProduct()) {
+				codeReqDTO = new CodificationReqDTO();
+				codeReqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+				codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
+				CmType typeObj = null;
+				CmBrand brandObj = null;
+				CmMeasurement meaObj = null;
 
-						if (objSelected != null) {
-							typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
+				if (!isSelectedRequestItemProduct()) {
 
-							brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
-
-							meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
-
-						} else {
-							if (codeResDTO.getCommodityObj().getCmType() != null
-									&& codeResDTO.getCommodityObj().getCmType().size() > 0) {
-								typeObj = codeResDTO.getCommodityObj().getCmType().get(0);
-							} else {
-								typeObj = new CmType();
-								typeObj.setTypeCode("000");
-								typeObj.setTypeName("N/A");
-								typeObj.setUnspscId(codeResDTO.getCommodityObj());
-								codeReqDTO.setCmType(typeObj);
-								typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
-							}
-							if (codeResDTO.getCommodityObj().getCmBrand() != null
-									&& codeResDTO.getCommodityObj().getCmBrand().size() > 0) {
-								brandObj = codeResDTO.getCommodityObj().getCmBrand().get(0);
-							} else {
-								brandObj = new CmBrand();
-								brandObj.setBrandCode("00");
-								brandObj.setBrandName("N/A");
-								brandObj.setUnspscId(codeResDTO.getCommodityObj());
-								codeReqDTO.setCmBrand(brandObj);
-								brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
-							}
-							if (codeResDTO.getCommodityObj().getCmMeasurement() != null
-									&& codeResDTO.getCommodityObj().getCmMeasurement().size() > 0) {
-								meaObj = codeResDTO.getCommodityObj().getCmMeasurement().get(0);
-							} else {
-								meaObj = new CmMeasurement();
-								meaObj.setMeasurementCode("000");
-								meaObj.setMeasurementName("N/A");
-								meaObj.setUnspscId(codeResDTO.getCommodityObj());
-								codeReqDTO.setCmMeasurement(meaObj);
-								meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
-							}
-							obj.setColorId(1L);
-
-						}
-
-					} else {
-
+					if (objSelected != null) {
 						typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
 
 						brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
 
 						meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
+
+					} else {
+						if (codeResDTO.getCommodityObj().getCmType() != null
+								&& codeResDTO.getCommodityObj().getCmType().size() > 0) {
+							typeObj = codeResDTO.getCommodityObj().getCmType().get(0);
+						} else {
+							typeObj = new CmType();
+							typeObj.setTypeCode("000");
+							typeObj.setTypeName("N/A");
+							typeObj.setUnspscId(codeResDTO.getCommodityObj());
+							codeReqDTO.setCmType(typeObj);
+							typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
+						}
+						if (codeResDTO.getCommodityObj().getCmBrand() != null
+								&& codeResDTO.getCommodityObj().getCmBrand().size() > 0) {
+							brandObj = codeResDTO.getCommodityObj().getCmBrand().get(0);
+						} else {
+							brandObj = new CmBrand();
+							brandObj.setBrandCode("00");
+							brandObj.setBrandName("N/A");
+							brandObj.setUnspscId(codeResDTO.getCommodityObj());
+							codeReqDTO.setCmBrand(brandObj);
+							brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
+						}
+						if (codeResDTO.getCommodityObj().getCmMeasurement() != null
+								&& codeResDTO.getCommodityObj().getCmMeasurement().size() > 0) {
+							meaObj = codeResDTO.getCommodityObj().getCmMeasurement().get(0);
+						} else {
+							meaObj = new CmMeasurement();
+							meaObj.setMeasurementCode("000");
+							meaObj.setMeasurementName("N/A");
+							meaObj.setUnspscId(codeResDTO.getCommodityObj());
+							codeReqDTO.setCmMeasurement(meaObj);
+							meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
+						}
+						obj.setColorId(1L);
+
 					}
 
-					CmColor colorObj = this.searchColorObjByColorId(obj.getColorId());
+				} else {
 
-					CmItem newItem = new CmItem();
+					typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
 
-					newItem.setCmUnspsc(codeResDTO.getCommodityObj());
-					newItem.setCmType(typeObj);
-					newItem.setCmBrand(brandObj);
-					newItem.setCmMeasurement(meaObj);
-					newItem.setCmColor(colorObj);
-					newItem.setItemName(codeResDTO.getCommodityObj().getUnspscTitle()
-							+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
-									+ typeObj.getTypeName())
-							+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? ""
-									: " " + brandObj.getBrandName())
-							+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
-									: " " + meaObj.getMeasurementName())
-							+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? ""
-									: " " + colorObj.getColorName()));
+					brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
 
-					newItem.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + typeObj.getTypeCode()
-							+ brandObj.getBrandCode() + meaObj.getMeasurementCode() + colorObj.getColorCode());
-
-					String codeDesc = newItem.getExtensionCode() + " - " + newItem.getItemName();
-					this.getManagedBean().setItemCodeDesc(codeDesc);
-
+					meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
 				}
+
+				CmColor colorObj = this.searchColorObjByColorId(obj.getColorId());
+
+				CmItem newItem = new CmItem();
+
+				newItem.setCmUnspsc(codeResDTO.getCommodityObj());
+				newItem.setCmType(typeObj);
+				newItem.setCmBrand(brandObj);
+				newItem.setCmMeasurement(meaObj);
+				newItem.setCmColor(colorObj);
+				newItem.setItemName(codeResDTO.getCommodityObj().getUnspscTitle()
+						+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj
+								.getTypeName().equals("N A")) ? "" : " " + typeObj.getTypeName())
+						+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj
+								.getBrandName().equals("N A")) ? "" : " " + brandObj.getBrandName())
+						+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj
+								.getMeasurementName().equals("N A")) ? "" : " " + meaObj.getMeasurementName())
+						+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj
+								.getColorName().equals("N A")) ? "" : " " + colorObj.getColorName()));
+
+				newItem.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + typeObj.getTypeCode()
+						+ brandObj.getBrandCode() + meaObj.getMeasurementCode() + colorObj.getColorCode());
+
+				String codeDesc = newItem.getExtensionCode() + " - " + newItem.getItemName();
+				this.getManagedBean().setItemCodeDesc(codeDesc);
+
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "selectedItemCode", "selectedItemCode", null,

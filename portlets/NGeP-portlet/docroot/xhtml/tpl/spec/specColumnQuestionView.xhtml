@@ -61,7 +61,7 @@
 			value="#{question.cmItem.extensionCode}"
 			style="color: #009ae5; font-size:12px;font-style:italic"
 			action="#{codificationBackingBean.showItemDescPopup(question)}"
-			process="@this" update="@([id$=itemDescDialogId])"
+			process="@this" update="@([id$=itemDescDialogId], [id$=itemDetailPanel])"
 			rendered="#{!isRepeated}" />
 		<!-- #31503 End -->
 
