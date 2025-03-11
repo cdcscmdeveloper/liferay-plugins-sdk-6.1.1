@@ -802,6 +802,12 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setHideRemarks(false);
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				
+				//#35508 fl audit trail - set original DO supplier ref no
+				if(resDTO.getFlDeliveryOrder() != null){
+					getManagedBean().setOriginalSupplierDoRef(resDTO.getFlDeliveryOrder().getSupplierDoRef());
+				}
+				//#35508 fl audit trail
 
 				checkDisciplinaryAction();//26279
 		}else{
@@ -838,12 +844,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setContractFlag(false);
 		}
 		// 28855 - End
-		
-		//#35508 fl audit trail - set original DO supplier ref no
-		if(getManagedBean().getFlDeliveryOrder() != null){
-			getManagedBean().setOriginalSupplierDoRef(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());			
-		}
-		//#35508 fl audit trail
 	}
 	
 	// 26279 - start
