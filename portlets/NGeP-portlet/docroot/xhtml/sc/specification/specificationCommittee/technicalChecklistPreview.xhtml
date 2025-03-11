@@ -24,9 +24,9 @@
 				escape="false" />
 
 			<div align="right">
-				<ui:remove>action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.download']}"
 					partialSubmit="true" ajax="false" styleClass="BtnSpacing"
+					action="#{specificationBackingBean.downloadTechnicalChecklistSummaryReport()}"
 					process="@this" />
 			</div>
 		</p:panel>
@@ -71,9 +71,9 @@
 
 			</p:dataTable>
 			<div align="right">
-				<ui:remove>action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.download']}"
 					partialSubmit="true" ajax="false" styleClass="BtnSpacing"
+					action="#{specificationBackingBean.downloadTechnicalChecklistDetailedReport()}"
 					process="@this" />
 			</div>
 		</p:panel>
