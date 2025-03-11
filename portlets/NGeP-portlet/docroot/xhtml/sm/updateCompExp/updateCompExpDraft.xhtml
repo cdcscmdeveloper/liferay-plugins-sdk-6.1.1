@@ -3,6 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="resourceSection">
 		<script>
@@ -144,7 +145,7 @@
 			partialSubmit="true" update=":form">
 			<p:graphicImage value="/css/images/design/edit.png" />
 		</p:commandLink>
-		<ac:smUpdateCompExpPopUp dialogName="updateCompExpEdit" fromSM="true"
+		<ac:smUpdateCompExpEditPopUp dialogName="updateCompExpEdit" fromSM="true"
 			fromCT="false" />
 	</ui:define>
 </ui:composition>

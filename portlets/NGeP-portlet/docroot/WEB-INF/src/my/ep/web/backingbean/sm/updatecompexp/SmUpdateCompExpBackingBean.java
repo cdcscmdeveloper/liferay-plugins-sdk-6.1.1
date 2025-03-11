@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm.updatecompexp;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.updatecompexp.SmUpdateCompExpManagedBean;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -48,6 +49,10 @@ public class SmUpdateCompExpBackingBean extends BaseBackingBean<SmUpdateCompExpM
 	 * To show popup when user click edit on company experience
 	 */
 	public void onClickEditAction() {
+		SmCompExpDraft selectedDraf = new SmCompExpDraft();
+		
+		selectedDraf.setClientType("F");
+		this.getManagedBean().setSelectedCompExpDrafList(selectedDraf);
 		RequestContext.getCurrentInstance().execute("updateCompExpEditWV.show();");
 	}
 }

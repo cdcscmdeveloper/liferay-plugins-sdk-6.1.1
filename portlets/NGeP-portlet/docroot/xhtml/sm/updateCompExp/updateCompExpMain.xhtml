@@ -5,9 +5,9 @@
 	xmlns:h="http://java.sun.com/jsf/html">
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_updateCompExpInfo_WAR_NGePportlet').find(
+			$('#portlet_updateCompExp_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
-					"#{lbl['lbl.sm.update.comp.exp.info']}");
+					"#{lbl['lbl.sm.update.comp.exp']}");
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
@@ -18,20 +18,20 @@
 			<p:graphicImage value="/css/images/priority.png" />
 			<p:spacer height="2" />
 			<h:outputText
-				value="#{lbl['lbl.sm.update.comp.exp.info.draft.alert.part.one']}"
+				value="#{lbl['lbl.sm.update.comp.exp.draft.alert.part.one']}"
 				style="color:blue;" escape="false" />
 			<p:spacer height="2" />
 			<p:commandLink onstart="blockWidget.show()"
 				oncomplete="blockWidget.hide()"
-				action="#{updateCompExpInfoBB.redirectToDraftPage}"
+				action="#{updateCompExpBB.redirectToDraftPage}"
 				process="@this" partialSubmit="true" update=":form">
 				<u><h:outputText
-						value="#{lbl['lbl.sm.update.comp.exp.info.draft.alert.part.two']}"
+						value="#{lbl['lbl.sm.update.comp.exp.draft.alert.part.two']}"
 						style="color:blue;" escape="false" /></u>
 			</p:commandLink>
 			<p:spacer height="2" />
 			<h:outputText
-				value="#{lbl['lbl.sm.update.comp.exp.info.draft.alert.part.three']}"
+				value="#{lbl['lbl.sm.update.comp.exp.draft.alert.part.three']}"
 				style="color:blue;" escape="false" />
 		</p:outputPanel>
 	</ui:define>

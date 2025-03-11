@@ -5,37 +5,37 @@
 	xmlns:h="http://java.sun.com/jsf/html">
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_updateCompExpInfo_WAR_NGePportlet').find(
+			$('#portlet_updateCompExp_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
-					"#{lbl['lbl.sm.update.comp.exp.info']}");
+					"#{lbl['lbl.sm.update.comp.exp']}");
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:panel header="#{lbl['lbl.sm.update.comp.exp.info.tnc.header']}">
+		<p:panel header="#{lbl['lbl.sm.update.comp.exp.tnc.header']}">
 			<h:outputText escape="false"
-				value="#{lbl['lbl.sm.update.comp.exp.info.tnc.msg']}"
+				value="#{lbl['lbl.sm.update.comp.exp.tnc.msg']}"
 				style="white-space : normal !important" />
 		</p:panel>
 		<table>
 			<tr>
 				<td><p:selectBooleanCheckbox
-						value="#{updateCompExpInfoBB.managedBean.agreeTC}">
+						value="#{updateCompExpBB.managedBean.agreeTC}">
 						<p:ajax update="btnProceed" partialSubmit="true" process="@this"
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sm.update.comp.exp.info.tnc.agree']}" /></td>
+						value="#{lbl['lbl.sm.update.comp.exp.tnc.agree']}" /></td>
 			</tr>
 		</table>
 		<div align="right">
 			<p:commandButton id="btnProceed"
-				value="#{lbl['lbl.sm.update.comp.exp.info.action.proceed']}"
+				value="#{lbl['lbl.sm.update.comp.exp.action.proceed']}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				disabled="#{!updateCompExpInfoBB.managedBean.agreeTC}"
-				action="#{updateCompExpInfoBB.proceedAfterAcceptTnC}" />
+				disabled="#{!updateCompExpBB.managedBean.agreeTC}"
+				action="#{updateCompExpBB.proceedAfterAcceptTnC}" />
 		</div>
 	</ui:define>
 </ui:composition>

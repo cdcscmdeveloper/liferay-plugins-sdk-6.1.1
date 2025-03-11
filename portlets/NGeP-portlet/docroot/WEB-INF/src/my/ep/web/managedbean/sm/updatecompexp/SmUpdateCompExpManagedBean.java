@@ -5,6 +5,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -17,6 +18,8 @@ public class SmUpdateCompExpManagedBean extends BaseManagedBean {
 	private boolean agreeTC;
 	private List<SmCompExpDraft> smCompExpDrafList;
 	private List<SmCompExpDraft> ctCompExpDrafList;
+	private SmCompExpDraft selectedCompExpDrafList;
+	private PmParameter selectedOrgType;
 
 	public boolean isAgreeTC() {
 		return agreeTC;
@@ -40,5 +43,21 @@ public class SmUpdateCompExpManagedBean extends BaseManagedBean {
 
 	public void setCtCompExpDrafList(List<SmCompExpDraft> ctCompExpDrafList) {
 		this.ctCompExpDrafList = ctCompExpDrafList;
+	}
+
+	public SmCompExpDraft getSelectedCompExpDrafList() {
+		return selectedCompExpDrafList;
+	}
+
+	public void setSelectedCompExpDrafList(SmCompExpDraft selectedCompExpDrafList) {
+		this.selectedCompExpDrafList = selectedCompExpDrafList;
+	}
+
+	public PmParameter getSelectedOrgType() {
+		return selectedOrgType;
+	}
+
+	public void setSelectedOrgType(PmParameter selectedOrgType) {
+		this.selectedOrgType = selectedOrgType;
 	}
 }
