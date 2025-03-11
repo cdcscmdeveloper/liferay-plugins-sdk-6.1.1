@@ -621,6 +621,14 @@ public class FlDocumentBackingBean extends FulfilmentBaseBackingBean<FlDocumentM
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+				
+				//#35508 fl audit trail - set original DO supplier ref no
+				log.info("35508 start setOriginalSupplierDoRef");
+				if(resDTO.getFlDeliveryOrder() != null){
+					doBB.getManagedBean().setOriginalSupplierDoRef(resDTO.getFlDeliveryOrder().getSupplierDoRef());
+				}
+				//#35508 fl audit trail
+				
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else { // view
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
