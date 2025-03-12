@@ -433,34 +433,30 @@
 	</p:confirmDialog>
 	<!-- 32304 - end -->
 	<!-- #34400 - start -->
-	<ac:confirmationPopup id="confirmRecommendDlg" widget="confirmRecommendDlg"
+	<ac:confirmationPopupSM id="confirmRecommendDlg" widget="confirmRecommendDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{backingBean.managedBean.poSecReview.recommendation eq 'REJECT' ? lbl['lbl.sm.confirm.recc.reject'] : lbl['lbl.sm.confirm.recc.approve']}" 
 		update="@([id$=Msg])"
 		loadingWidget="poEscalateBlockWidget" />
 		
-	<ac:confirmationPopup id="confirmApproveDlg" widget="confirmApproveDlg"
+	<ac:confirmationPopupSM id="confirmApproveDlg" widget="confirmApproveDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.approve']}" 
 		update="@([id$=Msg])"
 		loadingWidget="blockWidget" />
 		
-	<ac:confirmationPopup id="confirmRejectDlg" widget="confirmRejectDlg"
+	<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.reject']}" 
 		update="@([id$=Msg])"
 		loadingWidget="blockWidget" />
 
-	<ac:confirmationPopup id="confirmInquiryDlg" widget="confirmInquiryDlg"
+	<ac:confirmationPopupSM id="confirmInquiryDlg" widget="confirmInquiryDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.enquiry.po']}" 
 		update="@([id$=Msg])"
 		loadingWidget="poEnquiryBlockWidget" />

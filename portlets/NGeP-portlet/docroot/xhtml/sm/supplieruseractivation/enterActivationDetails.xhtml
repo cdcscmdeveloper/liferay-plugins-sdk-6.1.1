@@ -80,11 +80,9 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:dialog>
 	<!-- #34400 -->
-	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 		okAction="supplierUserActivationBackingBean.activateSupplierUser"
 		okProcess="@form"
-		width="400" height="100"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.sm.confirm.user.activate']}" 
 		update="@form"
 		loadingWidget="submissionDialog"/>

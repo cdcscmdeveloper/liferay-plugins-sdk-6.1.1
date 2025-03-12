@@ -71,11 +71,9 @@
 					oncomplete="if (!args.validationFailed) confirmDlg.show()" />
 			</div>
 		</p:panel>
-		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 			bean="#{backingBean}"
 			okAction="onDisplayConfirmCanceMofRegistration"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.confirm.cancel.mof']}" 
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
