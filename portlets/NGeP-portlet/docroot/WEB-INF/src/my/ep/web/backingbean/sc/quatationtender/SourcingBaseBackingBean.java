@@ -5754,7 +5754,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 			}
 			//#36678 set null if user change above 50k. related to 35061
-			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
+			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
+					&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){//#37899 add null checking for Pm Status
 				scQt.setJustificationProcValue(null);
 			}
 			return Boolean.FALSE;
@@ -7373,4 +7374,42 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
+	// #29007 Start vinod
+	public boolean checkWIPVersionAndInsertItemSpecOffer(ScLoa scLoa) {
+		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
+		String docType = scLoa.getScLoiLoa().getDocType();
+
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_DP);
+		} else {
+			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_QT);
+		}
+
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
+		String version = this.getManagedBean().getBpmVersionNo();
+
+		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion, version);
+	}
+
+	// #29007 End vinod
+	// #29007 Start vinod
+	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus, String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
+				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
+		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
+		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
+
+		if (isPendingAcknowledgement || isPendingVerify && isOldVersion) {
+			return true;
+		}
+		return false;
+	}
+
+	// #29007 End vinod
 }

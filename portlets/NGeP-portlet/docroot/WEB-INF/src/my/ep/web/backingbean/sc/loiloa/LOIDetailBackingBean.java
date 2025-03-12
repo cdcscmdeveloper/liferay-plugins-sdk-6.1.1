@@ -34,6 +34,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -1026,6 +1027,9 @@ public class LOIDetailBackingBean extends
 						 * 31061 - END
 						 */
 				}
+				
+				disqualifiedSupplierListbyItemBranchDeleted(scQtRecommendList); //#28777 & #29729
+				
 			} else {
 				getManagedBean().setItemized(false);
 				processRecommendedSuppliersByPKG(scQtRecommendList);
@@ -1040,10 +1044,49 @@ public class LOIDetailBackingBean extends
 				ScQtEvaluationResultDtl awardedSupplier = getRecommendedEvaluationResultDtlByPKG(scQtRecommend);
 				getManagedBean().setRecommendedSupplierList(scQtRecommend.getAwardSupplierList());	
 				getManagedBean().setSelectedSupplier(awardedSupplier);
+				
+				disqualifiedSupplierListbyPakageBranchDeleted(scQtRecommendList);//#28777 & #29729
+				
 			}			
 		
 		
 	}
+	
+	//#28777 & #29729 - Start
+    /**
+    * Method to check had disqualified supplier list by items
+    * @param scQtRecommendList
+    **/
+	private void disqualifiedSupplierListbyItemBranchDeleted(List<ScQtRecommend> scQtRecommendList){
+	  ScQt scQt = this.getManagedBean().getScQt();
+	  if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())){
+		  List<ScQtRecommend> disqualifiedRecomendedList = new ArrayList<>();
+			for (ScQtRecommend disqualifiedRecom : scQtRecommendList) {
+				List<ScQtEvaluationResultDtl> disRecomDisList = disqualifiedRecom.getNotAwardSupplierList();
+				disqualifiedRecom.setNotAwardSupplierList(disRecomDisList);
+				disqualifiedRecomendedList.add(disqualifiedRecom);
+			}
+			this.getManagedBean().setDisqualifiedRecommendList(disqualifiedRecomendedList);
+      }
+	}
+	//#28777 & #29729 - End
+	
+	//#28777 & #29729 - Start
+   /**
+    * Method to check had disqualified supplier list by packages
+    * @param scQtRecommendList
+    **/
+	private void disqualifiedSupplierListbyPakageBranchDeleted(List<ScQtRecommend> scQtRecommendList){
+		ScQt scQt = this.getManagedBean().getScQt();
+		if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId())){
+			
+			  processRecommendedSuppliersByPKG(scQtRecommendList);
+			  ScQtRecommend scQtRecommend = scQtRecommendList.get(0);
+			  this.getManagedBean().setDisqualifiedSupplierList(scQtRecommend.getNotAwardSupplierList()); 
+			 
+		}
+	}
+	//#28777 & #29729 - End	
 	
 	/**
 	 * @see Bug#31061
@@ -5732,7 +5775,7 @@ public class LOIDetailBackingBean extends
 						SmSupplier smSupplier = scQtRecommendDtl.getSupplier();
 						Long supplierId = smSupplier.getSupplierId();
 	
-						if (!supplierIds.contains(supplierId)) {
+						if (!supplierIds.contains(supplierId) && !checkDisqualifiedSupplierBranchDeleted(this.getManagedBean().getScQt().getQtId(), supplierId)) {//#28777 & #29729
 							selectItems.add(new SelectItem(supplierId, scQtRecommendDtl
 									.getScQtProposalAmount().getScQtProposal().getSupplierNo().toString()));
 							supplierIds.add(supplierId);
@@ -5928,28 +5971,41 @@ public class LOIDetailBackingBean extends
 	private void setRecommendedSupplierList(ScQtRecommend scQtRecommend) {
 		boolean isSuccessful = false;
 		List<ScQtEvaluationResultDtl> shortlistedSupplierList = null;
+		List<ScQtEvaluationResultDtl> disqualifiedSupplierList = new ArrayList<>();//#28777 & #29729
 		boolean isItemized = this.getManagedBean().isItemized();
 		
 		if (CollectionUtils.isEmpty(
-				scQtRecommend.getShortListedSupplierList())) {
+				scQtRecommend.getShortListedSupplierList()) || CollectionUtils.isEmpty(scQtRecommend.getNotAwardSupplierList())) { //#28777 & #29729
 			
 			// Retrieve the suppliers short listed for the selected item
 			SuppFinalizationResDTO resDTO = null;
 			if (isItemized) {
 				resDTO = this.getShortListedSuppliersByItem(scQtRecommend);	
 				shortlistedSupplierList = resDTO.getQualifiedByItemSuppliers();
+				//#28777 & #29729 - Start
+				if(resDTO.getDisqualifiedByItemSuppliers() != null){
+					disqualifiedSupplierList  = resDTO.getDisqualifiedByItemSuppliers();
+				}
+				//#28777 & #29729 - End
 			} else {
 				resDTO = this.getShortListedSuppliersByPkg(
 									scQtRecommend.getTplSpecZoneDtl());
 				shortlistedSupplierList = resDTO.getQualifiedByPackageSuppliers();
+				//#28777 & #29729 - Start
+				if(resDTO.getDisqualifiedByPackageSuppliers() != null){
+					disqualifiedSupplierList = resDTO.getDisqualifiedByPackageSuppliers();
+				}
+				//#28777 & #29729 - End
 			}
 			
 			isSuccessful = resDTO.isSuccessful();
 			scQtRecommend.setShortListedSupplierList(shortlistedSupplierList);
+			scQtRecommend.setNotAwardSupplierList(disqualifiedSupplierList);//#28777 & #29729
 		} else {
 			isSuccessful = true;
 			shortlistedSupplierList = scQtRecommend
 					.getShortListedSupplierList();
+			disqualifiedSupplierList = scQtRecommend.getNotAwardSupplierList();//#28777 & #29729
 		}
 		if (isSuccessful) {
 			
@@ -5994,7 +6050,38 @@ public class LOIDetailBackingBean extends
 						} 
 					}
 				}				
-			}			
+			}		
+			
+			//#28777 & #29729 - Start
+			scQtRecommend.setNotAwardSupplierList(
+					new ArrayList<ScQtEvaluationResultDtl>());
+			if (CollectionUtils.isNotEmpty(disqualifiedSupplierList)) {
+				for (ScQtEvaluationResultDtl evaluationResultDtl : disqualifiedSupplierList) {
+					Long supplierId = evaluationResultDtl.getQtEvaluationResult()
+							.getScQtProposal().getScQtSupplier().getSmSupplier()
+							.getSupplierId();
+					if (recommendDtlsMap.containsKey(supplierId)) {
+						if (evaluationResultDtl.getScQtRecommendDtl() == null) {
+							evaluationResultDtl.setScQtRecommendDtl(
+										new ArrayList<ScQtRecommendDtl>());
+						}
+						ScQtRecommendDtl recommendDtl = recommendDtlsMap.get(supplierId);
+						evaluationResultDtl.getScQtRecommendDtl().add(recommendDtl);						
+						
+						if (recommendDtl != null && recommendDtlIds.contains(String.valueOf(recommendDtl.getRecommendDtlId()))) {
+							scQtRecommend.getNotAwardSupplierList()
+							 .add(evaluationResultDtl);
+						}						
+						
+						if (isItemized) {
+							calculateOfferedPrice(
+									evaluationResultDtl,scQtRecommend.getRequestItem());	
+						} 
+					}
+				}				
+			}
+			//#28777 & #29729 - End
+			
 		}
 		
 	}
@@ -7030,22 +7117,6 @@ public class LOIDetailBackingBean extends
     	  
     	return suppSearchResDTO.getSmSupplierBranchList();
 	}
-	
-	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param supplier id 
-	* @return true or false
-	**/
-	public boolean disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(ScQtEvaluationResult qtEvaluationResult){
-	
-		Long supplierId = qtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
-		ScQt scQt = this.getManagedBean().getScQt();
-		
-		if(supplierId != null && scQt != null){
-		    return Boolean.TRUE;
-	    }
-		return Boolean.FALSE;
-	}
 	//#28777 & #29729 - End
 	
 	/**
@@ -7102,4 +7173,57 @@ public class LOIDetailBackingBean extends
 			RequestContext.getCurrentInstance().update("userPtjOrg");
 		}
 	}
+	
+	//#28777 & #29729 - Start
+    /**
+	  * Method to display instruction when had supplier deleted branch
+	  * @param Long qtId
+      * @return true or false
+	  **/
+	public Boolean checkInstructionSupplierBranchDeleted(Long qtId){
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		
+		 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
+			 return Boolean.TRUE;
+		 }
+		 return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
+	
+	//#28777 & #29729 - Start
+    /**
+    * Method to check if this supplier disqualified
+    * @param Long qtId
+    * @param Long supplierId
+    * @return true or false
+    **/
+	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId){
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		
+		if(sourcingIntegrationSO.flagDisqualifiedSupplierBranchDeleted(qtId,supplierId)){
+			
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
+	
+    //#28777 & #29729 - Start
+    /**
+    * Method to check had disqualified supplier list
+    * @param Long qtId
+    * @return true or false
+    **/
+	public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId){
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		
+		 if(sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)){
+			 return Boolean.TRUE;
+		 }
+		 return Boolean.FALSE;
+	}
+	//#28777 & #29729 - End
 }

@@ -2349,6 +2349,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
 			// 25037 - end
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo());
+			// #29007 End Vinod
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -4235,28 +4238,37 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
+	/**
+	 * This method manages the popup and role downgrades based on the application and personnel details.
+	 * It clears roles, adjusts flags, and triggers UI changes as needed. It also includes logging for TDD validation.
+	 *
+	 * @param smAppl The application object
+	 * @param ssmResDTO The personnel and role data
+	 * @return boolean indicating whether the downgrade role is set
+	 */
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl, SsmResDTO ssmResDTO) {
 	    LoggerUtils logger = LoggerUtils.getInstance();
-	    logger.logCodeCoverage("Test Case: Starting method execution");
-
+	    // Test Case 1: Clear roles and flags
+	    logger.logCodeCoverage("Test Case 1: Start clearing roles and flags");
 	    getManagedBean().getPersonnelsRole().clear();
 	    getManagedBean().setDowngradeRole(false);
 	    getManagedBean().setDisAllowOwnerEdit(false);
-
+	    logger.logCodeCoverage("Test Case 1: Roles and flags cleared");
+	    
 	    SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 	    Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
-	    logger.logCodeCoverage("Test Case 3: isMofAccEffDatePassed6MonthCurrDate = " + isMofAccEffDatePassed6MonthCurrDate);
 
 	    String applType = smAppl.getApplType();
 	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
 	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
-	    logger.logCodeCoverage("Test Case 3: disallowEditApplType = " + disallowEditApplType);
-
+	    
 	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
-	    reqDto.setApplId(smAppl.getApplId());
+	    reqDto.setApplId(getManagedBean().isResubmitAppl() ? smAppl.getApplId() : supplier.getSmAppl().getApplId());
 	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-
+	    // Test Case 2: Ensure that personnel list is populated based on conditions
+	    logger.logCodeCoverage("Test Case 2: Start checking and adding personnel to roles");
+	    
 	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
 	        for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
 	            SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
@@ -4266,35 +4278,42 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	            Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
 
 	            Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull && (!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
-	            logger.logCodeCoverage("Test Case 1: shouldAddPersonnel = " + shouldAddPersonnel);
-
+	            
 	            if (shouldAddPersonnel) {
 	                getManagedBean().getPersonnelsRole().add(personnel);
 	            }
-
+	            
 	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
 	                getManagedBean().setDisAllowOwnerEdit(true);
-	                logger.logCodeCoverage("Test Case 2: disallowOwnerEdit set to true");
 	                break;
 	            }
 	        }
 	    }
-
+	    
+	    // Log personnel role population completion
+	    logger.logCodeCoverage("Test Case 2: Personnel added to roles list");
+	    
+	    // Test Case 3: Check if disallow owner edit flag is set correctly
+	    logger.logCodeCoverage("Test Case 3: Check if disallow owner edit flag is set");
 	    if (getManagedBean().getPersonnelsRole() != null && !getManagedBean().getPersonnelsRole().isEmpty()) {
+	    	// Test Case 4: Set downgrade role flag if personnel is added
+	    	logger.logCodeCoverage("Test Case 4: Setting downgrade role flag");
 	        getManagedBean().setDowngradeRole(true);
-	        logger.logCodeCoverage("Test Case 1: downgradeRole set to true");
 
 	        String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
 	        getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
 	        getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[]{epRole}));
 	        getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[]{epRole}));
 	        getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
-
+	        // Log the downgrade role and popup actions
+	        logger.logCodeCoverage("Test Case 3: Downgrade role set, displaying term and condition popup");
+	        
 	        RequestContext.getCurrentInstance().execute("blockWidget.hide()");
 	        RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+	        logger.logCodeCoverage("Test Case 4: Downgrade role flag set and UI updated");
 	    }
-
-	    logger.logCodeCoverage("Test Case: Method execution completed");
+	 // Log downgrade role setting completion
+	    logger.logCodeCoverage("Test Case 4: Method displayPopupDowngradeSSMOwner completed");
 	    return getManagedBean().isDowngradeRole();
 	}
 

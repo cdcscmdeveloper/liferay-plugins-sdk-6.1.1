@@ -27,11 +27,10 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /></td>
 				<!-- 34810 - start  -->
 				<!-- #34159 - START - add param disableValidation -->
+				<!-- 34810, #34400 - start  -->
 				<td style="white-space: nowrap; float: right;">
-					<p:commandButton
-						value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.checkingBeforeSave()}"
-						onclick="blockWidget.show()" oncomplete="blockWidget.hide()" >
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmDlg.show()" >
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 				</td>
@@ -39,6 +38,12 @@
 				<!-- 34810 - end  -->
 			</tr>
 		</table>
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
+			okAction="smPersonnelBackingBean.checkingBeforeSave()"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 
 
 		<p:panel id="UserProfile" toggleable="true">
@@ -863,7 +868,10 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td style="float: left;"><p:selectBooleanCheckbox
+									<td style="float: left;">
+										<!-- #36718 - Start - add disabled option-->
+										<p:selectBooleanCheckbox
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelResidentialAddress.sameAsPerm}">
 											<p:ajax event="change"
 												update="@([id$=ResidentialAddressInfo])"
@@ -1102,7 +1110,10 @@
 								</tr>
 								<tr>
 									<td></td>
-									<td style="float: left;"><p:selectBooleanCheckbox
+									<td style="float: left;">
+									<!-- #36718 - Start - add disabled option-->
+										<p:selectBooleanCheckbox
+											disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelOfficeAddress.sameAsComp}">
 											<p:ajax event="change"
 												update="@([id$=officeAddressInfo])"
