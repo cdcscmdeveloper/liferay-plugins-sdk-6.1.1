@@ -2050,7 +2050,6 @@ public class SpecificationBackingBean extends
 					
 				}
 
-				// 37813,35384 remove coding.
 				techWeightageSum();
 				techScoreSum();
 			}
@@ -8742,40 +8741,36 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	private void techScoreSum() {
 		try {
-			// 37813,35384 -start
-			BigDecimal totalScore = BigDecimal.valueOf(0);
-			// 37813,35384  -end
-			List<ScQtCheckList> weightageList = this.getManagedBean()
-					.getTechnicalScoring();
+			BigDecimal totalScore = BigDecimal.valueOf(0); // 37813,35384
+			List<ScQtCheckList> weightageList = this.getManagedBean().getTechnicalScoring();
+
 			if (weightageList == null) {
-				// 37813,35384 -start 
-				weightageList = new ArrayList<>();
-				// 37813,35384 -end
+				weightageList = new ArrayList<>(); // 37813,35384
 			}
+
 			for (int i = 0; i < weightageList.size(); i++) {
 				// 37813,35384 -start
 				ScQtCheckList weight = weightageList.get(i);
-				if (null != weight.getQtScoreWeightage()){	
-				ScQtScoreWeightage checklistWeighatge=setWeightageScore(weight.getQtScoreWeightage());
-				weight.setQtScoreWeightage(checklistWeighatge);
-				BigDecimal checkListScore = weight.getQtScoreWeightage()
-							.getScore() != null ? weight.getQtScoreWeightage()
-							.getScore() : BigDecimal.valueOf(0);
-				totalScore = totalScore.add(checkListScore);
-				// 37813,35384 -end
+
+				if (null != weight.getQtScoreWeightage()) {
+					ScQtScoreWeightage checklistWeighatge = setWeightageScore(weight.getQtScoreWeightage());
+
+					weight.setQtScoreWeightage(checklistWeighatge);
+
+					BigDecimal checkListScore = weight.getQtScoreWeightage().getScore() != null ? weight
+							.getQtScoreWeightage().getScore() : BigDecimal.valueOf(0);
+					totalScore = totalScore.add(checkListScore);
 				}
-				
-				
+				// 37813,35384 -end
 			}
-			// 37813,35384 -start
-			this.getManagedBean().setTechPoints(totalScore);
-			// 37813,35384 -end
+
+			this.getManagedBean().setTechPoints(totalScore); // 37813,35384
 		} finally {
 
 		}
 
 	}
-	
+
 	// 37813,35384 -start
 	/**
 	 * set checkist score weight.
