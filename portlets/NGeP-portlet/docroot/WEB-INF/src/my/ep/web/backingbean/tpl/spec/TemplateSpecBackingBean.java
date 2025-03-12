@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -3919,8 +3920,14 @@ public class TemplateSpecBackingBean extends
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 						.getStatusId() ? this.getManagedBean().getScQt()
 				.getQtStatus().getStatusId() : Long.MIN_VALUE;
-		if (statusId
-				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+				
+		List<Long> orderedStatuses = Arrays
+				.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+				orderedStatuses.indexOf(QTStatusConst.QT_PROPOSAL_PREPARATION),
+				orderedStatuses.indexOf(QTStatusConst.QT_AWARDED) + 1);
+
+		if (orderedStatuses.contains(statusId)) {
 			List<TplSpecAnswer> answerList = templateSpecBean
 					.getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answerList) {
