@@ -1,0 +1,30 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.tnc.header']}">
+			<h:outputText value="#{lbl['lbl.sm.comp.exp.tnc.msg']}" escape="false" />
+		</p:panel>
+		<table>
+			<tr>
+				<td><p:selectBooleanCheckbox value="#{compExpMB.agreeTnC}">
+						<p:ajax update="btnProceed" partialSubmit="true" process="@this"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+					</p:selectBooleanCheckbox></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.comp.exp.tnc.agree']}" /></td>
+			</tr>
+		</table>
+		<div align="right">
+			<p:commandButton id="btnProceed"
+				value="#{lbl['lbl.sm.comp.exp.tnc.btn.proceed']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				disabled="#{!compExpMB.agreeTnC}"
+				action="#{compExpBB.proceedAfterAcceptTnC}" />
+		</div>
+	</ui:define>
+</ui:composition>

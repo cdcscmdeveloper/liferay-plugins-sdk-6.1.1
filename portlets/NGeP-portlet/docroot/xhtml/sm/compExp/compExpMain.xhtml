@@ -1,0 +1,28 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="contentSection">
+		<p:outputPanel rendered="compExpMB.smDraftList !empty">
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			<p:graphicImage value="/css/images/priority.png" />
+			<p:spacer width="3" />
+			<h:outputText value="#{lbl['lbl.sm.comp.exp.draft.link.one']}"
+				style="color:blue;" />
+			<p:commandLink onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				action="#{compExpBB.redirectToDraft}" process="@this"
+				partialSubmit="true" update=":form">
+				<u><h:outputText
+						value="#{lbl['lbl.sm.comp.exp.draft.link.two']}"
+						style="color:blue;" /></u>
+			</p:commandLink>
+			<p:spacer width="3" />
+			<h:outputText value="#{lbl['lbl.sm.comp.exp.draft.link.three']}"
+				style="color:blue;" />
+		</p:outputPanel>
+	</ui:define>
+</ui:composition>
