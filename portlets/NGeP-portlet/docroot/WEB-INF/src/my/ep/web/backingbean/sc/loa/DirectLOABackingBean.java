@@ -5546,6 +5546,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				//Enhancement #21694 END
 			}
 			else {
+				// #29007 Start Vinod
+				checkAndInsertItemSpecOffer();
+				// #29007 End Vinod
 				updateBpmTaskAction(outcome);
 			}
 		}
@@ -9866,6 +9869,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void confirmSupplierAccept() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
 		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" DIRECT LOA.");
+		// #29007 Start Vinod
+		checkAndInsertItemSpecOffer();
+		// #29007 End Vinod
 		
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -13102,4 +13108,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return false;
 	}
 	// #36757 Start Vinod 05/12/2024
+	// #29007 Start vinod
+	private void checkAndInsertItemSpecOffer() {
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		
+		if (checkWIPVersionAndInsertItemSpecOffer(scLoa)) {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(scLoa.getLoaId());
+			
+			getQtAwardSO().insertItemSpecOffer(reqDTO);
+		}
+	}
+
+	// #29007 End vinod
 }

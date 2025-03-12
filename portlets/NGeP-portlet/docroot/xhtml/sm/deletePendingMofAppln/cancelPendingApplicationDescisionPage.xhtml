@@ -112,18 +112,16 @@
 			</div>
 		</p:dialog>
 		<!-- #34400 -->
-		<ac:confirmationPopup id="confirmApproveDlg" widget="confirmApproveDlg"
+		<ac:confirmationPopupSM id="confirmApproveDlg" widget="confirmApproveDlg"
 			okParam="#{backingBean.approveOrRejectPendingApplicationCancellation('APPROVE')}"
-			width="400" height="100" hasParam="true"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			hasParam="true"
 			content="#{lbl['lbl.sm.confirm.approve']}" 
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
 			
-		<ac:confirmationPopup id="confirmRejectDlg" widget="confirmRejectDlg"
+		<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
 			okParam="#{backingBean.approveOrRejectPendingApplicationCancellation('REJECT')}"
-			width="400" height="100" hasParam="true"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			hasParam="true"
 			content="#{lbl['lbl.sm.confirm.reject']}" 
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />

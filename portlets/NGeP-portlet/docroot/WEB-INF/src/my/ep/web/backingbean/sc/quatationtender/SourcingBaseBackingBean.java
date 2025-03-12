@@ -7388,6 +7388,47 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
+
+	// #29007 Start vinod
+	public boolean checkWIPVersionAndInsertItemSpecOffer(ScLoa scLoa) {
+		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
+		String docType = scLoa.getScLoiLoa().getDocType();
+
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_DP);
+		} else {
+			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_QT);
+		}
+
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
+		String version = this.getManagedBean().getBpmVersionNo();
+
+		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion, version);
+	}
+
+	// #29007 End vinod
+	// #29007 Start vinod
+	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus, String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
+				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
+		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
+		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
+
+		if (isPendingAcknowledgement || isPendingVerify && isOldVersion) {
+			return true;
+		}
+		return false;
+	}
+
+	// #29007 End vinod
+	
+	// 26247 - start
 	/**
 	 * Retrieve mof status descriptions
 	 * @param mofAccount
@@ -7411,7 +7452,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return recordStatusParamMap.get(mofStatus.concat(locale.getLanguage()));
 	}
-	
+	// 26247 - end
+	// 26247 - start
 	/**
 	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
 	 * @param scQt
@@ -7435,4 +7477,5 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
 						mofRecordStatus);
 	}
+	// 26247 - end
 }

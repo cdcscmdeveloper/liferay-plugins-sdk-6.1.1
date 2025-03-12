@@ -4440,6 +4440,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 			//Enhancement #21694 END
 		}else {
+			// #29007 Start Vinod
+			checkAndInsertItemSpecOffer();
+			// #29007 End Vinod
 			updateBpmTaskAction(outcome);
 		}
 	}
@@ -8307,6 +8310,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void confirmSupplierAccept() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
 		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" LOA.");
+		// #29007 Start Vinod
+		checkAndInsertItemSpecOffer();
+		// #29007 End Vinod
 
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -12361,5 +12367,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX);
 		}
 	}// 25791-end	
+	
+	// #29007 Start vinod
+	private void checkAndInsertItemSpecOffer() {
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+
+		if (checkWIPVersionAndInsertItemSpecOffer(scLoa)) {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(scLoa.getLoaId());
+			
+			getQtAwardSO().insertItemSpecOffer(reqDTO);
+		}
+	}
+
+	// #29007 End vinod
 }
 
