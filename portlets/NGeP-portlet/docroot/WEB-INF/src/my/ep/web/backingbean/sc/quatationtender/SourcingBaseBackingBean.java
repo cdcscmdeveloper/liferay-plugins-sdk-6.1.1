@@ -275,7 +275,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
 	
-	private static final String UTF = "UTF-8";
+	//private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
 	protected static final String  UNDER_SCORE = "_";
@@ -929,10 +929,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws IOException
 	 */
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
-			ATTACHMENT scAttachment, String contentType) throws IOException {
+ATTACHMENT scAttachment, String contentType)
+			throws IOException {
 		ByteArrayOutputStream tmpOut = null;
 		FileInputStream in = null;
-		try{
+		try {
 			if (scAttachment != null) {
 				File file = new File(getActualFilePath(scAttachment));
 				tmpOut = new ByteArrayOutputStream();
@@ -946,10 +947,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					tmpOut.write(buf, 0, len);
 				}
-				in.close();
-				tmpOut.close();
-				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-						tmpOut.size());
+
+				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
 
 				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
 
@@ -957,10 +956,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} else {
 				return null;
 			}
-		}finally{
-			//TODO baffled to close tmpOut
+		} finally {
+			in.close();
+			tmpOut.close();
 		}
-		
 	}
 
 	protected List<PmParameterDesc> retrieveParametersBySearchBean(

@@ -15265,6 +15265,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		// 1873 - start - note 52
 		boolean popupShown = assertPendingFinancialSubmission();
+		checkTechnicalAndFinancialSpec(this.getManagedBean().getQt()); //Bug #37612
 
 		if (!popupShown) {
 			// 1873 - end - note 52
