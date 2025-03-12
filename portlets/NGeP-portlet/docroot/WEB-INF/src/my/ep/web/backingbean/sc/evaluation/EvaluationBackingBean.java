@@ -6506,11 +6506,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							// #35384 recalculate at endorse or sign off -start-
 							|| this.getManagedBean().isReadOnly()
 							&& null == this.getManagedBean().getScQt().getFecEvaluationCheck()
-							&& (this.getManagedBean().getCurrentStatusId()
-									.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT) || this.getManagedBean()
-									.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)
-									||this.getManagedBean()
-									.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION))
+							&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF) 
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION))
 							// #35384 recalculate at endorse or sign off -end-
 					) {
 						if (null == this.getManagedBean().getScQt()
@@ -6528,8 +6526,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 									.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
 									|| this.getManagedBean().getCurrentStatusId()
 											.equals(QTStatusConst.FEC_PENDING_SIGN_OFF)
-									|| this.getManagedBean()
-											.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)) {
+									|| this.getManagedBean().getCurrentStatusId()
+											.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)) {
 								retriveSummaryEvaluationStage();
 							}
 							// #35384 recalculate at endorse or sign off -end-
@@ -6621,9 +6619,9 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							// #35384 avoid run this code below when endorse or sign off -start-
 							|| this.getManagedBean().isReadOnly()
 							&& this.getManagedBean().getScQt().isTechEvaluationReq()
-							&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) || this
-									.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)
-									|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
+							&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION))
 							// #35384 avoid run this code below when endorse or sign off -end-
 					) {
 
@@ -6659,8 +6657,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 							// formula when qt is at status endorse/sign off
 							// evaluation once deploy into environment
 							if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT)
-									|| this.getManagedBean().getCurrentStatusId()
-											.equals(QTStatusConst.EC_PENDING_SIGN_OFF) || this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)) {
+								|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)
+								|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION)) {
 								retriveOneTierFinancialSupplierSummary();
 							}
 							// #35384 end
