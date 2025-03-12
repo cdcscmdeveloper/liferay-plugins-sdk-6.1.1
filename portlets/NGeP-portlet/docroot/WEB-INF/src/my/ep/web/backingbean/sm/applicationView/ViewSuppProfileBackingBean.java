@@ -634,6 +634,9 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public List<String> evaluateWarningTooltip(SmSupplier supplier) {
 		List<String> messages = new ArrayList<>();
+		if(supplier == null){
+			return messages;
+		} 
 		Locale locale = new FacesScopes().getUserLocale();
 		if (evaluateCancellationBlacklist(supplier)) {
 			messages.add(MessageUtils.getMessage(MessageConst.INFO_760553,

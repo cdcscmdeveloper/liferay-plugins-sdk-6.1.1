@@ -11802,7 +11802,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 						evalResultDtl.isSuppSelectionDisabled(),
 						this.getManagedBean().isDisableSupplierSelection(),
 						isBidding,
-						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
+						this.disabledQTProcess(supplier),// 26247
 						periodExtensionRejected,this.isQTMaintenanceScreen(),
 						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
 	}
