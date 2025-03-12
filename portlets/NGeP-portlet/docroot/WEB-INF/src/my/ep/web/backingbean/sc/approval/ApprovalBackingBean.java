@@ -1069,6 +1069,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	//#21692 - Start
 	/**
 	 * Save used by Proposal Validity Extension, will save all data in
 	 * ScQtApprovalRequest, including attachments, dates, response period and etc.
@@ -1126,6 +1127,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_QUOTATION, scQtDetail.getQtNo(), Boolean.TRUE);
 		}
 	}
+	//#21692 - End
 
 	//#21692 - Start
 	private void checkValidProposalPeriodExtension(QuationTenderReqDTO reqDTO) {
@@ -1142,23 +1144,29 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		List<ScQtApprovalRequest> approvalRequests = reqDTO.getApprovalRequests();
 		for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-			if (approvalRequest.getDecisionType().getParameterId() == null) {
-				if (enableDateMOF) {
-					//#21692 - start
-					if (null != approvalRequest.getDecisionCertPBM().getParameterId()
-							&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
-						mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
-					}
-					//#21692 - end
-				} else {
-					mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
+			decisionChecking(approvalRequest, enableDateMOF);
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void decisionChecking(ScQtApprovalRequest approvalRequest, boolean enableDateMOF) {
+		if (approvalRequest.getDecisionType().getParameterId() == null) {
+			if (enableDateMOF) {
+				//#21692 - start
+				if (null != approvalRequest.getDecisionCertPBM().getParameterId()
+						&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
+					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
 				}
-			}
-
-			if (enableDateMOF && approvalRequest.getDecisionCertPBM().getParameterId() == null) {
-				mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+				//#21692 - end
+			} else {
+				mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
 			}
 		}
+
+		if (enableDateMOF && approvalRequest.getDecisionCertPBM().getParameterId() == null) {
+			mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+		}		
 	}
 	//#21692 - End
 
