@@ -36,7 +36,7 @@ public class SPKIHelper {
 	
 	public SpkiVO getSignedData(String provider, String identificationNo, String epNo, String pin, Map<Object, Object> challenges,
 			String dataForSigning) {
-		log.info("BEFORE SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning + "||" + provider);
+		log.info("BEFORE SIGNING:" + identificationNo + "||" + epNo + "||" + dataForSigning + "||" + provider);
 		SpkiResDTO resDTO = null;
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
@@ -52,8 +52,8 @@ public class SPKIHelper {
 				Object answer = entry.getValue();
 				reqDTO.setSelectedQuestion(question.toString());
 				reqDTO.setAnswer(answer.toString());
-				log.info("question: " + question);
-				log.info("answer: " + answer);
+				log.info("question : " + question);
+				log.info("answer : " + answer);
 			}
 		}
 		try {
@@ -61,8 +61,9 @@ public class SPKIHelper {
 			signedData = resDTO.getSignedData();
 			vo.setStatusCode(resDTO.getStatusCode());
 			vo.setStatusMsg(resDTO.getStatusMsg());
+			vo.setErrMsg(resDTO.getErrorMessage());
 		} catch (Exception e) {
-			log.info("SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
+			log.info("SIGNING:" + identificationNo + "||" + epNo + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
 			vo.setErrMsg(resDTO.getErrorMessage());
 		}
 		vo.setSignedData(signedData);
