@@ -12,8 +12,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang.StringUtils;
-
 import my.ep.constant.MessageConst;
 import my.ep.constant.sm.SupplierManagementConst;
 import my.ep.exception.EpException;
@@ -21,8 +19,11 @@ import my.ep.helper.EntityHelper;
 import my.ep.util.MessageUtils;
 import my.ep.web.util.DigiCertHelper;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SPKIHelper;
 import my.ep.web.util.TrustGateHelper;
 import my.ep.web.vo.SpkiVO;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.augtech.kmc.client.InvalidKMCAPIFieldException;
 import com.augtech.kmc.client.KMCAPIException;
@@ -270,37 +271,57 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 		@Override
 		public List<String> getChallengeQuestion(){
 			
-			com.msctg.cdc.pki.KMCClient client = getClient();
-			log.info("Test Client=" + client);
-			KMCRequestBuilder reqbuilder = getReqBuilder();
-			log.info("Test reqbuilder=" + reqbuilder);
-			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(idNo, 10, epNo);
-			log.info("Test Question=" + res);
-			
-			log.info("Test TG status code: "+res.getStatusCode());
-			if(EntityHelper.isCollectionEmpty(res.CHALLENGE_RESPONSES)){
-				log.info("empty challenge responses");
-				throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
-			}
-			if(StringUtils.isBlank(getChallengeQues1())){
+			if (SPKIHelper.getInstance().isUsingSpkiTLSLatest()) {
+				log.info("------>GET CHALL QUES TG IDNO:"+idNo+" EPNO:"+epNo);
+				return SPKIHelper.getInstance().getChallengeQuestion(
+						SupplierManagementConst.CERT_TRUSTGATE, idNo, epNo,
+						null);
+			} else {
+				com.msctg.cdc.pki.KMCClient client = getClient();
+				log.info("Test Client=" + client);
+				KMCRequestBuilder reqbuilder = getReqBuilder();
+				log.info("Test reqbuilder=" + reqbuilder);
+				IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(idNo, 10, epNo);
+				log.info("Test Question=" + res);
+				
+				log.info("Test TG status code: "+res.getStatusCode());
+				if(EntityHelper.isCollectionEmpty(res.CHALLENGE_RESPONSES)){
+					log.info("empty challenge responses");
+					throw new EpException(MessageConst.ERROR_TRUSTGATE_776051);
+				}
+				if(StringUtils.isBlank(getChallengeQues1())){
+					return res.CHALLENGE_RESPONSES;
+				}
+				if(getChallengeQues1().equalsIgnoreCase(res.CHALLENGE_RESPONSES.get(0))){
+					res.CHALLENGE_RESPONSES.remove(0);
+				}
 				return res.CHALLENGE_RESPONSES;
 			}
-			if(getChallengeQues1().equalsIgnoreCase(res.CHALLENGE_RESPONSES.get(0))){
-				res.CHALLENGE_RESPONSES.remove(0);
-			}
-				
-			return res.CHALLENGE_RESPONSES;
 		}
 		
 		@Override
 		public SpkiVO getSignedData(String identificationNo, String epNo,
 				String pin, Map<Object, Object> challenges, String dataForSigning){
 			SpkiVO vo = new SpkiVO();
-			com.msctg.cdc.pki.KMCRequestBuilder reqbuilder = getReqBuilder();
-			com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
-					challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
-			vo.setSignedData(res.SIGNATURE);
-			vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
+			
+			if (SPKIHelper.getInstance().isUsingSpkiTLSLatest()) {
+				log.info("--->GET SIGNED DATA  FOR TG IDNO:" + identificationNo + " EPNO:"
+						+ epNo + " DATA SIGNING:" + dataForSigning);
+				vo = SPKIHelper.getInstance()
+						.getSignedData(SupplierManagementConst.CERT_TRUSTGATE,
+								identificationNo, epNo, pin, challenges,
+								dataForSigning);
+				vo.setErrMsg(code+vo.getStatusCode()+" - "+vo.getStatusMsg());
+				if (StringUtils.isBlank(vo.getStatusMsg())){
+					vo.setErrMsg(String.valueOf(vo.getStatusCode()));
+				}
+			} else {
+				com.msctg.cdc.pki.KMCRequestBuilder reqbuilder = getReqBuilder();
+				com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
+						challenges, new ByteArrayInputStream(dataForSigning.getBytes()));
+				vo.setSignedData(res.SIGNATURE);
+				vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
+			}
 			return vo;
 		}
 	}
@@ -308,30 +329,46 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 	class DigiHelp extends DigiCertHelper implements CertHelper{
 		@Override
 		public List<String> getChallengeQuestion(){
-			return super.getChallengeQuestion(idNo);
+			return SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper
+					.getInstance().getChallengeQuestion(
+							SupplierManagementConst.CERT_DIGICERT, idNo, epNo,
+							null) : super.getChallengeQuestion(idNo);
 		}
 		
 		@Override
 		public SpkiVO getSignedData(String identificationNo, String epNo,
 				String pin, Map<Object, Object> challenges, String dataForSigning){
 			SpkiVO vo = new SpkiVO();
-			com.augtech.kmc.client.KMCClient client = getClient();
-			try {
-				com.augtech.kmc.client.IKMCAPIResponse res = client.requestService(
-						com.augtech.kmc.client.KMCRequestBuilder.signData(identificationNo, epNo, pin.toCharArray(),
-						challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
-				vo.setSignedData((byte[]) res
-						.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
-				vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
-				if (StringUtils.isBlank(res.getStatusMessage())){
-					vo.setErrMsg(String.valueOf(res.getStatusCode()));
+			if (SPKIHelper.getInstance().isUsingSpkiTLSLatest()) {
+				log.info("--->GET SIGNED DATA  FOR DG IDNO:" + identificationNo + " EPNO:"
+						+ epNo + " DATA SIGNING:" + dataForSigning);
+				vo = SPKIHelper.getInstance()
+						.getSignedData(SupplierManagementConst.CERT_DIGICERT,
+								identificationNo, epNo, pin, challenges,
+								dataForSigning);
+				vo.setErrMsg(code+vo.getStatusCode()+" - "+vo.getStatusMsg());
+				if (StringUtils.isBlank(vo.getStatusMsg())){
+					vo.setErrMsg(String.valueOf(vo.getStatusCode()));
 				}
-			} catch (KMCAPIException e) {
-				log.info(e);
-				vo.setErrMsg("DigiCert error - KMCAPIException");
-			} catch (InvalidKMCAPIFieldException e) {
-				log.info(e);
-				vo.setErrMsg("DigiCert error - InvalidKMCAPIFieldException");
+			} else {
+				com.augtech.kmc.client.KMCClient client = getClient();
+				try {
+					com.augtech.kmc.client.IKMCAPIResponse res = client.requestService(
+							com.augtech.kmc.client.KMCRequestBuilder.signData(identificationNo, epNo, pin.toCharArray(),
+							challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+					vo.setSignedData((byte[]) res
+							.get(com.augtech.kmc.client.IKMCAPIResponse.SignDataResponse.SIGNATURE));
+					vo.setErrMsg(code+res.getStatusCode()+" - "+res.getStatusMessage());
+					if (StringUtils.isBlank(res.getStatusMessage())){
+						vo.setErrMsg(String.valueOf(res.getStatusCode()));
+					}
+				} catch (KMCAPIException e) {
+					log.info(e);
+					vo.setErrMsg("DigiCert error - KMCAPIException");
+				} catch (InvalidKMCAPIFieldException e) {
+					log.info(e);
+					vo.setErrMsg("DigiCert error - InvalidKMCAPIFieldException");
+				}
 			}
 			return vo;
 		}

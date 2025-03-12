@@ -1,6 +1,4 @@
-/*
- * 
- */
+
 package my.ep.web.backingbean.report;
 
 import java.util.ArrayList;
@@ -101,13 +99,6 @@ public class PmReportsBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
-	// public List<SelectItem> retrieveReportListByAuthorization() {
-	// log.info("ReportBackingBean-retrieveReportListByAuthorization");
-	// return
-	// this.retrieveReportListByAuthorization(ModuleCodeConst.PROFILE_MANAGEMENT
-	// .toUpperCase());
-	// }
 
 	public void onChangeReportName() {
 		log.info("onChangeReportName");
@@ -1431,7 +1422,7 @@ public class PmReportsBackingBean extends
 		}
 		return items;
 	}
-
+	
 	// #36719 - Start
 	/**
 	 * filter services Type

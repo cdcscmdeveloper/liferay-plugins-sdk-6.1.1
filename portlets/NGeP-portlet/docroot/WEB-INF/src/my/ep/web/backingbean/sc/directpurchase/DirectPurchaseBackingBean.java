@@ -1620,4 +1620,3 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	*/
 	// end - #36018	
 }
-

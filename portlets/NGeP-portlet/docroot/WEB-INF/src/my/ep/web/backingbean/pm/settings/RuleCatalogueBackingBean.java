@@ -4897,9 +4897,9 @@ public class RuleCatalogueBackingBean extends
 				}
 			}// end of second loop
 		}// end of first loop*/
-
+		
 		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
-
+		
 	    // Group approvals by OrgProfileId using a HashMap
 	    Map<Long, List<PmPtjSpecialApproval>> groupedApprovals = new HashMap<>();
 	    for (PmPtjSpecialApproval approval : approvals) {

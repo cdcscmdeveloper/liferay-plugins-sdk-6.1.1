@@ -6840,6 +6840,7 @@ public class EvaluationBackingBean extends
 								.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION))
 						&& !this.getManagedBean().isReadOnly()) {
 					// Bug #36747@Syazani 20/01/2025 -- End
+
 					if (currentTab == 2) {
 
 						if (this.getManagedBean()
