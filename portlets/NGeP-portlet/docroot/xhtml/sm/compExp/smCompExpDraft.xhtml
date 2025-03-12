@@ -1,0 +1,76 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_compExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.sm.comp.exp.draft.screen.name']}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.sm.comp.exp.draft.btn.back']}"
+				partialSubmit="true" update="@this" process="@this"
+				action="#{compExpBB.proceedAfterAcceptTnC}"
+				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"></p:commandButton>
+		</div>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.draft.header.sm']}"
+			toggleable="true">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.draft.instruction.sm']}" />
+			<p:dataTable id="smCompExpDrafId" var="smDraft" rows="10"
+				value="#{compExpMB.smDraftList}" rowIndexVar="index"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<ac:paginator for="smCompExpDrafId"></ac:paginator>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.title']}"
+							style="text-align: center !important;" />
+						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.value']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.eff.date']}"
+							style="text-align: center !important;" />
+						<p:column
+							headerText="#{lbl['lbl.sm.comp.exp.draft.table.action']}"
+							style="text-align: center !important;" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{smDraft.title}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{smDraft.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{smDraft.contractStartDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{compExpBB.onClickDraftAction(smDraft)}" process="@this"
+						partialSubmit="true" update=":form">
+						<p:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

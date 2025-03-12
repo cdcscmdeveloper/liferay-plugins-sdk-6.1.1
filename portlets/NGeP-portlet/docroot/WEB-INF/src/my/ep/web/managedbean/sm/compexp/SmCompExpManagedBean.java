@@ -6,21 +6,33 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * @author firdaus.omar Redmine #9299
+ * ManagedBean for Sm Company Experience
+ * 
+ * @author firdaus.omar
  */
 @ManagedBean(name = "compExpMB")
 @SessionScoped
-public class CompExpManagedBean extends BaseManagedBean {
+public class SmCompExpManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
+	private SmSupplier supplier;
 	private boolean agreeTnC;
 	private List<SmCompExpDraft> smDraftList;
 	private List<SmCompExpDraft> ctDraftList;
 	private List<SmCompExpDraft> selectedDraft;
+
+	public SmSupplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(SmSupplier supplier) {
+		this.supplier = supplier;
+	}
 
 	public boolean isAgreeTnC() {
 		return agreeTnC;

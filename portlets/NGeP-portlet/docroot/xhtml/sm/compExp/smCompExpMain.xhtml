@@ -4,7 +4,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
 	<ui:define name="contentSection">
-		<p:outputPanel rendered="compExpMB.smDraftList !empty">
+		<p:outputPanel
+			rendered="#{not empty compExpMB.smDraftList or not empty compExpMB.ctDraftList}">
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
