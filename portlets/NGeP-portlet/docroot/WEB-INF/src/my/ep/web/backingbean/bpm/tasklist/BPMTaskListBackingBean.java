@@ -1703,19 +1703,23 @@ BaseBackingBean<BPMTaskListManagedBean> {
 		log.info("taskId:"+this.getManagedBean().getTaskId());
 		log.info("token:"+token);
 		
-		//#21387 - Start
-		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
-			
-			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-			bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
-			BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
-			if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
-				for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
-					 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
-						 claimTaskByTaskId(getDocNumber.getTaskId());
-					 } 
-				 } 
-			}//#21387 - End			
+		//#37924: 070325 - Start
+		if(this.getManagedBean().getCurrentTaskDocType()!= null){
+			//#21387 - Start
+			if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+				BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+				bpmReqDTO.setDocNumber(getManagedBean().getDocNo());
+				BpmResponseDTO resDTO = claimBpmTaskGroupByDocNo(bpmReqDTO);
+				
+				if(!resDTO.getWorklistVO().getWorklistItem().isEmpty() && resDTO.getWorklistVO().getWorklistItem() != null){
+					for(WorklistItemVO getDocNumber: resDTO.getWorklistVO().getWorklistItem()){
+						 if(getDocNumber.getDocNumber().equalsIgnoreCase(this.getManagedBean().getDocNo()) && getDocNumber.getAcquiredBy() == null){
+							 claimTaskByTaskId(getDocNumber.getTaskId());
+						 }
+					 }
+				}
+			}//#21387 - End
+		//#37924: 070325 - End
 		}else{
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	    	reqDTO.setCtxToken(token);
