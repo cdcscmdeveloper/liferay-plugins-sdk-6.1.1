@@ -254,6 +254,10 @@ public class SuppPerformRptBackingBean extends
 	}
 	//#33741 - END
 	//#36125 - START
+	/**
+     * Validates if the Supplier Performance Report exists.
+     * If the report does not exist, an EpException will be thrown.
+     */
 	public void ValidateSupplierPerformanceReport(){
 		SupplierSearchReqDTO ssReqDTO = new SupplierSearchReqDTO();
 		ssReqDTO.setMofAccountNo(getManagedBean().getMofNo());

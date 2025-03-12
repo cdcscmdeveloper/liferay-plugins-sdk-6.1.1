@@ -41,6 +41,7 @@
 					saveObject="ctReportBB.managedBean.selectedPTJ"
 					conditionField="#{ctReportBB.constructPTJConditionFields()}" /></td>
 		</tr>
+		<!--Start - #29416-->
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 			<td>
@@ -53,7 +54,15 @@
 				<p:inputText value="#{ctReportBB.managedBean.contractPhysicalNo}"  maxlength="30" style="width:300px">
 					<p:ajax event="blur" partialSubmit="true" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+				<c:choose>
+					<c:when
+						test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no.item.monitoring']}" />
+					</c:when>
+					<c:otherwise>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+					</c:otherwise>
+				</c:choose>
 			</td>
 		</tr>
 		<tr>
@@ -68,9 +77,18 @@
 				<p:inputText value="#{ctReportBB.managedBean.loaPhysicalNo}"  maxlength="100" style="width:300px">					
 					<p:ajax event="blur" partialSubmit="true" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+				<c:choose>
+					<c:when
+						test="#{ctReportBB.managedBean.reportCode == CtReportConst.ctContractItemUsageMonitoringRptMcVal}">
+						     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.reference.no.item.monitoring']}" />
+					</c:when>
+					<c:otherwise>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+					</c:otherwise>
+				</c:choose>
 			</td>
 		</tr>
+		<!--End - #29416-->
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.agreement']}" /></td>
 			<td>
@@ -123,6 +141,29 @@
 				</tr></table>
 			</td>
 		</tr>
+		<!--Start - #29416-->
+		<c:if test="#{ctReportBB.managedBean.reportCode eq CtReportConst.ctContractItemUsageMonitoringRptMcVal}">	
+		<tr>	
+				<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" /></td>
+				<td><ac:lov id="ctSupplierName" readonly="true"
+						size="40" lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT"
+						headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
+						value="#{ctReportBB.managedBean.selectedSupplier.smSupplier.companyName}"
+						saveObject="ctReportBB.managedBean.selectedSupplier" /></td>
+						
+			    <td style="width:20%"><p:outputLabel value="#{lbl['lbl.rpt.itmName']}" /></td>
+				<td colspan="2"><ac:lovItemName id="ctReportItemName"
+						lovId="CT_CONTRACT_ITEM_USAGE_MONITORING" readonly="true"
+						size="60" headerText="#{lbl['lbl.rpt.itmName']}"
+						value="#{ctReportBB.managedBean.formattedSelectedItems}"
+						saveObject="ctReportBB.managedBean.lovSelectedItemList"
+						selectionMode="multiple"
+						postUpdateListener="ctReportBB.checkValue()"
+						update="@form"
+						flagBean="ctReportBB" /></td>
+		 </tr> 		
+		 </c:if> 
+		 <!--End - #29416-->
 	</table>
 	<br/>
 	<ac:generateReport bBean="#{ctReportBB}"
