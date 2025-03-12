@@ -680,6 +680,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 			if (isInactiveChecklistPopup) {
 				RequestContext.getCurrentInstance()
 				.execute(QTConstants.INACTIVE_CHECKLIST_NOTIFICATION);
+				return;
 			}
 		}
 		// #10141 End Vinod
