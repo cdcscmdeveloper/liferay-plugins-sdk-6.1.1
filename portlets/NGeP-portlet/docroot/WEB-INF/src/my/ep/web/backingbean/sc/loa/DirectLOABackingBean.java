@@ -4007,7 +4007,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						.equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN));
 		Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
 				.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa().getQtType()
+				&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean().getScLoa().getQtType()
 						.getParameterCode());
 		Boolean isOneOff = this.getManagedBean().getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterCode()
 				.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -4048,7 +4048,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			Long oldParmValue = responseDTO.getScLoa().getScLoiLoa().getFulfilmentTypeCode().getParameterId();
 			Long currentParmValue = scLoa.getScLoiLoa().getFulfilmentTypeCode().getParameterId();
 			if(!oldParmValue.equals(currentParmValue) 
-					&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(scLoa.getQtType().getParameterCode()) 
+					&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(scLoa.getQtType().getParameterCode()) 
 					&& this.getManagedBean().isFullfilmentTypeChange()){
 		        return Boolean.TRUE;
 			}
@@ -8425,7 +8425,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		boolean isOneOff = false;
 		boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
 				.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa().getQtType()
+				&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean().getScLoa().getQtType()
 						.getParameterCode());
 
 		ScLoa loa = getManagedBean().getScLoa();
@@ -8892,7 +8892,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if(null != this.getManagedBean().getScLoa().getQtType()){
 					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
 							.getQtType().getParameterType())
-							&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
+							&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean().getScLoa()
 									.getQtType().getParameterCode());
 				}
 			}			
@@ -10096,7 +10096,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		
 		if (null != qtType 
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
+				&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(qtType.getParameterCode())) {
 			QtTypepk7 = true;
 			if (null == getManagedBean().getScLoa().getJustificationType()) {
 				getManagedBean().getScLoa().setJustificationType(new PmReason());
@@ -10194,7 +10194,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//set for PK7 and one off default agreementreq is false.
 		if (null != qtType && null != fulfilmentType 
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
-				&& !ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())
+				&& !ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(qtType.getParameterCode())
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType()) 
 				&& (ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED.equals(fulfilmentType.getParameterCode()) 
 				|| ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN.equals(fulfilmentType.getParameterCode()) 
@@ -10370,7 +10370,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		//#29766 Start Vinod refactored and added new PK7/WP QT type.
 		boolean isQTtypePK7 = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+				&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(qtType.getParameterCode());
 		boolean isFulfilmentTypeInPK7 = null != fulfilmentType
 				&& ParameterTypeConst.FULFILMENT_TYPE.equals(fulfilmentType.getParameterType())
 				&& ParameterConst.getFulfilmentTypeCodesForQtTypePK7Checking().contains(
@@ -10394,7 +10394,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	**/
 	private Boolean resetJustificatonPmReasonIfNull(PmParameter qtType){
 		if(null != qtType && 
-				ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode()) && 
+				ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(qtType.getParameterCode()) && 
 				null != getManagedBean().getScLoa().getJustificationType()){
 			 return Boolean.TRUE;
 		}
@@ -11641,7 +11641,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				if (this.getManagedBean().getScLoa().getQtType() != null) {
 					isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa().getQtType()
 							.getParameterType())
-							&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
+							&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean().getScLoa()
 									.getQtType().getParameterCode());
 				}
 			}
@@ -11718,7 +11718,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						if (this.getManagedBean().getScLoa().getQtType() != null) {
 							isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
 									.getQtType().getParameterType())
-									&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean()
+									&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean()
 											.getScLoa().getQtType().getParameterCode());
 							if (!isPK7 && isPeriodic) {
 								return result = true;							
@@ -11774,7 +11774,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					if(this.getManagedBean().getScLoa().getQtType() != null){
 						isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
 								.getQtType().getParameterType())
-								&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
+								&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean().getScLoa()
 										.getQtType().getParameterCode());
 					}				
 				}		
@@ -11864,7 +11864,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				Boolean isOneOff = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				Boolean isPK7 = ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(this.getManagedBean().getScLoa()
 									.getQtType().getParameterType())
-									&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(this.getManagedBean().getScLoa()
+									&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(this.getManagedBean().getScLoa()
 											.getQtType().getParameterCode());
 				if((!loa.isAgreementReq())&&((isNonPeriodic||isOneOff) && !isPK7 && over500K(loa))){
 					if(loa.getScLoaAttachment() == null){
@@ -13169,7 +13169,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		boolean isQTtypePK7 = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+				&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(qtType.getParameterCode());
 		List<Long> displayStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
 				QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
@@ -13203,7 +13203,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		boolean isQTtypePK7 = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equals(qtType.getParameterCode());
 
 		if (isQTtypePK7) {
 			String reasonCode = null != this.getManagedBean().getScLoa()

@@ -2140,17 +2140,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if(isDirectLoa) {
 			boolean setBondReq = true; 
 			//20231122@asyrafhaziq_25726 - Issue 16
-			if (null != scLoa.getQtType() 
-					&& null != scLoa.getQtType().getParameterId() 
-					&& scLoa.getQtType().getParameterCode().equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)  
-					&& null != scLoa.getScQt() 
-					&& null != scLoa.getScQt().getFulfilmentType()
+			// #29766 Start Vinod refactored and added new PK7/WP QT type.
+			List<String> fulfilementTypes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
+					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN,
+					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED, ParameterConst.FULFILMENT_TYPE_SCHEDULED,
+					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+			boolean isQTtypePK7 = null != scLoa.getQtType()
+					&& null != scLoa.getQtType().getParameterId()
+					&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(
+							scLoa.getQtType().getParameterCode());
+			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& (scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)
-					|| scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)
-					||scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-                    || scLoa.getScQt().getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN))) {
+					&& fulfilementTypes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
+
+			if (isQTtypePK7 && isFulfilmentType) {
+				// #29766 End Vinod
 				setBondReq = false;
 			}
 			
