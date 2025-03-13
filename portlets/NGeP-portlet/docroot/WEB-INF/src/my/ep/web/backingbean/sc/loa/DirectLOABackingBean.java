@@ -13167,16 +13167,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (null != getManagedBean().getScLoa().getQtType()) {
 			qtType = getManagedBean().getScLoa().getQtType();
 		}
-		boolean isQTtypePK7 = null != qtType
+		boolean isQTtypePK7WP = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(qtType.getParameterCode());
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equals(qtType.getParameterCode());
 		List<Long> displayStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
 				QTStatusConst.LOA_PENDING_REVISION, QTStatusConst.LOA_PENDING_APPROVAL,
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
 		boolean isShowInfo = null != this.getManagedBean().getScLoa().getPmStatus()
 				&& displayStatus.contains(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
 
-		if (isQTtypePK7 && isShowInfo) {
+		if (isQTtypePK7WP && isShowInfo) {
 			this.getManagedBean().setQtTypePK7WPselected(true);
 			String qtTypeDesc = getParameterDesc(qtType);
 			FacesContext.getCurrentInstance().addMessage(
@@ -13201,11 +13201,11 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (null != getManagedBean().getScLoa().getQtType()) {
 			qtType = getManagedBean().getScLoa().getQtType();
 		}
-		boolean isQTtypePK7 = null != qtType
+		boolean isQTtypeOldPK7 = null != qtType
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equals(qtType.getParameterCode());
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
 
-		if (isQTtypePK7) {
+		if (isQTtypeOldPK7) {
 			String reasonCode = null != this.getManagedBean().getScLoa()
 					&& null != this.getManagedBean().getScLoa().getJustificationType()
 					&& null != this.getManagedBean().getScLoa().getJustificationType().getReasonCode() ? this
