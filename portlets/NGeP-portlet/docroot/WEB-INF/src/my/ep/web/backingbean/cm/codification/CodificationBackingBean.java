@@ -70,6 +70,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.managedbean.cm.codification.CodificationManagedBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -3691,6 +3692,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	
 	/**
 	 * #31503 - show confirmation popup when user select Item Code
+	 * @param unspscObj
 	 */
 	public void assignCodeConfirmation(CmUnspsc unspscObj) {
 		String codeDesc = unspscObj.getUnspscCode() + " - " + unspscObj.getUnspscTitle();
@@ -3707,154 +3709,272 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if (objSelected == null) {
 			throw new EpException(MessageConst.ERROR_760700);
 		} else {
-			RequestContext.getCurrentInstance().execute("asignCodeDialConfirm.show()");
+			try {
+
+				ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
+						ICodificationSO.class);
+
+				this.getManagedBean().setExtensionVoList(null);
+
+				ExtensionCodeVO extCodeVO = null;
+
+				Object[] objects = this.getManagedBean().getObjSelected();
+
+				if (objects != null && objects.length > 0) {
+					extCodeVO = new ExtensionCodeVO();
+					extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
+					extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
+					extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
+					extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
+					extCodeVO.setTypeName(String.valueOf(objects[4]));
+					extCodeVO.setBrandName(String.valueOf(objects[5]));
+					extCodeVO.setMeasurementName(String.valueOf(objects[6]));
+					extCodeVO.setColorName(String.valueOf(objects[7]));
+
+				}
+
+				if (extCodeVO != null) {
+					this.getManagedBean().getExtensionVoList().add(extCodeVO);
+				}
+				if (this.getManagedBean().getExtensionVoList() != null
+						&& this.getManagedBean().getExtensionVoList().isEmpty()) {
+
+					ExtensionCodeVO obj = this.getManagedBean().getExtensionVoList().get(0);
+
+					CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+					codeReqDTO.setBrandId(obj.getBrandId());
+					codeReqDTO.setMeasurementId(obj.getMeasurementId());
+					codeReqDTO.setTypeId(obj.getTypeId());
+					codeReqDTO.setColorId(obj.getColorId());
+					codeReqDTO.setUnspscId(this.getManagedBean().getSelectedUNSPSCObj().getUnspscId());
+
+					codeReqDTO = new CodificationReqDTO();
+					codeReqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+					CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
+					CmType typeObj;
+					CmBrand brandObj;
+					CmMeasurement meaObj;
+
+					if (!isSelectedRequestItemProduct()) {
+
+						if (objects != null) {
+							typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
+
+							brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
+
+							meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
+
+						} else {
+							if (codeResDTO.getCommodityObj().getCmType() != null
+									&& !codeResDTO.getCommodityObj().getCmType().isEmpty()) {
+								typeObj = codeResDTO.getCommodityObj().getCmType().get(0);
+							} else {
+								typeObj = new CmType();
+								typeObj.setTypeCode("000");
+								typeObj.setTypeName("N/A");
+								typeObj.setUnspscId(codeResDTO.getCommodityObj());
+								codeReqDTO.setCmType(typeObj);
+								typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
+							}
+							if (codeResDTO.getCommodityObj().getCmBrand() != null
+									&& !codeResDTO.getCommodityObj().getCmBrand().isEmpty()) {
+								brandObj = codeResDTO.getCommodityObj().getCmBrand().get(0);
+							} else {
+								brandObj = new CmBrand();
+								brandObj.setBrandCode("00");
+								brandObj.setBrandName("N/A");
+								brandObj.setUnspscId(codeResDTO.getCommodityObj());
+								codeReqDTO.setCmBrand(brandObj);
+								brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
+							}
+							if (codeResDTO.getCommodityObj().getCmMeasurement() != null
+									&& !codeResDTO.getCommodityObj().getCmMeasurement().isEmpty()) {
+								meaObj = codeResDTO.getCommodityObj().getCmMeasurement().get(0);
+							} else {
+								meaObj = new CmMeasurement();
+								meaObj.setMeasurementCode("000");
+								meaObj.setMeasurementName("N/A");
+								meaObj.setUnspscId(codeResDTO.getCommodityObj());
+								codeReqDTO.setCmMeasurement(meaObj);
+								meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
+							}
+							obj.setColorId(1L);
+
+						}
+
+					} else {
+
+						typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
+
+						brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
+
+						meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
+					}
+
+					CmColor colorObj = this.searchColorObjByColorId(obj.getColorId());
+
+					CmItem newItem = createCmItem(codeResDTO, typeObj, brandObj, meaObj, colorObj);
+
+					String codeDesc = newItem.getExtensionCode() + " - " + newItem.getItemName();
+					this.getManagedBean().setItemCodeDesc(codeDesc);
+
+				}
+
+				RequestContext.getCurrentInstance().execute("asignCodeDialConfirm.show()");
+
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("QT", "selectedItemCode", "selectedItemCode", null,
+						getUserIdSessionFromLoginId(), e);
+			}
 		}
 
 	}
 	
 	/**
 	 * #31503 - Display Item Dialog box 
-	 * @param SelectEvent
-	 * @return void
+	 * 
 	 */
-	public void selectedItemCode(SelectEvent selectEvent) {
+	public void selectedItemCode() {
 
-		try {
-			Object[] objSelected = this.getManagedBean().getObjSelected();
+//		try {
 
-			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
-					ICodificationSO.class);
+//			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
+//					ICodificationSO.class);
+//
+//			this.getManagedBean().setExtensionVoList(null);
+//
+//			ExtensionCodeVO extCodeVO = null;
+//
+//			Object[] objects = this.getManagedBean().getObjSelected();
+//
+//			if (objects != null && objects.length > 0) {
+//				extCodeVO = new ExtensionCodeVO();
+//				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
+//				extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
+//				extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
+//				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
+//				extCodeVO.setTypeName(String.valueOf(objects[4]));
+//				extCodeVO.setBrandName(String.valueOf(objects[5]));
+//				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
+//				extCodeVO.setColorName(String.valueOf(objects[7]));				
+//
+//			}
+//
+//			if (extCodeVO != null) {
+//				this.getManagedBean().getExtensionVoList().add(extCodeVO);
+//			}
+//			if (this.getManagedBean().getExtensionVoList() != null
+//					&& this.getManagedBean().getExtensionVoList().isEmpty()) {
+//
+//				ExtensionCodeVO obj = this.getManagedBean().getExtensionVoList().get(0);
+//
+//				CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+//				codeReqDTO.setBrandId(obj.getBrandId());
+//				codeReqDTO.setMeasurementId(obj.getMeasurementId());
+//				codeReqDTO.setTypeId(obj.getTypeId());
+//				codeReqDTO.setColorId(obj.getColorId());
+//				codeReqDTO.setUnspscId(this.getManagedBean().getSelectedUNSPSCObj().getUnspscId());
+//
+//				codeReqDTO = new CodificationReqDTO();
+//				codeReqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+//				CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
+//				CmType typeObj;
+//				CmBrand brandObj;
+//				CmMeasurement meaObj;
+//
+//				if (!isSelectedRequestItemProduct()) {
+//
+//					if (objects != null) {
+//						typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
+//
+//						brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
+//
+//						meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
+//
+//					} else {
+//						if (codeResDTO.getCommodityObj().getCmType() != null
+//								&& !codeResDTO.getCommodityObj().getCmType().isEmpty()) {
+//							typeObj = codeResDTO.getCommodityObj().getCmType().get(0);
+//						} else {
+//							typeObj = new CmType();
+//							typeObj.setTypeCode("000");
+//							typeObj.setTypeName("N/A");
+//							typeObj.setUnspscId(codeResDTO.getCommodityObj());
+//							codeReqDTO.setCmType(typeObj);
+//							typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
+//						}
+//						if (codeResDTO.getCommodityObj().getCmBrand() != null
+//								&& !codeResDTO.getCommodityObj().getCmBrand().isEmpty()) {
+//							brandObj = codeResDTO.getCommodityObj().getCmBrand().get(0);
+//						} else {
+//							brandObj = new CmBrand();
+//							brandObj.setBrandCode("00");
+//							brandObj.setBrandName("N/A");
+//							brandObj.setUnspscId(codeResDTO.getCommodityObj());
+//							codeReqDTO.setCmBrand(brandObj);
+//							brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
+//						}
+//						if (codeResDTO.getCommodityObj().getCmMeasurement() != null
+//								&& !codeResDTO.getCommodityObj().getCmMeasurement().isEmpty()) {
+//							meaObj = codeResDTO.getCommodityObj().getCmMeasurement().get(0);
+//						} else {
+//							meaObj = new CmMeasurement();
+//							meaObj.setMeasurementCode("000");
+//							meaObj.setMeasurementName("N/A");
+//							meaObj.setUnspscId(codeResDTO.getCommodityObj());
+//							codeReqDTO.setCmMeasurement(meaObj);
+//							meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
+//						}
+//						obj.setColorId(1L);
+//
+//					}
+//
+//				} else {
+//
+//					typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
+//
+//					brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
+//
+//					meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
+//				}
+//
+//				CmColor colorObj = this.searchColorObjByColorId(obj.getColorId());
+//				
+//				CmItem newItem = createCmItem(codeResDTO, typeObj, brandObj, meaObj, colorObj);
+//
+//				String codeDesc = newItem.getExtensionCode() + " - " + newItem.getItemName();
+//				this.getManagedBean().setItemCodeDesc(codeDesc);				
 
-			this.getManagedBean().setExtensionVoList(null);
-
-			ExtensionCodeVO extCodeVO = null;
-
-			Object[] objects = (Object[]) objSelected;
-
-			if (objects != null && objects.length > 0) {
-				extCodeVO = new ExtensionCodeVO();
-				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-				extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-				extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-				extCodeVO.setTypeName(String.valueOf(objects[4]));
-				extCodeVO.setBrandName(String.valueOf(objects[5]));
-				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-				extCodeVO.setColorName(String.valueOf(objects[7]));
-
-			}
-
-			if (extCodeVO != null) {
-				this.getManagedBean().getExtensionVoList().add(extCodeVO);
-			}
-			if (this.getManagedBean().getExtensionVoList() != null
-					&& this.getManagedBean().getExtensionVoList().size() > 0) {
-
-				ExtensionCodeVO obj = this.getManagedBean().getExtensionVoList().get(0);
-
-				CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-				codeReqDTO.setBrandId(obj.getBrandId());
-				codeReqDTO.setMeasurementId(obj.getMeasurementId());
-				codeReqDTO.setTypeId(obj.getTypeId());
-				codeReqDTO.setColorId(obj.getColorId());
-				codeReqDTO.setUnspscId(this.getManagedBean().getSelectedUNSPSCObj().getUnspscId());
-
-				CodificationResDTO codeResDTO = codificationSO.searchItem(codeReqDTO);
-
-				codeReqDTO = new CodificationReqDTO();
-				codeReqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-				codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
-				CmType typeObj = null;
-				CmBrand brandObj = null;
-				CmMeasurement meaObj = null;
-
-				if (!isSelectedRequestItemProduct()) {
-
-					if (objSelected != null) {
-						typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
-
-						brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
-
-						meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
-
-					} else {
-						if (codeResDTO.getCommodityObj().getCmType() != null
-								&& codeResDTO.getCommodityObj().getCmType().size() > 0) {
-							typeObj = codeResDTO.getCommodityObj().getCmType().get(0);
-						} else {
-							typeObj = new CmType();
-							typeObj.setTypeCode("000");
-							typeObj.setTypeName("N/A");
-							typeObj.setUnspscId(codeResDTO.getCommodityObj());
-							codeReqDTO.setCmType(typeObj);
-							typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
-						}
-						if (codeResDTO.getCommodityObj().getCmBrand() != null
-								&& codeResDTO.getCommodityObj().getCmBrand().size() > 0) {
-							brandObj = codeResDTO.getCommodityObj().getCmBrand().get(0);
-						} else {
-							brandObj = new CmBrand();
-							brandObj.setBrandCode("00");
-							brandObj.setBrandName("N/A");
-							brandObj.setUnspscId(codeResDTO.getCommodityObj());
-							codeReqDTO.setCmBrand(brandObj);
-							brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
-						}
-						if (codeResDTO.getCommodityObj().getCmMeasurement() != null
-								&& codeResDTO.getCommodityObj().getCmMeasurement().size() > 0) {
-							meaObj = codeResDTO.getCommodityObj().getCmMeasurement().get(0);
-						} else {
-							meaObj = new CmMeasurement();
-							meaObj.setMeasurementCode("000");
-							meaObj.setMeasurementName("N/A");
-							meaObj.setUnspscId(codeResDTO.getCommodityObj());
-							codeReqDTO.setCmMeasurement(meaObj);
-							meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
-						}
-						obj.setColorId(1L);
-
-					}
-
-				} else {
-
-					typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
-
-					brandObj = this.searchBrandObjByBrandId(obj.getBrandId());
-
-					meaObj = this.searchMeasurementByMeasurementId(obj.getMeasurementId());
-				}
-
-				CmColor colorObj = this.searchColorObjByColorId(obj.getColorId());
-
-				CmItem newItem = new CmItem();
-
-				newItem.setCmUnspsc(codeResDTO.getCommodityObj());
-				newItem.setCmType(typeObj);
-				newItem.setCmBrand(brandObj);
-				newItem.setCmMeasurement(meaObj);
-				newItem.setCmColor(colorObj);
-				newItem.setItemName(codeResDTO.getCommodityObj().getUnspscTitle()
-						+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj
-								.getTypeName().equals("N A")) ? "" : " " + typeObj.getTypeName())
-						+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj
-								.getBrandName().equals("N A")) ? "" : " " + brandObj.getBrandName())
-						+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj
-								.getMeasurementName().equals("N A")) ? "" : " " + meaObj.getMeasurementName())
-						+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj
-								.getColorName().equals("N A")) ? "" : " " + colorObj.getColorName()));
-
-				newItem.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + typeObj.getTypeCode()
-						+ brandObj.getBrandCode() + meaObj.getMeasurementCode() + colorObj.getColorCode());
-
-				String codeDesc = newItem.getExtensionCode() + " - " + newItem.getItemName();
-				this.getManagedBean().setItemCodeDesc(codeDesc);
-
-			}
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("QT", "selectedItemCode", "selectedItemCode", null,
-					getUserIdSessionFromLoginId(), e);
-		}
+//			}
+			
+//		} catch (Exception e) {
+//			SLAUtils.getInstance().logSLAError("QT", "selectedItemCode", "selectedItemCode", null,
+//					getUserIdSessionFromLoginId(), e);
+//		}
 	}
+	
+	private CmItem createCmItem(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement, CmColor color) {
+	    CmItem item = new CmItem();	    
+	    item.setCmUnspsc(codeResDTO.getCommodityObj());
+	    item.setCmType(type);
+	    item.setCmBrand(brand);
+	    item.setCmMeasurement(measurement);
+	    item.setCmColor(color);
+	    item.setItemName(formatItemName(codeResDTO, type, brand, measurement, color));
+	    item.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + type.getTypeCode() + brand.getBrandCode() + 
+	                          measurement.getMeasurementCode() + color.getColorCode());
+	    return item;
+	}
+
+	private String formatItemName(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement, CmColor color) {
+		CommonUtils common = new CommonUtils();
+	    return codeResDTO.getCommodityObj().getUnspscTitle() +
+	    		common.filterItemNameNA(type.getTypeName()) +
+	            common.filterItemNameNA(brand.getBrandName()) +
+	            common.filterItemNameNA(measurement.getMeasurementName()) +
+	            common.filterItemNameNA(color.getColorName());
+	}
+	
 	
 	/**
 	 * #31503 - Show Details Items in popup
@@ -3864,14 +3984,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void showItemDescPopup(TplSpecQuestion question) {
 
 		try {
-			//this.getManagedBean().setTplSpecQuestion(question);
-
+			
 			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
-			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-			CmType typeObj = null;
-			CmBrand brandObj = null;
-			CmMeasurement meaObj = null;
+			CodificationReqDTO codeReqDTO = new CodificationReqDTO();			
 
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			cReqDTO.setItemId(question.getCmItem().getItemId());
@@ -3885,11 +4001,11 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			this.getManagedBean().setCommodityTitle(codeResDTO.getCommodityObj().getUnspscTitle());
 			this.getManagedBean().setFamilyCode(item.getExtensionCode());			
 
-			typeObj = this.searchTypeOjbyTypeId(item.getCmType().getTypeId());
+			CmType typeObj = this.searchTypeOjbyTypeId(item.getCmType().getTypeId());
 
-			brandObj = this.searchBrandObjByBrandId(item.getCmBrand().getBrandId());
+			CmBrand brandObj = this.searchBrandObjByBrandId(item.getCmBrand().getBrandId());
 
-			meaObj = this.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
+			CmMeasurement meaObj = this.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
 
 			CmColor colorObj = this.searchColorObjByColorCode(item.getCmColor().getColorCode());
 
