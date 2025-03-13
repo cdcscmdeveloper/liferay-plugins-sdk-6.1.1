@@ -3,12 +3,19 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_compExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.sm.comp.exp.screen.name']}");
+		</script>
+	</ui:define>
 	<ui:define name="contentSection">
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.tnc.header']}">
-			<h:outputText value="#{lbl['lbl.sm.comp.exp.tnc.msg']}" escape="false" />
+			<h:outputText value="#{lbl['lbl.sm.comp.exp.tnc.msg']}"
+				escape="false" />
 		</p:panel>
 		<table>
 			<tr>

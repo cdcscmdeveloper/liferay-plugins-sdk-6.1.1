@@ -3,6 +3,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_compExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{lbl['lbl.sm.comp.exp.screen.name']}");
+		</script>
+	</ui:define>
 	<ui:define name="contentSection">
 		<p:outputPanel
 			rendered="#{not empty compExpMB.smDraftList or not empty compExpMB.ctDraftList}">

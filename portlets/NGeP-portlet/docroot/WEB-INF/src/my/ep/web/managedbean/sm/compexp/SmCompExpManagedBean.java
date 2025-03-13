@@ -24,7 +24,9 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean agreeTnC;
 	private List<SmCompExpDraft> smDraftList;
 	private List<SmCompExpDraft> ctDraftList;
-	private List<SmCompExpDraft> selectedDraft;
+	private SmCompExpDraft selectedDraft;
+	private boolean fromSM;
+	private boolean fromCT;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -58,12 +60,28 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.ctDraftList = ctDraftList;
 	}
 
-	public List<SmCompExpDraft> getSelectedDraft() {
+	public SmCompExpDraft getSelectedDraft() {
 		return selectedDraft;
 	}
 
-	public void setSelectedDraft(List<SmCompExpDraft> selectedDraft) {
+	public void setSelectedDraft(SmCompExpDraft selectedDraft) {
 		this.selectedDraft = selectedDraft;
+	}
+
+	public boolean isFromSM() {
+		return fromSM;
+	}
+
+	public void setFromSM(boolean fromSM) {
+		this.fromSM = fromSM;
+	}
+
+	public boolean isFromCT() {
+		return fromCT;
+	}
+
+	public void setFromCT(boolean fromCT) {
+		this.fromCT = fromCT;
 	}
 
 }

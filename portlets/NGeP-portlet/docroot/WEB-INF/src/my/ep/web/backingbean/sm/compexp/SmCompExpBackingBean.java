@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.compexp;
 
+import java.util.ArrayList;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -14,6 +16,8 @@ import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+
+import org.primefaces.context.RequestContext;
 
 /**
  * BackingBean for Sm Company Experience
@@ -32,22 +36,27 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void preRenderCompExp() {
 		renewSesionObject();
 		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
+		this.getManagedBean().setSmDraftList(new ArrayList<SmCompExpDraft>());
+		this.getManagedBean().setCtDraftList(new ArrayList<SmCompExpDraft>());
 		SmCommonUtil.redirectToPage("smCompExpTnc.xhtml", "", null, null);
 	}
 
 	/**
-	 * To redirect to main SM Update Company Experience Information
+	 * To redirect to main SM Update Company Experience Information screen
 	 */
 	public void proceedAfterAcceptTnC() {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setSupplierId(this.getManagedBean().getSupplier().getSupplierId());
 
-		SmCompExpResDTO resDTO = new SmCompExpResDTO();
+		SmCompExpResDTO resDTO;
 		resDTO = smCompExpSo().retrieveCompExpDraftListBySupplierId(reqDTO);
 
 		for (SmCompExpDraft draf : resDTO.getDraftList()) {
 			if (draf.getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 				this.getManagedBean().getSmDraftList().add(draf);
+			} else if (draf.getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)
+					|| draf.getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_QT)) {
+				this.getManagedBean().getCtDraftList().add(draf);
 			}
 		}
 
@@ -55,7 +64,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
-	 * To redirect to draft screen
+	 * To redirect to SM Update Company Experience Information Draft screen
 	 */
 	public void redirectToDraft() {
 		SmCommonUtil.redirectToPage("smCompExpDraft.xhtml", "", null, null);
@@ -63,9 +72,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	/**
 	 * To redirect to draft screen
+	 * 
+	 * @param draft
+	 * @param fromSM
+	 * @param fromCT
 	 */
-	public void onClickDraftAction(SmCompExpDraft draft) {
-		SmCommonUtil.redirectToPage("", "", null, null);
+	public void onClickDraftAction(SmCompExpDraft draft, boolean fromSM, boolean fromCT) {
+		this.getManagedBean().setSelectedDraft(draft);
+		this.getManagedBean().setFromSM(fromSM);
+		this.getManagedBean().setFromCT(fromCT);
+		RequestContext.getCurrentInstance().execute("updateCompExpWV.show();");
 	}
 
 	private ISmCompExpSO smCompExpSo() {

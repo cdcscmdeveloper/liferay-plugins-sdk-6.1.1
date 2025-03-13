@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:f="http://java.sun.com/jsf/core">
 	<ui:define name="resourceSection">
 		<script>
 			$('#portlet_compExp_WAR_NGePportlet').find('.portlet-title-text')
@@ -47,7 +48,8 @@
 				<p:column>
 					<h:outputText value="#{index+1}" />
 				</p:column>
-				<p:column>
+				<p:column
+					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{smDraft.title}" />
 				</p:column>
 				<p:column>
@@ -57,7 +59,7 @@
 					</h:outputText>
 				</p:column>
 				<p:column>
-					<h:outputText value="#{smDraft.contractStartDate}">
+					<h:outputText value="#{smDraft.contractEffDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
@@ -65,12 +67,14 @@
 				<p:column>
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						action="#{compExpBB.onClickDraftAction(smDraft)}" process="@this"
+						action="#{compExpBB.onClickDraftAction(smDraft, true, false)}" process="@this"
 						partialSubmit="true" update=":form">
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<ac:updateCompExpPopUp dialogName="updateCompExp"
+			fromSM="#{compExpMB.fromSM}" fromCT="#{compExpMB.fromCT}" />
 	</ui:define>
 </ui:composition>
