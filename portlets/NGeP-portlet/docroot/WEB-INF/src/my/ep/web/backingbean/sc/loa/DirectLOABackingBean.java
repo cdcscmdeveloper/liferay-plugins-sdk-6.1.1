@@ -8738,7 +8738,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		// Added to remove "PK7" from QT Types Dropdown list if user not selectd
 		// already.
-		//qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
+		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 		
 		// if the LOA already added ITEM IN PK7 we remove the code from the list 
