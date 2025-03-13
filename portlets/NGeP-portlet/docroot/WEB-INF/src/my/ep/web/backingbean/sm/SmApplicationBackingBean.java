@@ -8616,6 +8616,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
 		}
 		//#34138 - end
+		
+		//#36718 - START
+		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getShareHolderMailAddr().deepCopy());
+		//#36718 - END
 	}
 	
 	//start #31479
