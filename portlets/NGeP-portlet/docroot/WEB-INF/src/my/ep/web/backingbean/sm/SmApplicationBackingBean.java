@@ -8616,6 +8616,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
 		}
 		//#34138 - end
+		
+		//#36718 - START
+		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getShareHolderMailAddr().deepCopy());
+		//#36718 - END
 	}
 	
 	//start #31479
@@ -12816,10 +12820,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void deleteSupDocFileAttachment() {
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-		//#28807 - Start
-		if(this.getManagedBean().getSmApplDocFile() != null){
-			mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+		// #37775 - Start
+		if (this.getManagedBean().getSmApplDocFile() != null) {
+			if (mainDoc.getSmApplDocFiles().size() == 1) {
+				// If there is only one file, clear its name
+				this.getManagedBean().getSmApplDocFile().setFileName(" ");
+				this.getManagedBean().getSmApplDocFile().setFilePath(" ");
+				// Reassign the modified object back to the list (ensuring persistence)
+				List<SmApplDocFile> updatedFiles = new ArrayList<>(mainDoc.getSmApplDocFiles());
+				updatedFiles.set(0, this.getManagedBean().getSmApplDocFile());
+				mainDoc.setSmApplDocFiles(updatedFiles);
+			} else {
+				// #28807 - Start
+				mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			}
 		}
+		// #37775 - End
 		this.getManagedBean().setSmApplDocFile(null);
 	}
 	//#28807 - End
@@ -15284,35 +15300,31 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 	/**
 	 * Get new additional categories as select item
-	 * 
+	 * @param categoryTypeId
 	 * @return List<SelectItem>
 	 */
 	public List<SelectItem> getSelectedCategoryItemsByCategoryType(
 			Long categoryTypeId) {
-		List<SmSupplierCategory> applCategories = null;
-		List<SelectItem> retVal = new ArrayList<SelectItem>();
-		SelectItem item = null;
-		if (EntityHelper.isCollectionEmpty(getManagedBean()
-				.getActiveCategoryList())) {
-			applCategories = getManagedBean().getSmAppl()
-					.getSmSupplierCategories();
-		} else {
-			applCategories = getManagedBean().getActiveCategoryList();
+		//28778 - Site Visit Grouping Enhancement -28775 - start
+		if (categoryTypeId == null){
+			return new ArrayList<>();
 		}
+		List<SmSupplierCategory> applCategories = new ArrayList<>();
+		List<SelectItem> retVal = new ArrayList<>();
+		applCategories.addAll(getManagedBean().getActiveCategoryList());
+		applCategories.addAll(getManagedBean().getSmAppl().getSmSupplierCategories());
+		List<Integer> validStatus = Arrays.asList(
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		
 		for (SmSupplierCategory cat : applCategories) {
-			if ((categoryTypeId != null
-					&& cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_ACT_STATUS) == 0 || cat
-					.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0)
-					&& (cat.getPmCategoryL3() != null
-							&& cat.getPmCategoryL3().getCategoryTypeCode() != null
-							&& cat.getPmCategoryL3().getCategoryTypeCode()
-									.getParameterId() != null && cat
-							.getPmCategoryL3().getCategoryTypeCode()
-							.getParameterId().compareTo(categoryTypeId) == 0)) {
-
-				item = new SelectItem();
+			if (cat.getPmCategoryL3() == null || cat.getPmCategoryL3().getCategoryTypeCode() == null
+					|| cat.getPmCategoryL3().getCategoryTypeCode().getParameterId() == null){
+				continue;
+			}
+			if (categoryTypeId.equals(cat.getPmCategoryL3().getCategoryTypeCode().getParameterId())
+					&& validStatus.contains(cat.getRecordStatusFlg())) {
+				SelectItem item = new SelectItem();
+				//28778 - Site Visit Grouping Enhancement -28775 - end
 				item.setValue(cat.getPmCategoryL3().getCategoryL3Id());
 				item.setLabel(cat.getPmCategoryL1().getCategoryL1Code()
 						+ cat.getPmCategoryL2().getCategoryL2Code()
