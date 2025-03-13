@@ -7375,6 +7375,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 37622 - end
 	// #29007 Start vinod
+	/**
+	 * This method will check the BPM version and status to insert item spec
+	 * offer.
+	 * 
+	 * @param scLoa
+	 *            .
+	 * @return boolean.
+	 */
 	public boolean checkWIPVersionAndInsertItemSpecOffer(ScLoa scLoa) {
 		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
 		String docType = scLoa.getScLoiLoa().getDocType();
