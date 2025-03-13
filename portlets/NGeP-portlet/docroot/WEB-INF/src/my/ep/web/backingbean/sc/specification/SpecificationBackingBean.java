@@ -23717,11 +23717,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
 					|| Arrays.asList(QTConstants.TECHNICAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
+				Long qtChecklistId = techChecklist.getQtChecklistId();
 				String title = techChecklist.getTitle();
 				PmParameter definationType = techChecklist.getDefinationType();
 				PmDocument pmDocument = techChecklist.getPmDocument();
 				PmStatus pmStatus = techChecklist.getPmStatus();
 
+				previewCheckList.setQtChecklistId(qtChecklistId);
 				previewCheckList.setTitle(title);
 				previewCheckList.setDefinationType(definationType);
 				previewCheckList.setPmDocument(pmDocument);
@@ -23756,11 +23758,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			if (Arrays.asList(QTConstants.DEFINATION_TYPE_LIST).contains(defType)
 					|| Arrays.asList(QTConstants.FINANCIAL_CHECKLIST_SELECT_LIST).contains(docDefKey)) {
 				ScQtCheckList previewCheckList = new ScQtCheckList();
+				Long qtChecklistId = finChecklist.getQtChecklistId();
 				String title = finChecklist.getTitle();
 				PmParameter definationType = finChecklist.getDefinationType();
 				PmDocument pmDocument = finChecklist.getPmDocument();
 				PmStatus pmStatus = finChecklist.getPmStatus();
 
+				previewCheckList.setQtChecklistId(qtChecklistId);
 				previewCheckList.setTitle(title);
 				previewCheckList.setDefinationType(definationType);
 				previewCheckList.setPmDocument(pmDocument);
@@ -23904,20 +23908,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
+		FacesScopes facesScopes = new FacesScopes();
+
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING));
 		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		// reportAttachment.setPrefixFileName();
+
+		String selectedTechnicalCheckList = selectedFinancialChecklistForReport(this.getManagedBean()
+				.getTechChecklistPreview(), true);
+
 		try {
 			ScAttachment attachment = reportAttachment;
 			populateAttachmentDetails(attachment);
 			reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
+			PmUser user = facesScopes.getUserSessionBean();
 
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_PKEY, SourcingConstants.ORACLE_ENCRYPTION_KEY);
 			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
+			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedTechnicalCheckList);
+			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
 
 			downloadReportSpecPrepare(reportName, paramMap, attachment);
 		} catch (IOException e) {
@@ -23944,26 +23957,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
+		FacesScopes facesScopes = new FacesScopes();
+
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING));
 		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		// reportAttachment.setPrefixFileName();
-		List<ScQtCheckList> selectedTechCheckList = new ArrayList<>();
-		for (ScQtCheckList scQtCheckList : this.getManagedBean().getTechChecklistPreview()) {
-			if (scQtCheckList.isSelected()) {
-				selectedTechCheckList.add(scQtCheckList);
-			}
-		}
+
+		String selectedTechnicalCheckList = selectedFinancialChecklistForReport(this.getManagedBean()
+				.getTechChecklistPreview(), false);
+
 		try {
 			ScAttachment attachment = reportAttachment;
 			populateAttachmentDetails(attachment);
 			reportName = ReportConst.SC_PVW_TECH_CHECKLIST_DTL_JSP;
+			PmUser user = facesScopes.getUserSessionBean();
 
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_PKEY, SourcingConstants.ORACLE_ENCRYPTION_KEY);
 			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
+			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedTechnicalCheckList);
+			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
 
 			downloadReportSpecPrepare(reportName, paramMap, attachment);
 		} catch (IOException e) {
@@ -23990,20 +24006,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
+		FacesScopes facesScopes = new FacesScopes();
+
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING));
 		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		// reportAttachment.setPrefixFileName();
+
+		String selectedFinancialChecklist = selectedFinancialChecklistForReport(this.getManagedBean()
+				.getFinChecklistPreview(), true);
+
 		try {
 			ScAttachment attachment = reportAttachment;
 			populateAttachmentDetails(attachment);
-			reportName = ReportConst.SC_PVW_FIN_CHECKLIST_SUMMARY_JSP;
+			reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
+			PmUser user = facesScopes.getUserSessionBean();
 
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_PKEY, SourcingConstants.ORACLE_ENCRYPTION_KEY);
 			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
+			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedFinancialChecklist);
+			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
 
 			downloadReportSpecPrepare(reportName, paramMap, attachment);
 		} catch (IOException e) {
@@ -24030,21 +24055,29 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
+		FacesScopes facesScopes = new FacesScopes();
+		
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING));
 		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+		
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		// reportAttachment.setPrefixFileName();
-		List<ScQtCheckList> selectedFinancialChecklist = selectedFinancialChecklistForReport();
+		
+		String selectedFinancialChecklist = selectedFinancialChecklistForReport(this.getManagedBean()
+				.getFinChecklistPreview(), false);
+		
 		try {
 			ScAttachment attachment = reportAttachment;
 			populateAttachmentDetails(attachment);
 			reportName = ReportConst.SC_PVW_FIN_CHECKLIST_DTL_JSP;
+			PmUser user = facesScopes.getUserSessionBean();
 
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_PKEY, SourcingConstants.ORACLE_ENCRYPTION_KEY);
 			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
+			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedFinancialChecklist);
+			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
 
 			downloadReportSpecPrepare(reportName, paramMap, attachment);
 		} catch (IOException e) {
@@ -24058,31 +24091,21 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #10141 End Vinod
 
 	// #10141 Start Vinod
-	private List<ScQtCheckList> selectedFinancialChecklistForReport() {
-		List<ScQtCheckList> selectedFinCheckList = new ArrayList<>();
-		for (ScQtCheckList scQtCheckList : this.getManagedBean().getFinChecklistPreview()) {
-			if (scQtCheckList.isSelected() && null != scQtCheckList.getPmDocument()
-					&& null != scQtCheckList.getPmDocument().getDocDefinitionKey()
-					&& scQtCheckList.getPmDocument().getDocDefinitionKey().equals(QTConstants.FINANCIAL_BANK_STMT_CODE)) {
-				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-				IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTSpecSO.class);
-
-				reqDTO.setScQtCheckList(scQtCheckList);
-				SpecificationResDTO resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-
-				if (null != resDTO.getScQtCheckListValue()) {
-					scQtCheckList.setScQtCheckListValue(resDTO.getScQtCheckListValue());
-					retriveFromMonthToManthDtls(resDTO.getScQtCheckListValue());
-				}
-
-				selectedFinCheckList.add(scQtCheckList);
-			} else if (scQtCheckList.isSelected()) {
-				selectedFinCheckList.add(scQtCheckList);
+	private String selectedFinancialChecklistForReport(List<ScQtCheckList> scQtChecklistList, boolean isSummary) {
+		StringBuilder selectedChecklists = new StringBuilder();
+		int checklistCount = 0;
+		
+		for (ScQtCheckList scQtCheckList : scQtChecklistList) {
+			if ((scQtCheckList.isSelected() || isSummary) && checklistCount==0) {
+				selectedChecklists.append(scQtCheckList.getQtChecklistId().toString());
+			}else if ((scQtCheckList.isSelected() || isSummary) && checklistCount!=0) {
+				selectedChecklists.append(","+scQtCheckList.getQtChecklistId().toString());
 			}
+			
+			checklistCount++;
 		}
 
-		return selectedFinCheckList;
+		return selectedChecklists.toString();
 	}
 
 	// #10141 End Vinod
