@@ -542,7 +542,7 @@ public class ConsolidationReportBackingBean extends
 		List<ScQtFinalizationReport> decisionPaperList = null;
 
 		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization()
-				.getScQtFinalizationReports())) {// 27623
+				.getScQtFinalizationReports())) { // 37623
 			if (report.getTitle().contains("Kertas Taklimat")) {
 
 				if (briefingPaperList == null) {
@@ -677,19 +677,23 @@ public class ConsolidationReportBackingBean extends
 		// 18685 -end-		
 		// 37622 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+
 		for (ScQtFinalizationReport report : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
+
 			if (attachment == null) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
+
 			if (attachment != null) {
 				attachment.setTempFileName(report.getTitle());
 			}
+
 			scAttachments.add(attachment);
 		}
 		// 37622 - end
-		
+
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
 			// 18685 -start-

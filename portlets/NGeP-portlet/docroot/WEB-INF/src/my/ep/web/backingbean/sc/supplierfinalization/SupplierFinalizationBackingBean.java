@@ -3485,7 +3485,7 @@ public class SupplierFinalizationBackingBean extends
 
 		return streamContent;
     }	
-     
+
 	// 36715 START
 	/**
 	 * Get the Documents Report Information.
@@ -3500,6 +3500,7 @@ public class SupplierFinalizationBackingBean extends
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
 		ScQtFinalizationReportAttachment reportAttachment = null;
+
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
 			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
 			ScQt scQt = getManagedBean().getScQt();
@@ -3516,8 +3517,8 @@ public class SupplierFinalizationBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);// 36715
 
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload); // 36715
 			} else {
 				debugLogger("No document type is exists with the key " + docDefinitionKey);
 				reportAttachment = null;
@@ -3527,8 +3528,8 @@ public class SupplierFinalizationBackingBean extends
 
 		return reportAttachment;
 	}
-
 	// 36715 END
+
     /**
 	 *Get the Documents Report Information.
 	 * 
@@ -3562,7 +3563,8 @@ public class SupplierFinalizationBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
+
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload); // 36715
 			} else {
 				debugLogger("No document type is exists with the key "
 						+ docDefinitionKey);

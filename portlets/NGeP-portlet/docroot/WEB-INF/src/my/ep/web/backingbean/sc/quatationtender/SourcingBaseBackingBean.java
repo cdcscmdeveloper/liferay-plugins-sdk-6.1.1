@@ -975,24 +975,21 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			boolean isDirectDownload) throws IOException {
 
 		String reportUrl = generateReportURL(reportName, paramMap);
-		log.info("reportUrl: " + reportUrl);
 
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
+
 		OutputStream out = null;
 		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
 				.getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		InputStream input = null;
 		FileOutputStream fos = null;
-		try {
 
-			log.info("-----------after set header hatta .rtf only ----------");
-			log.info(" isDirectDownload " + isDirectDownload);
-			log.info(" filename=" + attachment.getFileName());
+		try {
 			String finalFileName = attachment.getFileName();
-			log.info(" finalFileName=" + finalFileName);
+
 			if (!isDirectDownload) {
 				res.setContentType("application/rtf");
 				res.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\"");
@@ -1000,8 +997,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				res.flushBuffer();
 				out = res.getOutputStream();
 			}
-
-			log.info("-----------after set header hatta .rtf only ----------");
 
 			File localFile = new File(getActualFilePath(attachment));
 
@@ -1013,8 +1008,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				} catch (ConnectException e) {
 					throw new EpException(MessageConst.ERROR_100058);
 				}
+
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				byte[] buf = new byte[1024];
+
 				try {
 					for (int readNum; (readNum = input.read(buf)) != -1;) {
 						bos.write(buf, 0, readNum);
@@ -1022,15 +1019,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
+
 				byte[] bytes = bos.toByteArray();
 				fos = new FileOutputStream(localFile);
 				fos.write(bytes);
 				fos.flush();
 			}
+
 			if (!isDirectDownload) {
 				out.flush();
-
 			}
+
 			return localFile;
 		} finally {
 			if (fos != null) {
@@ -1043,11 +1042,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				out.close();
 			}
 		}
-
 	}
-
 	// 36715 END
-	
+
 	/**
 	 * To get report from orcle reports
 	 * 
