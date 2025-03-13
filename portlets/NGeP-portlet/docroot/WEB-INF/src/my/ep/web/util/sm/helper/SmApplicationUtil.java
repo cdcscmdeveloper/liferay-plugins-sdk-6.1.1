@@ -10935,18 +10935,19 @@ public class SmApplicationUtil {
 	/**
 	 * Get pending activation category codes by category type Id
 	 * 
-	 * @param Long
-	 *            categoryTypeId
-	 * @param SmAppl
-	 *            appl
+	 * @param categoryTypeId
+	 * @param appl
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getCategoryCodesItemsByCatTypeId(
 			Long categoryTypeId, SmAppl appl) {
-		List<SelectItem> categoryCodeItems = new ArrayList<SelectItem>();
+		//28778 - Site Visit Grouping Enhancement -28775 - start
+		List<SelectItem> categoryCodeItems = new ArrayList<>();
+		List<Integer> validStatus = Arrays.asList(
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				if (validStatus.contains(cat.getRecordStatusFlg())		//28778 - end
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode()
