@@ -78,10 +78,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param fromCT
 	 */
 	public void onClickDraftAction(SmCompExpDraft draft, boolean fromSM, boolean fromCT) {
-		this.getManagedBean().setSelectedDraft(draft);
-		this.getManagedBean().setFromSM(fromSM);
-		this.getManagedBean().setFromCT(fromCT);
-		RequestContext.getCurrentInstance().execute("updateCompExpWV.show();");
+		
 	}
 
 	private ISmCompExpSO smCompExpSo() {
