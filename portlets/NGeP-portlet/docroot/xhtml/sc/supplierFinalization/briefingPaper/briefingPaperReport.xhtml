@@ -9,11 +9,17 @@
 	<p:panel header="#{lbl['lbl.sc.report.section']}" toggleable="true">
 		<h:outputText styleClass="instruction" escape="false"
 			value="#{lbl['lbl.sc.sf.briefing.paper.reports.instructions']}" />
-		<p:dataTable id="reportTbl" widgetVar="reportWidget" var="report"
-			value="#{suppFinalizationBackingBean.managedBean.documentList}"
-			rows="10" styleClass="documentslist"
+
+		<ui:remove>37622 add briefingPaperDisplayFilter -start-</ui:remove>
+		<ui:param name="finalizationReports"
+			value="#{suppFinalizationBackingBean.managedBean.documentList}" />
+		<p:dataTable id="reportTbl"
+			value="#{consolidationReportBackingBean.briefingPaperDisplayFilter(finalizationReports)}"
+			widgetVar="reportWidget" var="report" rows="10"
+			styleClass="documentslist"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			rowKey="#{report}" rowIndexVar="rowIndex">
+			<ui:remove>37622 -end-</ui:remove>
 
 			<ac:paginator for="reportTbl" />
 
