@@ -15195,14 +15195,11 @@ public class SmApplicationBackingBean extends
 		if (categoryTypeId == null){
 			return new ArrayList<>();
 		}
-		List<SmSupplierCategory> applCategories = new ArrayList<>();
 		List<SelectItem> retVal = new ArrayList<>();
-		applCategories.addAll(getManagedBean().getActiveCategoryList());
-		applCategories.addAll(getManagedBean().getSmAppl().getSmSupplierCategories());
 		List<Integer> validStatus = Arrays.asList(
 				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		
-		for (SmSupplierCategory cat : applCategories) {
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 			if (cat.getPmCategoryL3() == null || cat.getPmCategoryL3().getCategoryTypeCode() == null
 					|| cat.getPmCategoryL3().getCategoryTypeCode().getParameterId() == null){
 				continue;
