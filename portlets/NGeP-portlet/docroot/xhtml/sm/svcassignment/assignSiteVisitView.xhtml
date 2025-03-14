@@ -43,18 +43,15 @@
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 
 		<!-- #34400 -->
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500"
-			header="#{lbl['lbl.btn.dialog.cofirm.header']}">
-   			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}">
-						<f:param name="disableValidation" value="true" />
-					</p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="submissionConfirmDlg.hide();"></p:commandButton>
-			</div>
-		</p:dialog>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okParam="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.sitevisit.want.proceed.qmark']}" 
+			update="@all"
+			loadingWidget="blockWidget" />
 
 		<p:messages id="svoMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />

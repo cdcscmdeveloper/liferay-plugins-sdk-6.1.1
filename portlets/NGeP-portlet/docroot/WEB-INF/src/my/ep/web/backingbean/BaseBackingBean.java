@@ -2349,6 +2349,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
 			// 25037 - end
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo());
+			// #29007 End Vinod
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {

@@ -260,26 +260,23 @@
 	</p:confirmDialog>
 	<!-- 32304 - end -->
 	<!-- #34400 - start -->
-	<ac:confirmationPopup id="confirmApproveDlg" widget="confirmApproveDlg"
+	<ac:confirmationPopupSM id="confirmApproveDlg" widget="confirmApproveDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.approve']}" 
 		update="@([id$=Msg])"
 		loadingWidget="blockWidget" />
 		
-	<ac:confirmationPopup id="confirmRejectDlg" widget="confirmRejectDlg"
+	<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.reject']}" 
 		update="@([id$=Msg])"
 		loadingWidget="blockWidget" />
 		
-	<ac:confirmationPopup id="confirmReviseDlg" widget="confirmReviseDlg"
+	<ac:confirmationPopupSM id="confirmReviseDlg" widget="confirmReviseDlg"
 		okParam="#{backingBean.submitPOorApproverReviewToBPM('REVISE')}"
-		width="400" height="100" hasParam="true"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		hasParam="true"
 		content="#{lbl['lbl.sm.confirm.revise']}" 
 		update="@([id$=Msg])"
 		loadingWidget="approverReviseBlockWidget" />

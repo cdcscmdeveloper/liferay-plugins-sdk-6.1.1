@@ -848,6 +848,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		debugLogger("start of saveQtDetailsAction");
 		this.getManagedBean().setSaveFlow(true);
+		//#10141 Start Vinod
+		boolean isSendNotificationButton = this.getManagedBean().isSaveForSendNotification();
+		boolean inactiveCLWarn = this.getManagedBean().isShowInactiveChecklistWarning();
+		String notifyText = this.getManagedBean().getInActiveChecklistNotificationText();
+		//#10141 End Vinod
 		try {
 			
 			Long currentStatus = this.getManagedBean().getCurrentStatusId();
@@ -875,6 +880,21 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#29521-end
 			//#28784
 			checkDemoPresentationByStatus();
+			//#10141 Start Vinod
+			if(isSendNotificationButton){
+				this.getManagedBean().setShowInactiveChecklistWarning(inactiveCLWarn);
+				this.getManagedBean().setInActiveChecklistNotificationText(notifyText);
+				this.getManagedBean().setSaveForSendNotification(false);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED, new String[] { this
+										.getManagedBean().getInActiveChecklistNotificationText() },
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+				return;
+			}
+			//#10141 End Vinod
 			
 			if(isFirstSave){								
 				 /* 
@@ -1186,7 +1206,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().setCurrentStatusId(currentStatus);
 			//#21692 05/02/2024 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
-			if (!enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD)) {//#21692 note-#418 issue 2
+			if (this.getManagedBean().getAmendMentBean() == null
+					|| this.getManagedBean().getAmendMentBean().getValueMap().get(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) == null) {//#21692 note-#418 issue 2
 				//Reopen #452 remove null checking
 				selectedScQt.setResponsePeriod(result);
 			}
@@ -2717,23 +2738,17 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-		
+			//25791 -start
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>();
+			//25791 -end
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
-				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)
-						// ***19336#99 - start
-						&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT) 
-						// ***19336#99 - end
-						) {
-					if (!StringUtils.isBlank(docNo)) {
-						SearchFilterBean bean = new SearchFilterBean();
-						bean.setSearchField("loiNo");
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);	
-					}
+				// 25791-start-
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+					searchFilterBean = setDocNumBean(docNo, searchFilterBean,
+							SourcingConstants.LOI_NO);
+					// 25791-end-
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
@@ -2769,24 +2784,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-		
+			//25791 -start-
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>();
+			//25791 -end-
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docType)) {
+				// 25791 -start-
 				if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
-					if (!StringUtils.isBlank(docNo) 
-							// ***19336#99 - start
-							&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD) 
-							// ***19336#99 - end
-						)
-							{
-						SearchFilterBean bean = new SearchFilterBean();
-						bean.setSearchField("loaNo");
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);	
-					}
+					searchFilterBean = setDocNumBean(docNo, searchFilterBean,
+							SourcingConstants.LOA_NUMBER);
+					// 25791-end-
+
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
@@ -2808,10 +2817,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//30418-START
 			//Special Case for LOA Doctype QT Maintenance Search, procurement mode is search against SC_LOA instead of SC_QT
 			if (StringUtils.isNotEmpty(qtnTenderSearchBean.getProcurementMode())) {
+				// 25791 -start-
 				searchFilterBean.add(new SearchFilterBean(
-						"procurementMode.parameterCode",
+						SourcingConstants.LOA_PROCUREMNT_MODE,
 						SearchOperator.OPERATOR_EQUALS.value(),
 						qtnTenderSearchBean.getProcurementMode()));
+				// 25791 -end-
 			}
 			//30418-END
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -4007,6 +4018,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				this.getManagedBean().setSubStatusId(sts.getStatusId());
 			}
 			//#11299 vinod End
+			// #10141 Start Vinod
+			checkInactiveChecklistAndDisplayWarning(this.getManagedBean().getTaskName());
+			// #10141 End Vinod
 			//assertSpecificationUpdateInProgress(false);//25037 #568 - to tally with 15391			
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
@@ -4412,6 +4426,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			if ((null != committeResDto && committeResDto.isSuccessful())
 					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
+				
 
 				// 25037 - start
 				if (this.getManagedBean().isReapproval()) {
@@ -4733,9 +4748,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 								for (ScQtApproverSettings approverSettings : approvalSettings) {
 									approverSettings.setScQtApproval(qtApproval);
 									
-									// Added to populate security if Finalization committee is same as Committee Appointment
-									approverSettings.setPmUser(scQt.getFinalizationSecratery());
-									approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
+									//21692 Sync Approval PB with Committee Appointment PB except for Central Contract note 571 - Start
+									if (!scQt.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+										approverSettings.setPmUser(scQt.getFinalizationSecratery());
+										approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
+									}
+									//21692 Sync Approval PB with Committee Appointment PB except for Central Contract note 571 - End
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
@@ -7211,7 +7229,12 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		int changedIndexNumber = manipulateIndexNumber(activeIndex);
 		switch (changedIndexNumber) {
 		case 0:
-			detailSO.validateQTDetails(reqDTO);
+			// #10141 Start Vinod added condition to ignore validation for send
+			// notification button.
+			if (!this.getManagedBean().isSaveForSendNotification()) {
+				detailSO.validateQTDetails(reqDTO);
+			}
+			// #10141 End Vinod
 			
 			//9019 - start using new method
 			//9019 - Start (Harun) Reopen reset to null as remarks that initialize empty will cause error while save
@@ -7457,6 +7480,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (isQTStatusGreaterThan(getManagedBean().getQt().getQtStatus().getStatusId(), QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				reqDTO.getQtdetail().setModified(true);
 				reqDTO.getQtdetail().setFCApproval(true);
+				// #10141 Start Vinod added condition to ignore validation for send
+				// notification button.
+				if (this.getManagedBean().isSaveForSendNotification()) {
+					List<ScQtApproval> approvers = new ArrayList<>();
+					approvers.add(this.getManagedBean().getScQtApproval());
+					reqDTO.getQtdetail().setScQtApprovals(approvers);
+				}
+				// #10141 End Vinod
 				detailSO.validateApprovalDetails(reqDTO);
 				detailSO.removeSchedule(reqDTO);//#29474
 				resDTO = detailSO.saveQTDtl(reqDTO);
@@ -13122,6 +13153,10 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 		List<ScQtCategory> qtCatCodeList = this.getManagedBean().getQt()
 				.getScQtCategorys();
+		//suspected session were renew, set back list.
+		if(null == qtCatCodeList || qtCatCodeList.isEmpty()){
+			qtCatCodeList = this.getManagedBean().getQtCategoryList();
+		}
 // #29732 Start - reOpen Fix
 		String catCodeList = "";
 		Integer recordstatusInactive = 0;// #29732(#221)
@@ -13185,6 +13220,156 @@ public void retrieveDemoQtDetails(Long qtId) {
 			return false;
 	}
 	//#11299 End Vinod
+	// #10141 Start Vinod
+	/**
+	 * this method will check inactive checklist and display the warning to send
+	 * notification onload.
+	 * 
+	 * @param status
+	 *            .
+	 * @return
+	 */
+	public void checkInactiveChecklistAndDisplayWarning(String status) {
+		List<ScQtCheckList> inActiveChecklist = new ArrayList<>();
+		List<String> checkStatus = new ArrayList<>();
+		checkStatus.add(SCProcessNameConst.PREPARE_QT_SCHEDULE);
+		checkStatus.add(SCProcessNameConst.REVISE_QT_SCHEDULE);
+		checkStatus.add(SCProcessNameConst.APPROVE_PUBLICATION);
+		checkStatus.add(SCProcessNameConst.REVISE_BPK);
+		checkStatus.add(SCProcessNameConst.APPROVE_BPK);
+		
+		if (checkStatus.contains(status)) {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			IQTSpecSO specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			reqDTO.setScQt(this.getManagedBean().getQt());
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
+
+			for (ScQtCheckList tech : resDTO.getTechnicalCheckList()) {
+				if (null != tech.getPmDocument() && !tech.getPmDocument().isRecordStatus()) {
+					inActiveChecklist.add(tech);
+				}
+			}
+			for (ScQtCheckList fin : resDTO.getFinancialCheckLists()) {
+				if (null != fin.getPmDocument() && !fin.getPmDocument().isRecordStatus()) {
+					inActiveChecklist.add(fin);
+				}
+			}
+		}
+
+		showWarningMessageForInactiveChecklist(inActiveChecklist);
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	private void showWarningMessageForInactiveChecklist(List<ScQtCheckList> inActiveChecklist) {
+
+		if (!inActiveChecklist.isEmpty()) {
+			this.getManagedBean().setInActiveChecklist(inActiveChecklist);
+
+			String confirmationMsg = inactiveChecklistChecking(inActiveChecklist);
+
+			this.getManagedBean().setShowInactiveChecklistWarning(true);
+			this.getManagedBean().setInActiveChecklistNotificationText(confirmationMsg);
+
+			if (this.getManagedBean().getQt().isInactiveChecklistNotified()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST_NOTIFIED,
+								new String[] { confirmationMsg }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_SPEC_CONFIRM_INACTIVE_TECHFIN_CHECKLIST,
+								new String[] { confirmationMsg }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
+			}
+		}
+	}
+
+	// #10141 End Vinod
+	
+	// #10141 Start Vinod
+	private String inactiveChecklistChecking(List<ScQtCheckList> inActiveChecklist) {
+		StringBuilder confirmationMsg = new StringBuilder();
+		String lineBreak = QTConstants.HTML_NEW_LINE_CHARACTER;
+		String techCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_TECH_CHECKLIST);
+		String finCheckList = getMessageCommon(QTConstants.LBL_INACTIVE_FIN_CHECKLIST);
+		int checkListcount = 0;
+		for (ScQtCheckList inactive : inActiveChecklist) {
+			checkListcount++;
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(inactive.getDocCategory())) {
+				confirmationMsg
+						.append(checkListcount + ". " + 
+								techCheckList + " " + 
+								inactive.getTitle() + 
+								lineBreak);
+			} else {
+				confirmationMsg
+						.append(checkListcount + ". " + 
+								finCheckList + " " + 
+								inactive.getTitle() + 
+								lineBreak);
+			}
+		}
+
+		return confirmationMsg.toString();
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	/**
+	 * this method will send notification to secratry to remove inactive
+	 * checklists.
+	 * 
+	 * @param status
+	 *            .
+	 * @return
+	 */
+	public void sendNotificationForInactiveChecklist() {
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+		QuationTenderResDTO qtResDTO;
+
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		CommitteResDTO resDTO = null;
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					ICommitteSO.class);
+			resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
+			qtReqDTO.setScCommitteeMemberList(committeeMembersList);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKINGBEAN,
+					this.getManagedBean().getQt().getQtNo(),
+					SLALogConstant.QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC, getUserIdSessionFromLoginId(), e);
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		}
+
+		qtReqDTO.setQtdetail(this.getManagedBean().getQt());
+		qtReqDTO.setInActiveChecklist(this.getManagedBean().getInActiveChecklist());
+		qtReqDTO.setProcurementModeStr(this.getParameterDesc(this.getManagedBean().getQt().getProcurementMode()));
+		qtResDTO = detailSO.updateChecklistNotify(qtReqDTO);
+
+		if (qtResDTO.isSuccessful()) {
+			ScQt qt = this.getManagedBean().getQt();
+			qt.setInactiveChecklistNotified(true);
+			this.getManagedBean().setSaveForSendNotification(true);
+			saveQtDetailsAction();
+		}
+	}
+
+	// #10141 End Vinod
 	
 	//#21692 - start
 	/**
@@ -14047,6 +14232,33 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	// 25791 -end-
+
+	// 25791 -start-
+	/**
+	 * set document number during LOI or LOA seach in qtmaintenance and Audit
+	 * screen.
+	 * 
+	 * @param docNum
+	 * @param searchFilterBean
+	 * @param serachField
+	 * @return List<SearchFilterBean>
+	 */
+	private List<SearchFilterBean> setDocNumBean(String docNum,
+			List<SearchFilterBean> searchFilterBean, String serachField) {
+		if (StringUtils.isNotBlank(docNum) || StringUtils.isNotEmpty(docNum)) {
+			SearchFilterBean docNumBean = new SearchFilterBean();
+			docNumBean.setSearchField(serachField);
+			docNumBean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			docNumBean.setSearchValue(docNum);
+			searchFilterBean.add(docNumBean);
+		}
+		return searchFilterBean;
+	}
+
+	// 25791 -end-
+	
+	
+	
 	
 	//29732 start
     private boolean isQTRoleMaintenanceValidation(){
@@ -14085,6 +14297,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return isQTAfterPublicationApproved && isDeskOfficerPendingCMT;
 	}
 	//12471 - End - Dayan
+	
+	
 
 
 }

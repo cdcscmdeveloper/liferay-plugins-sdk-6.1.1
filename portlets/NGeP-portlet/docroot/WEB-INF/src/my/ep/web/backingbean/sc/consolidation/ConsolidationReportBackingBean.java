@@ -1382,10 +1382,6 @@ public class ConsolidationReportBackingBean extends
 
 			resDTO = qtSuppFinalizationSO
 					.retrieveQtEvaluationResultDtls(reqDTO);
-			
-			// #28777 & #29729 - Start
-			this.getManagedBean().setCountSupplierBranchDeleted(resDTO.getTotalQualifiedSuppliersBranchDeleted());
-			// #28777 & #29729 - End
 
 			if (resDTO.isSuccessful()) {
 				return resDTO;
@@ -1535,6 +1531,13 @@ public class ConsolidationReportBackingBean extends
 			qualifiedSuppliers = resDTO.getQualifiedSupplierDetails();
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
 		}
+		
+		//#28777 & #29729 - Start
+		if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId()) && resDTO != null){
+			qualifiedSuppliers = resDTO.getListQualifiedSuppliersBranchDeleted();
+			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
+		}
+		//#28777 & #29729 - End
 
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
@@ -1568,6 +1571,14 @@ public class ConsolidationReportBackingBean extends
 					totalQualifiedSuppliers = resDTO
 							.getTotalQualifiedSuppliers();
 				}
+				
+				//#28777 & #29729 - Start
+				if(checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId()) && resDTO != null){
+					itemQualifiedSuppliers = resDTO.getListQualifiedSuppliersBranchDeleted();
+					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
+				}
+				//#28777 & #29729 - End
+				
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 						specZoneDtl, item.getRequestItem(),
 						itemQualifiedSuppliers);
@@ -1641,8 +1652,6 @@ public class ConsolidationReportBackingBean extends
 					}
 
 					if (epException == null) {
-						log.info(" hatta doRank "+doRank);
-						log.info(" hatta currentRank "+currentRank);
 						if (doRank == currentRank) {
 							epException = new EpException(
 									MessageConst.ERROR_760381, new String[] {
@@ -1678,12 +1687,6 @@ public class ConsolidationReportBackingBean extends
 				}
 			}
 		}
-		
-		//#28777 & #29729 - Start
-		if(this.getManagedBean().getCountSupplierBranchDeleted() > 0){
-			minRankCount -= this.getManagedBean().getCountSupplierBranchDeleted(); 
-		}
-		//#28777 & #29729 - End
 
 		if (totalRanksCount < minRankCount) {
 			setZoneAndTabIndexOnException(isItemized, specZoneDtl);
@@ -2512,8 +2515,6 @@ public class ConsolidationReportBackingBean extends
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		
-		 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-		 searchReqDTO.setDocId(qtId);
 		 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
 			 return Boolean.TRUE;
 		 }

@@ -188,10 +188,9 @@ public class QTFieldMapper {
 		// Briefing/Site visit
 		QT_BRIEFING_SITE_VISIT(QTStatusConst.QT_BRIEFING_SITE_VISIT,
 				new String[] { 
-						QTFieldConst.FIELD_QT_VALIDITY_PERIOD,
 						QTFieldConst.FIELD_QT_PUBLISH_PERIOD,
 						QTFieldConst.FIELD_QT_BSVDETAILS,
-						QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT}),//25037
+						QTFieldConst.FIELD_QT_DESK_OFFICER_ASSISTANT}),//25037//#21692 note #569
 						
         //Proposal Preparation 
 		QT_PROPOSAL_PREPARATION(QTStatusConst.QT_PROPOSAL_PREPARATION,
