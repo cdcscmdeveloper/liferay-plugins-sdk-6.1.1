@@ -8741,10 +8741,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 		
-		// if the LOA already added ITEM IN PK7 we remove the code from the list 
-		// to display in dropdown.
-		if (StringUtils.isNotEmpty(qtType) && qtType
-				.equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)) {
+		List<Long> submitStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
+				QTStatusConst.LOA_PENDING_REVISION);
+
+		boolean isPendingSubmit = null != this.getManagedBean().getScLoa().getPmStatus()
+				&& submitStatus.contains(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+
+		// if the LOA already added ITEM IN PK7 we remove the code from the list
+		// to display in dropdown only if the status is not submit.
+		if (StringUtils.isNotEmpty(qtType) && qtType.equals(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7)
+				&& !isPendingSubmit) {
 			qtTypes.remove(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		}
 
@@ -13184,6 +13190,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
 							MessageConst.WARN_7602694, new String[] { qtTypeDesc },
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		boolean isQTtypePK7 = null != qtType
+				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
+		if (isQTtypePK7) {
+			this.getManagedBean().setQtTypePK7WPselected(true);
 		}
 	}
 

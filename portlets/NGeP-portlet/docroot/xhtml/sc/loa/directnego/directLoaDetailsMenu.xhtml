@@ -383,13 +383,15 @@
 								size="35" disabled="true" />
 							</c:when>
 							<c:otherwise>
+								<ui:remove>#29766 Start Vinod</ui:remove>
 								<p:selectOneMenu
 										style="width: 206px;margin-bottom: 5px;" id="justificationId"
 										panelStyle="overflow-y: scroll; width:400px; height:200px;"
 										label="#{lbl['lbl.sc.reason']}"
 										required="true"
 										value="#{directLOABackingBean.managedBean.scLoa.justificationType.reasonCode}"
-										disabled="#{directLOABackingBean.managedBean.disableFields}">
+										disabled="#{directLOABackingBean.managedBean.disableFields or ispK7WPselected}">
+										<ui:remove>#29766 End Vinod</ui:remove>
 										<f:selectItems
 											value="#{directLOABackingBean.managedBean.pk7Reasons}" />
 									
