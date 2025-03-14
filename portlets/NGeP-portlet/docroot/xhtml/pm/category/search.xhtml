@@ -9,72 +9,8 @@
 	<ui:define name="contentSection">
 
 		<p:messages id="catSrchMsg" showDetail="true" closable="true" autoUpdate="true"
-			severity="error,info" showSummary="false"></p:messages>
-		<ui:remove>
-			<p:blockUI block=":form" widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
-
-			<p:panel>
-				<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
-			</p:panel>
-		</ui:remove>
-            <ui:remove>
-			<h:panelGrid columns="2">
-				<h:panelGroup style="float: right">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputLabel value="#{lbl['lbl.pm.category.level']}"></h:outputLabel>
-				</h:panelGroup>
-
-				<p:selectOneMenu
-					value="#{categoryBackingBean.managedBean.pmCategoryLevel}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}"
-						itemValue="1" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}"
-						itemValue="2" />
-					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-					<p:ajax event="change"
-						listener="#{categoryBackingBean.updateCategoryLevel()}"
-						update="catSearch" />
-				</p:selectOneMenu>
-
-				<h:outputLabel value="#{lbl['lbl.pm.main.category.code']}"></h:outputLabel>
-				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.mainCatCode}" maxlength="2" 
-					 size="10" />
-					<h:outputLabel value="#{lbl['lbl.pm.main.category.desc']}"></h:outputLabel>
-					<p:inputText value="#{categoryBackingBean.managedBean.mainCatDesc}"
-						size="50" />
-				</h:panelGrid>
-
-				<h:outputLabel value="#{lbl['lbl.pm.sub.category.code']}"
-					rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.subCatCode}"
-						size="10" maxlength="2"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-					<h:outputLabel value="#{lbl['lbl.pm.sub.category.desc']}"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-					<p:inputText value="#{categoryBackingBean.managedBean.subCatDesc}"
-						size="50"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==2 || categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-				</h:panelGrid>
-
-				<h:outputLabel value="#{lbl['lbl.pm.sub.div.code']}"
-					rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-				<h:panelGrid columns="3">
-					<p:inputText value="#{categoryBackingBean.managedBean.subDivCode}"
-						size="10" maxlength="2"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-					<h:outputLabel value="#{lbl['lbl.pm.sub.div.desc']}"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}"></h:outputLabel>
-					<p:inputText value="#{categoryBackingBean.managedBean.subDivDesc}"
-						size="50"
-						rendered="#{categoryBackingBean.managedBean.pmCategoryLevel==3}" />
-				</h:panelGrid>
-			</h:panelGrid>
-			</ui:remove>
+			globalOnly="true" severity="error,info" showSummary="false">
+		</p:messages>
 
 		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
 			toggleable="true" id="catSearch">
@@ -210,7 +146,8 @@
 					<h:outputText value="#{category[2]}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.pm.category.desc']}">
+				<p:column headerText="#{lbl['lbl.pm.category.desc']}"
+				   style="max-width:400px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"> <!-- #35590 - wrap text -->
 					<h:outputText value="#{category[3]}" />
 				</p:column>
 
@@ -223,7 +160,6 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 					style="width :5%">
-
 
 					<p:commandLink rendered="#{category[0]==1}"
 						action="#{categoryBackingBean.addSubCategory(category[1])}"
@@ -246,19 +182,21 @@
 						<p:graphicImage title="#{lbl['lbl.pm.add.sub.div']}"
 							value="/css/images/design/add.png" />
 					</p:commandLink>
+					<!-- start #29665 add new param -->
 					<p:commandLink rendered="#{category[0]==2}"
-						action="#{categoryBackingBean.editSubCategory(category[1])}"
+						action="#{categoryBackingBean.editSubCategory(category[1],0,false)}"
 						update="@form">
+					<!-- end #29665 add new param -->
 						<p:graphicImage library="ep/images/design" 
 							title="#{lbl['lbl.pm.edit.sub.category']}"
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
 
-
-
+					<!-- start #29665 add new param -->
 					<p:commandLink rendered="#{category[0]==3}"
-						action="#{categoryBackingBean.editSubDivision(category[1])}"
+						action="#{categoryBackingBean.editSubDivision(category[1],0)}"
 						update="@form">
+					<!-- end #29665 add new param -->
 						<p:graphicImage library="ep/images/design" 
 							title="#{lbl['lbl.pm.edit.sub.div']}"
 							value="/css/images/design/edit.png" />
@@ -269,11 +207,11 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<div class="ppRightBtn">
-
+		<ui:remove>START : #29665 Add style button</ui:remove>
+		<div class="ppRightBtn" style="text-align: right;">
 			<p:commandButton value="#{lbl['lbl.btn.create']}" 
 				action="#{categoryBackingBean.addCategory()}" />
 		</div>
-
+		<ui:remove>END : #29665 Add style button</ui:remove>
 	</ui:define>
 </ui:composition>
