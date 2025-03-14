@@ -307,10 +307,14 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 			if (SPKIHelper.getInstance().isUsingSpkiTLSLatest()) {
 				log.info("--->GET SIGNED DATA  FOR TG IDNO:" + identificationNo + " EPNO:"
 						+ epNo + " DATA SIGNING:" + dataForSigning);
-				SPKIHelper.getInstance()
+				vo = SPKIHelper.getInstance()
 						.getSignedData(SupplierManagementConst.CERT_TRUSTGATE,
 								identificationNo, epNo, pin, challenges,
 								dataForSigning);
+				vo.setErrMsg(code+vo.getStatusCode()+" - "+vo.getStatusMsg());
+				if (StringUtils.isBlank(vo.getStatusMsg())){
+					vo.setErrMsg(String.valueOf(vo.getStatusCode()));
+				}
 			} else {
 				com.msctg.cdc.pki.KMCRequestBuilder reqbuilder = getReqBuilder();
 				com.msctg.cdc.pki.IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), 
@@ -342,6 +346,10 @@ public class TestSpkiBackingBean extends SpkiBackingBean implements Serializable
 						.getSignedData(SupplierManagementConst.CERT_DIGICERT,
 								identificationNo, epNo, pin, challenges,
 								dataForSigning);
+				vo.setErrMsg(code+vo.getStatusCode()+" - "+vo.getStatusMsg());
+				if (StringUtils.isBlank(vo.getStatusMsg())){
+					vo.setErrMsg(String.valueOf(vo.getStatusCode()));
+				}
 			} else {
 				com.augtech.kmc.client.KMCClient client = getClient();
 				try {
