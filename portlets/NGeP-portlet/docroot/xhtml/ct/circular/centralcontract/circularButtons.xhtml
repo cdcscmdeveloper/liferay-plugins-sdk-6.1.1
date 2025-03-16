@@ -24,6 +24,7 @@
 						oncomplete="blockWidget.hide();" onkeypress="if (event.keyCode == 13) { return false; }"
 						action="#{centralContractBackingBean.gpkiSignAction(action)}" />
 				</ui:repeat></td>
+			<!--#35506 start-->
 			<td style="float: right;">
 			<c:if test="#{centralContractBackingBean.managedBean.action eq 'view' and circularBackingBean.isAuditCheck()}">
 			<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
@@ -39,7 +40,8 @@
 						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiaryForCircularContract(centralContractBackingBean.managedBean.circularVer.docType,
 								 centralContractBackingBean.managedBean.circular.circularId, centralContractBackingBean.managedBean.circular.circularNo)}" /> <!-- #36608 -->
 			</c:if>
-			</td>				
+			</td>
+			<!--#35506 end-->				
 		</tr>
 	</table>
 </ui:composition>

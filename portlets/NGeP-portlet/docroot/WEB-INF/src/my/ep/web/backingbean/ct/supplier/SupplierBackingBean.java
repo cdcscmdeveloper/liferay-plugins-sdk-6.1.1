@@ -31,14 +31,14 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
-import my.ep.constant.ct.audit.AuditContractConst;
+import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.audit.AuditContractReqDTO;
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -72,7 +72,7 @@ import my.ep.util.ct.CtAddressUtil;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
-import my.ep.web.backingbean.ct.audit.AuditContractBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
