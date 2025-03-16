@@ -28,17 +28,20 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.ct.audit.AuditContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.audit.AuditContractReqDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -55,6 +58,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -585,6 +589,35 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// #35506 Start
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
+								.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					
+					CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+					AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+					AuditContractReqDTO auCtData = new AuditContractReqDTO();
+					auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+					auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+					auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+					auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+					auCtData.setRoleName(getUserRole());
+					
+					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+					}
+				
+					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+					}
+
+					auditCtBean.saveAuditData(auCtData);
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
