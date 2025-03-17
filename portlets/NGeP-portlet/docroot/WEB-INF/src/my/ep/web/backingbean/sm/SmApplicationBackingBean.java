@@ -2986,6 +2986,11 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().setCountryId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId());
 					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().setStateId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
 					if(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision() != null && getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId() != null){
+						//#36718 - START
+						if(getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision()== null){
+							getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(new PmDivision());
+						}
+						//#36718 - END	
 						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision().setDivisionId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
 					}					
 					getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
@@ -8509,6 +8514,10 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
 		}
 		//#34138 - end
+		
+		//#36718 - START
+		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getShareHolderMailAddr().deepCopy());
+		//#36718 - END
 	}
 	
 	//start #31479
@@ -8639,36 +8648,53 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722656,
 					new String[] { addrType });
 		} else {
+			//#36718 - START
+			String panelName = StringUtils.EMPTY;
+			
+			if (destAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL;
+			}
+			if (destAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL;
+			}
+			if (destAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL;
+			}
+			if (destAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+					panelName = SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL;
+			}
+			
 			if (destAddr.isSameAsPerm()) {
-				String panelName = StringUtils.EMPTY;
-				destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
+					destAddr.setSmAddress(SmApplicationUtil.cloneAsPermenantAddr(
 						srcAddr, destAddr.getSmAddress(), destAddr,
 						getManagedBean().getDefPmCountry()));
-				if (destAddr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
-					panelName = SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL;
-
-				}
-				if (destAddr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
-					panelName = SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL;
-
-				}
-				if (destAddr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
-					panelName = SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL;
-
-				}
-				if (destAddr.getAddressType().equalsIgnoreCase(
-						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
-					panelName = SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL;
-				}
-
-				SmApplicationUtil.getInstance()
+			
+					SmApplicationUtil.getInstance()
 						.assignStateDistAndCityForSelVal(getManagedBean(),
 								destAddr.getSmAddress(), panelName);
 			} else {
 				destAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+				switch(panelName){
+					case SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL :
+						if(getManagedBean().getLatestMailAddr()!=null && getManagedBean().getLatestMailAddr().getSmAddress()!=null)
+							destAddr.setSmAddress((SmAddress) getManagedBean().getLatestMailAddr().getSmAddress().cloneEntity());
+						break;
+					case SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL :
+						if(getManagedBean().getLatestResdAddr()!=null && getManagedBean().getLatestResdAddr().getSmAddress()!=null)
+							destAddr.setSmAddress((SmAddress) getManagedBean().getLatestResdAddr().getSmAddress().cloneEntity());
+						break;
+					case SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL :
+						if(getManagedBean().getLatestOffAddr()!=null && getManagedBean().getLatestOffAddr().getSmAddress()!=null)
+							destAddr.setSmAddress((SmAddress) getManagedBean().getLatestOffAddr().getSmAddress().cloneEntity());
+						break;
+					default:
+						destAddr.setSmAddress(SmApplicationUtil.setDefaultAddr(null));
+				}
+				
+				SmApplicationUtil.getInstance()
+				.assignStateDistAndCityForSelVal(getManagedBean(),
+						destAddr.getSmAddress(), panelName);
+			//#36718 - END
 			}
 		}
 	}
@@ -10384,6 +10410,11 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmCountry().setCountryId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmCountry().getCountryId());
 						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmState().setStateId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().getStateId());
 						if(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision() != null && getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId() != null){
+							//#36718 - START
+							if(getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision()== null){
+								getManagedBean().getBasicCompanyFacility().getSmAddress().setPmDivision(new PmDivision());
+							}
+							//#36718 - END	
 							getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDivision().setDivisionId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDivision().getDivisionId());
 						}
 						getManagedBean().getBasicCompanyFacility().getSmAddress().getPmDistrict().setDistrictId(getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId());
@@ -12896,9 +12927,11 @@ public class SmApplicationBackingBean extends
 			if(!addr.isSsmData()){
 				addr.setPostcode("");
 			}
+			//#36718 - START
+			addr.setMapLatitude("");
+			addr.setMapLongitude("");
+			//#36718 - END
 		}
-		addr.setMapLatitude("");
-		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -12949,9 +12982,11 @@ public class SmApplicationBackingBean extends
 			if(!addr.isSsmData()){
 				addr.setPostcode("");
 			}
+			//#36718 - START
+			addr.setMapLatitude("");
+			addr.setMapLongitude("");
+			//#36718 - END
 		}
-		addr.setMapLatitude("");
-		addr.setMapLongitude("");
 		//#36483 - END
 		
 		/*//13320-start
@@ -13012,9 +13047,11 @@ public class SmApplicationBackingBean extends
 			if(!addr.isSsmData()){
 				addr.setPostcode("");
 			}
+			//#36718 - START
+			addr.setMapLatitude("");
+			addr.setMapLongitude("");
+			//#36718 - END
 		}
-		addr.setMapLatitude("");
-		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -13039,9 +13076,11 @@ public class SmApplicationBackingBean extends
 			if(!addr.isSsmData()){
 				addr.setPostcode("");
 			}
+			//#36718 - START
+			addr.setMapLatitude("");
+			addr.setMapLongitude("");
+			//#36718 - END
 		}
-		addr.setMapLatitude("");
-		addr.setMapLongitude("");
 		//#36483 - END
 	}
 
@@ -16729,10 +16768,11 @@ public class SmApplicationBackingBean extends
 			if(!addr.isSsmData()){
 				addr.setPostcode("");
 			}
+			//#36718 - START
+			addr.setMapLatitude("");
+			addr.setMapLongitude("");
+			//#36718 - END
 		}
-		
-		addr.setMapLatitude("");
-		addr.setMapLongitude("");
 		//#36483 - END
 	}
 	//13320-End	
