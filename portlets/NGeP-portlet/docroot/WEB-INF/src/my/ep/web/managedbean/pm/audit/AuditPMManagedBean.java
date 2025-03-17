@@ -29,7 +29,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name = "locationAMB")
 @SessionScoped
-public class AuditLocationManagedBean extends BaseManagedBean {
+public class AuditPMManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private VAuditPMDTO auditPmLocation = new VAuditPMDTO();
@@ -95,7 +95,7 @@ public class AuditLocationManagedBean extends BaseManagedBean {
 
 	private List<VAuditPMDTO> vpmAuditLocationDTOList;
 
-	public AuditLocationManagedBean() {
+	public AuditPMManagedBean() {
 		state = new PmState();
 		division = new PmDivision();
 		district = new PmDistrict();

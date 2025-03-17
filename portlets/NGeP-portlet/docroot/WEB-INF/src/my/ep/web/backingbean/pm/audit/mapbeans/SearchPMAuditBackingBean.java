@@ -21,7 +21,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.AuditPMSearchBean;
-import my.ep.web.managedbean.pm.audit.AuditLocationManagedBean;
+import my.ep.web.managedbean.pm.audit.AuditPMManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -31,7 +31,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  */
 @ManagedBean(name = "searchPMAuditBackingBean")
 @ViewScoped
-public class SearchPMAuditBackingBean extends BaseBackingBean<AuditLocationManagedBean> {
+public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean> {
 	/**
 	 * 
 	 */
