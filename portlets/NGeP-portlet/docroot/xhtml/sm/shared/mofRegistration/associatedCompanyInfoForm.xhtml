@@ -209,8 +209,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText maxlength="100"
-							required="#{backingBean.managedBean.valueReqd}"
+					<td>
+						<!-- #36718 - add !empty param['disableValidation'] -->
+						<p:inputText maxlength="100"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.companyaddress']}" id="assocCompCmpAddr"
 							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
 							size="35" 
@@ -438,8 +440,9 @@
 					<td><p:outputPanel id="postCodeAssocPanelId">
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId==backingBean.managedBean.myCountryId}">
+								<!-- #36718 - add !empty param['disableValidation'] -->
 								<p:inputText maxlength="5"
-									required="#{backingBean.managedBean.valueReqd}"
+									required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.postcode']}" id="assocCmpyPostCodeMy"
 									value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
 									validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
