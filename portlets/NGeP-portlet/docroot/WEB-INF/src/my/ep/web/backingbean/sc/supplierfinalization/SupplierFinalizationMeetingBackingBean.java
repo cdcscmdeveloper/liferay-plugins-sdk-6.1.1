@@ -2363,7 +2363,7 @@ if (CollectionUtils.isNotEmpty(
 			auditResDTO.setDocId(this.getManagedBean().getScQt().getQtId());
 			auditResDTO.setDocNo(this.getManagedBean().getScQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
-			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_APPROVAL);
+			auditResDTO.setStatusId(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION);
 			auditResDTO.setRoleCode(checkRolesForAuditTrail());
 			auditResDTO.setAuGroupSectionId(QTAuditConstant.AU_SECTION_QC);
 			if (auditResDTO.getRoleCode().equals(RoleCode.FPB_SECRETARY.value())
@@ -2397,23 +2397,41 @@ if (CollectionUtils.isNotEmpty(
 	 * @return
 	 */
 	public List<AuditTrailReqDTO> insertCommitteeAuditTrail(AuditTrailResDTO auditResDTO,
-			List<ScCommitteeMember> committeeMembers,String type,IQTAuditTrailSO qtAuditTrailSO) {
+			List<ScCommitteeMember> committeeMembers, String type, IQTAuditTrailSO qtAuditTrailSO) {
 		List<AuditTrailReqDTO> auditReqList = new ArrayList<>();
-		
+
 		for (ScCommitteeMember committeeMember : committeeMembers) {
-			auditResDTO.setActionType(type);			
+			auditResDTO.setActionType(type);
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_NAME);
-			auditResDTO.setNewValue(committeeMember.getMemberName());
+			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
+				auditResDTO.setOldValue(null);
+				auditResDTO.setNewValue(committeeMember.getMemberName());
+			} else {
+				auditResDTO.setNewValue(null);
+				auditResDTO.setOldValue(committeeMember.getMemberName());
+			}
 			AuditTrailReqDTO auditReqDTOName = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTOName);
 
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_IDENTIFICATION);
-			auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
+				auditResDTO.setNewValue(committeeMember.getPmUser().getIdentificationNo());
+			} else {
+				auditResDTO.setOldValue(committeeMember.getPmUser().getIdentificationNo());
+			}
 			AuditTrailReqDTO auditReqDTOIdentification = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTOIdentification);
 
 			auditResDTO.setQtFieldLabelId(QTAuditConstant.AU_FIELD_QC_ROLE);
-			auditResDTO.setNewValue(committeeMember.getMemberRole().getParameterCode());
+			if (type.equals(QTAuditConstant.AU_TYPE_CREATE)) {
+				auditResDTO.setNewValue(ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+						SourcingConstants.MY_LOCALE));
+			} else {
+				auditResDTO.setOldValue(ParameterHelper.getInstance().getParameterDesc(
+						ParameterTypeConst.COMMITTEE_ROLE, committeeMember.getMemberRole().getParameterCode(),
+						SourcingConstants.MY_LOCALE));
+			}
 			AuditTrailReqDTO auditReqDTORole = qtAuditTrailSO.populateAuditReqDTO(auditResDTO);
 			auditReqList.add(auditReqDTORole);
 

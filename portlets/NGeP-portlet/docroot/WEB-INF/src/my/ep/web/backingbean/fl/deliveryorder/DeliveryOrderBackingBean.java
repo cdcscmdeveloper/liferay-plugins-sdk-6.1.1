@@ -838,12 +838,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setContractFlag(false);
 		}
 		// 28855 - End
-		
-		//#35508 fl audit trail - set original DO supplier ref no
-		if(getManagedBean().getFlDeliveryOrder() != null){
-			getManagedBean().setOriginalSupplierDoRef(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());			
-		}
-		//#35508 fl audit trail
 	}
 	
 	// 26279 - start
@@ -1692,10 +1686,10 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
 
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}

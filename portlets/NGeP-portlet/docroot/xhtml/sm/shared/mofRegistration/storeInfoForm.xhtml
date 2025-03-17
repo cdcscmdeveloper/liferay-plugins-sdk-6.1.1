@@ -115,16 +115,18 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelStoreSaveorUpdate}"/>
 		
-		<p:outputPanel layout="block" id="storeBlockPanel">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel layout="block" id="storeBlockPanel" rendered="#{backingBean.managedBean.showStorePanel}">
 			<p:messages id="storeDialogMsg" showSummary="false" showDetail="true"
 				autoUpdate="false" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.store.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smStoreName"
+							label="#{lbl['lbl.sm.facility.store.name']}" id="smStoreName"
 							value="#{backingBean.managedBean.selectedStoreFacility.facilityName}" 
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
