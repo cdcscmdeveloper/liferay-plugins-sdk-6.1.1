@@ -4646,17 +4646,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
-		if ("createQt".equals(ScreenType)) {
+		// 36678 add condition status id related to 35061 -start-
+		if ("createQt".equals(ScreenType)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
 			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
 		} else {
-			actualIntendedPrice = scQt.getEstimatedAmount();
+			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0);
+			// 36678 related to 35061 -end-
 		}
 
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
-
-			// #25729 #174			 
+			// #25729 #174
 			// Bug #35061 - asyrafhaziq
 			// get total indicative price threshold validation value
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
@@ -4666,6 +4666,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				return Boolean.TRUE;
 			}
 		}
+
+		// #36678 set null if user change above 50k. related to #35061,#37899
+		if (scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
+				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+			scQt.setJustificationProcValue(null);
+		}
+		// #36678, #35061, #37899 -end-
 
 		return Boolean.FALSE;
 	}
