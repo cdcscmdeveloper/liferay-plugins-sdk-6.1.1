@@ -22,7 +22,6 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -156,14 +155,17 @@ public class gpkiBackingBean implements Serializable {
 				pmDigiSign.setCreatedDate(date);
 				pmDigiSign.setOriginalData(textBeforeSign);
 				pmDigiSign.setGpkiSignedData(signedText);
+
 				returnObj = postSignActionMtdExpr.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
 						new Object[] { pmDigiSign });
+				
 				if (enableAutoUpdateMtdExpr != null) {
 					enableAutoUpdateMtdExpr.invoke(
 							FacesContext.getCurrentInstance().getELContext(),
 							new Object[] {});
 				}
+				
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 				
 			}
@@ -194,6 +196,7 @@ public class gpkiBackingBean implements Serializable {
 	 */
 	public void showError() {
 		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		log.info("--35488--err- "+map.get("response"));
 		String statusMsg = map.get("statusMsg");
 		String extMsg = map.get("extMsg");
 		String field = map.get("field");
@@ -207,7 +210,7 @@ public class gpkiBackingBean implements Serializable {
 		if(field != null){
 			statusMsg = SmCommonUtil.getMessage("lbl.sm.required.msg", new String[] { field.trim() });
 		}
-		log.info("#35488 MyGPKI: "+statusMsg + " -ResponseGPKI: "+map.get("response"));
+		log.info("#35488 MyGPKI: "+statusMsg);
 		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
@@ -307,9 +310,6 @@ public class gpkiBackingBean implements Serializable {
 			ContextualCompositeMethodExpression enableAutoUpdateMtd){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		Map<String, String> map = fc.getExternalContext().getRequestParameterMap();
-		log.info("35488 TB GPKI Sign: Login IC eP: " + nric
-				+ "  Request eP : " + map.get("js_nric")
-				+ "  ResponseGPKI:" + map.get("response"));
 		if(!isValidNric(map)){
 			fc.addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
 					"Token's certificate not match with signer identity."));
@@ -325,6 +325,7 @@ public class gpkiBackingBean implements Serializable {
 		try {
 			returnObj = postSignMtd.invoke(fc.getELContext(), new Object[] { pmDigiSign });
 		} catch (Exception e){
+			e.printStackTrace();
 			nonSigningException = e;
 			log.info("--35488--"+map.get("response"));
 			log.error(e);
@@ -451,16 +452,6 @@ public class gpkiBackingBean implements Serializable {
 	
 	public String getNotes(){
 		return SmCommonUtil.getMessage("lbl.gpki.otp.notes", new String[] {otpExp});
-	}
-	
-	/**
-	 * Log request OTP
-	 */
-	public void logOTP(){
-		Map<String, String> map = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		log.info("35488 TB GPKI OTP: Login IC eP: " + nric
-				+ "  Request eP : " + map.get("js_nric")
-				+ "  ResponseGPKI:" + map.get("response"));
 	}
 	//#35488 - end
 }
