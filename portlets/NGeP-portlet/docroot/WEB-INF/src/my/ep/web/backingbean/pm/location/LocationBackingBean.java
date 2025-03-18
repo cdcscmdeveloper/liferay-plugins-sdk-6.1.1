@@ -369,6 +369,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			reqDTO.setStateId(district.getPmState().getStateId());
 			reqDTO.setDivisionId(null != district.getPmDivision() ? district.getPmDivision().getDivisionId() : null);
 			/************ AUDIT #28895_35509 *************/
+			reqDTO.setDistrictId(getManagedBean().getDistrict().getDistrictId());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF) && getManagedBean().getDistrict().getDistrictId() != null) {
 				getManagedBean().setDistrictOldVal(districtSO.retriveDistrictByID(reqDTO));
 			}
