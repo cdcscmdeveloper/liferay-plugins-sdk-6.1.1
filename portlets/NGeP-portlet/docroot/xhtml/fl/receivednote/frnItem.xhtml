@@ -45,9 +45,18 @@
              <p:column>
             	<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
         	</p:column>
+        	<!-- 28855 Start -->
         	<p:column style="white-space:normal;">
-				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
+				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" 
+				id="itemDesc" title="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemDesc}"/>
+				<p:commandLink oncomplete="frnItemInfo.show();" process="@this"  
+					rendered="#{receivedNoteBackingBean.managedBean.contractFlag}"
+					action="#{receivedNoteBackingBean.frnItemInfoList(item.flDelOrderItem.flFulfilmentItemAddr)}"
+					update=":form:frnItemInfoDialog,@(.orderSummaryChange)">
+					<ac:iconTooltip value="#{lbl['lbl.fl.item.tooltip']}"  escape="false"/>
+					</p:commandLink>
 			</p:column>
+			<!-- 28855 End -->
 			<p:column >
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
 			</p:column>
