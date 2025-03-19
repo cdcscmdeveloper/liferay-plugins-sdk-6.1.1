@@ -1934,13 +1934,15 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 *
 	 * @throws EpException if the expected delivery date is invalid.
 	 */
-	public void validateExpDeliveryDate(){
-		for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+	public void validateExpDeliveryDate() {
+		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
 			if (estDelDate != null) {
 				if (estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
 					getManagedBean().setSelectedTabIndex(1);
-					throw new EpException(MessageConst.ERROR_100067, new String[]{ResourceBundleUtils.getMessage("lbl.fl.exp.del.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" ",ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getFlAddress())});
+					throw new EpException(MessageConst.ERROR_100067, new String[] {
+							ResourceBundleUtils.getMessage("lbl.fl.exp.del.date",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
 		}
