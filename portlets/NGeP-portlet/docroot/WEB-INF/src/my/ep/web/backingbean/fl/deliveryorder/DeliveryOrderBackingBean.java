@@ -213,7 +213,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}
 			//38009-Start
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				validateExpDeliveryDate();
+				validateExpectedDeliveryDate();
 			}
 			//38009-End
 			
@@ -1934,7 +1934,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 *
 	 * @throws EpException if the expected delivery date is invalid.
 	 */
-	public void validateExpDeliveryDate() {
+	public void validateExpectedDeliveryDate() {
 		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
 			if (estDelDate != null) {
