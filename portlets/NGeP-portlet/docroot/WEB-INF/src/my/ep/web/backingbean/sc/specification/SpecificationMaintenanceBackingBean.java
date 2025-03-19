@@ -617,6 +617,11 @@ public void specCommitteeMaintenancereset() {
 				this.getManagedBean().setChecklist(false);
 			}
 		}
+		//#33795 - start
+		if (!isSpecCommittee()) {
+			this.getManagedBean().setChecklist(false);
+		}
+		//#33795 - end
 		// #15391 - end
 
 		// 29464-start
