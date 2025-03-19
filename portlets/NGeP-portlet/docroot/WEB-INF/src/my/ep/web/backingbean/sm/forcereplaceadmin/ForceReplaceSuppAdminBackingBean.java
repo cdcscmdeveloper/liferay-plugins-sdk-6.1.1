@@ -1559,12 +1559,20 @@ public class ForceReplaceSuppAdminBackingBean extends
 	//#36718 - Refactor this method
 	public void copyPermanentAddress(SmAddress refAddress){
 		if(!this.getManagedBean().getMailAddr().isSameAsPerm()){
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getAddress1() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setAddress1("");
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getAddress2() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setAddress2("");
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getAddress3() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setAddress3("");
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getPostcode() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setPostcode("");
 			refAddress = this.getManagedBean().getLatestMailAddr().getSmAddress();
-		} 
-		
-		//#36716 - Start
-		recheckVal(refAddress);
-		//#36716 - End
+		} else {
+			//#36716 - Start
+			recheckVal(refAddress);
+			//#36716 - End
+		}
 		if(this.getManagedBean().getMailAddr().getSmAddress() != null){
 			if(this.getManagedBean().getMailAddr().getSmAddress() == null){
 				this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());

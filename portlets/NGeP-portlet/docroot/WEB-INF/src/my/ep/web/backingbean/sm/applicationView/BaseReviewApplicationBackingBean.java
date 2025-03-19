@@ -4555,23 +4555,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-		return getDisciplinaryActionVOList(resultList, currSupp.getSupplierId());
+		return getDisciplinaryActionVOList(resultList, currSupp);
 	}
 	
-	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, Long supplierId){
+	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, SmSupplier currSupp){
 		List<DisciplinaryActionVO> voList = new ArrayList<>();
+		Long supplierId = currSupp.getSupplierId();
 		if (EntityHelper.isCollectionEmpty(daList) || supplierId == null){
 			return voList;
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setRecordStatus(null);
-		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
-				.retrievePersonnelBySupplierIdAndRecordStatus(reqDTO);
 		
 		boolean isMOF = false;
-		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())){
-			String suppType = resDTO.getSmPersonnelList().get(0).getSmAppl().getSupplierType();
+		if (currSupp != null){
+			String suppType = currSupp.getSmAppl().getSupplierType();
 			isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
 					|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
 		}
@@ -4600,9 +4599,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			// 28281 (bumi cat code) start
 			retVal.setCategoryCodeList(getCategoryCodeListDA(da));
-			if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())){
-				retVal.setBlacklistownerDirectorList(getBlacklistOwners(da, resDTO.getSmPersonnelList()));
-			}
+			retVal.setBlacklistownerDirectorList(getSupplierHasPersonnelBlacklist(supplierId));
 			retVal.setMofNoExist(isMOF);
 			voList.add(retVal);
 		}
@@ -4972,7 +4969,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		return getDisciplinaryActionVOList(resultList, currSupp.getSupplierId());
+		return getDisciplinaryActionVOList(resultList, currSupp);
 	}
 	//31033 end
 	

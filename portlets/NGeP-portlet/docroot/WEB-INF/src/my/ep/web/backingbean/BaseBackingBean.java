@@ -96,6 +96,8 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureReqDTO;
 import my.ep.dto.sm.businessnature.SupplierBusinessNatureResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
@@ -130,6 +132,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -149,6 +152,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.SLALogConstant;
@@ -173,6 +177,8 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -2349,6 +2355,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
 			// 25037 - end
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo());
+			// #29007 End Vinod
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -4408,5 +4417,63 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #25000 - End
 	
+	/**
+	 * Retrieves a list of personnel blacklisted under a specific supplier.
+	 *
+	 * @param supplierId
+	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
+	 */
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO().retrieveSupplierHasPersonnelBlacklist(supplierId);
+		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
+		if (blacklistPersonnel.isEmpty()){
+			return blacklist;
+		}
+		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+		for (SmPersonBlacklist per : blacklistPersonnel){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			reqDTO.setDirectorIdNo(per.getIdentificationNo());
+			
+			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
+					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
+				blacklistOwner.setIcNo(per.getIdentificationNo());
+				blacklist.add(blacklistOwner);
+			}
+		}
+		return blacklist;
+	}
+	
+	//26238 - START
+	/**
+	 * Handles the viewing of active disciplinary actions for a given supplier.
+	 *
+	 * This method updates the supplier's flags related to disciplinary actions
+	 * and retrieves the list of disciplinary actions associated with the supplier.
+	 * If the list is not empty, it is set in the managed bean; otherwise, an empty
+	 * list is assigned. Finally, it triggers the display of the disciplinary action
+	 * history dialog.
+	 *
+	 * @param smSupplier the supplier whose disciplinary actions are to be viewed
+	 * @throws EpException if an error occurs during processing
+	 */
+	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
+		try {
+			// #30756 start
+			smSupplier.setFlagSupplier(true);
+			smSupplier.setFlagDASuppProfile(true);
+			// #30756 end
+
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+
+			getManagedBean().setDisciplineVOs(
+					CollectionUtils.isNotEmpty(voList) ? voList : new ArrayList<DisciplinaryActionVO>());
+
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
+		}
+	} 
+	//26238 - END
 }
 
