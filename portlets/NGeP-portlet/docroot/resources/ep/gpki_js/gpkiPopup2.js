@@ -101,18 +101,18 @@ var gpkiRequestTime = 0;
  * @param msg
  */
 function parseResultMedium(msg) {
-	try {
+  $(document).ready(
+    function () {
 		const obj = jQuery.parseJSON(msg);
+      const response = obj.response;
+      var mediumTypeId;
 		if (obj.status) {
-			const mediumArr = jQuery.parseJSON(obj.response);
-			let mediumTypeId = null;
-	      
-			if (mediumArr && mediumArr.length > 0) {
+        var mediumArr = jQuery.parseJSON(response);
 				mediumTypeId = mediumArr[0].id;
-	        
-				// Pick roaming OTP over token
+        var id;
+        //pick roaming otp over token
 				for (var i = 0; i < mediumArr.length; i++) {
-					var id = parseInt(mediumArr[i].id, 10);
+          id = parseInt(mediumArr[i].id, 10);
 					if (id === 5) {
 						mediumTypeId = 5;
 						break;
@@ -120,14 +120,10 @@ function parseResultMedium(msg) {
 						mediumTypeId = 4;
 					}
 				}
-			}
-			setMediumType([
-				{ name: 'message', value: obj.message },
+        setMediumType([{ name: 'message', value: obj.message },
 	        	{ name: 'mediumTypeId', value: mediumTypeId },
 	        	{ name: 'response', value: msg },
-	        	{ name: 'js_nric', value: gpki.nric() }
-	        ]);
-	      
+                       { name: 'js_nric', value: gpki.nric()} ]);
 			if (mediumTypeId === 5) {
 				gpki.requestOtp();
 			} else if (mediumTypeId !== 4) {
@@ -135,17 +131,12 @@ function parseResultMedium(msg) {
 				gpki_dlg2.show();
 				showError(obj.status, "Medium Token atau Roaming OTP sahaja", msg);
 			}
-		//gpki error
 		} else {
 			gpki_dlg.hide();
 			gpki_dlg2.show();
 			showError(obj.status, obj.message, msg);
 		}
-	} catch (e) {
-		gpki_dlg.hide();
-		gpki_dlg2.show();
-		showError(-1, "Error processing medium types: " + e.message, msg);
-	}
+    });
 }
 
 /**
@@ -153,7 +144,8 @@ function parseResultMedium(msg) {
  * @param msg
  */
 function parseTxResultRequestOTP(msg) {
-	try {
+  $(document).ready(
+    function () {
 		const obj = jQuery.parseJSON(msg);
 		if (obj.status) {
 			gpkiRequestTime = Date.now();
@@ -165,12 +157,7 @@ function parseTxResultRequestOTP(msg) {
 			disableOtpTimeout();
 			showError(obj.status, obj.message, msg);
 		}
-	} catch (e) {
-		disableOtpTimeout();
-		showError(-1, "Error processing OTP response: " + e.message, msg);
-	}
-	logOTP([ { name: 'js_nric', value: gpki.nric() },
-	         { name: 'response', value: msg } ]);
+    });
 }
 
 /**
@@ -178,25 +165,20 @@ function parseTxResultRequestOTP(msg) {
  * @param msg
  */
 function parseSignResult(msg) {
-	try {
+  $(document).ready(
+    function () {
 		const obj = jQuery.parseJSON(msg);
 		if (obj.status_code === 0) {
-			postSignOTP([ 
-				{ name: 'message', value: obj.message },
+        postSignOTP([ { name: 'message', value: obj.message },
 				{ name: 'subjectDN', value: obj.subject_dn },
 				{ name: 'textBeforeSign', value: gpki.textBeforeSign() },
 				{ name: 'signedText', value: obj.signed_data },
-				{ name: 'response', value: msg },
-				{ name: 'js_nric', value: gpki.nric() }
-			]);
+                      { name: 'response', value: msg }]);
 		} else {
 			showError(obj.status_code, obj.status_message, msg);
 		}
-	} catch (e) {
-		showError(-1, "Error processing sign response: " + e.message, msg);
-	} finally {
 		gpkiBlockWidget.hide();
-	}
+    });
 }
 
 /**
@@ -204,34 +186,28 @@ function parseSignResult(msg) {
  * @param msg
  */
 function parseTxResultSigningRoaming(msg) {
-	try {
+  $(document).ready(
+    function () {
 		const obj = jQuery.parseJSON(msg);
 		if (obj.status) {
 			clearTimeout(otpTimeoutId);
 			const response = jQuery.parseJSON(obj.response);
-			postSignOTP([
-			    { name: 'message', value: obj.message },
+        postSignOTP([{ name: 'message', value: obj.message },
 	        	{ name: 'subjectDN', value: response.subject_dn },
 	        	{ name: 'textBeforeSign', value: gpki.textBeforeSign() },
 	        	{ name: 'signedText', value: response.signed_data },
-	        	{ name: 'response', value: msg },
-	        	{ name: 'js_nric', value: gpki.nric() }
-	        ]);
+			         { name: 'response', value: msg }]);
 		} else {
 			showError(obj.status, obj.message, msg);
 		}
-	} catch (e) {
-		showError(-1, "Error processing sign response: " + e.message, msg);
-	} finally {
 		gpkiBlockWidget.hide();
-	}
+    });
 }
 
 function showError(code, msg, response) {
   errorAction([{ name: 'statusCode', value: code },
                { name: 'statusMsg', value: msg },
-               { name: 'response', value: response },
-               { name: 'js_nric', value: gpki.nric() }]);
+               { name: 'response', value: response }]);
 }
 
 /**
