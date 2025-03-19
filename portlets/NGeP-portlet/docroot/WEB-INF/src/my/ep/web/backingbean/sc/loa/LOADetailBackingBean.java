@@ -12413,23 +12413,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	/**
 	 * #31503 - Show Details Items in popup
-	 * @param ScRequestItem
+	 * @param reqItem
 	 * @return void
 	 */
 	public void showItemDescPopup(ScRequestItem reqItem) {
 
 		try {
-			
-//			this.getManagedBean().setTplSpecQuestion(question);
 
-			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-			CmType typeObj = null;
-			CmBrand brandObj = null;
-			CmMeasurement meaObj = null;
 
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			CommonUtils common = new CommonUtils();
 			CodificationBackingBean cdbb = new CodificationBackingBean();
 			cReqDTO.setItemId(reqItem.getCmItem().getItemId());
 			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
@@ -12440,13 +12436,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 			cdbb.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
 			cdbb.getManagedBean().setCommodityTitle(codeResDTO.getCommodityObj().getUnspscTitle());
-			cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());			
+			cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
 
-			typeObj = cdbb.searchTypeOjbyTypeId(item.getCmType().getTypeId());
+			CmType typeObj = cdbb.searchTypeOjbyTypeId(item.getCmType().getTypeId());
 
-			brandObj = cdbb.searchBrandObjByBrandId(item.getCmBrand().getBrandId());
+			CmBrand brandObj = cdbb.searchBrandObjByBrandId(item.getCmBrand().getBrandId());
 
-			meaObj = cdbb.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
+			CmMeasurement meaObj = cdbb.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
 
 			CmColor colorObj = cdbb.searchColorObjByColorCode(item.getCmColor().getColorCode());
 
@@ -12457,24 +12453,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			newItem.setCmBrand(brandObj);
 			newItem.setCmMeasurement(meaObj);
 			newItem.setCmColor(colorObj);
-			newItem.setItemName(((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
-					+ typeObj.getTypeName())
-					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? "" : " "
-							+ brandObj.getBrandName())
-					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
-							: " " + meaObj.getMeasurementName())
-					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? "" : " "
-							+ colorObj.getColorName()));
-			
-			String completeItemName = (codeResDTO.getCommodityObj().getUnspscTitle()
-					+ ((typeObj.getTypeName().equals("N/A") || typeObj.getTypeName().equals("NA") || typeObj.getTypeName().equals("N A")) ? "" : " "
-							+ typeObj.getTypeName())
-					+ ((brandObj.getBrandName().equals("N/A") || brandObj.getBrandName().equals("NA") || brandObj.getBrandName().equals("N A")) ? ""
-							: " " + brandObj.getBrandName())
-					+ ((meaObj.getMeasurementName().equals("N/A") || meaObj.getMeasurementName().equals("NA") || meaObj.getMeasurementName().equals("N A")) ? ""
-							: " " + meaObj.getMeasurementName())
-					+ ((colorObj.getColorName().equals("N/A") || colorObj.getColorName().equals("NA") || colorObj.getColorName().equals("N A")) ? ""
-							: " " + colorObj.getColorName()));
+			newItem.setItemName(common.filterItemNameNA(typeObj.getTypeName())
+					+ common.filterItemNameNA(brandObj.getBrandName())
+					+ common.filterItemNameNA(meaObj.getMeasurementName())
+					+ common.filterItemNameNA(colorObj.getColorName()));
+
+			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle()
+					+ common.filterItemNameNA(typeObj.getTypeName())
+					+ common.filterItemNameNA(brandObj.getBrandName())
+					+ common.filterItemNameNA(meaObj.getMeasurementName())
+					+ common.filterItemNameNA(colorObj.getColorName());
 
 			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 					+ colorObj.getColorCode());

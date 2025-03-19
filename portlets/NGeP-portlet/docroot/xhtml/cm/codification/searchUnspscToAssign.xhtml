@@ -121,6 +121,7 @@
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 			        	</f:facet>
+			        	<!-- #31503 Start -->
 						<p:commandLink
 							action="#{codificationBackingBean.assignCodeConfirmation(unspscObj)}"
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}" 
@@ -129,8 +130,7 @@
 							#{unspscObj.unspscCode}
 						
 						</p:commandLink>
-
-						<!-- #31503 Start -->
+						
 						<p:confirmDialog id="asignCodeDialogConfirm"
 							widgetVar="asignCodeDialogConfirm"
 							message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"

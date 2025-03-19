@@ -189,8 +189,9 @@
 					style="color: #009ae5; font-size:12px;font-style:italic"
 					action="#{lOADetailBackingBean.showItemDescPopup(scLoiLoaItem.scRequestItem)}"
 					rendered="#{scLoiLoaItem.scRequestItem.cmItem != null and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}"
-					process="@this" update="@([id$=itemDescDialogId], [id$=itemDetailPanel])" />
-				<!-- #31503 End -->				
+					process="@this"
+					update="@([id$=itemDescDialogId], [id$=itemDetailPanel])" />
+				<!-- #31503 End -->
 			</p:column>
 			
 			<p:column style="width:7%;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">

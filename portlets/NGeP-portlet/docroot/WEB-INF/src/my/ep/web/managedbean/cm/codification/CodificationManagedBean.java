@@ -205,6 +205,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	//#31503
 	private String itemCodeDesc;
 	private Object [] objSelected;
+	private boolean renderButtonAssignCode;
 	
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
@@ -1533,5 +1534,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setObjSelected(Object [] objSelected) {
 		this.objSelected = objSelected;
+	}
+
+	public boolean isRenderButtonAssignCode() {
+		return renderButtonAssignCode;
+	}
+
+	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
+		this.renderButtonAssignCode = renderButtonAssignCode;
 	}
 }

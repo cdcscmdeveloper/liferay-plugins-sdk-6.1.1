@@ -183,9 +183,9 @@
 
 					<ac:paginator for="itemTable2ID"></ac:paginator>
 
-<!-- 					<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true" -->
-<!-- 						update="@([id$=itemTable2ID], [id$=asignCodeDialConfirm])" -->
-<!-- 						listener="#{codificationBackingBean.selectedItemCode}" /> -->
+					<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
+						update="@form"
+						listener="#{codificationBackingBean.selectedItemCode}" />
 					<p:column selectionMode="single" />
 					<!-- #31503 End -->
 
@@ -221,12 +221,13 @@
 				<!-- #31503 Start -->
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.sc.qt.assign.code']}"
-						action="#{codificationBackingBean.assignItemConfirmation}" />
+						action="#{codificationBackingBean.assignItemConfirmation}"
+						rendered="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}" update="@([id$=asignCodeDialConfirm])"/>
 
 
 				</div>
 				<!-- #31503 End -->
-				
+
 				<div class="clear"></div>
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
