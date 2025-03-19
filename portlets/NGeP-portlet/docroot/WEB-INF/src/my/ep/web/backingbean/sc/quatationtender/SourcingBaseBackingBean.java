@@ -7417,7 +7417,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
 		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
 
-		if (isPendingAcknowledgement || isPendingVerify && isOldVersion) {
+		if ((isPendingAcknowledgement || isPendingVerify) && isOldVersion) {
 			return true;
 		}
 		return false;
