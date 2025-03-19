@@ -2968,6 +2968,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//#26238
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
+		// #34031
+		initSmRvHistory();
 		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
