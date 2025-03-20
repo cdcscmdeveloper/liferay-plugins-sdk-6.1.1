@@ -4457,7 +4457,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param smSupplier the supplier whose disciplinary actions are to be viewed
 	 * @throws EpException if an error occurs during processing
 	 */
-	public static List<DisciplinaryActionVO> onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
+	public static List<DisciplinaryActionVO> onDisplayActiveDisciplinaryAction(SmSupplier smSupplier) {
 		try {
 			// #30756 start
 			smSupplier.setFlagSupplier(true);
