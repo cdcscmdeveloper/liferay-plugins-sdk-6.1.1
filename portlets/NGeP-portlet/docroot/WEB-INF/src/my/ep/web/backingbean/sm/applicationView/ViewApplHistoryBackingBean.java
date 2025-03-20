@@ -408,13 +408,15 @@ public class ViewApplHistoryBackingBean extends
 		this.getManagedBean().setPreRegistration(true);
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){
-			//start #29956
-			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			//start #29956 && #37598
+			getManagedBean().setResubmitAppl(resubmission);
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(getManagedBean().getSmAppl(), getManagedBean().getSsmResDTO());
 			if(displayPopupDowngradeSSMOwner){
 				proceed = false;
 			}
+			//end #29956 && #37598
 		}
-		//end #29956
+		
 		if(proceed){
 			if(resubmission){
 				SmCommonUtil.redirectToExternalUrl(getManagedBean()
@@ -656,12 +658,83 @@ public class ViewApplHistoryBackingBean extends
 			getManagedBean().setMofCertLs(
 					SmServiceLookup.getVirtualCertSO()
 							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
+			// #36401 - Start
+			getLatestSmMofCertsIfDuplicate(getManagedBean().getMofCertLs());
+			// #36401 - End
 		} catch (Exception ex) {
 			getManagedBean().setMofCertLs(
 					SmServiceLookup.getVirtualCertSO()
 							.retrieveMofCertsByApplId(reqDTO).getSmMofCerts());
+			// #36401 - Start
+			getLatestSmMofCertsIfDuplicate(getManagedBean().getMofCertLs());
+			// #36401 - End
 		}
 	}
+	
+	// #36401 - Start
+	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
+	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
+			List<SmMofCert> mofCerts) {
+		List<SmMofCert> cert = new ArrayList<>();
+		List<SmMofCert> bumiCert = new ArrayList<>();
+
+		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
+		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
+
+		for (SmMofCert mofCert : mofCerts) {
+			if (!mofCert.isBumiCert()) {
+				cert.add(mofCert);
+			}
+
+			if (mofCert.isBumiCert()) {
+				bumiCert.add(mofCert);
+			}
+		}
+
+		log.info("#36401 :: Size of cert >>>>>>>> " + cert.size());
+		log.info("#36401 :: Size of bCert >>>>>>>> " + bumiCert.size());
+
+		// if more than 1 Cert on a same appl_id, need reorder it and means there is duplicate, sort cert by asc order
+		if (cert.size() > 1) {
+			sortCertsListByAsc(cert);
+		}
+
+		// if more than 1 bumiCert on a same appl_id, need reorder it and means there is duplicate, Sort bumiCert by asc order
+		if (bumiCert.size() > 1) {
+			sortCertsListByAsc(bumiCert);
+		}
+
+		if (cert.size() > 1 || bumiCert.size() > 1) {
+			// clear actual list
+			mofCerts.clear();
+
+			if (!cert.isEmpty()) {
+				mofCerts.add(cert.get(0));
+			}
+
+			if (!bumiCert.isEmpty()) {
+				mofCerts.add(bumiCert.get(0));
+			}
+		}
+
+		return mofCerts;
+	}
+
+	/**
+	 * To sort list of smMofCert by asc
+	 * 
+	 * @param smMofCert
+	 */
+	public void sortCertsListByAsc(List<SmMofCert> smMofCert) {
+		Collections.sort(smMofCert, new Comparator<SmMofCert>() {
+			@Override
+			public int compare(SmMofCert cert1, SmMofCert cert2) {
+				return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
+			}
+		});
+	}
+
+	// #36401 - End
 
 	/**
 	 * Initialized PO or approver decision info

@@ -11913,6 +11913,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * MOF Supplier
 	 * 
 	 * @param supplierId
+	 * @param mofNo
 	 */
 	public void onViewDisciplinaryAction(Long supplierId, String mofNo) {
 		log.info("[#26282] onViewDisciplinaryAction");
@@ -11936,7 +11937,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 
 			// get disicplinary action history
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getActiveDisciplinaryActionVO(smSupplier);
 
 			if (!EntityHelper.isCollectionEmpty(voList)) {
 				voObj = voList.get(0);

@@ -74,6 +74,7 @@
 					</p:panel><br />
 
 					<!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
+					<ui:remove>
 					<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}"
 						toggleable="true" rendered="false">
 
@@ -133,7 +134,7 @@
 
 						</p:dataTable>
 
-					</p:panel><br />
+					</p:panel><br /></ui:remove><!-- 28775 - Site Visit Grouping Enhancement - 28775 -->
 
 					<p:panel header="#{lbl['lbl.sm.facility.information']}"
 						rendered="#{tableVar.l3.facilityType ne 'B'}" toggleable="true">

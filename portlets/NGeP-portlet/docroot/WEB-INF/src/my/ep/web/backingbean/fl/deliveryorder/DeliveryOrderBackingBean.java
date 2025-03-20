@@ -191,7 +191,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	 * navigate to acknowledge page.
 	 */
 	public String createDeliveryOrder(String action) {
-		FacesScopes facesScopes = new FacesScopes();
+//		FacesScopes facesScopes = new FacesScopes();//36534
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		IUserGroupSO userGroupSO = null;
@@ -213,7 +213,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			reqDTO.setSupplier(hasSupplierRole());
-			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());//36534
 			
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
@@ -861,12 +861,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setContractFlag(false);
 		}
 		// 28855 - End
-		
-		//#35508 fl audit trail - set original DO supplier ref no
-		if(getManagedBean().getFlDeliveryOrder() != null){
-			getManagedBean().setOriginalSupplierDoRef(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());			
-		}
-		//#35508 fl audit trail
 	}
 
 	/**

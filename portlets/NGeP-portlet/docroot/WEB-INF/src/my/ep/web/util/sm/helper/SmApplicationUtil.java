@@ -1543,6 +1543,17 @@ public class SmApplicationUtil {
 		validateRenewalApplTypeForSpecialCategory(appl);
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
+			//#37605 START
+			Map<Long, SmSupplierCategory> newCat = buildCategoryMap(managedBean.getActiveCategoryList());
+
+		    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+		        updateCategoryDescription(cat, newCat);
+		        
+		        if (cat.isSpecialCategory()) {
+		            validateAndCleanCategory(cat);
+		        }
+		    }
+			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
 			if (!StringUtils.isBlank(errMsg)) {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
@@ -2266,14 +2277,24 @@ public class SmApplicationUtil {
 			//#28693
 			if ((per.isBumi() == null && per.getBumiFlg() == null && per.getBumiFlgTrans() == null)
 					// #30718 - start
-					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null && (per.getPmCountry().getCountryId() == 131L))
+					|| (per.isMuslim() == null && per.getMuslimFlg() == null && per.getMuslimFlgTrans() == null 
+					&& (per.getPmCountry() != null && per.getPmCountry().getCountryId() == 131L)) //#31130 --22/11/24 
 					// #30718 - end
-					//31130
-					|| per.getPmRace() == null || per.getTitle() == null) {
+					//#31130 --START 22/11/24
+					|| per.getPmRace() == null || per.getTitle() == null
+					|| per.getDesignation() == null 
+					|| per.getPmCountry() == null || per.getIdentificationNo() == null
+					|| per.getIdentificationTypeId() == null || per.getBirthDate() == null 
+					|| (per.getWorkExperienceYear() == null && appl.getSupplierType().equalsIgnoreCase(
+									SupplierManagementConst.STYPE_CONSULTANT)) 
+					|| ((per.getMobileArea() == null || per.getMobileNo() == null|| per.getMobileTelcoId() == null)
+											&& per.isAuthorized() == true)
+					|| per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
+			} //#31130 --END 22/11/24
+			/*} else if (per.getSmPersonnelAddresses() == null || per.getSmPersonnelAddresses().size() <= 0) {
 				validPersonnel = false;
-			}
+			}*/ //Commented for #31130
 			//31130-start
 			for (SmPersonnelAddress addressPer : per.getSmPersonnelAddresses()){
 				if (addressPer.getSmAddress() == null
@@ -5027,9 +5048,13 @@ public class SmApplicationUtil {
 						}
 						if (applicationType
 								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-							if (diffDays > 180) { //#36391
+							//#36594 - Start
+							int renewMinTime = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl("");
+							int renewalPeriod = SmServiceLookup.getSmRuleSO().retrieveRenewalPeriodForAppl(ParameterConst.NEW_SM_APPLN_FOR_RENEW);
+							if (diffDays > renewMinTime) { //#36391
 								result = true;
-								throw new EpException(MessageConst.ERROR_722501);
+								throw new EpException(MessageConst.ERROR_722501, new String[] { String.valueOf(renewalPeriod), String.valueOf(renewMinTime)});
+							//#36594 - End
 							} else if (diffDays < -365) {
 								result = true;
 								throw new EpException(MessageConst.ERROR_722502);
@@ -10709,18 +10734,19 @@ public class SmApplicationUtil {
 	/**
 	 * Get pending activation category codes by category type Id
 	 * 
-	 * @param Long
-	 *            categoryTypeId
-	 * @param SmAppl
-	 *            appl
+	 * @param categoryTypeId
+	 * @param appl
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getCategoryCodesItemsByCatTypeId(
 			Long categoryTypeId, SmAppl appl) {
-		List<SelectItem> categoryCodeItems = new ArrayList<SelectItem>();
+		//28778 - Site Visit Grouping Enhancement -28775 - start
+		List<SelectItem> categoryCodeItems = new ArrayList<>();
+		List<Integer> validStatus = Arrays.asList(
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				if (validStatus.contains(cat.getRecordStatusFlg())		//28778 - end
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode()
@@ -15515,4 +15541,141 @@ public class SmApplicationUtil {
 		return true;
 	}
 	//#34483 END
+	
+	// #37779 - Start
+	/**
+	 * @param managedBean
+	 *            - SmApplicationManagedBean object
+	 * @return error message
+	 */
+	public static void checkBankAccountPurpose(
+			SmApplicationManagedBean managedBean) {
+		StringBuilder bf = new StringBuilder();
+		int index = 1;
+
+		SmAppl appl = managedBean.getSmAppl();
+
+		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
+			if (bank.getAccountPurpose().equalsIgnoreCase("O")) {
+				if (index == 1) {
+					bf.append("<br>" + index++ + ". "
+							+ bank.getPmFinancialOrg().getFinOrgName() + " ("
+							+ bank.getAccountNo() + ") " + "<br>");
+					index++;
+				} else if (index > 1) {
+					bf.append(index++ + ". "
+							+ bank.getPmFinancialOrg().getFinOrgName() + " ("
+							+ bank.getAccountNo() + ") " + "<br>");
+					index++;
+				}
+
+			}
+		}
+
+		if (index > 1) {
+			if (managedBean.isSupplierUser()) {
+				throw new EpException(MessageConst.ERROR_722710,
+						new String[] { bf.toString() });
+			} else if (managedBean.isApproverUser() || managedBean.isPoUser()) {
+				throw new EpException(MessageConst.ERROR_722709,
+						new String[] { bf.toString() });
+			}
+		}
+	}
+	// #37779 - End
+	//#37605 START
+	/*
+	 * Validate string using ASCII character
+	 */
+	public static boolean convertToAscii(String input) {
+        log.info("ASCII values for the string: \"" + input + "\"");
+        boolean isValid = true;
+        for (char character : input.toCharArray()) {
+            int asciiValue = (int) character; 
+            log.info("Character: '" + character + "' -> ASCII: " + asciiValue);
+            if(asciiValue > 127){
+            	isValid = false;
+            }
+        }
+        return isValid;
+    }
+	
+	/*
+	 * Replace tab with a space
+	 */
+	public static String replaceTabWSpace(String input){
+		String str = null;
+		Map<String, String> documents = new HashMap<>();
+        documents.put("input", input);
+
+        log.info("Before Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        }
+
+        // Replace tabs with spaces in all values
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+            String value = entry.getValue();
+            if (value != null) {
+                // Replace tabs with 1 space
+                value = value.replace("\t", " ");
+                entry.setValue(value); 
+            }
+        }
+        
+        log.info("After Replacement:");
+        for (Map.Entry<String, String> entry : documents.entrySet()) {
+        	log.info(entry.getKey() + ": " + entry.getValue());
+        	str = entry.getValue();
+        }
+        return str;
+	}
+	
+	/**
+	 * Builds a map of active categories for fast lookup.
+	 * @param List
+	 *            - SmSupplierCategory object
+	 * @return category
+	 */
+	private static Map<Long, SmSupplierCategory> buildCategoryMap(List<SmSupplierCategory> activeCategoryList) {
+	    Map<Long, SmSupplierCategory> categoryMap = new HashMap<>();
+	    if (activeCategoryList != null && !activeCategoryList.isEmpty()) {
+	        for (SmSupplierCategory newCat : activeCategoryList) {
+	            if (newCat != null && newCat.getPmCategoryL3() != null) {
+	                categoryMap.put(newCat.getPmCategoryL3().getCategoryL3Id(), newCat);
+	            }
+	        }
+	    }
+	    return categoryMap;
+	}
+
+	/**
+	 * Updates the category description if a matching category exists.
+	 * @param SmSupplierCategory, Map<Long, SmSupplierCategory>
+	 *            
+	 * set other description
+	 */
+	private static void updateCategoryDescription(SmSupplierCategory cat, Map<Long, SmSupplierCategory> categoryMap) {
+	    if (cat.getPmCategoryL3() != null) {
+	        SmSupplierCategory category = categoryMap.get(cat.getPmCategoryL3().getCategoryL3Id());
+	        if (category != null && category.getPmCategoryL3().getCategoryL3Id().equals(cat.getPmCategoryL3().getCategoryL3Id())) {
+	            cat.setOtherDesc(category.getOtherDesc());
+	        }
+	    }
+	}
+	
+	/**
+	 * Validates and cleans the special category description.
+	 * @param cat
+	 *            - SmSupplierCategory object
+	 */
+	private static void validateAndCleanCategory(SmSupplierCategory cat) {
+	    if (cat.getOtherDesc() != null) {
+	        if (!convertToAscii(cat.getOtherDesc())) {
+	            throw new EpException(MessageConst.ERROR_760555);
+	        }
+	        cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+	    }
+	}
+	//#37605 END
 }

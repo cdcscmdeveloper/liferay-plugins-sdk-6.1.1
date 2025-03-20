@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -2419,6 +2420,14 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setNoSupplierPackageExist(false);
 				}
 				
+			}
+			//#33178 related to #21695 End
+			
+			//36228 fixing index -issue if No suppliers qualified in package, summary tec next button effected to click two times to proceed to next train station. 
+			if(null != this.getManagedBean().getWipStatusMax() && this.getManagedBean().getWipStatusMax() >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM 
+					&& this.getManagedBean().getScQt().getEvaluateBy().equals(SourcingConstants.EVALUATE_BY__ITEM)
+					&& !this.getManagedBean().getScQt().isPartial()){
+				this.getManagedBean().setNoSupplierPackageExist(true);
 			}
 			//#33178 related to #21695 End
 			checkTechnicalSuppliersQualified();
@@ -5220,7 +5229,8 @@ public class EvaluationBackingBean extends
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				//#29187 Start Vinod
 				for(TplSpecAnswer answer : specBB.getManagedBean().getTemplateSpecBean().getSpecAnswerList()){
-					if(answer.getUserScore()!=null && answer.getCompliance()!=null && answer.getUserScore().intValue()!=0 && !answer.getCompliance()){
+					if(answer.getUserScore()!=null && answer.getCompliance()!=null 
+							&& answer.getUserScore().intValue()!=0 && !answer.getCompliance()){
 						answer.setUserScore(new BigDecimal(0));
 					}
 				}
@@ -6022,7 +6032,7 @@ public class EvaluationBackingBean extends
 						//#32089
 						/*#29187 Start Vinod*/
 						if (this.getManagedBean().getScQt().isZonal()
-								&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
+								&& Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
 										this.getManagedBean().getScQt().getQtStatus().getStatusId())
 								&& !"T".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 							this.getManagedBean().setTplSpecZoneDtl(
@@ -7879,24 +7889,10 @@ public class EvaluationBackingBean extends
 				}
 			}
 			if (outputTab == 1) {
-				this.getManagedBean().setCheckReportDownload(false);
-				if (((ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType()) && !this.getManagedBean()
-						.isReadOnly()) || (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType()) && !this.getManagedBean()
-						.isReadOnly()))) {
-					// checkMeetingDetailsAndStatus(this.getManagedBean()
-					// .getScQtMeetings());
-					checkCommitteeMembersAttendance(this.getManagedBean()
-							.getCommitteeMemberList());
-					if (currentTab == 0) {
-						saveMeetingDtls(false);
-					}
-				}
-				retriveComplianceTechnical();
-				// retrives1Details();
+				// #36828 Start Vinod 13/12/2024
+				// moved and refactored all the related code to following method.
+				outputTabOneFunctionality(currentTab);
+				// #36828 End Vinod 13/12/2024
 			} else if (outputTab == 2) {
 				this.getManagedBean().setDemo(false);
 				//#28784 - start
@@ -8567,12 +8563,12 @@ public class EvaluationBackingBean extends
 				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
 								.getCommitteeType())) {
-					if (this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)
-						||this.getManagedBean()
-							.getCurrentStatusId()
-							.equals(QTStatusConst.OC_PENDING_ENDORSEMENT)) {
+					// Bug #36747@Syazani 20/01/2025 -- Start
+					if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)
+							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_ENDORSEMENT)
+							|| this.getManagedBean().getCurrentStatusId()
+									.equals(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION)) {
+						// Bug #36747@Syazani 20/01/2025 -- End
 						complianceStageStatusCheck();
 					}
 					if (currentTab == 1) {
@@ -8963,9 +8959,18 @@ public class EvaluationBackingBean extends
 				}
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
-				retrieveReportTabDtl();
-				retriveCommitteeEndorsment();
-				
+				// Bug #36747@Syazani 20/01/2025 -- Start
+				outputTab = evaluationStageSummaryForceViewCheck(currentTab, outputTab);
+
+				if (currentTab != 4) {
+					retrieveReportTabDtl();
+				}
+
+				if (outputTab != 2) {
+					// Bug #36747@Syazani 20/01/2025 -- End
+					retriveCommitteeEndorsment();
+				} // Bug #36747@Syazani 20/01/2025
+
 				// RequestContext.getCurrentInstance().update("@form");
 			} else if (outputTab == 6) {
 
@@ -8975,6 +8980,8 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setDemo(false);
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
 						this.getManagedBean().getCommitteeType(), 1);
+				
+				outputTab = evaluationStageSummaryForceViewCheck(currentTab, outputTab);	// Bug #36747@Syazani 20/01/2025
 			}
 
 			if (getManagedBean().getTempTab() < outputTab) {
@@ -9412,6 +9419,7 @@ public class EvaluationBackingBean extends
 
 			if (!this.getManagedBean().isReadOnly()) {
 				//saveQtReportDtls();
+				retriveSummaryEvaluationStage();	// Bug #36747@Syazani 20/01/2025
 				saveEvaluationReportsDtls();
 				setReportAttachment();
 			}
@@ -10161,15 +10169,13 @@ private void retriveCommitteeRemarksList(){
 				log.info("============displayitemsamplerequired===");
 			List<ScQtSampleItem> sampleItemlist=this.getManagedBean().getSampleItemList();
 			for(ScQtSampleItem item:sampleItemlist){
-				/*#29187 Start Vinod*/
-				if(item.getCompliance()!=null  
-					&& item.getCompliance().equals(Boolean.FALSE)){
-					if(item.getRemark().equals(null)
-							|| item.getRemark().equals("")
-							|| item.getRemark().equals(" "))
-						throw new EpException(MessageConst.ERROR_775180);
+				/* #29187 Start Vinod */
+				String remark = item.getRemark();
+				boolean isCompliance = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
+				if (isCompliance && StringUtils.isEmpty(remark)) {
+					throw new EpException(MessageConst.ERROR_775180);
 				}
-				/*#29187 End Vinod*/
+				/* #29187 End Vinod */
 			}
 			reqDtO.setSampleComplianceList(sampleItemlist);
 			}//#11104-End
@@ -10594,16 +10600,15 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
-					//#29187 Start Vinod
-					if(QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
-						&& tplSpecAnswer.getCompliance()!=null  
-						&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE)){
-						if(tplSpecAnswer.getUserRemark()==null
-								|| tplSpecAnswer.getUserRemark().equals("")
-								|| tplSpecAnswer.getUserRemark().equals(" "))
+					// #29187 Start Vinod
+					boolean isCompliance = tplSpecAnswer.getCompliance() != null
+							&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+					String remark = tplSpecAnswer.getUserRemark();
+					if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
+							&& isCompliance && StringUtils.isEmpty(remark)) {
 						throw new EpException(MessageConst.ERROR_775180);
 					}
-					//#29187 End Vinod
+					// #29187 End Vinod
 
 				}
 			}
@@ -10696,6 +10701,10 @@ private void retriveCommitteeRemarksList(){
 				updateCheckListIntoQtCheckLists(qtCheckLists, getManagedBean().getScQtChecklist(), evalResDTO.getCheckList());
 				// Bug #33249@Syazani 03/08/2022 -- End
 			}
+			
+			// #29187 Start moved update to backingbean for note #582 Vinod
+			RequestContext.getCurrentInstance().update(QTConstants.REQUESTCONTEXT_INSTANCE_UPDATE_ALL);
+			// #29187 End Vinod
 
 			successMessage(MessageConst.INFO_700004,
 					getMessageCommon("lbl.sc.prepare.evaluation.evaluationStage.scores"), " ", Boolean.FALSE);
@@ -11547,21 +11556,36 @@ private void retriveCommitteeRemarksList(){
 		debugLogger("generateDocumentAttachment");
 		
 		ScAttachment reportAttachment = null;
+		ScAttachment commReportAttachment = null; // 37617
 		ScQt scQt = getManagedBean().getScQt();
 		
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScEvaluationCommitteeReportAttachment(); // 37617
 			reportAttachment = new ScEvaluationCommitteeReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScOpenCommitteeReportAttachment(); // 37617
 			reportAttachment = new ScOpenCommitteeReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScTechnicalEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScTechnicalEvaluationReportAttachment();
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			commReportAttachment = scQt.getScFinancialEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScFinancialEvaluationReportAttachment();
 		}	
+		
+		// 37617 - end
+		String taskName = this.getManagedBean().getTaskName();
+		taskName = null != taskName ? taskName : "";
+		boolean isFetchReportOnly = Arrays.asList(SCProcessNameConst.EVAL_COMM_ENDORSE_GROUP).contains(taskName)
+				|| Arrays.asList(SCProcessNameConst.EVAL_COMM_SIGNOFF_GROUP).contains(taskName);
+		if (null != commReportAttachment && isFetchReportOnly) {
+			return commReportAttachment;
+		}
+		// 37617 - end
 		
 		StringBuilder fileName = new StringBuilder(
 				getManagedBean().getReportDownloadFileName());
@@ -16726,7 +16750,13 @@ private void retriveCommitteeRemarksList(){
 		
 		EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 		reqDTO.setScQt(this.getManagedBean().getScQt());
+		//#36226 denominator bug #30 - Start
+		reqDTO.setQtproposalId(proposalId);
+		reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 		int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
+		int onlyUsedOncePerSupplier = 1;
+		int includeNonApplicableScore = 0;
+		//#36226 denominator bug #30 - End
 		List<Object[]> findSupplierProposal = new ArrayList<>();
 		List<Long> specQuestionIds = new ArrayList<>();
 		if (this.getManagedBean().getScQt().isZonal() && wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
@@ -16735,6 +16765,8 @@ private void retriveCommitteeRemarksList(){
 			for (Object[] specZoneId : findSupplierProposal) {
 				specQuestionIds.add((Long) specZoneId[3]);
 			}
+			includeNonApplicableScore = this.getManagedBean().getScQt().isPartial() ? evaluationSO.retriveNotApplicableSupplierScore(reqDTO).getNotApplicableScore().intValue()
+					: 0;//#36226 denominator bug #30
 		}
 		//#36226 denominator bug - End
 		
@@ -16765,6 +16797,10 @@ private void retriveCommitteeRemarksList(){
 					if (this.getManagedBean().getScQt().isZonal() && CollectionUtils.isNotEmpty(findSupplierProposal)
 							&& wipstatus >= SourcingConstants.SCORE_SETTING_TYPE_TECHNICAL_BY_ITEM) {
 						sumMaxScore = specQuestionIds.contains(specQuestion.getParentSpecQuestion().getSpecQuestionId()) ? sumMaxScore + maxScore : sumMaxScore;
+						//#36226 denominator bug #30 - Start
+						sumMaxScore = onlyUsedOncePerSupplier == 1 ? sumMaxScore + includeNonApplicableScore : sumMaxScore;
+						onlyUsedOncePerSupplier++;
+						//#36226 denominator bug #30 - End
 					} else {
 						sumMaxScore = sumMaxScore + maxScore;
 					}
@@ -17588,7 +17624,7 @@ private void retriveCommitteeRemarksList(){
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug//#28784 sonarqube
 			}
 			//#28784 add weightage to calculation - end
 			divNum = divNum.add(totalScore);
@@ -17627,7 +17663,7 @@ private void retriveCommitteeRemarksList(){
 				BigDecimal maxScore = specscore.getScQtCheckList().getQtScoreWeightage().getScore();
 				BigDecimal weightage = specscore.getScQtCheckList().getQtScoreWeightage().getWeightage();
 				
-				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros();//#28784 no package bug
+				totalScore = weightage.multiply(totalScore).divide(maxScore, 2, RoundingMode.HALF_UP).stripTrailingZeros();//#28784 no package bug//#28784 sonarqube
 			}
 			divNum = divNum.add(totalScore);
 			//#28784 add weightage to calculation - end
@@ -17687,7 +17723,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setOtherchecklistScore(String.valueOf(totalNum.toPlainString()));
 			totalTechScore = String.valueOf(resDTO.getTechScore());
 			this.getManagedBean().setItemTsPercentage(resDTO.getTechScore().multiply(this.getManagedBean().getMaxItemTsPercentage())
-					.divide(this.getManagedBean().getMaxItemTsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+					.divide(this.getManagedBean().getMaxItemTsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			if (resDTO.isGenerateSuppliers()) {
 				presentationDemoItemScore(String.valueOf(propId.getQtEvaluationResult().getScQtProposal().getSupplierNo()),
 						this.getManagedBean().getSinglesummaryItemList().getRequestNoteItemId());
@@ -17698,7 +17734,7 @@ private void retriveCommitteeRemarksList(){
 						new FacesScopes()
 						.getUserLocale()));
 				this.getManagedBean().setItemAllOtherElementsPercentage(totalNum.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
-						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+						.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 			}
 		} finally {
 			evaluationSO = null;
@@ -17723,7 +17759,7 @@ private void retriveCommitteeRemarksList(){
 			this.getManagedBean().setItemAllOtherElementsPercentage((new BigDecimal(this.getManagedBean().getOtherchecklistScore())
 			.add(new BigDecimal(this.getManagedBean().getDemoScore())))
 			.multiply(this.getManagedBean().getMaxItemAllOtherElementsPercentage())
-			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));
+			.divide(this.getManagedBean().getMaxItemAllOtherElementsScore(), 2, RoundingMode.HALF_UP).stripTrailingZeros().add(BigDecimal.ZERO));//#28784 sonarqube
 		}
 		finally {
 
@@ -18833,16 +18869,20 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public boolean checkUOMandQuantityRender() {
 		boolean render = true;
+		Long statusId = null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus() ? this
+				.getManagedBean().getScQt().getQtStatus().getStatusId()
+				: Long.MIN_VALUE;
 
-		if (null != this.getManagedBean().getScQt()
-				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
-						this.getManagedBean().getScQt().getQtStatus().getStatusId())) {
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
+				statusId)) {
 			render = false;
 		}
 		return render;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to display Mandatory spec and compliance
 	 * column.
@@ -18850,15 +18890,23 @@ private void retriveCommitteeRemarksList(){
 	 * @param templateSpecBean
 	 * @return boolean
 	 */
-	public boolean displayMandatorySpecAndComplianceColumn(TemplateSpecBean templateSpecBean) {
+	public boolean displayMandatorySpecAndComplianceColumn(
+			TemplateSpecBean templateSpecBean) {
 		boolean manSpec = false;
-		if (null != this.getManagedBean().getScQt()
-				&& null != this.getManagedBean().getScQt().getQtStatus()
-				&& Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES).contains(
-						this.getManagedBean().getScQt().getQtStatus().getStatusId())) {
-			for (TplSpecAnswer tplSpecAnswer : templateSpecBean.getSpecAnswerList()) {
-				if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(tplSpecAnswer.getTplSpecQuestion()
-						.getQuestionType()) && tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()) {
+		Long statusId = null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus() ? this
+				.getManagedBean().getScQt().getQtStatus().getStatusId()
+				: Long.MIN_VALUE;
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
+				statusId)) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecBean
+					.getSpecAnswerList()) {
+				String questionType = tplSpecAnswer.getTplSpecQuestion()
+						.getQuestionType();
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion()
+						.isMandatorySpec();
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
+						.equals(questionType) && isMandatorySpec) {
 					manSpec = true;
 					break;
 				}
@@ -18867,6 +18915,8 @@ private void retriveCommitteeRemarksList(){
 		return manSpec;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to show conformation popup.
 	 * 
@@ -18876,26 +18926,34 @@ private void retriveCommitteeRemarksList(){
 	public void checkTechnicalSpecCompliance() {
 		boolean isCompliance = false;
 		try {
-			for (TplSpecAnswer answer : this.getManagedBean().getTemplateSpecBean().getSpecAnswerList()) {
-				if (answer.getCompliance() != null && Boolean.FALSE.equals(answer.getCompliance())) {
+			for (TplSpecAnswer answer : this.getManagedBean()
+					.getTemplateSpecBean().getSpecAnswerList()) {
+				boolean isNotCompliance = answer.getCompliance() != null
+						&& Boolean.FALSE.equals(answer.getCompliance());
+				if (isNotCompliance) {
 					isCompliance = true;
 					break;
 				}
 			}
 
 			if (isCompliance) {
-				RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
+				RequestContext.getCurrentInstance().execute(
+						QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
 			} else {
 				this.saveTempleateSpecDtls();
 			}
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
-					this.getManagedBean().getScQt().getQtNo(), SLALogConstant.QT_CHECK_SPEC_COMPLIANCE,
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_CHECK_SPEC_COMPLIANCE,
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to display Zone.
 	 * 
@@ -18903,17 +18961,23 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderZoneForFinancial() {
-		if (Arrays.asList(QTStatusConst.EAVL_ITEM_HYPERLINK_STATUSES)
-				.contains(this.getManagedBean()
-				.getScQt().getQtStatus().getStatusId())
+		Long statusId = null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getQtStatus() ? this
+				.getManagedBean().getScQt().getQtStatus().getStatusId()
+				: Long.MIN_VALUE;
+		String checklistType = getManagedBean().getCheckListType();
+		if (Arrays.asList(QTStatusConst.EVAL_ITEM_HYPERLINK_STATUSES).contains(
+				statusId)
 				&& (QTConstants.FINANCIAL_EVALUATION
-						.equalsIgnoreCase(getManagedBean().getCheckListType()) || QTConstants.TECHNICAL_EVALUATION
-						.equalsIgnoreCase(getManagedBean().getCheckListType()))) {
+						.equalsIgnoreCase(checklistType) || QTConstants.TECHNICAL_EVALUATION
+						.equalsIgnoreCase(checklistType))) {
 			return false;
 		}
 		return true;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to get dropdown values for Compliance.
 	 * 
@@ -18924,20 +18988,30 @@ private void retriveCommitteeRemarksList(){
 		List<SelectItem> selectItems = new ArrayList<>();
 
 		try {
-			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_SELECT,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_YES,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-			selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils.getMessage(QTConstants.LBL_TXT_NO,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils
+					.getMessage(QTConstants.LBL_TXT_SELECT,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(Boolean.TRUE, ResourceBundleUtils
+					.getMessage(QTConstants.LBL_TXT_YES,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
+			selectItems.add(new SelectItem(Boolean.FALSE, ResourceBundleUtils
+					.getMessage(QTConstants.LBL_TXT_NO,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())));
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
-					this.getManagedBean().getScQt().getQtNo(), SLALogConstant.QT_CHECK_SAMPLE_COMPLIANCE,
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_CHECK_SAMPLE_COMPLIANCE,
 					getUserIdSessionFromLoginId(), e);
 		}
 		return selectItems;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to popup confirmation if the item compliance is false.
 	 * 
@@ -18947,26 +19021,34 @@ private void retriveCommitteeRemarksList(){
 	public void checkSampleCompliance() {
 		boolean isCompliance = false;
 		try {
-			for (ScQtSampleItem sampleItem : this.getManagedBean().getSampleItemList()) {
-				if (sampleItem.getCompliance() != null && Boolean.FALSE.equals(sampleItem.getCompliance())) {
+			for (ScQtSampleItem sampleItem : this.getManagedBean()
+					.getSampleItemList()) {
+				boolean isNotCompliance = sampleItem.getCompliance() != null
+						&& Boolean.FALSE.equals(sampleItem.getCompliance());
+				if (isNotCompliance) {
 					isCompliance = true;
 					break;
 				}
 			}
 
 			if (isCompliance) {
-				RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
+				RequestContext.getCurrentInstance().execute(
+						QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
 			} else {
 				this.saveProposalScoreDtls();
 			}
 
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_EVALUATION_BACKINGBEAN,
-					this.getManagedBean().getScQt().getQtNo(), SLALogConstant.QT_GET_COMPLIANCE_DROPDOWN_VALUES,
+			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE,
+					SLALogConstant.QT_EVALUATION_BACKINGBEAN,
+					this.getManagedBean().getScQt().getQtNo(),
+					SLALogConstant.QT_GET_COMPLIANCE_DROPDOWN_VALUES,
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to render disqualified or not.
 	 * 
@@ -18974,10 +19056,16 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean renderDisqialified() {
-		if (null != this.getManagedBean().getDisqualifiedSuppliersDM()
-				&& null != this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
-			for (ScQtEvaluationResultDtl disQualDtl : this.getManagedBean().getDisqualifiedSuppliersDM().getList()) {
-				if (null != disQualDtl.isCompliance() && !disQualDtl.isCompliance()) {
+		List<ScQtEvaluationResultDtl> disqualifiedList = null != this
+				.getManagedBean().getDisqualifiedSuppliersDM()
+				&& null != this.getManagedBean().getDisqualifiedSuppliersDM()
+						.getList() ? this.getManagedBean()
+				.getDisqualifiedSuppliersDM().getList() : null;
+		if (CollectionUtils.isNotEmpty(disqualifiedList)) {
+			for (ScQtEvaluationResultDtl disQualDtl : disqualifiedList) {
+				boolean isDisqualifiedCompliance = null != disQualDtl
+						.isCompliance() && !disQualDtl.isCompliance();
+				if (isDisqualifiedCompliance) {
 					return true;
 				}
 			}
@@ -18985,20 +19073,26 @@ private void retriveCommitteeRemarksList(){
 		return false;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to render diswualified column.
 	 * 
 	 * @param evalResultDtl
 	 * @return boolean
 	 */
-	public boolean isDisqialifiedByCompliance(ScQtEvaluationResultDtl evalResultDtl) {
-		if (null != evalResultDtl.isCompliance()
-				&& !evalResultDtl.isCompliance()) {
+	public boolean isDisqialifiedByCompliance(
+			ScQtEvaluationResultDtl evalResultDtl) {
+		boolean isDisqualified = null != evalResultDtl.isCompliance()
+				&& !evalResultDtl.isCompliance();
+		if (isDisqualified) {
 			return true;
 		}
 		return false;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to check whether to display mandatory spec and compliance
 	 * columns for sample items.
@@ -19007,69 +19101,90 @@ private void retriveCommitteeRemarksList(){
 	 * @return boolean
 	 */
 	public boolean displayMandatorySpecAndComplianceColumnSample() {
-		for (ScQtSampleItem sample : this.getManagedBean().getSampleItemList()) {
-			if (sample.getScRequestItem() != null && sample.getScRequestItem().getTplSpecQuestion() != null
-					&& sample.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()) {
+		List<ScQtSampleItem> sampleItemList = this.getManagedBean()
+				.getSampleItemList();
+		for (ScQtSampleItem sample : sampleItemList) {
+			boolean isMandatorySpecForSample = sample.getScRequestItem() != null
+					&& sample.getScRequestItem().getTplSpecQuestion() != null
+					&& sample.getScRequestItem().getTplSpecQuestion()
+							.isMandatorySpecForSample();
+			if (isMandatorySpecForSample) {
 				return true;
 			}
 		}
 		return false;
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to get spec master details and checking for sample items.
 	 * 
 	 * @param templateChecklist
 	 * @return
 	 */
-	public void retriveSampleSpecmasterForMandatorySpecChecking(List<ScQtSampleItem> templateChecklist) {
-		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+	public void retriveSampleSpecmasterForMandatorySpecChecking(
+			List<ScQtSampleItem> templateChecklist) {
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 
 		for (ScQtSampleItem item : templateChecklist) {
 			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			specReqDTO.setItemName(item.getScRequestItem().getTplSpecQuestion().getClItem());
-			TemplateSpecResDTO resDTO = templateSpecSO.retrieveTechSpecByItemNames(specReqDTO);
+			specReqDTO.setItemName(item.getScRequestItem().getTplSpecQuestion()
+					.getClItem());
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.retrieveTechSpecByItemNames(specReqDTO);
 
 			checkMandatorySpecForSample(item, resDTO);
 			adjustUserScoreBasedOnCompliance(item);
 		}
 	}
 
-	private void checkMandatorySpecForSample(ScQtSampleItem item, TemplateSpecResDTO resDTO) {
-		if (resDTO != null && resDTO.getSpecQuestionList() != null) {
+	// #29187 End Vinod
+	// #29187 Start Vinod
+	private void checkMandatorySpecForSample(ScQtSampleItem item,
+			TemplateSpecResDTO resDTO) {
+		if (resDTO != null && CollectionUtils.isNotEmpty(resDTO.getSpecQuestionList())) {
 			for (TplSpecQuestion question : resDTO.getSpecQuestionList()) {
-				if (question.isMandatorySpec()) {
-					item.getScRequestItem().getTplSpecQuestion().setMandatorySpecForSample(true);
+				boolean isMandatorySpec = question.isMandatorySpec();
+				if (isMandatorySpec) {
+					item.getScRequestItem().getTplSpecQuestion()
+							.setMandatorySpecForSample(true);
 				}
 			}
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	private void adjustUserScoreBasedOnCompliance(ScQtSampleItem item) {
 		BigDecimal userScore = item.getUserScore();
 		Boolean compliance = item.getCompliance();
 
-		if (userScore != null && userScore.equals(BigDecimal.ZERO) && compliance != null && !compliance) {
+		if (userScore != null && userScore.equals(BigDecimal.ZERO)
+				&& compliance != null && !compliance) {
 			item.setUserScore(BigDecimal.ZERO);
 		}
 	}
 
+	// #29187 End Vinod
+	// #29187 Start Vinod
 	/**
 	 * This method is to disable and enable the UserScore in screen and also if
 	 * disable this method will set default value for UserScore 0.
 	 * 
-	 * @param itm
+	 * @param sampleItem
 	 * @return
 	 */
-	public void onchangeCompliance(ScQtSampleItem itm) {
+	public void onchangeCompliance(ScQtSampleItem sampleItem) {
 		for (ScQtSampleItem item : this.getManagedBean().getSampleItemList()) {
-			if (itm.getSampleItemId().compareTo(item.getSampleItemId()) == 0 && itm.getCompliance() != null) {
-				if (itm.getCompliance() == Boolean.FALSE) {
-					item.setUserScore(BigDecimal.ZERO);
-				} 
-			} 
+			if (sampleItem.getSampleItemId().compareTo(item.getSampleItemId()) == 0
+					&& sampleItem.getCompliance() != null
+					&& sampleItem.getCompliance() == Boolean.FALSE) {
+				item.setUserScore(BigDecimal.ZERO);
+			}
 		}
 	}
 
@@ -19247,4 +19362,161 @@ private void retriveCommitteeRemarksList(){
 		this.getManagedBean().setMaxItemAllOtherElementsPercentage(scoreSetting.getOverallOtherTechnical());
 	}
 	//#28784 add demo condition - End
+	
+	// #36828 Start Vinod 13/12/2024
+	private void outputTabOneFunctionality(int currentTab) throws Exception {
+		this.getManagedBean().setCheckReportDownload(false);
+		boolean isCommittee = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType());
+		boolean isReadOnly = this.getManagedBean().isReadOnly();
+
+		if (isCommittee && !isReadOnly && currentTab == 0) {
+			// moved this checking from outside to here in #36828
+			checkCommitteeMembersAttendance(this.getManagedBean()
+					.getCommitteeMemberList());
+			saveMeetingDtls(false);
+		}
+		retriveComplianceTechnical();
+	}
+	// #36828 End Vinod 13/12/2024
+	
+	// Bug #36747@Syazani 20/01/2025 -- Start
+	private int evaluationStageSummaryForceViewCheck(int currentTab, int outputTab) throws Exception {
+		int outputTabEval = outputTab;
+		boolean isEvaluationCommittee = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+				.getManagedBean().getCommitteeType());
+
+		boolean isTecCommittee = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+				.getManagedBean().getCommitteeType());
+
+		boolean isFecCommittee = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
+				.getManagedBean().getCommitteeType());
+
+		boolean isOcCommittee = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
+				.getCommitteeType());
+
+		boolean isCommittee2TierPass = isTecCommittee || isFecCommittee || isOcCommittee;
+
+		boolean isDemoRequired = isTecCommittee && this.getManagedBean().getScQt().isDemoRequired();
+
+		if (!isEvaluationCommittee) {
+			outputTabEval = tier2EvaluationSummaryCheck(isCommittee2TierPass, isDemoRequired, currentTab,
+					outputTabEval, isOcCommittee);
+		} else {
+			outputTabEval = tier1EvaluationSummaryCheck(currentTab, outputTabEval);
+		}
+		return outputTabEval;
+	}
+
+	private int tier2EvaluationSummaryCheck(boolean isCommittee2TierPass, boolean isDemoRequired, int currentTab,
+			int outputTabEval, boolean isOcCommittee) throws Exception {
+		int outputTabEvalTier2 = outputTabEval;
+		boolean isWithoutDemo = isWithoutDemoTier2(isCommittee2TierPass, isDemoRequired, currentTab);
+		boolean isDemo = isDemoTier2(isCommittee2TierPass, isDemoRequired, currentTab);
+		// Tier 2
+		// Opening, Financial & Technical Evaluation
+		if (isOcTier2(isOcCommittee, currentTab)) {
+			if (!this.getManagedBean().getScQt().isSampleReq()) {
+				if (this.getManagedBean().getComplianceActiveIndex() < 2) {
+					retriveComplianceSummary();
+					outputTabEvalTier2 = 1;
+				}
+			} else {
+				outputTabEvalTier2 = sampleReqComplianceStageCheck(outputTabEvalTier2);
+			}
+		} else if (isWithoutDemo) {
+			if (this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
+				retriveSummaryEvaluationStage();
+				outputTabEvalTier2 = 2;
+			}
+
+		} else if (isDemo && this.getManagedBean().getPresentationDemoActiveIndex() < 1) {
+			retrivePresentationDemoSummary();
+			outputTabEvalTier2 = 3;
+		}
+		return outputTabEvalTier2;
+	}
+
+	private boolean isOcTier2(boolean isOcCommittee, int currentTab) {
+		return isOcCommittee && currentTab == 1;
+	}
+
+	private boolean isWithoutDemoTier2(boolean isCommittee2TierPass, boolean isDemoRequired, int currentTab) {
+		return isCommittee2TierPass && currentTab == 2 && !this.getManagedBean().isReadOnly() && !isDemoRequired;
+	}
+
+	private boolean isDemoTier2(boolean isCommittee2TierPass, boolean isDemoRequired, int currentTab) {
+		return isCommittee2TierPass && currentTab == 3 && !this.getManagedBean().isReadOnly() && isDemoRequired;
+	}
+
+	private int tier1EvaluationSummaryCheck(int currentTab, int outputTabEval) {
+		int outputTabEvalTier1 = outputTabEval;
+		// Tier 1
+		// Compliance Stage
+		if (currentTab == 1) {
+			if (!this.getManagedBean().getScQt().isSampleReq()) {
+				if (this.getManagedBean().getComplianceActiveIndex() < 2) {
+					retriveComplianceSummary();
+					outputTabEvalTier1 = 1;
+				}
+			} else {
+				outputTabEvalTier1 = sampleReqComplianceStageCheck(outputTabEvalTier1);
+			}
+			// Technical Evaluation
+		} else if (currentTab == 2 && this.getManagedBean().getEvaluatioStageActiveIndex() < 1) {
+			retriveSummaryEvaluationStage();
+			outputTabEvalTier1 = 2;
+			// Financial Evaluation
+		} else if (currentTab == 3 && this.getManagedBean().getOneTierFinancialActiveIndex() < 1) {
+			retriveOneTierFinancialSupplierSummary();
+			outputTabEvalTier1 = 3;
+		}
+		return outputTabEvalTier1;
+	}
+
+	private int sampleReqComplianceStageCheck(int outputTabEvalTier1) {
+		int outputTabEvalTier1SampleReq = outputTabEvalTier1;
+		sampleClosingDateCountDays();
+
+		if (ecPendingComplianceFailedCheck()) {
+			throw new EpException(MessageConst.ERROR_760261);
+		}
+		if (ecPendingComplianceCheck()) {
+			checkSampleComplianceCompleted();
+		}
+
+		if (this.getManagedBean().getComplianceActiveIndex() < 3) {
+			retriveComplianceSummary();
+			outputTabEvalTier1SampleReq = 1;
+		}
+		return outputTabEvalTier1SampleReq;
+	}
+
+	private boolean ecPendingComplianceFailedCheck() {
+		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId()
+				.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+				|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+
+		boolean isDaysCheck = this.getManagedBean().getCountDays() > 0
+				|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() < 12);
+
+		return isEcPendingComplianceCheck && isDaysCheck;
+	}
+
+	private boolean ecPendingComplianceCheck() {
+		boolean isDaysCheck = this.getManagedBean().getCountDays() < 0
+				|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() >= 12);
+
+		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId()
+				.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+				|| this.getManagedBean().getCurrentStatusId()
+						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+
+		return isDaysCheck && isEcPendingComplianceCheck;
+	}
+	// Bug #36747@Syazani 20/01/2025 -- End
 }
