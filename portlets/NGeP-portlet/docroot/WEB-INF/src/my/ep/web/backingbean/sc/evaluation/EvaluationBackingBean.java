@@ -8972,6 +8972,7 @@ public void saveComplianceSample() {
 				retrieveReportTabDtl();
 			
 			} else if (outputTab == 5) {
+				log.info("::DEV ISLAND retriveCommitteeEndorsment checking for Error START::");
 				// Bug #36747@Syazani 20/01/2025 -- Start
 				outputTab = evaluationStageSummaryForceViewCheck(currentTab, outputTab);
 
@@ -8983,7 +8984,7 @@ public void saveComplianceSample() {
 					// Bug #36747@Syazani 20/01/2025 -- End
 					retriveCommitteeEndorsment();
 				} // Bug #36747@Syazani 20/01/2025
-
+				log.info("::DEV ISLAND retriveCommitteeEndorsment checking for Error END::");
 				// RequestContext.getCurrentInstance().update("@form");
 			} else if (outputTab == 6) {
 
