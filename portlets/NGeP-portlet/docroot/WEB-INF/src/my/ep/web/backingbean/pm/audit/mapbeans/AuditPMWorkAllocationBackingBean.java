@@ -48,7 +48,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		if (!managedBean.isBrandNew()) {
 			PmPoJobTypeRatio oldPoJobRatio = managedBean.getOriPoJobTypeRatio();
 
-			if (! jobRatio.getPoJobWeight().getPoJobWeightId().equals(oldPoJobRatio.getPoJobWeight().getPoJobWeightId())) {
+			if (!jobRatio.getPoJobWeight().getPoJobWeightId().equals(oldPoJobRatio.getPoJobWeight().getPoJobWeightId())) {
 
 				dtlWeightCategory.setRoleCode(roleCode);
 				dtlWeightCategory.setDocType(AuditConst.PM_AUD_WORK_ALLOCATION);
@@ -66,9 +66,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 				objList.add(dtlWeightCategory);
 			}
 
-			System.out.println("record status : " + jobRatio.getRecordStatusFlg());
-			
-			if (! jobRatio.getRecordStatusFlg().equals(oldPoJobRatio.getRecordStatusFlg())) {
+			if (!jobRatio.getRecordStatusFlg().equals(oldPoJobRatio.getRecordStatusFlg())) {
 				dtlStatus.setRoleCode(roleCode);
 				dtlStatus.setDocType(AuditConst.PM_AUD_WORK_ALLOCATION);
 				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_WORK_ALLOCATION_PMPARAMETERLVLID);
@@ -119,9 +117,8 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 
 	private String checkValue(Long parameterId) {
 
-		return parameterId == 1 ? AuditConst.PM_AUD_MODERATE : 
-				parameterId == 2 ? AuditConst.PM_AUD_HIGH : 
-				 parameterId == 3 ? AuditConst.PM_AUD_EXTRA_HIGH : null;
+		return parameterId == 1 ? AuditConst.PM_AUD_MODERATE : parameterId == 2 ? AuditConst.PM_AUD_HIGH
+				: parameterId == 3 ? AuditConst.PM_AUD_EXTRA_HIGH : null;
 
 	}
 }
