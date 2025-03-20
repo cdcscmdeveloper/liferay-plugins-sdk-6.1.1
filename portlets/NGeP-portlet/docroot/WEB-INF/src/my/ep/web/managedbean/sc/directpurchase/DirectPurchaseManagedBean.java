@@ -22,7 +22,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.DPStatusConstants;
-import my.ep.constants.SpecialCharacter; //#36018
+import my.ep.constants.SpecialCharacter; //#36018 & #25790
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -219,15 +219,23 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 					if (isSearchLoaByRN()) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
 					}else{
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo", SearchOperator.OPERATOR_EQUALS.value(), getSearchDocumentNo()));
+						// start - #25790
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(), String.valueOf(
+										SpecialCharacter.MODULO.getCharacter()).concat(getSearchDocumentNo())));
+						// end - #25790
 					}
 				}
 				if(getSearchStatusId() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(), getSearchStatusId()));
 				} else { // start - #36018
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
-									DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+					// 25790 & 36720 - start
+					if (isSearchDPM()) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+					}
+					// 25790 & 36720 - start
 				}// end - #36018
 				
 				if(getSearchDocumentFromDuration() != null && getSearchDocumentToDuration() != null) {

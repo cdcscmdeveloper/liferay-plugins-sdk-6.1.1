@@ -2610,6 +2610,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
 		contractBB.getManagedBean().setResetval(true);
 	
+		// #25790 - start
+		if (getManagedBean().getDpContinuitySession() != null) {
+			getManagedBean().setExternalPageUrl(getManagedBean().getDpContinuitySession());
+		}
+		// #25790 - end
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 
