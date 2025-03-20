@@ -133,6 +133,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
@@ -264,6 +265,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		getManagedBean().setViewOnly(Boolean.TRUE);
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		}
+		// End - #30866
 		
 		// page navigation 
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
