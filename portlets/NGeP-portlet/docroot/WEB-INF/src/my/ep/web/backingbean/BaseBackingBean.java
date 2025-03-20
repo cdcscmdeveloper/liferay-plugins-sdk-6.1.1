@@ -4468,9 +4468,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 
 			getManagedBean().setDisciplineVOs(
 					CollectionUtils.isNotEmpty(voList) ? voList : new ArrayList<DisciplinaryActionVO>());
-
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		} catch (Exception e) {
+			log.error("An error occurred while handling disciplinary actions for supplier: ", e);
 			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
 		}
 	} 
