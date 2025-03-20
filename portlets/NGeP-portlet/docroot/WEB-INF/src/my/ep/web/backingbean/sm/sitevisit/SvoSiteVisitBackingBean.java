@@ -2200,6 +2200,14 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 						paramCode.equals(SupplierManagementConst.CAT_TYPE_TRAVEL));
 			}
 			//28775 - Site Visit Grouping Enhancement - 28775 - end
+			//28775 - temp start
+			if (svTask.getSmSvOffice().getSignboardRemark() != null)
+				log.info("28775 Length - Signboard:" + svTask.getSmSvOffice().getSignboardRemark().length());
+			if (svTask.getSmSvOffice().getShareWithRemark() != null)
+				log.info("28775 Length - ShareWith:" + svTask.getSmSvOffice().getShareWithRemark().length());
+			if (svTask.getSmSvOffice().getOfficeArrangement() != null)
+				log.info("28775 Length - Arrangement:" + svTask.getSmSvOffice().getOfficeArrangement().length());
+			//28775 - temp end
 			reqDTO.setSmSvTask(svTask);
 			reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 			ISiteVisitSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
