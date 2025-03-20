@@ -352,7 +352,16 @@ public class SupplierDataMaintenanceBackingBean extends
 						reqDTO.setOldDesc(this.getManagedBean().getTempCategoryLs().get(latestCat.getSupplierCategoryId()));
 						reqDTO.setNewDesc(latestCat.getOtherDesc());
 						SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(getManagedBean().getSmAppl(), getTrackingActionDesc(reqDTO,"OD"));
-						listSmTrackingDiary.add(smTrackingDairyVO);
+						//#37605
+						int limit = 2500;
+				        int currentLength = smTrackingDairyVO.getActionDesc().length();
+
+				        if (currentLength <= limit) {
+				            log.info("Character count is within the limit: " + currentLength);
+				            listSmTrackingDiary.add(smTrackingDairyVO);
+				        } else {
+				            log.info("Character count exceeds the limit of " + limit + ". Current count: " + currentLength);
+				        }
 				}
 			}
 			//#30766 & #34209 - END
