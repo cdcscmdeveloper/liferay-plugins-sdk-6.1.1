@@ -76,8 +76,6 @@ import my.ep.dto.ct.ContractResDTO; //#25790
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO; //#25790
 import my.ep.dto.fl.FulfilmentResDTO; //#25790
-import my.ep.dto.osb.sc.DPOsbReqDTO;
-import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -93,6 +91,8 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.osb.sc.DPOsbReqDTO;
+import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#25790
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#25790
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
@@ -5622,7 +5622,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		reloadRequestNoteForCodification(requestNoteResDTO);
 	}
 	// #36119 - end
-
 	// start - #25790
 	/**
 	 * load continuity session of page.
@@ -6023,4 +6022,4 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	// end - #25790
-  }
+}
