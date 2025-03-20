@@ -906,11 +906,11 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			return false;
 		}
 		int checkBasic = 0;
-		List<String> basicMTO = Arrays.asList("04", "05", "06");
+		List<String> basicMTO = Arrays.asList(SupplierManagementConst.MTO_CODE_04, SupplierManagementConst.MTO_CODE_05, SupplierManagementConst.MTO_CODE_06);
 		
 		for(SmSupplierCategory cat : catList){
-			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null && ("22").equals(cat.getPmCategoryL1().getCategoryL1Code())
-					&& cat.getPmCategoryL2() != null && ("17").equals(cat.getPmCategoryL2().getCategoryL2Code());
+			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null && (SupplierManagementConst.CAT_L1_22).equals(cat.getPmCategoryL1().getCategoryL1Code())
+					&& cat.getPmCategoryL2() != null && (SupplierManagementConst.CAT_L2_17).equals(cat.getPmCategoryL2().getCategoryL2Code());
 			
 			if(isSubCategoryMTO && cat.getPmCategoryL3() != null && basicMTO.contains(cat.getPmCategoryL3().getCategoryL3Code())){
 				checkBasic++;
@@ -939,17 +939,17 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		 * @param e
 		 *            -AjaxBehaviorEvent
 		 */
-	public void unSelectDACategories(AjaxBehaviorEvent e) {
+	public void unSelectDACategories() {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(getManagedBean().getSelectedCategoryL3().getPmCategoryL2().getCategoryL2Id());
 		reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
 		reqDTO.setBusinessTypeCode(getManagedBean().getBusinessTypeCode());
-		if (("N").equals(getManagedBean().getCategoryType())) {
+		if ((SupplierManagementConst.BUSINESS_TYPE_CODE_N).equals(getManagedBean().getCategoryType())) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {
 			reqDTO.setIsSpecialCategory(true);
 		}
-		if (("H").equalsIgnoreCase(getManagedBean().getFacilityType())) {
+		if ((SupplierManagementConst.BUSINESS_TYPE_CODE_H).equalsIgnoreCase(getManagedBean().getFacilityType())) {
 			reqDTO.setHomeOperated(1);
 		} else {
 			reqDTO.setHomeOperated(0);
@@ -994,11 +994,11 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		}
 		boolean hasBumiputeraDA = hasActiveBumiputeraDisciplinaryAction(activeDAs);
 		
-		if (selectedL3.getBumiPercentage() > 50 && (hasBumiputeraDA ||  srcAppl.getSmSupplier().isBumi())){
+		if (selectedL3.getBumiPercentage() > SupplierManagementConst.BUMI_PERCENTAGE && (hasBumiputeraDA ||  srcAppl.getSmSupplier().isBumi())){
 			getManagedBean().setSelectedCategoryL3(null);
 		}
 		boolean hasAllBasicMTO = hasAllBasicMTOCodes(getManagedBean().getApprovedCategoryList());
-		if (!hasAllBasicMTO && selectedL3Id == 347){
+		if (!hasAllBasicMTO && selectedL3Id == SupplierManagementConst.CAT_L3_347){
 			getManagedBean().setSelectedCategoryL3(null);
 		}
 	}

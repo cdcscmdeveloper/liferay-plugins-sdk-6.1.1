@@ -64,6 +64,14 @@ public class ResendAccountActivationEmailBackingBean extends
 
 	private SmPersonnel selectedPersonnel;
 	
+	/**
+	 * This method is invoked before rendering a page.
+	 * 
+	 * It checks if the current user session is valid and if the supplier has any disciplinary actions.
+	 * If the session is invalid or the disciplinary check fails, the session object is renewed.
+	 * After this validation, the user is redirected to the "Resend Account Activation Email" page.
+	 * 
+	 */
 	public void preRender() {
 		//26238 - start 27848
 		//check disciplinary action on supplier
