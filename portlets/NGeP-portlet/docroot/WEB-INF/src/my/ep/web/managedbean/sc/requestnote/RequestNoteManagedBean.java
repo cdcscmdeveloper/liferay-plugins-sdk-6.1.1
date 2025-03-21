@@ -364,6 +364,24 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private PurchaseRequestResDTO purchaseRequestResDTO;
     //#28895#35492 - End
     
+	// #25790 - start
+	/** The continuity page session */
+	private String continuityPageSession = "";
+
+	/** The purchase request map list */
+	private List<Map<String, String>> purchaseRequestMapList;
+
+	/** The loa map list */
+	private List<Map<String, String>> loaMapList;
+
+	/** The pid flag */
+	private boolean showPurchaseInDefault = Boolean.FALSE;
+
+	/** The request note dtl. */
+	private ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
+
+	// #25790 - end
+
 	// #36119 - start
 	/** The new sourcing dp bpm version flag */
 	private boolean sourcingDpNewBpmVer = Boolean.FALSE;
@@ -2127,4 +2145,97 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.sourcingDpNewBpmVer = sourcingDpNewBpmVer;
 	}
 	// #36119 - end
+	
+	// #25790 - start
+	/**
+	 * @return the continuityPageSession
+	 */
+	public String getContinuityPageSession() {
+		return continuityPageSession;
+	}
+
+	/**
+	 * Sets the continuity Page Session.
+	 * 
+	 * @param continuityPageSession
+	 *            the continuity Page Session
+	 */
+	public void setContinuityPageSession(String continuityPageSession) {
+		this.continuityPageSession = continuityPageSession;
+	}
+
+	/**
+	 * @return the purchaseRequestMapList
+	 */
+	public List<Map<String, String>> getPurchaseRequestMapList() {
+		if (purchaseRequestMapList == null) {
+			purchaseRequestMapList = new ArrayList<>();
+		}
+		return purchaseRequestMapList;
+	}
+
+	/**
+	 * Sets the purchase Request Map List.
+	 * 
+	 * @param purchaseRequestMapList
+	 *            the purchase Request Map List
+	 */
+	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
+		this.purchaseRequestMapList = purchaseRequestMapList;
+	}
+
+	/**
+	 * @return the loaMapList
+	 */
+	public List<Map<String, String>> getLoaMapList() {
+		if (loaMapList == null) {
+			loaMapList = new ArrayList<>();
+		}
+		return loaMapList;
+	}
+
+	/**
+	 * Sets the loa Map List.
+	 * 
+	 * @param loaMapList
+	 *            the loa Map List
+	 */
+	public void setLoaMapList(List<Map<String, String>> loaMapList) {
+		this.loaMapList = loaMapList;
+	}
+
+	/**
+	 * @return the showPurchaseInDefault
+	 */
+	public boolean isShowPurchaseInDefault() {
+		return showPurchaseInDefault;
+	}
+
+	/**
+	 * Sets the purchase in default flag.
+	 * 
+	 * @param showPurchaseInDefault
+	 *            the purchase in default flag
+	 */
+	public void setShowPurchaseInDefault(boolean showPurchaseInDefault) {
+		this.showPurchaseInDefault = showPurchaseInDefault;
+	}
+
+	/**
+	 * @return the scRequestNoteDtl
+	 */
+	public ScRequestNoteDtl getScRequestNoteDtl() {
+		return scRequestNoteDtl;
+	}
+
+	/**
+	 * Sets the scRequestNoteDtl.
+	 * 
+	 * @param scRequestNoteDtl
+	 *            the scRequestNoteDtl to set
+	 */
+	public void setScRequestNoteDtl(ScRequestNoteDtl scRequestNoteDtl) {
+		this.scRequestNoteDtl = scRequestNoteDtl;
+	}
+	// #25790 - end
 }

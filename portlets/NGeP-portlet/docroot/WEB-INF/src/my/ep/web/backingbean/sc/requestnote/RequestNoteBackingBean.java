@@ -1,4 +1,5 @@
 /**
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.requestnote;
 
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import my.ep.util.SLAUtils; //#25790
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -38,7 +40,10 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.ct.IContractSO; //#25790
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO; //#25790
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO; //#25790
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -49,6 +54,7 @@ import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -61,11 +67,16 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.ContinuityDPConst; //#25790
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.ct.ContractReqDTO; //#25790
+import my.ep.dto.ct.ContractResDTO; //#25790
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
+import my.ep.dto.fl.FulfilmentReqDTO; //#25790
+import my.ep.dto.fl.FulfilmentResDTO; //#25790
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -83,6 +94,8 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.osb.sc.DPOsbReqDTO;
 import my.ep.dto.osb.sc.DPOsbResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#25790
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#25790
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -93,6 +106,9 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.CtContract; //#25790
+import my.ep.persistence.entity.ct.VCtContract; //#25790
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest; //#25790
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -109,7 +125,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest; //#25790
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
@@ -119,6 +135,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#25790
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa; //#25790
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -133,8 +151,13 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.ct.ContractDetailsBackingBean; //#25790
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean; //#25790
+import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean; //#25790
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean; //#25790
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -189,6 +212,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
 	
+	// start - #25790
+	/** The request note continuity page. */
+	private String requestNoteContinuityPage = "/xhtml/sc/directpurchase/requestnote/requestNoteContinuity.xhtml";
+	// end - #25790
+	
 	/** The request note page. */
 	private String PURCHASE_REQUEST_PAGE = "purchaseRequestMain";
 	
@@ -236,19 +264,39 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().getReqNoteDataModel().resetData();
 	}
 	
+	// start - #25790
+	/**
+	 * view the request note.
+	 * 
+	 * @param requestNoteId
+	 *            the request note id
+	 */
+	public void viewRequestNote(long requestNoteId) {
+		viewRequestNote(requestNoteId, false);
+	}
+
+	// end - #25790
+	
 	
 	/**
 	 * view the request note.
-	 *
-	 * @param requestNoteId the request note id
+	 * 
+	 * @param requestNoteId
+	 *            the request note id
+	 * @param isContinuityPage
+	 *            the flag continuity page
 	 * @return the string
 	 */
-	public void viewRequestNote(long requestNoteId) {
+	public void viewRequestNote(long requestNoteId, boolean isContinuityPage) { // #25790
 		debugLogger("viewRequestNote");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		requestNoteReqDTO.setRequestNoteId(requestNoteId);
 		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 		if(requestNoteResDTO.getRequestNoteDetail() != null){
+			// #25790 - start
+			getManagedBean().setPrInquiryId(null);
+			getManagedBean().setPurchaseInDefaultId(null);
+			// #25790 - end
 			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
 			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);	
 			if(requestNote.getCurrentStatus() != null) {
@@ -264,9 +312,25 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		getManagedBean().setViewOnly(Boolean.TRUE);
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		}
+		// End - #30866
 		
 		// page navigation 
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
+		// start - #25790
+		if (isContinuityPage) {
+			getManagedBean().setContinuityPageSession(fc.getViewRoot().getViewId());
+			getManagedBean().getPurchaseRequestMapList().clear();
+			getManagedBean().getLoaMapList().clear();
+			purchaseRequestList(requestNoteId);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoteContinuityPage);
+		} else {
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, REQUEST_NOTE_PAGE);
+		}
+		// end - #25790
 	}
 	
 	/**
@@ -1185,11 +1249,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNoteDtl.setProcurementTypeCategory(null);
 				}
 				
-				// #36362 - start
+				// #36362 & 25790 - start
 				if (requestNoteDtl.getPriceType() != null && null != requestNoteDtl.getPriceType().getParameterId()) { 
 					validateTierQuantityExceedMaxQuantity(requestNoteDtl);
 				}
-				// #36362 - end
+				// #36362 & 25790 - end
 				
 				if(!requestNoteDtl.isDeleted() && !results.contains(requestNoteDtl.getProcurementTitle())){
 					results.add(requestNoteDtl.getProcurementTitle());
@@ -1628,6 +1692,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		//RequestNote Details
 		boolean itemSearchBackBtn = Boolean.TRUE;
 		getManagedBean().setRequestNote(requestNote);
+		// 25790 - start
+		getManagedBean().setShowPurchaseInDefault(false);
+		getManagedBean().setScRequestNoteDtl(null);
+		// 25790 - end
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -1661,6 +1729,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				// Purchase In Default -> Request Note
 				if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+					//25790 - start
+					getManagedBean().setShowPurchaseInDefault(true);
+					getManagedBean().setScRequestNoteDtl(scRequestNoteDtl);
+					//25790 - end
 					itemSearchBackBtn = Boolean.FALSE;
 					getPurchaseInDefaultExpiredMessage(docStatusId);
 				} else if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getQuote() != null){
@@ -1818,6 +1890,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
+			// start - #25790
+			requestNoteReqDTO.setPtjOfOrgProfileId(retrievePTJByOrgProfileId(requestNote.getPmOrgProfile()
+					.getOrgProfileId(), requestNote.getPmOrgProfile().getCreatedDate()));
+			// end - #25790
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 			requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			requestNoteReqDTO.setOutcome(outcome);
@@ -3278,6 +3354,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("showSimpleQuote");
 		SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 		if(getManagedBean().getRequestNote().getQuote() != null){
+			//#25790 - start
+			if (!StringUtils.isBlank(getManagedBean().getContinuityPageSession())) {
+				simpleQuoteBackingBean.getManagedBean().setTrackingDairyView(true);
+			}
+			//#25790 - end
 			ScQuote scQuote  = getManagedBean().getRequestNote().getQuote();
 			simpleQuoteBackingBean.viewQuote(scQuote.getQuoteId());
 		}
@@ -5548,4 +5629,405 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		reloadRequestNoteForCodification(requestNoteResDTO);
 	}
 	// #36119 - end
+	
+	// start - #25790
+	/**
+	 * load continuity session of page.
+	 * 
+	 */
+	public void loadContinuitySession() {
+		getManagedBean().setBackToPreviousPage(getManagedBean().getContinuityPageSession());
+		getManagedBean().setContinuityPageSession("");
+		backToPrevious();
+	}
+
+	/**
+	 * retrieve purchase request list.
+	 * 
+	 * @param requestNoteId
+	 *            the request note id
+	 */
+	public void purchaseRequestList(Long requestNoteId) {
+		IPurchaseRequestSO purchaseRequestSO = null;
+		try {
+			purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IPurchaseRequestSO.class);
+
+			PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+			reqDTO.setRequestNoteId(requestNoteId);
+			List<String> fulfilmentTypes = new ArrayList<>();
+
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN);
+			fulfilmentTypes.add(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED);
+			reqDTO.setFulfillmentTypes(fulfilmentTypes);
+			reqDTO.setUserIdRequired(false);
+
+			PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequestsByRequestNote(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				List<ScPurchaseRequest> purchaseRequestList = resDTO.getListPurchaseRequest();
+				if (CollectionUtils.isNotEmpty(purchaseRequestList)) {
+					List<Map<String, String>> prDtl = new ArrayList<>();
+					extractPurchaseRequestList(purchaseRequestList, prDtl);
+					getManagedBean().getPurchaseRequestMapList().addAll(prDtl);
+
+					Comparator<Map<String, String>> prComparator = new Comparator<Map<String, String>>() {
+						@Override
+						public int compare(Map<String, String> map1, Map<String, String> map2) {
+
+							String prNo1 = map1.get(ContinuityDPConst.getPrNo());
+							String prNo2 = map2.get(ContinuityDPConst.getPrNo());
+
+							return prNo1.compareTo(prNo2);
+						}
+					};
+
+					Collections.sort(getManagedBean().getPurchaseRequestMapList(), prComparator);
+
+				}
+			}
+
+		} catch (Exception e) {
+			String exceptionRequestNoteId = Long.toString(requestNoteId);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "viewPurchaseRequestList",
+					exceptionRequestNoteId, "viewPurchaseRequestList", getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * extract purchase request list.
+	 * 
+	 * @param purchaseRequestList
+	 *            the purchase request list
+	 * @param prDtl
+	 *            the purchase request mapping
+	 */
+	private void extractPurchaseRequestList(List<ScPurchaseRequest> purchaseRequestList, List<Map<String, String>> prDtl) {
+		for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
+			retrieveLoaList(scPurchaseRequest.getPurchaseRequestId());
+			retrieveMapFlFulfilmentRequest(prDtl, scPurchaseRequest);
+		}
+	}
+
+	/**
+	 * to retrieve map FlFulfilmentRequest.
+	 * 
+	 * @param prDtl
+	 *            the purchase request mapping
+	 * @param scPurchaseRequest
+	 *            the purchase request object
+	 */
+	private void retrieveMapFlFulfilmentRequest(List<Map<String, String>> prDtl, ScPurchaseRequest scPurchaseRequest) {
+		for (FlFulfilmentRequest flFulfilmentRequest : scPurchaseRequest.getFlFulfilmentRequests()) {
+			Map<String, String> mapFlFulfilmentRequest = new HashMap<>();
+			mapFlFulfilmentRequest.put(ContinuityDPConst.getPrNo(), flFulfilmentRequest.getDocNo());
+			mapFlFulfilmentRequest
+					.put(ContinuityDPConst.getPrId(), flFulfilmentRequest.getFulfilmentReqId().toString());
+
+			PurchaseRequestBackingBean purchaseRequestBackingBean = new PurchaseRequestBackingBean();
+			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(flFulfilmentRequest);
+			mapFlFulfilmentRequest.put(ContinuityDPConst.getPrStatus(),
+					purchaseRequestBackingBean.getDocStatus(flFulfilmentRequest));
+
+			if (flFulfilmentRequest.getFlFulfilmentOrder() != null) {
+				mapFlFulfilmentRequest.put(ContinuityDPConst.getPoNo(), flFulfilmentRequest.getFlFulfilmentOrder()
+						.getDocNo());
+				mapFlFulfilmentRequest.put(ContinuityDPConst.getPoId(), flFulfilmentRequest.getFlFulfilmentOrder()
+						.getFulfilmentOrderId().toString());
+
+				if (flFulfilmentRequest.getFlFulfilmentOrder().getStatus() != null) {
+					FulfilmentOrderBackingBean fulfilmentOrderBackingBean = new FulfilmentOrderBackingBean();
+					mapFlFulfilmentRequest.put(
+							ContinuityDPConst.getPoStatus(),
+							fulfilmentOrderBackingBean.getStatusDescById(flFulfilmentRequest.getFlFulfilmentOrder()
+									.getStatus().getStatusId()));
+				} else {
+					mapFlFulfilmentRequest.put(ContinuityDPConst.getPoStatus(), "");
+				}
+			} else {
+				mapFlFulfilmentRequest.put(ContinuityDPConst.getPoNo(), "");
+				mapFlFulfilmentRequest.put(ContinuityDPConst.getPoStatus(), "");
+			}
+
+			prDtl.add(mapFlFulfilmentRequest);
+		}
+	}
+
+	/**
+	 * retrieve loa list.
+	 * 
+	 * @param purchaseRequestId
+	 *            the purchase request id
+	 */
+	public void retrieveLoaList(Long purchaseRequestId) {
+		IQTAwardSO qtAwardSO = null;
+		IContractSO contractSO = null;
+		boolean isSupplierUser = false;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTAwardSO.class);
+			contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					IContractSO.class);
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setDocId(purchaseRequestId);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveListLOILOA(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
+
+				if (loiLoaList != null && !loiLoaList.isEmpty()) {
+					List<Map<String, String>> loaDtl = new ArrayList<>();
+					extractScloa(contractSO, isSupplierUser, loiLoaList, loaDtl);
+					getManagedBean().getLoaMapList().addAll(loaDtl);
+
+					Comparator<Map<String, String>> loaComparator = new Comparator<Map<String, String>>() {
+						@Override
+						public int compare(Map<String, String> map1, Map<String, String> map2) {
+							String loaNo1 = map1.get(ContinuityDPConst.getLoaNo());
+							String loaNo2 = map2.get(ContinuityDPConst.getLoaNo());
+
+							return loaNo1.compareTo(loaNo2);
+						}
+					};
+
+					Collections.sort(getManagedBean().getLoaMapList(), loaComparator);
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			String exceptionPurchaseRequestId = Long.toString(purchaseRequestId);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "viewLoaList",
+					exceptionPurchaseRequestId, "viewLoaList", getUserIdSessionFromLoginId(), e);
+		}
+
+	}
+
+	/**
+	 * to extract Scloa.
+	 * 
+	 * @param contractSO
+	 *            the contractSO
+	 * @param isSupplierUser
+	 *            the flag is supplier user
+	 * @param loiLoaList
+	 *            the loi loa list
+	 * @param loaDtl
+	 *            the loa mapping
+	 */
+	private void extractScloa(IContractSO contractSO, boolean isSupplierUser, List<ScLoiLoa> loiLoaList,
+			List<Map<String, String>> loaDtl) {
+		// expected size below than 10
+		for (ScLoiLoa loiLoa : loiLoaList) {
+			if (CollectionUtils.isNotEmpty(loiLoa.getScloas())) {
+				// expected size below than 10
+				for (ScLoa scLoa : loiLoa.getScloas()) {
+					Map<String, String> mapScLoa = new HashMap<>();
+					mapScLoa.put(ContinuityDPConst.getLoaNo(), scLoa.getLoaNo());
+					mapScLoa.put(ContinuityDPConst.getLoaId(), scLoa.getLoaId().toString());
+
+					LOADetailBackingBean lOADetailBackingBean = new LOADetailBackingBean();
+					lOADetailBackingBean.getManagedBean().setScLoa(scLoa);
+					mapScLoa.put(
+							ContinuityDPConst.getLoaStatus(),
+							!lOADetailBackingBean.isSqStillValid() && sqExpiredMessageFlag ? lOADetailBackingBean
+									.getStatusDescById(DPStatusConstants.SQ_EXPIRED) : lOADetailBackingBean
+									.getStatusDescById(scLoa.getPmStatus().getStatusId()));
+
+					CtContract contract = loadContractDetail(scLoa.getLoaId());
+					mapScLoa.put(ContinuityDPConst.getContractNo(), "");
+					mapScLoa.put(ContinuityDPConst.getContractStatus(), "");
+					mapScLoa.put(ContinuityDPConst.getFulfilmentStatus(), "");
+					mapScLoa.put(ContinuityDPConst.getAgreementStatus(), "");
+					mapScLoa.put(ContinuityDPConst.getDocContractStatus(), "");
+					mapScLoa.put(ContinuityDPConst.getContractId(), "");
+					mapScLoa.put(ContinuityDPConst.getContractVerId(), "");
+
+					retrieveMapScLoa(contractSO, isSupplierUser, mapScLoa, contract);
+					loaDtl.add(mapScLoa);
+				}
+			}
+		}
+	}
+
+	/**
+	 * to retrieve map Scloa.
+	 * 
+	 * @param contractSO
+	 *            the contractSO
+	 * @param isSupplierUser
+	 *            the flag is supplier user
+	 * @param mapScLoa
+	 *            the ScLoa mapping
+	 * @param contract
+	 *            contract object
+	 */
+	private void retrieveMapScLoa(IContractSO contractSO, boolean isSupplierUser, Map<String, String> mapScLoa,
+			CtContract contract) {
+		if (contract != null) {
+			ContractReqDTO contractReqDTO = new ContractReqDTO();
+			contractReqDTO.setFromSupplier(isSupplierUser);
+
+			ISearchBean<VCtContract> searchBean = new SearchBean<>();
+
+			SearchFilterBean filterBean = new SearchFilterBean(ContinuityDPConst.getContractNoField(),
+					SearchOperator.OPERATOR_LIKE.value(), contract.getContractNo());
+			filterBean.setCaseInsensitive(true);
+			searchBean.getDataFilterBeans().add(filterBean);
+			searchBean.setUseEntityClass(true);
+
+			contractReqDTO.setvCtContractSearchBean(searchBean);
+			ContractResDTO contractResDTO = contractSO.searchContractDocument(contractReqDTO);
+
+			if (contractResDTO.getvCtContractResultBean() != null
+					&& contractResDTO.getvCtContractResultBean().getResultList() != null) {
+				for (VCtContract ctContract : contractResDTO.getvCtContractResultBean().getResultList()) {
+					ContractDetailsBackingBean contractDetailsBackingBean = new ContractDetailsBackingBean();
+					contractDetailsBackingBean.getManagedBean().setDpContinuitySession(requestNoteContinuityPage);
+
+					mapScLoa.put(ContinuityDPConst.getContractNo(), ctContract.getContractNo());
+					mapScLoa.put(ContinuityDPConst.getContractId(), ctContract.getCtContract().getContractId()
+							.toString());
+					mapScLoa.put(ContinuityDPConst.getContractVerId(), ctContract.getCtContractVer().getContractVerId()
+							.toString());
+
+					mapScLoa.put(ContinuityDPConst.getContractStatus(),
+							contractDetailsBackingBean.getContractStatusDesc(ctContract.getContractStatus()));
+					mapScLoa.put(ContinuityDPConst.getFulfilmentStatus(),
+							contractDetailsBackingBean.chkContractStatusType(ctContract.getFdStatus()));
+					mapScLoa.put(ContinuityDPConst.getAgreementStatus(),
+							contractDetailsBackingBean.chkContractStatusType(ctContract.getAgStatus()));
+					mapScLoa.put(ContinuityDPConst.getDocContractStatus(),
+							contractDetailsBackingBean.chkContractStatusType(ctContract.getStatus()));
+				}
+			}
+		}
+	}
+
+	/**
+	 * load contract detail.
+	 * 
+	 * @param loaId
+	 *            the loa id
+	 * @return CtContract
+	 */
+	public CtContract loadContractDetail(long loaId) {
+		CtContract contract = null;
+		IContractSO contractSO = null;
+		try {
+			contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					IContractSO.class);
+			contract = contractSO.getContractDtlByLoaId(loaId);
+
+		} catch (Exception e) {
+			String exceptionContractId = Long.toString(loaId);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "loadContractDetail",
+					exceptionContractId, "loadContractDetail", getUserIdSessionFromLoginId(), e);
+		}
+		return contract;
+	}
+
+	/**
+	 * view loa.
+	 * 
+	 * @param loaId
+	 *            the loa id
+	 */
+	public void viewLoa(long loaId) {
+		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+		loaDetailBackingBean.viewLOA(loaId);
+	}
+
+	/**
+	 * view purchase request.
+	 * 
+	 * @param prId
+	 *            the pr id
+	 */
+	public void viewPurchaseRequest(long prId) {
+		IFulfilmentRequestSO requestSO = null;
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		try {
+			requestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+					IFulfilmentRequestSO.class);
+
+			flReqDTO.setFlRequestId(prId);
+			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
+
+			FulfilmentOrderBackingBean fulfilmentOrderBackingBean = new FulfilmentOrderBackingBean();
+			fulfilmentOrderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			String navigatePR = fulfilmentOrderBackingBean.navigateDocument(resDTO.getFlFulfilmentRequest()
+					.getDocType());
+
+			PurchaseRequestBackingBean prBB = new PurchaseRequestBackingBean();
+			prBB.initializePRBeans();
+			prBB.getManagedBean().setHyperLinkPage(false);
+			prBB.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigatePR);
+		} catch (Exception e) {
+			String exceptionPrNo = resDTO.getFlFulfilmentRequest() == null ? "" : resDTO.getFlFulfilmentRequest()
+					.getDocNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "viewPr", exceptionPrNo, "viewPr",
+					getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	/**
+	 * view purchase order.
+	 * 
+	 * @param poId
+	 *            the po id
+	 */
+	public void viewPurchaseOrder(long poId) {
+		IFulfilmentOrderSO orderSO = null;
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		try {
+			orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+					IFulfilmentOrderSO.class);
+
+			flReqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+			flReqDTO.setFlOrderId(poId);
+			resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
+
+			FulfilmentOrderBackingBean fulfilmentOrderBackingBean = new FulfilmentOrderBackingBean();
+			fulfilmentOrderBackingBean.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			String navigatePO = fulfilmentOrderBackingBean.navigateDocument(resDTO.getFlOrder().getDocType());
+
+			fulfilmentOrderBackingBean.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			fulfilmentOrderBackingBean.getManagedBean().setHyperLinkPage(false);
+			fulfilmentOrderBackingBean.getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+
+			boolean isFactoredSelected = resDTO.getFlOrder().isFactored();
+			if (isFactoredSelected) {
+				fulfilmentOrderBackingBean.getManagedBean().setFactoringCheck("true");
+			} else {
+				fulfilmentOrderBackingBean.getManagedBean().setFactoringCheck("false");
+			}
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fulfilmentOrderBackingBean.getManagedBean().setDpContinuityView(true);
+			fulfilmentOrderBackingBean.getManagedBean().setBackToPrevious(fc.getViewRoot().getViewId());
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, navigatePO);
+		} catch (Exception e) {
+			String exceptionPoNo = resDTO.getFlOrder() == null ? "" : resDTO.getFlOrder().getDocNo();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "viewPo", exceptionPoNo, "viewPo",
+					getUserIdSessionFromLoginId(), e);
+
+		}
+	}
+	// end - #25790
 }
