@@ -30,8 +30,8 @@
 			<c:if test="#{panelBackingBean.managedBean.action eq 'view' }">
 				<td style="text-align: right;">
 					<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}" immediate="true"
-						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(panelBackingBean.managedBean.circularVer.docType,
-						panelBackingBean.managedBean.circular.circularId)}"  />
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiaryForCircularContract(panelBackingBean.managedBean.circularVer.docType,
+						panelBackingBean.managedBean.circular.circularId, panelBackingBean.managedBean.circular.circularNo)}"  /> <!-- #36608 -->
 				</td>
 			</c:if>
 		</tr>
