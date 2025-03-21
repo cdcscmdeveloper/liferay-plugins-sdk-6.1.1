@@ -36,7 +36,7 @@
 	<ui:param name = "isLoaSubmissionOrApproval" value = "#{(directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION) || (directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION)}"></ui:param>
 	<!-- #12487 END -->
 	<ui:remove>#29766 Start Vinod</ui:remove>
-	<ui:param name = "ispK7WPselected" value = "#{directLOABackingBean.checkPK7WPselectedToDisable()}"/>
+	<ui:param name = "ispK7OrPK7WPselected" value = "#{directLOABackingBean.checkPK7OrPK7WPselectedToDisable()}"/>
 	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
@@ -263,7 +263,9 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -289,14 +291,14 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
-							<ui:remove>#29766 Start Vinod added ispK7WPselected</ui:remove>
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
 								label="#{lbl['lbl.sc.qttentype']}"
-								disabled="#{directLOABackingBean.managedBean.disableFields or ispK7WPselected}">
-								<ui:remove>#29766 End Vinod</ui:remove>
+								disabled="#{directLOABackingBean.managedBean.disableFields}">
 								<f:selectItems value="#{directLOABackingBean.getQTTypesDropdownValues()}" />
 								<p:ajax event="change" 
 									process="@this" partialSubmit="true" 
@@ -320,7 +322,7 @@
 								<ui:remove>#29766 Start Vinod</ui:remove>
 								<p:ajax event="change"
 									listener="#{directLOABackingBean.checkQtTypePk7WpItem()}"
-									update="@all" />
+									update="bondReqPG, menuItems, agreementReqPG" />
 								<ui:remove>#29766 End Vinod</ui:remove>
 							</p:selectOneMenu>
 							<p:message id="qtTypeMsg" for="qtType" display="icon" />
@@ -377,21 +379,21 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 Start Vinod added ispK7OrPK7WPselected</ui:remove>
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or ispK7OrPK7WPselected}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 End Vinod</ui:remove>
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />
 							</c:when>
 							<c:otherwise>
-								<ui:remove>#29766 Start Vinod</ui:remove>
 								<p:selectOneMenu
 										style="width: 206px;margin-bottom: 5px;" id="justificationId"
 										panelStyle="overflow-y: scroll; width:400px; height:200px;"
 										label="#{lbl['lbl.sc.reason']}"
 										required="true"
 										value="#{directLOABackingBean.managedBean.scLoa.justificationType.reasonCode}"
-										disabled="#{directLOABackingBean.managedBean.disableFields or ispK7WPselected}">
-										<ui:remove>#29766 End Vinod</ui:remove>
+										disabled="#{directLOABackingBean.managedBean.disableFields}">
 										<f:selectItems
 											value="#{directLOABackingBean.managedBean.pk7Reasons}" />
 									

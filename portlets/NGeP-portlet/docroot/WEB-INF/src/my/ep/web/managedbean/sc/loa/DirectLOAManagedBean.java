@@ -380,7 +380,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
 	// #29766 Start Vinod
-	private boolean qtTypePK7WPselected;
 	private String alertForInactivePK7;
 	// #29766 End Vinod
 	
@@ -2204,14 +2203,6 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// Bug #35078@Syazani -- 22/09/2023 -- End
 
 	// #29766 Start Vinod
-	public boolean isQtTypePK7WPselected() {
-		return qtTypePK7WPselected;
-	}
-
-	public void setQtTypePK7WPselected(boolean qtTypePK7WPselected) {
-		this.qtTypePK7WPselected = qtTypePK7WPselected;
-	}
-	
 	public String getAlertForInactivePK7() {
 		return alertForInactivePK7;
 	}

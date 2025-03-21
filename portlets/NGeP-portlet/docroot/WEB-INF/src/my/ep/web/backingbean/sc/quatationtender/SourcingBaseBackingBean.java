@@ -2140,18 +2140,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if(isDirectLoa) {
 			boolean setBondReq = true; 
 			//20231122@asyrafhaziq_25726 - Issue 16
-			// #29766 Start Vinod refactored and added new PK7/WP QT type.
-			List<String> fulfilementTypes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
+			/*
+			 * #29766 Start Vinod updated
+			 * getQuotationTenderTypeItemInPK7AndPK7WPChecking to check 2 QT type
+			 * codes and refactor old code.
+			 */
+			List<String> flTypeCodes = Arrays.asList(ParameterConst.FULFILMENT_TYPE_ONE_OFF,
 					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN,
-					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED, ParameterConst.FULFILMENT_TYPE_SCHEDULED,
+					ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED, 
+					ParameterConst.FULFILMENT_TYPE_SCHEDULED,
 					ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 			boolean isQTtypePK7 = null != scLoa.getQtType()
 					&& null != scLoa.getQtType().getParameterId()
-					&& ParameterConst.getQuotationTenderTypeItemInPK7OrPK7WPChecking().contains(
+					&& ParameterConst.getQuotationTenderTypeItemInPK7AndPK7WPChecking().contains(
 							scLoa.getQtType().getParameterCode());
 			boolean isFulfilmentType = null != scLoa.getScQt() && null != scLoa.getScQt().getFulfilmentType()
 					&& null != scLoa.getScQt().getFulfilmentType().getParameterId()
-					&& fulfilementTypes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
+					&& flTypeCodes.contains(scLoa.getScQt().getFulfilmentType().getParameterCode());
 
 			if (isQTtypePK7 && isFulfilmentType) {
 				// #29766 End Vinod
