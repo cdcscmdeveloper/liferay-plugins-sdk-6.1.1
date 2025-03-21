@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:remoteCommand name="setMediumType" action="#{gpkiBackingBean.setMediumType()}" 
+		update="gpki_dlg2" oncomplete="gpki_dlg.hide(); gpki_dlg2.show();"/>
+	<p:remoteCommand name="getUser" action="#{gpkiBackingBean.getUserDetails()}" 
+		oncomplete="gpki.setUser(xhr,status,args); "/>
+	<p:remoteCommand name="enableBtn" action="#{gpkiBackingBean.enableBtn()}" update="resendOtpBtn"/>
+	<p:remoteCommand name="disableBtn" action="#{gpkiBackingBean.disableBtn()}" update="resendOtpBtn"/>
+	<p:remoteCommand name="saveNonce" action="#{gpkiBackingBean.saveNonce()}" />
+	<h:outputScript library="ep/gpki_js" name="gpki-api-v2.js" />
+	<h:outputScript library="ep/gpki_js" name="gpkiPopup2.js" />
+
+	<script>
+		function token(){
+			const text = $("[id='#{textBeforeSign.clientId}']").val();
+			const pin = $("[id='#{pin.clientId}']").val();
+			const pinLbl = $("label[id$='pinLbl']").text();
+		    gpki.signToken([text, pin, pinLbl]);
+		}
+		
+		function otp(){
+			const text = $("[id='#{textBeforeSign.clientId}']").val();
+		    const pin = $("[id='#{pin2.clientId}']").val();
+		    const otp = $("[id='#{otpPin.clientId}']").val();
+		    const pinLbl = $("label[id$='pin2Lbl']").text();
+		    const otpLbl = $("label[id$='otpLbl']").text();
+		    gpki.signRoam([text, pin, otp, pinLbl, otpLbl]);
+		}
+		
+		var otpTimeoutId;
+		function disableOtpTimeout(){
+			disableBtn();
+			$("[id$='gpkiOtpNotes']").show();
+			otpTimeoutId = setTimeout(
+				function() {
+					$("[id$='gpkiOtpNotes']").hide();
+					enableBtn();
+				}, getTimeoutMillis());
+		}
+		
+		function reset(){
+			$("[id='#{otpPin.clientId}']").val('');
+		}
+	</script>
+
+	<p:dialog id="gpki_dlg" widgetVar="gpki_dlg" 
+		onShow="reset(); #{gpkiBackingBean.getGpkiEnabledProperty() ? 'getUser();' : 'setMediumType();'}"
+		resizable="false" modal="true" showHeader="false" closable="false">
+		<p:graphicImage value="/css/images/ajax-loader.gif" />
+	</p:dialog>
+	
+	<p:dialog widgetVar="gpki_dlg2" resizable="false" modal="true" id="gpki_dlg2" >
+		<p:blockUI block="gpkiPopup" widgetVar="gpkiBlockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+		
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.cc.gpki.title']}" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}"/>
+			<h:outputText value="#{lbl['lbl.gpki.otp.title']}" rendered="#{gpkiBackingBean.isMediumTypeOTP()}"/>
+		</f:facet>
+
+		<p:panel id="gpkiPopup" >
+			<p:messages id="dlgMessages" for="gpki" showDetail="true" autoUpdate="true" closable="true"/>
+			
+			<div id="gpkiOtpNotes" >
+				<ac:instructionText value="#{gpkiBackingBean.getNotes()}" rendered="#{gpkiBackingBean.isMediumTypeOTP()}"/>
+			</div>
+			
+			<h:panelGrid columns="4" cellpadding="5" rendered="#{!gpkiBackingBean.isMediumTypeOTP()}">
+				<p:outputLabel for="password" value="#{lbl['lbl.cc.gpki.pin']}" id="pinLbl" styleClass="required" />
+				<p:password binding="#{pin}" id="password" />
+				<p:commandButton id="signButtonId" value="#{lbl['lbl.btn.sign']}" onstart="token()" />
+				
+				
+			</h:panelGrid>
+			
+			<h:panelGrid columns="5" cellpadding="5" id="otpPnl" rendered="#{gpkiBackingBean.isMediumTypeOTP()}">
+				<p:outputLabel for="password2" value="#{lbl['lbl.gpki.otp.pin']}" id="pin2Lbl" styleClass="required" />
+				<p:password binding="#{pin2}" id="password2" />
+				<h:outputLabel/><h:outputLabel/><h:outputLabel/>
+				
+				<p:outputLabel for="otpcode" value="#{lbl['lbl.gpki.otp.code']}" id="otpLbl" styleClass="required" />
+				<p:inputText binding="#{otpPin}" id="otpcode" />
+				<p:commandButton id="signOtpBtn" value="#{lbl['lbl.btn.sign']}" onstart="otp()"/>
+				<p:commandButton value="#{lbl['lbl.gpki.otp.resend']}" id="resendOtpBtn" onclick="gpki.requestOtp();" 
+					disabled="#{gpkiBackingBean.getBtn()}"/>
+				
+				
+			</h:panelGrid>
+		</p:panel>
+	</p:dialog>
+</ui:composition>

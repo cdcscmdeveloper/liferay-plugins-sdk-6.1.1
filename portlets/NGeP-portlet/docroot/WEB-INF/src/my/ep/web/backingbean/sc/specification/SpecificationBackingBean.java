@@ -2050,7 +2050,6 @@ public class SpecificationBackingBean extends
 					
 				}
 
-				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
 			}
@@ -8742,32 +8741,50 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	private void techScoreSum() {
 		try {
-			int total = 0;
-			List<ScQtCheckList> weightageList = this.getManagedBean()
-					.getTechnicalScoring();
+			BigDecimal totalScore = BigDecimal.valueOf(0); // 37813,35384
+			List<ScQtCheckList> weightageList = this.getManagedBean().getTechnicalScoring();
+
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>(); // 37813,35384
 			}
+
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (null != weight.getQtScoreWeightage()
-						&& weight.getQtScoreWeightage().getWeightage() == null) {
-					weight.getQtScoreWeightage()
-							.setWeightage(new BigDecimal(0));
-				}
+				// 37813,35384 -start
+				ScQtCheckList weight = weightageList.get(i);
+
 				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getScore()
-									.intValue();
+					ScQtScoreWeightage checklistWeighatge = setWeightageScore(weight.getQtScoreWeightage());
+
+					weight.setQtScoreWeightage(checklistWeighatge);
+
+					BigDecimal checkListScore = weight.getQtScoreWeightage().getScore() != null ? weight
+							.getQtScoreWeightage().getScore() : BigDecimal.valueOf(0);
+					totalScore = totalScore.add(checkListScore);
 				}
-				BigDecimal techScore = new BigDecimal(total);
-				this.getManagedBean().setTechPoints(techScore.intValue());
+				// 37813,35384 -end
 			}
+
+			this.getManagedBean().setTechPoints(totalScore); // 37813,35384
 		} finally {
 
 		}
 
 	}
+
+	// 37813,35384 -start
+	/**
+	 * set checkist score weight.
+	 * 
+	 * @param scoreWeightage
+	 * @return ScQtScoreWeightage
+	 */
+	private ScQtScoreWeightage setWeightageScore(ScQtScoreWeightage scoreWeightage) {
+		if (null == scoreWeightage.getWeightage()) {
+			scoreWeightage.setWeightage(new BigDecimal(0));
+		}
+		return scoreWeightage;
+	}
+	// 37813,35384 -end
 
 	/**
 	 * Fin score sum.calculate financial score sum.
@@ -10872,6 +10889,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						checkZoneLocationChange(this.getManagedBean().getQt());
 					}
 					//20210621@asyrafhaziq_Bug #30914 - End
+					validateSupplierCriteriaIntegrity(this.getManagedBean().getQt());	// Bug #36730@Syazani 07/01/2025
 					
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 							&& !this.getManagedBean().isReadOnly()) {
@@ -15113,6 +15131,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 		// 1873 - start - note 52
 		boolean popupShown = assertPendingFinancialSubmission();
+		checkTechnicalAndFinancialSpec(this.getManagedBean().getQt()); //Bug #37612
 
 		if (!popupShown) {
 			// 1873 - end - note 52
@@ -15846,8 +15865,10 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 												new FacesScopes().getUserLocale()) });
 							}
 							//20210205@haziq- Bug #30046 - End
-							totalSpecEstimatedAmount = totalSpecEstimatedAmount
-									.add(estimatedCost.setScale(2, BigDecimal.ROUND_UP));
+							if (null != estimatedCost) {
+								totalSpecEstimatedAmount = totalSpecEstimatedAmount
+										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
+							}
 							//20201217@haziq- Bug #29806 - Start
 						}
 					}
@@ -15874,7 +15895,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					// 32477, 25138, 32134, 25729 -end-
 				}
 				//Bug #29808
-				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP));
+				qt.setEstimatedAmount(totalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 			}
 			
 			// Check Intended Price
@@ -15917,8 +15938,8 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 						}
 					}
 
-					newTotalSpecEstimatedAmount.setScale(2, BigDecimal.ROUND_UP);
-
+					newTotalSpecEstimatedAmount.setScale(2, QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani 19/09/2024
+					
 					if (newTotalSpecEstimatedAmount.compareTo(indPriceThreshold) > 0) {
 						throw new EpException(MessageConst.ERROR_760504,
 								new String[] { SourcingConstants.DF_AMOUNT.format(indPriceThreshold) });
