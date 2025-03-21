@@ -759,12 +759,12 @@ public class SupplierManagementConst {
 	public static final String MTO_CODE_06 = "06";
 	public static final String CAT_L1_22 = "22";
 	public static final String CAT_L2_17 = "17";
-//	public static final String CAT_L3_09 = "09";
-//	public static final int CAT_L3_347 = 347;
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
 	public static final String BUSINESS_TYPE_CODE_N = "N";
 	public static final String BUSINESS_TYPE_CODE_H = "H";
-//	public static final int BUMI_PERCENTAGE = 50;
-//	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
 
 	// Getters for panel info
