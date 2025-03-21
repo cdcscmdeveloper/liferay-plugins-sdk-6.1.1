@@ -59,6 +59,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.VCtContract; //Fix - #30866
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
@@ -78,12 +79,14 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc; //Fix - #30866
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
@@ -98,6 +101,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.util.pm.helper.StatusHelper; //Fix - #30866
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -137,6 +141,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 //	/*#21387-basri start*/
 	private static final String REQUEST_CONTRACT_ADMIN = "/xhtml/ct/fulfilmentdetails/contractadmin/requestContractAdmin.xhtml?faces-redirect=true";/*#21387-basri*/
 //	/*#21387-basri end*/
+	
+	private static final String CONTRACT_VIEW_AUDIT = "/xhtml/ct/viewcontract/resultViewAudit.xhtml?faces-redirect=true"; // #30866
 
 	private String proceedForFulfilmentMsg;
 	private ContractBackingBean ctBB = null;
@@ -243,7 +249,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		renewSesionObject();
 		defaultMinistryPtjSearchValue();
 		getManagedBean().setTrackingDiarySearch(trackingDiarySearch);
+		// Start - #30866
+		String fullViewRootPath = "";
 		FacesContext fc = FacesContext.getCurrentInstance();
+		fullViewRootPath = fc.getViewRoot().getViewId().toString();
+		if (fullViewRootPath.contains("trackingDiarySearch.xhtml")) {
+			getManagedBean().setContinuityCircularAuditSearch(true);
+		}
+		// End - #30866
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
 	}
 
@@ -2251,6 +2264,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		setValidateContractField(reqDTO);
 		getManagedBean().setSelectedTabIndex(0);
 		getManagedBean().setExternalPageUrl(null);
+		// Start - #30866
+		if (getManagedBean().isContinuityCircularAuditSearch()) {
+			getManagedBean().setFromContractViewPage(true);
+		}
+		// End - #30866
 		getManagedBean().setLoaContractVerId(ctBB.getManagedBean().getContractVer().getContractVerId());
 		reqDTO.setCtContractVer( ctBB.getManagedBean().getContractVer());
 		getManagedBean().setWarningPercentage(contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage());
@@ -2561,6 +2579,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			Long contractId =  ctBB.getManagedBean().getContractVer().getCtContract().getContractId();
 			boolean isTrue =  getManagedBean().isBackPageAmendment();
 			String taskId = getManagedBean().getTaskId();
+			//Start Fix - #30866
+			if(!getManagedBean().isContinuityCircularAuditSearch()){
+				renewSesionObject();
+			}
+			//End Fix - #30866
 			renewSesionObject();
 			if(isTrue && taskId == null){
 				return gotoAmendPage(contractId);
@@ -2609,6 +2632,25 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		contractBB.getManagedBean().getContractListingPagingDataModel().resetData();
 		contractBB.getManagedBean().getServiceListingPagingDataModel().resetData();
 		contractBB.getManagedBean().setResetval(true);
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().getExternalPageUrlForAudit() != null) {
+			getManagedBean().getContractDataModel().reloadData();
+			getManagedBean().setExternalPageUrl(circularBB.getManagedBean().getExternalPageUrlForAudit());
+		}
+
+		if (getManagedBean().isContinuityCircularAuditSearch()) {
+
+			if (getManagedBean().isFromContractViewPage()) {
+				getManagedBean().setFromContractViewPage(false);
+				return CONTRACT_VIEW_AUDIT;
+			} else if (getManagedBean().isFromResultViewAudit()) {
+				getManagedBean().setFromResultViewAudit(false);
+				getManagedBean().setSearchContractNo(null);
+				return CONTRACT_MAINT_PAGE;
+			}
+		}
+		// End - #30866
 	
 		// #25790 - start
 		if (getManagedBean().getDpContinuitySession() != null) {
@@ -3510,4 +3552,132 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 	}
 	//#25406 - End
+	
+	// Start - #30866
+	/**
+	 * method to display audit instruction
+	 * 
+	 * @return true if user is from audit menu (directory)
+	 */
+	public boolean isAuditCheck() {
+		boolean auditCheck = false;
+		if (getManagedBean().isContinuityCircularAuditSearch()) {
+			auditCheck = true;
+		}
+		return auditCheck;
+	}
+
+	/**
+	 * method to determine specific user roles for audit(supplier)
+	 * 
+	 * Only allow user with supplier_role and the request is only from the audit
+	 * menu
+	 * 
+	 * @return true if user has either one of the describe roles
+	 */
+	public boolean isAuditCheckForSupplier() {
+		boolean auditSupplierCheck = false;
+		if (isSupplierRole()) {
+			auditSupplierCheck = getManagedBean().isContinuityCircularAuditSearch();
+		}
+		return auditSupplierCheck;
+	}
+
+	/**
+	 * method to determine specific user roles for audit
+	 * 
+	 * Only allow user with specific designated role and the request is only
+	 * from audit menu
+	 * 
+	 * @return true if user has either one of the describe roles
+	 */
+	public boolean isAuditContinuityRoleCheck() {
+		return (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CC_APPROVER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.SYS_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()));
+	}
+
+	/**
+	 * method to determine specific user roles that has to disable for audit
+	 * 
+	 * @return true if user has either one of described roles
+	 */
+	public boolean isAuditRoleForChairpersonAndMember() {
+		return (getFacesScopes().hasRoleUser(RoleCode.QCA_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PPB_MEMBER.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCA_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.QCB_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBA_CHAIRPERSON.value())
+				|| getFacesScopes().hasRoleUser(RoleCode.PBB_CHAIRPERSON.value()) || getFacesScopes().hasRoleUser(
+				RoleCode.PPB_CHAIRPERSON.value()));
+	}
+
+	/**
+	 * method to hide FL subTable, and to check its roles combination
+	 * 
+	 * @return true to hide the table
+	 */
+	public boolean isToHideFlSubTable() {
+		boolean hide = false;
+		if (!isAuditContinuityRoleCheck() && isAuditRoleForChairpersonAndMember()) {
+			hide = true;
+		}
+		return hide;
+	}
+
+	/**
+	 * Get Status description by status id.
+	 * 
+	 * @param statusId
+	 *            the status id.
+	 * @return status description
+	 */
+	public String getStatusDescById(Long statusId) {
+		String statusDesc = null;
+
+		if (statusId != null) {
+			// Get the status description.
+			PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
+
+			if (pmStatusDesc != null) {
+				statusDesc = pmStatusDesc.getStatusName();
+			}
+		}
+
+		return statusDesc;
+	}
+
+	/**
+	 * contract search from audit maintenance screen.
+	 * 
+	 * @param contractNO
+	 *            , VCtContract
+	 * 
+	 * @return navigate to audit view page
+	 */
+	public String searchContractCtFlForAudit(String contractNO, VCtContract contractData) {
+		getManagedBean().setSearchContractNo(contractNO);
+		getManagedBean().setFromResultViewAudit(true);
+		getManagedBean().setContractDetailsAuditList(contractData);
+		getManagedBean().getContractDataModelForCtAuditViewFl().reloadData();
+		return CONTRACT_VIEW_AUDIT;
+	}
+	// End - #30866
 }

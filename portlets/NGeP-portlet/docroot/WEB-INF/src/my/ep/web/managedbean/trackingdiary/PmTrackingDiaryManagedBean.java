@@ -123,7 +123,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private Boolean viewAsSupplier;
 	private String supplierRole;
 	//end - #25396	
-
+	
+	private String selectedDocNo;//Fix - #36608
+	
 	// #25790 - start
 	private transient List<Map<String, String>> purchaseRequestMapList;
 	// #25790 - end
@@ -1043,11 +1045,19 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			SearchFilterBean searchFilterBean4 = new SearchFilterBean(
 					"groupId", SearchOperator.OPERATOR_EQUALS.value(),
 					getSelectedDocId(), SearchCondition.CONDITION_AND.value());
-		
+			
+			//Start Fix - #36608
+			SearchFilterBean searchFilterBean5 = new SearchFilterBean("docNo", 
+					SearchOperator.OPERATOR_EQUALS.value(), getSelectedDocNo(), SearchCondition.CONDITION_AND.value());
+					
 			BaseSearchFilterBean searchFilterBeanAnd1 = new SearchMultiFilterBean(
 					searchFilterBean1, searchFilterBean2);
 			BaseSearchFilterBean searchFilterBeanAnd2 = new SearchMultiFilterBean(
 					searchFilterBean3, searchFilterBean4);
+			if(getSelectedDocNo() != null){
+				searchBean.getDataFilterBeans().add(searchFilterBean5);
+			}
+			//End Fix - #36608
 
 			searchFilterBeanAnd1.setAndOr(SearchCondition.CONDITION_OR.value());
 			searchFilterBeanAnd2.setAndOr(SearchCondition.CONDITION_OR.value());
@@ -1228,6 +1238,16 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 	
 	//end - #25396
+	
+	//Start Fix - #36608
+	public String getSelectedDocNo() {
+		return selectedDocNo;
+	}
+
+	public void setSelectedDocNo(String selectedDocNo) {
+		this.selectedDocNo = selectedDocNo;
+	}
+	//End Fix - #36608
 	
 	// #25790 - start
 	/**
