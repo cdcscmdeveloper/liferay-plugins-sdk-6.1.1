@@ -969,7 +969,6 @@ ATTACHMENT scAttachment, String contentType)
 
 	}
 	
-	//36715 START
 	/**
 	 * To get report from orcle reports only for .rtf format file
 	 * 
@@ -3766,7 +3765,7 @@ ATTACHMENT scAttachment, String contentType)
 
 						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove();
+							//iterator.remove(); // 37622 - remove code
 						}
 					}
 				}
@@ -3780,7 +3779,7 @@ ATTACHMENT scAttachment, String contentType)
 								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove(); 
+							//iterator.remove(); // 37622 - remove code
 						}
 					}
 					

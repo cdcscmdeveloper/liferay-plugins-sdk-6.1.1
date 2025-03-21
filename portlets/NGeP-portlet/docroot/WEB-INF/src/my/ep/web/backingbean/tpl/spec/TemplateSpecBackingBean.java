@@ -2963,7 +2963,7 @@ public class TemplateSpecBackingBean extends
 			}
 		}
 	}
-	// #25039 End - version zonal	
+	// #25039 End - version zonal
 	
 	// #31134&11104 -start-
 	public boolean checkPriceTierEnableColumn(TemplateSpecBean templateSpecBean) {
