@@ -25,10 +25,10 @@
 			toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.draft.instruction.sm']}" />
-			<p:dataTable id="smCompExpDrafId" var="smDraft" rows="10"
-				value="#{compExpMB.smDraftList}" rowIndexVar="index"
+			<p:dataTable id="" var="draftSm" rows="10" value="#{compExpMB.}"
+				rowIndexVar="index"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<ac:paginator for="smCompExpDrafId"></ac:paginator>
+				<ac:paginator for=""></ac:paginator>
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
@@ -50,16 +50,16 @@
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-					<h:outputText value="#{smDraft.title}" />
+					<h:outputText value="#{draftSm.title}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{smDraft.contractValue}">
+					<h:outputText value="#{draftSm.contractValue}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
 				<p:column>
-					<h:outputText value="#{smDraft.contractEffDate}">
+					<h:outputText value="#{draftSm.contractEffDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
@@ -67,8 +67,8 @@
 				<p:column>
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						action="#{compExpBB.onClickDraftAction(smDraft, true, false)}" process="@this"
-						partialSubmit="true" update=":form">
+						action="#{compExpBB.onClickDraftAction(draftSm, true, false)}"
+						process="@this" partialSubmit="true" update=":form">
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
