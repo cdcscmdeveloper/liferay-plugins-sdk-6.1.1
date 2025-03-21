@@ -118,9 +118,10 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			getManagedBean().setCtCircularType(AuditContractConst.CT_NULL);
 			getManagedBean().setCtType(AuditContractConst.CT_CONTRACT);
 		} else {
-			getManagedBean().setCtCircularType(ctType);
-			getManagedBean().setCtType(AuditContractConst.CT_CIRCULAR);
+			getManagedBean().setCtType(ctType);
 		}
+  
+		handleButtonClick(0); // Default to first tab									   
 		loadCTAuditTrail();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoneView);
 	}
@@ -513,22 +514,19 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 */
 	public void handleButtonClick(Integer activeIndex) {
 		log.info("handleButtonClick");
-		int prevIndex = this.getManagedBean().getActiveTab();
-
-		// Check if the clicked tab is already active; if so, do nothing.
-		if (prevIndex == activeIndex) {
-			return;
-		}
+		
+		int selectedIndex = (activeIndex != null) ? activeIndex : 0; // Default to first tab
 
 		// Update the tab view based on the selected tab index
-		updateTabView(activeIndex);
+		updateTabView(selectedIndex);
 
 		// Store the newly selected tab as the active tab
-		this.getManagedBean().setActiveTab(activeIndex);
+		this.getManagedBean().setActiveTab(selectedIndex);
 
 		// Load additional data for the selected tab
 		loadCTAuditTrail();
 	}
+
 
 	/**
 	 * Updates the audit tab view based on the given active index. If the index
@@ -573,7 +571,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
 		}
 
-		if (getManagedBean().getCtCircularType().equals(AuditContractConst.CT_TYPE_CCR)) {
+		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
 			tabViews.put(0, AuditContractConst.AU_SECTION_CC);
 			tabViews.put(1, AuditContractConst.AU_SECTION_PID);
 			tabViews.put(2, AuditContractConst.AU_SECTION_CPD);
@@ -582,7 +580,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(5, AuditContractConst.AU_SECTION_CL);
 		}
 
-		if (getManagedBean().getCtCircularType().equals(AuditContractConst.CT_TYPE_PCR)) {
+		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_PCR)) {
 			tabViews.put(0, AuditContractConst.AU_SECTION_PC);
 			tabViews.put(1, AuditContractConst.AU_SECTION_PID);
 			tabViews.put(2, AuditContractConst.AU_SECTION_CPD);
