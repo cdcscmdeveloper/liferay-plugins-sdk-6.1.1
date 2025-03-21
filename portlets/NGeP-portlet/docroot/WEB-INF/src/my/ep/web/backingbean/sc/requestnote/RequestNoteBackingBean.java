@@ -153,7 +153,6 @@ import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean; //#25790
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean; //#25790
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean; //#25790
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean; //#25790
