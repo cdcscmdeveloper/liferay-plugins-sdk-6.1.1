@@ -1936,4 +1936,27 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	// End - #26129
+	
+	// #25790 - start
+	/**
+	 * Retrieve purchase inquiry.
+	 * 
+	 * @param purchaseInqId
+	 *            the purchase Inquiry Id
+	 * @return ScPrInquiry
+	 */
+	public ScPrInquiry retrievePurchaseInquiry(long purchaseInqId) {
+		IPrInquirySO prInquirySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IPrInquirySO.class);
+		ScPrInquiry prInquiry;
+		// Purchase Inquiry
+		PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+		prInquiryReqDTO.setPrInquiryId(purchaseInqId);
+		prInquiryReqDTO.setFetchSubEntity(true);
+		PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
+		prInquiry = prInquiryResDTO.getPrInquiryDetail();
+		getManagedBean().setTrackingDairyView(true);
+		return prInquiry;
+	}
+	// #25790 - end
 }
