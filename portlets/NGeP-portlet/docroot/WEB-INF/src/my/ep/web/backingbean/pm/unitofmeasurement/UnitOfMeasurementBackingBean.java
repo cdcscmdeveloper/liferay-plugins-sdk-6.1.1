@@ -20,13 +20,19 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
@@ -38,16 +44,14 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMUOMBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.unitofmeasurement.UnitOfMeasurementManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -417,6 +421,19 @@ public class UnitOfMeasurementBackingBean extends
 							pmUom.getRecordStatusFlg().longValue(),
 							getPmActionDesc(messageId, msgParam)));
 
+			/************ AUDIT #28895_35509 *************/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMUOMBackingBean();
+			UomReqDTO uomReqDTO = new UomReqDTO();
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM) && reqDTO.getPmUom() != null
+					&& reqDTO.getPmUom().getUomId() != null) {
+				uomReqDTO.setUomId(reqDTO.getPmUom().getUomId());
+				UomResDTO resDTO = iUomSO.retrieveUomByUomId(uomReqDTO);
+				getManagedBean().setAuditUomOldVal(resDTO.getPmUom());
+			}
+			/************ AUDIT #28895_35509 *************/
+
 			UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
 			reloadUOMData(resDTO.getPmUom());
 			PmUom oldPmUomData = (PmUom) BeanUtils.cloneBean(resDTO.getPmUom());
@@ -459,7 +476,13 @@ public class UnitOfMeasurementBackingBean extends
 															new FacesScopes()
 																	.getUserLocale())));
 				}
-
+				/************ AUDIT #28895_35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM)) {
+					uomReqDTO.setUomId(resDTO.getPmUom().getUomId());
+					getManagedBean().setUomResDTO(resDTO);
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_UOM);
+				}
+				/************ AUDIT #28895_35509 *************/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
