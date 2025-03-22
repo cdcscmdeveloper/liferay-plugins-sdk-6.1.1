@@ -84,6 +84,7 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
@@ -2692,10 +2693,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 				//27691 END
 				//26238 - retrieve active DA. To display at basic account supplier screen
-				if(resDTO.getSmSupp() != null){
-					retrieveActiveDisicplinaryAction(resDTO.getSmSupp());
-				}
-				//26238 - end
+				retrieveActiveDisciplinaryAction(resDTO.getSmSupp());
 				if(resDTO.getSmSupp().getSmSupplierOwners()!=null && CollectionUtils.isNotEmpty(resDTO.getSmSupp().getSmSupplierOwners())){
 					// #27691 - Start
 					if(!resDTO.getSmSupp().getSmAppl().isApplValidWithSsm()){
@@ -5305,65 +5303,65 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	//26238 - start 
-	public void retrieveActiveDisicplinaryAction(SmSupplier supplier){
-		
-		//27876: Disciplinary Action - start - <27876>
+	public void retrieveActiveDisciplinaryAction(SmSupplier supplier){
+		if (supplier == null){
+			return;
+		}
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-		//27876: Disciplinary Action - end - <27876>
-		
+		if(EntityHelper.isCollectionEmpty(discList)){
+			getManagedBean().setNoDisciplinary(true);
+			return;
+		}
+		getManagedBean().setNoDisciplinary(false);
 		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
 		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierId(perReqDTO);
-		
-		if(discList != null && !discList.isEmpty()){
-			for(SmDisciplinaryAction disc : discList){
-				//Start 30842
-				if(disc.isWarning() || disc.isSuspendRegistration() 
-						|| disc.isCancelRegistration() || disc.isBlacklistOwner() || disc.isCancelCategory()){
-					if(disc.isWarning())
-						this.getManagedBean().setWarning(true);					
-					if(disc.isSuspendRegistration())
-						this.getManagedBean().setSuspendRegistration(true);
-					if(disc.isCancelRegistration())
-						this.getManagedBean().setCancelRegistration(true);
-					if(disc.isBlacklistOwner())
-						this.getManagedBean().setBlacklistowner(true);
-					if(disc.isCancelCategory())
-						this.getManagedBean().setCancelCategory(true);
-				//End 30842
+		//27915: Disciplinary Action - start - 26238
+		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
+		//27915: Disciplinary Action - end - 26238
+		for(SmDisciplinaryAction disc : discList){
+			getManagedBean().setWarning(disc.isWarning());
+			getManagedBean().setCancelCategory(disc.isCancelCategory());
+			getManagedBean().setSuspendRegistration(disc.isSuspendRegistration());
+			getManagedBean().setCancelRegistration(disc.isCancelRegistration());
+			getManagedBean().setBlacklistowner(disc.isBlacklistOwner());
 					
-					if(!disc.isWarning()){
-						List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<BlacklistOwnerDirectorVO>();
-						if(personnelResDTO != null 
-								&& personnelResDTO.getSmPersonnelList().size() > 0){
-							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-								BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-								if(personnel.isCancelRegistration()
-										|| personnel.isSuspendRegistration()
-											|| personnel.isBlacklisted()){
-									blacklistOwner.setIcNo(personnel.getIdentificationNo());
-									blacklistownerDirectorList.add(blacklistOwner);
-								}
-							}
-							this.getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
-						}
-					}
-					this.getManagedBean().setStartDate(DateUtils.dateToString("dd/MM/yyyy",disc.getStartDate()));
-					this.getManagedBean().setEndDate(DateUtils.dateToString("dd/MM/yyyy",disc.getEndDate()));
-					this.getManagedBean().setRemarks(disc.getRemark());
-				}
+			if(!disc.isWarning()){
+				setBlacklistownerDirectorList(personnelResDTO);
 			}
-			
-			//26238
-			this.getManagedBean().setActiveDisicplinaryAction(false);
-			if(this.getManagedBean().isSuspendRegistration() || this.getManagedBean().isCancelRegistration() 
-					|| this.getManagedBean().isBlacklistowner()){
-				this.getManagedBean().setActiveDisicplinaryAction(true);
+			String pattern = "dd/MM/yyyy";
+			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
+			getManagedBean().setEndDate(DateUtils.dateToString(pattern, disc.getEndDate()));
+			getManagedBean().setRemarks(disc.getRemark());
+			//28198: Disciplinary Action - start - 26238
+			List<SmDisciplinaryActionRemarks> remarksList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionRemarksByDA(disc);
+					
+			if(!EntityHelper.isCollectionEmpty(remarksList)){
+				getManagedBean().setRemarks(remarksList.get(0).getRemark());
 			}
-		} else {
-			this.getManagedBean().setNoDisciplinary(true);
+			//28198: Disciplinary Action - end - 26238
 		}
+		getManagedBean().setActiveDisicplinaryAction(
+				getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration() 
+				|| getManagedBean().isBlacklistowner());
+	}
+	
+	private void setBlacklistownerDirectorList(PersonnelResDTO personnelResDTO){
+		if(personnelResDTO == null || personnelResDTO.getSmPersonnelList().isEmpty()){
+			return;
+		}
+		List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<>();
+		
+		for(SmPersonnel per : personnelResDTO.getSmPersonnelList()){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			if(per.isCancelRegistration() || per.isSuspendRegistration() || per.isBlacklisted()){
+				if (per.isDirector() || per.isEquityOwner()){
+					blacklistOwner.setIcNo(per.getIdentificationNo());
+				}
+				blacklistownerDirectorList.add(blacklistOwner);
+			}
+		}
+		getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
 	} //26238 - end
 	
 	//16052019 - SSM INTEGRATION CR => START
