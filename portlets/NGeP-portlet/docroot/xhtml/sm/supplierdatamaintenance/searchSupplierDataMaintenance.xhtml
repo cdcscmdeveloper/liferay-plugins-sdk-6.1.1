@@ -126,6 +126,8 @@
 				<!-- #32008 -->
 				<c:if test="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+						<ui:param name="isSuppDataMaintenance" value="true"/> <!-- #24819 -->
+					</ui:include>
 				</c:if>
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/regCatCodesMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/approverRemarkMaintenance.xhtml" />
