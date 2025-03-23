@@ -1386,6 +1386,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());	
 		context.put("applNo", svTask.getSmAppl().getApplNo());
 		context.put("businessRegistrationNo",  svTask.getSmAppl().getSmSupplier().getRegNo());
+		//24819
+		context.put("newBusinessRegistrationNo",svTask.getSmAppl().getSmSupplier().getSsmNewRegNo());
 		context.put("visitingPurpose", templateDesc.toUpperCase());
 		context.put("catApplicable", getManagedBean().getSupplierCategory());
 		context.put("telNo", svTask.getSmAppl().getSmCompanyBasic().getPhoneNo());
@@ -1487,6 +1489,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("busRegNo", svTask.getSmAppl().getSmSupplier().getRegNo());
+		//24819
+		context.put("newBusinessRegistrationNo",svTask.getSmAppl().getSmSupplier().getSsmNewRegNo());
 		context.put("mofNo",StringUtils.isNotBlank(mofAccount.getMofNo())?mofAccount.getMofNo() : "");
 		context.put("applNo",svTask.getSmAppl().getApplNo());
 		context.put("templateType",templateDesc);
