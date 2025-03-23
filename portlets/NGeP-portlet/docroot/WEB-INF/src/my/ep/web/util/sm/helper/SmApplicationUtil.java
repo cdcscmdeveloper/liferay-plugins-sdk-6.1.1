@@ -4613,9 +4613,9 @@ public class SmApplicationUtil {
 					if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 						cat.setCancelCategory(true);
 						if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
-							cat.setTypeDisciplinaryAction("C");
+							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
 						}else if(smDisciplinaryAction.isManufacturerCancel()){
-							cat.setTypeDisciplinaryAction("M");
+							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
 						}
 						apprvList.add(cat);
 					}
@@ -14998,6 +14998,7 @@ public class SmApplicationUtil {
 	 * @param supplier
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static List<Object[]> retrieveCancelCategoryBySupplier(SmSupplier supplier) {
 		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
 		Long supplierId = supplier.getSupplierId();
