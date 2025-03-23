@@ -466,6 +466,7 @@ public class SupplierManagementConst {
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG = "S";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE = "M";
 	public static final String SM_DISCIPLINARY_ACTION = "DA";
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 

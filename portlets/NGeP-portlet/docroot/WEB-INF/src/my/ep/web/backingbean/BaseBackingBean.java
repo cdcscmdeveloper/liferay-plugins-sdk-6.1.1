@@ -4446,16 +4446,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	
 	//26238 - START
 	/**
-	 * Handles the viewing of active disciplinary actions for a given supplier.
-	 *
-	 * This method updates the supplier's flags related to disciplinary actions
-	 * and retrieves the list of disciplinary actions associated with the supplier.
-	 * If the list is not empty, it is set in the managed bean; otherwise, an empty
-	 * list is assigned. Finally, it triggers the display of the disciplinary action
-	 * history dialog.
-	 *
-	 * @param smSupplier the supplier whose disciplinary actions are to be viewed
-	 * @throws EpException if an error occurs during processing
+	 * Retrieves the list of active disciplinary actions for the given supplier.
+	 * 
+	 * @param smSupplier The supplier for whom disciplinary actions are being retrieved.
+	 * @return A list of {@link DisciplinaryActionVO} representing the active disciplinary actions
+	 *         associated with the given supplier. If an error occurs, an {@link EpException} is thrown.
+	 * @throws EpException If there is an issue retrieving disciplinary actions.
 	 */
 	public static List<DisciplinaryActionVO> onDisplayActiveDisciplinaryAction(SmSupplier smSupplier) {
 		try {
@@ -4464,9 +4460,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			smSupplier.setFlagDASuppProfile(true);
 			// #30756 end
 
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
-
-			return voList;
+			return ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
 		} catch (Exception e) {
 			log.error("An error occurred while handling disciplinary actions for supplier: ", e);
 			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
