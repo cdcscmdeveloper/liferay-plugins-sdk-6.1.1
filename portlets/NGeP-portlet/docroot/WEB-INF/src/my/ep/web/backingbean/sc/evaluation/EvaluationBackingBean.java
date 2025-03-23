@@ -6526,8 +6526,8 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 									.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
 									|| this.getManagedBean().getCurrentStatusId()
 											.equals(QTStatusConst.FEC_PENDING_SIGN_OFF)
-									|| this.getManagedBean().getCurrentStatusId()
-											.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)) {
+									|| this.getManagedBean()
+											.getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION)) {
 								retriveSummaryEvaluationStage();
 							}
 							// #35384 recalculate at endorse or sign off -end-
@@ -9212,11 +9212,11 @@ private void retriveCommitteeRemarksList(){
 				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 			commReportAttachment = scQt.getScFinancialEvaluationReportAttachment(); // 37617
 			reportAttachment = new ScFinancialEvaluationReportAttachment();
-		}	
-		
+		}
+
 		// 37617 - end
 		String taskName = this.getManagedBean().getTaskName();
-		taskName = null != taskName ? taskName: "";
+		taskName = null != taskName ? taskName : "";
 		boolean isFetchReportOnly = Arrays.asList(SCProcessNameConst.EVAL_COMM_ENDORSE_GROUP).contains(taskName)
 				|| Arrays.asList(SCProcessNameConst.EVAL_COMM_SIGNOFF_GROUP).contains(taskName);
 		if (null != commReportAttachment && isFetchReportOnly) {
