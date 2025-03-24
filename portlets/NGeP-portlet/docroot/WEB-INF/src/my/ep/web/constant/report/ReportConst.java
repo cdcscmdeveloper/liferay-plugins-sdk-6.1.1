@@ -1146,7 +1146,8 @@ public class ReportConst implements Serializable{
 	//26238 : Disciplinary Action
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY = "SM_DISCIPLINARY_ACTION_HISTORY.jsp";
 	public static final String SM_DISCIPLINARY_ACTION_HISTORY_BASIC = "SM_DISCIPLINARY_ACTION_HISTORY_BASIC.jsp";
-	
+	public static final String SM_PARAM_KEY_SUPPLIER_ID = "PSUPPLIERID";
+
 	// YEP
 	public static final String FL_DOCTYPE_CO = "CR";
 	public static final String FL_DOCTYPE_PO = "PR";

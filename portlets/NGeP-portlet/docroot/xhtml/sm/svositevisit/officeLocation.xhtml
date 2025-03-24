@@ -46,7 +46,9 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 				<!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
 				<!-- #34166 - Start  -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" id="txtSignBoardRmk" readonly="#{viewFlag}"
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.sign.board']}" 
+					id="txtSignBoardRmk" readonly="#{viewFlag}"
+					onblur="console.log('Text Length: ' + this.value.length);"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardRemark}" validator="#{svoSiteVisitBackingBean.validateText}">
 					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.sign.board']}" />
 					<f:ajax event="blur" execute="@this" />
@@ -56,7 +58,9 @@
 				<!-- #34166 - End  -->	
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 				<!-- #34166 - Start  -->
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" id="txtShareWithRmk" disabled="#{viewFlag}"
+				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.share.with']}"
+					id="txtShareWithRmk" disabled="#{viewFlag}"
+					onblur="console.log('Text Length: ' + this.value.length);"
 					value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.shareWithRemark}" validator="#{svoSiteVisitBackingBean.validateText}" >
 					<f:attribute name="param" value="#{lbl['lbl.txt.remarks']}" />
 					<f:ajax event="blur" execute="@this" />
@@ -73,6 +77,7 @@
 				<td><!-- 9583 - Site Visit Grouping Enhancement - 28775 -->
 				<!-- #34166 - Start  -->
 				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="4000" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				onblur="console.log('Text Length: ' + this.value.length);"
 				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}" disabled="#{viewFlag}" validator="#{svoSiteVisitBackingBean.validateText}">
 					<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" />
 					<f:ajax event="blur" execute="@this" />
