@@ -11,7 +11,7 @@
 		</script>
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:outputPanel rendered="#{not empty compExpMB.draftExist}">
+		<p:outputPanel rendered="#{compExpMB.draftExist}">
 			<p:blockUI block=":form" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
