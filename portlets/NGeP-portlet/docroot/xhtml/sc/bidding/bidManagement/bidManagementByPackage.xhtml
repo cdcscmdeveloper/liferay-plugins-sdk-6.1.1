@@ -167,9 +167,6 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.bidPackagesDisqualified}" var="item" rendered="#{isDisqualified}" >
 			<ac:paginator for="bidPackagesListForBMBPDisqualified"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
-				<p:outputLabel value="#{item.ranking}" />
-			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 
 				<p:commandLink value="#{item.scBidSupplier.supplierNo}"
