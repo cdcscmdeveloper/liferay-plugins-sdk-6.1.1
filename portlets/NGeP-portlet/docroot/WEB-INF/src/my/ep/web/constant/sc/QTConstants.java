@@ -325,4 +325,6 @@ public interface QTConstants {
 	// 36678 -start-
 	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 	// 36678 -end-
+
+	public static final String QT_REPORT_BRIEFING_PAPER = "Kertas Taklimat"; // 37623
 }

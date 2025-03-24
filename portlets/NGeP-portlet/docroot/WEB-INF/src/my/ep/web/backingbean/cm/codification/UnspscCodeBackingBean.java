@@ -4,11 +4,9 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -815,8 +813,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		CodificationResDTO resDTO = null;
 
 		log.info("***update***");
-		log.info("size:"
-				+ reqDTO.getRequestCode().getCmRecommendCodes().size());
+		log.info("size:" + reqDTO.getRequestCode().getCmRecommendCodes().size());
 
 		log.info("tracking diary for Catalog_Admin:selectSubmitRecommend");
 		reqDTO.setTrackingStatus(true);
@@ -3041,17 +3038,15 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
 			statusReqDTO.setStatusId(15025L);
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
+
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "
-					+ this.getManagedBean().getReviewExtCodeList().get(0)
-							.getDocNo()
+					+ this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()
 					+ " telah diserah kepada Jawatankuasa Kodifikasi (eP) untuk perakuan.";
 			reqDTO.setTrackingDairyVO(CmApplicationUtil
 					.assignTrackingDiaryValuesForUNSPSCExtension(
 							actionDesc,
-							statusResDTO.getPmStatus() != null ? statusResDTO
-									.getPmStatus() : new PmStatus(),
+							statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus(),
 							CmConst.CE_DocType));
 
 		}
