@@ -1078,7 +1078,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 	//#25406 - end
 	
-	
 	// Start - #30866
 	private class contractDataModelForCtAuditViewSubFl extends PagingDataModel<VCtFl> {
 		private static final long serialVersionUID = 1L;
@@ -1161,6 +1160,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.isFromContractViewPage = isFromContractViewPage;
 	}
 	// End - #30866
+	
 	// start - #25790
 	/**
 	 * @return the backPageDpContinuity

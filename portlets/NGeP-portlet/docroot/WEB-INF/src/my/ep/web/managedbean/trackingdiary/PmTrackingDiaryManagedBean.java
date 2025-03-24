@@ -74,7 +74,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "pmTrackingDiaryManagedBean")
@@ -123,7 +122,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private Boolean viewAsSupplier;
 	private String supplierRole;
 	//end - #25396	
-
+	
 	// #25790 - start
 	private transient List<Map<String, String>> purchaseRequestMapList;
 	// #25790 - end
@@ -1248,6 +1247,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.selectedDocNo = selectedDocNo;
 	}
 	//End Fix - #36608
+	
 	// #25790 - start
 	/**
 	 * @return the purchaseRequestMapList
