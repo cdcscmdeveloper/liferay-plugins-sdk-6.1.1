@@ -23,7 +23,7 @@
 							style="color:red; font-weight:bold;"
 							rendered="#{cc.attrs.supplier.disciplinaryActions}"
 							action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
-							update="@([id$=disciplinaryActionHistoryDlgId])">
+							update="@([id$=disciplinaryActionHistoryDlgId])" immediate="true">
 							<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 								styleClass="warning" />
 						</p:commandLink>
@@ -52,7 +52,7 @@
 					oncomplete="blockWidget.hide()"
 					style="color:red; font-weight:bold;"
 					action="#{viewSuppProfileBackingBean.onViewActiveDisciplinaryAction(cc.attrs.supplier)}"
-					update="@([id$=disciplinaryActionHistoryDlgId])">
+					update="@([id$=disciplinaryActionHistoryDlgId])" immediate="true">
 					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 						styleClass="warning" />
 					<p:spacer width="2" />

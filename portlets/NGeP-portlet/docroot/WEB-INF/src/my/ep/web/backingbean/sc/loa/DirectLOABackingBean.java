@@ -573,7 +573,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			reqDTO.setScLoa(scLoa);
 			//#26474 - start
-			if(getManagedBean().getContractSignerUser().getUserId() != null){//12487&29693 add to check by user id
+			if (null != getManagedBean().getContractSignerUser()
+					&& null != getManagedBean().getContractSignerUser().getUserId()) {// 12487&29693 add to check by user id
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
 				String designation = getManagedBean().getContractSignerUser().getDesignation();
 				reqDTO.getScLoa().setLoaSignerDesig(designation);
@@ -2599,6 +2600,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param scLoa
 	 */
 	private void setDisciplinaryAction(ScLoa scLoa) {
+		if(scLoa.isBrandNew()){
+			return;
+		}
 		SmSupplier smSupplier = this.getQtSuppFinalizationSO().evaluateDisciplinaryActions(
 				scLoa.getScLoiLoa().getSmSupplier(), scLoa.getScLoiLoa().getDocId());
 		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
