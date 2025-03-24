@@ -17,11 +17,9 @@
 		</p:blockUI>
 		
 		<!-- #34400 - start -->
-		<ac:confirmationPopup id="submissionConfirmDlg" widget="submissionConfirmDlg"
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
 			bean="#{registrationBackingBean}"
 			okAction="updateBasicAccountStatus"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.basic.msg.account.confirm.deactivate']}" 
 			update="@form"
 			loadingWidget="blockWidget" />
