@@ -62,11 +62,9 @@
 										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{forceReplaceSuppAdminBackingBean.managedBean.permCountries}" />
-										<!-- #34159 - START -->
 										<p:ajax event="change"
 											update="basicPermAddStateList, basicPermAddDistrictList, basicPermAddCityList,basicPermAddPostCodePanelId"
-											listener="#{forceReplaceSuppAdminBackingBean.updatePermAddLists(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId,null,null,null)}" />
-										<!-- #34159 - END -->
+											listener="#{forceReplaceSuppAdminBackingBean.updatePermAddLists(forceReplaceSuppAdminBackingBean.managedBean.permAddr.smAddress.pmCountry.countryId,null,null)}" />
 									</p:selectOneMenu>
 									<p:message id="basicPermAddCountryListMsg"
 										for="basicPermAddCountryList" showSummary="true"
