@@ -2968,6 +2968,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//#26238
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
+		// #34031
+		initSmRvHistory();
 		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
@@ -4567,11 +4569,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setRecordStatus(null);
-		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
-				.retrievePersonnelBySupplierIdAndRecordStatus(reqDTO);
 		
 		boolean isMOF = false;
-		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())){
+		if (currSupp != null){
 			String suppType = currSupp.getSmAppl().getSupplierType();
 			isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
 					|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
@@ -4993,31 +4993,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		// 28198: Disciplinary Action - end - 26238
 		return remList;
 	}
-	
-	private static List<BlacklistOwnerDirectorVO> getBlacklistOwners(SmDisciplinaryAction da, List<SmPersonnel> personnels){
-		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
-		if (!da.isSuspendRegistration() && !da.isCancelRegistration() && !da.isBlacklistOwner()){
-			return blacklist;
-		}
-		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-		for (SmPersonnel per : personnels){
-			if (!per.isDirector() && !per.isEquityOwner()) {
-				continue;
-			}
-			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			// 26238 - Disciplonary action - 28146 - start
-			reqDTO.setDirectorIdNo(per.getIdentificationNo());
-			
-			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
-			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
-				blacklistOwner.setIcNo(per.getIdentificationNo());
-				blacklist.add(blacklistOwner);
-			}
-		}
-		return blacklist;
-	}
-	//#26238 - end
 	
 	//3460 - Start
 		/**
