@@ -4899,7 +4899,7 @@ public class RuleCatalogueBackingBean extends
 		}// end of first loop*/
 		
 		List<PmPtjSpecialApproval> approvals = this.getManagedBean().getMainPtjSpecialApprovalList();
-		
+
 	    // Group approvals by OrgProfileId using a HashMap
 	    Map<Long, List<PmPtjSpecialApproval>> groupedApprovals = new HashMap<>();
 	    for (PmPtjSpecialApproval approval : approvals) {
@@ -4909,7 +4909,7 @@ public class RuleCatalogueBackingBean extends
 	        }
 	        groupedApprovals.get(orgProfileId).add(approval);
 	    }
-
+	    
 	    // Iterate through each group and check for overlapping dates
 	    for (Map.Entry<Long, List<PmPtjSpecialApproval>> entry : groupedApprovals.entrySet()) {
 	        List<PmPtjSpecialApproval> group = entry.getValue();

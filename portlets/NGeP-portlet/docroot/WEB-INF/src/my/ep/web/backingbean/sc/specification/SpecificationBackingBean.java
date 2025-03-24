@@ -2029,7 +2029,6 @@ public class SpecificationBackingBean extends
 					
 				}
 
-				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
 			}
@@ -8714,32 +8713,50 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	private void techScoreSum() {
 		try {
-			int total = 0;
-			List<ScQtCheckList> weightageList = this.getManagedBean()
-					.getTechnicalScoring();
+			BigDecimal totalScore = BigDecimal.valueOf(0); // 37813,35384
+			List<ScQtCheckList> weightageList = this.getManagedBean().getTechnicalScoring();
+
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>(); // 37813,35384
 			}
+
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (null != weight.getQtScoreWeightage()
-						&& weight.getQtScoreWeightage().getWeightage() == null) {
-					weight.getQtScoreWeightage()
-							.setWeightage(new BigDecimal(0));
-				}
+				// 37813,35384 -start
+				ScQtCheckList weight = weightageList.get(i);
+
 				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getScore()
-									.intValue();
+					ScQtScoreWeightage checklistWeighatge = setWeightageScore(weight.getQtScoreWeightage());
+
+					weight.setQtScoreWeightage(checklistWeighatge);
+
+					BigDecimal checkListScore = weight.getQtScoreWeightage().getScore() != null ? weight
+							.getQtScoreWeightage().getScore() : BigDecimal.valueOf(0);
+					totalScore = totalScore.add(checkListScore);
 				}
-				BigDecimal techScore = new BigDecimal(total);
-				this.getManagedBean().setTechPoints(techScore.intValue());
+				// 37813,35384 -end
 			}
+
+			this.getManagedBean().setTechPoints(totalScore); // 37813,35384
 		} finally {
 
 		}
 
 	}
+
+	// 37813,35384 -start
+	/**
+	 * set checkist score weight.
+	 * 
+	 * @param scoreWeightage
+	 * @return ScQtScoreWeightage
+	 */
+	private ScQtScoreWeightage setWeightageScore(ScQtScoreWeightage scoreWeightage) {
+		if (null == scoreWeightage.getWeightage()) {
+			scoreWeightage.setWeightage(new BigDecimal(0));
+		}
+		return scoreWeightage;
+	}
+	// 37813,35384 -end
 
 	/**
 	 * Fin score sum.calculate financial score sum.

@@ -959,6 +959,91 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
+	// 36715 START
+	/**
+	 * To get report from orcle reports only for .rtf format file
+	 * 
+	 * @param reportName
+	 * @param paramMap
+	 * @param attachment
+	 * @param isDirectDownload
+	 * @return File instance
+	 * @throws IOException
+	 */
+	protected File generateRtfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment,
+			boolean isDirectDownload) throws IOException {
+
+		String reportUrl = generateReportURL(reportName, paramMap);
+
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+
+		OutputStream out = null;
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext()
+				.getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		InputStream input = null;
+		FileOutputStream fos = null;
+
+		try {
+			String finalFileName = attachment.getFileName();
+
+			if (!isDirectDownload) {
+				res.setContentType("application/rtf");
+				res.setHeader("Content-Disposition", "attachment; filename=\"" + finalFileName + "\"");
+
+				res.flushBuffer();
+				out = res.getOutputStream();
+			}
+
+			File localFile = new File(getActualFilePath(attachment));
+
+			if (reportUrl.toString() != null) {
+				try {
+					URL obj = new URL(reportUrl.toString());
+					HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+				} catch (ConnectException e) {
+					throw new EpException(MessageConst.ERROR_100058);
+				}
+
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				byte[] buf = new byte[1024];
+
+				try {
+					for (int readNum; (readNum = input.read(buf)) != -1;) {
+						bos.write(buf, 0, readNum);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+
+				byte[] bytes = bos.toByteArray();
+				fos = new FileOutputStream(localFile);
+				fos.write(bytes);
+				fos.flush();
+			}
+
+			if (!isDirectDownload) {
+				out.flush();
+			}
+
+			return localFile;
+		} finally {
+			if (fos != null) {
+				fos.close();
+			}
+			if (input != null) {
+				input.close();
+			}
+			if (out != null) {
+				out.close();
+			}
+		}
+	}
+	// 36715 END
+
 	/**
 	 * To get report from orcle reports
 	 * 
@@ -3682,7 +3767,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if (SourcingConstants.PERAKUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_UDPUPBM_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove();
+							//iterator.remove(); // 37622 - remove code
 						}
 					}
 				}
@@ -3696,7 +3781,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								|| SourcingConstants.DOC_DEF_KEY_UDPUP_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_METODOLOGI_PENILAIAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())
 								|| SourcingConstants.DOC_DEF_KEY_TUJUAN_REPORT.equals(report.getPmDocument().getDocDefinitionKey())) {
-							iterator.remove(); 
+							//iterator.remove(); // 37622 - remove code
 						}
 					}
 					
@@ -6475,4 +6560,31 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
+	
+	// 37622 - start
+	/**
+	 * Create a new list for displaying briefing paper report and filter
+	 * evaluation report form getting displayed
+	 * 
+	 * @param briefingPaperList
+	 * @return report list
+	 */
+	public List<ScQtFinalizationReport> briefingPaperDisplayFilter(List<ScQtFinalizationReport> briefingPaperList) {
+		List<ScQtFinalizationReport> reportList = new ArrayList<>();
+		if (CollectionUtils.isEmpty(briefingPaperList)) {
+			return reportList;
+		}
+		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
+			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
+					.getDocDefinitionKey() : "";
+			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
+					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)) {
+				reportList.add(briefingPaperReport);
+			}
+		}
+		return reportList;
+	}
+	// 37622 - end
 }
