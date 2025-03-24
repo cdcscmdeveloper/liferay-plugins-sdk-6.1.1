@@ -161,6 +161,11 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//#29983 start
+	private String businessRegNoNew;
+	//#29983 end
+
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1346,4 +1351,19 @@ public class ContractManagedBean extends BaseManagedBean {
 		}
 	    //End Fix - #33674
 
+		//#29983 start
+		/**
+		 * @return the businessRegNoNew
+		 */
+		public String getBusinessRegNoNew() {
+			return businessRegNoNew;
+		}
+
+		/**
+		 * @param businessRegNoNew the businessRegNoNew to set
+		 */
+		public void setBusinessRegNoNew(String businessRegNoNew) {
+			this.businessRegNoNew = businessRegNoNew;
+		}
+		//#29983 end
 }
