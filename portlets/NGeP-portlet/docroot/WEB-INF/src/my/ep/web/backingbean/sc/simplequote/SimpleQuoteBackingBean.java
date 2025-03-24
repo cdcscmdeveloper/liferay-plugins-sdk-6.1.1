@@ -7888,7 +7888,7 @@ public class SimpleQuoteBackingBean extends
 			try {
 				SmSupplier currSupp = scQuoteSupp.getSmSupplier();
 				if (currSupp != null) {
-					List<DisciplinaryActionVO> voList = BaseReviewApplicationBackingBean.getDisciplinaryActionVO(currSupp);
+					List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
 					if (!voList.isEmpty()) {
 						getManagedBean().setDisciplineVOs(voList);
 					} else {
@@ -7899,10 +7899,8 @@ public class SimpleQuoteBackingBean extends
 				}
 				RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 			} catch (Exception e) {
-				String exceptionSupplierId = scQuoteSupp != null ? scQuoteSupp.getSmSupplier() != null ? Long
-						.toString(scQuoteSupp.getSmSupplier().getSupplierId()) : StringUtils.EMPTY : StringUtils.EMPTY;
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "supplierDisciplinaryActionInfo",
-						exceptionSupplierId, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
+						StringUtils.EMPTY, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
 			}
 		}
 	
