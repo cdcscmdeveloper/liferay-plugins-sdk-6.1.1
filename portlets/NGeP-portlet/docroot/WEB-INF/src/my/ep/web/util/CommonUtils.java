@@ -201,7 +201,7 @@ public class CommonUtils {
 	 */
 	public String filterItemNameNA(String itemName) {
 		if(itemName != null && !itemName.isEmpty()){
-			return itemName.replaceAll("\\s(NA|N/A|N A)\\b", "");
+			return itemName.replaceAll("\\s(NA|N/A|N A|na|n/a|n a)\\b", "");
 		}
 		return itemName;
 	}
