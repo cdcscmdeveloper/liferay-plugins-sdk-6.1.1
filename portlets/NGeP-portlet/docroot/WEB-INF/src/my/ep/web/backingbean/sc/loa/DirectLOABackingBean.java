@@ -300,6 +300,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			Long statusId = scLoa.getPmStatus().getStatusId();
 			boolean validateWitness=this.getManagedBean().isValidatewitness(); //#17376
 			boolean directLoa=this.getManagedBean().isIconForDL();//29007
+			// #29007 Start Vinod
+			String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
+			// #29007 End Vinod
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 					.equals(statusId)) {
 				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
@@ -396,6 +399,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 						scLoa.getLoaNo(), Boolean.FALSE);
 			}
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(bpmVersionNo);
+			// #29007 End Vinod
 
 		} finally {
 			// qtAwardSO = null;
@@ -13117,9 +13123,20 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		
 		if (checkWIPVersionAndInsertItemSpecOffer(scLoa)) {
+			Long workFlowStatus = scLoa.getPmStatus().getStatusId();
+			boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(workFlowStatus);
+			if (isPendingAcknowledgement) {
+				DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
+				awardReqDTOnew.setScLoa(scLoa);
+				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
+				if (awardResDTOnew.isSuccessful()) {
+					scLoa.setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
+				}
+			}
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(scLoa.getLoaId());
-			
+
 			getQtAwardSO().insertItemSpecOffer(reqDTO);
 		}
 	}

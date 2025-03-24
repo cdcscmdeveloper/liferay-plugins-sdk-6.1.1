@@ -598,7 +598,7 @@
 								<p:dataList var="recommendedSupplDis" value="#{item.notAwardSupplierList}" type="none"
 											rendered="#{!isPendingNegotiationStatus}">
 									<p:column
-										rendered="#{recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
+										rendered="#{recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}">
 										<p:commandLink
 											oncomplete="suppDetailsPopup.show(); return false;"
 											disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
@@ -625,6 +625,14 @@
 										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+										
+									<h:outputText
+										value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+												fn:toUpperCase(recommendedSupplDis.scQtRecommendDtl.get(0).scQtProposalAmount.scQtProposal.bumi))}"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
+										
 								</ui:repeat>
 							</p:column>
 							
@@ -649,6 +657,8 @@
 										 value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
 										 <h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+										 <h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
 								</p:dataList>																							
 							</p:column>
 							<ui:remove>
@@ -671,6 +681,15 @@
 									</h:outputText>
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+										
+								    <h:outputText
+										value="#{recommendedSupplDis.qtEvaluationResult.offeredPrice}"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}">
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+									</h:outputText>
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
 
@@ -685,6 +704,14 @@
 									</h:outputText>
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+										
+								    <h:outputText value="#{recommendedSupplDis.totalScore}"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}">
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+									</h:outputText>
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
 
@@ -698,6 +725,14 @@
 									</h:outputText>
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
+										
+									<h:outputText value="#{recommendedSupplDis.evalRank}"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}">
+										<f:convertNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+									</h:outputText>
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{!isPendingNegotiationStatus and recommendedSupplDis.scQtRecommendDtl.get(0).recordStatusFlg ne DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
 
