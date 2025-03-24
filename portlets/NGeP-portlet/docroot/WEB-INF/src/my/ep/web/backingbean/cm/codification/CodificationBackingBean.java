@@ -85,7 +85,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -261,7 +260,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public void extensionCodeforRequestSearch() {
-
+		
 		extensionSearchItemDataModel.reloadData();
 
 	}
@@ -293,7 +292,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * 
 	 */
 	public void extensionCodeSearchForAssign() {
-
+		//#31503
+		this.getManagedBean().setRenderButtonAssignCode(false);
+		
 		extensionSearchItemDataModel.reloadData();
 
 	}
@@ -3779,24 +3780,22 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * #31503 - Display Item Dialog box 
 	 * 
 	 */
-	public void selectedItemCode() {
-		
+	public void selectedItemCode() {		
 		this.getManagedBean().setRenderButtonAssignCode(true);
 	}
-	
+		
 	
 	/**
 	 * #31503 - Show Details Items in popup
 	 * @param question
-	 * @return void
 	 */
 	public void showItemDescPopup(TplSpecQuestion question) {
 
 		try {
-			
+
 			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
 					ICodificationSO.class);
-			CodificationReqDTO codeReqDTO = new CodificationReqDTO();			
+			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			CommonUtils common = new CommonUtils();
@@ -3809,7 +3808,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 			this.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
 			this.getManagedBean().setCommodityTitle(codeResDTO.getCommodityObj().getUnspscTitle());
-			this.getManagedBean().setFamilyCode(item.getExtensionCode());			
+			this.getManagedBean().setFamilyCode(item.getExtensionCode());
 
 			CmType typeObj = this.searchTypeOjbyTypeId(item.getCmType().getTypeId());
 
@@ -3818,24 +3817,24 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			CmMeasurement meaObj = this.searchMeasurementByMeasurementId(item.getCmMeasurement().getMeasurementId());
 
 			CmColor colorObj = this.searchColorObjByColorCode(item.getCmColor().getColorCode());
-			
-			CmItem newItem = new CmItem();	
+
+			CmItem newItem = new CmItem();
 
 			newItem.setCmUnspsc(codeResDTO.getCommodityObj());
 			newItem.setCmType(typeObj);
 			newItem.setCmBrand(brandObj);
 			newItem.setCmMeasurement(meaObj);
 			newItem.setCmColor(colorObj);
-			newItem.setItemName(common.filterItemNameNA(typeObj.getTypeName())
-					+ common.filterItemNameNA(brandObj.getBrandName())
-					+ common.filterItemNameNA(meaObj.getMeasurementName())
-					+ common.filterItemNameNA(colorObj.getColorName()));
-			
-			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle()
-					+ common.filterItemNameNA(typeObj.getTypeName())
-					+ common.filterItemNameNA(brandObj.getBrandName())
-					+ common.filterItemNameNA(meaObj.getMeasurementName())
-					+ common.filterItemNameNA(colorObj.getColorName());
+			newItem.setItemName(common.removeItemNameNA(typeObj.getTypeName()) + " "
+					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
+					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
+					+ common.removeItemNameNA(colorObj.getColorName()));
+
+			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
+					+ common.removeItemNameNA(typeObj.getTypeName()) + " " 
+					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
+					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
+					+ common.removeItemNameNA(colorObj.getColorName());
 
 			newItem.setExtensionCode(typeObj.getTypeCode() + brandObj.getBrandCode() + meaObj.getMeasurementCode()
 					+ colorObj.getColorCode());
@@ -3866,10 +3865,10 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	
 	private String formatItemName(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement, CmColor color) {
 		CommonUtils common = new CommonUtils();
-	    return codeResDTO.getCommodityObj().getUnspscTitle() +
-	    		common.filterItemNameNA(type.getTypeName()) +
-	            common.filterItemNameNA(brand.getBrandName()) +
-	            common.filterItemNameNA(measurement.getMeasurementName()) +
-	            common.filterItemNameNA(color.getColorName());
+	    return codeResDTO.getCommodityObj().getUnspscTitle() + " " +
+	    		common.removeItemNameNA(type.getTypeName()) + " " +
+	            common.removeItemNameNA(brand.getBrandName()) + " " +
+	            common.removeItemNameNA(measurement.getMeasurementName()) + " " +
+	            common.removeItemNameNA(color.getColorName());
 	}
 }

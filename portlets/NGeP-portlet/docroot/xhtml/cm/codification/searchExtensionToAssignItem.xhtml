@@ -160,7 +160,7 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.extensionCodeSearchForAssign}"
-					update="itemTable2ID" />
+					update="itemTable2ID, @form" />
 				<p:commandButton value="#{lbl['lbl.btn.back']}"
 					action="#{codificationBackingBean.backToSearchUnspscToAssign}" />
 			</div>
@@ -246,7 +246,7 @@
 			<p:confirmDialog id="asignCodeDialConfirm"
 				widgetVar="asignCodeDialConfirm"
 				message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"
-				header="#{lbl['lbl.sc.item.details']}" resizable="true"
+				header="#{lbl['lbl.sc.item.details']}" style="width:100%"
 				closable="true">
 				<p:outputLabel
 					value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
