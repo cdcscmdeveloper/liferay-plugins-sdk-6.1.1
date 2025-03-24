@@ -866,25 +866,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	//#28777 & #29729 - Start
 	private void processPackageBidSchedulesDisqualified(List<ScBidSchedule> bidScheduleList, List<BidPackageBean> biddingPackagePriceListDisqualified, ScQtRecommendDtl awardedSupplier) {
-		
-		Map<Long,BidPackageBean> selectedPackageBeans 
-					= getManagedBean().getSelectedPackageBeans();		
-		BigDecimal estimatedCost = new BigDecimal(0);
-		if (CollectionUtils.isNotEmpty(bidScheduleList)) {
-			if (BidStatusConst.BID_CANCELLED.equals(
-					bidScheduleList.get(0).getPmStatus().getStatusId())) {
-				disableSupplierSelection(true);
-			}
-			if (CollectionUtils.isNotEmpty(
-					bidScheduleList.get(0).getScBidItems())) {
-				for (ScBidItem bidItem : bidScheduleList.get(0).getScBidItems()) {
-					if (bidItem.getEstimatedCost() != null) {
-						estimatedCost = estimatedCost.add(bidItem.getEstimatedCost());
-					}
-				}
-			}			
-		}
-		
+		log.info(" hatta processPackageBidSchedulesDisqualified ");
+		Map<Long,BidPackageBean> selectedPackageBeans = getManagedBean().getSelectedPackageBeans();		
 		List<ScQtEvaluationResultDtl> notShortlistedSuppliers = getManagedBean().getNotShortlistedSuppliers();
 		Map<Long, ScQtEvaluationResultDtl> supplierCodes = getSupplierCodes(notShortlistedSuppliers);
 		
@@ -894,31 +877,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 			awardedSupplierId = awardedSupplier.getSupplier().getSupplierId();
 		}
 		
-		getManagedBean().setScheduledBid(bidScheduleList.get(0));
-		getManagedBean().setEstimatedCost(estimatedCost);
-		
 		/*
 		 * 31101 - Shafful 
 		 */
 		settingDisciplinaryAction(biddingPackagePriceListDisqualified,null);	
 		getManagedBean().setBiddingPackagePriceListDisqualified(biddingPackagePriceListDisqualified);
 		
-		BigDecimal bumiSuppLowestOfferedPrice = null;
-		BigDecimal lowestNonBumiOfferedPrice = null;
-		
-		List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
-		List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
-		
-		// Set lowest non-bumi offered price
 		if (CollectionUtils.isNotEmpty(biddingPackagePriceListDisqualified)) {
 			for (BidPackageBean packageBean : biddingPackagePriceListDisqualified) {
 				SmSupplier smSupplier = packageBean.getScBidSupplier().getSmSupplier();
 				
-				if (smSupplier.isBumi()) {
-					bumiPriceList.add(packageBean.getBidPriceTotal());
-				} else {
-					nonBumiPriceList.add(packageBean.getBidPriceTotal());
-				}
 				if (StringUtils.isBlank(packageBean.getSupplierName())) {
 					packageBean.setSupplierName(packageBean.getScBidSupplier()
 												.getSmSupplier().getCompanyName());
@@ -946,21 +914,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 					}
 				}
 			}
-			if (CollectionUtils.isNotEmpty(bumiPriceList)) {
-				Collections.sort(bumiPriceList);
-				bumiSuppLowestOfferedPrice = bumiPriceList.get(0);
-			} 
-			if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
-				Collections.sort(nonBumiPriceList);
-				lowestNonBumiOfferedPrice = nonBumiPriceList.get(0);
-			}
-		}
-		
-		getManagedBean().setBumiSuppLowestOfferedPrice(bumiSuppLowestOfferedPrice);
-		getManagedBean().setLowestNonBumiOfferedPrice(lowestNonBumiOfferedPrice);
-		
-		if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
-			getManagedBean().setNonBumiAvailable(true);
 		}	
 	}
 	//#28777 & #29729 - End
@@ -1319,7 +1272,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 		if (resDTO.isSuccessful()) {
 			List<BidItemBean> biddingItemPriceListDisqualified = resDTO.getBidPriceItemsDisqualified();
 			if (CollectionUtils.isNotEmpty(biddingItemPriceListDisqualified)) {
-				List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 				
 				/*
 				 * 31101 - WIP Impact , added Disciplinary Action 
@@ -1329,10 +1281,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 				for (BidItemBean itemBean : biddingItemPriceListDisqualified) {
 					SmSupplier smSupplier = itemBean.getSupplier();
 					itemBean.setSupplierName(smSupplier.getCompanyName());
-					
-					if (!itemBean.isBumi()) {
-						nonBumiPriceList.add(itemBean.getBidPriceTotal());
-					}		
+						
 					if (MapUtils.isNotEmpty(supplierCodes) && 
 							supplierCodes.containsKey(smSupplier.getSupplierId())) {
 						ScQtEvaluationResultDtl shortlistedSupplier 
@@ -1347,15 +1296,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 					if (smSupplier.getSupplierId().equals(awardedSupplierId) && !itemBean.getSupplier().isDisciplinaryActions()) {
 						getManagedBean().setSelectedBidItemBean(itemBean);
 						selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
-					}
-				}
-				
-				if (CollectionUtils.isNotEmpty(
-									nonBumiPriceList)) {
-					Collections.sort(nonBumiPriceList);
-					if (nonBumiPriceList.get(0) != null) {
-						getManagedBean().setLowestNonBumiOfferedPrice(
-								nonBumiPriceList.get(0));
 					}
 				}				
 			}
