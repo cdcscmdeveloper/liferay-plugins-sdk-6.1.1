@@ -3,8 +3,12 @@ package my.ep.web.backingbean.sm.compexp;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.sm.compexp.ISmCompExpSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
@@ -32,7 +36,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * To redirect to main SM Update Company Experience Information screen
 	 */
 	public void proceedAfterAcceptTnC() {
+		this.getManagedBean().setDraftExist(checkCompExpDraftExist());
 		SmCommonUtil.redirectToPage("smCompExpMain.xhtml", "", null, null);
+	}
+
+	private boolean checkCompExpDraftExist() {
+		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
+		reqDTO.setSupplierId(this.getManagedBean().getSupplier().getSupplierId());
+		ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+		return compExpSo.checkCompExpDraftExist(reqDTO);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -25,10 +26,11 @@
 			toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.draft.instruction.sm']}" />
-			<p:dataTable id="" var="draftSm" rows="10" value="#{compExpMB.}"
-				rowIndexVar="index"
+			<p:dataTable id="draftSmDataTableId" var="draftSm" rows="10"
+				value="#{compExpMB.draftSmDataModel}" rowIndexVar="index"
+				lazy="true"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-				<ac:paginator for=""></ac:paginator>
+				<ac:paginator for="draftSmDataTableId"></ac:paginator>
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sm.comp.exp.draft.table.no']}"
