@@ -25,7 +25,6 @@ import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.factory.EpLogger;
 import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -121,7 +120,6 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -138,8 +136,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDetailManagedBean.class);
+	//private static final Logger log = EpLogger.getLogger(QTDetailManagedBean.class);
 	
 	/** The qt. */
 	private ScQt qt;

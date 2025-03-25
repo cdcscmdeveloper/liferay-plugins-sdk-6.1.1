@@ -386,7 +386,7 @@ public class ViewApplHistoryBackingBean extends
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			//start #29956
 			getManagedBean().setResubmitAppl(resubmission);
-
+			
 			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
 			
 			if(displayPopupDowngradeSSMOwner){

@@ -85,9 +85,7 @@
 				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}" style="white-space : normal;vertical-align: top;">
 					#{catCode}
 				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.category.description']}"
-					style="white-space: normal; width: 88%;vertical-align: top;">
+				<p:column headerText="#{lbl['lbl.sm.category.description']}" style="white-space: normal; width: 88%;vertical-align: top;">
 					#{catApp.pmCategoryL3.categoryName}
 					<h:outputText value="(#{catApp.otherDesc})" rendered="#{catApp.pmCategoryL3.categoryL3Code eq SupplierMgmtConst.categoryCatManufacturingCode}"></h:outputText>
 				</p:column>
