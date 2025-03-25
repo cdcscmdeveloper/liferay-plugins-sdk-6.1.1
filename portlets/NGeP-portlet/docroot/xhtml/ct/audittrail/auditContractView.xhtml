@@ -77,7 +77,7 @@
 				<ui:include src="/xhtml/ct/audittrail/auditCtView.xhtml" />
 			</c:if>
 			<c:if
-				test="#{auditContractBackingBean.managedBean.ctType eq 'CIRCULAR'}">
+				test="#{auditContractBackingBean.managedBean.ctType eq 'CCR' or auditContractBackingBean.managedBean.ctType eq 'CPR'}">
 				<ui:include src="/xhtml/ct/audittrail/auditCtViewCircular.xhtml" />
 			</c:if>
 		</p:panel>
