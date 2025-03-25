@@ -15811,7 +15811,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
 										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 							}
-							//20201217@haziq- Bug #29806 - End
+							//20201217@haziq- Bug #29806 - Start
 						}
 					}
 				}
