@@ -62,8 +62,8 @@ public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseMan
 		try {
 			auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "insert", modName,
-					auditPMReqDTO.getActionType(), new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "insert", modName, "auditPMSO",
+					new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
 		}
 	}
 }
