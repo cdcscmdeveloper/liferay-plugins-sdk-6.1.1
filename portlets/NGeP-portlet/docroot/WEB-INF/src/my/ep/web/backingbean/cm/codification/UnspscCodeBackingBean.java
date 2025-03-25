@@ -3038,7 +3038,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
 			statusReqDTO.setStatusId(15025L);
-
+			
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 			String actionDesc = "Kod Lanjutan "
 					+ this.getManagedBean().getReviewExtCodeList().get(0).getDocNo()
@@ -3048,7 +3048,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 							actionDesc,
 							statusResDTO.getPmStatus() != null ? statusResDTO.getPmStatus() : new PmStatus(),
 							CmConst.CE_DocType));
-
+			
 		}
 		// #37924: 070325 - End
 	}

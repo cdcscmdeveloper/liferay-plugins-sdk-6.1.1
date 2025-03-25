@@ -57,9 +57,11 @@
 				       #{lOADetailBackingBean.managedBean.scLoa.scQt.qtNo}
 					</p:commandLink>
 					<ui:remove>#25201 - end </ui:remove>
-				 <h:outputText
-						value="#{lOADetailBackingBean.managedBean.scLoa.scQuote.quoteNo}"
-						rendered="#{!(isDocTypeQuotation or isDocTypeDirectNego)}" /></td>
+			    <!-- start - 25790 -->
+				<p:commandLink rendered="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !(isDocTypeQuotation or isDocTypeDirectNego)}" process="@this" partialSubmit="true"
+						action="#{lOADetailBackingBean.navigateRequestNotePage(lOADetailBackingBean.managedBean.scLoa.scQuote.requestNotes.get(0).requestNoteId)}">
+				       #{lOADetailBackingBean.managedBean.scLoa.scQuote.requestNotes.get(0).requestNoteNo}</p:commandLink></td>
+				<!-- end - 25790 -->
 				<td width="10%"><h:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.title']}" /></td>
 				<td class="header-info-text">

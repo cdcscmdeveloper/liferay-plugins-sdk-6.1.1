@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<style>
+        .aligned-text {
+            vertical-align: middle;
+        }
+        .command-link {
+            display: inline-block; /* Ensures the command link is treated like an inline element */
+            float:left; /* Aligns the command link with other inline elements */
+            color: #009ae5 !important; /* Ensures the link color is applied */
+            text-decoration: none; /* Removes the underline */
+            padding-top: 6px; /* Adjust top padding to move text down */
+        }
+        .command-link:hover {
+            text-decoration: underline; /* Adds underline on hover */
+        }
+        .dataTableColumn {
+            text-align: center; /* Centers text in columns */
+        }
+        .dataTableColumn p {
+            margin: 0; /* Removes default margin */
+        }
+    </style>
+	<p:dataTable var="map" rowIndexVar="index"
+		rendered="#{requestNoteBackingBean.managedBean.purchaseRequestMapList.size() > 0}"
+		value="#{requestNoteBackingBean.managedBean.purchaseRequestMapList}" style="width:100%"  id="purchaseRequestTableID" rows="10" preserveDataModel="true">
+		<ac:paginator for="purchaseRequestTableID"></ac:paginator>
+		<p:column headerText="#{lbl['lbl.sc.continuity.no']}" style="text-align:center;">
+			<div align="center"><h:outputText value="#{index + 1}" /></div>
+		</p:column>
+		<p:column headerText="#{lbl['lbl.rpt.prNo']}"
+			style="text-align:center;">
+			<p:commandLink value="#{map['prNo']}" styleClass="command-link"
+				action="#{requestNoteBackingBean.viewPurchaseRequest(map['prId'])}"
+				immediate="true" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.td.status']}"
+			style="text-align:center;">
+			<h:outputText value="#{map['prStatus']}" style="float:left;" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.td.order.no']}"
+			style="text-align:center;">
+			<p:commandLink value="#{map['poNo']}" styleClass="command-link"
+				action="#{requestNoteBackingBean.viewPurchaseOrder(map['poId'])}"
+				immediate="true" />
+		</p:column>
+		<p:column headerText="#{lbl['lbl.td.status']}"
+			style="text-align:center;">
+			<h:outputText value="#{map['poStatus']}" style="float:left;" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>

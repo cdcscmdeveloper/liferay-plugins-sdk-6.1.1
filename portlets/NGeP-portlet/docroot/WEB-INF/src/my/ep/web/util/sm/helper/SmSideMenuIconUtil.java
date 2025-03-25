@@ -46,8 +46,7 @@ public class SmSideMenuIconUtil {
 		SmApplicationUtil.checkOverLappingCategories(bean); // #31018
 		if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
 			if (bean.isSupplierUser()) {
-				bean.getEditVO().setSuppEditCompBasic(false);
-				
+				bean.getEditVO().setSuppEditCompBasic(false);				
 				if (step1CompanyBasicHasDifference(bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditCompBasic(true);
 				}
@@ -75,7 +74,7 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
-				
+
 				if (step2AssocCompProjExpHasDifference(true, bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
@@ -86,7 +85,7 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditAssocProj(false);
 				bean.getEditVO().setPoEditAssocProj(false);
-				
+
 				if (step2AssocCompProjExpHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditAssocProj(true);
 				}
@@ -114,9 +113,8 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditPersonnel(false);
 				bean.getEditVO().setPoEditPersonnel(false);
-				
-				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 
+				if (step3PersonnelHasDifference(true, bean.getLatestApproveAppl(), bean.getSupplierAppl(), bean.getDowngradeMofAcc())) {
 					bean.getEditVO().setSuppEditPersonnel(true);
 				}
 
@@ -161,7 +159,7 @@ public class SmSideMenuIconUtil {
 		} else if (sectionType.equals(SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)) {
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
-
+				
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(), bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
 				}

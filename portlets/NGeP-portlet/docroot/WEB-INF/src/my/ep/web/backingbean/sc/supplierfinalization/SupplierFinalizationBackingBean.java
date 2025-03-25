@@ -3576,8 +3576,8 @@ public class SupplierFinalizationBackingBean extends
 		return reportAttachment;
 	}
 	
-	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
-										   throws Exception {
+	/*
+	private void generateKertasTaklimatPdf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
 		populateAttachmentDetails(attachment);
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -3618,6 +3618,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}*/
+	/*
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
@@ -3628,6 +3629,7 @@ public class SupplierFinalizationBackingBean extends
 		// #18685 - End
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
+	*/
 	
 	// 36715 START
 	private void generateKertasTaklimatRtf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
