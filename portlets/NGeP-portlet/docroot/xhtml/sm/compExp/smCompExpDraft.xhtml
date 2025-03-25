@@ -69,8 +69,8 @@
 				<p:column>
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						action="#{compExpBB.onClickDraftAction(draftSm)}"
-						process="@this" partialSubmit="true" update=":form">
+						action="#{compExpBB.onClickDraftAction(draftSm)}" process="@this"
+						partialSubmit="true" update=":form">
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
@@ -123,12 +123,14 @@
 				<p:column>
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						action="#{compExpBB.onClickDraftAction(draftCt)}"
-						process="@this" partialSubmit="true" update=":form">
+						action="#{compExpBB.onClickDraftAction(draftCt)}" process="@this"
+						partialSubmit="true" update=":form">
 						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<ac:updateCompExpPopUp dialogName="updateCompExp" bBean="#{compExpBB}"
+			mBean="#{compExpMB}" />
 	</ui:define>
 </ui:composition>
