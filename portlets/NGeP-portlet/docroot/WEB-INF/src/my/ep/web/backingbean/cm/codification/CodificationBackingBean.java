@@ -293,7 +293,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 */
 	public void extensionCodeSearchForAssign() {
 		//#31503
-		this.getManagedBean().setRenderButtonAssignCode(false);
+		this.getManagedBean().setRenderButtonAssignCode(true);
 		
 		extensionSearchItemDataModel.reloadData();
 
@@ -2426,6 +2426,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		.setUnspscCode(unspscObj.getUnspscCode());
 		this.getManagedBean().getSelectedUNSPSCObj()
 		.setUnspscTitle(unspscObj.getUnspscTitle());
+		
+		//#31503
+		this.getManagedBean().setRenderButtonAssignCode(true);
 
 		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
 		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
@@ -3781,7 +3784,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * 
 	 */
 	public void selectedItemCode() {		
-		this.getManagedBean().setRenderButtonAssignCode(true);
+		this.getManagedBean().setRenderButtonAssignCode(false);
 	}
 		
 	

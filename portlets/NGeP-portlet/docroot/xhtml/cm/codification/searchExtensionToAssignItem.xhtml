@@ -222,7 +222,7 @@
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.sc.qt.assign.code']}"
 						action="#{codificationBackingBean.assignItemConfirmation}"
-						rendered="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}" update="@([id$=asignCodeDialConfirm])"/>
+						disabled="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}" update="@([id$=asignCodeDialConfirm])"/>
 
 
 				</div>
