@@ -3715,8 +3715,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		} else {
 			try {
 
-				ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
-						ICodificationSO.class);
+				ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 
 				ExtensionCodeVO extCodeVO = null;
 				this.getManagedBean().setExtensionVoList(null);
@@ -3796,8 +3796,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		try {
 
-			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
-					ICodificationSO.class);
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
@@ -3834,7 +3834,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					+ common.removeItemNameNA(colorObj.getColorName()));
 
 			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
-					+ common.removeItemNameNA(typeObj.getTypeName()) + " " 
+					+ common.removeItemNameNA(typeObj.getTypeName()) + " "
 					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
 					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
 					+ common.removeItemNameNA(colorObj.getColorName());

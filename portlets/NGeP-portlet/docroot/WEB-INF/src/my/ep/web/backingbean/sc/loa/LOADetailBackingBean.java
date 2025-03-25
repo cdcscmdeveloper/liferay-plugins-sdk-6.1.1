@@ -12424,8 +12424,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		try {
 
-			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject("cm",
-					ICodificationSO.class);
+			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
@@ -12463,7 +12463,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					+ common.filterItemNameNA(colorObj.getColorName()));
 
 			String completeItemName = codeResDTO.getCommodityObj().getUnspscTitle() + " "
-					+ common.removeItemNameNA(typeObj.getTypeName()) + " " 
+					+ common.removeItemNameNA(typeObj.getTypeName()) + " "
 					+ common.removeItemNameNA(brandObj.getBrandName()) + " "
 					+ common.removeItemNameNA(meaObj.getMeasurementName()) + " "
 					+ common.removeItemNameNA(colorObj.getColorName());
