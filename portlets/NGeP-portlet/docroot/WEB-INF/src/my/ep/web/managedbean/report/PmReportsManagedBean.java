@@ -71,6 +71,13 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 	private String selectedAccessType;
 	private Long selectedApplicationStatus;
 	private Date monthlyDate;//#29486
+	//29991 start
+	private PmOrgProfile selectedSupplier;
+	private String pmCompanyName;
+	private String cmCompanyName;
+	private String smCompanyName;
+	private String smSupplierName;
+	//29991 end
 	private PmFinancialOrg selectedFinancialOrg; //#36719
 	
 	public PmReportsManagedBean(){}
@@ -598,6 +605,78 @@ public class PmReportsManagedBean extends ReportBaseManagedBean {
 		this.monthlyDate = monthlyDate;
 	}
 	//#29486 - END
+	
+	//#29991 start--
+	/**
+	 * @return the pmCompanyName
+	 */
+	public String getPmCompanyName() {
+		return pmCompanyName;
+	}
+
+	/**
+	 * @param pmCompanyName the pmCompanyName to set
+	 */
+	public void setPmCompanyName(String pmCompanyName) {
+		this.pmCompanyName = pmCompanyName;
+	}
+
+	/**
+	 * @return the cmCompanyName
+	 */
+	public String getCmCompanyName() {
+		return cmCompanyName;
+	}
+
+	/**
+	 * @param cmCompanyName the cmCompanyName to set
+	 */
+	public void setCmCompanyName(String cmCompanyName) {
+		this.cmCompanyName = cmCompanyName;
+	}
+
+	/**
+	 * @return the smCompanyName
+	 */
+	public String getSmCompanyName() {
+		return smCompanyName;
+	}
+
+	/**
+	 * @param smCompanyName the smCompanyName to set
+	 */
+	public void setSmCompanyName(String smCompanyName) {
+		this.smCompanyName = smCompanyName;
+	}
+
+	/**
+	 * @return the smSupplierName
+	 */
+	public String getSmSupplierName() {
+		return smSupplierName;
+	}
+
+	/**
+	 * @param smSupplierName the smSupplierName to set
+	 */
+	public void setSmSupplierName(String smSupplierName) {
+		this.smSupplierName = smSupplierName;
+	}
+
+	/**
+	 * @return the selectedSupplier
+	 */
+	public PmOrgProfile getSelectedSupplier() {
+		return selectedSupplier;
+	}
+
+	/**
+	 * @param selectedSupplier the selectedSupplier to set
+	 */
+	public void setSelectedSupplier(PmOrgProfile selectedSupplier) {
+		this.selectedSupplier = selectedSupplier;
+	}
+	//#29991 end--
 	
 	// #36719 - Start
 	/**
