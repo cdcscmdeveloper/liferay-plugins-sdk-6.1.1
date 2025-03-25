@@ -103,6 +103,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	public boolean backPageAmendment;
 	private Long contractId;
+	private boolean backPageDpContinuity = Boolean.FALSE; //#25790
+	private String dpContinuitySession = null; //#25790
 
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
@@ -1076,7 +1078,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	}
 	//#25406 - end
 	
-	
 	// Start - #30866
 	private class contractDataModelForCtAuditViewSubFl extends PagingDataModel<VCtFl> {
 		private static final long serialVersionUID = 1L;
@@ -1159,4 +1160,36 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.isFromContractViewPage = isFromContractViewPage;
 	}
 	// End - #30866
+	
+	// start - #25790
+	/**
+	 * @return the backPageDpContinuity
+	 */
+	public boolean isBackPageDpContinuity() {
+		return backPageDpContinuity;
+	}
+
+	/**
+	 * @param backPageDpContinuity
+	 *            the backPageDpContinuity to set
+	 */
+	public void setBackPageDpContinuity(boolean backPageDpContinuity) {
+		this.backPageDpContinuity = backPageDpContinuity;
+	}
+
+	/**
+	 * @return the dpContinuitySession
+	 */
+	public String getDpContinuitySession() {
+		return dpContinuitySession;
+	}
+
+	/**
+	 * @param dpContinuitySession
+	 *            the dpContinuitySession to set
+	 */
+	public void setDpContinuitySession(String dpContinuitySession) {
+		this.dpContinuitySession = dpContinuitySession;
+	}
+	// end - #25790
 }

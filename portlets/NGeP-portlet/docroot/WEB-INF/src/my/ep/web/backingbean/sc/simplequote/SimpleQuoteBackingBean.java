@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +40,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -128,7 +128,6 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBusiness; // #29832
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -156,7 +155,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -178,8 +176,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class SimpleQuoteBackingBean.
@@ -7438,6 +7434,17 @@ public class SimpleQuoteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
+	// #25886 - start
+	/**
+	 * Gets the purchaseindefault so.
+	 * 
+	 * @return the purchaseindefault so
+	 */
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IPurchaseInDefaultSO.class);
+	}
+	// #25886 - end
 	
 	/**
 	 * based on treenode selection button enable/disable.
@@ -7961,20 +7968,16 @@ public class SimpleQuoteBackingBean extends
 			try {
 				BeanUtils.copyProperties(ptsb, getManagedBean().getProductTemplateSpecBean());
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			final TemplateSpecBean stsb = new TemplateSpecBean();
 			try {
 				BeanUtils.copyProperties(stsb, getManagedBean().getServiceTemplateSpecBean());
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ppBB.getManagedBean().setProductTemplateSpecBean(ptsb);

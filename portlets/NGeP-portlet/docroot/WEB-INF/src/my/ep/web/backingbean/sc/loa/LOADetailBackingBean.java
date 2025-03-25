@@ -152,6 +152,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.format.AttachmentDateFormat;
@@ -2627,12 +2628,30 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
-			if(smSupplier.getSmMofAccount() != null && smSupplier.getSmMofAccounts().size()>0){
-				context.put("mofNo", smSupplier.getSmMofAccounts().get(0).getMofNo());
+			// 29819 - start
+			String mofNo = null;
+			String contextMofNo = smSupplier.getRegNo();
+
+			if (Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+					scLoiLoa.getDocType())) {
+				if (StringUtils.isNotBlank(scLoiLoa.getMofNo())) {
+					mofNo = scLoiLoa.getMofNo();
+				} else if (CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+					mofNo = smSupplier.getSmMofAccounts().get(0).getMofNo();
+				}
+			} else if (smSupplier.getSmMofAccount() != null
+					&& CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+				mofNo = smSupplier.getSmMofAccounts().get(0).getMofNo();
 			}
-			else{
-				context.put("mofNo", smSupplier.getRegNo());
+
+			if (null != mofNo) {
+				contextMofNo = mofNo;
+			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
+				contextMofNo = smSupplier.getSsmNewRegNo();
 			}
+
+			context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, contextMofNo);
+			// 29819 - end
 		}
 
 		FileOutputStream fos = null;
