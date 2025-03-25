@@ -704,16 +704,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						reqDTO.setOldDesc(this.getManagedBean().getTempCategoryLs().get(latestCat.getSupplierCategoryId()));
 						reqDTO.setNewDesc(latestCat.getOtherDesc());
 						SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(getManagedBean().getSmAppl(), getTrackingActionDesc(reqDTO,"OD"));
-						//#37605
-						int limit = 2500;
-				        int currentLength = smTrackingDairyVO.getActionDesc().length();
-
-				        if (currentLength <= limit) {
-				            log.info("Character count is within the limit: " + currentLength);
-				            listSmTrackingDiary.add(smTrackingDairyVO);
-				        } else {
-				            log.info("Character count exceeds the limit of " + limit + ". Current count: " + currentLength);
-				        }
+						listSmTrackingDiary.add(smTrackingDairyVO);
 				}
 			}
 			//#34209 - END
@@ -2116,6 +2107,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			sb.append(" kepada ");
 			sb.append(reqDTO.getNewDesc());
 			sb.append(" oleh ").append(curUser.getUserName());
+			//#37605
+			int limit = 2500;
+	        int currentLength = sb.toString().length();
+
+	        if (currentLength <= limit) {
+	            log.info("Character count is within the limit: " + currentLength);
+	        } else {
+	            log.info("Character count exceeds the limit of " + limit + ". Current count: " + currentLength);
+	            sb = new StringBuffer();
+	            
+				sb.append("Keterangan Lain bagi bidang ");
+				sb.append(reqDTO.getCatCodeChanged());
+				sb.append(" telah diubah oleh ");
+				sb.append(curUser.getUserName());
+	        }
 		break;
 		//#34209 - END
 		default:
@@ -2327,7 +2333,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				itemList.add(selectItem);
 			}else{
 				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
-				if(!("A").equals(pmParameter.getParameterCode())){
+				if(!(ParameterTypeConst.PARAM_TYPE_A).equals(pmParameter.getParameterCode())){
 					itemList.add(selectItem);
 				}
 			}
