@@ -45,6 +45,11 @@ public class TravellingTicketManagedBean extends BaseManagedBean{
 	private int recordStatus;
 	
 	private boolean disabledVal;
+	
+	/************ AUDIT START #28895-35509 *************/
+	private PmMachine oldPmMachine;
+	private PmMachine updatedPmMachine;
+	/************ AUDIT END #28895-35509 *************/
 
 	public List<SelectItem> getListOfCategories() {
 		if(listOfCategories==null){
@@ -123,4 +128,22 @@ public class TravellingTicketManagedBean extends BaseManagedBean{
 	public void setCode(String code) {
 		Code = code;
 	}
+	
+	/************ AUDIT START #28895-35509 *************/
+	public PmMachine getOldPmMachine() {
+		return oldPmMachine;
+	}
+
+	public void setOldPmMachine(PmMachine oldPmMachine) {
+		this.oldPmMachine = oldPmMachine;
+	}
+
+	public PmMachine getUpdatedPmMachine() {
+		return updatedPmMachine;
+	}
+
+	public void setUpdatedPmMachine(PmMachine updatedPmMachine) {
+		this.updatedPmMachine = updatedPmMachine;
+	}
+	/************ AUDIT END #28895-35509 *************/
 }

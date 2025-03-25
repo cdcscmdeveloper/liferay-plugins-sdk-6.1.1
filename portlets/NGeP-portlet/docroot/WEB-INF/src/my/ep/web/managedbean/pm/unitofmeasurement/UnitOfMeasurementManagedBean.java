@@ -5,6 +5,8 @@ package my.ep.web.managedbean.pm.unitofmeasurement;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -34,6 +36,14 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	private boolean isLazy = false;
 	
 	private PmUom oldPmUom;
+
+	/************ AUDIT #28895_35509 *************/
+	private UomResDTO uomResDTO;
+
+	/** The AUDIT PM UOM OLD Value. */
+	private PmUom auditUomOldVal;
+
+	/************ AUDIT #28895_35509 *************/
 
 	public UnitOfMeasurementManagedBean(){}
 	
@@ -119,4 +129,21 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 		this.oldPmUom = oldPmUom;
 	}
 
+	/************ AUDIT #28895_35509 *************/
+	public PmUom getAuditUomOldVal() {
+		return auditUomOldVal;
+	}
+
+	public void setAuditUomOldVal(PmUom auditUomOldVal) {
+		this.auditUomOldVal = auditUomOldVal;
+	}
+
+	public UomResDTO getUomResDTO() {
+		return uomResDTO;
+	}
+
+	public void setUomResDTO(UomResDTO uomResDTO) {
+		this.uomResDTO = uomResDTO;
+	}
+	/************ AUDIT #28895_35509 *************/
 }
