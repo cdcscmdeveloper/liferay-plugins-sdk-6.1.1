@@ -6,11 +6,14 @@ import javax.faces.bean.RequestScoped;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
+import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+
+import org.primefaces.context.RequestContext;
 
 /**
  * BackingBean for Sm Company Experience
@@ -52,6 +55,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void redirectToDraft() {
 		SmCommonUtil.redirectToPage("smCompExpDraft.xhtml", "", null, null);
+	}
+
+	/**
+	 * To redirect to draft screen
+	 * 
+	 * @param draft
+	 * @param fromSM
+	 * @param fromCT
+	 */
+	public void onClickDraftAction(SmCompExpDraft draft) {
+		this.getManagedBean().setSelectedDraft(draft);
+		RequestContext.getCurrentInstance().execute("updateCompExpWV.show();");
 	}
 
 }

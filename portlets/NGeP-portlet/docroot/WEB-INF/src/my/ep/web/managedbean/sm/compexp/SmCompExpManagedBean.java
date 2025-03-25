@@ -36,6 +36,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean agreeTnC;
 	private boolean draftExist;
 	private transient IPagingDataModel<SmCompExpDraft> draftSmDataModel = new DraftSmPagingDataModel();
+	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
+	private SmCompExpDraft selectedDraft;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -61,6 +63,33 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.draftExist = draftExist;
 	}
 
+	private class DraftSmPagingDataModel extends PagingDataModel<SmCompExpDraft> {
+
+		private static final long serialVersionUID = 1L;
+
+		public DraftSmPagingDataModel() {
+			super("draftSmDataTableId", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
+
+			SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_SM);
+
+			try {
+				ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return compExpSo.retriveCompExpDraft(reqDTO, searchBean).getDraftResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
 	public IPagingDataModel<SmCompExpDraft> getDraftSmDataModel() {
 		return draftSmDataModel;
 	}
@@ -69,25 +98,24 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.draftSmDataModel = draftSmDataModel;
 	}
 
-	private class DraftSmPagingDataModel extends PagingDataModel<SmCompExpDraft> {
+	private class DraftCtPagingDataModel extends PagingDataModel<SmCompExpDraft> {
 
 		private static final long serialVersionUID = 1L;
 
-		public DraftSmPagingDataModel() {
-			super("draftSmDataTableId");
+		public DraftCtPagingDataModel() {
+			super("draftCtDataTableId", true);
 		}
 
 		@Override
 		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
-			
+
 			SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
-			reqDTO.setDraftSearchBean(searchBean);
 			reqDTO.setSupplierId(supplier.getSupplierId());
-			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_SM);
-			
+			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_CT);
+
 			try {
 				ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
-				return compExpSo.retriveCompExpDraft(reqDTO).getDraftResultBean();
+				return compExpSo.retriveCompExpDraft(reqDTO, searchBean).getDraftResultBean();
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
 						"ISmCompExpSO", logKey.getUserId(), e);
@@ -95,6 +123,22 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 			}
 		}
 
+	}
+
+	public IPagingDataModel<SmCompExpDraft> getDraftCtDataModel() {
+		return draftCtDataModel;
+	}
+
+	public void setDraftCtDataModel(IPagingDataModel<SmCompExpDraft> draftCtDataModel) {
+		this.draftCtDataModel = draftCtDataModel;
+	}
+
+	public SmCompExpDraft getSelectedDraft() {
+		return selectedDraft;
+	}
+
+	public void setSelectedDraft(SmCompExpDraft selectedDraft) {
+		this.selectedDraft = selectedDraft;
 	}
 
 }
