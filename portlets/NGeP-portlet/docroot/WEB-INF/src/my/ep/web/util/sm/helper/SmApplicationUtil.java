@@ -12274,15 +12274,7 @@ public class SmApplicationUtil {
 						PmDivision div = new PmDivision();
 						div.setDivisionId(addr.getSmAddress().getPmDivision()
 								.getDivisionId());
-						//#34159 - START
-						IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-										IDivisionSO.class);
-						DivisionReqDTO reqDTO = new DivisionReqDTO();
-						reqDTO.setDivisionId(div.getDivisionId());
-						DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
-						smAddress.setPmDivision(resDTO.getPmDivision());
-						//#34159 - END
+						smAddress.setPmDivision(div);
 						smAddress.setDivisionId(div.getDivisionId());
 					}
 					//#13320 - added division - end
@@ -12298,15 +12290,7 @@ public class SmApplicationUtil {
 					if(addr.getSmAddress().getPmCity() != null){
 						PmCity city = new PmCity();
 						city.setCityId(addr.getSmAddress().getPmCity().getCityId());
-						//#34159 - START
-						ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-										ICitySO.class);
-						CityReqDTO reqDTO = new CityReqDTO();
-						reqDTO.setCityId(city.getCityId());
-						CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
-						smAddress.setPmCity(resDTO.getPmCity());
-						//#34159 - END
+						smAddress.setPmCity(city);
 						smAddress.setCityId(city.getCityId());
 					}
 					//END 27879
