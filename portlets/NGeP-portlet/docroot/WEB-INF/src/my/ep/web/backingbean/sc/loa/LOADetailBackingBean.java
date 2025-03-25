@@ -3781,6 +3781,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					//#29007 Start Vinod
 					boolean specificationAndSupplierDialogFlagQT=this.getManagedBean().isSpecificationAndSupplierDialogFlagQT();
 					boolean supPropSpecUpdate=this.getManagedBean().isSupPropSpecUpdate();
+					String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
 					//#29007 End Vinod
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
@@ -3894,6 +3895,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 						//Bug #33188 end
 					}
+					// #29007 Start Vinod
+					this.getManagedBean().setBpmVersionNo(bpmVersionNo);
+					// #29007 End Vinod
 				 }
 			//#29173 - replaced finally with catch nullpointerexception to cater for scLoa could be null
 		} catch (NullPointerException e) {
