@@ -26,6 +26,16 @@
 				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
 			}
 		}
+		//#29991 start 
+		function hideOrgCodeName() {
+			$('.tabOrgCode').hide();
+			$('.tabOrgName').hide();
+		}
+		function showOrgCodeName() {
+			$('.tabOrgCode').show();
+			$('.tabOrgName').show();
+		}
+		//#29991 end
 	</script>
 	<p:outputPanel id="orgSearchPanel">
 		<table style="width: 100%;">
@@ -93,17 +103,16 @@
 						<p:ajax process="@this" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()" event="change"
 							partialSubmit="true"
-							update=":form:orgNameIt,:form:orgProfilePG"
-							listener="#{pmReportsBackingBean.onChangeOrgType()}" />
+							update=":form:orgNameIt,:form:orgProfilePG, @form"
+							listener="#{pmReportsBackingBean.onChangeOrgType()}" /> <!-- #29991 add @form -->
 					</p:selectOneMenu></td>
 			</tr>
-
-			<tr>
+			<tr class="tabOrgCode"> <!-- #29991-->
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /></td>
 				<td><h:panelGroup id="orgProfilePG">
 						<ac:lov id="pmOrgCode" lovId="PM_ORG_PROFILE_REPORT" size="100"
-							update="@this,:form:orgNameIt"
+						    update="@this,:form:orgNameIt"
 							headerText="#{lbl['lbl.pm.organisation.orgCode']}"
 							readonly="true"
 							disabled="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId==null}"
@@ -112,13 +121,38 @@
 							saveObject="pmReportsBackingBean.managedBean.selectedOrgProfile" />
 					</h:panelGroup></td>
 			</tr>
-			<tr>
+			<tr class="tabOrgName"> <!-- #29991 -->
 				<td><p:outputLabel
 						value="#{lbl['lbl.pm.organisation.orgName']}" /></td>
 				<td><p:inputText id="orgNameIt" maxlength="150" readonly="true" size="100"
 						value="#{pmReportsBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}">
 					</p:inputText></td>
 			</tr>
+	        <!-- #29991 start -->
+			<c:if test="#{pmReportsBackingBean.managedBean.selectedOrgType.parameterId eq PmReportConst.orgTypeSupplier}">
+			<TR>
+				<TD><p:outputLabel
+							value="#{lbl['lbl.rpt.businessregistrationnoscreen']}" /></TD>
+				<TD><h:panelGroup id="BusRegnoPG">
+					    <ac:lov id="pmBusinessRegNo" readonly="true"
+							style="width:289px;" lovId="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT"
+							size="100" update="@this,:form:compNameIt"
+							headerText="#{lbl['lbl.rpt.businessregistrationnoscreen']}"
+							conditionField="#{pmReportsBackingBean.constructConditionFieldsSupplierList()}"
+							value="#{pmReportsBackingBean.managedBean.selectedSupplier.smSupplier.regNo}"
+							postUpdateListener="#{pmReportsBackingBean.onCompanyNameChangeForLOVPMReport()}"
+							saveObject="pmReportsBackingBean.managedBean.selectedSupplier" />
+				    </h:panelGroup></TD>
+			</TR>
+			<TR>
+				<TD><p:outputLabel
+							value="#{lbl['lbl.rpt.companyName']}" /></TD>
+				<TD><p:inputText id="compNameIt" maxlength="150" readonly="true" size="100"
+							value="#{pmReportsBackingBean.managedBean.selectedSupplier.smSupplier.companyName}">
+					</p:inputText></TD>
+			</TR>
+			</c:if>
+			<!-- #29991 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.status']}" /></td>
 				<td><p:selectOneMenu

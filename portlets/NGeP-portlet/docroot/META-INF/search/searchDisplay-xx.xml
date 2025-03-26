@@ -2445,6 +2445,28 @@
 	</bean>
 	<!-- Enhancement 25627-end- -->
 	
+	<!--29991 start-->
+	<bean id="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.businessregistrationnoscreen" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.companyName" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--29991 end-->
+	
 	<!-- 36719 - Start -->
 	<bean id="PM_FIN_SVC_REPORT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="financialOrgId" />
