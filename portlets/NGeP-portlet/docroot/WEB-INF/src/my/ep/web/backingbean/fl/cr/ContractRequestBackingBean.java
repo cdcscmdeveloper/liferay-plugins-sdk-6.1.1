@@ -2425,6 +2425,11 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			BigDecimal formattedOrderedQty = flItemAddr.getOrderedQty().setScale(flItemAddr.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			flItemAddr.setOrderedQty(formattedOrderedQty);
 		}
+		//38009-Start
+		if(null != flItemAddr.getUnitPrice()){
+			flItemAddr.setUnitPrice(flItemAddr.getUnitPrice().setScale(2, RoundingMode.HALF_UP));
+		}
+		//38009-End
 		// Tier only
 		if(flItemAddr.getPriceType() != null 
 				&& (flItemAddr.getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER))){// TIER PRICE
