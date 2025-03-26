@@ -2217,6 +2217,10 @@ public class ConsolidationReportBackingBean extends
 			List<ScQtEvaluationResultDtl> disqualifiedSuppliers = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 				for (ScQtEvaluationResultDtl qualSupplier : qualifiedSuppliers) {
+					BigDecimal offeredPrice = new BigDecimal(0);
+					offeredPrice = qualSupplier.getProposalAmount().getProposalAmt();
+					offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					qualSupplier.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 					disqualifiedSuppliers.add(qualSupplier);
 				}
 			}

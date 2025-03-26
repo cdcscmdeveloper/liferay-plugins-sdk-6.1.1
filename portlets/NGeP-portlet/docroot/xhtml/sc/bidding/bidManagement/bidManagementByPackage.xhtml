@@ -230,6 +230,9 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
+			     <h:outputText value="#{lbl['lbl.sc.disqualified.reason.status']}" />  
+			</p:column>
 		</p:dataTable>
 	    <ui:remove> #28777#29729 - End </ui:remove>	
 		
