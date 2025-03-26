@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -861,12 +862,6 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setContractFlag(false);
 		}
 		// 28855 - End
-		
-		//#35508 fl audit trail - set original DO supplier ref no
-		if(getManagedBean().getFlDeliveryOrder() != null){
-			getManagedBean().setOriginalSupplierDoRef(getManagedBean().getFlDeliveryOrder().getSupplierDoRef());			
-		}
-		//#35508 fl audit trail
 	}
 
 	/**
@@ -1892,4 +1887,24 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 
 	}
 	// #35508 fl audit trail
+	
+	//38009-Start
+		/**
+		 * Validates the expected delivery date for each delivery address in the fulfilment request.
+		 * If the date is before January 1, 1900, an exception is thrown and the tab index is set to 1.
+		 *
+		 * @throws EpException if the expected delivery date is invalid.
+		 */
+	public void validateExpectedDeliveryDate() {
+		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
+			if (estDelDate != null && estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
+				getManagedBean().setSelectedTabIndex(1);
+				throw new EpException(MessageConst.ERROR_100067, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.fl.exp.del.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+		}
+	}
+	// 38009-End
 }
