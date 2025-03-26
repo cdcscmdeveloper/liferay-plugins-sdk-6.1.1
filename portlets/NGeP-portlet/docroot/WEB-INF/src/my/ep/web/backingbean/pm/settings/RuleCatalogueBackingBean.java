@@ -165,7 +165,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 	private String inactiveFeeContPopUpMsg = "";
 
 	private String dupplicateOrgTypeName;
-	private boolean updte = false;
+	private boolean update = false;
 
 	private static final String SETTING_CONFIG_MAIN = "settingConfig.xhtml?faces-redirect=true";
 	private static final String ERROR_PAGE = "/xhtml/pm/shared/outputMsg.xhtml";
@@ -4309,10 +4309,10 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 			if (updateVal.getPtjSpecialApprovalId().equals(approval.getPtjSpecialApprovalId())) {
 				insertUpdateVal(approval, updateVal, paramVal);
 			} else {
-				updte = true;
+				update = true;
 			}
 		}
-		if (Boolean.valueOf(updte)) {
+		if (Boolean.valueOf(update)) {
 			getManagedBean().getAuditUpdateMainPtjSpecialApprovalList().add(updateVal);
 			newUpdatePK(updateVal, paramVal);
 		}
@@ -4338,7 +4338,7 @@ public class RuleCatalogueBackingBean extends BaseBackingBean<RuleCatalogueManag
 				approval.setProcureAmt(updateVal.getProcureAmt());
 			}
 		}
-		updte = false;
+		update = false;
 	}
 
 	/************ END AUDIT #28895_35509 *************/
