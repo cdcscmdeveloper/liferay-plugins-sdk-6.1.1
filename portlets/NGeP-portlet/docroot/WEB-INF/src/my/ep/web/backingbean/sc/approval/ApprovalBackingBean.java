@@ -890,7 +890,6 @@ public class ApprovalBackingBean extends
 					qtDetailBB.getManagedBean().addUserTasks(UserTasks.CommitteeAppointmentApproval);
 					qtDetailBB.getManagedBean().setActiveIndex(5);
 				}
-				System.out.println("--->2 setActiveIndex " + qtDetailBB.getManagedBean().getActiveIndex()); 
 
 				//#25692-start
 				PmStatus sts = getQTDetailSO().retrieveActiveStatusByDoctype( qtDetailBB.getManagedBean().getQt().getQtId(), docType == null ? ParameterConst.DOCTYPE_QUOTATION : ParameterConst.DOCTYPE_COMMITTE_APROVAL);
@@ -1954,6 +1953,7 @@ public class ApprovalBackingBean extends
 					scQt=checkProcuremntCategoryMedicine(scQt);
 					scQt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
+					updatePublishClosingDate(scQt); //Bug_37764
 					
 				} else if (ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD.equalsIgnoreCase(approvalType)) {
 					if (isFinalApproval) {
@@ -2877,105 +2877,7 @@ return scQt;
 	}
 	// #25037-END
 
-	//#30477, #25426 - Start
-	public boolean isInactivePublicationApproverRole() {
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt scQt = this.getManagedBean().getQt();
-		ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
-		
-		if (null == publicationApproval ) {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
-			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
-			publicationApproval = resDTO.getQtApproval();
-		}
-	
-		List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
-		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
-		return qtBackingBean.isInactiveCommiteeApproverRole(null,approverSettings, RoleCode.PUBLICATION_APPROVER.value());
-	}
-	//#30477, #25426 -end-
-	
-	// #25426 - Start
-	/**
-	 * 202407252@haziq #25426 To remove EXIST DOA when approve cancel QT
-	 * 
-	 * @param scQt
-	 */
-	private void approveCancelQTwithDOASenariosExists(ScQt scQt) {
-		String docNo = scQt.getQtNo();
 
-		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
-		bpmReqDTO.setDocNumber(docNo);
-		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
-		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
-		boolean isWithdrawTask = false;
-		if (bpmResDTO.getWorklistVO() != null
-				&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
-			for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
-				String docType = currentVO.getDocType();
-				if (StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)
-						&& StringUtils.isNotBlank(currentVO.getTaskId())) {
-
-					Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
-							EpPropertiesConst.BPM_PRINCIPAL));
-
-					bpmReqDTO = new BpmRequestDTO();
-					bpmReqDTO.setTaskId(currentVO.getTaskId());
-					bpmReqDTO.setCtxToken(token);
-					bpmSO.withdrawTask(bpmReqDTO);
-
-					isWithdrawTask = true;
-					break;
-				}
-			}
-			if (isWithdrawTask) {
-				updateWorkFlowStatus(scQt);
-			}
-		}
-	}
-	
-	/**
-	 * update workflow Status
-	 * @param scQt
-	 */
-	private void updateWorkFlowStatus(ScQt scQt) {
-		IScWorkFlowStatusSO workFlowStatusSO = null;
-
-		try {
-			workFlowStatusSO = (IScWorkFlowStatusSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-			ScWorkFlowStatusReqDTO workFlowReqDTO = new ScWorkFlowStatusReqDTO();
-			ScQtStatus workFlowStatus = new ScQtStatus();
-			workFlowStatus.setScQt(scQt);
-			workFlowStatus.setCurrent(true);
-			PmStatus newStatus = getPmStatusByStatusId(QTStatusConst.DAR_CANCELLED);
-			workFlowStatus.setPmStatus(newStatus);
-			workFlowReqDTO.setScWorkFlowStatus(workFlowStatus);
-			workFlowReqDTO.setDocType(ParameterConst.DOCTYPE_DOA_ASSIGNMENT);
-			workFlowReqDTO.setDocId(scQt.getQtId());
-			workFlowStatusSO.updateCurrentWorkflowStatus(workFlowReqDTO);
-
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
-					scQt.getQtNo(), "approvalBackingBean.updateWorkFlowStatus", getUserIdSessionFromLoginId(), e);
-		}
-	}
-
-	// #25426 - End
-	
-	// #28784 -start-
-	/*
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	*/
-	// #28784 -end-
 	
 	// 36671, 25037 - start
 	private void prepareCommitteApprovalRequest(Long qtId) {
@@ -3169,4 +3071,106 @@ return scQt;
 		}
 	}
 	// 36671, 25037 - end
+	
+	//#30477, #25426 - Start
+	public boolean isInactivePublicationApproverRole() {
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt scQt = this.getManagedBean().getQt();
+		ScQtApproval publicationApproval = this.getManagedBean().getPublicationApproval();
+		
+		if (null == publicationApproval ) {
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setApprovalCategory(ParameterConst.APPROVAL_CATEGORY_PTJ);
+			QuationTenderResDTO resDTO = detailSO.retrieveApprovalDtlsByQtIdNType(reqDTO);
+			publicationApproval = resDTO.getQtApproval();
+		}
+	
+		List<ScQtApproverSettings> approverSettings = publicationApproval.getApproverSettings();
+		QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+		return qtBackingBean.isInactiveCommiteeApproverRole(null,approverSettings, RoleCode.PUBLICATION_APPROVER.value());
+	}
+	//#30477, #25426 -end-
+	
+	// #25426 - Start
+	/**
+	 * 202407252@haziq #25426 To remove EXIST DOA when approve cancel QT
+	 * 
+	 * @param scQt
+	 */
+	private void approveCancelQTwithDOASenariosExists(ScQt scQt) {
+		String docNo = scQt.getQtNo();
+
+		BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		bpmReqDTO.setDocNumber(docNo);
+		bpmReqDTO.setState(BpmConstants.STATE_ASSIGNED);
+		BpmResponseDTO bpmResDTO = bpmSO.getTasksByDocNumber(bpmReqDTO);
+		boolean isWithdrawTask = false;
+		if (bpmResDTO.getWorklistVO() != null
+				&& CollectionUtils.isNotEmpty(bpmResDTO.getWorklistVO().getWorklistItem())) {
+			for (WorklistItemVO currentVO : bpmResDTO.getWorklistVO().getWorklistItem()) {
+				String docType = currentVO.getDocType();
+				if (StringUtils.isNotBlank(docType) && docType.equals(ParameterConst.DOCTYPE_DOA_ASSIGNMENT)
+						&& StringUtils.isNotBlank(currentVO.getTaskId())) {
+
+					Object token = bpmSO.authenticate(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.BPM_PRINCIPAL));
+
+					bpmReqDTO = new BpmRequestDTO();
+					bpmReqDTO.setTaskId(currentVO.getTaskId());
+					bpmReqDTO.setCtxToken(token);
+					bpmSO.withdrawTask(bpmReqDTO);
+
+					isWithdrawTask = true;
+					break;
+				}
+			}
+			if (isWithdrawTask) {
+				updateWorkFlowStatus(scQt);
+			}
+		}
+	}
+	// #25426 - End
+
+	// #25426 - Start
+	/**
+	 * update workflow Status
+	 * @param scQt
+	 */
+	private void updateWorkFlowStatus(ScQt scQt) {
+		IScWorkFlowStatusSO workFlowStatusSO = null;
+
+		try {
+			workFlowStatusSO = (IScWorkFlowStatusSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+			ScWorkFlowStatusReqDTO workFlowReqDTO = new ScWorkFlowStatusReqDTO();
+			ScQtStatus workFlowStatus = new ScQtStatus();
+			workFlowStatus.setScQt(scQt);
+			workFlowStatus.setCurrent(true);
+			PmStatus newStatus = getPmStatusByStatusId(QTStatusConst.DAR_CANCELLED);
+			workFlowStatus.setPmStatus(newStatus);
+			workFlowReqDTO.setScWorkFlowStatus(workFlowStatus);
+			workFlowReqDTO.setDocType(ParameterConst.DOCTYPE_DOA_ASSIGNMENT);
+			workFlowReqDTO.setDocId(scQt.getQtId());
+			workFlowStatusSO.updateCurrentWorkflowStatus(workFlowReqDTO);
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_SELECTION, ParameterConst.DOCTYPE_QUOTATION,
+					scQt.getQtNo(), "approvalBackingBean.updateWorkFlowStatus", getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	// #25426 - End
+	
+	// #28784 -start-
+	/*
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	*/
+	// #28784 -end-
 }
