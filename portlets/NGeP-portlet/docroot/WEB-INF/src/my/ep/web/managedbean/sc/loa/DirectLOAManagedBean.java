@@ -314,6 +314,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	/*#29007 Start Vinod*/
+	private boolean iconForDL = false;
 
 	/**
 	 * Gets the spki backing bean.
@@ -1923,4 +1926,13 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.readOnlyLOADownload = readOnlyLOADownload;
 	}
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	/*#29007 Start Vinod*/
+	public boolean isIconForDL() {
+		return iconForDL;
+	}
+	public void setIconForDL(boolean iconForDL) {
+		this.iconForDL = iconForDL;
+	}
+	/*#29007 End Vinod*/
 }
