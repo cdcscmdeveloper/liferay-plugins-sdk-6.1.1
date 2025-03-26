@@ -252,9 +252,9 @@
 		    <h:outputText escape="false" value="#{lbl['lbl.sc.list.disqualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}" /> 
 		    <p:dataTable id="disqualifiedSuppliers"
 				var="disqualifiedSupp" widgetVar="shortlistedSuppDtls" 
-				value="#{consolidationReportBackingBean.managedBean.listDisqualifiedSupplier}"
+				value="#{consolidationReportBackingBean.managedBean.disQualifiedSuppliersDataModel}"
 				emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
-				rowIndexVar="index" rows="10" 
+				editable="true" lazy="true" rowIndexVar="index" rows="10" 
 				style="width:100%;" rowKey="#{disqualifiedSupp}" rendered="#{isDisqualified}" >
 				<ac:paginator for="disqualifiedSuppliers" />
 				
