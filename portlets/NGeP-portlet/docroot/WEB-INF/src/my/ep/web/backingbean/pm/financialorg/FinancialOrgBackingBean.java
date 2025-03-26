@@ -892,9 +892,13 @@ public class FinancialOrgBackingBean extends
 //			if (AddressType.BILLING_ADDRESS.value().equalsIgnoreCase(pmAddressType.getAddressType()) 
 //					&& DbValueConst.RECORD_STATUS_ACTIVE == pmAddressType.getRecordStatusFlg()){
 		if(pmAddressType != null && !pmAddressType.isBrandNew() && pmAddressType.getAddressTypeId() != null){
-			log.info("updateMainAddress - update");			
-			pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
+			log.info("updateMainAddress - update");	
 			
+			pmAddressType.setPmAddress(this.getManagedBean().getPmAddress());
+			//#35489 - Start
+			pmAddressType.getPmAddress().setChangedBy(getUserIdSessionFromLoginId());
+			//#35489 - End
+						
 			if(pmAddressType.getPmContacts()==null){
 				pmAddressType.setPmContacts(new ArrayList<PmContact>());
 			}

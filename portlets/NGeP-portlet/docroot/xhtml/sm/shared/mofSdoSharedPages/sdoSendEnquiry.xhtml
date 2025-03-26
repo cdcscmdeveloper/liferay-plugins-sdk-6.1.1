@@ -11,7 +11,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 		id="InqSuppDocPanel">
-
+		<!--#34392 Start -->
 		<!-- <p:dataTable var="onTable" id="inqSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{backingBean.managedBean.missinDocs}">
 			<ac:paginator for="inqSdList" />
@@ -36,9 +36,9 @@
 
 		</p:dataTable> -->
 		<p:dataTable var="table"
-			value="#{backingBean.managedBean.mandatoryDocs}"
+			value="#{backingBean.managedBean.missinDocsMandatory}"
 			id="onlineMandatoryList" rowIndexVar="index"
-			rendered="#{not empty backingBean.managedBean.mandatoryDocs}"
+			rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
 			style="width:1000px !important; table-layout: fixed !important;"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:columnGroup type="header">
@@ -72,13 +72,13 @@
 			<p:column headerText="#{lbl['lbl.sm.remarks']}"
 				style="width : 27% !important;"
 				rendered="#{table.pmDocument.mandatory}">
-				<h:inputTextarea value="#{table.inquiryRemark}"
-					style="float: left;white-space: normal;width:97% !important;" />
+				<p:inputTextarea value="#{table.inquiryRemark}"
+					style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 			</p:column>
 		</p:dataTable>
 		<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
 		<p:dataTable var="" value="" id="EmptyOnlineMandatoryList"
-			rendered="#{empty backingBean.managedBean.mandatoryDocs}"
+			rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
 			rowIndexVar="index"
 			style="width:1000px !important; table-layout: fixed !important;"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -108,9 +108,9 @@
 		</p:dataTable>
 		<!-- datatable for non-mandatory support doc with record to display -->
 		<p:dataTable var="table"
-			value="#{backingBean.managedBean.nonMandatoryDocs}"
+			value="#{backingBean.managedBean.missinDocsNonMandatory}"
 			id="onlineNonMandatoryList" rowIndexVar="index"
-			rendered="#{not empty backingBean.managedBean.nonMandatoryDocs}"
+			rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
 			style="width:1000px !important; table-layout: fixed !important;"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 
@@ -145,13 +145,13 @@
 			<p:column headerText="#{lbl['lbl.sm.remarks']}"
 				style="width : 27% !important;"
 				rendered="#{!table.pmDocument.mandatory}">
-				<h:inputTextarea value="#{table.inquiryRemark}"
-					style="float: left;white-space: normal;width:97% !important;" />
+				<p:inputTextarea value="#{table.inquiryRemark}"
+					style="float: left;white-space: normal;width:97% !important;" maxlength="2500"/>
 			</p:column>
 		</p:dataTable>
 		<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
 		<p:dataTable var="" value="" id="EmptyOnlineNonMandatoryList"
-			rendered="#{empty backingBean.managedBean.nonMandatoryDocs}"
+			rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
 			rowIndexVar="index"
 			style="width:1000px !important; table-layout: fixed !important;"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
@@ -179,7 +179,7 @@
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>
-
+		<!--#34392 Start -->
 	</p:panel>
 	
 	<p:panel id="inquiryTextPanelId" header="#{lbl['lbl.sm.other.application.inquiry']}"

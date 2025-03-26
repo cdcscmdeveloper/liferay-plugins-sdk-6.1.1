@@ -11,7 +11,7 @@
 	
 	<table style="border: 1px solid black;">
 		<tr align="center" style="background-color: #99ccff;">
-			<td>File Name</td>
+			<td>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.file')</td>
 		</tr>
 		<tr align="center">
 			<td>K/KEW/PK/PS/1100/000000/165/47-(<span style="padding-left:150px" />)</td>
@@ -86,7 +86,7 @@
 		
 		<!--#34159 - START - Re-Order Address based on format in log #36-->
 		<tr align="left">
-			<td width="25%"><b>District</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmDistrict.districtName</td>
 		</tr>
@@ -107,7 +107,7 @@
 		<!--#34159 - START -->
 		#if($compAddress.pmState.adoptDivision)
 		<tr align="left">
-			<td width="25%"><b>Division</b></td>
+			<td width="25%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.division')</b></td>
 			<td width="5%">:</td>
 			<td width="50%">$compAddress.pmDivision.divisionName</td>
 		</tr>
@@ -136,7 +136,7 @@
 	<br /><br />
 	<table width="100%"  class="descTable">
 		<tr  style="background-color:#99ccff;">
-			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.num')</th>
+			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.num').</th>
 			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.desc')</th>
 			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.date.if')</th>
 			<th>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.remarks')</th>
@@ -168,10 +168,6 @@
 			<td>Pegawai Pelawat: 
 				<br />
 				##29781 - Start - Display names of Site Visit Officers 
-				<!-- 
-				<b> i. $svOfficers </b><br/>
-				<b> ii. $svAOfficer </b><br/>
-				-->
 				#foreach($svOfficer in $svOfficers)
 					<b> $velocityCount. $svOfficer </b><br/>
 				#end

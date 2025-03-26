@@ -79,7 +79,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtFinalizationReport> deletedFinalizationReports;
 	
 	// Qualified Suppliers Paging Data Model
-	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDataModel;	
+	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDataModel;		
 
 	private Map<Long, TplSpecZoneDtl> zoneMap;
 	private Map<MapKey,List<QtEvaluationResultDtlBean>> qualifiedSuppliersCache;
@@ -96,12 +96,18 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	//#21695 End
 	private List<ScQtRecommendationUlasanRemarks> finalizationUlasanremarks;
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
-	private List<SmSupplierBranch> supplierBranchList; //#29729
+	
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList; 
+	private List<ScQtEvaluationResultDtl> listDisqualifiedSupplier;
+	// #28777 & #29729 - End
 	
 	private boolean isSetNull ; //Bug #31364
 	
 	//#28784
 	private boolean isDemoReq;
+	
+	private boolean allSupplierDisagreeEPV;//#21692
 	//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 	private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
@@ -630,7 +636,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#21695 End
 
-	//#29729 - Start
+	//#28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -638,7 +644,15 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	//#29729 - End
+	
+	public List<ScQtEvaluationResultDtl> getListDisqualifiedSupplier() {
+		return listDisqualifiedSupplier;
+	}
+
+	public void setListDisqualifiedSupplier(List<ScQtEvaluationResultDtl> listDisqualifiedSupplier) {
+		this.listDisqualifiedSupplier = listDisqualifiedSupplier;
+	}
+	//#28777 & #29729 - End
 
 	public boolean isSetNull() {
 		return isSetNull;
@@ -655,4 +669,15 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setDemoReq(boolean isDemoReq) {
 		this.isDemoReq = isDemoReq;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
+
 }

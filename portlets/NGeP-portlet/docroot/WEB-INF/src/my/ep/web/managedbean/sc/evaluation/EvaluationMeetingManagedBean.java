@@ -29,7 +29,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.web.backingbean.sc.evaluation.EvaluationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -128,6 +130,9 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	/** The remove committee list. */
 	private List<ScCommitteeMember> removeCommitteeList;
+	
+	/** #28895 - 35500 The new committee list. */
+	private List<ScCommitteeMember> newCommitteeAuditTrailList;
 
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -163,9 +168,15 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private boolean hasPreviousMeeting;//#29473
 
 	//12471 - start
-	private String ministry;
-	private String ptjGroup;
-	private String ptj;
+	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
+	private UserCommitteeSearchBean userCommitteeSearchBean;
+	
+	/**
+	 * Instantiates a new EvaluationMeetingManagedBean. 
+	 */
+	public EvaluationMeetingManagedBean() {
+		userCommitteeSearchBean = new UserCommitteeSearchBean();
+	}
 	//12471 - end
 
 	/**
@@ -947,28 +958,30 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	//25037 #568 - end
 
 	//12471 - start
-	public String getMinistry() {
-		return ministry;
+	public IPagingDataModel<PmUser> getUserSearchCommitteeDataModel() {
+		return userSearchCommitteeDataModel;
 	}
 
-	public void setMinistry(String ministry) {
-		this.ministry = ministry;
+	public void setUserSearchCommitteeDataModel(IPagingDataModel<PmUser> userSearchCommitteeDataModel) {
+		this.userSearchCommitteeDataModel = userSearchCommitteeDataModel;
 	}
 
-	public String getPtjGroup() {
-		return ptjGroup;
+	public UserCommitteeSearchBean getUserCommitteeSearchBean() {
+		return userCommitteeSearchBean;
 	}
 
-	public void setPtjGroup(String ptjGroup) {
-		this.ptjGroup = ptjGroup;
-	}
-
-	public String getPtj() {
-		return ptj;
-	}
-
-	public void setPtj(String ptj) {
-		this.ptj = ptj;
+	public void setUserCommitteeSearchBean(UserCommitteeSearchBean userCommitteeSearchBean) {
+		this.userCommitteeSearchBean = userCommitteeSearchBean;
 	}
 	//12471 - end
+
+	//#28895-35500 start
+	public List<ScCommitteeMember> getNewCommitteeAuditTrailList() {
+		return newCommitteeAuditTrailList;
+	}
+
+	public void setNewCommitteeAuditTrailList(List<ScCommitteeMember> newCommitteeAuditTrailList) {
+		this.newCommitteeAuditTrailList = newCommitteeAuditTrailList;
+	}
+	//#28895-35500 end
 }

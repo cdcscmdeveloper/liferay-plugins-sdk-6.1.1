@@ -65,9 +65,10 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private String backToNtf;
     //26279 - start
     private String disciplinaryActionMessage;
-    private List<DisciplinaryActionVO> disciplineVOs;
+    private List<DisciplinaryActionVO> disciplinaryActionVO;
     private SmDisciplinaryAction smDisciplinaryAction;
     //26279 - end
+    private String searchFunctionType;//36386
 	/**
 	 * Gets the reason descs.
 	 *
@@ -408,12 +409,12 @@ public class StopInstrManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -424,4 +425,20 @@ public class StopInstrManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+
+	//36386-start
+	/**
+	 * @return the searchFunctionType
+	 */
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	/**
+	 * @param searchFunctionType the searchFunctionType to set
+	 */
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+	//36386-end
 }

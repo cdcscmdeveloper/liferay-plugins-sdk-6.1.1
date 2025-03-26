@@ -218,6 +218,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final String IDENTIFICATION_TYPE_PASSPORT = "P"; //#32014
+	public static final String IDENTIFICATION_TYPE_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
 	//30865 Start & #34098 - START
@@ -464,6 +465,9 @@ public class SupplierManagementConst {
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - start 
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST = "B";
 	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG = "C";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG = "S";
+	public static final String SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE = "M";
+	public static final String SM_DISCIPLINARY_ACTION = "DA";
 	//33248 - reopen 31/05: Disciplinary Action - 26238 - end 
 
 	public static final String RESUBMIT_APPL_PATH = "resubmit-application?";
@@ -508,6 +512,7 @@ public class SupplierManagementConst {
 	public static final long PM_STATUS_PENDING_APPL_DECLARATION = 20100;
 	public static final long PM_STATUS_PENDING_PROCESS_FEE = 20114;
 	public static final long PM_STATUS_PENDING_PAYMENT = 20251;
+	public static final long PM_STATUS_PENDING_PAYMENT_SOFT_CERT = 20252; //#35579
 	public static final long PM_STATUS_PENDING_VERIFY_SUPP_DOCS = 20101;
 	public static final long PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED = 20299;
 	public static final long PM_STATUS_MOF_ACCT_REG_APPROVED = 20199;
@@ -558,6 +563,7 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_PODEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC;
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC;
 	public static final String SM_APPL_PAGE_TYPE_POINQUIRY = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_POINQUIRY;
+
 	public static final String SM_APPL_BUTTON_TYPE_PREV = "PREV";
 	public static final String SM_APPL_BUTTON_TYPE_SAME = "SAME";
 	public static final String SM_APPL_BUTTON_TYPE_NEXT = "NEXT";
@@ -570,6 +576,7 @@ public class SupplierManagementConst {
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
+	public static final int RECORD_STATUS_ACTIVE = 1; //34209
 	public static final int SUPPLIER_SELF_REQUEST_ADMIN_STATUS = my.ep.constant.sm.SupplierManagementConst.SUPPLIER_SELF_REQUEST_ADMIN_STATUS;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
@@ -655,6 +662,11 @@ public class SupplierManagementConst {
 	public static final String STATUS_REVISE_ENG = "Pending Revise Application";
 	public static final String STATUS_REVISE_BM = "Menunggu Kaji Semula Permohonan";
 	// #12483 - END
+	
+	// #34392 - Start
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL = "Pending Review Site Visit Report - After Approval";
+	public static final String PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM = "Menunggu Laporan Lawatan Tapak - Selepas Diluluskan";
+	// #34392 - End
 
 	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
 	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
@@ -708,7 +720,7 @@ public class SupplierManagementConst {
 
 	public static final int MAX_PAYMENT_BANK = 35;
 
-	public static final String DELETED_BY_DISCIPLINARY_ACTION = "Dihapuskan kerana dikenakan Tindakan Tatatertib"; // 26238, 32332
+	public static final String DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.DELETED_BY_DISCIPLINARY_ACTION;// 26238, 32332
 	public static final long PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION = my.ep.constant.sm.SupplierManagementConst.PM_STATUS_DELETED_BY_DISCIPLINARY_ACTION; // 26238
 
 	// EXTERNAL CONTEXT SESSION KEY MAP
@@ -717,23 +729,17 @@ public class SupplierManagementConst {
 	// SUPP_SUSPEND_OR_TERMINATED
 	public static String SUSPENDED = my.ep.constant.sm.SupplierManagementConst.SUSPENDED;
 	public static String TERMINATED = my.ep.constant.sm.SupplierManagementConst.TERMINATED;
-
-	// 29379 - Site Visit Grouping Enhancement -28775 - Start
-	public static final int MIN_EMPLOYEE = 2;
-
-	// //29380 - Site Visit Grouping Enhancement -28775 - Start
-	// Category Code for L1 L2 L3
-
-	public static final String CATEGORY_CODE_L1_22 = "22";
-	public static final String CATEGORY_CODE_L2_07 = "07";
-	public static final String CATEGORY_CODE_L3_01 = "01";
-	public static final String CATEGORY_CODE_L3_99 = "99";
-	public static final String CATEGORY_CODE_L1_L2_L3_220701 = "220701";
 	
 	//14530
 	public static final String PORTAL_URL = "https://www.eperolehan.gov.my/";
 	public static final int NOTIFICATION_ID_401189 = 401189;
 	public static final int NOTIFICATION_ID_401190 = 401190;
+	
+	//28775 - Site Visit Grouping Enhancement - 28775
+	public static final long STATE_SELANGOR = 11L;
+	public static final long STATE_KL = 15L;
+	public static final List<Long> KLANG_VALLEY = Collections.unmodifiableList(Arrays.asList(STATE_SELANGOR, STATE_KL));
+	public static final int IC_NO_LENGTH = 12;
 
 	//9569
 	public static final String EPROLE_DELETED = "Delete";
@@ -745,33 +751,39 @@ public class SupplierManagementConst {
 	
 	//33783 - start
 	public static final String COMPANY_TYPE_CLBG = my.ep.constant.sm.SupplierManagementConst.COMPANY_TYPE_CLBG;
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public static final String SM_APPL_PAGE_TYPE_AUDIT_TRAIL = my.ep.constant.sm.SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
+	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
+	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
+	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
+	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
+	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
+	public static final String AU_TAB_ID_USER_INFO = "userInfoTab";
+	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
+	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
+	// #28895_35501 End
+	// #34031
+	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
+	
+	//26238 - START
+	public static final String MTO_CODE_04 = "04";
+	public static final String MTO_CODE_05 = "05";
+	public static final String MTO_CODE_06 = "06";
+	public static final String CAT_L1_22 = "22";
+	public static final String CAT_L2_17 = "17";
+	public static final String CAT_L3_09 = "09";
+	public static final int CAT_L3_347 = 347;
+	public static final String BUSINESS_TYPE_CODE_N = "N";
+	public static final String BUSINESS_TYPE_CODE_H = "H";
+	public static final int BUMI_PERCENTAGE = 50;
+	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
+	//26238 - END
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
 	}
 	//33783 - end
-
-	public String getCATEGORY_CODE_L3_99() {
-		return CATEGORY_CODE_L3_99;
-	}
-
-	public String getCATEGORY_CODE_L1_22() {
-		return CATEGORY_CODE_L1_22;
-	}
-
-	public String getCATEGORY_CODE_L2_07() {
-		return CATEGORY_CODE_L2_07;
-	}
-
-	public String getCATEGORY_CODE_L3_01() {
-		return CATEGORY_CODE_L3_01;
-	}
-
-	public String getCATEGORY_CODE_L1_L2_L3_220701() {
-		return CATEGORY_CODE_L1_L2_L3_220701;
-	}
-
-	// 29380 - Site Visit Grouping Enhancement -28775 - End
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1466,4 +1478,63 @@ public class SupplierManagementConst {
 		return SM_FACILITY_OWNERSHIP_RENTED;
 	}
 	//#34711 - END
+
+	public static String getIdentificationTypeIc() {
+		return IDENTIFICATION_TYPE_IC;
+	}
+
+	/**
+	 * @return the smApplPageTypeAuditTrail
+	 */
+	public String getSM_APPL_PAGE_TYPE_AUDIT_TRAIL() {
+		return SM_APPL_PAGE_TYPE_AUDIT_TRAIL;
+	}
+	
+	// #34392 - Start
+	public String getPendingReviewSiteVisitReportAfterApproval() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL;
+	}
+	public String getPendingReviewSiteVisitReportAfterApprovalBM() {
+		return PENDING_REVIEW_SITE_VISIT_REPORT_AFTER_APPROVAL_BM;
+	}
+	// #34392 - End
+
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getAuTabIdBankInfo() {
+		return AU_TAB_ID_BANK_INFO;
+	}
+
+	public String getAuTabIdCategoryCodeInfo() {
+		return AU_TAB_ID_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdSupplierInfo() {
+		return AU_TAB_ID_SUPPLIER_INFO;
+	}
+
+	public String getAuTabIdApprovedCategoryCodeInfo() {
+		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;
+	}
+
+	public String getAuTabIdOverlappingRemarkInfo() {
+		return AU_TAB_ID_OVERLAPPING_REMARK_INFO;
+	}
+
+	public String getAuTabIdApproverRemarkInfo() {
+		return AU_TAB_ID_APPROVER_REMARK_INFO;
+	}
+
+	public String getAuTabIdUserInfo() {
+		return AU_TAB_ID_USER_INFO;
+	}
+
+	public String getAuTabIdAdminInfo() {
+		return AU_TAB_ID_ADMIN_INFO;
+	}
+
+	public static String getSupplierApplSearchUrl() {
+		return SUPPLIER_APPL_SEARCH_URL;
+	}
+	// #28895_35501 End
+
 }

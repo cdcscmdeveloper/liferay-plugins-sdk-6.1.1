@@ -27,16 +27,22 @@
 	<ui:remove> #30477 Start </ui:remove>
 	<ui:param name="isCommitteeApprovalReviseTask" value="#{qTDetailBB.isCommitteeApprovalReviseTask(qTDetailBB.managedBean.taskName)}" />
 	<ui:remove> #30477 End </ui:remove>
-	<!-- 12471 - start -->
-	<ui:param name="isQTPendingCMTSubmissionAfterPublicationApproval"
-		value="#{qtDetailBB.isQTPendingCMTSubmissionAfterPublicationApproval()}" />
-	<!-- 12471 - end -->
 		<table width="100%">
 		<tr>
-		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;"
+			<ui:remove> #35500 Start </ui:remove>
+			<td style="vertical-align: bottom; float:right;" >
+				<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}" 
+					action="#{auditQTBackingBean.redirectToAuditTrailsViews(qTDetailBB.managedBean.qt.qtId)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.auditViewRole}" />
+					&#160;&#160;&#160;
+					
+				<p:commandLink
+					value=" #{lbl['lbl.td.doc.trackingDiary']} " 
 					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
-					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}"/></td>
+					immediate="true"
+					rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}" />
+			</td>
+		<ui:remove> #35500 End </ui:remove>
 		</tr>
 		<ui:remove>//29464-start</ui:remove>
 		<c:if test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">
@@ -72,21 +78,31 @@
 				
 				<div class="ppRightBtn">
 					<ui:remove>
-						#13344 Start				
+						#13344 Start, 36671				
 					</ui:remove>				
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{qTDetailBB.saveQtCAApproval}" process="@form" partialSubmit="true"
+					action="#{approvalBackingBean.saveQtCAApproval}" process="@form" partialSubmit="true"
 					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
 					rendered="#{isCommitteeApprovalTask}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					<ui:remove>
-						#13344 End					
+						#13344 End, 36671					
 					</ui:remove>
 										
 					<h:panelGroup id="approverBtns">
 					<ui:param name="readOnlyTask" value="#{approvalBackingBean.managedBean.readOnly}" />
+					<ui:remove>#10141 Start Vinod</ui:remove>
+					<p:commandButton
+						value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
+						id="sendNotificationApprove" process="@this" 
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@all"
+						action="#{qTDetailBB.sendNotificationForInactiveChecklist()}"
+						rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+						disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
+						title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
+					<ui:remove>#10141 End Vinod</ui:remove>
 					<ui:remove>
 						START Bug #28932					
 					</ui:remove>						
@@ -98,10 +114,13 @@
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 									
+									<ui:remove>#10141 Start Vinod added disable</ui:remove>
 									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 										styleClass="ui-button" onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();"
+										disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 										action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
+									<ui:remove>#10141 End Vinod</ui:remove>
 								</ui:repeat>
 							</ui:define>
 						</ui:decorate>						
@@ -157,11 +176,14 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<ui:param name="bpAction" value="SUBMIT" />
 							
+							<ui:remove>#10141 Start Vinod added disabled</ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button"
 								actionListener ="#{qTDetailBB.assertSpecificationUpdateInProgress(true)}"  
 								update="@([id$=#{submitConfirmId2}])" 
+								disabled="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
 								rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
+							<ui:remove>#10141 End Vinod</ui:remove>
 								
 							<ui:remove> #30477 Start </ui:remove>	
 <!-- #29732 Start - reOpen Fix -->
@@ -242,16 +264,26 @@
 				  	       action="#{qTDetailBB.closeQTDialogPopUp}" disabled="#{isQTClosePermanently}" />
 				  	</c:if>
 				  	<!-- 26095@hatta - end -->
-			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending</ui:remove>
+			  	 	<ui:remove>9019 update condition to disable cancel button for QT status was pending, 12471 - add renderCancelButton </ui:remove>
 			  	 	<!--12471 add checking if QT has been approved for publication and current committee status is Pending Submission / Revision -->
 					<c:if test="#{qTDetailBB.isQTStatusLessThanOrEquals(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_LOA) and !isQTStatusPendingQtSubmission 
-					and (isQTPendingCMTSubmissionAfterPublicationApproval eq false)}">
+					and !qTDetailBB.renderCancelButton()}">
 					<!-- 9019 & 12471 -end- -->
-					<ui:remove>9019 -end</ui:remove>
+					<ui:remove>9019, 12471 - end</ui:remove>
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@this"
 							style="float:right;" action="#{qTDetailBB.checkIsQTAllowCancel}"
 							disabled="#{qTDetailBB.managedBean.qt.brandNew}" />
 					</c:if>
+					<ui:remove>#10141 Start Vinod</ui:remove>
+					<p:commandButton
+						value="#{lbl['lbl.sc.spec.inactive.btn.send.notification']}"
+						id="sendNotification" process="@this" style="float:right;"
+						onclick="blockWidget.show();" oncomplete="blockWidget.hide();" update="@all"
+						action="#{qTDetailBB.sendNotificationForInactiveChecklist()}"
+						rendered="#{qTDetailBB.managedBean.showInactiveChecklistWarning}"
+						disabled="#{qTDetailBB.managedBean.qt.inactiveChecklistNotified}"
+						title="#{lbl['lbl.sc.spec.inactive.btn.send.notification.mouseover']}" />
+					<ui:remove>#10141 End Vinod</ui:remove>
 				</c:if>
 			</td>
 		</tr>
@@ -455,7 +487,7 @@
 		<ui:remove>#29472 - end</ui:remove>
 		
 		<ui:remove>#25077 - Start</ui:remove>	
-		    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || isCommitteeApprovalTask}"> <ui:remove>#34694</ui:remove>
+		    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.qtPendingPublicationApprovalReschedule ||isCommitteeApprovalTask}"> <ui:remove>#34694, #35527</ui:remove>
 				<p:dialog id="reviceApprovalDlgTemp" widgetVar="reviceApprovalDlgTemp"
 					header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
 					resizable="false" width="360" height="90" modal="true"

@@ -24,6 +24,7 @@
     	</tr>
     	
     	<tr>
+    		<!-- #24819 - start -->
 	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.businessregno')</b></td>
 	        <td>$busRegNo</td>
     	</tr>
@@ -35,6 +36,7 @@
 	      	#else
 	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
 	      	#end
+	      	<!-- #24819 - end -->
     	</tr>
     	
     	<tr>
@@ -78,7 +80,7 @@
     	</tr>
     	
    	    <tr>
-	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no').</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no')</b></td>
 	        <td>$mofNo</td>
     	</tr>
     	

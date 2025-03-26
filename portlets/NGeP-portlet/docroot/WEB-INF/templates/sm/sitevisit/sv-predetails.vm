@@ -1,3 +1,4 @@
+
 #parse("templates/sm/sitevisit/shared/header.vm")
 
 	<table width='100%'>
@@ -64,7 +65,7 @@
 		
 		<!-- #34159 - START - Add District-->
 		<tr>
-			 <td width="35%"><b>District</b></td>
+			 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.district')</b></td>
 			 <td>$svAddress.pmDistrict.districtName</td>
 		</tr>
 		<!-- #34159 - START -->
@@ -82,7 +83,7 @@
 		<!--#34159 - START -->
 		#if($svAddress.pmState.adoptDivision)
 		<tr>
-			 <td width="35%"><b>Division</b></td>
+			 <td width="35%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.division')</b></td>
 			 <td>$svAddress.pmDivision.divisionName</td>
 		</tr>
 		#end
@@ -148,8 +149,8 @@
 		    	<tr>
 		    	<td>
 		    		$codeL1$codeL2$codeL3 : $tmp.suppCategory.pmCategoryL3.categoryName
-		    		#if($codeL3 == "99")
-		    			($tmp.suppCategory.otherDesc)
+		    		#if($!tmp.suppCategory.otherDesc && $!tmp.suppCategory.otherDesc != "")
+		    			($!tmp.suppCategory.otherDesc)
 		    		#end
 		    	</td>
 		    	<td></td></tr>

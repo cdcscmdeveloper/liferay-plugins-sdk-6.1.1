@@ -35,14 +35,14 @@
 										listener="#{suppFinalMeetingBackingBean.resetUserAction}" />
 									<f:selectItem
 										itemLabel="#{lbl['lbl.sc.committee.add.member.search.ptj.full']}"
-										itemValue="#{suppFinalMeetingBackingBean.managedBean.orgCatPTJ}" />
+										itemValue="#{ParameterConst.orgCategoryPtj}" />
 									<f:selectItem
 										itemLabel="#{lbl['lbl.sc.committee.add.member.search.other']}"
-										itemValue="#{suppFinalMeetingBackingBean.managedBean.orgCatOther}" />
+										itemValue="#{ParameterConst.orgCategoryOthers}" />
 								</p:selectOneRadio></td>
 						</tr>
 						<c:if
-							test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq suppFinalMeetingBackingBean.managedBean.orgCatPTJ}">
+							test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.committee.add.member.search.ministry']}" /></td>
@@ -50,7 +50,7 @@
 										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.ministry}">
 										<p:ajax onstart="blockWidget.show()"
 											oncomplete="blockWidget.hide()" update="PtjGroupDD PtjDD"
-											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypeMinistry())}" />
+											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterConst.orgTypeMinistry)}" />
 										<f:selectItems
 											value="#{suppFinalMeetingBackingBean.managedBean.ministryDDList}" />
 									</p:selectOneMenu></td>
@@ -62,7 +62,7 @@
 										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.ptjGroup}">
 										<p:ajax onstart="blockWidget.show()"
 											oncomplete="blockWidget.hide()" update="PtjDD"
-											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterConst.getOrgTypePtjGroup())}" />
+											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterConst.orgTypePtjGroup)}" />
 										<f:selectItems
 											value="#{suppFinalMeetingBackingBean.managedBean.ptjGroupDDList}" />
 									</p:selectOneMenu></td>
@@ -78,7 +78,7 @@
 							</tr>
 						</c:if>
 						<c:if
-							test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq suppFinalMeetingBackingBean.managedBean.orgCatOther}">
+							test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryOthers}">
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.committee.add.member.search.org.type']}" /></td>
@@ -86,7 +86,7 @@
 										value="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgType}">
 										<p:ajax onstart="blockWidget.show()"
 											oncomplete="blockWidget.hide()" update="orgNameDD"
-											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterTypeConst.getOrganisationTypes())}" />
+											listener="#{suppFinalMeetingBackingBean.onChangeDD(ParameterTypeConst.organisationTypes)}" />
 										<f:selectItems
 											value="#{suppFinalMeetingBackingBean.managedBean.orgTypeDDList}" />
 									</p:selectOneMenu></td>
@@ -171,21 +171,21 @@
 						</p:column>
 					<!-- #12471 Start -->
 					<c:if
-						test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq suppFinalMeetingBackingBean.managedBean.orgCatPTJ}">
+						test="#{suppFinalMeetingBackingBean.managedBean.userSearchBean.orgCat eq ParameterConst.orgCategoryPtj}">
 						<p:column
 							headerText="#{lbl['lbl.sc.committee.add.member.search.ministry']}">
 							<h:outputText style="white-space: normal;"
-								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.getOrgTypeMinistry())}" />
+								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypeMinistry)}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sc.committee.add.member.search.ptj.group']}">
 							<h:outputText style="white-space: normal;"
-								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.getOrgTypePtjGroup())}" />
+								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypePtjGroup)}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sc.committee.add.member.search.ptj']}">
 							<h:outputText style="white-space: normal;"
-								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.getOrgTypePtj())}" />
+								value="#{suppFinalMeetingBackingBean.getOrgDesc(existingMember.pmUserOrgs,ParameterConst.orgTypePtj)}" />
 						</p:column>
 					</c:if>
 					<!-- #12471 End -->
@@ -205,14 +205,18 @@
 								value="#{lbl[existingMember.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.role']}">
-								<p:selectOneMenu id="appaction"
-										value="#{existingMember.memberRoleId}"
-										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItems
-											value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember)}" />
-									</p:selectOneMenu>
-					</p:column>
-					</p:dataTable>
+							<ui:param name="filteredRoles" value="#{fn:split('S',',')}" />
+							<p:selectOneMenu id="appaction"
+								value="#{existingMember.memberRoleId}"
+								style="width: 110px;margin-bottom: 5px;">
+								<f:selectItems var="role" itemDisabled="#{!role.selectable}"
+									value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValuesBasedOnPTJ(existingMember.PMP,suppFinalMeetingBackingBean.managedBean.scQt, existingMember, filteredRoles)}"
+									itemLabel="#{role.codeName}"
+									itemValue="#{role.pmParameter.parameterId}" />
+							</p:selectOneMenu>
+
+						</p:column>
+				</p:dataTable>
 				</p:panel>
 		</h:panelGroup>
 		<div class="ppRightBtn">

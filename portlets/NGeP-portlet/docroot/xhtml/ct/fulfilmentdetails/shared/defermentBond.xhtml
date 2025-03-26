@@ -1,0 +1,373 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<style type="text/css">
+.calendarDateField input {
+	width: 80px;
+}
+</style>
+
+	<p:panel id="historyPanel" toggleable="true" toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.pb.waiver.table.title']}" />
+			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deferment.bond.dtls']}" />
+		</f:facet>
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.ct.instruction.performance.bond']}" escape="false" />
+		<br />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.ct.instruction.bond.waiver']}" escape="false" />
+		<br />
+		<br />
+		<h:panelGrid columns="2">
+			<p:selectBooleanCheckbox
+				value="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}"
+				disabled="#{!ctBackingBean.managedBean.ctContractAmount.bondReq or ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+				<p:ajax event="change" update="@all"
+					listener="#{ctBackingBean.chkBondWaiverAction}" process="@this" />
+
+			</p:selectBooleanCheckbox>
+			<h:outputFormat id="waiverId"
+				value="#{lbl['lbl.ct.bond.waiver.chkbox']}" styleClass="instruction">
+				<f:param
+					value="#{ctBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+			</h:outputFormat>
+		</h:panelGrid>
+
+		<p:outputPanel id="waiverPanelId"
+			rendered="#{ctBackingBean.managedBean.ctContractAmount.bondWaived}">
+			<p:dataGrid id="dataGridId"
+				value="#{ctBackingBean.managedBean.contractVer.bondWaiverDefermentLatest}"
+				var="bondDeferment" rowIndexVar="defermentIndex" columns="1"
+				style="width:100%" emptyMessage="">
+				<table>
+					<tr>
+						<td><p:outputLabel id="waiverStartDate"
+								value="#{lbl['lbl.ct.pb.waiver.start.date']}"
+								styleClass="required" /></td>
+						<td><c:choose>
+								<c:when
+									test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting 
+								or ctBackingBean.managedBean.disableDeferment}">
+									<!-- Enhancement 13847 - end -->
+									<p:calendar id="startDate"
+										value="#{bondDeferment.waiverStartDate}"
+										styleClass="calendarDateField" size="9" readonlyInput="true"
+										navigator="true" disabled="true"
+										mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+										maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									</p:calendar>
+								</c:when>
+								<c:otherwise
+									test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}">
+									<p:calendar id="startDate"
+										value="#{bondDeferment.waiverStartDate}"
+										styleClass="calendarDateField" size="9" showOn="button"
+										readonlyInput="true" navigator="true"
+										mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+										maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+										<p:ajax event="dateSelect"
+											listener="#{ctBackingBean.checkPerformanceBondExceedDate}" />
+									</p:calendar>
+								</c:otherwise>
+							</c:choose> <ac:iconTooltip
+								value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}" />
+						</td>
+						<td><p:outputLabel id="waiverEndDate"
+								value="#{lbl['lbl.ct.pb.waiver.end.date']}"
+								styleClass="required" /></td>
+						<td colspan="2"><c:choose>
+								<c:when
+									test="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting 
+								or ctBackingBean.managedBean.disableDeferment}">
+									<p:calendar id="endDate" value="#{bondDeferment.waiverEndDate}"
+										styleClass="calendarDateField" size="9" readonlyInput="true"
+										navigator="true" disabled="true"
+										mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+										maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									</p:calendar>
+								</c:when>
+								<c:otherwise>
+									<p:calendar id="endDate" value="#{bondDeferment.waiverEndDate}"
+										styleClass="calendarDateField" size="9" showOn="button"
+										readonlyInput="true" navigator="true"
+										mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+										maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+										<p:ajax event="dateSelect"
+											listener="#{ctBackingBean.checkPerformanceBondExceedDate}" />
+									</p:calendar>
+								</c:otherwise>
+							</c:choose> <ac:iconTooltip
+								value="#{lbl['lbl.ct.tooltip.waiver.pb.end.date']}" /> <!-- #13847 - start -->
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel id="waiverReferenceNo"
+								value="#{lbl['lbl.ct.pb.waiver.reference.no']}"
+								styleClass="required" /></td>
+						<td><p:inputText id="referenceNo" maxlength="20"
+								style="width:130px;" value="#{bondDeferment.referenceNo}"
+								disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
+			  				or ctBackingBean.managedBean.disableDeferment}">
+							</p:inputText></td>
+						<td><h:outputLabel value="#{lbl['lbl.ct.pb.waiver.letter']}"
+								styleClass="required" /></td>
+						<td><p:outputPanel id="uploadDocWaiver">
+
+								<p:commandButton
+									oncomplete="uploadWaiverDlg.show();return false;"
+									update=":form:dataGridId, :form:uploadWaiverDlg"
+									icon=" ui-icon-upload" partialSubmit="true"
+									rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting  and bondDeferment.ctAttachment.fileName == null
+									and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+									disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
+										or ctBackingBean.managedBean.disableDeferment}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.ct.tooltip.pb.waiver.letter']}" />
+							</p:outputPanel></td>
+						<td>
+							<table>
+								<tr>
+									<td><h:commandLink
+											value="#{bondDeferment.ctAttachment.fileName}"
+											styleClass="blue_font"
+											style="word-break: break-word; overflow: hidden; display: -webkit-box; 
+										max-width: 192px; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
+											action="#{ctBackingBean.downloadFile(bondDeferment.ctAttachment)}" />
+									</td>
+									<td><p:commandLink
+											onsuccess="deleteWaiverAttachDlg.show();"
+											action="#{ctBackingBean.setAttachFileIndex(defermentIndex)}"
+											process="@this" partialSubmit="true"
+											disabled="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting}"
+											rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting and bondDeferment.ctAttachment.fileName != null
+										and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+											<h:graphicImage value="/css/images/design/icon_trash.png"
+												styleClass="tasklist_title1" />
+										</p:commandLink></td>
+								</tr>
+							</table>
+						</td>
+						<td><p:commandButton id="addwaiverBtn"
+								value="#{lbl['lbl.btn.add']}" process="@all"
+								action="#{ctBackingBean.validationBondDefermentBeforeHistory()}"
+								update="@all" partialSubmit="true"
+								rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
+								disabled="#{ctBackingBean.managedBean.disableDeferment}" /> <!-- #13847 - end -->
+						</td>
+					</tr>
+				</table>
+			</p:dataGrid>
+		</p:outputPanel>
+		<br></br>
+
+	</p:panel>
+	<br></br>
+
+	<p:panel id="newHistoryPanel" toggleable="true" toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText
+				value="#{lbl['lbl.ct.menu.performanceBond.history.header']}" />
+		</f:facet>
+		<p:dataTable id="tableWaiver" var="bondWaiverDefermentHistory"
+			rowIndexVar="defermentHistoryIndex" widgetVar="tableWaiverWidget"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			render="#{ctBackingBean.managedBean.bondWaiverDefermentHistory.size >0}"
+			value="#{ctBackingBean.managedBean.contractVer.bondWaiverDefermentHistory}"
+			rowKey="#{rowKeyObj}">
+			<ac:paginator for="tableWaiver" />
+
+			<p:column style="width:25%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.pb.waiver.start.date']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.ct.tooltip.waiver.performance.bond.start.date']}" />
+				</f:facet>
+
+				<p:calendar id="popupButtonCal7"
+					value="#{bondWaiverDefermentHistory.waiverStartDate}"
+					styleClass="calendarDateField" size="9" readonlyInput="true"
+					navigator="true" disabled="true"
+					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect"
+						update="@([id$=bondExpDateCalId],[id$=bondExpDateCalIdSpl])"
+						process="@this" />
+				</p:calendar>
+			</p:column>
+
+			<p:column style="width:25%;" styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.pb.waiver.end.date']}" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.waiver.pb.end.date']}" />
+				</f:facet>
+				<p:calendar id="popupButtonCal8"
+					value="#{bondWaiverDefermentHistory.waiverEndDate}"
+					styleClass="calendarDateField" size="9" readonlyInput="true"
+					navigator="true" disabled="true"
+					mindate="#{ctBackingBean.managedBean.contractVer.ctContractValue.effDate}"
+					maxdate="#{ctBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect"
+						update="@([id$=bondExpDateCalId],[id$=bondExpDateCalIdSpl])"
+						process="@this" />
+				</p:calendar>
+
+			</p:column>
+			<p:column style="width:20%;white-space:normal;"
+				styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.pb.waiver.reference.no']}" />
+				</f:facet>
+				<p:inputText id="bondRefNoId"
+					value="#{bondWaiverDefermentHistory.referenceNo}" maxlength="20"
+					disabled="true"
+					rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
+						and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+					<p:ajax process="@this"></p:ajax>
+				</p:inputText>
+				<h:outputText value="#{bondWaiverDefermentHistory.referenceNo}"
+					style="float:left;text-align:left;"
+					rendered="#{ctBackingBean.managedBean.viewContract or ctBackingBean.managedBean.notificationSetting
+					      or !ctBackingBean.managedBean.ctContractAmount.bondReq}" />
+			</p:column>
+			<p:column styleClass="column-align-center"
+				headerText="#{lbl['lbl.ct.pb.waiver.letter']}" style="width:30%;">
+				<h:panelGroup id="uploadBondPg" columns="2">
+					<h:commandLink
+						title="#{bondWaiverDefermentHistory.ctAttachment.fileName}"
+						value="#{bondWaiverDefermentHistory.ctAttachment.fileName}"
+						style="float:left; overflow: hidden; text-overflow: ellipsis; 
+								max-width: 192px;"
+						styleClass="blue_font"
+						action="#{ctBackingBean.commonDownload(bondWaiverDefermentHistory.ctAttachment.filePath, bondWaiverDefermentHistory.ctAttachment.fileName)}" />
+					<p:commandButton
+						oncomplete="uploadHistoryWaiverDlg.show();return false;"
+						update=":form:uploadHistoryWaiverDlg" icon=" ui-icon-upload"
+						process="@this" partialSubmit="true"
+						action="#{ctBackingBean.setAttachFileIndex(defermentHistoryIndex)}"
+						rendered="#{bondWaiverDefermentHistory.ctAttachment.fileName eq null and bondWaiverDefermentHistory.ctAttachment.filePath eq null and !ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}" />
+					<p:commandLink onsuccess="deleteHistoryWaiverAttachDlg.show();"
+						action="#{ctBackingBean.setAttachFileIndex(defermentHistoryIndex)}"
+						process="@this"
+						rendered="#{bondWaiverDefermentHistory.ctAttachment.fileName ne null and bondWaiverDefermentHistory.ctAttachment.filePath ne null 
+									and !ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting}"
+						partialSubmit="true">
+						<h:graphicImage value="/css/images/design/icon_trash.png"
+							styleClass="tasklist_title1" />
+					</p:commandLink>
+				</h:panelGroup>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<br />
+
+	<p:dialog id="uploadWaiverDlg" widgetVar="uploadWaiverDlg" modal="true"
+		resizable="false" width="700px" height="350px" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}"
+		onShow="singleUploadListener(uploadWaiverFile);">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{ctBackingBean.ComonFileUpload}"
+			showButtons="false" mode="advanced" id="uploadWaiver"
+			multiple="false" dragDropSupport="false"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			widgetVar="uploadWaiverFile"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			label="#{lbl['lbl.btn.choose']}"
+			uploadLabel="#{lbl['lbl.btn.upload.all']}"
+			cancelLabel="#{lbl['lbl.btn.remove.all']}" update=":form:dataGridId">
+		</p:fileUpload>
+		<f:facet name="footer">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
+					ajax="false" onclick="uploadWaiverDlg.hide();" />
+			</div>
+		</f:facet>
+	</p:dialog>
+
+	<p:dialog id="uploadHistoryWaiverDlg"
+		widgetVar="uploadHistoryWaiverDlg" modal="true" resizable="false"
+		width="700px" height="350px" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}"
+		onShow="singleUploadListener(uploadHistoryWaiverFile);">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{ctBackingBean.ComonFileUpload}"
+			showButtons="false" mode="advanced" id="uploadHistoryWaiver"
+			multiple="false" dragDropSupport="false"
+			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+			widgetVar="uploadHistoryWaiverFile"
+			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
+			label="#{lbl['lbl.btn.choose']}"
+			uploadLabel="#{lbl['lbl.btn.upload.all']}"
+			cancelLabel="#{lbl['lbl.btn.remove.all']}" update=":form:tableWaiver">
+		</p:fileUpload>
+		<f:facet name="footer">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.close']}" type="button"
+					ajax="false" onclick="uploadHistoryWaiverDlg.hide();" />
+			</div>
+		</f:facet>
+	</p:dialog>
+
+	<p:confirmDialog id="deleteWaiverAttachDlg"
+		widgetVar="deleteWaiverAttachDlg"
+		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+		closable="true" appendToBody="true"
+		header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+				partialSubmit="true" update=":form:dataGridId" id="delLatestWaiver"
+				actionListener="#{ctBackingBean.deleteAttachmentActionByEvent}"
+				oncomplete="deleteWaiverAttachDlg.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="deleteWaiverAttachDlg.hide();" type="button" />
+		</div>
+	</p:confirmDialog>
+
+	<p:confirmDialog id="deleteHistoryWaiverAttachDlg"
+		widgetVar="deleteHistoryWaiverAttachDlg"
+		message="#{lbl['lbl.msg.confirm.delete']}" severity="alert"
+		closable="true" appendToBody="true"
+		header="#{lbl['lbl.msg.confirm.delete.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
+				partialSubmit="true" update=":form:tableWaiver"
+				id="delHistoryWaiver"
+				actionListener="#{ctBackingBean.deleteAttachmentActionByEvent}"
+				oncomplete="deleteHistoryWaiverAttachDlg.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="deleteHistoryWaiverAttachDlg.hide();" type="button" />
+		</div>
+	</p:confirmDialog>
+
+	<p:confirmDialog
+		message="#{lbl['lbl.ct.menu.performanceBond.confirm']}"
+		severity="alert" widgetVar="addPBConfirmDlg" closable="true"
+		appendToBody="true" header="#{lbl['lbl.msg.confirm.cancel.header']}">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+				partialSubmit="true" process="@this"
+				action="#{ctBackingBean.saveBondWaiverToTable()}"
+				onstart="addPBConfirmDlg.hide();blockWidget.show();"
+				oncomplete="blockWidget.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}"
+				onclick="addPBConfirmDlg.hide()" type="button" />
+		</div>
+	</p:confirmDialog>
+</ui:composition>

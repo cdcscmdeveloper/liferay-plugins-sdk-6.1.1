@@ -43,11 +43,13 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
@@ -114,6 +116,7 @@ import my.ep.util.ct.CtAddressUtil;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -125,6 +128,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.RoleHelper;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -136,6 +140,7 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -403,6 +408,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * @return the navigate URL 
 	 */
 	public String backAction() {
+		CircularBackingBean circularBB = new CircularBackingBean(); // Fix - #30866
 		if(getManagedBean().isChkCancelPage()) {
 			//#33533 /#33752 start		
 			getManagedBean().setAction(null);
@@ -443,14 +449,36 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 				getManagedBean().setPreRenderViewDirectPurchaseDataTypeSession(null);
 				// #29800 - end
+				// #25790 - start
+				if (getManagedBean().isSqEditableMode()) {
+					sqbb.getManagedBean().setTrackingDairyView(false);
+					sqbb.getManagedBean().setEditableFlag(true);
+				} else {
+					sqbb.getManagedBean().setTrackingDairyView(true);
+					sqbb.getManagedBean().setEditableFlag(false);
+				}
+				// #25790 - end
+				
 				sqbb.getManagedBean().setProductTemplateSpecBean(getManagedBean().getProductTemplateSpecBean());
 				sqbb.getManagedBean().setServiceTemplateSpecBean(getManagedBean().getServiceTemplateSpecBean());
 			}
 			// #3761 - end
 			return getManagedBean().getGotoPreviewPage();
-		} else {
+		}
+		// Start -#30866
+		else if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			if (circularBB.getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+					|| circularBB.getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				return "/xhtml/ct/viewcontract/resultViewCircularContractQt.xhtml?faces-redirect=true";
+			} else if (circularBB.getManagedBean().getProcurementModeCode().equals(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+				return "/xhtml/ct/viewcontract/resultViewCircularContractDp.xhtml?faces-redirect=true";
+			}
+		}
+		// End -#30866
+		else {
 			return "search.xhtml?faces-redirect=true";
 		}
+		return null;
 	}
 
 	/**
@@ -533,6 +561,33 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// #35506 Start
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+
+					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
+					AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+					AuditContractReqDTO auCtData = new AuditContractReqDTO();
+					auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
+					auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
+					auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+					auCtData.setDocType(resDTO.getCircularVer().getDocType());
+					auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
+					auCtData.setRoleName(getUserRole());
+
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+						auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+						auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+					}
+
+					auditCtBean.saveAuditData(auCtData);
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 				

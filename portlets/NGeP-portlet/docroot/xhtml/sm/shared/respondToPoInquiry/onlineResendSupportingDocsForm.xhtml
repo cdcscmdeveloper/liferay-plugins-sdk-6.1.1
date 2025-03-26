@@ -22,8 +22,7 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		<p:messages id="messages" showDetail="true" showSummary="false"
-			autoUpdate="true" closable="true" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.unclaim.task.submit.msg']}" rendered="#{!backingBean.managedBean.claimTask}"/><br />
 		<table style="width: 100%">
 			<tr>
@@ -118,7 +117,7 @@
 				</p:column>
 			</p:dataTable> -->
 			<!-- datatable for mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.mandatoryDocs}" id="InquiriesMandatoryList" 
+			<p:dataTable var="table" value="#{backingBean.managedBean.missinDocsMandatory}" id="InquiriesMandatoryList" rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -129,8 +128,8 @@
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width:48% !important; overflow: hidden !important;" />
-						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
+							style="width:38% !important; overflow: hidden !important;" />
+						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"	
 							style="width:11% !important; overflow: hidden !important;"/>
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
 							style="width:23% !important; overflow: hidden !important;" />
@@ -145,14 +144,11 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{backingBean.mandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:48% !important;" rendered="#{table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:38% !important;" rendered="#{table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
 				rendered="#{table.pmDocument.mandatory and table.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
-					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-						rendered="#{table.verifiedFlg != 1}"
-						style="float: left;white-space: normal;" />
 					<ui:repeat var="applDocsFile" value="#{table.smApplDocFiles}">
 						<ui:remove>
 							<p:commandLink value="#{applDocsFile.fileName}"
@@ -211,7 +207,7 @@
 				</p:column>
 			</p:dataTable>
 			<!-- datatable for mandatory support doc with no record to display(fix bug in primeface) -->
-			<p:dataTable var="" value="" id="mandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.mandatoryDocs}"
+			<p:dataTable var="" value="" id="mandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -240,7 +236,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<!-- datatable for non-mandatory support doc with record to display -->
-			<p:dataTable var="table" value="#{backingBean.managedBean.nonMandatoryDocs}" id="InquiriesNonMandatoryList" 
+			<p:dataTable var="table" value="#{backingBean.managedBean.missinDocsNonMandatory}" id="InquiriesNonMandatoryList" rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -252,11 +248,11 @@
 	                	<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
 							style="width:2% !important; text-align: center !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" 
-							style="width:48% !important; overflow: hidden !important;" />
+							style="width:38% !important; overflow: hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}"
 							style="width:11% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.remarks']}" 
-							style="width:23% !important; overflow:hidden !important;" />
+							style="width:33% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppdoc.upload.document']}" 
 							style="width:5% !important; overflow:hidden !important;" />
 						<p:column headerText="#{lbl['lbl.sm.suppDoc.added.document.name']}"  
@@ -266,7 +262,7 @@
 				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}" style="width:2% !important; text-align:center !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{supportingDocInquiryBackingBean.nonMandatoryCounter}" style="float: left;white-space: normal;font-weight:bold;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:48% !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.docName']}" style="width:38% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:outputText value="#{table.pmDocument.docName}" style="float: left;white-space: normal;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.file.name']}" style="width:11% !important;" 
@@ -284,7 +280,7 @@
 						<br />
 					</ui:repeat>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:23% !important;" rendered="#{!table.pmDocument.mandatory}">
+				<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width:33% !important;" rendered="#{!table.pmDocument.mandatory}">
 					<h:inputTextarea value="#{table.poRemarks}" disabled="true"
 						style="float:left; white-space:normal; width:97%;" />
 				</p:column>
@@ -314,7 +310,7 @@
 				</p:column>
 			</p:dataTable>
 			<!-- datatable for non-mandatory support doc with record to display(to fix bug in primeface version) -->
-			<p:dataTable var="" value="" id="nonMandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.nonMandatoryDocs}"
+			<p:dataTable var="" value="" id="nonMandatoryEmptyForInquiry" rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
 				rowIndexVar="index" style="width:100% !important; table-layout: fixed !important;" 
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<p:columnGroup type="header">
@@ -389,5 +385,19 @@
 				multiple="true"
 				showButtons="false"/>
 		</p:dialog>
+		<p:confirmDialog id="confirmDeleteSupDocDialog" closable="true"
+			message="#{lbl['lbl.sm.upload.delete.message']}"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			severity="alert" widgetVar="confirmDeleteSupDocDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					onclick="confirmDeleteSupDocDialog.hide();"
+					action="#{supportingDocInquiryBackingBean.deleteInquirySupDocFileAttachment}" update="@form"
+					partialSubmit="true" onstart="blockWidget.show()"
+					oncomplete="blockWidget.hide()" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDeleteSupDocDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>

@@ -9,6 +9,10 @@
 	<!-- #29466 - START -->
 	<ui:param name="manufacturercategoryCode" value="#{biddingBB.checkManufacturerCategoryCodes(biddingBB.managedBean.scQt)}"></ui:param>
 	<!-- #29466 - END -->
+    <ui:remove> #28777#29729 - Start </ui:remove>	
+    <ui:param name="isDisqualified" value="#{biddingBB.managedBean.disqualified}"></ui:param> 
+    <ui:remove> #28777#29729 - End </ui:remove>	
+	
 	<p:panel header="#{lbl['lbl.sc.item.details']}"
 		id="itemDetailsByPackage" toggleable="true">
 
@@ -74,6 +78,9 @@
 			<ui:include src="bidManagementTimers.xhtml"></ui:include>
 		</h:panelGrid>
 
+        <ui:remove> #28777#29729 - Start </ui:remove>	
+	    <h:outputText escape="false" value="#{lbl['lbl.sc.list.qualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}" /> 
+        <ui:remove> #28777#29729 - End </ui:remove>	
 		<p:dataTable id="bidPackagesListForBMBP"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.bidPackages}" var="item">
@@ -153,6 +160,79 @@
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
+		
+		<ui:remove> #28777#29729 - Start </ui:remove>	
+		<h:outputText escape="false" value="#{lbl['lbl.sc.list.disqualified.supplier']}" style="font-weight:bold; font-size: 15px;" rendered="#{isDisqualified}" /> 
+		<p:dataTable id="bidPackagesListForBMBPDisqualified"
+			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+			value="#{biddingBB.managedBean.bidPackagesDisqualified}" var="item" rendered="#{isDisqualified}" >
+			<ac:paginator for="bidPackagesListForBMBPDisqualified"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
+
+				<p:commandLink value="#{item.scBidSupplier.supplierNo}"
+					oncomplete="pricePop.show();"
+					actionListener="#{biddingBB.supplierItemPricePopupAction(item)}"
+					update="@([id$=itemPricePop])" />
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
+				<h:outputText
+					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
+				<h:outputText style="float : right"
+					value="#{item.scBidSupplier.packageStartPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
+				<h:outputText
+					rendered="#{item.scBidSupplier.packageStartPrice ne item.bidPriceTotal}"
+					style="float : right" value="#{item.bidPriceTotal}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
+
+				<h:outputText style="float : right"
+					rendered="#{item.scBidSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
+					value="#{item.bidPriceTotal - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
+
+				<h:outputText style="float : right"
+					rendered="#{item.scBidSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
+					value="#{item.diffPercentage}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+
+			</p:column>
+			<!-- #29466 - START -->
+			<p:column headerText="#{lbl[manufacturercategoryCode ?'lbl.sc.pref.margin.manufacturer' : 'lbl.sc.pref.margin']}">
+				<h:outputText style="float : right" value="#{item.prefMargin}"
+					rendered="#{item.scBidSupplier.bumi}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+			<!-- #29466 - END -->
+			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
+				<h:outputText style="float : right"
+					value="#{biddingBB.managedBean.scheduledBid.packageEstimateCost - item.bidPriceTotal}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	    <ui:remove> #28777#29729 - End </ui:remove>	
+		
 	</p:panel>
 	<p:panel>
 		<div style="align: left">

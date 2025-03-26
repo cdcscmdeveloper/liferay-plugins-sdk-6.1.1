@@ -8,55 +8,76 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.worker.employee']}" >
-	<p:dataTable value="#{template.smSvWorkers}" var="svWorker" selection="#{template.selectedWorkers}" 
-		rowKey="#{svWorker}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
-		<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
-		<p:ajax event="rowSelectCheckbox" update="@parent" />
-		<p:ajax event="rowUnselectCheckbox" update="@parent" />
-		<p:ajax event="rowSelect" update="@parent" />
-        <p:ajax event="rowUnselect" update="@parent" />
-        <p:ajax event="toggleSelect" update="@parent" />
+		<c:set var="isRequired" value="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] 
+				and empty param['disabledValidation']}"/>
+		<p:dataTable value="#{template.smSvWorkers}" var="svWorker" selection="#{template.selectedWorkers}" 
+			rowKey="#{svWorker}" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="workTbl#{catCode}">
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
+			<p:ajax event="rowSelectCheckbox" update="@parent" />
+			<p:ajax event="rowUnselectCheckbox" update="@parent" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
+	        <p:ajax event="rowUnselect" update="@parent" />
+	        <p:ajax event="toggleSelect" update="@parent" />
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.worker.specialization']}
 					</f:facet>
-					<p:inputText value="#{svWorker.expertise}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.specialization']}"
-					maxlength="2000" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
+					<p:inputText value="#{svWorker.expertise}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.specialization']}" 
+						maxlength="2000" required="#{isRequired}" />
 			</p:column>
 			<p:column>
 					<f:facet name="header">
 						#{lbl['lbl.sm.worker.name']}
 					</f:facet>
-				<p:inputText value="#{svWorker.name}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.name']}"
-				maxlength="50" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"/>
+				<p:inputText value="#{svWorker.name}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.name']}" maxlength="50" 
+					required="#{isRequired}"/>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.employee.idtype']}
 				</f:facet>
 				<p:selectOneMenu id="empIdTypeId" size="50" disabled="#{viewFlag}" label="#{lbl['lbl.sm.employee.idtype']}"
-						required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" 
-						value="#{svWorker.identificationTypeId}">
+						required="#{isRequired}" value="#{svWorker.identificationTypeId}"
+						style="width: 90%;margin-bottom: 5px;background-color:white;">
 						<f:selectItems value="#{svoSiteVisitBackingBean.managedBean.identificationTypes}" />
-						<p:ajax event="change" process="@form" 
-							listener="#{svoSiteVisitBackingBean.changeWorkerIdentificationType(svWorker)}"/>
+						<p:ajax event="change" process="@this" update="@this,pnlIdentType"/>
 				</p:selectOneMenu>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.worker.icno']}
 				</f:facet>
-				<p:inputText value="#{svWorker.identificationNo}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.icno']}"
-				maxlength="12" validatorMessage="#{lbl['lbl.sm.invalidIcNo']}" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}"> 
-					<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{svWorker.identificationTypeId ne '115'}"/>
-                </p:inputText>                				
+				<p:outputPanel id="pnlIdentType">
+                	<p:inputText id="empIcId" value="#{svWorker.identificationNo}"
+						label="#{lbl['lbl.sm.worker.icno']}"
+						rendered="#{svWorker.identificationTypeId eq '115'}"
+						required="#{isRequired}" disabled="#{viewFlag}"
+						maxlength="12" size="30" style="width: 80% !important;"
+						validatorMessage="#{lbl['lbl.sm.worker.icno']} - #{lbl['lbl.sm.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						<p:ajax process="@this" partialSubmit="true" update="@this,empIcIdMsg" />
+					</p:inputText>
+					<p:message id="empIcIdMsg" for="empIcId"
+									showSummary="true" showDetail="false" display="icon" />	
+									
+					<p:inputText id="empPassId" value="#{svWorker.identificationNo}"
+						label="#{lbl['lbl.sm.worker.icno']}"
+						rendered="#{svWorker.identificationTypeId ne '115'}"
+						required="#{isRequired}" disabled="#{viewFlag}"
+						maxlength="15" size="30" style="width: 80% !important;">
+					</p:inputText>
+					<p:message id="empPassIdMsg" for="empPassId"
+									showSummary="true" showDetail="false" display="icon" />
+				</p:outputPanel>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.worker.experience']}
 				</f:facet>
 				<p:inputText value="#{svWorker.workExpYear}" disabled="#{viewFlag}" label="#{lbl['lbl.sm.worker.experience']}"
-				maxlength="2" required="#{empty param['disabledValidation'] and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" />
+					maxlength="2" required="#{isRequired}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:inputText>
 			</p:column>
 		</p:dataTable>		
 		
@@ -67,6 +88,7 @@
 				action="#{svoSiteVisitBackingBean.addWorkshopWorker()}" 
 				update="@parent" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				id="deleteEmpBtnId"
 				rendered="#{!viewFlag}" oncomplete="workerDeletePopUp.show();"
 				update="@parent" action="#{svoSiteVisitBackingBean.setSelectedTemplate(template)}"
 				disabled="#{empty template.selectedWorkers}">
