@@ -283,7 +283,13 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
 		for (int i = 0; i < totalNoOfCell; i++) {
-			sheetName.autoSizeColumn(i + 1);
+			// #35501_Reopen#58 Start
+			if (i == 0) {
+				sheetName.setColumnWidth(i + 1 , 25 * 256);
+			} else {
+				sheetName.autoSizeColumn(i + 1);
+			}
+			// #35501_Reopen#58 End
 		}
 	}
 
