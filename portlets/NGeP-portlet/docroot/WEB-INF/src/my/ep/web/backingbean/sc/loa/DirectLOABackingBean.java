@@ -465,7 +465,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractDetails(scLoa);
 			validateContractAdmin(scLoa); // #26474 validate contract admin
 
-			// log.info("submitAction loop executed");
+			// Bug #37791@Syazani -- 04/02/2025 -- Start
+			if (scLoa.getScLoaApproval() != null && !scLoa.isApprovalReq()) {
+				scLoa.setScLoaApproval(null);
+			}
+			// Bug #37791@Syazani -- 04/02/2025 -- End
+			
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(), this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
 			// To avoid insert workflow status when direct submit without save.
@@ -5552,8 +5557,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		// #26130 -start-
         SimpleDateFormat dateSDF = new SimpleDateFormat(
-                commonUtils
-                        .getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+               commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
                         
         context.put("dateSDF", dateSDF);
         context.put("isZonal", scQt.isZonal());
@@ -5614,7 +5618,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
         String headerTitle = SSTConstant.EMPTY_STRING; // #25025,#26770
 	
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-            headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // #25025,#26770
+            		headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // #25025,#26770
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
@@ -9346,8 +9350,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			qtType = getManagedBean().getScLoa().getQtType();
 		}
 
-		if (null != getManagedBean().getScLoa().getScQt()
-				&& null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
+		if (null != getManagedBean().getScLoa().getScQt() && null != getManagedBean().getScLoa().getScQt().getFulfilmentType()) {
 			fulfilmentType = getManagedBean().getScLoa().getScQt().getFulfilmentType();
 		}
 
@@ -9358,17 +9361,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (getManagedBean().getPk7Reasons() == null) {
 			setPk7DropDownValues();
 		}
+		
+		// 34420-start
+		// MC
+		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
+				&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
+			return false;
+		}
+		// 34420-end
 
 		if (StringUtils.isEmpty(getManagedBean().getYesParameterId())) {
-			getManagedBean().setYesParameterId(
-					String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG,
-							ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
+			getManagedBean().setYesParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_COMPLIANCE.toUpperCase())));
 		}
 
 		if (StringUtils.isEmpty(getManagedBean().getNoParameterId())) {
-			getManagedBean().setNoParameterId(
-					String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG,
-							ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
+			getManagedBean().setNoParameterId(String.valueOf(getParameterIdByTypeAndCode(ParameterTypeConst.YES_NO_FLAG, ParameterConst.COMPLIANCE_STATUS_NOT_COMPLIANCE.toUpperCase())));
 		}
 
 		if (StringUtils.isEmpty(getManagedBean().getBondReqSelectedVal())) {
@@ -9379,15 +9386,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 			
-		// 34420-start
-		// MC
-		if (null != contractType && ParameterTypeConst.CONTRACT_TYPE.equals(contractType.getParameterType())
-				&& !ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType.getParameterCode())) {
-			return false;
-		}
-		// 34420-end
-			
-		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
+		if (null != qtType && ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode())) {
 			QtTypepk7 = true;
 
@@ -9635,14 +9634,27 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35078@Syazani -- End 14/09/2023	
-
+	
+	// #32648 populate lampiran 7 if LOA at supplier - start
+	public boolean isDpAuditOrQtAuditOrQtMaint() {
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						|| QTConstants.PORTLET_NAME_DL_CREATE
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+	}
+	// #32648 populate lampiran 7 if LOA at supplier - end
+	
 	// #26130 - Start.
 	/**
-     * @param scLoaReportAttachment
-     * @param scLoa
-     * @throws Exception
-     * @throws FileNotFoundException
-     */
+	 * @param scLoaReportAttachment
+	 * @param scLoa
+	 * @throws Exception
+	 * @throws FileNotFoundException
+	 */
 	private void generaateUpdatedLampiraA3PDF(ScLoaReportAttachment scLoaReportAttachment, ScLoa scLoa)
 			throws Exception, FileNotFoundException {
 		VelocityContext context = new VelocityContext();
@@ -9762,16 +9774,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
-    // #26130 - End.
-    
-    // #26130 - Start.
-    /**
-     * @param file
-     * @param filePath
-     * @param tempFilePath
-     * @param context
-     * @throws IOException
-     */
+
+	// #26130 - End.
+
+	// #26130 - Start.
+	/**
+	 * @param file
+	 * @param filePath
+	 * @param tempFilePath
+	 * @param context
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	public void mergePdf(File file, String filePath, String tempFilePath, VelocityContext context) throws IOException {
 		PDDocument sstDocument = null;
@@ -9873,9 +9886,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				lampiranA3Doc.close();
 		}
 	}
-    // #26130 - End.
-	
-	//#26130 start 	
+
+	// #26130 - End.
+
+	// #26130 start
 	public TplSpecQuestion retrieveDLSpecService(List<TplSpecMaster> specMasters) {
 		TplSpecQuestion specQuestion = new TplSpecQuestion();
 		List<List<HashMap<String, Object>>> listDL = new ArrayList<>();
@@ -11587,17 +11601,4 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		return hidden;
 	}
 	/* #31033, #26247 End */
-	
-	// #32648 populate lampiran 7 if LOA at supplier - start
-	public boolean isDpAuditOrQtAuditOrQtMaint() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
-				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| SourcingConstants.PORTLET_NAME_DP_SEARCH
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-						|| QTConstants.PORTLET_NAME_DL_CREATE
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
-	}
-	// #32648 populate lampiran 7 if LOA at supplier - end
 }
