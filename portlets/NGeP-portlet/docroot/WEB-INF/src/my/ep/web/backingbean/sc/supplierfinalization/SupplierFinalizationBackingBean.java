@@ -78,7 +78,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.actor.ScActorResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -6080,7 +6079,7 @@ return	remarksNotFound;
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
+			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -11194,8 +11193,6 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 			
-			 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-			 searchReqDTO.setDocId(qtId);
 			 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
 				 return Boolean.TRUE;
 			 }
