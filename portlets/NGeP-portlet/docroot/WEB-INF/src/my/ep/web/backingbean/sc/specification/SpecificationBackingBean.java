@@ -12612,10 +12612,9 @@ public class SpecificationBackingBean extends
 	 */
 	public void specCommitteBpmTask(String action) {
 // #29732 Start - reOpen Fix
-		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) 
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
+		if (!this.getManagedBean().getQt().isPanel() && (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ENDORSE)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise()) {
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise())) {
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() 
 					|| BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())){
 				throw new EpException(MessageConst.ERROR_760025);
@@ -17626,7 +17625,7 @@ public class SpecificationBackingBean extends
 
 		// 29732 fix duplicate issues while deleting the category and add the same id -start-
 		if (null != removeCategoryCodes) {
-			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+			List<ScQtCategory> categoryResultsnew;
 			categoryResultsnew = this.getManagedBean().getQtCategoryList();
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
@@ -18172,12 +18171,15 @@ public class SpecificationBackingBean extends
 
 		// 29732 fix duplicate issues while deleting the category and add the same id -start-
 		if (null != removeCategoryCodes) {
-			List<ScQtCategory> categoryResultsnew = new ArrayList<>();
+			List<ScQtCategory> categoryResultsnew;
 			categoryResultsnew = this.getManagedBean().getQtCategoryList();
 			this.getManagedBean().setQtCategoryList(categoryResultsnew);
 		}
 		// 29732 -end-
-		
+		spReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes); 
+		//29732 add here, issue could need to delete in dao those category has been delete in managebean
+		//Status : Pending document preparation
+		//Screen : Pending spec preparation (Revision)
 		spReqDTO.setRemoveDeductions(deductionRemoveList);// #29474 - end
 		spReqDTO.setTobeRemoveList(checklistRemoveList);
 		spReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);//#15391 - end
