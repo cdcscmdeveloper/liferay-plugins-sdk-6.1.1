@@ -321,6 +321,7 @@ public class ViewApplHistoryBackingBean extends
 				//END 27951
 			}
 		} else {			
+			//#27232 - END SSM CHANGES FOR RESUBMIT
 			if (SmApplicationUtil.isRejectedApplValidForResubmission(getManagedBean().getSmAppl())) {
 				redirectToReapplyNewAppl(true); //29956
 			} else {
@@ -385,7 +386,9 @@ public class ViewApplHistoryBackingBean extends
 			List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 			//start #29956
 			getManagedBean().setResubmitAppl(resubmission);
-			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(getManagedBean().getSmAppl(), getManagedBean().getSsmResDTO());
+			
+			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
+			
 			if(displayPopupDowngradeSSMOwner){
 				proceed = false;
 			}
@@ -623,11 +626,10 @@ public class ViewApplHistoryBackingBean extends
 			// #36401 - End
 		}
 	}
-
+	
 	// #36401 - Start
 	// If there is duplicate cert on same applId, prevention step, To make sure display latest smMofcert only by applId
-	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(
-			List<SmMofCert> mofCerts) {
+	private List<SmMofCert> getLatestSmMofCertsIfDuplicate(List<SmMofCert> mofCerts) {
 		List<SmMofCert> cert = new ArrayList<>();
 		List<SmMofCert> bumiCert = new ArrayList<>();
 

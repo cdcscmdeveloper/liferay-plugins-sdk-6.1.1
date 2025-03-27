@@ -14,14 +14,10 @@ import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,38 +57,35 @@ public class TrustGateHelper {
 			client = KMCClientFactory.getInstance(f);
 		} catch (Exception e) {
 			log.info("Error while getKMCClient");
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return client;
 	}
 
-	public List<String> getChallengeQuestion(String identificationNo,
-			String epNo, String selectedQuest) {
-		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
-				+ "||" + selectedQuest);
+	public List<String> getChallengeQuestion(String identificationNo, String epNo, String selectedQuest) {
+		log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest);
 		List<String> retVal = new ArrayList<String>();
 		try {
 			log.info("Before Get Client=======================");
 			KMCClient client = getClient();
-			log.info("After Get Client======================="+client);
+			log.info("After Get Client=======================" + client);
 			KMCRequestBuilder reqbuilder = getReqBuilder();
-			log.info("After Get reqbuilder======================="+reqbuilder);
-			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder
-					.getChallengeQuestions(identificationNo, 10, epNo);
-			log.info("After Get GetChallengeQuestionResponse======================="+res);
+			log.info("After Get reqbuilder=======================" + reqbuilder);
+			IKMCAPIResponse.GetChallengeQuestionResponse res = reqbuilder.getChallengeQuestions(identificationNo, 10, epNo);
+			log.info("After Get GetChallengeQuestionResponse=======================" + res);
 
-			//#30425 - Start
-			//remove all validation to spkibackingBean
-					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
-						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
-					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
-						log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
-					} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
-						log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
-					} else {
-						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
-					}
-			//#30425 - End
+			// #30425 - Start
+			// remove all validation to spkibackingBean
+			if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
+				log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
+			} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
+				log.info("50; " + MessageConst.ERROR_DIGICERT_776060);
+			} else if (res.getStatusCode() == SPKIConst.OPERATION_FAILED) {
+				log.info("0; " + MessageConst.ERROR_DIGICERT_776061);
+			} else {
+				log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
+			}
+			// #30425 - End
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
@@ -109,9 +102,8 @@ public class TrustGateHelper {
 			}
 
 		} catch (Exception ex) {
-			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo
-					+ "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
-			ex.printStackTrace();
+			log.info("TRUSTGATE CHALL QUEST:" + identificationNo + "||" + epNo + "||" + selectedQuest + " ERROR MSG:", ex);
+			log.error(ex.getMessage(), ex);
 			throw new EpException(ex.getMessage());
 
 		}
@@ -139,8 +131,8 @@ public class TrustGateHelper {
 		try {
 			KMCClient client = getClient();
 			KMCRequestBuilder reqbuilder = getReqBuilder();
-			IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), challenges, new ByteArrayInputStream(
-					dataForSigning.getBytes()));
+			IKMCAPIResponse.SignDataResponse res = reqbuilder.signData(identificationNo, epNo, pin.toCharArray(), challenges,
+					new ByteArrayInputStream(dataForSigning.getBytes()));
 
 			log.info("TRUSTGATE SIGNING STATUS CODE:" + res.getStatusCode() + " MESSAGE:" + res.getStatusMessage());
 
@@ -179,7 +171,7 @@ public class TrustGateHelper {
 			}
 		} catch (Exception e) {
 			log.info("TRUSTGATE SIGNING:" + identificationNo + "||" + epNo + "||" + pin + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			vo.setErrMsg(MessageUtils.getMessage(MessageConst.ERROR_776062, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()));
 		}
 		vo.setSignedData(signedData);
@@ -194,15 +186,15 @@ public class TrustGateHelper {
 			KMCRequestBuilder reqbuilder = getReqBuilder();
 			IKMCAPIResponse.GenSecToken res = reqbuilder.generateToken(identificationNo, epNo);
 			switch (res.getStatusCode()) {
-				case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-					tok = res.TOKEN;
-					break;
-	
-				default:
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				tok = res.TOKEN;
+				break;
+
+			default:
 			}
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 			throw new EpException(ex.getMessage());
 		}
 
@@ -211,7 +203,8 @@ public class TrustGateHelper {
 
 	public void revoke(String identificationNo, String epNo) throws IOException {
 		log.info("TRUSTGATE REVOKE:" + identificationNo + "||" + epNo);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
@@ -222,7 +215,8 @@ public class TrustGateHelper {
 
 	public void resetPIN(String identificationNo, String epNo, String email) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||" + email);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
@@ -233,7 +227,8 @@ public class TrustGateHelper {
 
 	public void changePIN(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE CHANGE PIN:" + identificationNo + "||" + epNo);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
@@ -244,7 +239,8 @@ public class TrustGateHelper {
 
 	public void updateChallResp(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
@@ -258,7 +254,7 @@ public class TrustGateHelper {
 			try {
 				instance = new TrustGateHelper();
 			} catch (Exception e) {
-
+				log.error(e.getMessage(), e);
 			}
 		}
 		return instance;
@@ -273,7 +269,7 @@ public class TrustGateHelper {
 				log.info("getClient=====================================" + client);
 			} catch (Exception e) {
 				log.info("getClient=====================================Error");
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		return client;
@@ -288,7 +284,7 @@ public class TrustGateHelper {
 				log.info("reqBuilder=====================================");
 			} catch (Exception e) {
 				log.info("reqBuilder=====================================Error");
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 		return reqBuilder;
@@ -303,7 +299,7 @@ public class TrustGateHelper {
 					dns = "https://digitalid.msctrustgate.com";
 				}
 			} catch (Exception e) {
-
+				log.error(e.getMessage(), e);
 			}
 		}
 		return dns;

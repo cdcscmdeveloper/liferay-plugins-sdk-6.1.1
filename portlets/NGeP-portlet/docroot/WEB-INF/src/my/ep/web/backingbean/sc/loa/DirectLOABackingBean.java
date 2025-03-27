@@ -451,8 +451,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			validateContractDetails(scLoa);
 			validateContractAdmin(scLoa); // #26474 validate contract admin
 
+			// Bug #37791@Syazani -- 04/02/2025 -- Start
+			if (scLoa.getScLoaApproval() != null && !scLoa.isApprovalReq()) {
+				scLoa.setScLoaApproval(null);
+			}
+			// Bug #37791@Syazani -- 04/02/2025 -- End
+			
 			validateDuplicateItems(this.getManagedBean().getProdscQtDoc(),this.getManagedBean().getServicescQtDoc());
 			scLoa.setScLoaWorkFlowStatuses(null);
+			
+			//Bug #37791@Syazani -- 04/02/2025 -- Start
+			if (scLoa.getScLoaApproval() != null && !scLoa.isApprovalReq()) {
+				scLoa.setScLoaApproval(null);
+			}
+			//Bug #37791@Syazani -- 04/02/2025 -- End
+			
 			// To avoid insert workflow status when direct submit without save.
 			if (scLoa.isBrandNew()) {
 				List<ScLoaRemark> remarks = scLoa.getScLoaRemarks();
@@ -740,6 +753,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param bankAccNo
 	 * @return
 	 */
+	/*
 	private Long getBankByAccountNo(String bankAccNo) {
 		if (StringUtils.isNotEmpty(bankAccNo)) {
 			List<SmSupplierBank> bankAccounts = this.getManagedBean()
@@ -754,6 +768,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		return null;
 	}
+	*/
 
 	/**
 	 * Pre render page navigation to loa supplier page based on task id
@@ -2778,6 +2793,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return the text before sign
 	 */
 	public String getTextBeforeSign() {
+		// #36466 -start-
+		StringBuilder sb = new StringBuilder();
+
+		if (getManagedBean().getScLoa() != null) {
+			sb.append(getManagedBean().getScLoa().getLoaNo());
+		}
+
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+
+		textBeforeSign = sb.toString();
+		// #36466 -end-
+
 		return textBeforeSign;
 	}
 

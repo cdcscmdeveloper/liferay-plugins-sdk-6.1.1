@@ -3659,9 +3659,11 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
 					//#32236 end
+					
 					// #37779 - Start
 					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 					// #37779 - End
+					
 					setDefaultPoReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC:
@@ -3732,9 +3734,11 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
 					//#32236 - end
+					
 					// #37779 - Start
 					SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 					// #37779 - End
+					
 					setDefaultApproverReviewSection(); //#36622
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV:
@@ -3936,7 +3940,10 @@ public class SmApplicationBackingBean extends
 						if(resId.equals(new Long(345L))){//safe check, not necessarily needed, just in case, reason(others) must be accompanied by a remark
 							if (StringUtils.isBlank(getManagedBean()
 									.getApplnRejectionRemarks())) {
-								throw new EpException("Rejection Remarks is mandatory.");
+								//#37896, 15629 - Start
+								throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+										null));
+								//#37896,15629 - End
 							}
 						}
 						
@@ -3955,8 +3962,10 @@ public class SmApplicationBackingBean extends
 			}
 		}else{
 			//Just in case
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Reject reason in mandatory."));		
+			//#37896, 15629 - Start
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.error.rejection.reasons",
+					null)); 
+			//#37896, 15629 - End
 		}
 
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
@@ -4068,6 +4077,7 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
 			// #37779 - Start
 			if (getManagedBean().isSupplierUser()) {
+				SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
 				validSave = SmApplicationUtil.validateBankBeforeSave(validSave,
 						getManagedBean(), currentTab);
 			}
@@ -4590,14 +4600,14 @@ public class SmApplicationBackingBean extends
 					SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
 		}
 		
-		//#36483 - START
+		//#36483
 		if(getManagedBean().getBasicCompanyFacility().getOwnershipType().equals(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 			SmApplicationUtil.getInstance().cloneAddress(
 					getManagedBean().getBasicCompanyFacility().getSmAddress(),
 					getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getSmCompanyAddresses().get(0).getSmAddress());
 		}
-		//#36483 - END
+		//#36483
 				
 		setFacilityDefaultPrices(getManagedBean().getBasicCompanyFacility());
 		
@@ -11964,10 +11974,23 @@ public class SmApplicationBackingBean extends
 	public void deleteSupDocFileAttachment() {
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-		//#28807 - Start
-		if(this.getManagedBean().getSmApplDocFile() != null){
-			mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+		// #37775 - Start
+		if (this.getManagedBean().getSmApplDocFile() != null) {
+			if (mainDoc.getSmApplDocFiles().size() == 1) {
+				// If there is only one file, clear its name
+				this.getManagedBean().getSmApplDocFile().setFileName(" ");
+				this.getManagedBean().getSmApplDocFile().setFilePath(" ");
+				// Reassign the modified object back to the list (ensuring persistence)
+				
+				List<SmApplDocFile> updatedFiles = new ArrayList<>(mainDoc.getSmApplDocFiles());
+				updatedFiles.set(0, this.getManagedBean().getSmApplDocFile());
+				mainDoc.setSmApplDocFiles(updatedFiles);
+			} else {
+				// #28807 - Start
+				mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			}
 		}
+		// #37775 - End
 		this.getManagedBean().setSmApplDocFile(null);
 	}
 	//#28807 - End
@@ -12079,7 +12102,7 @@ public class SmApplicationBackingBean extends
 						.isShowStorePanel(), getManagedBean()
 						.isShowWorkShopPanel());
 	}
-	
+
 	//#36483 - START
 	public void onChangeAddress(SmAddress addr, String addrLine, String panelName){
 		if(panelName.equalsIgnoreCase(SupplierManagementConst.SM_BASIC_INFO_PANEL) && getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){

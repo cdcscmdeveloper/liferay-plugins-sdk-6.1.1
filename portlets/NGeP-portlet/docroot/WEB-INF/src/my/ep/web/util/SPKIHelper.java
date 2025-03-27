@@ -34,10 +34,9 @@ public class SPKIHelper {
 
 	}
 	
-	public SpkiVO getSignedData(String provider,String identificationNo, String epNo,
-			String pin, Map<Object, Object> challenges, String dataForSigning) {
-		log.info("BEFORE SIGNING:" + identificationNo + "||" + epNo
-				+ "||" + pin + "||" + dataForSigning+"||"+provider);
+	public SpkiVO getSignedData(String provider, String identificationNo, String epNo, String pin, Map<Object, Object> challenges,
+			String dataForSigning) {
+		log.info("BEFORE SIGNING:" + identificationNo + "||" + epNo + "||" + dataForSigning + "||" + provider);
 		SpkiResDTO resDTO = null;
 		byte[] signedData = null;
 		SpkiVO vo = new SpkiVO();
@@ -46,13 +45,25 @@ public class SPKIHelper {
 		reqDTO.setIdentificationNo(identificationNo);
 		reqDTO.setSoftCertProvider(provider);
 		reqDTO.setDataForSigning(dataForSigning);
+		reqDTO.setPin(pin);
+		if (challenges != null && !challenges.isEmpty()) {
+			for (Map.Entry<Object, Object> entry : challenges.entrySet()) {
+				Object question = entry.getKey();
+				Object answer = entry.getValue();
+				reqDTO.setSelectedQuestion(question.toString());
+				reqDTO.setAnswer(answer.toString());
+				log.info("question : " + question);
+				log.info("answer : " + answer);
+			}
+		}
 		try {
 			resDTO = SmServiceLookup.getSpkiSO().signData(reqDTO);
 			signedData = resDTO.getSignedData();
+			vo.setStatusCode(resDTO.getStatusCode());
+			vo.setStatusMsg(resDTO.getStatusMsg());
+			vo.setErrMsg(resDTO.getErrorMessage());
 		} catch (Exception e) {
-			log.info("SIGNING:" + identificationNo + "||" + epNo
-					+ "||" + pin + "||" + dataForSigning + "  ERROR MSG:"
-					+ e.getMessage());
+			log.info("SIGNING:" + identificationNo + "||" + epNo + "||" + dataForSigning + "  ERROR MSG:" + e.getMessage());
 			vo.setErrMsg(resDTO.getErrorMessage());
 		}
 		vo.setSignedData(signedData);

@@ -1,6 +1,3 @@
-/*
- * 
- */
 package my.ep.web.backingbean.report;
 
 import java.util.ArrayList;
@@ -101,13 +98,6 @@ public class PmReportsBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
-	// public List<SelectItem> retrieveReportListByAuthorization() {
-	// log.info("ReportBackingBean-retrieveReportListByAuthorization");
-	// return
-	// this.retrieveReportListByAuthorization(ModuleCodeConst.PROFILE_MANAGEMENT
-	// .toUpperCase());
-	// }
 
 	public void onChangeReportName() {
 		log.info("onChangeReportName");
@@ -260,23 +250,19 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_SERVICE_TYPE, getManagedBean()
 					.getServiceType());
 		}
-
+		
 		// #36719 - Start
-		if (getManagedBean().getSelectedFinancialOrg() != null
-				&& getManagedBean().getSelectedFinancialOrg().getFinOrgName() != null) {
-			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean()
-					.getSelectedFinancialOrg().getFinOrgName());
+		if (getManagedBean().getSelectedFinancialOrg() != null && getManagedBean().getSelectedFinancialOrg().getFinOrgName() != null) {
+			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean().getSelectedFinancialOrg().getFinOrgName());
 		}
-		if (getManagedBean().getSelectedFinancialOrg() != null
-				&& getManagedBean().getSelectedFinancialOrg().getBizRegNumber() != null) {
-			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
-					.getSelectedFinancialOrg().getBizRegNumber());
+		
+		if (getManagedBean().getSelectedFinancialOrg() != null && getManagedBean().getSelectedFinancialOrg().getBizRegNumber() != null) {
+			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean().getSelectedFinancialOrg().getBizRegNumber());
 		}
-		// #36719 - End
+		//#36719 - End
 
 		if (getManagedBean().getStatus() != null) {
-			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
-					getManagedBean().getStatus().toString());
+			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS, getManagedBean().getStatus().toString());
 		}
 	}
 
@@ -1431,7 +1417,7 @@ public class PmReportsBackingBean extends
 		}
 		return items;
 	}
-
+	
 	// #36719 - Start
 	/**
 	 * filter services Type
