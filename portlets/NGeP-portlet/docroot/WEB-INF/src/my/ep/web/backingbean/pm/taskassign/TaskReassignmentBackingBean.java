@@ -2932,9 +2932,14 @@ public class TaskReassignmentBackingBean extends
 						new ArrayList<Long>(Arrays.asList(userId,
 								getFacesScopes().getUserSessionBean()
 										.getUserId())),searchBean);
-				
 			}
-			
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "").replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
+		
 			isSearched = true;
 			break;
 		case ProfileManagementConst.REASSIGN_TYPE_SUPPLIER:
