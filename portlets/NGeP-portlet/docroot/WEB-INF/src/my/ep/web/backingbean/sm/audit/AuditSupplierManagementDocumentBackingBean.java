@@ -217,8 +217,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		// Section - Setting Cell Style for No Records Found message.
 		CellStyle noRecordsStyle = new ExcelCellStyleBuilder(wb).buildDefaultCellStyle();
 		// Cell Format: String
-		CellStyle cellStyleStringWrap = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
-		CellStyle cellStyleStringNoWrap = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.FALSE).buildDataCellStyleString();
+		CellStyle cellStyleString = new ExcelCellStyleBuilder(wb).setIsTxtWrap(Boolean.TRUE).buildDataCellStyleString();
 		// Cell Format: DateTime
 		CellStyle cellStyleDateTime = new ExcelCellStyleBuilder(wb).buildDataCellStyleDateTime();
 		// End Section - Setting Cell Style for each cell
@@ -249,31 +248,31 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 				cellActionDate.setCellStyle(cellStyleDateTime);
 				Cell cellActionType = currRow.createCell(2);
 				cellActionType.setCellValue(rsltReportList.get(a).getActionType());
-				cellActionType.setCellStyle(cellStyleStringNoWrap);
+				cellActionType.setCellStyle(cellStyleString);
 				Cell cellActionBy = currRow.createCell(3);
 				cellActionBy.setCellValue(rsltReportList.get(a).getActionBy());
-				cellActionBy.setCellStyle(cellStyleStringNoWrap);
+				cellActionBy.setCellStyle(cellStyleString);
 				Cell cellOrg = currRow.createCell(4);
 				cellOrg.setCellValue(rsltReportList.get(a).getOrg());
-				cellOrg.setCellStyle(cellStyleStringNoWrap);
+				cellOrg.setCellStyle(cellStyleString);
 				Cell cellRole = currRow.createCell(5);
 				cellRole.setCellValue(rsltReportList.get(a).getRole());
-				cellRole.setCellStyle(cellStyleStringNoWrap);
+				cellRole.setCellStyle(cellStyleString);
 				Cell cellDocType = currRow.createCell(6);
 				cellDocType.setCellValue(rsltReportList.get(a).getDocType());
-				cellDocType.setCellStyle(cellStyleStringNoWrap);
+				cellDocType.setCellStyle(cellStyleString);
 				Cell cellDocNo = currRow.createCell(7);
 				cellDocNo.setCellValue(rsltReportList.get(a).getDocNo());
-				cellDocNo.setCellStyle(cellStyleStringNoWrap);
+				cellDocNo.setCellStyle(cellStyleString);
 				Cell cellFieldName = currRow.createCell(8);
 				cellFieldName.setCellValue(rsltReportList.get(a).getFieldName());
-				cellFieldName.setCellStyle(cellStyleStringNoWrap);
+				cellFieldName.setCellStyle(cellStyleString);
 				Cell cellOldValue = currRow.createCell(9);
 				cellOldValue.setCellValue(rsltReportList.get(a).getOldValue());
-				cellOldValue.setCellStyle(cellStyleStringWrap);
+				cellOldValue.setCellStyle(cellStyleString);
 				Cell cellNewValue = currRow.createCell(10);
 				cellNewValue.setCellValue(rsltReportList.get(a).getNewValue());
-				cellNewValue.setCellStyle(cellStyleStringWrap);
+				cellNewValue.setCellStyle(cellStyleString);
 			}
 		} else {
 			createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
@@ -283,15 +282,18 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	}
 
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
-		for (int i = 0; i < totalNoOfCell; i++) {
-			// #35501_Reopen#58 Start
-			if (i == 0) {
-				sheetName.setColumnWidth(i + 1 , 25 * 256);
-			} else {
-				sheetName.autoSizeColumn(i + 1);
-			}
-			// #35501_Reopen#58 End
-		}
+		// #35501_Reopen#58 Start
+		sheetName.setColumnWidth(1, 25 * 256);
+		sheetName.setColumnWidth(2, 20 * 256);
+		sheetName.setColumnWidth(3, 30 * 256);
+		sheetName.setColumnWidth(4, 30 * 256);
+		sheetName.setColumnWidth(5, 30 * 256);
+		sheetName.setColumnWidth(6, 20 * 256);
+		sheetName.setColumnWidth(7, 20 * 256);
+		sheetName.setColumnWidth(8, 20 * 256);
+		sheetName.setColumnWidth(9, 50 * 256);
+		sheetName.setColumnWidth(10, 50 * 256);
+		// #35501_Reopen#58 End
 	}
 
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
