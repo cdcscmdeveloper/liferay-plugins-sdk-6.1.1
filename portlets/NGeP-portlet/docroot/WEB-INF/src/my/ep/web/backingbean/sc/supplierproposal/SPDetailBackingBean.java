@@ -6336,7 +6336,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		public boolean checkValidationSupplierBranchDeleted(){
 			boolean isSupplierBranchDeleted = false;
 			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
-			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
+			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			}

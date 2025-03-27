@@ -252,8 +252,9 @@
 				31101 - Added Disciplinary Action validation
 			</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
-							     <h:outputText value="#{lbl['lbl.sc.disqualified.reason.status']}" />  
-							</p:column>		
+			    <h:outputText value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" 
+			    rendered="#{suppFinalBiddingBackingBean.checkDisqualifiedSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId ,itemSupplierDis.scQtProposal.scQtSupplier.smSupplier.supplierId)}" />	
+			</p:column>		
 		</p:dataTable>  
         <ui:remove> #28777#29729 - End </ui:remove>
 		                

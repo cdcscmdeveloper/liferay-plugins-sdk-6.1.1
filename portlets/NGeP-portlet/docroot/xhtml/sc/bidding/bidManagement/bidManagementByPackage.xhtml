@@ -231,7 +231,8 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
-			     <h:outputText value="#{lbl['lbl.sc.disqualified.reason.status']}" />  
+			     <h:outputText rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId)}"  
+			     value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />    
 			</p:column>
 		</p:dataTable>
 	    <ui:remove> #28777#29729 - End </ui:remove>	
