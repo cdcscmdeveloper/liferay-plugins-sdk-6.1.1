@@ -5,8 +5,10 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -60,7 +62,11 @@ public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseMan
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
 		try {
-			auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+			if (!auditPMReqDTO.getObjList().isEmpty() && auditPMReqDTO.getObjList() != null) {
+				auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+			} else {
+				throw new EpException(MessageConst.ERROR_880001);
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "insert", modName, "auditPMSO",
 					new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
