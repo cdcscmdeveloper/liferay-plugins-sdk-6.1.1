@@ -722,6 +722,11 @@ public class SupplierDataMaintenanceBackingBean extends
 				for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 					if (cat.getOtherDesc() != null) {
 						isCategoryDescriptionHasChanged = true;
+						//#37605
+						if(!SmApplicationUtil.convertToAscii(cat.getOtherDesc())){
+							throw new EpException(MessageConst.ERROR_760555);
+						}
+						cat.setOtherDesc(SmApplicationUtil.replaceTabWSpace(cat.getOtherDesc()));
 					}
 				}
 			}
@@ -1085,12 +1090,23 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Special.
 	 */
 	public void resetApplnCategoryType() {
-		if (getManagedBean().getSmAppl().getApplCategoryType() != null
-				&& getManagedBean().getSmAppl().getApplCategoryType()
-						.equals("S")) {
-			getManagedBean().getSmAppl().setApplCategoryType("N");
+		//37807 - START
+		if (getManagedBean().getSmAppl().getSupplierType() != null
+				&& (my.ep.constant.sm.SupplierManagementConst.SUPP_TYPE_CONTRACTOR).equals(getManagedBean().getSmAppl().getSupplierType())) {
+			if (getManagedBean().getSmAppl().getApplCategoryType() != null
+					&& (my.ep.constant.sm.SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL).equals(getManagedBean().getSmAppl().getApplCategoryType())) {
+				getManagedBean().getSmAppl().setApplCategoryType(my.ep.constant.sm.SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL);
+			} else {
+				getManagedBean().getSmAppl().setApplCategoryType(my.ep.constant.sm.SupplierManagementConst.SM_APPL_CATEGORY_TYPE_SPECIAL);
+			}
 		} else {
-			getManagedBean().getSmAppl().setApplCategoryType("S");
+			if (getManagedBean().getPhysicalConsulting() != null
+					&& getManagedBean().getPhysicalConsulting().equals(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE)) {
+				getManagedBean().setPhysicalConsulting(my.ep.constant.sm.SupplierManagementConst.NON_PHYSICAL_SERVICES_CAT_CODE);
+			} else {
+				getManagedBean().setPhysicalConsulting(my.ep.constant.sm.SupplierManagementConst.PHYSICAL_SERVICES_CAT_CODE);
+			}
+		//37807 - END
 		}
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
@@ -1107,11 +1123,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void assignApplnCategoryType() {
 		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 		// Remove from active list
+		//37807 - START
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean()
 					.getActiveCategoryList()) {
-				if (cat.isSpecialCategory()
-						&& cat.getRecordStatusFlg().compareTo(
+				if (cat.getRecordStatusFlg().compareTo(
 								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 					catList.add(cat);
 				}
@@ -1131,16 +1147,17 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().getActiveCategoryList().removeAll(catList);
 		}
 		// Remove from main list
+		catList.clear();
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
-				if (cat.isSpecialCategory()
-						&& cat.getRecordStatusFlg().compareTo(
+				if (cat.getRecordStatusFlg().compareTo(
 								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 					catList.add(cat);
 				}
 
 			}
+			getManagedBean().getSmAppl().getSmSupplierCategories().removeAll(catList);
 		} else {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
@@ -1151,6 +1168,8 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 
 			}
+			getManagedBean().getSmAppl().getSmSupplierCategories().removeAll(catList);
+			//37807 - END
 		}
 
 		assignApplnConsultantCategoryType();
@@ -2393,6 +2412,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			sb.append(" kepada ");
 			sb.append(reqDTO.getNewDesc());
 			sb.append(" oleh ").append(curUser.getUserName());
+			//#37605
+			int limit = 2500;
+	        int currentLength = sb.toString().length();
+
+	        if (currentLength <= limit) {
+	            log.info("Character count is within the limit: " + currentLength);
+	        } else {
+	            log.info("Character count exceeds the limit of " + limit + ". Current count: " + currentLength);
+	            sb = new StringBuffer();
+	            
+				sb.append("Keterangan Lain bagi bidang ");
+				sb.append(reqDTO.getCatCodeChanged());
+				sb.append(" telah diubah oleh ");
+				sb.append(curUser.getUserName());
+	        }
 		break;
 		//#30766 & #34209 - END
 		default:

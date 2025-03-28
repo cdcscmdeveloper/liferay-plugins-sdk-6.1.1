@@ -19,10 +19,13 @@
 			<p:commandButton id="yes" value="#{lbl['lbl.btn.download']}" ajax="false" onclick="printConfirm.hide()">
 				<p:fileDownload value="#{backingBean.printSupplierProfile()}" />
 			</p:commandButton>
+			<!-- #37779 START - add actionListener -->
 			<p:commandButton id="no"
 				value="#{lbl['lbl.btn.proceed']}" onclick="printConfirm.hide()" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 				action="#{backingBean.submitSmApplToBpm(backingBean.managedBean.smAppl.applType)}" />
+			<!-- #37779 End -->
 		</div>
 
 	</p:confirmDialog>

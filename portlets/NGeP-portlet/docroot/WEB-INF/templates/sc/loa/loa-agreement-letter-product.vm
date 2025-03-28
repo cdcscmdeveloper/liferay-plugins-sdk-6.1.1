@@ -1445,7 +1445,9 @@ u.underline {
 				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
+							## 36085 - start
+							<th class="text_family" style="font-weight: bold; color:black;">Zon</th> 
+							## 36085 - end 
 						#end
 						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
@@ -1497,7 +1499,9 @@ u.underline {
 				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
+							## 36085 - start
+							<th class="text_family" style="font-weight: bold; color:black;">Zon</th> 
+							## 36085 - end 
 						#end
 						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>

@@ -1405,13 +1405,16 @@ public class SupplierFinalizationBackingBean extends
 				// #25037 - start
 				reqDTO = validateInfo(activeIndex, skipValidation);
 				scQtCommittee = reqDTO.getScQtCommittee();
+				
+				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
+				
 				reqDTO = validateInfo(2, skipValidation);
 				// #25037 - end
 			} else {
 				if (!getManagedBean().isInitialDecisionFwdToBPK()) {
 					scQtCommittee = preparationDtlsInfo();
 				}
-				reqDTO = validateInfo(2);
+				reqDTO = validateInfo(2, skipValidation); // 25037 
 			}
 
 			validateFinalizationReports(reqDTO, skipValidation);//25037 - note 31
@@ -3300,7 +3303,7 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
 		
-		for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
+		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getDocumentList())) {// 37622
 			
 			  if (report.getTitle().contains("Kertas Taklimat")) {
 				  
@@ -9182,6 +9185,7 @@ public class SupplierFinalizationBackingBean extends
 					&& ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
 				regenEvaluationDownload(attachment, false);
 			}
+			attachment.setTempFileName(scQtFinalizationReport.getTitle()); // 37622
 			attachment.setDocNo(getManagedBean().getScQt().getQtNo());
 			// Bug #35485@Syazani 08/02/2024 -- End
 			scAttachments.add(attachment);
@@ -10573,7 +10577,7 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 
-		scQtFinalizationReport = getManagedBean().getDocumentList().get(0);
+//		scQtFinalizationReport = getManagedBean().getDocumentList().get(0);// 37622 - remove code
 
 		ScQtFinalizationReport report = new ScQtFinalizationReport();
 		report.setScQtFinalization(scQtFinalization);

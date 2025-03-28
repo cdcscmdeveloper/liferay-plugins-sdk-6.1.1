@@ -848,7 +848,9 @@ public class QtSpecCloneBackingBean extends
 		if (null != copy.getDefinationType()
 				&& ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE.equalsIgnoreCase(copy.getDefinationType()
 						.getParameterCode())) {
-			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			// 37859,25635 -start-
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			// 37859,25635 -end-
 		}
 
 		if (null != copy.getDefinationType()
