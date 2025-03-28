@@ -5582,7 +5582,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				// #29007 Start Vinod
 				checkAndInsertItemSpecOffer();
 				// #29007 End Vinod
-				//updateBpmTaskAction(outcome);
+				updateBpmTaskAction(outcome);
 			}
 		}
 		//20190405@asyrafhaziq - CR25062 - End
@@ -8746,8 +8746,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.getParameterCode() != null ? scLoa
 				.getQtType().getParameterCode() : StringUtils.EMPTY;
 
-		// Added to remove "PK7" from QT Types Dropdown list if user not selectd
-		// already.
+		// Added to remove "PK7" from QT Types Dropdown list.
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7);
 		qtTypes.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 		
@@ -10115,7 +10114,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (null != qtType 
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType()) 
 				&& ParameterConst.getQuotationTenderTypeItemInPK7AndPK7WPChecking().contains(qtType.getParameterCode())) {
-			// #29766 Start Vinod
+			// #29766 End Vinod
 			QtTypepk7 = true;
 			if (null == getManagedBean().getScLoa().getJustificationType()) {
 				getManagedBean().getScLoa().setJustificationType(new PmReason());
