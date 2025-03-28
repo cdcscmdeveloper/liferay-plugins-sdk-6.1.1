@@ -5888,7 +5888,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			try {
 				SmSupplier currSupp = smSupplier;
 				if (currSupp != null) {
-					List<DisciplinaryActionVO> voList = BaseReviewApplicationBackingBean.getDisciplinaryActionVO(currSupp);
+					List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
 					if (!voList.isEmpty()) {
 						getManagedBean().setDisciplineVOs(voList);
 					} else {
@@ -5902,10 +5902,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// #32643,32642 - End
 
 			} catch (Exception e) {
-				String exceptionSupplierId = smSupplier != null ? Long.toString(smSupplier.getSupplierId())
-						: StringUtils.EMPTY;
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "supplierDisciplinaryActionInfo",
-						exceptionSupplierId, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
+						StringUtils.EMPTY, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
 			}
 		}
 

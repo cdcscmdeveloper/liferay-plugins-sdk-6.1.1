@@ -187,8 +187,7 @@
 						disabled="#{registrationBackingBean.managedBean.sameAddress}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<!-- #36718 - process panel when change dropdown -->
-						<f:selectItems var="city" process="@([id$=pnlContactInfo])" 
+						<f:selectItems var="city" 
 							value="#{registrationBackingBean.managedBean.residentialCityLs}"
 							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
 					</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>
