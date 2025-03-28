@@ -268,7 +268,7 @@
 	</p:panel>
 	
 	<!-- #13847 start -->
-	<p:panel id="performanceBondDefermentPanel" toggleable="true" toggleSpeed="500">	
+	<p:panel id="performanceBondDefermentPanel" toggleable="true" toggleSpeed="500" rendered="#{!ctBackingBean.isPendingSupplementalContractLetter()}">	
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.pb.waiver.table.title']}"/>
 			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deferment.bond.dtls']}"/>
@@ -350,7 +350,7 @@
 	</p:panel>
 	
 	<br></br>
-	<p:panel id="defermentHistoryPanel" toggleable="true" toggleSpeed="500">	
+	<p:panel id="defermentHistoryPanel" toggleable="true" toggleSpeed="500" rendered="#{!ctBackingBean.isPendingSupplementalContractLetter()}">	
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.menu.performanceBond.history.header']}"/>
 	   	</f:facet>
