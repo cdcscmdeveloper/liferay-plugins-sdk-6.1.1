@@ -8616,6 +8616,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL, getManagedBean());
 		}
 		//#34138 - end
+		
+		//#36718 - START
+		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getShareHolderMailAddr().deepCopy());
+		//#36718 - END
 	}
 	
 	//start #31479
@@ -15305,14 +15309,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (categoryTypeId == null){
 			return new ArrayList<>();
 		}
-		List<SmSupplierCategory> applCategories = new ArrayList<>();
 		List<SelectItem> retVal = new ArrayList<>();
-		applCategories.addAll(getManagedBean().getActiveCategoryList());
-		applCategories.addAll(getManagedBean().getSmAppl().getSmSupplierCategories());
 		List<Integer> validStatus = Arrays.asList(
 				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		
-		for (SmSupplierCategory cat : applCategories) {
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl().getSmSupplierCategories()) {
 			if (cat.getPmCategoryL3() == null || cat.getPmCategoryL3().getCategoryTypeCode() == null
 					|| cat.getPmCategoryL3().getCategoryTypeCode().getParameterId() == null){
 				continue;

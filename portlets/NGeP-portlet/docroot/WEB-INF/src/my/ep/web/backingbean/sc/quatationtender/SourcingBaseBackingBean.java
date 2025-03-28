@@ -7375,6 +7375,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	// 37622 - end
 	// #29007 Start vinod
+	/**
+	 * This method will check the BPM version and status to insert item spec
+	 * offer.
+	 * 
+	 * @param scLoa
+	 *            .
+	 * @return boolean.
+	 */
 	public boolean checkWIPVersionAndInsertItemSpecOffer(ScLoa scLoa) {
 		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
 		String docType = scLoa.getScLoiLoa().getDocType();
@@ -7405,7 +7413,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(workFlowStatus);
 		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION.equals(workFlowStatus);
 
-		if (isPendingAcknowledgement || isPendingVerify && isOldVersion) {
+		if ((isPendingAcknowledgement || isPendingVerify) && isOldVersion) {
 			return true;
 		}
 		return false;
