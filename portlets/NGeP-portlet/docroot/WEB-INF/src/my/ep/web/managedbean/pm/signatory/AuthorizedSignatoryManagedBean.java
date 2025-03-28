@@ -46,6 +46,11 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private Date tomorrow = tomorrowDate();
 	private PmCertSignatory deleteSignatory;
 	private Date today = new Date();
+	
+	/************ AUDIT 35509 Start*************/
+	private List<PmCertSignatory> newCertSignatories;
+	private Map<Long,PmCertSignatory> existingCertSignatoriesMap;
+	/************ AUDIT 35509 END*************/
 
 	public AuthorizedSignatoryManagedBean() {
 	}
@@ -246,5 +251,23 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	public void setToday(Date today) {
 		this.today = today;
 	}
+	
+	/************ AUDIT 35509 Start*************/
+	public Map<Long, PmCertSignatory> getExistingCertSignatoriesMap() {
+		return existingCertSignatoriesMap;
+	}
 
+	public void setExistingCertSignatoriesMap(Map<Long, PmCertSignatory> existingCertSignatoriesMap) {
+		this.existingCertSignatoriesMap = existingCertSignatoriesMap;
+	}
+
+	public List<PmCertSignatory> getNewCertSignatories() {
+		return newCertSignatories;
+	}
+
+	public void setNewCertSignatories(List<PmCertSignatory> newCertSignatories) {
+		this.newCertSignatories = newCertSignatories;
+	}
+
+	/************ AUDIT 35509 END*************/
 }
