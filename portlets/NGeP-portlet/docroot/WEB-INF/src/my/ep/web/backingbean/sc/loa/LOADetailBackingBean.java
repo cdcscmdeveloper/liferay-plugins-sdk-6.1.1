@@ -2998,6 +2998,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// 29819 - start
 			String mofNo = null;
 			String contextMofNo = smSupplier.getRegNo();
+
 			if (Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
 					scLoiLoa.getDocType())) {
 				if (StringUtils.isNotBlank(scLoiLoa.getMofNo())) {
@@ -3015,6 +3016,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else if (StringUtils.isNotBlank(smSupplier.getSsmNewRegNo())) {
 				contextMofNo = smSupplier.getSsmNewRegNo();
 			}
+
 			context.put(QtReportConst.VELOCITY_CTX_KEY_MOFNO, contextMofNo);
 			// 29819 - end
 		}
