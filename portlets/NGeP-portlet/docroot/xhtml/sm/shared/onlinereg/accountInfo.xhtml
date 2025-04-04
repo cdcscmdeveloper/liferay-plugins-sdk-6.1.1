@@ -85,13 +85,24 @@
 							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
+					<!-- #36710 START -->
+					<c:when test="#{registrationBackingBean.managedBean.smAppl.brandNew and !registrationBackingBean.managedBean.smAppl.applValidWithSsm and !registrationBackingBean.managedBean.ssmIntegrationActive}">
+						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
+							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
+							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
+							style="width:310px"
+							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM)}">
+							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/> 
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
+						</p:selectOneMenu> <!-- #36710 END-->
+					</c:when>
 					<c:otherwise>
 						<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
 							value="#{registrationBackingBean.managedBean.smSupp.businessType}" 
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px"
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM) or registrationBackingBean.managedBean.activeDisicplinaryAction}">
-							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
+							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDownAccountInfo()}"/> <!-- #36710 -->
 							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm || registrationBackingBean.managedBean.activeDisicplinaryAction}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:otherwise>
