@@ -15,8 +15,8 @@
 			<ac:title value="#{lbl['lbl.sc.loiloa.loa.header.title']}" />
 		</c:if>
 
-		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="#{lOADetailBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" />
-		
+		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="#{lOADetailBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" escape="false"/>
+
 		<ui:param name="isTrackingDairyView" value="#{lOADetailBackingBean.managedBean.trackingDairyView}" />
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
 		<ui:param name="isDocTypeDirectNego" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeDirectNego}" />
@@ -33,10 +33,12 @@
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
+		<ui:param name="isZonalWithPaOrPs" value="#{lOADetailBackingBean.isZonalWithPaOrPs()}" />
 		<ui:param name="isSqStillValid" value="#{lOADetailBackingBean.isSqStillValid()}" />
 		<ui:param name="isSaveHideSqExpired" value="#{!lOADetailBackingBean.managedBean.scLoa.brandNew and !isSqStillValid}" />
 		<ui:param name="isLOACancelByApprover" value="#{lOADetailBackingBean.isLOACancelByApprover()}" />	
 		<ui:param name="isLoaGenerated" value="#{lOADetailBackingBean.isLoaGenerated()}" />	
+		<ui:param name="isMultipleSuppOffer" value="#{lOADetailBackingBean.managedBean.multipleSuppOffer}" />	
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
 		
@@ -82,12 +84,14 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
 					<ui:remove>#29007 Added actionListener Vinod start</ui:remove>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
 							actionListener="#{lOADetailBackingBean.searchSupplierItemByName}"
 							update="@form">
 							<ui:remove>#29007 Added actionListener Vinod end</ui:remove>
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
-					</p:menuitem>
+							<f:setPropertyActionListener
+								target="#{lOADetailBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>

@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.loa;
 
 import java.math.BigDecimal;
+import java.util.ArrayList; //#29006
 import java.util.List;
 import java.util.Map;
 
@@ -356,11 +357,28 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	// Bug #34757 -end-
 	/* #29007 End Vinod */
 
-    /**
-     * Gets the spki backing bean.
-     *
-     * @return the spki backing bean
-     */
+	// #27797 - start
+	private ScLoiLoaItem highestZoneScLoiLoaItem;
+	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
+	public BigDecimal highestZonePrice = new BigDecimal(0);
+	private List<ScLoiLoaItem> nameZoneScLoiLoaItemList;
+	private List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList;
+	private List<ScLoiLoaItem> dtlScLoiLoaItemList;
+	private Map<Long, Integer> reqItemRowSpanMap;
+	private Map<Long, BigDecimal> reqItemMaxSubTotalMap;
+	private Long reqItemSession = 0L;
+	private Long reqItemSubTotalSession = 0L;
+	public BigDecimal totalZonePrice = new BigDecimal(0);
+	// #27797 - end
+	
+	// #32280 - start
+	private Long reqItemAssignButtonSession = 0L;
+	// #32280 - end
+	/**
+	 * /** Gets the spki backing bean.
+	 * 
+	 * @return the spki backing bean
+	 */
     public SpkiBackingBean getSpkiBackingBean() {
     	return spkiBackingBean;
     }
@@ -2037,4 +2055,123 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.loaItemIds = loaItemIds;
 	}
 	// Bug #34757, #29007 -end-
+	
+	// #27797 - start
+	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
+		return highestZoneScLoiLoaItem;
+	}
+
+	public void setHighestZoneScLoiLoaItem(ScLoiLoaItem highestZoneScLoiLoaItem) {
+		this.highestZoneScLoiLoaItem = highestZoneScLoiLoaItem;
+	}
+
+	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
+		if (highestZoneScLoiLoaItemList == null) {
+			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+		}
+		return highestZoneScLoiLoaItemList;
+	}
+
+	public void setHighestZoneScLoiLoaItemList(List<ScLoiLoaItem> highestZoneScLoiLoaItemList) {
+		this.highestZoneScLoiLoaItemList = highestZoneScLoiLoaItemList;
+	}
+
+	public BigDecimal getHighestZonePrice() {
+		return highestZonePrice;
+	}
+
+	public void setHighestZonePrice(BigDecimal highestZonePrice) {
+		this.highestZonePrice = highestZonePrice;
+	}
+
+	public List<ScLoiLoaItem> getNameZoneScLoiLoaItemList() {
+		return nameZoneScLoiLoaItemList;
+	}
+
+	public void setNameZoneScLoiLoaItemList(List<ScLoiLoaItem> nameZoneScLoiLoaItemList) {
+		this.nameZoneScLoiLoaItemList = nameZoneScLoiLoaItemList;
+	}
+
+	public List<ScLoiLoaItem> getSubTotalZoneScLoiLoaItemList() {
+		return subTotalZoneScLoiLoaItemList;
+	}
+
+	public void setSubTotalZoneScLoiLoaItemList(List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList) {
+		this.subTotalZoneScLoiLoaItemList = subTotalZoneScLoiLoaItemList;
+	}
+
+	public List<ScLoiLoaItem> getDtlScLoiLoaItemList() {
+		return dtlScLoiLoaItemList;
+	}
+
+	public void setDtlScLoiLoaItemList(List<ScLoiLoaItem> dtlScLoiLoaItemList) {
+		this.dtlScLoiLoaItemList = dtlScLoiLoaItemList;
+	}
+
+	public Map<Long, Integer> getReqItemRowSpanMap() {
+		return reqItemRowSpanMap;
+	}
+
+	public void setReqItemRowSpanMap(Map<Long, Integer> reqItemRowSpanMap) {
+		this.reqItemRowSpanMap = reqItemRowSpanMap;
+	}
+
+	public Long getReqItemSession() {
+		return reqItemSession;
+	}
+
+	public void setReqItemSession(Long reqItemSession) {
+		this.reqItemSession = reqItemSession;
+	}
+
+	public Map<Long, BigDecimal> getReqItemMaxSubTotalMap() {
+		return reqItemMaxSubTotalMap;
+	}
+
+	public void setReqItemMaxSubTotalMap(Map<Long, BigDecimal> reqItemMaxSubTotalMap) {
+		this.reqItemMaxSubTotalMap = reqItemMaxSubTotalMap;
+	}
+
+	public Long getReqItemSubTotalSession() {
+		return reqItemSubTotalSession;
+	}
+
+	public void setReqItemSubTotalSession(Long reqItemSubTotalSession) {
+		this.reqItemSubTotalSession = reqItemSubTotalSession;
+	}
+
+	public BigDecimal getTotalZonePrice() {
+		return totalZonePrice;
+	}
+
+	public void setTotalZonePrice(BigDecimal totalZonePrice) {
+		this.totalZonePrice = totalZonePrice;
+	}
+
+	// #27797 - end
+	//#32280 - start
+	public Long getReqItemAssignButtonSession() {
+		return reqItemAssignButtonSession;
+	}
+
+	public void setReqItemAssignButtonSession(Long reqItemAssignButtonSession) {
+		this.reqItemAssignButtonSession = reqItemAssignButtonSession;
+	}	
+	//#32280 - end	
+	// 29006 @zaim start
+	/**
+	 * @return the listSpecAnswer
+	 */
+	public List<TplSpecQuestion> getListSpecAnswer() {
+		return listSpecAnswer;
+	}
+
+	/**
+	 * @param listSpecAnswer
+	 *            the listSpecAnswer to set
+	 */
+	public void setListSpecAnswer(List<TplSpecQuestion> listSpecAnswer) {
+		this.listSpecAnswer = listSpecAnswer;
+	}
+	// 29006 @zaim end
 }

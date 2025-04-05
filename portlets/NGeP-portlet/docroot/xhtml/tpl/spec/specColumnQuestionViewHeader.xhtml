@@ -9,8 +9,8 @@
 		<ui:param name="specificationRequired" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
 	<p:columnGroup type="header">
 		<p:row>
-			<p:column colspan="1" style="white-space: normal;"
-				headerText="#{lbl['lbl.tpl.spec.content.item']}">
+			<p:column colspan="1" style="white-space: normal;word-break:normal;"
+				headerText="#{lbl['lbl.tpl.spec.content.item']}"><!-- #29006 add CSS property -->
 				
 
 			</p:column>
@@ -20,39 +20,39 @@
 				rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 
 			</p:column>
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:8%;white-space:normal;"
-				headerText="#{lbl['lbl.tpl.spec.content.uom']}">
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:8%;white-space:normal;word-break:normal;"
+				headerText="#{lbl['lbl.tpl.spec.content.uom']}"><!-- #29006 add CSS property -->
 
 			</p:column>
 
 
 			<c:if test="#{isItemTypeService}">
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:70px;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+					style="width:70px;white-space:normal;word-break:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"><!-- #29006 add CSS property -->
 
 				</p:column>
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:60px;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+					style="width:60px;white-space:normal;word-break:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"><!-- #29006 add CSS property -->
 
 				</p:column>
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:60px;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+					style="width:60px;white-space:normal;word-break:normal;text-align:right;"
+					headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"><!-- #29006 add CSS property -->
 
 				</p:column>
 				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:2%;white-space:normal;text-align:right;"
+					style="width:2%;white-space:normal;word-break:normal;text-align:right;"
 					headerText="#{lbl['lbl.tpl.spec.content.duration.month']}"
-					rendered="#{isDurationByItem}">
+					rendered="#{isDurationByItem}"><!-- #29006 add CSS property -->
 
 				</p:column>
 			</c:if>
 
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:75px; white-space:normal;"
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:75px; white-space:normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.price.type']}"
-				rendered="#{!isItemTypeService}">
+				rendered="#{!isItemTypeService}"><!-- #29006 add CSS property -->
 
 			</p:column>
 
@@ -73,46 +73,38 @@
 			<!-- 31134 #11104  Farid end -->
 			<!-- 11715 danial end -->
 
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;"
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.supplier.note']}"
-				rendered="#{isUpdateSpecByAnswers}">
+				rendered="#{isUpdateSpecByAnswers}"><!-- #29006 add CSS property -->
 
 			</p:column>
 
-			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;"
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:100px;white-space:normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.comment']}"
-				rendered="#{isUpdateSpecByAnswers}">
+				rendered="#{isUpdateSpecByAnswers}"><!-- #29006 add CSS property -->
 
 			</p:column>
 			<ui:insert name="otherHeaderSection" />
-			<ui:remove> #29007 Start Vinod </ui:remove>
-			<c:if
-				test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
-				<ui:param name="specificationRequired1"
-					value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
-				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:97px; white-space:normal;word-break:normal;"
-					headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
-				</p:column>
-				<!-- #29006 add CSS property -->
-				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:90px;white-space:normal;word-break:normal;text-align:right;"
-					rendered="#{isItemTypeService}"
-					headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
-				</p:column>
-				<!-- #29006 add CSS property -->
-				<p:column rowspan="#{specificationRequired ? 2 : 1}"
-					style="width:115px; text-align:right; white-space:normal;word-break:normal;"
-					headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
-				</p:column>
-				<!-- #29006 add CSS property -->
-			</c:if>
-			<ui:remove> #29007 End Vinod </ui:remove>
+		<ui:remove> #29007 Start Vinod </ui:remove>
+		<c:if test="#{directLOABackingBean.managedBean.searchItemForDL and !templateSpecBean.specMaster.brandNew and !isItemTypeService}">
+			<ui:param name="specificationRequired1" value="#{isSpecTypeTechnical or isSqSpec or (isSpecTypeFinancial and !isSpecificationReq)}"></ui:param>
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:97px; white-space:normal;word-break:normal;"
+			headerText="#{lbl['lbl.tpl.spec.content.unit.price']}">
+			</p:column><!-- #29006 add CSS property -->
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:90px;white-space:normal;word-break:normal;text-align:right;"
+			rendered="#{isItemTypeService}"
+			headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+			</p:column><!-- #29006 add CSS property -->
+			<p:column rowspan="#{specificationRequired ? 2 : 1}" style="width:115px; text-align:right; white-space:normal;word-break:normal;"
+			headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+			</p:column><!-- #29006 add CSS property -->
+		</c:if>
+		<ui:remove> #29007 End Vinod </ui:remove>
 		</p:row>
 		<p:row rendered="#{specificationRequired}">
-			<p:column colspan="1" style="width: 30%;white-space: normal;"
+			<p:column colspan="1" style="width: 30%;white-space: normal;word-break:normal;"
 				headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-				rendered="#{specificationRequired}">
+				rendered="#{specificationRequired}"><!-- #29006 add CSS property -->
 
 			</p:column>
 		</p:row>

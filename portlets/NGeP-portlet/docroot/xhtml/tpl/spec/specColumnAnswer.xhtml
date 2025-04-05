@@ -171,6 +171,14 @@
 				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and !(isZonal and isSqSpec)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
+			<!-- #31789 START 
+			<h:outputText id="totalAmountZonal" 
+				styleClass="calcAmount" 
+				value="#{templateSpecBean.specMaster.totalAmount}"
+				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard and isZonal and isSqSpec}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
+			 #31789 END -->
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
@@ -246,7 +254,9 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 		</h:outputText>
 	</p:column>
-	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq)}">
+	<!-- #29006 add !isSqSpec -start- -->
+	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and !isSqSpec}">
+	<!-- #29006 add !isSqSpec -end- -->
 		<p:inputTextarea id="answerRemarks" label="#{lbl[remarklbl]}" style="width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
 		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
@@ -255,4 +265,40 @@
 		</p:inputTextarea>
 		<p:message id="answerRemarksMsg" for="answerRemarks" display="icon" />
 	</p:column>
+	<!-- #29006 start -->
+	<p:column  style="width:200px;"  rendered="#{!(isSpecTypeFinancial and !isSpecificationReq) and isSqSpec}">
+	
+	<c:if test="#{isZonal}"><!-- #34108 allow resize text area-->
+		<h:panelGroup rendered="#{!isRepeated}">
+			<ui:remove>#36681 - start</ui:remove>
+			<p:inputTextarea id="answerSqZonalRemarks" label="#{lbl[remarklbl]}" style="resize: vertical;width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
+				disabled="#{!editable}" rows="1"
+				maxlength="1000"
+				validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+				onkeyup="limitTextAreaWithBreakline(this,1000);" onkeydown="limitTextAreaWithBreakline(this,1000);"
+				onmouseout="limitTextAreaWithBreakline(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+				<f:validateLength for="answerSqZonalRemarks" maximum="1000" />
+				</p:inputTextarea>
+			<ui:remove>#36681 - end</ui:remove>
+			<p:message id="answerSqZonalRemarksMsg" for="answerSqZonalRemarks" display="icon" />
+		</h:panelGroup>	
+	</c:if>	
+	<c:if test="#{!isZonal}"><!-- #34108 allow resize text area-->
+		<ui:remove>#36681 - start</ui:remove>
+		<p:inputTextarea id="answerSqRemarks" label="#{lbl[remarklbl]}" style="resize: vertical;width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
+			disabled="#{!editable}" rows="1"
+			maxlength="1000"
+			validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+			onkeyup="limitTextAreaWithBreakline(this,1000);" onkeydown="limitTextAreaWithBreakline(this,1000);"
+			onmouseout="limitTextAreaWithBreakline(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
+			<p:ajax partialSubmit="true" process="@this" update="@this" />
+			<f:validateLength for="answerSqRemarks" maximum="1000" />
+			</p:inputTextarea>
+		<ui:remove>#36681 - end</ui:remove>	
+		<p:message id="answerSqRemarksMsg" for="answerSqRemarks" display="icon" />
+	</c:if>	
+		
+	</p:column>
+	<!-- #29006 end -->
 </ui:composition>

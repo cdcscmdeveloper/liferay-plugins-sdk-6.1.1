@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import my.ep.util.SLAUtils; //#25790
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -40,6 +41,9 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
+import my.ep.biz.service.ct.IContractSO; //#25790
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO; //#25790
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO; //#25790
 import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -51,6 +55,7 @@ import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -62,11 +67,16 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.ContinuityDPConst; //#25790
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.ct.ContractReqDTO; //#25790
+import my.ep.dto.ct.ContractResDTO; //#25790
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
+import my.ep.dto.fl.FulfilmentReqDTO; //#25790
+import my.ep.dto.fl.FulfilmentResDTO; //#25790
 import my.ep.dto.osb.sc.DPOsbReqDTO;
 import my.ep.dto.osb.sc.DPOsbResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -84,6 +94,8 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#25790
+import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#25790
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -94,6 +106,9 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.CtContract; //#25790
+import my.ep.persistence.entity.ct.VCtContract; //#25790
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest; //#25790
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -110,6 +125,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest; //#29006
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
@@ -118,6 +134,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoa; //#25790
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa; //#25790
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -138,6 +156,7 @@ import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean; //#25790
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean; //#25790
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean; //#25790
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -189,6 +208,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
+	
+	// start - #25790
+	/** The request note continuity page. */
+	private String requestNoteContinuityPage = "/xhtml/sc/directpurchase/requestnote/requestNoteContinuity.xhtml";
+	// end - #25790
 	
 	/** The request note page. */
 	private String PURCHASE_REQUEST_PAGE = "purchaseRequestMain";
@@ -4992,9 +5016,35 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 				}
-				for(ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
-					subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+				// - start- #27797
+				if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+						) {
+					if (priceType.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+						BigDecimal highestZonePrice = BigDecimal.ZERO;
+
+						for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+							int result = spItemPrice.getItemPrice().compareTo(highestZonePrice);
+
+							if (result == 1) {
+								highestZonePrice = spItemPrice.getItemPrice();
+							}
+						}
+						subTotalAmount = highestZonePrice.multiply(zonalSubTotalAmount);
+					} else {
+						for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+							subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice()
+									.multiply(zonalSubTotalAmount));
+						}
+					}
 				}
+
+				else {
+					for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+						subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+					}
+				}
+				// - end - #27797
 			} else {
 				ScSupplierItemPrice itemPrice = getTopZonalTierPrice(requestSupplierItem.getSupplierItemPrices(),
 						orderQuantity,
