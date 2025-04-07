@@ -11996,6 +11996,11 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise())) {
 			
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() && 
+					null == this.getManagedBean().getTobeRemoveCategoryCodes()){
+				retriveSupplierQualificationCriteria("SC");
+			}
+			
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() 
 					|| BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())){
 				throw new EpException(MessageConst.ERROR_760025);
