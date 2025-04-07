@@ -3452,6 +3452,23 @@ public class SupplierFinalizationBiddingBackingBean extends
 		 }
 		 return Boolean.FALSE;
 	}
+	
+    /**
+    * Method to check if this supplier disqualified
+    * @param Long qtId
+    * @param Long supplierId
+    * @return true or false
+    **/
+	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId){
+		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+		
+		if(sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId,supplierId)){
+			
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
 	//#28777 & #29729 - End
 	
 	//#21692 - Start

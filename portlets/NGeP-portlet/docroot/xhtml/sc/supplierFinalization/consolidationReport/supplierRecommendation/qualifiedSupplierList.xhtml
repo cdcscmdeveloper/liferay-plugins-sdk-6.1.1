@@ -446,7 +446,8 @@
 				</p:column>
 				
 			    <p:column style="text-align:center;">
-				     <h:outputText value="#{lbl['lbl.sc.disqualified.reason.status']}" />  
+			        <h:outputText rendered="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusDisqualifiedSupplierBranchDeleted}" 
+				    value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />	    		    
 				</p:column>
 																
 			</p:dataTable>
