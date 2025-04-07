@@ -1084,6 +1084,14 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}
+
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
 	
 	public boolean isNewVersion() {
 		return newVersion;
