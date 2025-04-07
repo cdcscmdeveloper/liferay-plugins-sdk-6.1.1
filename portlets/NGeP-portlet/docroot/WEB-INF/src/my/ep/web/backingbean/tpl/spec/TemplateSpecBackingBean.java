@@ -3984,13 +3984,16 @@ public class TemplateSpecBackingBean extends
 		List<TplSpecAnswer> answerList = this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList();
 		for (TplSpecAnswer answer : answerList) {
-			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() != null) {
-				if (ans.getCompliance() == Boolean.FALSE) {
-					answer.setUserScore(BigDecimal.ZERO);
-				}
-			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() == null) {
+			if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0
+					&& ans.getCompliance() != null
+					&& ans.getCompliance() == Boolean.FALSE) {
+				answer.setUserScore(BigDecimal.ZERO);
+			} else if (ans.getSpecAnswerId()
+					.compareTo(answer.getSpecAnswerId()) == 0
+					&& (ans.getCompliance() == null || (ans.getCompliance() != null && ans
+							.getCompliance() == Boolean.TRUE))) {
+				// As per note #631 issue 1 & 4 system will reset score if user
+				// select yes.
 				answer.setUserScore(null);
 			}
 		}
