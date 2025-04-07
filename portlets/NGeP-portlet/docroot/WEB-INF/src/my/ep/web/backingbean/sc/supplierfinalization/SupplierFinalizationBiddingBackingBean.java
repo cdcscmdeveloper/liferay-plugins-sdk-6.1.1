@@ -866,7 +866,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	//#28777 & #29729 - Start
 	private void processPackageBidSchedulesDisqualified(List<ScBidSchedule> bidScheduleList, List<BidPackageBean> biddingPackagePriceListDisqualified, ScQtRecommendDtl awardedSupplier) {
-		log.info(" hatta processPackageBidSchedulesDisqualified ");
 		Map<Long,BidPackageBean> selectedPackageBeans = getManagedBean().getSelectedPackageBeans();		
 		List<ScQtEvaluationResultDtl> notShortlistedSuppliers = getManagedBean().getNotShortlistedSuppliers();
 		Map<Long, ScQtEvaluationResultDtl> supplierCodes = getSupplierCodes(notShortlistedSuppliers);
@@ -3451,23 +3450,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 			 return Boolean.TRUE;
 		 }
 		 return Boolean.FALSE;
-	}
-	
-    /**
-    * Method to check if this supplier disqualified
-    * @param Long qtId
-    * @param Long supplierId
-    * @return true or false
-    **/
-	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId){
-		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		
-		if(sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId,supplierId)){
-			
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
 	}
 	//#28777 & #29729 - End
 	
