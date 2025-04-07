@@ -28,17 +28,20 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtActor;
+import my.ep.persistence.entity.ct.CtContractVer; //35506
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -55,6 +58,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -585,6 +589,35 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
+				
+				// #35506 Start
+				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome
+								.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					
+					CtContractVer ctContractVer = ctBB.getManagedBean().getContractVer();
+					AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+					AuditContractReqDTO auCtData = new AuditContractReqDTO();
+					auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+					auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+					auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+					auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+					auCtData.setRoleName(getUserRole());
+					
+					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+					}
+				
+					if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+					}
+
+					auditCtBean.saveAuditData(auCtData);
+				}
+				// #35506 End
+				
 				String messageId = MessageConst.INFO_700005;
 				String nextRole = null;
 
@@ -833,39 +866,42 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		            getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
 		            getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
 		        } else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
-		            itemSpecList.add(itemSpecOffer.getItemSpec());
+		            itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
 		        }
 		    }
 		    getManagedBean().setItemSpecification(itemSpecList);
 		}
 		
-		/**
-		 * Handles the logic for procurement modes that involve quotations, tenders,
-		 * or direct negotiations.
-		 * 
-		 * @param requestItemSO
-		 *            the service object used to retrieve item specifications; must
-		 *            not be null
-		 * @param requestItemId
-		 *            the ID of the request item; must not be null
-		 */
-		private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
-			List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
-			Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator();
+	/**
+	 * Handles the logic for procurement modes that involve quotations, tenders,
+	 * or direct negotiations.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleQuotationTenderOrDirectNegoMode(IRequestItemSO requestItemSO, Long requestItemId) {
+		List<ScRequestItemSpecOffer> itemSpecOffers = requestItemSO.retrieveNewOfferSpec(requestItemId);
 
-			while (iterator.hasNext()) {
-				ScRequestItemSpecOffer itemSpecOffer = iterator.next();
-				if (itemSpecOffer.getNewOfferSpec() != null) {
-					itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
-				}
-				if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
-					iterator.remove();
-				}
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOffers.iterator(); iterator.hasNext();) {
+			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
+				iterator.remove();
 			}
-
-			getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
 		}
-		// #28854 - End
+
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOffers);
+	}
+	// #28854 - End
 	
 	/**
 	 * The method used to concat both Item code and Item Name.

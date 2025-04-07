@@ -44,7 +44,7 @@
 		#35739
 		note: Legend for V_P_SUPP_ITEM table as below:
         1)supplierItem[0]- ROW_ID
-        2)supplierItem[1]- BRNAD_ID
+        2)supplierItem[1]- BRAND_ID
         3)supplierItem[2]- FAMILY_CODE
         4)supplierItem[3]- COMPANY_NAME
         5)supplierItem[4]- DELIVERY_TERM
@@ -186,17 +186,27 @@
 												value="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
-									<!-- #10747 - Shafie, Soo - Start -->
+									<!-- #10747 - Shafie, Soo, Azza- Start -->
 									<tr height="40px;">
-										<td style="border-bottom: 1px solid #CFD62A;"> #{lbl['lbl.cm.pub.catalog.from']} <p:inputText
+										<td style="border-bottom: 1px solid #CFD62A;">
+											#{lbl['lbl.cm.pub.catalog.from']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceForm}"
-												size="10"> <f:converter converterId="priceRangeConverter" />
-												</p:inputText> #{lbl['lbl.cm.pub.catalog.to']} <p:inputText
+												size="10">
+											    <f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="priceRangeConverter" />
+											</p:inputText> 
+											#{lbl['lbl.cm.pub.catalog.to']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
-												size="10"> <f:converter converterId="priceRangeConverter" />
-												</p:inputText>
+												size="10">
+												<f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="priceRangeConverter" />
+											</p:inputText>
 										</td>
 									</tr>
 									<tr height="30px;">
@@ -205,21 +215,32 @@
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
 									<tr height="40px;">
-										<td style="border-bottom: 1px solid #CFD62A;"> #{lbl['lbl.cm.pub.catalog.from']} <p:inputText
+										<td style="border-bottom: 1px solid #CFD62A;">
+											#{lbl['lbl.cm.pub.catalog.from']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
 												value="#{pCatalogueBackingBean.managedBean.deliveryFrom}"
-												size="10"> <f:converter converterId="deliveryTermConverter" /> 
-												</p:inputText> #{lbl['lbl.cm.pub.catalog.to']} <p:inputText
+												size="10">
+												<f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="deliveryTermConverter" />
+											</p:inputText> 
+											#{lbl['lbl.cm.pub.catalog.to']} 
+											<p:inputText
 												label="#{lbl['lbl.cm.pub.catalog.delivery.term']}"
 												value="#{pCatalogueBackingBean.managedBean.deliveryTo}"
-												size="10"> <f:converter converterId="deliveryTermConverter" />
-												</p:inputText>
+												size="10">
+												<f:converter
+													rendered="#{pCatalogueBackingBean.managedBean.converterVisible}"
+													converterId="deliveryTermConverter" />
+											</p:inputText>
 										</td>
 									</tr>
 
 									<tr>
 										<td style="text-align: right; padding-top: 5px;"><p:commandButton
 												value="#{lbl['lbl.btn.reset']}"
+												immediate="true"
 												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.resetCatalogue()}"
 												update=":form" /> <p:commandButton
@@ -228,7 +249,7 @@
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
 												update=":form:catalogueTabId:catalogueGridViewID, :form:catalogueTabId:catalogueListingTable" /></td> <!--shift between catalogueListingTable and catalogueGridViewID -->
 									</tr>
-									<!-- #10747 - Shafie, Soo - End -->
+									<!-- #10747 - Shafie, Soo, Azza- End -->
 								</table>
 							</td>
 							<!-- #10747 - Shafie - Start  -->	

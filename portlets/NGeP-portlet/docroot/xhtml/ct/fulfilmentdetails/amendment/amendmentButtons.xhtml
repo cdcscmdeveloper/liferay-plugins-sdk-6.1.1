@@ -17,16 +17,22 @@
 			postSignAction="#{amendmentBackingBean.preSubmitContractAmendment(spkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{amendmentBackingBean.enableAutoUpdate()}" />
 		
-		<ui:fragment rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
-			<ui:include	src="amendmentInfo.xhtml" />
-		</ui:fragment>
+	<!--#26186 start-->
+	<ui:fragment
+		rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
+		<ui:include src="amendmentInfo.xhtml" />
+	</ui:fragment>
+	<!--#26186 start-->
 
-		<h:panelGrid columns="1" rendered="#{ctBackingBean.isPendingSupplementalContractLetter() and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
+		<!--#24333 start-->
+		<h:panelGrid columns="1" rendered="#{ctBackingBean.managedBean.contractVer.status.statusId eq CtStatusConst.faPendingVerification and !ctBackingBean.managedBean.contractVer.ctContractAmount.bondExempted
 		and ctBackingBean.managedBean.contractVer.ctContract.loa.bondReq and ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend
 		and amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performance.bond']}">
 	    <h:outputText value="#{lbl['lbl.ct.bond.alert']}" 
 	   	position = "left" style="color:red;" />
 	   	</h:panelGrid>
+	   	<!--#24333 end-->
+	   	
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"

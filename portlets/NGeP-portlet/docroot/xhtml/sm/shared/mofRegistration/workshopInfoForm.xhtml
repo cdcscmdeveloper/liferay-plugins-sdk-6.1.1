@@ -13,10 +13,11 @@
 			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(workshopCatVar, false, true)})" />
+						    	(#{backingBean.getSupplierCategoryName(workshopCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 				</table>
@@ -117,7 +118,8 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelWorkShopSaveorUpdate}"/>
 		
-		<p:outputPanel layout="block" id="workShopBlockPanel">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel layout="block" id="workShopBlockPanel" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 			<p:messages id="workShopDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 				
@@ -125,9 +127,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.workshop.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smWrkShpName"
+							label="#{lbl['lbl.sm.facility.workshop.name']}" id="smWrkShpName"
 							value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
@@ -169,7 +172,8 @@
 					countryItems="#{backingBean.managedBean.countryItems}" stateItems="#{backingBean.managedBean.workShopFacilityStates}"
 					divisionItems="#{backingBean.managedBean.workShopFacilityDivisions}"
 					districtItems="#{backingBean.managedBean.workShopFacilityDistricts}" cityItems="#{backingBean.managedBean.workShopFacilityCities}" 
-					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+					facilityPanel="#{SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL}" panelId="workShopBlockPanel" disabled="#{backingBean.managedBean.upsCannotEdit}"
+					disableValidation="#{param['disableValidation']}"/>  <!-- #34159 -->
 					
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
@@ -292,11 +296,15 @@
 			<ui:include src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
 			<br />
 			<div align="right">
+				<!-- #34159 - START - add param disablevalidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.addOrUpdateWorkshopToSmAppl}"
 					partialSubmit="true" process="workShopDialog"
 					onclick="workShopBlockWidget.show();" oncomplete="workShopBlockWidget.hide();" 
-					update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
+					update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+				<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelWorkShopSaveorUpdate}"

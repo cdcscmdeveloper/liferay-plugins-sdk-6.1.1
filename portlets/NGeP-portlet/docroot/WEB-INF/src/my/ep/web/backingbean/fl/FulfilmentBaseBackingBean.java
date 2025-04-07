@@ -5,33 +5,35 @@ package my.ep.web.backingbean.fl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -41,7 +43,6 @@ import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
@@ -57,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -70,11 +72,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.web.vo.DisciplinaryActionVO;
 
 /**
  * Base Backing Bean for Fulfilment.
@@ -405,34 +402,45 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	/**
 	 * Update Supplier Hq Address
 	 */
-	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl, SmSupplier supplier){
+	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl,Long supplierId, List<SmCompanyBasic> compBasicList ){//29728
 		FlAddress flAddress = supplierDtl.getFlAddress();
-		for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
-			if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
-				SmAddress smAddress = smCompanyAddress.getSmAddress();
-				flAddress.setAddress1(smAddress.getAddress1());
-				flAddress.setAddress2(smAddress.getAddress2());
-				flAddress.setAddress3(smAddress.getAddress3());
-				flAddress.setMapLatitude(smAddress.getMapLatitude());
-				flAddress.setMapLongitude(smAddress.getMapLongitude());
-				flAddress.setPmCity(smAddress.getPmCity());
-				flAddress.setPmCountry(smAddress.getPmCountry());
-				flAddress.setPmDistrict(smAddress.getPmDistrict());
-				flAddress.setPmDivision(smAddress.getPmDivision());
-				flAddress.setPmState(smAddress.getPmState());
-				flAddress.setPostcode(smAddress.getPostcode());
-				flAddress.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
-				flAddress.setFaxArea(supplier.getSmAppl().getSmCompanyBasic().getFaxArea());
-				flAddress.setFaxCountry(supplier.getSmAppl().getSmCompanyBasic().getFaxCountry());
-				flAddress.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
-				flAddress.setPhoneArea(supplier.getSmAppl().getSmCompanyBasic().getPhoneArea());
-				flAddress.setPhoneCountry(supplier.getSmAppl().getSmCompanyBasic().getPhoneCountry());
+		//29728-Start
+		for (SmCompanyBasic companyBasic : compBasicList) {
+			for(SmCompanyAddress smCompanyAddress : companyBasic.getSmCompanyAddresses()){
+				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					SmAddress smAddress = smCompanyAddress.getSmAddress();
+					
+					flAddress.setAddress1(smAddress.getAddress1());
+					flAddress.setAddress2(smAddress.getAddress2());
+					flAddress.setAddress3(smAddress.getAddress3());
+					flAddress.setMapLatitude(smAddress.getMapLatitude());
+					flAddress.setMapLongitude(smAddress.getMapLongitude());
+					flAddress.setPmCity(smAddress.getPmCity());
+					flAddress.setPmCountry(smAddress.getPmCountry());
+					flAddress.setPmDistrict(smAddress.getPmDistrict());
+					flAddress.setPmDivision(smAddress.getPmDivision());
+					flAddress.setPmState(smAddress.getPmState());
+					flAddress.setPostcode(smAddress.getPostcode());
+					flAddress.setFaxNo(companyBasic.getFaxNo());
+					flAddress.setFaxArea(companyBasic.getFaxArea());
+					flAddress.setFaxCountry(companyBasic.getFaxCountry());
+					flAddress.setPhoneNo(companyBasic.getPhoneNo());
+					flAddress.setPhoneArea(companyBasic.getPhoneArea());
+					flAddress.setPhoneCountry(companyBasic.getPhoneCountry());
+				}
 			}
 		}
-		for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
-			//#31920 filter active user
-			if(smPersonnel.isContactPerson() 
-					&& smPersonnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
+		
+		IPersonnelSO personnelSO;
+		personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				IPersonnelSO.class);
+
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		PersonnelResDTO personnelResDTO = personnelSO.retrieveContactPersonBySupplierId(reqDTO);
+
+		if (!personnelResDTO.getSmPersonnelList().isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {
 				flAddress.setContactEmail(smPersonnel.getEmail());
 				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
 				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
@@ -444,8 +452,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
 				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
 				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-				
+
 			}
+			//29728-End
 		}
 	}
 	
@@ -710,174 +719,99 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return null;
 	}
 	
-	//26279 - start	
+	// 26279 - start
+	/**
+	 * Retrieve Imposed Disciplinary Action By Supplier
+	 * 
+	 * @param smSupplier
+	 * @return SupplierDataMaintenanceResDTO SmDisciplinaryActions info
+	 */
 	protected SmDisciplinaryAction getImposedDisciplinaryAction(SmSupplier smSupplier) {
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		reqDTO.setSupplier(smSupplier);
-		
-		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierDataMaintenanceSO.class);
-		
-		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO.retrieveImposedDisciplinaryActionBySupplier(reqDTO);//always return single result
-		
-		if(resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
+
+		ISupplierDataMaintenanceSO supplierDataMaintenanceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+
+		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
+				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always return single result
+
+		if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
 			return resDTO.getSmDisciplinaryActions().get(0);
 		}
 		return null;
 	}
-	
-	protected String getWarningOrDisciplinaryActionMsg(Date startDate,
-			Date endDate, String langCode, boolean isWarningOnly) {
+
+	/**
+	 * Get Disciplinary Action Message
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @param langCode
+	 * @return msg
+	 */
+	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, boolean isWarningOnly) {
 		StringBuilder msg = new StringBuilder();
 		if (startDate != null && endDate != null) {
 			msg.append(" ");
 			String messagePrefix;
-			if(isWarningOnly) {
-				messagePrefix = "lbl.sm.supplier.warning.disc.action";				
+			if (isWarningOnly) {
+				messagePrefix = "lbl.sm.supplier.warning.disc.action";
 			} else {
 				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
 			}
-			msg.append(getMessageByKey(
+			
+			msg.append(ResourceBundleUtils.getMessage(
 					messagePrefix,
-					new String[] {
-							DateUtils.dateToString("dd-MM-yyyy",
-									startDate),
-							DateUtils.dateToString("dd-MM-yyyy",
-									endDate) }, langCode));		
+					new String[] { DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, startDate),
+							DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
 		}
 		return msg.toString();
 	}
-	
-	protected List<DisciplinaryActionVO> retrieveDisciplinaryActions(SmDisciplinaryAction smDisciplinaryAction) {
-		List<DisciplinaryActionVO> disciplinaryActionVOs = new ArrayList<>();
-		
-		if(smDisciplinaryAction != null) {
-			DisciplinaryActionVO disciplinaryActionVO = new DisciplinaryActionVO();
-			disciplinaryActionVO.setWarning(smDisciplinaryAction.isWarning());
-			disciplinaryActionVO.setCancelCategory(smDisciplinaryAction.isCancelCategory());
-			disciplinaryActionVO.setSuspendRegistration(smDisciplinaryAction.isSuspendRegistration());
-			disciplinaryActionVO.setCancelRegistration(smDisciplinaryAction.isCancelRegistration());
-			disciplinaryActionVO.setBlacklistOwnerDirector(smDisciplinaryAction.isBlacklistOwner());
-			disciplinaryActionVO.setBumiputeraCancel(smDisciplinaryAction.isBumiputeraCancel());
-			disciplinaryActionVO.setManufacturerCancel(smDisciplinaryAction.isManufacturerCancel());
-			disciplinaryActionVO.setStartDate(DateUtils.dateToString("dd-MM-yyyy",
-					smDisciplinaryAction.getStartDate()));
-			disciplinaryActionVO.setEndDate(DateUtils.dateToString("dd-MM-yyyy",
-					smDisciplinaryAction.getEndDate()));
-			disciplinaryActionVO.setRemarks(smDisciplinaryAction.getRemark());
-			
-			if(smDisciplinaryAction.isCancelCategory()
-					|| smDisciplinaryAction.isManufacturerCancel() 
-						|| smDisciplinaryAction.isBumiputeraCancel())/*28640 (add if new condition)*/{
-				List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<>();
-				//29456 - start // follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier))
-				List<Object[]> catList = SmApplicationUtil.retrieveCancelCategoryByDisciplinaryActionId(smDisciplinaryAction.getDisciplinaryActionId());
-				if(!EntityHelper.isCollectionEmpty(catList)){
-					for(Object[] arr : catList){
-						if(smDisciplinaryAction.getDisciplinaryActionId().toString().equalsIgnoreCase(arr[7].toString())){//29456
-							DisciplinaryActionCategoryVO catVo = new DisciplinaryActionCategoryVO();
-							String catCode;
-							catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-							catVo.setCategoryCode(catCode);	
-							catVoList.add(catVo);
-						}//29456 - end						
-					}						
-					disciplinaryActionVO.setCategoryCodeList(catVoList);
-				}
-			}	
-			
-			if(smDisciplinaryAction.isBlacklistOwner()
-					|| smDisciplinaryAction.isSuspendRegistration()
-						|| smDisciplinaryAction.isCancelRegistration()){
-				List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<>();
-				PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
-				perReqDTO.setSmSupplierId(smDisciplinaryAction.getSmSupplier().getSupplierId());
-				
-				PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelBySupplierIdAndRecordStatus(perReqDTO);
-				//28790 - start // follow from SM (BaseReviewApplicationBackingBean.getDisciplinaryActionVO(SmSupplier))
-				if(smDisciplinaryAction.isSuspendRegistration() && personnelResDTO != null 
-						&& !EntityHelper.isCollectionEmpty(personnelResDTO.getSmPersonnelList())){					
 
-					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-						if(personnel.isSuspendRegistration()){
-							blacklistOwner.setIcNo(personnel.getIdentificationNo());
-							blacklistownerDirectorList.add(blacklistOwner);
-						}
-					}
-					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);						
-				}
-				
-				if(smDisciplinaryAction.isCancelRegistration() 
-						&& !smDisciplinaryAction.isBlacklistOwner() && personnelResDTO != null 
-						&& !personnelResDTO.getSmPersonnelList().isEmpty()){
-					//29579 - start						
-					BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-					BlacklistDirectorResDTO resDTO;
-					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-						reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-						resDTO = SmServiceLookup.getBlacklistDirectorSO().retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
-						if(resDTO != null && resDTO.getPersonBlacklist() != null){//29579 - end
-							blacklistOwner.setIcNo(personnel.getIdentificationNo());
-							blacklistownerDirectorList.add(blacklistOwner);
-						}
-					}
-					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);						
-				}
-				
-				if(smDisciplinaryAction.isBlacklistOwner() && personnelResDTO != null 
-						&& !personnelResDTO.getSmPersonnelList().isEmpty()){					
-					BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-					BlacklistDirectorResDTO resDTO;//28790
-					for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-						BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-						reqDTO.setDirectorIdNo(personnel.getIdentificationNo());
-						// Get blacklist by identification no
-						resDTO = SmServiceLookup.getBlacklistDirectorSO()
-								.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);//28790
-						if(resDTO != null && 
-								resDTO.getPersonBlacklist() != null){
-							blacklistOwner.setIcNo(personnel.getIdentificationNo());
-							blacklistownerDirectorList.add(blacklistOwner);
-						}
-					}
-					disciplinaryActionVO.setBlacklistownerDirectorList(blacklistownerDirectorList);
-				}
-				//28790 - end
-			}
-			
-			//28640 - start
-			List<DisciplinaryActionVO> remarkList = new ArrayList<>();
-			DisciplinaryActionVO remark = new DisciplinaryActionVO();
-			remark.setRemarks(disciplinaryActionVO.getRemarks());
-			remarkList.add(remark);
-			disciplinaryActionVO.setRemarksList(remarkList);
-			//28640 - end
-			disciplinaryActionVOs.add(disciplinaryActionVO);
-		}
-		
-		return disciplinaryActionVOs;
+	// 26279 - Remove the retrieveDisciplinaryActions method because the method
+	// from the SM module is used for displaying the Disciplinary Action info in
+	// the pop-up
+	
+	// 26279 - remove getMessageByKey and use ResourceBundleUtils.getMessage
+
+	/**
+	 * Check if the disciplinary action is a warning-only action.
+	 * 
+	 * @param smDisciplinaryAction
+	 *            the action to check
+	 * @return true if the action is only a warning, false if otherwise actions
+	 */
+	public boolean isWarningOnly(SmDisciplinaryAction smDisciplinaryAction) {
+		Set<Boolean> actionSet = new HashSet<>();
+		actionSet.add(smDisciplinaryAction.isCancelCategory());
+		actionSet.add(smDisciplinaryAction.isSuspendRegistration());
+		actionSet.add(smDisciplinaryAction.isCancelRegistration());
+		actionSet.add(smDisciplinaryAction.isBlacklistOwner());
+		actionSet.add(smDisciplinaryAction.isBumiputeraCancel());
+		actionSet.add(smDisciplinaryAction.isManufacturerCancel());
+
+		boolean isImposedAction  = actionSet.contains(true);
+		return !isImposedAction && smDisciplinaryAction.isWarning();
 	}
 	
-	private String getMessageByKey(String key, String[] params,
-			String langCode) {
-		String msg;
-		Locale loc = new Locale("en", "EN");
-		if ("ms".equalsIgnoreCase(langCode)) {
-			loc = new Locale("ms", "MY");
-		}
-		if (params != null) {
-			msg = ResourceBundleUtils.getMessage(key, params,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		} else {
-			msg = ResourceBundleUtils.getMessage(key,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		}
-		return msg;
+	/**
+	 * Sets the disciplinary action message
+	 * 
+	 * @param smDisciplinaryAction
+	 * @return warningOrDisciplinaryActionMsg
+	 */
+	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
+		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
+
+		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
+				isWarningOnly);
 	}
-	//26279 - end
+
+	// 26279 - end
+	
 	//29728 - start	
 	protected boolean isSelectedBranchDeleted(Long branchCode, Long supplierId) {
 		IMofRegistrationSO mofRegistrationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
@@ -901,4 +835,43 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return filteredItemName;
 	}
 	//21416 end
+	
+	//36386 -Start
+	/**
+	 * Checks if is Government User Role
+	 *
+	 * @return true, if user has Government User Role
+	 */
+	public boolean hasFlGovernmentUserRole() {
+		List<String> roles = Arrays.asList(RoleCode.REQUISITIONER.value(), RoleCode.FL_APPROVER.value(),
+				RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(), RoleCode.PAY_OFFICER.value(),
+				RoleCode.BPK_APPROVER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(),
+				RoleCode.AUDITOR_INTERNAL.value(), RoleCode.SYS_ADMIN.value());
+
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+	/**
+	 * Determines whether the PRCR link can be viewed based on user roles.
+	 * 
+	 * @return {@code true} if the user can view the PRCR link, {@code false} otherwise
+	 */
+	public boolean canViewPRCRLink() {
+		
+		if (hasSupplierRole() || hasFactoringUserRole()) {
+			if(hasGovtSellerRole() && hasFlGovernmentUserRole()){
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
+	//36386 -End
+
 }

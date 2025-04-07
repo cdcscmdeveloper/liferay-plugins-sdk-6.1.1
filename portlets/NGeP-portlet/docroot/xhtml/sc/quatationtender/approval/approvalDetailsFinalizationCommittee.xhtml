@@ -32,6 +32,8 @@
 
 	<p:panel id="fcappoint" header="#{lbl['lbl.sc.qt.approver.selection']}"
 		toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.qt.approval.menu.instruction']}" escape="false" /><ui:remove>#21692</ui:remove>
 		<p:dataTable id="finalizationsecretaryid"
 			value="#{fcaApprovalTab.scQtApproval.approverSettings}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -42,7 +44,8 @@
 							qTDetailBB.managedBean.selectedApprovalTabBean.tabType != ParameterConst.approvalCategoryProcurementBoard}">
 						<p:selectOneMenu id="fcApprovalId"
 							value="#{approverSettings.committeeType.parameterId}"
-							style="width:75%;margin-bottom: 5px;" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod}">
+							style="width:75%;margin-bottom: 5px;" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
+																				and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="secretary"
@@ -63,7 +66,8 @@
 					<c:choose>
 						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
 							<p:selectOneMenu id="usersSecretaryId"
-								value="#{approverSettings.pmUser.userId}" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod}"
+								value="#{approverSettings.pmUser.userId}" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
+																						and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}"
 								style="width:90%;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />

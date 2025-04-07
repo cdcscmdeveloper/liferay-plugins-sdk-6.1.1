@@ -22,7 +22,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -40,6 +39,7 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.admin.PmAdminMatrix;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -59,7 +59,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
@@ -76,7 +75,6 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
@@ -86,6 +84,14 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.persistence.logging.LogKey;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+//#28895_35501 End
 
 
 /**
@@ -433,12 +439,19 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			getManagedBean().setPasswordPolicy(null);
 			generatePasswordPolicy();
+			// #28895_35501 Start - AUDIT TRAIL SM
+			if (isSmAuditUser()) {
+				this.getManagedBean().setOldSelectedUser((PmUser) CustomUtils.getInstance().deepCopy(this.getManagedBean().getSelectedUser()));
+			}
+			// #28895_35501 End
 
 			// Load admin profile details of current user
 			searchAdminProfile();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogKey logKey = new LogKey();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "retrieve", id.toString(), "UserSO",
+					logKey.getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
 		}
 	}
@@ -928,6 +941,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				 * if(user.getPortrait()!=null){
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF) && isSmAuditUser()) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementUserProfileBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -937,7 +957,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogKey logKey = new LogKey();
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "save", user.getUserId().toString(),
+					"UserSO", logKey.getUserId(), e);
 			throw e;
 			// throw new EpException(MessageConst.ERROR_770050, new
 			// String[]{e.getMessage()});
@@ -1596,220 +1618,111 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 
 	}
 	
-	// //TODO: testing
-	// public void handleFileUpload(FileUploadEvent event) {
-	// System.out.println("handleFileUploadTest - start");
-	// UploadedFile item = event.getFile();s
-	//
-	// System.out.println("login ID: " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// System.out.println("username: " +
-	// this.getManagedBean().getSelectedUser().getUserName());
-	//
-	// this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
-	//
-	// System.out.println("login ID: " +
-	// this.getManagedBean().getSelectedUser().getLoginId());
-	// System.out.println("username: " +
-	// this.getManagedBean().getSelectedUser().getUserName());
-	// IUserSO userSO = null;
-	// try {
-	// userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-	// ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	// UserReqDTO reqDTO = new UserReqDTO();
-	// reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
-	//
-	// UserResDTO resDTO = userSO.updatePortrait(reqDTO);
-	//
-	// if (resDTO.isSuccessful()) {
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_INFO,
-	// null, "Record save successfully for Login ID: "
-	// + resDTO.getPmUser().getLoginId()));
-	// this.preLoadingMyAccount();
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-	// e.getMessage()));
-	// } finally {
-	// userSO = null;
-	// }
-	//
-	// FacesMessage msg = new FacesMessage("Succesful", event.getFile()
-	// .getFileName() + " is uploaded.");
-	// FacesContext.getCurrentInstance().addMessage(null, msg);
-	//
-	// System.out.println("handleFileUploadTest - end");
-	// }
 	
 	//26238 - start
+	/**
+	 * Pre-Render Disciplinary Action
+	 */
 	public void preRenderDisciplinaryAction() {
 		//26238 -  START Disciplinary Action - 28111,28496
-		logger.info("preRenderDisciplinaryAction");
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
-		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-
-		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-		reqDTO.setSupplier(this.getManagedBean().getSmSupplier());
 		renewSesionObject(); 
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();  
 		long startTime = System.currentTimeMillis();
 		try {
-			if(docNo != null && !"".equalsIgnoreCase(docNo) && !"null".equalsIgnoreCase(docNo)){
+			if(!StringUtils.isEmpty(docNo)){
 				MofRegistrationReqDTO reqDTO1 = new MofRegistrationReqDTO();
 				reqDTO1.setApplNo(docNo);
-
-				//26238 -  START Disciplinary Action  - for getting smsupplier data - start
-//				SmAppl srcAppl = SmServiceLookup.getMofRegistrationSO()
-//				.retrieveSmApplWithChildByApplNo(reqDTO1).getSmAppl();
 				SmAppl srcAppl =  SmServiceLookup.getMofRegistrationSO().retrieveSmSupplierByApplNo(reqDTO1).getSmAppl();								
 				//26238 -  START Disciplinary Action - end
 		
-				if(srcAppl == null){
-					return;
-				}
-				retrieveDisciplinaryAction(srcAppl.getSmSupplier());
-				this.getManagedBean().setSmSupplier(srcAppl.getSmSupplier());
-				reqDTO.setSupplier(srcAppl.getSmSupplier());
-
-				//start 32229
-				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-1","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
-				startTime = System.currentTimeMillis();
-				//end 32229
-			} else if(reqDTO.getSupplier() != null){ 
-				logger.info("----------------------preRenderDisciplinaryAction from site visit----------------"); 
-
-				retrieveDisciplinaryAction(reqDTO.getSupplier());
-				this.getManagedBean().setSmSupplier(reqDTO.getSupplier()); 
-
-				//start 32229
-				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-2","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
-				startTime = System.currentTimeMillis();
-				//end 32229
-			}else{
-				PmUser sUsers = facesScopes.getUserSessionBean();						
-				if (sUsers != null){
-					loadSupplierCommonDetails(sUsers.getUserId());
-				}
-				retrieveDisciplinaryAction(null);
-
-				//start 32229
-				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-3","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
-				startTime = System.currentTimeMillis();
-				//end 32229
+				this.getManagedBean().setSmSupplier(srcAppl != null ? srcAppl.getSmSupplier() : null);
 			}
-			Locale locale = new FacesScopes().getUserLocale();
-			if(this.getManagedBean().isDisciplinaryAction()){
-				
-				
-				if (locale != null 
-						&& locale.getLanguage() != null){
-					reqDTO.setLanguage(locale.getLanguage());
-				} else {
-					reqDTO.setLanguage("en");
+			if (getManagedBean().getSmSupplier() == null){
+				getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
+			}
+			if (getManagedBean().getSmSupplier() == null){
+				loadSupplierCommonDetails(getUserIdSessionFromLoginId());
+				if(getManagedBean().getCurrentProfile().getSmSupplier() != null){
+					getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
 				}
-				
-				if(getManagedBean().getCurrentProfile() != null){
-					if(reqDTO.getSupplier() != null){ 
-						this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
-					}else if(getManagedBean().getCurrentProfile().getSmSupplier() != null){
-						reqDTO.setSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
-						this.getManagedBean().setSmSupplier(getManagedBean().getCurrentProfile().getSmSupplier());
-					}
-				}
+			}
+			SmSupplier supplier = getManagedBean().getSmSupplier();
+			String log = "ProfilePersonalizationBackingBean.preRenderDisciplinaryAction";
+			getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+			String msgDA = getDisciplinaryActionMsg(supplier);
+			if(msgDA != null){
 				//30842 Start
-				this.getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(this.getManagedBean().getSmSupplier().getSupplierId()));
+				getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(
+						getManagedBean().getSmSupplier().getSupplierId()));
 				//30842 End
-				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
-				if(resDTO.getErrorMessage() != null){
-					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
-				} else {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-				}
+				getManagedBean().setDisciplinaryActionMsg(msgDA);
+				getManagedBean().setDisciplinaryAction(true);
+				facesScopes.getUserSessionBean().setDisciplinaryAction(true);
 				//start 32229
-				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-4","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
+				SLAUtils.getInstance().logSQLPerformanceInfo("SM","DA-4", log, startTime,"32229");
 				startTime = System.currentTimeMillis();
 				//end 32229
 			}
-			if(this.getManagedBean().getSmSupplier() == null){
-				this.getManagedBean().setSmSupplier(reqDTO.getSupplier());
-			}
-			SLAUtils.getInstance().logSLAInfo("SM","DA - 5","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime);
+			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("SM", "DA", "", "ProfilePersonalizationBackingBean", 
+					(new LogKey()).getUserId(), e);
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, MessageConst.ERROR_770045, PmCommonUtil
 							.getMsgFromMsgUtils(MessageConst.ERROR_770045, 	null)));
 			PmCommonUtil.redirectToPage(ERROR_PAGE, null, null);
 		}
-		//26238 -  End Disciplinary Action - 28111
 	}
-	//26238 -  Start Disciplinary Action - 28111
-	private void retrieveDisciplinaryAction(SmSupplier currSupp) {
-		if(currSupp == null){
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+	
+	private String getDisciplinaryActionMsg(SmSupplier supplier) {
+		if (supplier == null){
+			return null;
 		}
-		long startTime = System.currentTimeMillis();
-		this.getManagedBean().setSmSupplier(currSupp);
-		if(currSupp != null){
-			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-			//logger.info(resultList);
-			if(resultList != null && resultList.size() > 0){
-				for(SmDisciplinaryAction disciplinaryAction: resultList){
-					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
-							|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-							|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-							|| disciplinaryAction.isBumiputeraCancel()){
-						getManagedBean().setDisciplinaryAction(true);
-						new FacesScopes().getUserSessionBean().setDisciplinaryAction(true);
-						break;
-					}
-				}
-			} else {
-				getManagedBean().setDisciplinaryAction(false);
-				new FacesScopes().getUserSessionBean().setDisciplinaryAction(false);
-			}
-			//start 32229
-			SLAUtils.getInstance().logSQLPerformanceInfo("SM","IN DA-3","ProfilePersonalizationBackingBean.preRenderDisciplinaryAction", startTime,"32229");
-			startTime = System.currentTimeMillis();
-			//end 32229
-		}
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setSupplier(supplier);
+		Locale locale = new FacesScopes().getUserLocale();
+		reqDTO.setLanguage(locale != null && locale.getLanguage() != null ? locale.getLanguage() : "en");
+		SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+				.retrieveDisciplinaryActionMsg(reqDTO);
+		return resDTO.getErrorMessage();
 	}
+	
 	//26238 -  END Disciplinary Action - 28111
-	private void loadSupplierCommonDetails(Long id) {
-		logger.info("loadSupplierCommonDetails");
+	private void loadSupplierCommonDetails(Long userId) {
+		if (userId == null){
+			return;
+		}
 		try {
-			if (id != null) {
-				long startTime = System.currentTimeMillis();
-				// load user
-				//PmUser pmUser = PmCommonUtil.retrieveUserWithoutOrgInfoById(id);
-				//this.getManagedBean().setSelectedUser(pmUser);
-				// retrieve current active org
-				List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(id);
-				this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
-				this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
-				this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
-				if (this.getManagedBean().getCurrentUserOrg() != null) {
-					for (PmUserRole userRole : this.getManagedBean().getCurrentUserOrg().getPmUserRoles()) {
-						if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-							this.getManagedBean().getUserActiveRoles().add(userRole);
-						}
-
-					}
-				}
-				SLAUtils.getInstance().logSLAInfo("SM","DA","ProfilePersonalizationBackingBean.loadSupplierCommonDetails", startTime);
-			}			
+			long startTime = System.currentTimeMillis();
+			// load user, retrieve current active org
+			List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(userId);
+			this.getManagedBean().setCurrentProfile(pmUserOrgs != null ? pmUserOrgs.get(0).getPmOrgProfile() : null);
+			this.getManagedBean().setCurrentUserOrg(pmUserOrgs != null ? pmUserOrgs.get(0) : null);
+			this.getManagedBean().setUserActiveRoles(new ArrayList<PmUserRole>());
+			addUserActiveRoles(this.getManagedBean().getCurrentUserOrg());
+			SLAUtils.getInstance().logSLAInfo("SM","DA",
+					"ProfilePersonalizationBackingBean.loadSupplierCommonDetails", startTime);				
 		} catch (Exception e) {
-			e.printStackTrace();
+			SLAUtils.getInstance().logSLAError("SM", "DA", userId.toString(), "ProfilePersonalizationBackingBean", 
+					(new LogKey()).getUserId(), e);
 			throw new EpException(MessageConst.ERROR_770016, new String[] { e.getMessage() });
+		}
+	}
+	
+	private void addUserActiveRoles(PmUserOrg currentUserOrg){
+		if (currentUserOrg == null || EntityHelper.isCollectionEmpty(currentUserOrg.getPmUserRoles())){
+			return;
+		}
+		for (PmUserRole userRole : this.getManagedBean().getCurrentUserOrg().getPmUserRoles()) {
+			if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				this.getManagedBean().getUserActiveRoles().add(userRole);
+			}
 		}
 	}
 	//26238 - end
@@ -1840,4 +1753,18 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 					"emailPopUpWidgetVar.show()");
 		}
 	} // #28720 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private boolean isSmAuditUser() {
+		String[] roles = { RoleCode.BASIC_SUPPLIER_USER.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value(), RoleCode.G2G_SUPPLIER_USER.value(),
+				RoleCode.G2G_SUPPLIER_ADMIN.value(), RoleCode.MOF_SUPPLIER_USER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value() };
+		boolean auditUser = false;
+		for (String role : roles) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				auditUser = true;
+				break;
+			}
+		}
+		return auditUser;
+	}
+	// #28895_35501 End
 }

@@ -31,12 +31,16 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#34031 Start
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.persistence.entity.sm.SmRvAssistOfficer;
+import my.ep.persistence.entity.sm.SmRvDocFile;
+import my.ep.persistence.entity.sm.SmRvSuppDoc;
+//#34031 End
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -70,27 +74,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-	//26238 - start - #28281
-	/*
-	private boolean warningExist;
-	private boolean warning;
-	private boolean cancelCategoryCode;
-	private boolean suspendRegistration;
-	private boolean cancelRegistration;
-	private boolean blacklistOwnerOrDirector;
-	private boolean bumiputeraStatusCancel;
-	private boolean manufacturerStatusCancel;
-	private List<DisciplinaryActionVO> disciplinaryActionVoList;
-	private List<DisciplinaryActionVO> disciplineVOs; 
-	private List<SmPersonnel> ownerAndDirectorList; 
-	private List<SmPersonnel> selectedOwnerAndDirectorList; 
-	private String applType; 
-	private boolean viewFlag; 
-	private SmSupplier smSupp; 
-	private boolean viewMode; 
-	private boolean disciplinaryAction;
-	private boolean mofNoExist;
-	*/
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<PmFinancialOrg> financialOrgLs;
 	
@@ -143,14 +126,6 @@ public class ViewSuppProfileManagedBean extends
 	private SmSupplierBusiness selectedBusinessNature;
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	
-	/*	#28281
-	private List<BlacklistOwnerDirectorVO> blacklistownerDirectorList;
-	private String startDate;
-	private String endDate;
-	private String remarks;
-	private boolean noDisciplinary;
-	private List<DisciplinaryActionCategoryVO> categoryCodeList;
-	*/
 	//27437 : Disciplinary Action
 	private IPagingDataModel<SmSupplier> basicSupplierDataModel = new SmBasicSupplierPagingDataModel();
 	private String searchByCompanyName;
@@ -174,9 +149,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean disableDeleteButtonAprrovedCategoryCodePanel;
 	//End - 27815
 	
-	//28281
-	private List<Long> bumiCodeList;
-	
 	// Start 27815
 	private boolean disabledApprovedCategories;
 	// End 27815
@@ -197,6 +169,24 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasActiveDA; //#34626
 	
 	private Map<Long, String> tempCategoryLs; //#34209
+	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
+	// #28895_35501 End
+	// #34031 Start
+	private SmRevisit smRevisit;
+	private String svoRoleCode;
+	private SmRvAssistOfficer selectedRvAssistOfficer;
+	private boolean disableAddSmRvAssistOfficerBtn;
+	private int smRvAttachedFileIndex;
+	private String smRvFilePath;
+	private SmRvSuppDoc smRvSuppDoc;
+	private SmRvDocFile smRvDocFile;
+	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
+	// #34031 End
 		
 	public ViewSuppProfileManagedBean() {
 
@@ -288,8 +278,6 @@ public class ViewSuppProfileManagedBean extends
 				}
 			} catch (Exception ex) {
 				return new SearchResultBean();
-			} finally {
-				reqDTO = null;
 			}
 		}
 		
@@ -309,10 +297,9 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSmAppl(smAppl);
 			// 28273: Disciplinary Action - end - 26238
 			
-			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveBasicSupplierForMaintenance(reqDTO)
 					.getSupplierResultBean();
-			return resultBean;
 		}
 	} 
 	
@@ -784,23 +771,7 @@ public class ViewSuppProfileManagedBean extends
 	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
 		this.smSuppOwners = smSuppOwners;
 	}
-	/*	#28281
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
-
-	public boolean isWarningExist() {
-		return warningExist;
-	}
-
-	public void setWarningExist(boolean warningExist) {
-		this.warningExist = warningExist;
-	} 
-	*/
+	
 	//27437 : Disciplinary Action 
 	/**
 	 * Search supplier latest application
@@ -956,14 +927,6 @@ public class ViewSuppProfileManagedBean extends
 		this.divisionBox = divisionBox;
 	}
 
-	public List<Long> getBumiCodeList() {
-		return bumiCodeList;
-	}
-
-	public void setBumiCodeList(List<Long> bumiCodeList) {
-		this.bumiCodeList = bumiCodeList;
-	}
-
 	public boolean isDisabledApprovedCategories() {
 		return disabledApprovedCategories;
 	}
@@ -1025,4 +988,111 @@ public class ViewSuppProfileManagedBean extends
 	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
 		this.tempCategoryLs = tempCategoryLs;
 	}
+	
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
+	// #34031 Start
+	public SmRevisit getSmRevisit() {
+		return smRevisit;
+	}
+
+	public void setSmRevisit(SmRevisit smRevisit) {
+		this.smRevisit = smRevisit;
+	}
+
+	public String getSvoRoleCode() {
+		return svoRoleCode;
+	}
+
+	public void setSvoRoleCode(String svoRoleCode) {
+		this.svoRoleCode = svoRoleCode;
+	}
+
+	public SmRvAssistOfficer getSelectedRvAssistOfficer() {
+		return selectedRvAssistOfficer;
+	}
+
+	public void setSelectedRvAssistOfficer(SmRvAssistOfficer selectedRvAssistOfficer) {
+		this.selectedRvAssistOfficer = selectedRvAssistOfficer;
+	}
+
+	public boolean isDisableAddSmRvAssistOfficerBtn() {
+		return disableAddSmRvAssistOfficerBtn;
+	}
+
+	public void setDisableAddSmRvAssistOfficerBtn(boolean disableAddSmRvAssistOfficerBtn) {
+		this.disableAddSmRvAssistOfficerBtn = disableAddSmRvAssistOfficerBtn;
+	}
+
+	public int getSmRvAttachedFileIndex() {
+		return smRvAttachedFileIndex;
+	}
+
+	public void setSmRvAttachedFileIndex(int smRvAttachedFileIndex) {
+		this.smRvAttachedFileIndex = smRvAttachedFileIndex;
+	}
+	
+	public String getSmRvFilePath() {
+	    return smRvFilePath;
+	}
+
+	public void setSmRvFilePath(String smRvFilePath) {
+	    this.smRvFilePath = smRvFilePath;
+	}
+
+	public SmRvSuppDoc getSmRvSuppDoc() {
+		return smRvSuppDoc;
+	}
+
+	public void setSmRvSuppDoc(SmRvSuppDoc smRvSuppDoc) {
+		this.smRvSuppDoc = smRvSuppDoc;
+	}
+
+	public SmRvDocFile getSmRvDocFile() {
+		return smRvDocFile;
+	}
+
+	public void setSmRvDocFile(SmRvDocFile smRvDocFile) {
+		this.smRvDocFile = smRvDocFile;
+	}
+
+	public List<SmRvAssistOfficer> getEmptyRvAssistOfficers() {
+		return emptyRvAssistOfficers;
+	}
+
+	public void setEmptyRvAssistOfficers(List<SmRvAssistOfficer> emptyRvAssistOfficers) {
+		this.emptyRvAssistOfficers = emptyRvAssistOfficers;
+	}
+	// #34031 End
 }

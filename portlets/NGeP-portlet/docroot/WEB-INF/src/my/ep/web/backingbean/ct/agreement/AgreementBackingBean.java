@@ -1322,6 +1322,8 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		ctBB.getManagedBean().setInPage(false);//Bug 34142 - shaqimi 04/12/2022
 		ctBB.getManagedBean().setContractVerIdFromAgreementTaskList(contractVerId);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
+		contractDetailsBB.getManagedBean().setLoaContractVerList(null); //#15851
+		contractDetailsBB.getManagedBean().setLoaContractVerId(null); //#15851
 		contractDetailsBB.getManagedBean().setAsAtDate(null);
 		contractDetailsBB.setValidateContractField(ctReqDTO);
 		contractDetailsBB.getManagedBean().setSelectedTabIndex(0);

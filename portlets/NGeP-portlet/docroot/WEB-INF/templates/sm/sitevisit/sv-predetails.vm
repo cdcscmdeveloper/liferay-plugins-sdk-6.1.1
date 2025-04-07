@@ -1,9 +1,10 @@
+
 #parse("templates/sm/sitevisit/shared/header.vm")
 
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;font-weight: bold;font-size: 10pt;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.prep.title')</font>
+	            <font style='color:#ffffff;font-weight: bold;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.prep.title')</font>
 	        </td>
     	</tr>
 	</table>
@@ -148,8 +149,8 @@
 		    	<tr>
 		    	<td>
 		    		$codeL1$codeL2$codeL3 : $tmp.suppCategory.pmCategoryL3.categoryName
-		    		#if ($tmp.suppCategory.otherDesc != "")
-		    			($tmp.suppCategory.otherDesc)
+		    		#if($!tmp.suppCategory.otherDesc && $!tmp.suppCategory.otherDesc != "")
+		    			($!tmp.suppCategory.otherDesc)
 		    		#end
 		    	</td>
 		    	<td></td></tr>
