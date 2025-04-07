@@ -3722,10 +3722,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					boolean isNewLoa = false; //Bug #33188
 					
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
-					//#29007 Start Vinod
-					boolean specificationAndSupplierDialogFlagQT=this.getManagedBean().isSpecificationAndSupplierDialogFlagQT();
-					boolean supPropSpecUpdate=this.getManagedBean().isSupPropSpecUpdate();
-					//#29007 End Vinod
+				// #29007 Start Vinod
+				boolean specificationAndSupplierDialogFlagQT = this.getManagedBean()
+						.isSpecificationAndSupplierDialogFlagQT();
+				boolean supPropSpecUpdate = this.getManagedBean().isSupPropSpecUpdate();
+				String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
+				// #29007 End Vinod
+
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
 						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
@@ -3840,6 +3843,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						}
 						//Bug #33188 end
 					}
+					// #29007 Start Vinod
+					this.getManagedBean().setBpmVersionNo(bpmVersionNo);
+					// #29007 End Vinod
 				 }
 
 		} catch (NullPointerException e) {
@@ -4402,7 +4408,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				updateBpmTaskAction(outcome);
 			}
 			//Enhancement #21694 END
-		}else {
+		} else {
+			checkAndInsertItemSpecOffer(); // #29007 wip Vinod
+
 			updateBpmTaskAction(outcome);
 		}
 	}
@@ -8291,6 +8299,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void confirmSupplierAccept() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
 		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" LOA.");
+
+		checkAndInsertItemSpecOffer(); // #29007 wip Vinod
 
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -12418,6 +12428,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// 25791 -end-
-	
+
+	// #29007 Start vinod
+	private void checkAndInsertItemSpecOffer() {
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+
+		if (checkWIPVersionAndInsertItemSpecOffer(scLoa)) {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(scLoa.getLoaId());
+
+			getQtAwardSO().insertItemSpecOffer(reqDTO);
+		}
+	}
+	// #29007 End vinod
 }
 
