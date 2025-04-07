@@ -167,9 +167,6 @@
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{biddingBB.managedBean.bidPackagesDisqualified}" var="item" rendered="#{isDisqualified}" >
 			<ac:paginator for="bidPackagesListForBMBPDisqualified"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
-				<p:outputLabel value="#{item.ranking}" />
-			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 
 				<p:commandLink value="#{item.scBidSupplier.supplierNo}"
@@ -232,6 +229,10 @@
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
+			     <h:outputText rendered="#{biddingBB.checkDisqualifiedSupplierBranchDeleted(biddingBB.managedBean.scQt.qtId, item.scBidSupplier.smSupplier.supplierId)}"  
+			     value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />    
 			</p:column>
 		</p:dataTable>
 	    <ui:remove> #28777#29729 - End </ui:remove>	
