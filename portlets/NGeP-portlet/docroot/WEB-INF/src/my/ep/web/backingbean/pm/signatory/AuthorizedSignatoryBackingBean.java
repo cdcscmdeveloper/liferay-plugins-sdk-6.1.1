@@ -42,9 +42,9 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import org.springframework.util.ObjectUtils;
 
 
 /**
@@ -352,7 +352,10 @@ public class AuthorizedSignatoryBackingBean extends
 		validation();
 		
 		List<PmCertSignatory> certSignatories = this.getManagedBean().getCertSignatories();
-		
+		/************ AUDIT 35509 Start *************/
+		List<PmCertSignatory> newCertSign = new ArrayList<>();
+		List<PmCertSignatory> modifiedCertSignatories = new ArrayList<>();
+		/************ AUDIT 35509 END *************/
 		validationDate(certSignatories);
 		
 		ISignatorySO iSignatorySO = EpEjbBusinessDelegate.getInstance()
@@ -376,6 +379,10 @@ public class AuthorizedSignatoryBackingBean extends
 				msgParam = new String[] {this.getManagedBean().getCertSignatories().get(0).getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				pmcertSignatory.setCreatedBy(getUserIdSessionFromLoginId()); //#34090
 				pmcertSignatory.setChangedBy(getUserIdSessionFromLoginId()); //#34090
+				/************ AUDIT 35509 Start *************/
+				newCertSign.add(pmcertSignatory);
+				/************ AUDIT 35509 END *************/
+				
 			} else {
 				if (pmcertSignatory.isModified()
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
@@ -394,6 +401,10 @@ public class AuthorizedSignatoryBackingBean extends
 					messageId = MessageConst.TD_80901;
 					msgParam = new String[] {pmcertSignatory.getPmZone().getZoneName(),pmcertSignatory.getSinnatoryName()};
 				}
+				/************ AUDIT 35509 Start *************/
+				// modified
+				modifiedCertSignatories.add(pmcertSignatory);
+				/************ AUDIT 35509 END *************/
 			}
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
@@ -405,27 +416,21 @@ public class AuthorizedSignatoryBackingBean extends
 		reqDTO.setCertSignatorys(certSignatories);
 		/************ AUDIT 35509 Start *************/
 		reqDTO.setZoneId(certSignatories.get(0).getPmZone().getZoneId());
+		getManagedBean().setModifiedCertSignatories(modifiedCertSignatories);
+		getManagedBean().setNewCertSignatories(newCertSign);
 		AuditPMBackingBeanTemplate auTemplate = new AuditPMAuthorizedSignBackingBean();
 		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
 
 		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
 			SignatoryResDTO resDTO = iSignatorySO.retrieveCertSignatoryByZone(reqDTO);
-
-			getManagedBean().setExistingCertSignatoriesMap(new HashMap<Long, PmCertSignatory>());
-
-			if (!ObjectUtils.isEmpty(resDTO.getCertSignatories().toArray())) {
-				for (PmCertSignatory ruleValue : resDTO.getCertSignatories()) {
-					getManagedBean().getExistingCertSignatoriesMap().put(ruleValue.getCertSignatoryId(), ruleValue);
-				}
-			}
+			setExistingCertSignToMap(resDTO.getCertSignatories());
 		}
 		/************ AUDIT 35509 END *************/
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
 			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
 			/************ AUDIT 35509 Start*************/
-			this.getManagedBean().setNewCertSignatories(resDTO.getCertSignatories());
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
 				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_AUTHORIZED);
 			}
@@ -435,6 +440,17 @@ public class AuthorizedSignatoryBackingBean extends
 		     null,
 		     MessageUtils.getMessage(MessageConst.INFO_770146, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
+		}
+	}
+	
+	/************ AUDIT 35509 Start*************/
+	private void setExistingCertSignToMap(List<PmCertSignatory> certSign) {
+		if (!CollectionUtils.isNotEmpty(certSign)) {
+			this.getManagedBean().setExistingCertSignatoriesMap(new HashMap<Long, PmCertSignatory>());
+
+			for (PmCertSignatory ruleValue : certSign) {
+				this.getManagedBean().getExistingCertSignatoriesMap().put(ruleValue.getCertSignatoryId(), ruleValue);
+			}
 		}
 	}
 	/**
