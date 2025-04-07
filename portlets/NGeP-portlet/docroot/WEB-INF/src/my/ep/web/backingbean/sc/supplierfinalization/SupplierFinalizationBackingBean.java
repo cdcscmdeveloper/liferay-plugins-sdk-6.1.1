@@ -6079,7 +6079,7 @@ return	remarksNotFound;
 		//START - #26169
 		else{
 			//If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
+			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
@@ -8784,7 +8784,7 @@ return	remarksNotFound;
 			if(isDisqualified){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
-								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED));	
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
 			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
@@ -9009,7 +9009,7 @@ return	remarksNotFound;
 			if(isDisqualified){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
-								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED));	
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
 			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
@@ -11884,11 +11884,10 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	// Bug #37829@Syazani 13/03/2024 -- Start
 	private boolean validateCurrentStatus() {
 		Long bpmStatusId = getManagedBean().getCurrentStatusId() != null ? getManagedBean().getCurrentStatusId() : 0L;
-		boolean isReadOnly = getManagedBean().isReadOnly();
 		List<ScWorkFlowStatus> scWorkFlowStatus = retrieveWorkFlowStatusSF();
 		if (!CollectionUtils.isEmpty(scWorkFlowStatus)) {
 			for (ScWorkFlowStatus stat : scWorkFlowStatus) {
-				if (!validateCurrentStatusProcess(stat, bpmStatusId, isReadOnly)) {
+				if (!validateCurrentStatusProcess(stat, bpmStatusId)) {
 					return false;
 				}
 			}
@@ -11896,7 +11895,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		return true;
 	}
 	
-	private boolean validateCurrentStatusProcess(ScWorkFlowStatus stat, Long bpmStatusId, boolean isReadOnly) {
+	private boolean validateCurrentStatusProcess(ScWorkFlowStatus stat, Long bpmStatusId) {
 		PmStatus workFlowStat = stat.getPmStatus();
 		Long workFlowStatusId = workFlowStat.getStatusId() != null ? workFlowStat.getStatusId() : 0L;
 		boolean isCurrent = stat.isCurrent();
@@ -11906,7 +11905,7 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 			boolean isSecStatusRole = Arrays.asList(
 					new Long[] { QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION,
 							QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION }).contains(workFlowStatusId);
-			if (this.getManagedBean().isSecretaryUser() && isReadOnly && !isSecStatusRole) {
+			if (this.getManagedBean().isSecretaryUser() && !isSecStatusRole) {
 				return false;
 			}
 		}

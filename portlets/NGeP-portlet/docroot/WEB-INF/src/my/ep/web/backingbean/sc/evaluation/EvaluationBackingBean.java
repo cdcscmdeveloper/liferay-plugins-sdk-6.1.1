@@ -19145,10 +19145,23 @@ private void retriveCommitteeRemarksList(){
 	 * @return
 	 */
 	public void onchangeCompliance(ScQtSampleItem sampleItem) {
-		for (ScQtSampleItem item : this.getManagedBean().getSampleItemList()) {
-			if (sampleItem.getSampleItemId().compareTo(item.getSampleItemId()) == 0 && sampleItem.getCompliance() != null
-					&& sampleItem.getCompliance() == Boolean.FALSE) {
+		List<ScQtSampleItem> sampleItemList = this.getManagedBean().getSampleItemList();
+		for (ScQtSampleItem item : sampleItemList) {
+			if (sampleItem.getSampleItemId().compareTo(item.getSampleItemId()) == 0
+					&& sampleItem.getCompliance() != null && sampleItem.getCompliance() == Boolean.FALSE) {
 				item.setUserScore(BigDecimal.ZERO);
+				// Added to calculate score once updated for total score for
+				// note #631 issue 3 & 6.
+				this.sampleScoreCalculate();
+			} else if (sampleItem.getSampleItemId().compareTo(item.getSampleItemId()) == 0
+					&& (sampleItem.getCompliance() == null || (sampleItem.getCompliance() != null && sampleItem
+							.getCompliance() == Boolean.TRUE))) {
+				// As per note #631 issue 1 & 4 system will reset score if user
+				// select yes.
+				item.setUserScore(null);
+				// Added to calculate score once updated for total score for
+				// note #631 issue 3 & 6.
+				this.sampleScoreCalculate();
 			}
 		}
 	}

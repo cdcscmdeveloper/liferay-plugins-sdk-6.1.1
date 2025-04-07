@@ -11306,7 +11306,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_775250, new String[] { techInactive },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
@@ -11326,7 +11326,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_775251, new String[] { finInactive },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
