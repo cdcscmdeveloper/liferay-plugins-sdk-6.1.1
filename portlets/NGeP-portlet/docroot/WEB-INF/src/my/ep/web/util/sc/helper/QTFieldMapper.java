@@ -214,6 +214,12 @@ public class QTFieldMapper {
 		QT_CONSOLIDATION_REPORT(QTStatusConst.QT_CONSOLIDATION_REPORT,
 						QT_CLOSED.value() ),
 
+		// #28834 -start-
+		// Pending Recommendation (Revise Briefing Paper)
+		QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER,
+				QT_CLOSED.value()),
+		// #28834 -end-
+
 		// Supplier Finalization
 		QT_SUPPLIER_FINALIZATION(QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				QT_CLOSED.value() ),
