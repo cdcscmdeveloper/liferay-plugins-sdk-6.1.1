@@ -22,6 +22,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -94,6 +95,11 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isUserStatusChange = false;
 	//#35489 - End
 	private boolean suppGovSellerUser = false; // #36489
+	
+	/************ AUDIT #28895-35509 *************/
+	private PmUser oldAuditPmUser;
+	private PmUserOrg oldAuditPmUserOrg;
+	/************ AUDIT #28895-35509 *************/
 
 	public ProfileManagementManagedBean(){}
 	
@@ -840,5 +846,22 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.suppGovSellerUser = suppGovSellerUser;
 	}
 	//#36489 - End
+	
+	/************ AUDIT *************/
+	public PmUser getOldAuditPmUser() {
+		return oldAuditPmUser;
+	}
 
+	public void setOldAuditPmUser(PmUser oldAuditPmUser) {
+		this.oldAuditPmUser = oldAuditPmUser;
+	}
+	public PmUserOrg getOldAuditPmUserOrg() {
+		return oldAuditPmUserOrg;
+	}
+	
+	public void setOldAuditPmUserOrg(PmUserOrg oldAuditPmUserOrg) {
+		this.oldAuditPmUserOrg = oldAuditPmUserOrg;
+	}
+	/************ AUDIT *************/
+	
 }

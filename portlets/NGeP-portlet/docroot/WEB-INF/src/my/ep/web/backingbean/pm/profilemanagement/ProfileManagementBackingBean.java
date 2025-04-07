@@ -29,10 +29,12 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -44,6 +46,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
+import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -83,6 +86,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.SLAUtils; //#36489
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMEducationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
@@ -3234,6 +3239,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.setSuppGovSeller(true);
 			}
 			//#36489 - End
+
+			/************ AUDIT #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMEducationBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER) && !reqDTO.getPmUser().isBrandNew()) {
+				UserResDTO oldUser = userSO.retrieveUserByUserId(reqDTO);
+				
+				getManagedBean().setOldAuditPmUser(oldUser.getPmUser());
+				getManagedBean().setOldAuditPmUserOrg(oldUser.getPmUserOrg());
+			}
 			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
