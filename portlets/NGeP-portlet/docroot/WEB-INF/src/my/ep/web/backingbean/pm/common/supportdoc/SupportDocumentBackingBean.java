@@ -18,15 +18,22 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -34,6 +41,8 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
+import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -64,6 +73,9 @@ import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMQTChecklistBackingBean;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMSupportingDocumentBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
@@ -72,11 +84,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import my.ep.web.util.sm.helper.SmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 /**
  * Backing Bean for Support Document
@@ -2104,9 +2111,14 @@ public class SupportDocumentBackingBean extends
 				System.out.println("1. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				pmDocument.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
+				/** AUDIT 35509 **/
+				getManagedBean().setUpdated(false);
+				/** AUDIT 35509 **/
 			} else {
 				System.out.println("2. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				messageId = MessageConst.TD_80801;
+				getManagedBean().setUpdated(true);
+				getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
 			}
 			log.info("setChangedBy|| userId == " + user.getUserId() + "| userName == " + user.getUserName());
 			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
@@ -2127,9 +2139,41 @@ public class SupportDocumentBackingBean extends
 			reqSO = (IDocumentSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IDocumentSO.class);
+
+			/************ AUDIT #28895_35509 - START *************/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (!createAction && pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+					|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)
+					&& reqDTO.getPmDocument() != null && reqDTO.getPmDocument().getDocumentId() != null) {
+				reqDTO.setDocumentId(reqDTO.getPmDocument().getDocumentId());
+				PmDocument pmDocumentOld = retrieveDocumentById(reqDTO.getPmDocument().getDocumentId());
+				getManagedBean().setSelectedDocumentOld(pmDocumentOld);
+			}
+			/************ AUDIT #28895_35509 - END *************/
+
 			resDTO = reqSO.saveDocument(reqDTO);
+			/************ AUDIT #28895_35509 - START *************/
+			this.getManagedBean().setNewCompanyCodeTypeAuditList(resDTO.getNewCompanyCodeTypeAuditList());
+			this.getManagedBean().setNewCategoryL3AuditList(resDTO.getNewCategoryL3AuditList());
+			/************ AUDIT #28895_35509 - START *************/
+
 			reloadEditData(resDTO.getDocument().getDocumentId());
 
+			/************ AUDIT #28895_35509 - START *************/
+			AuditPMBackingBeanTemplate auTemplate;
+			String modName;
+			if (ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(resDTO.getDocument().getDocCategoryCode()
+					.getParameterCode())
+					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(resDTO.getDocument().getDocCategoryCode()
+							.getParameterCode())) {
+				auTemplate = new AuditPMQTChecklistBackingBean();
+				modName = AuditConst.PM_AUD_QTCHECKLIST;
+			} else {
+				auTemplate = new AuditPMSupportingDocumentBackingBean();
+				modName = AuditPMSupplierMgtConfigConst.PM_AUD_SD;
+			}
+			/************ AUDIT #28895_35509 - START *************/
 			if (resDTO.isSuccessful()) {
 				// loadSupportDoc(resDTO.getDocument().getDocumentId());
 				if (createAction) {
@@ -2141,7 +2185,15 @@ public class SupportDocumentBackingBean extends
 									getParameterDesc(pmDocument
 											.getDocCategoryCode()),
 									pmDocument
-											.getDocName()});					
+.getDocName() });
+					/************ AUDIT #28895_35509 - START **************/
+					getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+							|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
+						getManagedBean().setResDTO(resDTO);
+						auTemplate.auditSaveData(getManagedBean(), modName);
+					}
+					/************ END AUDIT #28895_35509 - END *************/
 					return redirectToSearchSupportDoc();
 				} else {
 					PmCommonUtil.showFacesMsg(
@@ -2151,6 +2203,15 @@ public class SupportDocumentBackingBean extends
 							new String[] { getParameterDesc(pmDocument
 									.getDocCategoryCode()) });
 					redirectToMaintainDoc(pmDocument.getDocumentId());
+					/************ AUDIT #28895_35509 - START *************/
+					pmDocument.getPmDocumentRestrs();
+					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
+							|| pmauditSO.isAuditConfig(AuditPMSupplierMgtConfigConst.PM_AUD_CONF_SUPPORTDOCUMENT)) {
+						getManagedBean().setResDTO(resDTO);
+						auTemplate.auditSaveData(getManagedBean(), modName);
+					}
+					/************ END AUDIT #28895_35509 - END *************/
+
 					return null;
 				}
 			}
