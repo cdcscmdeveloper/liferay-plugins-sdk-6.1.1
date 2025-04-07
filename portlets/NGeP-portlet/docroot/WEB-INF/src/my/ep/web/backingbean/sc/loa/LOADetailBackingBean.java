@@ -3722,11 +3722,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					boolean isNewLoa = false; //Bug #33188
 					
 					boolean validateWitness=this.getManagedBean().isValidatewitness(); //#19336
-					//#29007 Start Vinod
-					boolean specificationAndSupplierDialogFlagQT=this.getManagedBean().isSpecificationAndSupplierDialogFlagQT();
-					boolean supPropSpecUpdate=this.getManagedBean().isSupPropSpecUpdate();
-					String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
-					//#29007 End Vinod
+				// #29007 Start Vinod
+				boolean specificationAndSupplierDialogFlagQT = this.getManagedBean()
+						.isSpecificationAndSupplierDialogFlagQT();
+				boolean supPropSpecUpdate = this.getManagedBean().isSupPropSpecUpdate();
+				String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
+				// #29007 End Vinod
+
 					if((scLoa!=null) && (this.getManagedBean().getFlowamt()!=null))
 					{
 						scLoa.setFollowLoaAmt(this.getManagedBean().getFlowamt());
@@ -4406,10 +4408,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				updateBpmTaskAction(outcome);
 			}
 			//Enhancement #21694 END
-		}else {
-			// #29007 Start Vinod
-			checkAndInsertItemSpecOffer();
-			// #29007 End Vinod
+		} else {
+			checkAndInsertItemSpecOffer(); // #29007 wip Vinod
+
 			updateBpmTaskAction(outcome);
 		}
 	}
@@ -8298,9 +8299,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	public void confirmSupplierAccept() {
 		this.getManagedBean().setAction(BpmOutcomeConst.BPM_ACCEPT);
 		log.info(":::confirmSupplierAccept() to "+ BpmOutcomeConst.BPM_ACCEPT +" LOA.");
-		// #29007 Start Vinod
-		checkAndInsertItemSpecOffer();
-		// #29007 End Vinod
+
+		checkAndInsertItemSpecOffer(); // #29007 wip Vinod
 
 		// spki
 		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -12428,7 +12428,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// 25791 -end-
-	
+
 	// #29007 Start vinod
 	private void checkAndInsertItemSpecOffer() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
@@ -12440,7 +12440,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getQtAwardSO().insertItemSpecOffer(reqDTO);
 		}
 	}
-
 	// #29007 End vinod
 }
 
