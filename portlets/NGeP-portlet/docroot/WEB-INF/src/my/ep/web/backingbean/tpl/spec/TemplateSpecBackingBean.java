@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -3919,8 +3920,14 @@ public class TemplateSpecBackingBean extends
 				&& null != this.getManagedBean().getScQt().getQtStatus()
 						.getStatusId() ? this.getManagedBean().getScQt()
 				.getQtStatus().getStatusId() : Long.MIN_VALUE;
-		if (statusId
-				.equals(QTStatusConst.QT_PROPOSAL_PREPARATION)) {
+				
+		List<Long> orderedStatuses = Arrays
+				.asList(QTStatusConst.QT_ORDERED_STATUSES);
+		orderedStatuses = orderedStatuses.subList(
+				orderedStatuses.indexOf(QTStatusConst.QT_PROPOSAL_PREPARATION),
+				orderedStatuses.indexOf(QTStatusConst.QT_AWARDED) + 1);
+
+		if (orderedStatuses.contains(statusId)) {
 			List<TplSpecAnswer> answerList = templateSpecBean
 					.getSpecAnswerList();
 			for (TplSpecAnswer tplSpecAnswer : answerList) {
@@ -3977,13 +3984,16 @@ public class TemplateSpecBackingBean extends
 		List<TplSpecAnswer> answerList = this.getManagedBean()
 				.getTemplateSpecBean().getSpecAnswerList();
 		for (TplSpecAnswer answer : answerList) {
-			if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() != null) {
-				if (ans.getCompliance() == Boolean.FALSE) {
-					answer.setUserScore(BigDecimal.ZERO);
-				}
-			} else if (ans.getSpecAnswerId() == answer.getSpecAnswerId()
-					&& ans.getCompliance() == null) {
+			if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0
+					&& ans.getCompliance() != null
+					&& ans.getCompliance() == Boolean.FALSE) {
+				answer.setUserScore(BigDecimal.ZERO);
+			} else if (ans.getSpecAnswerId()
+					.compareTo(answer.getSpecAnswerId()) == 0
+					&& (ans.getCompliance() == null || (ans.getCompliance() != null && ans
+							.getCompliance() == Boolean.TRUE))) {
+				// As per note #631 issue 1 & 4 system will reset score if user
+				// select yes.
 				answer.setUserScore(null);
 			}
 		}

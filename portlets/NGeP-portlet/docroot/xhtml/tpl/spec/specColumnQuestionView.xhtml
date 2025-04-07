@@ -12,7 +12,9 @@
 		<ui:param name="isRenderUOMandQuantity" value="#{evaluationBackingBean.checkUOMandQuantityRender()}" />
 		<ui:remove>#29187 End Vinod</ui:remove>
  <!-- #32952 remove here -->
-	<p:column style="width: 25%;white-space: normal;"><!-- #29006 word-break:normal | #36103-remove word-break:normal -->
+ 	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width: #{isManSpecAndCompliance ? '30%' : '25%'};white-space: normal;"><!-- #29006 word-break:normal | #36103-remove word-break:normal -->
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<ui:remove>#29187 Start Vinod</ui:remove>
 		<p:commandLink value="#{fn:replace(question.clItem,',',',  ')}"
 					   rendered="#{!isRepeated and !isRenderUOMandQuantity}" process="@this" partialSubmit="true"
@@ -179,7 +181,7 @@
 	</ui:insert>
 	<ui:remove>#29187 Start Vinod</ui:remove>
 	</c:if>
-	<p:column style="width:5%;text-align:right;" rendered="#{isManSpecAndCompliance}">
+	<p:column style="width:10%;text-align:right;" rendered="#{isManSpecAndCompliance}">
 			<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
 	</p:column>
 	<ui:remove>#29187 End Vinod</ui:remove>
