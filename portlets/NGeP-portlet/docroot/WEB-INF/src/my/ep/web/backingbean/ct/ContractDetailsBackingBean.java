@@ -1279,7 +1279,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
 
 					        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
-//					        result.addAll(originalBond);
 					        result = ListUtils.union(newBond, originalBond);
 							contractAmt.setCtPerformanceBonds( result);
 						}else{
@@ -4360,7 +4359,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	// End - #30866
 	
-	// #24333,#36491 - Start
 	/**
 	 * Processes performance bonds by classifying them as new or original and
 	 * handles bond requirements based on document type and amendment status.
@@ -4386,36 +4384,55 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
+		ctBB.isContractExtendOrIsBond();
 
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			if (bond.isBondNew()) {
+			boolean isNewBond = bond.isBondNew();
+			boolean bondRequired = ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq();
+			boolean disableOriginalBond = ctBB.getManagedBean().isDisableOriginalBond();
+			boolean shouldCreateNewBond = bondRequired && disableOriginalBond && bond.isBrandNew() && !isNewBond ;
+
+			if (isNewBond) {
 				bondNew.add(bond);
-			} else {
+			}  else {
 				bondOriginal.add(bond);
 			}
-
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() && bondNew.isEmpty()) {
-				if (bond.isBrandNew()) {
-					CtPerformanceBond newBond = new CtPerformanceBond();
-					newBond.setPerformanceBondId(null);
-					newBond.setBondNew(true);
-					newBond.setRefNo(bond.getRefNo());
-					newBond.setFinancialOrg(bond.getFinancialOrg());
-					newBond.setFinancialOrgName(bond.getFinancialOrgName());
-					newBond.setBondAmount(bond.getBondAmount());
-
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-					cal.add(Calendar.YEAR, 1);
-					newBond.setExpDate(cal.getTime());
-					newBond.setEffDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-					bondNew.add(newBond);
-				}
-			}
+			
+			if (shouldCreateNewBond) {
+				bondNew.add(createNewBondFrom(bond));
+			}			
 		}
-
 		contractAmt.setCtPerformanceBondsNew(bondNew);
 		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}
+	
+	/**
+	 * Creates a new performance bond based on an existing bond, extending the expiration date by one year.
+	 *
+	 * @param bond The original performance bond.
+	 * @return A new performance bond with updated attributes.
+	 */
+	private CtPerformanceBond createNewBondFrom(CtPerformanceBond bond) {
+		CtPerformanceBond newBond = new CtPerformanceBond();
+		newBond.setPerformanceBondId(null);
+		newBond.setBondNew(true);
+		newBond.setRefNo(bond.getRefNo());
+		newBond.setFinancialOrg(bond.getFinancialOrg());
+		newBond.setFinancialOrgName(bond.getFinancialOrgName());
+		newBond.setBondAmount(bond.getBondAmount());
+
+		CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+		CtContractValue contractValue = contractVer.getCtContractValue();
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(contractValue.getExpDate());
+		cal.add(Calendar.YEAR, 1);
+
+		newBond.setExpDate(cal.getTime());
+		newBond.setEffDate(contractValue.getEffDate());
+
+		return newBond;
+	}
 	// #24333,#36491 - End
+	
 }

@@ -177,7 +177,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private Integer wipStatusMax;//34865,34866,34867 - 29021 WIP
 	
 	//#28784 - Demo WIP - To display QT BPM version
-	private String bpmVersionNo;
+	private String bpmVersionNo; // #29007 wip
 	private boolean newVersion;
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
@@ -1084,7 +1084,17 @@ public abstract class BaseManagedBean implements Serializable {
 	public void setWipStatusMax(Integer wipStatusMax) {
 		this.wipStatusMax = wipStatusMax;
 	}
-	
+
+	// #29007 wip -start-
+	public String getBpmVersionNo() {
+		return bpmVersionNo;
+	}
+
+	public void setBpmVersionNo(String bpmVersionNo) {
+		this.bpmVersionNo = bpmVersionNo;
+	}
+	// #29007 wip -end-
+
 	public boolean isNewVersion() {
 		return newVersion;
 	}
@@ -1111,6 +1121,3 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #28895_35501 End
 }
-
-// ***25201
-// ***25692
