@@ -1607,15 +1607,6 @@ public class ViewApplHistoryBackingBean extends
 		RequestContext.getCurrentInstance().execute(
 				"disciplinaryActionHistoryDlg.show();");
 	} 
-	
-	public boolean mofView(){
-		boolean mofView = false;
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		if(supplier != null && supplier.getMofNo() != null){
-			mofView = true;
-		}
-		return mofView;
-	}
 	//26238 - end
 	
 	public void resetInputOnChangeAccountType() {
