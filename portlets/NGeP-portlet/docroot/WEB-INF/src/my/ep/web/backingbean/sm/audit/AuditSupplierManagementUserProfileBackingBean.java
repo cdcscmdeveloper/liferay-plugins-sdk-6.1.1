@@ -46,12 +46,6 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 		} 
 		// #35501_Reopen#63 End
 
-		if (!oldPhoneNo.equalsIgnoreCase(newPhoneNo)) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_MOBILE_NO, oldPhoneNo, newPhoneNo, null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_MOBILE_NO));
-		}
-
 		if (!oldUser.getEmail().equalsIgnoreCase(newUser.getEmail())) {
 			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EMAIL,
 					oldUser.getEmail(), newUser.getEmail(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EMAIL));
