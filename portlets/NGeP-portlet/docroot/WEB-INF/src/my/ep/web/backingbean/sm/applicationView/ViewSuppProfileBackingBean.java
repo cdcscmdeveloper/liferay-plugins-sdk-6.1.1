@@ -236,7 +236,7 @@ public class ViewSuppProfileBackingBean extends
 	/**
 	 * 32560 - Added Checking to Get Active DA from the list
 	 * CHECKING TO SET START / END DATE FOR DISCIPLINARY ACTION POPUP
-	 * @return void
+	 * @param listDA
 	 */
 	public void findActiveDA(List<DisciplinaryActionVO> listDA) {
 			    Iterator<DisciplinaryActionVO> iterator = listDA.iterator();
@@ -249,19 +249,6 @@ public class ViewSuppProfileBackingBean extends
 			        }
 			    }
 			}
-	
-	private boolean disableDownloadDA(){
-		// 28342 : Disciplinary Action - start, 28630 : Add additional role
-		List<String> disableRoles = Arrays.asList(RoleCode.UPS_SDO.value(), RoleCode.UPS_PO.value(),
-				RoleCode.APPROVER.value(), RoleCode.UPS_SVC.value(), RoleCode.UPS_SVO.value(), 
-				RoleCode.UPS_APPROVER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value());
-		for (String role : disableRoles){
-			if (getFacesScopes().hasRoleUser(role)){
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	/**
 	 * @param smSupplier
@@ -350,27 +337,29 @@ public class ViewSuppProfileBackingBean extends
 		}
 		RequestContext.getCurrentInstance().execute(SHOW_DA);
 	} 
-	//26238 -  END Disciplinary Action - 28111
 	
-	//28281 - start
-	public void viewApplication(SmAppl selectedSmAppl){
-		super.viewApplication(selectedSmAppl);
-		SmSupplier supplier = null;
-		if(getManagedBean().isSupplierUser()){
-			supplier = SmApplicationUtil.getCurrentSupplier();
-		} else {
-			supplier = getManagedBean().getSmSupplier();
+	private boolean disableDownloadDA(){
+		// 28342 : Disciplinary Action - start, 28630 : Add additional role
+		List<String> disableRoles = Arrays.asList(RoleCode.UPS_SDO.value(), RoleCode.UPS_PO.value(),
+				RoleCode.APPROVER.value(), RoleCode.UPS_SVC.value(), RoleCode.UPS_SVO.value(), 
+				RoleCode.UPS_APPROVER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		for (String role : disableRoles){
+			if (getFacesScopes().hasRoleUser(role)){
+				return true;
+			}
 		}
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-		if(!EntityHelper.isCollectionEmpty(resultList)
-				&& resultList.size() > 0){
-			getManagedBean().setDisciplinaryAction(true);
-		} else {
-			getManagedBean().setDisciplinaryAction(false);
-		}
-		retrieveActiveDisciplinaryAction(supplier);
+		return false;
 	}
-	//28281 - end
+	
+	//31033 start
+	/**
+	 * View Active Disciplinary Action
+	 * @param smSupplier
+	 */
+	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
+		displayDisciplinaryAction(smSupplier, true);
+	} 
+	//26238 -  END Disciplinary Action - 28111, //31033 end
 	
 	//#29482 - Start
 	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
@@ -438,59 +427,6 @@ public class ViewSuppProfileBackingBean extends
 		return remarkList;
 	}
 	// #28175 end
-	
-	//31033 start
-	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
-
-		// 27876: Disciplinary Action - start - <27876>
-		smSupplier.setFlagSupplier(true);
-		// 27876: Disciplinary Action - start - <27876>
-
-		List<DisciplinaryActionVO> voList = getActiveDisciplinaryActionVO(smSupplier);
-		/*
-		 * 32560 - Added Checking Active DA
-		 */
-		findActiveDA(voList);	
-		
-		if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
-			getManagedBean().setDisciplineVOs(voList);
-			// #-29771 - Start.
-			getManagedBean().setSmSupplier(smSupplier);
-			// #-29771 - End.
-			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			PmUser sUsers = facesScopes.getUserSessionBean();
-
-			if (sUsers != null && sUsers.getPreferredLanguage() != null) {
-				reqDTO.setLanguage(sUsers.getPreferredLanguage());
-			}
-
-			reqDTO.setSupplier(smSupplier);
-			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-			SupplierDataMaintenanceResDTO resDTO = null;
-
-			if (null != suppDataSO) {
-				resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
-				if (StringUtils.isNotEmpty(resDTO.getErrorMessage())) {
-					if (resDTO.getErrorMessage().contains("Please click")) {
-						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Please click")[0]);
-					}
-					if (resDTO.getErrorMessage().contains("Sila semak")) {
-						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Sila semak")[0]);
-					}
-					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
-				} else {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-				}
-			}
-
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
-		}
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-	} 
-	//31033 end
 	//35336 START
 	/**
 	 * Check whether the rejected application was expired

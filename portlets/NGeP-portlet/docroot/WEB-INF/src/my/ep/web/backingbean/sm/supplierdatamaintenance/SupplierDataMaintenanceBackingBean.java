@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -119,10 +120,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	private static final long serialVersionUID = 3781591594455061750L;
 	//26238 - start
 	private static Map<Long, Object> identityType; 
-	private boolean gmapDisabled;
-	//26238 - end
+	private static String defaultAccPurpose = "P";
+	private static String addrPermanent = "permenant";
+	private static String addrBusiness = "business";
+	private static String addrResidential = "residential";
 	//26238 -  Disciplonary action - 28146
-	private boolean searchBlacklisted = true;
 	/**
 	 * Pre-render and redirect to Search Page
 	 */
@@ -144,12 +146,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				"", null, null);
 	}
 	//26238 - start
-	private static String defaultAccPurpose = "P";
-	private static String addrPermanent = "permenant";
-	private static String addrBusiness = "business";
-	private static String addrResidential = "residential";
-	//26238 -  Disciplinary action - 28146
-	
 	/**
 	 * Pre-render and redirect to Search Page
 	 */
@@ -1322,33 +1318,6 @@ public class SupplierDataMaintenanceBackingBean extends
 
 	}
 
-	private String getActionDesc(SmAppl appl) {
-		PmUser user = new FacesScopes().getUserSessionBean();
-		StringBuffer sb = new StringBuffer();
-		sb.append("Keterangan Lain untuk bidang:<br />");
-		boolean editOtherDesc = false;
-		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
-			for (SmSupplierCategory sc : appl.getSmSupplierCategories()) {
-				if (!StringUtils.isBlank(sc.getOtherDesc())
-						&& !sc.getOtherDesc().equals(sc.getEntryMode())) {
-					editOtherDesc = true;
-					sb.append(sc.getPmCategoryL1().getCategoryL1Code()
-							+ sc.getPmCategoryL2().getCategoryL2Code()
-							+ sc.getPmCategoryL3().getCategoryL3Code());
-					sb.append(" telah dikemaskini dari ")
-							.append(sc.getEntryMode()).append(" kepada ")
-							.append(sc.getOtherDesc()).append(" oleh ")
-							.append(user.getUserName()).append("<br />");
-				}
-			}
-		}
-		if (!editOtherDesc) {
-			sb = new StringBuffer();
-			sb.append(SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
-		}
-		return sb.toString();
-	}
-
 	private void setCategoryTypeConfirm() {
 		if (getManagedBean().getSmAppl().getApplCategoryType()
 				.equalsIgnoreCase("N")) {
@@ -1366,8 +1335,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Assign active category list with status Active or Pending approval
 	 */
 	private void assignApplActiveAndApprovedCategoryList() {
-		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
-		List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> catList = new ArrayList<>();
+		List<SmSupplierCategory> apprvList = new ArrayList<>();
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getRecordStatusFlg().compareTo(
@@ -1380,12 +1349,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				cat.setEntryMode(cat.getOtherDesc());
 				//26238: Disciplinary Action - start - 28219
 				apprvList.add(cat);
-				//26238: Disciplinary Action - End- 28219
-				//26238 - start
-				//if(!cat.isCancelCategory()){
-				//	apprvList.add(cat);
-				//}
-				//26238 - end
 			}
 		}
 		if (getManagedBean().getActiveCategoryList() != null
@@ -2241,9 +2204,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setOwnerAndDirectorList(perList);
 	}
 	
-	
 	/**
-	 * retrieve PM FinancialOrg List 
+	 * retrieve PM FinancialOrg List
+	 * @return
 	 */
 	public List<PmFinancialOrg> retrieveFinancialOrgList() {
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
@@ -2453,10 +2416,11 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * set State By Address Type
 	 * @param typeAdd - business, residential, permenant
+	 * @param reset
 	 */
 	public void populateDistrictByAddType(String typeAdd, boolean reset) {
-		if (typeAdd.equals("business")) {
-			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId()));
+		if (typeAdd.equals(addrBusiness)) {
+			PmState state = SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 			if(reset){
 				//13320-Start
 				if(state !=null && state.getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
@@ -2477,13 +2441,12 @@ public class SupplierDataMaintenanceBackingBean extends
 					getManagedBean().setDivisionBox(true);//13320-End
 				}
 			}else{
-			List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
-			this.getManagedBean().setBusinessDistrictLs(divisionLs);
-			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
-			
-				}
+				List<SelectItem> divisionLs = SmCommonUtil.getDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
+				this.getManagedBean().setBusinessDistrictLs(divisionLs);
+				this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
+			}
 			//33071 - end
-		} else if (typeAdd.equals("residential")) {
+		} else if (typeAdd.equals(addrResidential)) {
 			log.info("------------residential----------------");
 			//13320-Start
 			PmState state = (SmCommonUtil.getInstance().getStateById(this.getManagedBean().getSmResAdd().getPmState().getStateId()));
@@ -2508,7 +2471,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				this.getManagedBean().setResidentialDistrictLs(districtLs);
 				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
 				}
-		} else if (typeAdd.equals("permenant")) {
+		} else if (typeAdd.equals(addrPermanent)) {
 			log.info("------------permenant----------------"
 					+ this.getManagedBean().getSmPermenantAdd().getPmState()
 					.getStateId());
@@ -2544,6 +2507,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * set City By AddType
 	 * @param typeAdd - business, residential, permenant
+	 * @param reset
 	 */
 	public void populateCityByAddType(String typeAdd, boolean reset) {
 		log.info("---------------City By Type--------------------");
@@ -2564,6 +2528,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 	
+	/**
+	 * @param typeAdd
+	 */
 	public void onSelectCity(String typeAdd){
 		if (typeAdd.equals(addrBusiness)) {
 			getManagedBean().getSmBusinessAdd().setPmCity(SmCommonUtil.getInstance().getCityById(getManagedBean().getSmBusinessAdd().getPmCity().getCityId()));
@@ -2679,31 +2646,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		return stateList;
 	}
 	
-	public boolean isGmapDisabled() {
-		gmapDisabled = false;
-		
-		if(getManagedBean().getSmBusinessAdd() != null){
-			SmAddress bizAddress = getManagedBean().getSmBusinessAdd();
-
-			if(bizAddress.getPmCountry() == null || bizAddress.getPmDistrict() == null || 
-					bizAddress.getPmState() == null || bizAddress.getPmCity() == null || 
-					bizAddress.getAddress1() == null ){
-					gmapDisabled = true;
-			}else{
-				if(StringUtils.isBlank(bizAddress.getAddress1()) || bizAddress.getPmCountry().getCountryId() == null ||
-						bizAddress.getPmDistrict().getDistrictId() == null || bizAddress.getPmState().getStateId() == null ||
-						bizAddress.getPmCity().getCityId() == null){
-					gmapDisabled = true;
-				}
-
-			}
-		}else{
-			gmapDisabled = true;
-		}
-
-		return gmapDisabled;
-	}
-	
 	/**
 	 * Initializes GST (Goods and Services Tax) information for the given supplier.
 	 * 
@@ -2786,7 +2728,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Download disciplinary action history
 	 * @param supplier
 	 */
-	public void downloadDAHistory(SmSupplier supplier) throws Exception {
+	public void downloadDAHistory(SmSupplier supplier) throws IOException {
 		SmSupplier supp = supplier != null ? supplier : getManagedBean().getSmSupplier();
 		if(supp == null){
 			supp = SmApplicationUtil.getCurrentSupplier();
@@ -2835,66 +2777,20 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//End 17906
 	
-	//26238 -  Disciplonary action - 28146 - start
-	private SmDisciplinaryAction cloneSmDisciplinaryActionEditableValue(SmDisciplinaryAction newSmDisciplinaryAction, SmDisciplinaryAction smDisciplinaryAction){
-		
-		newSmDisciplinaryAction.setStartDate(smDisciplinaryAction.getStartDate());
-		newSmDisciplinaryAction.setEndDate(smDisciplinaryAction.getEndDate());
-		newSmDisciplinaryAction.setRemark(smDisciplinaryAction.getRemark());
-		
-		return newSmDisciplinaryAction;
-		
-	}
-	//26238 -  Disciplonary action - 28146 - end
-	
-	
-	//28281: auto-tick bumi code when bumi status DA is ticked
-	private void autoTickBumiCode(){
-		List<SmSupplierCategory> catList = getManagedBean().getApprovedCategoryList();
-		if(catList == null || catList.isEmpty()) return;		
-		List<Long> bumiList = getManagedBean().getBumiCodeList();
-		if(bumiList == null || bumiList.isEmpty()){
-			bumiList = SmApplicationUtil.retrieveBumiCodeList();
-			getManagedBean().setBumiCodeList(bumiList);
-		}
-		
-		List<SmSupplierCategory> selectList = getManagedBean().getSelectedApprovedCategories();
-		for(SmSupplierCategory cat: catList){
-			if(bumiList.contains(cat.getPmCategoryL3().getCategoryL3Id())){
-				if(!cat.isSelected()) selectList.add(cat);
-				cat.setSelected(true);
-			}
-		}		
-		getManagedBean().setApprovedCategoryList(catList);
-		getManagedBean().setSelectedApprovedCategories(selectList);
-		// Start 27815,28324, 32386
-		if (!getManagedBean().isBumiputeraStatusCancel()) {
-			log.info("---do nothing semua DA---");
-			if(getManagedBean().isDisabledApprovedCategories()){ 
-				getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? false : true);
-			}
-		} else if(getManagedBean().isBumiputeraStatusCancel()){
-			getManagedBean().setDisabledApprovedCategories(CollectionUtils.isNotEmpty(selectList) ? true : false);
-
-		}
-		// End 27815,28324 32386
-	}
-	//28281 end
-	
 	//13320-Start
 	public void populateDivisionByAddType(String typeAdd, boolean reset) {
 		log.info("---------------Division By Type--------------------");
-			if((typeAdd.equals("business"))){
+			if(typeAdd.equals(addrBusiness)){
 			List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmBusinessAdd().getPmDivision().getDivisionId());
 			this.getManagedBean().setBusinessDistrictLs(divisionLs);
 			this.getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());	
 		}
-			if((typeAdd.equals("residential"))){
+			if(typeAdd.equals(addrResidential)){
 				List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmResAdd().getPmDivision().getDivisionId());
 				this.getManagedBean().setResidentialDistrictLs(divisionLs);
 				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());	
 			}
-	       if((typeAdd.equals("permenant"))){
+	       if(typeAdd.equals(addrPermanent)){
 				List<SelectItem> divisionLs = SmCommonUtil.getDistrictListByID(this.getManagedBean().getSmPermenantAdd().getPmDivision().getDivisionId());
 				this.getManagedBean().setPermenantDistrictLs(divisionLs);
 				this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());	
@@ -2902,22 +2798,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//13320-end
 	
-	private ISupplierSearchSO getISupplierSearchSO(){
-		return (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-	}
-
-	//26238 -  Disciplinary action - 30720 - Start
-	public int retrieveBumiPercent(SmAppl smAppl){
-		Integer bumiPerc = new Integer(0);
-
-		if(smAppl.isBumi() && smAppl.getSmSupplier().isBumi()){
-			bumiPerc = 90; 
-		} else {
-			bumiPerc = 1;  
-		}
-
-		return bumiPerc;
-	}
 	
 	//32618 - Start
 	//#26238

@@ -713,50 +713,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 						}
 						//32851 - end
-						
-
-						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-						
-//						IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
-//						PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
-//						
-//						personneleqDTO.setIdentificationNo(suppOwner.getIdentificationNo());
-//						PersonnelResDTO personnelResDTO = personnelSO.retrievePersonnelByIdNo(personneleqDTO);
-//						
-//						if(personnelResDTO != null && personnelResDTO.getSmPersonnelList().size() > 0){
-//							for(SmPersonnel personnel : personnelResDTO.getSmPersonnelList()){
-//								
-//								if(null != personnel.getSmAppl()){
-//									
-//									SmAppl latestAppl = new SmAppl();
-//									latestAppl.setSmSupplier(personnel.getSmAppl().getSmSupplier());
-//									
-//									SmSupplier supplier = latestAppl.getSmSupplier();
-//									
-//									//27876: Disciplinary Action - start - <27876>
-//									List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
-//									//27876: Disciplinary Action - end - <27876>
-//									
-//									//CR 27382: Static Code Analysis
-//									//if(discList != null && discList.size() > 0){ asal
-//									if(discList != null && !discList.isEmpty()){
-//										for(SmDisciplinaryAction disc : discList){
-//											//27861:  Disciplinary Action - start - 28798
-//											//32851
-//											if(//( disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isBlacklistOwner() ) ||
-//													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isCancelRegistration() ) ||
-//													(disc.getDisciplinaryActionId() != null && disc.isRecordStatus() && disc.isSuspendRegistration() ) ){
-//												throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
-//												
-//											}
-//											//27861:  Disciplinary Action - end - 28798
-//										}
-//									}
-//								}
-//							}
-//						}
-						//26238: Disciplinary Action -32851 - start remove second checking for imposed DA since checking already run based on table sm_person_blacklist
-						
 					}
 				}
 			}

@@ -682,7 +682,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			Integer bumiPercentage, String categoryType, Long supplierId, String businessTypeCode, List<SmSupplierCategory> activeCategoryList) {
 		//#33387 - END
 		if(categoryL2Id == 0) {
-			return new ArrayList<SelectItem>();
+			return new ArrayList<>();
 		}
 		
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -807,7 +807,6 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		
 		return selectItems;
 	}
-	//26238 - approver cannot add imposed category code - end
 	
 	//#26238 - start
 	private List<SmSupplierCategory> getApprovedCategories(SmSupplier currSupp, List<SmDisciplinaryAction> activeDAs){
@@ -919,7 +918,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		return checkBasic == basicMTO.size();
 	}
 	//26238 - approver cannot add imposed category code - end
-	
+ 
 	public void resetL2L3CategoryCode() {
 		this.getManagedBean().setCategoryCodeIdLvl2(null);
 		this.getManagedBean().setCategoryCodeIdLvl3(null);
@@ -939,7 +938,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		 * @param e
 		 *            -AjaxBehaviorEvent
 		 */
-	public void unSelectDACategories(AjaxBehaviorEvent e) {
+	public void unSelectDACategories() {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(getManagedBean().getSelectedCategoryL3().getPmCategoryL2().getCategoryL2Id());
 		reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
@@ -980,7 +979,6 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		//27438, 27613, 27673: Disciplinary Action - end
 	}
 	//32629 - End
-	
 	//#26238
 	private void checkSelectedL3(List<SmDisciplinaryAction> activeDAs, SmAppl srcAppl){
 		if (getManagedBean().getSelectedCategoryL3() == null){
@@ -1003,5 +1001,5 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			getManagedBean().setSelectedCategoryL3(null);
 		}
 	}
-		
+	
 }
