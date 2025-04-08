@@ -249,7 +249,7 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(docType);
-		dtlObj.setPmParameterLvlId(this.lvlCode3 == "TC" ? AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID_TC
+		dtlObj.setPmParameterLvlId(this.lvlCode3.equalsIgnoreCase("TC") ? AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID_TC
 				: AuditConst.PM_AUD_QTCHECKLIST_PMPARAMETERLVLID_FC);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
