@@ -2176,7 +2176,7 @@ public class ConsolidationReportBackingBean extends
 		}else{
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED));	
+							SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
 		}
 		//#28777 & #29729 - End
 

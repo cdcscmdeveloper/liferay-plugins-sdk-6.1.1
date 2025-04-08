@@ -846,7 +846,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	//#28777 & #29729 - Start
 	private void processPackageBidSchedulesDisqualified(List<ScBidSchedule> bidScheduleList, List<BidPackageBean> biddingPackagePriceListDisqualified, ScQtRecommendDtl awardedSupplier) {
-		log.info(" hatta processPackageBidSchedulesDisqualified ");
 		Map<Long,BidPackageBean> selectedPackageBeans = getManagedBean().getSelectedPackageBeans();		
 		List<ScQtEvaluationResultDtl> notShortlistedSuppliers = getManagedBean().getNotShortlistedSuppliers();
 		Map<Long, ScQtEvaluationResultDtl> supplierCodes = getSupplierCodes(notShortlistedSuppliers);

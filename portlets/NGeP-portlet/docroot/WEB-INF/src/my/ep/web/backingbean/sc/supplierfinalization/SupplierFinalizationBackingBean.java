@@ -323,7 +323,7 @@ public class SupplierFinalizationBackingBean extends
 			// #27502 -- End
 			
 			// Bug #37829@Syazani 13/03/2024 -- Start
-			if (!validateCurrentStatus()) {
+			if (!validateCurrentStatus() && !isBpkCentralContract) {
 				throw new EpException(MessageConst.ERROR_721018);
 			}
 			// Bug #37829@Syazani 13/03/2024 -- End
@@ -8784,7 +8784,7 @@ return	remarksNotFound;
 			if(isDisqualified){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
-								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED));	
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
 			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
@@ -9009,7 +9009,7 @@ return	remarksNotFound;
 			if(isDisqualified){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
-								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED));	
+								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
 			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
