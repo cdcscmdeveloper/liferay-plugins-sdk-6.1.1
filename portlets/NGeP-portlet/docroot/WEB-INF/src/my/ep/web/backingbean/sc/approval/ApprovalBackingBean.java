@@ -1624,7 +1624,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
 
-					approvalRequests = proposalValidityWip(outcome);
+					approvalRequests = proposalValidityWip(outcome);//#21692
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
@@ -1634,22 +1634,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							qt.setResponsePeriod(ParameterConst.DEFAULT_RESP_DAYS);
 						}
 						//#21692 WIP - End
-						//#21692 - start
-						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
-						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
-						if(wfStatus.getPmStatus()!=null
-								&& (QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())
-								|| QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.equals(wfStatus.getPmStatus().getStatusId()))) {
-							QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
-							qtReqDTO1.setQtdetail(qt);
-							QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
-							String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
-							dataType.getSupplierList().clear();
-
-							dataType.getSupplierList().addAll(
-									Arrays.asList(supplierIdsArray));
-						}
-						//#21692 - end
 						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
 						this.getManagedBean().setNoSupplierExistForEPV(CollectionUtils.isEmpty(dataType.getSupplierList()));//#21692 note-569
 						

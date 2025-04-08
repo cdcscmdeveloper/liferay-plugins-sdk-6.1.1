@@ -1664,6 +1664,7 @@ public class ConsolidationReportBackingBean extends
 					resultDtlBean = new QtEvaluationResultDtlBean();
 					resultDtlBean.setQtEvalResDtlId(evalResDtl.getEvaluationResultDtlId());
 					resultDtlBean.setEvaluationRank(evalResDtl.getEvalRank());
+					setRankNull(evalResDtl);
 					resultDtlBean.setDeskOfficerRank(evalResDtl.getDeskOfficerRank());
 					resultDtlBean.setDeskOfficerRemark(evalResDtl.getDeskOfficerRemark());
 				}
@@ -2066,6 +2067,7 @@ public class ConsolidationReportBackingBean extends
 													.getDeskOfficerRemark());
 								}
 							}
+							setRankNull(qualSupplier);
 						}
 						getManagedBean().setMaxRank(
 								String.valueOf(resultBean.getTotalRecord()));
@@ -2685,6 +2687,18 @@ public class ConsolidationReportBackingBean extends
 		private boolean allSupplierDisagreeEPV(Long qtId) {		
 			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			return qtDetailSO.allSupplierDisagreeEPV(qtId);
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		private void setRankNull(ScQtEvaluationResultDtl qualSupplier) {
+			boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+					&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED
+					|| qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+			
+			if (disagreeProposalValidityExtension) {
+				qualSupplier.setDeskOfficerRank(null);
+			}
 		}
 		//#21692 - End
 }

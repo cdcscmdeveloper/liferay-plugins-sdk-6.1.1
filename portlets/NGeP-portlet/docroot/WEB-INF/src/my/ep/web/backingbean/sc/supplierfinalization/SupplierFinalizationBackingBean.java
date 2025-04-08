@@ -2440,6 +2440,7 @@ public class SupplierFinalizationBackingBean extends
 		// #25638 - Start.
 		if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) || QTStatusConst.SF_PENDING_ENDORSEMENT.equals(currentStatusId)) {
 		// #25638 - End.
+			checkSupplierAwardedRejectValidityExtension();
   			 // #28834 - Start.
 			 if (QTStatusConst.SF_PENDING_SIGN_OFF.equals(currentStatusId) && CollectionUtils.isNotEmpty(scQtFinalization.getScQtFinalizationReports())) {
 				 String decisionTypeCode = scQtFinalization.getDecision()
@@ -8834,9 +8835,14 @@ public class SupplierFinalizationBackingBean extends
 							//  Set shortlisted as true by defaultly for qualified suppliers in Bidding  
 							if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 									.equals(getManagedBean().getFinalizationMethod())
-									&& !qualSupplier.isSuppSelectionDisabled()&& !isQTRefinalized()) {
+									&& !qualSupplier.isSuppSelectionDisabled()&& !isQTRefinalized()
+									&& !disagreeProposalValidityExtension(qualSupplier)) {//#21692 rejecting Validity Extension will be excluded
 								qualSupplier.setShortListed(true);		
 							}
+							
+							//#21692 - Start
+							resetQualifiedSupplierForMLOI(qualSupplier);
+							//#21692 - End
 							
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
@@ -8850,6 +8856,11 @@ public class SupplierFinalizationBackingBean extends
 								getManagedBean().setRecommendedSupplier(qualSupplier);
 							}
 							// #32699 - End.
+
+							//#21692 - Start
+							awardedSupplierRejectEPV(recommendationBean, qualSupplier);
+							//#21692 - End
+							
 							/*
 							 * END BUG #31128
 							 */
@@ -11587,6 +11598,42 @@ public class SupplierFinalizationBackingBean extends
 	private boolean allSupplierDisagreeEPV(Long qtId) {		
 		IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 		return qtDetailSO.allSupplierDisagreeEPV(qtId);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void checkSupplierAwardedRejectValidityExtension() {
+		
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean disagreeProposalValidityExtension(ScQtEvaluationResultDtl qualSupplier) {
+		return qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+				&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED
+				|| qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void resetQualifiedSupplierForMLOI(ScQtEvaluationResultDtl qualSupplier) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
+				.equals(getManagedBean().getFinalizationMethod())) {
+			qualSupplier.setShortListed(false);
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void awardedSupplierRejectEPV(QtEvaluationResultDtlBean recommendationBean, ScQtEvaluationResultDtl qualSupplier) {
+		if (recommendationBean.isAwarded()
+				&& (recommendationBean.getScQtProposal().getIsAgreeQtExtendPeriod() != null &&
+						(recommendationBean.getScQtProposal().getIsAgreeQtExtendPeriod()
+								.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) ||
+						recommendationBean.getScQtProposal().getIsAgreeQtExtendPeriod()
+						.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)))) {
+			getManagedBean().setRecommendedSupplier(qualSupplier);
+		}
 	}
 	//#21692 - End
 }
