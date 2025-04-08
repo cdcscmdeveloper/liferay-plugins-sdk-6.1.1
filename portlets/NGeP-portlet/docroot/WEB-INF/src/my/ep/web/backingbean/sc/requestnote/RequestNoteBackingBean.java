@@ -1,4 +1,5 @@
 /**
+ * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.requestnote;
 
@@ -150,9 +151,9 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean; //#25790
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean; //#25790
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean; //#25790
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
 import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
 import my.ep.web.backingbean.sc.loa.LOADetailBackingBean; //#25790
@@ -5605,6 +5606,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	// 36362 - end
 	
+	// #36119 - start
+	/**
+	 * Act as reload RN for codification wrapper
+	 * 
+	 * @param RequestNoteResDTO
+	 *            rnResDTO
+	 * 
+	 * @return void
+	 */
+	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO) {
+		reloadRequestNoteForCodification(requestNoteResDTO);
+	}
+	// #36119 - end
+	
 	// start - #25790
 	/**
 	 * load continuity session of page.
@@ -6004,20 +6019,5 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		}
 	}
-
 	// end - #25790
-	
-	// #36119 - start
-	/**
-	 * Act as reload RN for codification wrapper
-	 * 
-	 * @param RequestNoteResDTO
-	 *            rnResDTO
-	 * 
-	 * @return void
-	 */
-	public void reloadRequestNoteForCodificationWrapper(RequestNoteResDTO requestNoteResDTO) {
-		reloadRequestNoteForCodification(requestNoteResDTO);
-	}
-	// #36119 - end
 }
