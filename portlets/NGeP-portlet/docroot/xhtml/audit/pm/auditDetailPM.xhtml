@@ -13,7 +13,7 @@
 			<ac:paginator for="searchDetails"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.pm.audit.actionDate']}" style="width :15%">
 				<h:outputText value="#{detail.createdDate}" >
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.actionType']}" style="width :10%">
