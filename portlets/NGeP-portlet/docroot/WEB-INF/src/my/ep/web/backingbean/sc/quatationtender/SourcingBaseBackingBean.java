@@ -7478,10 +7478,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
 		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
 				&& !supplier.isBumi();
-		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes());
 
-		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction)
-				.contains(true)
+		List<String> cancelledCategoryCodes = new ArrayList<>();
+		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
+		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
+
+		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
+
+		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
+				isSuspendRegistration).contains(true)
 				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
 						mofRecordStatus);
 	}
