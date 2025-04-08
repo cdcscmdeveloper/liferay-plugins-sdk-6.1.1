@@ -80,7 +80,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 			try {
 				ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
-				return compExpSo.retriveCompExpDraft(reqDTO, searchBean).getDraftResultBean();
+				return compExpSo.retriveCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
 						"ISmCompExpSO", logKey.getUserId(), e);
@@ -115,7 +115,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 			try {
 				ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
-				return compExpSo.retriveCompExpDraft(reqDTO, searchBean).getDraftResultBean();
+				return compExpSo.retriveCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
 						"ISmCompExpSO", logKey.getUserId(), e);

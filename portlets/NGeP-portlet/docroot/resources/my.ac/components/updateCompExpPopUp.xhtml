@@ -13,11 +13,11 @@
 	</cc:interface>
 	<cc:implementation>
 		<ui:param name="selectedDraf" value="#{cc.attrs.mBean.selectedDraft}" />
-		<c:if test="#{cc.attrs.mBean.selectedDraft.sourceType == ParameterConst.categoryCodeSearchByCode}">
-			<ui:param name="header" value="#{lbl['lbl.sm.comp.exp.update.header.sm']}" />
+		<c:if test="#{selectedDraft.sourceType == ParameterConst.sourceTypeIdSm}">
+			<ui:param name="headerTitle" value="#{lbl['lbl.sm.comp.exp.update.header.sm']}" />
 		</c:if>
-		<c:if test="#{cc.attrs.mBean.selectedDraft.sourceType == ParameterConst.sourceTypeIdCt}">
-			<ui:param name="header" value="#{lbl['lbl.sm.comp.exp.update.header.ct']}" />
+		<c:if test="#{selectedDraft.sourceType == ParameterConst.sourceTypeIdCt}">
+			<ui:param name="headerTitle" value="#{lbl['lbl.sm.comp.exp.update.header.ct']}" />
 		</c:if>
 		<p:dialog id="#{cc.attrs.dialogName}Id"
 			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"

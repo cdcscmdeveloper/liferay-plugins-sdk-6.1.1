@@ -42,12 +42,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setDraftExist(checkCompExpDraftExist());
 		SmCommonUtil.redirectToPage("smCompExpMain.xhtml", "", null, null);
 	}
+	
+	private ISmCompExpSO getCompExpSo(){
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+	}
 
 	private boolean checkCompExpDraftExist() {
 		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
 		reqDTO.setSupplierId(this.getManagedBean().getSupplier().getSupplierId());
-		ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
-		return compExpSo.checkCompExpDraftExist(reqDTO);
+		return getCompExpSo().checkCompExpDraftExist(reqDTO);
 	}
 
 	/**
@@ -65,7 +68,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param fromCT
 	 */
 	public void onClickDraftAction(SmCompExpDraft draft) {
-		this.getManagedBean().setSelectedDraft(draft);
+		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
+		reqDTO.setDraftId(draft.getCompExpDraftId());
+		this.getManagedBean().setSelectedDraft(getCompExpSo().retrieveCompExpDraft(reqDTO).getExpDraf());
 		RequestContext.getCurrentInstance().execute("updateCompExpWV.show();");
 	}
 
