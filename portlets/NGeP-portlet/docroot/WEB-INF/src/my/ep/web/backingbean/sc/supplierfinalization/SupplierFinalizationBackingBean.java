@@ -323,7 +323,7 @@ public class SupplierFinalizationBackingBean extends
 			// #27502 -- End
 			
 			// Bug #37829@Syazani 13/03/2024 -- Start
-			if (!validateCurrentStatus()) {
+			if (!validateCurrentStatus() && !isBpkCentralContract) {
 				throw new EpException(MessageConst.ERROR_721018);
 			}
 			// Bug #37829@Syazani 13/03/2024 -- End
