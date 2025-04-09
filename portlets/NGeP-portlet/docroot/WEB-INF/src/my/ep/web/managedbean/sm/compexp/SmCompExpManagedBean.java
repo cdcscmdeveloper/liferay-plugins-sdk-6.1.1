@@ -38,6 +38,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private transient IPagingDataModel<SmCompExpDraft> draftSmDataModel = new DraftSmPagingDataModel();
 	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
 	private SmCompExpDraft selectedDraft;
+	private String headerTitle;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -139,6 +140,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSelectedDraft(SmCompExpDraft selectedDraft) {
 		this.selectedDraft = selectedDraft;
+	}
+
+	public String getHeaderTitle() {
+		return headerTitle;
+	}
+
+	public void setHeaderTitle(String headerTitle) {
+		this.headerTitle = headerTitle;
 	}
 
 }

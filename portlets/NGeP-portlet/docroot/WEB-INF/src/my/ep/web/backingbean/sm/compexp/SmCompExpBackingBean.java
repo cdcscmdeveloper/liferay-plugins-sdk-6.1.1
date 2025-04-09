@@ -5,7 +5,9 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
@@ -42,8 +44,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setDraftExist(checkCompExpDraftExist());
 		SmCommonUtil.redirectToPage("smCompExpMain.xhtml", "", null, null);
 	}
-	
-	private ISmCompExpSO getCompExpSo(){
+
+	private ISmCompExpSO getCompExpSo() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
 	}
 
@@ -71,7 +73,18 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
 		reqDTO.setDraftId(draft.getCompExpDraftId());
 		this.getManagedBean().setSelectedDraft(getCompExpSo().retrieveCompExpDraft(reqDTO).getExpDraf());
+		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.sm", null));
+		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.ct", null));
+		}
 		RequestContext.getCurrentInstance().execute("updateCompExpWV.show();");
 	}
 
+	/**
+	 * Retrieve description based on parameter id
+	 */
+	public String getParamDesc(PmParameter param) {
+		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(param);
+	}
 }

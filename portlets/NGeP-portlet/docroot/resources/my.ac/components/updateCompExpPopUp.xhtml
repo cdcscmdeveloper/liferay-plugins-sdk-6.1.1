@@ -1,9 +1,8 @@
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core">
@@ -13,74 +12,76 @@
 		<cc:attribute name="mBean" required="true" />
 	</cc:interface>
 	<cc:implementation>
-		<ui:param name="selectedDraf" value="#{cc.attrs.mBean.selectedDraft}" />
-		<ui:param name="sourceType" value="#{selectedDraf.sourceType.parameterId}" />
-		<c:if
-			test="#{sourceType eq ParameterConst.sourceTypeIdSm}">
-			<ui:param name="headerTitle"
-				value="#{lbl['lbl.sm.comp.exp.update.header.sm']}" />
-		</c:if>
-		<c:if
-			test="#{sourceType eq ParameterConst.sourceTypeIdCt}">
-			<ui:param name="headerTitle"
-				value="#{lbl['lbl.sm.comp.exp.update.header.ct']}" />
-		</c:if>
 		<p:dialog id="#{cc.attrs.dialogName}Id"
 			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"
 			resizable="true" style="width: 70%;" styleClass="pop_up_top"
-			header="#{headerTitle}">
+			header="#{cc.attrs.mBean.headerTitle}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.update.instruction']}" />
 			<table style="table-layout: fixed">
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.project.done.for']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /></td>
 					<td style="width: 66%"><p:selectOneRadio id="clientType"
-							label="#{lbl['lbl.sm.update.comp.exp.draft.project.done.for']}"
-							value="#{selectedDraf.clientType}" disabled="true">
+							label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
+							value="#{cc.attrs.mBean.selectedDraft.clientType}"
+							disabled="true">
 							<f:selectItem
-								itemLabel="#{lbl['lbl.sm.update.comp.exp.draft.federal']}"
-								itemValue="F"></f:selectItem>
+								itemLabel="#{lbl['lbl.sm.comp.exp.update.client.type.federal']}"
+								itemValue="#{ParameterConst.clientTypeFederal}"></f:selectItem>
 							<f:selectItem
-								itemLabel="#{lbl['lbl.sm.update.comp.exp.draft.non.federal']}"
-								itemValue="O"></f:selectItem>
+								itemLabel="#{lbl['lbl.sm.comp.exp.update.client.type.other']}"
+								itemValue="#{ParameterConst.clientTypeNonFederal}"></f:selectItem>
 						</p:selectOneRadio></td>
 				</tr>
-				<tr rendered="#{selectedDraf.clientType eq F}">
-					<td style="width: 34%"><p:outputLabel
-							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.ori.agency.name']}" /></td>
-					<td style="width: 66%"><p:outputLabel
-							styleClass="outputLabel-view mandatory"
-							value="#{selectedDraf.oriAgencyName}" /> <p:graphicImage
-							id="oriAgencyNameToolTipsId"
-							value="/css/images/design/tooltips.png" /> <p:tooltip
-							for="oriAgencyNameToolTipsId"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.ori.agency.name.tooltip']}" /></td>
-				</tr>
+				<p:outputPanel
+					rendered="#{cc.attrs.mBean.selectedDraft.clientType == ParameterConst.clientTypeFederal}">
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label mandatory"
+								value="#{lbl['lbl.sm.comp.exp.update.client.ori.agency.name']}" /></td>
+						<td style="width: 66%"><p:outputLabel
+								styleClass="outputLabel-view mandatory"
+								value="#{cc.attrs.mBean.selectedDraft.oriAgencyName}" /> <p:graphicImage
+								id="oriAgencyNameToolTipsId"
+								value="/css/images/design/tooltips.png" /> <p:tooltip
+								for="oriAgencyNameToolTipsId"
+								value="#{lbl['lbl.sm.comp.exp.update.client.ori.agency.name.tooltip']}" /></td>
+					</tr>
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td style="width: 66%">
+							<!-- LOV -->
+						</td>
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel
+					rendered="#{cc.attrs.mBean.selectedDraft.clientType == ParameterConst.clientTypeNonFederal}">
+					<tr>
+						<td style="width: 34%"><p:outputLabel
+								styleClass="outputLabel-view-label"
+								value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" />
+						</td>
+						<td style="width: 66%"><p:outputLabel
+								styleClass="outputLabel-view"
+								value="#{cc.attrs.mBean.selectedDraft.agencyName}" /></td>
+					</tr>
+				</p:outputPanel>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.agency.name']}" /> <p:outputLabel
-							rendered="#{selectedDraf.clientType eq F}" value="*"
-							styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:outputPanel
-							rendered="#{selectedDraf.clientType eq F}">
-							<!-- Ptj LOV -->
-						</p:outputPanel> <p:outputLabel rendered="#{selectedDraf.clientType eq O}"
-							styleClass="outputLabel-view mandatory"
-							value="#{selectedDraf.agencyName}" /></td>
-				</tr>
-				<tr>
-					<td style="width: 34%"><p:outputLabel
-							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.file.ref.no']}" /> <p:outputLabel
+							value="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:inputText
-							value="#{selectedDraf.fileReferenceNo}" /> <p:spacer width="3px"></p:spacer>
-						<p:inputText value="#{selectedDraf.fileExtensionNo}" size="3"
-							maxlength="3" /> <p:graphicImage id="fileReferenceNoToolTipsId"
+							value="#{cc.attrs.mBean.selectedDraft.fileReferenceNo}"
+							required="true" /> <p:spacer width="3px"></p:spacer> <p:inputText
+							value="#{cc.attrs.mBean.selectedDraft.fileExtensionNo}" size="3"
+							maxlength="3" required="true" /> <p:graphicImage
+							id="fileReferenceNoToolTipsId"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							for="fileReferenceNoToolTipsId">
 							<img
@@ -90,85 +91,76 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.loa.no']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.client.loa.no']}" /></td>
 					<td style="width: 66%"><p:inputText
-							value="#{selectedDraf.loaNo}" /></td>
+							value="#{cc.attrs.mBean.selectedDraft.loaNo}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.proc.cont.proj.title']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.client.project.title']}" /></td>
 					<td style="width: 66%"><p:outputLabel
-							styleClass="outputLabel-view" value="#{selectedDraf.title}" /></td>
+							style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+							styleClass="outputLabel-view"
+							value="#{cc.attrs.mBean.selectedDraft.title}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.value']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.client.contract.value']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view"
-							value="#{selectedDraf.contractValue}" /></td>
+							value="#{cc.attrs.mBean.selectedDraft.contractValue}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.pay.method']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.client.payment.method']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view"
-							value="#{selectedDraf.paymentMethod}" /></td>
+							value="#{cc.attrs.bBean.getParamDesc(cc.attrs.mBean.selectedDraft.paymentMethod)}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.proc.method']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.client.procument.method']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view"
-							value="#{selectedDraf.procumentMode}" /></td>
+							value="#{cc.attrs.bBean.getParamDesc(cc.attrs.mBean.selectedDraft.procumentMode)}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.eff.date']}" /></td>
-					<td style="width: 66%"><p:outputLabel
-							rendered="#{selectedDraf.contractEffDate ne null}"
+							value="#{lbl['lbl.sm.comp.exp.update.contract.eff.date']}" /></td>
+					<td style="width: 66%"><h:outputText
+							rendered="#{cc.attrs.mBean.selectedDraft.contractEffDate ne null}"
 							styleClass="outputLabel-view"
-							value="#{selectedDraf.contractEffDate}" /> <p:calendar
-							rendered="#{selectedDraf.contractEffDate eq null}"
+							value="#{cc.attrs.mBean.selectedDraft.contractEffDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText> <p:calendar
+							rendered="#{cc.attrs.mBean.selectedDraft.contractEffDate eq null}"
 							showOn="button" readonlyInput="true"
-							value="#{selectedDraf.contractEffDate}"
+							value="#{cc.attrs.mBean.selectedDraft.contractEffDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						</p:calendar></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.exp.date']}" />
-						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:calendar showOn="button"
-							readonlyInput="true" value="#{selectedDraf.contractExpDate}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-						</p:calendar></td>
-				</tr>
-				<tr>
-					<td style="width: 34%"><p:outputLabel
-							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.cont.status']}" /></td>
-					<td style="width: 66%"><p:outputLabel
-							styleClass="outputLabel-view"
-							value="#{selectedDraf.contractStatus}" /></td>
-				</tr>
-				<tr>
-					<td style="width: 34%"><p:outputLabel
-							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.update.comp.exp.draft.supp.doc']}" /> <p:outputLabel
+							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:graphicImage
-							id="fileReferenceNoSuppDocToolTipsId"
-							value="/css/images/design/tooltips.png" /> <p:tooltip
-							for="fileReferenceNoSuppDocToolTipsId">
-							<img
-								src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" />
-						</p:tooltip></td>
+					<td style="width: 66%"><p:calendar showOn="button"
+							readonlyInput="true" required="true"
+							value="#{cc.attrs.mBean.selectedDraft.contractExpDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						</p:calendar></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
+					<td style="width: 66%"></td>
 				</tr>
 			</table>
 		</p:dialog>
