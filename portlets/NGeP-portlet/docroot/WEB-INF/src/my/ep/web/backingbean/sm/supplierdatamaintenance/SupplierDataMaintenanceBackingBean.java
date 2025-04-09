@@ -2333,7 +2333,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				itemList.add(selectItem);
 			}else{
 				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
-				if(!("A").equals(pmParameter.getParameterCode())){
+				if(!(ParameterTypeConst.PARAM_TYPE_A).equals(pmParameter.getParameterCode())){
 					itemList.add(selectItem);
 				}
 			}

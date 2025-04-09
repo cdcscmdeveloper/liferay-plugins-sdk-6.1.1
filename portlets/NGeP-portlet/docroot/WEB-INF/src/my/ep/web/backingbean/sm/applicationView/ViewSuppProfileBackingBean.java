@@ -303,7 +303,7 @@ public class ViewSuppProfileBackingBean extends
 	
 	//28281
 	//26238 - end
-	//26238 -  STATR Disciplinary Action - 28111
+	//26238 - START Disciplinary Action - 28111
 	/**
 	 * View Disciplinary Action Supplier
 	 * @param currSupp

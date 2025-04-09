@@ -76,7 +76,7 @@
 				<!-- SideTab Menu -->
 				<td width="20%;" valign="top" class="sidemenutd"><p:tabMenu
 						id="sidemenuCircularId" styleClass="sidemenu"
-						rendered="#{auditContractBackingBean.managedBean.ctCircularType eq 'CCR' }"
+						rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR' }"
 						activeIndex="#{auditContractBackingBean.managedBean.activeTab}">
 
 						<p:menuitem value="#{lbl['lbl.ct.audit.tab.central.contract']}"
@@ -121,7 +121,7 @@
 						</p:menuitem>
 					</p:tabMenu> <!-- SideTab Panel Circular --> <p:tabMenu id="sidemenuPanelId"
 						styleClass="sidemenu"
-						rendered="#{auditContractBackingBean.managedBean.ctCircularType eq 'PCR' }"
+						rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR' }"
 						activeIndex="#{auditContractBackingBean.managedBean.activeTab}">
 
 						<p:menuitem style="white-space:normal;"
@@ -167,7 +167,7 @@
 						</p:menuitem>
 					</p:tabMenu></td>
 
-				<td width="80%"><p:outputPanel>
+				<td width="80%" valign="top"><p:outputPanel>
 						<p:dataTable id="searchCircularId" var="obj" rows="10"
 							width="100%" value="#{auditContractBackingBean.searchCT}"
 							rowIndexVar="index" lazy="true">
