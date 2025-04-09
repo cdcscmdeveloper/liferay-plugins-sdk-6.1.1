@@ -444,8 +444,12 @@ public class AuthorizedSignatoryBackingBean extends
 	}
 	
 	/************ AUDIT 35509 Start*************/
+	/**
+	 * refactor method to set existing cert signtory
+	 * 
+	 */
 	private void setExistingCertSignToMap(List<PmCertSignatory> certSign) {
-		if (!CollectionUtils.isNotEmpty(certSign)) {
+		if (CollectionUtils.isNotEmpty(certSign)) {
 			this.getManagedBean().setExistingCertSignatoriesMap(new HashMap<Long, PmCertSignatory>());
 
 			for (PmCertSignatory ruleValue : certSign) {
@@ -453,6 +457,8 @@ public class AuthorizedSignatoryBackingBean extends
 			}
 		}
 	}
+	/************ AUDIT 35509 END*************/
+	
 	/**
 	 * Track Signatory status
 	 * 
