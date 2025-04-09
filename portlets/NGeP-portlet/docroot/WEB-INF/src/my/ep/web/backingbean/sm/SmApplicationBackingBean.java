@@ -10392,6 +10392,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
+				} else if(getManagedBean().isBasicSupplier()){
+					SmCommonUtil
+					.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721204,
+							new String[] {
+									SmCommonUtil.getMessage(
+										"lbl.sm.upgrade.acc.appl", null),
+									getManagedBean().getSmAppl()
+											.getApplNo(),
+									SmApplicationUtil
+											.getMofApplicationSaveDraftUrl(getManagedBean()
+													.getSmAppl()) });
+					renewSesionObject();
 				} else {
 					SmCommonUtil
 							.redirectToPage(
