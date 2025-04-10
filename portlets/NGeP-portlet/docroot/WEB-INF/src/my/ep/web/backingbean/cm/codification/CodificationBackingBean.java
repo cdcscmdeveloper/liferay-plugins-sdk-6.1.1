@@ -147,7 +147,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	private TreeNode rootNodes;
 	private TreeNode selectedNode;
-	private String itemTypeParameter;	
+	private String itemTypeParameter;
 
 	public CodificationBackingBean() {
 
@@ -260,7 +260,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	}
 
 	public void extensionCodeforRequestSearch() {
-		
+
 		extensionSearchItemDataModel.reloadData();
 
 	}
@@ -292,9 +292,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	 * 
 	 */
 	public void extensionCodeSearchForAssign() {
-		//#31503
-		this.getManagedBean().setRenderButtonAssignCode(true);
-		
+
+		this.getManagedBean().setRenderButtonAssignCode(true); // #31503
+
 		extensionSearchItemDataModel.reloadData();
 
 	}
@@ -584,10 +584,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if(unspscCode == null && unspscTitle.trim().length()<3){
 			throw new EpException(MessageConst.ERROR_715060);
 		}
-		
-		//#31503
-		this.getManagedBean().setRenderButtonAssignCode(true);
 
+		this.getManagedBean().setRenderButtonAssignCode(true); // #31503
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
 
@@ -2429,9 +2427,8 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		.setUnspscCode(unspscObj.getUnspscCode());
 		this.getManagedBean().getSelectedUNSPSCObj()
 		.setUnspscTitle(unspscObj.getUnspscTitle());
-		
-		//#31503
-		this.getManagedBean().setRenderButtonAssignCode(true);
+
+		this.getManagedBean().setRenderButtonAssignCode(true); // #31503
 
 		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
 		Collections.sort(resDTO.getColorList(), new Comparator<CmColor>() {
@@ -3696,20 +3693,26 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 	}
 	//[#26282] check for Disciplinary Action - End
-	
+
+	// #31503 -start-
 	/**
 	 * #31503 - show confirmation popup when user select Item Code
+	 * 
 	 * @param unspscObj
 	 */
 	public void assignCodeConfirmation(CmUnspsc unspscObj) {
 		String codeDesc = unspscObj.getUnspscCode() + " - " + unspscObj.getUnspscTitle();
+
 		this.getManagedBean().setItemCodeDesc(codeDesc);
 		this.getManagedBean().setSelectedUNSPSCObj(unspscObj);
 		RequestContext.getCurrentInstance().execute("asignCodeDialogConfirm.show()");
 	}
-	
+	// #31503 -end-
+
+	// #31503 -start-
 	/**
-	 * #31503 - show confirmation popup when user select Item Code and set Item Code Desc
+	 * #31503 - show confirmation popup when user select Item Code and set Item
+	 * Code Desc
 	 */
 	public void assignItemConfirmation() {
 		Object[] objSelected = this.getManagedBean().getObjSelected();
@@ -3722,6 +3725,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 						ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 
 				ExtensionCodeVO extCodeVO = null;
+
 				this.getManagedBean().setExtensionVoList(null);
 
 				Object[] objects = this.getManagedBean().getObjSelected();
@@ -3736,7 +3740,6 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					extCodeVO.setBrandName(String.valueOf(objects[5]));
 					extCodeVO.setMeasurementName(String.valueOf(objects[6]));
 					extCodeVO.setColorName(String.valueOf(objects[7]));
-
 				}
 
 				if (extCodeVO != null) {
@@ -3754,6 +3757,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 				codeReqDTO = new CodificationReqDTO();
 				codeReqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+
 				CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
 				CmType typeObj;
 				CmBrand brandObj;
@@ -3770,6 +3774,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				CmItem newItem = createCmItem(codeResDTO, typeObj, brandObj, meaObj, colorObj);
 
 				String codeDesc = newItem.getExtensionCode() + " - " + newItem.getItemName();
+				
 				this.getManagedBean().setItemCodeDesc(codeDesc);
 
 				RequestContext.getCurrentInstance().execute("asignCodeDialConfirm.show()");
@@ -3781,18 +3786,22 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		}
 
 	}
-	
+	// #31503 -end-
+
+	// #31503 -start-
 	/**
-	 * #31503 - Display Item Dialog box 
+	 * #31503 - Display Item Dialog box
 	 * 
 	 */
-	public void selectedItemCode() {		
+	public void selectedItemCode() {
 		this.getManagedBean().setRenderButtonAssignCode(false);
 	}
-		
-	
+	// #31503 -end-
+
+	// #31503 -start-
 	/**
 	 * #31503 - Show Details Items in popup
+	 * 
 	 * @param question
 	 */
 	public void showItemDescPopup(TplSpecQuestion question) {
@@ -3802,14 +3811,16 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			CommonUtils common = new CommonUtils();
+
 			cReqDTO.setItemId(question.getCmItem().getItemId());
+
 			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
 			CmItem item = cResDTO.getCmItem();
 
 			codeReqDTO.setUnspscCode(item.getCmUnspsc().getUnspscCode());
+
 			CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
 
 			this.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
@@ -3854,27 +3865,36 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 					getUserIdSessionFromLoginId(), e);
 		}
 
-	}	
-
-	private CmItem createCmItem(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement, CmColor color) {
-	    CmItem item = new CmItem();	    
-	    item.setCmUnspsc(codeResDTO.getCommodityObj());
-	    item.setCmType(type);
-	    item.setCmBrand(brand);
-	    item.setCmMeasurement(measurement);
-	    item.setCmColor(color);
-	    item.setItemName(formatItemName(codeResDTO, type, brand, measurement, color));
-	    item.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + type.getTypeCode() + brand.getBrandCode() + 
-	                          measurement.getMeasurementCode() + color.getColorCode());
-	    return item;
-	}	
-	
-	private String formatItemName(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement, CmColor color) {
-		CommonUtils common = new CommonUtils();
-	    return codeResDTO.getCommodityObj().getUnspscTitle() + " " +
-	    		common.removeItemNameNA(type.getTypeName()) + " " +
-	            common.removeItemNameNA(brand.getBrandName()) + " " +
-	            common.removeItemNameNA(measurement.getMeasurementName()) + " " +
-	            common.removeItemNameNA(color.getColorName());
 	}
+	// #31503 -end-
+
+	// #31503 -start-
+	private CmItem createCmItem(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement,
+			CmColor color) {
+		CmItem item = new CmItem();
+		item.setCmUnspsc(codeResDTO.getCommodityObj());
+		item.setCmType(type);
+		item.setCmBrand(brand);
+		item.setCmMeasurement(measurement);
+		item.setCmColor(color);
+		item.setItemName(formatItemName(codeResDTO, type, brand, measurement, color));
+		item.setExtensionCode(codeResDTO.getCommodityObj().getUnspscCode() + type.getTypeCode() + brand.getBrandCode()
+				+ measurement.getMeasurementCode() + color.getColorCode());
+
+		return item;
+	}
+	// #31503 -end-
+
+	// #31503 -start-
+	private String formatItemName(CodificationResDTO codeResDTO, CmType type, CmBrand brand, CmMeasurement measurement,
+			CmColor color) {
+		CommonUtils common = new CommonUtils();
+
+		return codeResDTO.getCommodityObj().getUnspscTitle() + " " + common.removeItemNameNA(type.getTypeName()) + " "
+				+ common.removeItemNameNA(brand.getBrandName()) + " "
+				+ common.removeItemNameNA(measurement.getMeasurementName()) + " "
+				+ common.removeItemNameNA(color.getColorName());
+	}
+	// #31503 -end-
+
 }

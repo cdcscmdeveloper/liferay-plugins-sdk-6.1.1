@@ -12414,9 +12414,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// #29007 End vinod
-	
+
+	// #31503 -start-
 	/**
 	 * #31503 - Show Details Items in popup
+	 * 
 	 * @param reqItem
 	 * @return void
 	 */
@@ -12427,15 +12429,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			CommonUtils common = new CommonUtils();
 			CodificationBackingBean cdbb = new CodificationBackingBean();
+
 			cReqDTO.setItemId(reqItem.getCmItem().getItemId());
+
 			CodificationResDTO cResDTO = codificationSO.searchItemObj(cReqDTO);
 			CmItem item = cResDTO.getCmItem();
 
 			codeReqDTO.setUnspscCode(item.getCmUnspsc().getUnspscCode());
+
 			CodificationResDTO codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
 
 			cdbb.getManagedBean().setCommodityCode(codeResDTO.getCommodityObj().getUnspscCode());
@@ -12481,5 +12485,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 
 	}
+	// #31503 -end-
+
 }
 

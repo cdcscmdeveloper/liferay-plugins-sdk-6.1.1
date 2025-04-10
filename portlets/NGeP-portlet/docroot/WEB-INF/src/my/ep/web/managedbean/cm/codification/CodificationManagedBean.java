@@ -201,12 +201,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-	
-	//#31503 - Start
+
+	// #31503 - Start
 	private String itemCodeDesc;
-	private Object [] objSelected;
+	private Object[] objSelected;
 	private boolean renderButtonAssignCode;
-	//#31503 - End
+	// #31503 - End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -1520,6 +1520,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 	/*[#27625] end*/
 
+	// #31503 -start-
 	public String getItemCodeDesc() {
 		return itemCodeDesc;
 	}
@@ -1528,11 +1529,11 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.itemCodeDesc = itemCodeDesc;
 	}
 
-	public Object [] getObjSelected() {
+	public Object[] getObjSelected() {
 		return objSelected;
 	}
 
-	public void setObjSelected(Object [] objSelected) {
+	public void setObjSelected(Object[] objSelected) {
 		this.objSelected = objSelected;
 	}
 
@@ -1543,4 +1544,5 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
 		this.renderButtonAssignCode = renderButtonAssignCode;
 	}
+	// #31503 -end-
 }

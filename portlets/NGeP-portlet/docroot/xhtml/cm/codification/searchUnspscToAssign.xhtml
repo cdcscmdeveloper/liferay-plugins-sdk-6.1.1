@@ -121,16 +121,17 @@
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 			        	</f:facet>
-			        	<!-- #31503 Start -->
+						<!-- #31503 Start -->
 						<p:commandLink
 							action="#{codificationBackingBean.assignCodeConfirmation(unspscObj)}"
-							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}" 
+							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}"
 							update="@([id$=asignCodeDialogConfirm])">
-						
+							<!-- #31503 End -->
 							#{unspscObj.unspscCode}
 						
 						</p:commandLink>
-						
+
+						<!-- #31503 Start -->
 						<p:confirmDialog id="asignCodeDialogConfirm"
 							widgetVar="asignCodeDialogConfirm"
 							message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"
@@ -170,7 +171,7 @@
 
 
 					</p:column>
-
+					
 					<p:column rendered="#{codificationBackingBean.managedBean.assignCodeFlg}">
 						<f:facet name="header">
 							#{lbl['lbl.cm.item.table.type']}
@@ -215,7 +216,7 @@
 				<ui:include src="recommendSearchPopUp.xhtml"></ui:include>
 
 			</p:dialog>
-
+			
 			<!-- Item Specification PopUp -->
 			<ui:include src="/xhtml/cm/codification/itemSpecDlg.xhtml" />
 

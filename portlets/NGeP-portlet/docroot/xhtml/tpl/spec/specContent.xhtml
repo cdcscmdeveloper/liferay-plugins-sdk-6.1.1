@@ -115,7 +115,7 @@
 				<c:if test="#{isContentTypeQuestion and editable and isScoringReq}">
 					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
 				</c:if>
-			
+				
 			
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsTechnical" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
@@ -362,6 +362,7 @@
 			</c:if>
 			
 			<c:if test="#{isContentTypeQuestionAndAnswer}">
+				
 				<p:remoteCommand name="#{templateSpecId}addedQuestionsAndAnswers" 
 				actionListener="#{templateSpecBackingBean.addQuestion(templateSpecBean, templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"
 					update="@([id$=questionTbl])" partialSubmit="true" process="@this,questionTbl"

@@ -143,7 +143,7 @@
 						action="#{lOADetailBackingBean.onClickSpecsAndSupplierOfferLink(scLoiLoaItem)}"
 						oncomplete="specAndSupplierOfferDlgVar.show();">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink> abc
+					</p:commandLink>
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
 						for="specAndSupplierOfferLink"
 						value="#{lbl['lbl.sc.spec.and.supplier.offer']}" trackMouse="true" hideEvent="mouseleave click" />
@@ -155,7 +155,7 @@
 						partialSubmit="true"
 						action="#{lOADetailBackingBean.onClickSupplierProposalUpdateLink(scLoiLoaItem)}">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>def
+					</p:commandLink>
 					<p:tooltip id="toolTipSupplierProposalUpdate"
 						for="supplierProposalUpdateLink#{varStatus.index}"
 						value="#{lbl['lbl.sc.update.supplier.offer.tooltip']}"
@@ -171,7 +171,7 @@
 						action="#{lOADetailBackingBean.searchSupplierSpecification(scLoiLoaItem,true)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
-					</p:commandLink>ghi
+					</p:commandLink>
 					<p:tooltip id="toolTipSpecAndSupplierOffer"
 						for="itemName"
 						value="#{lbl['lbl.sc.proposal.specification.update.mouseover']}" trackMouse="true" hideEvent="mouseleave click" />
@@ -180,8 +180,7 @@
 				<!-- #29007 End Vinod -->
 				<br /><br />
 				<!-- #29006 - end -->
-<!-- 				<h:outputText value="#{lOADetailBackingBean.getLatestItemCode(scLoiLoaItem.scRequestItem)}" rendered="#{scLoiLoaItem.scRequestItem.cmItem != null -->
-<!-- 				 and (scLoiLoaItem.tplSpecTierQty eq null or (scLoiLoaItem.tplSpecTierQty ne null and scLoiLoaItem.tplSpecTierQty.fromQty == 1))}" /><ui:remove>Bug #34757</ui:remove> -->
+				<!-- #31503 remove h:outputText from Bug #34757 -->
 
 				<!-- #31503 Start -->
 				<p:commandLink oncomplete="itemDescDialogId.show();"
