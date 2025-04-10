@@ -7850,6 +7850,8 @@ public void saveComplianceSample() {
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();//6906
 		try {
+			log.info("evaluationMaintainPreviousNextTabIndex outputTab:: " + outputTab);
+			System.out.println("evaluationMaintainPreviousNextTabIndex outputTab:: " + outputTab);
 
 			// this.currentTab = currentTab;
 			// this.outputTab = outputTab;
