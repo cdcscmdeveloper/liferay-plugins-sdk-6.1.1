@@ -62,7 +62,7 @@
 					</p:outputLabel>
 					<!-- 30865 End -->
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;width:250px "disabledSelection="#{aprvdCatBean.cancelCategory}">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" style="white-space : normal;vertical-align: top;width:250px" disabledSelection="#{aprvdCatBean.cancelCategory}">
 					<p:outputPanel rendered="#{aprvdCatBean.recordStatusFlg ne SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}">
 						<h:outputText value="#{lbl['lbl.sm.no.available']}"
 							rendered="#{empty aprvdCatBean.otherDesc}" />
