@@ -68,11 +68,6 @@ public class ViewApplHistoryManagedBean extends	BaseReviewApplicationManagedBean
 	//28771
 	private String SearchDocumentMode;
 
-	//26238 - 28281
-	/*
-	private List<DisciplinaryActionVO> disciplineVOs; 
-	private boolean disciplinaryAction;
-	*/
 	//#29482 - Start
 	private SmPersonnel smPersonnel;
 	//#29482 - End
