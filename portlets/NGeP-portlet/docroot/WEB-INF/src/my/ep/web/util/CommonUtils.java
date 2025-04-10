@@ -208,7 +208,7 @@ public class CommonUtils {
 	// #31344 end
 	
 	/**
-	 * #31502 Remove "N/A" or “NA” or “N A”.
+	 * #31503 Remove "N/A" or “NA” or “N A”.
 	 * @param itemName
 	 * @return
 	 */

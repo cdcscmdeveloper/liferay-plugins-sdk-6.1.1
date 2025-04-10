@@ -202,11 +202,11 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private boolean assignCodeFlg = false;
 	
-	//#31503
+	//#31503 - Start
 	private String itemCodeDesc;
 	private Object [] objSelected;
 	private boolean renderButtonAssignCode;
-	
+	//#31503 - End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;

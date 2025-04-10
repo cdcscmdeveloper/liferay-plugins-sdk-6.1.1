@@ -584,6 +584,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		if(unspscCode == null && unspscTitle.trim().length()<3){
 			throw new EpException(MessageConst.ERROR_715060);
 		}
+		
+		//#31503
+		this.getManagedBean().setRenderButtonAssignCode(true);
 
 		this.getManagedBean().getSearchDataModel().reloadData();
 	}
