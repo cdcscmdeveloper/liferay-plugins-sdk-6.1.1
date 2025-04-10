@@ -5991,7 +5991,6 @@ public class SmApplicationUtil {
 			s = SupplierManagementConst.PROCEED_MOF_REG;
 			break;
 		case "A":
-			// TODO changed to satisfy enhancement of adding the bank section
 			s = SupplierManagementConst.PROCEED_ADDTNLCAT_APPLN_SIDEMENU;
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
@@ -13326,7 +13325,6 @@ public class SmApplicationUtil {
 	public static void addOrUpdateRelatedCompanies(SmApplicationManagedBean bean) {
 		if (bean.getSelectedShareHolder().getSmRelatedCompanies().contains(bean.getSelectedRelatedCompany())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmRelatedCompanies().add(bean.getSelectedRelatedCompany());
 			RequestContext.getCurrentInstance().execute("suppPrsnRelComDtWidVar.paginator.endLink.click()");
@@ -13395,10 +13393,8 @@ public class SmApplicationUtil {
 	 * selected SmPersonnel.
 	 */
 	public static void addOrUpdateShrHldrProfBody(SmApplicationManagedBean bean) {
-		if (bean.getSelectedShareHolder().getSmAssociationBodies()
-				.contains(bean.getSelectedStfPrfBdy())) {
+		if (bean.getSelectedShareHolder().getSmAssociationBodies().contains(bean.getSelectedStfPrfBdy())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmAssociationBodies()
 					.add(bean.getSelectedStfPrfBdy());
@@ -13463,7 +13459,6 @@ public class SmApplicationUtil {
 		}
 		if (bean.getSelectedShareHolder().getSmStaffAcademics()
 				.contains(bean.getSelectedStaffAcademic())) {
-			// TODO if any validation reqd for edit
 		} else {
 
 			bean.getSelectedShareHolder().getSmStaffAcademics()
@@ -13545,14 +13540,11 @@ public class SmApplicationUtil {
 			RequestContext.getCurrentInstance().execute(
 					addPopupName + ".show()");
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -13582,14 +13574,11 @@ public class SmApplicationUtil {
 
 			}
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 

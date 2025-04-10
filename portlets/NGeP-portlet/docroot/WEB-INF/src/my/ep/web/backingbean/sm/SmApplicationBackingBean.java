@@ -11981,14 +11981,13 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().getSmApplDocFile().setFileName(" ");
 				this.getManagedBean().getSmApplDocFile().setFilePath(" ");
 				// Reassign the modified object back to the list (ensuring persistence)
-				List<SmApplDocFile> updatedFiles = new ArrayList<>(
-						mainDoc.getSmApplDocFiles());
+				
+				List<SmApplDocFile> updatedFiles = new ArrayList<>(mainDoc.getSmApplDocFiles());
 				updatedFiles.set(0, this.getManagedBean().getSmApplDocFile());
 				mainDoc.setSmApplDocFiles(updatedFiles);
 			} else {
 				// #28807 - Start
-				mainDoc.getSmApplDocFiles().remove(
-						this.getManagedBean().getSmApplDocFile());
+				mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
 			}
 		}
 		// #37775 - End
