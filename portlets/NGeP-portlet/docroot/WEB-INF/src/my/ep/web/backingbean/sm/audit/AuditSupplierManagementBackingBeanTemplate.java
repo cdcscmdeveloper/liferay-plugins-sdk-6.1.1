@@ -104,11 +104,27 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 		AuditSupplierManagementDetailDTO auDetail = new AuditSupplierManagementDetailDTO();
 		auDetail.setActionType(actionType);
 		auDetail.setSmFieldLabelId(BigInteger.valueOf(fieldLabelId));
+		// #35501_Reopen#65 Start
+		String oldValueExt = null;
+		if(oldValue != null && oldValue.length() > AuditSupplierManagementConst.AU_VARCHAR_LIMIT){
+			oldValueExt = oldValue.substring(4000);
+			oldValue = oldValue.substring(0, 4000);
+		}
+		String newValueExt = null;
+		if(newValue != null && newValue.length() > AuditSupplierManagementConst.AU_VARCHAR_LIMIT){
+			newValueExt = newValue.substring(4000);
+			newValue = newValue.substring(0, 4000);
+		}
+		// #35501_Reopen#65 End
 		auDetail.setOldValue(oldValue != null ? oldValue : null);
 		auDetail.setNewValue(newValue != null ? newValue : null);
 		auDetail.setOldValueId(oldValueId != null ? BigInteger.valueOf(oldValueId) : null);
 		auDetail.setNewValueId(newValueId != null ? BigInteger.valueOf(newValueId) : null);
 		auDetail.setFieldLabelCode(BigInteger.valueOf(fieldLabelCode));
+		// #35501_Reopen#65 Start
+		auDetail.setOldValueExt(oldValueExt != null ? oldValueExt : null);
+		auDetail.setNewValueExt(newValueExt != null ? newValueExt : null);
+		// #35501_Reopen#65 End
 		return auDetail;
 	}
 
