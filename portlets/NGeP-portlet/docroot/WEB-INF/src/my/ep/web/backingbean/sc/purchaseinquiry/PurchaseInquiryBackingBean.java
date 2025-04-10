@@ -5,7 +5,6 @@ package my.ep.web.backingbean.sc.purchaseinquiry;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,7 +38,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.PriceTypeConstants; // #29557
-import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -90,7 +88,6 @@ import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -2422,7 +2419,6 @@ public class PurchaseInquiryBackingBean extends
 				
 				if(scSupplierItemPrice.getTplSpecZone().getSpecZoneId() != null){
 					if (specZoneId.compareTo(scSupplierItemPrice.getTplSpecZone().getSpecZoneId()) == 0 ){
-						//countZoneId++;
 					}
 				}
 			}
@@ -2481,24 +2477,22 @@ public class PurchaseInquiryBackingBean extends
 //		BigDecimal range = BigDecimal.valueOf(0); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		if(scSupplierItemPrices.size() > 1) {
 			for (ScSupplierItemPrice scSupplierItemPrice : scSupplierItemPrices) {
-				
-				if(index == 0 || (scSupplierItemPrice.getFromQty() != null && scSupplierItemPrice.getFromQty().compareTo(BigDecimal.valueOf(1)) == 0)){
+
+				if (index == 0 || (scSupplierItemPrice.getFromQty() != null && scSupplierItemPrice.getFromQty().compareTo(BigDecimal.valueOf(1)) == 0)) {
 					if (scSupplierItemPrice.getToQty() == null) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage("lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								facesScopes.getUserLocale()) });
 					}
-					
-					//range = scSupplierItemPrice.getToQty().subtract(scSupplierItemPrice.getFromQty());					
-				}else{
+
+				} else {
 					ScSupplierItemPrice prevScSupplierItemPrice = scSupplierItemPrices.get(index - 1);
 					if (scSupplierItemPrice.getToQty() == null) {
-						if(index != scSupplierItemPrices.size() - 1)
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								"lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+						if (index != scSupplierItemPrices.size() - 1)
+							throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage("lbl.sc.to.qty", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									facesScopes.getUserLocale()) });
 					}
-					
+
 					scSupplierItemPrice.setFromQty(prevScSupplierItemPrice.getToQty().add(BigDecimal.valueOf(1)));
-					//scSupplierItemPrice.setToQty(scSupplierItemPrice.getFromQty().add(range));
 				}
 				index++;
 			}

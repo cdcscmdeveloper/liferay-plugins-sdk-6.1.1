@@ -891,7 +891,7 @@ public class NoticeBoardBackingBean extends
 		supplierReqDTO.setQtId(qtId);
 		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
 		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
-		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
+		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED){
 			return Boolean.TRUE;
 	    }
 		return Boolean.FALSE;
