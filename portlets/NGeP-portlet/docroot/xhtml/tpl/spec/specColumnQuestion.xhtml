@@ -46,8 +46,14 @@
 			<ui:remove>#36681 - end</ui:remove>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 			<br />
-			#{question.cmItem.extensionCode}
-			<p:spacer width="20" />
+
+				<!-- #31503 Start -->				
+				<p:commandLink oncomplete="itemDescDialogId.show();" value="#{question.cmItem.extensionCode}" style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{codificationBackingBean.showItemDescPopup(question)}" process="@this" update="@([id$=itemDescDialogId])"/>
+				<!-- #31503 End -->
+
+
+				<p:spacer width="20" />
 			<p:commandLink id="itemSpecificationLink" process="@this"
 				update="@([id$=itemSpecificationDlg])"
 				oncomplete="itemSpecificationDlgVar.show();"
