@@ -7850,6 +7850,8 @@ public void saveComplianceSample() {
 		EvaluationResDTO evalResDTO = new EvaluationResDTO();
 		boolean noProposalSubmitted = this.getManagedBean().isNoProposalSubmitted();//6906
 		try {
+			log.info("evaluationMaintainPreviousNextTabIndex outputTab:: " + outputTab);//dev island checking
+			System.out.println("evaluationMaintainPreviousNextTabIndex outputTab:: " + outputTab);//dev island checking
 
 			// this.currentTab = currentTab;
 			// this.outputTab = outputTab;
@@ -9076,6 +9078,7 @@ public void saveComplianceSample() {
 			outputTab=currentTab;
 			getManagedBean().setTabActiveIndex(outputTab);
 			this.getManagedBean().getEvaluationContext().put(SourcingConstants.MAP_PROPERTY_ERROR, e);//34748
+			log.error(e.getMessage());//dev island checking
 			handleException(e);
 		}
 		finally {
