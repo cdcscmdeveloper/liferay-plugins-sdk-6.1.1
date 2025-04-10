@@ -107,13 +107,13 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 		// #35501_Reopen#65 Start
 		String oldValueExt = null;
 		if(oldValue != null && oldValue.length() > AuditSupplierManagementConst.AU_VARCHAR_LIMIT){
-			oldValueExt = oldValue.substring(4000);
-			oldValue = oldValue.substring(0, 4000);
+			oldValueExt = oldValue.substring(AuditSupplierManagementConst.AU_VARCHAR_LIMIT);
+			oldValue = oldValue.substring(0, AuditSupplierManagementConst.AU_VARCHAR_LIMIT);
 		}
 		String newValueExt = null;
 		if(newValue != null && newValue.length() > AuditSupplierManagementConst.AU_VARCHAR_LIMIT){
-			newValueExt = newValue.substring(4000);
-			newValue = newValue.substring(0, 4000);
+			newValueExt = newValue.substring(AuditSupplierManagementConst.AU_VARCHAR_LIMIT);
+			newValue = newValue.substring(0, AuditSupplierManagementConst.AU_VARCHAR_LIMIT);
 		}
 		// #35501_Reopen#65 End
 		auDetail.setOldValue(oldValue != null ? oldValue : null);
