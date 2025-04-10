@@ -9078,6 +9078,7 @@ public void saveComplianceSample() {
 			outputTab=currentTab;
 			getManagedBean().setTabActiveIndex(outputTab);
 			this.getManagedBean().getEvaluationContext().put(SourcingConstants.MAP_PROPERTY_ERROR, e);//34748
+			log.error(e.getMessage());
 			handleException(e);
 		}
 		finally {
