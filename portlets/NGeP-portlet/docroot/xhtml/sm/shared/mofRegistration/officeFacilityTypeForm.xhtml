@@ -507,13 +507,20 @@
 					      }
 						
 						</script>
-									 
+						<!-- 37771 -->			 
 						<ac:gmap id="acgmap2" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							latitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}"
 							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}"
-							disabled="#{backingBean.managedBean.upsCannotEdit}" />					
+							disabled="#{backingBean.managedBean.upsCannotEdit}" 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriLatValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLatitude}" 
+							currLatValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}" 
+							alertLatValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLatitude}"
+							oriLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}" 
+							currLongValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" 
+							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>					
 					</td>
 				</tr>
 				</p:outputPanel>
