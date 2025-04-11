@@ -63,7 +63,7 @@ public class SmSideMenuIconUtil {
 					}
 				}				
 				//27641, 27736 : Disciplinary Action - #26238 - end
-				
+				//#37771 START
 				bean.getEditVO().setSuppEditCompBasic(false);
 				if (step1CompanyBasicHasDifference(bean.getLatestAppl(),
 						bean.getSmAppl())) {
@@ -569,7 +569,7 @@ public class SmSideMenuIconUtil {
 				}
 			}
 		} */
-	}
+	}//#37771 END
 
 	public static void setAllSectionEditorVO(SmApplicationManagedBean bean,
 			boolean setAll, String page) {

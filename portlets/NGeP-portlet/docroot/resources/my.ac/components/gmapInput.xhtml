@@ -36,7 +36,7 @@
 		<ac:instructionText value="#{lbl['lbl.gmap.instruction']}" />
   		
   		<div class="ui-fieldset-content">
-  		
+  		<!-- 37771 START -->
   		<h:panelGroup layout="block" style="display: flex; align-items: center; gap: 5px;">
   		
 		X: <p:inputText id="plat" value="#{cc.attrs.latitude}" disabled="#{cc.attrs.disabled}" maxlength="20" />
@@ -69,7 +69,7 @@
 		</p:commandButton>	
 		
 		</h:panelGroup>	
-
+		<!-- 37771 END -->
 		<p:remoteCommand 
 			id="updateGmap"
 			name="updateGmap" 
