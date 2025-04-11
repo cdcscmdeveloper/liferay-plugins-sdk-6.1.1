@@ -66,6 +66,18 @@ public class SSTConstant {
 	 * Represent HTML Entity line break.
 	 */
 	public static final String HTML_ENTITY_LINE_SEPARATOR = "<br/>";
+	
+	/**
+	 * Constant representing the prefix for a new supplier offer.
+	 * This is used as a standard identifier or key prefix in various parts of the application.
+	 */
+	public static final String NEW_SUPPLIER_OFFER_ = "NSO_";
+
+	/**
+	 * Constant representing the prefix for a new supplier offer justification.
+	 * This prefix is typically used to identify or reference justifications related to new supplier offers.
+	 */
+	public static final String NEW_SUPPLIER_OFFER_JUSTIFICATON_ = "NSOJ_";
 	// 29006 end
 	// #29007 - start 
 	public static final String LESS_THAN_SYMBOL = "&#60;";
