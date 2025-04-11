@@ -158,9 +158,11 @@
 				</table>
 			</p:panel>
 			<div style="text-align: right;">
+				<!-- #31503 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.extensionCodeSearchForAssign}"
-					update="itemTable2ID" />
+					update="itemTable2ID, @form" />
+				<!-- #31503 End -->
 				<p:commandButton value="#{lbl['lbl.btn.back']}"
 					action="#{codificationBackingBean.backToSearchUnspscToAssign}" />
 			</div>
@@ -168,13 +170,27 @@
 
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
+				<!-- #31503 Start -->
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.qt.assign.item.code.instruction3']}" />
+				<br />
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.qt.assign.item.code.instruction4']}" />
+
 				<p:dataTable id="itemTable2ID"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
-					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex" lazy="true">
+					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex" lazy="true"
+					selection="#{codificationBackingBean.managedBean.objSelected}">
+					<!-- #31503 End -->
 
 					<ac:paginator for="itemTable2ID"></ac:paginator>
-
+					<!-- #31503 Start -->
+					<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
+						update="@form"
+						listener="#{codificationBackingBean.selectedItemCode}" />
+					<p:column selectionMode="single" />
+					<!-- #31503 End -->
 
 					<p:column>
 						<f:facet name="header">
@@ -204,19 +220,17 @@
 						#{obj[7]}
 					</p:column>
 
-					<p:column>
-						<f:facet name="header">
-							#{lbl['lbl.cm.action']}
-						</f:facet>
-						<p:commandLink title="#{lbl['lbl.cm.assign']}"
-							action="#{codificationBackingBean.insertContractedItemCode(obj)}">
-							<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
-						</p:commandLink>
-					</p:column>
-
-
+					<!-- #31503 remove column -->
 
 				</p:dataTable>
+				<!-- #31503 Start -->
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.sc.qt.assign.code']}"
+						action="#{codificationBackingBean.assignItemConfirmation}"
+						disabled="#{codificationBackingBean.managedBean.isRenderButtonAssignCode()}"
+						update="@([id$=asignCodeDialConfirm])" />
+				</div>
+				<!-- #31503 End -->
 				<div class="clear"></div>
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
@@ -230,6 +244,29 @@
 
 			<!-- Item Specification PopUp -->
 			<ui:include src="/xhtml/cm/codification/itemSpecDlg.xhtml" />
+
+			<!-- #31503 Start -->
+			<p:confirmDialog id="asignCodeDialConfirm"
+				widgetVar="asignCodeDialConfirm"
+				message="#{lbl['lbl.sc.qt.assign.item.code.confirmation']}"
+				header="#{lbl['lbl.sc.item.details']}" style="width:100%"
+				closable="true">
+				<p:outputLabel
+					value="#{codificationBackingBean.managedBean.itemCodeDesc}" />
+				<br />
+				<br />
+
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						onclick="asignCodeDialConfirm.hide();"
+						action="#{codificationBackingBean.insertContractedItemCode(codificationBackingBean.managedBean.objSelected)}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						update="@form" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						onclick="asignCodeDialConfirm.hide();" update="@form" />
+				</div>
+			</p:confirmDialog>
+			<!-- #31503 End -->
 
 		</h:panelGroup>
 
