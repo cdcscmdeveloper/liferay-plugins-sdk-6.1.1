@@ -7,6 +7,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:param name="isFCApprovalDtlsEditable" value="#{!qTDetailBB.approvalDtlsEditable(qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval)}" />
+	<ui:param name="qtStatusAfterPendingRecommendation"
+		value="#{createQtBB.isQTStatusGreaterThan(scQt.qtStatus.statusId, QTStatusConst.qtConsolidationReport)}" />
 
 	<p:panel id="fcreqDetails" header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="fcareqdtlsid"
@@ -45,7 +47,8 @@
 						<p:selectOneMenu id="fcApprovalId"
 							value="#{approverSettings.committeeType.parameterId}"
 							style="width:75%;margin-bottom: 5px;" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
-																				and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}"><ui:remove>#21692</ui:remove>
+																				and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral
+																				and qtStatusAfterPendingRecommendation}"><ui:remove>#21692</ui:remove>
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="secretary"
@@ -67,7 +70,8 @@
 						<c:when test="#{!empty fcaApprovalTab.scQtApproval.scQtApprovalDtls and empty fcaApprovalTab.scQtApproval.scQtApprovalDtls[0].submissionDate}">
 							<p:selectOneMenu id="usersSecretaryId"
 								value="#{approverSettings.pmUser.userId}" disabled="#{fcaApprovalTab.scQtApproval.scQtApprovalDtls.get(0).approvalType.parameterCode eq ParameterConst.approvalRequestExtendProposalValidityPeriod
-																						and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral}"
+																						and qTDetailBB.managedBean.qt.contractType.parameterCode ne ParameterConst.contractTypeCentral
+																						and qtStatusAfterPendingRecommendation}"
 								style="width:90%;margin-bottom: 5px;"><ui:remove>#21692</ui:remove>
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 									itemValue="#{null}" />
