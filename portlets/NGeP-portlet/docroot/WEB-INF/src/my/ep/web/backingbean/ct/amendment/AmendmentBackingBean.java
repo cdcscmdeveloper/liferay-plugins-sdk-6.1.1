@@ -5372,8 +5372,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onItemPriceChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			// contract type: central and followLoaAmount: false, disallow to change contract value
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
@@ -5397,6 +5396,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 		}
 		ConstructTabSideMenu();
+	}
+		
+	private boolean isCentralContractWithoutLoaAmt() {
+		return ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt();
+	}
+
+	private boolean isNotChangedByGstOrSst() {
+		return !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst();
 	}
 
 	/**
