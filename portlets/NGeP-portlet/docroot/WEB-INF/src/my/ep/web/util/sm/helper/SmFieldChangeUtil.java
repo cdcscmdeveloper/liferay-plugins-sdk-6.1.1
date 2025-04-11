@@ -56,8 +56,9 @@ public class SmFieldChangeUtil {
 					.retrieveLatestSmApplWithChildBySupplierId(mofReqDTO)
 					.getSmAppl();
 			bean.setLatestApproveAppl(srcAppl);
-			//#35194
-			if (bean.getSmAppl().isResubmit() && bean.getSmAppl().getOriginalAppl() != null) {
+			//#35194 
+			//#37771 START -comment these line because unusable - changes in logic
+			/*if (bean.getSmAppl().isResubmit() && bean.getSmAppl().getOriginalAppl() != null) {
 				mofReqDTO.setSmAppl(bean.getSmAppl());
 				SmAppl latestRejectedAppl = SmServiceLookup
 						.getMofRegistrationSO()
@@ -71,7 +72,8 @@ public class SmFieldChangeUtil {
 				} else {
 					srcAppl = applRevDTO.getSmAppl();
 				}
-			}
+			}*/
+			//#37771 - END
 			bean.setLatestAppl(srcAppl);
 			bean.getLatestAppl()
 					.setHqFacility(
