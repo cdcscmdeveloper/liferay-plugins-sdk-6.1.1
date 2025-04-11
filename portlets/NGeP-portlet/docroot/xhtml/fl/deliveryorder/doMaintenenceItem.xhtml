@@ -22,9 +22,18 @@
 			rowKey="#{flItem}"
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">
 			<ac:paginator for="doItems" />
-			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
-				<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
+			<!-- 28855 Start -->
+			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal">
+				<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc" 
+				 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
+				<p:commandLink oncomplete="doItemInfo.show();" process="@this"
+					rendered="#{createDOBackingBean.managedBean.contractFlag}"  
+					action="#{createDOBackingBean.doItemInfoList(doItems)}"
+					update=":form:doItemInfoDialog,@(.orderSummaryChange)">
+					<ac:iconTooltip value="#{lbl['lbl.fl.item.tooltip']}"  escape="false"/>
+					</p:commandLink>
 			</p:column>
+			<!-- 28855 End -->
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 				<h:outputText value="#{doItems.scRequestItem.uom.uomName}" style="float:left;"/>
 			</p:column>

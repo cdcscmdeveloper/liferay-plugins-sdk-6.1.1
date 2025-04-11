@@ -162,7 +162,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
-
+	
 	//#28854 - start
 	private List<String> itemSpecification;
 	private String newOfferSpec;
