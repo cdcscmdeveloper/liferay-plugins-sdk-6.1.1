@@ -288,12 +288,10 @@ public class ViewSuppProfileManagedBean extends
 				if(isBasicAccountMaintenance()){
 					return getBasicSupplierResultBean(reqDTO);
 				} else {
-					return new SearchResultBean<SmSupplier>();
+					return new SearchResultBean();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean<SmSupplier>();
-			} finally {
-				reqDTO = null;
+				return new SearchResultBean();
 			}
 		}
 		
@@ -313,10 +311,9 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSmAppl(smAppl);
 			// 28273: Disciplinary Action - end - 26238
 			
-			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveBasicSupplierForMaintenance(reqDTO)
 					.getSupplierResultBean();
-			return resultBean;
 		}
 	} 
 	
@@ -788,23 +785,7 @@ public class ViewSuppProfileManagedBean extends
 	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
 		this.smSuppOwners = smSuppOwners;
 	}
-	/*	#28281
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
-
-	public boolean isWarningExist() {
-		return warningExist;
-	}
-
-	public void setWarningExist(boolean warningExist) {
-		this.warningExist = warningExist;
-	} 
-	*/
+	
 	//27437 : Disciplinary Action 
 	/**
 	 * Search supplier latest application
@@ -958,14 +939,6 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setDivisionBox(boolean divisionBox) {
 		this.divisionBox = divisionBox;
-	}
-
-	public List<Long> getBumiCodeList() {
-		return bumiCodeList;
-	}
-
-	public void setBumiCodeList(List<Long> bumiCodeList) {
-		this.bumiCodeList = bumiCodeList;
 	}
 
 	public boolean isDisabledApprovedCategories() {
