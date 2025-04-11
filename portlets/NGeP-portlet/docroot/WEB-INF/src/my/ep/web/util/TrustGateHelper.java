@@ -237,7 +237,8 @@ public class TrustGateHelper {
 
 	public void revoke(String identificationNo, String epNo) throws IOException {
 		log.info("TRUSTGATE REVOKE:" + identificationNo + "||" + epNo);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -251,7 +252,8 @@ public class TrustGateHelper {
 			throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||"
 				+ email);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -264,7 +266,8 @@ public class TrustGateHelper {
 	public void changePIN(String identificationNo, String epNo)
 			throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE CHANGE PIN:" + identificationNo + "||" + epNo);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
@@ -278,7 +281,8 @@ public class TrustGateHelper {
 			throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||"
 				+ epNo);
-		String token = generateSecurityToken(identificationNo, epNo);
+		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
+				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
