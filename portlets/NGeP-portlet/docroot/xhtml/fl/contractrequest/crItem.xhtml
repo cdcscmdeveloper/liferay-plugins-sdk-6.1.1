@@ -684,16 +684,18 @@
 		</div>
 	</p:dialog>
 	
+	<!-- 28855 Start -->
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
-		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="600" resizable="false" style="overflow:scroll">
+		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade" style="overflow:scroll"
+		modal="true" width="900" height="550" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{contractRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
 			</tr>
+			<!--  		
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.item.desc']}" /></td>
 				<td><p:inputTextarea cols="61" rows="4" id="itemDesc"
@@ -703,6 +705,8 @@
 						value="#{contractRequestBackingBean.managedBean.itemDesc == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.itemDesc}" /> 
 				</td>
 			</tr>
+			-->
+	<!-- 28855 End -->
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.ct.max.order.qty']}" rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"
