@@ -4506,71 +4506,71 @@ public class SmApplicationUtil {
 
 	private static void assignExistingAndAdditionalCategoryList(
 			SmApplicationManagedBean managedBean) {
+		List<SmSupplierCategory> addtnlList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
+		//#34209 START - to remove category with deleted status in the list - fix issue active category show in addcat list
+		List<SmSupplierCategory> delCatList = new ArrayList<SmSupplierCategory>();
+		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
+				.getSmAppl().getSmSupplierCategories()){
+			if(filtCat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+				delCatList.add(filtCat);
+			}
+		}
+		managedBean.getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories().removeAll(delCatList);
+		//#34209 END
+		//28775 - Site Visit Grouping Enhancement -28775
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE,
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
-		if (managedBean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			assignExistingAndAdditionalCategoryList(managedBean);
-		} else {
-			List<SmSupplierCategory> catList = new ArrayList<>();
-			List<SmSupplierCategory> apprvList = new ArrayList<>();
-			for (SmSupplierCategory cat : managedBean.getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(
+				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
+						.getEntityBySinglePropertyFromList(cat
+								.getPmCategoryL3().getCategoryL3Id(),
+								managedBean.getSmAppl().getSmSupplier()
+										.getSmAppl().getSmSupplierCategories(),
+								"pmCategoryL3");
+				//#32726 start
+				if (tmp != null
+						&& (tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL 
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					if(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0)
+						addtnlList.add(cat);
+					else
+						existingList.add(cat);
+				//#32726 end
+				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg()
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-					catList.add(cat);
-				} else if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					//29823 - start
-					//#34098 - START 
-					if(managedBean.getCurrentStatus() != null 
-							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
-							    managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
-							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)
-							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
-						catList.add(cat);
-					}else if(managedBean.getCurrentStatus() != null 
-							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
-								managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
-							&& managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
-						if(cat.getApplRefId().equals(cat.getSmAppl().getApplId())){
-							catList.add(cat);
-						}else{
-							apprvList.add(cat);
-						}
-					//#34098 - END 
-					}else{
-						apprvList.add(cat);
-					}
-					//29823 - end
-			
-					//30865, 30921 - Starts
-				}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
+					addtnlList.add(cat);
+				}
+				//30865 - Starts
+			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 							cat.setCancelCategory(true);
-							apprvList.add(cat);
+							existingList.add(cat);
 						}
 			}
 				//30865 - Ends
-			}
-			setCancelCategoryCatCodes(managedBean.getSmAppl().getSmSupplier(), catList);
-			if (managedBean.getActiveCategoryList() != null
-					&& !managedBean.getActiveCategoryList().isEmpty()) {
-				managedBean.getActiveCategoryList().clear();
-			}
-			if (managedBean.getApprovedCategoryList() != null
-					&& !managedBean.getApprovedCategoryList().isEmpty()) {
-				managedBean.getApprovedCategoryList().clear();
-			}
-			sortSupplierCategory(apprvList);
-			sortSupplierCategory(catList);
-			managedBean.setActiveCategoryList(catList);
-			managedBean.setApprovedCategoryList(apprvList);
 		}
+		if (managedBean.getActiveCategoryList() != null
+				&& !managedBean.getActiveCategoryList().isEmpty()) {
+			managedBean.getActiveCategoryList().clear();
+		}
+		if (managedBean.getApprovedCategoryList() != null
+				&& !managedBean.getApprovedCategoryList().isEmpty()) {
+			managedBean.getApprovedCategoryList().clear();
+		}
+		sortSupplierCategory(existingList);
+		sortSupplierCategory(addtnlList);
+		managedBean.setActiveCategoryList(addtnlList);
+		managedBean.setApprovedCategoryList(existingList);
 	}
 	
 	//14150
