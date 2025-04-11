@@ -1908,6 +1908,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
 						SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+						// #24819
+						this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
 						//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -2019,7 +2021,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						//START NEW CHANGES POPUP OWNER UPDATE ROLE
 						List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
 						//start #29956
-						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(smApplSupplier.getSmAppl(),ssmResDTO);
+						boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(getManagedBean().getSmAppl(),ssmResDTO); //#37598
 						if (displayPopupDowngradeSSMOwner) {
 							// end #29956
 							getManagedBean().setSmSupplierSsm(this.getManagedBean().getSmSupplier());	
@@ -11852,10 +11854,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void deleteSupDocFileAttachment() {
 
 		SmApplSupportDoc mainDoc = getManagedBean().getSupportDoc();
-		//#28807 - Start
-		if(this.getManagedBean().getSmApplDocFile() != null){
-			mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+		// #37775 - Start
+		if (this.getManagedBean().getSmApplDocFile() != null) {
+			if (mainDoc.getSmApplDocFiles().size() == 1) {
+				// If there is only one file, clear its name
+				this.getManagedBean().getSmApplDocFile().setFileName(" ");
+				this.getManagedBean().getSmApplDocFile().setFilePath(" ");
+				// Reassign the modified object back to the list (ensuring persistence)
+				List<SmApplDocFile> updatedFiles = new ArrayList<>(mainDoc.getSmApplDocFiles());
+				updatedFiles.set(0, this.getManagedBean().getSmApplDocFile());
+				mainDoc.setSmApplDocFiles(updatedFiles);
+			} else {
+				// #28807 - Start
+				mainDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			}
 		}
+		// #37775 - End
 		this.getManagedBean().setSmApplDocFile(null);
 	}
 	//#28807 - End
@@ -15274,6 +15288,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+			// #24819
+			this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -15588,6 +15604,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
 			mofReqDto.setSmAppl(this.getManagedBean().getSmAppl());
+			//#24819
+			mofReqDto.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+			mofRegistrationSO.updateSupplierProfile(mofReqDto);
 			MofRegistrationResDTO mofRespDto = mofRegistrationSO.updateSmAppl(mofReqDto);
 			this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());
 			
