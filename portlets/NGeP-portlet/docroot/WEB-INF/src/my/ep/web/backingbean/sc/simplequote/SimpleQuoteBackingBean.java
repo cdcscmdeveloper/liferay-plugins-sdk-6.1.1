@@ -146,6 +146,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -405,9 +406,18 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
+			getManagedBean().setTrackingDairyView(Boolean.TRUE);//#25790
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
 			
+			//#25886 - start
+			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+						getManagedBean().getScQuote());
+				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+			}
+			//#25886 - end
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 
@@ -879,7 +889,7 @@ public class SimpleQuoteBackingBean extends
 		if (supplierId != null && supplierId != 0) {
 			if (scQuote.getSupplierId() == 0)
 				scQuote.setSupplierId(supplierId);
-		} else if (supplierId == 0) {
+		} else if(supplierId != null && supplierId == 0){ //#34994 & #25790
 			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}
@@ -5225,6 +5235,14 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		// #25886 - start
+		if (getManagedBean().getScQuote().getPurchaseInDefault() != null) {
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+					getManagedBean().getScQuote());
+			ScQuote scQt = getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+		}
+		// #25886 - end
 		
 		// Populate General Information tab details saved in session
 		// after returning from Treasury Circular Page
@@ -7971,6 +7989,11 @@ public class SimpleQuoteBackingBean extends
 			ppBB.getManagedBean().setFromCircularNotice(false);
 			ppBB.getManagedBean().setDifferentModule(false);
 			ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
+			// 25790 - start
+			if (getManagedBean().isEditableFlag()) {
+				ppBB.getManagedBean().setSqEditableMode(true);
+			}
+			// 25790 - end
 			ppBB.getManagedBean().setSupplierItemDocId(getManagedBean().getSupplierItemDocId());
 			final TemplateSpecBean ptsb = new TemplateSpecBean();
 			try {
@@ -8149,6 +8172,21 @@ public class SimpleQuoteBackingBean extends
 		return sb.toString();
 	}
     //29832 - end
+
+	// start - #25790
+	/**
+	 * Redirect to purchase in default view.
+	 * 
+	 * @param purchaseInDefaultId
+	 *            the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId) {
+		PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+		pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
+	}
+
+	// end - #25790
 
 	// 36301 - start
 	/**
