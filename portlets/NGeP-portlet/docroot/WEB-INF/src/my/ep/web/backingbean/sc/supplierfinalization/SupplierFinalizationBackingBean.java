@@ -1372,8 +1372,9 @@ public class SupplierFinalizationBackingBean extends
 
 			if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
 				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
+				
+				reqDTO = validateInfo(activeIndex, skipValidation); // 25037 
 
-				reqDTO = validateInfo(activeIndex, skipValidation); // 25037
 				scQtCommittee = reqDTO.getScQtCommittee();
 
 				this.getManagedBean().setSubmit(Boolean.FALSE); // 32613,37623 issue 1
@@ -3480,28 +3481,25 @@ public class SupplierFinalizationBackingBean extends
 				reportAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
 		return streamContent;
-    }	
-    
-	//36715 START
-    /**
-	 *Get the Documents Report Information.
+    }
+
+	// 36715 START
+	/**
+	 * Get the Documents Report Information.
 	 * 
-	 *@return the ScQtFinalizationReportAttachment instance.
-	 *             
+	 * @return the ScQtFinalizationReportAttachment instance.
+	 * 
 	 */
 	public ScQtFinalizationReportAttachment generateDocumentAttachmentRtf(
 			ScQtFinalizationReport scQtFinalizationReport, boolean isDirectDownload) throws Exception {
 		log.info("generateDocumentAttachment");
-		String definitionType = scQtFinalizationReport.getDefinationType()
-				.getParameterCode();
-		ScQtFinalization scQtFinalization = getManagedBean()
-				.getScQtFinalization();
+		String definitionType = scQtFinalizationReport.getDefinationType().getParameterCode();
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 
 		ScQtFinalizationReportAttachment reportAttachment = null;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equals(definitionType)) {
-			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-					.getDocDefinitionKey();
+
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
 			ScQt scQt = getManagedBean().getScQt();
 			reportAttachment = new ScQtFinalizationReportAttachment();
 			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
@@ -3510,26 +3508,25 @@ public class SupplierFinalizationBackingBean extends
 			StringBuilder filename = new StringBuilder();
 			// replace white space due to firefox
 			filename.append(scQtFinalizationReport.getTitle()
-					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE,SourcingConstants.UNDER_SCORE)
-					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH,SourcingConstants.UNDER_SCORE));
-			
+					.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, SourcingConstants.UNDER_SCORE)
+					.replaceAll(SourcingConstants.REG_EXP_BACK_SLASH, SourcingConstants.UNDER_SCORE));
+
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
-				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
 
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload); // 36715
 			} else {
-				debugLogger("No document type is exists with the key "
-						+ docDefinitionKey);
+				debugLogger("No document type is exists with the key " + docDefinitionKey);
 				reportAttachment = null;
 			}
 
-		} 
-		
+		}
+
 		return reportAttachment;
 	}
-	//36715 END
-     
+	// 36715 END
+	
     /**
 	 *Get the Documents Report Information.
 	 * 
@@ -3563,8 +3560,10 @@ public class SupplierFinalizationBackingBean extends
 			if (SourcingConstants.DOC_DEF_KEY_KERTAS_TAKLIMAT.equals(docDefinitionKey)) {
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
+
 				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
 
+				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload); // 36715
 			} else {
 				debugLogger("No document type is exists with the key "
 						+ docDefinitionKey);
@@ -3629,60 +3628,59 @@ public class SupplierFinalizationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
 	}
 	
-	//36715 START
-	private void generateKertasTaklimatRtf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) 
-			   throws Exception {
+	// 36715 START
+	private void generateKertasTaklimatRtf(ScQt qt, ScAttachment attachment, boolean isDirectDownload) throws Exception {
 		populateAttachmentDetails(attachment);
-		
+
 		FacesScopes facesScopes = new FacesScopes();
 		long qtId = qt.getQtId();
 		String reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
-		
+
 		String estimatedAmountStr = null;
 		IQTDetailSO qtDetailSO = null;
 		try {
-		qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
-		ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
-		estimatedAmountStr = estimatedAmount.toPlainString();
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+			BigDecimal estimatedAmount = qtDetailSO.getdecryptedEstAmount(qtId);
+			estimatedAmountStr = estimatedAmount.toPlainString();
 		} finally {
-		qtDetailSO = null;
-		}		
-		
+			qtDetailSO = null;
+		}
+
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
-		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
-		.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_ESTIMATED_AMOUNT, estimatedAmountStr);
-		StringBuilder ulasan=new StringBuilder();
-		List<ScQtRecommendationUlasanRemarks> ulasanRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationUlasanRemarks();
+		StringBuilder ulasan = new StringBuilder();
+		List<ScQtRecommendationUlasanRemarks> ulasanRemarks = this.getManagedBean().getScQtFinalization()
+				.getScQtRecommendationUlasanRemarks();
 		if (CollectionUtils.isNotEmpty(ulasanRemarks)) {
-		for(ScQtRecommendationUlasanRemarks remark:ulasanRemarks){
-		if(StringUtils.isNotBlank(remark.getRemark())){
-		ulasan.append(remark.getRemark() + "\n");
+			for (ScQtRecommendationUlasanRemarks remark : ulasanRemarks) {
+				if (StringUtils.isNotBlank(remark.getRemark())) {
+					ulasan.append(remark.getRemark() + "\n");
+				}
+			}
 		}
-		}
-		}
-		/*StringBuilder pengesyoran=new StringBuilder();
-		List<ScQtRecommendationPengesyoranRemarks> pengerysonRemarks=this.getManagedBean().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
-		if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
-		for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
-		if(StringUtils.isNotBlank(remark.getRemark())){
-		pengesyoran.append(remark.getRemark() + "\n");
-		}
-		}
-		}*/
-		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
-		StringUtils.EMPTY : ulasan.toString());
+		/*
+		 * StringBuilder pengesyoran=new StringBuilder();
+		 * List<ScQtRecommendationPengesyoranRemarks>
+		 * pengerysonRemarks=this.getManagedBean
+		 * ().getScQtFinalization().getScQtRecommendationPengesyoranRemarks();
+		 * if (CollectionUtils.isNotEmpty(pengerysonRemarks)) {
+		 * for(ScQtRecommendationPengesyoranRemarks remark:pengerysonRemarks){
+		 * if(StringUtils.isNotBlank(remark.getRemark())){
+		 * pengesyoran.append(remark.getRemark() + "\n"); } } }
+		 */
+		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
-		//paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ? 
-		//StringUtils.EMPTY : pengesyoran.toString());
+		// paramMap.put(ReportConst.PARAM_RECOM, pengesyoran.length() == 0 ?
+		// StringUtils.EMPTY : pengesyoran.toString());
 		// #18685 - Start
 		paramMap.put("flowType", "tasklist");
 		// #18685 - End
-		generateRtfFromOracle(reportName, paramMap, attachment, isDirectDownload);		
-    }
-	//36715 End
+		generateRtfFromOracle(reportName, paramMap, attachment, isDirectDownload);
+	}
+	// 36715 End
 
 	private void generateEndorsementReportFromVelocityToPdf(
 			ScQtFinalization scQtFinalization, ScAttachment attachment)
