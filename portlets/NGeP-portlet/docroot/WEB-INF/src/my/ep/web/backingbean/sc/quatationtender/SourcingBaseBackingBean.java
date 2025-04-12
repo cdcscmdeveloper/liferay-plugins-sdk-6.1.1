@@ -276,7 +276,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public static Logger log = EpLogger
 			.getLogger(SourcingBaseBackingBean.class);
 	
-	private static final String UTF = "UTF-8";
+	//private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
 	protected static final String  UNDER_SCORE = "_";
@@ -930,10 +930,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @throws IOException
 	 */
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
-			ATTACHMENT scAttachment, String contentType) throws IOException {
+ATTACHMENT scAttachment, String contentType)
+			throws IOException {
 		ByteArrayOutputStream tmpOut = null;
 		FileInputStream in = null;
-		try{
+		try {
 			if (scAttachment != null) {
 				File file = new File(getActualFilePath(scAttachment));
 				tmpOut = new ByteArrayOutputStream();
@@ -958,10 +959,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} else {
 				return null;
 			}
-		}finally{
-			//TODO baffled to close tmpOut
+		} finally {
 		}
-		
 	}
 
 	protected List<PmParameterDesc> retrieveParametersBySearchBean(
@@ -971,7 +970,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 	
-	//36715 START
 	/**
 	 * To get report from orcle reports only for .rtf format file
 	 * 
@@ -4730,17 +4728,17 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
 		BigDecimal actualIntendedPrice = new BigDecimal(0);
 
-		if ("createQt".equals(ScreenType)) {
+		// 36678 add condition status id related to 35061 -start-
+		if ("createQt".equals(ScreenType)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
 			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
 		} else {
-			actualIntendedPrice = scQt.getEstimatedAmount();
+			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0);
+			// 36678 related to 35061 -end-
 		}
 
 		if (!scQt.isPanel() && actualIntendedPrice != null) {
-			log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-			log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
-
-			// #25729 #174			 
+			// #25729 #174
 			// Bug #35061 - asyrafhaziq
 			// get total indicative price threshold validation value
 			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
@@ -4750,6 +4748,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				return Boolean.TRUE;
 			}
 		}
+
+		// #36678 set null if user change above 50k. related to #35061,#37899
+		if (scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
+				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+			scQt.setJustificationProcValue(null);
+		}
+		// #36678, #35061, #37899 -end-
 
 		return Boolean.FALSE;
 	}
@@ -5087,7 +5092,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						} else {
 							zoneId = 0l; // Long Object initialization
 						}
-
 						if (answer.getTplSpecQuestion().getClFulfilmentTypeCode() == null) {
 							answer.getTplSpecQuestion().setClFulfilmentTypeCode(
 									scLoa.getScLoiLoa().getFulfilmentTypeCode());
@@ -5095,12 +5099,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						if (days == null) {
 							days = answer.getTplSpecQuestion().getClDeliveryTerm();
 						} else {
+
 							if (!days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())
 									&& (answer.getTplSpecQuestion().getClDeliveryTerm() != null)) {
 								days = answer.getTplSpecQuestion().getClDeliveryTerm();
 							}
 						}
-						
 						if (answer.getAnswerRemark() != null) {
 							answer.getTplSpecQuestion().setAnswerRemarks(answer.getAnswerRemark());
 						} else {
@@ -5152,6 +5156,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 														.getSpecQuestionId()))) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
 									if (master.getTplSpecZone() != null) {
+
 										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
 											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
 													.getTplSpecZoneDtls().get(i);
@@ -5175,6 +5180,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 								if (days.equals(answer.getTplSpecQuestion().getClDeliveryTerm())) {
 									master = answer.getTplSpecQuestion().getTplSpecMaster();
 									if (master.getTplSpecZone() != null) {
+
 										for (int i = 0; i < master.getTplSpecZone().getTplSpecZoneDtls().size(); i++) {
 											TplSpecZoneDtl tplspecZoneDtls = master.getTplSpecZone()
 													.getTplSpecZoneDtls().get(i);
