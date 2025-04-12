@@ -229,6 +229,21 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private Integer disableSection = 0;
 	//ENd #29665
 	
+	/************ AUDIT 35509 *************/
+	private PmCategoryL1 auditOldCategoryL1;
+	private PmCategoryL2 auditOldCategoryL2;
+	private PmCategoryL3 auditOldCategoryL3;
+	
+	private String auditLevelCategory;
+	
+	private List<PmCategoryRestr> auditAddedPmCategoryRestr;
+	private List<PmMachineCategory> auditAddedPmMachineCategory;
+	private List<PmBasicCategory> auditAddedPmBasicCategory;
+	
+	private List<PmBasicCategory> auditDeletedPmBasicCategory;
+	private List<PmCategoryRestr> auditDeletedPmCategoryRestr;
+	
+	/************ AUDIT 35509 *************/
 	
 	/**
 	 * Instantiates a new category managed bean.
@@ -1387,4 +1402,82 @@ public class CategoryManagedBean extends BaseManagedBean {
 	
 	//end #29665
 
+	/************ AUDIT 35509 *************/
+	public PmCategoryL3 getAuditOldCategoryL3() {
+		return auditOldCategoryL3;
+	}
+
+	public void setAuditOldCategoryL3(PmCategoryL3 auditOldCategoryL3) {
+		this.auditOldCategoryL3 = auditOldCategoryL3;
+	}
+
+	public PmCategoryL1 getAuditOldCategoryL1() {
+		return auditOldCategoryL1;
+	}
+
+	public void setAuditOldCategoryL1(PmCategoryL1 auditOldCategoryL1) {
+		this.auditOldCategoryL1 = auditOldCategoryL1;
+	}
+
+	public PmCategoryL2 getAuditOldCategoryL2() {
+		return auditOldCategoryL2;
+	}
+
+	public void setAuditOldCategoryL2(PmCategoryL2 auditOldCategoryL2) {
+		this.auditOldCategoryL2 = auditOldCategoryL2;
+	}
+
+	public String getAuditLevelCategory() {
+		return auditLevelCategory;
+	}
+
+	public void setAuditLevelCategory(String auditLevelCategory) {
+		this.auditLevelCategory = auditLevelCategory;
+	}
+
+	public List<PmCategoryRestr> getAuditAddedPmCategoryRestr() {
+		auditAddedPmCategoryRestr = new ArrayList<PmCategoryRestr>();
+		return auditAddedPmCategoryRestr;
+	}
+
+	public void setAuditAddedPmCategoryRestr(List<PmCategoryRestr> auditAddedPmCategoryRestr) {
+		this.auditAddedPmCategoryRestr = auditAddedPmCategoryRestr;
+	}
+
+	public List<PmMachineCategory> getAuditAddedPmMachineCategory() {
+		auditAddedPmMachineCategory = new ArrayList<PmMachineCategory>();
+		return auditAddedPmMachineCategory;
+	}
+
+	public void setAuditAddedPmMachineCategory(List<PmMachineCategory> auditAddedPmMachineCategory) {
+		this.auditAddedPmMachineCategory = auditAddedPmMachineCategory;
+	}
+
+	public List<PmBasicCategory> getAuditAddedPmBasicCategory() {
+		auditAddedPmBasicCategory = new ArrayList<PmBasicCategory>();
+		return auditAddedPmBasicCategory;
+	}
+
+	public void setAuditAddedPmBasicCategory(List<PmBasicCategory> auditAddedPmBasicCategory) {
+		this.auditAddedPmBasicCategory = auditAddedPmBasicCategory;
+	}
+
+	public List<PmBasicCategory> getAuditDeletedPmBasicCategory() {
+		auditDeletedPmBasicCategory = new ArrayList<PmBasicCategory>();
+		return auditDeletedPmBasicCategory;
+	}
+
+	public void setAuditDeletedPmBasicCategory(List<PmBasicCategory> auditDeletedPmBasicCategory) {
+		this.auditDeletedPmBasicCategory = auditDeletedPmBasicCategory;
+	}
+
+	public List<PmCategoryRestr> getAuditDeletedPmCategoryRestr() {
+		auditDeletedPmCategoryRestr = new ArrayList<PmCategoryRestr>();
+		return auditDeletedPmCategoryRestr;
+	}
+
+	public void setAuditDeletedPmCategoryRestr(List<PmCategoryRestr> auditDeletedPmCategoryRestr) {
+		this.auditDeletedPmCategoryRestr = auditDeletedPmCategoryRestr;
+	}
+	/************ AUDIT 35509 *************/
 }
