@@ -291,8 +291,10 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		sheetName.setColumnWidth(6, 20 * 256);
 		sheetName.setColumnWidth(7, 20 * 256);
 		sheetName.setColumnWidth(8, 20 * 256);
-		sheetName.setColumnWidth(9, 50 * 256);
-		sheetName.setColumnWidth(10, 50 * 256);
+		// #35501_Reopen#65 Start
+		sheetName.setColumnWidth(9, 100 * 256);
+		sheetName.setColumnWidth(10, 100 * 256);
+		// #35501_Reopen#65 End
 		// #35501_Reopen#58 End
 	}
 
