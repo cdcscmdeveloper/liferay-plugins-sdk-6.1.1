@@ -4053,12 +4053,14 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				log.info("SumAmt: " + sumAmt);
 				log.info("ThresholdAmt: " + thresoldAmt);
 				if(sumAmt.doubleValue() > thresoldAmt){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					//#31344 start
+					/*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.ERROR_740004, 
 									new String[]{CommonConstants.DEFAULT_LANGUAGE_CODE.equals(languageCode) ? cmUnspsc.getUnspscTitleEng() : cmUnspsc.getUnspscTitle() , StringUtils.EMPTY, //#27377
 											amountDF.format(thresoldAmt)}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));*/
 									//#26047 -- end
+					//#31344 end
 				}
 			}
 		}
