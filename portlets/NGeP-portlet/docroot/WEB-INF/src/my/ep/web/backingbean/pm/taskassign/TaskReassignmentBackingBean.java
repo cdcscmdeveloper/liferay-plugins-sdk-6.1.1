@@ -1183,7 +1183,7 @@ public class TaskReassignmentBackingBean extends
 							docNumberList.add(getManagedBean()
 									.getTaskAssignmentSearchBean().getDocNo());
 							reqDTO.setDocNumberList(docNumberList);
-							log.info("BPM documentList******" + reqDTO.getDocNumberList()); //#37794 
+							log.info("#37794-For PDS : BPM documentList******" + reqDTO.getDocNumberList()); //#37794 
 						}
 
 						if (getManagedBean().getTaskAssignmentSearchBean()
@@ -1194,14 +1194,14 @@ public class TaskReassignmentBackingBean extends
 							reqDTO.setDocType(getManagedBean()
 									.getTaskAssignmentSearchBean().getDocType()
 									.getPmParameter().getParameterCode());
-							log.info("BPM documentType******" + reqDTO.getDocType()); //#37794 
+							log.info("#37794-For PDS : BPM documentType******" + reqDTO.getDocType()); //#37794 
 						}
 						
 						//#37794 - Start
-						log.info("BPM statuslist *****" + reqDTO.getStatusList());
-						log.info("BPM userId*****" + reqDTO.getUserId());
-						log.info("BPM loginId******" + loginId);
-						log.info("BPM token******" + reqDTO.getCtxToken());
+						log.info("#37794-For PDS : BPM statuslist *****" + reqDTO.getStatusList());
+						log.info("#37794-For PDS : BPM userId*****" + reqDTO.getUserId());
+						log.info("#37794-For PDS : BPM loginId******" + loginId);
+						log.info("#37794-For PDS : BPM token******" + reqDTO.getCtxToken());
 						//#37794 - End
 
 						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
@@ -1211,12 +1211,12 @@ public class TaskReassignmentBackingBean extends
 						//#37794 - Start
 						if (responseDTO.getWorklistVO() != null) {
 							for (WorklistItemVO currentVO : responseDTO.getWorklistVO().getWorklistItem()) {
-								log.info("reqDTO.getDocNo()" + currentVO.getDocNumber());
-								log.info("reqDTO.getDocType()" + currentVO.getDocType());
-								log.info("reqDTO.getDocType()" + currentVO.getDocStatus());
-								log.info("reqDTO.getDocType()" + currentVO.getAssigneesString());
-								log.info("reqDTO.getCompositeModule()" + currentVO.getCompositeDN());
-								log.info("reqDTO.getInstanceId()" + currentVO.getInstanceId());
+								log.info("#37794-For PDS : reqDTO.getDocNo()" + currentVO.getDocNumber());
+								log.info("#37794-For PDS : reqDTO.getDocType()" + currentVO.getDocType());
+								log.info("#37794-For PDS : reqDTO.getDocStatus()" + currentVO.getDocStatus());
+								log.info("#37794-For PDS : reqDTO.getAssign()" + currentVO.getAssigneesString());
+								log.info("#37794-For PDS : reqDTO.getCompositeModule()" + currentVO.getCompositeDN());
+								log.info("#37794-For PDS : reqDTO.getInstanceId()" + currentVO.getInstanceId());
 							}
 						}
 						//#37794 - End
@@ -1718,8 +1718,8 @@ public class TaskReassignmentBackingBean extends
 				if (resDTO.isSuccessful()) {
 					for (int i = 0; i < resDTO.getStatusRoleList().size(); i++) {
 						//#37794 - Start
-						log.info("StatusRoleList() " + resDTO.getStatusRoleList().size());
-						log.info("statusIds " + resDTO.getStatusRoleList().get(i)
+						log.info("#37794-For PDS : StatusRoleList() " + resDTO.getStatusRoleList().size());
+						log.info("#37794-For PDS : statusIds " + resDTO.getStatusRoleList().get(i)
 								.getPmStatus().getStatusId().intValue());
 						//#37794 - End
 						statusIds.add(resDTO.getStatusRoleList().get(i)
