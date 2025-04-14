@@ -207,6 +207,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
+	private static final int MAX_LENGTH = 53; //#29418
 
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
@@ -1675,6 +1676,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return filename;
 	}
+	
+	//#29418 start
+	/**
+	 * Gets the medium file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
+	public String getMediumFileName(String filename) {
+        if (StringUtils.isEmpty(filename) || filename.length() <= MAX_LENGTH) {
+            return filename;
+        }
+
+        StringBuilder truncatedFilename = new StringBuilder(filename.substring(0, MAX_LENGTH));
+        truncatedFilename.append("...");
+        
+        return truncatedFilename.toString();
+    }
+	//#29418 end
 
 	/**
 	 * Retrieve jabatan by org profile id.
