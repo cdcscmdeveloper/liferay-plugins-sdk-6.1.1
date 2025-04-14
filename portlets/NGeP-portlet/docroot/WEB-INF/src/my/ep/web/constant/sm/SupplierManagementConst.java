@@ -760,8 +760,6 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
 	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
-	// #28895_35501_DA - AUDIT TRAIL SM DA
-	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
