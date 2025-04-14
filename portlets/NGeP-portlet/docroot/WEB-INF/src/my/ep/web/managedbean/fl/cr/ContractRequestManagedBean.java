@@ -329,6 +329,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static String catalogueFlag;
     //13984-end
     
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
+    
  // 28855 - Start
  	private boolean dpFlag;
 	private String supplierOffer;
@@ -3410,4 +3414,19 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			this.backToNtf = backToNtf;
 		}
 		//35357-Start
+
+	/**
+	 * @return the preparedBy
+	 */
+	public String getPreparedBy() {
+		return preparedBy;
+	}
+
+	/**
+	 * @param preparedBy
+	 *            the preparedBy to set
+	 */
+	public void setPreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
 }
