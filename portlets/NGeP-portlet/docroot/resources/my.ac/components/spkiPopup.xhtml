@@ -65,11 +65,13 @@
 						
 						<table>
 							<tr>
-								<td>
-									<p:outputLabel style="white-space: normal;" value="#{cc.attrs.challengeQues1}" />
-									<p:outputLabel value="*" styleClass="mandatory" />
+								<td><!-- #36605 -->
+									<p:outputLabel style="white-space: normal;" value="#{cc.attrs.challengeQues1}" 
+										rendered="#{not empty cc.attrs.challengeQues1}"/>
+									<p:outputLabel value="*" styleClass="mandatory" rendered="#{not empty cc.attrs.challengeQues1}"/>
 								</td>
-								<td><p:inputText id="answerId" value="#{cc.attrs.challengeAns1}" onkeypress="blockEnter();" /></td>
+								<td><p:inputText id="answerId" value="#{cc.attrs.challengeAns1}" onkeypress="blockEnter();" 
+										rendered="#{not empty cc.attrs.challengeQues1}"/></td>
 							</tr>
 							<tr>
 								<td>

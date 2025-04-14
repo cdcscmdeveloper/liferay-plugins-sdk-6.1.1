@@ -85,6 +85,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.DisciplinaryActionConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -1355,6 +1356,38 @@ public class SmCommonUtil {
 
 		return msg;
 	}
+
+	//13362 - START
+	public static String getMessageMalay(String key, String[] params) {
+		String preferredLang = CommonConstants.LANGUAGE_CODE_MALAY;
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		String msg = "";
+
+		log.info("ROLE NAME USRLOCALE VALUE =====>" + usrLocale);
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		}
+
+		return msg;
+	}
+	
+	private static Locale getLocaleByLang(String lang){
+		if(StringUtils.isNotBlank(lang)){
+			if(lang.equalsIgnoreCase(CommonConstants.LANGUAGE_CODE_MALAY)){
+				return new Locale(CommonConstants.LANGUAGE_CODE_MALAY,CommonConstants.DEFAULT_COUNTRY_CODE);
+			}else{
+				return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			}
+		}else{
+			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		}
+	}
+	//13362 - END
+
 
 	/**
 	 * Get message from Message Bundle
@@ -3995,6 +4028,8 @@ public class SmCommonUtil {
 		List<SelectItem> machineItems = new ArrayList<SelectItem>();
 		String[] categoryInMachineSection = new String[] {
 				ParameterConst.CATEGORY_TYPE_DOCKYARD,
+				ParameterConst.CATEGORY_TYPE_MANUFACTURING, // #25442 - Site Visit Grouping Enhancement -28775
+				ParameterConst.CATEGORY_TYPE_PRINTING, // #25442 - Site Visit Grouping Enhancement -28775
 				ParameterConst.CATEGORY_TYPE_TRAVEL,
 				ParameterConst.CATEGORY_TYPE_WORKSHOP };
 		if (StringUtils.isNotBlank(catTypeCode)
@@ -4140,6 +4175,12 @@ public class SmCommonUtil {
 			SmAddress smAddress) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//#36718 - START
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		item.setValue(null);
+		items.add(item);
+		//#36718 - END
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
 				.contains(businessType)) {
@@ -4161,11 +4202,13 @@ public class SmCommonUtil {
 							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
 							.getOrgProfileList();
 					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
-						item = new SelectItem();
+						//#36718 - START
+						/*item = new SelectItem();
 						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
 								null));
 						item.setValue(null);
-						items.add(item);
+						items.add(item);*/
+						//#36718 - END
 						for (PmOrgProfile orgProfile : orgProfileList) {
 							item = new SelectItem();
 							item.setLabel(orgProfile.getPmOrgValidity()
@@ -4353,6 +4396,58 @@ public class SmCommonUtil {
 			}
 		}
 	}
+	
+	//29379 - Site Visit Grouping Enhancement - 28775 -start
+	/**
+	 * Verify MyIdentity with IC only
+	 * @param name
+	 * @param identificationNo
+	 * @return status code
+	 */
+	public String verifyWithMyIdentityICOnly(String name, String identificationNo){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IMyIdentitySO.class);
+		reqDTO.setName(name.trim());
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setType(my.ep.constant.sm.SupplierManagementConst.MY_IDENTITY_TYPE_ONLINE);
+		try{
+			MyIdentityResDTO resDTO = reqSO.myIdentityVerificationIcOnly(reqDTO);
+			log.info("verifyWithMyIdentityICOnly>>>>" + resDTO.getSeverity()
+					+ ">>code>>" + resDTO.getStatusCode());
+			
+			if (!resDTO.getSeverity().equalsIgnoreCase(
+					my.ep.constant.sm.SupplierManagementConst.MYIDENTITY_SEVERITY_SUCC)) {
+				switch (resDTO.getStatusCode()) {
+				case "70019":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+				case "70020":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+				case "70031":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+				case "70004":
+				case "70005":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70004);
+				case "70039":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70039);
+				case "70040":
+					throw new EpException(MessageConst.ERROR_MYIDENTITY_70040);
+				}
+			}
+			return resDTO.getStatusCode();
+			
+		} catch(Exception ex){
+			String msg = MessageUtils.getMessage(ex.getMessage(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+			if (msg != null) {
+				throw new EpException(msg + "(ERR-"+ ex.getMessage() + ")");
+			} else {
+				log.error(ex);
+				throw new EpException(ex.getMessage() + "(ERR-729999)");
+			}
+		}
+	}
+	//29379 - Site Visit Grouping Enhancement - 28775 -end
 	
 	//16052019 - SSM INTEGRATION CR - Fahmi
 		/**
@@ -5413,6 +5508,28 @@ public class SmCommonUtil {
 		
 		return resDTO.getSmSupplierCategoryList();
 	}
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param applId
+	 * @param categoryL3Id
+	 * @param applType
+	 * @return supplier categories
+	 */
+	public List<SmSupplierCategory> retrieveSupplierCategoryByApplIdAndCategoryId(
+			Long applId, Long categoryL3Id, String applType){
+	
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			reqDTO.setApplId(applId);
+			reqDTO.setCategoryId(categoryL3Id);
+			SupplierSearchResDTO resDTO = SmServiceLookup.getSupplierSearchSO()
+					.retrieveCategoryByApplIdAndCategoryId(reqDTO);
+			return resDTO.getSmSupplierCategoryList();
+		}
+		return retrieveSupplierCategoryByApplIdAndCategoryId(applId, categoryL3Id);
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 
 	/**
 	 * Gets the my identity status description based on the responsecode.

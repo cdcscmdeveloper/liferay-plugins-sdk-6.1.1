@@ -102,7 +102,9 @@
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
-							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+							or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+							or backingBean.managedBean.specialCategoryRechecked}">
+							<!-- #26671 - Site Visit Grouping Enhancement -28775 -->
 							
 							<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -139,7 +141,6 @@
 						</c:when>
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:approveDialog" partialSubmit="true"
 								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}" 
@@ -283,8 +284,14 @@
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes2']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
+										
+										<!-- 26671  - Site Visit Grouping Enhancement -28775  START-->
 										<c:when
-											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi}">
+											test="#{backingBean.managedBean.bpmTaskName eq SupplierManagementConst.BPM_TASK_REVIEW_APPL_SPLCAT 
+												or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForBumi
+												or backingBean.managedBean.specialCategoryRechecked}">
+											<!-- 26671  - Site Visit Grouping Enhancement -28775  END-->
+											
 											<h:outputText value="#{lbl['lbl.sm.po.splNotes3']}"
 												styleClass="splNotesFonts" escape="false" />
 										</c:when>
@@ -321,7 +328,8 @@
 			</p:blockUI>
 		</p:outputPanel>
 	</p:dialog>
-	<p:dialog width="70%" height="60%" closable="false"
+	<!-- #28775 -->
+	<p:dialog width="70%" height="60%" closable="false" resizable="false"
 		header="#{lbl['lbl.sm.assign.site.visit']}" widgetVar="svcDialog"
 		id="svcDialog" showEffect="fade" hideEffect="fade"
 		modal="true">
@@ -371,7 +379,7 @@
 		
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}"
 		closable="false" id="approveDialog" widgetVar="approveDialog"
-		height="350px" resizable="false" showEffect="fade" hideEffect="fade"
+		height="480px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		
 		<p:outputPanel layout="block" id="poApprovedBlockPanel">
@@ -409,5 +417,7 @@
 		</div>
 		</ac:smSearchRejectReasons>
 	</p:dialog>
-	
+	<!-- 13362 START -->
+	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
+	<!-- 13362 END -->
 </ui:composition>

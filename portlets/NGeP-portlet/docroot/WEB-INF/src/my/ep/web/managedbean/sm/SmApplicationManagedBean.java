@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -572,8 +573,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	//#29315
 	private boolean flagMandatoryEpfNo;
@@ -607,6 +606,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmReasonDesc> selectedRejectReasonDescs;
 	private boolean showDifferenceRejection;
 	// #30974 - END
+
+	// 29379 - Site Visit Grouping Enhancement -28775 - start
+	private SmSvWorker[] selectedWorkers;
+	private List<SmSvWorker> deletedWorkers;
+	// 29379 - Site Visit Grouping Enhancement -28775 - end
+	
+	// #28778 -28775 - Start
+	private boolean specialCategoryRechecked;
+	// #28778 - End
 	
 	//29727
 	private String deleteBranchMsg;
@@ -614,6 +622,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 31043 START
 	private boolean showFacilityMachine;
 	// 31043 END
+	
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 		
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -4094,15 +4105,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 
-	//26238 - start 
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} //26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4398,7 +4400,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	// #15629 - END
-	
+
+	// 29379 - Site Visit Grouping Enhancement -28775 START
+	public SmSvWorker[] getSelectedWorkers() {
+		return selectedWorkers;
+	}
+
+	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
+		this.selectedWorkers = selectedWorkers;
+	}
+
+	public List<SmSvWorker> getDeletedWorkers() {
+		return deletedWorkers;
+	}
+
+	public void setDeletedWorkers(List<SmSvWorker> deletedWorkers) {
+		this.deletedWorkers = deletedWorkers;
+	}
+	// 29379 - Site Visit Grouping Enhancement -28775 END
 	//#34135 - START - Commit part from Redmine 29727
 	public List<SmSupplierBranch> getDisplayBranches() {
 		return displayBranches;
@@ -4416,16 +4435,25 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.deleteBranchMsg = deleteBranchMsg;
 	}
 
-	// 26671 - Site Visit Grouping Enhancement -28775 START
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
+	public boolean isSpecialCategoryRechecked() {
+		return specialCategoryRechecked;
 	}
 
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
+	public void setSpecialCategoryRechecked(boolean specialCategoryRechecked) {
+		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
-	// 26671 - Site Visit Grouping Enhancement -28775 END
 	
+
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
+
 	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
 		return selectedRecommendRejectReasonDescs;

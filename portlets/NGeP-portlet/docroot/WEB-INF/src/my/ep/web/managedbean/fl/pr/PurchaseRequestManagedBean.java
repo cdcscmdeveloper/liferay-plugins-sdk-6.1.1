@@ -313,6 +313,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//29728 - end
 	
 	 private String backToNtf; //35357
+	 
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
 
 /**
  * Gets the charge line item root.
@@ -3426,5 +3430,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.backToNtf = backToNtf;
 	}
 	//35357-Start
+
+	/**
+	 * @return the preparedBy
+	 */
+	public String getPreparedBy() {
+		return preparedBy;
+	}
+
+	/**
+	 * @param preparedBy
+	 *            the preparedBy to set
+	 */
+	public void setPreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
 	
 }

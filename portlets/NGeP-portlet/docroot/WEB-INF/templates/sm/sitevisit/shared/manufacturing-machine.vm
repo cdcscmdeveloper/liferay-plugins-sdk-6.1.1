@@ -1,17 +1,17 @@
-<u class="txtBold">Machine/Equipment List</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.equipmnt.mchne')</u>
 <br /><br />
 
 
 <table class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%" class="txtBold">No</th>
-			<th width="25%" class="txtBold">Type of Machine/Equipment</th>
-			<th width="20%" class="txtBold">Brand</th>
-			<th width="10%" class="txtBold">Function</th>
-			<th width="10%" class="txtBold">Qty</th>
-			<th width="10%" class="txtBold">Value(RM)</th>
-			<th width="10%" class="txtBold">Purchasing/Method</th>
-			<th width="10%" class="txtBold">Guarantor Name</th>
+			<th width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacturing.type.machine')</th>
+			<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.brand')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.function')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.sv.templ.qty')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purMthd')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.guarnName')</th>
 		</tr>
 		
 		#if($machineLs.size() > 0)
@@ -35,7 +35,7 @@
 			#end
 		#else
 			<tr>
-				<td colspan="8" align="center">No Record Found</td>
+				<td colspan="8" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 			</tr>
 		#end
 </table>
