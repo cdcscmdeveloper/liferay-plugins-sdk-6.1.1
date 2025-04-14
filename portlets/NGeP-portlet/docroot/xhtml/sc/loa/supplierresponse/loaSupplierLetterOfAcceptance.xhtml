@@ -75,7 +75,7 @@
 				<ac:scSingleFileUploadButton id="scDocUploadBtn"
 					popupWidgetVar="qtLoaSuppUploadDlg"
 					rendered="#{(scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or
-					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload) and (!isQtAudit)}"
+					scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSupplierUploadAndDownload and !scLoaReport.uploadlampiranA3) and (!isQtAudit)}"
 					attachment="#{scLoaReport.scLoaReportAttachment}"
 					update=":#{p:component('contentsTbl')}"
 					readonly="#{lOADetailBackingBean.managedBean.readOnly}"
@@ -86,7 +86,7 @@
 					<f:setPropertyActionListener for="actionEvent"
 						target="#{lOADetailBackingBean.managedBean.attachmentDocType}"
 						value="LAR" />
-				</ac:scSingleFileUploadButton>
+				</ac:scSingleFileUploadButton><!-- #29007 vinod Added uploadlampiranA3 -->
 				<!-- Bug #35078@Syazani - 14/09/2023 End -->
 			</p:column>
 		</p:dataTable>

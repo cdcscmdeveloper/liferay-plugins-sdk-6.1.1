@@ -26,6 +26,9 @@ public class SLALogConstant {
 	// #25426 - start
 	public static final String QT_SUPPLIER_FINALIZATION_BACKINGBEAN = "SupplierFinalizationBackingBean";
 	// #25426 - end
+	
+	public static final String QT_LOA_DETAIL_BACKINGBEAN = "LOADetailBackingBean"; // #29007
+	public static final String QT_DIRECT_LOA_DETAIL_BACKINGBEAN = "DirectLOABackingBean"; // #29007
 
 	/*
 	 * METHOD_NAME
@@ -38,6 +41,13 @@ public class SLALogConstant {
 	public static final String QT_PREPARE_QT_INFO = "prepareQTInfo";
 
 	// 25037 - end
+	
+	// #29007 -start-
+	public static final String QT_GENERATE_LAMPIRANA3PDF_FROM_VELOCITY = "generateLampiranA3PdfFromVelocity";
+	public static final String QT_CREATE_LAMPIRANA3FORQT = "createLampiranA3forQT";
+	public static final String QT_CREATE_LAMPIRANA3PDF_FOR_QT_VERIFICATION = "createLampiranA3forQTVerification";
+
+	// #29007 -end-
 
 	private SLALogConstant() {
 
