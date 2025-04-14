@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem; // #29007
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -30,7 +31,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer; // #29007
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion; // #29007
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -317,6 +320,18 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	
 	/*#29007 Start Vinod*/
 	private boolean iconForDL = false;
+	private boolean searchItemForDL = false;
+	private boolean supPropSpecDisable = false;
+	private boolean supPropSpecUpdate = false;
+	private boolean specificationAndSupplierDialogFlagQT = false;
+	private String newSupplierJustification;
+	private String itemNamePopup;
+	private String specKeyword;
+	private String loaBpmVerify;
+	private TplSpecQuestion tplSpecQuestion;
+	private ScLoiLoaItem scLoiLoaItem;
+	private List<TplSpecAnswer> tplSpecAnswerList;
+	/*#29007 End Vinod*/
 
 	/**
 	 * Gets the spki backing bean.
@@ -1928,11 +1943,77 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	// Bug #35078@Syazani -- 22/09/2023 -- End
 	
 	/*#29007 Start Vinod*/
+	public boolean isSupPropSpecDisable() {
+		return supPropSpecDisable;
+	}
+	public void setSupPropSpecDisable(boolean supPropSpecDisable) {
+		this.supPropSpecDisable = supPropSpecDisable;
+	}
+	public boolean isSupPropSpecUpdate() {
+		return supPropSpecUpdate;
+	}
+	public void setSupPropSpecUpdate(boolean supPropSpecUpdate) {
+		this.supPropSpecUpdate = supPropSpecUpdate;
+	}
+	public boolean isSpecificationAndSupplierDialogFlagQT() {
+		return specificationAndSupplierDialogFlagQT;
+	}
+	public void setSpecificationAndSupplierDialogFlagQT(boolean specificationAndSupplierDialogFlagQT) {
+		this.specificationAndSupplierDialogFlagQT = specificationAndSupplierDialogFlagQT;
+	}
+	public String getItemNamePopup() {
+		return itemNamePopup;
+	}
+	public void setItemNamePopup(String itemNamePopup) {
+		this.itemNamePopup = itemNamePopup;
+	}
+	public String getSpecKeyword() {
+		return specKeyword;
+	}
+	public void setSpecKeyword(String specKeyword) {
+		this.specKeyword = specKeyword;
+	}
+	public String getLoaBpmVerify() {
+		return loaBpmVerify;
+	}
+	public void setLoaBpmVerify(String loaBpmVerify) {
+		this.loaBpmVerify = loaBpmVerify;
+	}
+	public ScLoiLoaItem getScLoiLoaItem() {
+		return scLoiLoaItem;
+	}
+	public void setScLoiLoaItem(ScLoiLoaItem scLoiLoaItem) {
+		this.scLoiLoaItem = scLoiLoaItem;
+	}
+	public List<TplSpecAnswer> getTplSpecAnswerList() {
+		return tplSpecAnswerList;
+	}
+	public void setTplSpecAnswerList(List<TplSpecAnswer> tplSpecAnswerList) {
+		this.tplSpecAnswerList = tplSpecAnswerList;
+	}
+	public String getNewSupplierJustification() {
+		return newSupplierJustification;
+	}
+	public void setNewSupplierJustification(String newSupplierJustification) {
+		this.newSupplierJustification = newSupplierJustification;
+	}
+	public TplSpecQuestion getTplSpecQuestion() {
+		return tplSpecQuestion;
+	}
+	public void setTplSpecQuestion(TplSpecQuestion tplSpecQuestion) {
+		this.tplSpecQuestion = tplSpecQuestion;
+	}
 	public boolean isIconForDL() {
 		return iconForDL;
 	}
 	public void setIconForDL(boolean iconForDL) {
 		this.iconForDL = iconForDL;
+	}
+	public boolean isSearchItemForDL() {
+		return searchItemForDL;
+	}
+	public void setSearchItemForDL(boolean searchItemForDL) {
+		this.searchItemForDL = searchItemForDL;
 	}
 	/*#29007 End Vinod*/
 }
