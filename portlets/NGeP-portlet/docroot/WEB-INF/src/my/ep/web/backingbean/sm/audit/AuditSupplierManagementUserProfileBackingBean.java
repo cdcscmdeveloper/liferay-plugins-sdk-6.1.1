@@ -62,7 +62,7 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 			actionType = AuditSupplierManagementConst.AU_ACTION_TYPE_ADD;
 		} else if (oldValue != null && newValue != null && !oldValue.equalsIgnoreCase(newValue)) {
 			actionType = AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY;
-		} else if (newValue == null && oldValue != null) {
+		} else if (oldValue != null && newValue == null) {
 			actionType = AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE;
 		}
 		return actionType;
@@ -70,7 +70,7 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
  
 	private String getPhoneNo(PmUser user) {
 		String phoneNo = null;
-		if (user.getMobileNo() != null && !user.getMobileNo().isEmpty()) {
+		if (!"null".equalsIgnoreCase(user.getMobileNo()) && user.getMobileNo() != null && !user.getMobileNo().isEmpty()) {
 			phoneNo = user.getMobileCountry() + user.getMobileArea() + user.getMobileNo();
 		}
 		return phoneNo;
