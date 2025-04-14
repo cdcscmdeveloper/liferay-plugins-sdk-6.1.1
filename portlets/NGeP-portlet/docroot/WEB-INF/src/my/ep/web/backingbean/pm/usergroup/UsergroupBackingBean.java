@@ -5,17 +5,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -26,7 +20,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
-import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -34,7 +27,6 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -70,8 +62,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
-import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMUserGroupBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserGroupSearchBean;
@@ -79,6 +69,11 @@ import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.taglib.ui.GroupSearchTag;
 
 /**
  * @author DK
@@ -130,8 +125,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 		return PmCommonUtil.getCommonStatusOptions();
 	}
-
-	// #27629 start
+	
+	//#27629 start
 	/**
 	 * get search user group status record list
 	 * 
@@ -139,16 +134,20 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public SelectItem[] getSearchUserGroupStatus() {
 
 		SelectItem[] items = new SelectItem[3];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.all", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
-		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE, ResourceBundleUtils.getMessage("lbl.pm.active",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		items[2] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED, ResourceBundleUtils.getMessage("lbl.pm.inactive",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		items[1] = new SelectItem(DbValueConst.RECORD_STATUS_ACTIVE,
+				ResourceBundleUtils.getMessage("lbl.pm.active",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items[2] = new SelectItem(DbValueConst.RECORD_STATUS_SUSPENDED,
+				ResourceBundleUtils.getMessage("lbl.pm.inactive",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
 		return items;
 	}
-
-	// #27629 end
+	//#27629 end
 
 	/**
 	 * pagination for user search list
@@ -165,8 +164,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			populateSearchBean(searchBean);
 			UserGroupReqDTO reqDTO = new UserGroupReqDTO();
 			reqDTO.setUserGroupSearchBean(searchBean);
-			IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IUserGroupSO.class);
+			IUserGroupSO groupSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 			UserGroupResDTO resDTO = groupSO.retrieveUserGroups(reqDTO);
 			ISearchResultBean<PmUserGroup> iSearchResultBean = resDTO.getUserGroupResultBean();
 			return iSearchResultBean;
@@ -234,32 +233,32 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			} else {
 				codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 				codesSearchBean.setSearchField("recordStatusFlg");
-				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE,
-						ParameterConst.RECORD_STATUS_ACTIVE)));
+				codesSearchBean.setSearchValue(new ArrayList<String>(
+						Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
-			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
+			List<PmUserOrg> userOrgList = PmCommonUtil
+					.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 			PmOrgProfile orgProfile = null;
 			if (userOrgList != null && !userOrgList.isEmpty()) {
 				orgProfile = userOrgList.get(0).getPmOrgProfile();
 			}
 			if (orgProfile != null) {
 				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile."
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"pmOrgProfile."
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-									SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
+							SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
 
 				} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile."
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"pmOrgProfile."
 									+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-									SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
+							SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
 
 				} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), orgProfile
-									.getOrgProfileId()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("pmOrgProfile.orgProfileId",
+							SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
 				}
 			}
 
@@ -283,7 +282,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			// searchBean.getDataFilterBeans().add(orgProfileSearchBean);
 			// }
 			//
-			// // }
+			//// }
 			// codesSearchBean = new SearchFilterBean(
 			// SearchOperator.OPERATOR_EQUALS.value());
 			// codesSearchBean.setSearchField("roleCode");
@@ -383,7 +382,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		Date currentDate = new Date();
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
 
 			SearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
 
@@ -391,27 +391,26 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmUserOrg.effDate", SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(new SearchFilterBean("pmUserOrg.expDate", SearchOperator.OPERATOR_GREATER_EQUAL
-							.value(), currentDate), new SearchFilterBean("pmUserOrg.expDate", SearchOperator.OPERATOR_IS_NULL
-							.value(), null, SearchCondition.CONDITION_OR.value())));
+			searchBean.getDataFilterBeans()
+					.add(new SearchMultiFilterBean(
+							new SearchFilterBean("pmUserOrg.expDate", SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+									currentDate),
+							new SearchFilterBean("pmUserOrg.expDate", SearchOperator.OPERATOR_IS_NULL.value(), null,
+									SearchCondition.CONDITION_OR.value())));
 
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmUserOrg.pmOrgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), this
-							.getManagedBean().getOrgProfileId()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmUserOrg.pmOrgProfile.orgProfileId",
+					SearchOperator.OPERATOR_EQUALS.value(), this.getManagedBean().getOrgProfileId()));
 
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
+					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 
 			// User id
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmUserOrg.pmUser.userId", SearchOperator.OPERATOR_EQUALS.value(), userId));
 
 			// Role Code
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmRole.roleCode", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean()
-							.getUserGroup().getRoleCode()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmRole.roleCode",
+					SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getUserGroup().getRoleCode()));
 
 			reqDTO.setUserRoleSearchBean(searchBean);
 			UserResDTO resDTO = reqSO.retrieveUserRoleBySearchBean(reqDTO);
@@ -443,19 +442,19 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	//
 	// List<PmUserGroupUser> grpUsers = this.getManagedBean().getUserGroups();
 	// PmUserGroupUser removeGroupUser = grpUsers.get(rowIndex);
-	// // List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
-	// // .getSelectedUsrGrps();
-	// //
-	// // if (selectedUsrGrp.isEmpty()) {
-	// // throw new EpException(MessageConst.ERR_900003);
-	// // }
-	// // if (grpUsers.size() == selectedUsrGrp.size()) {
-	// // throw new EpException(MessageConst.ERR_900004);
-	// // }
+	//// List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
+	//// .getSelectedUsrGrps();
+	////
+	//// if (selectedUsrGrp.isEmpty()) {
+	//// throw new EpException(MessageConst.ERR_900003);
+	//// }
+	//// if (grpUsers.size() == selectedUsrGrp.size()) {
+	//// throw new EpException(MessageConst.ERR_900004);
+	//// }
 	// grpUsers.remove(removeGroupUser);
-	// // for (PmUserGroupUser pmUserGroupUser : selectedUsrGrp) {
-	// // grpUsers.remove(pmUserGroupUser);
-	// // }
+	//// for (PmUserGroupUser pmUserGroupUser : selectedUsrGrp) {
+	//// grpUsers.remove(pmUserGroupUser);
+	//// }
 	//
 	// this.getManagedBean().setUserGroups(grpUsers);
 	// }
@@ -489,67 +488,60 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		this.getManagedBean().setSelectGrp(true);
 		// getManagedBean().setBrandNew(false);
 		orgProfileId = userGroup.getPmOrgProfile().getOrgProfileId();
-		// List<PmUserGroupUser> groupUserList = new
-		// ArrayList<PmUserGroupUser>();
-		// for (PmUserGroupUser userGroupUser : userGroup.getPmUserGroupUsers())
-		// {
-		// for (PmUserOrg userOrg : userGroupUser.getPmUser().getPmUserOrgs()) {
-		// if (orgProfileId.equals(userOrg.getPmOrgProfile().getOrgProfileId())
-		// && DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg())
-		// {
-		// for (PmUserRole userRole : userOrg.getPmUserRoles()) {
-		// if
-		// (userGroup.getRoleCode().equals(userRole.getPmRole().getRoleCode()))
-		// {
-		// if
-		// ((RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode())
-		// ||
-		// RoleCode.RN_APPROVER.value().equals(userRole.getPmRole().getRoleCode()))
-		// && null != userRole.getApprovalLimit()) {
-		// if (!groupUserList.contains(userGroupUser)) {
-		// userGroupUser.setPmUserRole(userRole);
-		// groupUserList.add(userGroupUser);
-		// }
-		// }
-		// }
-		// }
-		// }
-		//
-		// }
-		// }
-		// logger.info("groupUserList  :" + groupUserList.size());
-
+//		List<PmUserGroupUser> groupUserList = new ArrayList<PmUserGroupUser>();
+//		for (PmUserGroupUser userGroupUser : userGroup.getPmUserGroupUsers()) {
+//			for (PmUserOrg userOrg : userGroupUser.getPmUser().getPmUserOrgs()) {
+//				if (orgProfileId.equals(userOrg.getPmOrgProfile().getOrgProfileId())
+//						&& DbValueConst.RECORD_STATUS_ACTIVE == userOrg.getRecordStatusFlg()) {
+//					for (PmUserRole userRole : userOrg.getPmUserRoles()) {
+//						if (userGroup.getRoleCode().equals(userRole.getPmRole().getRoleCode())) {
+//							if ((RoleCode.FL_APPROVER.value().equals(userRole.getPmRole().getRoleCode())
+//									|| RoleCode.RN_APPROVER.value().equals(userRole.getPmRole().getRoleCode()))
+//									&& null != userRole.getApprovalLimit()) {
+//								if (!groupUserList.contains(userGroupUser)) {
+//									userGroupUser.setPmUserRole(userRole);
+//									groupUserList.add(userGroupUser);
+//								}
+//							}
+//						}
+//					}
+//				}
+//
+//			}
+//		}
+//		logger.info("groupUserList  :" + groupUserList.size());		
+		
 		this.getManagedBean().setOrgProfileId(orgProfileId);
 		this.getManagedBean().setUserGroup(userGroup);
 		this.getManagedBean().setUserGroups(userGroup.getPmUserGroupUsers());
-
-		// [#26037] - start
-		if (this.getManagedBean().getHmGroupUserFlagStatDb() == null) {
-			this.getManagedBean().setHmGroupUserFlagStatDb(new HashMap<Long, Integer>());
+		
+		//[#26037] - start		
+		if(this.getManagedBean().getHmGroupUserFlagStatDb() == null) {
+			this.getManagedBean().setHmGroupUserFlagStatDb(new HashMap<Long,Integer>());		
 		}
-
-		HashMap<Long, Integer> hmGrpUsrStat = this.getManagedBean().getHmGroupUserFlagStatDb();
-		if (!hmGrpUsrStat.isEmpty()) {
+		
+		HashMap<Long,Integer> hmGrpUsrStat = this.getManagedBean().getHmGroupUserFlagStatDb();
+		if(!hmGrpUsrStat.isEmpty()) {
 			this.getManagedBean().getHmGroupUserFlagStatDb().clear();
 		}
-
-		// logger.info("[#26037] Set value to hashmap...");
-		if (this.getManagedBean().getUserGroups() != null) {
+		
+		//logger.info("[#26037] Set value to hashmap...");
+		if(this.getManagedBean().getUserGroups() != null) {
 			for (PmUserGroupUser groupUser : this.getManagedBean().getUserGroups()) {
 				hmGrpUsrStat.put(groupUser.getPmUser().getUserId(), groupUser.getRecordStatusFlg());
 			}
 		}
-		// logger.info("[#26037] Hashmap size: " + hmGrpUsrStat.size());
-		this.getManagedBean().setHmGroupUserFlagStatDb(hmGrpUsrStat);
-		// [#26037] - end
-
-		// #27629 start
+		//logger.info("[#26037] Hashmap size: " + hmGrpUsrStat.size());
+		this.getManagedBean().setHmGroupUserFlagStatDb(hmGrpUsrStat);		
+		//[#26037] - end		
+		
+		//#27629 start
 		this.getManagedBean().setUserSearch(false);
 		this.getManagedBean().setUserName(null);
 		this.getManagedBean().setIdentificationNo(null);
 		this.getManagedBean().setRecordSearchStatusFlg(null);
-		// #27629 end
-
+		//#27629 end
+		
 		return "/xhtml/pm/usergroupsearch/userGroupMaintenance.xhtml";
 	}
 
@@ -609,20 +601,20 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		debugLogger("saveUserGroup");
 		PmUserGroup userGroup = this.getManagedBean().getUserGroup();
 		// userGroup.setRoleCode("FL_APPROVER");
-
-		// #29225 get changes
-		if (this.getManagedBean().isUserSearch()) {
-			for (PmUserGroupUser searchList : this.getManagedBean().getUserGroupUserSearch()) {
-				for (PmUserGroupUser originList : userGroup.getPmUserGroupUsers()) {
-					if (searchList.getUserGroupUserId() == originList.getUserGroupUserId()) {
+		
+		//#29225 get changes
+		if(this.getManagedBean().isUserSearch()){
+			for(PmUserGroupUser searchList : this.getManagedBean().getUserGroupUserSearch()){
+				for(PmUserGroupUser originList: userGroup.getPmUserGroupUsers()){
+					if(searchList.getUserGroupUserId() == originList.getUserGroupUserId()){
 						originList.setRecordStatusFlg(searchList.getRecordStatusFlg());
 					}
 				}
 			}
 		}
-
-		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IUserGroupSO.class);
+		
+		IUserGroupSO userGrpSo = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserGroupSO.class);
 
 		// userGroup.setGroupCode(userGroup.getGroupCode().toUpperCase());
 		if (userGroup.isBrandNew()) {
@@ -636,37 +628,30 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		userGroupValidationMsg(userGroup);
 
 		List<PmUserGroupUser> pmUserGroupUsers = this.getManagedBean().getUserGroups();
-
-		// logger.info("[#26037] - calling setUserDetails...start");
-		HashMap<Long, Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
+		
+		//logger.info("[#26037] - calling setUserDetails...start");
+		HashMap<Long,Integer> hMap = this.getManagedBean().getHmGroupUserFlagStatDb();
 		for (PmUserGroupUser groupUser : pmUserGroupUsers) {
-			// logger.info("[#26423] User [" + groupUser.getPmUser().getUserId()
-			// + "]");
-			if (hMap != null && !(hMap.isEmpty())) {
-				// [#26423] - start
-				if (hMap.containsKey(groupUser.getPmUser().getUserId())) {
-					// logger.info("[#26423] Existing user [" +
-					// groupUser.getPmUser().getUserId() + "]");
-					if (groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
-						// logger.info("[#26037] User [" +
-						// groupUser.getPmUser().getUserId() +
-						// "] status has been changed from " +
-						// hMap.get(groupUser.getPmUser().getUserId()) + " to "
-						// + groupUser.getRecordStatusFlg());
+			//logger.info("[#26423] User [" + groupUser.getPmUser().getUserId()  + "]");
+			if(hMap != null && !(hMap.isEmpty())) {
+				//[#26423] - start
+				if(hMap.containsKey(groupUser.getPmUser().getUserId())) {
+					//logger.info("[#26423] Existing user [" + groupUser.getPmUser().getUserId()  + "]");
+					if(groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
+						//logger.info("[#26037] User [" + groupUser.getPmUser().getUserId()  + "] status has been changed from " + hMap.get(groupUser.getPmUser().getUserId()) + " to " + groupUser.getRecordStatusFlg());
 						setUserDetails(userGroup, groupUser);
 					}
 				} else {
-					// logger.info("[#26423] New user added [" +
-					// groupUser.getPmUser().getUserId() + "]");
+					//logger.info("[#26423] New user added [" + groupUser.getPmUser().getUserId()  + "]");
 					setUserDetails(userGroup, groupUser);
 				}
-				// [#26423] - end
+				//[#26423] - end
 			} else {
 				setUserDetails(userGroup, groupUser);
 			}
 		}
-		// logger.info("[#26037] - calling setUserDetails...end");
-
+		//logger.info("[#26037] - calling setUserDetails...end");
+		
 		changeUserGroupStatus(pmUserGroupUsers);
 		userGroup.setPmUserGroupUsers(pmUserGroupUsers);
 		if (userGroup.isBrandNew()) {
@@ -678,50 +663,31 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		reqDto.setRoleCode(PmCommonUtil.getUserRoleValue());
 		reqDto.setPmUser(getFacesScopes().getUserSessionBean());
 
-		/** AUDIT 28895_35509 START **/
-		if (reqDto.getUserGroup() != null && reqDto.getUserGroup().getUserGroupId() != null && !userGroup.isBrandNew()) {
-			System.out.println("userGroup.isBrandNew() :::: " + userGroup.isBrandNew());
-			UserGroupResDTO resDTOOld = userGrpSo.retrieveUserGroupByUserGroupId(reqDto);
-			this.getManagedBean().setUserGroupOld(resDTOOld.getUserGroup());
-			/** AUDIT 28895_35509 END **/
-		}
 		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
-		/** AUDIT 28895_35509 START **/
-		this.getManagedBean().setUserGroupUpdate(resDTO.getUserGroupUpdate());
-		this.getManagedBean().setUserGroupNew(resDTO.getUserGroupNew());
-		/** AUDIT 28895_35509 END **/
+
 		this.getManagedBean().setUserGroup(resDTO.getUserGroup());
 		if (resDTO.isSuccessful()) {
 
 			logger.info("resDTO.getUserGroup().getGroupCode() :" + resDTO.getUserGroup().getGroupCode());
 			if (userGroup.isBrandNew()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERR_900022,
-								new String[] { resDTO.getUserGroup().getGroupName() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.ERR_900022,
+										new String[] { resDTO.getUserGroup().getGroupName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.ERR_900023,
-								new String[] { resDTO.getUserGroup().getGroupName() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.ERR_900023,
+										new String[] { resDTO.getUserGroup().getGroupName() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
-			/************ AUDIT #28895_35509 *************/
-			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAuditPMSO.class);
-			AuditPMBackingBeanTemplate auTemplate = new AuditPMUserGroupBackingBean();
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USERGROUP)) {
-				// getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
-				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORGUSERGROUPCFG);
-			}
-			/************ END AUDIT #28895_35509 *************/
 		}
 		if (userGroup.isBrandNew()) {
 			return NAV_TO_MAIN;
 		} else {
 			return gotoMaintanance(resDTO.getUserGroup());
-			// return "userGroupMaintenance"; //#29225 duplicate return
+			//return "userGroupMaintenance"; //#29225 duplicate return
 		}
 	}
 
@@ -824,57 +790,58 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			if (!isValidRoleStatus) {
 				throw new EpException(MessageConst.ERR_900032, new String[] {
 						PmCommonUtil.getRoleDescByRoleCodeAndLanguage(getManagedBean().getUserGroup().getRoleCode(),
-								getFacesScopes().getUserLocale().getLanguage()), groupUser.getPmUser().getUserName() });
+								getFacesScopes().getUserLocale().getLanguage()),
+						groupUser.getPmUser().getUserName() });
 			}
 
 			if (isValidOrgProfile && isValidRoleStatus) {
 				groupUser.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			}
-		} else if (!userGroup.isBrandNew() && DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg().intValue()
+		} else if (!userGroup.isBrandNew() 
+				&& DbValueConst.RECORD_STATUS_ACTIVE == userGroup.getRecordStatusFlg().intValue()
 				&& DbValueConst.RECORD_STATUS_SUSPENDED == groupUser.getRecordStatusFlg().intValue()) {
-			// logger.info("[#26037] - check any pending task for user: " +
-			// groupUser.getPmUser().getUserName());
-			// logger.info("[#26037] - group id: " +
-			// userGroup.getUserGroupId());
-			// logger.info("[#26037] - group role: " + userGroup.getRoleCode());
-			// logger.info("[#26037] - check any pending task for user if status set to 0");
-			if (userGroup.getUserGroupId() != null && groupUser.getRecordStatusFlg().intValue() == 0) {
-				// logger.info("[#26037] - user set to inactive [0]");
+			//logger.info("[#26037] - check any pending task for user: " + groupUser.getPmUser().getUserName());
+			//logger.info("[#26037] - group id: " + userGroup.getUserGroupId());
+			//logger.info("[#26037] - group role: " + userGroup.getRoleCode());
+			//logger.info("[#26037] - check any pending task for user if status set to 0");
+			if (userGroup.getUserGroupId() != null 
+					&& groupUser.getRecordStatusFlg().intValue() == 0) {
+				//logger.info("[#26037] - user set to inactive [0]");
 				FulfilmentReqDTO fulfilmentReqDTO = null;
 				SourcingIntegrationReqDTO sourcingReqDTO = null;
-
+				
 				if (RoleCode.FL_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
 					if (groupUser.getPmUser().getLoginId() != null) {
-
-						fulfilmentReqDTO = new FulfilmentReqDTO();
-
-						fulfilmentReqDTO.setGroupId(userGroup.getUserGroupId());
-						// logger.info("[#26037] - calling isAnyPendingTaskForUser...");
-						if (isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId(), fulfilmentReqDTO, null)) {
-							// logger.info("[#26037] - user still has pending task in hand...");
+						
+						fulfilmentReqDTO = new FulfilmentReqDTO();						
+							
+						fulfilmentReqDTO.setGroupId(userGroup.getUserGroupId());						
+						//logger.info("[#26037] - calling isAnyPendingTaskForUser...");
+						if(isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId(), fulfilmentReqDTO, null)){
+							//logger.info("[#26037] - user still has pending task in hand...");
 							// revert it to active
 							userGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-
+							
 							// hit error and exit
 							throw new EpException(MessageConst.ERROR_770228, new String[] { groupUser.getPmUser().getUserName() });
-						}
+						}						
 					}
-
+					
 				} else if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
-					if (groupUser.getPmUser().getLoginId() != null) {
-
+					if (groupUser.getPmUser().getLoginId() != null) {									
+						
 						sourcingReqDTO = new SourcingIntegrationReqDTO();
-
-						sourcingReqDTO.setUserGroupId(userGroup.getUserGroupId());
-						// logger.info("[#26037] - calling isAnyPendingTaskForUser...");
-						if (isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId(), null, sourcingReqDTO)) {
-							// logger.info("[#26037] - user still has pending task in hand...");
+						
+						sourcingReqDTO.setUserGroupId(userGroup.getUserGroupId());						
+						//logger.info("[#26037] - calling isAnyPendingTaskForUser...");
+						if(isAnyPendingTaskForUser(groupUser.getPmUser().getLoginId(), null, sourcingReqDTO)){
+							//logger.info("[#26037] - user still has pending task in hand...");
 							// revert it to active
 							userGroup.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-
+							
 							// hit error and exit
 							throw new EpException(MessageConst.ERROR_770228, new String[] { groupUser.getPmUser().getUserName() });
-						}
+						}						
 					}
 				}
 			}
@@ -957,7 +924,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
 				roleReqDTO.setSearchRoleBean(rolesSearchBean);
 				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IRoleSO.class);
 				RoleResDTO resDto = roleSO.retrieveRoleDecsBySearchBean(roleReqDTO);
 				if (resDto.isSuccessful() && resDto.getSearchRoleResultBean() != null
 						&& !resDto.getSearchRoleResultBean().getResultList().isEmpty()) {
@@ -1035,16 +1003,16 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 		Date currentDate = new Date();
 		// Filter By - Org effDate
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.effDate", SearchOperator.OPERATOR_LESS_EQUAL.value(),
-						currentDate));
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.effDate",
+				SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
 		// Filter By - Org expDate
-		searchBean.getDataFilterBeans().add(
-				new SearchMultiFilterBean(new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.expDate",
-						SearchOperator.OPERATOR_GREATER_EQUAL.value(), currentDate), new SearchFilterBean(
-						"pmUserOrgs.pmOrgProfile.pmOrgValidity.expDate", SearchOperator.OPERATOR_IS_NULL.value(), null,
-						SearchCondition.CONDITION_OR.value())));
+		searchBean.getDataFilterBeans()
+				.add(new SearchMultiFilterBean(
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(), currentDate),
+						new SearchFilterBean("pmUserOrgs.pmOrgProfile.pmOrgValidity.expDate",
+								SearchOperator.OPERATOR_IS_NULL.value(), null, SearchCondition.CONDITION_OR.value())));
 
 		bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -1115,23 +1083,24 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			Date currentDate = new Date();
 
 			// Filter By - Active Status Only
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
-							DbValueConst.RECORD_STATUS_ACTIVE));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",
+					SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE));
 
 			// Filter By - Org effDate
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmOrgValidity.effDate", SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("pmOrgValidity.effDate",
+					SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
 			// Filter By - Org expDate
-			searchBean.getDataFilterBeans().add(
-					new SearchMultiFilterBean(new SearchFilterBean("pmOrgValidity.expDate", SearchOperator.OPERATOR_GREATER_EQUAL
-							.value(), currentDate), new SearchFilterBean("pmOrgValidity.expDate", SearchOperator.OPERATOR_IS_NULL
-							.value(), null, SearchCondition.CONDITION_OR.value())));
+			searchBean.getDataFilterBeans()
+					.add(new SearchMultiFilterBean(
+							new SearchFilterBean("pmOrgValidity.expDate", SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+									currentDate),
+							new SearchFilterBean("pmOrgValidity.expDate", SearchOperator.OPERATOR_IS_NULL.value(), null,
+									SearchCondition.CONDITION_OR.value())));
 
 			// Filter By - Org Profile Id
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("orgProfileId",
+					SearchOperator.OPERATOR_EQUALS.value(), orgProfile.getOrgProfileId()));
 
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileSearchBean(searchBean);
@@ -1178,8 +1147,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		try {
 			if (groupId != null) {
 				if (RoleCode.FL_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
-					fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+					fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 
 					reqDTO = new FulfilmentReqDTO();
 					reqDTO.setGroupId(groupId);
@@ -1196,8 +1165,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 					}
 
 				} else if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
-					sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+					sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 					sourcingReqDTO = new SourcingIntegrationReqDTO();
 					sourcingReqDTO.setUserGroupId(groupId);
 					sourcingResDTO = sourcingIntegrationSO.isUserGroupActiveInDP(sourcingReqDTO);
@@ -1214,15 +1183,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		return anyPendingTask;
 	}
-
-	/*
-	 * private boolean isAnyPendingTaskForUser(String loginId) {
-	 * logger.info("isAnyPendingTaskForUser"); return
-	 * PmCommonUtil.isAnyPendingTask(loginId); }
-	 */
-
-	private boolean isAnyPendingTaskForUser(String loginId, FulfilmentReqDTO fulfilmentReqDTO,
-			SourcingIntegrationReqDTO sourcingReqDTO) {
+	
+	/*private boolean isAnyPendingTaskForUser(String loginId) {		
+		logger.info("isAnyPendingTaskForUser");
+		return PmCommonUtil.isAnyPendingTask(loginId);
+	}*/
+	
+	private boolean isAnyPendingTaskForUser(String loginId, FulfilmentReqDTO fulfilmentReqDTO, SourcingIntegrationReqDTO sourcingReqDTO) {
 		logger.info("isAnyPendingTaskForUser");
 		boolean anyPendingTask = false;
 		IBpmSO bpmSO = null;
@@ -1232,94 +1199,85 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		ISourcingIntegrationSO sourcingIntegrationSO = null;
 		FulfilmentResDTO fulfilmentResDTO = null;
 		SourcingIntegrationResDTO sourcingResDTO = null;
-
-		try {
+		
+		try {			
 			if (loginId != null && loginId.length() > 0) {
-
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
+				
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+				
 				reqDTO = new BpmRequestDTO();
-				logger.info("BPM loginId: " + loginId);
+				logger.info("BPM loginId: " + loginId);				
 				reqDTO.setUserId(loginId);
-
+				
 				if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
-					reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+					reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE );
 				}
-
+				
 				// Invoke BPM
 				logger.info("Invoke BPM...");
 				responseDTO = bpmSO.getReassignedItems(reqDTO);
-
-				if (responseDTO.getWorklistVO() != null) {
+				
+				if (responseDTO.getWorklistVO() != null) {				
 					logger.info("BPM total: " + responseDTO.getWorklistVO().getTotal());
-					if (responseDTO.getWorklistVO().getTotal() > 0) {
-
-						if (responseDTO.getWorklistVO().getWorklistItem() != null
-								&& responseDTO.getWorklistVO().getWorklistItem().size() > 0) {
-
-							if (fulfilmentReqDTO != null) {
+					if (responseDTO.getWorklistVO().getTotal() > 0) {						
+						
+						if(responseDTO.getWorklistVO().getWorklistItem() != null 
+								&& responseDTO.getWorklistVO().getWorklistItem().size() > 0) {							
+							
+							if(fulfilmentReqDTO != null) {
 								fulfilmentReqDTO.setDocNumberList(new ArrayList<String>());
-							} else if (sourcingReqDTO != null) {
+							} else if(sourcingReqDTO != null) {
 								sourcingReqDTO.setDocNumberList(new ArrayList<String>());
 							}
-
-							for (WorklistItemVO item : responseDTO.getWorklistVO().getWorklistItem()) {
-								/*
-								 * logger.info(
-								 * "#26037 - ******Doc Items From BPM******");
-								 * logger.info("#26037 - TaskId******" +
-								 * item.getTaskId());
-								 * logger.info("#26037 - TaskNo******" +
-								 * item.getTaskNumber());
-								 * logger.info("#26037 - TaskName******" +
-								 * item.getTaskName());
-								 * logger.info("#26037 - DocId******" +
-								 * item.getDocId());
-								 * logger.info("#26037 - DocStatus******" +
-								 * item.getDocStatus());
-								 * logger.info("#26037 - DocType******" +
-								 * item.getDocType());
-								 * logger.info("#26037 - DocNumber******" +
-								 * item.getDocNumber());
-								 * logger.info("#26037 - TaskType******" +
-								 * item.getTaskType()); logger.info("\n");
-								 * logger.info("adding to list...");
-								 */
-								if (fulfilmentReqDTO != null) {
+							
+							for(WorklistItemVO item : responseDTO.getWorklistVO().getWorklistItem()){
+							/*	logger.info("#26037 - ******Doc Items From BPM******");
+								logger.info("#26037 - TaskId******" + item.getTaskId());
+								logger.info("#26037 - TaskNo******" + item.getTaskNumber());
+								logger.info("#26037 - TaskName******" + item.getTaskName());
+								logger.info("#26037 - DocId******" + item.getDocId());
+								logger.info("#26037 - DocStatus******" + item.getDocStatus());
+								logger.info("#26037 - DocType******" + item.getDocType());
+								logger.info("#26037 - DocNumber******" + item.getDocNumber());							
+								logger.info("#26037 - TaskType******" + item.getTaskType());
+								logger.info("\n");
+								logger.info("adding to list..."); */								
+								if(fulfilmentReqDTO != null) {
 									fulfilmentReqDTO.getDocNumberList().add(item.getDocNumber());
-								} else if (sourcingReqDTO != null) {
+								} else if(sourcingReqDTO != null) {
 									sourcingReqDTO.getDocNumberList().add(item.getDocNumber());
 								}
-							}
-
+							}							
+						
 							if (RoleCode.FL_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
-								fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-
-								// logger.info("#26037 - call retrieveDocNumberByGroupId to compare list of Doc Number in BPM");
-								// logger.info("#26037 - against list of Doc Number in FL_FULFILMENT_REQUEST");
+								fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+								
+								//logger.info("#26037 - call retrieveDocNumberByGroupId to compare list of Doc Number in BPM");
+								//logger.info("#26037 - against list of Doc Number in FL_FULFILMENT_REQUEST");
 								logger.info("#26037 - calling retrieveDocNumberByGroupId...");
 								fulfilmentResDTO = fulfilmentSO.retrieveDocNumberByGroupId(fulfilmentReqDTO);
-								// logger.info("#26037 - Total record match for Doc Number:"
-								// + fulfilmentResDTO.getDocNos().size());
-								if (fulfilmentResDTO.getDocNos() != null && fulfilmentResDTO.getDocNos().size() > 0) {
+								//logger.info("#26037 - Total record match for Doc Number:" + fulfilmentResDTO.getDocNos().size());
+								if(fulfilmentResDTO.getDocNos() != null 
+										&& fulfilmentResDTO.getDocNos().size() > 0) {
 									anyPendingTask = true;
 								}
 							} else if (RoleCode.RN_APPROVER.value().equals(getManagedBean().getUserGroup().getRoleCode())) {
-								sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-
-								// logger.info("#26037 - call retrieveDocNumberByGroupId to compare list of Doc Number in BPM");
-								// logger.info("#26037 - against list of Doc Number in SC_REQUEST_NOTE");
+								sourcingIntegrationSO = (ISourcingIntegrationSO) BusinessDelegate.getInstance()
+										.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
+								
+								//logger.info("#26037 - call retrieveDocNumberByGroupId to compare list of Doc Number in BPM");
+								//logger.info("#26037 - against list of Doc Number in SC_REQUEST_NOTE");
 								logger.info("#26037 - calling retrieveDocNumberByGroupId...");
 								sourcingResDTO = sourcingIntegrationSO.retrieveDocNumberByGroupId(sourcingReqDTO);
-								// logger.info("#26037 - Total record match for Doc Number:"
-								// + sourcingResDTO.getDocNumberList().size());
-								if (sourcingResDTO.getDocNumberList() != null && sourcingResDTO.getDocNumberList().size() > 0) {
+								//logger.info("#26037 - Total record match for Doc Number:" + sourcingResDTO.getDocNumberList().size());
+								if(sourcingResDTO.getDocNumberList() != null 
+										&& sourcingResDTO.getDocNumberList().size() > 0) {
 									anyPendingTask = true;
 								}
-							}
-						}
+							}							
+						}	
 					}
 				}
 			}
@@ -1330,38 +1288,32 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		return anyPendingTask;
 	}
-
-	// #27629 start
+	
+	//#27629 start
 	public void userGroupUserSearch() {
 		logger.info("[#27629] userGroupSearch");
 		String userName = getManagedBean().getUserName();
 		String identificationNo = getManagedBean().getIdentificationNo();
 		String statusFlag = getManagedBean().getRecordSearchStatusFlg();
-		List<PmUserGroupUser> firstLoad = this.getManagedBean().getUserGroups(); // #29225
-																					// save
-																					// origin
-																					// list
+		List<PmUserGroupUser> firstLoad = this.getManagedBean().getUserGroups(); //#29225 save origin list
 		PmUserGroupUser groupUser = null;
-
-		logger.info("userName :" + userName + ", id :" + identificationNo + ", status :" + statusFlag);
-
+		
+		logger.info("userName :"+userName+ ", id :"+identificationNo+", status :" + statusFlag);
+		
 		List<PmUserGroupUser> groupUsers = new ArrayList<PmUserGroupUser>();
-		if (!userName.isEmpty() || !identificationNo.isEmpty() || statusFlag != null) {
-
-			// #29225 comment setter
-			/*
-			 * if (this.getManagedBean().isUserSearch()){
-			 * this.getManagedBean().setUserGroups
-			 * (this.getManagedBean().getUserGroupUserSearch()); }else{
-			 * this.getManagedBean
-			 * ().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
-			 * }
-			 */
-
+		if (!userName.isEmpty() || !identificationNo.isEmpty() || statusFlag!=null){
+			
+			//#29225 comment setter
+			/*if (this.getManagedBean().isUserSearch()){
+				this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
+			}else{
+				this.getManagedBean().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
+			}*/
+			
 			for (PmUserGroupUser groupUserSearch : this.getManagedBean().getUserGroups()) {
-				logger.info("Loop : " + groupUserSearch.getPmUser().getUserName() + ", "
-						+ groupUserSearch.getPmUser().getIdentificationNo() + ", " + groupUserSearch.getApprovalLimit() + ","
-						+ groupUserSearch.getRecordStatusFlg() + ", " + groupUserSearch.isBrandNew());
+				logger.info("Loop : " + groupUserSearch.getPmUser().getUserName() + ", " + groupUserSearch.getPmUser().getIdentificationNo()
+						+ ", " + groupUserSearch.getApprovalLimit() + "," + groupUserSearch.getRecordStatusFlg()
+						+ ", " + groupUserSearch.isBrandNew());
 				groupUser = new PmUserGroupUser();
 
 				if (groupUserSearch.getPmUser().getUserName() != null && !userName.isEmpty()
@@ -1401,65 +1353,55 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 						}
 					}
 				}
-				if (groupUserSearch.getRecordStatusFlg().toString() != null && identificationNo.isEmpty() && userName.isEmpty()
-						&& statusFlag != null) {
+				if (groupUserSearch.getRecordStatusFlg().toString() != null && identificationNo.isEmpty()
+						&& userName.isEmpty() && statusFlag != null) {
 					if (groupUserSearch.getRecordStatusFlg().toString().equals(statusFlag.toLowerCase())) {
 						groupUser.setPmUser(groupUserSearch.getPmUser());
 					}
 				}
-
-				if (groupUser.getPmUser() != null) {
-					// groupUser.setPmUserGroup(this.getManagedBean().getUserGroup());
-					// groupUser.setPmUserRole(groupUserSearch.getPmUserRole());
+				
+				if (groupUser.getPmUser()!=null) {
+					//groupUser.setPmUserGroup(this.getManagedBean().getUserGroup());
+					//groupUser.setPmUserRole(groupUserSearch.getPmUserRole());
 					groupUser.setRecordStatusFlg(groupUserSearch.getRecordStatusFlg());
 					groupUser.setApprovalLimit(groupUserSearch.getApprovalLimit());
 					groupUser.setBrandNew(groupUserSearch.isBrandNew());
-					groupUser.setUserGroupUserId(groupUserSearch.getUserGroupUserId()); // #29225
-					logger.info("insert : " + groupUser.getPmUser().getUserName() + ", "
-							+ groupUser.getPmUser().getIdentificationNo() + ", " + groupUser.getApprovalLimit() + ","
-							+ groupUser.getRecordStatusFlg() + ", " + groupUser.isBrandNew());
-					groupUsers.add(groupUser);
+					groupUser.setUserGroupUserId(groupUserSearch.getUserGroupUserId()); //#29225
+					logger.info("insert : " + groupUser.getPmUser().getUserName() + ", " + groupUser.getPmUser().getIdentificationNo()
+							+ ", " + groupUser.getApprovalLimit() + "," + groupUser.getRecordStatusFlg()
+							+ ", " + groupUser.isBrandNew());
+					groupUsers.add(groupUser);	
 				}
 			}
 			this.getManagedBean().setUserSearch(true);
-			this.getManagedBean().setUserGroupUserSearch(groupUsers); // #29225
-																		// display
-																		// search
-																		// result
-			// this.getManagedBean().setUserGroups(groupUsers);
+			this.getManagedBean().setUserGroupUserSearch(groupUsers); //#29225 display search result 
+			//this.getManagedBean().setUserGroups(groupUsers);
 		}
-		/*
-		 * else if (userName.isEmpty() && identificationNo.isEmpty() &&
-		 * statusFlag==null){ if (this.getManagedBean().isUserSearch()){
-		 * this.getManagedBean
-		 * ().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
-		 * }else{
-		 * this.getManagedBean().setUserGroupUserSearch(this.getManagedBean
-		 * ().getUserGroups()); } }
-		 */
-		else {
+		/*else if (userName.isEmpty() && identificationNo.isEmpty() && statusFlag==null){
+			if (this.getManagedBean().isUserSearch()){
+				this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
+			}else{
+				this.getManagedBean().setUserGroupUserSearch(this.getManagedBean().getUserGroups());
+			}
+		}*/
+		else{
 			this.getManagedBean().setUserSearch(false);
-			this.getManagedBean().setUserGroups(firstLoad); // #29225 get origin
-			this.getManagedBean().setUserGroupUserSearch(new ArrayList<PmUserGroupUser>()); // #29225
-																							// reset
-																							// searchList
+			this.getManagedBean().setUserGroups(firstLoad); //#29225 get origin
+			this.getManagedBean().setUserGroupUserSearch(new ArrayList<PmUserGroupUser>()); //#29225 reset searchList
 		}
 	}
-
 	public void userGroupUserReset() {
-
-		// #29225 use isUserSearch as render property
-		/*
-		 * if(this.getManagedBean().isUserSearch()){
-		 * this.getManagedBean().setUserGroups
-		 * (this.getManagedBean().getUserGroupUserSearch()); }
-		 */
+		
+		//#29225 use isUserSearch as render property
+		/*if(this.getManagedBean().isUserSearch()){
+			this.getManagedBean().setUserGroups(this.getManagedBean().getUserGroupUserSearch());
+		}*/	
 		this.getManagedBean().setUserSearch(false);
 		this.getManagedBean().setUserName(null);
 		this.getManagedBean().setIdentificationNo(null);
 		this.getManagedBean().setRecordSearchStatusFlg(null);
-
+		
 	}
-
-	// #27629 end
+	
+	//#27629 end
 }
