@@ -40,7 +40,8 @@ import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.persistence.entity.sm.SmRvAssistOfficer;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
-//#34031 End
+//#34031 End//#28895_35501_DA - AUDIT TRAIL SM DA
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -176,6 +177,8 @@ public class ViewSuppProfileManagedBean extends
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
 	// #28895_35501 End
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	private SmDisciplinaryAction oldSmDisciplinaryAction;
 	// #34031 Start
 	private SmRevisit smRevisit;
 	private String svoRoleCode;
@@ -1022,6 +1025,15 @@ public class ViewSuppProfileManagedBean extends
 		this.oldApproverRemark = oldApproverRemark;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public SmDisciplinaryAction getOldSmDisciplinaryAction() {
+	    return oldSmDisciplinaryAction;
+	}
+
+	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
+	    this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
+	}
+	// #28895_35501_DA End
 	// #34031 Start
 	public SmRevisit getSmRevisit() {
 		return smRevisit;
