@@ -314,7 +314,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	// #11134 - Start
 	private boolean haveSupplierRejection;
 	// #11134 - End
-	private List<SmSupplierBranch> supplierBranchList; //#29729
+	
+	//#28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType;	
+	//#28777 & #29729 - End
 	
 	//29562 - START
 	private String finalizationMethodBefore;
@@ -324,6 +328,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//#30008 - start
 	private boolean notReachAgrm;
+	
+	private boolean allSupplierDisagreeEPV;//#21692
 	
 	/**
 	 * @return the activeIndex
@@ -2459,7 +2465,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//28834 end
 
-	//#29729 - Start
+	//#28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -2467,7 +2473,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	//#29729 - End
+	
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersByRecommendType() {
+		return disqualifiedSuppliersByRecommendType;
+	}
+
+	public void setDisqualifiedSuppliersByRecommendType(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersByRecommendType) {
+		this.disqualifiedSuppliersByRecommendType = disqualifiedSuppliersByRecommendType;
+	}
+	//#28777 & #29729 - End
 
 	public boolean isDemoReq() {
 		return isDemoReq;
@@ -2594,6 +2609,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setNotReachAgrm(boolean notReachAgrm) {
 		this.notReachAgrm = notReachAgrm;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierDisagreeEPV() {
+		return allSupplierDisagreeEPV;
+	}
+
+	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
+		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
+	}
+	//#21692 - End
 
 }
 // ***25201

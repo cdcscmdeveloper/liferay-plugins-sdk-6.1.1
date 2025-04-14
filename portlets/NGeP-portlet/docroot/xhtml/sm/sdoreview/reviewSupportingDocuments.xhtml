@@ -45,13 +45,6 @@
 			</p:commandButton>
 		</div>
 		
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 #{lbl['lbl.sm.confirm.proceed']}
-   			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();submissionConfirmDlg.hide();" oncomplete="blockWidget.hide()" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
-			</div>
-		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
 		<!-- #11641 - START -->
@@ -384,7 +377,8 @@
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton onclick="abcdeblockWidget.show();" oncomplete="abcdeblockWidget.hide();" value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}">
+				<!-- #34400 -->
+				<p:commandButton oncomplete="if (!args.validationFailed) confirmEnquiryDlg.show();" value="#{lbl['lbl.btn.submit']}" >
 					<f:param name="disableMsgAutoUpdate" value="true" />
 				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="inquiryDlg.hide();"></p:commandButton>
@@ -650,5 +644,19 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<!-- #34400 - start -->
+		<ac:confirmationPopupSM id="confirmEnquiryDlg" widget="confirmEnquiryDlg"
+			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.confirm.enquiry']}" 
+			update="@all"
+			loadingWidget="abcdeblockWidget" />
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
+			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
+			hasParam="true"
+			content="#{lbl['lbl.sm.confirm.proceed']}" 
+			update="@all"
+			loadingWidget="blockWidget" />
+		<!-- #34400 - end -->
 	</ui:define>
 </ui:composition>

@@ -29,20 +29,31 @@
 			</p:inputTextarea>
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 			<ui:fragment rendered="#{specificationrequired }">
+			<ui:remove>#36681 - start</ui:remove>
 			<p:inputTextarea id="specification" style="width:calc(100% - 30px);"
 				value="#{question.clSpecDetail}"
 				rendered="#{!isQuestionTypeItem or !isSpecificationReq}"
 				required="#{isValidationReq}" rows="5" maxlength="1000"
-				onkeyup="limitTextArea(this,1000);"
-				onkeydown="limitTextArea(this,1000);" onmouseout="limitTextArea(this,1000);"
+				validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+				onkeyup="limitTextAreaWithBreakline(this,1000);"
+				onkeydown="limitTextAreaWithBreakline(this,1000);"
+				onmouseout="limitTextAreaWithBreakline(this,1000);"
 				label="#{lbl['lbl.tpl.spec.content.specification']}"
 				autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
+				<f:validateLength for="specification" maximum="1000" />
 			</p:inputTextarea>
+			<ui:remove>#36681 - end</ui:remove>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 			<br />
-			#{question.cmItem.extensionCode}
-			<p:spacer width="20" />
+
+				<!-- #31503 Start -->				
+				<p:commandLink oncomplete="itemDescDialogId.show();" value="#{question.cmItem.extensionCode}" style="color: #009ae5; font-size:12px;font-style:italic"
+					action="#{codificationBackingBean.showItemDescPopup(question)}" process="@this" update="@([id$=itemDescDialogId])"/>
+				<!-- #31503 End -->
+
+
+				<p:spacer width="20" />
 			<p:commandLink id="itemSpecificationLink" process="@this"
 				update="@([id$=itemSpecificationDlg])"
 				oncomplete="itemSpecificationDlgVar.show();"

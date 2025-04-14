@@ -1287,7 +1287,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 		getManagedBean().setPermAddr(perm);
 		getManagedBean().setMailAddr(mail);
-
+		
+		//#36718 - START
+		getManagedBean().setLatestMailAddr((SmPersonnelAddress) mail.deepCopy());
+		getManagedBean().setLatestMailAddr((SmPersonnelAddress) getManagedBean().getLatestMailAddr().cloneEntity());
+		//#36718 - END
 	}
 
 	/**
@@ -1499,53 +1503,138 @@ public class ForceReplaceSuppAdminBackingBean extends
 				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
 	}
 	
+	// #36716 - Start
+	/**
+	 * Rechecks the validity of the specified source address.
+	 * @param srcAddr
+	 * @throws NullPointerException
+	 */
+	public void recheckVal(SmAddress srcAddr) {
+		if (isInvalidAddress(srcAddr)) {
+			handleInvalidAddress();
+		}
+	}
+	
+	private boolean isInvalidAddress(SmAddress srcAddr) {
+	    if (srcAddr == null) {
+	        return true;
+	    }
+	    return isBlank(srcAddr.getAddress1()) || hasInvalidLocation(srcAddr) || isBlank(srcAddr.getPostcode());
+	}
+	
+	private boolean hasInvalidLocation(SmAddress srcAddr) {
+	    return isInvalidState(srcAddr) || isInvalidDivision(srcAddr) 
+	            || isInvalidDistrict(srcAddr) || isInvalidCity(srcAddr); 
+	}
+
+	private boolean isInvalidState(SmAddress srcAddr) {
+		return srcAddr.getPmState() == null || srcAddr.getPmState().getStateId() == null;
+	}
+
+	private boolean isInvalidDivision(SmAddress srcAddr) {
+	    return "14".equalsIgnoreCase(srcAddr.getPmState().getStateId().toString()) 
+	            && (srcAddr.getPmDivision() == null 
+	                || srcAddr.getPmDivision().getDivisionId() == null);
+	}
+
+	private boolean isInvalidDistrict(SmAddress srcAddr) {
+		return srcAddr.getPmDistrict() == null || srcAddr.getPmDistrict().getDistrictId() == null;
+	}
+
+	private boolean isInvalidCity(SmAddress srcAddr) {
+		return srcAddr.getPmCity() == null || srcAddr.getPmCity().getCityId() == null;
+	}
+
+	private boolean isBlank(String value) {
+		return StringUtils.isBlank(value);
+	}
+
+	private void handleInvalidAddress() {
+		String addrType = SmCommonUtil.getMessage("lbl.sm.permenantaddress", null);
+		getManagedBean().getMailAddr().setSameAsPerm(false);
+		throw new EpException(MessageConst.ERROR_722656, new String[] { addrType });
+	}
+	// #36716 - End
+	
+	//#36718 - Refactor this method
 	public void copyPermanentAddress(SmAddress refAddress){
-		if(this.getManagedBean().getMailAddr().isSameAsPerm()){
-			if(this.getManagedBean().getMailAddr().getSmAddress() != null){
-				if(this.getManagedBean().getMailAddr().getSmAddress() == null){
-					this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
-				}
-				SmAddress address = this.getManagedBean().getMailAddr().getSmAddress();
-				if (refAddress.getAddress1() != null)
-					address.setAddress1(new String(refAddress.getAddress1().toString()));
-				if (refAddress.getAddress2() != null)
-					address.setAddress2(new String(refAddress.getAddress2().toString()));
-				if (refAddress.getAddress3() != null)
-					address.setAddress3(new String(refAddress.getAddress3().toString()));
-				if (refAddress.getPostcode() != null)
-					address.setPostcode(new String(refAddress.getPostcode().toString()));
-
-				PmCountry country = new PmCountry();
-				PmState state = new PmState();
-				//#34159 - START
-				PmDivision division = new PmDivision();
-				//#34159 - END
-				PmDistrict district = new PmDistrict();
-				PmCity city = new PmCity();
-
-				country.setCountryId(refAddress.getPmCountry().getCountryId());
-				address.setPmCountry(country);
-				
-				state.setStateId(refAddress.getPmState().getStateId());
-				address.setPmState(state);
-				
-				//#34159 - START
-				updateMailAddLists("", refAddress.getPmState().getStateId().toString(), "", "");
-				
-				if(("14").equalsIgnoreCase(refAddress.getPmState().getStateId().toString())){
-					division.setDivisionId(refAddress.getPmDivision().getDivisionId());
-					updateMailAddLists("", "",refAddress.getPmDivision().getDivisionId().toString(), "");
-				} else {
-					division.setDivisionId(null);
-				}
-				address.setPmDivision(division);
-				district.setDistrictId(refAddress.getPmDistrict().getDistrictId());
-				address.setPmDistrict(district);
-				updateMailAddLists("", "", "",refAddress.getPmDistrict().getDistrictId().toString());
-				//#34159 - END
-				city.setCityId(refAddress.getPmCity().getCityId());
-				address.setPmCity(city);
+		if(!this.getManagedBean().getMailAddr().isSameAsPerm()){
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getAddress1() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setAddress1("");
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getAddress2() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setAddress2("");
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getAddress3() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setAddress3("");
+			if (this.getManagedBean().getLatestMailAddr().getSmAddress().getPostcode() == null)
+				this.getManagedBean().getLatestMailAddr().getSmAddress().setPostcode("");
+			refAddress = this.getManagedBean().getLatestMailAddr().getSmAddress();
+		} else {
+			//#36716 - Start
+			recheckVal(refAddress);
+			//#36716 - End
+		}
+		if(this.getManagedBean().getMailAddr().getSmAddress() != null){
+			if(this.getManagedBean().getMailAddr().getSmAddress() == null){
+				this.getManagedBean().getMailAddr().setSmAddress(new SmAddress());
 			}
+			SmAddress address = this.getManagedBean().getMailAddr().getSmAddress();
+			if (refAddress.getAddress1() != null)
+				address.setAddress1(new String(refAddress.getAddress1().toString()));
+			if (refAddress.getAddress2() != null)
+				address.setAddress2(new String(refAddress.getAddress2().toString()));
+			if (refAddress.getAddress3() != null)
+				address.setAddress3(new String(refAddress.getAddress3().toString()));
+			if (refAddress.getPostcode() != null)
+				address.setPostcode(new String(refAddress.getPostcode().toString()));
+
+			PmCountry country = new PmCountry();
+			PmState state = new PmState();
+			//#34159 - START
+			PmDivision division = new PmDivision();
+			//#34159 - END
+			PmDistrict district = new PmDistrict();
+			PmCity city = new PmCity();
+			
+			//#36716 - START
+			if (refAddress.getPmCountry().getCountryId() != null) {
+				country = SmCommonUtil.getInstance().getCountryById(refAddress.getPmCountry().getCountryId());
+			}
+
+			address.setPmCountry(country);
+			onChangeCountry(address, "M");
+			
+			if(refAddress.getPmState().getStateId() != null){
+				state = SmCommonUtil.getInstance().getStateById(refAddress.getPmState().getStateId());
+			}
+			//#36716 - END
+			address.setPmState(state);
+			
+			//#34159 - START
+			//#36716 - START
+			onChangeState(address, "M");
+			
+			if(refAddress.getPmState().getStateId()!= null &&("14").equalsIgnoreCase(refAddress.getPmState().getStateId().toString())){
+				//#36716 - END
+				division.setDivisionId(refAddress.getPmDivision().getDivisionId());
+				updateMailAddLists("", "",refAddress.getPmDivision().getDivisionId().toString(), "");
+			} else {
+				division.setDivisionId(null);
+			}
+			address.setPmDivision(division);
+			
+			//#36716 - START
+			if(refAddress.getPmDistrict().getDistrictId() != null){
+				district = SmCommonUtil.getInstance().getDistrictById(refAddress.getPmDistrict().getDistrictId());
+			}
+			address.setPmDistrict(district);
+			onChangeDistrict(address, "M");
+			//#34159 - END
+			
+			if(refAddress.getPmCity().getCityId() != null){
+				city = SmCommonUtil.getInstance().getCityById(refAddress.getPmCity().getCityId());
+			}
+			//#36716 - END
+			address.setPmCity(city);
 		}
 	}
 	

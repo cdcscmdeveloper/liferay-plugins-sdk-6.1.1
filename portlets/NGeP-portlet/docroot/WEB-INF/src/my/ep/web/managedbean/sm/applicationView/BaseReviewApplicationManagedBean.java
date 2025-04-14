@@ -81,6 +81,8 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
+//#34031
+import my.ep.persistence.entity.sm.SmRevisit;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -386,6 +388,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		private SmApplInquiry poToSupplierInquiry;
 		private List<SmApplInquiry> poSupplierInquiryHistory;
 		private List<SmApplSupportDoc> missinDocs;
+	// #28895_35501 - AUDIT TRAIL SM
+	private boolean auditAccess;
+	// #34031 Start
+	private List<SmRevisit> smRevisitList;
+	private SmRevisit currentSmRevisit;
+	// #34031 End
 	
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -2593,4 +2601,30 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.allMachineDtls = allMachineDtls;
 	}
 	//#34209 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public boolean isAuditAccess() {
+		return auditAccess;
+	}
+
+	public void setAuditAccess(boolean auditAccess) {
+		this.auditAccess = auditAccess;
+	}
+	// #28895_35501 End
+	// #34031 Start
+	public List<SmRevisit> getSmRevisitList() {
+		return smRevisitList;
+	}
+
+	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
+		this.smRevisitList = smRevisitList;
+	}
+
+	public SmRevisit getCurrentSmRevisit() {
+		return currentSmRevisit;
+	}
+
+	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+		this.currentSmRevisit = currentSmRevisit;
+	}
+	// #34031 End
 }
