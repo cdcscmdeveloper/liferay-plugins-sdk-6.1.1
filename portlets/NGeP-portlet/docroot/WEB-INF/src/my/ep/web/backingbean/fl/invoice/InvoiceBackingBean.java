@@ -379,7 +379,13 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 					messageId = MessageConst.INFO_700025;
 				} else if(resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
-					messageId = MessageConst.INFO_700004;
+					//28719-Start
+					if(!getManagedBean().isSupplementContractComplete()){
+						messageId = MessageConst.INFO_745026;
+					} else {
+						messageId = MessageConst.INFO_700004;
+					}
+					//28719-End
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_745018;
 					if(null != getManagedBean().getDanStatusId()){
