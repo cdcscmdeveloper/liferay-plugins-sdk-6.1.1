@@ -30,8 +30,9 @@
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}"
 					style="white-space: normal;">
-					<h:outputText
-							value="#{requestNoteDtl.requestItem.itemName}" />
+					<ui:remove> #36950 start @zaim</ui:remove>
+						<h:outputText value="#{requestNoteBackingBean.handleSpecialCharacterForView(requestNoteDtl.requestItem.itemName)}" escape="false" />
+					<ui:remove> #36950 end @zaim</ui:remove>	
 					<p:spacer width="2px;" />
 				</p:column>
 

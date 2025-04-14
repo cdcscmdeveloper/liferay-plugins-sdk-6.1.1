@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -37,6 +38,8 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
@@ -55,6 +58,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -398,34 +402,45 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	/**
 	 * Update Supplier Hq Address
 	 */
-	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl, SmSupplier supplier){
+	protected void updateSupplierHqAddress(FlSupplierDtl supplierDtl,Long supplierId, List<SmCompanyBasic> compBasicList ){//29728
 		FlAddress flAddress = supplierDtl.getFlAddress();
-		for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
-			if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
-				SmAddress smAddress = smCompanyAddress.getSmAddress();
-				flAddress.setAddress1(smAddress.getAddress1());
-				flAddress.setAddress2(smAddress.getAddress2());
-				flAddress.setAddress3(smAddress.getAddress3());
-				flAddress.setMapLatitude(smAddress.getMapLatitude());
-				flAddress.setMapLongitude(smAddress.getMapLongitude());
-				flAddress.setPmCity(smAddress.getPmCity());
-				flAddress.setPmCountry(smAddress.getPmCountry());
-				flAddress.setPmDistrict(smAddress.getPmDistrict());
-				flAddress.setPmDivision(smAddress.getPmDivision());
-				flAddress.setPmState(smAddress.getPmState());
-				flAddress.setPostcode(smAddress.getPostcode());
-				flAddress.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
-				flAddress.setFaxArea(supplier.getSmAppl().getSmCompanyBasic().getFaxArea());
-				flAddress.setFaxCountry(supplier.getSmAppl().getSmCompanyBasic().getFaxCountry());
-				flAddress.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
-				flAddress.setPhoneArea(supplier.getSmAppl().getSmCompanyBasic().getPhoneArea());
-				flAddress.setPhoneCountry(supplier.getSmAppl().getSmCompanyBasic().getPhoneCountry());
+		//29728-Start
+		for (SmCompanyBasic companyBasic : compBasicList) {
+			for(SmCompanyAddress smCompanyAddress : companyBasic.getSmCompanyAddresses()){
+				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					SmAddress smAddress = smCompanyAddress.getSmAddress();
+					
+					flAddress.setAddress1(smAddress.getAddress1());
+					flAddress.setAddress2(smAddress.getAddress2());
+					flAddress.setAddress3(smAddress.getAddress3());
+					flAddress.setMapLatitude(smAddress.getMapLatitude());
+					flAddress.setMapLongitude(smAddress.getMapLongitude());
+					flAddress.setPmCity(smAddress.getPmCity());
+					flAddress.setPmCountry(smAddress.getPmCountry());
+					flAddress.setPmDistrict(smAddress.getPmDistrict());
+					flAddress.setPmDivision(smAddress.getPmDivision());
+					flAddress.setPmState(smAddress.getPmState());
+					flAddress.setPostcode(smAddress.getPostcode());
+					flAddress.setFaxNo(companyBasic.getFaxNo());
+					flAddress.setFaxArea(companyBasic.getFaxArea());
+					flAddress.setFaxCountry(companyBasic.getFaxCountry());
+					flAddress.setPhoneNo(companyBasic.getPhoneNo());
+					flAddress.setPhoneArea(companyBasic.getPhoneArea());
+					flAddress.setPhoneCountry(companyBasic.getPhoneCountry());
+				}
 			}
 		}
-		for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
-			//#31920 filter active user
-			if(smPersonnel.isContactPerson() 
-					&& smPersonnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
+		
+		IPersonnelSO personnelSO;
+		personnelSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+				IPersonnelSO.class);
+
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		PersonnelResDTO personnelResDTO = personnelSO.retrieveContactPersonBySupplierId(reqDTO);
+
+		if (!personnelResDTO.getSmPersonnelList().isEmpty()) {
+			for (SmPersonnel smPersonnel : personnelResDTO.getSmPersonnelList()) {
 				flAddress.setContactEmail(smPersonnel.getEmail());
 				flAddress.setContactFaxNo(smPersonnel.getFaxNo());
 				flAddress.setContactMobileNo(smPersonnel.getMobileNo());
@@ -437,8 +452,9 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				flAddress.setContactMobileCountry(smPersonnel.getMobileCountry());
 				flAddress.setContactPhoneArea(smPersonnel.getPhoneArea());
 				flAddress.setContactPhoneCountry(smPersonnel.getPhoneCountry());
-				
+
 			}
+			//29728-End
 		}
 	}
 	
@@ -718,10 +734,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
 
 		SupplierDataMaintenanceResDTO resDTO = supplierDataMaintenanceSO
-				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always
-																		// return
-																		// single
-																		// result
+				.retrieveImposedDisciplinaryActionBySupplier(reqDTO);// always return single result
 
 		if (resDTO.getSmDisciplinaryActions() != null && !resDTO.getSmDisciplinaryActions().isEmpty()) {
 			return resDTO.getSmDisciplinaryActions().get(0);
@@ -737,7 +750,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @param langCode
 	 * @return msg
 	 */
-	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, String langCode, boolean isWarningOnly) {
+	protected String getDisciplinaryActionMsg(Date startDate, Date endDate, boolean isWarningOnly) {
 		StringBuilder msg = new StringBuilder();
 		if (startDate != null && endDate != null) {
 			msg.append(" ");
@@ -747,8 +760,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 			} else {
 				messagePrefix = "lbl.sm.supplier.imposed.disc.action";
 			}
-			msg.append(getMessageByKey(messagePrefix, new String[] { DateUtils.dateToString("dd-MM-yyyy", startDate),
-					DateUtils.dateToString("dd-MM-yyyy", endDate) }, langCode));
+			
+			msg.append(ResourceBundleUtils.getMessage(
+					messagePrefix,
+					new String[] { DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, startDate),
+							DateUtils.dateToString(CommonConstants.DATE_FORMAT_DASH, endDate) }, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+
 		}
 		return msg.toString();
 	}
@@ -757,27 +775,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	// from the SM module is used for displaying the Disciplinary Action info in
 	// the pop-up
 	
-	/**
-	 * Retrieve message based on the specified key, parameters, and language code.
-	 *
-	 * @param key 
-	 * @param params 
-	 * @param langCode
-	 * @return msg
-	 */
-	private String getMessageByKey(String key, String[] params, String langCode) {
-		String msg;
-		Locale loc = new Locale("en", "EN");
-		if ("ms".equalsIgnoreCase(langCode)) {
-			loc = new Locale("ms", "MY");
-		}
-		if (params != null) {
-			msg = ResourceBundleUtils.getMessage(key, params, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		} else {
-			msg = ResourceBundleUtils.getMessage(key, ResourceBundleUtils.BUNDLE_COMMON_LABELS, loc);
-		}
-		return msg;
-	}
+	// 26279 - remove getMessageByKey and use ResourceBundleUtils.getMessage
 
 	/**
 	 * Check if the disciplinary action is a warning-only action.
@@ -808,10 +806,8 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	public String getDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
 		boolean isWarningOnly = isWarningOnly(smDisciplinaryAction);
 
-		String language = new FacesScopes().getUserLocale().getLanguage();
 		return getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(), smDisciplinaryAction.getEndDate(),
-				language, isWarningOnly);
-
+				isWarningOnly);
 	}
 
 	// 26279 - end

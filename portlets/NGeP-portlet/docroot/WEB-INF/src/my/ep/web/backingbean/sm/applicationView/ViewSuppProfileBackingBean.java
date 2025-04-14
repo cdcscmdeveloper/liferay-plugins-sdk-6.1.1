@@ -50,6 +50,12 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import javax.servlet.http.HttpServletRequest;
 import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 End
+//#34031 Start
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.util.ResourceBundleUtils;
+//#34031 End
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -297,7 +303,7 @@ public class ViewSuppProfileBackingBean extends
 	
 	//28281
 	//26238 - end
-	//26238 -  STATR Disciplinary Action - 28111
+	//26238 - START Disciplinary Action - 28111
 	/**
 	 * View Disciplinary Action Supplier
 	 * @param currSupp
@@ -428,4 +434,76 @@ public class ViewSuppProfileBackingBean extends
 		return remarkList;
 	}
 	// #28175 end
+	// #34031 Start
+	/**
+	 * Retrieves remarks related to a given revisit.
+	 * @param revisit
+	 * @return List<String>
+	 */
+	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
+		List<String> remarks = new ArrayList<>();
+		if (null != revisit) {
+			StringBuilder remarkOne = new StringBuilder();
+			remarkOne.append(
+					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())).append(" ");
+			if (null != revisit.getRevisitPrevRemark()) {
+				remarkOne.append(revisit.getRevisitPrevRemark());
+			} else {
+				remarkOne.append(
+						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+						.append(" ");
+			}
+			remarkOne.append(
+					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())).append(" ");
+			if (null != revisit.getRevisitRemark()) {
+				remarkOne.append(revisit.getRevisitRemark());
+			} else {
+				remarkOne.append(
+						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+						.append(" ");
+			}
+			remarks.add(remarkOne.toString());
+			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
+				List<PmStatusDesc> descList;
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+				StringBuilder remarkTwo = new StringBuilder();
+				remarkTwo
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()))
+						.append(" ")
+						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
+						.append(" ")
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())).append(" ")
+						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
+				remarks.add(remarkTwo.toString());
+			}
+			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
+				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				remarks.add(remarkThree);
+			}
+		}
+		return remarks;
+	}
+
+	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
+		String statusName = "";
+
+		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			// Expected Max Size in loop (5) based on NGEP_PDS database
+			for (PmStatusDesc status : statusList) {
+				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
+					statusName = status.getStatusName();
+					break;
+				}
+			}
+		}
+		return statusName;
+	}
+	// #34031 End
 }

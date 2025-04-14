@@ -85,6 +85,8 @@
 		
 		<p:dialog id="firstUserTncDialog" header="#{lbl['lbl.sm.suppadmin.appointment.header']}"
 			widgetVar="firstUserTncDialog" modal="true" width="600px" height="500px">
+			<!-- #34400 -->
+			<h:outputText value="#{lbl['lbl.sm.confirm.supp.register']}"/>
 			<p:panel id="firstUserTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
 				
 				<p:scrollPanel style="height:350px;border:0;" mode="native">
@@ -414,11 +416,12 @@
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-							<!-- #34159 - START - change reset value to true -->
+							<!-- #34159 - START - change reset value to true & #36718-->
 							<p:ajax event="change"
 								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',true)}"
-								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
-							<!-- #34159 - END -->
+								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" 
+								process="@this @([id$=pnlUsrInfo])" />
+							<!-- #34159 & #36718 - END -->
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 					<!--#30936-END-->

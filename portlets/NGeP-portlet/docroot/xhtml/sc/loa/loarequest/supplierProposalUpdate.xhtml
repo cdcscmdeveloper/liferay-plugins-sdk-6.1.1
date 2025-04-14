@@ -67,21 +67,23 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.justification']}"></h:outputLabel> <p:outputLabel
 							value="* " styleClass="mandatory" /></td>
+					<ui:remove>#36681 - start</ui:remove>		
 					<td colspan="3"><p:inputTextarea
 							label="#{lbl['lbl.sc.justification']}" id="justification"
 							disabled="#{isTrackingDairyView}"
 							value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
 							style="width:800px; margin-bottom:5px;" maxlength="1000" rows="5"
 							validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
-							onkeyup="limitTextArea(this,1000);"
-							onkeydown="limitTextArea(this,1000);"
-							onmouseout="limitTextArea(this,1000);"
+							onkeyup="limitTextAreaWithBreakline(this,1000);" 
+							onkeydown="limitTextAreaWithBreakline(this,1000);"
+							onmouseout="limitTextAreaWithBreakline(this,1000);"
 							autoResize="false">
 							<p:ajax event="change" process="@this" update="@this" />
 							<f:validateLength for="justification" maximum="1000" />
 						</p:inputTextarea> <ac:iconTooltip value="#{lbl['lbl.sc.supplier.proposal.justification.tooltip']}" />
 						<p:message id="justificationMsg" for="justification"
 							display="icon" /></td>
+					<ui:remove>#36681 - end</ui:remove>		
 				</tr>
 			</table>
 			<table
@@ -168,17 +170,19 @@
 							<td
 								rowspan="#{lOADetailBackingBean.managedBean.scLoiLoaItemSpecsList.size()}"
 								style="vertical-align: top;border: 1px solid #e8e8e8; border-collapse: collapse; text-align: right;">
+								<ui:remove>#36681 - start</ui:remove>
 								<p:inputTextarea id="newSupplierOfferedInput"
 									style="resize: vertical;width:calc(100% - 15px); height: 10em; top: 0;"
 									value="#{lOADetailBackingBean.managedBean.newSupplierOffered}"
 									disabled="#{isTrackingDairyView}" maxlength="1000"
 									validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
-									onkeyup="limitTextArea(this,1000);"
-									onkeydown="limitTextArea(this,1000);"
-									onmouseout="limitTextArea(this,1000);">
+									onkeyup="limitTextAreaWithBreakline(this,1000);"
+									onkeydown="limitTextAreaWithBreakline(this,1000);"
+									onmouseout="limitTextAreaWithBreakline(this,1000);">
 									<p:ajax event="change" process="@this" update="@this" />
 									<f:validateLength for="newSupplierOfferedInput" maximum="1000" />
 								</p:inputTextarea>
+								<ui:remove>#36681 - end</ui:remove>
 							</td>
 						</c:if>
 					</tr>

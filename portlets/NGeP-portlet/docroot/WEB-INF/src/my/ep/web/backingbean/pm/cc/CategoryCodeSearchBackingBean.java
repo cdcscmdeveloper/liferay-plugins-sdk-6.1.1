@@ -672,6 +672,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 * @param bumiPercentage
 	 * @param categoryType
 	 * @param businessTypeCode
+	 * @param supplierId
+	 * @param activeCategoryList
 	 * @return
 	 */
 	//26238 - approver cannot add imposed category code - start
@@ -682,7 +684,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			Integer bumiPercentage, String categoryType, Long supplierId, String businessTypeCode, List<SmSupplierCategory> activeCategoryList) {
 		//#33387 - END
 		if(categoryL2Id == 0) {
-			return new ArrayList<SelectItem>();
+			return new ArrayList<>();
 		}
 		
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -739,7 +741,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			List<SmSupplierCategory> apprvList = getApprovedCategories(currSupp, activeDAs);
 			getManagedBean().setApprovedCategoryList(apprvList);
 			
-			selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, currSupp.getSmAppl().getSmSupplierCategories());
+			selectItems = getSelectItems(resDTO.getCategoryL3List(), activeDAs, currSupp.getSupplierId());
 			//27738 end 
 		} else { 
 			//27859,30720 Start - 3rd level category didnot appear
@@ -747,10 +749,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				List<SmSupplierCategory> apprvList = new ArrayList<>();
 
 				getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(supplierId));
-				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+				ISupplierCategorySO supplierCategorySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
 
 				SupplierCategoryReqDTO suppCatReqDTO = new SupplierCategoryReqDTO();
-				SupplierCategoryResDTO suppCatResDTO = new SupplierCategoryResDTO();
+				SupplierCategoryResDTO suppCatResDTO;
 				suppCatReqDTO.setSupplierId(supplierId);
 				suppCatResDTO = supplierCategorySO.retrieveCategoryBySupplierId(suppCatReqDTO);
 
@@ -844,9 +846,9 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	}
 	
 	private List<SelectItem> getSelectItems(List<PmCategoryL3> catL3s, List<SmDisciplinaryAction> activeDAs, 
-			List<SmSupplierCategory> latestCatCodes){
+			Long supplierId){
 		
-		List<Long> activeDAL3 = getActiveDACategoryL3Ids(activeDAs, latestCatCodes);
+		List<Long> activeDAL3 = getActiveDACategoryL3Ids(activeDAs, supplierId);
 		
 		boolean hasBumiputeraDA = hasActiveBumiputeraDisciplinaryAction(activeDAs);
 		boolean hasAllBasicMTO = hasAllBasicMTOCodes(getManagedBean().getApprovedCategoryList());
@@ -856,31 +858,26 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			SelectItem item = new SelectItem(catL3.getCategoryL3Id(), 
 					catL3.getCategoryL3Code() + " - " + catL3.getCategoryName());
 			
-			item.setDisabled(activeDAL3.contains(catL3.getCategoryL3Id()));
-			item.setDisabled(catL3.getBumiPercentage() > 50 && hasBumiputeraDA);
+			boolean isActiveDAL3 = activeDAL3.contains(catL3.getCategoryL3Id());
+			boolean isBumiputeraEligible = catL3.getBumiPercentage() > 50 && hasBumiputeraDA;
 			// check approved basic category for MTO code
-			item.setDisabled(!hasAllBasicMTO && catL3.getCategoryL3Code() != null && catL3.getCategoryL3Id() == 347);
-			
+			boolean isMTO = !hasAllBasicMTO && catL3.getCategoryL3Code() != null && catL3.getCategoryL3Id() == 347;
+
+			if (isActiveDAL3 || isBumiputeraEligible || isMTO) {
+			    item.setDisabled(true);
+			}
 			selectItems.add(item);
 		}
 		return selectItems;
 	}
 	
-	private List<Long> getActiveDACategoryL3Ids(List<SmDisciplinaryAction> activeDAs, List<SmSupplierCategory> latestCatCodes){
+	private List<Long> getActiveDACategoryL3Ids(List<SmDisciplinaryAction> activeDAs, Long supplierId){
 		List<Long> activeDAL3 = new ArrayList<>();
 		if (EntityHelper.isCollectionEmpty(activeDAs)){
 			return activeDAL3;
 		}
-		if (!EntityHelper.isCollectionEmpty(latestCatCodes)){
-			for (SmSupplierCategory cat : latestCatCodes){
-				if (hasActiveCategoryDisciplinaryAction(cat, activeDAs)){
-					activeDAL3.add(cat.getPmCategoryL3().getCategoryL3Id());
-				}
-			}
-			return activeDAL3;
-		}
 		SmSupplier supplier = new SmSupplier();
-		supplier.setSupplierId(activeDAs.get(0).getSmSupplier().getSupplierId());
+		supplier.setSupplierId(supplierId);
 		List<Object[]> cancelDA = SmApplicationUtil.retrieveCancelCategoryBySupplier(supplier);
 		if (EntityHelper.isCollectionEmpty(cancelDA)){
 			return activeDAL3;
@@ -911,11 +908,11 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			return false;
 		}
 		int checkBasic = 0;
-		List<String> basicMTO = Arrays.asList("04", "05", "06");
+		List<String> basicMTO = Arrays.asList(SupplierManagementConst.MTO_CODE_04, SupplierManagementConst.MTO_CODE_05, SupplierManagementConst.MTO_CODE_06);
 		
 		for(SmSupplierCategory cat : catList){
-			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null && ("22").equals(cat.getPmCategoryL1().getCategoryL1Code())
-					&& cat.getPmCategoryL2() != null && ("17").equals(cat.getPmCategoryL2().getCategoryL2Code());
+			boolean isSubCategoryMTO = cat.getPmCategoryL1() != null && (SupplierManagementConst.CAT_L1_22).equals(cat.getPmCategoryL1().getCategoryL1Code())
+					&& cat.getPmCategoryL2() != null && (SupplierManagementConst.CAT_L2_17).equals(cat.getPmCategoryL2().getCategoryL2Code());
 			
 			if(isSubCategoryMTO && cat.getPmCategoryL3() != null && basicMTO.contains(cat.getPmCategoryL3().getCategoryL3Code())){
 				checkBasic++;
@@ -944,17 +941,17 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		 * @param e
 		 *            -AjaxBehaviorEvent
 		 */
-	public void unSelectDACategories(AjaxBehaviorEvent e) {
+	public void unSelectDACategories() {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(getManagedBean().getSelectedCategoryL3().getPmCategoryL2().getCategoryL2Id());
 		reqDTO.setSupplierTypeCode(getManagedBean().getSupplierType());
 		reqDTO.setBusinessTypeCode(getManagedBean().getBusinessTypeCode());
-		if (getManagedBean().getCategoryType().equals("N")) {
+		if ((SupplierManagementConst.BUSINESS_TYPE_CODE_N).equals(getManagedBean().getCategoryType())) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {
 			reqDTO.setIsSpecialCategory(true);
 		}
-		if (getManagedBean().getFacilityType().equalsIgnoreCase("H")) {
+		if ((SupplierManagementConst.BUSINESS_TYPE_CODE_H).equalsIgnoreCase(getManagedBean().getFacilityType())) {
 			reqDTO.setHomeOperated(1);
 		} else {
 			reqDTO.setHomeOperated(0);
@@ -979,31 +976,31 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			List<SmSupplierCategory> apprvList = getApprovedCategories(currSupp, activeDAs);
 			getManagedBean().setApprovedCategoryList(apprvList);
 		
-			checkSelectedL3(activeDAs, apprvList, srcAppl.getSmSupplier().isBumi());
+			checkSelectedL3(activeDAs, srcAppl);
 			//27738 end 
 		}
 		//27438, 27613, 27673: Disciplinary Action - end
 	}
 	//32629 - End
 	//#26238
-	private void checkSelectedL3(List<SmDisciplinaryAction> activeDAs, List<SmSupplierCategory> latestCatCodes, boolean isBumiSupplier){
+	private void checkSelectedL3(List<SmDisciplinaryAction> activeDAs, SmAppl srcAppl){
 		if (getManagedBean().getSelectedCategoryL3() == null){
 			return;
 		}
 		PmCategoryL3 selectedL3 = getManagedBean().getSelectedCategoryL3();
 		Long selectedL3Id = selectedL3.getCategoryL3Id();
 		
-		List<Long> activeDAL3 = getActiveDACategoryL3Ids(activeDAs, latestCatCodes);
+		List<Long> activeDAL3 = getActiveDACategoryL3Ids(activeDAs, srcAppl.getSmSupplier().getSupplierId());
 		if (activeDAL3.contains(selectedL3Id)){
 			getManagedBean().setSelectedCategoryL3(null);
 		}
 		boolean hasBumiputeraDA = hasActiveBumiputeraDisciplinaryAction(activeDAs);
 		
-		if (selectedL3.getBumiPercentage() > 50 && (hasBumiputeraDA || isBumiSupplier)){
+		if (selectedL3.getBumiPercentage() > SupplierManagementConst.BUMI_PERCENTAGE && (hasBumiputeraDA ||  srcAppl.getSmSupplier().isBumi())){
 			getManagedBean().setSelectedCategoryL3(null);
 		}
 		boolean hasAllBasicMTO = hasAllBasicMTOCodes(getManagedBean().getApprovedCategoryList());
-		if (!hasAllBasicMTO && selectedL3Id == 347){
+		if (!hasAllBasicMTO && selectedL3Id == SupplierManagementConst.CAT_L3_347){
 			getManagedBean().setSelectedCategoryL3(null);
 		}
 	}

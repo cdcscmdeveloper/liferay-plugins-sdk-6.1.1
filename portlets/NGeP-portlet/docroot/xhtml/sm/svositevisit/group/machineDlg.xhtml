@@ -8,7 +8,7 @@
 
 	<p:dialog id="machineDlg" header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}" widgetVar="macDlg" 
 		modal="true" width="600" dynamic="true" cache="false">
-		<p:messages id="macDlgMessages" showDetail="true" autoUpdate="#{!empty param['disableMsgAutoUpdate2']}" 
+		<p:messages id="macDlgMessages" showDetail="true" autoUpdate="#{!empty param['disableMsgAutoUpdate']}" 
 			closable="true" showSummary="false" />
 		<table>
 			<tr>
@@ -27,7 +27,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<!-- 14686 - Site Visit Grouping Enhancement -28775 -->
 				<td><p:inputText maxlength="250" size="50" label="#{lbl['lbl.sm.machine.brand']}" 
-					required="#{!empty param['disableMsgAutoUpdate2']}" 
+					required="#{!empty param['disableMsgAutoUpdate']}" 
 					value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.brandName}" />
 				</td>
 			</tr>
@@ -36,7 +36,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<!-- 14686 - Site Visit Grouping Enhancement -28775 -->
 				<td><p:inputTextarea  maxlength="250" style="width:75;" label="#{lbl['lbl.sm.machine.function']}" 
-						required="#{!empty param['disableMsgAutoUpdate2']}" 
+						required="#{!empty param['disableMsgAutoUpdate']}" 
 						value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.machineFunction}">
 					<f:validateLength maximum="250" />
 				</p:inputTextarea>
@@ -47,7 +47,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:inputText maxlength="8" size="50" label="#{lbl['lbl.sm.machine.quantity']}" 
-						required="#{!empty param['disableMsgAutoUpdate2']}" 
+						required="#{!empty param['disableMsgAutoUpdate']}" 
 						value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.qty}">
 						<f:validateLongRange minimum="1" maximum="99999999" />
 					</p:inputText>
@@ -57,7 +57,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="14" size="50" label="#{lbl['lbl.sm.machine.value']}" 
-						required="#{!empty param['disableMsgAutoUpdate2']}" 
+						required="#{!empty param['disableMsgAutoUpdate']}" 
 						value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.value}">
 						<f:validateDoubleRange minimum="#{SupplierManagementConst.MIN_AMT_RANGE}" 
 						maximum="#{SupplierManagementConst.MAX_AMT_RANGE}" disabled="#{empty param['disableMsgAutoUpdate']}"/>
@@ -73,7 +73,7 @@
 				<td><p:selectOneMenu id="macPurchaseMethodId" label="#{lbl['lbl.sm.machine.purMthd']}"  
 					rendered="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine != null}"
 					value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseMethod}" 
-					required="#{!empty param['disableMsgAutoUpdate2']}">
+					required="#{!empty param['disableMsgAutoUpdate']}">
 						<f:selectItems value="#{svoSiteVisitBackingBean.getDropdownCodeValues(ParameterTypeConst.purchasingMethod)}" />
 					</p:selectOneMenu>
 					</td>
@@ -92,7 +92,7 @@
 				<td><p:selectOneMenu label="#{lbl['lbl.sm.machine.purchase.year']}"  
 						rendered="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine != null}"
 						value="#{svoSiteVisitBackingBean.managedBean.selectedSvMachine.smMachineDtl.purchaseYear}" 
-						required="#{!empty param['disableMsgAutoUpdate2']}">
+						required="#{!empty param['disableMsgAutoUpdate']}">
 					<f:selectItems value="#{svoSiteVisitBackingBean.getYearDropDown()}" />
 				</p:selectOneMenu>
 				</td>
@@ -100,9 +100,9 @@
 		</table>
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@([id$=categoryTypeGroupPanel])" 
+			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@([id$=machTbl])" process="machineDlg"
 				 action="#{svoSiteVisitBackingBean.saveSmSvMachine}">
-				<f:param name="disableMsgAutoUpdate2" value="true" />
+				<f:param name="disableMsgAutoUpdate" value="true" />
 			</p:commandButton>
 		</div>
 	</p:dialog>

@@ -43,12 +43,11 @@
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 					<!-- #34159 - END -->
-					<!-- #33129 - START -->
-					<ac:confirmationPopup id="declareDeletePopUpId"
+					<!-- #33129 - START --><!-- #34400 -->
+					<ac:confirmationPopupSM id="declareDeletePopUpId"
 						widget="declareDeletePopUp"
 						okAction="#{forceReplaceSuppAdminBackingBean.declare()}"
 						width="400" height="auto"
-						title="#{lbl['lbl.msg.confirm.declare.header']}"
 						content="#{forceReplaceSuppAdminBackingBean.managedBean.displayMessageReplaceTrans}" 
 						update=":form"/>
 					<!-- #33129 - END -->
