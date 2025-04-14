@@ -1,0 +1,16 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+	<cc:interface>
+		<cc:attribute name="id" required="true" />
+		<cc:attribute name="bBean" required="true" />
+		<cc:attribute name="mBean" required="true" />
+	</cc:interface>
+	<cc:implementation>
+		<p:dialog id="smPtjPopup"
+			header="#{lbl['lbl.lov.listing']} -  #{cc.attrs.mBean.getParameterDesc(ParameterTypeConst.organisationTypes, ParameterConst.orgTypePtj)}">
+		</p:dialog>
+	</cc:implementation>
+</ui:composition>

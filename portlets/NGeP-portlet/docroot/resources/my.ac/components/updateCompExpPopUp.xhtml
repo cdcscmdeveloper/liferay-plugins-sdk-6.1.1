@@ -5,7 +5,8 @@
 	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<cc:interface>
 		<cc:attribute name="dialogName" required="true" />
 		<cc:attribute name="bBean" required="true" />
@@ -54,9 +55,9 @@
 								styleClass="outputLabel-view-label"
 								value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td style="width: 66%">
-							<!-- LOV -->
-						</td>
+						<td style="width: 66%"><p:inputText size="60"
+								value="#{cc.attrs.mBean.selectedDraft.agencyName}"
+								readonly="true" /></td>
 					</tr>
 				</p:outputPanel>
 				<p:outputPanel
@@ -168,5 +169,6 @@
 				</tr>
 			</table>
 		</p:dialog>
+		<ac:smPtjPopup id="agencyNameLovId" mBean="#{cc.attrs.mBean}" bBean="#{cc.attrs.bBean}"/>
 	</cc:implementation>
 </ui:composition>
