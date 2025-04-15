@@ -601,6 +601,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
+	// #30974 && 37896 - START
+	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	private List<PmReasonDesc> selectedRejectReasonDescs;
+	private boolean showDifferenceRejection;
+	// #30974 && 37896 - END
+	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
 	
@@ -615,6 +621,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean poApproverAcedemicErr;//#31130-end
 	
 	//#30691 - START - 26112021
+	
+	
 	private boolean poApproverChgBusiness;
 	private String msgChgBusiness;
 	//#30691 - END - 26112021
@@ -4759,4 +4767,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
 	}
 	//#34392 - end
+
+	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
+		return selectedRecommendRejectReasonDescs;
+	}
+
+	public void setSelectedRecommendRejectReasonDescs(
+			List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
+		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
+	}
+
+	public List<PmReasonDesc> getSelectedRejectReasonDescs() {
+		return selectedRejectReasonDescs;
+	}
+
+	public void setSelectedRejectReasonDescs(
+			List<PmReasonDesc> selectedRejectReasonDescs) {
+		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
+	}
+
+	public boolean isShowDifferenceRejection() {
+		return showDifferenceRejection;
+	}
+
+	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
+		this.showDifferenceRejection = showDifferenceRejection;
+	}
 }
