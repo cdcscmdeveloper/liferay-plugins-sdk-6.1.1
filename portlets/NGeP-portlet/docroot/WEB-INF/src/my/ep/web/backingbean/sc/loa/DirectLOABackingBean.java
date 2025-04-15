@@ -13317,18 +13317,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	/**
 	 * This method will check QT Type "Special Item/Item In PK7" selected and if
 	 * the status is pending approval and pending approval revision will make
-	 * the qt type non editable.
+	 * the reason non editable.
 	 * 
 	 * @param
 	 * @return
 	 */
-	public boolean checkPK7OrPK7WPselectedToDisable() {
+	public boolean checkOldPK7PselectedToDisable() {
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		PmParameter qtType = (scLoa != null) ? scLoa.getQtType() : null;
 
 		boolean isQTtypePK7 = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
-				&& ParameterConst.getQuotationTenderTypeItemInPK7AndPK7WPChecking().contains(qtType.getParameterCode());
+				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
 		
 		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
 		List<Long> approvalStatus = Arrays.asList(QTStatusConst.LOA_PENDING_APPROVAL,

@@ -36,7 +36,7 @@
 	<ui:param name = "isLoaSubmissionOrApproval" value = "#{(directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION) || (directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION)}"></ui:param>
 	<!-- #12487 END -->
 	<ui:remove>#29766 Start Vinod</ui:remove>
-	<ui:param name = "ispK7OrPK7WPselected" value = "#{directLOABackingBean.checkPK7OrPK7WPselectedToDisable()}"/>
+	<ui:param name = "isOldpK7selected" value = "#{directLOABackingBean.checkOldPK7PselectedToDisable()}"/>
 	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
@@ -379,8 +379,8 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<ui:remove>#29766 Start Vinod added ispK7OrPK7WPselected</ui:remove>
-							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or ispK7OrPK7WPselected}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 Start Vinod added isOldpK7selected</ui:remove>
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isOldpK7selected}" ><!-- #35335_haziq -->
 							<ui:remove>#29766 End Vinod</ui:remove>
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
