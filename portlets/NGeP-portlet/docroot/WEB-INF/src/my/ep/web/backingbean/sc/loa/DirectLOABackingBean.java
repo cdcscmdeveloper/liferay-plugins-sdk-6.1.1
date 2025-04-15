@@ -125,6 +125,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -13234,19 +13235,22 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void checkQtTypePk7WpItem() {
-		PmParameter qtType = null;
-		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType();
-		}
-		boolean isQTtypePK7WP = null != qtType
+		ScLoa scLoa = getManagedBean().getScLoa();
+		PmParameter qtType = scLoa != null ? scLoa.getQtType() : null;
+
+		boolean isQTtypePK7WP = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7_WP.equals(qtType.getParameterCode());
-		List<Long> displayStatus = Arrays.asList(QTStatusConst.LOA_PENDING_SUBMISSION,
-												 QTStatusConst.LOA_PENDING_REVISION, 
-												 QTStatusConst.LOA_PENDING_APPROVAL,
-												 QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
-		boolean isShowInfo = null != this.getManagedBean().getScLoa().getPmStatus()
-				&& displayStatus.contains(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+
+		List<Long> displayStatus = Arrays.asList(
+			QTStatusConst.LOA_PENDING_SUBMISSION,
+			QTStatusConst.LOA_PENDING_REVISION,
+			QTStatusConst.LOA_PENDING_APPROVAL,
+			QTStatusConst.LOA_PENDING_REVISION_APPROVAL
+		);
+
+		boolean isShowInfo = scLoa != null && scLoa.getPmStatus() != null
+				&& displayStatus.contains(scLoa.getPmStatus().getStatusId());
 
 		if (isQTtypePK7WP && isShowInfo) {
 			String qtTypeDesc = getParameterDesc(qtType);
@@ -13269,30 +13273,30 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	private boolean checkQtTypeItemPK7Selected() {
-		PmParameter qtType = null;
-		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType();
-		}
-		boolean isQTtypeOldPK7 = null != qtType
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		PmParameter qtType = (scLoa != null) ? scLoa.getQtType() : null;
+		PmReason justificationQtType = (scLoa != null) ? scLoa.getJustificationType() : null;
+
+		boolean isQTtypeOldPK7 = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.QUOTATION_TENDER_TYPE_ITEM_IN_PK7.equals(qtType.getParameterCode());
 
-		if (isQTtypeOldPK7) {
-			String reasonCode = null != this.getManagedBean().getScLoa()
-					&& null != this.getManagedBean().getScLoa().getJustificationType()
-					&& null != this.getManagedBean().getScLoa().getJustificationType().getReasonCode() ? this
-					.getManagedBean().getScLoa().getJustificationType().getReasonCode() : "";
-			String reasonDescription = this.getReasonDesc(reasonCode);
-			String qtTypeDescription = getParameterDesc(qtType);
-			String alertForPK7 = MessageUtils.getMessage(MessageConst.WARN_7602695, new String[] { qtTypeDescription,
-					reasonDescription }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
-
-			this.getManagedBean().setAlertForInactivePK7(alertForPK7);
-
-			return true;
+		if (!isQTtypeOldPK7) {
+			return false;
 		}
 
-		return false;
+		String reasonCode = justificationQtType != null && justificationQtType.getReasonCode() != null ? justificationQtType
+				.getReasonCode() : "";
+
+		String reasonDescription = this.getReasonDesc(reasonCode);
+		String qtTypeDescription = getParameterDesc(qtType);
+
+		String alertForPK7 = MessageUtils.getMessage(MessageConst.WARN_7602695, new String[] { qtTypeDescription,
+				reasonDescription }, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+
+		this.getManagedBean().setAlertForInactivePK7(alertForPK7);
+
+		return true;
 	}
 
 	// #29766 End Vinod
@@ -13319,17 +13323,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public boolean checkPK7OrPK7WPselectedToDisable() {
-		PmParameter qtType = null;
-		if (null != getManagedBean().getScLoa().getQtType()) {
-			qtType = getManagedBean().getScLoa().getQtType();
-		}
-		boolean isQTtypePK7 = null != qtType
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		PmParameter qtType = (scLoa != null) ? scLoa.getQtType() : null;
+
+		boolean isQTtypePK7 = qtType != null
 				&& ParameterTypeConst.QUOTATION_TENDER_TYPE.equals(qtType.getParameterType())
 				&& ParameterConst.getQuotationTenderTypeItemInPK7AndPK7WPChecking().contains(qtType.getParameterCode());
+		
+		PmStatus pmStatus = (scLoa != null) ? scLoa.getPmStatus() : null;
 		List<Long> approvalStatus = Arrays.asList(QTStatusConst.LOA_PENDING_APPROVAL,
 				QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
-		boolean isPendingApproval = null != this.getManagedBean().getScLoa().getPmStatus()
-				&& approvalStatus.contains(this.getManagedBean().getScLoa().getPmStatus().getStatusId());
+		boolean isPendingApproval = pmStatus != null && approvalStatus.contains(pmStatus.getStatusId());
 
 		if (isQTtypePK7 && isPendingApproval) {
 			return true;
