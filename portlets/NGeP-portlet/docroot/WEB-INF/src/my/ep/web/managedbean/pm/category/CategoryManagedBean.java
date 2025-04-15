@@ -234,14 +234,13 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private PmCategoryL2 auditOldCategoryL2;
 	private PmCategoryL3 auditOldCategoryL3;
 	
+	private PmCategoryL3 auditUpdatedCategoryL3;
+	
 	private String auditLevelCategory;
 	
 	private List<PmCategoryRestr> auditAddedPmCategoryRestr;
 	private List<PmMachineCategory> auditAddedPmMachineCategory;
 	private List<PmBasicCategory> auditAddedPmBasicCategory;
-	
-	private List<PmBasicCategory> auditDeletedPmBasicCategory;
-	private List<PmCategoryRestr> auditDeletedPmCategoryRestr;
 	
 	/************ AUDIT 35509 *************/
 	
@@ -1436,7 +1435,7 @@ public class CategoryManagedBean extends BaseManagedBean {
 	}
 
 	public List<PmCategoryRestr> getAuditAddedPmCategoryRestr() {
-		auditAddedPmCategoryRestr = new ArrayList<PmCategoryRestr>();
+		auditAddedPmCategoryRestr = new ArrayList<>();
 		return auditAddedPmCategoryRestr;
 	}
 
@@ -1445,7 +1444,7 @@ public class CategoryManagedBean extends BaseManagedBean {
 	}
 
 	public List<PmMachineCategory> getAuditAddedPmMachineCategory() {
-		auditAddedPmMachineCategory = new ArrayList<PmMachineCategory>();
+		auditAddedPmMachineCategory = new ArrayList<>();
 		return auditAddedPmMachineCategory;
 	}
 
@@ -1454,7 +1453,7 @@ public class CategoryManagedBean extends BaseManagedBean {
 	}
 
 	public List<PmBasicCategory> getAuditAddedPmBasicCategory() {
-		auditAddedPmBasicCategory = new ArrayList<PmBasicCategory>();
+		auditAddedPmBasicCategory = new ArrayList<>();
 		return auditAddedPmBasicCategory;
 	}
 
@@ -1462,22 +1461,13 @@ public class CategoryManagedBean extends BaseManagedBean {
 		this.auditAddedPmBasicCategory = auditAddedPmBasicCategory;
 	}
 
-	public List<PmBasicCategory> getAuditDeletedPmBasicCategory() {
-		auditDeletedPmBasicCategory = new ArrayList<PmBasicCategory>();
-		return auditDeletedPmBasicCategory;
+	public PmCategoryL3 getAuditUpdatedCategoryL3() {
+		return auditUpdatedCategoryL3;
 	}
 
-	public void setAuditDeletedPmBasicCategory(List<PmBasicCategory> auditDeletedPmBasicCategory) {
-		this.auditDeletedPmBasicCategory = auditDeletedPmBasicCategory;
+	public void setAuditUpdatedCategoryL3(PmCategoryL3 auditUpdatedCategoryL3) {
+		this.auditUpdatedCategoryL3 = auditUpdatedCategoryL3;
 	}
 
-	public List<PmCategoryRestr> getAuditDeletedPmCategoryRestr() {
-		auditDeletedPmCategoryRestr = new ArrayList<PmCategoryRestr>();
-		return auditDeletedPmCategoryRestr;
-	}
-
-	public void setAuditDeletedPmCategoryRestr(List<PmCategoryRestr> auditDeletedPmCategoryRestr) {
-		this.auditDeletedPmCategoryRestr = auditDeletedPmCategoryRestr;
-	}
 	/************ AUDIT 35509 *************/
 }

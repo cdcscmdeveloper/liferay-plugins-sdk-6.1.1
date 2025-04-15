@@ -132,6 +132,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 		objList.add(statusL1);
+		managedBean.setAuditOldCategoryL1(null);
 		auditPMReqDTO.setObjList(objList);
 	}
 
@@ -167,6 +168,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		}
 
 		objList.add(statusL2);
+		managedBean.setAuditOldCategoryL2(null);
 		auditPMReqDTO.setObjList(objList);
 	}
 
@@ -181,10 +183,10 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		
 		this.docType3 = AuditConst.PM_AUD_CODE_CATEGORY_L3;
 		this.docNo = pmCategoryL3.getCategoryL3Code();
+		this.docId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
+		this.docGroupId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
 		
 		if (managedBean.isNewCategory()) {
-			this.docId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
-			this.docGroupId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
 			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			
 			detailObj(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE, null, pmCategoryL3.getPaidUpCapital()
@@ -209,6 +211,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 					pmCategoryL3.getHomeOperated() == 1 ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 
 		} else {
+			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 			setCategoryL3CheckBox(managedBean);
 			
 			if (! pmCategoryL3.getPaidUpCapital().equals(oldpmCategoryL3.getPaidUpCapital())) {
@@ -222,6 +225,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				paidUpCapital.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 				paidUpCapital.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
 				paidUpCapital.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+				paidUpCapital.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 				paidUpCapital.setFieldLabelCode(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE);
 				paidUpCapital.setOldValue(String.valueOf(oldpmCategoryL3.getPaidUpCapital()));
 				paidUpCapital.setNewValue(String.valueOf(pmCategoryL3.getPaidUpCapital()));
@@ -240,6 +244,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				bumiPercentage.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 				bumiPercentage.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
 				bumiPercentage.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+				bumiPercentage.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 				bumiPercentage.setFieldLabelCode(AuditConst.PM_AUD_CCR_BUMI_PERCENTAGE_FIELDLABELCODE);
 				bumiPercentage.setOldValue(String.valueOf(oldpmCategoryL3.getBumiPercentage()));
 				bumiPercentage.setNewValue(String.valueOf(pmCategoryL3.getBumiPercentage()));
@@ -259,6 +264,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				supplierType.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 				supplierType.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
 				supplierType.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+				supplierType.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 				supplierType.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUPPLIER_TYPE_FIELDLABELCODE);
 				supplierType.setOldValue(oldpmCategoryL3.getSupplierTypeCode().getPmParameterDescsSpecCallOnly().get(0)
 						.getCodeDesc());
@@ -281,6 +287,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				statusL3.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 				statusL3.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
 				statusL3.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+				statusL3.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 				statusL3.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_DIVISION_STATUS_FIELDLABELCODE);
 				statusL3.setOldValue(oldpmCategoryL3.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 						: AuditConst.PM_AUD_INACTIVE);
@@ -297,7 +304,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		addRequiredCategory(managedBean);
 		addBusinessComType(managedBean);
 		addSpecialEquipment(managedBean);
-		
+		managedBean.setAuditOldCategoryL3(null);
 		auditPMReqDTO.setObjList(objList);
 	}
 
@@ -489,71 +496,70 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	private void addRequiredCategory(CategoryManagedBean managedBean) {
 
-//		PmCategoryL3 pmCategoryL3 = managedBean.getPmCategoryL3(); // new
-		List<PmBasicCategory> newBasicCategory = pmCategoryL3.getPmBasicCategory();
-		managedBean.getPmBasicCategoryList();
-		for(PmBasicCategory updatedBasicCategory : newBasicCategory) {
+	List<PmBasicCategory> newBasicCategory = pmCategoryL3.getPmBasicCategory();
+	managedBean.getPmBasicCategoryList();
+	for(PmBasicCategory updatedBasicCategory : newBasicCategory) {
 
-			if(updatedBasicCategory.isBrandNew()) {
-				addCategoryCode.setRoleCode(roleCode);
-				addCategoryCode.setDocType(docType3);
-				addCategoryCode.setDocNo(pmCategoryL3.getCategoryL3Code());
-				addCategoryCode.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
-				addCategoryCode.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
-				addCategoryCode.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-				addCategoryCode.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
-				addCategoryCode.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
-				addCategoryCode.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
-				addCategoryCode.setFieldLabelCode(AuditConst.PM_AUD_CCR_CATEGORY_CODE_FIELDLABELCODE);
-				addCategoryCode.setNewValue(updatedBasicCategory.getCodeConcatenate());
-				addCategoryCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(addCategoryCode);
+		if(updatedBasicCategory.isBrandNew()) {
+			addCategoryCode.setRoleCode(roleCode);
+			addCategoryCode.setDocType(docType3);
+			addCategoryCode.setDocNo(docNo);
+			addCategoryCode.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+			addCategoryCode.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
+			addCategoryCode.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+			addCategoryCode.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
+			addCategoryCode.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
+			addCategoryCode.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
+			addCategoryCode.setFieldLabelCode(AuditConst.PM_AUD_CCR_CATEGORY_CODE_FIELDLABELCODE);
+			addCategoryCode.setNewValue(updatedBasicCategory.getCodeConcatenate());
+			addCategoryCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(addCategoryCode);
 
-				addMainCategoryDesc.setRoleCode(roleCode);
-				addMainCategoryDesc.setDocType(docType3);
-				addMainCategoryDesc.setDocNo(pmCategoryL3.getCategoryL3Code());
-				addMainCategoryDesc.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
-				addMainCategoryDesc.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
-				addMainCategoryDesc.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-				addMainCategoryDesc.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
-				addMainCategoryDesc.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
-				addMainCategoryDesc.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
-				addMainCategoryDesc.setFieldLabelCode(AuditConst.PM_AUD_CCR_MAIN_DESC_FIELDLABELCODE);
-				addMainCategoryDesc.setNewValue(updatedBasicCategory.getBasicCategoryL1desc());
-				addMainCategoryDesc
-						.setNewValueId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryL1()));
-				addMainCategoryDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(addMainCategoryDesc);
+			addMainCategoryDesc.setRoleCode(roleCode);
+			addMainCategoryDesc.setDocType(docType3);
+			addMainCategoryDesc.setDocNo(docNo);
+			addMainCategoryDesc.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+			addMainCategoryDesc.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
+			addMainCategoryDesc.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+			addMainCategoryDesc.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
+			addMainCategoryDesc.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
+			addMainCategoryDesc.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
+			addMainCategoryDesc.setFieldLabelCode(AuditConst.PM_AUD_CCR_MAIN_DESC_FIELDLABELCODE);
+			addMainCategoryDesc.setNewValue(updatedBasicCategory.getBasicCategoryL1desc());
+			addMainCategoryDesc
+					.setNewValueId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryL1()));
+			addMainCategoryDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(addMainCategoryDesc);
 
-				addSubCategoryDesc.setRoleCode(roleCode);
-				addSubCategoryDesc.setDocType(docType3);
-				addSubCategoryDesc.setDocNo(pmCategoryL3.getCategoryL3Code());
-				addSubCategoryDesc.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
-				addSubCategoryDesc.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
-				addSubCategoryDesc.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-				addSubCategoryDesc.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
-				addSubCategoryDesc.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
-				addSubCategoryDesc.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
-				addSubCategoryDesc.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_DESC_FIELDLABELCODE);
-				addSubCategoryDesc.setNewValue(updatedBasicCategory.getBasicCategoryL2desc());
-				addSubCategoryDesc.setNewValueId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryL2()));
-				addSubCategoryDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(addSubCategoryDesc);
+			addSubCategoryDesc.setRoleCode(roleCode);
+			addSubCategoryDesc.setDocType(docType3);
+			addSubCategoryDesc.setDocNo(docNo);
+			addSubCategoryDesc.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+			addSubCategoryDesc.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
+			addSubCategoryDesc.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+			addSubCategoryDesc.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
+			addSubCategoryDesc.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
+			addSubCategoryDesc.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
+			addSubCategoryDesc.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_DESC_FIELDLABELCODE);
+			addSubCategoryDesc.setNewValue(updatedBasicCategory.getBasicCategoryL2desc());
+			addSubCategoryDesc.setNewValueId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryL2()));
+			addSubCategoryDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(addSubCategoryDesc);
 
-				addSubDivisionDesc.setRoleCode(roleCode);
-				addSubDivisionDesc.setDocType(docType3);
-				addSubDivisionDesc.setDocNo(pmCategoryL3.getCategoryL3Code());
-				addSubDivisionDesc.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
-				addSubDivisionDesc.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
-				addSubDivisionDesc.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
-				addSubDivisionDesc.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
-				addSubDivisionDesc.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
-				addSubDivisionDesc.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
-				addSubDivisionDesc.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_DIV_DESC_FIELDLABELCODE);
-				addSubDivisionDesc.setNewValue(updatedBasicCategory.getBasicCategoryL3desc());
-				addSubDivisionDesc.setNewValueId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryL3()));
-				addSubDivisionDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(addSubDivisionDesc);
+			addSubDivisionDesc.setRoleCode(roleCode);
+			addSubDivisionDesc.setDocType(docType3);
+			addSubDivisionDesc.setDocNo(docNo);
+			addSubDivisionDesc.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
+			addSubDivisionDesc.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_DIVISION_PMPARAMETERLVLID);
+			addSubDivisionDesc.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
+			addSubDivisionDesc.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
+			addSubDivisionDesc.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL3);
+			addSubDivisionDesc.setDocId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryId()));
+			addSubDivisionDesc.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_DIV_DESC_FIELDLABELCODE);
+			addSubDivisionDesc.setNewValue(updatedBasicCategory.getBasicCategoryL3desc());
+			addSubDivisionDesc.setNewValueId(BigInteger.valueOf(updatedBasicCategory.getBasicCategoryL3()));
+			addSubDivisionDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(addSubDivisionDesc);
 			}
 		}
 	}
@@ -592,12 +598,10 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObj.setDocGroupId(docGroupId);
 		dtlObj.setFieldLabelCode(fieldLabelId);
 		
-		dtlObj.setOldValue(oldValue);
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
 		}
 		
-		dtlObj.setOldValueId(oldValueId);
 		if (oldValueId != null) {
 			dtlObj.setOldValueId(oldValueId);
 		}
@@ -608,7 +612,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	
 	private void deleteRequiredCategory(CategoryManagedBean managedBean) {
 		// getManagedBean().getDeletedpmBasicCategory()
-		// need to compare with PMCategoryL3 to get thw desc
+		// need to compare with PMCategoryL3 to get the desc
 		
 		this.docGroupId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
 		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_DEL;

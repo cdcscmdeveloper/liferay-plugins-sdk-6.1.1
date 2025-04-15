@@ -1777,6 +1777,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				/************ AUDIT 35509*************/
+				this.getManagedBean().setAuditUpdatedCategoryL3(resDTO.getCategoryL3());
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
 				}
