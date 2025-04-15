@@ -92,14 +92,14 @@
 							<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.compliance.sample.tooltip']}" />
 						</f:facet>
 						<h:selectOneMenu id="itemCompliance"
-										 required="true"
 										 label="#{lbl['lbl.sc.tec.compliance']}"
 										 rendered="#{sampleItem.scRequestItem.tplSpecQuestion.mandatorySpecForSample}"
 										 disabled="#{evaluationBackingBean.managedBean.readOnly 
 										 			or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
+										 valueChangeListener="#{evaluationBackingBean.itemComplianceChangeControl}"
 										 value="#{sampleItem.compliance}">
-							<p:ajax event="change" process="@this" partialSubmit="true" update="@([id$=techSampleEvaluateId])" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
+							<p:ajax event="change" process="@this" partialSubmit="true" update="@all" listener="#{evaluationBackingBean.onchangeCompliance(sampleItem)}" />
 							<f:selectItems value="#{evaluationBackingBean.getComplianceDropdownValues()}" />
 						</h:selectOneMenu>
 						<p:message id="itemComplianceMsg" for="itemCompliance" display="icon" />
@@ -126,9 +126,6 @@
 
 
 						<tr>
-							<ui:remove>#29187 Start Vinod</ui:remove>
-							<c:if test="#{!evaluationBackingBean.managedBean.itemSampleReq}">
-							<ui:remove>#29187 End Vinod</ui:remove>
 							<td><p:outputLabel
 									value="#{lbl[evaluationBackingBean.managedBean.itemSampleReq ? 'lbl.sc.spec.total.points' : 'lbl.tpl.spec.content.user.score']}"
 									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
@@ -156,9 +153,6 @@
 									value="/#{evaluationBackingBean.managedBean.userScores}" /> <p:message
 									id="sampleaddressUserScoreMessage"
 									for="sampleaddressUserScoreId" display="icon"></p:message></td>
-							<ui:remove>#29187 Start Vinod</ui:remove>
-							</c:if>
-							<ui:remove>#29187 End Vinod</ui:remove>
 
 
 						</tr>
