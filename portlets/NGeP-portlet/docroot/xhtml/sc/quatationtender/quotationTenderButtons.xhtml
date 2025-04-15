@@ -164,11 +164,12 @@
 									rendered="#{isClone2 and !isCommitteeApprovalReviseTask}" />
 								<!-- #25635 -end- -->
 								<ui:remove> #30477 Start </ui:remove>	
+							<ui:remove> #29732 Start add update </ui:remove>	
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onclick="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								rendered="#{isClone2 and isCommitteeApprovalReviseTask}"
-								action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+								action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
 							</p:commandButton>
 							<ui:remove> #30477 End </ui:remove>
 						
@@ -177,12 +178,13 @@
 								styleClass="ui-button" onclick="cancel1QTDlg.show();"
 								update="@([id$=#{cancel1QTDlg}])"
 								rendered="#{!isClone2 and qTDetailBB.isCancel(bpmAction)}"/>
-				
+								<ui:remove>#29732 start add update</ui:remove>
 								<p:commandButton value="#{lbl[buttonLabel]}"
 									styleClass="ui-button" onclick="blockWidget.show();"
 									oncomplete="blockWidget.hide();"
 									rendered="#{!isClone1 and !isClone2 and !qTDetailBB.isCancel(bpmAction)}"
-									action="#{qTDetailBB.updateBpmTask(bpmAction)}">
+									action="#{qTDetailBB.updateBpmTask(bpmAction)}" update="@form">
+									<ui:remove> #29732 End </ui:remove>
 									<ui:remove>start 9019 - Reopen #note-317</ui:remove>
 									<f:param name="skipsubmitvalidation" value="0" />
 									<ui:remove>end 9019 - Reopen #note-317</ui:remove>

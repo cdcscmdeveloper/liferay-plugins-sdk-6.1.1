@@ -4,24 +4,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -275,6 +282,12 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 * @throws IOException
 	 */
 	public void printVirtualCert(SmMofCert cert) throws IOException{
+		//#28175
+		if(!checkCatCodeList(cert.getSmAppl())){
+			cert.setFileName(null);
+			cert.setFilePath(null);
+		}
+		//#28175 end
 		if(cert.getFileName() != null || cert.getFilePath() != null){
 			String file = cert.getFilePath() + "/" + cert.getFileName();
 			commonDownload(file,cert.getFileName());
@@ -295,5 +308,53 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	public String getsupplierApplTypeDesc(String applType){
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
+	//#28175 start
+	/**
+	 * Checks if the category codes in the supplier application match the
+	 * category codes in the profile management.
+	 * 
+	 * @param appl
+	 *            the supplier application to check
+	 * @return true if the category codes match, false otherwise
+	 */
+	public boolean checkCatCodeList(SmAppl appl) {
+		boolean check = true;
+
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		SupplierSearchReqDTO supReqDTO = new SupplierSearchReqDTO();
+		SupplierSearchResDTO supResDTO = new SupplierSearchResDTO();
+		supReqDTO.setApplId(appl.getApplId());
+		supResDTO = supplierSearchSO.retrieveSupplierActiveCategoryCodeByApplId(supReqDTO);
+		CategoryCodeReqDTO catReqDTO = new CategoryCodeReqDTO();
+		CategoryCodeResDTO catResDTO = new CategoryCodeResDTO();
+		// Max loop 30
+		for (SmSupplierCategory catCode : supResDTO.getSmSupplierCategoryList()) {
+			catReqDTO.setCategoryL1Id(catCode.getPmCategoryL1().getCategoryL1Id());
+			catResDTO = categoryCodeSO.retrieveCategoryL1DtlById(catReqDTO);
+			if (!catCode.getCategoryL1Name().equalsIgnoreCase(catResDTO.getCategoryL1().getCategoryName())) {
+				check = false;
+				break;
+			} else {
+				catReqDTO.setCategoryL2Id(catCode.getPmCategoryL2().getCategoryL2Id());
+				catResDTO = categoryCodeSO.retrieveCategoryL2DtlById(catReqDTO);
+				if (!catCode.getCategoryL2Name().equalsIgnoreCase(catResDTO.getCategoryL2().getCategoryName())) {
+					check = false;
+					break;
+				} else {
+					catReqDTO.setCategoryL3Id(catCode.getPmCategoryL3().getCategoryL3Id());
+					catResDTO = categoryCodeSO.retrieveCategoryL3DtlById(catReqDTO);
+					if (!catCode.getCategoryL3Name().equalsIgnoreCase(catResDTO.getCategoryL3().getCategoryName())) {
+						check = false;
+						break;
+					}
+				}
+			}
+		}
+		return check;
+	}
+	//#28175 end
 }
 
