@@ -69,7 +69,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			prepareList(rsltReportList);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
-					"generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
+					"generateRptExcelForAuditTrailDetailsAll", getUserIdSessionFromLoginId(), e);
 		}
 		Workbook wb = new XSSFWorkbook();
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)
@@ -153,7 +153,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			prepareList(rsltReportList);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU", auSmSearchBean.getDocId().toString(),
-					"AuditSupplierManagementDocumentBackingBean.generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
+					"generateRptExcelForAuditTrailDetails", getUserIdSessionFromLoginId(), e);
 		}
 		Workbook wb = new XSSFWorkbook();
 		if (getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.SUPP_TYPE_BASIC)) {
@@ -264,15 +264,15 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 				Cell cellDocNo = currRow.createCell(7);
 				cellDocNo.setCellValue(rsltReportList.get(a).getDocNo());
 				cellDocNo.setCellStyle(cellStyleString);
-				Cell cellSubDocNo = currRow.createCell(8);
-				cellSubDocNo.setCellValue(rsltReportList.get(a).getFieldName());
-				cellSubDocNo.setCellStyle(cellStyleString);
-				Cell cellFieldName = currRow.createCell(9);
-				cellFieldName.setCellValue(rsltReportList.get(a).getOldValue());
+				Cell cellFieldName = currRow.createCell(8);
+				cellFieldName.setCellValue(rsltReportList.get(a).getFieldName());
 				cellFieldName.setCellStyle(cellStyleString);
-				Cell cellOldValue = currRow.createCell(10);
-				cellOldValue.setCellValue(rsltReportList.get(a).getNewValue());
+				Cell cellOldValue = currRow.createCell(9);
+				cellOldValue.setCellValue(rsltReportList.get(a).getOldValue());
 				cellOldValue.setCellStyle(cellStyleString);
+				Cell cellNewValue = currRow.createCell(10);
+				cellNewValue.setCellValue(rsltReportList.get(a).getNewValue());
+				cellNewValue.setCellStyle(cellStyleString);
 			}
 		} else {
 			createNotFoundRecord(sheetRptAudit, rowIndex, colHeaderDataTableRpt.length, noRecordsStyle);
@@ -282,9 +282,20 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 	}
 
 	private void setExlSheetColumnWidth(int totalNoOfCell, Sheet sheetName) {
-		for (int i = 0; i < totalNoOfCell; i++) {
-			sheetName.autoSizeColumn(i + 1);
-		}
+		// #35501_Reopen#58 Start
+		sheetName.setColumnWidth(1, 25 * 256);
+		sheetName.setColumnWidth(2, 20 * 256);
+		sheetName.setColumnWidth(3, 30 * 256);
+		sheetName.setColumnWidth(4, 30 * 256);
+		sheetName.setColumnWidth(5, 30 * 256);
+		sheetName.setColumnWidth(6, 20 * 256);
+		sheetName.setColumnWidth(7, 20 * 256);
+		sheetName.setColumnWidth(8, 20 * 256);
+		// #35501_Reopen#65 Start
+		sheetName.setColumnWidth(9, 100 * 256);
+		sheetName.setColumnWidth(10, 100 * 256);
+		// #35501_Reopen#65 End
+		// #35501_Reopen#58 End
 	}
 
 	private void createNotFoundRecord(Sheet sheet, int rowIndex, int totalCell, CellStyle noRecordsStyle) {
@@ -314,7 +325,7 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 			wb.close();// Close Workbook
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "AU",
-					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "generateRptExcelForAuditTrailDetails",
+					this.getManagedBean().getAuSmSearchBean().getDocId().toString(), "exportExcelReportAudit",
 					getUserIdSessionFromLoginId(), e);
 		}
 	}
