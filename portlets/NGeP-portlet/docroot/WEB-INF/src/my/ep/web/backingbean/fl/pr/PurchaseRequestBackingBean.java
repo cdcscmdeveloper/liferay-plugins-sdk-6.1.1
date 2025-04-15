@@ -1547,7 +1547,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (isDisciplinaryActionPRPendingStatus()) {
+		if (isPRPendingStatus()) {
 			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
@@ -1565,7 +1565,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return true if the PR's status is one of the pending statuses,
 	 *         false for otherwise statuses
 	 */
-	private boolean isDisciplinaryActionPRPendingStatus() {
+	private boolean isPRPendingStatus() {
 		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
 		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
 				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
