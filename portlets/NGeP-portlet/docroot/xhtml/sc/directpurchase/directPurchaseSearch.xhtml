@@ -95,11 +95,16 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td><p:inputText size="35"
-							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText></td>
+							value="#{directPurchaseBackingBean.managedBean.searchDocumentNo}"></p:inputText>
+						<ac:iconTooltip
+							value="#{lbl['lbl.sc.allow.wildcard.search.tooltip']}" /></td>
+					<!-- 25790 -->
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
+					<ui:remove>36679 start</ui:remove>
 					<td><p:calendar showOn="button" size="35"
+							readonlyInput="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentFromDuration}">
 							<p:ajax event="dateSelect" update="toDate" />
@@ -107,10 +112,12 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 					<td><p:calendar showOn="button" size="20"
+							readonlyInput="true"
 							mindate="#{directPurchaseBackingBean.managedBean.searchDocumentFromDuration}"
 							id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							value="#{directPurchaseBackingBean.managedBean.searchDocumentToDuration}">
 						</p:calendar></td>
+					<ui:remove>36679 end</ui:remove>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>

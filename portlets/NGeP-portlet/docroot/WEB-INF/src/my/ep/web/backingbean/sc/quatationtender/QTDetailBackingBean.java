@@ -215,6 +215,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
@@ -901,9 +902,7 @@ public class QTDetailBackingBean extends
 			//bug #30435, Enhancement #25077 - end
 			
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
-			
-			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
-			
+
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
@@ -10296,6 +10295,13 @@ public class QTDetailBackingBean extends
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO)
 				.getWorkFlowStatus();
 		
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			currentWorkFlowStatus = null;
+			bpmExistFlag = true;
+		}
+		// End - #30866		
 		if (null != currentWorkFlowStatus) {
 			if (currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)) {
 				bpmExistFlag = false;

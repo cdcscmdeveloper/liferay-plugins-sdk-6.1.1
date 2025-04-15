@@ -2029,7 +2029,6 @@ public class SpecificationBackingBean extends
 					
 				}
 
-				this.getManagedBean().setTechPoints(score);
 				techWeightageSum();
 				techScoreSum();
 			}
@@ -8714,32 +8713,50 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	 */
 	private void techScoreSum() {
 		try {
-			int total = 0;
-			List<ScQtCheckList> weightageList = this.getManagedBean()
-					.getTechnicalScoring();
+			BigDecimal totalScore = BigDecimal.valueOf(0); // 37813,35384
+			List<ScQtCheckList> weightageList = this.getManagedBean().getTechnicalScoring();
+
 			if (weightageList == null) {
-				weightageList = new ArrayList<ScQtCheckList>();
+				weightageList = new ArrayList<>(); // 37813,35384
 			}
+
 			for (int i = 0; i < weightageList.size(); i++) {
-				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
-				if (null != weight.getQtScoreWeightage()
-						&& weight.getQtScoreWeightage().getWeightage() == null) {
-					weight.getQtScoreWeightage()
-							.setWeightage(new BigDecimal(0));
-				}
+				// 37813,35384 -start
+				ScQtCheckList weight = weightageList.get(i);
+
 				if (null != weight.getQtScoreWeightage()) {
-					total = total
-							+ weight.getQtScoreWeightage().getScore()
-									.intValue();
+					ScQtScoreWeightage checklistWeighatge = setWeightageScore(weight.getQtScoreWeightage());
+
+					weight.setQtScoreWeightage(checklistWeighatge);
+
+					BigDecimal checkListScore = weight.getQtScoreWeightage().getScore() != null ? weight
+							.getQtScoreWeightage().getScore() : BigDecimal.valueOf(0);
+					totalScore = totalScore.add(checkListScore);
 				}
-				BigDecimal techScore = new BigDecimal(total);
-				this.getManagedBean().setTechPoints(techScore.intValue());
+				// 37813,35384 -end
 			}
+
+			this.getManagedBean().setTechPoints(totalScore); // 37813,35384
 		} finally {
 
 		}
 
 	}
+
+	// 37813,35384 -start
+	/**
+	 * set checkist score weight.
+	 * 
+	 * @param scoreWeightage
+	 * @return ScQtScoreWeightage
+	 */
+	private ScQtScoreWeightage setWeightageScore(ScQtScoreWeightage scoreWeightage) {
+		if (null == scoreWeightage.getWeightage()) {
+			scoreWeightage.setWeightage(new BigDecimal(0));
+		}
+		return scoreWeightage;
+	}
+	// 37813,35384 -end
 
 	/**
 	 * Fin score sum.calculate financial score sum.
@@ -10745,6 +10762,19 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 	// #25638 -start-
 	public void specCommitteBpmTask(String action) {
 		// #25638 -end-
+		// #36678 related to #35061 start
+		BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+		BigDecimal intendedPrice = this.getManagedBean().getQt().getEstimatedAmount();
+
+		if (!this.getManagedBean().getQt().isPanel()
+				&& null != intendedPrice
+				&& intendedPrice.compareTo(indPriceThreshold) <= 0
+				&& (this.getManagedBean().getQt().getJustificationProcValue() == null || this.getManagedBean().getQt()
+						.getJustificationProcValue().isEmpty())) {
+			throw new EpException(MessageConst.ERROR_760560);
+		}
+		// #36678 related to #35061 end
+
 		// remove when #25635 ready for Production -start-
 		// #1873 -start-
 		// #34837 - start
@@ -12744,7 +12774,32 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					retriveSpecdetails(this.getManagedBean().getQt().getQtId());
 				}
 				saveSpecMaintenanceWorkFlowStatus();
-				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
+				// #36678 start
+				boolean isPanel = scQt.isPanel();
+				BigDecimal currentIndPrice = this.getManagedBean().getQt().getEstimatedAmount();
+				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+				//#36678 #38005 start
+				boolean isPriceBelowThreshold = currentIndPrice != null 
+						&& indPriceThreshold != null 
+						&& (currentIndPrice.compareTo(indPriceThreshold) <= 0) ;
+				
+				if ((!isPanel) && isPriceBelowThreshold 
+						&& SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {
+				//#36678 #38005 end
+					// Bug #35061 - asyrafhaziq
+					// set message
+					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE,
+							new String[] { String.valueOf(indPriceThreshold).trim() });
+					// SONARQUBE QT 2023 - haziq
+					this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
+
+					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+
+				} else {
+					return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
+				}
+				// #36678 end
 			}
 			return null;
 			// Bug #33661@Syazani 12/04/2023 -- Start
@@ -15756,7 +15811,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 								totalSpecEstimatedAmount = totalSpecEstimatedAmount
 										.add(estimatedCost.setScale(2, QTConstants.QT_ROUNDING_MODE));	//Bug #35600@Syazani 19/09/2024
 							}
-							//20201217@haziq- Bug #29806 - End
+							//20201217@haziq- Bug #29806 - Start
 						}
 					}
 				}
@@ -16703,4 +16758,16 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 		}
 	}
 	// 25037 - end
+
+	// #36678 related to #35061 -start-
+	public String redirectSpecComMainYes() {
+		this.getManagedBean().setFieldProcurementJustification(true);
+		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
+	}
+
+	public String redirectSpecComMainNo() {
+		this.getManagedBean().setFieldProcurementJustification(false);
+		return QTConstants.SPEC_COMMITTEE_MAIN_PAGE;
+	}
+	// #36678 related to #35061 -end-
 }

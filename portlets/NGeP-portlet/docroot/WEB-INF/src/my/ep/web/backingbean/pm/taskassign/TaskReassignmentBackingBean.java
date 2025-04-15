@@ -1183,6 +1183,7 @@ public class TaskReassignmentBackingBean extends
 							docNumberList.add(getManagedBean()
 									.getTaskAssignmentSearchBean().getDocNo());
 							reqDTO.setDocNumberList(docNumberList);
+							log.info("#37794-For PDS : BPM documentList******" + reqDTO.getDocNumberList()); //#37794 
 						}
 
 						if (getManagedBean().getTaskAssignmentSearchBean()
@@ -1193,12 +1194,32 @@ public class TaskReassignmentBackingBean extends
 							reqDTO.setDocType(getManagedBean()
 									.getTaskAssignmentSearchBean().getDocType()
 									.getPmParameter().getParameterCode());
+							log.info("#37794-For PDS : BPM documentType******" + reqDTO.getDocType()); //#37794 
 						}
 						
+						//#37794 - Start
+						log.info("#37794-For PDS : BPM statuslist *****" + reqDTO.getStatusList());
+						log.info("#37794-For PDS : BPM userId*****" + reqDTO.getUserId());
+						log.info("#37794-For PDS : BPM loginId******" + loginId);
+						log.info("#37794-For PDS : BPM token******" + reqDTO.getCtxToken());
+						//#37794 - End
+
 						reqDTO.setState(BpmConstants.STATE_ASSIGNED);
 						reqDTO.setAssignment(BpmConstants.ASSIGNMENT_MY);
 						responseDTO = bpmSO.getReassignedItems(reqDTO);
-
+						
+						//#37794 - Start
+						if (responseDTO.getWorklistVO() != null) {
+							for (WorklistItemVO currentVO : responseDTO.getWorklistVO().getWorklistItem()) {
+								log.info("#37794-For PDS : reqDTO.getDocNo()" + currentVO.getDocNumber());
+								log.info("#37794-For PDS : reqDTO.getDocType()" + currentVO.getDocType());
+								log.info("#37794-For PDS : reqDTO.getDocStatus()" + currentVO.getDocStatus());
+								log.info("#37794-For PDS : reqDTO.getAssign()" + currentVO.getAssigneesString());
+								log.info("#37794-For PDS : reqDTO.getCompositeModule()" + currentVO.getCompositeDN());
+								log.info("#37794-For PDS : reqDTO.getInstanceId()" + currentVO.getInstanceId());
+							}
+						}
+						//#37794 - End
 
 						// Set resultBean for UI
 						resultBean = new SearchResultBean<WorklistItemVO>();
@@ -1696,6 +1717,11 @@ public class TaskReassignmentBackingBean extends
 						.retrieveStatusRoleListByRoleCode(reqDTO);
 				if (resDTO.isSuccessful()) {
 					for (int i = 0; i < resDTO.getStatusRoleList().size(); i++) {
+						//#37794 - Start
+						log.info("#37794-For PDS : StatusRoleList() " + resDTO.getStatusRoleList().size());
+						log.info("#37794-For PDS : statusIds " + resDTO.getStatusRoleList().get(i)
+								.getPmStatus().getStatusId().intValue());
+						//#37794 - End
 						statusIds.add(resDTO.getStatusRoleList().get(i)
 								.getPmStatus().getStatusId().intValue());
 					}
@@ -2883,6 +2909,14 @@ public class TaskReassignmentBackingBean extends
 										.getUserId())),searchBean);
 				
 			}
+		
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
 			
 			isSearched = true;
 			break;

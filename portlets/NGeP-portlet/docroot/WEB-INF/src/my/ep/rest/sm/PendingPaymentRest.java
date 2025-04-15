@@ -29,11 +29,9 @@ public class PendingPaymentRest {
 			// #36401 - End
 			
 			for (SmPendingProcess smPendingProcess : resDTO.getSmPendingProcessLst()) {
-				// #36401 - Start				
-				log.info("#36401 :: logger :: " + smPendingProcess.getApplId() 
-						+ "Attempt :: " + smPendingProcess.getAttemp() 
-						+ "Err Msg :: " + smPendingProcess.getErrorMsg());
-
+				// #36401 - Start
+				log.info("#36401 :: logger :: " + smPendingProcess.getApplId() + "Attempt :: "
+						+ smPendingProcess.getAttemp() + "Err Msg :: " + smPendingProcess.getErrorMsg());
 				// #36401 - End
 				try {
 					SmServiceLookup.getPendingPaymentSO().completePendingProcess(smPendingProcess);
@@ -50,12 +48,10 @@ public class PendingPaymentRest {
 					}
 				}
 			}
-			
 			// #36401 - Start
 			long endTime = System.currentTimeMillis();
 			log.info("#36401 This function takes " + (endTime - startTime) + " milliseconds");
 			// #36401 - End
-			
 			return Response.status(200).entity("success calling process pending payment !!").build();
 		} catch (Exception e) {
 			return Response.status(406).entity(e.getMessage()).build();

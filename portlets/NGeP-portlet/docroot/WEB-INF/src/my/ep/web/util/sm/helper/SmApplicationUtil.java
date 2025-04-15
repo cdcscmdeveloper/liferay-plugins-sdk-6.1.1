@@ -1542,16 +1542,15 @@ public class SmApplicationUtil {
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
 			//#37605 START
-			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
-				        && !convertToAscii(cat.getOtherDesc())) {
-				    throw new EpException(MessageConst.ERROR_760555);
-				}
+			Map<Long, SmSupplierCategory> newCat = buildCategoryMap(managedBean.getActiveCategoryList());
 
-				if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
-				    cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
-				}
-	        }
+		    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+		        updateCategoryDescription(cat, newCat);
+		        
+		        if (cat.isSpecialCategory()) {
+		            validateAndCleanCategory(cat);
+		        }
+		    }
 			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
 			if (!StringUtils.isBlank(errMsg)) {
@@ -5992,7 +5991,6 @@ public class SmApplicationUtil {
 			s = SupplierManagementConst.PROCEED_MOF_REG;
 			break;
 		case "A":
-			// TODO changed to satisfy enhancement of adding the bank section
 			s = SupplierManagementConst.PROCEED_ADDTNLCAT_APPLN_SIDEMENU;
 			// PROCEED_ADDTNLCAT_MOF_APPLN;
 			break;
@@ -13343,7 +13341,6 @@ public class SmApplicationUtil {
 	public static void addOrUpdateRelatedCompanies(SmApplicationManagedBean bean) {
 		if (bean.getSelectedShareHolder().getSmRelatedCompanies().contains(bean.getSelectedRelatedCompany())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmRelatedCompanies().add(bean.getSelectedRelatedCompany());
 			RequestContext.getCurrentInstance().execute("suppPrsnRelComDtWidVar.paginator.endLink.click()");
@@ -13412,10 +13409,8 @@ public class SmApplicationUtil {
 	 * selected SmPersonnel.
 	 */
 	public static void addOrUpdateShrHldrProfBody(SmApplicationManagedBean bean) {
-		if (bean.getSelectedShareHolder().getSmAssociationBodies()
-				.contains(bean.getSelectedStfPrfBdy())) {
+		if (bean.getSelectedShareHolder().getSmAssociationBodies().contains(bean.getSelectedStfPrfBdy())) {
 
-			// TODO if any validation reqd for edit
 		} else {
 			bean.getSelectedShareHolder().getSmAssociationBodies()
 					.add(bean.getSelectedStfPrfBdy());
@@ -13480,7 +13475,6 @@ public class SmApplicationUtil {
 		}
 		if (bean.getSelectedShareHolder().getSmStaffAcademics()
 				.contains(bean.getSelectedStaffAcademic())) {
-			// TODO if any validation reqd for edit
 		} else {
 
 			bean.getSelectedShareHolder().getSmStaffAcademics()
@@ -13562,14 +13556,11 @@ public class SmApplicationUtil {
 			RequestContext.getCurrentInstance().execute(
 					addPopupName + ".show()");
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -13599,14 +13590,11 @@ public class SmApplicationUtil {
 
 			}
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -15188,6 +15176,53 @@ public class SmApplicationUtil {
         	str = entry.getValue();
         }
         return str;
+	}
+	
+	/**
+	 * Builds a map of active categories for fast lookup.
+	 * @param List
+	 *            - SmSupplierCategory object
+	 * @return category
+	 */
+	private static Map<Long, SmSupplierCategory> buildCategoryMap(List<SmSupplierCategory> activeCategoryList) {
+	    Map<Long, SmSupplierCategory> categoryMap = new HashMap<>();
+	    if (activeCategoryList != null && !activeCategoryList.isEmpty()) {
+	        for (SmSupplierCategory newCat : activeCategoryList) {
+	            if (newCat != null && newCat.getPmCategoryL3() != null) {
+	                categoryMap.put(newCat.getPmCategoryL3().getCategoryL3Id(), newCat);
+	            }
+	        }
+	    }
+	    return categoryMap;
+	}
+
+	/**
+	 * Updates the category description if a matching category exists.
+	 * @param SmSupplierCategory, Map<Long, SmSupplierCategory>
+	 *            
+	 * set other description
+	 */
+	private static void updateCategoryDescription(SmSupplierCategory cat, Map<Long, SmSupplierCategory> categoryMap) {
+	    if (cat.getPmCategoryL3() != null) {
+	        SmSupplierCategory category = categoryMap.get(cat.getPmCategoryL3().getCategoryL3Id());
+	        if (category != null && category.getPmCategoryL3().getCategoryL3Id().equals(cat.getPmCategoryL3().getCategoryL3Id())) {
+	            cat.setOtherDesc(category.getOtherDesc());
+	        }
+	    }
+	}
+	
+	/**
+	 * Validates and cleans the special category description.
+	 * @param cat
+	 *            - SmSupplierCategory object
+	 */
+	private static void validateAndCleanCategory(SmSupplierCategory cat) {
+	    if (cat.getOtherDesc() != null) {
+	        if (!convertToAscii(cat.getOtherDesc())) {
+	            throw new EpException(MessageConst.ERROR_760555);
+	        }
+	        cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+	    }
 	}
 	//#37605 END
 }

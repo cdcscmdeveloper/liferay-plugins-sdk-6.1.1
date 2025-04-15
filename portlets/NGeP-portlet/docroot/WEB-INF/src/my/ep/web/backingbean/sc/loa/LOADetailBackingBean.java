@@ -138,6 +138,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
+import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean; //#25790
 import my.ep.web.bean.sc.common.ItemBean;
 import my.ep.web.bean.sc.common.JadualHargaItemBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -7498,4 +7499,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35078@Syazani -- End 14/09/2023
+	// #25790 - start
+	/**
+	 * Navigate to RequestNote view page.
+	 * 
+	 * @param requestNoteId
+	 */
+	public void navigateRequestNotePage(Long requestNoteId) {
+		RequestNoteBackingBean reqNoteBB = new RequestNoteBackingBean();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		reqNoteBB.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		reqNoteBB.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		reqNoteBB.viewRequestNote(requestNoteId);
+	}
+	// #25790 - end
 }
