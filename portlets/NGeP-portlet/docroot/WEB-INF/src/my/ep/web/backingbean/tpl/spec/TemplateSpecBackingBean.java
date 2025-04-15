@@ -32,6 +32,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletResponse;
@@ -5794,11 +5795,30 @@ public class TemplateSpecBackingBean extends
 					&& ans.getCompliance() == Boolean.FALSE) {
 				answer.setUserScore(BigDecimal.ZERO);
 			} else if (ans.getSpecAnswerId().compareTo(answer.getSpecAnswerId()) == 0
-					&& (ans.getCompliance() == null || (ans.getCompliance() != null && ans.getCompliance() == Boolean.TRUE))) {
+					&& (!getManagedBean().isComplianceOldNull() 
+							&& (ans.getCompliance() != null && ans.getCompliance() == Boolean.TRUE))) {
 				// As per note #631 issue 1 & 4 system will reset score if user
-				// select yes.
+				// select yes but won't update if the old value is null.
 				answer.setUserScore(null);
 			}
+		}
+	}
+
+	// #29187 End Vinod
+	// #29187 Start Vinod
+	/**
+	 * This method is to check the old value from compliance dropdown and update
+	 * flag for not to update the score if the old value is null.
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public void itemComplianceChangeControl(ValueChangeEvent event) {
+		log.info("New: " + event.getNewValue() + ", Old: " + event.getOldValue());
+		if (event.getOldValue() == null) {
+			getManagedBean().setComplianceOldNull(true);
+		} else {
+			getManagedBean().setComplianceOldNull(false);
 		}
 	}
 

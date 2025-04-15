@@ -13594,8 +13594,8 @@ public class SmApplicationUtil {
 					sb2 = new StringBuilder();
 					sb2.append(exp.getCompanyName());
 					sb2.append(exp.getDesignation());
-
-					if (bean.getSelectedJobFunction().getStaffExpCode() == null
+					//#37771 START
+/*					if (bean.getSelectedJobFunction().getStaffExpCode() == null
 							|| (expCode != null
 									&& exp.getStaffExpCode() != null && expCode
 									.compareTo(exp.getStaffExpCode()) != 0)) {
@@ -13616,7 +13616,29 @@ public class SmApplicationUtil {
 							throw new EpException(MessageConst.ERROR_722639,
 									new String[] { exp.getCompanyName() });
 						}
-					}
+					}*/
+					if (bean.getSelectedJobFunction().getStaffExperienceId() == null
+							/*|| (expCode != null
+									&& exp.getStaffExpCode() != null && expCode
+									.compareTo(exp.getStaffExpCode()) != 0)*/) {
+						if (sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(exp.getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(exp.getToYear())) {
+							throw new EpException(MessageConst.ERROR_722639,
+									new String[] { exp.getCompanyName() });
+						} 
+					}else{
+						if (bean.getLatestJobFunction() != null && sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(bean.getLatestJobFunction().getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(bean.getLatestJobFunction().getToYear())) {
+							throw new EpException(MessageConst.ERROR_722638,
+									new String[] { exp.getCompanyName() });
+						}
+					}//#37771 END
 				}
 			}
 		}
@@ -13799,8 +13821,8 @@ public class SmApplicationUtil {
 		for (PmEduField edu : bean.getEduFieldList()) {
 			if (bean.getSelectedStaffAcademic().getPmEduField().getEduFieldId()
 					.equals(edu.getEduFieldId())) {
-				bean.getSelectedStaffAcademic().setPmEduField(edu);
-				break;
+				bean.getSelectedStaffAcademic().setPmEduField((PmEduField) edu.cloneEntity()); //37771
+				/*break;*/
 			}
 		}
 
