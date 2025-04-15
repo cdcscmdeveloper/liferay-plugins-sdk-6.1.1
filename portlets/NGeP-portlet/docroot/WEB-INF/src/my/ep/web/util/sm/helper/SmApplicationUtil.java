@@ -13776,7 +13776,7 @@ public class SmApplicationUtil {
 			bean.setLatestStaffAcademic((SmStaffAcademic) EntityHelper
 					.getEntityByMultiplePropertiesFromList(aca, bean
 							.getLatestPersonnel().getSmStaffAcademics(), null,
-							new String[] { "pmEduField", "pmEduLevel" }, null));
+							new String[] { "pmEduField" }, null)); //37771
 		}
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (bean.isShowPersonnelViewOnly()) {
