@@ -145,13 +145,6 @@
 						listener="#{specificationBackingBean.sampleRequiredChange(technicalSampleQuestion)}"
 						update="@([id$=technicalChecklistSampleScoreSetting],[id$=sampleQuanity],[id$=sampleTotalscoreId])"></p:ajax>
 				</p:selectBooleanCheckbox>
-				<ui:remove> #11104 - start </ui:remove>
-				<p:tooltip id="templatespecSampleQuestionSC"
-					for="templateSpecQuestionCheckbox">
-					<p:outputLabel escape="false"
-						value="#{lbl['lbl.sc.qt.spec.sample.checkbox.mouserover']}" />
-				</p:tooltip>
-				<ui:remove> #11104 - end </ui:remove>
 			</p:column>
 
 			<p:column style="white-space: normal;">
