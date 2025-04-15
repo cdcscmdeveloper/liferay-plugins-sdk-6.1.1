@@ -28,6 +28,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer; //#28854
 import my.ep.persistence.entity.sm.SmSupplierBank; //Fix - #33674
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -161,6 +162,18 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankName;
 	private Long applID;
 	//End Fix - #33674
+	
+	//#28854 - start
+	private List<String> itemSpecification;
+	private String newOfferSpec;
+	private String supplierOffer;
+	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
+	//#28854 - end
+	
+	//#29983 start
+	private String businessRegNoNew;
+	//#29983 end
+
 	/**
 	 * @return the fileDirectory
 	 */
@@ -1346,4 +1359,52 @@ public class ContractManagedBean extends BaseManagedBean {
 		}
 	    //End Fix - #33674
 
+		/* #28854 start*/
+		public String getNewOfferSpec() {
+			return newOfferSpec;
+		}
+
+		public void setNewOfferSpec(String newOfferSpec) {
+			this.newOfferSpec = newOfferSpec;
+		}
+
+		public String getSupplierOffer() {
+			return supplierOffer;
+		}
+
+		public void setSupplierOffer(String supplierOffer) {
+			this.supplierOffer = supplierOffer;
+		}	
+
+		public List<String> getItemSpecification() {
+			return itemSpecification;
+		}
+
+		public void setItemSpecification(List<String> itemSpecification) {
+			this.itemSpecification = itemSpecification;
+		}
+
+		public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
+			return scRequestItemSpecOfferList;
+		}
+		public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
+			this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
+		}	
+		/* #28854 end*/
+		
+		//#29983 start
+		/**
+		 * @return the businessRegNoNew
+		 */
+		public String getBusinessRegNoNew() {
+			return businessRegNoNew;
+		}
+
+		/**
+		 * @param businessRegNoNew the businessRegNoNew to set
+		 */
+		public void setBusinessRegNoNew(String businessRegNoNew) {
+			this.businessRegNoNew = businessRegNoNew;
+		}
+		//#29983 end
 }

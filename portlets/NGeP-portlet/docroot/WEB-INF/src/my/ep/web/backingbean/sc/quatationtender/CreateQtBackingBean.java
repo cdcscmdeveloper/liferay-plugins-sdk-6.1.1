@@ -1026,23 +1026,24 @@ public class CreateQtBackingBean extends
 
 			// Start Reopen 9019 #note-289
 			//#35061 - remove to allow show the the panel 
-				// #9019 note-289 -end-
-				// 25729#174 start
-				// Bug #35061 - asyrafhaziq -start-
-				// get total indicative price threshold validation value
-				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+			// #9019 note-289 -end-
+			// 25729#174 start
+			// Bug #35061 - asyrafhaziq -start-
+			// get total indicative price threshold validation value
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
 
-				if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <= 0)) {
-					// set message
-					String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE,
-							new String[] { String.valueOf(indPriceThreshold).trim() });
-					// SONARQUBE QT 2023 - haziq
-					this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
-					// Bug #35061 -end-
-					RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
-				}
-				// 25729#174 end
-			 // 9019 #note-289
+			if ((!isPanel && enable.length > 0) && (amount.compareTo(indPriceThreshold) <= 0)) {
+				// set message
+				String msg = getMessage(SourcingConstants.ALERT_MESSAGE_BELOW_QUATATION_VALUE,
+						new String[] { String.valueOf(indPriceThreshold).trim() });
+				// SONARQUBE QT 2023 - haziq
+				this.getManagedBean().setMsgConfirmBelowIndi(msg.trim());
+				// Bug #35061 -end-
+				RequestContext.getCurrentInstance().execute("proceedBelowQtValueDlgs.show()");
+			}
+			// 25729#174 end
+		 // 9019 #note-289
+
 		} finally {
 			parameterSo = null;
 		}
@@ -1316,15 +1317,20 @@ public class CreateQtBackingBean extends
 	 *            (Long locationLevelId).
 	 */
 	public void selectZoneLocationLevel(AjaxBehaviorEvent event) {
+		// Bug #36730@Syazani 07/01/2025 -- Start
+		if (this.getManagedBean().getQt().isZonal() && null != this.getManagedBean().getZoneGeneralTrees()
+				&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+			// Bug #36730@Syazani 07/01/2025 -- End
+			this.getManagedBean().setZoneGeneralTrees(null);
+			this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
 
-		if (this.getManagedBean().getQt().isZonal()) {
-			if (null != this.getManagedBean().getZoneGeneralTrees() && !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				this.getManagedBean().setZoneGeneralTrees(null);
-				this.getManagedBean().setBeans(new ArrayList<ZonesBean>());
+			// Bug #36730@Syazani 07/01/2025 -- Start
+			Long eventLocationLevelId = (Long) event.getComponent().getAttributes().get("value");
+			if (null != eventLocationLevelId) {
+				reinstateZoneLocationLevel(eventLocationLevelId);
 			}
-
+			// Bug #36730@Syazani 07/01/2025 -- End
 		}
-
 	}
 
 	/**
@@ -3561,6 +3567,22 @@ public class CreateQtBackingBean extends
 	public boolean isSpecEndorsmentScreen() {
 		return QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())|| QTConstants.PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-//#11104-end
+	//#11104-end
+	
+	// Bug #36730@Syazani 07/01/2025 -- Start
+	private void reinstateZoneLocationLevel(Long eventLocationLevelId) {
+		PmParameter zoneLocationLevel = new PmParameter();
+		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
+		Long sourceLocationLevelId = null != supplierCriteria && null != supplierCriteria.getLocationLevel()
+				&& null != supplierCriteria.getLocationLevel().getParameterId() ? supplierCriteria.getLocationLevel()
+				.getParameterId() : 0L;
+		zoneLocationLevel.setParameterId(eventLocationLevelId);
+		this.getManagedBean().getQt().setZoneLocationLevel(zoneLocationLevel);
+		if (!sourceLocationLevelId.equals(eventLocationLevelId) && 0l != sourceLocationLevelId
+				&& null != supplierCriteria) {
+			supplierCriteria.setLocationLevel(zoneLocationLevel);
+		}
+	}
+	// Bug #36730@Syazani 07/01/2025 -- End
 
 }

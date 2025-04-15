@@ -2445,4 +2445,51 @@
 	</bean>
 	<!-- Enhancement 25627-end- -->
 	
+	<!--29991 start-->
+	<bean id="PM_ORG_PROFILE_WITH_ORGANISATION_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="orgProfileId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+		<property name="searchMethod" value="retrieveOrgProfilesWithSupplier" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.regNo" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.businessregistrationnoscreen" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="smSupplier.companyName" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.rpt.companyName" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!--29991 end-->
+	
+	<!-- 36719 - Start -->
+	<bean id="PM_FIN_SVC_REPORT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="financialOrgId" />
+
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.financialorg.FinancialOrgDAO" />
+		<property name="searchMethod" value="searchFinancialOrgSrv" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="finOrgName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.financialorg.name" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="bizRegNumber" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.txt.business.reg.no" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<!-- 36719 - End -->
 </beans>

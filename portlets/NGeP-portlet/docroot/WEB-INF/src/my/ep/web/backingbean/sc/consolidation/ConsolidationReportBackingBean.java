@@ -541,7 +541,8 @@ public class ConsolidationReportBackingBean extends
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
 
-		for (ScQtFinalizationReport report : getManagedBean().getScQtFinalization().getScQtFinalizationReports()) {
+		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization()
+				.getScQtFinalizationReports())) { // 37623
 
 			if (report.getTitle().contains("Kertas Taklimat")) {
 
@@ -674,20 +675,25 @@ public class ConsolidationReportBackingBean extends
 		debugLogger("downloadAllEvaluationReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
-		// 18685 -end-		
+		// 18685 -end-
+		
 		// 37622 - start
 		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
-		for(ScQtFinalizationReport report: scQtFinalizationReports){
+
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
-			if (attachment == null) { 
+
+			if (attachment == null) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
-			} 
+			}
+
 			if (attachment != null) {
 				attachment.setTempFileName(report.getTitle());
-			} 
-			scAttachments.add(attachment); 
-		} 
+			}
+
+			scAttachments.add(attachment);
+		}
 		// 37622 - end
 
 		// Generate all the reports before submission

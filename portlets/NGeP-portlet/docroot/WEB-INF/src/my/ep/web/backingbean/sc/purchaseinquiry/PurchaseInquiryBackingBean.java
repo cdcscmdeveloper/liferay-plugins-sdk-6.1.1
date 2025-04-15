@@ -1844,6 +1844,18 @@ public class PurchaseInquiryBackingBean extends
 	 * @return the textBeforeSign
 	 */
 	public String getTextBeforeSign() {
+		// #36466 -start-
+		StringBuilder sb = new StringBuilder();
+
+		if (getManagedBean().getScPrInquiry() != null) {
+			sb.append(getManagedBean().getScPrInquiry().getPrInquiryNo());
+		}
+
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+
+		textBeforeSign = sb.toString();
+		// #36466 -end-
+
 		return textBeforeSign;
 	}
 
@@ -1924,4 +1936,27 @@ public class PurchaseInquiryBackingBean extends
 		}
 	}
 	// End - #26129
+	
+	// #25790 - start
+	/**
+	 * Retrieve purchase inquiry.
+	 * 
+	 * @param purchaseInqId
+	 *            the purchase Inquiry Id
+	 * @return ScPrInquiry
+	 */
+	public ScPrInquiry retrievePurchaseInquiry(long purchaseInqId) {
+		IPrInquirySO prInquirySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IPrInquirySO.class);
+		ScPrInquiry prInquiry;
+		// Purchase Inquiry
+		PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+		prInquiryReqDTO.setPrInquiryId(purchaseInqId);
+		prInquiryReqDTO.setFetchSubEntity(true);
+		PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
+		prInquiry = prInquiryResDTO.getPrInquiryDetail();
+		getManagedBean().setTrackingDairyView(true);
+		return prInquiry;
+	}
+	// #25790 - end
 }

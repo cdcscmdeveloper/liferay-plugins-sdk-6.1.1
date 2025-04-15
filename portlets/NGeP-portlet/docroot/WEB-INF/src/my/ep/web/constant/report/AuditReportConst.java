@@ -19,6 +19,7 @@ public class AuditReportConst implements Serializable {
 	// Report Parameter Key
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_DOC_ID = "P_DOCID";
+	
 	public static final String PARAM_DOC_TYPE = "P_DOCTYPE"; //35508
 	// #28895_35501 - AUDIT TRAIL SM
 	public static final String PARAM_GROUP_SECTION_ID = "P_GROUP_SECTION_ID";

@@ -22,9 +22,18 @@
 			rowKey="#{flItem}"
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">
 			<ac:paginator for="doItems" />
-			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
-				<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc" style="text-align:left; float:left;" title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
+			<!-- 28855 Start -->
+			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal">
+				<h:outputText value="#{doItems.scRequestItem.itemName}" id="itemDesc" 
+				 title="#{doItems.scRequestItem.itemDesc ==null ? lbl['lbl.fl.item.desc.na'] : doItems.scRequestItem.itemDesc}"/>
+				<p:commandLink oncomplete="doItemInfo.show();" process="@this"
+					rendered="#{createDOBackingBean.managedBean.contractFlag}"  
+					action="#{createDOBackingBean.doItemInfoList(doItems)}"
+					update=":form:doItemInfoDialog,@(.orderSummaryChange)">
+					<ac:iconTooltip value="#{lbl['lbl.fl.item.tooltip']}"  escape="false"/>
+					</p:commandLink>
 			</p:column>
+			<!-- 28855 End -->
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="text-align:center">
 				<h:outputText value="#{doItems.scRequestItem.uom.uomName}" style="float:left;"/>
 			</p:column>
@@ -70,5 +79,101 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	
+
+	<!-- 28855 Start -->
+	<p:dialog id="doItemInfoDialog" header="#{lbl['lbl.fl.do.item']}"
+		widgetVar="doItemInfo" showEffect="fade" hideEffect="fade"
+		modal="true" width="900" height="400" resizable="false"
+		style="overflow:scroll">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel
+						value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
+				<td><p:inputText disabled="true" size="35" style="float:left;"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}"
+						value="#{createDOBackingBean.managedBean.itemName}" /> <h:outputText
+						style="float:left;"
+						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+						value="#{createDOBackingBean.managedBean.itemName}" /></td>
+			</tr>
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.offer']} :&#160;"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
+				<td><p:inputText disabled="true" style="float:left;"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}"
+						escape="false"
+						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}"
+						size="35" /> <ac:iconTooltip
+						value="#{lbl['lbl.fl.supp.offer.tooltip']}"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
+			</tr>
+			<tr>
+				<td valign="top" width="25%"><p:outputLabel
+						value="#{lbl['lbl.fl.new.supp.offer']} :&#160;"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
+				<td><p:inputText disabled="true" style="float:left;"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}"
+						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}"
+						size="35" /> <ac:iconTooltip
+						value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
+						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
+			</tr>
+		</table>
+		<p:dataTable id="specificationDt" var="specificationList"
+			value="#{createDOBackingBean.managedBean.itemSpecList}" width="100%">
+			<ac:paginator for="specificationDt" />
+
+			<p:column headerText="#{lbl['lbl.fl.spec']}"
+				style="text-align:center"
+				rendered="#{createDOBackingBean.managedBean.dpFlag}">
+				<p:inputTextarea disabled="true"
+					rendered="#{createDOBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" value="#{specificationList.itemSpec}"
+					cols="135" rows="2" style="width: 100% !important;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.fl.spec']}"
+				style="text-align:center"
+				rendered="#{!createDOBackingBean.managedBean.dpFlag}">
+				<p:inputTextarea cols="41" rows="10" id="itemSpecification"
+					rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" autoResize="false"
+					style="width: 96% !important; margin-left:0px;" disabled="true"
+					value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" />
+			</p:column>
+			<p:column rendered="#{!createDOBackingBean.managedBean.dpFlag}">
+				<f:facet name="header" style="text-align:center">
+					<h:outputText value="#{lbl['lbl.fl.supp.offer']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}" />
+				</f:facet>
+				<p:inputTextarea cols="41" rows="10" id="supplierOffer"
+					rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" autoResize="false"
+					style="width: 96% !important; margin-left:0px;" disabled="true"
+					value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" />
+			</p:column>
+			<p:column rendered="#{!createDOBackingBean.managedBean.dpFlag}">
+				<f:facet name="header" style="text-align:center">
+					<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" />
+				</f:facet>
+				<p:inputTextarea cols="41" rows="10" id="newOfferedSpec"
+					rendered="#{!createDOBackingBean.managedBean.dpFlag}"
+					styleClass="colFloatLeft" autoResize="false"
+					style="width: 96% !important; margin-left:0px;" disabled="true"
+					value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" />
+			</p:column>
+		</p:dataTable>
+
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" process="@this"
+				oncomplete="doItemInfo.hide()" partialSubmit="true">
+			</p:commandButton>
+		</div>
+
+	</p:dialog>
+	<!-- 28855 End -->
+
 </ui:composition>

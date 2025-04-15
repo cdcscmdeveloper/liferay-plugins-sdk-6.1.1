@@ -212,6 +212,9 @@
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
 		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
 		modal="true" id="bankDialog">
+		<!--#37779-START-->
+		<p:ajax event="close" listener="#{backingBean.cancelSmBankFunctions}"/>
+		<!--#37779-End-->
 		<p:outputPanel id="bankDetailsPanel" layout="block">
 		<p:messages id="msg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" escape="false"/>				
 			<table style="width: 100%">
@@ -225,7 +228,9 @@
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
 							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="O" />
+							<!--#37779-START-->
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<!--#37779-End-->
 							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.registration']}"
 								itemValue="R" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.paymentLbl']}"

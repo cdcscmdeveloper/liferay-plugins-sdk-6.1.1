@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +40,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO; //#25886
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
@@ -128,7 +128,6 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBusiness; // #29832
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -147,6 +146,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -156,7 +156,6 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.simplequote.SimpleQuoteManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -178,8 +177,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class SimpleQuoteBackingBean.
@@ -409,9 +406,18 @@ public class SimpleQuoteBackingBean extends
 			getManagedBean().setNewableFlag(Boolean.FALSE);
 			getManagedBean().setAddNewSpecFlag(Boolean.FALSE);
 			getManagedBean().setEditableFlag(Boolean.FALSE);
+			getManagedBean().setTrackingDairyView(Boolean.TRUE);//#25790
 			getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			getManagedBean().setCreatedBy(getUserById(scQuote.getCreatedBy()).getUserName());
 			
+			//#25886 - start
+			if(getManagedBean().getScQuote().getPurchaseInDefault() != null){
+				getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+						getManagedBean().getScQuote());
+				ScQuote scQt= getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+				getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+			}
+			//#25886 - end
 			// page navigation to simple quote
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, SIMPLE_QUOTE_PAGE_NAV);
 
@@ -883,7 +889,7 @@ public class SimpleQuoteBackingBean extends
 		if (supplierId != null && supplierId != 0) {
 			if (scQuote.getSupplierId() == 0)
 				scQuote.setSupplierId(supplierId);
-		} else if (supplierId == 0) {
+		} else if(supplierId != null && supplierId == 0){ //#34994 & #25790
 			if (scQuote.getSupplierId() == 0 && getManagedBean().getPanelSuppliers() != null && !getManagedBean().getPanelSuppliers().isEmpty())
 				scQuote.setSupplierId(getManagedBean().getPanelSuppliers().get(0).getSmSupplier().getSupplierId());
 		}
@@ -5229,6 +5235,14 @@ public class SimpleQuoteBackingBean extends
 				}
 			}
 		}
+		// #25886 - start
+		if (getManagedBean().getScQuote().getPurchaseInDefault() != null) {
+			getPurchaseInDefaultSO().finaliseSourceMethod(getManagedBean().getScQuote().getPurchaseInDefault(),
+					getManagedBean().getScQuote());
+			ScQuote scQt = getQuoteSO().getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+			getManagedBean().setCreatedBy(getUserById(scQt.getCreatedBy()).getUserName());
+		}
+		// #25886 - end
 		
 		// Populate General Information tab details saved in session
 		// after returning from Treasury Circular Page
@@ -5874,6 +5888,14 @@ public class SimpleQuoteBackingBean extends
 			isServiceContainPrice = getTemplateSpecSO().validateSpecAnwer(
 					specAnswerList.get(0).getTplSpecQuestion()
 							.getTplSpecMaster(), specAnswerList, locale);
+			// #34147 #34395 start
+			if (getManagedBean().getScQuote() != null) {
+				if (getManagedBean().getScQuote().isZonal() == true) {
+					ScQuote scQuote = getManagedBean().getScQuote();
+					getTemplateSpecSO().validateSubmitSimpleQuoteResponse(specAnswerList, scQuote);
+				}
+			}
+			// #34147 #34395 end
 		}
 		
 		if (!isServiceContainPrice && !isProdContainPrice) {
@@ -7438,6 +7460,17 @@ public class SimpleQuoteBackingBean extends
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 	
+	// #25886 - start
+	/**
+	 * Gets the purchaseindefault so.
+	 * 
+	 * @return the purchaseindefault so
+	 */
+	private IPurchaseInDefaultSO getPurchaseInDefaultSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IPurchaseInDefaultSO.class);
+	}
+	// #25886 - end
 	
 	/**
 	 * based on treenode selection button enable/disable.
@@ -7956,25 +7989,26 @@ public class SimpleQuoteBackingBean extends
 			ppBB.getManagedBean().setFromCircularNotice(false);
 			ppBB.getManagedBean().setDifferentModule(false);
 			ppBB.getManagedBean().setGotoPreviewPage(SIMPLE_QUOTE_PAGE_NAV);
+			// 25790 - start
+			if (getManagedBean().isEditableFlag()) {
+				ppBB.getManagedBean().setSqEditableMode(true);
+			}
+			// 25790 - end
 			ppBB.getManagedBean().setSupplierItemDocId(getManagedBean().getSupplierItemDocId());
 			final TemplateSpecBean ptsb = new TemplateSpecBean();
 			try {
 				BeanUtils.copyProperties(ptsb, getManagedBean().getProductTemplateSpecBean());
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			final TemplateSpecBean stsb = new TemplateSpecBean();
 			try {
 				BeanUtils.copyProperties(stsb, getManagedBean().getServiceTemplateSpecBean());
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			ppBB.getManagedBean().setProductTemplateSpecBean(ptsb);
@@ -8138,6 +8172,21 @@ public class SimpleQuoteBackingBean extends
 		return sb.toString();
 	}
     //29832 - end
+
+	// start - #25790
+	/**
+	 * Redirect to purchase in default view.
+	 * 
+	 * @param purchaseInDefaultId
+	 *            the purchase in default id
+	 */
+	public void viewPurchaseInDefault(long purchaseInDefaultId) {
+		PurchaseInDefaultBackingBean pidBackingBean = new PurchaseInDefaultBackingBean();
+		pidBackingBean.getManagedBean().setTrackingDairyView(Boolean.TRUE);
+		pidBackingBean.viewPurchaseInDefault(purchaseInDefaultId);
+	}
+
+	// end - #25790
 
 	// 36301 - start
 	/**

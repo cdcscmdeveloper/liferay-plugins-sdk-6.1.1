@@ -43,6 +43,8 @@ public class TemplateSpecBean implements Serializable {
 	private boolean updateSpecByAnswers;
 	private List<TplSpecAnswer> specAnswersToDelete;
 	private TplSpecEstimation specEstimation;
+
+	private boolean wordBreakForQT;//#29007 Added Vinod
 	
 
 	/**
@@ -246,5 +248,14 @@ public class TemplateSpecBean implements Serializable {
 	}
 	//#25039 End
 
+	// #29007 Start Vinod
+	public boolean isWordBreakForQT() {
+		return wordBreakForQT;
+	}
+
+	public void setWordBreakForQT(boolean wordBreakForQT) {
+		this.wordBreakForQT = wordBreakForQT;
+	}
+	// #29007 End Vinod
 	
 }
