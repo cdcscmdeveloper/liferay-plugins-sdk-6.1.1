@@ -1495,6 +1495,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			log.info("end - PID validity process");
 			checkDisciplinaryAction(); //26279
+			checkSupplierDeleteBranch(); //29728
 		}
 		log.info("start - initializePRBeans");
 		initializePRBeans();
@@ -1555,16 +1556,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
-			
-			//29728 - start
-			if(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
-					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode(), 
-							getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
-				getManagedBean().setBranchNeedToBeChanged(true);
-				
-				getManagedBean().setBranchCode(getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
-			}
-			//29728 - end
 		}
 	}
 
@@ -1583,6 +1574,29 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		return pendingStatusIds.contains(statusId);
 	}
 	// 26279 - End
+	
+	
+	// 29728 - start
+	/**
+	 * Checks if the supplier's branch is deleted and needs to be changed.
+	 * 
+	 * If the branch is marked for deletion and is currently in a pending
+	 * status, this method sets the branch as needing a change and updates the
+	 * branch code.
+	 */
+	private void checkSupplierDeleteBranch() {
+		if (isPRPendingStatus()) {
+			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
+					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
+							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+				getManagedBean().setBranchNeedToBeChanged(true);
+
+				getManagedBean().setBranchCode(
+						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
+			}
+		}
+	}
+	// 29728 - End
 
 	/**
 	 * Calculate sub total based on quantity
