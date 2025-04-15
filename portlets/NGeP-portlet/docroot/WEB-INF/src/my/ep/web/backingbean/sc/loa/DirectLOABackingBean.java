@@ -13309,7 +13309,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @return
 	 */
 	public void reviseForQtTypeItemInPK7() {
-		this.approveBeforeupdateBpmTaskAction(BpmOutcomeConst.BPM_REVISE);
+		this.updateReviseBPMTaskAction(BpmOutcomeConst.BPM_REVISE);
 	}
 
 	// #29766 End Vinod
