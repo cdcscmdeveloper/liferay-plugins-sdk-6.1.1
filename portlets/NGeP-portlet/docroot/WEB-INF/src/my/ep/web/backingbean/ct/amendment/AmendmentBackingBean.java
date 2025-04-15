@@ -5350,8 +5350,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onQuantityChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			// contract type: central and followLoaAmount: false, disallow to change contract value
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
