@@ -323,7 +323,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private void setCategoryL3CheckBox(CategoryManagedBean managedBean) {
 		PmCategoryL3 oldpmCategoryL3 = managedBean.getAuditOldCategoryL3();
 
-		if (pmCategoryL3.getBasicCategoryReq().equals(oldpmCategoryL3.getBasicCategoryReq())) {
+		if (!pmCategoryL3.getBasicCategoryReq().equals(oldpmCategoryL3.getBasicCategoryReq())) {
 			requireOtherCategory.setRoleCode(roleCode);
 			requireOtherCategory.setDocType(docType3);
 			requireOtherCategory.setDocNo(pmCategoryL3.getCategoryL3Code());
@@ -362,7 +362,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			objList.add(bussCompRestriction);
 		}
 
-		if (pmCategoryL3.getHomeOperated().equals(oldpmCategoryL3.getHomeOperated())) {
+		if (!pmCategoryL3.getHomeOperated().equals(oldpmCategoryL3.getHomeOperated())) {
 			operateFromHome.setRoleCode(roleCode);
 			operateFromHome.setDocType(managedBean.getCatLevel());
 			operateFromHome.setDocNo(docType3);
