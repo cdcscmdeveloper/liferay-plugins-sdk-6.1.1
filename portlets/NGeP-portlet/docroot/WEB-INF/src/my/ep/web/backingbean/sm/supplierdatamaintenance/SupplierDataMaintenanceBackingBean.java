@@ -2192,30 +2192,18 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void onViewDisciplinaryAction() {
 		SmSupplier currSupp = getManagedBean().getSmSupplier();
-		List<DisciplinaryActionVO> disciplineVOs = new ArrayList<>();
-
-		if (currSupp != null) {
+		if(currSupp != null){
 			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
-
-			if (!EntityHelper.isCollectionEmpty(voList)) {
-				disciplineVOs = voList;
+			if(!EntityHelper.isCollectionEmpty(voList)){
+				getManagedBean().setDisciplineVOs(voList);
 			} else {
-				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-				SmAppl smAppl = currSupp.getSmAppl();
-
-				if (smAppl != null) {
-					String suppType = smAppl.getSupplierType();
-					boolean isContractorOrConsultant = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType)
-							|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
-					retVal.setMofNoExist(isContractorOrConsultant);
-				}
-
-				disciplineVOs.add(retVal);
+				getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 			}
+		} else {
+			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		}
-
-		getManagedBean().setDisciplineVOs(disciplineVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+		RequestContext.getCurrentInstance().execute(
+				"disciplinaryActionHistoryDlg.show();");
 	} 
 	
 	/**
