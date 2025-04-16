@@ -10392,22 +10392,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
+				//#34831 - Start
+				} else if (!isActiveAppl && getManagedBean().isBasicSupplier()) {
+					SmCommonUtil.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721204,
+							new String[] { SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null),
+									getManagedBean().getSmAppl().getApplNo(),
+									SmApplicationUtil.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl()) });
+					renewSesionObject();
 				} else {
-					SmCommonUtil
-							.redirectToPage(
-									SmApplicationUtil.getApplicationErrorPage(),
-									MessageConst.INFO_721204,
-									new String[] {
-											getParameterDesc(
-													ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-													getManagedBean()
-															.getSmAppl()
-															.getApplType()),
-											getManagedBean().getSmAppl()
-													.getApplNo(),
-											SmApplicationUtil
-													.getMofApplicationSaveDraftUrl(getManagedBean()
-															.getSmAppl()) });
+					SmCommonUtil.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721204,
+							new String[] {
+									getParameterDesc(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, getManagedBean()
+											.getSmAppl().getApplType()), getManagedBean().getSmAppl().getApplNo(),
+									SmApplicationUtil.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl()) });
+					// #34831 - End
 					renewSesionObject();
 				}
 			}

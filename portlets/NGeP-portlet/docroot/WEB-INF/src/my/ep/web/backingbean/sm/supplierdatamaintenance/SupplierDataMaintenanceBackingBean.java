@@ -101,6 +101,8 @@ import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementOverlappingCategoryBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementSupplierInformationBackingBean;
 //#28895_35501 End
+//#28895_35501_DA - AUDIT TRAIL SM DA
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementDisciplinaryActionBackingBean;
 //#34031 Start
 import java.util.Calendar;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -183,6 +185,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		} else {
 			supplierSearchReqDTO.setApplId(selectedSmAppl.getApplId());
 			getManagedBean().setSmAppl(SmServiceLookup.getSupplierSearchSO().retrieveSmApplWithChildByApplID(supplierSearchReqDTO).getSmAppl());
+			selectedSmAppl = getManagedBean().getSmAppl();
 		}
 		log.info("Appl ID : " + getManagedBean().getSmAppl().getApplId());
 		//28623 - start
@@ -351,6 +354,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setOldPoApprOverlappedRemark(this.getManagedBean().getPoApprOverlappedRemark());
 		this.getManagedBean().setOldApproverRemark(this.getManagedBean().getApproverRemark());
 		// #28895_35501 End
+		// #28895_35501_DA - AUDIT TRAIL SM DA
+		this.getManagedBean().setOldSmDisciplinaryAction((SmDisciplinaryAction) CustomUtils.getInstance().deepCopy(getActiveDisciplinaryAction()));
 		
 		//#34209 - START
 			getManagedBean().setTempCategoryLs(new HashMap<Long, String>());
@@ -474,7 +479,15 @@ public class SupplierDataMaintenanceBackingBean extends
 			SLAUtils.getInstance().logSLAError("SM", "basic", getManagedBean().getSmAppl().getApplNo(),
 					"SupplierDataMaintenanceBackingBean", (new LogKey()).getUserId(), e);
 		}
+		// #28895_35501_DA Start - AUDIT TRAIL SM DA
+		IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+		if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+			AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+			auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+		}
+		// #28895_35501_DA End			
 		getManagedBean().setDisplaySearchPage(true);
+		getManagedBean().setEditDisciplinaryActionCheckBox(false);
 		//27437 : Disciplinary Action
 		FacesContext fc = FacesContext.getCurrentInstance();
 		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
@@ -730,6 +743,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 					auditSmBackingBean = new AuditSupplierManagementApproverRemarksBackingBean();
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					// #28895_35501_DA Start - AUDIT TRAIL SM DA
+					auditSmBackingBean = new AuditSupplierManagementDisciplinaryActionBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+					// #28895_35501_DA End				
 				}
 			}
 			// #28895_35501 End
