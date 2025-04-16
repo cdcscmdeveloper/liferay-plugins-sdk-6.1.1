@@ -1486,6 +1486,5 @@ public class CategoryManagedBean extends BaseManagedBean {
 	public void setAuditUpdatedCategoryL1(PmCategoryL1 auditUpdatedCategoryL1) {
 		this.auditUpdatedCategoryL1 = auditUpdatedCategoryL1;
 	}
-
 	/************ AUDIT 35509 *************/
 }
