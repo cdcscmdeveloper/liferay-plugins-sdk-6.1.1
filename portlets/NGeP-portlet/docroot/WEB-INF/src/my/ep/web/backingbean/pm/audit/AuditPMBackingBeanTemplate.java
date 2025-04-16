@@ -60,7 +60,11 @@ public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseMan
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
 		try {
-			auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+			if (!auditPMReqDTO.getObjList().isEmpty() && auditPMReqDTO.getObjList() != null) {
+				auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
+			} else {
+				log.info("ObjectList is Empty");
+			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "insert", modName, "auditPMSO",
 					new LogKey(getUserIdSessionFromLoginId()).getUserId(), e);
