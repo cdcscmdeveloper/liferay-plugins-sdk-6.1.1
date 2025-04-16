@@ -4638,7 +4638,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			boolean branchDeleted = checkValidationSupplierBranchDeleted();
 			if(branchDeleted){
 				this.getManagedBean().setReadOnly(branchDeleted);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
