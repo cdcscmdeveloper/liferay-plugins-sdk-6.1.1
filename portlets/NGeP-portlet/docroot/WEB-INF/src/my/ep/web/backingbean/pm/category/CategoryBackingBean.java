@@ -1314,6 +1314,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			if (resDTO.isSuccessful()) {
 				/************ AUDIT 35509 Start*************/
+				this.getManagedBean().setAuditUpdatedCategoryL1(resDTO.getCategoryL1());
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
 				}
@@ -1557,6 +1558,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			
 			if (resDTO.isSuccessful()) {
 				/************ AUDIT 35509 *************/
+				this.getManagedBean().setAuditUpdatedCategoryL2(resDTO.getCategoryL2());
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
 				}
