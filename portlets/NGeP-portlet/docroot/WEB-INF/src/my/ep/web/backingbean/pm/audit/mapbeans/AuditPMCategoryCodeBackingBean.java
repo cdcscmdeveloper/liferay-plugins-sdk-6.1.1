@@ -96,6 +96,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		managedBean.setAuditOldCategoryL2(null);
 		managedBean.setAuditOldCategoryL3(null);
 		managedBean.setAuditLevelCategory(null);
+		managedBean.setAuditUpdatedCategoryL1(null);
+		managedBean.setAuditUpdatedCategoryL2(null);
+		managedBean.setAuditUpdatedCategoryL3(null);
 		return auditPMReqDTO;
 	}
 
@@ -110,16 +113,17 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		statusL1.setRoleCode(roleCode);
 		statusL1.setDocType(AuditConst.PM_AUD_CODE_CATEGORY_L1);
 		statusL1.setDocNo(pmCategoryL1.getCategoryL1Code());
-		statusL1.setDocGroupId(BigInteger.valueOf(pmCategoryL1.getCategoryL1Id()));
 		statusL1.setPmParameterLvlId(AuditConst.PM_AUD_CCR_MAIN_PMPARAMETERLVLID);
 		statusL1.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
 		statusL1.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 		statusL1.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL1);
-		statusL1.setDocId(BigInteger.valueOf(pmCategoryL1.getCategoryL1Id()));
 		statusL1.setFieldLabelCode(AuditConst.PM_AUD_CCR_MAIN_STATUS_FIELDLABELCODE);
 		statusL1.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 
 		if (managedBean.isNewCategory()) {
+			BigInteger categoryL1Id = BigInteger.valueOf(managedBean.getPmCategoryL1().getCategoryL1Id());
+			statusL1.setDocId(categoryL1Id);
+			statusL1.setDocGroupId(categoryL1Id);
 			statusL1.setNewValue(pmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
 
@@ -147,16 +151,17 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		statusL2.setRoleCode(roleCode);
 		statusL2.setDocType(AuditConst.PM_AUD_CODE_CATEGORY_L2);
 		statusL2.setDocNo(pmCategoryL2.getCategoryL2Code());
-		statusL1.setDocGroupId(BigInteger.valueOf(pmCategoryL2.getPmCategoryL1().getCategoryL1Id()));
 		statusL2.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_PMPARAMETERLVLID);
 		statusL2.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
 		statusL2.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 		statusL2.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL2);
-		statusL2.setDocId(BigInteger.valueOf(pmCategoryL2.getCategoryL2Id()));
 		statusL2.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_STATUS_FIELDLABELCODE);
 		statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 
 		if (managedBean.isNewCategory()) {
+			BigInteger categoryL2Id = BigInteger.valueOf(managedBean.getPmCategoryL2().getCategoryL2Id());
+			statusL2.setDocId(categoryL2Id);
+			statusL2.setDocGroupId(categoryL2Id);
 			statusL2.setNewValue(pmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
 
@@ -181,10 +186,11 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		this.pmCategoryL3 = managedBean.getPmCategoryL3();
 		this.docType3 = AuditConst.PM_AUD_CODE_CATEGORY_L3;
 		this.docNo = pmCategoryL3.getCategoryL3Code();
-		this.docId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
-		this.docGroupId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
 		
 		if (managedBean.isNewCategory()) {
+			BigInteger categoryL3Id = BigInteger.valueOf(managedBean.getPmCategoryL3().getCategoryL3Id());
+			this.docId = categoryL3Id;
+			this.docGroupId = categoryL3Id;
 			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			
 			detailObj(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE, null, pmCategoryL3.getPaidUpCapital()
