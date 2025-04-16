@@ -4166,6 +4166,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
 			if (!getManagedBean().isApproverTabLoaded()) {
+				// 37892 -start-
+				Long statusId = this.getManagedBean().getQt().getQtStatus()
+						.getStatusId();
+				callOtherApprovalTabDtls(statusId);
+				// 37892 -end-
 				retrieveApprovalTabDtl();
 			}
 			// #30435 - End.
@@ -14298,7 +14303,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//12471 - End - Dayan
 	
-	
+	// 37892 -start-
+	/**
+	 * call other approval tab details during pending document submit.
+	 * 
+	 * @param statusId
+	 * @return
+	 */
+	public void callOtherApprovalTabDtls(Long statusId) {
+		boolean isStatusCheck = QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+				.equals(statusId);
+		if (isStatusCheck) {
+			retrieveOthersApprovalTabDtl();
 
+		}
+	}
+	// 37892 -end-
 
 }
