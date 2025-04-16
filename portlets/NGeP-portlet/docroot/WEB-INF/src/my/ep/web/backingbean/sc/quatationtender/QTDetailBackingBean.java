@@ -14326,7 +14326,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 
 	/**
-	 * #29661
+	 * #29661 start
 	 * get parameter description by sc_qt_category's category type
 	 * @param categoryType
 	 * @return
@@ -14337,7 +14337,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	
 	/**
-	 * #29661
+	 * #29661 start
 	 * Convert CT panel category code data to ScQt category code data 
 	 * @param panelCategoryCodeList
 	 */

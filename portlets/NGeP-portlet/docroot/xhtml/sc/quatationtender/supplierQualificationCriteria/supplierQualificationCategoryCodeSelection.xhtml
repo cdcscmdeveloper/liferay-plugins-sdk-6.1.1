@@ -18,35 +18,35 @@
 					<p:row>
 						<p:column>
 							<!-- category codes -->
-							<p:dataTable id="openPnlId" var="cateGoryCt"
+							<p:dataTable id="openPnlId" var="categoryCT"
 								widgetVar="openCodes"
 								value="#{qTDetailBB.managedBean.ctPanelCategoryCode}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								rowKey="#{cateGoryCt}">
+								rowKey="#{categoryCT}">
 
 								<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
-									#{cateGoryCt.pmCategoryL1.categoryL1Code}#{cateGoryCt.pmCategoryL2.categoryL2Code}#{cateGoryCt.pmCategoryL3.categoryL3Code}
+									#{categoryCT.pmCategoryL1.categoryL1Code}#{categoryCT.pmCategoryL2.categoryL2Code}#{categoryCT.pmCategoryL3.categoryL3Code}
 									</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.main.category']}"
 									style="width:25%;white-space: normal;">
-									<h:outputText value="#{cateGoryCt.pmCategoryL1Name}" />
+									<h:outputText value="#{categoryCT.pmCategoryL1Name}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 									style="width:25%;white-space: normal;">
-									<h:outputText value="#{cateGoryCt.pmCategoryL2Name}" />
+									<h:outputText value="#{categoryCT.pmCategoryL2Name}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 									style="width:25%;white-space: normal;">
-									<h:outputText value="#{cateGoryCt.pmCategoryL3Name}" />
+									<h:outputText value="#{categoryCT.pmCategoryL3Name}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.category.type']}"
 									style="width:10%;white-space:normal;">
 									<h:outputText
-										value="#{suppliersReviewBackingBean.getParameterDesc(cateGoryCt.categoryType)}" />
+										value="#{suppliersReviewBackingBean.getParameterDesc(categoryCT.categoryType)}" />
 								</p:column>
 
 							</p:dataTable>
@@ -59,35 +59,35 @@
 					<p:row>
 						<p:column>
 							<!-- category codes -->
-							<p:dataTable id="restrictedPnlId" var="cateGory"
+							<p:dataTable id="restrictedPnlId" var="categorySC"
 								widgetVar="restrictedPnlId"
 								value="#{qTDetailBB.managedBean.qtCategoryList}"
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								rowKey="#{cateGory}">
+								rowKey="#{categorySC}">
 
 								<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
-									#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+									#{categorySC.pmCategoryL1.categoryL1Code}#{categorySC.pmCategoryL2.categoryL2Code}#{categorySC.pmCategoryL3.categoryL3Code}
 									</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.main.category']}"
 									style="width:25%;white-space: normal;">
-									<h:outputText value="#{cateGory.pmCategoryL1Name}" />
+									<h:outputText value="#{categorySC.pmCategoryL1Name}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.sub.category']}"
 									style="width:25%;white-space: normal;">
-									<h:outputText value="#{cateGory.pmCategoryL2Name}" />
+									<h:outputText value="#{categorySC.pmCategoryL2Name}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
 									style="width:25%;white-space: normal;">
-									<h:outputText value="#{cateGory.pmCategoryL3Name}" />
+									<h:outputText value="#{categorySC.pmCategoryL3Name}" />
 								</p:column>
 
 								<p:column headerText="#{lbl['lbl.sc.category.type']}"
 									style="width:10%;white-space:normal;">
 									<h:outputText
-										value="#{qTDetailBB.getParameterDescByString(cateGory.categoryType)}" />
+										value="#{qTDetailBB.getParameterDescByString(categorySC.categoryType)}" />
 								</p:column>
 
 							</p:dataTable>
