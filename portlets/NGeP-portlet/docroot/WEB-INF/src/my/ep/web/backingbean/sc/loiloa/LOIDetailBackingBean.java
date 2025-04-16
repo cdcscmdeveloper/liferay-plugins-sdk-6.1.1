@@ -1920,6 +1920,7 @@ public class LOIDetailBackingBean extends
 		} finally {
 		}
 
+		isSupplierEPVStatusRejected();//#21692
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
@@ -6620,7 +6621,7 @@ public class LOIDetailBackingBean extends
 		return agreeEPV;
 	}
 	
-	public boolean isSupplierEPVStatusRejected() {
+	private void isSupplierEPVStatusRejected() {
 		boolean supplierStatus = false;
 		
 		IQTDetailSO detailSO;
@@ -6641,24 +6642,30 @@ public class LOIDetailBackingBean extends
 		} finally {
 			detailSO = null;
 		}
+		getManagedBean().setAbleToSubmitLOI(!supplierStatus);
+		
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
 		
 		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 		
-		supplierStatus = (supplierStatus && isLoiListPortlet() && !this.getManagedBean().getScLoi().isBrandNew() && (
-				null != this.getManagedBean().getScLoi().getScWorkFlowStatus() &&
-				(this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_APPROVAL) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_NEGOTIATION) || 
-				this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL)))
-				&& isValidFor21692
-				) ? true : false;
+		supplierStatus = supplierStatus
+				&& isLoiListPortlet()
+				&& !this.getManagedBean().getScLoi().isBrandNew()
+				&& (null != this.getManagedBean().getScLoi().getScWorkFlowStatus() && statusEnabledCancel.contains(this
+						.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()))
+				&& isValidFor21692 ? true : false;
 		
 		getManagedBean().setAbleToCancelLOI(supplierStatus);//#36339, #21692
-		
-		return supplierStatus;
 	}
+	//#21692 - End
 	
+	//#21692 - Start
 	public boolean isLoiListPortlet() {
 		return QTConstants.PORTLET_NAME_QT_LOI_LIST
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());

@@ -509,8 +509,8 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	// #21692 - start
-	public boolean isSupplierEPVStatusRejected() {
+	//#21692 - start
+	public void isSupplierEPVStatusRejected() {
 		boolean supplierStatus = false;
 		
 		IQTDetailSO detailSO;
@@ -534,22 +534,22 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			} finally {
 				detailSO = null;
 			}
+			getManagedBean().setAbleToSubmitLOA(supplierStatus);
 			
 			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 			
-			supplierStatus = (supplierStatus && isLoaListPortlet()
-					&& isValidFor21692
-					) ? true : false;
+			supplierStatus = supplierStatus && isLoaListPortlet()
+					&& isValidFor21692 ? true : false;
 		}
 		getManagedBean().setAbleToCancelLOA(supplierStatus);//#36339, #21692
-		
-		return supplierStatus;
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	public boolean isLoaListPortlet() {
 		return QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-	// #21692 - end
+	//#21692 - end
 	
 }
 

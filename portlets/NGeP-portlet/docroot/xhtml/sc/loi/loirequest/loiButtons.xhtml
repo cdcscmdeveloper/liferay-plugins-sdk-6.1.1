@@ -52,7 +52,7 @@
 					process="@form" update="@form" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and lOIDetailBackingBean.managedBean.ableToSubmitLOI}"
 					action="#{lOIDetailBackingBean.submitAction}" process="@form"
 					update="@form" /><ui:remove>#21692</ui:remove>
 					

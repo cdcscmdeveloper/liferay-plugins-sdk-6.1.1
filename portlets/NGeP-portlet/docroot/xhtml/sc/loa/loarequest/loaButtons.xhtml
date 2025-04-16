@@ -45,7 +45,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
 					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
@@ -91,7 +91,7 @@
 				
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
-					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and !lOADetailBackingBean.managedBean.scLoa.brandNew
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and isLoaGenerated
 					and lOADetailBackingBean.isLOAStatusAbleToCancel()}"
 					oncomplete="cancelLoaPopup.show();"
 					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"

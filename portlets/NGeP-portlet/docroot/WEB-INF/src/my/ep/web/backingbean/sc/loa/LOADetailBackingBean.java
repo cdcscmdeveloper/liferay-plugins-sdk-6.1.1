@@ -12055,7 +12055,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		
 		return supplierStatus;
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	public boolean isLOAStatusAbleToCancel() {
 		boolean isAble = false;
 		
@@ -12066,18 +12068,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 		scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
 		
-		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+		List<Long> statusEnabledCancel = new ArrayList<>();
 		
-		isAble = null != currentWorkFlowStatus && (
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION) ||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
-				)? true : false;
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		
+		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
+
+		isAble = null != currentWorkFlowStatus
+				&& statusEnabledCancel.contains(currentWorkFlowStatus.getPmStatus().getStatusId()) ? true : false;
 		
 		return isAble;
 	}
-	//#21692 - end
+	//#21692 - End
 	
 	// 34242 - Start
 	public void retainAwardPage() {
