@@ -15,8 +15,8 @@
 	<p:remoteCommand name="enableBtn" action="#{gpkiBackingBean.enableBtn()}" update="resendOtpBtn"/>
 	<p:remoteCommand name="disableBtn" action="#{gpkiBackingBean.disableBtn()}" update="resendOtpBtn"/>
 	<p:remoteCommand name="saveNonce" action="#{gpkiBackingBean.saveNonce()}" />
-	<h:outputScript library="ep/gpki_js" name="obfuscate_gpki-api-v2.js" />
-	<h:outputScript library="ep/gpki_js" name="obfuscate_gpkiPopup2.js" />
+	<h:outputScript library="ep/gpki_js" name="gpki-api-v2.js" />
+	<h:outputScript library="ep/gpki_js" name="gpkiPopup2.js" />
 
 	<script>
 		function token(){
@@ -96,7 +96,7 @@
 					disabled="#{gpkiBackingBean.getBtn()}"/>
 				
 				<!-- BELOW BUTTON IS TO SKIP USE TOKEN. DO NOT MERGE TO PROD!!! -->
-				<p:commandButton id="skipBtn2" value="Sign W/O Token"  
+				<p:commandButton id="skipBtn2" value="Sign W/O GPKI"  
 					onstart="signSkipToken('gpki_dlg2');" oncomplete="gpkiBlockWidget.hide();" />
 			</h:panelGrid>
 		</p:panel>

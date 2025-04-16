@@ -412,11 +412,25 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 							if (null != resDTO.getFlOrder().getStatus()) {
 								if (null != resDTO.getFlOrder().getStatus().getStatusId()) {
 									orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-									if (isFlFulfilmentRecevingOfficer()) {
-										orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
-									} else if (isAcknowledgeOfficer()) {
-										orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+									// 36386-start
+									if (getSearchFunctionType() != null) {
+										if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+											if (isFlFulfilmentRecevingOfficer()) {
+												orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
+											} else if (isAcknowledgeOfficer()) {
+												orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+											}
+										} else if (getSearchFunctionType().equalsIgnoreCase(
+												ParameterConst.ORG_TYPE_SUPPLIER)
+												&& isFlFulfilmentSupplier()) {
+											orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+										}
+									} else {
+										if (isFlFulfilmentSupplier()) {
+											orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+										}
 									}
+									// 36386-end
 								}
 							}
 						}
@@ -677,6 +691,19 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
 	}
 	
+	// 35508 - start
+	/**
+	 * Checks if is Ep Admin.
+	 * 
+	 * @return true, if is Ep Admin
+	 */
+	public boolean isEpAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+
+	// 35508 - end
+	
 	/**
 	 * Gets the doc type list by role.
 	 *
@@ -717,6 +744,18 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			}
+			// 35508-start
+			if (isEpAdmin()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			// 35508-end
 		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getSearchOrderType())) {
 			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 			if(isFlFulfilmentRequisitioner()) {
@@ -748,7 +787,26 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			}
+			// 35508-start
+			if (isEpAdmin()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			// 35508-end
 		}
+		
+		//36386 -Start
+		if(getSearchFunctionType() !=null && getSearchFunctionType().equalsIgnoreCase("ParameterConst.ORG_TYPE_SUPPLIER")){
+			flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); 
+		}
+		//36386 -End
 		
 		return flDocTypes;
 	}

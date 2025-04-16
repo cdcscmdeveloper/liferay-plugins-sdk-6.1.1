@@ -153,6 +153,11 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 
+	//#35508 start
+  	private String originalSupplierInvRef;
+  	private String originalBankAccNoName;
+  	//#35508 end
+  	
 	public Map<String, PmFinancialOrg> getFactoringAccountMap() {
 		if(factoringAccountMap==null) {
 			factoringAccountMap = new HashMap<String, PmFinancialOrg>();
@@ -1260,4 +1265,32 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.smDisciplinaryAction = smDisciplinaryAction;
 	}
 	//26279 - end
+
+	/**
+	 * @return the originalSupplierInvRef
+	 */
+	public String getOriginalSupplierInvRef() {
+		return originalSupplierInvRef;
+	}
+
+	/**
+	 * @param originalSupplierInvRef the originalSupplierInvRef to set
+	 */
+	public void setOriginalSupplierInvRef(String originalSupplierInvRef) {
+		this.originalSupplierInvRef = originalSupplierInvRef;
+	}
+
+	/**
+	 * @return the originalBankAccNoName
+	 */
+	public String getOriginalBankAccNoName() {
+		return originalBankAccNoName;
+	}
+
+	/**
+	 * @param originalBankAccNoName the originalBankAccNoName to set
+	 */
+	public void setOriginalBankAccNoName(String originalBankAccNoName) {
+		this.originalBankAccNoName = originalBankAccNoName;
+	}
 }

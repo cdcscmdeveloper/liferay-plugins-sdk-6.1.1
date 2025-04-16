@@ -6,9 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-import org.primefaces.component.log.Log;
-
+import my.ep.constant.tpl.TemplateDocConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -16,12 +14,14 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.registration.RegistrationBackingBean;
 import my.ep.web.constant.SSTConstant;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
 
 public class VmUtil {
 	
@@ -143,6 +143,42 @@ public class VmUtil {
 	public String getCompleteAddress(SmAddress smAdd) {
 		return AddressUtils.getFullAddress(smAdd);
 	}
+	
+	// Bug #36702@Syazani 28/11/2024 -- Start
+	/**
+	 * This method will split Long words to display properly in velocity
+	 * template.
+	 * 
+	 * @param key
+	 * @param maxLength
+	 * @return the updatedKey
+	 */
+	public String splitText(String key, int maxLength) {
+		if (null == key) {
+			return key;
+		}
+		String[] words = key.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder subSb;
+		for (String word : words) {
+			int length = word.length();
+			if (length >= maxLength) {
+				subSb = new StringBuilder();
+				String newWord;
+				String subWord;
+				for (int i = 0; i < length; i += maxLength) {
+					subWord = word.substring(i, Math.min(length, i + maxLength));
+					subSb.append(subWord).append(TemplateDocConst.PARAM_SPACE);
+				}
+				newWord = subSb.toString();
+				sb.append(newWord).append(TemplateDocConst.PARAM_SPACE);
+			} else {
+				sb.append(word).append(TemplateDocConst.PARAM_SPACE);
+			}
+		}
+		return sb.toString();
+	}
+	// Bug #36702@Syazani 28/11/2024 -- End
 	
 	// 36122 - start
 	/**
@@ -387,4 +423,71 @@ public class VmUtil {
 		return localKey;
 	}
 	// #29007 - note 724 Vinod End
+	// 35295 - start
+				/**
+				 * This method will break Long words for file type docx.
+				 *
+				 * 
+				 * @param key
+				 * @param maxLength
+				 * @return the updatedKey
+				 */
+			public String wordWrapText(String key, int maxLength) {
+				if (key == null || maxLength <= 0) {
+					return key;
+				}
+
+				String[] words = key.split("(?<!\r)\n|[ \t]+");
+				StringBuilder result = new StringBuilder();
+
+				for (String word : words) {
+					if (word.length() > maxLength && !word.contains("-")) {
+						String choppedWord = word.replaceAll("(.{" + maxLength + "})(?=(.{4,}|$))", "$1"
+								+ SSTConstant.WORD_BREAK_TO_REMOVE);
+						choppedWord = choppedWord.endsWith(SSTConstant.WORD_BREAK_TO_REMOVE) ? choppedWord.substring(0,
+								choppedWord.length() - SSTConstant.WORD_BREAK_TO_REMOVE.length()) : choppedWord;
+
+						choppedWord = choppedWord.replace(TemplateSpecConst.NEW_LINE_CHARACTER,
+								SSTConstant.WORD_BREAK_TO_REMOVE);
+						choppedWord = choppedWord.replace("/AddBreakLineHere//AddBreakLineHere/",
+								SSTConstant.WORD_BREAK_TO_REMOVE);
+
+						result.append(choppedWord).append(SSTConstant.ADD_WHITESPACE);
+					} else {
+						result.append(word.replace(TemplateSpecConst.NEW_LINE_CHARACTER, SSTConstant.WORD_BREAK_TO_REMOVE))
+								.append(SSTConstant.ADD_WHITESPACE);
+					}
+				}
+
+				log.info("input : " + key + " maxLength : " + maxLength + " String : " + result.toString());
+				return result.toString();
+			}
+
+				/**
+				 * This method will replace special character
+				 * and wrap the text based on file type .
+				 * @param text
+				 * @param length
+				 * @param fileType
+				 * @return
+				 */
+			public String escapeAndWrapText(String text, int length, String fileType) {
+				String textAfterWrap = wordWrapText(text, length);
+
+				// Process text based on file type
+				if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_DOC)) {
+					textAfterWrap = StringEscapeUtils.escapeHtml(textAfterWrap);
+				} else if (fileType.equalsIgnoreCase(SSTConstant.FILE_TYPE_PDF)) {
+					textAfterWrap = textAfterWrap.replace(TemplateSpecConst.LESS_THEN_SYMBOL,
+							TemplateSpecConst.LESS_THEN_HTML_ENTITY).replace(TemplateSpecConst.GREATER_THEN_SYMBOL,
+							TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+				}
+
+				// Replace word break characters with HTML new line
+				textAfterWrap = textAfterWrap.replace(SSTConstant.WORD_BREAK_TO_REMOVE,
+						TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+
+				return textAfterWrap;
+			}
+	
 }

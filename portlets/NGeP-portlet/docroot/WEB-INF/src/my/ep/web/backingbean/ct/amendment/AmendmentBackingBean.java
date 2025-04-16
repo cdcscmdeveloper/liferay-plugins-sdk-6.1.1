@@ -55,6 +55,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
+import my.ep.comparator.ct.CtContractZoneComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -90,6 +91,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.helper.EntityHelper; //Fix - #36708
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtActor;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -134,6 +136,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.MemberRole;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -1112,6 +1115,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * 
 	 * @param resDTO  the response data transfer object for contract
 	 */
+	@SuppressWarnings("unchecked") //#36726
 	public void setAmendmentContractVer(ContractReqDTO reqDTO) {
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractResDTO resDTO = null;
@@ -1336,7 +1340,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			// Retrieve Zone
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContractZones() != null && ctBackingBean.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
-				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+				CustomUtils.sort(ctBackingBean.getManagedBean().getContractVer().getCtContractZones(), new CtContractZoneComparator()); //#36726
 				ctBackingBean.retriveZonesByContractVer();
 			}
 
@@ -1354,7 +1358,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Retrieve Schedules
 			if (ctBackingBean.getManagedBean().getContractVer().getCtSchedules() != null && !ctBackingBean.getManagedBean().getContractVer().getCtSchedules().isEmpty()) {
 				ctBackingBean.getManagedBean().setChkSchedule(true);
-				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
+				CustomUtils.sort(ctBackingBean.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule()); //#36726
 				for (CtSchedule ctSchedule : ctBackingBean.getManagedBean().getContractVer().getCtSchedules()) {
 					if (ctSchedule.isUseInFulfilment()) {
 						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
@@ -1366,7 +1370,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 			if (ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments() != null
 					&& !ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments().isEmpty()) {
-				Collections.sort(ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
+				CustomUtils.sort(ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment()); //#36726
 				for (CtProgressivePayment ctProgressivePayment : ctBackingBean.getManagedBean().getContractVer().getCtProgressivePayments()) {
 					if (ctProgressivePayment.isUseInFulfilment()) {
 						ctBackingBean.getManagedBean().setDisableScheduleRadio(true);
@@ -2662,14 +2666,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
 							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
-
-				// Validation for File Reference No
-				if (StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())){
-					setTabValue("LOD");
+				//Start Fix - #36708
+//				// Validation for File Reference No
+//				if (StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())){
+//					setTabValue("LOD");
+//					throw new EpException(MessageConst.ERROR_100022, 
+//							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.physical.no", 
+//									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+//				}
+				if (StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSclRefNo())){
+//					setTabValue("LOD");
+					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", 
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+					
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.physical.no", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
+				//End Fix - #36708
 				// Validation for contract signer
 				if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner() == null 
 						|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId() == null) {
@@ -6012,7 +6026,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
-
+		String  sclRefNo =  EntityHelper.getStringNestedProperty( ctBackingBean.getManagedBean(), "contractVer.ctAmendment.sclRefNo"); //Fix - #36708
 		// Supplemental Contract Letter
 		if (ParameterConst.DOCUMENT_DEFINITION_KEY_LETTER_OF_ACCEPTANCE.equalsIgnoreCase(docDefinitionKey)) {
 			FacesScopes fs = new FacesScopes();
@@ -6051,7 +6065,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			context.put("ptjAddress", ptjAddress);
 			context.put("phoneNo", phoneNo);
 			context.put("faxNo", faxNo);
-			context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+			context.put("fileNo", sclRefNo + "-" + scLoa.getFileExtNo()); //Fix - #36708
 			context.put("loaNo", scLoa.getLoaNo());
 
 			String issueDate = "";
@@ -6299,8 +6313,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			} else {
 				context.put("govSignDate", "_______________");
 			}
-			if (!StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo())) {
-				context.put("agencyRefNo", ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo());
+			if (!StringUtils.isEmpty(sclRefNo)) { //Fix - #36708
+				context.put("agencyRefNo", sclRefNo); //Fix - #36708
 			} else {
 				context.put("agencyRefNo", "_______________");
 			}			
@@ -7960,7 +7974,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	// Start Fix - #34110 , #34950
 	public void sortItemPriceForTier(List<CtItemPrice> list) {
-		Collections.sort(list, new Comparator<CtItemPrice>() {
+		CustomUtils.sort(list, new Comparator<CtItemPrice>() { //#36726
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
 				BigDecimal z1 = o1.getFromQty();
@@ -7989,7 +8003,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	public void sortItemPriceForZonalTier(List<CtItemPrice> list) {
-		Collections.sort(list, new Comparator<CtItemPrice>() {
+		CustomUtils.sort(list, new Comparator<CtItemPrice>() { //#36726
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 				String x1 = o1.getCtContractZone().getZoneName();
 				String x2 = o2.getCtContractZone().getZoneName();
@@ -8025,7 +8039,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	public void sortItemMaxQtyForZonal (List<CtItemMaxQty> list){
 		if(list!=null){
-			Collections.sort(list, new Comparator<CtItemMaxQty>() {	
+			CustomUtils.sort(list, new Comparator<CtItemMaxQty>() {	//#36726
 				public int compare(CtItemMaxQty o1, CtItemMaxQty o2) {
 					String x1 = o1.getCtContractZone().getZoneName();
 					String x2 = o2.getCtContractZone().getZoneName();
@@ -8042,7 +8056,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	public void sortItemPriceForZonal(List<CtItemPrice> list){
-		Collections.sort(list, new Comparator<CtItemPrice>() {
+		CustomUtils.sort(list, new Comparator<CtItemPrice>() { //#36726
 			public int compare(CtItemPrice o1, CtItemPrice o2) {
 
 				String x1 = o1.getCtContractZone().getZoneName();
