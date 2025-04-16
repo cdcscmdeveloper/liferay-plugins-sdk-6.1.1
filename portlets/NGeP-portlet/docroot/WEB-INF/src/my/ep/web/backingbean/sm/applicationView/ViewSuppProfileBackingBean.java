@@ -97,8 +97,6 @@ public class ViewSuppProfileBackingBean extends
 		getManagedBean().setViewApplicationHistory(false);
 		// #28175
 		getManagedBean().setHistoryList(new ArrayList<PmRemarkCategory>());
-		// #34031
-		initSmRvHistory();
 		logger.info("[preRenderViewSupplierProfile] #31754 getManagedBean().isSupplierUser(): " + getManagedBean().isSupplierUser());
 		if (getManagedBean().isSupplierUser()) {
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
@@ -305,7 +303,7 @@ public class ViewSuppProfileBackingBean extends
 	
 	//28281
 	//26238 - end
-	//26238 -  STATR Disciplinary Action - 28111
+	//26238 - START Disciplinary Action - 28111
 	/**
 	 * View Disciplinary Action Supplier
 	 * @param currSupp

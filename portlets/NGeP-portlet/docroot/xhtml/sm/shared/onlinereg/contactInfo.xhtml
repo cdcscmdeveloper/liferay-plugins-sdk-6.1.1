@@ -98,7 +98,8 @@
 						<f:selectItems var="resState"
 							value="#{registrationBackingBean.managedBean.residentialStateLs}"
 							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
-						<p:ajax event="change"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@([id$=pnlContactInfo])" 
 							listener="#{registrationBackingBean.populateDistrictByAddType('residential', true)}"
 							update="pnlContactInfo,divisionContLabelPanelId,divisionContDropdownPanelId,cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
@@ -126,7 +127,8 @@
 							value="#{registrationBackingBean.managedBean.residentialDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@this @([id$=pnlContactInfo])" 
 							listener="#{registrationBackingBean.populateDivisionByAddType('residential', true)}"
 							update="cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu>
@@ -158,7 +160,8 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.residentialDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<p:ajax event="change"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@([id$=pnlContactInfo])" 
 							listener="#{registrationBackingBean.populateCityByAddType('residential', true)}"
 							update="cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"
@@ -184,7 +187,7 @@
 						disabled="#{registrationBackingBean.managedBean.sameAddress}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="city"
+						<f:selectItems var="city" 
 							value="#{registrationBackingBean.managedBean.residentialCityLs}"
 							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
 					</p:selectOneMenu> <p:message id="cmbResCityMsg" for="cmbResCity" display="icon" /></td>

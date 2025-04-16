@@ -4224,6 +4224,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					cancelRN(prObj, prSize);
 				}			
 				
+				//36729 - Start	
+				RequestNoteReqDTO reqNoteReqDTO = new RequestNoteReqDTO();
+				reqNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+				reqNoteReqDTO.setSupplierId(getManagedBean().getSupplierId());
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
+						reqNoteReqDTO);
+				reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
+				getManagedBean().setRequestNoteDtls(requestNoteResDTO.getRequestNoteDtlList());
+				//36729 - End				
+
 				if (getManagedBean().getRequestNoteDtls().size() > 0 && null != purchaseRequestSO) {
 					
 					rndtls = getManagedBean().getRequestNoteDtls();
@@ -5878,7 +5888,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			try {
 				SmSupplier currSupp = smSupplier;
 				if (currSupp != null) {
-					List<DisciplinaryActionVO> voList = BaseReviewApplicationBackingBean.getDisciplinaryActionVO(currSupp);
+					List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
 					if (!voList.isEmpty()) {
 						getManagedBean().setDisciplineVOs(voList);
 					} else {
@@ -5892,10 +5902,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// #32643,32642 - End
 
 			} catch (Exception e) {
-				String exceptionSupplierId = smSupplier != null ? Long.toString(smSupplier.getSupplierId())
-						: StringUtils.EMPTY;
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "supplierDisciplinaryActionInfo",
-						exceptionSupplierId, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
+						StringUtils.EMPTY, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
 			}
 		}
 

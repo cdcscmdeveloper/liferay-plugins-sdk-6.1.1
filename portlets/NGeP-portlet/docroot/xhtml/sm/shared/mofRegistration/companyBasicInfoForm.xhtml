@@ -174,6 +174,8 @@
 					</tr>
 				</ui:remove>
 				<!-- #34159 - START -->
+				<!-- #36718 - START - add panel for refresh address -->
+				<p:panel id="basicComAddrPanelId" style="border: none;">
 				<tr>
 					<td style="vertical-align: top;">
 						<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" style="padding-top :5px;" />
@@ -192,7 +194,8 @@
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="basicCountry" value="#{backingBean.managedBean.countryItems}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=basicComAddrPanelId])"
 								listener="#{backingBean.onChangeCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress,SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 								update="basicComState,basicCompDist,basicCompCity,postCodeCompPanelId,coordinatePanelId,postCodeCompPanelId" />
 						</p:selectOneMenu>
@@ -242,7 +245,8 @@
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.stateId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="basicState" value="#{backingBean.managedBean.basicCompanyStates}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=basicComAddrPanelId])"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress, 
 								SupplierManagementConst.SM_BASIC_INFO_PANEL)}"
 								update="basHdPan,divisionCompInfoDropdownPanelId,basicCompDist,basicCompCity,coordinatePanelId,postCodeCompPanelId" />
@@ -381,6 +385,8 @@
 						<p:message id="basicCompCityMsg" for="basicCompCity" showSummary="true" showDetail="false" display="icon" />	
 					</td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<!-- #34159 - END  -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
@@ -554,15 +560,23 @@
 					      }
 						
 						</script>
-									
+						<!-- 37771 START -->			
 						<ac:gmap id="acgmap" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							latitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}"
 							longitude="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"
-							disabled="#{backingBean.managedBean.upsCannotEdit}" />	
+							disabled="#{backingBean.managedBean.upsCannotEdit}" 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriLatValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}" 
+							currLatValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}" 
+							alertLatValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLatitude}"
+							oriLongValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" 
+							currLongValue="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}" 
+							alertLongValue="#{backingBean.managedBean.latestAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.mapLongitude}"/>	
 							<!-- Disable for UPS 32008 - END -->				
 					</h:panelGroup>
+					<!-- 37771 END -->
 					<!-- #36483 END - put coordinate input into panelGroup to update using ajax -->
 					</td>
 				</tr>

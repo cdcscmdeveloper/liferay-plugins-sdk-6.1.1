@@ -14,6 +14,13 @@
 	<cc:attribute name="address" required="true" />
 	<cc:attribute name="showButton" 	default="true" />
 	<cc:attribute name="disabled" 		default="false" />
+	<cc:attribute name="isShow" 		default="false"/>
+	<cc:attribute name="oriLatValue" 	required="true" />
+	<cc:attribute name="currLatValue" 	required="true" />
+	<cc:attribute name="alertLatValue" 	required="true"  />
+	<cc:attribute name="oriLongValue" 	required="true" />
+	<cc:attribute name="currLongValue" 	required="true" />
+	<cc:attribute name="alerLongtValue" required="true"  />
 </cc:interface>
 
 <cc:implementation>
@@ -29,12 +36,24 @@
 		<ac:instructionText value="#{lbl['lbl.gmap.instruction']}" />
   		
   		<div class="ui-fieldset-content">
+  		<!-- 37771 START -->
+  		<h:panelGroup layout="block" style="display: flex; align-items: center; gap: 5px;">
   		
 		X: <p:inputText id="plat" value="#{cc.attrs.latitude}" disabled="#{cc.attrs.disabled}" maxlength="20" />
+			<ac:smFieldChangeAlert 
+				isShow="#{cc.attrs.isShow}"
+				oriValue="#{cc.attrs.oriLatValue}" 
+				currValue="#{cc.attrs.currLatValue}" 
+				alertValue="#{cc.attrs.alertLatValue}"/>
 		
 		&#160;
 		
 		Y: <p:inputText id="plng" value="#{cc.attrs.longitude}" disabled="#{cc.attrs.disabled}" maxlength="20"/>
+			<ac:smFieldChangeAlert 
+				isShow="#{cc.attrs.isShow}"
+				oriValue="#{cc.attrs.oriLongValue}" 
+				currValue="#{cc.attrs.currLongValue}" 
+				alertValue="#{cc.attrs.alertLongValue}"/>
 		
 		<p:commandButton id="gmId" 
 			value="#{lbl['lbl.gmap.viewmap']}" 
@@ -47,8 +66,10 @@
 				target="#{gmapBackingBean.renderMap}" 
 				value="#{true}" />
 				
-		</p:commandButton>		
-
+		</p:commandButton>	
+		
+		</h:panelGroup>	
+		<!-- 37771 END -->
 		<p:remoteCommand 
 			id="updateGmap"
 			name="updateGmap" 

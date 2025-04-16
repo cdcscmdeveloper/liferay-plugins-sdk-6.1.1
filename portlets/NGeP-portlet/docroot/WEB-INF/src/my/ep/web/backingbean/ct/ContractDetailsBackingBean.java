@@ -40,6 +40,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
+import my.ep.constant.ct.audit.AuditContractConst; //35506
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -48,6 +49,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
@@ -65,6 +67,7 @@ import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract; //Fix - #30866
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
+import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtPidReason;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -90,6 +93,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
 import my.ep.web.backingbean.ct.circular.CircularBackingBean; //Fix - #30866
 import my.ep.web.backingbean.ct.request.ctadmin.RequestCtAdminBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
@@ -571,8 +575,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						if (!reqDTO.isViewOnly()) {
 							if (ctBB.getManagedBean().getMinistryProfileId().equals(ctAgency.getOrgProfile().getMinstryId())) {
 								ctAgency.setAp178(false);
-								// ctBB.getManagedBean().setDisableAgent(true);
-								// //Bug #27579
+								//Bug #27579
 							} else {
 								ctAgency.setAp178(true);
 								ctBB.getManagedBean().setDisableAgent(false);
@@ -1229,14 +1232,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		if (ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-			//Start Fix - #36694 || #25406
-//			if(ctContractVer.getCtAgencies() != null){
-//			for (CtAgency ctAgency : ctContractVer.getCtAgencies()) {
-//				ctAgency.setOrgProfile(getManagedBean().getSearchPtjProfile());
-//			}
-//			
-//		}
-			//End Fix - #36694 || #25406
 			ctContractVer.setOwnerOrgProfile(ctContractVer.getCtContract().getOwnerOrgProfile());			
 			ctContractVer.getCtContract().setOwnerOrgProfile(getManagedBean().getSearchPtjProfile());
 		}
@@ -1264,7 +1259,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				        List<CtPerformanceBond> newBond = new ArrayList<CtPerformanceBond>(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew());
 
 				        List<CtPerformanceBond> result = new ArrayList<CtPerformanceBond>();
-//				        result.addAll(originalBond);
 				        result = ListUtils.union(newBond, originalBond);
 						contractAmt.setCtPerformanceBonds( result);
 					}else{
@@ -1340,6 +1334,34 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				  // log.info(" getSelectedAgencyChanges after clear() ::::::::::::::::::::::: "+ctBB.getManagedBean().getSelectedAgencyChanges().size());
 
 			}
+			
+			// #35506 Start
+			if (!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				AuditContractReqDTO auCtData = new AuditContractReqDTO();
+				auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+				auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+				auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+				auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+				auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+				auCtData.setRoleName(getUserRole());
+
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+				}
+
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+				}
+
+				auditCtBean.saveAuditData(auCtData);
+			}
+			// #35506 End
 
 			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && !ctBB.getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT)) {
 				messageId = MessageConst.INFO_700021;
@@ -4480,37 +4502,56 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
+		ctBB.isContractExtendOrIsBond();
 
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			if (bond.isBondNew()) {
+			boolean isNewBond = bond.isBondNew();
+			boolean bondRequired = ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq();
+			boolean disableOriginalBond = ctBB.getManagedBean().isDisableOriginalBond();
+			boolean shouldCreateNewBond = bondRequired && disableOriginalBond && bond.isBrandNew() && !isNewBond ;
+
+			if (isNewBond) {
 				bondNew.add(bond);
-			} else {
+			}  else {
 				bondOriginal.add(bond);
 			}
-
-			if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() && bondNew.isEmpty()) {
-				if (bond.isBrandNew()) {
-					CtPerformanceBond newBond = new CtPerformanceBond();
-					newBond.setPerformanceBondId(null);
-					newBond.setBondNew(true);
-					newBond.setRefNo(bond.getRefNo());
-					newBond.setFinancialOrg(bond.getFinancialOrg());
-					newBond.setFinancialOrgName(bond.getFinancialOrgName());
-					newBond.setBondAmount(bond.getBondAmount());
-
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(ctBB.getManagedBean().getContractVer().getCtContractValue().getExpDate());
-					cal.add(Calendar.YEAR, 1);
-					newBond.setExpDate(cal.getTime());
-					newBond.setEffDate(ctBB.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-					bondNew.add(newBond);
-				}
-			}
+			
+			if (shouldCreateNewBond) {
+				bondNew.add(createNewBondFrom(bond));
+			}			
 		}
-
 		contractAmt.setCtPerformanceBondsNew(bondNew);
 		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}
+	
+	/**
+	 * Creates a new performance bond based on an existing bond, extending the expiration date by one year.
+	 *
+	 * @param bond The original performance bond.
+	 * @return A new performance bond with updated attributes.
+	 */
+	private CtPerformanceBond createNewBondFrom(CtPerformanceBond bond) {
+		CtPerformanceBond newBond = new CtPerformanceBond();
+		newBond.setPerformanceBondId(null);
+		newBond.setBondNew(true);
+		newBond.setRefNo(bond.getRefNo());
+		newBond.setFinancialOrg(bond.getFinancialOrg());
+		newBond.setFinancialOrgName(bond.getFinancialOrgName());
+		newBond.setBondAmount(bond.getBondAmount());
+
+		CtContractVer contractVer = ctBB.getManagedBean().getContractVer();
+		CtContractValue contractValue = contractVer.getCtContractValue();
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(contractValue.getExpDate());
+		cal.add(Calendar.YEAR, 1);
+
+		newBond.setExpDate(cal.getTime());
+		newBond.setEffDate(contractValue.getEffDate());
+
+		return newBond;
+	}
+
 	// #24333,#36491 - End
 	
 }

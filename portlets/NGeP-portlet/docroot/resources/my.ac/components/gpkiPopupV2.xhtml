@@ -15,8 +15,6 @@
 	<p:remoteCommand name="enableBtn" action="#{gpkiBackingBean.enableBtn()}" update="resendOtpBtn"/>
 	<p:remoteCommand name="disableBtn" action="#{gpkiBackingBean.disableBtn()}" update="resendOtpBtn"/>
 	<p:remoteCommand name="saveNonce" action="#{gpkiBackingBean.saveNonce()}" />
-	<p:remoteCommand name="logOTP" action="#{gpkiBackingBean.logOTP()}" />
-	
 	<h:outputScript library="ep/gpki_js" name="gpki-api-v2.js" />
 	<h:outputScript library="ep/gpki_js" name="gpkiPopup2.js" />
 

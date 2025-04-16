@@ -89,11 +89,9 @@
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form" 
 			oncomplete="if (!args.validationFailed) confirmDlg.show();" />
 	</div>
-	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 			bean="#{reactivateBasicBackingBean}"
 			okAction="reactivateBasic"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.confirm.reactivate']}" 
 			update=":form"
 			loadingWidget="blockWidget" />
