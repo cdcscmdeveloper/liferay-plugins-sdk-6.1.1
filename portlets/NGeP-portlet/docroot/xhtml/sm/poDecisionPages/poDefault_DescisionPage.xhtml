@@ -141,7 +141,6 @@
 						</c:when>
 						<c:otherwise>
 							<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								update=":form:tt:approveDialog" partialSubmit="true"
 								process="@this" rendered="#{backingBean.managedBean.showPoApprovedOrRecommendButton and !backingBean.managedBean.upsCannotEdit}"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll or !backingBean.managedBean.allowedToApprove}" 
@@ -380,7 +379,7 @@
 		
 	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}"
 		closable="false" id="approveDialog" widgetVar="approveDialog"
-		height="350px" resizable="false" showEffect="fade" hideEffect="fade"
+		height="480px" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		
 		<p:outputPanel layout="block" id="poApprovedBlockPanel">
@@ -418,5 +417,7 @@
 		</div>
 		</ac:smSearchRejectReasons>
 	</p:dialog>
-	
+	<!-- 13362 START -->
+	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
+	<!-- 13362 END -->
 </ui:composition>

@@ -32,6 +32,17 @@
     			pointer-events: none;
 			}
 		</style>
+		<!-- 13362 START -->
+		<script>
+					$(function(){
+					    // Self-executing recursive animation
+					    (function pulse(){
+					        $('#blinkId4').delay(1000).fadeOut('slow').delay(50).fadeIn('slow',pulse);
+					    })();
+					});
+		</script>
+		<!-- 13362 END -->
+		
 		<p:outputPanel id="#{cc.attrs.changeRegStatusUpdateId}">
 			<table style="width: 100%" border="#{cc.attrs.border ? 1 : 0}">
 				<c:if test="#{cc.attrs.smAppl.applType ne 'C'}">
@@ -250,11 +261,51 @@
                 <!-- #15629 end -->
 												
 				<c:if test="#{cc.attrs.overLappedCategoryExists}">
+				<!-- 13362 START -->
+				<tr><td><br></br></td></tr>
+					<tr>
+						<td></td>
+						<td align="left">
+							<span id="blinkId4">
+								<font color="red">&#x26A0;</font>
+								<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+							</span>
+							<span style="opacity: 0.0;">
+								<font color="red">&#x26A0;</font>
+								<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td align="left">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.main']}" escape="false"/>&#160;
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.please.click']}" escape="false"/>&#160;
+							<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{backingBean.onViewOverlapCategory()}"
+						process="@this"
+						partialSubmit="true">
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.here']}" escape="false"/>
+					</p:commandLink>&#160; 
+							<h:outputText styleClass="warning" value="#{lbl['lbl.sm.overlapped.category.msg.to.view.details']}" escape="false"/>
+					
+						</td>
+					</tr>
+				<tr><td><br></br></td></tr>
+				<!-- 13362 END -->
 					<tr>
 					<td></td>
 						<td align="left"><p:outputLabel style="float:left;"
 								value="#{lbl['lbl.sm.remarks.overLap.note1']}" escape="false" /></td>
 					</tr>
+					<!-- 13362 START -->
+					<tr>
+					<td></td>
+						<td align="left"><p:outputLabel style="float:left;"
+								value="#{lbl['lbl.sm.remarks.overLap.note3']}" escape="false" /></td>
+					</tr>
+					<!-- 13362 END -->
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.remarks.overLapping']}" /></td>
 						<td style="padding-top: 5px;"><p:inputTextarea cols="90"
