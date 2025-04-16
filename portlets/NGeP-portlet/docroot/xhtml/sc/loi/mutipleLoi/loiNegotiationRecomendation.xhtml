@@ -14,7 +14,12 @@
 		</c:if>
 		<c:if test="#{!lOIDetailBackingBean.managedBean.scQt.zonal}">
 			.tdWidth { width: 100%; }
-		</c:if>		
+		</c:if>
+		.red-background {
+			background-color:red; 
+			color:white; 
+			font-weight:bold;
+		}			
 	</style>	
 	
 	<!-- Supplier Details PopUp -->
@@ -141,12 +146,11 @@
 								value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 							<ui:param name="mofExpired"
 								value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-							<p:column>
+							<p:column styleClass="#{mofExpired ? 'red-background':''}">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
 								</f:facet>
-								<h:outputText style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}"
-									value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+								<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 							</p:column>
 							<ui:remove>
 								#31061 - SHAFFUL (START)

@@ -515,68 +515,7 @@ public class ViewSuppProfileBackingBean extends
 	}
 	// #34031 End
 
-	// 26247 - start
-	private void initAccountStatusMap() {
-		if (!accountStatusMap.isEmpty()) {
-			return;
-		}
-		Locale localeEn = new Locale(CommonConstants.DEFAULT_USER_LANGUAGE_CODE,
-				CommonConstants.DEFAULT_USER_COUNTRY_CODE);
-		Locale localeMs = new Locale(CommonConstants.TRACKING_DIARY_LANGUAGE_CODE,
-				CommonConstants.TRACKING_DIARY_COUNTRY_CODE);
-		List<Locale> locales = Arrays.asList(localeEn, localeMs);
-		for (Locale locale : locales) {
-			String languageCode = locale.getLanguage();
-			String deletedPreStatement = ResourceBundleUtils.getMessage("lbl.sm.mof.status.deleted1",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale).concat(" (");
-			String suspendedPreStatement = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale).concat(" (");
-
-			accountStatusMap.put("active".concat(languageCode), ResourceBundleUtils.getMessage(
-					"lbl.sm.mof.status.active", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			accountStatusMap.put("expired".concat(languageCode), ResourceBundleUtils.getMessage(
-					"lbl.sm.mof.status.expired", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
-			accountStatusMap.put(
-					"suspendedCancel".concat(languageCode),
-					suspendedPreStatement.concat(ResourceBundleUtils.getMessage(
-							"lbl.sm.disciplinary.jktt.cancel.registration", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale).concat(")")));
-			accountStatusMap.put(
-					"deletedCancel".concat(languageCode),
-					deletedPreStatement.concat(ResourceBundleUtils.getMessage(
-							"lbl.sm.disciplinary.jktt.cancel.registration", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale).concat(")")));
-			accountStatusMap.put(
-					"suspendedBlacklist".concat(languageCode),
-					suspendedPreStatement.concat(ResourceBundleUtils.getMessage(
-							"lbl.sm.disciplinary.jktt.blacklist.owner", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale).concat(")")));
-			accountStatusMap.put(
-					"deletedBlacklist".concat(languageCode),
-					deletedPreStatement.concat(ResourceBundleUtils.getMessage(
-							"lbl.sm.disciplinary.jktt.blacklist.owner", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							locale).concat(")")));
-
-		}
-	}
-
-	/**
-	 * Evaluate account status state
-	 * @param key
-	 * @param supplier
-	 * @return boolean flag if supplier in the give state
-	 */
-	public boolean evaluateAccountStatus(String key, SmSupplier supplier) {
-		initAccountStatusMap();
-		Locale locale = new FacesScopes().getUserLocale();
-		String keyLocale = key.concat(locale.getLanguage());
-		if (!accountStatusMap.containsKey(keyLocale)) {
-			throw new IllegalArgumentException("Key was not defined!");
-		}
-		String status = StringUtils.deleteWhitespace(accountStatusMap.get(keyLocale));
-		return status.equalsIgnoreCase(StringUtils.deleteWhitespace(supplier.getSupplierStatus()));
-	}
-	
+	// 26247 - start	
 	/**
 	 * Evaluate suspension status based on supplier. 
 	 * This supposed to be from SM. 
@@ -607,26 +546,17 @@ public class ViewSuppProfileBackingBean extends
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		}
 
-		// evaluateCancelledCategories(supplier) &&
 		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
 			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
 					new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray(), ", ") },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
-		} else if (CollectionUtils.isNotEmpty(supplier.getDeletedCategoryCodes())) {
-			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760557, new String[] {},
-					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		}
 
 		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor()) && !supplier.isBumi();
-		// evaluateCancelledBumiAccount(supplier) && 
 		if (noBumiAccount) {
 			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760556, new String[] {},
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		} 
-//		else if (noBumiAccount) {
-//			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760558, new String[] {},
-//					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
-//		}
 		return composeWarningMessages(messages);
 	}
 	
