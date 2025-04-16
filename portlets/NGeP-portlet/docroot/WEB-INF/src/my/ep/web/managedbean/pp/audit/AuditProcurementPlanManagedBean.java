@@ -7,8 +7,8 @@ import my.ep.web.bean.pp.AuditPPSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * New file introduced for Audit Trail Procurement Plan (#28895 - #35502) Manage
- * Bean for PP audit report/view
+ * New file introduced for Audit Trail Procurement Plan (#28895 - #35502)
+ * Manage Bean for PP audit report/view
  * 
  * @author irfan
  * @since 20/03/2025

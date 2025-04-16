@@ -1450,7 +1450,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			}
 
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "processPEAudit", null,
+			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "processAudit", null,
 					"ProcurementPlanBackingBean", null, ex);
 		}
 	}

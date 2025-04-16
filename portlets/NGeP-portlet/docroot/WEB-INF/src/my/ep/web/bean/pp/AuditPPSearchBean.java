@@ -3,8 +3,8 @@ package my.ep.web.bean.pp;
 import java.io.Serializable;
 
 /**
- * New file introduced for Audit Trail Procurement Plan (#28895 - #35502) Search
- * Bean for PP audit report/view
+ * New file introduced for Audit Trail Procurement Plan (#28895 - #35502)
+ * Search Bean for PP audit report/view
  * 
  * @author irfan
  * @since 20/03/2025
