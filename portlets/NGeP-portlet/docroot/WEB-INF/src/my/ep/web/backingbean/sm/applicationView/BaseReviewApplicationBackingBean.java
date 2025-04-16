@@ -4543,15 +4543,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if(currSupp != null) {
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
 			voList = getDisciplinaryActionVOList(resultList, currSupp);
-			if(EntityHelper.isCollectionEmpty(voList)){
-				return voList;
-			}
-			for(DisciplinaryActionVO vo : voList){
-				if(vo.isBlacklistOwnerDirector()){
-					vo.setBlacklistownerDirectorList(
-							getSupplierHasPersonnelBlacklist(currSupp.getSupplierId(), false));
-				}
-			}
 		}
 		return voList;
 	}
@@ -4604,7 +4595,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			// 28281 (bumi cat code) start
 			retVal.setCategoryCodeList(getCategoryCodeListDA(da));
-			
+			retVal.setBlacklistownerDirectorList(getSupplierHasPersonnelBlacklist(supplierId));
 			retVal.setMofNoExist(isMOF);
 			voList.add(retVal);
 		}
@@ -4969,17 +4960,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		List<DisciplinaryActionVO> voList =  getDisciplinaryActionVOList(resultList, currSupp);
-		Long supplierId = currSupp.getSupplierId();
-		if (EntityHelper.isCollectionEmpty(voList)){
-			return voList;
-		}
-		for (DisciplinaryActionVO vo : voList){
-			if(vo.isBlacklistOwnerDirector()){
-				vo.setBlacklistownerDirectorList(getSupplierHasPersonnelBlacklist(supplierId, true));
-			}
-		}
-		return voList;
+		return getDisciplinaryActionVOList(resultList, currSupp);
 	}
 	//31033 end
 	
