@@ -213,10 +213,10 @@ public class AuditSupplierManagementDocumentBackingBean extends BaseBackingBean<
 		} else if (getManagedBean().getActiveIndex() == 1) {
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_SUPPLIER_INFO, rsltReportList);
 		} else if (getManagedBean().getActiveIndex() == 2) {
-			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, rsltReportList);
-		} else if (getManagedBean().getActiveIndex() == 3) {
 			// #28895_35501_DA Start - AUDIT TRAIL SM DA
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_DISCIPLINARY_ACTION, rsltReportList); 
+		} else if (getManagedBean().getActiveIndex() == 3) {
+			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_APPROVED_CATEGORY_CODE, rsltReportList);
 		} else if (getManagedBean().getActiveIndex() == 4) { 
 			createSheetLayout(wb, ReportExcelAuditConstant.COL_HEADER_OVERLAPPING_CATEGORY, rsltReportList); 
 		} else if (getManagedBean().getActiveIndex() == 5) { 
