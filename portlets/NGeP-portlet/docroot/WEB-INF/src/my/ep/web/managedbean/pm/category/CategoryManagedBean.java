@@ -234,6 +234,8 @@ public class CategoryManagedBean extends BaseManagedBean {
 	private PmCategoryL2 auditOldCategoryL2;
 	private PmCategoryL3 auditOldCategoryL3;
 	
+	private PmCategoryL1 auditUpdatedCategoryL1;
+	private PmCategoryL2 auditUpdatedCategoryL2;
 	private PmCategoryL3 auditUpdatedCategoryL3;
 	
 	private String auditLevelCategory;
@@ -1469,5 +1471,20 @@ public class CategoryManagedBean extends BaseManagedBean {
 		this.auditUpdatedCategoryL3 = auditUpdatedCategoryL3;
 	}
 
+	public PmCategoryL2 getAuditUpdatedCategoryL2() {
+		return auditUpdatedCategoryL2;
+	}
+
+	public void setAuditUpdatedCategoryL2(PmCategoryL2 auditUpdatedCategoryL2) {
+		this.auditUpdatedCategoryL2 = auditUpdatedCategoryL2;
+	}
+
+	public PmCategoryL1 getAuditUpdatedCategoryL1() {
+		return auditUpdatedCategoryL1;
+	}
+
+	public void setAuditUpdatedCategoryL1(PmCategoryL1 auditUpdatedCategoryL1) {
+		this.auditUpdatedCategoryL1 = auditUpdatedCategoryL1;
+	}
 	/************ AUDIT 35509 *************/
 }
