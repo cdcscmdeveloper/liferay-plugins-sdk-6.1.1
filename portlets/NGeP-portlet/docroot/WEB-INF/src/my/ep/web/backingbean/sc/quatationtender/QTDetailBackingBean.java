@@ -13556,6 +13556,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @return String
 	 */
 	public String epvBackAction() {
+		this.getManagedBean().setScQtApprovalRequest(null);
 		return QTConstants.MAINTANANCE_PAGE_FULL;
 	}
 
