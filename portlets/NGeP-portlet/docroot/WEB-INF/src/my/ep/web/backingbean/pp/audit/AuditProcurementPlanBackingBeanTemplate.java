@@ -16,8 +16,8 @@ import my.ep.web.backingbean.pp.procurementplan.ProcurementPlanBackingBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * New file introduced for Audit Trail Procurement Plan (#28895 - #35502) The
- * Backing Bean Template for PP audit
+ * New file introduced for Audit Trail Procurement Plan (#28895 - #35502)
+ * The Backing Bean Template for PP audit
  * 
  * @author Irfan
  * @since 10.06.2024
@@ -38,7 +38,7 @@ public class AuditProcurementPlanBackingBeanTemplate extends BaseBackingBean imp
 	}
 
 	/**
-	 * The void auditSaveData.
+	 * The void saveAuditData.
 	 * 
 	 * @param action
 	 * @param isNeedAudit
@@ -57,7 +57,7 @@ public class AuditProcurementPlanBackingBeanTemplate extends BaseBackingBean imp
 	}
 
 	/**
-	 * The void ppAuditSO.
+	 * The void ppeAuditSO.
 	 * 
 	 * @param auProcurementPlanSPDTO
 	 */
@@ -67,18 +67,23 @@ public class AuditProcurementPlanBackingBeanTemplate extends BaseBackingBean imp
 					ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
 			auditPPSO.insertPPEAudit(auPPSPDTO);
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "ppAuditSO", null,
+			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "ppeAuditSO", null,
 					"AuditProcurementPlanBackingBeanTemplate", null, ex);
 		}
 	}
 	
+	/**
+	 * The void pppAuditSO.
+	 * 
+	 * @param auProcurementPlanSPDTO
+	 */
 	private void pppAuditSO(AuditProcurementPlanSPDTO auPPSPDTO) {
 		try {
 			IAuditProcurementPlanSO auditPPSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
 			auditPPSO.insertPPPAudit(auPPSPDTO);
 		} catch (Exception ex) {
-			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "ppAuditSO", null,
+			SLAUtils.getInstance().logSLAError(AuditPPConst.AUDIT_PROCUREMENT_PLAN, "pppAuditSO", null,
 					"AuditProcurementPlanBackingBeanTemplate", null, ex);
 		}
 	}

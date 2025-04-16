@@ -50,7 +50,7 @@ import com.liferay.portal.util.PortalUtil;
 
 /**
  * New file introduced for Audit Trail Procurement Plan (#28895 - #35502)
- * Backing Bean for PP audit report/view
+ * The Backing Bean for PP audit report/view
  * 
  * @author irfan
  * @since 20/03/2025
