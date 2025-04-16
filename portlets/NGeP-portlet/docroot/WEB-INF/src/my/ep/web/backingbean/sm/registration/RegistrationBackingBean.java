@@ -2192,7 +2192,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 			}
 			if(this.getManagedBean().getSmBusinessAdd().getPmCountry() != null){
-				pmStateDropdownValues();
+				pmStateDropdownValues(false);//#36718 - add boolean reset to reset address or not
 			}
 			
 			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
@@ -3830,7 +3830,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * set state drop down value
 	 */
-	public void pmStateDropdownValues() {
+	public void pmStateDropdownValues(boolean reset) { //#36718 - add boolean reset to reset address or not
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
 		//SSM INTEGRATION
 		if(this.getManagedBean().getSmAppl()!= null && this.getManagedBean().getSmAppl().isApplValidWithSsm() && countryId == null){
@@ -3946,6 +3946,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				//#16052019 - SSM INTEGRATION CR 
 				if(getManagedBean().getSmBusinessAdd().isBrandNew() && !getManagedBean().isValidateWithSSM()){
 					getManagedBean().setSabahSarawakType(false);
+					//#36718 - START
+					if(getManagedBean().getSmBusinessAdd().getPmDivision()!=null)
+						getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
+					getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(false);
+					//#36718 - END
 					getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
@@ -3957,9 +3962,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setSabahSarawakType(false);
 				//#36718 - START - if ROC maintained as is
 				if(!this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) &&
-				   !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)){
+				   !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD) && reset){
 					if(getManagedBean().getSmBusinessAdd().getPmDivision()!=null)
 						getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
+					getManagedBean().getSmBusinessAdd().getPmState().setAdoptDivision(false);
 					getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
@@ -4584,6 +4590,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setAgreeTC(false);
 		getManagedBean().setValidateWithSSM(true);
 		getManagedBean().setCompanyValidWithSSM(false);
+		//#37900 -start
+		getManagedBean().getSmSupp().setRegNo(null);
+		getManagedBean().getSmSupp().setBusinessType(null);
+		getManagedBean().getSmAppl().setSupplierType(null);
+		//#37900 -end
 		return termAndCondition;
 
 	}
@@ -5480,7 +5491,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 			getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 			populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
-			getManagedBean().getSmSupp().setLocalAuthorityId(null);
+			//#36718 - START - execute only if reset
+			if(reset){
+				getManagedBean().getSmSupp().setLocalAuthorityId(null);
+			}
+			//#36718 - END
 			//#34159 - END
 		}
 		if((typeAdd.equals("residential"))){

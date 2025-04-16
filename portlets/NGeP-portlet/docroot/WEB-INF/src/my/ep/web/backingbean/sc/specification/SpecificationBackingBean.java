@@ -11306,7 +11306,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_775250, new String[] { techInactive },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
@@ -11326,7 +11326,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					this.getManagedBean().setDisableButtonForInactiveChecklist(true);
 					FacesContext.getCurrentInstance().addMessage(
 							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 									MessageConst.ERROR_775251, new String[] { finInactive },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
@@ -12635,6 +12635,11 @@ if (null != checklist && !checklist.isEmpty()) {
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SIGNOFF)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) && !isRoleValidationfromTaskListAllowRevise())) {
 			// category
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() && 
+					null == this.getManagedBean().getTobeRemoveCategoryCodes()){
+				retriveSupplierQualificationCriteria("SC");
+			}
+			
 			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && null == this.getManagedBean().getQtCategoryList() 
 					|| BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) && CollectionUtils.isEmpty(this.getManagedBean().getQtCategoryList())){
 				throw new EpException(MessageConst.ERROR_760025);
