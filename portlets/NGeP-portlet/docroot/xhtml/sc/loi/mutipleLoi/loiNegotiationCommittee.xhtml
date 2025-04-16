@@ -196,19 +196,40 @@
 				<p:column selectionMode="multiple" style="width:2%"
 					rendered="#{isPendingNegotiationStatus}" />
 
-				<p:column headerText="#{lbl['lbl.sc.name']}">
-					<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"
-						rendered="#{isPendingNegotiationStatus}" />
-					<h:outputText value="#{meetingAttDtl.name}"
-						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
-				</p:column>
+				<ui:remove>#35360 - Start </ui:remove>
+				<c:choose>
+					<c:when test="#{isSecretaryUser}">
+						<p:column headerText="#{lbl['lbl.sc.name']}">
+							<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
+								size="50" style="color:black" rendered="#{isPendingNegotiationStatus}" />
+							<h:outputText value="#{meetingAttDtl.name}"
+								rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+						</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-					<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
-						size="15" rendered="#{isPendingNegotiationStatus}" />
-					<h:outputText value="#{meetingAttDtl.icPassport}"
-						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
-				</p:column>
+						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+							<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+								size="15" style="color:black" rendered="#{isPendingNegotiationStatus}" />
+							<h:outputText value="#{meetingAttDtl.icPassport}"
+								rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+						</p:column>
+					</c:when>
+					<c:otherwise>
+						<p:column headerText="#{lbl['lbl.sc.name']}">
+							<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
+								size="50" rendered="#{isPendingNegotiationStatus}" />
+							<h:outputText value="#{meetingAttDtl.name}"
+								rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+							<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
+								size="15" rendered="#{isPendingNegotiationStatus}" />
+							<h:outputText value="#{meetingAttDtl.icPassport}"
+								rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+						</p:column>
+					</c:otherwise>
+				</c:choose>
+				<ui:remove>#35360 - End</ui:remove>
 
 			</p:dataTable>
 			<div class="ppRightBtn BtnSpacing">
