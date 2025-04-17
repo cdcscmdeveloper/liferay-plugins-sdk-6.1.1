@@ -185,7 +185,7 @@ public class NoticeBoardBackingBean extends
 	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
 	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
-	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml?faces-redirect=true";
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml"; //#28777 & #29729
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
@@ -868,7 +868,7 @@ public class NoticeBoardBackingBean extends
 		
 		//#28777 & #29729 - Start
 		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 					MessageUtils.getMessage(MessageConst.INFO_760522, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
