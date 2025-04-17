@@ -1581,45 +1581,45 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 			// sm module
-			
+
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			StringBuilder sb = new StringBuilder();
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			
-			//#34831 - Start
-			if (title.equalsIgnoreCase("lbl.sm.new.registerAccountDraft")) {
-				// sm module
-				// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
-				// sm module
-				sb = new StringBuilder();
-				
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				reqDTO.setApplNo(worklistItemVO.getDocNumber());
-				List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO()
-						.retrievePersonnelsByApplNo(reqDTO).getSmPersonnelList();
-				
-				for(SmPersonnel personnel : personnels){
-					PmUser user = SmCommonUtil.getUserByUserId(personnel.getPmUser().getUserId());
-					List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());	
-					for(PmUserRole userRole : userRoles){
-						if(userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
-							sb.append("Update Mof Account");
-						}
+
+			// #34831 - Start
+			// if (title.equalsIgnoreCase("lbl.sm.new.registerAccountDraft")) {
+			// sm module
+			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
+			// sm module
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setApplNo(worklistItemVO.getDocNumber());
+			List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO)
+					.getSmPersonnelList();
+
+			for (SmPersonnel personnel : personnels) {
+				PmUser user = SmCommonUtil.getUserByUserId(personnel.getPmUser().getUserId());
+				List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+				for (PmUserRole userRole : userRoles) {
+					if (userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+						sb = new StringBuilder();
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.upgrade.acc.appl",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 					}
 				}
 			}
-			//#34831 - Start
-			
+			// }
+			// #34831 - Start
+
 			if (mofResDto.getCompanyName() != null) {
 				sb.append(" ( ");
 				sb.append(mofResDto.getCompanyName());
 				sb.append(" ) ");
-//				Enhancement #28766 - Remove GLP flag - Start
-//				if (viewGlpFlag() && mofResDto.isGlp()) {
-//					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-//				}
-//				Enhancement #28766 - Remove GLP flag - End
+				// Enhancement #28766 - Remove GLP flag - Start
+				// if (viewGlpFlag() && mofResDto.isGlp()) {
+				// sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+				// }
+				// Enhancement #28766 - Remove GLP flag - End
 			}
 			worklistItemVO.setTitle(sb.toString());
 		} else if (title.startsWith("lbl.cd")) {
