@@ -3,11 +3,8 @@ package my.ep.web.backingbean.sm.compexp;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
@@ -63,7 +60,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
-	 * To redirect to draft screen
+	 * To show to draft update popup
 	 * 
 	 * @param draft
 	 * @param fromSM
@@ -82,9 +79,9 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	/**
-	 * Retrieve description based on parameter id
+	 * To show to agency LOV popup
 	 */
-	public String getParamDesc(PmParameter param) {
-		return SmCommonUtil.getParamDescriptionByLanguageAndPmParameter(param);
+	public void onClickSearchAgency() {
+		RequestContext.getCurrentInstance().execute("agencyNameSearchLovWV.show();");
 	}
 }

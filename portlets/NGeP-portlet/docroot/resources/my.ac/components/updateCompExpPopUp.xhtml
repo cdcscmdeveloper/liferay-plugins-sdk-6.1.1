@@ -15,7 +15,7 @@
 	<cc:implementation>
 		<p:dialog id="#{cc.attrs.dialogName}Id"
 			widgetVar="#{cc.attrs.dialogName}WV" modal="true" dynamic="true"
-			resizable="true" style="width: 70%;" styleClass="pop_up_top"
+			style="width: 70%;" styleClass="pop_up_top"
 			header="#{cc.attrs.mBean.headerTitle}">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sm.comp.exp.update.instruction']}" />
@@ -57,7 +57,12 @@
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td style="width: 66%"><p:inputText size="60"
 								value="#{cc.attrs.mBean.selectedDraft.agencyName}"
-								readonly="true" /></td>
+								readonly="true" /> <p:commandLink onstart="blockWidget.show()"
+								oncomplete="blockWidget.hide()"
+								action="#{compExpBB.onClickSearchAgency}" process="@this"
+								partialSubmit="true" update=":form">
+								<p:graphicImage value="/css/images/design/search.png" />
+							</p:commandLink></td>
 					</tr>
 				</p:outputPanel>
 				<p:outputPanel
@@ -122,7 +127,7 @@
 							value="#{lbl['lbl.sm.comp.exp.update.client.payment.method']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view"
-							value="#{cc.attrs.bBean.getParamDesc(cc.attrs.mBean.selectedDraft.paymentMethod)}" /></td>
+							value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedDraft.paymentMethod)}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -130,7 +135,7 @@
 							value="#{lbl['lbl.sm.comp.exp.update.client.procument.method']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view"
-							value="#{cc.attrs.bBean.getParamDesc(cc.attrs.mBean.selectedDraft.procumentMode)}" /></td>
+							value="#{cc.attrs.bBean.getParameterDesc(cc.attrs.mBean.selectedDraft.procumentMode)}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -169,6 +174,7 @@
 				</tr>
 			</table>
 		</p:dialog>
-		<ac:smPtjPopup id="agencyNameLovId" mBean="#{cc.attrs.mBean}" bBean="#{cc.attrs.bBean}"/>
+		<ac:smPtjPopup dialogName="agencyNameSearchLov"
+			mBean="#{cc.attrs.mBean}" bBean="#{cc.attrs.bBean}" />
 	</cc:implementation>
 </ui:composition>
