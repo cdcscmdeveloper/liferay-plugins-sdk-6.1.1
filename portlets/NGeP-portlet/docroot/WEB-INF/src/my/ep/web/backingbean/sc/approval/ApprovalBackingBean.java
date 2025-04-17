@@ -1191,15 +1191,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// End Reopen 9019
 
 			CommitteResDTO committeResDto = null;
-
-			log.info("Bug #37906 - ApprovalBackingBean.updateBpmTask() -- Start");
-			log.info("TaskName: " + (StringUtils.isNotEmpty(taskName) ? taskName : ""));
-			log.info("QT ID: " + (null != qt && null != qt.getQtId() ? qt.getQtId() : ""));
-			log.info("User ID: "
-					+ (null != new FacesScopes().getUserSessionBean()
-							&& null != new FacesScopes().getUserSessionBean().getUserId() ? new FacesScopes()
-							.getUserSessionBean().getUserId().toString() : ""));
-			log.info("Outcome: " + (null != outcome ? outcome : ""));
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -1261,7 +1252,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
-
+				committeReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign,
 							ParameterConst.DOCTYPE_COMMITTE_APROVAL,
@@ -1289,6 +1280,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				qtReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);
@@ -1401,7 +1393,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					}	
 				}
 			}
-			log.info("Bug #37906 - ApprovalBackingBean.updateBpmTask() -- End");
 		} finally {
 		}
 		return tenderResDTO;
