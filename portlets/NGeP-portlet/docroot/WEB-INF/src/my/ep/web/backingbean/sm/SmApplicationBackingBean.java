@@ -10191,29 +10191,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		try {
 			valid = deleteDraftApplciationTask();
 			if (valid) {
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_721205,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																		getManagedBean()
-																				.getSmAppl()
-																				.getApplType()),
-																getManagedBean()
-																		.getSmAppl()
-																		.getApplNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				renewSesionObject();
+				String label = "";
+
+				if (getManagedBean().isBasicSupplier()) {
+					label = SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null);
+				} else {
+					label = getParameterDesc(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, getManagedBean()
+							.getSmAppl().getApplType());
+				}
+
+				deleteApplicationMessage(label);
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				return null;
@@ -10221,6 +10208,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		} finally {
 
 		}
+	}
+	
+	public void deleteApplicationMessage(String label) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721205,
+						new String[] { label, getManagedBean().getSmAppl().getApplNo() },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		renewSesionObject();
 	}
 
 	/**
