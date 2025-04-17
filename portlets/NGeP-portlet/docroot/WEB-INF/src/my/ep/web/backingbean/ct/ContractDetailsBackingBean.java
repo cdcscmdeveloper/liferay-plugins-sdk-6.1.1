@@ -1267,6 +1267,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 						
 				}
 				//#29713 - removed old commented block
+				
+				//24333 - Start
+				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime()
+						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime() && ctBB.isContractExtendOrIsBond()) {
+					contractAmt.setBondAttachment(true);
+				}
+				//24333 - End
 			}
 		}
 		
@@ -3581,7 +3588,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()) {
 			if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 					&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-				processPerformanceBonds(contractAmt, docType, isAmendment);
+				//processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 				ctBB.getManagedBean().setCtContractAmount(contractAmt);
 			}
 
@@ -3590,7 +3597,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			Date CurrentDate = new Date();
 			if(dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
 					&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0){
-				processPerformanceBonds(contractAmt, docType, isAmendment);
+				processPerformanceBonds(contractAmt, docType, isAmendment); 
 				ctBB.getManagedBean().setCtContractAmount(contractAmt);
 				break; // Exit loop after processing the first matching
 						// contractAmt
