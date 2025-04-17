@@ -1471,7 +1471,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			}
 			// 20220127@syazani - Enhancement #3657 - specific error message - End
 
-          if(!this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){
+          if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
