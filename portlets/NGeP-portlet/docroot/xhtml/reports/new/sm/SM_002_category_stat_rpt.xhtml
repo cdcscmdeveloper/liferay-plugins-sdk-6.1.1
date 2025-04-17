@@ -54,6 +54,29 @@
 				<ac:smReportDistrict bBean="#{categoryStatRptBB}" />
 			</td>
 		</tr>
+		<!-- 32521 - START -->
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.categoryRegistered']}" />
+			</td>
+			<td>
+				<!-- 32521 - START -->
+				<ac:smReportDateFromTo bBean="#{categoryStatRptBB}" limitYearRange="true" dateRange="36" mandatoryDateTo="true"  />
+				<!-- 32521 - END -->
+			</td>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.disciplinaryActionStatus']}"  />
+			</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{categoryStatRptBB.managedBean.disciplinaryActionStatus}">
+				<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.yes']}" itemValue="#{lbl['lbl.rpt.yes']}" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.no']}" itemValue="#{lbl['lbl.rpt.no']}" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		<!-- 32521 - END -->
 	</table>
 	<br />
 	

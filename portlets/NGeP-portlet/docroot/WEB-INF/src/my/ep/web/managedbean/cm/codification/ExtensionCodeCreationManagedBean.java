@@ -152,7 +152,10 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 	private boolean requestColor = true;
 	//#25551 18042020 - azza - end
 
-	
+	// 35503 Start
+	private List<CmRequestCode> auditRequestExtList;
+	// 35503 End
+		
 	/** The back to previous page. */
 	private String backToPreviousPage;
 
@@ -1223,6 +1226,19 @@ public class ExtensionCodeCreationManagedBean extends BaseManagedBean {
 		this.requestColor = requestColor;
 	}
 
+	// 35503 Start
+	public List<CmRequestCode> getAuditRequestExtList() {
+		if (auditRequestExtList == null)
+			auditRequestExtList = new ArrayList<>();
+		return auditRequestExtList;
+	}
+
+	public void setAuditRequestExtList(List<CmRequestCode> auditRequestExtList) {
+		this.auditRequestExtList = auditRequestExtList;
+	}
+
+	// 35503 End
+		
 	/*[#27625] begin*/
 	public String getTypeName() {
 		return typeName;
