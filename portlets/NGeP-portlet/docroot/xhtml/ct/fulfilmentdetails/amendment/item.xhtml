@@ -113,7 +113,19 @@
 		      <p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
                  <h:outputText value="#{index+1}" />
 	         </p:column> 
-		     
+	        
+	          <p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:32%; white-space:normal;">	                       
+	         	#{ctItemVar.scRequestItem.itemName}
+	         	<p:spacer width="1" />       		 	
+       		 	<p:commandLink id="productSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(ctItemVar)}">
+       		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
+			 	</p:commandLink>
+				<br />
+			    <h:outputText id="extensionCodeID" value="#{ctItemVar.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>
+			    <br /> 	
+			  	<h:outputText id="skuID" value="#{ctItemVar.sku == null ? lbl['lbl.txt.na'] : ctItemVar.sku }" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/> 				
+	      	</p:column>	
+  		      <!--
 		      <p:column  styleClass="column-align-center" style="width:35%; white-space:normal;"  >
 	 			<f:facet name="header">
 	      			<h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}" escape="false"/>
@@ -123,6 +135,7 @@
 						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
 					</p:commandLink>
          		 </p:column>  
+         		 -->
 			
 				  <p:column style="width:15%; white-space:normal;" 
 				      styleClass="column-align-center" headerText="#{lbl['lbl.ct.type.of.goods']}">
@@ -465,16 +478,17 @@
 				<p:column headerText="#{lbl['lbl.ct.No']}" styleClass="column-align-center" style="width:8%; white-space:normal;">
               <h:outputText value="#{index+1}" />
             </p:column>  
-              
-              <p:column style="width:32%; white-space:normal;"  styleClass="column-align-center">
-	             <f:facet name="header">
-	                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
-	               </f:facet>
-	           <h:outputText id="serviceNameID" value="#{fn:replace(amendmentBackingBean.contactItem(serviceItemVar),',','&lt;/br&gt;')}" size="50" escape="false"  style="float:left; text-align:left;"/>
-       		 <p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(serviceItemVar)}">
-       		 <p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" style="float:left; padding-left: 5px;" />
-			 </p:commandLink>                        
-	      </p:column>  
+              <!-- #31558 start -->
+              <p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:32%; white-space:normal;">	                       
+	         	#{serviceItemVar.scRequestItem.itemName}
+	         	<p:spacer width="10" />
+       		 	<p:commandLink id="serviceSpec" update=":form:itemSpecDlg" action="#{ctBackingBean.viewItemSpecDlg(serviceItemVar)}">
+       		 		<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}"/>
+			 	</p:commandLink>
+				<br/>
+			  	<h:outputText id="extensionCodeID" value="#{serviceItemVar.scRequestItem.cmItem.extensionCode}" size="50" escape="false"  style="float:left; text-align:left; display:block;width:200px"/>       		 				                        
+	      	</p:column>	      	
+	      	<!-- #31558 end -->
 				
 				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:14%;white-space:normal;" styleClass="column-align-center">
 					<h:outputText value="#{serviceItemVar.scRequestItem.uom.uomName}" style="float:left;" />
@@ -792,8 +806,8 @@
 		</f:facet>
 	</p:dialog>
 	<!-- #28854 end - Display item specification as defined in LOA -->
-
-	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
+	
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
