@@ -1479,14 +1479,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			CommitteResDTO committeResDto = null;
 			// QuationTenderResDTO qtResDTO = null;
-			log.info("Bug #37906 - ApprovalBackingBean.updateBpmTask() -- Start");
-			log.info("TaskName: " + (StringUtils.isNotEmpty(taskName) ? taskName : ""));
-			log.info("QT ID: " + (null != qt && null != qt.getQtId() ? qt.getQtId() : ""));
-			log.info("User ID: "
-					+ (null != new FacesScopes().getUserSessionBean()
-							&& null != new FacesScopes().getUserSessionBean().getUserId() ? new FacesScopes()
-							.getUserSessionBean().getUserId().toString() : ""));
-			log.info("Outcome: " + (null != outcome ? outcome : ""));
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -1547,6 +1539,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
+				committeReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
@@ -1600,6 +1593,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				qtReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				
 				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				String approvalDocType = ParameterConst.DOCTYPE_QUOTATION;
@@ -1777,7 +1771,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			log.info("ApprovalBackingBean.updateBpmTask(): duration in milli seconds is: " + (System.currentTimeMillis() - startTime) + " : QT No. is: " + qt.getQtNo());
-			log.info("Bug #37906 - ApprovalBackingBean.updateBpmTask() -- End");
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("QT", "updateBpmTask", this.getManagedBean().getQt().getQtNo(), "updateBpmTask",getUserIdSessionFromLoginId(), e);
 			throw new EpException(MessageConst.ERROR_722632);
