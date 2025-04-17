@@ -668,8 +668,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(this.getManagedBean().getSmPersonnel() != null ){
 					if(suppOwner.getIdentificationNo() != null){
 						//32851 - start
+						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+						reqDTO.setDirectorIdNo(suppOwner.getIdentificationNo());
 						SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
-								.retrieveValidBlacklist(suppOwner.getIdentificationNo()).getPersonBlacklist();
+								.retrievePersonBlacklistByIdentificationNO(reqDTO).getPersonBlacklist();
 						if(ban != null){
 							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 						}
