@@ -201,17 +201,23 @@
 					<c:when test="#{isSecretaryUser}">
 						<p:column headerText="#{lbl['lbl.sc.name']}">
 							<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
-								size="50" style="color:black" rendered="#{isPendingNegotiationStatus}" />
+								size="50" style="color:black"
+								rendered="#{isPendingNegotiationStatus}" />
+							<ui:remove>#35360 - End</ui:remove>
 							<h:outputText value="#{meetingAttDtl.name}"
 								rendered="#{!isPendingNegotiationStatus}"></h:outputText>
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.identification.no']}">
+							<ui:remove>#35360 - Start</ui:remove>
 							<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15"
-								size="15" style="color:black" rendered="#{isPendingNegotiationStatus}" />
+								size="15" style="color:black"
+								rendered="#{isPendingNegotiationStatus}" />
+							<ui:remove>#35360 - End</ui:remove>
 							<h:outputText value="#{meetingAttDtl.icPassport}"
 								rendered="#{!isPendingNegotiationStatus}"></h:outputText>
 						</p:column>
+					<ui:remove>#35360 - Start</ui:remove>
 					</c:when>
 					<c:otherwise>
 						<p:column headerText="#{lbl['lbl.sc.name']}">
