@@ -1238,11 +1238,12 @@ public class SPDetailBackingBean extends
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean
 									.getSpecAnswerList()) {
+								//#21695 farid IN MONITORING START	
 								
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
 								}	//#28785-End
-
+								
 								if (specAnswer.getRatePerUom() != null
 										&& specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) > 0) {
 									answers.add(specAnswer);
@@ -1253,11 +1254,13 @@ public class SPDetailBackingBean extends
 									answers.add(specAnswer);
 								
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+												.getProcurementMode().getParameterCode())) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+												.getProcurementMode().getParameterCode())) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1271,8 +1274,11 @@ public class SPDetailBackingBean extends
 								}
 								//Bug_34259 - End
 								else{
-									specAnswer.setDeleted(true);
-									toDeleteZoneAnswers.add(specAnswer);
+									//#21695 as is error for tender , 2times deleted if user null the value of the rate per uom.
+									 if (!ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())) {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
+									 }
 								}
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
