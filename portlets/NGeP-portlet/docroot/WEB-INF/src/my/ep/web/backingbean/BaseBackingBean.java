@@ -4453,11 +4453,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		for (SmPersonBlacklist per : blacklistPersonnel){
 			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-			reqDTO.setDirectorIdNo(per.getIdentificationNo());
-			reqDTO.setBlacklist(isActive);
+			
 			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+					.retrieveAllPersonBlacklistByIdentificationNO(per.getIdentificationNo(), isActive);
 			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
 				blacklistOwner.setIcNo(per.getIdentificationNo());
 				blacklist.add(blacklistOwner);
