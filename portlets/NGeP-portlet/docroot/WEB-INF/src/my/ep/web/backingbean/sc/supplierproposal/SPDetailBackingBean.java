@@ -1260,7 +1260,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
-				//28777 - start
+				//#28777 & #29729 - Start
 				List<Long> deactivatedZones = new ArrayList<>();
 				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
 					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
@@ -1268,7 +1268,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							deactivatedZones.add(zoneDtl.getSpecZoneId());
 					}
 				}
-				//28777 - end
+				//#28777 & #29729 - End
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1290,14 +1290,14 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
-				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {// 28777(35838) - fix sonarqube issue
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {//#28777 & #29729 (35838) - fix sonarqube issue
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
-						//28777 - start
+						//#28777 & #29729 - Start
 						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
 							continue;
-						//28777 - end
+						//#28777 & #29729 - End
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -1360,7 +1360,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						}
 						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
-				}
+				}//#28777 & #29729 (35838) - fix sonarqube issue
 				//#34363 - note 50 - Start - Vinod
 				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
 						&& null != getManagedBean().getQt()
@@ -4638,7 +4638,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			boolean branchDeleted = checkValidationSupplierBranchDeleted();
 			if(branchDeleted){
 				this.getManagedBean().setReadOnly(branchDeleted);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 						MessageUtils.getMessage(MessageConst.INFO_760522, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
@@ -6336,7 +6336,7 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		public boolean checkValidationSupplierBranchDeleted(){
 			boolean isSupplierBranchDeleted = false;
 			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
-			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
+			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED){
 					isSupplierBranchDeleted = true;
 					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			}
