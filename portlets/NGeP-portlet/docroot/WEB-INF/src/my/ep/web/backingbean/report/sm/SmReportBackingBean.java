@@ -3387,6 +3387,35 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 	// #28115 - end
 	
+	//#32521 - START
+	public List<SelectItem> retrieveReportApplStatus() {
+		if (EntityHelper
+				.isCollectionEmpty(getManagedBean().getApplStatusList())
+				&& null != new FacesScopes().getUserSessionBean().getUserId()) {
+
+			getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> applStatusList = reportSO
+					.retrieveApplicationProcessedStatusList(new FacesScopes()
+							.getUserLocale().getLanguage());
+
+			if (CollectionUtils.isNotEmpty(applStatusList)) {
+				for (Object[] object : applStatusList) {
+					if (object[0] != null && object[1] != null) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setValue(object[0].toString());
+						selectItem.setLabel(object[1].toString());
+						getManagedBean().getApplStatusList().add(selectItem);
+					}
+				}
+			}
+		}
+		return getManagedBean().getApplStatusList();
+	}
+	//#32521 - END
+	
 	// #7754_#35984 - Start
 	public String getZoneByUser() {
 		PmZone zone = SmCommonUtil.getInstance().getUserZone();
