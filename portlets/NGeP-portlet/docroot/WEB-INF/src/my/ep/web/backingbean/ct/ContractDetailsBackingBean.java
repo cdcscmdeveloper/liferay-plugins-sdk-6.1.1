@@ -1293,7 +1293,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime()
 							&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()
 							&& ctBB.isContractExtendOrIsBond()) {
-						contractAmt.setBondAttachment(true);
+						contractAmt.setIsBondAttachment(ContractConst.STATUS_COMPLETE);
 					}
 					// 24333 - End
 				}
