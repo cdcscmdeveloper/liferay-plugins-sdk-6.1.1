@@ -70,7 +70,8 @@
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
+							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<c:when test="#{!registrationBackingBean.managedBean.smAppl.brandNew and registrationBackingBean.managedBean.regAccountMaintainance}">
@@ -79,7 +80,8 @@
 							disabled="#{!registrationBackingBean.businessTypeIsROB(registrationBackingBean.managedBean.smSupp.businessType) and !registrationBackingBean.businessTypeIsROC(registrationBackingBean.managedBean.smSupp.businessType)}"
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" ></p:ajax>
+							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" ></p:ajax>
 						</p:selectOneMenu>
 					</c:when>
 					<!-- #36710 START -->
@@ -90,7 +92,8 @@
 							style="width:310px"
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM)}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/> 
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
+							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
 						</p:selectOneMenu> <!-- #36710 END-->
 					</c:when>
 					<c:otherwise>
@@ -100,7 +103,8 @@
 							style="width:310px"
 							disabled="#{(registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_BASIC and registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance) or (!registrationBackingBean.managedBean.smAppl.brandNew or registrationBackingBean.managedBean.companyValidWithSSM)}">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDownAccountInfo()}"/> <!-- #36710 -->
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
+							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}" update="@all" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew || registrationBackingBean.managedBean.smAppl.applValidWithSsm}" ></p:ajax>
 						</p:selectOneMenu>
 					</c:otherwise>
 				</c:choose>

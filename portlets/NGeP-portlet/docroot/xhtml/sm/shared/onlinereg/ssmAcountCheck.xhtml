@@ -66,7 +66,8 @@
 							rendered="#{registrationBackingBean.managedBean.smAppl.brandNew or !registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" 
 							style="width:310px">
 							<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}"/>
-							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}"  update="@form" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
+							<!-- #36718 - add parameter to pmStateDropdownValues listener method -->
+							<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues(true)}"  update="@form" process="@form" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"></p:ajax>
 						</p:selectOneMenu>
 						<p:outputLabel styleClass="outputLabel-view" 
 						value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
