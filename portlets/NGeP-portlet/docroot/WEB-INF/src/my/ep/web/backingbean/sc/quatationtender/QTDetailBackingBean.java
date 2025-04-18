@@ -4166,6 +4166,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
 			if (!getManagedBean().isApproverTabLoaded()) {
+				// 37892 -start-
+				Long statusId = this.getManagedBean().getQt().getQtStatus()
+						.getStatusId();
+				callOtherApprovalTabDtls(statusId);
+				// 37892 -end-
 				retrieveApprovalTabDtl();
 			}
 			// #30435 - End.
@@ -4513,10 +4518,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod updated error message
-			List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval()
-					.getApproverSettings();
+			ScQtApproval approverPublication = this.getManagedBean().getPublicationApproval();
 
-			if (CollectionUtils.isEmpty(approverSettings)) {
+			if (approverPublication == null 
+					|| CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
 				throw new EpException(MessageConst.ERROR_775174);
 			}
@@ -4527,7 +4532,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
 					) {
 
-				validatePublicationApproverInactive(approverSettings);
+				validatePublicationApproverInactive(approverPublication.getApproverSettings());
 				validateDOAInactive();
 				validateBPKInactive();
 			}
@@ -14298,7 +14303,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//12471 - End - Dayan
 	
-	
+	// 37892 -start-
+	/**
+	 * call other approval tab details during pending document submit.
+	 * 
+	 * @param statusId
+	 * @return
+	 */
+	public void callOtherApprovalTabDtls(Long statusId) {
+		boolean isStatusCheck = QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
+				.equals(statusId);
+		if (isStatusCheck) {
+			retrieveOthersApprovalTabDtl();
 
+		}
+	}
+	// 37892 -end-
 
 }
