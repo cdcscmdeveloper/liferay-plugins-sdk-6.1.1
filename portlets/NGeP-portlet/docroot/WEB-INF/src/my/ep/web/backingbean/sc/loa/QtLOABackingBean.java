@@ -513,7 +513,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	 * 
 	 * @return
 	 */
-	public boolean isSupplierEPVStatusRejected(ScLoa scLoa) {
+	public void isSupplierEPVStatusRejected(ScLoa scLoa) {
 		boolean supplierStatus = false;
 
 		// all status stated in FRS for 21692
