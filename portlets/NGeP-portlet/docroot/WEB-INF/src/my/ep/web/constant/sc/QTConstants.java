@@ -343,6 +343,7 @@ public interface QTConstants {
 	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
 	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
 	// #29187 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";

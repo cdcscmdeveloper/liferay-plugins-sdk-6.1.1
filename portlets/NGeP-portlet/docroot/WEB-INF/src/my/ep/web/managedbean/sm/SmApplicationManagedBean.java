@@ -573,8 +573,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	//#29315
 	private boolean flagMandatoryEpfNo;
@@ -624,6 +622,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 31043 START
 	private boolean showFacilityMachine;
 	// 31043 END
+	
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 		
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -4104,15 +4105,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 
-	//26238 - start 
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} //26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4451,6 +4443,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 	
+
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
+
 	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
 		return selectedRecommendRejectReasonDescs;

@@ -18,16 +18,24 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<h:panelGroup layout="block" class="ui-messages ui-widget" rendered="#{(paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.paPendingPaymentMatch.longValue() 
-		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.poPendingPaymentQuery.longValue() 
-		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.coPendingPaymentQuery.longValue()
-		or paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId.longValue() == FulfilmentStatusCont.paPendingPaymentQuery.longValue()) 
-		and not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}">
-		<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
-		<h:outputText class="ui-messages-info-icon" /><ul><li>
-		<h:outputText class="ui-messages-info-detail" /> #{paymentMatchBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink id="sharedcommand" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" rendered="#{not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}" action="#{paymentMatchBackingBean.viewDisciplinaryAction(paymentMatchBackingBean.managedBean.smDisciplinaryAction)}" process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink> #{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li></ul>
+		<!--#26279 Start-->
+		<h:panelGroup layout="block" class="ui-messages ui-widget"
+			rendered="#{not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}">
+			<h:panelGroup layout="block" class="ui-messages-info ui-corner-all">
+				<h:outputText class="ui-messages-info-icon" />
+				<ul>
+					<li><h:outputText class="ui-messages-info-detail" />
+						#{paymentMatchBackingBean.managedBean.disciplinaryActionMessage} <p:commandLink
+							id="sharedcommand" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							rendered="#{not empty paymentMatchBackingBean.managedBean.disciplinaryActionMessage}"
+							action="#{paymentMatchBackingBean.viewDisciplinaryAction(paymentMatchBackingBean.managedBean.smDisciplinaryAction)}"
+							process="@this" partialSubmit="true" update=":form">#{lbl['lbl.sm.disciplinary.here']}</p:commandLink>
+						#{lbl['lbl.sm.supplier.to.view.disc.action.details']}</li>
+				</ul>
+			</h:panelGroup>
 		</h:panelGroup>
-		</h:panelGroup>
+		<!--#26279 End-->
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
@@ -211,7 +219,9 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<ac:disciplinaryActionHistory voList="#{paymentMatchBackingBean.managedBean.disciplineVOs}" 
+	<!--#26279 Start-->
+	<ac:disciplinaryActionHistory voList="#{paymentMatchBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />		
+	<!--#26279 End-->
 	</ui:define>
 </ui:composition>
