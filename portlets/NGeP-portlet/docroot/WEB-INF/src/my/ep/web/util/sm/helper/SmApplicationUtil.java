@@ -55,6 +55,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -3836,6 +3837,8 @@ public class SmApplicationUtil {
 		managedBean.setOverLappedCategoryExists(false);
 		managedBean.setOverLappedCategoryMsg(StringUtils.EMPTY);
 		managedBean.setOverLappedCategoryRemarks(StringUtils.EMPTY);
+		//13362
+		managedBean.setApplnOverLapRemarks(StringUtils.EMPTY);
 
 		if (overlapCategoryVO != null) {
 			managedBean.setOverLappedCategoryExists(overlapCategoryVO
@@ -3846,12 +3849,30 @@ public class SmApplicationUtil {
 					.getOverLappedCategoryRemarks());
 			managedBean.setOverlapCategoryVOList(overlapCategoryVO
 					.getOverlapCategoryVOList());
+			//13362
+			managedBean.setApplnOverLapRemarks(overlapCategoryVO.getApplnOverLapRemarks());
 			managedBean.setOverLappedCategoryExists(true); //#31018
 		}else{
 			managedBean.setOverlapDocs(null);//#31018
+			log.info("overlapCategoryVO == null");
 		}
 		resetAddedCategoryOverlapStatus(managedBean.getSmAppl(),
 				overlapCategoryVO);
+	}
+
+	//13362
+	public static List<SmBulkApplOverlapCatVO>  checkOverLappingCategoriesMalay(
+			SmApplicationManagedBean managedBean) {
+		log.info("Inside checkOverLappingCategoriesMalay === ");
+		SmOverlapCategoryVO overlapCategoryMalay = null;
+		managedBean.getSmAppl().setOverlapLanguage(CommonConstants.LANGUAGE_CODE_MALAY);
+		overlapCategoryMalay = getOverlapCategoryVO(managedBean.getSmAppl());
+
+		if (overlapCategoryMalay != null) {
+			managedBean.setOverlapCategoryListMalay(overlapCategoryMalay
+					.getOverlapCategoryMalayList());
+		}
+		return overlapCategoryMalay.getOverlapCategoryMalayList();
 	}
 
 	public static void validateOverlapCategoryJustificationAndSuppDocs(
@@ -3939,6 +3960,19 @@ public class SmApplicationUtil {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(smAppl.getSmSupplier().getSupplierId());
 		reqDTO.setApplId(smAppl.getApplId());
+		
+		//13362
+		if (smAppl.getOverlapLanguage() != null){
+			reqDTO.setLangCode(CommonConstants.LANGUAGE_CODE_MALAY);
+			List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
+			if (!EntityHelper.isCollectionEmpty(resultList)
+					&& !resultList.isEmpty()) {
+				retVal = new SmOverlapCategoryVO();
+				retVal.setOverlapCategoryMalayList(getOverlapCategoryVOList(
+						resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage()));
+			}
+		}else{
 		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 		List<Object[]> resultList = SmServiceLookup.getMofRegistrationSO()
 				.retrieveOverLappedCategoryDetails(reqDTO).getResultList();
@@ -3960,7 +3994,48 @@ public class SmApplicationUtil {
 					+ System.lineSeparator()
 					+ getOverlappedCategoryRemarks(resultList));
 			retVal.setOverlapCategoryVOList(getOverlapCategoryVOList(
-					resultList, smAppl.getSupplierType()));
+					resultList, smAppl.getSupplierType(), smAppl.getOverlapLanguage())); //ganti dgn overlap lang
+			
+			//13362 - START setApplnOverlapRemarks
+			String companyName = "";
+			String mofNo = "";
+			String catCode = "";
+			String catCodeCombine = "";
+			int index = 0;
+			
+			if(resultList != null){
+				for (Object[] arrI : resultList){ 
+					catCode = arrI[0].toString() + arrI[1] + arrI[2];
+					if("".equalsIgnoreCase(companyName)){
+						companyName = arrI[4].toString();
+						log.info("MOF NO == "+arrI[5]);
+						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						catCodeCombine += companyName + ", " +  mofNo + ", " + " (";
+						index ++;
+					}
+					if (index == 1){
+						catCodeCombine = catCodeCombine + catCode;
+					}
+					if(arrI[4].toString().equalsIgnoreCase(companyName) && index != 1){
+						catCodeCombine = catCodeCombine + ", " + catCode;
+					}else{
+						companyName = arrI[4].toString();
+						log.info("MOF NO == "+arrI[5]);
+						mofNo = arrI[5] != null ? arrI[5].toString() : "null";
+						
+						if (index == 1){
+							catCodeCombine = catCodeCombine + "";
+							index++;
+						}else{
+							catCodeCombine = catCodeCombine + ")," + " " + companyName + ", " +  mofNo + ", " + " (" + catCode;
+						}
+					}	
+				}
+				catCodeCombine = catCodeCombine + "" + ")";
+				retVal.setApplnOverLapRemarks(catCodeCombine);
+			}
+			//13362 - END
+		}
 		}
 		return retVal;
 	}
@@ -4095,7 +4170,7 @@ public class SmApplicationUtil {
 	}
 
 	private static List<SmBulkApplOverlapCatVO> getOverlapCategoryVOList(
-			List<Object[]> resultList, String suppType) {
+			List<Object[]> resultList, String suppType, String lang) {
 		List<SmBulkApplOverlapCatVO> retVal = new ArrayList<SmBulkApplOverlapCatVO>();
 
 		if (!EntityHelper.isCollectionEmpty(resultList)) {
@@ -4105,7 +4180,14 @@ public class SmApplicationUtil {
 			String catCode = StringUtils.EMPTY;
 			String isActiveAppl = StringUtils.EMPTY;
 			String applStatus = StringUtils.EMPTY;
-			String language = new FacesScopes().getUserLocale().getLanguage();
+			String language = null;
+			//13362
+			if (lang != null){
+				language = CommonConstants.LANGUAGE_CODE_MALAY;
+			}
+			else{
+				language = new FacesScopes().getUserLocale().getLanguage();
+			}
 			boolean isAdd = false;
 			boolean isSubAdd = false;
 			for (Object[] arr : resultList) {
@@ -4164,7 +4246,7 @@ public class SmApplicationUtil {
 					voSubTmp.setIdentificationNo(arr[16] + "");
 					voSubTmp.setRole(getRoleName(arr[9] + "", arr[10] + "",
 							arr[11] + "", arr[15] + "", arr[12] + "", arr[13]
-									+ "", arr[14] + "", suppType));
+									+ "", arr[14] + "", suppType, lang));
 					voSubTmp.setCompanyName(arr[4] + "");
 					voSubTmp.setMofNo(arr[5] + "");
 					if (StringUtils.isBlank(voSubTmp.getMofNo())) {
@@ -4218,8 +4300,65 @@ public class SmApplicationUtil {
 
 	private static String getRoleName(String equityOwner, String director,
 			String higherManagement, String clerical, String management,
-			String prof, String semiProf, String suppType) {
+			String prof, String semiProf, String suppType, String lang) {
 		StringBuilder sb = new StringBuilder();
+		//13362
+		if (lang != null){
+			if (equityOwner.equals("1")) {
+				sb.append(
+						SmCommonUtil.getMessageMalay(
+								SupplierManagementConst.PERSONNEL_EQUI_OWNER, null))
+						.append(",");
+			}
+			if (director.equals("1")) {
+				sb.append(
+						SmCommonUtil.getMessageMalay(
+								SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
+								null)).append(",");
+			}
+			if (higherManagement.equals("1")) {
+				sb.append(
+						SmCommonUtil.getMessageMalay(
+								SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
+								null)).append(",");
+			}
+			if (management.equals("1")) {
+				sb.append(
+						SmCommonUtil
+								.getMessageMalay(
+										SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+										null)).append(",");
+			}
+			if (clerical.equals("1")) {
+				if (suppType.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+					sb.append(
+							SmCommonUtil
+									.getMessageMalay(
+											SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+											null)).append(",");
+				} else {
+					sb.append(
+							SmCommonUtil
+									.getMessageMalay(
+											SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
+											null)).append(",");
+				}
+			}
+			if (prof.equals("1")) {
+				sb.append(
+						SmCommonUtil
+								.getMessageMalay(
+										SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+										null)).append(",");
+			}
+			if (semiProf.equals("1")) {
+				sb.append(
+						SmCommonUtil
+								.getMessageMalay(
+										SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+										null)).append(",");
+			}
+			}else{
 		if (equityOwner.equals("1")) {
 			sb.append(
 					SmCommonUtil.getMessage(
@@ -4274,6 +4413,8 @@ public class SmApplicationUtil {
 									SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
 									null)).append(",");
 		}
+			}
+		
 		return sb.length() > 0 ? StringUtils.removeEnd(sb.toString(), ",")
 				: StringUtils.EMPTY;
 	}		
@@ -4506,71 +4647,71 @@ public class SmApplicationUtil {
 
 	private static void assignExistingAndAdditionalCategoryList(
 			SmApplicationManagedBean managedBean) {
+		List<SmSupplierCategory> addtnlList = new ArrayList<SmSupplierCategory>();
+		List<SmSupplierCategory> existingList = new ArrayList<SmSupplierCategory>();
+		//#34209 START - to remove category with deleted status in the list - fix issue active category show in addcat list
+		List<SmSupplierCategory> delCatList = new ArrayList<SmSupplierCategory>();
+		for(SmSupplierCategory filtCat : managedBean.getSmAppl().getSmSupplier()
+				.getSmAppl().getSmSupplierCategories()){
+			if(filtCat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
+				delCatList.add(filtCat);
+			}
+		}
+		managedBean.getSmAppl().getSmSupplier().getSmAppl().getSmSupplierCategories().removeAll(delCatList);
+		//#34209 END
+		//28775 - Site Visit Grouping Enhancement -28775
+		List<Integer> validStatus = Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE,
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (validStatus.contains(cat.getRecordStatusFlg()) && cat.getPmCategoryL3() != null) {
 
-		if (managedBean.getSmAppl().getApplType()
-				.equals(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			assignExistingAndAdditionalCategoryList(managedBean);
-		} else {
-			List<SmSupplierCategory> catList = new ArrayList<>();
-			List<SmSupplierCategory> apprvList = new ArrayList<>();
-			for (SmSupplierCategory cat : managedBean.getSmAppl()
-					.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg().compareTo(
+				SmSupplierCategory tmp = (SmSupplierCategory) EntityHelper
+						.getEntityBySinglePropertyFromList(cat
+								.getPmCategoryL3().getCategoryL3Id(),
+								managedBean.getSmAppl().getSmSupplier()
+										.getSmAppl().getSmSupplierCategories(),
+								"pmCategoryL3");
+				//#32726 start
+				if (tmp != null
+						&& (tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL 
+								|| tmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION)) {
+					if(cat.getRecordStatusFlg().compareTo(SupplierManagementConst.PENDING_ACT_STATUS) == 0)
+						addtnlList.add(cat);
+					else
+						existingList.add(cat);
+				//#32726 end
+				} else if (cat.getRecordStatusFlg().compareTo(
 						SupplierManagementConst.PENDING_ACT_STATUS) == 0
 						|| cat.getRecordStatusFlg()
 								.compareTo(
 										SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-					catList.add(cat);
-				} else if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-					//29823 - start
-					//#34098 - START 
-					if(managedBean.getCurrentStatus() != null 
-							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
-							    managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
-							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_BUMI)
-							&& !managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
-						catList.add(cat);
-					}else if(managedBean.getCurrentStatus() != null 
-							&& (managedBean.getCurrentStatus().equalsIgnoreCase("Pending Review Site Visit Report - After Approval") ||
-								managedBean.getCurrentStatus().equalsIgnoreCase("Menunggu Laporan Lawatan Tapak - Selepas Diluluskan"))
-							&& managedBean.getSmAppl().getApplType().equals(SupplierManagementConst.APPL_TYPE_CATEGORY)){
-						if(cat.getApplRefId().equals(cat.getSmAppl().getApplId())){
-							catList.add(cat);
-						}else{
-							apprvList.add(cat);
-						}
-					//#34098 - END 
-					}else{
-						apprvList.add(cat);
-					}
-					//29823 - end
-			
-					//30865, 30921 - Starts
-				}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
+					addtnlList.add(cat);
+				}
+				//30865 - Starts
+			}else if (cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_CANCELLED) == 0 
 					|| cat.getRecordStatusFlg().compareTo(DbValueConst.RECORD_STATUS_DELETED) == 0){
 						SmDisciplinaryAction smDisciplinaryAction = retrieveActiveSmDisciplinaryActionByDisciplinaryId(cat.getDisciplinaryActionId());
 						if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 							cat.setCancelCategory(true);
-							apprvList.add(cat);
+							existingList.add(cat);
 						}
 			}
 				//30865 - Ends
-			}
-			setCancelCategoryCatCodes(managedBean.getSmAppl().getSmSupplier(), catList);
-			if (managedBean.getActiveCategoryList() != null
-					&& !managedBean.getActiveCategoryList().isEmpty()) {
-				managedBean.getActiveCategoryList().clear();
-			}
-			if (managedBean.getApprovedCategoryList() != null
-					&& !managedBean.getApprovedCategoryList().isEmpty()) {
-				managedBean.getApprovedCategoryList().clear();
-			}
-			sortSupplierCategory(apprvList);
-			sortSupplierCategory(catList);
-			managedBean.setActiveCategoryList(catList);
-			managedBean.setApprovedCategoryList(apprvList);
 		}
+		if (managedBean.getActiveCategoryList() != null
+				&& !managedBean.getActiveCategoryList().isEmpty()) {
+			managedBean.getActiveCategoryList().clear();
+		}
+		if (managedBean.getApprovedCategoryList() != null
+				&& !managedBean.getApprovedCategoryList().isEmpty()) {
+			managedBean.getApprovedCategoryList().clear();
+		}
+		sortSupplierCategory(existingList);
+		sortSupplierCategory(addtnlList);
+		managedBean.setActiveCategoryList(addtnlList);
+		managedBean.setApprovedCategoryList(existingList);
 	}
 	
 	//14150
