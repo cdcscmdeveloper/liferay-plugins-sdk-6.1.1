@@ -4166,11 +4166,6 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (null!= this.getManagedBean().getTaskName() &&!SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getTaskName())){	//#28644-start	
 			// #30435- Start.
 			if (!getManagedBean().isApproverTabLoaded()) {
-				// 37892 -start-
-				Long statusId = this.getManagedBean().getQt().getQtStatus()
-						.getStatusId();
-				callOtherApprovalTabDtls(statusId);
-				// 37892 -end-
 				retrieveApprovalTabDtl();
 			}
 			// #30435 - End.
@@ -11927,6 +11922,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
 						if (null == approverAction || null == approverAction.getParameterId()) {
 							this.getManagedBean().setResetBpkCurrentArea(false);
+							//25635,37892 -start-
+							setOtherApprovalLoaded();
+							//25635,37892 -end-
 							throw new EpException(MessageConst.ERROR_760149);
 						}
 						
@@ -14307,21 +14305,17 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//12471 - End - Dayan
 	
-	// 37892 -start-
-	/**
-	 * call other approval tab details during pending document submit.
-	 * 
-	 * @param statusId
-	 * @return
-	 */
-	public void callOtherApprovalTabDtls(Long statusId) {
-		boolean isStatusCheck = QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT
-				.equals(statusId);
-		if (isStatusCheck) {
-			retrieveOthersApprovalTabDtl();
-
+	// 37892,25635 -start-
+		/**
+		 * check other approval tab loaded during clone.
+		 */
+		private void setOtherApprovalLoaded() {
+			List<TabBean> approvalOthersTab = this.getManagedBean()
+					.getTabOtherApproval();
+			if (CollectionUtils.isEmpty(approvalOthersTab)) {
+				this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+			}
 		}
-	}
-	// 37892 -end-
+		// 37892,25635 -end-
 
 }
