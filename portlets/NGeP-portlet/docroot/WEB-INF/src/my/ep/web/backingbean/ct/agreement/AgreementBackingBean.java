@@ -563,6 +563,21 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		} else {
 			getManagedBean().setValidBondAttachment(false);
 		}
+		
+		// #24333 - Start
+		if (getManagedBean().getCtAgreement().getCtAmendment().isContractExtend()) {
+			if (getManagedBean().getContractVer().getCtContractAmounts() != null) {
+				for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
+					if (contractAmt.getEffDate().getTime() <= getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime()
+							&& contractAmt.getExpDate().getTime() >= getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime()
+							&& contractAmt.isBondAttachment() && contractAmt.isBondReq()) {
+						getManagedBean().setBondAttachmentCompleted(true);
+						break;
+					}
+				}
+			}
+		}
+		// #24333 - End
 
 		// Check for migrated contract
 		if (getManagedBean().getCtAgreement().getCtAmendment() == null
@@ -934,7 +949,12 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750043, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+			} else if (getManagedBean().getCtAgreement().getCtAmendment().isContractExtend() && !getManagedBean().isBondAttachmentCompleted()) { //#24333 - Start
+				getManagedBean().setSelectedTabIndex(0);
+				throw new EpException(MessageConst.ERROR_750043, new String[] { ResourceBundleUtils.getMessage(getManagedBean().getCtContract()
+						.getContractNo(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()) });
 			}
+			//#24333 - End
 		}
 
 		// Contract Approver cannot approve the final agreement if:-
