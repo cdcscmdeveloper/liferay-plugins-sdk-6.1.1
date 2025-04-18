@@ -927,7 +927,7 @@ public class SmPersonnelBackingBean extends
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
 		}else{
-			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().cloneEntity();
+			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().deepCopy();
 			Long prevCountry = prevAddr.getPmCountry().getCountryId();
 			Long prevState = prevAddr.getPmState().getStateId();
 			PmDivision prevDivision = prevAddr.getPmDivision();
