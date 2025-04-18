@@ -56,6 +56,7 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -63,12 +64,15 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -80,6 +84,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1576,21 +1581,46 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 			// sm module
+
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			StringBuilder sb = new StringBuilder();
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+
+			// #34831 - Start
+			// if (title.equalsIgnoreCase("lbl.sm.new.registerAccountDraft")) {
+			// sm module
+			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
+			// sm module
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setApplNo(worklistItemVO.getDocNumber());
+			List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO)
+					.getSmPersonnelList();
+
+			for (SmPersonnel personnel : personnels) {
+				PmUser user = SmCommonUtil.getUserByUserId(personnel.getPmUser().getUserId());
+				List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+				for (PmUserRole userRole : userRoles) {
+					if (userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+						sb = new StringBuilder();
+						sb.append(ResourceBundleUtils.getMessage("lbl.sm.upgrade.acc.appl",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+					}
+				}
+			}
+			// }
+			// #34831 - Start
+
 			if (mofResDto.getCompanyName() != null) {
 				sb.append(" ( ");
 				sb.append(mofResDto.getCompanyName());
 				sb.append(" ) ");
-//				Enhancement #28766 - Remove GLP flag - Start
-//				if (viewGlpFlag() && mofResDto.isGlp()) {
-//					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-//				}
-//				Enhancement #28766 - Remove GLP flag - End
+				// Enhancement #28766 - Remove GLP flag - Start
+				// if (viewGlpFlag() && mofResDto.isGlp()) {
+				// sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+				// }
+				// Enhancement #28766 - Remove GLP flag - End
 			}
-
 			worklistItemVO.setTitle(sb.toString());
 		} else if (title.startsWith("lbl.cd")) {
 
