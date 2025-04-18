@@ -4516,8 +4516,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
 			if (bond.isBondNew()) {
 				hasNewBond = true;
-				bond.setFilePath(null);
-				bond.setFileName(null);
+		        if (bond.isBrandNew()) {
+		            bond.setFileName(null);
+		            bond.setFilePath(null);
+		        }
 				bondNew.add(bond);
 			} else {
 				bondOriginal.add(bond);
