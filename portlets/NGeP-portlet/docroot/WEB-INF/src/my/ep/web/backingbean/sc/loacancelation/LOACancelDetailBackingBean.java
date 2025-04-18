@@ -891,7 +891,10 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			reqDTO.setToBeRemoveSchedulesList(this.getManagedBean().getToBeRemoveFreqSchedules());
 			reqDTO.setToBeRemoveProgressivePayments(this.getManagedBean().getToBeRemoveProgressivePayments());
-			getQtAwardSO().validateCancelLoaRequiredRemark(reqDTO);	
+			//#38093 - Start
+			reqDTO.setCancelPrepareLoaActionMethod(true);
+			//#38093 - End
+			getQtAwardSO().validateCancelLoaRequiredRemark(reqDTO);		
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
@@ -1035,7 +1038,9 @@ public class LOACancelDetailBackingBean extends LOABaseBackingBean<LOADetailMana
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
-			reqDTO.setRoleCode(getUserRoleCode(scLoa.getScLoiLoa().getDocType()));
+			//#38093 - Start
+			reqDTO.setRoleCode(RoleCode.RN_APPROVER.value());
+			//#38093 - End
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
