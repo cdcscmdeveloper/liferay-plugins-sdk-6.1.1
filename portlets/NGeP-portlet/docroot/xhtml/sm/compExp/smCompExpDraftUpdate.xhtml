@@ -1,0 +1,184 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_compExp_WAR_NGePportlet').find('.portlet-title-text')
+					.html("#{compExpMB.headerTitle}");
+		</script>
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.sm.comp.exp.draft.btn.back']}"
+				partialSubmit="true" update="@this" process="@this"
+				action="#{compExpBB.redirectToDraft}" onclick="blockWidget.show()"
+				oncomplete="blockWidget.hide()"></p:commandButton>
+		</div>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sm.comp.exp.update.instruction']}" />
+		<table style="table-layout: fixed">
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /></td>
+				<td style="width: 66%"><p:selectOneRadio id="clientType"
+						label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
+						value="#{compExpMB.selectedDraft.clientType}" disabled="true">
+						<f:selectItem
+							itemLabel="#{lbl['lbl.sm.comp.exp.update.client.type.federal']}"
+							itemValue="#{ParameterConst.clientTypeFederal}"></f:selectItem>
+						<f:selectItem
+							itemLabel="#{lbl['lbl.sm.comp.exp.update.client.type.other']}"
+							itemValue="#{ParameterConst.clientTypeNonFederal}"></f:selectItem>
+					</p:selectOneRadio></td>
+			</tr>
+			<p:outputPanel
+				rendered="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeFederal}">
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label mandatory"
+							value="#{lbl['lbl.sm.comp.exp.update.client.ori.agency.name']}" /></td>
+					<td style="width: 66%"><p:outputLabel
+							styleClass="outputLabel-view mandatory"
+							value="#{compExpMB.selectedDraft.oriAgencyName}" /> <p:graphicImage
+							id="oriAgencyNameToolTipsId"
+							value="/css/images/design/tooltips.png" /> <p:tooltip
+							for="oriAgencyNameToolTipsId"
+							value="#{lbl['lbl.sm.comp.exp.update.client.ori.agency.name.tooltip']}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td style="width: 66%"><p:inputText size="60" id="agencyName"
+							value="#{compExpMB.selectedDraft.agencyName}" readonly="true" />
+						<p:commandLink id="ptjSearchCL" partialSubmit="true"
+							disabled="#{empty custServiceBackingBean.managedBean.searchBean.selectedOrgType}"
+							process="@this" update=":form:orgProfileCcId:ptjPopup"
+							action="#{organisationSearchBackingBean.initPtjPopup}"
+							oncomplete="ptjPopup.show();">
+							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+						</p:commandLink>
+				</tr>
+			</p:outputPanel>
+			<p:outputPanel
+				rendered="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeNonFederal}">
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" /></td>
+					<td style="width: 66%"><p:outputLabel
+							styleClass="outputLabel-view"
+							value="#{compExpMB.selectedDraft.agencyName}" /></td>
+				</tr>
+			</p:outputPanel>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td style="width: 66%"><p:inputText
+						value="#{compExpMB.selectedDraft.fileReferenceNo}" required="true"
+						label="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:spacer
+						width="3px"></p:spacer> <p:inputText
+						value="#{compExpMB.selectedDraft.fileExtensionNo}" size="3"
+						maxlength="3" required="true"
+						label="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:graphicImage
+						id="fileReferenceNoToolTipsId"
+						value="/css/images/design/tooltips.png" /> <p:tooltip
+						for="fileReferenceNoToolTipsId">
+						<img
+							src="/NGeP-portlet/images/suratSetujuTerima_fileReference_tooltip.jpeg" />
+					</p:tooltip></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.client.loa.no']}" /></td>
+				<td style="width: 66%"><p:inputText
+						value="#{compExpMB.selectedDraft.loaNo}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.client.project.title']}" /></td>
+				<td style="width: 66%"><p:outputLabel
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
+						styleClass="outputLabel-view"
+						value="#{compExpMB.selectedDraft.title}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.client.contract.value']}" /></td>
+				<td style="width: 66%"><p:outputLabel
+						styleClass="outputLabel-view"
+						value="#{compExpMB.selectedDraft.contractValue}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.client.payment.method']}" /></td>
+				<td style="width: 66%"><p:outputLabel
+						styleClass="outputLabel-view"
+						value="#{compExpBB.getParameterDesc(compExpMB.selectedDraft.paymentMethod)}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.client.procument.method']}" /></td>
+				<td style="width: 66%"><p:outputLabel
+						styleClass="outputLabel-view"
+						value="#{compExpBB.getParameterDesc(compExpMB.selectedDraft.procumentMode)}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.eff.date']}" /></td>
+				<td style="width: 66%"><h:outputText
+						rendered="#{compExpMB.selectedDraft.contractEffDate ne null}"
+						styleClass="outputLabel-view"
+						value="#{compExpMB.selectedDraft.contractEffDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText> <p:calendar
+						rendered="#{compExpMB.selectedDraft.contractEffDate eq null}"
+						showOn="button" readonlyInput="true"
+						value="#{compExpMB.selectedDraft.contractEffDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					</p:calendar></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td style="width: 66%"><p:calendar showOn="button"
+						readonlyInput="true" required="true"
+						label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
+						value="#{compExpMB.selectedDraft.contractExpDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					</p:calendar></td>
+			</tr>
+			<tr>
+				<td style="width: 34%"><p:outputLabel
+						styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.comp.exp.update.contract.status']}" /></td>
+				<td style="width: 66%"></td>
+			</tr>
+		</table>
+		<ac:ptjPopup id="orgProfileCcId"
+			orgTypeParamCode="#{ParameterConst.getOrgTypePtj}"
+			okAction="ccompExpBB.selectAgencyAction"
+			update=":form" />
+	</ui:define>
+</ui:composition>

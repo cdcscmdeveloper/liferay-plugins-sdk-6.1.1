@@ -3,16 +3,17 @@ package my.ep.web.backingbean.sm.compexp;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-
-import org.primefaces.context.RequestContext;
 
 /**
  * BackingBean for Sm Company Experience
@@ -66,7 +67,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param fromSM
 	 * @param fromCT
 	 */
-	public void onClickDraftAction(SmCompExpDraft draft) {
+	public void redirectToDraftUpdate(SmCompExpDraft draft) {
 		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
 		reqDTO.setDraftId(draft.getCompExpDraftId());
 		this.getManagedBean().setSelectedDraft(getCompExpSo().retrieveCompExpDraft(reqDTO).getExpDraf());
@@ -75,13 +76,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.ct", null));
 		}
-		RequestContext.getCurrentInstance().execute("updateCompExpWV.show();");
+		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
 	}
 
-	/**
-	 * To show to agency LOV popup
-	 */
-	public void onClickSearchAgency() {
-		RequestContext.getCurrentInstance().execute("agencyNameSearchLovWV.show();");
+	public void selectAgencyAction(PmOrgProfile orgProfile) {
+//		this.getManagedBean().getSearchBean().setSelectedOrgProfile(orgProfile);
 	}
 }
