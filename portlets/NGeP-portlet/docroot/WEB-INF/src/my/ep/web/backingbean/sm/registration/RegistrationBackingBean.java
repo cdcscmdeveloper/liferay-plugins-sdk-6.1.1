@@ -2139,7 +2139,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 			}
 			if(this.getManagedBean().getSmBusinessAdd().getPmCountry() != null){
-				pmStateDropdownValues();
+				pmStateDropdownValues(false);
 			}
 			
 			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
@@ -3559,7 +3559,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * set state drop down value
 	 */
-	public void pmStateDropdownValues() {
+	public void pmStateDropdownValues(boolean reset) {
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
 		//SSM INTEGRATION
 		if(this.getManagedBean().getSmAppl()!= null && this.getManagedBean().getSmAppl().isApplValidWithSsm() && countryId == null){
@@ -3680,7 +3680,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}else{
 				this.getManagedBean().setSabahSarawakType(false);
 				//#36718 - START - if ROC maintained as is
-				if(!this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) &&
+				if(!this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD) && reset &&
 				   !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)){
 					if(getManagedBean().getSmBusinessAdd().getPmDivision()!=null)
 						getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
