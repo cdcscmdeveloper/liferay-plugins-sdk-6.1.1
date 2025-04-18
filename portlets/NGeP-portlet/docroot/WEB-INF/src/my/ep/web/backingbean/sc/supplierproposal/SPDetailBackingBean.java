@@ -1108,7 +1108,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) && completedFinSpec != null) {
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) && null != completedFinSpec) {
 					//#34726 start - flag to define process from technical, 
 					//save technical spec proposal is sending financialproposalchecklist(preparefinancialaction)
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
