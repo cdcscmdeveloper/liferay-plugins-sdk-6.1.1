@@ -90,21 +90,6 @@ public class AuditPMRoleBackingBean {
 				.hasRoleUser(RoleCode.UPS_ADMIN.value()) ? RoleCode.UPS_ADMIN.value() : null;
 
 	}
-	
-	/**
-	 * @return
-	 */
-	public String roleUser() {
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.SUPPORT_APPL.value()) ? RoleCode.SUPPORT_APPL.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.UPS_ADMIN.value()) ? RoleCode.UPS_ADMIN.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.PTJ_ADMIN.value()) ? RoleCode.PTJ_ADMIN.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) ? RoleCode.MINISTRY_ADMIN.value() : getFacesScopes()
-			.hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ? RoleCode.JABATAN_ADMIN.value() : null;
-						
-	}
 
 	/**
 	 * @return
@@ -237,5 +222,19 @@ public class AuditPMRoleBackingBean {
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : null;
+	}
+	
+	/**
+	 * @return
+	 */
+	public String roleConfUser() {
+		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.BPK_ADMIN.value()) ? RoleCode.BPK_ADMIN.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.SUPPORT_APPL.value()) ? RoleCode.SUPPORT_APPL.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.UPS_ADMIN.value()) ? RoleCode.UPS_ADMIN.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value()) ? RoleCode.PTJ_ADMIN.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()) ? RoleCode.MINISTRY_ADMIN.value() : 
+					getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()) ? RoleCode.JABATAN_ADMIN.value() : null;
 	}
 }

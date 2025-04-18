@@ -46,7 +46,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
-import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -87,7 +86,7 @@ import my.ep.util.SLAUtils; //#36489
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
-import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMEducationBackingBean;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMConfigUserBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
@@ -2809,7 +2808,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 							&& userRole.getPmRole().isLimitRequired()) {
 						//SQ: remove compareTo
-						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().intValue() != 1) {
+						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().compareTo(BigDecimal.ZERO) != 1) {
 							throw new EpException(MessageConst.ERROR_770148,
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
@@ -3109,6 +3108,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			validateUser(user, userOrg);
 			validatePreference(user);
 			validateRoles(userOrg);
+						
+			/** AUDIT 28895_35509 START **/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
+			
+			PmUserOrg oldPmUserOrg = PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(), 
+					this.getManagedBean().getSelectedUserOrg().getUserOrgId());
+			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
+			List<PmUserRole> oldPmUserRoles = oldPmUserOrg != null ? oldPmUserOrg.getPmUserRoles() : null;
+			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;
+			/** AUDIT 28895_35509 START END **/
 
 			reqDTO = new UserReqDTO();
 			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
@@ -3240,21 +3251,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 			//#36489 - End
 
-			/************ AUDIT #28895-35509 *************/
-			AuditPMBackingBeanTemplate auTemplate = new AuditPMEducationBackingBean();
-			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAuditPMSO.class);
-			
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER) && !reqDTO.getPmUser().isBrandNew()) {
-				UserResDTO oldUser = userSO.retrieveUserByUserId(reqDTO);
-				
-				getManagedBean().setOldAuditPmUser(oldUser.getPmUser());
-				getManagedBean().setOldAuditPmUserOrg(oldUser.getPmUserOrg());
+			/************ AUDIT #28895_35509 START *************/
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+				getManagedBean().setNewAuditPmUser(user);
+				getManagedBean().setNewAuditPmUserOrg(userOrg);
+				getManagedBean().setNewAuditPmUserRoles(userOrg.getPmUserRoles());
+				getManagedBean().setNewAuditPmAddressTypes(getManagedBean().getSelectedReceivingAddrTypes());
+				getManagedBean().setOldAuditPmUser(oldPmUser);
+				getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
+				getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
+				getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
 			}
+			/************ END AUDIT #28895_35509 END *************/
 			
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
+				
+				/************ START AUDIT #28895_35509 START *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
+				}
+				/************ END AUDIT #28895_35509 END *************/
 
 				uploadAttachments();
 				deleteAttachments();
