@@ -1271,7 +1271,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				//24333 - Start
 				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime()
 						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime() && ctBB.isContractExtendOrIsBond()) {
-					contractAmt.setBondAttachment(true);
+					contractAmt.setIsBondAttachment(ContractConst.STATUS_COMPLETE);
 				}
 				//24333 - End
 			}
@@ -4516,8 +4516,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
 			if (bond.isBondNew()) {
 				hasNewBond = true;
-				bond.setFilePath(null);
-				bond.setFileName(null);
+		        if (bond.isBrandNew()) {
+		            bond.setFileName(null);
+		            bond.setFilePath(null);
+		        }
 				bondNew.add(bond);
 			} else {
 				bondOriginal.add(bond);

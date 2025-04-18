@@ -12,7 +12,7 @@
 	
 		<table style="margin-top: 10px; width: 100%;">
 			
-			<c:if test='#{flReportBB.managedBean.userRole ne "COLLECTOR_GOV"}'>
+			<c:if test="#{flReportBB.managedBean.showRptCategory}">
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" /> 
