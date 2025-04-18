@@ -14307,7 +14307,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	
 	// 37892,25635 -start-
 	/**
-	 * check other approval tab loaded during clone.
+	 * check other approval tab loaded during  pending document submit.
 	 */
 	private void setOtherApprovalLoaded() {
 		List<TabBean> approvalOthersTab = this.getManagedBean()
