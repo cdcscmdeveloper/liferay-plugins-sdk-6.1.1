@@ -7282,14 +7282,15 @@ public class QTDetailBackingBean extends
 			
 			// 11104-start
 			if (this.getManagedBean().getQt().isSampleReq()) {
-	             retrieveScheduleTabDtl();
+	           	retrieveScheduleTabDtl();
 				//11104 -start-
 				this.getManagedBean().setSubmit(true);
 				//11104 -end-
-				
-			}//11104-End
-			
-			//29732 qt maintenance 
+
+			}
+			// 11104-End
+
+			// 29732 qt maintenance -Start
 			this.getManagedBean().setFromSubmitCatChange(true);
 
 			String changedCatCodeList = checkCatCodeChange();
