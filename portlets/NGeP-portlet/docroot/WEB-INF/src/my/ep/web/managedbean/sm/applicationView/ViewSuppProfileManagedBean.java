@@ -35,6 +35,8 @@ import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 //#28175
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28895_35501_DA - AUDIT TRAIL SM DA
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -201,6 +203,8 @@ public class ViewSuppProfileManagedBean extends
 	private String oldPoApprOverlappedRemark;
 	private String oldApproverRemark;
 	// #28895_35501 End
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	private SmDisciplinaryAction oldSmDisciplinaryAction;
 	
 	public ViewSuppProfileManagedBean() {
 
@@ -288,12 +292,10 @@ public class ViewSuppProfileManagedBean extends
 				if(isBasicAccountMaintenance()){
 					return getBasicSupplierResultBean(reqDTO);
 				} else {
-					return new SearchResultBean<SmSupplier>();
+					return new SearchResultBean();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean<SmSupplier>();
-			} finally {
-				reqDTO = null;
+				return new SearchResultBean();
 			}
 		}
 		
@@ -313,10 +315,9 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSmAppl(smAppl);
 			// 28273: Disciplinary Action - end - 26238
 			
-			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveBasicSupplierForMaintenance(reqDTO)
 					.getSupplierResultBean();
-			return resultBean;
 		}
 	} 
 	
@@ -788,23 +789,7 @@ public class ViewSuppProfileManagedBean extends
 	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
 		this.smSuppOwners = smSuppOwners;
 	}
-	/*	#28281
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
-
-	public boolean isWarningExist() {
-		return warningExist;
-	}
-
-	public void setWarningExist(boolean warningExist) {
-		this.warningExist = warningExist;
-	} 
-	*/
+	
 	//27437 : Disciplinary Action 
 	/**
 	 * Search supplier latest application
@@ -960,14 +945,6 @@ public class ViewSuppProfileManagedBean extends
 		this.divisionBox = divisionBox;
 	}
 
-	public List<Long> getBumiCodeList() {
-		return bumiCodeList;
-	}
-
-	public void setBumiCodeList(List<Long> bumiCodeList) {
-		this.bumiCodeList = bumiCodeList;
-	}
-
 	public boolean isDisabledApprovedCategories() {
 		return disabledApprovedCategories;
 	}
@@ -1062,4 +1039,13 @@ public class ViewSuppProfileManagedBean extends
 		this.oldApproverRemark = oldApproverRemark;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public SmDisciplinaryAction getOldSmDisciplinaryAction() {
+	    return oldSmDisciplinaryAction;
+	}
+
+	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
+	    this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
+	}
+	// #28895_35501_DA End
 }
