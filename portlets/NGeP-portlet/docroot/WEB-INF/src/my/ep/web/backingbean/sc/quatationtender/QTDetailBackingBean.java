@@ -3558,11 +3558,13 @@ public class QTDetailBackingBean extends
 							.getScQtDocReportList());
 				}
 				if (this.getManagedBean().getQt().isSampleReq()) {
-					this.getManagedBean().setSubmit(true);
 					retrieveScheduleTabDtl();
 					qt.setScQtSampleSubmission(this.getManagedBean()
 							.getScQtSampleSubmissionList());
 					qt.setSampleClosingDate(qt.getClosingDate());
+				    //11104 -start-
+					this.getManagedBean().setSubmit(true);
+					 //11104 -end-
 				} else {
 					retrieveScheduleTabDtl();
 					
@@ -7280,12 +7282,14 @@ public class QTDetailBackingBean extends
 			
 			// 11104-start
 			if (this.getManagedBean().getQt().isSampleReq()) {
+	             retrieveScheduleTabDtl();
+				//11104 -start-
 				this.getManagedBean().setSubmit(true);
-				retrieveScheduleTabDtl();
-			}
-			// 11104-End
-
-			// 29732 qt maintenance -Start
+				//11104 -end-
+				
+			}//11104-End
+			
+			//29732 qt maintenance 
 			this.getManagedBean().setFromSubmitCatChange(true);
 
 			String changedCatCodeList = checkCatCodeChange();
