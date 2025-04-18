@@ -349,4 +349,8 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
 	}
+	
+	public AuditPMReqDTO getReqDTO(){
+		return auditPMReqDTO;
+	}
 }
