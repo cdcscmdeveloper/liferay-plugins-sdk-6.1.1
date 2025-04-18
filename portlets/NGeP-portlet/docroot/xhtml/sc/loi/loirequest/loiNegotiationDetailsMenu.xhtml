@@ -100,7 +100,8 @@
 
 	<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
 		toggleable="true">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction']}" escape="false" rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}" />  <ui:remove> #29007 rendered added</ui:remove>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction1']}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" escape="false" /><ui:remove> #29007 Added Vinod  </ui:remove>
 		
 	   <ui:param name="delBtnClientId" value="delNegoTermBtn" />
        <ui:param name="isTermRequired" value="#{param[p:component(delBtnClientId)]==null}" />
@@ -120,7 +121,7 @@
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoTerm.selectTerm}"
-					disabled="#{!empty negoTerm.pmTerm}">
+					disabled="#{((!empty negoTerm.pmTerm) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and !isPendingNegotiation) or(empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec and isPendingNegotiation and !lOIDetailBackingBean.managedBean.buttonFlag) or(empty negoTerm.pmTerm and !lOIDetailBackingBean.managedBean.buttonFlag))}"><ui:remove> #29007	Vinod added !isPendingSubmissionStatus </ui:remove>
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=negoTermId])"
 						listener="#{lOIDetailBackingBean.negoTermPriceEvent()}" />
 				</p:selectBooleanCheckbox>
@@ -132,7 +133,7 @@
 					<h:outputText value="#{negoTerm.termDesc}" />
 				</c:if>
 
-				<c:if test="#{isEditableStatus and !afterNegotiation}">
+				<c:if test="#{isEditableStatus and !afterNegotiation}"><ui:remove> #29007	Vinod added renderd condition loiSupplierProposalspec </ui:remove>
 					<h:outputText value="#{negoTerm.termDesc}"
 						rendered="#{!empty negoTerm.pmTerm}" />
 						
@@ -142,9 +143,11 @@
 						readonly="#{lOIDetailBackingBean.managedBean.readOnly}"
 						required="#{isTermRequired}" rows="2" 	onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
 						value="#{negoTerm.termDesc}" autoResize="false" maxlength="1000"
-						rendered="#{empty negoTerm.pmTerm}" >
+						rendered="#{empty negoTerm.pmTerm and negoTerm.termDesc ne lOIDetailBackingBean.managedBean.loiSupplierProposalspec}" >
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 						</p:inputTextarea>
+						<h:outputText value="#{lbl['lbl.sc.loiloa.suppliers.proposal.specification.update']}"
+						rendered="#{empty negoTerm.pmTerm and !empty negoTerm.termDesc and negoTerm.termDesc eq lOIDetailBackingBean.managedBean.loiSupplierProposalspec}" /> <ui:remove> #29007 Vinod </ui:remove>
 						<p:message id="termDescIdMsg" for="termDescId" display="icon" />
 				</c:if>
 
@@ -185,6 +188,13 @@
 		</p:dataTable>
 
 		<div align="right" class="BtnSpacing">
+		<ui:remove> #29007	Vinod Start </ui:remove>
+			<p:commandButton value="#{lbl['lbl.sc.loi.btn.suppliers.proposal.specification.update']}"
+				process="@this" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addSuppliersProposalSpecificationUpdate}"
+				 oncomplete="lovPopulateSelection()"
+				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" />
+			<ui:remove> #29007	Vinod End </ui:remove>
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 			disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 				process="@this negoTermstbl" partialSubmit="true"
