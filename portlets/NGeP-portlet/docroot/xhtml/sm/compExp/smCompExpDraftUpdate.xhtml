@@ -45,29 +45,30 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label mandatory"
-							value="#{lbl['lbl.sm.comp.exp.update.client.ori.agency.name']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view mandatory"
 							value="#{compExpMB.selectedDraft.oriAgencyName}" /> <p:graphicImage
 							id="oriAgencyNameToolTipsId"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							for="oriAgencyNameToolTipsId"
-							value="#{lbl['lbl.sm.comp.exp.update.client.ori.agency.name.tooltip']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name.tooltip']}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" /> <p:outputLabel
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:inputText size="60" id="agencyName"
 							value="#{compExpMB.selectedDraft.agencyName}" readonly="true" />
-						<p:commandLink id="ptjSearchCL" partialSubmit="true"
-							disabled="#{empty custServiceBackingBean.managedBean.searchBean.selectedOrgType}"
-							process="@this" update=":form:orgProfileCcId:ptjPopup"
-							action="#{organisationSearchBackingBean.initPtjPopup}"
-							oncomplete="ptjPopup.show();">
+						<p:commandLink partialSubmit="true" process="@this" update="@this"
+							action="#{smPtjPopupBB.initPopup}"
+							oncomplete="smPtjPopupWV.show();">
 							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
-						</p:commandLink>
+						</p:commandLink> <p:graphicImage id="agencyNameToolTipsId"
+							value="/css/images/design/tooltips.png" /> <p:tooltip
+							for="agencyNameToolTipsId"
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" /></td>
 				</tr>
 			</p:outputPanel>
 			<p:outputPanel
@@ -75,7 +76,7 @@
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.comp.exp.update.client.agency.name']}" /></td>
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /></td>
 					<td style="width: 66%"><p:outputLabel
 							styleClass="outputLabel-view"
 							value="#{compExpMB.selectedDraft.agencyName}" /></td>
@@ -84,15 +85,15 @@
 			<tr>
 				<td style="width: 34%"><p:outputLabel
 						styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:outputLabel
+						value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 66%"><p:inputText
 						value="#{compExpMB.selectedDraft.fileReferenceNo}" required="true"
-						label="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:spacer
+						label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:spacer
 						width="3px"></p:spacer> <p:inputText
 						value="#{compExpMB.selectedDraft.fileExtensionNo}" size="3"
 						maxlength="3" required="true"
-						label="#{lbl['lbl.sm.comp.exp.update.client.file.ref.no']}" /> <p:graphicImage
+						label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:graphicImage
 						id="fileReferenceNoToolTipsId"
 						value="/css/images/design/tooltips.png" /> <p:tooltip
 						for="fileReferenceNoToolTipsId">
@@ -103,14 +104,14 @@
 			<tr>
 				<td style="width: 34%"><p:outputLabel
 						styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.comp.exp.update.client.loa.no']}" /></td>
+						value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
 				<td style="width: 66%"><p:inputText
 						value="#{compExpMB.selectedDraft.loaNo}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 34%"><p:outputLabel
 						styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.comp.exp.update.client.project.title']}" /></td>
+						value="#{lbl['lbl.sm.comp.exp.update.project.title']}" /></td>
 				<td style="width: 66%"><p:outputLabel
 						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"
 						styleClass="outputLabel-view"
@@ -119,7 +120,7 @@
 			<tr>
 				<td style="width: 34%"><p:outputLabel
 						styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.comp.exp.update.client.contract.value']}" /></td>
+						value="#{lbl['lbl.sm.comp.exp.update.contract.value']}" /></td>
 				<td style="width: 66%"><p:outputLabel
 						styleClass="outputLabel-view"
 						value="#{compExpMB.selectedDraft.contractValue}" /></td>
@@ -127,7 +128,7 @@
 			<tr>
 				<td style="width: 34%"><p:outputLabel
 						styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.comp.exp.update.client.payment.method']}" /></td>
+						value="#{lbl['lbl.sm.comp.exp.update.payment.method']}" /></td>
 				<td style="width: 66%"><p:outputLabel
 						styleClass="outputLabel-view"
 						value="#{compExpBB.getParameterDesc(compExpMB.selectedDraft.paymentMethod)}" /></td>
@@ -135,7 +136,7 @@
 			<tr>
 				<td style="width: 34%"><p:outputLabel
 						styleClass="outputLabel-view-label"
-						value="#{lbl['lbl.sm.comp.exp.update.client.procument.method']}" /></td>
+						value="#{lbl['lbl.sm.comp.exp.update.procument.method']}" /></td>
 				<td style="width: 66%"><p:outputLabel
 						styleClass="outputLabel-view"
 						value="#{compExpBB.getParameterDesc(compExpMB.selectedDraft.procumentMode)}" /></td>
@@ -176,9 +177,6 @@
 				<td style="width: 66%"></td>
 			</tr>
 		</table>
-		<ac:ptjPopup id="orgProfileCcId"
-			orgTypeParamCode="#{ParameterConst.getOrgTypePtj}"
-			okAction="ccompExpBB.selectAgencyAction"
-			update=":form" />
+		<ac:smPtjPopup id="agencyNameLov" />
 	</ui:define>
 </ui:composition>
