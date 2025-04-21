@@ -15,10 +15,11 @@
 		<p:dialog id="#{cc.attrs.id}" header="#{cc.attrs.header}"
 			widgetVar="smPtjPopupWV" modal="true" styleClass="pop_up_top">
 			<h:panelGroup>
-				<p:panel header="#{lbl['lbl.sm.ptj.popup.search']}"
-					toggleable="true">
+				<p:panel id="smPtjPopupSearchPnl"
+					header="#{lbl['lbl.sm.ptj.popup.search.pnl']}" toggleable="true">
 					<h:panelGrid columns="3">
-						<p:inputText value="#{lbl['lbl.sm.ptj.popup.ministry']}" disabled />
+						<p:inputText value="#{lbl['lbl.sm.ptj.popup.ministry']}"
+							disabled="true" style="width:170px" />
 						<p:spacer height="1" />
 						<p:selectOneMenu id="somMinistry"
 							value="#{smPtjPopupMB.ministryProfileId}">
@@ -27,7 +28,8 @@
 								update=":form:#{cc.attrs.id}:somPtjGroup" />
 						</p:selectOneMenu>
 
-						<p:inputText value="#{lbl['lbl.sm.ptj.popup.ptjGroup']}" disabled />
+						<p:inputText value="#{lbl['lbl.sm.ptj.popup.ptjGroup']}"
+							disabled="true" style="width:170px" />
 						<p:spacer height="1" />
 						<p:selectOneMenu id="somPtjGroup"
 							value="#{smPtjPopupMB.ministryProfileId}">
@@ -36,15 +38,23 @@
 								update="@this" />
 						</p:selectOneMenu>
 
-						<p:selectOneMenu id="somPtjCodeNameKey"
-							value="#{smPtjPopupMB.ptjCodeName}">
+						<p:selectOneMenu id="somPtjCodeName"
+							value="#{smPtjPopupMB.ptjCodeNameKey}" style="width:180px">
 							<f:selectItems value="#{smPtjPopupBB.getPtjCodeNameDropDown()}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@this" />
 						</p:selectOneMenu>
 						<p:spacer height="1" />
-						<p:inputText value="#{smPtjPopupMB.ptjCodeNameValue}">
+						<p:inputText value="#{smPtjPopupMB.ptjCodeNameValue}" />
 					</h:panelGrid>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.sm.ptj.popup.search.btn']}"
+							action="#{smPtjPopupBB.search}" partialSubmit="true" process=""
+							update="" />
+						<p:commandButton value="#{lbl['lbl.sm.ptj.popup.reset.btn']}"
+							action="#{smPtjPopupBB.reset}" partialSubmit="true"
+							process="smPtjPopupSearchPnl" update="smPtjPopupSearchPnl" />
+					</div>
 				</p:panel>
 			</h:panelGroup>
 		</p:dialog>

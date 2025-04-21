@@ -44,4 +44,13 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		return items;
 	}
 
+	public void search() {
+	}
+
+	public void reset() {
+		this.getManagedBean().setMinistryProfileId(null);
+		getPtjGroupDropdown();
+		this.getManagedBean().setJabatanProfileId(null);
+	}
+
 }
