@@ -1588,23 +1588,25 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 
 			// #34831 - Start
-			// if (title.equalsIgnoreCase("lbl.sm.new.registerAccountDraft")) {
-			// sm module
-			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
-			// sm module
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setApplNo(worklistItemVO.getDocNumber());
-			List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO)
-					.getSmPersonnelList();
+			if (title.equalsIgnoreCase("lbl.sm.new.registerAccountDraft")) {
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				reqDTO.setApplNo(worklistItemVO.getDocNumber());
+				List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO)
+						.getSmPersonnelList();
 
-			for (SmPersonnel personnel : personnels) {
-				PmUser user = SmCommonUtil.getUserByUserId(personnel.getPmUser().getUserId());
-				List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-				for (PmUserRole userRole : userRoles) {
-					if (userRole.getPmRole().getRoleCode().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-						sb = new StringBuilder();
-						sb.append(ResourceBundleUtils.getMessage("lbl.sm.upgrade.acc.appl",
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+				for (SmPersonnel personnel : personnels) {
+					if (personnel.getPmUser().getUserId() != null) {
+						PmUser user = SmCommonUtil.getUserByUserId(personnel.getPmUser().getUserId());
+						List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
+						for (PmUserRole userRole : userRoles) {
+							if (userRole.getPmRole().getRoleCode()
+									.equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+								sb = new StringBuilder();
+								sb.append(ResourceBundleUtils.getMessage("lbl.sm.upgrade.acc.appl",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+								break;
+							}
+						}
 					}
 				}
 			}
