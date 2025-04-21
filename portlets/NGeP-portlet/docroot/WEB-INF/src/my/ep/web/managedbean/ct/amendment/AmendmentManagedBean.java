@@ -120,6 +120,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaReport selectedScLoaReports;
 	private PmDigiSign pmDigiSign;
 	private SelectItem[] secretaryList;
+	private List<PmUser> contractAdminlist; //#25956
 
 	private String contractId;
 	private String itemname;
@@ -148,6 +149,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	//20997
 	private PmUom selectedSearchItem;
+	
+	//25956
+	private boolean viewOnly = false; /*#25956 notification setting*/
+	private String backToNtf; //25956
 	
 	public void reassignValue(boolean value) 
 	{
@@ -1360,6 +1365,15 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 	}
 	//#20997 - End
 	
+	//#25956 Start
+	public List<PmUser> getContractAdminlist() {
+		return contractAdminlist;
+	}
+	public void setContractAdminlist(List<PmUser> contractAdminlist) {
+		this.contractAdminlist = contractAdminlist;
+	}
+	//#25956 End
+	
 	//26753 - start
 	/**
 	 * @return the updateCommittee
@@ -1441,4 +1455,22 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.selectedChangeItemPrice = selectedChangeItemPrice;
 	}
 	// End Fix - #33256
+
+	// #25956 - Start
+	public boolean isViewOnly() {
+		return viewOnly;
+	}
+	
+	public void setViewOnly(boolean viewOnly) {
+		this.viewOnly = viewOnly;
+	}
+	
+	public String getBackToNtf() {
+		return backToNtf;
+	}
+
+	public void setBackToNtf(String backToNtf) {
+		this.backToNtf = backToNtf;
+	}
+	// #25956 - End
 }
