@@ -443,6 +443,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//if ssm, disable role.
 					this.getManagedBean().setDisableRole(true);
 				}
+			//24819
+			this.getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().setSmPersonnelDirector(ssmResDTO.getSmPersonnelDirector());
 				this.getManagedBean().setSmAppl(ssmResDTO.getSmAppl());
@@ -2997,6 +2999,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							}//#27691 END
 						}
 						
+						//24819
+						getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET SMSUPPLIEROWNER
 						//27691 START - TO HANDLE ISSUE OWNER ID NULL
 						if(ssmResDTO.getSmSupplierOwners() != null && this.getManagedBean().getSmSupp().getSmSupplierOwners() != null) {
