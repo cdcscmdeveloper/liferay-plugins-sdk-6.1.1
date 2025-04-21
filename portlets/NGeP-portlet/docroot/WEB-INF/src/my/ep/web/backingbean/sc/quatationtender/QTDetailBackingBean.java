@@ -10652,7 +10652,9 @@ public class QTDetailBackingBean extends
 							
 							if (null == approverAction || null == approverAction.getParameterId()) {
 								this.getManagedBean().setResetBpkCurrentArea(false);
-								
+								//25635,37892 -start-
+								setOtherApprovalLoaded();
+								//25635,37892 -end-
 								throw new EpException(MessageConst.ERROR_760149);
 							}
 
@@ -11593,4 +11595,19 @@ public class QTDetailBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
 	// 29732 end
+
+
+	// 37892,25635 -start-
+		/**
+		 * check other approval tab loaded during clone.
+		 */
+		private void setOtherApprovalLoaded() {
+			List<TabBean> approvalOthersTab = this.getManagedBean()
+					.getTabOtherApproval();
+			if (CollectionUtils.isEmpty(approvalOthersTab)) {
+				this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+			}
+		}
+		// 37892,25635 -end-
+
 }
