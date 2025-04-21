@@ -209,6 +209,14 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setCreatedBy(lSearchBean.getCreatedBy());
 					lSearchBean.setCreatedByOldVal(lSearchBean.getCreatedBy());
 				}
+				if (lSearchBean.getItemCode() != null) {
+					auditPMReqDTO.setpItemCode(lSearchBean.getItemCode());
+					lSearchBean.setItemCodeOldVal(lSearchBean.getItemCode());
+				}
+				if (lSearchBean.getItemName() != null) {
+					auditPMReqDTO.setpItemName(lSearchBean.getItemName());
+					lSearchBean.setItemNameOldVal(lSearchBean.getItemName());
+				}
 				if (lSearchBean.isSearching()) {
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFrom());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateTo());

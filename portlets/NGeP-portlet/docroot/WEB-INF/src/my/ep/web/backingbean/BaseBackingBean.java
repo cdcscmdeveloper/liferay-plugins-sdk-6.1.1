@@ -4437,31 +4437,52 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #25000 - End
 	
+	@Deprecated
 	/**
 	 * Retrieves a list of personnel blacklisted under a specific supplier.
 	 *
 	 * @param supplierId
+	 * @param isActive
 	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
 	 */
-	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId) {
-		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO().retrieveSupplierHasPersonnelBlacklist(supplierId);
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId, boolean isActive) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveSupplierHasPersonnelBlacklist(supplierId, isActive);
 		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
 		if (blacklistPersonnel.isEmpty()){
 			return blacklist;
 		}
-		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 		for (SmPersonBlacklist per : blacklistPersonnel){
 			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			reqDTO.setDirectorIdNo(per.getIdentificationNo());
 			
 			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+					.retrieveAllPersonBlacklistByIdentificationNO(per.getIdentificationNo(), isActive);
 			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
 				blacklistOwner.setIcNo(per.getIdentificationNo());
 				blacklist.add(blacklistOwner);
 			}
 		}
 		return blacklist;
+	}
+	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
 	}
 	
 	//26238 - START
