@@ -11,24 +11,18 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
-import my.ep.persistence.entity.pm.common.PmBusinessNature;
-import my.ep.persistence.entity.pm.common.PmGlAccount;
-import my.ep.persistence.entity.pm.integration.PmInterfaceAgOff;
 import my.ep.web.backingbean.report.fl.FlReportBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
