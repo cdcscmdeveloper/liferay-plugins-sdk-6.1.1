@@ -22,15 +22,19 @@
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}">
 			<ac:paginator for="scBidItemsList"></ac:paginator>
 
-
-			<p:column headerText="#{lbl['lbl.sc.item.name']}">
+            <ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 400px;"  headerText="#{lbl['lbl.sc.item.name']}">
 				<h:outputText id="itemNameVBP"
+					style="white-space: normal;word-wrap: break-word;" escape="false"
 					value="#{item.scRequestItem.itemName}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-
+			<ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 350px;" headerText="#{lbl['lbl.sc.item.description']}">
 				<h:outputText id="ItemDescriptionVBP"
+					style="white-space: normal;word-wrap: break-word;" escape="false"
 					value="#{item.scRequestItem.itemDesc}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
