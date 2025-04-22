@@ -10191,7 +10191,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		try {
 			valid = deleteDraftApplciationTask();
 			if (valid) {
-				String label = "";
+				//#34831 - Start
+				String label = StringUtils.EMPTY;
 
 				if (getManagedBean().isBasicSupplier()) {
 					label = SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null);
@@ -10201,6 +10202,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				}
 
 				deleteApplicationMessage(label);
+				//#34831 - End
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				return null;
@@ -10210,6 +10212,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	
+	//#34831 - Start
+	/**
+	 * Display message based on parameter label
+	 * 
+	 * @param String
+	 *            label
+	 */
 	public void deleteApplicationMessage(String label) {
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -10218,6 +10227,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		renewSesionObject();
 	}
+	//#34831 - End
 
 	/**
 	 * Click print icon and process offline supporting document checklist pdf
@@ -10313,28 +10323,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_721222,
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																	getManagedBean()
-																			.getSmAppl()
-																			.getApplType()),
-															getManagedBean()
-																	.getSmAppl()
-																	.getApplNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+			//#34831 - Start
+			if (getManagedBean().isBasicSupplier()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_721222,
+								new String[] { SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null),
+										getManagedBean().getSmAppl().getApplNo() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+								MessageConst.INFO_721222,
+								new String[] {
+										getParameterDesc(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+												getManagedBean().getSmAppl().getApplType()),
+										getManagedBean().getSmAppl().getApplNo() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			//#34831 - End
 		}
 	}
 

@@ -61,7 +61,6 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 	private void updateDetailsNew(String roleCode, PmBusinessNature newBusinessNature, AuditPMReqDTO auditPMReqDTO) {
 
 		dtlStatus.setRoleCode(roleCode);
-		dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BUSINESS_NATURE_PMPARAMETERLVLID);
 		dtlStatus.setDocNo(newBusinessNature.getLevelCode());
 		dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_BN);
@@ -72,19 +71,19 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 		dtlStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 		if (AuditConst.PM_AUD_BN_SECTION.equals(newBusinessNature.getBusinessLevel())) {
-
+			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_SECTION_PMPARAMETERLVLID);
 			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_SECTION);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLSEC);
 		} else if (AuditConst.PM_AUD_BN_DIVISION.equals(newBusinessNature.getBusinessLevel())) {
-
+			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_DIVISION_PMPARAMETERLVLID);
 			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_DIVISION);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLDIV);
 		} else if (AuditConst.PM_AUD_BN_GROUP.equals(newBusinessNature.getBusinessLevel())) {
-
+			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_GROUP_PMPARAMETERLVLID);
 			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_GROUP);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLG);
 		} else if (AuditConst.PM_AUD_BN_CLASS.equals(newBusinessNature.getBusinessLevel())) {
-
+			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_CLASS_PMPARAMETERLVLID);
 			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_CLASS);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLC);
 		}
@@ -98,7 +97,6 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 			PmBusinessNature newBusinessNature, AuditPMReqDTO auditPMReqDTO) {
 
 		dtlStatus.setRoleCode(roleCode);
-		dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BUSINESS_NATURE_PMPARAMETERLVLID);
 		dtlStatus.setDocNo(newBusinessNature.getLevelCode());
 		dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_BN);
@@ -113,19 +111,19 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 					: AuditConst.PM_AUD_INACTIVE);
 
 			if (AuditConst.PM_AUD_BN_SECTION.equals(newBusinessNature.getBusinessLevel())) {
-
+				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_SECTION_PMPARAMETERLVLID);
 				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_SECTION);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLSEC);
 			} else if (AuditConst.PM_AUD_BN_DIVISION.equals(newBusinessNature.getBusinessLevel())) {
-
+				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_DIVISION_PMPARAMETERLVLID);
 				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_DIVISION);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLDIV);
 			} else if (AuditConst.PM_AUD_BN_GROUP.equals(newBusinessNature.getBusinessLevel())) {
-
+				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_GROUP_PMPARAMETERLVLID);
 				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_GROUP);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLG);
 			} else if (AuditConst.PM_AUD_BN_CLASS.equals(newBusinessNature.getBusinessLevel())) {
-
+				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_CLASS_PMPARAMETERLVLID);
 				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_CLASS);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLC);
 			}
