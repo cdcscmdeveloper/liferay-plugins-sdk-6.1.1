@@ -1,14 +1,19 @@
 package my.ep.web.backingbean.sm.ptjpopup;
 
+import javax.el.MethodExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import my.ep.constant.pm.ParameterConst;
+import org.primefaces.context.RequestContext;
+
+import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
 import my.ep.web.managedbean.sm.ptjpopup.SmPtjPopupManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -25,6 +30,11 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	private static final long serialVersionUID = 1L;
 
 	public void initPopup() {
+		this.getManagedBean().setMinistryProfileId(null);
+		this.getManagedBean().setJabatanProfileId(null);
+		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
+		this.getManagedBean().setPtjCodeNameValue(null);
+		this.getManagedBean().getOrgProfileDataModel().resetData();
 	}
 
 	public SelectItem[] getMinistryDropdown() {
@@ -45,12 +55,34 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	}
 
 	public void search() {
+		if (null == this.getManagedBean().getMinistryProfileId()) {
+			throw new EpException(MessageConst.ERROR_775221);
+		} else if (null == this.getManagedBean().getJabatanProfileId()) {
+			throw new EpException(MessageConst.ERROR_775222);
+		} else if (null != this.getManagedBean().getPtjCodeNameValue() && !this.getManagedBean().getPtjCodeNameValue().isEmpty()
+				&& this.getManagedBean().getPtjCodeNameValue().length() <= 3) {
+			throw new EpException(MessageConst.ERROR_775223);
+		}
+		this.getManagedBean().getOrgProfileDataModel().reloadData();
 	}
 
 	public void reset() {
 		this.getManagedBean().setMinistryProfileId(null);
-		getPtjGroupDropdown();
 		this.getManagedBean().setJabatanProfileId(null);
+		this.getManagedBean().setPtjCodeNameKey(null);
+		this.getManagedBean().setPtjCodeNameValue(null);
+		this.getManagedBean().getOrgProfileDataModel().resetData();
+	}
+
+	public void okAction(String methodActionStr) {
+		if (!methodActionStr.isEmpty()) {
+			MethodExpression methodExp = FacesScopes.createMethodExpression(FacesContext.getCurrentInstance(), methodActionStr, null,
+					new Class[] { PmOrgProfile.class });
+			if (this.getManagedBean().getSelectedPtj() != null) {
+				methodExp.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[] { this.getManagedBean().getSelectedPtj() });
+			}
+			RequestContext.getCurrentInstance().execute("smPtjPopupWV.hide();");
+		}
 	}
 
 }

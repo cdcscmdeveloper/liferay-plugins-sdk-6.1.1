@@ -80,6 +80,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void selectAgencyAction(PmOrgProfile orgProfile) {
-//		this.getManagedBean().getSearchBean().setSelectedOrgProfile(orgProfile);
+		this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
 	}
 }

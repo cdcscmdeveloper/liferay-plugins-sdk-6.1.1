@@ -61,7 +61,7 @@
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:inputText size="60" id="agencyName"
 							value="#{compExpMB.selectedDraft.agencyName}" readonly="true" />
-						<p:commandLink partialSubmit="true" process="@this" update="@this"
+						<p:commandLink partialSubmit="true" process="@this" update=":form"
 							action="#{smPtjPopupBB.initPopup}"
 							oncomplete="smPtjPopupWV.show();">
 							<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
@@ -177,6 +177,6 @@
 				<td style="width: 66%"></td>
 			</tr>
 		</table>
-		<ac:smPtjPopup id="agencyNameLov" />
+		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
 	</ui:define>
 </ui:composition>

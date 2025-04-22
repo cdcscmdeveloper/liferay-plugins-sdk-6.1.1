@@ -5,55 +5,92 @@
 	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<cc:interface>
-		<cc:attribute name="id" required="true" />
 		<cc:attribute name="header" required="false"
 			default="#{lbl['lbl.sm.ptj.popup.header']}" />
+		<cc:attribute name="okAction" required="true" />
 	</cc:interface>
 	<cc:implementation>
-		<p:dialog id="#{cc.attrs.id}" header="#{cc.attrs.header}"
+		<p:dialog id="smPtjPopup" header="#{cc.attrs.header}"
 			widgetVar="smPtjPopupWV" modal="true" styleClass="pop_up_top">
+			<p:messages showDetail="true" autoUpdate="true" closable="true"
+				showSummary="false" />
 			<h:panelGroup>
 				<p:panel id="smPtjPopupSearchPnl"
 					header="#{lbl['lbl.sm.ptj.popup.search.pnl']}" toggleable="true">
-					<h:panelGrid columns="3">
-						<p:inputText value="#{lbl['lbl.sm.ptj.popup.ministry']}"
-							disabled="true" style="width:170px" />
-						<p:spacer height="1" />
-						<p:selectOneMenu id="somMinistry"
-							value="#{smPtjPopupMB.ministryProfileId}">
-							<f:selectItems value="#{smPtjPopupBB.getMinistryDropdown()}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update=":form:#{cc.attrs.id}:somPtjGroup" />
-						</p:selectOneMenu>
-
-						<p:inputText value="#{lbl['lbl.sm.ptj.popup.ptjGroup']}"
-							disabled="true" style="width:170px" />
-						<p:spacer height="1" />
-						<p:selectOneMenu id="somPtjGroup"
-							value="#{smPtjPopupMB.ministryProfileId}">
-							<f:selectItems value="#{smPtjPopupBB.getPtjGroupDropdown()}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@this" />
-						</p:selectOneMenu>
-
-						<p:selectOneMenu id="somPtjCodeName"
-							value="#{smPtjPopupMB.ptjCodeNameKey}" style="width:180px">
-							<f:selectItems value="#{smPtjPopupBB.getPtjCodeNameDropDown()}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@this" />
-						</p:selectOneMenu>
-						<p:spacer height="1" />
-						<p:inputText value="#{smPtjPopupMB.ptjCodeNameValue}" />
-					</h:panelGrid>
+					<table>
+						<tr>
+							<td><p:inputText style="width:160px"
+									value="#{lbl['lbl.sm.ptj.popup.ministry']}" disabled="true" /></td>
+							<td><p:spacer height="1" /></td>
+							<td><p:selectOneMenu id="somMinistry" style="width:410px"
+									value="#{smPtjPopupMB.ministryProfileId}">
+									<f:selectItems value="#{smPtjPopupBB.getMinistryDropdown()}" />
+									<p:ajax event="change" process="@this" partialSubmit="true"
+										update="somPtjGroup" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:inputText style="width:160px"
+									value="#{lbl['lbl.sm.ptj.popup.ptjGroup']}" disabled="true" /></td>
+							<td><p:spacer height="1" /></td>
+							<td width="400px"><p:selectOneMenu id="somPtjGroup"
+									style="width:410px" value="#{smPtjPopupMB.jabatanProfileId}">
+									<f:selectItems value="#{smPtjPopupBB.getPtjGroupDropdown()}" />
+									<p:ajax event="change" process="@this" partialSubmit="true" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:selectOneMenu id="somPtjCodeName" style="width:170px"
+									value="#{smPtjPopupMB.ptjCodeNameKey}">
+									<f:selectItems value="#{smPtjPopupBB.getPtjCodeNameDropDown()}" />
+									<p:ajax event="change" process="@this" partialSubmit="true" />
+								</p:selectOneMenu></td>
+							<td><p:spacer height="1" /></td>
+							<td width="400px"><p:inputText style="width:400px"
+									value="#{smPtjPopupMB.ptjCodeNameValue}">
+									<p:ajax event="keyup" process="@this" partialSubmit="true" />
+								</p:inputText></td>
+						</tr>
+					</table>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.sm.ptj.popup.search.btn']}"
-							action="#{smPtjPopupBB.search}" partialSubmit="true" process=""
-							update="" />
+							action="#{smPtjPopupBB.search}" partialSubmit="true"
+							process="@this" update="smPtjPopupResultPnl" />
 						<p:commandButton value="#{lbl['lbl.sm.ptj.popup.reset.btn']}"
 							action="#{smPtjPopupBB.reset}" partialSubmit="true"
-							process="smPtjPopupSearchPnl" update="smPtjPopupSearchPnl" />
+							process="@this" update="smPtjPopupSearchPnl" />
+					</div>
+				</p:panel>
+				<p:panel id="smPtjPopupResultPnl"
+					header="#{lbl['lbl.sm.ptj.popup.result.pnl']}" toggleable="true">
+					<p:dataTable id="orgProfileDataTableId" var="orgProfile" rows="10"
+						value="#{smPtjPopupMB.orgProfileDataModel}" rowIndexVar="index"
+						lazy="true"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						selection="#{smPtjPopupMB.selectedPtj}" selectionMode="single">
+						<ac:paginator for="orgProfileDataTableId" />
+						<p:ajax event="rowUnselect" update="orgProfileDataTableId"
+							process="@this" partialSubmit="true" />
+						<p:ajax event="rowSelect" update="orgProfileDataTableId"
+							process="@this" partialSubmit="true" />
+						<p:ajax event="toggleSelect" update="orgProfileDataTableId"
+							process="@this" partialSubmit="true" />
+						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.code']}">
+							<h:outputText value="#{orgProfile.pmOrgValidity.orgCode}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.ptj.popup.org.name']}">
+							<h:outputText value="#{orgProfile.pmOrgValidity.orgName}" />
+						</p:column>
+					</p:dataTable>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.sm.ptj.popup.select.btn']}"
+							action="#{smPtjPopupBB.okAction(cc.attrs.okAction)}"
+							process="@this" update=":form" />
+						<p:commandButton value="#{lbl['lbl.sm.ptj.popup.cancel.btn']}"
+							oncomplete="smPtjPopupWV.hide()" process="@this" />
 					</div>
 				</p:panel>
 			</h:panelGroup>
