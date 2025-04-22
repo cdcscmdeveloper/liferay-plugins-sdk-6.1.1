@@ -51,10 +51,8 @@
 					rendered="#{empty scLoaReport.pmDocument}">
 					<p:ajax event="keyup" />
 				</h:inputText>
-				<ui:remove> #25025 - start </ui:remove>
-				<h:outputText value="#{lOADetailBackingBean.setValueLowercase(scLoaReport.title,21)}"
+				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
-				<ui:remove> #25025 - end </ui:remove>
 				<h:panelGroup id="PerakuanPenerimaanId"
 					rendered="#{scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'SU' and isSupplierAckStatus}">
 					<span style="color: red;">*</span>

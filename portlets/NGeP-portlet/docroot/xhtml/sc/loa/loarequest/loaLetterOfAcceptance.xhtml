@@ -114,10 +114,8 @@
 					rendered="#{empty scLoaReport.pmDocument}">
 					<p:ajax event="keyup" />
 				</h:inputText>
-				<ui:remove> #25025 - start </ui:remove>
-				<h:outputText value="#{lOADetailBackingBean.setValueLowercase(scLoaReport.title,21)}"
+				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
-				<ui:remove> #25025 - end </ui:remove>
 				<h:panelGroup id="SuratSetujuTerimaQtLoaId"
 					rendered="#{(scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'UD' or scLoaReport.pmDocument.docDefinitionTypeCode.parameterCode eq 'UP') and isPendingSubmissionStatus}">
 					<span style="color: red;">*</span>
