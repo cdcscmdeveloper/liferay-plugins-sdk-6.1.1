@@ -931,7 +931,7 @@ public class SmPersonnelBackingBean extends
 				updateMailAddLists(sourceCountry.toString(), sourceState.toString(), sourceDivision, sourceDistrict.toString());
 			}
 		}else{
-			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().cloneEntity();
+			SmAddress prevAddr = (SmAddress) getManagedBean().getLatestBasicSmPersonnelMailingAddress().getSmAddress().deepCopy();
 			Long prevCountry = prevAddr.getPmCountry().getCountryId();
 			Long prevState = prevAddr.getPmState().getStateId();
 			PmDivision prevDivision = prevAddr.getPmDivision();
@@ -2262,8 +2262,8 @@ public class SmPersonnelBackingBean extends
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(getManagedBean().getSmSupplier().getSupplierId());//#33592-start
 			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
-			FacesScopes facesScopes = new FacesScopes();
-			PmUser usr = facesScopes.getUserSessionBean();
+			// #38064
+			PmUser usr = getManagedBean().getBasicSmPersonnel().getPmUser();
 			getPersonnelByPmUser(usr);
 			reqDTO.setUserId(usr.getUserId());//#33592-end
 			SmSoftcertRequest softcertRequest = SmServiceLookup.getPersonnelSO().retrievePersonnelSoftcertRequestBySupplierIdAndUserId(reqDTO).getSoftcertRequest();

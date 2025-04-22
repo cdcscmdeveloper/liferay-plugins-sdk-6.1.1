@@ -92,6 +92,7 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private boolean zoneForItemHlink;
 	private TplSpecQuestion questionForItemHlink;
 	private List<TplSpecZoneQty> zoneQtyForItemHlink;
+	private boolean isComplianceOldNull;
 	// #29187 End Vinod
 	
 	/** for specification Zonal ****************************/
@@ -1014,5 +1015,14 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	public void setZoneQtyForItemHlink(List<TplSpecZoneQty> zoneQtyForItemHlink) {
 		this.zoneQtyForItemHlink = zoneQtyForItemHlink;
 	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+	
 	//#29187 End Vinod
 }

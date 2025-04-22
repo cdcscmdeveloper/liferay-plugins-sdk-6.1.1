@@ -99,7 +99,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	
 	// #28777 & #29729 - Start
 	private List<SmSupplierBranch> supplierBranchList; 
-	private List<ScQtEvaluationResultDtl> listDisqualifiedSupplier;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel;
 	// #28777 & #29729 - End
 	
 	private boolean isSetNull ; //Bug #31364
@@ -645,12 +645,12 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		this.supplierBranchList = supplierBranchList;
 	}
 	
-	public List<ScQtEvaluationResultDtl> getListDisqualifiedSupplier() {
-		return listDisqualifiedSupplier;
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisQualifiedSuppliersDataModel() {
+		return disQualifiedSuppliersDataModel;
 	}
 
-	public void setListDisqualifiedSupplier(List<ScQtEvaluationResultDtl> listDisqualifiedSupplier) {
-		this.listDisqualifiedSupplier = listDisqualifiedSupplier;
+	public void setDisQualifiedSuppliersDataModel(IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel) {
+		this.disQualifiedSuppliersDataModel = disQualifiedSuppliersDataModel;
 	}
 	//#28777 & #29729 - End
 
