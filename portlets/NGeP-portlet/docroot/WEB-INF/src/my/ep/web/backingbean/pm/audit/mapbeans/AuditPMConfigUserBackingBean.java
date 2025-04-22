@@ -79,6 +79,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	BigInteger docId;
 	String docNo;
 	String code;
+	int lvl3CodeIndex;
+	String orgName;
+	BigInteger orgProfileId;
 
 	@Override
 	public String getRoleCode() {
@@ -96,10 +99,23 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans = (ProfileManagementManagedBean) manageBean;
 		
 		this.roleCode = roleCode;
-		this.docId = BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
-		this.docNo = managedBeans.getSelectedUser().getIdentificationNo();
-
-		this.code = lvl3Code.get(managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue());
+		this.docId = managedBeans.getSelectedUser().isBrandNew() ? 
+				BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : 
+					BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
+		this.docNo = managedBeans.getSelectedUser().isBrandNew() ? 
+				managedBeans.getNewAuditPmUser().getIdentificationNo() : 
+					managedBeans.getSelectedUser().getIdentificationNo();
+		this.lvl3CodeIndex = managedBeans.getSelectedUserOrg().isBrandNew() ? 
+				managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue() : 
+					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue();
+		this.orgName = managedBeans.getSelectedUserOrg().isBrandNew() ? 
+				managedBeans.getNewAuditPmUserOrg().getPmOrgProfile().getOrgName() : 
+					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgName();
+		this.orgProfileId = managedBeans.getSelectedUserOrg().isBrandNew() ? 
+				BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getUserOrgId()) : 
+					BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId());
+				
+		this.code = lvl3Code.get(lvl3CodeIndex);
 		
 		if(managedBeans.getOrgCategory() == AuditConst.PM_AUD_FEDERAL && federalGovUsers.contains(code)){
 			if(code.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ))
@@ -301,9 +317,11 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		for(PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()){
 			PmUserRole oldPmUserRole = null;
 			
-			for(PmUserRole old : managedBeans.getOldAuditPmUserRoles()){
-				if(old.getUserRoleId().equals(newPmUserRole.getUserRoleId())){
-					oldPmUserRole = old;
+			if(managedBeans.getOldAuditPmUserRoles() != null){
+				for(PmUserRole old : managedBeans.getOldAuditPmUserRoles()){
+					if(old.getUserRoleId().equals(newPmUserRole.getUserRoleId())){
+						oldPmUserRole = old;
+					}
 				}
 			}
 			
@@ -341,9 +359,11 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		for(PmAddressType newPmAddressType : managedBeans.getNewAuditPmAddressTypes()){
 			PmAddressType oldPmAddressType = null;
 			
-			for(PmAddressType old : managedBeans.getOldAuditPmAddressTypes()){
-				if(old.getAddressTypeId().equals(newPmAddressType.getAddressTypeId())){
-					oldPmAddressType = old;
+			if(managedBeans.getOldAuditPmAddressTypes() != null){
+				for(PmAddressType old : managedBeans.getOldAuditPmAddressTypes()){
+					if(old.getAddressTypeId().equals(newPmAddressType.getAddressTypeId())){
+						oldPmAddressType = old;
+					}
 				}
 			}
 			
@@ -365,16 +385,16 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocNo(docNo);
-		dtlObj.setDocGroupId(BigInteger.valueOf(managedBeans.getSelectedUserOrg().getPmUser().getUserId()));
+		dtlObj.setDocGroupId(docId);
 		dtlObj.setDocType(facesScopes.getUserSessionBean().getUserName());
-		dtlObj.setPmParameterLvlId(pmParameterLevelId.get(managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue()));
+		dtlObj.setPmParameterLvlId(pmParameterLevelId.get(lvl3CodeIndex));
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OUSR);
-		dtlObj.setLvlCode3(lvl3Code.get(managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue()));
+		dtlObj.setLvlCode3(lvl3Code.get(lvl3CodeIndex));
 		dtlObj.setDocId(docId);
 		dtlObj.setFieldLabelCode(fieldLabelId);
-		dtlObj.setOrgName(managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgName());
-		dtlObj.setOrgProfileId(BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId()));
+		dtlObj.setOrgName(orgName);
+		dtlObj.setOrgProfileId(orgProfileId);
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
 		}
