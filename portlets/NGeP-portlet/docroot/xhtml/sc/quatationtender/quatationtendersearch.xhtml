@@ -162,12 +162,14 @@
 								Bug 32050, reinsert back code END
 							</ui:remove>
 								<ui:remove> #25791 start </ui:remove>
+								<!-- 37978 - Start -->
 								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED ne scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
-									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
+									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId, null)}"
 									partialSubmit="true" process="@this" />
+								<!-- 37978 - End -->
 								<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
