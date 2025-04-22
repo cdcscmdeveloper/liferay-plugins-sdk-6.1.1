@@ -1537,28 +1537,27 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 			log.debug("pageChangeListener");
 		}
 		try {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("ap59Status.statusId",SearchOperator.OPERATOR_EQUALS.value(),FulfilmentStatusConst.AP59_PENDING_AP59_DECISION));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("recordStatusFlg",SearchOperator.OPERATOR_EQUALS.value(),DbValueConst.RECORD_STATUS_ACTIVE));
-			
-			if(getManagedBean().getLoaNo()!=null && getManagedBean().getLoaNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loa.loaNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getLoaNo()));
-			}
-			if(getManagedBean().getContractNo()!=null && getManagedBean().getContractNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getContractNo()));
-			}
-			if(getManagedBean().getTitle()!=null && getManagedBean().getTitle().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getTitle()));
-			}
-			if(getManagedBean().getPhysicalLoaNo()!=null && getManagedBean().getPhysicalLoaNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPhysicalLoaNo()));
-			}
-			if(getManagedBean().getPhysicalContractNo()!=null && getManagedBean().getPhysicalContractNo().length() > 0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.latestContractVer.contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPhysicalContractNo()));
-			}
-			
+			//28719 -Start
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			searchBean.setUseEntityClass(true);
 			reqDTO.setSearchBean(searchBean);
 			
+			if(getManagedBean().getLoaNo()!=null && getManagedBean().getLoaNo().length() > 0) {
+				reqDTO.setLoaNo(getManagedBean().getLoaNo());
+			}
+			if(getManagedBean().getContractNo()!=null && getManagedBean().getContractNo().length() > 0) {
+				reqDTO.setContractNo(getManagedBean().getContractNo());
+			}
+			if(getManagedBean().getTitle()!=null && getManagedBean().getTitle().length() > 0) {
+				reqDTO.setContractName(getManagedBean().getTitle());
+			}
+			if(getManagedBean().getPhysicalLoaNo()!=null && getManagedBean().getPhysicalLoaNo().length() > 0) {
+				reqDTO.setLoaPhysicalNo(getManagedBean().getPhysicalLoaNo());
+			}
+			if(getManagedBean().getPhysicalContractNo()!=null && getManagedBean().getPhysicalContractNo().length() > 0) {
+				reqDTO.setContractPhysicalNo(getManagedBean().getPhysicalContractNo());
+			}
+			//28719 -End
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			FulfilmentResDTO resDTO = invoiceSO.searchAP59(reqDTO);
 			if(resDTO.isSuccessful()) {
