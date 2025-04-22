@@ -1354,6 +1354,8 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 *            the ScQt instance
 	 * @param previousPageUrl
 	 * 				the previous page url.
+	 * @param scLoaQT
+	 * 				the scLoaQT object
 	 * @return the navigation page
 	 */
 	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl, ScLoaForQt scLoaQT) {	// Bug #37978@Syazani 22/04/2025
