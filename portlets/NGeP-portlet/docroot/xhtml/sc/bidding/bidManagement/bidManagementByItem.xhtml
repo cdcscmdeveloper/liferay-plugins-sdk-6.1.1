@@ -17,15 +17,20 @@
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
 				update="@([id$=itemPriceLineChartPanel],[id$=itemizedSupplierPricesPanel])" />
 			<ac:paginator for="biddingListBMBI"></ac:paginator>
-
-			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<h:outputText style="white-space : normal;" id="itemNameBMBI"
+			
+            <ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 400px;" headerText="#{lbl['lbl.sc.item.name']}">
+				<h:outputText style="white-space : normal;word-wrap: break-word;"
+					id="itemNameBMBI" escape="false"
 					value="#{bidItem.scRequestItem.itemName}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.description']}">
-
-				<h:outputText style="white-space : normal;" id="itemDescBMBI"
+			<ui:remove> #25791 start </ui:remove>
+			<p:column style="width : 350px;" headerText="#{lbl['lbl.sc.item.description']}">
+				<h:outputText style="white-space : normal;word-wrap: break-word;"
+					id="itemDescBMBI" escape="false"
 					value="#{bidItem.scRequestItem.itemDesc}" />
+				<ui:remove> #25791 end </ui:remove>
 			</p:column>
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
