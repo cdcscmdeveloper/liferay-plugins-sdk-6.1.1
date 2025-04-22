@@ -760,6 +760,9 @@ public class BSVAttendanceBackingBean extends
 				ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
 				// 26247 - start
 				ScQt scQt = this.getManagedBean().getScQtBriefing().getScQtBsv().getScQt();
+				if (null != mofAccount.getSmSupplier()) {
+					mofAccount.getSmSupplier().setSmMofAccounts(mofAccounts);
+				}
 				SmSupplier smSupplier = getQtBriefingSO().evaluateDisciplinaryActions(mofAccount.getSmSupplier(),
 						scQt.getQtId());
 				// 26247 - end

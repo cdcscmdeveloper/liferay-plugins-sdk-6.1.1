@@ -76,7 +76,6 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	private static final long serialVersionUID = 377766773512626830L;
 	private static final String SHOW_DA = "disciplinaryActionHistoryDlg.show();";
-	private final Map<String, String> accountStatusMap = new HashMap<>();
 	/**
 	 * Pre - render for View Supplier Profile
 	 */
@@ -525,25 +524,14 @@ public class ViewSuppProfileBackingBean extends
 	 * @return
 	 */
 	public String evaluateQTWarningMessage(SmSupplier supplier) {
+		if (null == supplier) {
+			return null;
+		}
 		Locale locale = new FacesScopes().getUserLocale();
 		List<String> messages = new ArrayList<>();
 	
 		if (evaluateCancellationBlacklist(supplier)) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			String statusDescription = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction", null,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			String status = null;
-			if (disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist()) {
-				status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner ", null,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			} else if (disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel()) {
-				status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			}
-
-			statusDescription = statusDescription.concat(" (" + status + ")");
-			messages.add(MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 		}
 
 		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
@@ -578,47 +566,51 @@ public class ViewSuppProfileBackingBean extends
 	 */
 	public List<String> evaluateWarningTooltip(SmSupplier supplier) {
 		List<String> messages = new ArrayList<>();
-		if (supplier == null) {
-			return messages;
-		}
-		Locale locale = new FacesScopes().getUserLocale();
-		if (evaluateCancellationBlacklist(supplier)) {
-			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
-			String statusDescription = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction", null,
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			String status = null;
-			if (disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist()) {
-				status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner ", null,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-			} else if (disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel()) {
-				status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		if (supplier != null) {
+			Locale locale = new FacesScopes().getUserLocale();
+			if (evaluateCancellationBlacklist(supplier)) {
+				messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 			}
 
-			statusDescription = statusDescription.concat(" (" + status + ")");
-			messages.add(MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
-		}
+			List<String> cancelledCategoryCodes = new ArrayList<>();
+			cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
+			cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
-		List<String> cancelledCategoryCodes = new ArrayList<>();
-		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
-		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
+					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
+			if (noCancelledCategory) {
+				messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
+						new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
 
-		boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
-				&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
-		if (noCancelledCategory) {
-			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
-					new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
-					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
-		}
-
-		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
-				&& !supplier.isBumi() && (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
-		if (noBumiAccount) {
-			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
-					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+					&& !supplier.isBumi()
+					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
+			if (noBumiAccount) {
+				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
 		}
 		return messages;
+	}
+
+	private String getCancelRegistrationOrBlacklistMessage(SmSupplier supplier, Locale locale) {
+		SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+		String statusDescription = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction", null,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String status = null;
+		if (disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist()) {
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner ", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		} else if (disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel()) {
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}
+
+		statusDescription = statusDescription.concat(" (" + status + ")");
+		return MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
+				MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
 	}
 	
 	private boolean evaluateCancelledCategories(SmSupplier supplier) {
@@ -640,6 +632,11 @@ public class ViewSuppProfileBackingBean extends
 		return cancelledBumiAccount;
 	}
 	
+	/**
+	 * Evaluate for suspend registration disciplinary action
+	 * @param supplier
+	 * @return
+	 */
 	public boolean evaluateSuspendRegistration(SmSupplier supplier){
 		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
 			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
@@ -647,7 +644,11 @@ public class ViewSuppProfileBackingBean extends
 		}
 		return false;
 	}
-	
+	/**
+	 * Evaluate for pending register cancellation or blacklist owner disciplinary action
+	 * @param supplier
+	 * @return
+	 */
 	public boolean evaluateCancellationBlacklist(SmSupplier supplier) {
 		if(null == supplier){
 			return false;
