@@ -13978,12 +13978,16 @@ public class SmApplicationUtil {
 			if (StringUtils.isBlank(searchQuery)) {
 				resultList = rejectReasons;
 			} else {
-				for (PmReasonDesc tmp : rejectReasons) {
-					if (StringUtils.upperCase(tmp.getReasonDesc()).contains(
+				//#37896 START
+				for (PmReasonDesc tmp : rejectReasons) {					
+					String stringtest = tmp.getReasonDesc().replaceAll("\\s{2,}"," ").trim();
+
+					if (StringUtils.upperCase(stringtest).contains(
 							StringUtils.upperCase(searchQuery))) {
 						resultList.add(tmp);
 					}
 				}
+				//#37896 END
 			}
 		}
 		return resultList;
