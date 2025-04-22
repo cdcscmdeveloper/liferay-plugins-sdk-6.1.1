@@ -16,7 +16,9 @@
 <!-- Farid start -->	
 <!-- #25138 #21695 - start -->
 <!--  Bug #32220  add lbl['lbl.sc.no.available']-->
-	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<h:panelGroup rendered="#{isScoring and !isRepeated}">
 			<h:outputText 
 			rendered="#{isSpecTypeFinancial and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0}"
@@ -85,8 +87,9 @@
 		ADDED : lbl['lbl.sc.no.available']
 	</ui:remove>
 	l
-	<p:column style="width:50px; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
-	
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '50px'}; white-space:normal; text-align:right;"  rendered="#{isScoringReq}">
+	<ui:remove>#29187 End Vinod</ui:remove>
 
 		<c:when test="#{tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty eq 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S'
 		or !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity eq 0 and tplSpecAnswer.tplSpecQuestion.questionType ne 'S'}">
@@ -104,7 +107,7 @@
 			<ui:remove><!-- #28784 - start --></ui:remove>
 			<ui:remove>#29187 Start Vinod Added Compliance checking</ui:remove>
 			<ui:remove>#35293 - Change the width size based on length maxvalue</ui:remove>
-			<p:inputText id="userScore" style="min-width:0px !important; text-align:right; width: #{empty tplSpecAnswer.tplSpecQuestion.maxScore ? 30 : ((tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString().length() * 6)}px;"
+			<p:inputText id="userScore" style="min-width:0px !important; text-align:right; width: #{empty tplSpecAnswer.tplSpecQuestion.maxScore ? 30 : ((tplSpecAnswer.tplSpecQuestion.maxScore * (tplSpecAnswer.tplSpecQuestion.weightageReq ? tplSpecAnswer.tplSpecQuestion.weightage : 1)).toString().length() * 8)}px;"
 				value="#{tplSpecAnswer.userScore}"
 				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.user.score']}"
@@ -155,8 +158,8 @@
 	</p:column>
 	
 <!-- Farid end -->
-	<ui:remove>#29187 End Vinod</ui:remove>
-	<p:column style="width:5%;" rendered="#{isManSpecAndCompliance}">
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<p:column style="width:10%;" rendered="#{isManSpecAndCompliance}">
 		<ui:fragment
 			rendered="#{isSpecTypeTechnical 
 			and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected
@@ -174,6 +177,7 @@
 			<h:selectOneMenu id="specCompliance" required="true"
 				label="#{lbl['lbl.sc.tec.compliance']}"
 				value="#{tplSpecAnswer.compliance}"
+				valueChangeListener="#{templateSpecBackingBean.itemComplianceChangeControl}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification 
 				and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
@@ -191,7 +195,9 @@
 	</p:column>
 	<ui:remove>#29187 End Vinod</ui:remove>
 <!-- #31537 related #21695 Farid START 28/8/2021 -->
-	<p:column style="width:130px;">	
+	<ui:remove>#29187 Start Vinod Added condition for width</ui:remove>
+	<p:column style="width:#{isManSpecAndCompliance ? '10%' : '130px'};">	
+	<ui:remove>#29187 End Vinod</ui:remove>
 	<ui:remove>#21692 - start</ui:remove>
 		<p:inputTextarea disabled="#{tplSpecAnswer.ratePerUom eq 0 or evaluationBackingBean.managedBean.readOnly}" 
 		  		rendered="#{isSpecTypeFinancial and isZonal and tplSpecAnswer.tplSpecZoneQty ne null and tplSpecAnswer.tplSpecZoneQty.qty ne 0 and tplSpecAnswer.ratePerUom eq 0 or isSpecTypeFinancial and !isZonal and tplSpecAnswer.tplSpecQuestion.clQuantity ne 0 and tplSpecAnswer.ratePerUom eq 0 and !(evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodRejected or evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.isAgreeQtExtendPeriod eq SourcingConstants.extendProposalValidityPeriodNotQualified)}"

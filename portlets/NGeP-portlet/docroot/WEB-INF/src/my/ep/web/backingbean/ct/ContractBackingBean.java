@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -93,6 +92,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtBondWaiverDetail;
+import my.ep.persistence.entity.ct.CtContract; //#24333
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
@@ -122,6 +122,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus; //#24333
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -4576,26 +4577,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
-				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
+		Double bondAmt = getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue();
+
+		if (bondAmt == null || bondAmt == 0.0) {
 			return "";
 		}
 
+		DecimalFormat df = new DecimalFormat("#.00");
+		String formattedAmount = df.format(bondAmt);
+
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");		
-			return NumberWordUtilEn.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+			return NumberWordUtilEn.convert(formattedAmount);
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");
-			return NumberWordUtil.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
-		}else{
-			return "";
+			return NumberWordUtil.convert(formattedAmount);
 		}
+
+		return "";
 	}
 
 	//#24333 - Start
@@ -4605,62 +4603,71 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return new contract period
 	 */
 	public String calculateBondPeriod() {
-		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)){
-			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
-
-		} 
+		if(getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)){	
+			
 			return String.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration());
-
+		}else{
+			return String.valueOf(getManagedBean().getContractVer().getCtContractValue().getContractPeriod());
+		}
 	}
-	//#24333 - End	
-	/**
-	 * Function to check if bond required for contract is extend
-	 * 
-	 * @return true, if performance bond is required contract extend
-	 *         false, if performance bond is not required contract extend
-	 * */
 	
+	/**
+	 * Function to check if bond is required for contract extension.
+	 *
+	 * @return true if performance bond is required, otherwise false.
+	 */
 	public boolean isContractExtendOrIsBond() {
-		//#24333 - Start
-		String currentPeriod = null;
-		String extendPeriod = null;
-		boolean isContractExtendOrIsBond = false;
-		getManagedBean().setExtendContract(false);
-		getManagedBean().setDisableOriginalBond(false);
-		
-		if(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration() != null) {
-			currentPeriod = BigDecimal.valueOf(getManagedBean().getContractVer().getCtContract().getLoa().getContractDuration().longValue()).toString();
-		}
-		if(getManagedBean().getContractVer().getCtContractValue().getContractPeriod() > 0) {
-			extendPeriod = Integer.toString(getManagedBean().getContractVer().getCtContractValue().getContractPeriod()); 
-		}		
+	    // Inisialisasi variabel
+	    boolean isContractExtendOrIsBond = false;
+	    CtContractVer contractVer = getManagedBean().getContractVer();
+	    CtContract contract = contractVer.getCtContract();
+	    ScLoa loa = contract.getLoa();
 
-		if((getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
-				|| getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
-				|| getManagedBean().isViewContract() == true)
-				&& isAlreadyAmendment() //#35137
-				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-			isContractExtendOrIsBond = true;
-			getManagedBean().setDisableOriginalBond(true);
-			if(currentPeriod != null && extendPeriod != null) {
-				if(!extendPeriod.equals(currentPeriod) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-					isContractExtendOrIsBond = true;
-					getManagedBean().setExtendContract(true);
-					getManagedBean().setDisableOriginalBond(true);
-					
-				}
-			}
-		}
-		if (getManagedBean().getContractVer().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
-				&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-			if(getManagedBean().getContractVer().getCtAmendment() != null && getManagedBean().getContractVer().getCtAmendment().isContractExtend())
-			isContractExtendOrIsBond = true;
-		}
+	    getManagedBean().setExtendContract(false);
+	    getManagedBean().setDisableOriginalBond(false);
 
-		return isContractExtendOrIsBond;
-		//#24333 - End	
-		}
+	    // Retrieve currentPeriod and extendPeriod
+	    String currentPeriod = (loa.getContractDuration() != null) 
+	            ? BigDecimal.valueOf(loa.getContractDuration().longValue()).toString() 
+	            : null;
+
+	    String extendPeriod = (contractVer.getCtContractValue().getContractPeriod() > 0) 
+	            ? Integer.toString(contractVer.getCtContractValue().getContractPeriod()) 
+	            : null;
+
+	    // Check if the contract needs an extension or requires a bond
+	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && loa.isBondReq()
+	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
+
+	        isContractExtendOrIsBond = true;
+	        getManagedBean().setExtendContract(true);
+	        getManagedBean().setDisableOriginalBond(true);
+	    }
+
+	    // Check for contract amendment
+	    if (contractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
+	            && loa.isBondReq()
+	            && contractVer.getCtAmendment() != null
+	            && contractVer.getCtAmendment().isContractExtend()) {
+	        
+	        isContractExtendOrIsBond = true;
+	    }
+
+	    return isContractExtendOrIsBond;
+	}
+
+	/**
+	 * Checks if the document type is a contract update, an amendment without a supplement, or a view contract.
+	 *
+	 * @param contractVer The contract version object containing document type details.
+	 * @return true if the document type is contract update, amendment without supplement, or view contract.
+	 */
+	private boolean isContractUpdateOrView(CtContractVer contractVer) {
+	    String docType = contractVer.getDocType();
+	    return docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+	            || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT)
+	            || getManagedBean().isViewContract();
+	}	
 	
 	/**
 	 * Function to check if bond required for contract status
@@ -4668,21 +4675,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true, if performance bond is Pending Amendment With Supplemental Submission
 	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
 	 * */
-	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus() != null && //#25956
-				(getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
-			return true;
+	public boolean isPendingSupplementalContractLetter() {
+		PmStatus status = getManagedBean().getContractVer().getStatus();
+		if (status == null) {
+			return false;
 		}
-		return false;
-		
+
+		long statusId = status.getStatusId();
+		return statusId == ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_VERIFICATION.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue();
 	}
+	//#24333 - End
 	
 	
 	/**
@@ -4969,7 +4976,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		if (getManagedBean().getContractVer().getCtContractValue().getLoaNo() != null) {
 			if (getManagedBean().getContractVer().getCtContractValue().getLoaNo().substring(0, 2)
 					.equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)) {
-				getManagedBean().setDisableOriginalBond(true);
+
 				return true;
 			}
 		}

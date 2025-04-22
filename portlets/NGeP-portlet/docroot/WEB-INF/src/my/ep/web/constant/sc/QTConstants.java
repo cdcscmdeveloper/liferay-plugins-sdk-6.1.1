@@ -306,7 +306,7 @@ public interface QTConstants {
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
-	
+
 	// #29007 Start Vinod
 	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
 	public static final String LAMPIRAN_A3_UPDATE = "Updated";
@@ -330,7 +330,10 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TEXT_YA = "Ya";
 	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
 	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
+	public static final Long COMPOSITE_VALIDITY_ID_QT = 29007L;
+	public static final Long COMPOSITE_VALIDITY_ID_DP = 29006L;
 	// #29007 End Vinod
+
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
@@ -340,6 +343,7 @@ public interface QTConstants {
 	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
 	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
 	// #29187 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";

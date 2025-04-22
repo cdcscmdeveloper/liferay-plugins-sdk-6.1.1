@@ -1115,7 +1115,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	    	bpmSO.claimTask(reqDTO);
 		}
 		*/
-
+        
+	   //#37924 - Start
+	   if(this.getManagedBean().getCurrentTaskDocType()!= null){
 		// #21387 - Start
 		if (this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)) {
 
@@ -1129,6 +1131,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					}
 				}
 			}// #21387 - End
+		  }//#37924 - End
 		} else {
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setCtxToken(token);
