@@ -20,6 +20,7 @@ import my.ep.constant.MapKeyEnum;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
@@ -506,53 +507,63 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	//#21692 - start
+	//#21692 - Start
 	/**
 	 * Check If Supplier EPV Status Is Rejected
 	 * 
 	 * @return
 	 */
-	public boolean isSupplierEPVStatusRejected() {
+	public void isSupplierEPVStatusRejected(ScLoa scLoa) {
 		boolean supplierStatus = false;
-		
-		
-		if (null != getManagedBean().getScLoiLoaList()) {
-			
-			try {
-				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-				
-				List<Long> suppList = new ArrayList<>();
-				for (ScLoiLoa scLo : getManagedBean().getScLoiLoaList()) {
-					suppList.add(scLo.getSmSupplier().getSupplierId());
-				}
-				if (null != getManagedBean().getScLoiLoaList()
-						&& !getManagedBean().getScLoiLoaList().isEmpty()
-						&& !suppList.isEmpty()) {
-					supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
-				}
-				
-			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError("QTLOA", "CheckIfSupplierEPVStatusIsRejected", getManagedBean().getScLoiLoaList().get(0).getDocId().toString(), "isSupplierEPVStatusRejected",
-						getUserIdSessionFromLoginId(), e);
+
+		// all status stated in FRS for 21692
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+
+		if (null != scLoa.getScLoiLoa()) {
+
+			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTDetailSO.class);
+
+			// Only one supplier, LOA's supplier
+			List<Long> suppList = new ArrayList<>();
+			suppList.add(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+
+			if (null != getManagedBean().getScLoiLoaList() && !getManagedBean().getScLoiLoaList().isEmpty()
+					&& !suppList.isEmpty()) {
+				// will return true if the supplier reject EPV
+				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getQt().getQtId(), suppList);
 			}
-			
-			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
-			
-			supplierStatus = (supplierStatus && isLoaListPortlet()
-					&& isValidFor21692
-					) ? true : false;
+
+			// check the validity of BPM version, if version is equal/higher will enable button
+			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(),
+					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+
+			// will hide submit LOA button if supplier reject EPV (prerendered == false)
+			getManagedBean().setAbleToSubmitLOA(isValidFor21692 && !supplierStatus);
+			supplierStatus = supplierStatus && isLoaListPortlet() && isValidFor21692 ? true : false;
 		}
-		getManagedBean().setAbleToCancelLOA(supplierStatus);//#36339, #21692
 		
-		return supplierStatus;
+		// cancel button will show/hide based on this (prerendered false/true)
+		getManagedBean().setAbleToCancelLOA(
+				supplierStatus
+						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));//#36339, #21692
+		// cancel button during Pending LOA Submission only
+		getManagedBean().setAbleToCancelLOAWithoutBPM(
+				supplierStatus
+						&& new LOADetailBackingBean().isLOAStatusAbleToCancel().equals(
+								QTStatusConst.LOA_PENDING_SUBMISSION));
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	public boolean isLoaListPortlet() {
 		return QTConstants.PORTLET_NAME_QT_LIST
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-	//#21692 - end
+	//#21692 - End
 	
 }
 
