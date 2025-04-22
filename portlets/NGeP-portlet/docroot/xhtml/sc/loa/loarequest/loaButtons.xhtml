@@ -13,10 +13,6 @@
 	<ui:param name="validityDaysExpiredQt"
 		value="#{lOADetailBackingBean.checkProposalValidityDateReachByQt(lOADetailBackingBean.managedBean.scQt)}" />
 		
-	<ui:param name="supplierDisagreeEPV"
-		value="#{!lOIDetailBackingBean.isSupplierAgreeExtendEPV(
-		lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docId, lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier.supplierId)}"/><ui:remove>#21692</ui:remove>
-		
 	<h:panelGroup rendered="#{isTrackingDairyView}">
 		<table style="width: 100%">
 			<tr>
@@ -45,7 +41,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid}"
+					rendered="#{isPendingSubmissionStatus and validityDaysExpiredQt and isSqStillValid and qtLOABackingBean.managedBean.ableToSubmitLOA}"
 					action="#{lOADetailBackingBean.submitConformationForLampiranA3}" process="@form"
 					update="@form" onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();" /><ui:remove>#21692</ui:remove>
@@ -92,12 +88,18 @@
 				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					styleClass="ui-button"
-					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and !lOADetailBackingBean.managedBean.scLoa.brandNew
-					and lOADetailBackingBean.isLOAStatusAbleToCancel()}"
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOA and isLoaGenerated}"
 					oncomplete="cancelLoaPopup.show();" partialSubmit="true"
 					process="#{isReject ? '@this' : '@form'}"
 					update="#{isReject ? '@this' : '@form'}" />
 				<ui:remove>36339, 21692</ui:remove>
+				
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					styleClass="ui-button"
+					rendered="#{qtLOABackingBean.managedBean.ableToCancelLOAWithoutBPM and isLoaGenerated}"
+					oncomplete="cancelLoaPopup2.show();"
+					partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
+					update="#{isReject ? '@this' : '@form'}" /><ui:remove>21692</ui:remove>
 			</c:if>
 
 			<c:if test="#{!empty lOADetailBackingBean.managedBean.taskId}">
@@ -254,6 +256,27 @@
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
 				action="#{lOADetailBackingBean.updateBpmTaskAction('EPVCANCEL')}"
 				oncomplete="cancelLoaPopup.hide();"  update="@form">
+			</p:commandButton>
+
+		</div>
+	</p:dialog>
+	<ui:remove>#21692</ui:remove>
+	<ui:remove>#21692</ui:remove>
+	<p:dialog id="submissionPopupId2" widgetVar="cancelLoaPopup2"
+		header="#{lbl['lbl.sc.cancel.confirm']}"
+		resizable="false" width="325" height="100" closable="false"
+		modal="true">
+		<table>
+			<tr>
+				<td align="center"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.pending.qt.loa.cancel']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" partialSubmit="true" onclick="blockWidget.show();"
+				action="#{lOADetailBackingBean.cancelLOAWithoutBPM()}"
+				oncomplete="cancelLoaPopup2.hide();"  update="@form">
 			</p:commandButton>
 
 		</div>
