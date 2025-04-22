@@ -1356,11 +1356,18 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * 				the previous page url.
 	 * @return the navigation page
 	 */
-	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl) {
+	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl, ScLoaForQt scLoaQT) {	// Bug #37978@Syazani 22/04/2025
 		debugLogger("viewDirectLOADetails");
 		
 		Long qtId = scQt.getQtId();
-		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		// Bug #37978@Syazani 22/04/2025 -- Start
+		Long loaId;
+		if (scLoaQT != null) {
+			loaId = scLoaQT.getLoaId();
+		} else {
+			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		}
+		// Bug #37978@Syazani 22/04/2025 -- End
 		checkRolesToAuditView(); // #35500
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}
@@ -1482,7 +1489,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						/* Bug #27412 END */
 					}else{
 						if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
-							return viewDirectLOADetails(scQt, previousPageUrl);
+							return viewDirectLOADetails(scQt, previousPageUrl, scLoaForQt);	// Bug #37978@Syazani 22/04/2025
 						}
 						else{
 							otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
@@ -1507,7 +1514,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
 					
-					return viewDirectLOADetails(scQt, previousPageUrl);
+					return viewDirectLOADetails(scQt, previousPageUrl, null);	// Bug #37978@Syazani 22/04/2025
 				}else{	
 					QtLOABackingBean bb = new QtLOABackingBean();
 					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
