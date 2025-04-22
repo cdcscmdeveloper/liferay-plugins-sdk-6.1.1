@@ -1271,7 +1271,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				//24333 - Start
 				if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime()
 						&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime() && ctBB.isContractExtendOrIsBond()) {
-					contractAmt.setBondAttachment(true);
+					contractAmt.setIsBondAttachment(ContractConst.STATUS_COMPLETE);
 				}
 				//24333 - End
 			}
@@ -4502,7 +4502,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				|| !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || docType
 							.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
-			// If not relevant, keep original bonds as is
 			contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
 			return;
 		}
@@ -4511,22 +4510,34 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
 
-		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			boolean isNewBond = bond.isBondNew();
-			boolean bondRequired = ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq();
-			boolean disableOriginalBond = ctBB.getManagedBean().isDisableOriginalBond();
-			boolean shouldCreateNewBond = bondRequired && disableOriginalBond && bond.isBrandNew() && !isNewBond ;
+		boolean hasNewBond = false;
+		CtPerformanceBond emptyNewBond = null;
 
-			if (isNewBond) {
+		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
+			if (bond.isBondNew()) {
+				hasNewBond = true;
+		        if (bond.isBrandNew()) {
+		            bond.setFileName(null);
+		            bond.setFilePath(null);
+		        }
 				bondNew.add(bond);
-			}  else {
+			} else {
 				bondOriginal.add(bond);
+
+				// Save potential bond to clone only if brand new and eligible
+				if (emptyNewBond == null && ctBB.getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+						&& ctBB.getManagedBean().isDisableOriginalBond() && bond.isBrandNew()) {
+
+					emptyNewBond = bond;
+				}
 			}
-			
-			if (shouldCreateNewBond) {
-				bondNew.add(createNewBondFrom(bond));
-			}			
 		}
+
+		// Only create new bond if NONE exist
+		if (!hasNewBond && emptyNewBond != null) {
+			bondNew.add(createNewBondFrom(emptyNewBond));
+		}
+
 		contractAmt.setCtPerformanceBondsNew(bondNew);
 		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}
