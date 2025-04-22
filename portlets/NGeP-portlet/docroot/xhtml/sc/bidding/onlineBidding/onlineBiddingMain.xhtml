@@ -13,7 +13,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="obMessage" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
+			closable="true" showSummary="false" severity="error, info, fatal" /> <ui:remove> #28777#29729 </ui:remove>
 			
 		<ui:remove> #28777#29729 - Start </ui:remove>	
 		<ui:param name="isDisqualified" value="#{onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}"/>	
@@ -81,9 +81,9 @@
 							width="30%" style=" text-align:center" />
 
 						<p:column rowspan="2"
-							rendered="#{(onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and (onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem)}"
+							rendered="#{(onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and (onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and !isDisqualified}"
 							headerText="#{lbl['lbl.sc.current.ranking']}"
-							style="white-space : normal" width="4%" />
+							style="white-space : normal" width="4%" /> <ui:remove> #28777#29729 </ui:remove>
 					</p:row>
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%" />
@@ -211,7 +211,7 @@
 					</h:panelGroup>
 				</p:column>
 				<p:column
-					rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING)}">
+					rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}"> <ui:remove> #28777#29729 </ui:remove>
 					<h:panelGroup id="newRanking">
 						<h:outputText value="#{bidPriceItem.ranking}" />
 					</h:panelGroup>
@@ -268,7 +268,7 @@
 							</f:facet>
 						</p:column>
 						<p:column
-							rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING)}" />
+							rendered="#{(onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem) and (onlineBiddingBB.scBidSchedule.pmStatus.statusId ne BidStatusConst.BID_PENDING_BIDDING) and !isDisqualified}" /> <ui:remove> #28777#29729 </ui:remove>
 					</p:row>
 				</p:columnGroup>
 			</p:dataTable>

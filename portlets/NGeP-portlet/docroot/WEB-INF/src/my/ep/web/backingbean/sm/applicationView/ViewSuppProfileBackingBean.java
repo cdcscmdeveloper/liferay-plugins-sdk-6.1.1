@@ -97,8 +97,6 @@ public class ViewSuppProfileBackingBean extends
 		getManagedBean().setViewApplicationHistory(false);
 		// #28175
 		getManagedBean().setHistoryList(new ArrayList<PmRemarkCategory>());
-		// #34031
-		initSmRvHistory();
 		logger.info("[preRenderViewSupplierProfile] #31754 getManagedBean().isSupplierUser(): " + getManagedBean().isSupplierUser());
 		if (getManagedBean().isSupplierUser()) {
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
@@ -220,10 +218,10 @@ public class ViewSuppProfileBackingBean extends
 	public void onViewDisciplinaryAction() {
 		SmSupplier currSupp = getManagedBean().getSmSupplier();
 		//27876: Disciplinary Action
-		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
-		if(getManagedBean().isSupplierUser()){
+		if(currSupp == null || getManagedBean().isSupplierUser()){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 		}
+		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
 		log.info("onViewDisciplinaryAction - "+currSupp.getSupplierId());
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
@@ -305,7 +303,7 @@ public class ViewSuppProfileBackingBean extends
 	
 	//28281
 	//26238 - end
-	//26238 -  STATR Disciplinary Action - 28111
+	//26238 - START Disciplinary Action - 28111
 	/**
 	 * View Disciplinary Action Supplier
 	 * @param currSupp

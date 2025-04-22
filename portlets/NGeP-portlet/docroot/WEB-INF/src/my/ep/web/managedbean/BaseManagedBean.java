@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.model.StreamedContent;
@@ -197,7 +198,7 @@ public abstract class BaseManagedBean implements Serializable {
 	//12471 End
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
-
+	
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1227,4 +1228,5 @@ public abstract class BaseManagedBean implements Serializable {
 		this.forceReplace = forceReplace;
 	}
 	// #28895_35501 End
+	
 }

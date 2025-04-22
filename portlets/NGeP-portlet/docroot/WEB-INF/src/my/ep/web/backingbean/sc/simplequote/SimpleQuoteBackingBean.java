@@ -82,17 +82,12 @@ import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -133,10 +128,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
 import my.ep.persistence.entity.sm.SmGstSupplier;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 //import my.ep.persistence.entity.sm.SmSupplierBusiness; //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
@@ -160,7 +152,6 @@ import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;//#25790
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -176,10 +167,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -5913,29 +5901,29 @@ public class SimpleQuoteBackingBean extends
 			if (getManagedBean().getServiceTemplateSpecBean()
 					.getSpecAnswerList() != null) {
 				// #30552 - start
-				if (isServiceContainPrice){
-					specAnswers.addAll(getManagedBean()
-							.getServiceTemplateSpecBean().getSpecAnswerList());
-				}else {
+				if (isServiceContainPrice) {
+					specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
+				} else {
+					/* Sonarqube - Merge this if statement with the enclosing one.
 					if (!isProduct){
 						if (getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
 							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
 						}
 					}
-				}
-				
-				
+					*/
+					if (!isProduct && getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList() != null){
+							specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getBackupSpecAnswerList());
+					}
+				}				
 			}
 			// #30552 - end
+			
 			// update is submitted by supplier
 			if (CollectionUtils.isNotEmpty(quote.getScQuoteSuppliers())) {//sonarQubeIssue27#84
-				for (ScQuoteSupplier scQuoteSupplier : quote
-						.getScQuoteSuppliers()) {
+				for (ScQuoteSupplier scQuoteSupplier : quote.getScQuoteSuppliers()) {
 					if (getManagedBean().getScQuoteSupplier() != null) {
-						ScQuoteSupplier selectedQuoteSupplier = getManagedBean()
-								.getScQuoteSupplier();
-						if (selectedQuoteSupplier.getQuoteSupplierId().equals(
-								scQuoteSupplier.getQuoteSupplierId())) {
+						ScQuoteSupplier selectedQuoteSupplier = getManagedBean().getScQuoteSupplier();
+						if (selectedQuoteSupplier.getQuoteSupplierId().equals(scQuoteSupplier.getQuoteSupplierId())) {
 							scQuoteSupplier.setSubmitted(Boolean.TRUE);
 						}
 					}
@@ -7888,7 +7876,7 @@ public class SimpleQuoteBackingBean extends
 			try {
 				SmSupplier currSupp = scQuoteSupp.getSmSupplier();
 				if (currSupp != null) {
-					List<DisciplinaryActionVO> voList = BaseReviewApplicationBackingBean.getDisciplinaryActionVO(currSupp);
+					List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
 					if (!voList.isEmpty()) {
 						getManagedBean().setDisciplineVOs(voList);
 					} else {
@@ -7899,10 +7887,8 @@ public class SimpleQuoteBackingBean extends
 				}
 				RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 			} catch (Exception e) {
-				String exceptionSupplierId = scQuoteSupp != null ? scQuoteSupp.getSmSupplier() != null ? Long
-						.toString(scQuoteSupp.getSmSupplier().getSupplierId()) : StringUtils.EMPTY : StringUtils.EMPTY;
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.DIRECT_PURCHASE, "supplierDisciplinaryActionInfo",
-						exceptionSupplierId, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
+						StringUtils.EMPTY, "supplierDisciplinaryActionInfo", getUserIdSessionFromLoginId(), e);
 			}
 		}
 	
@@ -8058,21 +8044,21 @@ public class SimpleQuoteBackingBean extends
 				try {
 					BeanUtils.copyProperties(ptsb, getManagedBean().getProductTemplateSpecBean());
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					log.error(e.getMessage(), e);
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 				final TemplateSpecBean stsb = new TemplateSpecBean();
 				try {
 					BeanUtils.copyProperties(stsb, getManagedBean().getServiceTemplateSpecBean());
 				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					log.error(e.getMessage(), e);
 				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 				ppBB.getManagedBean().setProductTemplateSpecBean(ptsb);
 				ppBB.getManagedBean().setServiceTemplateSpecBean(stsb);
