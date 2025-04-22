@@ -4595,7 +4595,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			// 28281 (bumi cat code) start
 			retVal.setCategoryCodeList(getCategoryCodeListDA(da));
-			retVal.setBlacklistownerDirectorList(getSupplierHasPersonnelBlacklist(supplierId));
+			retVal.setBlacklistownerDirectorList(getPersonnelBlacklist(da.getDisciplinaryActionId()));
 			retVal.setMofNoExist(isMOF);
 			voList.add(retVal);
 		}
@@ -4960,7 +4960,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		return getDisciplinaryActionVOList(resultList, currSupp);
+		List<DisciplinaryActionVO> voList =  getDisciplinaryActionVOList(resultList, currSupp);
+		return voList;
 	}
 	//31033 end
 	
