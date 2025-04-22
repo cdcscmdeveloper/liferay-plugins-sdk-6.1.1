@@ -413,7 +413,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						break;
 					}
 				}
-				
 			}
 		}
 	}
@@ -477,14 +476,11 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						displaySequence.setNewValue(updatedPmMachineCategory.getPmMachine().getMachineCode());
 						displaySequence.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 						objList.add(displaySequence);
-						
 						break;
 					}
 				}
-				
 			}
 		}
-
 	}
 
 	private void setSiteVisit(PmMachineCategory pmMachineCategory, String categoryTypeCode) {
