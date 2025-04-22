@@ -10184,8 +10184,8 @@ private void retriveCommitteeRemarksList(){
 								new FacesScopes().getUserLocale()) });
 					}
 					String remark = item.getRemarkMandatorySpec();
-					boolean isNotCompliance = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
-					if (isNotCompliance && StringUtils.isEmpty(remark)) {
+					boolean isNotComply = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
+					if (isNotComply && StringUtils.isEmpty(remark)) {
 						throw new EpException(MessageConst.ERROR_775180);
 					}
 					/* #29187 End Vinod */
