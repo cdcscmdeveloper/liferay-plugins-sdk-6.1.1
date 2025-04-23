@@ -1727,6 +1727,8 @@ public void saveComplianceSample() {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setEvalStage(null);
 				reqDTO.setProposalChecklistSearchBean(null);
+				
+				reqDTO.setProposalChecklist(proposalCheckList); //Bug #38123 CRM#5224901: MOE issue 16/4/2025
 				resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 
 				if (null != resDTO
