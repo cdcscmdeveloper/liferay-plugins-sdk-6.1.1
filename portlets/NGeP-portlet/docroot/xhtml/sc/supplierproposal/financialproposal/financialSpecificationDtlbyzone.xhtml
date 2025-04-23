@@ -10,8 +10,10 @@
 	<table style="width: 100%">
 		<tr>
 			<td width="16%"  class="sidemenutd"  valign="top" >
+				<!-- 20220907@syazani - Enhancement #3657 - specific error message - Start -->
 				<p:remoteCommand id="zoneRemote" name="zoneTabChange" update="@form" partialSubmit="true" process="@this" action="#{supplierProposalDetailBackingBean.zoneTabChange}" />
-				<ac:zoneTabMenu tabList="#{supplierProposalDetailBackingBean.managedBean.zones}" 
+				<!-- 20220907@syazani - Enhancement #3657 - specific error message - End -->
+				<ui:remove> #28777#29729 </ui:remove><ac:zoneTabMenu tabList="#{supplierProposalDetailBackingBean.managedBean.zones}" 
 							activeIndex="#{supplierProposalDetailBackingBean.managedBean.activeIndex}"
 							remoteCommand="zoneTabChange" update="@this"  process="@form"/>
 			</td>
@@ -19,8 +21,8 @@
 					<ac:templateSpec processValidationId="zoneRemote"
 						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
 						editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly 
-						and !supplierProposalDetailBackingBean.managedBean.zones.get(supplierProposalDetailBackingBean.managedBean.activeIndex).branchDeactivated}"
-						title="#{lbl['lbl.sc.spec.financial.title']}" />
+							and !supplierProposalDetailBackingBean.managedBean.zones.get(supplierProposalDetailBackingBean.managedBean.activeIndex).branchDeactivated}"
+						title="#{lbl['lbl.sc.spec.financial.title']}" /><ui:remove> #28777#29729 </ui:remove>	
 				</p:outputPanel></td>
 		</tr>
 	</table>

@@ -529,7 +529,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				}		
 			}
 
-			if (getManagedBean().isRemedy()) {
+			if (getManagedBean().isRemedy() || this.getManagedBean().isTermination()) { // Fix - #36707
 				if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.start.date", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});

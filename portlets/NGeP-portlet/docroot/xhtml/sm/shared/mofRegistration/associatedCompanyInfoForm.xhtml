@@ -202,6 +202,14 @@
 						<p:inputText value="#{backingBean.managedBean.selectedAssocCompany.mofNo}"
 							size="35" id="assocMofNoId"
 							disabled="#{backingBean.managedBean.upsCannotEdit}"/>
+						<!-- 37771 -->
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges 
+									and not empty backingBean.managedBean.selectedAssocCompany.mofNo}"
+							oriValue="#{backingBean.managedBean.latestAssocCompany.mofNo}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.mofNo}" 
+							alertValue="#{backingBean.managedBean.latestAssocCompany.mofNo}"/>
+						
 					</td>
 				</tr>
 				<!-- #36718 - START - add panel for refresh address -->
@@ -277,11 +285,12 @@
 								update="assocState,divisionLabelAssocPanelId,divisionAssocDropdownPanelId,assocDist,assocCity,postCodeAssocPanelId" />
 						</p:selectOneMenu> 
 					<!-- #34159 - END --> 
+					<!-- 37771 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
 								and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId}" 
-							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.countryId}" 
 							alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
 							 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
 								backingBean.getCountryLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmCountry.countryId)
@@ -354,11 +363,13 @@
 					</p:selectOneMenu>
 					<!-- #34159 - END -->
 					<!-- END 31736 -->
+					<!-- #37771 -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 
-									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId}"
+									and not empty backingBean.managedBean.selectedAssocCompany.associateCompanyId
+									and backingBean.managedBean.selectedAssocCompany.smAddress.divisionId ne null}"
 							oriValue="#{backingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId}" 
-							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDivision.divisionId}" 
+							currValue="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}" 
 							alertValue="#{(not empty backingBean.managedBean.latestAssocCompany and 
 							 	not empty backingBean.managedBean.latestAssocCompany.smAddress) ?
 								backingBean.getDivisionLabelById(backingBean.managedBean.latestAssocCompany.smAddress.pmDivision.divisionId)

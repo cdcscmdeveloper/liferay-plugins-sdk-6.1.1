@@ -177,6 +177,7 @@
 			<h:selectOneMenu id="specCompliance" required="true"
 				label="#{lbl['lbl.sc.tec.compliance']}"
 				value="#{tplSpecAnswer.compliance}"
+				valueChangeListener="#{templateSpecBackingBean.itemComplianceChangeControl}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				rendered="#{tplSpecAnswer.tplSpecQuestion.questionType eq ParameterConst.tplSpecQuestionTypeSpecification 
 				and tplSpecAnswer.tplSpecQuestion.mandatorySpec}">
