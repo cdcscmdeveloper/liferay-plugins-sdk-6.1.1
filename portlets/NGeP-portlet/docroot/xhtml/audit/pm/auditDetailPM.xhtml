@@ -7,13 +7,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Audit Trail Details" toggleable="true">
+		<div align="right" style="vertical-align: top; width: 100%">
+			<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+			<p:fileDownload value="#{auditPMDocBBean.generateReport(searchPMAuditBackingBean.reqDTO)}" />
+			</p:commandLink>
+			&#160;
+			<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
+			<p:fileDownload value="#{auditPMDocBBean.generateRptExcel(searchPMAuditBackingBean.reqDTO, searchPMAuditBackingBean.searchDetail)}" />
+			</p:commandLink>
+			&#160;
+		</div>
+		
 		<p:dataTable id="searchDetails" var="detail" rows="10"
 			value="#{searchPMAuditBackingBean.searchDetail}"
 			rowIndexVar="index" lazy="true">
 			<ac:paginator for="searchDetails"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.pm.audit.actionDate']}" style="width :15%">
 				<h:outputText value="#{detail.createdDate}" >
-				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.audit.actionType']}" style="width :10%">
