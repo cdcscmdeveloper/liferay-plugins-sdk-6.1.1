@@ -4437,6 +4437,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #25000 - End
 	
+	@Deprecated
 	/**
 	 * Retrieves a list of personnel blacklisted under a specific supplier.
 	 *
@@ -4462,6 +4463,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		return blacklist;
+	}
+	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
 	}
 	
 	//26238 - START
