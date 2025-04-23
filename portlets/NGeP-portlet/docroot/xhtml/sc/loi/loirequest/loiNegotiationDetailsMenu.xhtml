@@ -106,9 +106,11 @@
 	   <ui:param name="delBtnClientId" value="delNegoTermBtn" />
        <ui:param name="isTermRequired" value="#{param[p:component(delBtnClientId)]==null}" />
       	<p:remoteCommand name="lovPopulateSelection"  partialSubmit="true" update="@([id$=negoTermstbl])" actionListener="#{lOIDetailBackingBean.populateNegoTerms()}" />
-      	<ui:remove>#37831 - #29007 Start Vinod 23/04/2025</ui:remove>
-      	<p:remoteCommand name="addNegoSelection"  partialSubmit="true" update="@([id$=negoTermstbl])" actionListener="#{lOIDetailBackingBean.addNegoTermsSelected()}" /> 	
-      	<ui:remove>#37831 - #29007 End Vinod 23/04/2025</ui:remove>
+		<ui:remove>#37831 - #29007 Start Vinod 23/04/2025</ui:remove>
+		<p:remoteCommand name="addNegoSelection" partialSubmit="true"
+			update="@([id$=negoTermstbl])"
+			actionListener="#{lOIDetailBackingBean.addNegoTermsSelected()}" />
+		<ui:remove>#37831 - #29007 End Vinod 23/04/2025</ui:remove>
 		<p:dataTable id="negoTermstbl" var="negoTerm"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
