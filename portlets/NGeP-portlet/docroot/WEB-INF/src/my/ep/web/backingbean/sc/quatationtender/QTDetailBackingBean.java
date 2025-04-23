@@ -3558,13 +3558,14 @@ public class QTDetailBackingBean extends
 							.getScQtDocReportList());
 				}
 				if (this.getManagedBean().getQt().isSampleReq()) {
+					//11104 -start-
+					this.getManagedBean().setSubmit(true);
+					 //11104 -end-
 					retrieveScheduleTabDtl();
 					qt.setScQtSampleSubmission(this.getManagedBean()
 							.getScQtSampleSubmissionList());
 					qt.setSampleClosingDate(qt.getClosingDate());
-				    //11104 -start-
-					this.getManagedBean().setSubmit(true);
-					 //11104 -end-
+				    
 				} else {
 					retrieveScheduleTabDtl();
 					
@@ -7002,6 +7003,9 @@ public class QTDetailBackingBean extends
 					if (isMaintancePendingChklistStatus) {
 						retrieveDocumentTabDtl();
 					} else {
+						//11104 -start-
+						this.getManagedBean().setSubmit(Boolean.FALSE);
+						//11104 -end-
 						retrieveScheduleTabDtl();
 					}
 				}
@@ -7282,10 +7286,10 @@ public class QTDetailBackingBean extends
 			
 			// 11104-start
 			if (this.getManagedBean().getQt().isSampleReq()) {
-	           	retrieveScheduleTabDtl();
-				//11104 -start-
+	           //11104 -start-
 				this.getManagedBean().setSubmit(true);
 				//11104 -end-
+				retrieveScheduleTabDtl();
 
 			}
 			// 11104-End
