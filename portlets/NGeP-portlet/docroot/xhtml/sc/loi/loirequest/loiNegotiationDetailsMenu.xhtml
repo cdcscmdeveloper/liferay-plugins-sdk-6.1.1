@@ -106,7 +106,7 @@
 	   <ui:param name="delBtnClientId" value="delNegoTermBtn" />
        <ui:param name="isTermRequired" value="#{param[p:component(delBtnClientId)]==null}" /> <ui:remove> #29007 Vinod added</ui:remove>
       	<p:remoteCommand name="lovPopulateSelection"  partialSubmit="true" update="@([id$=negoTermstbl])" actionListener="#{lOIDetailBackingBean.populateNegoTerms()}" /> 	
-		<ui:remove>#37831 - #29007 Start Vinod 23/04/2025</ui:remove>
+		<ui:remove>#37831 - #29007 Start Vinod 23/04/2025</ui:remove> 
 		<p:remoteCommand name="addNegoSelection" partialSubmit="true"
 			update="@([id$=negoTermstbl])"
 			actionListener="#{lOIDetailBackingBean.addNegoTermsSelected()}" />
