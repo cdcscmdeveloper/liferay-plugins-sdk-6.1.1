@@ -53,6 +53,7 @@ import org.docx4j.wml.R;
 import org.docx4j.wml.RPr;
 import org.docx4j.wml.STFldCharType;
 import org.docx4j.wml.SectPr;
+import org.docx4j.wml.SectPr.PgMar;
 import org.docx4j.wml.Text;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -208,6 +209,12 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 
 				render.getFontResolver().addFont(fontPath, true);
 				// #26130 (06/06/2024) - end
+				//#25025 & #26770 - start
+				//follow #26130 to access font in server.
+				render.getFontResolver().addFont(getServerUrl()+"NGeP-portlet/resources/fonts/Ariali.ttf",true);  
+				render.getFontResolver().addFont(getServerUrl()+"NGeP-portlet/resources/fonts/Arialbd.ttf",true);
+				render.getFontResolver().addFont(getServerUrl()+"NGeP-portlet/resources/fonts/Arialbi.ttf",true);
+		        //#25025 & #26770 - end
 
 				render.setDocumentFromString(html);
 				render.layout();
@@ -316,6 +323,7 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
 			createHeaderPart(wordMLPackage, docNo);
 			addFooterToDocument(wordMLPackage);
+			setMarginSpace(wordMLPackage); 	// #25025
 			wordMLPackage.save(new java.io.File(filePath));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
@@ -384,18 +392,23 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		rpr.setSz(size);
 		run.setRPr(rpr);
 
+		// #26770 - Start.
 		Text t1 = factory.createText();
-		t1.setValue("Tandatangan & Cop (Kerajaan)  : …………………………………");
+		//#25025 -start
+		t1.setValue("Tandatangan & Cap (Kerajaan)  : _____________");
 		Br br = factory.createBr(); // this Br element is used break the current and go for next line
 		Text t2 = factory.createText();
-		t2.setValue("\r\n Tandatangan & Cop (Syarikat ) : …………………………………");
+		t2.setValue("\r\n Tandatangan & Cap (Syarikat ) : _____________");
 		Text t3 = factory.createText();
 
-		t3.setValue("\r\n  Pihak Kerajaan : pegawai yang diberi kuasa oleh Kerajaan di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani Surat ini");
+		t3.setValue("\r\n  Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak");
+		// 25025 - End.
 		Text t4 = factory.createText();
-		t4.setValue("\r\n  Pihak Syarikat  : pegawai yang diberi kuasa dengan sewajarnya oleh syarikat untuk menandatangani Surat ini");
+		t4.setValue("\r\n  Pihak Syarikat  : Penama pada sijil pendaftaran untuk menandatangani Surat ini");
 		run.getContent().add(t1);
 		run.getContent().add(br);
+		run.getContent().add(br);
+		// #26770 - End.
 		run.getContent().add(t2);
 		run.getContent().add(br);
 
@@ -575,4 +588,14 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
             log.debug(message);
         }
     }
+
+	// #25025 -start
+	public static void setMarginSpace(WordprocessingMLPackage wordPackage) {
+		ObjectFactory factory = Context.getWmlObjectFactory();
+		PgMar pg = factory.createSectPrPgMar();
+		pg.setLeft(BigInteger.valueOf(1000));
+		pg.setRight(BigInteger.valueOf(1000));
+		wordPackage.getDocumentModel().getSections().get(0).getSectPr().setPgMar(pg);
+	}
+	// #25025 - end
 }

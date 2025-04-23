@@ -647,8 +647,10 @@
 					</c:choose>
 				</td>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
-					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<ui:remove> #26770 - start </ui:remove>	
+					<p:outputLabel style="width:145%; text-align:left;" value="#{lbl['lbl.sc.loiloa.loa.req.sl1m']}" />
+					<p:outputLabel style="width: 151%;text-align:left;margin-top: -63px;" value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+					<ui:remove> #26770 - end </ui:remove>	
 				</td>
 				<td>
 					<table>
@@ -664,6 +666,11 @@
 								</p:selectOneRadio>
 								<p:message id="sl1mReqMsg" for="sl1mReq" display="icon" />
 							</td>
+							<ui:remove> #26770 - start </ui:remove>	
+							<td>
+								<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.sl1m.tooltip']}" />
+							</td>
+							<ui:remove> #26770 - end </ui:remove>	
 						</tr>
 					</table>
 				</td>

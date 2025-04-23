@@ -31,7 +31,7 @@ p {
 	color: red;
 }
 
-## #25025-change font-size
+## #26770 , #25025- start change font-size
 .text_family_medium {
 	font-family: Arial;
 	font-weight: normal;
@@ -41,7 +41,7 @@ p {
 	font-size: 10.5px;
 	color: red;
 }
-
+## #26770 , #25025- end change font-size
 .text_family_small {
 	font-family: Arial;
 	font-weight: normal;
@@ -52,7 +52,7 @@ p {
 	color: red;
 }
 
-## #25025-start
+## #26770 , #25025-start
 .text_family_small_black {
 	font-family: Arial;
 	font-weight: normal;
@@ -62,7 +62,7 @@ p {
 	font-size: 9px;
 	color: #333333;
 }
-## #25025-end
+## #26770 , #25025-end
 .text_family_bold {
 	font-family: Arial;
 	font-weight: bold;
@@ -139,7 +139,7 @@ u {
 	page-break-after:always;
 }
 
-## #25025-start
+## #26770 , #25025-start
 u.underline {
     white-space:pre;
     text-decoration:underline;
@@ -157,7 +157,7 @@ u.underline {
 .dottedBorderRed{
 	border-bottom: 1px solid red;
 }
-## #25025-end
+## #26770 , #25025-end
 .underline{
 	font-family: Arial;
 	font-size: 14.5px;
@@ -205,14 +205,14 @@ u.underline {
 </head>
 
 <body>
-	## #25025-start
+	## #26770 , #25025-start
 	<table border="0" cellpadding="2" cellspacing="2" width="100%">
-	## #25025-end
+	## #26770 , #25025-end
 		<tr>
 			<td align="center"><span class="text_family_header">SURAT SETUJU TERIMA <br /> (Bagi $headerTitle Bekalan) <br /><br /><br /></span></td>
 		</tr>
 		<tr>
-			## #25025-start
+			## #26770 , #25025-start
 			<table align="right" class="text_family">
 				<tr style="margin-bottom:1px;">
 					<td valign="top"> Rujukan Kami</td>
@@ -225,11 +225,10 @@ u.underline {
 					<td valign="top">$govtSignDate</td>
 				</tr>
 			</table>
-			## #25025-end
+			## #26770 , #25025-end
 		</tr>
 		<tr>
 			<td>
-			    ## #26770 - CJCP
 				<span class="text_family_red">*PENGARAH URUSAN/PENGURUS/PENGERUSI </span><br />
 				<span class="text_family">
 				$supplierName <br />
@@ -252,7 +251,7 @@ u.underline {
 		<tr>
 			<td>
 				<p>
-					## #25025-add space
+					## #26770 , #25025-add space
 					<span class="text_family">Dengan ini dimaklumkan bahawa
 						Kerajaan telah bersetuju menerima tawaran $subTitle syarikat tuan
 						dengan harga sebanyak Ringgit Malaysia <span class="underline">$overallCtAmtWording</span> (RM
@@ -307,20 +306,10 @@ u.underline {
 					Pembayaran cukai jualan ini adalah dikira berdasarkan tuntutan sebenar dan tarikh kuat
 					kuasa pendaftaran syarikat tuan dengan JKDM. </span>
 				</p>
-						   
-					 
-										
-		
-																							
-																							   
-		
-		 
 				<p>
 					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk syarikat yang
 					berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018)</span>
 				</p>
-		
-				
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family_red">*3. &#160;&#160;&#160;&#160;&#160;Harga kontrak adalah tidak termasuk peruntukan Kerajaan
@@ -332,21 +321,17 @@ u.underline {
 					syarikat tuan dengan JKDM. </span>
 				</p>
 				## #25025 & #26770 -end
-	
 				<p>
 					<span class="text_family_small">(Perenggan 3 di atas adalah terpakai untuk syarikat yang tidak
 					berdaftar dengan JKDM dan Barangan Dikenakan Cukai di bawah Akta Cukai Jualan 2018)</span>
 				</p>
-				
 				## #25025 & #26770 -start
 				<p>
 					<span class="text_family">4. &#160;&#160;&#160;&#160;&#160;Adalah dimaklumkan bahawa tiada pembekalan barang boleh dibuat <b>melainkan</b> jika syarikat tuan telah mengemukakan kepada Kerajaan dokumen-dokumen berikut:  </span>
 				</p>
 				## #25025 & #26770 -end
-
 				<div class="text_indent">
-				
-						## #25025-start
+						## #26770 , #25025-start
 							<table>
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(a)</td>
@@ -363,7 +348,7 @@ u.underline {
 									<td align="center" style="vertical-align: top;">*(b)</td>
 									<td style="text-align:justify;">suatu polisi insurans yang tidak boleh dibatalkan yang berjumlah Ringgit Malaysia ______________ (RM______________) dan resit premium; </td>
 								</tr>
-								## #25025 #579 - start	
+								## #26770 , #25025 #579 - start	
 								<tr class="text_family_red">
 									<td align="center" style="vertical-align: top;">*(c)</td>
 										<td style="text-align:justify;">Nombor Kod Majikan di bawah Skim PERKESO dan/atau Polisi Pampasan Pekerja; </td>									
@@ -372,29 +357,17 @@ u.underline {
 									<td align="center" style="vertical-align: top;">*(d)</td>
 									<td style="text-align:justify;">Nombor Pendaftaran Kumpulan Wang Simpanan Pekerja (KWSP),</td>
 								</tr>
-								## #25025 #579 - end
-								
-																  
-																										
-			 
+								## #26770 , #25025 #579 - end
 							</table
-							
-							## #25025- end
+							## #26770 , #25025- end
 				</div>
-				
 				<p><span class="text_family">seperti yang ditetapkan dalam <b><i>Lampiran A</i></b> tidak melebihi <span class="text_family_red"> *14/30 </span> hari dari tarikh pengakuan penerimaan Surat ini oleh syarikat tuan. Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan, boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa cara jua bertanggungan terhadap syarikat tuan <b>melainkan jika</b> penepian bertulis diberikan oleh orang yang diberi kuasa, bagi bekalan barang yang perlu dibuat dengan segera atau serta-merta apabila kelewatan itu akan memudarat dan menjejaskan perkhidmatan dan kepentingan awam. </span></p>
-				
 				## #25025 & #26770 -start
 				<p>
-																			 
 					<span class="text_family">5. &#160;&#160;&#160;&#160;&#160;Setelah pesanan/arahan dikeluarkan oleh Kerajaan, syarikat tuan dikehendaki melaksanakan pembekalan barang dalam tempoh yang ditetapkan dan kualiti bekalan tersebut hendaklah memuaskan hati serta memenuhi kehendak Kerajaan. Sekiranya syarikat tuan gagal melaksanakan pembekalan barang dalam tempoh dan/atau kualiti yang ditetapkan, Kerajaan berhak membatalkan pesanan/arahan yang dikeluarkan dan/atau mengenakan <span class="text_family_red">*Denda/Tolakan/<i>Liquidated & Ascertained Damages</i> (LAD)</span> seperti yang ditetapkan dalam <b><i>Lampiran A</i></b>.  </span>
-		  
-																																																																																																																																																																  
-		 
 				</p>
 				## #25025 & #26770 -end
 				#if($isSL1M == "true")
-							 
 					<p>
 						<span class="text_family_red">
 									*6.&#160;&#160;&#160;Syarikat tuan juga adalah dikehendaki melaksanakan program <i>Professional Training and Education for Growing Entrepreneurs - Ready To Work </i> 
@@ -402,8 +375,6 @@ u.underline {
 									dengan bilangan minimum peserta PROT&Eacute;G&Eacute;-RTW sebanyak ______________ orang tanpa sebarang kos kepada Kerajaan. Bilangan minimum
 									peserta yang diperlukan hendaklah dikira berdasarkan formula di bawah:</span>
 					</p>
-							
-					  
 					<p>
 						<table width="25%" align="center" style="border-collapse: collapse;">
 							<tr>
@@ -418,8 +389,7 @@ u.underline {
 							</tr>
 						</table>
 					 
-						##26770 - start
-						## #25025 #478 - start
+						## #26770 , #25025 #478 - start
 						<table width="80%" align="center">
 							<tr>
 								<td style="margin-bottom:1px;"><span class="text_family_medium">*Bagi tujuan pengiraan PROT&Eacute;G&Eacute;-RTW, Harga Kontrak adalah nilai tawaran yang dipersetujui tanpa cukai</span><br/>
@@ -429,8 +399,7 @@ u.underline {
 	   
 						</table>
 				   
-						## #25025 #478 - end
-						##26770 - end
+						## #26770 , #25025 #478 - end
 					</p>
 					
 				#else
@@ -444,38 +413,25 @@ u.underline {
 				#end
 				
 				#if($isSL1M == "true")
-				##26770 - start
+				##26770 , #25025 - start
 				<p>													 
-																			 
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>melebihi nilai ambang</b> dan syarikat dikehendaki
-																				   
-		  
-																																		  
 					untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
-		 
 				</p>
-				##26770 - end
+				##26770 , #25025 - end
 				#else
 				<p>
-				##26770 - start															
-																			
-																																	   
-																				  
-		 
+				##26770 , #25025 - start															
 					<span class="text_family_small">(Perenggan ini terpakai sekiranya Harga Kontrak <b>di bawah nilai ambang</b> dan syarikat digalakkan
 					untuk melaksanakan Program PROT&Eacute;G&Eacute;-RTW berdasarkan PP/PK1.12)</span>
-		
-				##26770 - end	
+				##26770 , #25025 - end	
 				</p>
 				#end
-	
-	
 				<p>
 					<span class="text_family">7.&#160;&#160;&#160;&#160;&#160;Bagi tujuan program PROT&Eacute;G&Eacute;-RTW ini, syarikat tuan adalah dikehendaki untuk:</span>
 				</p>
-	
 				<div class="text_indent">
-					## 25025- start
+					## #26770 , #25025 - start
 						<table class="text_family" style="text-align:justify;">
 							<tr>
 								<td align="center" style="vertical-align: top;">(a)</td>
@@ -498,11 +454,10 @@ u.underline {
 								<td>mengemukakan laporan berkaitan pelaksanaan program PROT&Eacute;G&Eacute;-RTW kepada Sekretariat PROT&Eacute;G&Eacute;. </td>
 							</tr>
 						</table>
-						## #25025-end	
+						## #26770 , #25025-end	
 				</div>
 				## #25025 & #26770 -start
 				#set($numberCount = 7)
-				
 					#if($isSL1M == "true")
 					#set($numberCount = $numberCount+1)
 						<p>
@@ -514,12 +469,12 @@ u.underline {
 						</p>
 					#end		
 					<p>
-					## #25025 #478 - start
+					## #26770 , #25025 #478 - start
 					## 8
 						#set ($numberCount = $numberCount+1)
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan Program Kolaborasi Industri (<i>Industrial Collaboration Program</i> (ICP)) yang mana pelaksanaan Program ICP tersebut adalah tertakluk kepada pematuhan kepada PP/PK1.7 Dasar dan Garis Panduan Program Kolaborasi ICP Dalam Perolehan Kerajaan.</span>
 					</p>
-					## #25025 #478 - end
+					## #26770 , #25025 #478 - end
 					<p>
 					## 9
 						#set ($numberCount = $numberCount+1)
@@ -529,9 +484,9 @@ u.underline {
 					<p>
 					## 10
 						#set ($numberCount = $numberCount+1)
-						## #25025 #579 - start
+						## #26770 , #25025 #579 - start
 						<span class="text_family_red">*$numberCount.&#160;&#160;&#160;&#160;&#160; Syarikat Tuan hendaklah melaksanakan dan menyempurnakan projek ICP dengan jumlah Nilai Kredit ICP Mandatori untuk projek ICP hendaklah bersamaan dengan nilai seperti termaktub di bawah PP/PK 1.7.</span>
-						## #25025 #579 - end
+						## #26770 , #25025 #579 - end
 					</p>
 					
 					<p style="padding-bottom:110px; margin-bottom:0px">
@@ -548,7 +503,7 @@ u.underline {
 						<span class="text_family">$numberCount. &#160;&#160;&#160;&#160;&#160;Syarikat tuan juga adalah diingatkan bahawa Kerajaan berhak untuk membatalkan Surat ini sekiranya:  </span></p>
 					## #25025 & #26770 -end
 					<div class="text_indent">
-					## 25025- start
+					## #26770 , #25025 - start
 						<table class="text_family" style="text-align:justify;">
 							<tr style="page-break-inside: avoid;">
 								<td align="center" style="vertical-align: top;">(a)</td>
@@ -615,11 +570,11 @@ u.underline {
 							
 							
 						</table>
-						## #25025-end
+						## #26770 , #25025-end
 					</div>
 
 					## #25025 & #26770 -start
-					## #25025 #478 - start
+					## #26770 , #25025 #478 - start
 					#set($numberCount = $numberCount+1)
 					#set ($prevNumberCount = $numberCount - 1)
 					<p>
@@ -636,12 +591,10 @@ u.underline {
 						Apa-apa kegagalan dalam mematuhi kehendak di perenggan ini dalam tempoh masa yang ditetapkan boleh mengakibatkan Surat ini terbatal dan Kerajaan tidaklah dengan apa-apa jua bertanggungan terhadap syarikat tuan.</span>
 					</p>
 				## #25025 & #26770 -end
-				## #25025 #478 - end
+				## #26770 , #25025 #478 - end
 			</td>
 		</tr>
 		
-
-
 		 <tr>
 			<td>
 				<p>
@@ -733,9 +686,9 @@ u.underline {
 		<tr>
 			<td colspan="4">
 				<br/>
-				## #25025-start
+				## #26770 , #25025-start
 				<span class="text_family">Meterai atau Cap Syarikat</span><br/><br/>
-				## #25025-end
+				## #26770 , #25025-end
 				<span class="text_family_italic">*potong mana yang tidak berkenaan</span>
 			</td>
 		</tr>
@@ -743,7 +696,6 @@ u.underline {
 	
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	
 	    <tr>
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A</i></b></span></td>
 		</tr>
@@ -754,27 +706,19 @@ u.underline {
 		<tr>
 			<td align="center"><span class="text_family"> $loaTitle</span> <br /> <br /></td>
 		</tr>
-
 		<tr>
 			<table width="100%">
 				<tr>
-				   
 					<td colspan="3">
 						<table >
-									<tr>
-										<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
-																				  
-											<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
-			   
-																																															
-			  
-									</tr>
+							<tr>
+								<td align="center" style="vertical-align: top;" class="text_family_header">1. </td>
+								<td class="text_header_submenu">Pendaftaran Syarikat Dengan Suruhanjaya Syarikat Malaysia (SSM) Atau Pendaftaran Koperasi Dengan Suruhanjaya Koperasi Malaysia (SKM) (jika berkaitan)</td>
+							</tr>
 						</table>						
 					</td>
 				</tr>
 				<tr valign="top">
-				 
-				   
 					<td align="left" style="width: 60%" class="submenu_padding"><span
 						class="text_family">1.1 No. Pendaftaran</span></td>
 					<td class="text_family" style="width: 1%">:</td>
@@ -798,7 +742,7 @@ u.underline {
 					</td>
 				</tr>
 				<tr>
-				## #25025-end
+				## #26770 , #25025-end
 					<td align="left" class="submenu_padding"><span
 						class="text_family">2.1 No. Pendaftaran</span></td>
 					<td class="text_family">:</td>
@@ -856,7 +800,7 @@ u.underline {
 
 
 				<tr>
-				## #25025-start
+				## #26770 , #25025-start
 					<td colspan="3">
 						<table>
 								<tr>
@@ -868,48 +812,44 @@ u.underline {
 				</tr>
 				<tr style="page-break-inside: avoid;">
 					<td align="left" class="submenu_padding" valign="top">
-					## #25025-start
+					## #26770 , #25025-start
 						<table class="text_family" >
 							<td valign="top">4.1 </td>					   
-																			   
 							<td>Harga $docType (butiran harga seperti di <b><i>Lampiran A1</i></b>)</td>
-			
-																			
-		   
 						</table>
-					## #25025-end	
+					## #26770 , #25025-end	
 					</td>
 					<td class="text_family" valign="top">:</td>
 					<td class="text_family" valign="top">RM $offerPrice <br/>
-					##25025 note 579 <span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
+					##26770 , #25025 note 579 <span class="text_family_medium_black"> Lampiran A1 adalah merupakan borang dalam dokumen $docType.toLowerCase() dengan harga yang ditandatangani oleh syarikat </span>
 					</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding" valign="top">
-					## #25025-start
+					## #26770 , #25025-start
 						<table class="text_family">
 								<td align="center" style="vertical-align: top;">4.2 </td>
 								<td style="vertical-align: top;">Peruntukan Cukai Jualan (sekiranya berkaitan)</td>
 						</table>
-					## #25025-end		
+					## #26770 , #25025-end		
 					</td>
 					<td valign="top" class="text_family">:</td>
 					<td valign="top" class="text_family">RM $sstAmt</td>
 				</tr>
 				<tr>
 					<td align="left" class="submenu_padding">
-						## #25025-start	
+						## #26770 , #25025-start	
 						<table class="text_family">
 								<td align="center" style="vertical-align: top;">4.3 </td>
 								<td>Fi Perkhidmatan ePerolehan (sekiranya berkaitan)</td>
 						</table>
-						## #25025-end	
+						## #26770 , #25025-end	
 					</td>
 					<td class="text_family">:</td>
 					<td class="text_family">$fiService </td>
 				</tr>
 				<tr>
-					## #25025
+					## #26770 , #25025
 					<td align="left" class="submenu_padding"><span
 						class="text_family">4.4 Harga Kontrak </span></td>
 					<td class="text_family">:</td>
@@ -955,17 +895,11 @@ u.underline {
 							class="text_family_red">*Senarai item, kuantiti dan/atau tempoh serta jadual
 							pembekalan yang ditetapkan seperti di <b><i>Lampiran A2</i></b></span>
 							<br/>
-										   
 							<span class="text_family_red"><i><b>Lampiran A2</b> adalah untuk menyatakan tempoh atau jadual pembekalan mengikut tawaran syarikat dan disediakan oleh Agensi</i></span>
-	   
-																																												 
-		   
 					</td>
-					
 				</tr>
 				<tr>
 					<td colspan="3"> 
-						
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">6. </td>
@@ -1003,9 +937,9 @@ u.underline {
 						class="text_family_red">7.2 Formula Bon Pelaksanaan </span></td>
 					<td class="text_family_red">:</td>
 					## #34168 - start
-					## #25025 #478 - start
+					## #26770 , #25025 #478 - start
 					<td class="text_family_red">2.5% atau 5% daripada nilai kontrak setahun</td>
-					## #25025 #478 - end
+					## #26770 , #25025 #478 - end
 					## #34168 - end
 				</tr>
 				<tr>
@@ -1015,12 +949,8 @@ u.underline {
 					<td class="text_family_red">RM $!bondAmt</td>
 				</tr>
 				<tr>											
-					  
-																
 					<td valign="top" align="left" class="submenu_padding"><span class="text_family_red">7.4 Bentuk Bon Pelaksanaan</span></td>
 					<td valign="top" class="text_family_red">:</td>																	  
-														
-																						  
 					<td class="text_family_red" style="text-align:justify;">Jaminan Bank/Bank Islam/Bank Pembangunan Malaysia Berhad; atau Jaminan Syarikat Kewangan; atau Jaminan Insurans/Takaful</td>
 				</tr>
 				<tr valign="top">
@@ -1047,11 +977,7 @@ u.underline {
 						<table>
 								<tr>
 									<td align="center" style="vertical-align: top;" class="text_family_header">8. </td>
-																				 
 									<td class ="text_header_submenu">No. Kod Majikan PERKESO/No. Pendaftaran KWSP/<span class="text_header_submenu_red">*Polisi Insurans (jika berkaitan)</span></td>
-			  
-																																										   
-			 
 								</tr>
 						</table>
 					</td>
@@ -1077,7 +1003,6 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family">8.2	 No. Pendaftaran KWSP</span></td>
 					<td class="text_family">:</td>
-					
 					<td>
 						<table border="0" cellpadding="0" cellspacing="0" width="100%">
 							 <tr>
@@ -1108,7 +1033,7 @@ u.underline {
 					<td class="text_family_red">Meliputi tempoh kontrak</td>
 				</tr>
 				
-				##25025 - end		
+				##26770 , #25025 - end		
 
 				<tr>
 					<td colspan="3">
@@ -1131,13 +1056,7 @@ u.underline {
 					<td class="text_family_red">
 					    <table>
 					      <tr style="margin-bottom:1px;" align="bottom"> 
-																					
-							
 					       		<td align="bottom" class="dottedBorderRed"><span class="text_family_small" style="text-align:justify;"><br/>Formula ditentukan sendiri oleh Agensi. Tetapi hendaklah dinyatakan secara <i>upfront</i> kepada syarikat dalam dokumen pelawaan</span></td>	
-						 
-				 
-																																																							  
-				  
 					      </tr>
 					    </table>
 					</td>
@@ -1174,12 +1093,12 @@ u.underline {
 				</tr>
 				<tr style="page-break-inside: avoid;">
 					<td align="left" class="submenu_padding">
-						## #25025-start
+						## #26770 , #25025-start
 						<table class="text_family">
 							<td align="center" style="vertical-align: top;">10.1 </td>
 							<td>Tertakluk kepada pelaksanaan Program PROT&Eacute;G&Eacute;-RTW</td>
 						</table>
-						## #25025-end	
+						## #26770 , #25025-end	
 					</td>
 					<td valign="top">:</td>
 					<td valign="top" class="text_family">YA <span class="text_family_small_black">(Berdasarkan nilai ambang yang ditetapkan dalam PP/PK1)</span></td>
@@ -1277,7 +1196,7 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
 				</tr>
-				##25025 note 579 - start
+				##26770 , #25025 note 579 - start
 				<tr>
 						<td colspan="3">
 						<br/><br/>
@@ -1312,7 +1231,7 @@ u.underline {
 										<td class="text_family_red">_______________________________</td>
 									</tr>
 				</tr>	
-				 ##25025 note 579 - end
+				 ##26770 , #25025 note 579 - end
 				#else
 				<tr>
 						<td colspan="3">
@@ -1356,7 +1275,7 @@ u.underline {
 					<td align="left" class="submenu_padding"><span
 						class="text_family_small"><i>*potong mana yang tidak berkenaan</i></span></td>
 				</tr>
-				##25025 note 579 - start
+				##26770 , #25025 note 579 - start
 				<tr>
 						<td colspan="3">
 						<br/><br/>
@@ -1391,7 +1310,7 @@ u.underline {
 										<td class="text_family_red">_______________________________</td>
 									</tr>
 				</tr>	
-				##25025 note 579 - end
+				##26770 , #25025 note 579 - end
 			  #end	
 			</table>
 		</tr>
@@ -1406,17 +1325,6 @@ u.underline {
 				
 				<p style="text-align:left;">
 					<span class="text_family">
-										  
-									  
-															
-															
-								 
-										   
-			
-		
-	
-								
-							   
 						Ketua Pegawai Eksekutif<br/>
 						Ibu Pejabat Lembaga Hasil Dalam Negeri Malaysia<br/>
 						Menara Hasil<br/>
@@ -1425,7 +1333,6 @@ u.underline {
 						(u.p.: Pengarah Jabatan Pematuhan Cukai) 
 					</span>
 				</p>
-				
 				<p style="text-align:left;">
 					<span class="text_family">
 						Ketua Pengarah Kastam<br/>
@@ -1437,7 +1344,7 @@ u.underline {
 						(u.p.: Pengarah Bahagian Cukai Dalam Negeri (SST)) 
 					</span>
 				</p>
-				## #25025 #478 - start
+				## #26770 , #25025 #478 - start
 				<p style="text-align:left;">
 					<span class="text_family">
 						Sekretariat Professional Training and Education for Growing Entrepreneurs (PROT&Eacute;G&Eacute;)<br/>
@@ -1448,8 +1355,8 @@ u.underline {
 						(u.p.: Ketua Sekretariat PROT&Eacute;G&Eacute;)
 					</span>
 				</p>
-				## #25025 #478 - end
-				## #25025 - start
+				## #26770 , #25025 #478 - end
+				## #26770 , #25025 - start
 				<p style="text-align:left;">
 				   <span class="text_family">
 						Ketua Pegawai Eksekutif <br/>
@@ -1460,7 +1367,7 @@ u.underline {
 						(u.p.: Ketua Unit Forensik Majikan dan Hubungan Luar, Seksyen Operasi)
 					</span
 				</p>
-				## #25025 - end
+				## #26770 , #25025 - end
 			</td>
 		</tr>
 	</table>
@@ -1499,7 +1406,9 @@ u.underline {
 				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
+							## 36085 - start
+							<th class="text_family" style="font-weight: bold; color:black;">Zon</th> 
+							## 36085 - end 
 						#end
 						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
@@ -1551,7 +1460,9 @@ u.underline {
 				<table width='100%' border="1" cellspacing="-1">
 					<tr bgcolor="#6d839b">
 						#if ($isZonal)
-							<th class="text_family" style="font-weight: bold; color:black;">Zone</th> 
+							## 36085 - start
+							<th class="text_family" style="font-weight: bold; color:black;">Zon</th> 
+							## 36085 - end 
 						#end
 						<th class="text_family" style="font-weight: bold; color:black;">Nama Item</th>
 						<th class="text_family" style="font-weight: bold; color:black;">Kuantiti</th>
@@ -1583,7 +1494,8 @@ u.underline {
 	</tr>
 </table>
 #end
-
+## #26770 , #25025 - end 
+## ------------------------------------------------------------------------------- START 26130 -----------------------------------------------------------------------------------
 #if ($scLoa.scLoiLoa.docType != "PR")
 <div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
