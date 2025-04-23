@@ -778,20 +778,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @param supplier
 	 */
 	private void mofUserAction(SmSupplier supplier){
-		Map<String,String> mofActionMap = new HashMap<String, String>();
+		Map<String,String> mofActionMap = new HashMap<>();
 		
 		SmCompanyBasic companyBasic = retrieveSmCompanyBasic(supplier.getSupplierId());
 		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
-				//String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
-				//String softCertImg = getLabelFromProperties("lbl.sm.softcert.request.image");
-				
 				mofActionMap.put("SC", MOF_SOFTCERT_REQUEST);
 			}
 			
 			String catalogue = checkCatalogueUpload(supplier.getSupplierId()); 
 			if(catalogue == null){
-				//mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
 				mofActionMap.put("CU", CATALOGUE_MAINTENANCE_PAGE);
 			}else{
 				if(!catalogue.equalsIgnoreCase(CATALOGUE_PUBLISHED)){
@@ -807,10 +803,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofReqDTO.setLoginId(pmUser.getLoginId());
 				Integer exisitingBasicMOFFlg = SmServiceLookup.getMofAccountSO().checkExpiredDowngradedToBasic(mofReqDTO).getBasicMOFRenewFlg();
 				log.info("This is the value of the integer" + exisitingBasicMOFFlg);
-				if (exisitingBasicMOFFlg != my.ep.constant.sm.SupplierManagementConst.RECORD_STATUS_DELETED) {
-					if (exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
-						mofActionMap.put("RNMOF", RENEW_MOF);
-					}
+				//#38116
+				if (exisitingBasicMOFFlg != null && exisitingBasicMOFFlg == my.ep.constant.sm.SupplierManagementConst.MOF_CAN_RENEW) {
+					mofActionMap.put("RNMOF", RENEW_MOF);
 				}
 			}	
 		}

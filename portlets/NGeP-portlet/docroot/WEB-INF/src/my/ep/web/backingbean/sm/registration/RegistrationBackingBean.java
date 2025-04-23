@@ -668,10 +668,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(this.getManagedBean().getSmPersonnel() != null ){
 					if(suppOwner.getIdentificationNo() != null){
 						//32851 - start
-						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						reqDTO.setDirectorIdNo(suppOwner.getIdentificationNo());
 						SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
-								.retrievePersonBlacklistByIdentificationNO(reqDTO).getPersonBlacklist();
+								.retrieveValidBlacklist(suppOwner.getIdentificationNo()).getPersonBlacklist();
 						if(ban != null){
 							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 						}
@@ -4590,6 +4588,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().setAgreeTC(false);
 		getManagedBean().setValidateWithSSM(true);
 		getManagedBean().setCompanyValidWithSSM(false);
+		//#37900 -start
+		getManagedBean().getSmSupp().setRegNo(null);
+		getManagedBean().getSmSupp().setBusinessType(null);
+		getManagedBean().getSmAppl().setSupplierType(null);
+		//#37900 -end
 		return termAndCondition;
 
 	}
