@@ -8,8 +8,11 @@
 	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/> <br/>
 	<!-- #25002 - start added new instruction -->
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.with.supplement.process']}" escape="false"/><br/><br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.with.supplement.process']}" escape="false"/><br/>
 	<!-- #25002 - end added new instruction -->
+	<!-- #34097 start -->
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.with.supplement.process.info']}" escape="false"/><br/>
+	<!-- #34097 end -->
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth170">
 				<p:outputLabel value="#{lbl['lbl.ct.amendment.type']}"  styleClass="required"/>
 			<h:panelGrid columns="3">
