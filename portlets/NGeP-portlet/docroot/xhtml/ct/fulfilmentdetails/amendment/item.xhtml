@@ -807,7 +807,7 @@
 	</p:dialog>
 	<!-- #28854 end - Display item specification as defined in LOA -->
 	
-	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract">
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true" rendered="#{!ctBackingBean.managedBean.viewContract}">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -852,7 +852,7 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadItemDlg.show();return false;"
 					update="lampiranItem, uploadItemDlg" value="#{lbl['lbl.txt.attach.files']}"
-					disabled="#{ctBackingBean.managedBean.viewContract
+					disabled="#{(ctBackingBean.managedBean.viewContract)
 						or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}" />
 			</td>
 		</tr>
@@ -880,7 +880,7 @@
 									styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onsuccess="deleteItemAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 									rendered="#{!ctBackingBean.managedBean.viewContract}"
-									disabled="#{ctBackingBean.managedBean.viewContract
+									disabled="#{(ctBackingBean.managedBean.viewContract)
 										or (ctBackingBean.managedBean.taskId != null and !bpmTasklistBackingBean.managedBean.claim)}">
 			   						<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
