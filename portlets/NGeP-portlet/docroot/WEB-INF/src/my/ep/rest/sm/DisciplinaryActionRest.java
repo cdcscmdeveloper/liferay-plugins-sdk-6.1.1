@@ -1,6 +1,7 @@
 package my.ep.rest.sm;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -215,7 +216,7 @@ public class DisciplinaryActionRest {
 		}
 	}
 	
-	private void suspendEndDateAfterToday(SmDisciplinaryAction suspendList, Date todayWithZeroTime){
+	private void suspendEndDateAfterToday(SmDisciplinaryAction suspendList, Date todayWithZeroTime) throws ParseException{
 		// 32558: disciplinary action - 26238 Start
 		PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
 		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
@@ -240,6 +241,13 @@ public class DisciplinaryActionRest {
 				// is for imposed suspen when supplier
 				// finish pending txn
 				if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
+					DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+					Date today = formatter.parse(formatter.format(new Date()));
+					if(completedPendingSmDa.getStartDate().compareTo(today) == 0){
+						completedPendingSmDa.setFutureImposed(true);
+					} else {
+						completedPendingSmDa.setFutureImposed(false);
+					}
 					completedPendingSmDa.getSmSupplier();
 					SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 				}
