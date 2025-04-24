@@ -188,6 +188,17 @@
 				</f:facet>
 				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.regNo}" />
 			</p:column>
+			 
+			<!-- #24819  -->
+			<p:column styleClass="column-align-center">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.new.business.regNo']}" />
+				</f:facet>
+				<h:outputText value="#{registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" 
+					rendered ="#{!empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}"/> 
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" 
+					rendered ="#{empty registrationBackingBean.managedBean.smSupp.ssmNewRegNo}" /> 
+			</p:column>
 			
 			<p:column  styleClass="column-align-center">
 				<f:facet name="header">
