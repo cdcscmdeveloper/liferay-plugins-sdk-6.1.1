@@ -26,6 +26,17 @@
 						</tr>
 					</table></td>
 			</tr>
+			<!-- 29982 start -->
+			<tr>
+			    <td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+				</td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="85"
