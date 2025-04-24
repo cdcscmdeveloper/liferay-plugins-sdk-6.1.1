@@ -100,10 +100,16 @@
 				</h:panelGroup>
 				<c:if
 					test='#{invoiceBackingBean.managedBean.buttonVal eq BpmOutcomeConstant.bpmView and !invoiceBackingBean.managedBean.isHyperLinkPage()}'>
-					<td colspan="4" style="text-align: right"><p:commandLink
-							value="#{lbl['lbl.td.doc.trackingDiary']}"
+					<td colspan="4" style="text-align: right"><ui:remove>START : #35508</ui:remove>
+						<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}"
+							action="#{auditFulfilmentBackingBean.redirectToAuditTrailView(invoiceBackingBean.managedBean.invoice.invoiceId,ParameterConst.doctypeInvoice)}"
+							immediate="true" 
+							rendered="#{auditFulfilmentBackingBean.isAuditTrailView()}"/>
+						&#160; <ui:remove>END : #35508</ui:remove>
+						<p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
 							action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeInvoice,invoiceBackingBean.managedBean.invoice.invoiceId)}"
 							immediate="true" /></td>
+
 				</c:if>
 				<h:panelGroup id="printButtonInv"
 					rendered="#{invoiceBackingBean.managedBean.invoice.status.statusId != FulfilmentStatusCont.inPendingInvoice}">
