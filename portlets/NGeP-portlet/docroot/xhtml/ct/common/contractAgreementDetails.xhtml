@@ -49,7 +49,7 @@
 				</p:outputPanel>
 				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
-			<p:column style="width:60%;">
+			<p:column style="width:58%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.agreement.attachment.doc']}" />
 				</f:facet>
@@ -136,14 +136,14 @@
 				</p:outputPanel>
 				<!-- Enhancement 29418 - shaqimi end 11102022 -->
 			</p:column>
-			<p:column style="text-align:center; width:10%; white-space:normal;">
+			<p:column style="text-align:center; width:12%; white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.menu.view.amendment.details']}" />
 					<ac:iconTooltip
 						value="#{lbl['lbl.ct.tooltip.view.amendment.details']}" />
 				</f:facet>
 				<!-- Enhancement 29418 - shaqimi end 11102022 -->
-				<p:commandButton
+				<p:commandButton style="text-align:center;white-space:normal;"
 					rendered="#{agreement.status.statusId == CtStatusConst.saComplete or agreement.status.statusId == CtStatusConst.saPendingCreation
 						or agreement.status.statusId == CtStatusConst.saPendingApproval or agreement.status.statusId == CtStatusConst.saPendingRevision 
 						or agreement.status.statusId == CtStatusConst.saPendingRevisionApproval}"
