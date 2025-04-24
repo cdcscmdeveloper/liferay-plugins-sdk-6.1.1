@@ -34,11 +34,13 @@ public class SmPtjPopupManagedBean extends BaseManagedBean {
 	private LogKey logKey = new LogKey();
 
 	private Long ministryProfileId;
+	private boolean disabledPtjGroup;
 	private Long jabatanProfileId;
 	private String ptjCodeNameKey;
 	private String ptjCodeNameValue;
 	private transient IPagingDataModel<PmOrgProfile> orgProfileDataModel = new OrgProfileDataModel();
 	private PmOrgProfile selectedPtj;
+	private boolean disabledSelect;
 
 	public Long getMinistryProfileId() {
 		return ministryProfileId;
@@ -46,6 +48,14 @@ public class SmPtjPopupManagedBean extends BaseManagedBean {
 
 	public void setMinistryProfileId(Long ministryProfileId) {
 		this.ministryProfileId = ministryProfileId;
+	}
+
+	public boolean isDisabledPtjGroup() {
+		return disabledPtjGroup;
+	}
+
+	public void setDisabledPtjGroup(boolean disabledPtjGroup) {
+		this.disabledPtjGroup = disabledPtjGroup;
 	}
 
 	public Long getJabatanProfileId() {
@@ -134,6 +144,14 @@ public class SmPtjPopupManagedBean extends BaseManagedBean {
 
 	public void setSelectedPtj(PmOrgProfile selectedPtj) {
 		this.selectedPtj = selectedPtj;
+	}
+
+	public boolean isDisabledSelect() {
+		return disabledSelect;
+	}
+
+	public void setDisabledSelect(boolean disabledSelect) {
+		this.disabledSelect = disabledSelect;
 	}
 
 }

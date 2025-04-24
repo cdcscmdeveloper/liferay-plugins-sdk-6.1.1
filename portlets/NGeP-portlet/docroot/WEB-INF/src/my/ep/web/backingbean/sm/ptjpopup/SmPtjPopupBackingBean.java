@@ -6,8 +6,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.context.RequestContext;
-
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.exception.EpException;
@@ -17,6 +15,8 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.ptjpopup.SmPtjPopupManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
+import org.primefaces.context.RequestContext;
 
 /**
  * BackingBean for Sm PTJ Popup
@@ -30,11 +30,7 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	private static final long serialVersionUID = 1L;
 
 	public void initPopup() {
-		this.getManagedBean().setMinistryProfileId(null);
-		this.getManagedBean().setJabatanProfileId(null);
-		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
-		this.getManagedBean().setPtjCodeNameValue(null);
-		this.getManagedBean().getOrgProfileDataModel().resetData();
+		reset();
 	}
 
 	public SelectItem[] getMinistryDropdown() {
@@ -42,7 +38,12 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	}
 
 	public SelectItem[] getPtjGroupDropdown() {
-		return PmCommonUtil.getJabatanDropdown(getManagedBean().getMinistryProfileId());
+		if (null != this.getManagedBean().getMinistryProfileId()) {
+			this.getManagedBean().setDisabledPtjGroup(false);
+		} else {
+			this.getManagedBean().setDisabledPtjGroup(true);
+		}
+		return PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId());
 	}
 
 	public static SelectItem[] getPtjCodeNameDropDown() {
@@ -55,13 +56,9 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	}
 
 	public void search() {
-		if (null == this.getManagedBean().getMinistryProfileId()) {
-			throw new EpException(MessageConst.ERROR_775221);
-		} else if (null == this.getManagedBean().getJabatanProfileId()) {
-			throw new EpException(MessageConst.ERROR_775222);
-		} else if (null != this.getManagedBean().getPtjCodeNameValue() && !this.getManagedBean().getPtjCodeNameValue().isEmpty()
+		if (null != this.getManagedBean().getPtjCodeNameValue() && !this.getManagedBean().getPtjCodeNameValue().isEmpty()
 				&& this.getManagedBean().getPtjCodeNameValue().length() <= 3) {
-			throw new EpException(MessageConst.ERROR_775223);
+			throw new EpException(MessageConst.ERROR_775221);
 		}
 		this.getManagedBean().getOrgProfileDataModel().reloadData();
 	}
@@ -69,9 +66,17 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	public void reset() {
 		this.getManagedBean().setMinistryProfileId(null);
 		this.getManagedBean().setJabatanProfileId(null);
-		this.getManagedBean().setPtjCodeNameKey(null);
+		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
 		this.getManagedBean().setPtjCodeNameValue(null);
-		this.getManagedBean().getOrgProfileDataModel().resetData();
+		this.getManagedBean().setDisabledSelect(true);
+	}
+
+	public void enableSelect() {
+		if (null != this.getManagedBean().getSelectedPtj()) {
+			this.getManagedBean().setDisabledSelect(false);
+		} else {
+			this.getManagedBean().setDisabledSelect(true);
+		}
 	}
 
 	public void okAction(String methodActionStr) {
