@@ -27,8 +27,10 @@
 		<ui:include src="/xhtml/sc/evaluation/checklistHeader.xhtml" />
 	</p:panel>
 
-
-	
+	<ui:remove>#11104 -start-</ui:remove>
+	<ui:param name="isSampleAll"
+		value="#{evaluationBackingBean.checklistSample(evaluationBackingBean.managedBean.scQtChecklist)}"></ui:param>
+	<ui:remove>#11104 -end-</ui:remove>
 	<ui:include
 		src="technicalEvaluationStgaeOtherchecklistSupplierList.xhtml" />
 
