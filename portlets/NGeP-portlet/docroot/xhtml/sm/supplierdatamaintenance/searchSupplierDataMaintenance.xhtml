@@ -53,7 +53,7 @@
 					<!-- 32792 END -->
 					    <!-- new requirement for wording #29778 -START -->
 					<p:column headerText="#{lbl['lbl.sm.accountstatus']}" style="width :25%;white-space : normal">
-						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE}" />
+						<h:outputText value="#{lbl['lbl.sm.mof.status.active']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_ACTIVE and empty smSupplier.typeDisciplinaryAction}" />
 						<h:outputText value="#{lbl['lbl.sm.mof.status.expired']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_EXPIRED and smSupplier.pendingSuspend ne true and smSupplier.blacklistStats ne true}" /> <!-- #32822 -->
 						<h:outputText value="#{lbl['lbl.sm.mof.status.not.applicable']}" rendered="#{smSupplier.mofStatus eq SupplierManagementConst.MOF_STATUS_NOT_AVAILABLE}" />
 						<!-- bug #28278 -START @harith -->
