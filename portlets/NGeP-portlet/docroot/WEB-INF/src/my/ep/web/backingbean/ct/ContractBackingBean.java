@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -123,6 +122,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus; //#24333
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -4577,26 +4577,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		Locale locale = null;
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-		if (getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null
-				|| getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue() == 0) {
+		Double bondAmt = getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue();
+
+		if (bondAmt == null || bondAmt == 0.0) {
 			return "";
 		}
 
+		DecimalFormat df = new DecimalFormat("#.00");
+		String formattedAmount = df.format(bondAmt);
+
 		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.ENG_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");		
-			return NumberWordUtilEn.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
+			return NumberWordUtilEn.convert(formattedAmount);
 		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			locale = new Locale(lang, ReportConst.MALAYSIA_COUNTRY_CODE);
-			DecimalFormat df = new DecimalFormat("#.00");
-			return NumberWordUtil.convert(df.format(
-					getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()));
-		}else{
-			return "";
+			return NumberWordUtil.convert(formattedAmount);
 		}
+
+		return "";
 	}
 
 	//#24333 - Start
@@ -4678,20 +4675,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return true, if performance bond is Pending Amendment With Supplemental Submission
 	 *         false, if performance bond is not Pending Amendment With Supplemental Submission
 	 * */
-	public boolean isPendingSupplementalContractLetter(){
-		if(getManagedBean().getContractVer().getStatus() != null &&
-				(getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
-				|| getManagedBean().getContractVer().getStatus().getStatusId() 
-				== ContractStatusConst.FA_PENDING_VERIFICATION.longValue())){								
-			return true;
+	public boolean isPendingSupplementalContractLetter() {
+		PmStatus status = getManagedBean().getContractVer().getStatus();
+		if (status == null) {
+			return false;
 		}
-		return false;
-		
+
+		long statusId = status.getStatusId();
+		return statusId == ContractStatusConst.FA_PENDING_LOA_SUBMISSION.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_APPROVAL.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_VERIFICATION.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION.longValue()
+				|| statusId == ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.longValue();
 	}
 	//#24333 - End
 	
