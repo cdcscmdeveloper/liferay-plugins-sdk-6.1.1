@@ -37,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -5042,37 +5043,41 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
 								&& (answer.getTplSpecQuestion().getClItem() != null)) {
-							// #25025 - Start.
+							// #25025 - Start fixing sonarlint
 							List<String> specList = null;
-							boolean addSpecList = false;
+
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
-								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
-										.getSpecQuestionId()) {
-									addSpecList = true;
-									continue;
+								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
+									continue; // Skip null values to prevent
+												// NullPointerException
+
 								}
-								if (addSpecList) {
-									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
-										if (specList == null) {
-											specList = new ArrayList<>();
-										}
-										//start #29006 - note 850,852,856
-										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
-									
-										specValue = specValue.replace("<", "#60;");
-										specValue = specValue.replace(">", "#62;");
-										specValue = specValue.replace("&", "#and;");
-										
-										specList.add(specValue);
-										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
-										//end #29006 - note 850,852,856
-									} else {
-										break;
+
+								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
+										.getTplSpecQuestion().getSpecQuestionId())
+										&& SSTConstant.specification.equals(tplSpecAns.getTplSpecQuestion()
+												.getQuestionType())
+										&& tplSpecAns.getTplSpecQuestion().getClSpecDetail() != null) {
+
+									if (specList == null) {
+										specList = new ArrayList<>();
 									}
+
+									//start #29006 - note 850,852,856
+									String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+								
+									specValue = specValue.replace("<", "#60;");
+									specValue = specValue.replace(">", "#62;");
+									specValue = specValue.replace("&", "#and;");
+									
+									specList.add(specValue);
+									tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+									//end #29006 - note 850,852,856
+
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
-							// #25025 - End.
+							// #25025 - End fixing sonarlint
 
 							/** This code is for LOA with Single Item Details **/
 
@@ -5219,28 +5224,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 
 						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
 								&& (answer.getTplSpecQuestion().getClItem() != null)) {
-							// #25025 - Start.
+							// #25025 - Start fixing sonarlint
 							List<String> specList = null;
-							boolean addSpecList = false;
+
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
-								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
-										.getSpecQuestionId()) {
-									addSpecList = true;
-									continue;
+								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
+									continue; // Skip null values to prevent
+												// NullPointerException
 								}
-								if (addSpecList) {
-									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
-										if (specList == null) {
-											specList = new ArrayList<>();
-										}
-										specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
-									} else {
-										break;
+								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
+										.getTplSpecQuestion().getSpecQuestionId())
+										&& SSTConstant.specification.equals(tplSpecAns.getTplSpecQuestion()
+												.getQuestionType())
+										&& tplSpecAns.getTplSpecQuestion().getClSpecDetail() != null) {
+
+									if (specList == null) {
+										specList = new ArrayList<>();
 									}
+
+									specList.add(tplSpecAns.getTplSpecQuestion().getClSpecDetail());
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
-							// #25025 - End.
+							// #25025 - End fixing sonarlint
 
 							/** This code is for LOA with Single Item Details **/
 
