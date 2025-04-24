@@ -189,6 +189,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			}else{
 				flOrderId = getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
 			}
+			//38009-Start
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				validateExpectedDeliveryDate();
+			}
+			//38009-End
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				reValidateRetrieveDelAmt();
