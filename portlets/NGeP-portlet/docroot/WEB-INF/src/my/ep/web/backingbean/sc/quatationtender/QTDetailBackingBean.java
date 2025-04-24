@@ -3558,11 +3558,14 @@ public class QTDetailBackingBean extends
 							.getScQtDocReportList());
 				}
 				if (this.getManagedBean().getQt().isSampleReq()) {
+					//11104 -start-
 					this.getManagedBean().setSubmit(true);
+					 //11104 -end-
 					retrieveScheduleTabDtl();
 					qt.setScQtSampleSubmission(this.getManagedBean()
 							.getScQtSampleSubmissionList());
 					qt.setSampleClosingDate(qt.getClosingDate());
+				    
 				} else {
 					retrieveScheduleTabDtl();
 					
@@ -3767,10 +3770,10 @@ public class QTDetailBackingBean extends
 		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod updated error message
-			List<ScQtApproverSettings> approverSettings = this.getManagedBean().getPublicationApproval()
-					.getApproverSettings();
+			ScQtApproval approverPublication = this.getManagedBean().getPublicationApproval();
 
-			if (CollectionUtils.isEmpty(approverSettings)) {
+			if (approverPublication == null 
+					|| CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
 				throw new EpException(MessageConst.ERROR_775174);
 			}
@@ -3781,7 +3784,7 @@ public class QTDetailBackingBean extends
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)
 					) {
 
-				validatePublicationApproverInactive(approverSettings);
+				validatePublicationApproverInactive(approverPublication.getApproverSettings());
 				validateDOAInactive();
 				validateBPKInactive();
 			}
@@ -7000,6 +7003,9 @@ public class QTDetailBackingBean extends
 					if (isMaintancePendingChklistStatus) {
 						retrieveDocumentTabDtl();
 					} else {
+						//11104 -start-
+						this.getManagedBean().setSubmit(Boolean.FALSE);
+						//11104 -end-
 						retrieveScheduleTabDtl();
 					}
 				}
@@ -7280,8 +7286,11 @@ public class QTDetailBackingBean extends
 			
 			// 11104-start
 			if (this.getManagedBean().getQt().isSampleReq()) {
+	           //11104 -start-
 				this.getManagedBean().setSubmit(true);
+				//11104 -end-
 				retrieveScheduleTabDtl();
+
 			}
 			// 11104-End
 
@@ -10647,7 +10656,9 @@ public class QTDetailBackingBean extends
 							
 							if (null == approverAction || null == approverAction.getParameterId()) {
 								this.getManagedBean().setResetBpkCurrentArea(false);
-								
+								//25635,37892 -start-
+								setOtherApprovalLoaded();
+								//25635,37892 -end-
 								throw new EpException(MessageConst.ERROR_760149);
 							}
 
@@ -11588,4 +11599,19 @@ public class QTDetailBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 	}
 	// 29732 end
+
+
+	// 37892,25635 -start-
+		/**
+		 * check other approval tab loaded during clone.
+		 */
+		private void setOtherApprovalLoaded() {
+			List<TabBean> approvalOthersTab = this.getManagedBean()
+					.getTabOtherApproval();
+			if (CollectionUtils.isEmpty(approvalOthersTab)) {
+				this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+			}
+		}
+		// 37892,25635 -end-
+
 }
