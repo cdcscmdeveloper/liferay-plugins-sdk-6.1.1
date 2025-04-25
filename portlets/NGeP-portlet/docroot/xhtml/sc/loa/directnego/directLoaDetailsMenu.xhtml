@@ -35,6 +35,9 @@
 	<!-- #12487 START -->
 	<ui:param name = "isLoaSubmissionOrApproval" value = "#{(directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION) || (directLOABackingBean.managedBean.scLoa.pmStatus.statusId eq QTStatusConst.LOA_PENDING_REVISION)}"></ui:param>
 	<!-- #12487 END -->
+	<ui:remove>#29766 Start Vinod</ui:remove>
+	<ui:param name = "isOldpK7selected" value = "#{directLOABackingBean.checkOldPK7PselectedToDisable()}"/>
+	<ui:remove>#29766 End Vinod</ui:remove>
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}"
 		toggleable="true">
 		
@@ -252,7 +255,9 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="procMode" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.procurementMode.parameterId}"
 								style="margin-bottom:5px;width:246px;"
@@ -278,7 +283,9 @@
 				</td>
 				<td>
 					<c:choose>
-						<c:when test="#{!isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 Start Vinod added isPendingRevApprovalStatus</ui:remove>
+						<c:when test="#{!isPendingRevApprovalStatus and !isPendingVerification and !isPendingApprovalStatus and !directLOABackingBean.managedBean.readOnly}"><!-- #34162 Added isPendingVerification Vinod -->
+						<ui:remove>#29766 End Vinod</ui:remove>	
 							<p:selectOneMenu id="qtType" required="true"
 								value="#{directLOABackingBean.managedBean.scLoa.qtType.parameterId}"
 								style="margin-bottom:5px;width:206px;"
@@ -304,6 +311,11 @@
 									listener="#{directLOABackingBean.isPk7Periodic()}"
 									partialSubmit="true" 
 									update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 Start Vinod</ui:remove>
+								<p:ajax event="change"
+									listener="#{directLOABackingBean.checkQTTypePk7WpItem()}"
+									update="bondReqPG, menuItems, agreementReqPG" />
+								<ui:remove>#29766 End Vinod</ui:remove>
 							</p:selectOneMenu>
 							<p:message id="qtTypeMsg" for="qtType" display="icon" />
 						</c:when>
@@ -359,7 +371,9 @@
 					<h:panelGroup id="reasonPG">
 						<c:if test="#{directLOABackingBean.isPbDropDown() || directLOABackingBean.isPk7Periodic()}">
 							<c:choose>
-							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 Start Vinod added isOldpK7selected</ui:remove>
+							<c:when test="#{!isEditableStatus or directLOABackingBean.managedBean.readOnly or isOldpK7selected}" ><!-- #35335_haziq -->
+							<ui:remove>#29766 End Vinod</ui:remove>
 							<p:inputText 
 								value="#{directLOABackingBean.getReasonDesc(directLOABackingBean.managedBean.scLoa.justificationType.reasonCode)}"
 								size="35" disabled="true" />

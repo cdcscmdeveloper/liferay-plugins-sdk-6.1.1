@@ -1727,6 +1727,8 @@ public void saveComplianceSample() {
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				reqDTO.setEvalStage(null);
 				reqDTO.setProposalChecklistSearchBean(null);
+				
+				reqDTO.setProposalChecklist(proposalCheckList); //Bug #38123 CRM#5224901: MOE issue 16/4/2025
 				resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 
 				if (null != resDTO
@@ -17175,6 +17177,46 @@ private void retriveCommitteeRemarksList(){
 		}
 		this.getManagedBean().getNoOfContractsProposalScore().setUserScore(sampleScore);
 	}//#11104_End
+	
+	// 11104 -start-
+	/**
+	 * check checklist type is Sample or others.
+	 * 
+	 * @param checkList
+	 * @return boolean
+	 */
+	public boolean checklistSample(ScQtCheckList checkList) {
+		String paramCode = checkList.getDefinationType().getParameterCode();
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				.equalsIgnoreCase(paramCode)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	// 11104 -end-
+
+	// 11104 -start-
+	/**
+	 * fetch sample sample status description based on statusId.
+	 * 
+	 * @param proposalCheckList
+	 * @return String
+	 */
+	public String sampleStatusDesc(ScQtProposalChecklist proposalCheckList) {
+		Long statusId = null != proposalCheckList.getEvaluationStatus() ? proposalCheckList
+				.getEvaluationStatus().getStatusId() : QTStatusConst.PR_PENDING;
+		if (QTStatusConst.PR_PENDING.equals(statusId)) {
+			return ResourceBundleUtils.getMessage(
+					QTConstants.SAMPLE_PENDING_SUBMISSION,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}
+		return getStatusDescById(statusId);
+	}
+
+	// 11104 -end-
+
 
 	/** #21695 Farid */	
 	/**

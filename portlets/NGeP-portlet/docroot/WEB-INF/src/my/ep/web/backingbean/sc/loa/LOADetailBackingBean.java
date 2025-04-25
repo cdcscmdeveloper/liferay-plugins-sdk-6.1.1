@@ -12280,6 +12280,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												// supplier respond and make new
 												// supplier offer
 												map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
+												answerRemark = VmUtil.getInstance().escapeAndWrapText(
+														answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF);
+
 												if (indi == scLoiLoaItem.getZoneNameList().size()){
 													map.put(SSTConstant.LAST_INDEX_WIP, "true");
 												}
@@ -12290,6 +12293,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												// supplier respond but no
 												// changes
 												map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
+												answerRemark = VmUtil.getInstance().escapeAndWrapText(
+														answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF);
+
 												map.put(SSTConstant.IS_WIP, "true");
 												if (indi == scLoiLoaItem.getZoneNameList().size()){
 													map.put(SSTConstant.LAST_INDEX_WIP, "true");

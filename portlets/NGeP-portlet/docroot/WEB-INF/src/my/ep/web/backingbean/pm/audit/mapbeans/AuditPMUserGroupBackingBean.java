@@ -26,6 +26,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
 	String docNo;
+	String docType;
 	BigInteger docId;
 	BigInteger docGroupId;
 	String groupName;
@@ -55,6 +56,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		this.roleCode = roleCode;
 		this.docGroupId = BigInteger.valueOf(userGroup.getUserGroupId());
 		this.docNo = userGroup.getGroupCode();
+		this.docType = userGroup.getGroupName();
 		this.groupRole = userGroup.getRoleCode(); // FL_APPROVER,RN_APPROVER
 
 		/* update UserGroupUsers List */
@@ -141,7 +143,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditConst.PM_AUD_OUSRG);
+		dtlObj.setDocType(this.docType);
 		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_OUSRG_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
