@@ -153,9 +153,8 @@
 		<td>
 				<p:outputPanel id="divisionDropdownPanelId">
 				<ui:fragment rendered="#{cc.attrs.facility.smAddress.pmState.adoptDivision}">
-				<!-- #34159 - START -->
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;background-color:white;"
-					id="divisionId" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+					id="divisionId" 
 					label="#{lbl['lbl.sm.division']}"
 					value="#{cc.attrs.facility.smAddress.divisionId}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
@@ -166,8 +165,6 @@
 					listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
 	                 update="districtId,cityId"/>
 				</p:selectOneMenu>
-				<p:message id="divisionIdMsg" for="divisionId" showSummary="true" showDetail="false" display="icon" />
-				<!-- #34159 - END -->
 				</ui:fragment>
 			</p:outputPanel>
 		</td>

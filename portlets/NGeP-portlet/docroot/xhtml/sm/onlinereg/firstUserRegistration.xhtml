@@ -411,11 +411,9 @@
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
-							<!-- #34159 - START - change reset value to true -->
 							<p:ajax event="change"
-								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',true)}"
+								listener="#{registrationBackingBean.populateDistrictByAddType('permenant',false)}"
 								update="divisionRegLabelPanelId,divisionRegDropdownPanelId,cmbPermDistrict,cmbPermCity" />
-							<!-- #34159 - END -->
 						</p:selectOneMenu>
 						<p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 					<!--#30936-END-->
@@ -436,8 +434,7 @@
 				<td class="tdContent">
 				<p:outputPanel id="divisionRegDropdownPanelId">
 					<ui:fragment rendered="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.adoptDivision}">
-					<!-- #34159 - START -->
-						<p:selectOneMenu id="cmbPermDivision" required="#{!empty param['disableValidation']}"
+						<p:selectOneMenu id="cmbPermDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDivision.divisionId}"
 						style="width:80%">
@@ -450,8 +447,6 @@
 							listener="#{registrationBackingBean.populateDivisionByAddType('permenant', true)}"
 							update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
-					<p:message id="cmbPermDivisionMsg" for="cmbPermDivision" display="icon" />
-					<!-- #34159 - END -->
 					</ui:fragment>
 				</p:outputPanel>
 				</td>

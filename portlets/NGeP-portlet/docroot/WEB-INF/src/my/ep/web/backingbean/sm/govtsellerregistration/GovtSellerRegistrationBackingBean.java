@@ -809,11 +809,6 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState().setAdoptDivision(false);
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmDivision(null);
-				//#34159 - START - Reset District when change state
-				if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().getDistrictId() !=null){
-					this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmDistrict().setDistrictId(null);
-				}
-				//#34159 - END
 			} 
 			if(states !=null && states.getAdoptDivision()) {
 				getManagedBean().setDivisionBox(false);	
@@ -846,11 +841,6 @@ public class GovtSellerRegistrationBackingBean extends
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSmPermenantAdd().setPmDivision(null);
 				getManagedBean().getSmPermenantAdd().getPmState().setAdoptDivision(false);
-				//#34159 - START - Reset District when change state
-				if(getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId() !=null){
-					getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
-				}
-				//#34159 - END
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -877,14 +867,7 @@ public class GovtSellerRegistrationBackingBean extends
 				
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(true);
 			}else{
-				//#34159 - remove division for non-Sarawak
-				this.getManagedBean().getSmResAdd().setPmDivision(null);
 				getManagedBean().getSmResAdd().getPmState().setAdoptDivision(false);
-				//#34159 - START - Reset District when change state
-				if(getManagedBean().getSmResAdd().getPmDistrict().getDistrictId() !=null){
-					getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
-				}
-				//#34159 - END
 
 			}if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
@@ -913,11 +896,6 @@ public class GovtSellerRegistrationBackingBean extends
 				//#13320 - remove division for non-sarawak
 				this.getManagedBean().getSelectedBranch().getSmAddress().setPmDivision(null);
 				getManagedBean().getSelectedBranch().getSmAddress().getPmState().setAdoptDivision(false);
-				//#34159 - START - Reset District when change state
-				if(this.getManagedBean().getSelectedBranch().getSmAddress().getPmDistrict().getDistrictId() !=null){
-					this.getManagedBean().getSelectedBranch().getSmAddress().setPmDistrict(new PmDistrict());
-				}
-				//#34159 - END
 
 			} if(states !=null && states.getAdoptDivision()) {//13320
 				getManagedBean().setDivisionBox(false);	
