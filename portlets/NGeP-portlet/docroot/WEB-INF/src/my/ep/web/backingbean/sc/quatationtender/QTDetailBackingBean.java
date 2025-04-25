@@ -4220,13 +4220,14 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							.getScQtDocReportList());
 				}
 				if (this.getManagedBean().getQt().isSampleReq()) {
+					//11104 -start-
+					this.getManagedBean().setSubmit(true);
+					 //11104 -end-
 					retrieveScheduleTabDtl();
 					qt.setScQtSampleSubmission(this.getManagedBean()
 							.getScQtSampleSubmissionList());
 					qt.setSampleClosingDate(qt.getClosingDate());
-				    //11104 -start-
-					this.getManagedBean().setSubmit(true);
-					 //11104 -end-
+				    
 				} else {
 					retrieveScheduleTabDtl();
 					
@@ -7749,7 +7750,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					if(isMaintancePendingChklistStatus){
 						retriveFulfilmentDtls();//#29474
 					} else{
-						retrieveScheduleTabDtl();					
+						//11104 -start-
+						this.getManagedBean().setSubmit(Boolean.FALSE);
+						//11104 -end-
+						retrieveScheduleTabDtl();
 					}
 				}//29464-end
 				
@@ -8016,10 +8020,10 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			// 25037 - end
 			if (this.getManagedBean().getQt().isSampleReq()) {//11104-start
-				retrieveScheduleTabDtl();
 				//11104 -start-
 				this.getManagedBean().setSubmit(true);
 				//11104 -end-
+				retrieveScheduleTabDtl();
 				
 			}//11104-End
 			
@@ -11854,6 +11858,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
        						PmParameter approverAction = approvalRequest.get(j).getApproverAction();
 							if (null == approverAction || null == approverAction.getParameterId()) {
 								this.getManagedBean().setResetBpkCurrentArea(false);
+	                            //25635,37892 -start-
+						    	setOtherApprovalLoaded();
+						    	//25635,37892 -end-
 								throw new EpException(MessageConst.ERROR_760149);
 							}
 							
@@ -14050,6 +14057,19 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 
 	// 25791 -end-
+
+	// 37892,25635 -start-
+	/**
+	 * check other approval tab loaded during clone.
+	 */
+	private void setOtherApprovalLoaded() {
+		List<TabBean> approvalOthersTab = this.getManagedBean()
+				.getTabOtherApproval();
+		if (CollectionUtils.isEmpty(approvalOthersTab)) {
+			this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
+		}
+	}
+	// 37892,25635 -end-
 
 
 }

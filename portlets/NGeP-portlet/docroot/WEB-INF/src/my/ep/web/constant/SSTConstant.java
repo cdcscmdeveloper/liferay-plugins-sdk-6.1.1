@@ -98,6 +98,12 @@ public class SSTConstant {
 		public static final String GREATER_THAN_SYMBOL = "&#62;";
 		public static final String AND_SYMBOL = "&#38;";
 		public static final String BREAKLINE ="<br />";
+		public static final String FILE_NO = "fileNo";
+		public static final String UNDERLINE_SHORT = "______________";
+		public static final String MOF_NO = "mofNo";
+		public static final String HEADER_TENDER = "Tender";
+		public static final String HEADER_SEBUT_HARGA = "Sebut Harga";
+		public static final String DOCUMENT_TYPE = "docType";
 		//25025 - end
 		//29006 start
 		
