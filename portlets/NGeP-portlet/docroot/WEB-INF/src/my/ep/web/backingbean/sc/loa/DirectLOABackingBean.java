@@ -16,6 +16,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -176,6 +177,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.EpPortletUtil;	// Bug #35078@Syazani 14/09/2023
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
+import my.ep.web.util.NumberWordUtilEn;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -203,7 +205,6 @@ import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class directLOABackingBean.
  * 
@@ -1794,7 +1795,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
 								.equals(contractType)) {
-					// TODO - filter user based on central contract.
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
 					reqDTO.setOrgProfileId(
@@ -2448,7 +2448,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void onQTSelected(ScQt scQt) {
 		debugLogger("onQTSelected");
-		// TODO ministry name cleared after selected QT.
 		ScLoa loa  = getManagedBean().getScLoa();
 		getManagedBean().setZoneTrees(null);
 		populateMinistryBasedOnLoginUser();
@@ -4334,7 +4333,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						// download from system
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						//TODO generate acknowledgement LOA receipt
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
 					}*/
 				} else if (scLoaReportAttachment != null
@@ -5527,7 +5525,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title);
 
-		context.put("hasLoi", false); // TODO
+		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "";
@@ -8225,7 +8223,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("loaTitle", title);
 		
-		context.put("hasLoi", false); // TODO
+		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "______________";
