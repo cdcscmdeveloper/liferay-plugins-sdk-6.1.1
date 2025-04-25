@@ -76,10 +76,25 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.ct", null));
 		}
+		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
+			this.getManagedBean().setDisableClienType(false);
+		} else {
+			this.getManagedBean().setDisableClienType(true);
+		}
 		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
+	}
+
+	public void clientTypeChange() {
+		if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
+			if (null != this.getManagedBean().getSelectedDraft().getOriAgencyName()
+					&& !this.getManagedBean().getSelectedDraft().getOriAgencyName().isEmpty()) {
+				this.getManagedBean().getSelectedDraft().setAgencyName(this.getManagedBean().getSelectedDraft().getOriAgencyName());
+			}
+		}
 	}
 
 	public void selectAgencyAction(PmOrgProfile orgProfile) {
 		this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
 	}
+
 }

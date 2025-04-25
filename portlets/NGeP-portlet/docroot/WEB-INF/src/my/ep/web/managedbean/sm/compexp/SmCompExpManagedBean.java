@@ -39,6 +39,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
 	private SmCompExpDraft selectedDraft;
 	private String headerTitle;
+	private boolean disableClienType;
+	
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -148,6 +150,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setHeaderTitle(String headerTitle) {
 		this.headerTitle = headerTitle;
+	}
+
+	public boolean isDisableClienType() {
+		return disableClienType;
+	}
+
+	public void setDisableClienType(boolean disableClienType) {
+		this.disableClienType = disableClienType;
 	}
 
 }

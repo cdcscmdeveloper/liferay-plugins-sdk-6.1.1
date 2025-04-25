@@ -57,7 +57,7 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 
 	public void search() {
 		if (null != this.getManagedBean().getPtjCodeNameValue() && !this.getManagedBean().getPtjCodeNameValue().isEmpty()
-				&& this.getManagedBean().getPtjCodeNameValue().length() <= 3) {
+				&& this.getManagedBean().getPtjCodeNameValue().length() < 3) {
 			throw new EpException(MessageConst.ERROR_775221);
 		}
 		this.getManagedBean().getOrgProfileDataModel().reloadData();
@@ -68,6 +68,8 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		this.getManagedBean().setJabatanProfileId(null);
 		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
 		this.getManagedBean().setPtjCodeNameValue(null);
+		this.getManagedBean().setPtjCodeNameValue(null);
+		this.getManagedBean().getOrgProfileDataModel().resetData();
 		this.getManagedBean().setDisabledSelect(true);
 	}
 
