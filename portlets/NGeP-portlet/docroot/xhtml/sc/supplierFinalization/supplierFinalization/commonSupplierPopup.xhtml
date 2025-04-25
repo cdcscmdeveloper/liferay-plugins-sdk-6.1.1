@@ -51,7 +51,7 @@
 						value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag,
 					fn:toUpperCase((suppInfo[2] eq 0)?'false':'true'))}" />
 				</p:column>
-
+				<ui:remove>26247 - start</ui:remove>
 				<ui:param name="mofExpired"
 					value="#{suppInfo[3] == null or suppInfo[3].recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
 				<p:column
@@ -59,7 +59,7 @@
 					<h:outputText
 						value="#{consolidationReportBackingBean.evaluateMOFStatus(suppInfo[3])}" />
 				</p:column>
-
+				<ui:remove>26247 - end</ui:remove>
 			</p:dataTable>
 
 			<div align="right">

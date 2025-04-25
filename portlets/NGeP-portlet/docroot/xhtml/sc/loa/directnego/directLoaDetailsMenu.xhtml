@@ -62,9 +62,13 @@
 						
 				<td width="160px"><p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
 				</td>
-				<td><ac:disciplinaryActionYesNo
+				<ui:remove>26247 - start</ui:remove>
+				<td>
+					<ac:disciplinaryActionYesNo
 						supplier="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
-						showTooltip="true" /></td>
+						showTooltip="true" />
+				</td>
+				<ui:remove>26247 - end</ui:remove>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
@@ -1189,11 +1193,7 @@
 			remarkList="#{directLOABackingBean.managedBean.scLoa.scLoaRemarks}"
 			showAttachment="false" 
 			readonly="true" />
-	</p:outputPanel>
-	<!-- #31033 #32560 starts -->
-	    <ac:disciplinaryActionHistory voList="#{viewSuppProfileBackingBean.managedBean.disciplineVOs}" rendered="#{!isHiddenDownloadButtonDAHistory}" />
-	      <!-- #31033 #32560 Ends -->
-	      
+	</p:outputPanel>    
 	<!-- #25726 START -->
 	<p:confirmDialog id="qtChangeAgreementReqDlg" widgetVar="qtChangeAgreementReqDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.change']}" 	severity="alert"  closable="false">

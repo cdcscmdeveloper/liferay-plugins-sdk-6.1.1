@@ -15,11 +15,13 @@
 		<c:if test="#{!lOIDetailBackingBean.managedBean.scQt.zonal}">
 			.tdWidth { width: 100%; }
 		</c:if>
+		/* 26247 - start */
 		.red-background {
 			background-color:red; 
 			color:white; 
 			font-weight:bold;
-		}			
+		}
+		/* 26247 - end */			
 	</style>	
 	
 	<!-- Supplier Details PopUp -->
@@ -141,7 +143,7 @@
 																				CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 								</h:outputText>
 							</p:column>
-
+							<ui:remove>26247 - start</ui:remove>
 							<ui:param name="supplier"
 								value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 							<ui:param name="mofExpired"
@@ -152,9 +154,6 @@
 								</f:facet>
 								<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 							</p:column>
-							<ui:remove>
-								#31061 - SHAFFUL (START)
-							</ui:remove>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
@@ -172,9 +171,7 @@
 												  or lOIDetailBackingBean.managedBean.readOnly 
 												  or supplierDtl.noReachAgreement
 												  or lOIDetailBackingBean.disabledQTProcess(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" />
-							<ui:remove>
-								#31061 - SHAFFUL (END), #30008 - End
-							</ui:remove>
+							<ui:remove>26247 - end</ui:remove>
 						</p:dataTable> 
 						
 						<p:dataTable id="recommendTbl" var="item"
@@ -279,9 +276,7 @@
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
-							<ui:remove>
-								#31061 - SHAFFUL (START)
-							</ui:remove>
+							<ui:remove>26247 - start</ui:remove>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
@@ -305,9 +300,7 @@
 									</p:column>
 								</p:dataList>
 							</p:column>
-							<ui:remove>
-								#31061 - SHAFFUL (END)
-							</ui:remove>
+							<ui:remove>26247 - end</ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.price.type']}">
 								<h:outputText
 									value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />

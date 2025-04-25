@@ -1077,20 +1077,17 @@ public class LOIDetailBackingBean extends
 	//#28777 & #29729 - End	
 	
 	// 26247 - 31061 - start
-	private void setDisciplinaryAction(List<ScQtEvaluationResultDtl> evalResDtl){	 	
-		for(ScQtEvaluationResultDtl qtEvalResDtl:evalResDtl){
+	private void setDisciplinaryAction(List<ScQtEvaluationResultDtl> evalResDtl) {
+		for (ScQtEvaluationResultDtl qtEvalResDtl : evalResDtl) {
 			ScQtProposal qtProposal = qtEvalResDtl.getQtEvaluationResult().getScQtProposal();
-			Long qtId = null;
-			if (null != qtProposal) {
-				if (null != qtProposal.getScQtSupplier() && null != qtProposal.getScQtSupplier().getScQt()) {
-					qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
-				}
+			if (null != qtProposal && null != qtProposal.getScQtSupplier()
+					&& null != qtProposal.getScQtSupplier().getScQt()) {
+				Long qtId = qtProposal.getScQtSupplier().getScQt().getQtId();
 				qtProposal.getScQtSupplier().setSmSupplier(
 						this.getQTDetailSO().evaluateDisciplinaryActions(qtProposal.getScQtSupplier().getSmSupplier(),
 								qtId));
-				
-			} 
-		} 
+			}
+		}
 	}	 
 	// 26247 - 31061 - end
 	

@@ -35,8 +35,10 @@
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
+				<ui:remove>26247 - start</ui:remove>
 				<ac:disciplinaryActionYesNo
 					supplier="#{scQtBriefReg.supplier}" index="#{index}"/>
+				<ui:remove>26247 - end</ui:remove>
 			</p:column>
 
 		</p:dataTable>

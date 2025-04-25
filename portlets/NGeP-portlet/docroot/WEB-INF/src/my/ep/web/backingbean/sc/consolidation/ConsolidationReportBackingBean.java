@@ -1542,6 +1542,7 @@ public class ConsolidationReportBackingBean extends
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 		}
 		//#28777 & #29729 - End
+		// 26247 - start
 		int countDisabled = 0;
 		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 			for (ScQtEvaluationResultDtl resultDtl : qualifiedSuppliers) {
@@ -1553,6 +1554,7 @@ public class ConsolidationReportBackingBean extends
 			}
 		}
 		totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
+		// 26247 - end
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 				if(scQt!=null && !scQt.isPartial()){
@@ -1592,6 +1594,7 @@ public class ConsolidationReportBackingBean extends
 					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 				}
 				//#28777 & #29729 - End
+				// 26247 - start
 				int countItemDisabled = 0;
 				if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
 					for (ScQtEvaluationResultDtl resultDtl : qualifiedSuppliers) {
@@ -1603,6 +1606,7 @@ public class ConsolidationReportBackingBean extends
 					}
 				}
 				totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
+				// 26247 - end
 				
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 						specZoneDtl, item.getRequestItem(),

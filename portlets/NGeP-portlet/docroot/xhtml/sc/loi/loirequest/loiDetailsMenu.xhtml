@@ -17,14 +17,16 @@
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
-			<!-- Bug #30600, #31033, #33073 Start -->
+			<ui:remove>26247 - start</ui:remove>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
 			</td>
-				<td><ac:disciplinaryActionYesNo
-						supplier="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier}"
-						showTooltip="true" /></td>
-				<!-- Bug #30600, #31033, #33073 End -->
+			<td>
+				<ac:disciplinaryActionYesNo
+					supplier="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier}"
+					showTooltip="true" />
+			</td>
+			<ui:remove>26247 - end</ui:remove>
 		</tr>
 		<tr>
 			<td>

@@ -83,7 +83,7 @@
         <ui:remove> #28777#29729 - End </ui:remove>	
 		<p:dataTable id="bidPackagesListForBMBP"
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{biddingBB.managedBean.bidPackages}" var="item" rowIndexVar="index">
+			value="#{biddingBB.managedBean.bidPackages}" var="item" rowIndexVar="index"><ui:remove>26247 - added rowIndexVar attr</ui:remove>
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">
 				<p:outputLabel value="#{item.ranking}" />
@@ -108,6 +108,7 @@
 				<h:outputText
 					value="#{(item.scBidSupplier.bumi)? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
+			<ui:remove>26247 - start</ui:remove>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
@@ -117,6 +118,7 @@
 				<ac:disciplinaryActionYesNo
 					supplier="#{item.scBidSupplier.smSupplier}" index="#{index}"/>
 			</p:column>
+			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
 				<h:outputText style="float : right"
 					value="#{item.scBidSupplier.packageStartPrice}">
