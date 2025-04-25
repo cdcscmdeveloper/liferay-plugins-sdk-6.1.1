@@ -109,7 +109,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId().intValue();
 		this.orgName = managedBeans.getSelectedUserOrg().isBrandNew() ? 
 				managedBeans.getCurrentActiveOrg().getPmOrgValidity().getOrgName() : 
-					managedBeans.getSelectedUserOrg().getPmOrgProfile().getPmOrgValidity().getOrgName();
+					managedBeans.getSelectedUserOrg().getPmOrgProfile().getOrgName();
 		this.orgProfileId = managedBeans.getSelectedUserOrg().isBrandNew() ? 
 				BigInteger.valueOf(managedBeans.getNewAuditPmUserOrg().getUserOrgId()) : 
 					BigInteger.valueOf(managedBeans.getSelectedUserOrg().getUserOrgId());
