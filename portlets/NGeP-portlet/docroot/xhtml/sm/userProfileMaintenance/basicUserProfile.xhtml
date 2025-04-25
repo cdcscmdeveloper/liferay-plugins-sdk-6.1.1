@@ -423,9 +423,6 @@
 												update="basicPermAddDistrictList, basicPermAddCityList"
 												listener="#{smPersonnelBackingBean.updatePermAddLists(null,null,smPersonnelBackingBean.managedBean.divisionId,null)}"/>
 										</p:selectOneMenu>
-										<!-- #34159 - START -->
-										<p:message id="basicPermAddDivisionListMsg" for="basicPermAddDivisionList" showSummary="true" showDetail="false" display="icon" />
-										<!-- #34159 - END -->
 										</ui:fragment>
 										</p:outputPanel>
 										</td>
@@ -623,12 +620,10 @@
 											<!-- #13320 - added division -->
 											<!-- #33592-->
 											<ui:fragment
-												rendered="#{smPersonnelBackingBean.managedBean.mailDivisionBox}">
-												<!-- #34159 - START -->				
+												rendered="#{smPersonnelBackingBean.managedBean.mailDivisionBox}">				
 												<p:selectOneMenu id="basicMailAddDivisionList"
 														label="#{lbl['lbl.sm.division']}"
 														value="#{smPersonnelBackingBean.managedBean.mailDivisionId}"
-														required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 														style="width: 207px;margin-bottom: 5px;">
@@ -640,8 +635,6 @@
 															update="basicMailAddDistrictList,basicMailAddCityList" 
 															listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,smPersonnelBackingBean.managedBean.mailDivisionId,null)}"/>
 													</p:selectOneMenu>
-													<p:message id="basicMailAddDivisionListMsg" for="basicMailAddDivisionList" showSummary="true" showDetail="false" display="icon" />
-													<!-- #34159 - END -->
 													</ui:fragment>
 													</p:outputPanel>
 													</td>

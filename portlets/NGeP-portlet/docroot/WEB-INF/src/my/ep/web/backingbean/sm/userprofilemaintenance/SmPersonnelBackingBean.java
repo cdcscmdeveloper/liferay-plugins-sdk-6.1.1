@@ -1207,12 +1207,6 @@ public class SmPersonnelBackingBean extends
 					this.getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictListByID(getManagedBean().getDivisionId()));
 					getManagedBean().setMailDivisionBox(true);
 				} else {
-					//#34159 - START - clear division when selecting non-sarawak
-					if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision() != null){
-						getManagedBean().setMailDivisionId(null);
-						getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDivision().setDivisionId(null);
-					}
-					//#34159 - END
 					this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().setPmDistrict(new PmDistrict());
 					getManagedBean().setMailAddDistrictList(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 				}//#33592- end
@@ -1437,11 +1431,6 @@ public class SmPersonnelBackingBean extends
 							SmCommonUtil.getDistrictListByID(this.getManagedBean().getDivisionId())); 
 					getManagedBean().setDivisionBox(true);
 				}else {
-					//#34159 - START - clear division when selecting non-sarawak
-					if(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDivision() != null){
-						getManagedBean().setDivisionId(null);
-					}
-					//#34159 - END
 					this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().setPmDistrict(new PmDistrict());
 					getManagedBean().setPermAddDistrictList(SmCommonUtil.getDistrictList(Long.valueOf(stateId)));
 				}//#33592-end

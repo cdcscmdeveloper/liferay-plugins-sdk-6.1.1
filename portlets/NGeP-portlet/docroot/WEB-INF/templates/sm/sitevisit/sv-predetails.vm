@@ -50,13 +50,6 @@
 			 <td width="35%" valign="top"><b>Site Visit Address</b></td>
 			 <td>$addressFormatter.getAddress($svAddress)</td>
 		</tr>
-		
-		<!-- #34159 - START - Add District-->
-		<tr>
-			 <td width="35%"><b>District</b></td>
-			 <td>$svAddress.pmDistrict.districtName</td>
-		</tr>
-		<!-- #34159 - START -->
 		    	
 		<tr>
 			 <td width="35%"><b>Postal Code</b></td>
@@ -67,15 +60,6 @@
 			 <td width="35%"><b>Town/City</b></td>
 			 <td>$svAddress.pmCity.cityName</td>
 		</tr>
-		
-		<!--#34159 - START -->
-		#if($svAddress.pmState.adoptDivision)
-		<tr>
-			 <td width="35%"><b>Division</b></td>
-			 <td>$svAddress.pmDivision.divisionName</td>
-		</tr>
-		#end
-		<!--#34159 - END -->
 		    	
 		<tr>
 			 <td width="35%"><b>State</b></td>
