@@ -12103,7 +12103,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 									blackListReqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO()
-											.retrieveAllPersonBlacklistByIdentificationNO(personnel.getIdentificationNo(), false);
+											.retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
 
 									if (blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null) {
 										//#31017 - start
@@ -12124,7 +12124,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 									blackListReqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO()
-											.retrieveAllPersonBlacklistByIdentificationNO(personnel.getIdentificationNo(), false);
+											.retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
 
 									if (blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null) {
 										//#31017 - start
@@ -12145,7 +12145,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
 									blackListReqDTO.setDirectorIdNo(personnel.getIdentificationNo());
 									blackListResDTO = SmServiceLookup.getBlacklistDirectorSO()
-											.retrieveAllPersonBlacklistByIdentificationNO(personnel.getIdentificationNo(), false);
+											.retrieveAllPersonBlacklistByIdentificationNO(blackListReqDTO);
 
 									if (blackListResDTO != null && blackListResDTO.getPersonBlacklist() != null) {
 										//#31017 - start
