@@ -4983,4 +4983,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 	}
 	// #35137,#24333 - End
+	
+	// 24333 - Start
+	/**
+	 * The method used to calculate overall amount with GST AND STAX From LOA
+	 * 
+	 * @return BigDecimal total amount
+	 */
+	public BigDecimal calculateOriginalOverallAmount() {
+		BigDecimal gstAmt = BigDecimal.ZERO;
+		BigDecimal staxAmt = BigDecimal.ZERO;
+		BigDecimal contractAmt = BigDecimal.ZERO;
+
+		if (getManagedBean().getContractVer().getCtContract().getLoa() != null) {
+			if (getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt() != null)
+				gstAmt = getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt();
+
+			if (getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt() != null)
+				staxAmt = getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt();
+
+			if (getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt() != null)
+				contractAmt = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+		}
+
+		BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
+		return total;
+	}
+	// 24333 - End
 }
