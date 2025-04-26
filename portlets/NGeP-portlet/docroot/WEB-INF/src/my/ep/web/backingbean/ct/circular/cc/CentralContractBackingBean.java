@@ -589,7 +589,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					AuditContractReqDTO auCtData = new AuditContractReqDTO();
 					auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
 					auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
-					auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+					if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
+						auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+					}
 					auCtData.setDocType(resDTO.getCircularVer().getDocType());
 					auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
 					auCtData.setRoleName(getUserRole());

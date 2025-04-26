@@ -672,7 +672,7 @@ public void editSpecificationMaintenanceNewManagedBean(ScQt scQt, boolean isEdit
 		// #10141 Start Vinod
 		boolean isReadOnly = this.getManagedBean().isReadOnly();
 		if (!isReadOnly
-				&& Arrays.asList(QTStatusConst.QT_SPEC_MAINTENANCE_INACTIVE_CHECKLIST_UPDATE_GROUP).contains(
+				&& QTStatusConst.getQTSpecMaintenanceInactiveChecklistUpdateGroup().contains(
 						this.getManagedBean().getCurrentStatusId())) {
 			boolean isInactiveChecklistPopup = specBB.checkInactiveChecklistForPopup(this.getManagedBean()
 					.isShowInactiveChecklistPopup(), QTConstants.SPEC_MAINTENANCE);
