@@ -70,27 +70,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-	//26238 - start - #28281
-	/*
-	private boolean warningExist;
-	private boolean warning;
-	private boolean cancelCategoryCode;
-	private boolean suspendRegistration;
-	private boolean cancelRegistration;
-	private boolean blacklistOwnerOrDirector;
-	private boolean bumiputeraStatusCancel;
-	private boolean manufacturerStatusCancel;
-	private List<DisciplinaryActionVO> disciplinaryActionVoList;
-	private List<DisciplinaryActionVO> disciplineVOs; 
-	private List<SmPersonnel> ownerAndDirectorList; 
-	private List<SmPersonnel> selectedOwnerAndDirectorList; 
-	private String applType; 
-	private boolean viewFlag; 
-	private SmSupplier smSupp; 
-	private boolean viewMode; 
-	private boolean disciplinaryAction;
-	private boolean mofNoExist;
-	*/
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<PmFinancialOrg> financialOrgLs;
 	
