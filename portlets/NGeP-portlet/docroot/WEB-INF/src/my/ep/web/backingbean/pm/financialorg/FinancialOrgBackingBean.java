@@ -1,11 +1,7 @@
 package my.ep.web.backingbean.pm.financialorg;
 //#29487 - View bank details by factoring user_endorsed - Start
 import java.io.IOException;
-//#29487 - View bank details by factoring user_endorsed - End
-//20201210@Jacky - Enhancement#28836 - Start
 import java.math.BigDecimal;
-//20201210@Jacky - Enhancement#28836 - End
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,7 +14,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -26,26 +21,23 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-//20201105@Jacky - Enhancement#28836 - Start
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
-//20201105@Jacky - Enhancement#28836 - End
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-//20201105@Jacky - Enhancement#28836 - Start
-import my.ep.persistence.entity.ct.CtWorkflowStatus;
-import my.ep.persistence.entity.fl.FlWorkflowStatus;
-//20201105@Jacky - Enhancement#28836 - End
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -65,11 +57,11 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-// #29487 - View bank details by factoring user_endorsed - Start
 import my.ep.type.pm.RoleCode;
-// #29487 - View bank details by factoring user_endorsed - End
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMFinancialOrgBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
@@ -84,6 +76,15 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+//#29487 - View bank details by factoring user_endorsed - End
+//20201210@Jacky - Enhancement#28836 - Start
+//20201210@Jacky - Enhancement#28836 - End
+//20201105@Jacky - Enhancement#28836 - Start
+//20201105@Jacky - Enhancement#28836 - End
+//20201105@Jacky - Enhancement#28836 - Start
+//20201105@Jacky - Enhancement#28836 - End
+// #29487 - View bank details by factoring user_endorsed - Start
+// #29487 - View bank details by factoring user_endorsed - End
 
 /**
  * Backing Bean for Financial Org
@@ -1048,17 +1049,32 @@ public class FinancialOrgBackingBean extends
 			
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
+			
+			/************ AUDIT #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMFinancialOrgBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION) && financialOrg.getFinancialOrgId() != null) {
+				reqDTO.setFinancialOrgId(financialOrg.getFinancialOrgId());
+				PmFinancialOrg oldFinancialOrg = financialOrgSO.retrieveFinancialOrgDtlById(reqDTO).getPmFinancialOrg();
+				//get old data
+				oldFinancialOrg.getRecordStatusFlg();
+				getManagedBean().setOldFinancialOrg(oldFinancialOrg);
+			}
+			/************ AUDIT #28895-35509 *************/
+			
 			FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrgDetails(reqDTO);
 	
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
-//				FacesContext.getCurrentInstance().addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_INFO,
-//								"Financial Org successfully.", "Org Name : "
-//										+ this.getManagedBean().getFinancialOrg()
-//												.getFinOrgName()));
 				
+				/************ AUDIT #28895-35509 *************/
+				getManagedBean().setSavedFinancialOrg(resDTO.getPmFinancialOrg());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_FINANCIAL_ORG);
+				}
+				/************ AUDIT #28895-35509 *************/
 				String message = "";
 				if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 					message = MessageUtils.getMessage(MessageConst.INFO_780093, new String[]{resDTO.getPmFinancialOrg().getFinOrgName()}, 
