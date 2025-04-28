@@ -160,5 +160,11 @@ public class SSTConstant {
 	 */
 	public static final String ADD_WHITESPACE = " ";
 	// 36122 - end
+
+	// #36757 Start Vinod
+	public static final String produk = "Produk";
+	public static final String product = "Product";
+	// #36757 End Vinod
+
 }
 
