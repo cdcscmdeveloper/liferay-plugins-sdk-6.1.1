@@ -3265,7 +3265,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
 				}
 				
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
 					getManagedBean().setNewAuditPmUser(user);
 					getManagedBean().setNewAuditPmUserOrg(userOrg);
 					getManagedBean().setNewAuditPmUserRoles(userOrg.getPmUserRoles());
