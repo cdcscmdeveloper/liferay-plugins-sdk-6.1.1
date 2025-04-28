@@ -410,4 +410,8 @@ public interface QTConstants {
 	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	//#29732 -End
+
+	// #36757 Start Vinod
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 End Vinod 
 }
