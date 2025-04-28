@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.AuditPMDaoConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
@@ -84,8 +85,10 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 	 * @param searchDetail
 	 */
 	public void generateRptExcel(AuditPMReqDTO reqDTO, IPagingDataModel<VAuditPMDTO> searchDetail) {
+		String oriLanguange = reqDTO.getpLanguage();
 		try {
 			reqDTO.setFetchAll(true);
+			reqDTO.setpLanguage(AuditConst.PM_LANGUAGECODE_MS);
 			ISearchResultBean<VAuditPMDTO> res = getAuditPMSO().searchDetailResultList(reqDTO, searchDetail.getSearchBean());
 			details = res.getResultList();
 			
@@ -96,6 +99,7 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			log.error(e);
 		}
 		reqDTO.setFetchAll(false);
+		reqDTO.setpLanguage(oriLanguange);
 		wb = null;
 	}
 	
