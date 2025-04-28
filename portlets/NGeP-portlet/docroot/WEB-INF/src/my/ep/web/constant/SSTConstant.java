@@ -16,4 +16,8 @@ public class SSTConstant {
 	public static String itemType = "itemType";
 	public static String EMPTY_STRING = "";
 	// 26226 - end 
+	// #36757 Start Vinod 05/12/2024
+	public static final String produk = "Produk";
+	public static final String product = "Product";
+	// #36757 End Vinod 05/12/2024
 }
