@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.sm.compexp;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -81,6 +84,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().setDisableClienType(true);
 		}
+		dateChange();
 		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
 	}
 
@@ -90,11 +94,55 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					&& !this.getManagedBean().getSelectedDraft().getOriAgencyName().isEmpty()) {
 				this.getManagedBean().getSelectedDraft().setAgencyName(this.getManagedBean().getSelectedDraft().getOriAgencyName());
 			}
+		} else if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
+			this.getManagedBean().getSelectedDraft().setAgencyName(null);
 		}
 	}
 
 	public void selectAgencyAction(PmOrgProfile orgProfile) {
 		this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
+		this.getManagedBean().getSelectedDraft().setOrgProfile((orgProfile));
 	}
 
+	public void trimFileReferenceNo() {
+		if (null != this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+				&& !this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()) {
+			String fileNo = this.getManagedBean().getSelectedDraft().getFileReferenceNo();
+			fileNo = fileNo.replaceAll("\\s+", "");
+			fileNo = fileNo.replaceAll("^[^a-zA-Z0-9]+", "");
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+$", "");
+			this.getManagedBean().getSelectedDraft().setFileReferenceNo(fileNo);
+		}
+	}
+
+	public void trimFileExtensionNo() {
+		if (null != this.getManagedBean().getSelectedDraft().getFileExtensionNo()
+				&& !this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
+			String fileNo = this.getManagedBean().getSelectedDraft().getFileExtensionNo();
+			fileNo = fileNo.replaceAll("\\s+", "");
+			fileNo = fileNo.replaceAll("[^a-zA-Z0-9]+", "");
+			this.getManagedBean().getSelectedDraft().setFileExtensionNo(fileNo);
+		}
+	}
+
+	public void dateChange() {
+		if (null != this.getManagedBean().getSelectedDraft().getContractEffDate()) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(this.getManagedBean().getSelectedDraft().getContractEffDate());
+			cal.add(Calendar.DATE, +1);
+			Date minExpDate = cal.getTime();
+			this.getManagedBean().setMinExpDate(minExpDate);
+		} else {
+			this.getManagedBean().setMinExpDate(null);
+		}
+		if (null != this.getManagedBean().getSelectedDraft().getContractExpDate()) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(this.getManagedBean().getSelectedDraft().getContractExpDate());
+			cal.add(Calendar.DATE, -1);
+			Date maxEffDate = cal.getTime();
+			this.getManagedBean().setMaxEffDate(maxEffDate);
+		} else {
+			this.getManagedBean().setMaxEffDate(null);
+		}
+	}
 }

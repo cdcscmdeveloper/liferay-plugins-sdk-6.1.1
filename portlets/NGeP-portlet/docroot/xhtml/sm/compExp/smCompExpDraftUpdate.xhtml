@@ -69,7 +69,8 @@
 								value="#{compExpMB.selectedDraft.agencyName}" readonly="true" />
 							<p:commandLink partialSubmit="true" process="@this"
 								update=":form" action="#{smPtjPopupBB.initPopup}"
-								oncomplete="smPtjPopupWV.show();">
+								onclick="blockWidget.show()"
+								oncomplete="blockWidget.hide(),smPtjPopupWV.show()">
 								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
 							</p:commandLink> <p:graphicImage id="agencyNameToolTipsId"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
@@ -96,15 +97,21 @@
 							styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:inputText
+					<td style="width: 66%"><p:inputText id="fileReferenceNo"
 							value="#{compExpMB.selectedDraft.fileReferenceNo}"
 							required="true"
-							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:spacer
-							width="3px"></p:spacer> <p:inputText
-							value="#{compExpMB.selectedDraft.fileExtensionNo}" size="3"
-							maxlength="3" required="true"
-							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:graphicImage
-							id="fileReferenceNoToolTipsId"
+							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}">
+							<p:ajax event="blur" update="fileReferenceNo"
+								listener="#{compExpBB.trimFileReferenceNo}"
+								process="fileReferenceNo" partialSubmit="true" />
+						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
+							value="#{compExpMB.selectedDraft.fileExtensionNo}"
+							required="true" size="3" maxlength="3"
+							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}">
+							<p:ajax event="blur" update="fileExtensionNo"
+								listener="#{compExpBB.trimFileExtensionNo}"
+								process="fileExtensionNo" partialSubmit="true" />
+						</p:inputText> <p:graphicImage id="fileReferenceNoToolTipsId"
 							value="/css/images/design/tooltips.png" /> <p:tooltip
 							for="fileReferenceNoToolTipsId">
 							<img
@@ -161,11 +168,19 @@
 							value="#{compExpMB.selectedDraft.contractEffDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText> <p:calendar
+						</h:outputText>
+						<p:calendar id="contractEffDate"
+							label="#{lbl['lbl.sm.comp.exp.update.contract.eff.date']}"
+							maxdate="#{compExpMB.maxEffDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							readonlyInput="true"
 							rendered="#{compExpMB.selectedDraft.contractEffDate eq null}"
-							showOn="button" readonlyInput="true"
-							value="#{compExpMB.selectedDraft.contractEffDate}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							required="true" showOn="button"
+							value="#{compExpMB.selectedDraft.contractEffDate}">
+							<p:ajax event="dateSelect" update="contractExpDate"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{compExpBB.dateChange}" process="@this"
+								partialSubmit="true" />
 						</p:calendar></td>
 				</tr>
 				<tr>
@@ -173,11 +188,16 @@
 							styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td style="width: 66%"><p:calendar showOn="button"
-							readonlyInput="true" required="true"
+					<td style="width: 66%"><p:calendar id="contractExpDate"
 							label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
-							value="#{compExpMB.selectedDraft.contractExpDate}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							mindate="#{compExpMB.minExpDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							readonlyInput="true" required="true" showOn="button"
+							value="#{compExpMB.selectedDraft.contractExpDate}">
+							<p:ajax event="dateSelect" update="contractEffDate"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								listener="#{compExpBB.dateChange}" process="@this"
+								partialSubmit="true" />
 						</p:calendar></td>
 				</tr>
 				<tr>

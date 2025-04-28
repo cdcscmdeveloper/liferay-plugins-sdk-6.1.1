@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.sm.compexp;
 
+import java.util.Date;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -40,7 +42,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private SmCompExpDraft selectedDraft;
 	private String headerTitle;
 	private boolean disableClienType;
-	
+	private Date maxEffDate;
+	private Date minExpDate;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -158,6 +161,22 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setDisableClienType(boolean disableClienType) {
 		this.disableClienType = disableClienType;
+	}
+
+	public Date getMaxEffDate() {
+		return maxEffDate;
+	}
+
+	public void setMaxEffDate(Date maxEffDate) {
+		this.maxEffDate = maxEffDate;
+	}
+
+	public Date getMinExpDate() {
+		return minExpDate;
+	}
+
+	public void setMinExpDate(Date minExpDate) {
+		this.minExpDate = minExpDate;
 	}
 
 }
