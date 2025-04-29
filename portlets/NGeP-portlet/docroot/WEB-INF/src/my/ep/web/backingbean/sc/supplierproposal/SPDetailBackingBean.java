@@ -1325,7 +1325,7 @@ public class SPDetailBackingBean extends
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
 							for (TplSpecAnswer specAnswer : templateSpecBean.getSpecAnswerList()) {
-								//#21695 farid IN MONITORING START	
+								//#21695 
 								
 								if(null==	specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() || null==specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl().getSpecZoneId()){ //#28785-Start
 									specAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(specZoneDtl);
@@ -1357,7 +1357,7 @@ public class SPDetailBackingBean extends
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
 										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
 									answers.add(specAnswer);
-								//#21695 farid IN MONITORING END	
+								//#21695 	
 								}
 								//Bug_34259 - End
 								else{
