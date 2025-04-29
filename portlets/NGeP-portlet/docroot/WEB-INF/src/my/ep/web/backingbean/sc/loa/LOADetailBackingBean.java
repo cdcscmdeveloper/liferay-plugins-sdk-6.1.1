@@ -2436,16 +2436,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// ##25025 #509 -start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
-		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
+		context.put(SSTConstant.FILE_NO, fileNo + "-" + scLoa.getFileExtNo());
 		// ##25025 #509 -end	context.put("loaNo", scLoa.getLoaNo());
 
-		String issueDate = "______________";
+		String issueDate = SSTConstant.UNDERLINE;
 		if (scLoa.getIssueDate() != null) {
 			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
 		context.put("issueDate", issueDate);
 
-		String govtSignDate = "______________";
+		String govtSignDate = SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if (scLoa.getGovtSignDate() != null) {
 			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
 		}
@@ -2457,7 +2457,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
 		log.info("supplierAddress" + supplierAddress);
-		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
 			String[] address = supplierAddress.split(System.getProperty("line.separator"));
@@ -2471,7 +2470,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("supplierAddressTable", supplierAddressTable);
 
 
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; //25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			//#25025 - start
@@ -2480,19 +2479,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; //25025 fix sonarlint
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; //25025 fix sonarlint
 			}
 
 		}
-		context.put("headerTitle", headerTitle); 
-		context.put("subTitle", headerTitle.toLowerCase()); 
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); //25025 fix sonarlint
+		context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase()); //25025 fix sonarlint
 
 		// loa title
 		String title = scLoiLoa.getTitle();
 		if (title == null) {
-			title = "";
+			title = SSTConstant.EMPTY_STRING; //25025 fix sonarlint
 		}
 		title = title.trim();
 
@@ -2529,7 +2528,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put(SSTConstant.BOND_PERCENTAGE_TEXT, bondPercentageText); 
 		context.put(SSTConstant.BOND_PERCENTAGE, bondPercentage);
 		//25025 - end
-		String bondExpDate = "______________";
+		String bondExpDate = SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		//bond exp date should be one year after the end of the contract period
 		if(scLoa.getContractExpDate() != null){
 			Calendar cal = Calendar.getInstance();
@@ -2570,17 +2569,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		context.put("isAgreementReq", scLoa.isAgreementReq());
 
-		String LoaSigner = "______________";
-		String loaSignerDesig = "______________";
+		String loaSigner = SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if(getManagedBean().getContractSignerUser() != null){
 			PmUser contractSigner = getManagedBean().getContractSignerUser();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-				LoaSigner = contractSigner.getUserName();
+				loaSigner = contractSigner.getUserName(); //25025 fix sonarlint
 			}
 		}
-		context.put("loaSigner", LoaSigner);	
+		context.put("loaSigner", loaSigner); //25025 fix sonarlint	
 
-		loaSignerDesig = scLoa.getLoaSignerDesig();
+		String loaSignerDesig = StringUtils.isNotEmpty(scLoa.getLoaSignerDesig())?  scLoa.getLoaSignerDesig(): SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
 			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
 		}
@@ -2634,14 +2632,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else {
 				qtNo = rnNo;
 			}
-			context.put("docType", "Pembelian Terus"); 
+			context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_PEMBELIAN_TERUS); //25025 fix sonarlint 
 		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
 			// #26770 - Start.
 			if (isQuotationOrTender(scQt)) {
-				context.put("docType", "Sebut Harga"); 
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_SEBUT_HARGA); // 25025 fix sonarlint
 			} else {
-				context.put("docType", "Tender"); 
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_TENDER); // 25025 fix sonarlint
 			}
 			// #26770 - End.
 		} 
@@ -2908,18 +2906,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		log.info("SupplierAddressTable" + supplierAddressTable);
 		
 		// #25025 - start
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; // 25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 fix sonarlint
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; // 25025 fix sonarlint
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix sonarlint
 			}
-
 		}
-		context.put("headerTitle", headerTitle);
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
@@ -3136,20 +3133,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("loaNo", loaNo);
 
 		// #25025 - start
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; // 25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 			// #25025 - start
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 fix sonarlint
 			// #25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; // 25025 fix sonarlint
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix sonarlint
 			}
-
 		}
-		context.put("headerTitle", headerTitle);
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
@@ -4419,23 +4415,39 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//20190405@asyrafhaziq - CR25062 - End
 	
-	// #26770 - Start.
-    /**
-    * 
-    */
-   private void validateReportAttachment() {
-     if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-                 if (report.getScLoaReportAttachment() == null) {
-                   throw new EpException(MessageConst.ERROR_775159);
-                 }
-                break;
-            }
-         }
-      }
-   }
-   // #26770 - End.
+	// #26770 - Start fix sonarlint.
+	/**
+	 * To Validate Report Attachment
+	 */
+	private void validateReportAttachment() {
+		if (null != this.getManagedBean().getScLoa()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+			validateScLoaReportAttachment(this.getManagedBean().getScLoa().getScLoaReports());
+		}
+	}
+
+	/**
+	 * @param scLoaReport
+	 */
+	private void validateScLoaReportAttachment(List<ScLoaReport> scLoaReport) {
+		if (scLoaReport == null || scLoaReport.isEmpty()) {
+			return;
+		}
+		// 64 records max
+		for (ScLoaReport report : scLoaReport) {
+			if (report == null) {
+				continue;
+			}
+
+			if ("Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())
+					&& report.getScLoaReportAttachment() == null) {
+				throw new EpException(MessageConst.ERROR_775159);
+			}
+
+		}
+	}
+
+	// #26770 - End fix sonarlint.
    
 	/**
 	 * Enhancement #21694
@@ -7361,6 +7373,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //
 //	}	
 	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param amountDF
+	 * @param myLocale
+	 */
 	private void setSstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,	DecimalFormat amountDF, Locale myLocale) {
 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): SSTConstant.UNDERLINE;
@@ -7371,7 +7389,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("gstEffectiveDate", gstEffectiveDate);
 
 		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
-				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		context.put("gstDeclaredDate", gstDeclaredDate);
 
 		String offerPrice = SSTConstant.UNDERLINE;
@@ -7487,27 +7505,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}*/
 		
-	// #26770 new kod bidang
-		if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
-				&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
-			int counter = 0;
-			StringBuilder categoryCode = new StringBuilder();
-			for (SmSupplierCategory category : smSupplier.getSmAppl().getSmSupplierCategories()) {
-				String l1Code = category.getPmCategoryL1().getCategoryL1Code();
-				String l2Code = category.getPmCategoryL2().getCategoryL2Code();
-				String l3Code = category.getPmCategoryL3().getCategoryL3Code();
-				String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
+			// #26770 new kod bidang
+			if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
+					&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
 
-				counter++;
-				if (counter % 4 == 0 && counter < smSupplier.getSmAppl().getSmSupplierCategories().size()) {
-					catcode = catcode + SSTConstant.LINE_BREAK;
-				}
-				categoryCode.append(catcode);
+				StringBuilder categoryCode = constructCategoryCodeForSST(smSupplier);
+
+				kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
 			}
-			kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
-		}
-		
-	//26770 - end	
+
+			// 26770 - end
 		}
 		context.put("mofValidityDuration", mofValidityDuration);
 		context.put("mofCertValidityDuration", mofCertValidityDuration);
@@ -7515,9 +7522,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("kodBidang", kodBidang);
 		// #25025 - Start.
 		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
-			context.put("mofNo", scLoiLoa.getMofNo());
+			context.put(SSTConstant.MOF_NO, scLoiLoa.getMofNo()); // 25025 fix sonarlint
 		} else {
-			context.put("mofNo", SSTConstant.UNDERLINE);
+			context.put(SSTConstant.MOF_NO, SSTConstant.UNDERLINE); // 25025 fix sonarlint
 		}
 		// #25025 - End.
 	}
@@ -7540,13 +7547,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		context.put(SSTConstant.REGISTRATION_NO, regNo);
 		//#26770 - start
-		if (null != smSupplier.getSmAppl()){
-			if (null != smSupplier.getSmAppl().getSmCompanyBasic()){
+		if (null != smSupplier.getSmAppl() && null != smSupplier.getSmAppl().getSmCompanyBasic()){
 				if (null != smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){
 					context.put(SSTConstant.SSM_EXPIRED,new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));
 				}else{
 					context.put(SSTConstant.SSM_EXPIRED,SSTConstant.UNDERLINE); 
-				}
 			}
 		}
 		//#26770 - end
@@ -12078,7 +12083,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#25025 - start
 	public String setValueLowercase(String text, int index){
 		//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
-		if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+		if ("SuratSetujuterima(TermasukLampiranA)".equalsIgnoreCase(text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, ""))) {
 			char[] arr = text.toCharArray();
 			arr[index] = Character.toLowerCase(arr[index]);
 			return new String(arr);//return string in lowercase  //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
@@ -12404,9 +12409,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 														.getNewSupplierOffer())) && scLoiLoaItem.isComplete()) {
 													// supplier respond and make new
 													// supplier offer
-													answerRemark = answer.getNewSupplierOffer(); //36681&35295 - zaim
 													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
-
+													answerRemark = VmUtil.getInstance().escapeAndWrapText(
+															answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF);
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
 														map.put(SSTConstant.LAST_INDEX_WIP, "true");
 													}
@@ -12416,8 +12421,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 																.isEmpty())) {
 													// supplier respond but no
 													// changes
-													answerRemark = answer.getAnswerRemark(); //36681&35295 - zaim
 													map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
+													answerRemark = VmUtil.getInstance().escapeAndWrapText(
+															answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF);
 													map.put(SSTConstant.IS_WIP, "true");
 													if (indi == scLoiLoaItem.getZoneNameList().size()){
 														map.put(SSTConstant.LAST_INDEX_WIP, "true");
@@ -12597,5 +12603,34 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// #29007 End vinod
+	// 26770 start fix sonarlint
+	/**
+	 * Will display 4 Category Code per line. If more than 4, the category code
+	 * will break into new line.
+	 * 
+	 * @param smSupplier
+	 * @return
+	 */
+	private StringBuilder constructCategoryCodeForSST(SmSupplier smSupplier) {
+		int counter = 0;
+		StringBuilder categoryCode = new StringBuilder();
+		for (SmSupplierCategory category : smSupplier.getSmAppl().getSmSupplierCategories()) {
+			String l1Code = category.getPmCategoryL1().getCategoryL1Code();
+			String l2Code = category.getPmCategoryL2().getCategoryL2Code();
+			String l3Code = category.getPmCategoryL3().getCategoryL3Code();
+			String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
+
+			counter++;
+
+			if (counter % 4 == 0 && counter < smSupplier.getSmAppl().getSmSupplierCategories().size()) {
+				catcode = catcode + SSTConstant.LINE_BREAK;
+			}
+
+			categoryCode.append(catcode);
+		}
+		return categoryCode;
+	}
+
+	// 26770 - end fix sonarlint
 }
 

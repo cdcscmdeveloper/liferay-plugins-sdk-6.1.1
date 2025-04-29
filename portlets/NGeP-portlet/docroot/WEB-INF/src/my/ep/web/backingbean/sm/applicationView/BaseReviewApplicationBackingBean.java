@@ -4561,12 +4561,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		SupplierSearchReqDTO searchReqDTO = new SupplierSearchReqDTO();
 		searchReqDTO.setSupplierId(currSupp.getSupplierId());
 		SmAppl smAppl = SmServiceLookup.getSupplierSearchSO().retriveLatestApplBySupplierId(searchReqDTO).getSmAppl();
-		if(smAppl != null){
-			currSupp.setSmAppl(smAppl);
-		}
 		
-		if (currSupp.getSmAppl() != null) {
-			String suppType = currSupp.getSmAppl().getSupplierType();
+		if (smAppl != null) {
+			String suppType = smAppl.getSupplierType();
 			isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
 					|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
 		}
@@ -4595,7 +4592,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			// 28281 (bumi cat code) start
 			retVal.setCategoryCodeList(getCategoryCodeListDA(da));
-			retVal.setBlacklistownerDirectorList(getSupplierHasPersonnelBlacklist(supplierId));
+			retVal.setBlacklistownerDirectorList(getPersonnelBlacklist(da.getDisciplinaryActionId()));
 			retVal.setMofNoExist(isMOF);
 			voList.add(retVal);
 		}
@@ -4960,7 +4957,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		return getDisciplinaryActionVOList(resultList, currSupp);
+		List<DisciplinaryActionVO> voList =  getDisciplinaryActionVOList(resultList, currSupp);
+		return voList;
 	}
 	//31033 end
 	

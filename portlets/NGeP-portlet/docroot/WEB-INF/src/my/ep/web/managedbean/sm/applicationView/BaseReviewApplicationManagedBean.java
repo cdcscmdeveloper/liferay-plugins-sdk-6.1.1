@@ -277,8 +277,12 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Date poRemarkAfterSiteVisitCreatedDate;
 	private String secondPoUserName = null;
 	// #29664 - start
+	//26238 - start
 	private boolean basicAccountMaintenance; //27437 : Disciplinary action
 	private SmSupplierOwner smSuppOwner; //26238
+	private boolean flagBlacklistCancel;	//28146
+	private boolean disableDownloadButtonDAHistory;	// 28342
+	//26238 - end
 	private boolean viewSupplierMaintenancePage; // #26639
 	
 	//28281 - start
@@ -360,13 +364,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		this.supportingDocMode = supportingDocMode;
 	}
 	//28771- end
-	
-	//26238 -  Disciplonary action - 28146
-	private boolean flagBlacklistCancel;
-	
-	// 28342 : Disciplinary Action - start
-	private boolean disableDownloadButtonDAHistory;
-	// 28342 : Disciplinary Action - end
 	
 	//28637
 	private boolean viewCatCode;
