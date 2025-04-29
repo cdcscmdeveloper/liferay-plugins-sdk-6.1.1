@@ -81,6 +81,7 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -534,7 +535,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setLoiLoaItemsResult(null);
 		}
 		// Bug 34404 - related to 29007 - end
-		new QtLOABackingBean().isSupplierEPVStatusRejected();//#36339, #21692
+		new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339, #21692
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -4786,19 +4787,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#21692 add supplier remark - start
 		if(BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)
 				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			
-			boolean remarksEmpty = false;
-			
+
 			// check if remark is empty
 			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
-			if(CollectionUtils.isNotEmpty(scLoaRemarks)){
-				for(ScLoaRemark each : scLoaRemarks){
-					if(StringUtils.isEmpty(each.getRemark())){
-						each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
-						break;
-					}
-				}
-			}else {
+			if (CollectionUtils.isNotEmpty(scLoaRemarks)) {
+				addSupplierRemark(scLoaRemarks);//#21692 sonarlint
+			} else {
 				for (ScLoaRemark each : scLoaRemarks) {
 					each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
 				}
@@ -4981,6 +4975,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 				action = ApprovalAction.APPROVAL_REVISED.value();
 			}
+			//#21692 - Start
+			else if (BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_CANCEL.value();
+			}
+			//#21692 - End
 
 			if(null != action){
 				scLoaApproval.setApproverAction(action);
@@ -12168,50 +12167,71 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// #32648 populate lampiran 7 if LOA at supplier - end
 	
-	//#21692 - start
+	//#21692 - Start
+	/**
+	 * check supplier response for proposal validity extension
+	 * 
+	 * @param supplierId
+	 * @return TRUE IF supplier Rejected Validity Extension
+	 */
 	public boolean isSupplierStatusRejectedEPV(Long supplierId) {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
-			List<Long> suppList = new ArrayList<>();
-			if (null != supplierId) {
-				suppList.add(supplierId);
-				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
-			}
-			
-		} finally {
-			detailSO = null;
+		List<Long> suppList = new ArrayList<>();
+		if (null != supplierId) {
+			suppList.add(supplierId);
+			supplierStatus = getQTDetailSO().checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
 		}
 		
 		return supplierStatus;
 	}
-	
-	public boolean isLOAStatusAbleToCancel() {
-		boolean isAble = false;
-		
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * retrieve current status of LOA
+	 * 
+	 * @return
+	 */
+	public Long isLOAStatusAbleToCancel() {
 		IScWorkFlowStatusSO workFlowStatusSO;
 		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
-		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScWorkFlowStatusSO.class);
 		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 		scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
-		
-		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
-		
-		isAble = null != currentWorkFlowStatus && (
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION) ||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
-				)? true : false;
-		
-		return isAble;
+
+		return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId();
 	}
-	//#21692 - end
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Enable LOA without BPM (LOA Submission) to be cancelled for rejecting
+	 * proposal validity extension
+	 */
+	public void cancelLOAWithoutBPM() {
+		try {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			/**
+			 * Will update LOA workflow status: Cancelled (Not agree with
+			 * extension validity period) and ScQtRecommendDtl: IS_LOA_AWARDED =
+			 * FALSE and RECORD_STATUS = Rejected (4). IF all LOAs' status
+			 * either Completed, Rejected OR Cancelled (Not agree with extension
+			 * validity period), QT will exit and goes to Refinalization.
+			 */
+			QuationTenderResDTO resDTO = getQTDetailSO().cancelLOAWithoutBPM(scLoa);
+
+			if (resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("LOI", "CancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
+					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#21692 - End
 	
 	// 34242 - Start
 	public void retainAwardPage() {
@@ -12605,5 +12625,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// 26770 - end fix sonarlint
+	
+	//#21692 sonarlint - Start
+	private void addSupplierRemark(List<ScLoaRemark> scLoaRemarks) {
+		for (ScLoaRemark each : scLoaRemarks) {
+			if (StringUtils.isEmpty(each.getRemark())) {
+				each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+				break;
+			}
+		}
+	}
+	//#21692 sonarlint - End
 }
 
