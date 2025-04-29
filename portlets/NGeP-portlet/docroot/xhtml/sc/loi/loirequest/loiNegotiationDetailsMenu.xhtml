@@ -195,7 +195,7 @@
 		<div align="right" class="BtnSpacing">
 			<!-- #29007	Vinod Start -->
 			<p:commandButton value="#{lbl['lbl.sc.loi.btn.suppliers.proposal.specification.update']}"
-				process="@this" partialSubmit="true"
+				process="@this negoTermstbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addSuppliersProposalSpecificationUpdate}"
 				 oncomplete="lovPopulateSelection()"
 				rendered="#{lOIDetailBackingBean.managedBean.buttonFlag and isPendingNegotiation}" />
