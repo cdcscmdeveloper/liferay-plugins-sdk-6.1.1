@@ -3431,4 +3431,35 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 	// #7754_#35984 - End
 	
+	//#32521 - start
+	public String getConditionFieldsCompany(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		return "smSupplier.smAppl.supplierType^" + suppType;
+	}
+	
+	public String getConditionFieldsPO(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		String searchZone = "pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			return searchZone + "1";
+		}
+		String zone = getManagedBean().getZone();
+		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				return searchZone + "1";
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				return searchZone + "2";
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				return searchZone + "3";
+			}
+		}
+		return "";
+	}
+	//#32521 - end
 }
