@@ -570,18 +570,16 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		
 		// #24333 - Start
 		if (getManagedBean().getCtAgreement().getCtAmendment() != null
-				&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend()) { //#38138
-			if (getManagedBean().getContractVer().getCtContractAmounts() != null) {
-				for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
-					if (contractAmt.getEffDate().getTime() <= getManagedBean().getContractVer().getCtContractValue()
-							.getExpDate().getTime()
-							&& contractAmt.getExpDate().getTime() >= getManagedBean().getContractVer()
-									.getCtContractValue().getExpDate().getTime()
-							&& (contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)
-							&& contractAmt.isBondReq()) {
-						getManagedBean().setBondAttachmentCompleted(true);
-						break;
-					}
+				&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend()
+				&& getManagedBean().getContractVer().getCtContractAmounts() != null) {
+			long expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime();
+			for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
+				if (contractAmt.getEffDate().getTime() <= expDate
+						&& contractAmt.getExpDate().getTime() >= expDate
+						&& (contractAmt.getIsBondAttachment() == null || contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)
+						&& contractAmt.isBondReq()) {
+					getManagedBean().setBondAttachmentCompleted(true);
+					break;
 				}
 			}
 		}
