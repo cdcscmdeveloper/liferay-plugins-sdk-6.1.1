@@ -1664,7 +1664,7 @@ public class ConsolidationReportBackingBean extends
 					resultDtlBean = new QtEvaluationResultDtlBean();
 					resultDtlBean.setQtEvalResDtlId(evalResDtl.getEvaluationResultDtlId());
 					resultDtlBean.setEvaluationRank(evalResDtl.getEvalRank());
-					setRankNull(evalResDtl);
+					setRankNull(evalResDtl);//#21692
 					resultDtlBean.setDeskOfficerRank(evalResDtl.getDeskOfficerRank());
 					resultDtlBean.setDeskOfficerRemark(evalResDtl.getDeskOfficerRemark());
 				}
@@ -2067,7 +2067,7 @@ public class ConsolidationReportBackingBean extends
 													.getDeskOfficerRemark());
 								}
 							}
-							setRankNull(qualSupplier);
+							setRankNull(qualSupplier);//#21692
 						}
 						getManagedBean().setMaxRank(
 								String.valueOf(resultBean.getTotalRecord()));

@@ -74,9 +74,11 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	/** The back to previous page. */
 	private String backToPreviousPage;
 	
-	private boolean ableToCancelLOA;//#36339, #21692
-	private boolean ableToCancelLOAWithoutBPM;//#21692
-	private boolean ableToSubmitLOA;//#21692
+	//#21692 - Start
+	private boolean ableToCancelLOA;
+	private boolean ableToCancelLOAWithoutBPM;
+	private boolean ableToSubmitLOA;
+	//#21692 - End
 
 
 	/**

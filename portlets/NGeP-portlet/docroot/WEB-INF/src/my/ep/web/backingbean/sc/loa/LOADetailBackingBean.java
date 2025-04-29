@@ -4787,19 +4787,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#21692 add supplier remark - start
 		if(BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)
 				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			
-			boolean remarksEmpty = false;
-			
+
 			// check if remark is empty
 			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
-			if(CollectionUtils.isNotEmpty(scLoaRemarks)){
-				for(ScLoaRemark each : scLoaRemarks){
-					if(StringUtils.isEmpty(each.getRemark())){
-						each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
-						break;
-					}
-				}
-			}else {
+			if (CollectionUtils.isNotEmpty(scLoaRemarks)) {
+				addSupplierRemark(scLoaRemarks);//#21692 sonarlint
+			} else {
 				for (ScLoaRemark each : scLoaRemarks) {
 					each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
 				}
@@ -12174,7 +12167,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// #32648 populate lampiran 7 if LOA at supplier - end
 	
-	//#21692 - start
+	//#21692 - Start
 	/**
 	 * check supplier response for proposal validity extension
 	 * 
@@ -12632,5 +12625,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// 26770 - end fix sonarlint
+	
+	//#21692 sonarlint - Start
+	private void addSupplierRemark(List<ScLoaRemark> scLoaRemarks) {
+		for (ScLoaRemark each : scLoaRemarks) {
+			if (StringUtils.isEmpty(each.getRemark())) {
+				each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+				break;
+			}
+		}
+	}
+	//#21692 sonarlint - End
 }
 

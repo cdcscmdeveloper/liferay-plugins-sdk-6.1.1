@@ -412,9 +412,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 
-	private boolean ableToCancelLOI;//#36339, #21692
-	private boolean ableToCancelLOIWithoutBPM;//#21692
-	private boolean ableToSubmitLOI;//#21692
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	//#21692 - End
 	
     /**
      * Gets the spki backing bean.

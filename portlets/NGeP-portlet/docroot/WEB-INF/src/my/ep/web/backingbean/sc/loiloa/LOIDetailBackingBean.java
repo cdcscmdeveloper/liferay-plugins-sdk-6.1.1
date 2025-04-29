@@ -6683,7 +6683,7 @@ public class LOIDetailBackingBean extends
 		return QTConstants.PORTLET_NAME_QT_LOI_LIST
 				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-	// #21692 - end
+	// #21692 - End
 	
 	//#21692 - Start
 	/**

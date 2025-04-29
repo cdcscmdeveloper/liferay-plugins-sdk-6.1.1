@@ -510,7 +510,12 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				|| QTConstants.PORTLET_NAME_QT_TECHSUPP.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	
-	//#21692 - start
+	//#21692 - Start
+	/**
+	 * Check If Supplier EPV Status Is Rejected
+	 * 
+	 * @return
+	 */
 	public void isSupplierEPVStatusRejected(ScLoa scLoa) {
 		boolean supplierStatus = false;
 
@@ -520,7 +525,8 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
 
-		if (null != scLoa.getScLoiLoa()) {
+		if (null != scLoa.getScLoiLoa()
+				&& !scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 
 			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTDetailSO.class);
@@ -536,7 +542,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			}
 
 			// check the validity of BPM version, if version is equal/higher will enable button
-			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(),
+			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
 					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 
 			// will hide submit LOA button if supplier reject EPV (prerendered == false)
@@ -547,12 +553,12 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		// cancel button will show/hide based on this (prerendered false/true)
 		getManagedBean().setAbleToCancelLOA(
 				supplierStatus
-						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));//#36339, #21692
+						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
 		// cancel button during Pending LOA Submission only
 		getManagedBean().setAbleToCancelLOAWithoutBPM(
 				supplierStatus
 						&& new LOADetailBackingBean().isLOAStatusAbleToCancel().equals(
-								QTStatusConst.LOA_PENDING_SUBMISSION));//#21692
+								QTStatusConst.LOA_PENDING_SUBMISSION));
 	}
 	//#21692 - End
 
@@ -560,7 +566,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	public boolean isLoaListPortlet() {
 		return QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
-	//#21692 - end
+	//#21692 - End
 	
 }
 
