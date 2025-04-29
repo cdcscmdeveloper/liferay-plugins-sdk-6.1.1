@@ -868,9 +868,12 @@ public class NoticeBoardBackingBean extends
 		
 		//#28777 & #29729 - Start
 		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 					MessageUtils.getMessage(MessageConst.INFO_760522, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}else{
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
 		}
 		//#28777 & #29729 - End
 		
@@ -2373,7 +2376,15 @@ public class NoticeBoardBackingBean extends
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv(),null);
 					
-				    briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES); //#28777 & #29729
+					//#28777 & #29729 - Start
+				    briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES); 
+				    if(briefingZoneBean.isBranchDeactivated()){
+				    	this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
+				    }else{
+				    	this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
+				    }
+				    //#28777 & #29729 - End
+				    
 					bsvZoneBeans.add(briefingZoneBean);
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 					if(isNotRigistered && !isRenderRigsterbtn){
