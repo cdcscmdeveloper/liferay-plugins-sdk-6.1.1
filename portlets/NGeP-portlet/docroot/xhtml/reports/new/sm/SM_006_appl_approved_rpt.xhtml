@@ -49,6 +49,22 @@
 				<p:inputText maxlength="20" value="#{applApprovedRptBB.managedBean.mofNo}" 
 				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}"/>
 			</td>
+			<!-- 32521 - START -->
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" /></td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{applApprovedRptBB.managedBean.applType}" style="width:300px;">
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.NewApplicationforMOF']}" itemValue="N" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.renewAccMOF']}" itemValue="R" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.applType.updateAccMOF']}" itemValue="U" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.addCatCode']}" itemValue="A" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiStatus']}" itemValue="B" />
+					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+				
+			</td>
+			<!-- 32521 - END -->
 		</tr>
 		
 		<tr>
@@ -58,6 +74,18 @@
 			<td>
 				<ac:smReportDateFromTo bBean="#{applApprovedRptBB}" />
 			</td>
+			<!-- 32521 - START -->
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.approvedBy']}"  />
+			</td>
+			<td class="tdContent">
+						<ac:lov id="lovUser" lovId="PM_USER_ID" style="width:289px;" size="40"
+		            	readonly="true" 
+						headerText="#{lbl['lbl.pm.ta.user.lov']}"
+						value="#{applApprovedRptBB.managedBean.selectedUser.userName}" 
+						saveObject="applApprovedRptBB.managedBean.selectedUser" />
+			</td>
+			<!-- 32521 - END -->
 		</tr>
 	</table>
 	<ac:lovPopup />

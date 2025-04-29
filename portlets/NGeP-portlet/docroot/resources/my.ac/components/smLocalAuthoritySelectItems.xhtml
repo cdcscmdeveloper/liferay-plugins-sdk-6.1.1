@@ -16,12 +16,13 @@
 </cc:interface>
 
 <cc:implementation>
+	<!-- #36718 - remove disabled from selectOneMenu, add disable for upsCannotEdit -->
 	<p:selectOneMenu value="#{cc.attrs.smSupplier.localAuthorityId}" 
 		required="#{cc.attrs.required}"
 		rendered="#{cc.attrs.isShow and (cc.attrs.smSupplier.businessType eq 'D' or cc.attrs.smSupplier.businessType eq 'E' 
 				or cc.attrs.smSupplier.businessType eq 'G' or cc.attrs.smSupplier.businessType eq 'H')}" 
-		disabled="#{cc.attrs.backingBean.getListSize(cc.attrs.backingBean.managedBean.localAuthorityItems) eq 1 or cc.attrs.disabled}"
 		label="#{lbl['lbl.sm.local.authority']}"
+		disabled="#{cc.attrs.disabled}"
 		style="width:80%" id="localAuthorityId">
 		<f:selectItems value="#{cc.attrs.backingBean.managedBean.localAuthorityItems}" />
 	</p:selectOneMenu>

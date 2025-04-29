@@ -6,7 +6,6 @@ package my.ep.web.backingbean.ct.suspension;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +21,7 @@ import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
+import my.ep.comparator.ct.CtContractItemComparator;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -49,6 +49,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -201,6 +202,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	/**
 	 * This  method used to set retrieve value from BPM or contract maintenance
 	 */
+	@SuppressWarnings("unchecked") //#36726
 	public void setSuspensionContractVer(ContractReqDTO reqDTO){
 		ctBB.renewSesionObject();
 		IContractSuspensionSO contractSuspensionSO= null;
@@ -237,7 +239,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			
 			/*If statement  for check contact item start*/
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
-				Collections.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItem());
+				CustomUtils.sort(getManagedBean().getContractVer().getCtContractItems(), new CtContractItemComparator()); //#36726
 
 				for (CtContractItem contractItem : getManagedBean().getContractVer().getCtContractItems()) {
 					getManagedBean().getContractItemList().add(contractItem);

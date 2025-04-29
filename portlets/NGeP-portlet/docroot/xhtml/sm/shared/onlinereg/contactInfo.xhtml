@@ -61,9 +61,11 @@
 					<p:outputLabel value="#{lbl['lbl.sm.correspondenceadd']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
+				<!-- #36718 - add listener to ajax -->
 				<td class="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
 						value="#{registrationBackingBean.managedBean.sameAddress}">
-						<p:ajax event="change" update="pnlContactInfo"  />
+						<p:ajax event="change" update="pnlContactInfo"  
+						listener="#{registrationBackingBean.onTickSameAddress()}" />
 					</p:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.sm.sameasabove']}"></h:outputText></td>
 				<td class="tdTitle">&#160;</td>
 				<td class="tdContent">&#160;</td>
@@ -96,7 +98,8 @@
 						<f:selectItems var="resState"
 							value="#{registrationBackingBean.managedBean.residentialStateLs}"
 							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
-						<p:ajax event="change"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@([id$=pnlContactInfo])" 
 							listener="#{registrationBackingBean.populateDistrictByAddType('residential', true)}"
 							update="pnlContactInfo,divisionContLabelPanelId,divisionContDropdownPanelId,cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
@@ -124,7 +127,8 @@
 							value="#{registrationBackingBean.managedBean.residentialDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@this @([id$=pnlContactInfo])" 
 							listener="#{registrationBackingBean.populateDivisionByAddType('residential', true)}"
 							update="cmbResDistrict,cmbResCity" />
 					</p:selectOneMenu>
@@ -156,7 +160,8 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.residentialDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
-						<p:ajax event="change"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@([id$=pnlContactInfo])" 
 							listener="#{registrationBackingBean.populateCityByAddType('residential', true)}"
 							update="cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResDistrictMsg" for="cmbResDistrict"

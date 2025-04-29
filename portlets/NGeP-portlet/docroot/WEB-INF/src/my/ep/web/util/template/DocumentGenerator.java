@@ -121,7 +121,6 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
         }
 		
     	Template template = getVelocityEngine().getTemplate("templates" + velocityTemplate);
-    	template.setEncoding("UTF-8"); //#35295 @zaim
     	log.info("template: " + template);
     	
     	StringWriter output = null;

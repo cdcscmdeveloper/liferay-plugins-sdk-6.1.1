@@ -29,10 +29,20 @@
 	<ui:remove> #30477 End </ui:remove>
 		<table width="100%">
 		<tr>
-		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;"
+			<ui:remove> #35500 Start </ui:remove>
+			<td style="vertical-align: bottom; float:right;" >
+				<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}" 
+					action="#{auditQTBackingBean.redirectToAuditTrailsViews(qTDetailBB.managedBean.qt.qtId)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.auditViewRole}" />
+					&#160;&#160;&#160;
+					
+				<p:commandLink
+					value=" #{lbl['lbl.td.doc.trackingDiary']} " 
 					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
-					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}"/></td>
+					immediate="true"
+					rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}" />
+			</td>
+		<ui:remove> #35500 End </ui:remove>		
 		</tr>
 		<ui:remove>//29464-start</ui:remove>
 		<c:if test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">

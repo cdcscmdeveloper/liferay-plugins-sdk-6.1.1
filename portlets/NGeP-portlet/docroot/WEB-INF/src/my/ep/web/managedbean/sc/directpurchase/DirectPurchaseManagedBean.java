@@ -233,9 +233,13 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 							.add(new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(),
 									getSearchStatusId()));
 				} else { // start - #36018
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
-									DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+					//25790 & 36720 - start
+					if (isSearchDPM()) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
+					}
+					//25790 & 36720 - start
 				}// end - #36018
 
 				if(getSearchDocumentFromDuration() != null && getSearchDocumentToDuration() != null) {

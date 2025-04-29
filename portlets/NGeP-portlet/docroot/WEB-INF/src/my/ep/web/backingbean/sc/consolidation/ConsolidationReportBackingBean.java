@@ -153,6 +153,7 @@ public class ConsolidationReportBackingBean extends
 			loadInitialData();
 			// #18685 - Start.
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
+			getManagedBean().setAllSupplierDisagreeEPV(allSupplierDisagreeEPV(qtId));//#21692
 			// #18685 - End.
 			fc.getApplication()
 					.getNavigationHandler()
@@ -545,7 +546,8 @@ public class ConsolidationReportBackingBean extends
 		// #28834 - Start.
 		List<ScQtFinalizationReport> briefingPaperList = null;
 		List<ScQtFinalizationReport> decisionPaperList = null;
-		for (ScQtFinalizationReport report: getManagedBean().getScQtFinalization().getScQtFinalizationReports()) {
+		for (ScQtFinalizationReport report : briefingPaperDisplayFilter(getManagedBean().getScQtFinalization()
+				.getScQtFinalizationReports())) { // 37623
 			  if (report.getTitle().contains("Kertas Taklimat")) {
 				  if (briefingPaperList == null) {
 					  briefingPaperList = new ArrayList<>();
@@ -654,19 +656,20 @@ public class ConsolidationReportBackingBean extends
 		debugLogger("downloadAllEvaluationReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getEvaluationReportList();
-		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-
-		for (int i = 0; i < scQtFinalizationReports.size(); i++) {
-			ScQtFinalizationReportAttachment attachment = scQtFinalizationReports
-					.get(i).getScQtFinalizationReportAttachment();
+		// 37622 - start
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<>();
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
 			if (attachment == null) {
-				attachment = generateDocumentAttachment(scQtFinalizationReports
-						.get(i));
-				scQtFinalizationReports.get(i)
-						.setScQtFinalizationReportAttachment(attachment);
+				attachment = generateDocumentAttachment(report);
+				report.setScQtFinalizationReportAttachment(attachment);
+			}
+			if (attachment != null) {
+				attachment.setTempFileName(report.getTitle());
 			}
 			scAttachments.add(attachment);
 		}
+		// 37622 - end
 
 		// Generate all the reports before submission
 		if (!getManagedBean().isSubmit()) {
@@ -2665,6 +2668,23 @@ public class ConsolidationReportBackingBean extends
 			
 			//Will be the list of instruction(s) above, can be empty if no condition met.
 			return instructionList;
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		/**
+		 * @return String Warning message for no supplier accept Extend Proposal Validity
+		 */
+		public String getNoSupplierWarningMessage() {
+			return MessageUtils.getMessage(MessageConst.WARN_7602693, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					new FacesScopes().getUserLocale());
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		private boolean allSupplierDisagreeEPV(Long qtId) {		
+			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			return qtDetailSO.allSupplierDisagreeEPV(qtId);
 		}
 		//#21692 - End
 }

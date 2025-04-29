@@ -93,6 +93,8 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
+import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -125,6 +127,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmPersonBlacklist;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSapVendorCode;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -142,6 +145,7 @@ import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.SLALogConstant;
@@ -166,6 +170,8 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.sm.helper.VmUtil;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.BlacklistOwnerDirectorVO;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -194,6 +200,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
+	private static final int MAX_LENGTH = 53; //#29418
 
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
@@ -1799,6 +1806,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return filename;
 	}
+	
+	//#29418 start
+	/**
+	 * Gets the medium file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
+	public String getMediumFileName(String filename) {
+        if (StringUtils.isEmpty(filename) || filename.length() <= MAX_LENGTH) {
+            return filename;
+        }
+
+        StringBuilder truncatedFilename = new StringBuilder(filename.substring(0, MAX_LENGTH));
+        truncatedFilename.append("...");
+        
+        return truncatedFilename.toString();
+    }
+	//#29418 end
 
 	/**
 	 * Retrieve jabatan by org profile id.
@@ -2491,6 +2517,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			this.getManagedBean().setCurrentTaskDocType(resDTO.getDocType());
 			this.getManagedBean().setCurrentTaskCreatedDate(resDTO.getCreateDate());
 			// 25037 - end
+			// #29007 Start Vinod
+			this.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo());
+			// #29007 End Vinod
 			return (BPM_DATA_TYPE) payLoad;
 
 		} finally {
@@ -2824,18 +2853,22 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 				}
 			}
 			public boolean businessTypeIsROB(String businessType){
-				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
+				//#36710 --START
+				if(businessType != null && (businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
 						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-																				){
+																				)){
+					//#36710 --END
 					return true;
 				}else{
 					return false;
 				}
 			}
 			public boolean businessTypeIsROC(String businessType){
-				if(businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
+				//#36710 --START
+				if(businessType != null && (businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)
 						|| businessType.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
-																				){
+																				)){
+					//#36710 --END
 					return true;
 				}else{
 					return false;
@@ -3440,19 +3473,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 			}
 		}
 		return retVal;
-	}	
-	
-	//29956 START
-	public static boolean isMofAccEffDatePassed6MonthCurrDate(SmSupplier supplier) {
-		Boolean retVal = false;
-		if (supplier != null && supplier.getSupplierId() != null) {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			retVal = SmServiceLookup.getMofAccountSO().checkPopupRuleMOFActiveByBetweenTodayEffDateAnd6Month(reqDTO);
-		}
-		return retVal;
 	}
-	//29956 END
 		
 	public static void checkEquityOwnerUpdateAllowance(
 			BaseManagedBean managedBean) {
@@ -3494,6 +3515,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		context.put("businessNaturelbl", ResourceBundleUtils.getMessage("lbl.sm.nature.of.biz.hdr",ResourceBundleUtils.BUNDLE_COMMON_LABELS,face.getUserLocale()));
 		context.put("companyInfo", this.getManagedBean().getSmSupplierSsm());
 		context.put("companyBasic", this.getManagedBean().getSmCompanyBasicSsm());
+		context.put("ssmNewRegNo", this.getManagedBean().getSmSupplier().getSsmNewRegNo());	//#24819
 		context.put("smAddress", this.getManagedBean().getSmAddress());
 		context.put("ownerInfo", this.getManagedBean().getPersonnelsOwnerSsm());
 		context.put("directorInfo", this.getManagedBean().getSmPersonnelDirectorSsm());
@@ -4150,53 +4172,66 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	//#28175, 29380 - Site Visit Grouping Enhancement -28775 - end
 	
 	//START #29956
+	/**
+	 * This method manages the popup and role downgrades based on the application and personnel details.
+	 * It clears roles, adjusts flags, and triggers UI changes as needed. It also includes logging for TDD validation.
+	 *
+	 * @param smAppl The application object
+	 * @param ssmResDTO The personnel and role data
+	 * @return boolean indicating whether the downgrade role is set
+	 */
 	public boolean displayPopupDowngradeSSMOwner(SmAppl smAppl,SsmResDTO ssmResDTO){
-		getManagedBean().getPersonnelsRole().clear();
-		getManagedBean().setDowngradeRole(false);
-		getManagedBean().setDisAllowOwnerEdit(false);
-		
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-		Boolean isMofAccEffDatePassed6MonthCurrDate = isMofAccEffDatePassed6MonthCurrDate(supplier);
-		Boolean isBasicAccount = smAppl.getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_BASIC) ? true : false;
-		
-		PersonnelReqDTO reqDto = new PersonnelReqDTO();
-		reqDto.setApplId(smAppl.getApplId());
-		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
-		if(resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()){
-			for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
-				SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
-				SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+	    getManagedBean().getPersonnelsRole().clear();
+	    getManagedBean().setDowngradeRole(false);
+	    getManagedBean().setDisAllowOwnerEdit(false);
 
-				Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
-				Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
-				Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull &&(isMofAccEffDatePassed6MonthCurrDate || (!isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
-				
-				if(shouldAddPersonnel){
-					getManagedBean().getPersonnelsRole().add(personnel);
-				}
-				
-				if(isPersonnelAdminRole
-						&& !isMofAccEffDatePassed6MonthCurrDate
-						&& !isBasicAccount){
-					getManagedBean().setDisAllowOwnerEdit(true);
-					break;
-				}
-			}
-		}
-		if(getManagedBean().getPersonnelsRole() != null 
-				&& !getManagedBean().getPersonnelsRole().isEmpty()) {
-			getManagedBean().setDowngradeRole(true);
-			
-			String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
-			getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[] { epRole }));
-			getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[] { epRole }));
-			
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
-			RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
-		}
-		return getManagedBean().isDowngradeRole();
+	    SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
+	    Boolean isMofAccEffDatePassed6MonthCurrDate = SmApplicationUtil.isMofAccEffDatePassedCurrDate(supplier);
+
+	    String applType = smAppl.getApplType();
+	    Boolean disallowEditApplType = applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+	    		|| applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI);
+
+	    PersonnelReqDTO reqDto = new PersonnelReqDTO();
+	    reqDto.setApplId(getManagedBean().isResubmitAppl() ? smAppl.getApplId() : supplier.getSmAppl().getApplId());
+	    PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO().retrieveOwnerOrDirectorByApplId(reqDto);
+
+	    if (resDto.getSmPersonnelList() != null && !resDto.getSmPersonnelList().isEmpty()) {
+	        for (SmPersonnel personnel : resDto.getSmPersonnelList()) {
+	            SmPersonnel personnelOwner = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelOwners(), "identificationNo");
+	            SmPersonnel personnelDirector = (SmPersonnel) EntityHelper.getEntityBySinglePropertyFromList(personnel.getIdentificationNo(), ssmResDTO.getSmPersonnelDirector(), "identificationNo");
+
+	            Boolean isPersonnelAdminRole = isPersonnelAdminRole(personnel);
+	            Boolean isPersonnelOwnerDirectorNull = isPersonnelOwnerDirectorNull(personnelOwner, personnelDirector);
+
+	            Boolean shouldAddPersonnel = isPersonnelOwnerDirectorNull && (!isMofAccEffDatePassed6MonthCurrDate || (isMofAccEffDatePassed6MonthCurrDate && isPersonnelAdminRole));
+
+	            if (shouldAddPersonnel) {
+	                getManagedBean().getPersonnelsRole().add(personnel);
+	            }
+
+	            if (isPersonnelAdminRole && isMofAccEffDatePassed6MonthCurrDate && disallowEditApplType) {
+	                getManagedBean().setDisAllowOwnerEdit(true);
+	                break;
+	            }
+	        }
+	    }
+
+	    if (getManagedBean().getPersonnelsRole() != null && !getManagedBean().getPersonnelsRole().isEmpty()) {
+	        getManagedBean().setDowngradeRole(true);
+
+	        String epRole = getEpRoleDowngradePopupByPersonnel(getManagedBean().getPersonnelsRole());
+	        getManagedBean().setTermAndConditionCheckOwner(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerA(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.a", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerC(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.c", new String[]{epRole}));
+	        getManagedBean().setTermAndConditionCheckOwnerChangeRole(SmCommonUtil.getMessage("lbl.sm.term.and.condition.checkowner.changerole", new String[]{epRole}));
+
+	        RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+	        RequestContext.getCurrentInstance().execute("ownerCheckingWidgetVar.show()");
+	    }
+
+	    return getManagedBean().isDowngradeRole();
 	}
 	
 	public Boolean isPersonnelAdminRole(SmPersonnel smPersonnel){
@@ -4235,4 +4270,78 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return formatted.replaceAll("(\r\n|\n)", "<br/>");
 	}
 	// #28854 - End
+	
+	@Deprecated
+	/**
+	 * Retrieves a list of personnel blacklisted under a specific supplier.
+	 *
+	 * @param supplierId
+	 * @param isActive
+	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
+	 */
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId, boolean isActive) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveSupplierHasPersonnelBlacklist(supplierId, isActive);
+		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
+		if (blacklistPersonnel.isEmpty()){
+			return blacklist;
+		}
+		for (SmPersonBlacklist per : blacklistPersonnel){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
+			reqDTO.setDirectorIdNo(per.getIdentificationNo());
+			reqDTO.setBlacklist(isActive);
+			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
+					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
+				blacklistOwner.setIcNo(per.getIdentificationNo());
+				blacklist.add(blacklistOwner);
+			}
+		}
+		return blacklist;
+	}
+	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
+	}
+	
+	//26238 - START
+	/**
+	 * Retrieves the list of active disciplinary actions for the given supplier.
+	 * 
+	 * @param smSupplier The supplier for whom disciplinary actions are being retrieved.
+	 * @return A list of {@link DisciplinaryActionVO} representing the active disciplinary actions
+	 *         associated with the given supplier. If an error occurs, an {@link EpException} is thrown.
+	 * @throws EpException If there is an issue retrieving disciplinary actions.
+	 */
+	public static List<DisciplinaryActionVO> onDisplayActiveDisciplinaryAction(SmSupplier smSupplier) {
+		try {
+			// #30756 start
+			smSupplier.setFlagSupplier(true);
+			smSupplier.setFlagDASuppProfile(true);
+			// #30756 end
+
+			return ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
+		} catch (Exception e) {
+			log.error("An error occurred while handling disciplinary actions for supplier: ", e);
+			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
+		}
+	} 
+	//26238 - END
 }
