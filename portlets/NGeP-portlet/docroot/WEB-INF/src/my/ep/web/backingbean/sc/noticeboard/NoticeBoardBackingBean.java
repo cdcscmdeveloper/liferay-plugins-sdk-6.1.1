@@ -847,6 +847,21 @@ public class NoticeBoardBackingBean extends
 		managedBean.setPreviousPage(MAIN_PAGE);
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
+		
+		//#28777 & #29729 - Start
+		if(managedBean.getScQt().isZonal()){
+			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
+			if(defaultBsvBean.isBranchDeactivated()){
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
+						MessageUtils.getMessage(MessageConst.INFO_760522, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}else{
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			}
+		}
+		//#28777 & #29729 - End
+		
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
@@ -934,12 +949,12 @@ public class NoticeBoardBackingBean extends
 	**/
 	private void checkValidationForBranchDeactivated(BriefingZoneBean selectedBsvBean){
 		if(selectedBsvBean.isBranchDeactivated()){
-			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 					MessageUtils.getMessage(MessageConst.INFO_760522, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}else{
-			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
 		}
 	}
 	//#28777 & #29729 - End
@@ -2379,9 +2394,9 @@ public class NoticeBoardBackingBean extends
 					//#28777 & #29729 - Start
 				    briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES); 
 				    if(briefingZoneBean.isBranchDeactivated()){
-				    	this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
+				    	this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
 				    }else{
-				    	this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
+				    	this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
 				    }
 				    //#28777 & #29729 - End
 				    
