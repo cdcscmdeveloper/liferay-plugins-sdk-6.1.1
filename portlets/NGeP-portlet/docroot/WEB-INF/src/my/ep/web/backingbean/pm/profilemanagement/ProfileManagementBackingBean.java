@@ -2804,7 +2804,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 							&& userRole.getPmRole().isLimitRequired()) {
 						//SQ: remove compareTo
-						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().intValue() != 1) {
+						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().signum() <= 0) {
 							throw new EpException(MessageConst.ERROR_770148,
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
