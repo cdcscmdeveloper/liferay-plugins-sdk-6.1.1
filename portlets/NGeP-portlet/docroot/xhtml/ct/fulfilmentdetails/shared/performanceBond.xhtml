@@ -32,7 +32,7 @@
 			</h:panelGrid>
 			<p:outputLabel id="overallContractAmount" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  disabled="true">
+	  			value="#{ctBackingBean.calculateOriginalOverallAmount()}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 	   	
