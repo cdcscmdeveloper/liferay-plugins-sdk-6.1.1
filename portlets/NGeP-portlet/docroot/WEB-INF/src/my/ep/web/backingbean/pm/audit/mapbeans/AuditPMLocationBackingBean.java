@@ -138,10 +138,9 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getResState().getPmCountry()
-					.getCountryName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateName(),
+			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getState().getStateName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_DIV_DVCODE_FIELDLABELID, null, managedBean.getResDivision().getDivisionCode(),
