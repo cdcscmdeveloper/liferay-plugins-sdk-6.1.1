@@ -290,6 +290,7 @@ public interface QTConstants {
 	//#11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
 	//#11104 -end-
 	
 	// 32453, #21695, #25138 -start-
@@ -409,4 +410,8 @@ public interface QTConstants {
 	public static final String QT_STATUS_BUTTON_ENDORSE = "ENDORSE";
 	public static final String SUPPLIER_CRITERIA = "SC";//#29732 change hard code to constant
 	//#29732 -End
+
+	// #36757 Start Vinod
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 End Vinod 
 }
