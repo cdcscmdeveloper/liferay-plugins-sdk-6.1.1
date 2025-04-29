@@ -1191,7 +1191,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// End Reopen 9019
 
 			CommitteResDTO committeResDto = null;
-
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
@@ -1253,7 +1252,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
-
+				committeReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign,
 							ParameterConst.DOCTYPE_COMMITTE_APROVAL,
@@ -1281,6 +1280,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				qtReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTDetailSO.class);

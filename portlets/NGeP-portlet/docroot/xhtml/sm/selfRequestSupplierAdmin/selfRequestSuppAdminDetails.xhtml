@@ -336,10 +336,8 @@
 				    <td><p:outputPanel id="divisionSrDropdownPanelId">
 					<ui:fragment
 						rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.pmState.adoptDivision}">
-						<!-- #34159 - START -->
 						<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-							label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.division']}"
-							required="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.pmState.adoptDivision}"
+							label="#{lbl['lbl.sm.division']}"
 							value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.divisionId}"
 							id="suppAdminPermDivision">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -349,8 +347,6 @@
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeDivision(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress)}"
 							update="suppAdminPermDist,suppAdminPermCity" />
 						</p:selectOneMenu>
-						<p:message id="suppAdminPermDivisionMsg" for="suppAdminPermDivision" showSummary="true" showDetail="false" display="icon" />
-						<!-- #34159 - END -->
 					</ui:fragment>
 					</p:outputPanel></td>
 			</tr>

@@ -324,8 +324,7 @@
 				</td>
 				<td class="tdContent">
 					<h:panelGroup id="divisionAssocDropdownPanelId">
-					<!-- #34159 - START -->
-						<p:selectOneMenu id="assocDivision" required="#{backingBean.managedBean.valueReqd}"
+						<p:selectOneMenu id="assocDivision"
 						label="#{lbl['lbl.sm.division']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.divisionId}"
 						style="width: 207px;margin-bottom: 5px;background-color:white;"
@@ -340,7 +339,6 @@
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedAssocCompany.smAddress,SupplierManagementConst.SM_ASSOC_COMPANY_PANEL)}"
 								update="assocDist,assocCity" />
 					</p:selectOneMenu>
-					<!-- #34159 - END -->
 					<!-- END 31736 -->
 					<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges 

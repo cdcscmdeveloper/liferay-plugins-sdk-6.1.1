@@ -1518,6 +1518,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setEvalStage(null);
 			reqDTO.setProposalChecklistSearchBean(null);
 
+			reqDTO.setProposalChecklist(proposalCheckList); //CRM#5224901: MOE issue 16/4/2025
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 
 			if (null != resDTO
