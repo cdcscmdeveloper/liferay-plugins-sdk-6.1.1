@@ -185,7 +185,7 @@ public class NoticeBoardBackingBean extends
 	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
 	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
-	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml?faces-redirect=true";
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml"; //#28777 & #29729
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
@@ -847,6 +847,21 @@ public class NoticeBoardBackingBean extends
 		managedBean.setPreviousPage(MAIN_PAGE);
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
+		
+		//#28777 & #29729 - Start
+		if(managedBean.getScQt().isZonal()){
+			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
+			if(defaultBsvBean.isBranchDeactivated()){
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
+						MessageUtils.getMessage(MessageConst.INFO_760522, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}else{
+				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+			}
+		}
+		//#28777 & #29729 - End
+		
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
 		if (smSupplier != null && null != managedBean.getMofNumber()) {
@@ -868,9 +883,12 @@ public class NoticeBoardBackingBean extends
 		
 		//#28777 & #29729 - Start
 		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 					MessageUtils.getMessage(MessageConst.INFO_760522, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}else{
+			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
 		}
 		//#28777 & #29729 - End
 		
@@ -915,12 +933,31 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setBriefingDtls(null);
 		BriefingZoneBean selectedBsvBean = this.getManagedBean().getZoneBean()
 				.get(selectedZoneTabIndex);
-
+		
+		checkValidationForBranchDeactivated(selectedBsvBean); //#28777 & #29729
+		
 		this.getManagedBean().setNormalBsvBean(selectedBsvBean);
 		this.getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
 		this.getManagedBean().setRenderRegisterBtn(this.getManagedBean().isDisableRegisterBtn());
 		setSlectedHeaderName(null);
 	}
+	
+	//#28777 & #29729 - Start
+	/**
+	* Method to appear validation, if tab zone has been selected
+	* @param selectedBsvBean
+	**/
+	private void checkValidationForBranchDeactivated(BriefingZoneBean selectedBsvBean){
+		if(selectedBsvBean.isBranchDeactivated()){
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
+					MessageUtils.getMessage(MessageConst.INFO_760522, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}else{
+			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+		}
+	}
+	//#28777 & #29729 - End
 
 	/**
 	 * hide or show date fields based on date types.
@@ -2353,6 +2390,16 @@ public class NoticeBoardBackingBean extends
 							specZoneDtl, briefingResDTO.getBriefingList(),
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv(),null);
+					
+					//#28777 & #29729 - Start
+				    briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES); 
+				    if(briefingZoneBean.isBranchDeactivated()){
+				    	this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+				    }else{
+				    	this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+				    }
+				    //#28777 & #29729 - End
+				    
 					bsvZoneBeans.add(briefingZoneBean);
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 					if(isNotRigistered && !isRenderRigsterbtn){
