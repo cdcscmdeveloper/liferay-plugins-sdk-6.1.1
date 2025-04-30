@@ -69,6 +69,7 @@ public class ApplApprovedRptBackingBean extends SmReportBackingBean<ApplApproved
 		//#32521 - START
 		getManagedBean().setSelectedUser(null);
 		getManagedBean().setApplType(null);
+		getManagedBean().setSupplierType(null);
 		//#32521 - END
 	}
 }
