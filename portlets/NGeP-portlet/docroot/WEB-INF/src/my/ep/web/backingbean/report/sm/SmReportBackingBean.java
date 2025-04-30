@@ -1,13 +1,8 @@
 package my.ep.web.backingbean.report.sm;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +57,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
-import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -3446,4 +3440,36 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return getManagedBean().getZone();
 	}
 	//#7754_#35984 - End
+	
+	//#32521 - start
+	public String getConditionFieldsCompany(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		return "smSupplier.smAppl.supplierType^" + suppType;
+	}
+	
+	public String getConditionFieldsPO(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		String searchZone = "pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			return searchZone + "1";
+		}
+		String zone = getManagedBean().getZone();
+		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				return searchZone + "1";
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				return searchZone + "2";
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				return searchZone + "3";
+			}
+		}
+		return "";
+	}
+	//#32521 - end
 }
