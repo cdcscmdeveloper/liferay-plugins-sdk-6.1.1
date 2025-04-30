@@ -65,6 +65,15 @@
 									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 									value="0" />
 							</p:menuitem>
+							<!-- #29661 start -->
+							<p:menuitem value="#{lbl['lbl.sc.sr.cat.code']}"
+								actionListener="#{directLOABackingBean.getSmSupplierCategory(directLOABackingBean.managedBean.scLoa)}"
+								update="@form">
+								<f:setPropertyActionListener
+									target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+									value="8" />
+							</p:menuitem>
+							<!-- #29661 end -->
 							<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
 								update="@form">
 								<f:setPropertyActionListener
@@ -153,6 +162,12 @@
 							test="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
 							<ui:include src="directawardloaApprovalMenu.xhtml" />
 						</c:if>
+						<!-- #29661 start -->
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 8}">
+							<ui:include src="directLoaCategoryCodeSelection.xhtml" />
+						</c:if>
+						<!-- #29661 end -->
 					</h:panelGroup></td>
 			</tr>
 		</table>
