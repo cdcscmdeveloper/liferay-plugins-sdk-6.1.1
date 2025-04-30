@@ -52,7 +52,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		LocationManagedBean managedBeans = (LocationManagedBean) manageBean;
 		this.roleCode = roleCode;
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_ST_DOC_TYPE;
+			docType = managedBeans.getState().getStateName();// AuditConst.PM_AUD_ST_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_ST_PMPARAMETERLVLID;
 			docNo = managedBeans.getState().getStateCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_ST;
@@ -60,7 +60,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			insertStateVal(managedBeans);
 		}
 		if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_DIV_DOC_TYPE;
+			docType = managedBeans.getDivision().getDivisionName();// AuditConst.PM_AUD_DIV_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_DIV_PMPARAMETERLVLID;
 			docNo = managedBeans.getDivision().getDivisionCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_DIV;
@@ -68,7 +68,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			insertDivisionVal(managedBeans);
 		}
 		if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_DS_DOC_TYPE;
+			docType = managedBeans.getResDistrict().getDistrictName();// AuditConst.PM_AUD_DS_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_DS_PMPARAMETERLVLID;
 			docNo = managedBeans.getResDistrict().getDistrictCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_DST;
@@ -76,7 +76,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			insertDistrictVal(managedBeans);
 		}
 		if (ParameterConst.LOCATION_LEVEL_CITY.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_CT_DOC_TYPE;
+			docType = managedBeans.getCity().getCityName();// AuditConst.PM_AUD_CT_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_CT_PMPARAMETERLVLID;
 			docNo = managedBeans.getCity().getCityCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_CT;
@@ -138,10 +138,10 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getResState().getPmCountry()
-					.getCountryName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateName(),
+			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getState().getStateName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_DIV_DVCODE_FIELDLABELID, null, managedBean.getResDivision().getDivisionCode(),
