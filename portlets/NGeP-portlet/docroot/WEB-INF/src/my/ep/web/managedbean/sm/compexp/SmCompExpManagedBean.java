@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.compexp;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -14,6 +15,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
@@ -43,7 +45,10 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private String headerTitle;
 	private boolean disableClienType;
 	private Date maxEffDate;
+	private Date contractEffDateTemp;
 	private Date minExpDate;
+	private SmCompExpMasterDoc compExpSuppDoc;
+	private List<SmCompExpMasterDoc> compExpSuppDocList;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -171,12 +176,36 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.maxEffDate = maxEffDate;
 	}
 
+	public Date getContractEffDateTemp() {
+		return contractEffDateTemp;
+	}
+
+	public void setContractEffDateTemp(Date contractEffDateTemp) {
+		this.contractEffDateTemp = contractEffDateTemp;
+	}
+
 	public Date getMinExpDate() {
 		return minExpDate;
 	}
 
 	public void setMinExpDate(Date minExpDate) {
 		this.minExpDate = minExpDate;
+	}
+
+	public SmCompExpMasterDoc getCompExpSuppDoc() {
+		return compExpSuppDoc;
+	}
+
+	public void setCompExpSuppDoc(SmCompExpMasterDoc compExpSuppDoc) {
+		this.compExpSuppDoc = compExpSuppDoc;
+	}
+
+	public List<SmCompExpMasterDoc> getCompExpSuppDocList() {
+		return compExpSuppDocList;
+	}
+
+	public void setCompExpSuppDocList(List<SmCompExpMasterDoc> compExpSuppDocList) {
+		this.compExpSuppDocList = compExpSuppDocList;
 	}
 
 }

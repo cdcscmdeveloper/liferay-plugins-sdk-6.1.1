@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.compexp;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,11 +13,16 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  * BackingBean for Sm Company Experience
@@ -84,7 +90,15 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().setDisableClienType(true);
 		}
+		if (null != this.getManagedBean().getSelectedDraft().getContractEffDate()) {
+			this.getManagedBean().setContractEffDateTemp(this.getManagedBean().getSelectedDraft().getContractEffDate());
+		} else {
+			this.getManagedBean().setContractEffDateTemp(null);
+		}
 		dateChange();
+		if (null == this.getManagedBean().getCompExpSuppDocList()) {
+			this.getManagedBean().setCompExpSuppDocList(new ArrayList<SmCompExpMasterDoc>());
+		}
 		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
 	}
 
@@ -126,15 +140,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void dateChange() {
-		if (null != this.getManagedBean().getSelectedDraft().getContractEffDate()) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(this.getManagedBean().getSelectedDraft().getContractEffDate());
-			cal.add(Calendar.DATE, +1);
-			Date minExpDate = cal.getTime();
-			this.getManagedBean().setMinExpDate(minExpDate);
-		} else {
-			this.getManagedBean().setMinExpDate(null);
-		}
 		if (null != this.getManagedBean().getSelectedDraft().getContractExpDate()) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(this.getManagedBean().getSelectedDraft().getContractExpDate());
@@ -144,5 +149,50 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().setMaxEffDate(null);
 		}
+		if (null != this.getManagedBean().getContractEffDateTemp()) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(this.getManagedBean().getContractEffDateTemp());
+			cal.add(Calendar.DATE, +1);
+			Date minExpDate = cal.getTime();
+			this.getManagedBean().setMinExpDate(minExpDate);
+		} else {
+			this.getManagedBean().setMinExpDate(null);
+		}
+		Date curDate = new Date();
+		this.getManagedBean().getSelectedDraft().setContractStatus(null);
+		if (null != this.getManagedBean().getSelectedDraft().getContractExpDate() && null != this.getManagedBean().getContractEffDateTemp()) {
+			if (curDate.before(this.getManagedBean().getContractEffDateTemp())) {
+				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_INACTIVE);
+			} else if ((curDate.equals(this.getManagedBean().getContractEffDateTemp()) || curDate.after(this.getManagedBean()
+					.getContractEffDateTemp())) && curDate.before(this.getManagedBean().getSelectedDraft().getContractExpDate())) {
+				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_EFFECTIVE);
+			} else if (curDate.after(this.getManagedBean().getSelectedDraft().getContractExpDate())) {
+				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_EXPIRED);
+			}
+		}
+	}
+
+	public void handleSupDocFileAttachment(FileUploadEvent event) {
+		if (null != event.getFile()) {
+			String filePath = "/";
+			SmCompExpMasterDoc doc = new SmCompExpMasterDoc();
+			doc.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+			doc.setFilePath(filePath);
+			this.getManagedBean().getCompExpSuppDocList().add(doc);
+			commonUploadFile(event, filePath);
+		}
+	}
+
+	public void onDeleteSupDocFileAttachment(SmCompExpMasterDoc doc) {
+		this.getManagedBean().setCompExpSuppDoc(doc);
+		RequestContext.getCurrentInstance().execute("confirmDelCompExpSuppDocDialogWV.show();");
+	}
+
+	public void delCompExpSuppDocFileAttachment() {
+		this.getManagedBean().getCompExpSuppDoc();
+		if (this.getManagedBean().getCompExpSuppDocList() != null && !this.getManagedBean().getCompExpSuppDocList().isEmpty()) {
+			this.getManagedBean().getCompExpSuppDocList().remove(this.getManagedBean().getCompExpSuppDoc());
+		}
+		this.getManagedBean().setCompExpSuppDoc(null);
 	}
 }
