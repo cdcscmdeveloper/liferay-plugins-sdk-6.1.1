@@ -199,15 +199,42 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 					sb.append(pmAddress.getAddress2());
 					sb.append(pmAddress.getAddress3());
 					
-					PmAddress OldPmAddress = oldAddress.getPmAddress();
-					oldSb.append(OldPmAddress.getAddress1());
-					oldSb.append(OldPmAddress.getAddress2());
-					oldSb.append(OldPmAddress.getAddress3());
+					PmAddress oldPmAddress = oldAddress.getPmAddress();
+					oldSb.append(oldPmAddress.getAddress1());
+					oldSb.append(oldPmAddress.getAddress2());
+					oldSb.append(oldPmAddress.getAddress3());
+					
+					/**
+					public static final BigInteger PM_AUD_OFO_DIVISION_FIELDLABELID  // might be null
+					 */
 					
 					if(!sb.equals(oldSb)){
 						detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, oldSb.toString(), sb.toString());
 					}
 					
+					if(!pmAddress.getPmCity().getCityId().equals(oldPmAddress.getPmCity().getCityId())){
+						detailObj(AuditConst.PM_AUD_OFO_CITY_FIELDLABELID, oldPmAddress.getPmCity().getCityName(), pmAddress.getPmCity().getCityName());
+					}
+					
+					if(!pmAddress.getPmDistrict().getDistrictId().equals(oldPmAddress.getPmDistrict().getDistrictId())){
+						detailObj(AuditConst.PM_AUD_OFO_DISTRICT_FIELDLABELID, oldSb.toString(), sb.toString());
+					}
+					
+					if(!pmAddress.getPmState().getStateId().equals(oldPmAddress.getPmState().getStateId())){
+						detailObj(AuditConst.PM_AUD_OFO_STATE_FIELDLABELID, oldPmAddress.getPmState().getStateName(),pmAddress.getPmState().getStateName());
+					}
+					
+					if(!pmAddress.getPostcode().equals(oldPmAddress.getPostcode())){
+						detailObj(AuditConst.PM_AUD_OFO_POSTCODE_FIELDLABELID, oldPmAddress.getPostcode(), pmAddress.getPostcode());
+					}
+					
+					if(!pmAddress.getPhoneFull().equals(oldPmAddress.getPhoneFull())){
+						detailObj(AuditConst.PM_AUD_OFO_PHONE_FIELDLABELID, oldPmAddress.getPhoneFull(), pmAddress.getPhoneFull());
+					}
+					
+					if(!pmAddress.getFaxNo().equals(oldPmAddress.getFaxNo())){
+						detailObj(AuditConst.PM_AUD_OFO_FAX_FIELDLABELID, oldPmAddress.getFaxNo(), pmAddress.getFaxNo());
+					}
 					
 					modifyContactPerson(addressType.getPmContacts().get(0), oldAddress.getPmContacts().get(0));
 				}
