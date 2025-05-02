@@ -524,6 +524,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		getManagedBean().setAbleToSubmitLOA(true);
 		if (null != scLoa.getScLoiLoa()
 				&& !scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 
