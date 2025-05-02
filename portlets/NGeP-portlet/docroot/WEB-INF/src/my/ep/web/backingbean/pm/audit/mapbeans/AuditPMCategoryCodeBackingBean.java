@@ -148,7 +148,8 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private void updateDetailPmCategoryL2(CategoryManagedBean managedBean, AuditPMReqDTO auditPMReqDTO) {
 		PmCategoryL2 pmCategoryL2 = managedBean.getPmCategoryL2();
 		PmCategoryL2 oldPmCategoryL2 = managedBean.getAuditOldCategoryL2();
-
+		BigInteger categoryL2Id = BigInteger.valueOf(managedBean.getAuditUpdatedCategoryL2().getCategoryL2Id());
+		
 		statusL2.setRoleCode(roleCode);
 		statusL2.setDocType(AuditConst.PM_AUD_CODE_CATEGORY_L2);
 		statusL2.setDocNo(pmCategoryL2.getCategoryL2Code());
@@ -156,24 +157,19 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		statusL2.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
 		statusL2.setLvlCode2(AuditConst.PM_LVL_CODE_2_CCR);
 		statusL2.setLvlCode3(AuditConst.PM_LVL_CODE_3_CCR_CATL2);
+		statusL2.setDocId(categoryL2Id);
+		statusL2.setDocGroupId(categoryL2Id);
 		statusL2.setFieldLabelCode(AuditConst.PM_AUD_CCR_SUB_STATUS_FIELDLABELCODE);
+		statusL2.setNewValue(pmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+				: AuditConst.PM_AUD_INACTIVE);
 
 		if (managedBean.isNewCategory()) {
-			BigInteger categoryL2Id = BigInteger.valueOf(pmCategoryL2.getCategoryL2Id());
-			statusL2.setDocId(categoryL2Id);
-			statusL2.setDocGroupId(categoryL2Id);
 			statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-			statusL2.setNewValue(pmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
+			
 
 		} else {
-			BigInteger categoryL2Id = BigInteger.valueOf(managedBean.getAuditUpdatedCategoryL2().getCategoryL2Id());
-			statusL2.setDocId(categoryL2Id);
-			statusL2.setDocGroupId(categoryL2Id);
 			statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			statusL2.setOldValue(oldPmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
-			statusL2.setNewValue(pmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
 		}
 
@@ -253,7 +249,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		addRequiredCategory(managedBean);
 		addBusinessComType(managedBean);
 		addSpecialEquipment(managedBean);
-		managedBean.setAuditOldCategoryL3(null);
 		auditPMReqDTO.setObjList(objList);
 	}
 

@@ -1094,6 +1094,12 @@ public class FinancialOrgBackingBean extends
 						    message
 				    		));
 	
+				/************ AUDIT #28895-35509 *************/
+				getManagedBean().setSavedFinancialOrg(resDTO.getPmFinancialOrg());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_FINANCIAL_ORG);
+				}
+				/************ AUDIT #28895-35509 *************/
 			}
 		}
 		catch (Exception e) {
