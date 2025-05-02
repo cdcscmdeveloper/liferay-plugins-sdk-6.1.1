@@ -74,9 +74,12 @@ public class AuditPMDocumentBackingBean extends BaseBackingBean<AuditPMManagedBe
 			paramMap.put(AuditReportConst.PARAM_USER_ID, String.valueOf(getUserIdSessionFromLoginId()));
 			
 			SimpleDateFormat sdf = new SimpleDateFormat(ReportConst.URL_RPT_DATE_ANOTHER_FORMAT);
-			paramMap.put(AuditPMDaoConst.P_DATEFROM, sdf.format(reqDTO.getPdateFrom()).toUpperCase());
-			paramMap.put(AuditPMDaoConst.P_DATETO, sdf.format(reqDTO.getPdateTo()).toUpperCase());
-			
+			if (reqDTO.getPdateFrom() != null) {
+				paramMap.put(AuditPMDaoConst.P_DATEFROM, sdf.format(reqDTO.getPdateFrom()));
+			}
+			if (reqDTO.getPdateTo() != null) {
+				paramMap.put(AuditPMDaoConst.P_DATETO, sdf.format(reqDTO.getPdateTo()));
+			}
 			paramMap.values().removeAll(Collections.singleton(null));
 			generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PM, paramMap);
 			
