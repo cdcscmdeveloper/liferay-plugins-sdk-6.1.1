@@ -2006,6 +2006,8 @@ public class SmApplicationBackingBean extends
 						//27382 - end
 						this.getManagedBean().setCompanyValidWithSSM(true);
 						SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+						// #24819
+						this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET COMPANY NAME
 						//if rob no need to copy capital.
 						//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -4279,7 +4281,7 @@ public class SmApplicationBackingBean extends
 			SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), currentTab);
 		}
 		//#31130- end
-		
+
 		// #37779 - Start
 		if (getManagedBean().isSupplierUser()) {
 			SmApplicationUtil.checkBankAccountPurpose(getManagedBean());
@@ -15182,7 +15184,7 @@ public class SmApplicationBackingBean extends
 		this.getManagedBean().setAccountNo(bank.getAccountNo());
 	}
 	
-	//FIXME : 16052019 - SSM INTEGRATION CR - start
+	//16052019 - SSM INTEGRATION CR - start
 	public void redirectToViewSSMInfo() {
 		clearPersonnelList();
 		//#27165
@@ -15339,7 +15341,7 @@ public class SmApplicationBackingBean extends
 		context.redirect(path);
 	}
 	// #26734 END
-	//FIXME : 16052019 - SSM INTEGRATION CR - end
+	//16052019 - SSM INTEGRATION CR - end
 	
 	//Bug #26705 - start
 	public void getlatestPoOverlappingRemarks() {
@@ -15534,6 +15536,8 @@ public class SmApplicationBackingBean extends
 			//27382 - end
 			this.getManagedBean().setCompanyValidWithSSM(true);
 			SmCommonUtil.ssmIdentificationTypeError(ssmResDTO); //#29582
+			// #24819
+			this.getManagedBean().getSmSupplier().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 			//SET COMPANY NAME
 			//if rob no need to copy capital.
 			//long tempAnnualRevenue = this.getManagedBean().getSmAppl().getSmCompanyBasic().getAnnualRevenue();
@@ -15848,6 +15852,9 @@ public class SmApplicationBackingBean extends
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
 			mofReqDto.setSmAppl(this.getManagedBean().getSmAppl());
+			//#24819
+			mofReqDto.setSmSupplier(getManagedBean().getSmAppl().getSmSupplier());
+			mofRegistrationSO.updateSupplierProfile(mofReqDto);
 			MofRegistrationResDTO mofRespDto = mofRegistrationSO.updateSmAppl(mofReqDto);
 			this.getManagedBean().setSmAppl(mofRespDto.getSmAppl());
 			
@@ -16578,6 +16585,7 @@ public class SmApplicationBackingBean extends
 	//#32014 - END
 	
 	//#30766 & #34209 - START
+	/*
 	private List<SmSupplierCategory> setPOorApprDec(List<SmSupplierCategory> catList) {
 		
 		for(SmSupplierCategory smSupplierCategory : catList){
@@ -16589,6 +16597,7 @@ public class SmApplicationBackingBean extends
 		}
 		return catList;
 	}
+	*/
 	
 	public String dynamicTableColumnWidth(String supplierUser, String poUser, String approverUser){
 		if(getManagedBean().isSupplierUser()){

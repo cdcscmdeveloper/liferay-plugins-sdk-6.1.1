@@ -1517,8 +1517,9 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setEvalStage(null);
 			reqDTO.setProposalChecklistSearchBean(null);
-
-			reqDTO.setProposalChecklist(proposalCheckList); //CRM#5224901: MOE issue 16/4/2025
+			
+			reqDTO.setProposalChecklist(proposalCheckList); //Bug #38123 CRM#5224901: MOE issue 16/4/2025
+			
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 
 			if (null != resDTO
@@ -2364,10 +2365,12 @@ public class EvaluationBackingBean extends
 				if (Arrays.asList(financialEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 						&& !this.getManagedBean().isReadOnly() && !getManagedBean().isFinancialSummaryGenerated()
 						// #35384 recalculate when at endorse or sign off -start-
+						
 						// #38074 remove status revision
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT) 
 						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)))
+						
 						// #35384 recalculate when at endorse or sign off -end-
 				) {
 					// #25638 -end-
@@ -2528,10 +2531,12 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 					&& this.getManagedBean().getScQt().isTechEvaluationReq()
 					// #35384 recalculate at endorse or sign off -start-
+					
 					// #38074 remove status revision
 					|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 					&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
 					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))
+					
 					// #35384 recalculate at endorse or sign off -end-
 			) { 
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
@@ -2560,10 +2565,12 @@ public class EvaluationBackingBean extends
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()
 						// #35384 recalculate at endorse or sign off -start-
+						
 						// #38074 remove status revision
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
 						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))
+						
 				        // #35384 recalculate at endorse or sign off -end-
 				) {
 					financialCheckListStatusCheck();
@@ -4575,22 +4582,7 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setWithInVarieance(
 							resDTO.getWithinVarieanceItem());
 				}
-
-				/*
-				 * TemplateSpecBackingBean specBB = new
-				 * TemplateSpecBackingBean(); TemplateSpecBean templateSpecBean
-				 * = getManagedBean() .getTemplateSpecBean();
-				 * templateSpecBean.setSupplier(proposalCheckList
-				 * .getScQtProposal().getScQtSupplier().getSmSupplier());
-				 * templateSpecBean
-				 * .setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
-				 * templateSpecBean.setSpecMaster(proposalCheckList
-				 * .getScQtCheckList().getScQtDoc().getTplSpecMaster());
-				 * specBB.retrieveTemplateSpecMaster(templateSpecBean);
-				 * System.out.println("====list size===" + templateSpecBean
-				 * .getSpecAnswerList().get(0)
-				 * .getTplSpecQuestion().getTplSpecScorings());
-				 */
+				
 				//TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 				templateSpecSO = (ITemplateSpecSO) BusinessDelegate
@@ -4616,20 +4608,7 @@ public class EvaluationBackingBean extends
 				}
 
 				specBB.retrieveTemplateSpecMaster(templateSpecBean);
-				/*specReqDTO.setSpecMaster(proposalCheckList.getScQtCheckList()
-						.getScQtDoc().getTplSpecMaster());
-				specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_SCORE);
-				specReqDTO.setSupplier(proposalCheckList.getScQtProposal()
-						.getScQtSupplier().getSmSupplier());
-				TemplateSpecResDTO specresDTO1 = templateSpecSO
-						.getTemplateMaster(specReqDTO);*/
-				/*
-				 * TemplateSpecBean templateSpecBean = getManagedBean()
-				 * .getTemplateSpecBean();
-				 * templateSpecBean.setSpecMaster(specresDTO1.getSpecMaster());
-				 * templateSpecBean.setSpecAnswerList(specresDTO1
-				 * .getSpecAnswerList());
-				 */
+
 				this.getManagedBean().setSpecItemScoringList(
 						null);
 				this.getManagedBean().setSpecItemScoringList(
@@ -6583,11 +6562,13 @@ public class EvaluationBackingBean extends
 
 					if (!this.getManagedBean().isReadOnly()
 							// #35384 recalculate at endorse or sign off -start-
+							
 							// #38074 remove status revision
 							|| this.getManagedBean().isReadOnly()
 							&& null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 							&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
 							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF))
+							
 							// #35384 recalculate at endorse or sign off -end-
 					) {
 						if (null == this.getManagedBean().getScQt()
@@ -6601,11 +6582,10 @@ public class EvaluationBackingBean extends
 							//Bug #31751 - end4
 
 							// #35384 recalculate at endorse or sign off -start-
+							
 							// #38074 remove status revision
-							if (this.getManagedBean().getCurrentStatusId()
-									.equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
-									|| this.getManagedBean().getCurrentStatusId()
-											.equals(QTStatusConst.FEC_PENDING_SIGN_OFF)) {
+							if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
+									|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)) {
 								retriveSummaryEvaluationStage();
 							}
 							// #35384 recalculate at endorse or sign off -end-
@@ -6695,6 +6675,7 @@ public class EvaluationBackingBean extends
 							// #25638 -end-
 							&& !this.getManagedBean().isReadOnly()
 							// #35384 avoid run this code below when endorse or sign off -start-
+							
 							// #38074 remove status revision
 							|| this.getManagedBean().isReadOnly()
 							&& this.getManagedBean().getScQt().isTechEvaluationReq()
@@ -6734,6 +6715,7 @@ public class EvaluationBackingBean extends
 							// #35384 add this condition to recalculate new
 							// formula when qt is at status endorse/sign off
 							// evaluation once deploy into environment
+							
 							// #38074 remove status revision
 							if (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT)
 								|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)) {
@@ -12304,7 +12286,7 @@ private void retriveCommitteeRemarksList(){
 				.getManagedBean().getCommitteeType())
 				&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION
 						.equals(this.getManagedBean().getCurrentStatusId()));
-
+		
 		boolean isTecCommittee = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
 				.getManagedBean().getCommitteeType())
 				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL) || this

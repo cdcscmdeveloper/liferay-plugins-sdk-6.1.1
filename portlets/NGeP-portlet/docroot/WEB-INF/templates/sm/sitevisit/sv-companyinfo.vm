@@ -24,12 +24,19 @@
     	</tr>
     	
     	<tr>
-	        <td><br /></td>
+    		<!-- #24819 - start -->
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.businessregno')</b></td>
+	        <td>$busRegNo</td>
     	</tr>
     	
     	<tr>
-	        <td width="30%"><b>ROC/ROB/ROS No.</b></td>
-	        <td>$busRegNo</td>
+    		<td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.new.business.regNo')</b></td>
+	        #if($newBusinessRegistrationNo != $null)
+	      	<td>$newBusinessRegistrationNo</td>
+	      	#else
+	      	<td>$!smVmUtil.getDescByLabel('lbl.txt.na') </td>
+	      	#end
+	      	<!-- #24819 - end -->
     	</tr>
     	
     	<tr>
