@@ -32,10 +32,12 @@
 			clear:both;
 			text-align:right;
 		}
+		##25025 & 26770 - start
 		body {
-			font-family: "Helvetica";
+			font-family: "Arial";
 			font-size: 8pt;
 		}
+		##25025 & 26770 - end
 		.header-cont {
 			width:100%;
 			margin-top:50px;
@@ -63,16 +65,17 @@
 			text-decoration:none;
 			color:#333333;
 		}
-
+		##25025 & 26770 - start
 		.redText{
 			text-align:justify;
 			font-family:Arial;
-			font-size:12px;
+			font-size:10px;
 			font-weight:normal;
 			font-style:normal;
 			text-decoration:none;
 			color:red;
 		}
+		##25025 & 26770 - end
 		u {    
 			border-bottom: 1px dotted #000;
 			text-decoration: none;
@@ -80,11 +83,14 @@
 	</style>
 </head>
 <body>
+##25025 & 26770 - start
 <section class="header">
 	<span class="standard">
+	Pekeliling Perbendaharaan Malaysia <br/>
 		No. Surat Setuju Terima : <span class="underline">$loaNo</span>
 	</span>
 </section>
+##25025 & 26770 - end
 <div class="standard" align="right">
 	<b>Lampiran C</b> <br/><br/>
 </div>
@@ -129,9 +135,11 @@
 					<tr>
 						<td><span id='font1'>(c)</span></td>
 						<td>
+							##25025 & #26770 - start
 							<span id='font1'>
-							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses *sebut harga/tender sehingga dokumen kontrak ditandatangani;
+							syarikat <b>TIDAK</b> terlibat dalam membuat pakatan harga dengan syarikat-syarikat lain atau apa-apa pakatan sepanjang proses $headerTitle.toLowerCase() sehingga dokumen kontrak ditandatangani;
 							</span>
+							##25025 & #26770 - end
 						</td>
 					</tr>
 						<tr>
@@ -269,8 +277,10 @@
 </div>	
 <section class="footer">
 	<p class="standard">
-	Tandatangan & Cop (Kerajaan) : .......................<br/><br/>
-	Tandatangan & Cop (Syarikat) : .......................<br/>
+	## #25205-start
+	Tandatangan & Cap (Kerajaan) : .......................<br/><br/>
+	Tandatangan & Cap (Syarikat) : .......................<br/>
+	## #25205-end
 	</p>
 	<span class="redText">
 	Pihak Kerajaan : Pegawai yang diberi kuasa oleh Menteri di bawah seksyen 2 Akta Kontrak Kerajaan 1949 untuk menandatangani kontrak<br/>
