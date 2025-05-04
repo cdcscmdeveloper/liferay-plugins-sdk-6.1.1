@@ -1313,6 +1313,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.getCategoryL1Id());
 			}
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509 Start*************/
+				this.getManagedBean().setAuditUpdatedCategoryL1(resDTO.getCategoryL1());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT 35509 END*************/
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setNewCategory(false);
 					returnUrl = "/xhtml/pm/category/search.xhtml";
@@ -1348,12 +1354,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 											resDTO.getCategoryL1().getCategoryL1Code() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				/************ AUDIT 35509 Start*************/
-				this.getManagedBean().setAuditUpdatedCategoryL1(resDTO.getCategoryL1());
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
-				}
-				/************ AUDIT 35509 END*************/
 			}
 		} catch (Exception e) {
 			throw(e);
@@ -1557,6 +1557,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setOldCategoryL2(oldCategoryL2);
 			
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509 *************/
+				this.getManagedBean().setAuditUpdatedCategoryL2(resDTO.getCategoryL2());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT 35509 *************/
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL2(
 							resDTO.getCategoryL2());
@@ -1604,13 +1610,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 											resDTO.getCategoryL2().getCategoryL2Code() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				/************ AUDIT 35509 *************/
-				this.getManagedBean().setAuditUpdatedCategoryL2(resDTO.getCategoryL2());
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
-				}
-				/************ AUDIT 35509 *************/
-
 			}
 
 		} catch (Exception e) {
@@ -1780,6 +1779,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setOldCategoryL3(oldCategoryL3);
 
 			if (resDTO.isSuccessful()) {
+				/************ AUDIT 35509*************/
+				this.getManagedBean().setAuditUpdatedCategoryL3(resDTO.getCategoryL3());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
+				}
+				/************ AUDIT *************/
 				reset();
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL3(
@@ -1825,12 +1830,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 											this.getManagedBean().getPmCategoryL3().getCategoryL3Code() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-				/************ AUDIT 35509*************/
-				this.getManagedBean().setAuditUpdatedCategoryL3(resDTO.getCategoryL3());
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
-					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
-				}
-				/************ AUDIT *************/
 			}
 
 		} catch (Exception e) {
