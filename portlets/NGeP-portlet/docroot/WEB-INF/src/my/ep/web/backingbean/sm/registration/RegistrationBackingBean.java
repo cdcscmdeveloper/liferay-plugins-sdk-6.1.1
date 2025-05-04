@@ -451,6 +451,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//if ssm, disable role.
 					this.getManagedBean().setDisableRole(true);
 				}
+				//24819
+				this.getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
 				this.getManagedBean().setSmPersonnelDirector(ssmResDTO.getSmPersonnelDirector());
 				this.getManagedBean().setSmAppl(ssmResDTO.getSmAppl());
@@ -2979,6 +2981,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 						}
 						
+						//24819
+						getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 						//SET SMSUPPLIEROWNER
 						//27691 START - TO HANDLE ISSUE OWNER ID NULL
 						if(ssmResDTO.getSmSupplierOwners() != null && this.getManagedBean().getSmSupp().getSmSupplierOwners() != null) {
@@ -4249,6 +4253,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/*
 	private SelectItem convertToStateSelectItem(PmState state){
 		SelectItem si = new SelectItem();
 		si.setLabel(state.getStateName());
@@ -4256,6 +4261,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		return si;
 	}
+	*/
 	
 	/**
 	 * Redirect to liferay logout url
@@ -5131,6 +5137,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	//13320-end
 
     //  #30829 - Start 1/11/2021
+	/*
 	private SmPersonnel onSaveSmPersonnelEquityOwner(SmAppl smAppl, SmSupplierOwner smSupplierOwner, SmPersonnel smPersonnel){
 		
 		smPersonnel.setName(smSupplierOwner.getOwnerName());
@@ -5160,6 +5167,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		return smPersonnel;
 	}
+	*/
 	//  #30829 - End 1/11/2021
 		
 	// #30829 - start

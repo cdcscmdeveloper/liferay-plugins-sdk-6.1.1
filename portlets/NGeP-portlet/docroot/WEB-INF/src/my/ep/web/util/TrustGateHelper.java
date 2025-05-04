@@ -212,9 +212,10 @@ public class TrustGateHelper {
 		RequestContext.getCurrentInstance().execute("window.open('" + url4 + "', '_blank')");
 		// externalContext.redirect(url4);
 	}
-
+	
 	public void resetPIN(String identificationNo, String epNo, String email) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE RESET:" + identificationNo + "||" + epNo + "||" + email);
+
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");
@@ -236,9 +237,10 @@ public class TrustGateHelper {
 
 		externalContext.redirect(url);
 	}
-
+	
 	public void updateChallResp(String identificationNo, String epNo) throws IOException, PortalException, SystemException {
 		log.info("TRUSTGATE UPDATE CHALL RESP:" + identificationNo + "||" + epNo);
+		
 		String token = SPKIHelper.getInstance().isUsingSpkiTLSLatest() ? SPKIHelper.getInstance().generateSecurityToken(
 				SupplierManagementConst.CERT_TRUSTGATE, identificationNo, epNo) : generateSecurityToken(identificationNo, epNo);
 		String encodedtoken = URLEncoder.encode(token, "UTF-8");

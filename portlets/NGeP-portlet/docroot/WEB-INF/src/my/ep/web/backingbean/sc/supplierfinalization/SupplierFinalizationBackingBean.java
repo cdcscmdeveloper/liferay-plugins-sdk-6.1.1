@@ -264,6 +264,12 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
 			// #18685 - End.
 			
+			// Bug #37829@Syazani 13/03/2024 -- Start
+			if (!validateCurrentStatus()) {
+				throw new EpException(MessageConst.ERROR_721018);
+			}
+			// Bug #37829@Syazani 13/03/2024 -- End
+			
 			// 28834 starts
 			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
 					&& this.getManagedBean().getOutComes().length > 0) {
@@ -8084,7 +8090,7 @@ public class SupplierFinalizationBackingBean extends
 		reqDTO.setDocNumber(scQt.getQtNo());
 		
 		SuppFinalizationReqDTO sfReqDTO = new SuppFinalizationReqDTO();
-		Set<String> fetchSet = new HashSet();
+		Set<String> fetchSet = new HashSet<String>();
 		fetchSet.add("finalizationCommittee");
 		sfReqDTO.setFetchSet(fetchSet);
 		sfReqDTO.setQtId(scQt.getQtId());

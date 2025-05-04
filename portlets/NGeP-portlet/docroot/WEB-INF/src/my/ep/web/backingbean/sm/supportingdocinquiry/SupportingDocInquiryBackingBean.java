@@ -175,7 +175,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		// #37775 - Start
 		reqSO.recheckSupportDocFileAndDocFileInquiry(reqDTO.getAppId());
 		// #37775 - End
-
+		
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
 		this.getManagedBean().setSmApplInquiry(resDTO.getSmApplInquiry());
 		//#11641 - START

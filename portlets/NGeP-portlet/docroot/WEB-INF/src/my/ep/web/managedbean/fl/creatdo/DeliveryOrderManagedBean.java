@@ -124,6 +124,9 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<FlDeliveryOrder> submittedDoList;
 	private String supplierUserName;
     
+	// #35508 start
+	private String originalSupplierDoRef;
+	// #35508 end
 	/**
 	 * Gets the item selected for cal.
 	 *
@@ -1253,4 +1256,19 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 		this.prevHideRemarks = prevHideRemarks;
 	}
 	
+	// #35508 start
+	/**
+	 * @return the originalSupplierDoRef
+	 */
+	public String getOriginalSupplierDoRef() {
+		return originalSupplierDoRef;
+	}
+
+	/**
+	 * @param originalSupplierDoRef the originalSupplierDoRef to set
+	 */
+	public void setOriginalSupplierDoRef(String originalSupplierDoRef) {
+		this.originalSupplierDoRef = originalSupplierDoRef;
+	}
+	// #35508 end
 }

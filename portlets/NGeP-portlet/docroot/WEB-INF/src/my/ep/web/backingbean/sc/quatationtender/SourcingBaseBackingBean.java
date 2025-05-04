@@ -270,10 +270,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * Logger instance.
 	 */
-	public static Logger log = EpLogger
-			.getLogger(SourcingBaseBackingBean.class);
+	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 	
-	private static final String UTF = "UTF-8";
+	//private static final String UTF = "UTF-8";
 	
 	// #18685 - Start
 	protected static final String  UNDER_SCORE = "_";
