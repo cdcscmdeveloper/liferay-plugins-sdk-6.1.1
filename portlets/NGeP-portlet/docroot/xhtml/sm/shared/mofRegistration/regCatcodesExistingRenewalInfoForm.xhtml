@@ -76,14 +76,16 @@
 					</p:outputPanel>
 				</p:column>
 				<!-- 32348 START - adjust width -->
-				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" width="#{backingBean.dynamicTableColumnWidth('16%', '8%', '8%')}" style="white-space : normal;vertical-align: top;">
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" width="#{backingBean.dynamicTableColumnWidth('16%', '8%', '8%')}" 
+					style="white-space : normal;vertical-align: top;">
 				<!-- 32348 END - adjust width -->
 					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!aprvdCatBean.specialCategory}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{aprvdCatBean.specialCategory}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.status']}" width="#{backingBean.dynamicTableColumnWidth('20%', '10%', '10%')}" style="white-space : normal;vertical-align: top;">
+				<p:column headerText="#{lbl['lbl.sm.status']}" width="#{backingBean.dynamicTableColumnWidth('20%', '10%', '10%')}"
+					style="white-space : normal;vertical-align: top;">
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
 					rendered="#{aprvdCatBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
@@ -434,4 +436,6 @@
 		</div>
 
 	</p:confirmDialog>
+	
+
 </ui:composition>

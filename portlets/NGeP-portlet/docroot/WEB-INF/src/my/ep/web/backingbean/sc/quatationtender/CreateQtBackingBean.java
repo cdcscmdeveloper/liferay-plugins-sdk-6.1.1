@@ -3515,12 +3515,10 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		PmParameter zoneLocationLevel = new PmParameter();
 		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
 		Long sourceLocationLevelId = null != supplierCriteria && null != supplierCriteria.getLocationLevel()
-				&& null != supplierCriteria.getLocationLevel().getParameterId() ? supplierCriteria.getLocationLevel()
-				.getParameterId() : 0L;
+				&& null != supplierCriteria.getLocationLevel().getParameterId() ? supplierCriteria.getLocationLevel().getParameterId() : 0L;
 		zoneLocationLevel.setParameterId(eventLocationLevelId);
 		this.getManagedBean().getQt().setZoneLocationLevel(zoneLocationLevel);
-		if (!sourceLocationLevelId.equals(eventLocationLevelId) && 0l != sourceLocationLevelId
-				&& null != supplierCriteria) {
+		if (!sourceLocationLevelId.equals(eventLocationLevelId) && 0l != sourceLocationLevelId && null != supplierCriteria) {
 			supplierCriteria.setLocationLevel(zoneLocationLevel);
 		}
 	}

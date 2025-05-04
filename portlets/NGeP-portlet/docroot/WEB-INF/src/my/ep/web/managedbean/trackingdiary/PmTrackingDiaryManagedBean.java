@@ -74,15 +74,13 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "pmTrackingDiaryManagedBean")
 @SessionScoped
 public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger
-			.getLogger(PmTrackingDiaryManagedBean.class);
+	private static Logger log = Logger.getLogger(PmTrackingDiaryManagedBean.class);
 	private String functionType;
 	private String transactionType;
 	private Date fromDate;
@@ -549,7 +547,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 					return resDto.getUserResultBean();
 				} else {
-					return new SearchResultBean();
+					return new SearchResultBean<PmUser>();
 				}
 			} finally {
 				userSO = null;
@@ -1116,8 +1114,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					// #25790 - End
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error(e.getMessage(), e);
 				}
 				
 				return resDTO.getResultBean();

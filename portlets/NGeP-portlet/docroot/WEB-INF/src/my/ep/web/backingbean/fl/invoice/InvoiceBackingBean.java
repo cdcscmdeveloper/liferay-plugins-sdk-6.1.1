@@ -23,16 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -40,6 +30,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
+import my.ep.biz.service.fl.audit.IAuditFulfilmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -48,7 +39,6 @@ import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.factoring.IFactoringCompaniesSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
@@ -59,6 +49,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.AuditFLConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
@@ -72,6 +63,7 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.audit.AuFLReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -100,6 +92,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
+import my.ep.persistence.entity.fl.audit.FlAuditTrail;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -108,6 +101,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -125,6 +119,7 @@ import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBaseBackingBean;
+import my.ep.web.backingbean.fl.audit.AuditFulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
@@ -138,6 +133,15 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
 import my.ep.web.vo.TaxInvoiceVO;
+
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for invoice.
@@ -353,6 +357,12 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 				//33654-End
 				
 				resDTO = invoiceSO.invoiceModification(reqDTO);
+				//#35508 fl audit trail - inv modification start
+				AuditFulfilmentBackingBean auflBB = new AuditFulfilmentBackingBean();
+				if (resDTO.isSuccessful() && auflBB.getAuditFlConfigState()) {
+					insertAuditFulfilmentInvoice(action);
+				}
+				//#35508 fl audit trail - inv modification end
 			}else{
 				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				log.info("LOG for 33574:: is Factored submitAction :before saveInvoice ="+reqDTO.getInvoice().getFlFulfilmentOrder().isFactored());
@@ -684,7 +694,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 						flReqDTO.setSectionId(FulfilmentConst.REMARK_SECTION_INVOICE_REVISION);
 						flresDTO = paymentMatchSO.retrieveRemarkAndAttachmentSection(flReqDTO);
-						List remarklist = flresDTO.getRemarkList();
+						List<FlRemark> remarklist = flresDTO.getRemarkList();
 						initializeRemarkRevision(null, remarklist,false);
 
 					}
@@ -1389,7 +1399,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		if(finOrgResDTO.isSuccessful()) {
 			if(finOrgResDTO.getPmAddressType()!=null){
-				//TODO NEW
 				getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType()));
 			}
 			
@@ -2488,18 +2497,17 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 	 * @param flWorkflowStatus the fl workflow status
 	 * @param remarkList the remark list
 	 */
-	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, boolean isHideRemarks) {
-		FacesScopes facesScopes = new FacesScopes();
+	public void initializeRemarkRevision(FlWorkflowStatus flWorkflowStatus, List<FlRemark> remarkList, boolean isHideRemarks) {
+		//FacesScopes facesScopes = new FacesScopes();
 
 		boolean flWorkflowStatusMatch = false;
-		
-		if(remarkList.size()>0  ) {
-				
-				flWorkflowStatusMatch = true;
+
+		if (remarkList.size() > 0) {
+
+			flWorkflowStatusMatch = true;
 		}
-				
-	
-		if (flWorkflowStatusMatch) {			
+
+		if (flWorkflowStatusMatch) {
 			getManagedBean().setRemarkRevise(remarkList);
 		}
 	}
@@ -2545,4 +2553,120 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		}	
 	}
 	//36754 -End
+	
+	// #35508 fl audit trail - insert method
+	/**
+	 * insert audit for invoice
+	 * 
+	 * @param invBean
+	 *            invoice manage bean
+	 * @param action
+	 *            action type for audit
+	 * 
+	 */
+	private void insertAuditFulfilmentInvoice(String action) {
+		Long userAuditId = getUserIdSessionFromLoginId();
+		IAuditFulfilmentSO auditFulfilmentSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.ORDER_FULFILLMENT, IAuditFulfilmentSO.class);
+
+		FlAuditTrail auFlAuditTrailObj;
+		List<FlAuditTrail> objList = new ArrayList<>();
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			auFlAuditTrailObj = setAuditFulfilmentInvoice(userAuditId, action, null, null, null);
+			objList.add(auFlAuditTrailObj);
+		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			// audit fl for supplier invoice reference
+			FlInvoice flinv = getManagedBean().getInvoice();
+			if (!flinv.getSupplierInvoiceRef().equals(getManagedBean().getOriginalSupplierInvRef())) {
+				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAuditId, action,
+						AuditFLConst.FL_AU_INV_NO_FIELDLABELCODE, getManagedBean().getOriginalSupplierInvRef(),
+						flinv.getSupplierInvoiceRef());
+				objList.add(auFlAuditTrailObj);
+			}
+			String newBankAccNoNameInv = flinv.getAccountNo() + " " + flinv.getPaymentBankName();
+			if (!newBankAccNoNameInv.equals(getManagedBean().getOriginalBankAccNoName())) {
+				auFlAuditTrailObj = setAuditFulfilmentInvoice(userAuditId, action,
+						AuditFLConst.FL_AU_BANK_ACC_FIELDLABELCODE, getManagedBean().getOriginalBankAccNoName(),
+						newBankAccNoNameInv);
+				objList.add(auFlAuditTrailObj);
+			}
+		}
+
+		if (!objList.isEmpty()) {
+			AuFLReqDTO auFlDTO = new AuFLReqDTO();
+			auFlDTO.setFlAuditTrailList(objList);
+			auditFulfilmentSO.insertAuditFLDetails(auFlDTO);
+		}
+	}
+
+	/**
+	 * set audit for invoice
+	 * 
+	 * @param invBean
+	 *            invoice manage bean
+	 * @param userAudit
+	 *            pmuser audit
+	 * @param action
+	 *            action type for audit
+	 * @param fieldLabelCode
+	 *            field label code for audit
+	 * @param oldValueInv
+	 *            value before change
+	 * @param newValueInv
+	 *            value after change
+	 *            
+	 * @return FlAuditTrail FlAuditTrail obj
+	 * 
+	 */
+	public FlAuditTrail setAuditFulfilmentInvoice(Long userAuditId, String action, String fieldLabelCode,
+			String oldValueInv, String newValueInv) {
+		// add audit set
+		FlInvoice flinv = getManagedBean().getInvoice();
+
+		Long orgProfileId;
+		Long statusId;
+		String orgName;
+		String auditActionType;
+
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+			// audit fl supplier
+			auditActionType = AuditFLConst.AUD_ACTION_TYPE_MODIFY;
+			orgProfileId = flinv.getFlRequest().getSmSupplier().getSupplierId();
+			orgName = flinv.getFlRequest().getSmSupplier().getCompanyName();
+			statusId = FulfilmentStatusConst.IN_PENDING_MODIFICATION_APPROVAL;
+		} else {
+			// audit fl approver
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(userAuditId);
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			PmOrgProfile pmOrgAudit = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+
+			auditActionType = null;
+			orgProfileId = pmOrgAudit.getOrgProfileId();
+			orgName = pmOrgAudit.getOrgName();
+			statusId = FulfilmentStatusConst.IN_SUBMITTED;
+		}
+		// insert for DO
+		FlAuditTrail auFlAuditTrail = new FlAuditTrail();
+		auFlAuditTrail.setDocType(ParameterConst.DOCTYPE_INVOICE);
+		auFlAuditTrail.setRoleCode(getUserRole());
+		auFlAuditTrail.setOrgProfileId(orgProfileId);
+		auFlAuditTrail.setOrgName(orgName);
+		auFlAuditTrail.setDocId(flinv.getInvoiceId());
+		auFlAuditTrail.setDocNo(flinv.getInvoiceNo());
+		auFlAuditTrail.setStatusId(statusId);
+		auFlAuditTrail.setActionType(auditActionType);
+		auFlAuditTrail.setFulfilmentRequestId(flinv.getFlRequest().getFulfilmentReqId());
+		auFlAuditTrail.setOldValue(oldValueInv);
+		auFlAuditTrail.setNewValue(newValueInv);
+		auFlAuditTrail.setCreatedBy(userAuditId);
+		auFlAuditTrail.setChangedBy(userAuditId);
+		auFlAuditTrail.setFieldLabelCode(fieldLabelCode);
+
+		return auFlAuditTrail;
+	}
+	// #35508 fl audit trail
 }

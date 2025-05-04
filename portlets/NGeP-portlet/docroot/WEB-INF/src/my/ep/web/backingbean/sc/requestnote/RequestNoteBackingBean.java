@@ -40,8 +40,8 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.ct.IContractSO; //#25790
 import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO; //#25790
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO; //#25790
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.osb.sc.IDPOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -72,8 +72,8 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.ContractReqDTO; //#25790
 import my.ep.dto.ct.ContractResDTO; //#25790
-import my.ep.dto.fl.FulfilmentReqDTO; //#25790
-import my.ep.dto.fl.FulfilmentResDTO; //#25790
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.osb.sc.DPOsbReqDTO;
 import my.ep.dto.osb.sc.DPOsbResDTO;
@@ -182,6 +182,7 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
+//#25790
 
 /**
  * The Class RequestNoteBackingBean.
@@ -774,7 +775,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 			if(requestNoteDtlList != null && requestNoteDtlList.size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteDtlList) {
-					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+					//ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 					
 					
@@ -1351,7 +1352,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						// Check total procurement amount per ptj per item per year
 						FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
 						if (requestNoteDtl.getRequestItem().getCmItem() != null) {
-							Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
+							//Long itemId = requestNoteDtl.getRequestItem().getCmItem().getItemId();
 							String extensionCode = requestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
 							debugLogger("RequestNoteBackingBean >> validateRequestNote : RequestNoteDtl ID = "
 									+ requestNoteDtl.getRequestNoteDtlId());
@@ -1481,7 +1482,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
-					String pType = requestNoteDtl.getProcurementType().getParameterCode();
+					//String pType = requestNoteDtl.getProcurementType().getParameterCode();
 					//#32362 - comment out this condition - start
 					/*if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
 							.equals(ParameterConst.PROC_TYPE_EMERGENCY)) && !pType.equals(ParameterConst.PROC_TYPE_PK7)) {*/
@@ -3859,8 +3860,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    
 			int prSize = sourcingIntegrationSO.getCountOfActivePR(searchReqDTO);
 
-			ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
-			List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
+			//ScPurchaseRequest purchaseRequest = (ScPurchaseRequest) prObj[2];
+			//List<ScRequestNoteDtl> requestNoteDtls = (List<ScRequestNoteDtl>) prObj[6];
 			IPurchaseRequestSO purchaseRequestSO = null;
 			try {
 				purchaseRequestSO = BusinessDelegate.getInstance()
@@ -4924,6 +4925,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param statusId the status id
 	 * @return the purchase in default expired message
 	 */
+	/*
 	private void getPurchaseInDefaultExpiredMessageCodification(Long statusId){
 		if(DPStatusConstants.PID_EXPIRED.equals(statusId)){
 			Locale locale = new FacesScopes().getUserLocale();
@@ -4937,6 +4939,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 											new FacesScopes().getUserLocale())));
 		}
 	}
+	*/
 	
 	/**
 	 * Update work flow and remarks.

@@ -11061,7 +11061,7 @@ public class SmApplicationUtil {
 			String fileNameAndPath = tmpPath + fileName;
 			String vm = "/sm/application/MOF-declaration-form.vm";
 			VelocityContext context = new VelocityContext();
-			FacesScopes fs = new FacesScopes();
+			//FacesScopes fs = new FacesScopes();
 			// context.put("hostUrl", fs.getRequest().getServerName() + ":"
 			// + fs.getRequest().getServerPort());
 			context.put("hostUrl", SmCommonUtil.getBasePortalUrl());
@@ -14411,7 +14411,7 @@ public class SmApplicationUtil {
 	private Map<Integer, Date> getPoKpiStartDate(Long docId, Long stateId) {
 		int pauseDays = 0;
 		Date startDate = new Date();
-		Map<Integer, Date> mapDate = new HashMap();
+		Map<Integer, Date> mapDate = new HashMap<Integer, Date>();
 		SmWorkFlowStatusReqDTO swReqDTO = new SmWorkFlowStatusReqDTO();
 		swReqDTO.setStatusIds(Arrays
 				.asList(new Long[] {
@@ -14430,7 +14430,7 @@ public class SmApplicationUtil {
 			startDate = workFlowList.get(0).getCreatedDate();
 			if (workFlowList.size() > 1) {
 				Iterator<SmWorkflowStatus> wfIter = workFlowList.iterator();
-				SmWorkflowStatus wfStart = wfIter.next();
+				//SmWorkflowStatus wfStart = wfIter.next();
 				int i = 0;
 				while (wfIter.hasNext()) {
 					i++;
@@ -14490,7 +14490,7 @@ public class SmApplicationUtil {
 	public Map<Integer, Date> getPoKpiEndDateByCompanyState(Date startDate,
 			int numDays, int pauseDays, Long stateId) {
 		int daysLeft = numDays;
-		Map<Integer, Date> mapDate = new HashMap();
+		Map<Integer, Date> mapDate = new HashMap<Integer, Date>();
 		Calendar dateCal = Calendar.getInstance();
 		dateCal.setTime(startDate);
 
