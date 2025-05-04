@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
@@ -96,14 +95,12 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			
 			detailObj(AuditConst.PM_AUD_OFO_STATUS_FIELDLABELID, null, financialOrg.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
-			
+
+			// financial services
+			addFinancialService(savedFinancialOrg.getPmFinancialSvcs());
 			// new main address
 			// new // contact person
 			newMainAddressDetail(savedFinancialOrg.getPmAddressTypes());
-			
-			// financial services
-			addFinancialService(savedFinancialOrg.getPmFinancialSvcs());
-			
 		}
 		else{
 			PmFinancialOrg oldFinancialOrg = managedBean.getOldFinancialOrg();
@@ -115,9 +112,9 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			
 			// address + contact person
 			// kalau null salah satu nya, akan problem
-			if(CollectionUtils.isNotEmpty(financialOrg.getPmAddressTypes())){
+			/**if(CollectionUtils.isNotEmpty(financialOrg.getPmAddressTypes())){
 				modifyMainAddressDetail(financialOrg.getPmAddressTypes(), oldFinancialOrg.getPmAddressTypes());
-			}
+			}*/
 			
 			 /** 
 			  * // modify financial services
@@ -127,7 +124,8 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			  * modifyFinancialService(financialOrg.getPmFinancialSvcs(), oldFinancialOrg.getPmFinancialSvcs());
 			  * 
 			  */
-			
+			// modify financial services
+			modifyFinancialService(financialOrg.getPmFinancialSvcs(), oldFinancialOrg.getPmFinancialSvcs());
 		}
 		
 		//factoring bank details
@@ -190,7 +188,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		StringBuilder sb = new StringBuilder();
 		StringBuilder oldSb = new StringBuilder();
 		
-		for(PmAddressType addressType : pmAddressTypeList){
+		/**for(PmAddressType addressType : pmAddressTypeList){
 			for(PmAddressType oldAddress : oldPmAddressTypeList){
 				docId = BigInteger.valueOf(addressType.getAddressTypeId());
 				if(addressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())){
@@ -203,10 +201,6 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 					oldSb.append(oldPmAddress.getAddress1());
 					oldSb.append(oldPmAddress.getAddress2());
 					oldSb.append(oldPmAddress.getAddress3());
-					
-					/**
-					public static final BigInteger PM_AUD_OFO_DIVISION_FIELDLABELID  // might be null
-					 */
 					
 					if(!sb.equals(oldSb)){
 						detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, oldSb.toString(), sb.toString());
@@ -239,10 +233,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 					modifyContactPerson(addressType.getPmContacts().get(0), oldAddress.getPmContacts().get(0));
 				}
 			}
-		}
+		}*/
 	}
 	
-	private void modifyContactPerson(PmContact pmContact, PmContact oldContact){
+	/**private void modifyContactPerson(PmContact pmContact, PmContact oldContact){
 		if(!pmContact.getContactName().equals(oldContact.getContactName())){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_NAME_FIELDLABELID, oldContact.getContactName(), pmContact.getContactName());
 		}
@@ -258,7 +252,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		if(!pmContact.getMobileNo().equals(oldContact.getMobileNo())){
 			detailObj(AuditConst.PM_AUD_OFO_CONTACT_MOBILE_FIELDLABELID, oldContact.getMobileNo(), pmContact.getMobileNo());
 		}
-	}
+	}*/
 	
 	// tab no 3
 	private void addFactoringBankDetail(List<PmFinancialAcc> financialAccList, List<PmFinancialAcc> savedfinancialAccList){
@@ -289,129 +283,76 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	
 	// modify tab no 2
 	private void modifyFinancialService(List<PmFinancialSvc> financialService, List<PmFinancialSvc> olfFinancialService) {
-		/**
-		 * setCheckBoxYes(financialService, olfFinancialService);
-		 * setCheckBoxNo(olfFinancialService, financialService);
-		 * 
-		 * kene masukkan old finance dlm hashmap
-		 * 
-		 * compare new data with old data if ada
-		 
-
-		Map<String, String> financialServiceHashMap = setValueForFinancialService(financialService);
-		Map<String, String> oldFinancialServiceHashMap = setValueForFinancialService(olfFinancialService);
-
-		for (Entry<String, String> entry : financialServiceHashMap.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-
-			String oldValue = oldFinancialServiceHashMap.get(key);
-
-			if (!value.equalsIgnoreCase(oldValue)) {
-				if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(key)) {
-					detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, oldValue, value);
-				} else if (ParameterConst.BANK_SERVICES_PERFORMANCE_BOND.equalsIgnoreCase(key)) {
-					detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, oldValue, value);
-				} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(key)) {
-					detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, oldValue, value);
-				} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(key)) {
-					detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, oldValue, value);
-				}
-			}
-		}*/
+		PmFinancialSvc oldFinancialService=null;
+		
 		if(CollectionUtils.isNotEmpty(financialService)){
 			for(PmFinancialSvc svc : financialService){
+				PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(svc.getServiceTypeCode().getParameterId());
 				for(PmFinancialSvc oldsvc : olfFinancialService){
-					if(svc.getFinancialSvcId() == oldsvc.getFinancialSvcId() && svc.getRecordStatusFlg() != oldsvc.getRecordStatusFlg()){
-						PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(svc.getServiceTypeCode().getParameterId());
-						
-						if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())) {
-							detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, oldsvc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-									: AuditConst.PM_AUD_NO, svc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-											: AuditConst.PM_AUD_NO);
-						} else if (ParameterConst.BANK_SERVICES_PERFORMANCE_BOND.equalsIgnoreCase(pmParameter.getParameterCode())) {
-							detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, oldsvc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-									: AuditConst.PM_AUD_NO, svc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-											: AuditConst.PM_AUD_NO);
-						} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(pmParameter.getParameterCode())) {
-							detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, oldsvc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-									: AuditConst.PM_AUD_NO, svc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-											: AuditConst.PM_AUD_NO);
-						} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(pmParameter.getParameterCode())) {
-							detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, oldsvc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-									: AuditConst.PM_AUD_NO, svc.getRecordStatusFlg()==1? AuditConst.PM_AUD_YES
-											: AuditConst.PM_AUD_NO);
-						}
-						
-						break;
+					if(svc.getServiceTypeCode().getParameterId() == oldsvc.getServiceTypeCode().getParameterId()){
+						oldFinancialService = oldsvc;
 					}
+					break;
+					
+				}
+				if(oldFinancialService != null){
+					compareFinancialService(svc.getRecordStatusFlg(), oldFinancialService.getRecordStatusFlg(), pmParameter.getParameterCode());
+				}else {
+					setNewFinancialService(pmParameter.getParameterCode());
 				}
 			}
 		}
 		
 	}
-
-	private Map<String,String> setValueForFinancialService(List<PmFinancialSvc> financialService){
-		Map<String,String> financialServiceHashMap = setHashMapForFinancialService();
-		
-		if(CollectionUtils.isNotEmpty(financialService)){
-			for(PmFinancialSvc currentFinancialServ : financialService){
-				currentFinancialServ.getServiceTypeCode().getParameterCode();
-				PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(currentFinancialServ.getServiceTypeCode().getParameterId());
-				docId = BigInteger.valueOf(currentFinancialServ.getFinancialSvcId());
-				
-				financialServiceHashMap = checkFinancialServiceCode(pmParameter.getParameterCode(), financialServiceHashMap);
+	
+	/**
+	 * @param newStatus
+	 * @param oldStatus
+	 * @param parameterCode
+	 *  comparison status
+	 */
+	public void compareFinancialService(Integer newStatus, Integer oldStatus, String parameterCode){
+		if(newStatus != oldStatus){
+			
+			if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(parameterCode)) {
+				detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
+						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
+								: AuditConst.PM_AUD_NO);
+			} else if (ParameterConst.BANK_SERVICES_PERFORMANCE_BOND.equalsIgnoreCase(parameterCode)) {
+				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
+						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
+								: AuditConst.PM_AUD_NO);
+			} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(parameterCode)) {
+				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
+						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
+								: AuditConst.PM_AUD_NO);
+			} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(parameterCode)) {
+				detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
+						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
+								: AuditConst.PM_AUD_NO);
 			}
 		}
-		return financialServiceHashMap;
 	}
 	
-	private Map<String,String> checkFinancialServiceCode(String parameterCode, Map<String,String> financialServiceHashMap) {
-		
+	public void setNewFinancialService( String parameterCode){
 		if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(parameterCode)) {
-			financialServiceHashMap.put(ParameterConst.BANK_SERVICES_FACTORING_COMPANY, AuditConst.PM_AUD_YES);
+			detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, null, AuditConst.PM_AUD_YES);
 		} else if (ParameterConst.BANK_SERVICES_PERFORMANCE_BOND.equalsIgnoreCase(parameterCode)) {
-			financialServiceHashMap.put(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND, AuditConst.PM_AUD_YES);
+			detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, null, AuditConst.PM_AUD_YES);
 		} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(parameterCode)) {
-			financialServiceHashMap.put(ParameterConst.BANK_SERVICES_PAYMENT_BANK, AuditConst.PM_AUD_YES);
+			detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, null, AuditConst.PM_AUD_YES);
 		} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(parameterCode)) {
-			financialServiceHashMap.put(ParameterConst.BANK_SERVICES_REGISTRATION, AuditConst.PM_AUD_YES);
+			detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, null, AuditConst.PM_AUD_YES);
 		}
-		return financialServiceHashMap;
-		
-	}
-	
-	private Map<String,String> setHashMapForFinancialService(){
-		
-		Map<String,String> defaultHashMap = new HashMap<>();
-		
-		defaultHashMap.put(ParameterConst.BANK_SERVICES_FACTORING_COMPANY, AuditConst.PM_AUD_NO);
-		defaultHashMap.put(ParameterConst.BANK_SERVICES_PAYMENT_BANK, AuditConst.PM_AUD_NO);
-		defaultHashMap.put(ParameterConst.BANK_SERVICES_PERFORMANCE_BOND, AuditConst.PM_AUD_NO);
-		defaultHashMap.put(ParameterConst.BANK_SERVICES_REGISTRATION, AuditConst.PM_AUD_NO);
-		
-		return defaultHashMap;
-		
 	}
 	
 	// tab no 2
-	private void addFinancialService(List<PmFinancialSvc> financialService){
-		Map<String,String> financialServiceHashMap = setValueForFinancialService(financialService);
+	private void addFinancialService(List<PmFinancialSvc> financialServiceList){
 
-		for (Entry<String, String> entry : financialServiceHashMap.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			    
-			if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(key)) {
-				detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, null, value);
-			} else if (ParameterConst.BANK_SERVICES_PERFORMANCE_BOND.equalsIgnoreCase(key)) {
-				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, null, value);
-			} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(key)) {
-				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, null, value);
-			} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(key)) {
-				detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, null, value);
-			}
-				  
+		for (PmFinancialSvc financialService : financialServiceList) {
+			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialService.getServiceTypeCode().getParameterId());
+					
+			setNewFinancialService(pmParameter.getParameterCode());
 		}
 	}
 	
