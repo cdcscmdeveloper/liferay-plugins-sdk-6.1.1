@@ -186,6 +186,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		this.pmCategoryL3 = managedBean.getPmCategoryL3();
 		this.docType3 = AuditConst.PM_AUD_CODE_CATEGORY_L3;
 		this.docNo = pmCategoryL3.getCategoryL3Code();
+		PmCategoryL3 oldpmCategoryL3 = managedBean.getAuditOldCategoryL3();
 
 		if (managedBean.isNewCategory()) {
 			BigInteger categoryL3Id = BigInteger.valueOf(managedBean.getAuditUpdatedCategoryL3().getCategoryL3Id());
@@ -215,7 +216,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 					pmCategoryL3.getHomeOperated() == 1 ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 
 		} else {
-			PmCategoryL3 oldpmCategoryL3 = managedBean.getAuditOldCategoryL3();
 			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 			this.docGroupId = BigInteger.valueOf(pmCategoryL3.getCategoryL3Id());
 			setCategoryL3Detail(oldpmCategoryL3);
