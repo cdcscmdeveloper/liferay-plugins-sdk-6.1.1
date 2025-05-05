@@ -545,15 +545,19 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
 					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 
-			// will hide submit LOA button if supplier reject EPV (prerendered == false)
-			getManagedBean().setAbleToSubmitLOA(isValidFor21692 && !supplierStatus);
-			supplierStatus = supplierStatus && isLoaListPortlet() && isValidFor21692 ? true : false;
+			if (isValidFor21692) {
+				// will hide submit LOA button if supplier reject EPV (prerendered == false)
+				getManagedBean().setAbleToSubmitLOA(!supplierStatus);
+				supplierStatus = supplierStatus && isLoaListPortlet() ? true : false;
+			} else {
+				supplierStatus = false;
+			}
 		}
 		
 		// cancel button will show/hide based on this (prerendered false/true)
 		getManagedBean().setAbleToCancelLOA(
 				supplierStatus
-						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
+						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));//#36339, #21692
 		// cancel button during Pending LOA Submission only
 		getManagedBean().setAbleToCancelLOAWithoutBPM(
 				supplierStatus
