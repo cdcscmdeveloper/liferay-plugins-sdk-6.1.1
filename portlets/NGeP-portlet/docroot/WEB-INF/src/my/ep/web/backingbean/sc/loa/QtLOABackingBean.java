@@ -557,7 +557,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		// cancel button will show/hide based on this (prerendered false/true)
 		getManagedBean().setAbleToCancelLOA(
 				supplierStatus
-						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));//#36339, #21692
+						&& statusEnabledCancel.contains(new LOADetailBackingBean().isLOAStatusAbleToCancel()));
 		// cancel button during Pending LOA Submission only
 		getManagedBean().setAbleToCancelLOAWithoutBPM(
 				supplierStatus
