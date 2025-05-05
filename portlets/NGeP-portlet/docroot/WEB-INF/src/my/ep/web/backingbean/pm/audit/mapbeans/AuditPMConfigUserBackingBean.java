@@ -22,7 +22,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 /**
  * AuditPMEducationBackingBean
  * 
- * @author haiza 28895_35509
+ * @author shaqimi 28895_35509
  * 
  */
 public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
@@ -89,16 +89,25 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMRoleBackingBean.roleConfUser();
 	}
 	
+	/**
+	 * @param status
+	 * @return
+	 */
 	private String pnpCheck(Boolean status){
 		return status.equals(Boolean.TRUE) ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO;
 	}
 	
+	/**
+	 * @param status
+	 * @return
+	 */
 	private String statusCheck(Integer status){
 		return status.equals(AuditConst.PM_AUD_ACTIVE1) ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
 	}
 
-	/**
-	 * @param args
+	
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate#insert(my.ep.web.managedbean.BaseManagedBean, java.lang.String)
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
@@ -155,6 +164,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
+	/**
+	 * set old and new value for federal type user (eP, Ministry, Kumpulan PTJ, Bahagian Perolehan Kerajaan), and sets actionType
+	 */
 	private void detailFederalObj() {
 		for(BigInteger obj : federalDtlObjList){
 			String oldValue = "";
@@ -214,7 +226,11 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-	
+
+
+	/**
+	 * set old and new value for federal ptj type user (Pusat Tanggungjawab PTJ), and sets actionType
+	 */
 	private void detailFederalPTJObj() {
 		for(BigInteger obj : federalPTJDtlObjList){
 			String oldValue = "";
@@ -274,7 +290,10 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-	
+
+	/**
+	 * set old and new value for Other organisation Category, and sets actionType
+	 */
 	private void detailOtherObj() {
 		for(BigInteger obj : otherDtlObjList){
 			String oldValue = "";
@@ -329,7 +348,10 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-	
+
+	/**
+	 * set old and new value for Other(Supplier) organisation Category, and sets actionType
+	 */
 	private void detailOtherSupplierObj() {
 		for(BigInteger obj : otherSupplierDtlObjList){
 			String oldValue = "";
@@ -368,6 +390,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		}
 	}
 	
+	/**
+	 * set old and/or new value for every organization type except for Supplier. Pusat Tanggungjawab PTJ will have extra steps here.
+	 */
 	private void detailRoles() {
 		if(managedBeans.getNewAuditPmUserRoles() != null){
 			for(PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()){
@@ -413,7 +438,11 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
+
 	
+	/**
+	 * set old and/or new value for every Pusat Tanggungjawab PTJ only
+	 */
 	private void detailPTJAddress() {
 		if(managedBeans.getNewAuditPmAddressTypes() != null){
 			for(PmAddressType newPmAddressType : managedBeans.getNewAuditPmAddressTypes()){
@@ -440,7 +469,13 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-
+	
+	/**
+	 * @param fieldLabelId
+	 * @param oldValue
+	 * @param newValue
+	 * @param actionType
+	 */
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
@@ -463,6 +498,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		objList.add(dtlObj);
 	}
 	
+	/**
+	 * @return
+	 */
 	private static Map<Integer, String> createLvl3CodeMap(){
 		Map<Integer, String> map = new HashMap<>();
 		map.put(1, AuditConst.PM_LVL_CODE_3_OUSR_EP); 
@@ -483,6 +521,10 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		
 		return map;
 	}
+	
+	/**
+	 * @return
+	 */
 	
 	private static Map<Integer, BigInteger> createPmParameterLevelIdMap(){
 		Map<Integer, BigInteger> map = new HashMap<>();
