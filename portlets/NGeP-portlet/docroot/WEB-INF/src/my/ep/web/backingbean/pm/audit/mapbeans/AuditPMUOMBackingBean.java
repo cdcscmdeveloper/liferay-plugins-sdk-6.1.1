@@ -23,6 +23,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
 	String docNo;
+	String docType;
 	BigInteger docId;
 
 	@Override
@@ -41,6 +42,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 		UnitOfMeasurementManagedBean managedBeans = (UnitOfMeasurementManagedBean) manageBean;
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getPmUom().getUomCode();
+		this.docType = managedBeans.getPmUom().getUomName();
 		if (null != managedBeans.getAuditUomOldVal() && managedBeans.getAuditUomOldVal().getUomId() > 0) {
 			if (managedBeans.getAuditUomOldVal().getRecordStatusFlg() != managedBeans.getPmUom().getRecordStatusFlg()) {
 				this.docId = BigInteger.valueOf(managedBeans.getAuditUomOldVal().getUomId());

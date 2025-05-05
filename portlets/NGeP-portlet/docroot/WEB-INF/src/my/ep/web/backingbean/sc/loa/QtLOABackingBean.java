@@ -521,7 +521,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
-
+		getManagedBean().setAbleToSubmitLOA(true);
 		if (null != scLoa.getScLoiLoa()
 				&& !scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 
@@ -542,9 +542,13 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
 					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 
-			// will hide submit LOA button if supplier reject EPV (prerendered == false)
-			getManagedBean().setAbleToSubmitLOA(isValidFor21692 && !supplierStatus);
-			supplierStatus = supplierStatus && isLoaListPortlet() && isValidFor21692 ? true : false;
+			if (isValidFor21692) {
+				// will hide submit LOA button if supplier reject EPV (prerendered == false)
+				getManagedBean().setAbleToSubmitLOA(!supplierStatus);
+				supplierStatus = supplierStatus && isLoaListPortlet() ? true : false;
+			} else {
+				supplierStatus = false;
+			}
 		}
 		
 		// cancel button will show/hide based on this (prerendered false/true)
