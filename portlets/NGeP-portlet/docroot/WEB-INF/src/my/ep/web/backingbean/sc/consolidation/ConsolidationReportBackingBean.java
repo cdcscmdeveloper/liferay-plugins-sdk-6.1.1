@@ -41,7 +41,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
@@ -1373,6 +1372,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+//			reqDTO.setDoRankRequired(true); // 26247
 			reqDTO.setCountOfQualiedSuppliersReq(true);
 
 			if (specZone != null) {
