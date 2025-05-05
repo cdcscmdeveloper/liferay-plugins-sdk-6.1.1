@@ -230,72 +230,8 @@
 								value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired.toolptip']}" />
 						</c:if></td>
 				</tr>
-				<tr>
-					<td style="width: 34%"><p:outputLabel
-							styleClass="outputLabel-view-label2"
-							value="#{lbl['lbl.sm.comp.exp.update.supp.doc']}" /></td>
-					<td style="width: 66%"><p:commandLink
-							oncomplete="compExpSuppDocUploadDialogWV.show();return false;"
-							partialSubmit="true" process="@this" update=":form">
-							<p:graphicImage style="margin-right:2px;"
-								value="/css/images/design/upload.png" />
-						</p:commandLink> <p:graphicImage id="suppDocToolTipsId"
-							value="/css/images/design/tooltips.png" /> <p:tooltip
-							for="suppDocToolTipsId">
-							<img
-								src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" />
-						</p:tooltip> <ui:repeat var="doc" value="#{compExpMB.compExpSuppDocList}">
-							<br />
-							<h:commandLink id="file"
-								value="#{compExpBB.getShortFileName(doc.fileName)}">
-								<p:fileDownload
-									value="#{compExpBB.commonDownload(doc.filePath,doc.fileName)}" />
-							</h:commandLink>
-							<p:tooltip for="file" value="#{doc.fileName}" position="top" />
-							<p:spacer width="10" />
-							<p:commandLink
-								action="#{compExpBB.onDeleteSupDocFileAttachment(doc)}"
-								update=":form">
-								<p:graphicImage value="/css/images/design/trash.png" />
-							</p:commandLink>
-						</ui:repeat></td>
-				</tr>
 			</table>
 		</div>
 		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
-		<p:dialog dynamic="true" header="#{lbl['lbl.bpm.choose.file']}"
-			height="200" id="compExpSuppDocUploadDialogId" modal="true"
-			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;"
-			onShow="singleUploadListener(uploadWV);" resizable="false"
-			styleClass="pop_up_top" widgetVar="compExpSuppDocUploadDialogWV"
-			width="700px">
-			<p:fileUpload allowTypes="/(\.|\/)(pdf)$/"
-				cancelLabel="#{lbl['lbl.btn.cancel']}"
-				fileUploadListener="#{compExpBB.handleSupDocFileAttachment}"
-				label="#{lbl['lbl.btn.addfile']}" multiple="true"
-				showButtons="false"
-				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
-				update=":form" uploadLabel="#{lbl['lbl.btn.upload']}"
-				widgetVar="uploadWV" />
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sm.comp.exp.update.supp.doc.guide']}"
-				escape="false" />
-		</p:dialog>
-		<p:confirmDialog closable="true"
-			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
-			id="confirmDelCompExpSuppDocDialogId"
-			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
-			widgetVar="confirmDelCompExpSuppDocDialogWV">
-			<div align="right">
-				<p:commandButton
-					action="#{compExpBB.delCompExpSuppDocFileAttachment}"
-					onclick="confirmDelRvSuppDocDialogWV.hide();"
-					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
-					partialSubmit="true" process="@this" update=":form"
-					value="#{lbl['lbl.btn.delete']}" />
-				<p:commandButton onclick="confirmDelCompExpSuppDocDialogWV.hide();"
-					value="#{lbl['lbl.btn.no']}" />
-			</div>
-		</p:confirmDialog>
 	</ui:define>
 </ui:composition>
