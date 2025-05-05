@@ -41,6 +41,7 @@ import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -579,7 +580,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmAppl activeAppl = SmCommonUtil
 				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
 		boolean isOverlapCategoryRemarkChanged = false;
-
+		VirtualCertReqDTO certDTO = new VirtualCertReqDTO();
+		certDTO.setApplId(getManagedBean().getSmAppl().getApplId());
+		
 		try {
 
 			// set registration status and expiry date
@@ -597,6 +600,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setDeletedCategories(getManagedBean()
 					.getDeleteApprovedCategories());
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
+			reqDTO.getSmMofAccount().setSmMofCerts(
+					SmServiceLookup.getVirtualCertSO().retrieveMofCertsByApplId(certDTO).getSmMofCerts());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
