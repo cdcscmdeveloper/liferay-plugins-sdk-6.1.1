@@ -212,10 +212,10 @@ public class ViewSuppProfileBackingBean extends
 	public void onViewDisciplinaryAction() {
 		SmSupplier currSupp = getManagedBean().getSmSupplier();
 		//27876: Disciplinary Action
-		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
-		if(getManagedBean().isSupplierUser()){
+		if(currSupp == null || getManagedBean().isSupplierUser()){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
 		}
+		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
 		log.info("onViewDisciplinaryAction - "+currSupp.getSupplierId());
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
