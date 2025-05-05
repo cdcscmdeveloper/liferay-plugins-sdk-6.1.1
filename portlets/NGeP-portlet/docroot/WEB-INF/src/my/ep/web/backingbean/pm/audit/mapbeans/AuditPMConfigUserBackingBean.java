@@ -17,11 +17,12 @@ import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 /**
  * AuditPMEducationBackingBean
  * 
- * @author haiza 28895_35509
+ * @author shaqimi 28895_35509
  * 
  */
 public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
@@ -63,8 +64,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	
 	private List<BigInteger> federalPTJDtlObjList = Arrays.asList(AuditConst.PM_AUD_OUSR_PNP_FIELDLABELID, AuditConst.PM_AUD_OUSR_GRADE_FIELDLABELID,
 			AuditConst.PM_AUD_OUSR_EMAIL_FIELDLABELID, AuditConst.PM_AUD_OUSR_TEL_FIELDLABELID, AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID,
-			AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID, AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, AuditConst.PM_AUD_OUSR_RCV_ADDR_NAME_FIELDLABELID, 
-			AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID);
+			AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID);
 	
 	private List<BigInteger> otherDtlObjList = Arrays.asList(AuditConst.PM_AUD_OUSR_PNP_FIELDLABELID, AuditConst.PM_AUD_OUSR_EMAIL_FIELDLABELID,
 			AuditConst.PM_AUD_OUSR_TEL_FIELDLABELID, AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID, AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID);
@@ -76,6 +76,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	
 	String roleCode;
 	BigInteger docId;
+	String docType;
 	String docNo;
 	int lvl3CodeIndex;
 	String orgName;
@@ -87,9 +88,26 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMRoleBackingBean auditPMRoleBackingBean = new AuditPMRoleBackingBean();
 		return auditPMRoleBackingBean.roleConfUser();
 	}
-
+	
 	/**
-	 * @param args
+	 * @param status
+	 * @return
+	 */
+	private String pnpCheck(Boolean status){
+		return status.equals(Boolean.TRUE) ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO;
+	}
+	
+	/**
+	 * @param status
+	 * @return
+	 */
+	private String statusCheck(Integer status){
+		return status.equals(AuditConst.PM_AUD_ACTIVE1) ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate#insert(my.ep.web.managedbean.BaseManagedBean, java.lang.String)
 	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
@@ -98,6 +116,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		managedBeans = (ProfileManagementManagedBean) manageBean;
 		
 		this.roleCode = roleCode;
+		this.docType = managedBeans.getSelectedUser().isBrandNew() ? 
+				managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser().getUserName();
 		this.docId = managedBeans.getSelectedUser().isBrandNew() ? 
 				BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : 
 					BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
@@ -144,6 +164,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
+	/**
+	 * set old and new value for federal type user (eP, Ministry, Kumpulan PTJ, Bahagian Perolehan Kerajaan), and sets actionType
+	 */
 	private void detailFederalObj() {
 		for(BigInteger obj : federalDtlObjList){
 			String oldValue = "";
@@ -151,8 +174,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			String actionType = "";
 			
 			if(obj.equals(AuditConst.PM_AUD_OUSR_PNP_FIELDLABELID)){
-				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? Boolean.toString(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
-				newValue = managedBeans.getNewAuditPmUserOrg() != null ? Boolean.toString(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? pnpCheck(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null ? pnpCheck(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_GRADE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
 						managedBeans.getOldAuditPmUserOrg().getGrade() != null ? managedBeans.getOldAuditPmUserOrg().getGrade() : "";
@@ -186,8 +209,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID)) {
-				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? Integer.toString(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
-				newValue = managedBeans.getNewAuditPmUserOrg() != null ? Integer.toString(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? statusCheck(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null ? statusCheck(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
 			}
 			
 			if(managedBeans.getOldAuditPmUserOrg() != null){
@@ -203,7 +226,11 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-	
+
+
+	/**
+	 * set old and new value for federal ptj type user (Pusat Tanggungjawab PTJ), and sets actionType
+	 */
 	private void detailFederalPTJObj() {
 		for(BigInteger obj : federalPTJDtlObjList){
 			String oldValue = "";
@@ -211,8 +238,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			String actionType = "";
 			
 			if(obj.equals(AuditConst.PM_AUD_OUSR_PNP_FIELDLABELID)){
-				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? Boolean.toString(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
-				newValue = managedBeans.getNewAuditPmUserOrg() != null ? Boolean.toString(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? pnpCheck(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null ? pnpCheck(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_GRADE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
 						managedBeans.getOldAuditPmUserOrg().getGrade() != null ? managedBeans.getOldAuditPmUserOrg().getGrade() : "";
@@ -246,8 +273,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID)) {
-				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? Integer.toString(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
-				newValue = managedBeans.getNewAuditPmUserOrg() != null ? Integer.toString(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? statusCheck(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null ? statusCheck(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
 			}
 			
 			if(managedBeans.getOldAuditPmUserOrg() != null){
@@ -263,7 +290,10 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-	
+
+	/**
+	 * set old and new value for Other organisation Category, and sets actionType
+	 */
 	private void detailOtherObj() {
 		for(BigInteger obj : otherDtlObjList){
 			String oldValue = "";
@@ -271,8 +301,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			String actionType = "";
 			
 			if(obj.equals(AuditConst.PM_AUD_OUSR_PNP_FIELDLABELID)){
-				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? Boolean.toString(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
-				newValue = managedBeans.getNewAuditPmUserOrg() != null ? Boolean.toString(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? pnpCheck(managedBeans.getOldAuditPmUserOrg().isPMP()) : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null ? pnpCheck(managedBeans.getNewAuditPmUserOrg().isPMP()) : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_EMAIL_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
 						managedBeans.getOldAuditPmUserOrg().getEmail() != null ? managedBeans.getOldAuditPmUserOrg().getEmail() : "";
@@ -301,8 +331,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_STATUS_USER_FIELDLABELID)) {
-				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? Integer.toString(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
-				newValue = managedBeans.getNewAuditPmUserOrg() != null ? Integer.toString(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
+				oldValue = managedBeans.getOldAuditPmUserOrg() != null ? statusCheck(managedBeans.getOldAuditPmUserOrg().getRecordStatusFlg()) : "";
+				newValue = managedBeans.getNewAuditPmUserOrg() != null ? statusCheck(managedBeans.getNewAuditPmUserOrg().getRecordStatusFlg()) : "";
 			}
 			
 			if(managedBeans.getOldAuditPmUserOrg() != null){
@@ -318,7 +348,10 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		}
 	}
-	
+
+	/**
+	 * set old and new value for Other(Supplier) organisation Category, and sets actionType
+	 */
 	private void detailOtherSupplierObj() {
 		for(BigInteger obj : otherSupplierDtlObjList){
 			String oldValue = "";
@@ -357,80 +390,98 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		}
 	}
 	
+	/**
+	 * set old and/or new value for every organization type except for Supplier. Pusat Tanggungjawab PTJ will have extra steps here.
+	 */
 	private void detailRoles() {
-		for(PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()){
-			PmUserRole oldPmUserRole = null;
-			
-			if(managedBeans.getOldAuditPmUserRoles() != null){
-				for(PmUserRole old : managedBeans.getOldAuditPmUserRoles()){
-					if(old.getUserRoleId().equals(newPmUserRole.getUserRoleId())){
-						oldPmUserRole = old;
+		if(managedBeans.getNewAuditPmUserRoles() != null){
+			for(PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()){
+				PmUserRole oldPmUserRole = null;
+				
+				if(managedBeans.getOldAuditPmUserRoles() != null){
+					for(PmUserRole old : managedBeans.getOldAuditPmUserRoles()){
+						if(old.getUserRoleId().equals(newPmUserRole.getUserRoleId())){
+							oldPmUserRole = old;
+						}
+					}
+				}
+				
+				
+				if(oldPmUserRole != null){
+					if(!oldPmUserRole.getRecordStatusFlg().equals(newPmUserRole.getRecordStatusFlg())){
+						detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, statusCheck(oldPmUserRole.getRecordStatusFlg()), 
+								statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+					}
+					
+					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
+						if((oldPmUserRole.getApprovalLimit() != null && oldPmUserRole.getApprovalLimit() != null)
+								&& (!oldPmUserRole.getApprovalLimit().setScale(2).equals(newPmUserRole.getApprovalLimit().setScale(2)))) {
+							detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, oldPmUserRole.getApprovalLimit().setScale(2).toString(), 
+									newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+						}
+					}
+					
+				} else {
+					detailObj(AuditConst.PM_AUD_OUSR_ROLE_FIELDLABELID, null, 
+							PmCommonUtil.getRoleDescByRoleCodeAndLanguage(newPmUserRole.getPmRole().getRoleCode(), AuditConst.PM_LANGUAGECODE_MS), 
+							AuditConst.PM_AUD_ACTION_TYPE_INS);
+					detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, null, statusCheck(newPmUserRole.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					
+					if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ) && newPmUserRole.getApprovalLimit() != null){
+						detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, null, newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 					}
 				}
 			}
 			
-			
-			if(oldPmUserRole != null){
-				if(!oldPmUserRole.getRecordStatusFlg().equals(newPmUserRole.getRecordStatusFlg())){
-					detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, oldPmUserRole.getRecordStatusFlg().toString(), 
-							newPmUserRole.getRecordStatusFlg().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				}
-				
-				if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
-					if((oldPmUserRole.getApprovalLimit() != null && oldPmUserRole.getApprovalLimit() != null)
-							&& (!oldPmUserRole.getApprovalLimit().setScale(2).equals(newPmUserRole.getApprovalLimit().setScale(2)))) {
-						detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, oldPmUserRole.getApprovalLimit().setScale(2).toString(), 
-								newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-					}
-				}
-				
-			} else {
-				detailObj(AuditConst.PM_AUD_OUSR_ROLE_FIELDLABELID, null, newPmUserRole.getPmRole().getRoleCode(), AuditConst.PM_AUD_ACTION_TYPE_INS);
-				detailObj(AuditConst.PM_AUD_OUSR_STATUS_ROLE_FIELDLABELID, null, newPmUserRole.getRecordStatusFlg().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
-				
-				if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ) && newPmUserRole.getApprovalLimit() != null){
-					detailObj(AuditConst.PM_AUD_OUSR_APPR_LIMIT_FIELDLABELID, null, newPmUserRole.getApprovalLimit().setScale(2).toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
-				}
-			}
-		}
-		
-		if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
-			detailPTJAddress();
-		}
-	}
-	
-	private void detailPTJAddress() {
-		for(PmAddressType newPmAddressType : managedBeans.getNewAuditPmAddressTypes()){
-			PmAddressType oldPmAddressType = null;
-			
-			if(managedBeans.getOldAuditPmAddressTypes() != null){
-				for(PmAddressType old : managedBeans.getOldAuditPmAddressTypes()){
-					if(old.getAddressTypeId().equals(newPmAddressType.getAddressTypeId())){
-						oldPmAddressType = old;
-					}
-				}
-			}
-			
-			
-			if(oldPmAddressType != null){
-				if(!oldPmAddressType.getRecordStatusFlg().equals(newPmAddressType.getRecordStatusFlg())){
-					detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID, oldPmAddressType.getRecordStatusFlg().toString(), 
-							newPmAddressType.getRecordStatusFlg().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				}
-				
-			} else {
-				detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_NAME_FIELDLABELID, null, getFullAddress(newPmAddressType.getPmAddress()), AuditConst.PM_AUD_ACTION_TYPE_INS);
-				detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID, null, newPmAddressType.getRecordStatusFlg().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			if(orgType.equals(AuditConst.PM_LVL_CODE_3_OUSR_PTJ)){
+				detailPTJAddress();
 			}
 		}
 	}
 
+	
+	/**
+	 * set old and/or new value for every Pusat Tanggungjawab PTJ only
+	 */
+	private void detailPTJAddress() {
+		if(managedBeans.getNewAuditPmAddressTypes() != null){
+			for(PmAddressType newPmAddressType : managedBeans.getNewAuditPmAddressTypes()){
+				PmAddressType oldPmAddressType = null;
+				
+				if(managedBeans.getOldAuditPmAddressTypes() != null){
+					for(PmAddressType old : managedBeans.getOldAuditPmAddressTypes()){
+						if(old.getAddressTypeId().equals(newPmAddressType.getAddressTypeId())){
+							oldPmAddressType = old;
+						}
+					}
+				}
+				
+				if(oldPmAddressType != null){
+					if(!oldPmAddressType.getRecordStatusFlg().equals(newPmAddressType.getRecordStatusFlg())){
+						detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID, statusCheck(oldPmAddressType.getRecordStatusFlg()), 
+								statusCheck(newPmAddressType.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+					}
+					
+				} else {
+					detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_NAME_FIELDLABELID, null, getFullAddress(newPmAddressType.getPmAddress()), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID, null, newPmAddressType.getRecordStatusFlg().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @param fieldLabelId
+	 * @param oldValue
+	 * @param newValue
+	 * @param actionType
+	 */
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setDocGroupId(docId);
-		dtlObj.setDocType(facesScopes.getUserSessionBean().getUserName());
+		dtlObj.setDocType(docType);
 		dtlObj.setPmParameterLvlId(pmParameterLevelId.get(lvl3CodeIndex));
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OUSR);
@@ -447,6 +498,9 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		objList.add(dtlObj);
 	}
 	
+	/**
+	 * @return
+	 */
 	private static Map<Integer, String> createLvl3CodeMap(){
 		Map<Integer, String> map = new HashMap<>();
 		map.put(1, AuditConst.PM_LVL_CODE_3_OUSR_EP); 
@@ -467,6 +521,10 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		
 		return map;
 	}
+	
+	/**
+	 * @return
+	 */
 	
 	private static Map<Integer, BigInteger> createPmParameterLevelIdMap(){
 		Map<Integer, BigInteger> map = new HashMap<>();
