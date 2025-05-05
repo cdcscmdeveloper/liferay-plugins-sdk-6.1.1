@@ -748,6 +748,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_BANK_INFO = "bankInfoTab";
 	public static final String AU_TAB_ID_CATEGORY_CODE_INFO = "catCodeInfoTab";
 	public static final String AU_TAB_ID_SUPPLIER_INFO = "supplierInfoTab";
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	public static final String AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO = "approvedCatCodeInfoTab";
 	public static final String AU_TAB_ID_OVERLAPPING_REMARK_INFO = "overlappingRemarkInfoTab";
 	public static final String AU_TAB_ID_APPROVER_REMARK_INFO = "approverRemarkInfoTab";
@@ -1493,6 +1495,11 @@ public class SupplierManagementConst {
 	public String getAuTabIdSupplierInfo() {
 		return AU_TAB_ID_SUPPLIER_INFO;
 	}
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 	public String getAuTabIdApprovedCategoryCodeInfo() {
 		return AU_TAB_ID_APPROVED_CATEGORY_CODE_INFO;

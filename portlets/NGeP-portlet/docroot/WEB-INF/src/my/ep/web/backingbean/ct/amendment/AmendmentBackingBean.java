@@ -5304,8 +5304,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onItemPriceChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			// contract type: central and followLoaAmount: false, disallow to change contract value
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) { //Fix - #33287
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
@@ -5332,6 +5331,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		ConstructTabSideMenu();
 	}
 
+	// Start Fix - #33287
+	private boolean isCentralContractWithoutLoaAmt() {
+		return ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
+				.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)
+				&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt();
+	}
+
+	private boolean isNotChangedByGstOrSst() {
+		return !ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst();
+	}
+	// End Fix - #33287
+	
 	/**
 	 * The method used to set the related amendment information
 	 * when user wish to amend the item quantity.
@@ -5339,8 +5350,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onQuantityChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			// contract type: central and followLoaAmount: false, disallow to change contract value
-			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
-					&& !ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+			if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 			} else {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
@@ -5392,28 +5402,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void onChangeValueByGstChecked() {
 		if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){ //Fix - #33287
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
-			ctBackingBean
-					.getManagedBean()
-					.getContractVer()
-					.getCtAmendment()
-					.setNewGstAmount(
-							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
-		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-		}
-		
-		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
-			ctBackingBean
-					.getManagedBean()
-					.getContractVer()
-					.getCtAmendment()
-					.setNewStaxAmount(
-							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
-		} else {
-			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
-			
-		}
+		setGstAndStaxAmounts();
 		
 		ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst() || ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByStax()) {
@@ -5433,6 +5422,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
 			spToCheck = true;
 		}else if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isValueChangeByGst()){
+			isCentralContractTypeCheck();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setApproverAuthorityReq(false);
 			Calendar c = Calendar.getInstance();
 			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
@@ -5440,6 +5430,48 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		//End Fix - #33287
 	}
+	
+	// Start Fix - #33287
+	/**
+	 * To reset the value of change contract value(auto-tick mechanism) that
+	 * depends on onChangeValueByGstChecked() method
+	 */
+	private void isCentralContractTypeCheck() {
+		if (isCentralContractWithoutLoaAmt() && isNotChangedByGstOrSst()) {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+		}
+	}
+
+	/**
+	 * Extracted criteria to set from onChangeValueByGstChecked() method to set
+	 * the gstAmount and staxAmout
+	 */
+	private void setGstAndStaxAmounts() {
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+			ctBackingBean
+					.getManagedBean()
+					.getContractVer()
+					.getCtAmendment()
+					.setNewGstAmount(
+							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getGstAmount());
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+		}
+
+		if (ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount() != null) {
+			ctBackingBean
+					.getManagedBean()
+					.getContractVer()
+					.getCtAmendment()
+					.setNewStaxAmount(
+							ctBackingBean.getManagedBean().getContractVer().getCtContractAmount().getStaxAmount());
+		} else {
+			ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);
+		}
+	}
+
+	// End fix - #33287
+	
 	//Start Fix - #33287
 	public void onClauseChecked() {
 		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
