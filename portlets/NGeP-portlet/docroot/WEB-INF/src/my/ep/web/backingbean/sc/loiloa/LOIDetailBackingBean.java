@@ -6954,6 +6954,7 @@ public class LOIDetailBackingBean extends
 
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
+		getManagedBean().setAbleToSubmitLOI(true);
 		// Only one supplier, LOI's supplier
 		List<Long> suppList = new ArrayList<>();
 		suppList.add(scLoi.getScLoiLoa().getSmSupplier().getSupplierId());
@@ -6975,14 +6976,17 @@ public class LOIDetailBackingBean extends
 		boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 
-		// will hide submit LOI button if supplier reject EPV (prerendered == false)
-		getManagedBean().setAbleToSubmitLOI(isValidFor21692 && !supplierStatus);
+		if (isValidFor21692) {
+			// will hide submit LOI button if supplier reject EPV (prerendered == false)
+			getManagedBean().setAbleToSubmitLOI(!supplierStatus);
 
-		// all condition needed to show cancel button in LOI
-		supplierStatus = supplierStatus
-				&& isLoiListPortlet()
-				&& !this.getManagedBean().getScLoi().isBrandNew()
-				&& isValidFor21692 ? true : false;
+			// all condition needed to show cancel button in LOI
+			supplierStatus = supplierStatus
+					&& isLoiListPortlet()
+					&& !this.getManagedBean().getScLoi().isBrandNew() ? true : false;
+		} else {
+			supplierStatus = false;
+		}
 
 		// cancel button will show/hide based on this (prerendered false/true)
 		getManagedBean().setAbleToCancelLOI(
