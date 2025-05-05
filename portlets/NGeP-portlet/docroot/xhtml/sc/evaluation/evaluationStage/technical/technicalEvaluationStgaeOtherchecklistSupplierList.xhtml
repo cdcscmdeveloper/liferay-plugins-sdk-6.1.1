@@ -46,8 +46,11 @@
 				<h:outputText value="#{othersList.totalScore}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}" rendered="#{evaluationBackingBean.managedBean.isScoringReq}"
+			<ui:remove>#11104 -start-</ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+				rendered="#{evaluationBackingBean.managedBean.isScoringReq and !isSampleAll}"
 				style="width:25%">
+				<ui:remove>#11104 -end-</ui:remove>
 
 
 				<h:outputText
@@ -55,6 +58,16 @@
 
 			</p:column>
 
+			<ui:remove>#11104 -start-</ui:remove>
+			<p:column headerText="#{lbl['lbl.sc.evalvation.status']}"
+				rendered="#{evaluationBackingBean.managedBean.isScoringReq and isSampleAll}"
+				style="width:25%">
+
+				<h:outputText
+					value="#{evaluationBackingBean.sampleStatusDesc(othersList)}"></h:outputText>
+			</p:column>
+			<ui:remove>#11104 -end-</ui:remove>
+			
 			<p:column style="width:30%;text-align: center;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.action']}" />
