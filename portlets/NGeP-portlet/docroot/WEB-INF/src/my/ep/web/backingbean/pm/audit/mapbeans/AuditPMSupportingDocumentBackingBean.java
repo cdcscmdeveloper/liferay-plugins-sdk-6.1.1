@@ -33,6 +33,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	boolean updated = false;
 	String roleCode;
 	String docNo;
+	String docType;
 	BigInteger docId;
 	BigInteger docGroupId;
 
@@ -64,7 +65,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	public AuditPMReqDTO insert(BaseManagedBean managedBean, String roleCode) {
 		SupportDocumentManagedBean managedBeans = (SupportDocumentManagedBean) managedBean;
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		if (null != managedBeans.getSelectedDocument() && null != managedBeans.getSelectedDocumentOld()) {
 			updated = true;
 			// /* Display priority **/
