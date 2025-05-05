@@ -2,9 +2,6 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
@@ -32,13 +29,6 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 	BigInteger paramLvlId;
 	String lvlCode3;
 
-	private static final Set<BigInteger> TRUE_FIELD_LABEL_IDS = new HashSet<>(Arrays.asList(
-			AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID,
-			AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, AuditConst.PM_AUD_DS_DSCOUNTRY_FIELDLABELID,
-			AuditConst.PM_AUD_CT_CTCOUNTRY_FIELDLABELID, AuditConst.PM_AUD_DS_DSSTATEID_FIELDLABELID,
-			AuditConst.PM_AUD_DS_DSDIVISIONID_FIELDLABELID, AuditConst.PM_AUD_CT_CTDISTRICTID_FIELDLABELID,
-			AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID));
-
 	@Override
 	public String getRoleCode() {
 		AuditPMRoleBackingBean auditPMRoleBackingBean = new AuditPMRoleBackingBean();
@@ -62,7 +52,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 		LocationManagedBean managedBeans = (LocationManagedBean) manageBean;
 		this.roleCode = roleCode;
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_ST_DOC_TYPE;
+			docType = managedBeans.getState().getStateName();// AuditConst.PM_AUD_ST_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_ST_PMPARAMETERLVLID;
 			docNo = managedBeans.getState().getStateCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_ST;
@@ -70,7 +60,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			insertStateVal(managedBeans);
 		}
 		if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_DIV_DOC_TYPE;
+			docType = managedBeans.getDivision().getDivisionName();// AuditConst.PM_AUD_DIV_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_DIV_PMPARAMETERLVLID;
 			docNo = managedBeans.getDivision().getDivisionCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_DIV;
@@ -78,7 +68,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			insertDivisionVal(managedBeans);
 		}
 		if (ParameterConst.LOCATION_LEVEL_DISTRICT.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_DS_DOC_TYPE;
+			docType = managedBeans.getResDistrict().getDistrictName();// AuditConst.PM_AUD_DS_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_DS_PMPARAMETERLVLID;
 			docNo = managedBeans.getResDistrict().getDistrictCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_DST;
@@ -86,7 +76,7 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			insertDistrictVal(managedBeans);
 		}
 		if (ParameterConst.LOCATION_LEVEL_CITY.equals(managedBeans.getSelectedType())) {
-			docType = AuditConst.PM_AUD_CT_DOC_TYPE;
+			docType = managedBeans.getCity().getCityName();// AuditConst.PM_AUD_CT_DOC_TYPE;
 			paramLvlId = AuditConst.PM_AUD_CT_PMPARAMETERLVLID;
 			docNo = managedBeans.getCity().getCityCode();
 			lvlCode3 = AuditConst.PM_LVL_CODE_3_CT;
@@ -117,8 +107,8 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			detailObj(AuditConst.PM_AUD_ST_STSTATECODE_FIELDLABELID, null, managedBean.getResState().getStateCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryId()
-					.toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_ST_STCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_ST_STNAME_FIELDLABELID, null, managedBean.getResState().getStateName(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -148,11 +138,11 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getDivision().getPmState().getPmCountry()
-					.getCountryId().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_DIV_DVCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getDivision().getPmState().getStateId()
-					.toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_DIV_DVSTATECODE_FIELDLABELID, null, managedBean.getState().getStateName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_DIV_DVCODE_FIELDLABELID, null, managedBean.getResDivision().getDivisionCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -184,15 +174,15 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_DS_DSCOUNTRY_FIELDLABELID, null, managedBean.getDistrict().getPmState().getPmCountry()
-					.getCountryId().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_DS_DSCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryName(),
+					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_DS_DSSTATEID_FIELDLABELID, null, managedBean.getDistrict().getPmState().getStateId()
-					.toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_DS_DSSTATEID_FIELDLABELID, null,
+					managedBean.getResDistrict().getPmState().getStateName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			if (managedBean.getResDistrict().getPmDivision() != null) {
-				detailObj(AuditConst.PM_AUD_DS_DSDIVISIONID_FIELDLABELID, null, managedBean.getDistrict().getPmDivision()
-						.getDivisionId().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			if (managedBean.getDistrict().getPmDivision() != null) {
+				detailObj(AuditConst.PM_AUD_DS_DSDIVISIONID_FIELDLABELID, null, managedBean.getResDistrict().getPmDivision()
+						.getDivisionName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 
 			detailObj(AuditConst.PM_AUD_DS_DSCODE_FIELDLABELID, null, managedBean.getResDistrict().getDistrictCode(),
@@ -222,16 +212,16 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			}
 		} else {
 			/** INSERT NEW transaction ***/
-			detailObj(AuditConst.PM_AUD_CT_CTCOUNTRY_FIELDLABELID, null, managedBean.getState().getPmCountry().getCountryId()
-					.toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_CT_CTCOUNTRY_FIELDLABELID, null, managedBean.getDistrict().getPmState().getPmCountry()
+					.getCountryName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID, null, managedBean.getDistrict().getPmState().getStateId()
-					.toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_CT_CTSTATECODE_FIELDLABELID, null, managedBean.getResDistrict().getPmState()
+					.getStateName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_CT_CTDISTRICTID_FIELDLABELID, null, managedBean.getCity().getPmDistrict().getDistrictId()
-					.toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+			detailObj(AuditConst.PM_AUD_CT_CTDISTRICTID_FIELDLABELID, null, managedBean.getResCity().getPmDistrict()
+					.getDistrictName(), AuditConst.PM_AUD_ACTION_TYPE_INS);
 
-			detailObj(AuditConst.PM_AUD_CT_CTCODE_FIELDLABELID, null, managedBean.getCity().getCityCode(),
+			detailObj(AuditConst.PM_AUD_CT_CTCODE_FIELDLABELID, null, managedBean.getResCity().getCityCode(),
 					AuditConst.PM_AUD_ACTION_TYPE_INS);
 
 			detailObj(AuditConst.PM_AUD_CT_CTNAME_FIELDLABELID, null, managedBean.getResCity().getCityName(),
@@ -258,19 +248,11 @@ public class AuditPMLocationBackingBean extends AuditPMBackingBeanTemplate {
 			dtlObj.setOldValue(oldValue);
 		}
 
-		if (newValueId(fieldLabelId)) {
-			dtlObj.setNewValueId(BigInteger.valueOf(Long.parseLong(newValue)));
-		} else {
 			dtlObj.setNewValue(newValue);
-		}
 
 		dtlObj.setActionType(actionType);
 		objList.add(dtlObj);
 		return objList;
-	}
-
-	private boolean newValueId(BigInteger fieldLabelId) {
-		return TRUE_FIELD_LABEL_IDS.contains(fieldLabelId);
 	}
 
 	/**

@@ -3431,8 +3431,6 @@ public class SupplierFinalizationBiddingBackingBean extends
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		
-		 SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-		 searchReqDTO.setDocId(qtId);
 		 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
 			 return Boolean.TRUE;
 		 }

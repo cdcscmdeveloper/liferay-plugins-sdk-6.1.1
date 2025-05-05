@@ -25,6 +25,7 @@
 		<p:spacer height="4"></p:spacer>
 		<ui:param name="scQtCheckList"
 					value="#{supplierProposalDetailBackingBean.managedBean.technicalQtChecklist}"></ui:param>
+		<ui:remove> #28777#29729 - Start </ui:remove>	
 		<c:if test="#{supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}">
 			<div class="ui-messages ui-widget">
 				<div class="ui-messages-warn ui-corner-all">
@@ -35,6 +36,7 @@
 				</div>
 			</div>
 		</c:if>
+		<ui:remove> #28777#29729 - End </ui:remove>	
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<p:spacer height="4"></p:spacer>
 		</div>

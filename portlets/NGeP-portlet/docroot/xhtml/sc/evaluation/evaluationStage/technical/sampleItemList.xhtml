@@ -110,12 +110,14 @@
 													or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 													or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}" 
 			  							 style="width:calc(100% - 15px);" 
-										 value="#{sampleItem.remark}" 
+										 value="#{sampleItem.remarkMandatorySpec}" 
 										 rows="1" 
 										 maxlength="100" 
 										 onkeyup="limitTextArea(this,100);" 
 										 onkeydown="limitTextArea(this,100);" 
-										 onmouseout="limitTextArea(this,100);"/>
+										 onmouseout="limitTextArea(this,100);">
+										 <p:ajax event="change" process="@this" partialSubmit="true" update="@this" />
+						</p:inputTextarea>
 					</p:column>
 					<ui:remove>#29187 End Vinod</ui:remove>
 

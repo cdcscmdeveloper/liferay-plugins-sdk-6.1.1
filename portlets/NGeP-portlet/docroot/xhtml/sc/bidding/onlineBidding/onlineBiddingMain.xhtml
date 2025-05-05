@@ -13,7 +13,7 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="obMessage" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" severity="error, info" />
+			closable="true" showSummary="false" severity="error, info, fatal" /> <ui:remove> #28777#29729 </ui:remove>
 			
 		<ui:remove> #28777#29729 - Start </ui:remove>	
 		<ui:param name="isDisqualified" value="#{onlineBiddingBB.checkDisqualifiedSupplierBranchDeleted(onlineBiddingBB.scBidSchedule.scBid.docId, onlineBiddingBB.smSupplier.supplierId)}"/>	
