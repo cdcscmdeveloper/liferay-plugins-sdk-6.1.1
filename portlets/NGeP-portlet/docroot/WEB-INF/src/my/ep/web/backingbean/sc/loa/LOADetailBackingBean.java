@@ -1806,6 +1806,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 		}
 		if(scLoaReportAttachmentGenerated != null) {
+			
 			// #29006 - start
 			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
 					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
@@ -2291,10 +2292,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// ##25025 #509 -start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
-		// ##25025 #509 -start
+		// ##25025 #509 -end
+
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
 		context.put("loaNo", scLoa.getLoaNo());
-
+		// ##25025 #509 -start
 		String issueDate = "______________";
 		if (scLoa.getIssueDate() != null) {
 			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
@@ -2325,8 +2327,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		log.info("SupplierAddressTable" + supplierAddressTable);
 		context.put("supplierAddressTable", supplierAddressTable);
-
-
+		
 		String headerTitle = SSTConstant.EMPTY_STRING;
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 			// #25025 - start
@@ -2334,12 +2335,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = SSTConstant.HEADER_TENDER; 
+				headerTitle = SSTConstant.HEADER_TENDER;
 			} else {
 				headerTitle = SSTConstant.HEADER_SEBUT_HARGA;
 			}
 
 		}
+		
 		context.put(SSTConstant.HEADER_TITLE, headerTitle); //25025 fix sonarlint
 		context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase()); //25025 fix sonarlint
 
@@ -2349,10 +2351,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			title = SSTConstant.EMPTY_STRING;
 		}
 		title = title.trim();
-
-		// replace all special characters
-		// title = title.replaceAll("\\W", "");
-		// title=title.replaceAll("&", "&#38;");
+		
 		// 25025 - note 436 start
 		title = title.replaceAll("&", SSTConstant.AND_SYMBOL);
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
@@ -2424,7 +2423,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(scLoa.getContractExpDate()));
 		}
 		// #25025 & #26770 - end
-		// ontractDuration
+
+		//ontractDuration
 		context.put("contractDuration", scLoa.getContractDuration());
 
 		context.put("isAgreementReq", scLoa.isAgreementReq());
@@ -2436,8 +2436,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				loaSigner = contractSigner.getUserName();
 			}
 		}
-		context.put("loaSigner", loaSigner);	
-
+		context.put("loaSigner", loaSigner);
+		
 		String loaSignerDesig = StringUtils.isNotEmpty(scLoa.getLoaSignerDesig())?  scLoa.getLoaSignerDesig(): SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
 			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
@@ -2490,15 +2490,15 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else {
 				qtNo = rnNo;
 			}
-			context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_PEMBELIAN_TERUS); //25025 fix sonarlint
+			context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_PEMBELIAN_TERUS); // 25025 fix sonarlint
 		} else if (scQt != null
 				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
 						.equals(scLoa.getScLoiLoa().getDocType()))) {
 			// #26770 - Start.
 			if (isQuotationOrTender(scQt)) {
-				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_SEBUT_HARGA); //25025 fix sonarlint
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_SEBUT_HARGA); // 25025 fix sonarlint
 			} else {
-				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_TENDER); //25025 fix sonarlint
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_TENDER); // 25025 fix sonarlint
 			}
 			// #26770 - End.
 		}
@@ -2772,24 +2772,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		log.info("SupplierAddressTable" + supplierAddressTable);
-
+		
 		// #25025 - start
 		String headerTitle = SSTConstant.EMPTY_STRING; // 25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 fix
-																// sonarlint
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 fix sonarlint
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
 				headerTitle = SSTConstant.HEADER_TENDER; // 25025 fix sonarlint
 			} else {
-				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix
-																// sonarlint
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix sonarlint
 			}
-
 		}
-		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix
-															// sonarlint
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
+		
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
 		context.put("supplierSignerAddress", supplierAddressTable);
@@ -3020,11 +3017,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
 				headerTitle = SSTConstant.HEADER_TENDER; // 25025 fix sonarlint
 			} else {
-				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix sonarlint
 			}
 		}
-		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix
-															// sonarlint
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
 
 		if(scLoiLoa.getSmSupplier() != null){
@@ -4193,13 +4189,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateReportAttachment();
 			// #26770 - End.
 			RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
-		} else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-			// 22111 - START
-			// REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD
-			// DOCUMENT
-			if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
-					.getStatusId().longValue())) {
-				if (this.getManagedBean().getScQt() != null) {
+		}else if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+			//22111 - START
+			//REVISE DOCUMENT FROM VERIFIER TO SUPPLIER AGAIN FOR REUPLOAD DOCUMENT
+			if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(this.getManagedBean().getScLoa().getPmStatus()
+							.getStatusId().longValue())) {
+				if (this.getManagedBean().getScQt() != null){
 					// Code for QT
 					updateBpmTaskAction(outcome);
 				}else{
@@ -6884,7 +6879,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			offerPrice = amountDF.format(loaAmount);
 			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
 		}
-
+		
 		// #25025,#26770 -start-
 		context.put(SSTConstant.OFFER_PRICE, offerPrice);
 		context.put(SSTConstant.OFFER_PRICE_WORDING, offerPriceWording);
@@ -6895,28 +6890,26 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		String overallctAmt = SSTConstant.UNDERLINE;
 		String overallctAmtWording = SSTConstant.UNDERLINE;
 		// #25025,#26770 -end-
+		
 		BigDecimal sstAmt = scLoa.getSstAmt();
-
+		
 		if (sstAmt != null && loaAmount != null) {// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 - 25025, 26770 merge to prevent error
 			sstAmount = amountDF.format(sstAmt);
 			overallctAmt = amountDF.format(loaAmount.add(sstAmt));
-			log.info(":::setSstInfoForAgreementLetter(). loaId: " + scLoa.getLoaId() + ". overallctAmt inc. sstAmt: "
-					+ overallctAmt);
+			log.info(":::setSstInfoForAgreementLetter(). loaId: "+ scLoa.getLoaId() +". overallctAmt inc. sstAmt: "+ overallctAmt);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(sstAmt).toString()));
 		} else if (loaAmount != null) {// 20230706@asyrafhaziq- SQUBE Bug NullPointer#3 - 25025,26770 merge to  prevent error
 			overallctAmt = amountDF.format(loaAmount);
 			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
 		}
-
 		// #25025,#26770 -start-
 		context.put(SSTConstant.SST_AMOUNT, sstAmount);
 		context.put(SSTConstant.OVERALL_CONTRACT_AMOUNT, overallctAmt);
 		context.put(SSTConstant.OVERALL_CONTRACT_AMOUNT_WORDING, overallctAmtWording);
 		// #25025,#26770 -end-
-
-	}
-
-	// end Enhancement #24259 #24269
+				
+	}	
+	//end Enhancement #24259 #24269
 
 	/**
 	 * @param context
@@ -6992,7 +6985,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
 			}
 			// 26770 - end
-
 		}
 		context.put("mofValidityDuration", mofValidityDuration);
 		context.put("mofCertValidityDuration", mofCertValidityDuration);
@@ -8276,20 +8268,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//Bug #33674@Syazani -- End 14/09/2022
-	
-	// #25025 - start
-	public String setValueLowercase(String text, int index) {
-		// Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
-		if ("SuratSetujuterima(TermasukLampiranA)".equalsIgnoreCase(text.replaceAll(
-				SourcingConstants.REG_EXP_WHITE_SPACE, ""))) {
-			char[] arr = text.toCharArray();
-			arr[index] = Character.toLowerCase(arr[index]);
-			String newPrefixName = new String(arr);
-			return newPrefixName;
-		}
-		return text;
-	}
-	// #25025 - end
 	
 	// #32648 populate lampiran 7 if LOA at supplier - start
 	public boolean isDpAuditOrQtAuditOrQtMaint() {
@@ -12000,8 +11978,22 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			getQtAwardSO().insertItemSpecOffer(reqDTO);
 		}
 	}
-
 	// #29007 End vinod
+
+	// #25025 - start
+	public String setValueLowercase(String text, int index) {
+		// Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
+		if ("SuratSetujuterima(TermasukLampiranA)".equalsIgnoreCase(text.replaceAll(
+				SourcingConstants.REG_EXP_WHITE_SPACE, ""))) {
+			char[] arr = text.toCharArray();
+			arr[index] = Character.toLowerCase(arr[index]);
+			String newPrefixName = new String(arr);
+			return newPrefixName;
+		}
+		return text;
+	}
+	// #25025 - end
+	
 	// #26770 - Start fix sonarlint.
 	/**
 	 * To Validate Report Attachment
@@ -12012,7 +12004,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			validateScLoaReportAttachment(this.getManagedBean().getScLoa().getScLoaReports());
 		}
 	}
-	
+
 	/**
 	 * @param scLoaReport
 	 */
@@ -12033,6 +12025,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		}
 	}
+
 	// #26770 - End fix sonarlint.
 	// 26770 start fix sonarlint
 	/**
@@ -12063,4 +12056,24 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 
 	// 26770 - end fix sonarlint
+	// #26770 - Start.
+	/**
+	 * @param scQt
+	 * @return
+	 */
+	protected boolean isQuotationOrTender(ScQt scQt) {
+		boolean isQuotation = true;
+		PmParameter procurementMode = scQt.getProcurementMode();
+
+		if (procurementMode != null
+				&& procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			isQuotation = true;
+		} else if (procurementMode != null
+				&& procurementMode.getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			isQuotation = false;
+		}
+
+		return isQuotation;
+	}
+	// #26770 - End.
 }

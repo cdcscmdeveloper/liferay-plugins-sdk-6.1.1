@@ -5660,8 +5660,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title=title.replaceAll(">", "&#62;");
 		title = title.replaceAll("\r\n", "<br />");
 		context.put("title", title);
-
-		context.put("hasLoi", false);
+		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
 		String bondAmt = "";
@@ -8372,6 +8371,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase());
 		// #25025,#26770 -end-
 		
+		context.put("headerTitle", headerTitle); 
+		context.put("subTitle", headerTitle.toLowerCase());
+		
 		// loa title
 		String title=	scQt.getQtTitle();
 		if (title == null) {
@@ -8390,8 +8392,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
 		// 26770 - end
 		context.put("loaTitle", title);
-		
-		context.put("hasLoi", false);
+		context.put("hasLoi", false); 
 		context.put("bondReq", scLoa.isBondReq());
 
 		// 26770 - start
@@ -8497,7 +8498,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			setSSMExpiredDateForAgreementLetter(context, supplier);
 		}
 		// 26770-end fix sonarlint
-				
+		
 //		setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setSstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		setMofInfoForAgreementLetter(context, scLoa, myLocale);
@@ -8533,6 +8534,19 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		// #26770 - End fix sonarlint
 		
+		// #26770 - Start fix sonarlint
+		if (scQt != null
+				&& (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType()) || ParameterConst.DOCTYPE_DIRECT_NEGO
+						.equals(scLoa.getScLoiLoa().getDocType()))) {
+			// #26770 - Start.
+			if ("Q".equals(getManagedBean().getScLoa().getProcurementMode().getParameterCode())) {
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_SEBUT_HARGA);
+			} else if ("T".equals(getManagedBean().getScLoa().getProcurementMode().getParameterCode())) {
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_TENDER);
+			}
+			// #26770 - End.
+		}
+		// #26770 - End fix sonarlint
 		// JadualHarga
 		formJadualHarga(context, scLoa);
 		
@@ -11486,6 +11500,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	// #29007 End vinod
+	
 	// #26770 - Start fix sonarlint
 	/**
 	 * To Validate Report Attachment

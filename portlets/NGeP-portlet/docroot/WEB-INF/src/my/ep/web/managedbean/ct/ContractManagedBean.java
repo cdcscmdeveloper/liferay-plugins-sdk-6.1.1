@@ -1358,7 +1358,7 @@ public class ContractManagedBean extends BaseManagedBean {
 			this.applID = applID;
 		}
 	    //End Fix - #33674
-
+		
 		/* #28854 start*/
 		public String getNewOfferSpec() {
 			return newOfferSpec;
