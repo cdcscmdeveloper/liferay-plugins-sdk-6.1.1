@@ -1610,7 +1610,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 											resDTO.getCategoryL2().getCategoryL2Code() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
-
 			}
 
 		} catch (Exception e) {

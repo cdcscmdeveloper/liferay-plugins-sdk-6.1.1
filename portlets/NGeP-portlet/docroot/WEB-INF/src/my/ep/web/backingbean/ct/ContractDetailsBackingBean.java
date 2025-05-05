@@ -4509,17 +4509,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
-
 		boolean hasNewBond = false;
-		CtPerformanceBond emptyNewBond = null;
 
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
+			CtPerformanceBond emptyNewBond = null;
 			if (bond.isBondNew()) {
 				hasNewBond = true;
-		        if (bond.isBrandNew()) {
-		            bond.setFileName(null);
-		            bond.setFilePath(null);
-		        }
+				if (bond.isBrandNew()) {
+					bond.setFileName(null);
+					bond.setFilePath(null);
+				}
 				bondNew.add(bond);
 			} else {
 				bondOriginal.add(bond);
@@ -4531,11 +4530,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					emptyNewBond = bond;
 				}
 			}
-		}
-
-		// Only create new bond if NONE exist
-		if (!hasNewBond && emptyNewBond != null) {
-			bondNew.add(createNewBondFrom(emptyNewBond));
+			// Only create new bond if NONE exist
+			if (!hasNewBond && emptyNewBond != null) {
+				bondNew.add(createNewBondFrom(emptyNewBond));
+			}
 		}
 
 		contractAmt.setCtPerformanceBondsNew(bondNew);
