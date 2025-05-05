@@ -3568,9 +3568,8 @@ public class SupplierFinalizationBackingBean extends
 				filename.append(".rtf");
 				reportAttachment.setFileName(filename.toString());
 
-				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload);
-
 				generateKertasTaklimatRtf(scQt, attachment, isDirectDownload); // 36715
+
 			} else {
 				debugLogger("No document type is exists with the key "
 						+ docDefinitionKey);
