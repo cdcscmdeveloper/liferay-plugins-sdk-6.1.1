@@ -7459,6 +7459,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return recordStatusParamMap.get(mofStatus.concat(locale.getLanguage()));
 	}
 	// 26247 - end
+	
 	// 26247 - start
 	/**
 	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario

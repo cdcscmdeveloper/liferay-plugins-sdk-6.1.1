@@ -547,7 +547,9 @@ public class ViewSuppProfileBackingBean extends
 		} 
 		return composeWarningMessages(messages);
 	}
+	// 26247 - end
 	
+	// 26247 - start
 	/**
 	 * Retrieve message and set message to QT DA warning dialog
 	 * @param messages
@@ -556,7 +558,9 @@ public class ViewSuppProfileBackingBean extends
 		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
 		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
 	}
-
+	// 26247 - end
+	
+	// 26247 - start
 	/**
 	 * Evaluate the flag to show warning flag( for yes/no hyperlink) for
 	 * non/disciplinary action
@@ -594,7 +598,9 @@ public class ViewSuppProfileBackingBean extends
 		}
 		return messages;
 	}
-
+	// 26247 - end
+	
+	// 26247 - start
 	private String getCancelRegistrationOrBlacklistMessage(SmSupplier supplier, Locale locale) {
 		SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
 		String statusDescription = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction", null,
@@ -612,7 +618,9 @@ public class ViewSuppProfileBackingBean extends
 		return MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
 				MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
 	}
+	// 26247 - end
 	
+	// 26247 - start
 	private boolean evaluateCancelledCategories(SmSupplier supplier) {
 		boolean cancelledCategory = false;
 		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
@@ -622,7 +630,9 @@ public class ViewSuppProfileBackingBean extends
 		}
 		return cancelledCategory;
 	}
+	// 26247 - end
 	
+	// 26247 - start
 	private boolean evaluateCancelledBumiAccount(SmSupplier supplier){
 		boolean cancelledBumiAccount = false;
 		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
@@ -631,7 +641,9 @@ public class ViewSuppProfileBackingBean extends
 		}
 		return cancelledBumiAccount;
 	}
+	// 26247 - end
 	
+	// 26247 - start
 	/**
 	 * Evaluate for suspend registration disciplinary action
 	 * @param supplier
@@ -644,6 +656,9 @@ public class ViewSuppProfileBackingBean extends
 		}
 		return false;
 	}
+	// 26247 - end
+	
+	// 26247 - start
 	/**
 	 * Evaluate for pending register cancellation or blacklist owner disciplinary action
 	 * @param supplier
@@ -666,7 +681,9 @@ public class ViewSuppProfileBackingBean extends
 		return ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus) && blacklistedOrCancelled
 				&& !supplier.isDisciplinaryActions();
 	}
-
+	// 26247 - end
+	
+	// 26247 - start
 	private String composeWarningMessages(List<String> messages) {
 		StringBuilder messageSb = new StringBuilder();
 		int count = 0;
