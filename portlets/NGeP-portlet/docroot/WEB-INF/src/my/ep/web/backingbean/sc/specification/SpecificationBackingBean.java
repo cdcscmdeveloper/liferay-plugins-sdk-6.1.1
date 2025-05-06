@@ -23898,6 +23898,46 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 End Vinod
+	// #10141 Start Vinod
+	/**
+	 * this method will check whether atleast one checklist is selected and if
+	 * selected will call the hidden button.
+	 * 
+	 * @param actualButtonId
+	 *            this is the actual id for the hidden button since it is not
+	 *            recognized directly we used binding to get this id.
+	 * @param isTechnical
+	 *            this is to make sure the correct checklist is used for
+	 *            checking.
+	 * 
+	 * @return
+	 * 
+	 * @throws
+	 * 
+	 */
+	public void validateAtleastOneChecklistSelected(String actualButtonId, boolean isTechnical) {
+		List<ScQtCheckList> scQtChecklistListLocal = new ArrayList<>();
+		int selectedCount = 0;
+
+		if (isTechnical) {
+			scQtChecklistListLocal = this.getManagedBean().getTechChecklistPreview();
+		} else {
+			scQtChecklistListLocal = this.getManagedBean().getFinChecklistPreview();
+		}
+
+		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
+			if (scQtCheckList.isSelected()) {
+				selectedCount++;
+				break;
+			}
+		}
+		if (selectedCount != 0) {
+			// Trigger the hidden download button.
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
+		}
+	}
+
+	// #10141 End Vinod
 
 	// #10141 Start Vinod
 	/**
@@ -23910,10 +23950,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @throws IOException
 	 */
 	public void downloadTechnicalChecklistSummaryReport() throws IOException {
-		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
-		FacesScopes facesScopes = new FacesScopes();
 
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_PREVIEW_PRINTING));
@@ -23922,27 +23960,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
 
-		String selectedTechnicalCheckList = selectedFinancialChecklistForReport(this.getManagedBean()
+		String reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
+
+		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), true);
-
-		try {
-			ScAttachment attachment = reportAttachment;
-			populateAttachmentDetails(attachment);
-			reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
-			PmUser user = facesScopes.getUserSessionBean();
-
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
-			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedTechnicalCheckList);
-			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
-			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
-
-			downloadReportSpecPrepare(reportName, paramMap, attachment);
-		} catch (IOException e) {
-			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
-					qtNo, SLALogConstant.QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), e);
-		}
 	}
 
 	// #10141 End Vinod
@@ -23959,10 +23980,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 */
 	public void downloadTechnicalChecklistDetailedReport() throws IOException {
-		String reportName;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
-		FacesScopes facesScopes = new FacesScopes();
 
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_TECHNICAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING));
@@ -23971,28 +23990,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
 
-		String selectedTechnicalCheckList = selectedFinancialChecklistForReport(this.getManagedBean()
+		String reportName = ReportConst.SC_PVW_TECH_CHECKLIST_DTL_JSP;
+
+		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getTechChecklistPreview(), false);
-
-		try {
-			ScAttachment attachment = reportAttachment;
-			populateAttachmentDetails(attachment);
-			reportName = ReportConst.SC_PVW_TECH_CHECKLIST_DTL_JSP;
-			PmUser user = facesScopes.getUserSessionBean();
-
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
-			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedTechnicalCheckList);
-			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
-			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
-
-			downloadReportSpecPrepare(reportName, paramMap, attachment);
-		} catch (IOException e) {
-			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
-					qtNo, SLALogConstant.QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW,
-					getUserIdSessionFromLoginId(), e);
-		}
 	}
 
 	// #10141 End Vinod
@@ -24008,10 +24009,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @throws IOException
 	 */
 	public void downloadFinancialChecklistSummaryReport() throws IOException {
-		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
-		FacesScopes facesScopes = new FacesScopes();
 
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_PREVIEW_PRINTING));
@@ -24020,27 +24019,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
 
-		String selectedFinancialChecklist = selectedFinancialChecklistForReport(this.getManagedBean()
+		String reportName = ReportConst.SC_PVW_FIN_CHECKLIST_SUMMARY_JSP;
+
+		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), true);
-
-		try {
-			ScAttachment attachment = reportAttachment;
-			populateAttachmentDetails(attachment);
-			reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
-			PmUser user = facesScopes.getUserSessionBean();
-
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
-			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedFinancialChecklist);
-			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
-			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
-
-			downloadReportSpecPrepare(reportName, paramMap, attachment);
-		} catch (IOException e) {
-			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
-			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
-					qtNo, SLALogConstant.QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW, getUserIdSessionFromLoginId(), e);
-		}
 	}
 
 	// #10141 End Vinod
@@ -24057,56 +24039,117 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 */
 	public void downloadFinancialChecklistDetailedReport() throws IOException {
-		String reportName = null;
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
-		FacesScopes facesScopes = new FacesScopes();
-		
+
 		StringBuilder fileName = new StringBuilder(
 				getMessageCommon(QTConstants.LBL_FINANCIAL_CHECKLIST_ELEMENT_DETAILS_PREVIEW_PRINTING));
 		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
-		
+
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		
-		String selectedFinancialChecklist = selectedFinancialChecklistForReport(this.getManagedBean()
+
+		String reportName = ReportConst.SC_PVW_FIN_CHECKLIST_DTL_JSP;
+
+		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), false);
+	}
+
+	// #10141 End Vinod
+
+	// #10141 Start Vinod
+	/**
+	 * This method will be the common method to download report based on the
+	 * parameters.
+	 * 
+	 * @param reportAttachment
+	 *            this will be used to save the report in local.
+	 * @param reportName
+	 *            this will be passed to report builder to generate the exact
+	 *            report.
+	 * @param scQtChecklistList
+	 *            this can be technical or financial checklists from the popup
+	 *            screen to check and pass to the parameters.
+	 * @param isSummary
+	 *            this is to differentiate if the method is calling from summary
+	 *            action.
+	 * 
+	 * @return
+	 * 
+	 * @throws IOException
+	 * 
+	 */
+	private void downloadReportBasedOnChecklistTypeAndAction(ScAttachment reportAttachment, String reportName,
+			List<ScQtCheckList> scQtChecklistList, boolean isSummary) throws IOException {
+		ScAttachment reportAttachmentLocal = reportAttachment;
+		String reportNameLocal = reportName;
+		List<ScQtCheckList> scQtChecklistListLocal = scQtChecklistList;
 		
+		ScQt scQt = getManagedBean().getQt();
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = facesScopes.getUserSessionBean();
+		
+		int selectedCount = 0;
+
+		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
+			if (scQtCheckList.isSelected()) {
+				selectedCount++;
+			}
+		}
+		if (!isSummary && selectedCount == 0) {
+			return;
+		}
+
+		String selectedChecklist = selectedChecklistForReport(scQtChecklistListLocal, isSummary);
+
 		try {
-			ScAttachment attachment = reportAttachment;
+			ScAttachment attachment = reportAttachmentLocal;
 			populateAttachmentDetails(attachment);
-			reportName = ReportConst.SC_PVW_FIN_CHECKLIST_DTL_JSP;
-			PmUser user = facesScopes.getUserSessionBean();
 
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_QTID, getManagedBean().getQt().getQtId().toString());
-			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedFinancialChecklist);
+			paramMap.put(QTConstants.PARAM_MAP_QTID, scQt.getQtId().toString());
+			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedChecklist);
 			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
 			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
 
-			downloadReportSpecPrepare(reportName, paramMap, attachment);
+			downloadReportSpecPrepare(reportNameLocal, paramMap, attachment);
 		} catch (IOException e) {
 			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_SPECIFICATION_BACKINGBEAN,
 					qtNo, SLALogConstant.QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW,
 					getUserIdSessionFromLoginId(), e);
 		}
+
 	}
 
 	// #10141 End Vinod
 
 	// #10141 Start Vinod
-	private String selectedFinancialChecklistForReport(List<ScQtCheckList> scQtChecklistList, boolean isSummary) {
+	/**
+	 * This method will be the common method to download report based on the
+	 * parameters.
+	 * 
+	 * @param scQtChecklistList
+	 *            this can be technical or financial checklists from the popup
+	 *            screen to check and pass to the parameters.
+	 * @param isSummary
+	 *            this is to differentiate if the method is calling from summary
+	 *            action.
+	 * 
+	 * @return String list of selected checklist id's.
+	 * 
+	 */
+	private String selectedChecklistForReport(List<ScQtCheckList> scQtChecklistList, boolean isSummary) {
 		StringBuilder selectedChecklists = new StringBuilder();
 		int checklistCount = 0;
-		
+
 		for (ScQtCheckList scQtCheckList : scQtChecklistList) {
-			if ((scQtCheckList.isSelected() || isSummary) && checklistCount==0) {
+			if ((scQtCheckList.isSelected() || isSummary) && checklistCount == 0) {
 				selectedChecklists.append(scQtCheckList.getQtChecklistId().toString());
-			}else if ((scQtCheckList.isSelected() || isSummary) && checklistCount!=0) {
-				selectedChecklists.append(","+scQtCheckList.getQtChecklistId().toString());
+			} else if ((scQtCheckList.isSelected() || isSummary) && checklistCount != 0) {
+				selectedChecklists.append("," + scQtCheckList.getQtChecklistId().toString());
 			}
-			
+
 			checklistCount++;
 		}
 

@@ -268,7 +268,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				if (loiLoaList != null && loiLoaList.size() > 0) {
 					for (ScLoiLoa scLoiLoa : loiLoaList) {
-						SmSupplier smSupplier = qtAwardSO.retrieveActiveDisciplinaryActionBySupplier(scLoiLoa.getSmSupplier());
+						SmSupplier smSupplier = qtAwardSO.evaluateDisciplinaryActions(scLoiLoa.getSmSupplier(), qtId); // 26247
 						scLoiLoa.setSmSupplier(smSupplier);
 					}
 					getManagedBean().setScLoiLoaList(loiLoaList);
@@ -521,8 +521,9 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
 		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
-
-		if (null != scLoa.getScLoiLoa()) {
+		getManagedBean().setAbleToSubmitLOA(true);
+		if (null != scLoa.getScLoiLoa()
+				&& !scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)) {
 
 			IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 					IQTDetailSO.class);
@@ -538,12 +539,16 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 			}
 
 			// check the validity of BPM version, if version is equal/higher will enable button
-			boolean isValidFor21692 = this.validateSupportedTask(this.getManagedBean().getQt().getQtNo(),
+			boolean isValidFor21692 = this.validateSupportedTask(scLoa.getScQt().getQtNo(),
 					QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 
-			// will hide submit LOA button if supplier reject EPV (prerendered == false)
-			getManagedBean().setAbleToSubmitLOA(isValidFor21692 && !supplierStatus);
-			supplierStatus = supplierStatus && isLoaListPortlet() && isValidFor21692 ? true : false;
+			if (isValidFor21692) {
+				// will hide submit LOA button if supplier reject EPV (prerendered == false)
+				getManagedBean().setAbleToSubmitLOA(!supplierStatus);
+				supplierStatus = supplierStatus && isLoaListPortlet() ? true : false;
+			} else {
+				supplierStatus = false;
+			}
 		}
 		
 		// cancel button will show/hide based on this (prerendered false/true)

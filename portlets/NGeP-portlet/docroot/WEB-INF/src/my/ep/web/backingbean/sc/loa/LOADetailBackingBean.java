@@ -1281,24 +1281,13 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
 		
-		// #26247 - #33073 - #33354 - Start.
-		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()){
-			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-			
-			try {
-				qtSuppFinalizationSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTSuppFinalizationSO.class);
-				
-				if (null != qtSuppFinalizationSO) {
-					SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-					scLoa.getScLoiLoa().setSmSupplier(smSupplier);
-				}
-			} finally {
-				qtSuppFinalizationSO = null;
-			}
+		// 26247 - start
+		if (null != scLoa && null != scLoa.getScLoiLoa() && null != scLoa.getScLoiLoa().getSmSupplier()) {
+			SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+					scLoa.getScLoiLoa().getSmSupplier(), scLoa.getScLoiLoa().getDocId());
+			scLoa.getScLoiLoa().setSmSupplier(smSupplier);
 		}
-		// #26247 - #33073 - #33354 - End.
+		// 26247 - start
 		
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -1310,7 +1299,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		//Supplier overall contract amount
 		//Enhancement #24259 #24269
-//		BigDecimal overallCtAmout = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
 		//20230706@asyrafhaziq- SQUBE Bug NullPointer#3
 		BigDecimal overallCtAmout = null;
 		if (scLoa !=null )
@@ -6582,28 +6570,18 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			loaBackingBean.getManagedBean().setQt(resDTO.getScQt());
 			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
 			// #26247 - #33073 - #33354 - Start.
-			if (CollectionUtils.isNotEmpty(loiLoaList) && loiLoaList.size() > 0) {
-				IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-				try {
-					for (ScLoiLoa scLoiLoa: loiLoaList) {
-						qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-										IQTSuppFinalizationSO.class);
-						
-						if (null != qtSuppFinalizationSO) {
-							SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoiLoa.getSmSupplier());
-							scLoiLoa.setSmSupplier(smSupplier);
-						}
-					}
-				} finally {
-					qtSuppFinalizationSO = null;
-				}
-			}
-			// #26247 - #33073 - #33354 - End.
-			if (loiLoaList != null && loiLoaList.size() > 0) {
+			if (CollectionUtils.isNotEmpty(loiLoaList)) {
+				for (ScLoiLoa scLoiLoa : loiLoaList) {
+					SmSupplier smSupplier = getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+							scLoiLoa.getSmSupplier(), qtId);
+					scLoiLoa.setSmSupplier(smSupplier);
+
+				} 
 				loaBackingBean.getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				loaBackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
 				loaBackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
-			}	
+			}
+			// #26247 - #33073 - #33354 - End.
 		}
 		loaBackingBean.generateSuppLoiLoaList();
 	}
@@ -12302,6 +12280,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												// supplier respond and make new
 												// supplier offer
 												map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
+												answerRemark = VmUtil.getInstance().escapeAndWrapText(
+														answer.getNewSupplierOffer(), 13, SSTConstant.FILE_TYPE_PDF);
+
 												if (indi == scLoiLoaItem.getZoneNameList().size()){
 													map.put(SSTConstant.LAST_INDEX_WIP, "true");
 												}
@@ -12312,6 +12293,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 												// supplier respond but no
 												// changes
 												map.put(SSTConstant.answerRemark, VmUtil.getInstance().escapeAndWrapText(answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF)); //35295 #124 @zaim
+												answerRemark = VmUtil.getInstance().escapeAndWrapText(
+														answer.getAnswerRemark(), 13, SSTConstant.FILE_TYPE_PDF);
+
 												map.put(SSTConstant.IS_WIP, "true");
 												if (indi == scLoiLoaItem.getZoneNameList().size()){
 													map.put(SSTConstant.LAST_INDEX_WIP, "true");
