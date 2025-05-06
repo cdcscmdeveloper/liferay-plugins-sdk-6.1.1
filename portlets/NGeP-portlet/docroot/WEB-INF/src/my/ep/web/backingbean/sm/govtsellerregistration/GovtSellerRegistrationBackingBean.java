@@ -68,6 +68,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.apache.log4j.Logger;
+//#28895_35501 Start - AUDIT TRAIL SM
+import my.ep.biz.service.IAuditTrailSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sm.AuditSupplierManagementConst;
+import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBankInformationBackingBean;
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+//#28895_35501 End
 
 @ManagedBean(name = "govtSellerBackingBean")
 @RequestScoped
@@ -155,6 +164,10 @@ public class GovtSellerRegistrationBackingBean extends
 		initBankBranches();
 		//START 17906
 		if(this.getManagedBean().getSmSupp().getSmAppl() != null && this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks() != null){
+			// #28895_35501 Start - AUDIT TRAIL SM
+			this.getManagedBean().setOldBanks(
+					CustomUtils.getInstance().deepCopyArrayList(this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()));
+			// #28895_35501 End
 			StringBuilder sb = new StringBuilder();
 			for(SmSupplierBank bank:this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()){
 				if(bank.getAccountNo() != null){
@@ -1063,6 +1076,13 @@ public class GovtSellerRegistrationBackingBean extends
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
 					.updateGovtSellerAcc(reqDTO);
 			if (resDTO.isSuccessful()) {
+				// #28895_35501 Start - AUDIT TRAIL SM
+				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
+				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
+					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementBankInformationBackingBean();
+					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
+				}
+				// #28895_35501 End
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/onlinereg/outputMsg.xhtml",
 						MessageConst.INFO_721013, null, null);
