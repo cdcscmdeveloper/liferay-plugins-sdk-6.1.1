@@ -50,10 +50,6 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 
 	private List<PmBusinessNature> childNatures;
 	
-	/************ AUDIT START #28895-35509 *************/
-	private PmBusinessNature oldPmBusinessNature;
-	/************ AUDIT END #28895-35509 *************/
-	
 	public BusinessNatureManagedBean(){}
 
 	/**
@@ -307,14 +303,6 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 	public void setChildNatures(List<PmBusinessNature> childNatures) {
 		this.childNatures = childNatures;
 	}
-	
-	/*********************AUDIT**********/
-	public PmBusinessNature getOldPmBusinessNature() {
-		return oldPmBusinessNature;
-	}
 
-	public void setOldPmBusinessNature(PmBusinessNature oldPmBusinessNature) {
-		this.oldPmBusinessNature = oldPmBusinessNature;
-	}
-	/*********************AUDIT**********/
+	
 }
