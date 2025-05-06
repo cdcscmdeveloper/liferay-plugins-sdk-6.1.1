@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
@@ -39,6 +40,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 //20201105@Jacky - Enhancement#28836 - Start
 import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.AuditConst;
 //20201105@Jacky - Enhancement#28836 - End
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -97,6 +99,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMOrganizationProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -1163,6 +1167,9 @@ public class OrganisationBackingBean extends
 							&& !getManagedBean().getAddressTypesList()
 									.contains(addressType)) {
 						getManagedBean().getAddressTypesList().add(addressType);
+						/************ AUDIT 35509 *************/
+						getManagedBean().setBillingAddressType(addressType);
+						/************ AUDIT 35509 *************/
 					}
 				}
 
@@ -1225,7 +1232,19 @@ public class OrganisationBackingBean extends
 			reqDTO.setUserId(userLoginId.getUserId());
 			reqDTO.setUser(currentUser);
 			//#30651 - end
-			
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMOrganizationProfileBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE) && !orgProfile.isBrandNew()){
+				// retrieve old data
+				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+				OrgProfileResDTO res = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
+				getManagedBean().setAuditOldPMOrgProfile(res.getPmOrgProfile());
+//				getManagedBean().setOldReceivingAddressList(getManagedBean().getAddressTypesList());
+				// OldReceivingAddressList
+			}
+			/************ AUDIT *************/
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1258,6 +1277,11 @@ public class OrganisationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								message));
+				/************ AUDIT 35509*************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORG_PROFILE);
+				}
+				/************ AUDIT *************/
 			}
 		} finally {
 			orgProfileSO = null;

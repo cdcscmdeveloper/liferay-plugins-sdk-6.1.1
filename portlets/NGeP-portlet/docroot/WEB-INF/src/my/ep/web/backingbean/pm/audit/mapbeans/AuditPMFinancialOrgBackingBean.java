@@ -99,7 +99,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			// financial services
 			addFinancialService(savedFinancialOrg.getPmFinancialSvcs());
 			// new main address
-			// new // contact person
+			// new contact person
 			newMainAddressDetail(savedFinancialOrg.getPmAddressTypes());
 		}
 		else{
@@ -284,6 +284,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	// modify tab no 2
 	private void modifyFinancialService(List<PmFinancialSvc> financialService, List<PmFinancialSvc> olfFinancialService) {
 		PmFinancialSvc oldFinancialService=null;
+		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		
 		if(CollectionUtils.isNotEmpty(financialService)){
 			for(PmFinancialSvc svc : financialService){
@@ -351,7 +352,6 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 
 		for (PmFinancialSvc financialService : financialServiceList) {
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialService.getServiceTypeCode().getParameterId());
-					
 			setNewFinancialService(pmParameter.getParameterCode());
 		}
 	}
