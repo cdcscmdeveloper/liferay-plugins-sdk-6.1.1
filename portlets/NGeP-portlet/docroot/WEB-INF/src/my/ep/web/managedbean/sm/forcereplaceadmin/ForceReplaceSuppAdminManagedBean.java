@@ -68,6 +68,10 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disableStaff=false;
 	//28765
 	private boolean disableNationality;
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private String oldIdentification;
+	private String newIdentifiction;
+	// #28895_35501 End
 
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -364,4 +368,21 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.disableNationality = disableNationality;
 	}
 	//#28765 - End
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getOldIdentification() {
+		return oldIdentification;
+	}
+
+	public void setOldIdentification(String oldIdentification) {
+		this.oldIdentification = oldIdentification;
+	}
+
+	public String getNewIdentifiction() {
+		return newIdentifiction;
+	}
+
+	public void setNewIdentifiction(String newIdentifiction) {
+		this.newIdentifiction = newIdentifiction;
+	}
+	// #28895_35501 End
 }
