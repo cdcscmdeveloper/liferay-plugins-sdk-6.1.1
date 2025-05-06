@@ -32,11 +32,10 @@ public class ApplProcessedRptBackingBean extends SmReportBackingBean<ApplProcess
 		params.put(SmReportConst.PARAM_DATE_FROM, df.format(getManagedBean().getDateFrom()));
 		params.put(SmReportConst.PARAM_DATE_TO, df.format(getManagedBean().getDateTo()));
 
-		if(getManagedBean().getSelectedOrgProfile() != null){
-			if(getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
+		if(getManagedBean().getSelectedOrgProfile() != null
+			&& getManagedBean().getSelectedOrgProfile().getSmSupplier() != null){
 				params.put(SmReportConst.PARAM_COMPANY_NAME, 
 						getManagedBean().getSelectedOrgProfile().getSmSupplier().getCompanyName());
-			}
 		}
 		
 		if(getManagedBean().getSupplierType()  != null){

@@ -81,6 +81,7 @@ import my.ep.dto.sc.actor.ScActorReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -534,7 +535,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setLoiLoaItemsResult(null);
 		}
 		// Bug 34404 - related to 29007 - end
-		new QtLOABackingBean().isSupplierEPVStatusRejected();//#36339, #21692
+		new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339, #21692
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -2435,16 +2436,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		// ##25025 #509 -start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
-		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
+		context.put(SSTConstant.FILE_NO, fileNo + "-" + scLoa.getFileExtNo());
 		// ##25025 #509 -end	context.put("loaNo", scLoa.getLoaNo());
 
-		String issueDate = "______________";
+		String issueDate = SSTConstant.UNDERLINE;
 		if (scLoa.getIssueDate() != null) {
 			issueDate = getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
 		context.put("issueDate", issueDate);
 
-		String govtSignDate = "______________";
+		String govtSignDate = SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if (scLoa.getGovtSignDate() != null) {
 			govtSignDate = getLocalizeDate(scLoa.getGovtSignDate(), myLocale);
 		}
@@ -2456,7 +2457,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			supplierAddress = getFullAddress(scLoa.getScSupplierAddress());
 		}
 		log.info("supplierAddress" + supplierAddress);
-		//context.put("supplierAddress", supplierAddress);
 		StringBuilder supplierAddressTable = null;
 		if(StringUtils.isNotBlank(supplierAddress)){
 			String[] address = supplierAddress.split(System.getProperty("line.separator"));
@@ -2470,7 +2470,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("supplierAddressTable", supplierAddressTable);
 
 
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; //25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			//#25025 - start
@@ -2479,19 +2479,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; //25025 fix sonarlint
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; //25025 fix sonarlint
 			}
 
 		}
-		context.put("headerTitle", headerTitle); 
-		context.put("subTitle", headerTitle.toLowerCase()); 
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); //25025 fix sonarlint
+		context.put(SSTConstant.SUBJECT_TITLE, headerTitle.toLowerCase()); //25025 fix sonarlint
 
 		// loa title
 		String title = scLoiLoa.getTitle();
 		if (title == null) {
-			title = "";
+			title = SSTConstant.EMPTY_STRING; //25025 fix sonarlint
 		}
 		title = title.trim();
 
@@ -2528,7 +2528,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put(SSTConstant.BOND_PERCENTAGE_TEXT, bondPercentageText); 
 		context.put(SSTConstant.BOND_PERCENTAGE, bondPercentage);
 		//25025 - end
-		String bondExpDate = "______________";
+		String bondExpDate = SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		//bond exp date should be one year after the end of the contract period
 		if(scLoa.getContractExpDate() != null){
 			Calendar cal = Calendar.getInstance();
@@ -2569,17 +2569,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		context.put("isAgreementReq", scLoa.isAgreementReq());
 
-		String LoaSigner = "______________";
-		String loaSignerDesig = "______________";
+		String loaSigner = SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if(getManagedBean().getContractSignerUser() != null){
 			PmUser contractSigner = getManagedBean().getContractSignerUser();
 			if(StringUtils.isNotEmpty(contractSigner.getUserName())){
-				LoaSigner = contractSigner.getUserName();
+				loaSigner = contractSigner.getUserName(); //25025 fix sonarlint
 			}
 		}
-		context.put("loaSigner", LoaSigner);	
+		context.put("loaSigner", loaSigner); //25025 fix sonarlint	
 
-		loaSignerDesig = scLoa.getLoaSignerDesig();
+		String loaSignerDesig = StringUtils.isNotEmpty(scLoa.getLoaSignerDesig())?  scLoa.getLoaSignerDesig(): SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		if(StringUtils.isNotEmpty(loaSignerDesig) && loaSignerDesig.length()>86){
 			loaSignerDesig = splitLongLengthString(loaSignerDesig, 86);
 		}
@@ -2633,14 +2632,14 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else {
 				qtNo = rnNo;
 			}
-			context.put("docType", "Pembelian Terus"); 
+			context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_PEMBELIAN_TERUS); //25025 fix sonarlint 
 		} else if(scQt != null && (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())
 				|| ParameterConst.DOCTYPE_DIRECT_NEGO.equals(scLoa.getScLoiLoa().getDocType()))) {
 			// #26770 - Start.
 			if (isQuotationOrTender(scQt)) {
-				context.put("docType", "Sebut Harga"); 
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_SEBUT_HARGA); // 25025 fix sonarlint
 			} else {
-				context.put("docType", "Tender"); 
+				context.put(SSTConstant.DOCUMENT_TYPE, SSTConstant.HEADER_TENDER); // 25025 fix sonarlint
 			}
 			// #26770 - End.
 		} 
@@ -2907,18 +2906,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		log.info("SupplierAddressTable" + supplierAddressTable);
 		
 		// #25025 - start
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; // 25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 fix sonarlint
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; // 25025 fix sonarlint
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix sonarlint
 			}
-
 		}
-		context.put("headerTitle", headerTitle);
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
 		context.put("supplierSignerUser", supplierSignerUser);
 		context.put("supplierSignerIcNo", supplierSignerIcNo);
@@ -3135,20 +3133,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("loaNo", loaNo);
 
 		// #25025 - start
-		String headerTitle = "";
+		String headerTitle = SSTConstant.EMPTY_STRING; // 25025 fix sonarlint
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 			// #25025 - start
-			headerTitle = "Pembelian Terus";
+			headerTitle = SSTConstant.HEADER_PEMBELIAN_TERUS; // 25025 fix sonarlint
 			// #25025 - end
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())) {
 			if (ParameterConst.PROCUREMENT_MODE_TENDER.equals(scLoa.getProcurementMode().getParameterCode())) {
-				headerTitle = "Tender";
+				headerTitle = SSTConstant.HEADER_TENDER; // 25025 fix sonarlint
 			} else {
-				headerTitle = "Sebut Harga";
+				headerTitle = SSTConstant.HEADER_SEBUT_HARGA; // 25025 fix sonarlint
 			}
-
 		}
-		context.put("headerTitle", headerTitle);
+		context.put(SSTConstant.HEADER_TITLE, headerTitle); // 25025 fix sonarlint
 		// #25025 - end
 		if(scLoiLoa.getSmSupplier() != null){
 			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
@@ -4418,23 +4415,39 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//20190405@asyrafhaziq - CR25062 - End
 	
-	// #26770 - Start.
-    /**
-    * 
-    */
-   private void validateReportAttachment() {
-     if (null != this.getManagedBean().getScLoa() && CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
-         for (ScLoaReport report : this.getManagedBean().getScLoa().getScLoaReports()) {
-             if (null != report && "Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())) {
-                 if (report.getScLoaReportAttachment() == null) {
-                   throw new EpException(MessageConst.ERROR_775159);
-                 }
-                break;
-            }
-         }
-      }
-   }
-   // #26770 - End.
+	// #26770 - Start fix sonarlint.
+	/**
+	 * To Validate Report Attachment
+	 */
+	private void validateReportAttachment() {
+		if (null != this.getManagedBean().getScLoa()
+				&& CollectionUtils.isNotEmpty(this.getManagedBean().getScLoa().getScLoaReports())) {
+			validateScLoaReportAttachment(this.getManagedBean().getScLoa().getScLoaReports());
+		}
+	}
+
+	/**
+	 * @param scLoaReport
+	 */
+	private void validateScLoaReportAttachment(List<ScLoaReport> scLoaReport) {
+		if (scLoaReport == null || scLoaReport.isEmpty()) {
+			return;
+		}
+		// 64 records max
+		for (ScLoaReport report : scLoaReport) {
+			if (report == null) {
+				continue;
+			}
+
+			if ("Surat Setuju Terima (Termasuk Lampiran A)".equals(report.getTitle())
+					&& report.getScLoaReportAttachment() == null) {
+				throw new EpException(MessageConst.ERROR_775159);
+			}
+
+		}
+	}
+
+	// #26770 - End fix sonarlint.
    
 	/**
 	 * Enhancement #21694
@@ -4774,19 +4787,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		//#21692 add supplier remark - start
 		if(BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)
 				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			
-			boolean remarksEmpty = false;
-			
+
 			// check if remark is empty
 			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
-			if(CollectionUtils.isNotEmpty(scLoaRemarks)){
-				for(ScLoaRemark each : scLoaRemarks){
-					if(StringUtils.isEmpty(each.getRemark())){
-						each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
-						break;
-					}
-				}
-			}else {
+			if (CollectionUtils.isNotEmpty(scLoaRemarks)) {
+				addSupplierRemark(scLoaRemarks);//#21692 sonarlint
+			} else {
 				for (ScLoaRemark each : scLoaRemarks) {
 					each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
 				}
@@ -4969,6 +4975,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 				action = ApprovalAction.APPROVAL_REVISED.value();
 			}
+			//#21692 - Start
+			else if (BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_CANCEL.value();
+			}
+			//#21692 - End
 
 			if(null != action){
 				scLoaApproval.setApproverAction(action);
@@ -7355,6 +7366,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 //
 //	}	
 	
+	/**
+	 * @param context
+	 * @param scLoa
+	 * @param amountDF
+	 * @param myLocale
+	 */
 	private void setSstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,	DecimalFormat amountDF, Locale myLocale) {
 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): SSTConstant.UNDERLINE;
@@ -7365,7 +7382,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("gstEffectiveDate", gstEffectiveDate);
 
 		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
-				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "______________";
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : SSTConstant.UNDERLINE_SHORT; //25025 fix sonarlint
 		context.put("gstDeclaredDate", gstDeclaredDate);
 
 		String offerPrice = SSTConstant.UNDERLINE;
@@ -7481,27 +7498,16 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}*/
 		
-	// #26770 new kod bidang
-		if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
-				&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
-			int counter = 0;
-			StringBuilder categoryCode = new StringBuilder();
-			for (SmSupplierCategory category : smSupplier.getSmAppl().getSmSupplierCategories()) {
-				String l1Code = category.getPmCategoryL1().getCategoryL1Code();
-				String l2Code = category.getPmCategoryL2().getCategoryL2Code();
-				String l3Code = category.getPmCategoryL3().getCategoryL3Code();
-				String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
+			// #26770 new kod bidang
+			if ((smSupplier.getSmAppl() != null && smSupplier.getSmAppl().getSmSupplierCategories() != null)
+					&& !smSupplier.getSmAppl().getSmSupplierCategories().isEmpty()) {
 
-				counter++;
-				if (counter % 4 == 0 && counter < smSupplier.getSmAppl().getSmSupplierCategories().size()) {
-					catcode = catcode + SSTConstant.LINE_BREAK;
-				}
-				categoryCode.append(catcode);
+				StringBuilder categoryCode = constructCategoryCodeForSST(smSupplier);
+
+				kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
 			}
-			kodBidang = StringUtils.removeEnd(categoryCode.toString(), SSTConstant.SEPARATOR);
-		}
-		
-	//26770 - end	
+
+			// 26770 - end
 		}
 		context.put("mofValidityDuration", mofValidityDuration);
 		context.put("mofCertValidityDuration", mofCertValidityDuration);
@@ -7509,9 +7515,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		context.put("kodBidang", kodBidang);
 		// #25025 - Start.
 		if (StringUtils.isNotEmpty(scLoiLoa.getMofNo())) {
-			context.put("mofNo", scLoiLoa.getMofNo());
+			context.put(SSTConstant.MOF_NO, scLoiLoa.getMofNo()); // 25025 fix sonarlint
 		} else {
-			context.put("mofNo", SSTConstant.UNDERLINE);
+			context.put(SSTConstant.MOF_NO, SSTConstant.UNDERLINE); // 25025 fix sonarlint
 		}
 		// #25025 - End.
 	}
@@ -7534,13 +7540,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		context.put(SSTConstant.REGISTRATION_NO, regNo);
 		//#26770 - start
-		if (null != smSupplier.getSmAppl()){
-			if (null != smSupplier.getSmAppl().getSmCompanyBasic()){
+		if (null != smSupplier.getSmAppl() && null != smSupplier.getSmAppl().getSmCompanyBasic()){
 				if (null != smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()){
 					context.put(SSTConstant.SSM_EXPIRED,new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT).format(smSupplier.getSmAppl().getSmCompanyBasic().getRobExpiryDate()));
 				}else{
 					context.put(SSTConstant.SSM_EXPIRED,SSTConstant.UNDERLINE); 
-				}
 			}
 		}
 		//#26770 - end
@@ -12072,7 +12076,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#25025 - start
 	public String setValueLowercase(String text, int index){
 		//Change SuratSetujuterima(TermasukLampiranA) capital T to small t.
-		if (text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "").equalsIgnoreCase("SuratSetujuterima(TermasukLampiranA)")){
+		if ("SuratSetujuterima(TermasukLampiranA)".equalsIgnoreCase(text.replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, ""))) {
 			char[] arr = text.toCharArray();
 			arr[index] = Character.toLowerCase(arr[index]);
 			return new String(arr);//return string in lowercase  //Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
@@ -12163,50 +12167,71 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	// #32648 populate lampiran 7 if LOA at supplier - end
 	
-	//#21692 - start
+	//#21692 - Start
+	/**
+	 * check supplier response for proposal validity extension
+	 * 
+	 * @param supplierId
+	 * @return TRUE IF supplier Rejected Validity Extension
+	 */
 	public boolean isSupplierStatusRejectedEPV(Long supplierId) {
 		boolean supplierStatus = false;
 		
-		IQTDetailSO detailSO;
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
-			List<Long> suppList = new ArrayList<>();
-			if (null != supplierId) {
-				suppList.add(supplierId);
-				supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
-			}
-			
-		} finally {
-			detailSO = null;
+		List<Long> suppList = new ArrayList<>();
+		if (null != supplierId) {
+			suppList.add(supplierId);
+			supplierStatus = getQTDetailSO().checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
 		}
 		
 		return supplierStatus;
 	}
-	
-	public boolean isLOAStatusAbleToCancel() {
-		boolean isAble = false;
-		
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * retrieve current status of LOA
+	 * 
+	 * @return
+	 */
+	public Long isLOAStatusAbleToCancel() {
 		IScWorkFlowStatusSO workFlowStatusSO;
 		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
-		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
+		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScWorkFlowStatusSO.class);
 		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
 		scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
-		
-		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus();
-		
-		isAble = null != currentWorkFlowStatus && (
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_SUBMISSION) ||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION)||
-				currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)
-				)? true : false;
-		
-		return isAble;
+
+		return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId();
 	}
-	//#21692 - end
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Enable LOA without BPM (LOA Submission) to be cancelled for rejecting
+	 * proposal validity extension
+	 */
+	public void cancelLOAWithoutBPM() {
+		try {
+			ScLoa scLoa = getManagedBean().getScLoa();
+			/**
+			 * Will update LOA workflow status: Cancelled (Not agree with
+			 * extension validity period) and ScQtRecommendDtl: IS_LOA_AWARDED =
+			 * FALSE and RECORD_STATUS = Rejected (4). IF all LOAs' status
+			 * either Completed, Rejected OR Cancelled (Not agree with extension
+			 * validity period), QT will exit and goes to Refinalization.
+			 */
+			QuationTenderResDTO resDTO = getQTDetailSO().cancelLOAWithoutBPM(scLoa);
+
+			if (resDTO.isSuccessful()) {
+				successMessage(MessageConst.INFO_700031, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("LOI", "CancelLOAWithoutBPM", getManagedBean().getScLoa().getLoaNo(),
+					"cancelLOAWithoutBPM", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#21692 - End
 	
 	// 34242 - Start
 	public void retainAwardPage() {
@@ -12571,5 +12596,45 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	// #29007 End vinod
+	// 26770 start fix sonarlint
+	/**
+	 * Will display 4 Category Code per line. If more than 4, the category code
+	 * will break into new line.
+	 * 
+	 * @param smSupplier
+	 * @return
+	 */
+	private StringBuilder constructCategoryCodeForSST(SmSupplier smSupplier) {
+		int counter = 0;
+		StringBuilder categoryCode = new StringBuilder();
+		for (SmSupplierCategory category : smSupplier.getSmAppl().getSmSupplierCategories()) {
+			String l1Code = category.getPmCategoryL1().getCategoryL1Code();
+			String l2Code = category.getPmCategoryL2().getCategoryL2Code();
+			String l3Code = category.getPmCategoryL3().getCategoryL3Code();
+			String catcode = l1Code + l2Code + l3Code + SSTConstant.SEPARATOR;
+
+			counter++;
+
+			if (counter % 4 == 0 && counter < smSupplier.getSmAppl().getSmSupplierCategories().size()) {
+				catcode = catcode + SSTConstant.LINE_BREAK;
+			}
+
+			categoryCode.append(catcode);
+		}
+		return categoryCode;
+	}
+
+	// 26770 - end fix sonarlint
+	
+	//#21692 sonarlint - Start
+	private void addSupplierRemark(List<ScLoaRemark> scLoaRemarks) {
+		for (ScLoaRemark each : scLoaRemarks) {
+			if (StringUtils.isEmpty(each.getRemark())) {
+				each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
+				break;
+			}
+		}
+	}
+	//#21692 sonarlint - End
 }
 

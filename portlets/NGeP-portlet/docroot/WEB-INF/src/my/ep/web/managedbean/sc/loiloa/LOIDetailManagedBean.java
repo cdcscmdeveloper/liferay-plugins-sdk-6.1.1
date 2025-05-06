@@ -412,7 +412,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
 
-	private boolean ableToCancelLOI;//#36339, #21692
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	//#21692 - End
 	
     /**
      * Gets the spki backing bean.
@@ -2372,5 +2376,29 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.ableToCancelLOI = ableToCancelLOI;
 	}
 	//#36339, #21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOI() {
+		return ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
+		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOIWithoutBPM() {
+		return ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOIWithoutBPM(boolean ableToCancelLOIWithoutBPM) {
+		this.ableToCancelLOIWithoutBPM = ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
 	
 }
