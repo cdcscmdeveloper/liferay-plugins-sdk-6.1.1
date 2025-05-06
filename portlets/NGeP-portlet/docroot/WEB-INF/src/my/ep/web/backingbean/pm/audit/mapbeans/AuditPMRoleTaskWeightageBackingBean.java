@@ -63,7 +63,7 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 					detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 					detailStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 					detailStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-					detailStatus.setDocId(BigInteger.valueOf(roleTask.getPoRoleTaskdId()));
+					detailStatus.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 					detailStatus.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 					detailStatus.setDocNo(selectedUser.getIdentificationNo());
 					detailStatus.setFieldLabelCode(AuditConst.PM_AUD_PORTW_STATUS_FIELDLABELID);
@@ -74,7 +74,6 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 					detailStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 
 					objList.add(detailStatus);
-					auditPMReqDTO.setObjList(objList);
 				}
 
 			} else {
@@ -85,14 +84,13 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailSupplierType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailSupplierType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 				detailSupplierType.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-				detailSupplierType.setDocId(BigInteger.valueOf(selectedUser.getPmPoWeightage().getPoWeightageId()));
+				detailSupplierType.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailSupplierType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailSupplierType.setDocNo(selectedUser.getIdentificationNo());
 				detailSupplierType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_SUPPLIER_TYPE_FIELDLABELID);
 				detailSupplierType.setNewValue(roleTask.getSupplierType());
 				detailSupplierType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailSupplierType);
-				auditPMReqDTO.setObjList(objList);
 
 				/** application **/
 				detailApplicationType.setRoleCode(roleCode);
@@ -101,14 +99,13 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailApplicationType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailApplicationType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 				detailApplicationType.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-				detailApplicationType.setDocId(BigInteger.valueOf(selectedUser.getPmPoWeightage().getPoWeightageId()));
+				detailApplicationType.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailApplicationType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailApplicationType.setDocNo(selectedUser.getIdentificationNo());
 				detailApplicationType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_APPLICATION_TYPE_FIELDLABELID);
 				detailApplicationType.setNewValue(roleTask.getApplType());
 				detailApplicationType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailApplicationType);
-				auditPMReqDTO.setObjList(objList);
 
 				/** category **/
 				detailCategoryType.setRoleCode(roleCode);
@@ -117,14 +114,13 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailCategoryType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailCategoryType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 				detailCategoryType.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-				detailCategoryType.setDocId(BigInteger.valueOf(selectedUser.getPmPoWeightage().getPoWeightageId()));
+				detailCategoryType.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailCategoryType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailCategoryType.setDocNo(selectedUser.getIdentificationNo());
 				detailCategoryType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_CATEGORY_TYPE_FIELDLABELID);
 				detailCategoryType.setNewValue(roleTask.getCategoryType());
 				detailCategoryType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailCategoryType);
-				auditPMReqDTO.setObjList(objList);
 
 				AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 				detailStatus.setRoleCode(roleCode);
@@ -133,19 +129,18 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 				detailStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-				detailStatus.setDocId(BigInteger.valueOf(roleTask.getPoRoleTaskdId()));
+				detailStatus.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailStatus.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailStatus.setDocNo(selectedUser.getIdentificationNo());
 				detailStatus.setFieldLabelCode(AuditConst.PM_AUD_PORTW_STATUS_FIELDLABELID);
 				detailStatus.setNewValue(roleTask.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 						: AuditConst.PM_AUD_INACTIVE);
 				detailStatus.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-
 				objList.add(detailStatus);
-				auditPMReqDTO.setObjList(objList);
 			}
 		}
 
+		auditPMReqDTO.setObjList(objList);
 		return auditPMReqDTO;
 	}
 
@@ -159,7 +154,7 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 			dtlWeightage.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlWeightage.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 			dtlWeightage.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-			dtlWeightage.setDocId(BigInteger.valueOf(selectedUser.getPmPoWeightage().getPoWeightageId()));
+			dtlWeightage.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 			dtlWeightage.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 			dtlWeightage.setDocNo(selectedUser.getIdentificationNo());
 			dtlWeightage.setFieldLabelCode(AuditConst.PM_AUD_PORTW_NEW_WEIGHT_FIELDLABELID);
