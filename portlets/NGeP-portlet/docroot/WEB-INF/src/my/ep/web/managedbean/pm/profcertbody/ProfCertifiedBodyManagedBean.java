@@ -37,6 +37,10 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	
 	private PmCertBody oldPmCertBody;
 
+	/************ AUDIT #28895-35509 *************/
+	private PmCertBody oldAuditPmCertBody;
+	/************ AUDIT #28895-35509 *************/
+	
 	public ProfCertifiedBodyManagedBean(){}
 	
 	/**
@@ -112,4 +116,13 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 		this.profCertifiedBodySearchBean = profCertifiedBodySearchBean;
 	}
 
+	/************ AUDIT #28895-35509 *************/
+	public PmCertBody getOldAuditPmCertBody() {
+		return oldAuditPmCertBody;
+	}
+
+	public void setOldAuditPmCertBody(PmCertBody oldAuditPmCertBody) {
+		this.oldAuditPmCertBody = oldAuditPmCertBody;
+	}
+	/************ AUDIT #28895-35509 *************/
 }
