@@ -318,6 +318,8 @@ public interface QTConstants {
 	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX=1;//35148&11104
 	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX=2;
 	public static final int EVALUATION_MAIN_ACTIVE_INDEX=7;//35148&11104
+	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
+	//#11104 -end-
 	
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
@@ -365,4 +367,8 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_CT_MAINTENANCE = "ctContractMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_CT_SEARCH = "ctContractMaintenance_WAR_NGePportlet";
 	// #32199 - end
+
+	// #36757 Start Vinod
+	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
+	// #36757 End Vinod
 }

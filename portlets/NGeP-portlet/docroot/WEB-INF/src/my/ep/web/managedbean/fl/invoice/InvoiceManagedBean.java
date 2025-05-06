@@ -1233,6 +1233,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	}
 	//32967-end
 	
+	//#35508 start
 	/**
 	 * @return the originalSupplierInvRef
 	 */
@@ -1260,4 +1261,5 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setOriginalBankAccNoName(String originalBankAccNoName) {
 		this.originalBankAccNoName = originalBankAccNoName;
 	}
+	//#35508 end
 }

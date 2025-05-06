@@ -174,6 +174,7 @@ public abstract class LOABaseBackingBean<T extends LOABaseManagedBean> extends S
 		return QTConstants.PORTLET_NAME_DL_CREATE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	// Bug #35227@Syazani 20/10/2022 -- End
+	
 	// #26770 - Start.
 	/**
 	 * @param scQt
