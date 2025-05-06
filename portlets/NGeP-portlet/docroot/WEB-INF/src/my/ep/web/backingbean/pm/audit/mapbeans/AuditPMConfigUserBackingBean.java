@@ -464,7 +464,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 					
 				} else {
 					detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_NAME_FIELDLABELID, null, getFullAddress(newPmAddressType.getPmAddress()), AuditConst.PM_AUD_ACTION_TYPE_INS);
-					detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID, null, newPmAddressType.getRecordStatusFlg().toString(), AuditConst.PM_AUD_ACTION_TYPE_INS);
+					detailObj(AuditConst.PM_AUD_OUSR_RCV_ADDR_STATUS_FIELDLABELID, null, statusCheck(newPmAddressType.getRecordStatusFlg()), AuditConst.PM_AUD_ACTION_TYPE_INS);
 				}
 			}
 		}
