@@ -10569,13 +10569,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		specReqDto.setSpecSearchForApp(true);
 
 		boolean qtMaint = isQTMaintenanceScreen();
+		boolean checkLoiLoaItems = false;
 
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint) {
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
 			getManagedBean().setSupPropSpecDisable(false);
-		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId()) && !qtMaint) {
+			checkLoiLoaItems = true;
+		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
 			getManagedBean().setSupPropSpecDisable(false);
 		} else {
 			getManagedBean().setSupPropSpecDisable(true);
+			checkLoiLoaItems = true;
+		}
+		
+		if(checkLoiLoaItems){
 
 			TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 
