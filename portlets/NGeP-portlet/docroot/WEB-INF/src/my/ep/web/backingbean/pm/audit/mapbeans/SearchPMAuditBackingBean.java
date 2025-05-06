@@ -201,6 +201,10 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 					auditPMReqDTO.setPmParameterLvlId(lSearchBean.getPmParameterLvlId());
 					lSearchBean.setPmParameterLvlIdOldval(lSearchBean.getPmParameterLvlId());
 				}
+				if (lSearchBean.getItemConfigParamLevel3() != null) {
+					auditPMReqDTO.setpLvl3Code(lSearchBean.getItemConfigParamLevel3());
+					lSearchBean.setpLvl3CodeOld(lSearchBean.getItemConfigParamLevel3());
+				}
 				if (lSearchBean.getRoleCode() != null) {
 					auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCode());
 					lSearchBean.setRoleCodeOldVal(lSearchBean.getRoleCode());
