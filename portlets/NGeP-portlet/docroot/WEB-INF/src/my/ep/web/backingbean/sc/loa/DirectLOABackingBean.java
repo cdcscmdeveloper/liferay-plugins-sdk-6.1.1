@@ -10564,7 +10564,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		if(checkLoiLoaItems){
-			getManagedBean().setSupPropSpecDisable(true);
 			TemplateSpecResDTO templateSpecResDTO = templateSpecSO
 					.searchSupplierSpecification(specReqDto);
 
