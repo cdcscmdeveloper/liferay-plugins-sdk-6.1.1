@@ -119,6 +119,7 @@ public class AuditPMCriteriaBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_SPCM);
 		dtlObj.setLvlCode3(AuditConst.PM_LVL_CODE_3_SPCM);
 		dtlObj.setDocId(docId);
+		dtlObj.setDocGroupId(docGroupId);
 		dtlObj.setFieldLabelCode(fieldLabelId);
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
