@@ -304,6 +304,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			// #29007 Start Vinod
 			String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
 			// #29007 End Vinod
+			// Bug #38049@Syazani 29/04/2025 -- Start
+			PmParameter selectedOrgType = null != this.getManagedBean().getSelectedOrgType() ? (PmParameter) this
+					.getManagedBean().getSelectedOrgType().cloneEntity() : null;
+			PmOrgProfile selectedPtj = null != this.getManagedBean().getSelectedPtj() ? (PmOrgProfile) this
+					.getManagedBean().getSelectedPtj().cloneEntity() : null;
+			// Bug #38049@Syazani 29/04/2025 -- End
+								
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 					.equals(statusId)) {
 				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
@@ -383,6 +390,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setValidatewitness(validateWitness); //#17376
 				this.getManagedBean().setIconForDL(directLoa);//29007
 				this.getManagedBean().setCurrentStatusId(currentstatusID);//33310
+				// Bug #38049@Syazani 29/04/2025 -- Start
+				if (null != selectedOrgType) {
+					this.getManagedBean().setSelectedOrgType(selectedOrgType);
+				}
+				if (null != selectedPtj) {
+					this.getManagedBean().setSelectedPtj(selectedPtj);
+				}
+				// Bug #38049@Syazani 29/04/2025 -- End
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
 					retriveLoaDetails(scLoa.getLoaId(), null, false);
@@ -578,7 +593,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			
 			reqDTO.setScLoa(scLoa);
 			//#26474 - start
-			if(getManagedBean().getContractSignerUser().getUserId() != null){//12487&29693 add to check by user id
+			if (null != getManagedBean().getContractSignerUser() //26247 - add nullcheck to contractSigner
+					&& null != getManagedBean().getContractSignerUser().getUserId()) {// 12487&29693 add to check by user id
 				reqDTO.getScLoa().setContractSigner(getManagedBean().getContractSignerUser());
 				String designation = getManagedBean().getContractSignerUser().getDesignation();
 				reqDTO.getScLoa().setLoaSignerDesig(designation);
@@ -893,6 +909,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
+			setDisciplinaryAction(this.getManagedBean().getScLoa()); // 26247
 			this.getManagedBean().setValidatewitness(Boolean.TRUE); //#17376-144
 
 		} catch (Exception e) {
@@ -2592,37 +2609,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.setScLoiLoa(scLoiLoa);
 			}
 		}
-		
-		// #29451 -- #26247 -- Start.
-		checkDA(scLoa);
-		// #29451 -- #26247 -- End.
+		setDisciplinaryAction(scLoa);// 26247
 	}
 
-	// #29451 -- #26247 -- Start.
-	/**
-	 * @param scLoa
-	 */
-	private void checkDA(ScLoa scLoa) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			if (null != qtSuppFinalizationSO) {
-				SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-				scLoa.getScLoiLoa().setSmSupplier(smSupplier);
-			}
-		} finally {
-			qtSuppFinalizationSO = null;
-		}
-		
-	}
-	// #29451 -- #26247 -- End.
-	
-	
-	
 	public SelectItem[]  getSelectRadioButtonCodeValues(String type)
 	{
 		
@@ -5287,9 +5276,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
 		
-		// #29451 -- #26247 -- Start.
-		checkDA(scLoa);
-		// #29451 -- #26247 -- End.
+		setDisciplinaryAction(scLoa);// 26247
 		
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
@@ -10621,11 +10608,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		specReqDto.setSpecSearchForApp(true);
 		boolean qtMaint = isQTMaintenanceScreen();
+		boolean checkLoiLoaItems = false;
+
 		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-				|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
+			getManagedBean().setSupPropSpecDisable(false);
+			checkLoiLoaItems = true;
+		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
 				&& !qtMaint) {
 			getManagedBean().setSupPropSpecDisable(false);
 		} else {
+			getManagedBean().setSupPropSpecDisable(true);
+			checkLoiLoaItems = true;
+		}
+		
+		if(checkLoiLoaItems){
 			getManagedBean().setSupPropSpecDisable(true);
 			TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 
@@ -13400,4 +13397,18 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	}
 
 	// #29766 End Vinod
+	// 26247 - start
+	/**
+	 * Populate scLoa with disciplinary action informations
+	 * @param scLoa
+	 */
+	private void setDisciplinaryAction(ScLoa scLoa) {
+		if (scLoa.isBrandNew()) {
+			return;
+		}
+		SmSupplier smSupplier = this.getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+				scLoa.getScLoiLoa().getSmSupplier(), scLoa.getScLoiLoa().getDocId());
+		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+	}
+	// 26247 - end
 }
