@@ -23898,6 +23898,46 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	}
 
 	// #10141 End Vinod
+	// #10141 Start Vinod
+	/**
+	 * this method will check whether atleast one checklist is selected and if
+	 * selected will call the hidden button.
+	 * 
+	 * @param actualButtonId
+	 *            this is the actual id for the hidden button since it is not
+	 *            recognized directly we used binding to get this id.
+	 * @param isTechnical
+	 *            this is to make sure the correct checklist is used for
+	 *            checking.
+	 * 
+	 * @return
+	 * 
+	 * @throws
+	 * 
+	 */
+	public void validateAtleastOneChecklistSelected(String actualButtonId, boolean isTechnical) {
+		List<ScQtCheckList> scQtChecklistListLocal = new ArrayList<>();
+		int selectedCount = 0;
+
+		if (isTechnical) {
+			scQtChecklistListLocal = this.getManagedBean().getTechChecklistPreview();
+		} else {
+			scQtChecklistListLocal = this.getManagedBean().getFinChecklistPreview();
+		}
+
+		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
+			if (scQtCheckList.isSelected()) {
+				selectedCount++;
+				break;
+			}
+		}
+		if (selectedCount != 0) {
+			// Trigger the hidden download button.
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
+		}
+	}
+
+	// #10141 End Vinod
 
 	// #10141 Start Vinod
 	/**
@@ -23979,7 +24019,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
 
-		String reportName = ReportConst.SC_PVW_TECH_CHECKLIST_SUMMARY_JSP;
+		String reportName = ReportConst.SC_PVW_FIN_CHECKLIST_SUMMARY_JSP;
 
 		downloadReportBasedOnChecklistTypeAndAction(reportAttachment, reportName, this.getManagedBean()
 				.getFinChecklistPreview(), true);
