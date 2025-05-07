@@ -2806,6 +2806,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setUpdateAction(true);	
 			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			trBB = new TerminationBackingBean();
+			trBB.renewSesionObject();// Fix - #36707
 			trBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			trBB.getManagedBean().setButtonHideActive(true);
@@ -4393,11 +4394,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
-
 		boolean hasNewBond = false;
-		CtPerformanceBond emptyNewBond = null;
-
+		
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
+			CtPerformanceBond emptyNewBond = null;
 			if (bond.isBondNew()) {
 				hasNewBond = true;
 		        if (bond.isBrandNew()) {
@@ -4415,11 +4415,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					emptyNewBond = bond;
 				}
 			}
-		}
-
-		// Only create new bond if NONE exist
-		if (!hasNewBond && emptyNewBond != null) {
-			bondNew.add(createNewBondFrom(emptyNewBond));
+			// Only create new bond if NONE exist
+			if (!hasNewBond && emptyNewBond != null) {
+				bondNew.add(createNewBondFrom(emptyNewBond));
+			}
 		}
 
 		contractAmt.setCtPerformanceBondsNew(bondNew);
