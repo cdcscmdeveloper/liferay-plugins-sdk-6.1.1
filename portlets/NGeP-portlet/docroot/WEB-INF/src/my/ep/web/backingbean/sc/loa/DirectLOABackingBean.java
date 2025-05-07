@@ -302,6 +302,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			boolean directLoa = this.getManagedBean().isIconForDL();
 			String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
 			// #29007 End Vinod
+			// Bug #38049@Syazani 29/04/2025 -- Start
+			PmParameter selectedOrgType = null != this.getManagedBean().getSelectedOrgType() ? (PmParameter) this
+					.getManagedBean().getSelectedOrgType().cloneEntity() : null;
+			PmOrgProfile selectedPtj = null != this.getManagedBean().getSelectedPtj() ? (PmOrgProfile) this
+					.getManagedBean().getSelectedPtj().cloneEntity() : null;
+			// Bug #38049@Syazani 29/04/2025 -- End
 
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 					.equals(statusId)) {
@@ -382,6 +388,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setValidatewitness(validateWitness); //#17376
 				this.getManagedBean().setIconForDL(directLoa);//29007
 				this.getManagedBean().setCurrentStatusId(currentstatusID);//33310
+				// Bug #38049@Syazani 29/04/2025 -- Start
+				if (null != selectedOrgType) {
+					this.getManagedBean().setSelectedOrgType(selectedOrgType);
+				}
+				if (null != selectedPtj) {
+					this.getManagedBean().setSelectedPtj(selectedPtj);
+				}
+				// Bug #38049@Syazani 29/04/2025 -- End
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
 					retriveLoaDetails(scLoa.getLoaId(), null, false);
@@ -10549,13 +10563,21 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		specReqDto.setSpecSearchForApp(true);
 		boolean qtMaint = isQTMaintenanceScreen();
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean()
-				.getScLoa().getPmStatus().getStatusId())
-				|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean()
-						.getScLoa().getPmStatus().getStatusId()) && !qtMaint) {
+		boolean checkLoiLoaItems = false;
+
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
+			getManagedBean().setSupPropSpecDisable(false);
+			checkLoiLoaItems = true;
+		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
 			getManagedBean().setSupPropSpecDisable(false);
 		} else {
 			getManagedBean().setSupPropSpecDisable(true);
+			checkLoiLoaItems = true;
+		}
+		
+		if(checkLoiLoaItems){
 			TemplateSpecResDTO templateSpecResDTO = templateSpecSO
 					.searchSupplierSpecification(specReqDto);
 
