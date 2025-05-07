@@ -4428,7 +4428,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return newCtAgreementList
 	 */
 	public List<CtAgreement> filterAgreementList() {
-		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		List<CtAgreement> newCtAgreementList = new ArrayList<>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 
 		CtAgreement tempCtAgreement = null;
