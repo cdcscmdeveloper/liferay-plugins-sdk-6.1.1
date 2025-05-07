@@ -10624,7 +10624,13 @@ private void retriveCommitteeRemarksList(){
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
-					Boolean isComplianceNull = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()
+					String questionType = tplSpecAnswer.getTplSpecQuestion()
+							.getQuestionType();
+					boolean isMandatorySpec = tplSpecAnswer
+							.getTplSpecQuestion().isMandatorySpec();
+					boolean isComplianceNull = questionType
+							.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+							&& isMandatorySpec
 							&& tplSpecAnswer.getCompliance() == null;
 					if (isComplianceNull) {
 						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
