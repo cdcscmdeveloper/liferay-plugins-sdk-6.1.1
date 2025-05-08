@@ -913,6 +913,7 @@ public class OrganisationBackingBean extends
 
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
+					getManagedBean().setAuditBillingAddress(pmAddressType.getPmAddress()); // 35509
 					getManagedBean().setSelectedStateId(
 							pmAddressType.getPmAddress().getPmState()
 									.getStateId());
@@ -923,6 +924,7 @@ public class OrganisationBackingBean extends
 							&& !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setOfficeContactPerson(
 								pmAddressType.getPmContacts().get(0));
+						getManagedBean().setAuditContactPerson(pmAddressType.getPmContacts().get(0)); // 35509
 						log.info("Contact Exist");
 						contactExist = true;
 					}
@@ -1167,9 +1169,6 @@ public class OrganisationBackingBean extends
 							&& !getManagedBean().getAddressTypesList()
 									.contains(addressType)) {
 						getManagedBean().getAddressTypesList().add(addressType);
-						/************ AUDIT 35509 *************/
-						getManagedBean().setBillingAddressType(addressType);
-						/************ AUDIT 35509 *************/
 					}
 				}
 
@@ -1279,6 +1278,7 @@ public class OrganisationBackingBean extends
 								message));
 				/************ AUDIT 35509*************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
+					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORG_PROFILE);
 				}
 				/************ AUDIT *************/
