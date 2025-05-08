@@ -2333,13 +2333,14 @@ public class SmApplicationUtil {
 				validPersonnels = false;
 			}
 			//#30444 --END--25082021--
-			//#31130 --START--230425--
-			if(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
+			//#31130 --START--050525--
+			if(per.getPmUser() != null && per.getEpRole() != null
+					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT) 
 					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
 					|| (per.isEquityOwner() && (per.getSmStaffExperiences() == null || per.getSmStaffExperiences().isEmpty()))
-					|| (per.isEquityOwner() && (per.getSmAssociationBodies() == null || per.getSmAssociationBodies().isEmpty()))))){
-				//#31130 --END--230425--
+					|| (per.isEquityOwner() && (per.getSmAssociationBodies() == null || per.getSmAssociationBodies().isEmpty())))))){
+				//#31130 --END--050525--
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				// sb.append(",  ");
