@@ -1299,6 +1299,4 @@ public class OrganisationManagedBean extends BaseManagedBean{
 		this.newProfileId = newProfileId;
 	}
 
-
-
 }
