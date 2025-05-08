@@ -2806,7 +2806,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setUpdateAction(true);	
 			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			trBB = new TerminationBackingBean();
-			trBB.renewSesionObject();// Fix - #36707
 			trBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			trBB.getManagedBean().setButtonHideActive(true);
