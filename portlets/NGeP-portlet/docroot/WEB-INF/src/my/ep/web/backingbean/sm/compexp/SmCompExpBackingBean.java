@@ -1,7 +1,9 @@
 package my.ep.web.backingbean.sm.compexp;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -12,11 +14,18 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  * BackingBean for Sm Company Experience
@@ -90,6 +99,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setContractEffDateTemp(null);
 		}
 		dateChange();
+		List<SmCompExpMasterDoc> compExpDocList = new ArrayList<SmCompExpMasterDoc>();
+		this.getManagedBean().setCompExpDocList(compExpDocList);
+		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH)
+				+ this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo() + "/"
+				+ DateUtils.dateToString("yyyyMMdd_HHmmss", Calendar.getInstance().getTime()) + "/";
+		this.getManagedBean().setCompExpFilePath(filePath);
 		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
 	}
 
@@ -161,5 +176,29 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_EXPIRED);
 			}
 		}
+	}
+
+	public void handleSupDocFileAttachment(FileUploadEvent event) {
+		if (event.getFile() != null) {
+			String filePath = this.getManagedBean().getCompExpFilePath();
+			SmCompExpMasterDoc docFile = new SmCompExpMasterDoc();
+			docFile.setFileName(StringUtils.replace(event.getFile().getFileName(), " ", "-"));
+			docFile.setFilePath(filePath);
+			this.getManagedBean().getCompExpDocList().add(docFile);
+			commonUploadFile(event, filePath);
+		}
+	}
+
+	public void onDeleteSupDocFileAttachment(SmCompExpMasterDoc doc) {
+		this.getManagedBean().setCompExpDoc(doc);
+		RequestContext.getCurrentInstance().execute("confirmDelSuppDocDialogWV.show();");
+	}
+
+	public void delSuppDocFileAttachment() {
+		SmCompExpMasterDoc suppDoc = this.getManagedBean().getCompExpDoc();
+		if (null != suppDoc) {
+			this.getManagedBean().getCompExpDocList().remove(suppDoc);
+		}
+		this.getManagedBean().setCompExpDoc(null);
 	}
 }

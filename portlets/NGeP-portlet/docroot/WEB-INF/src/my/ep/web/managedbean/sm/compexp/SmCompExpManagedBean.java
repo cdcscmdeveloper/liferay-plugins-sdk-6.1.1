@@ -47,6 +47,9 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private Date maxEffDate;
 	private Date contractEffDateTemp;
 	private Date minExpDate;
+	private List<SmCompExpMasterDoc> compExpDocList;
+	private String compExpFilePath;
+	private SmCompExpMasterDoc compExpDoc;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -188,6 +191,30 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setMinExpDate(Date minExpDate) {
 		this.minExpDate = minExpDate;
+	}
+
+	public List<SmCompExpMasterDoc> getCompExpDocList() {
+		return compExpDocList;
+	}
+
+	public void setCompExpDocList(List<SmCompExpMasterDoc> compExpDocList) {
+		this.compExpDocList = compExpDocList;
+	}
+
+	public String getCompExpFilePath() {
+		return compExpFilePath;
+	}
+
+	public void setCompExpFilePath(String compExpFilePath) {
+		this.compExpFilePath = compExpFilePath;
+	}
+
+	public SmCompExpMasterDoc getCompExpDoc() {
+		return compExpDoc;
+	}
+
+	public void setCompExpDoc(SmCompExpMasterDoc compExpDoc) {
+		this.compExpDoc = compExpDoc;
 	}
 
 }
