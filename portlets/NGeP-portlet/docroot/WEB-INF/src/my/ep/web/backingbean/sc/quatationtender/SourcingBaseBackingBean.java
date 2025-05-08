@@ -67,6 +67,7 @@ import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
@@ -215,6 +216,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.shared.PerformanceBondUtil;
 import my.ep.util.type.MimeType;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;	// Bug #36730@Syazani 07/01/2025
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.constant.SSTConstant;
@@ -278,7 +280,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
 			  SourcingConstants.MALAYSIA_COUNTRY_CODE);
 
-	
+	private final Map<String, String> recordStatusParamMap = new HashMap<>();
 	/**
 	 * Logger instance.
 	 */
@@ -895,6 +897,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 	
+	// 26247 - start
+	protected IQTSuppFinalizationSO getQtSuppFinalizationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTSuppFinalizationSO.class);
+	}
+
+	protected IQTBriefingSO getQtBriefingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTBriefingSO.class);
+	}
+
+	// 26247 - end
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -7372,6 +7386,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
+
 	// #29007 Start vinod
 	/**
 	 * This method will check the BPM version and status to insert item spec
@@ -7418,4 +7433,62 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	// #29007 End vinod
+	
+	// 26247 - start
+	/**
+	 * Retrieve mof status descriptions
+	 * @param mofAccount
+	 * @return mof status description
+	 */
+	public String evaluateMOFStatus(SmMofAccount mofAccount) {
+		if (recordStatusParamMap.isEmpty()) {
+			List<PmParameterDesc> paramDescs = this.getParameterDescsByTypeAndSearchBean(
+					ParameterTypeConst.RECORD_STATUS, null);
+			for (PmParameterDesc paramDesc : paramDescs) {
+				recordStatusParamMap.put(
+						paramDesc.getPmParameter().getParameterCode().concat(paramDesc.getLanguageCode()),
+						paramDesc.getCodeName());
+			}
+		}
+
+		Locale locale = new FacesScopes().getUserLocale();
+		String mofStatus = "0";
+		if (null != mofAccount) {
+			mofStatus = mofAccount.getRecordStatusFlg().toString();
+		}
+		return recordStatusParamMap.get(mofStatus.concat(locale.getLanguage()));
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate if qt is disabled for futher action for non/disciplinary action scenario
+	 * @param scQt
+	 * @param supplier
+	 * @return
+	 */
+	public boolean disabledQTProcess(SmSupplier supplier) {
+		if (null == supplier || null == supplier.getScQt()) {
+			return false;
+		}
+		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
+		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
+		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
+		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+				&& !supplier.isBumi();
+
+		List<String> cancelledCategoryCodes = new ArrayList<>();
+		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
+		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+		boolean hasCancelledCategories = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
+
+		boolean isSuspendRegistration = viewSuppProfileBean.evaluateSuspendRegistration(supplier);
+
+		return Arrays.asList(hasCancelledCategories, noBumiAccount, isCancelledOrBlacklisted, isDisciplinaryAction,
+				isSuspendRegistration).contains(true)
+				|| !Arrays.asList(DbValueConst.RECORD_STATUS_ACTIVE, DbValueConst.RECORD_STATUS_EXPIRED).contains(
+						mofRecordStatus);
+	}
+	// 26247 - end
 }
