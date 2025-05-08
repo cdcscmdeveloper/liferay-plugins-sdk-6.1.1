@@ -529,7 +529,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				}		
 			}
 
-			if (getManagedBean().isRemedy()) {
+			if (getManagedBean().isRemedy() || this.getManagedBean().isTermination()) { // Fix - #36707
 				if (getManagedBean().getContractVer().getCtTermination().getRemedyStartDate() == null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.ct.remedy.start.date", 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -589,6 +589,14 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 		try {
 			flush();
+			//Start - Fix #36707
+			if(getManagedBean().getContractVer().getTerminationLetterAttachments() != null){
+				//getManagedBean().getContractVer().getTerminationLetterAttachments().clear();			
+				while (!getManagedBean().getContractVer().getTerminationLetterAttachments().isEmpty()) {
+				    ctBB.deleteTerminationLetterAction(0);
+				}
+			}
+			//End - Fix #36707
 			String parameterCode = ParameterHelper.getInstance().getPmParameterById(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()).getParameterCode();
 			if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
 				getManagedBean().setRemedy(true);

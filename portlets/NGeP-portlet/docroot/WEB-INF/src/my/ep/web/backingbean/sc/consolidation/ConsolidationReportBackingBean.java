@@ -6,11 +6,9 @@ package my.ep.web.backingbean.sc.consolidation;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +25,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -44,11 +41,9 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
-import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -62,14 +57,15 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
-import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -1376,7 +1372,7 @@ public class ConsolidationReportBackingBean extends
 							IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-			reqDTO.setDoRankRequired(true);
+//			reqDTO.setDoRankRequired(true); // 26247
 			reqDTO.setCountOfQualiedSuppliersReq(true);
 
 			if (specZone != null) {
@@ -1546,7 +1542,19 @@ public class ConsolidationReportBackingBean extends
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 		}
 		//#28777 & #29729 - End
-
+		// 26247 - start
+		int countDisabled = 0;
+		if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
+			for (ScQtEvaluationResultDtl resultDtl : qualifiedSuppliers) {
+				ScQtEvaluationResult scQtEvaluationResult = resultDtl.getQtEvaluationResult();
+				ScQtProposal scQtProposal = scQtEvaluationResult.getScQtProposal();
+				if (this.disabledQTProcess(scQtProposal.getScQtSupplier().getSmSupplier())) {
+					countDisabled++;
+				}
+			}
+		}
+		totalQualifiedSuppliers = totalQualifiedSuppliers - countDisabled;
+		// 26247 - end
 		// farid start bug #31556 related to #21695
 		// exclude validation ranking if has not offer
 				if(scQt!=null && !scQt.isPartial()){
@@ -1586,6 +1594,19 @@ public class ConsolidationReportBackingBean extends
 					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 				}
 				//#28777 & #29729 - End
+				// 26247 - start
+				int countItemDisabled = 0;
+				if (CollectionUtils.isNotEmpty(qualifiedSuppliers)) {
+					for (ScQtEvaluationResultDtl resultDtl : qualifiedSuppliers) {
+						ScQtEvaluationResult scQtEvaluationResult = resultDtl.getQtEvaluationResult();
+						ScQtProposal scQtProposal = scQtEvaluationResult.getScQtProposal();
+						if (this.disabledQTProcess(scQtProposal.getScQtSupplier().getSmSupplier())) {
+							countItemDisabled++;
+						}
+					}
+				}
+				totalQualifiedSuppliers = totalQualifiedSuppliers - countItemDisabled;
+				// 26247 - end
 				
 				qualifiedSupplierBeans = getQtEvaluationResultDtlBeansWithRank(
 						specZoneDtl, item.getRequestItem(),
@@ -1736,6 +1757,7 @@ public class ConsolidationReportBackingBean extends
 					resultDtlBean.setQtEvalResDtlId(evalResDtl
 							.getEvaluationResultDtlId());
 					resultDtlBean.setEvaluationRank(evalResDtl.getEvalRank());
+					setRankNull(evalResDtl);//#21692
 					resultDtlBean.setDeskOfficerRank(evalResDtl
 							.getDeskOfficerRank());
 					resultDtlBean.setDeskOfficerRemark(evalResDtl
@@ -2236,7 +2258,7 @@ public class ConsolidationReportBackingBean extends
 												.getDeskOfficerRemark());
 							}
 						}
-						
+						setRankNull(qualSupplier);//#21692
 					}
 					
 				}
@@ -2886,6 +2908,18 @@ public class ConsolidationReportBackingBean extends
 		private boolean allSupplierDisagreeEPV(Long qtId) {		
 			IQTDetailSO qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			return qtDetailSO.allSupplierDisagreeEPV(qtId);
+		}
+		//#21692 - End
+		
+		//#21692 - Start
+		private void setRankNull(ScQtEvaluationResultDtl qualSupplier) {
+			boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+					&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED
+					|| qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+			
+			if (disagreeProposalValidityExtension) {
+				qualSupplier.setDeskOfficerRank(null);
+			}
 		}
 		//#21692 - End
 }
