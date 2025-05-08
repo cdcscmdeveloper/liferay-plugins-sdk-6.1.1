@@ -40,7 +40,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	private static final long serialVersionUID = 1L;
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-	String docno;
+	String docNo;
 	String docType;
 	String roleCode;
 	BigInteger docId;
@@ -74,7 +74,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		String serviceType = managedBean.getServiceTypes().get(0);
 		checkLevelCode3(serviceType);
 		this.roleCode = roleCode;
-		docno = financialOrg.getBizRegNumber();
+		docNo = financialOrg.getBizRegNumber();
 		docType = financialOrg.getFinOrgName();
 		retrieveServiceTypeMap();
 		PmFinancialOrg savedFinancialOrg = managedBean.getSavedFinancialOrg();
@@ -399,6 +399,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(docType);
+		dtlObj.setDocNo(docNo);
 		dtlObj.setPmParameterLvlId(parameterLvlId);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OFO);
