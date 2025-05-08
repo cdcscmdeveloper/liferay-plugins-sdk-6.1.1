@@ -157,22 +157,6 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 		if(selectedUser.getPmPoWeightage() != null) {
 			if (selectedUser.getPmPoWeightage().getNewWeight() != selectedUser.getPmPoWeightage().getWeightEnter()) {
 
-				/**dtlWeightage.setRoleCode(roleCode);
-				dtlWeightage.setDocType(AuditConst.PM_AUD_TASK_WEIGHTAGE);
-				dtlWeightage.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
-				dtlWeightage.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-				dtlWeightage.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
-				dtlWeightage.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-				dtlWeightage.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
-				dtlWeightage.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
-				dtlWeightage.setDocNo(selectedUser.getIdentificationNo());
-				dtlWeightage.setFieldLabelCode(AuditConst.PM_AUD_PORTW_NEW_WEIGHT_FIELDLABELID);
-				dtlWeightage.setOldValue(String.valueOf(selectedUser.getPmPoWeightage().getNewWeight()));
-				dtlWeightage.setNewValue(String.valueOf(selectedUser.getPmPoWeightage().getWeightEnter()));
-				dtlWeightage.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(dtlWeightage);
-				auditPMReqDTO.setObjList(objList);
-				*/
 				String oldValue = String.valueOf(selectedUser.getPmPoWeightage().getNewWeight());
 				String newValue = String.valueOf(selectedUser.getPmPoWeightage().getWeightEnter());
 				 
