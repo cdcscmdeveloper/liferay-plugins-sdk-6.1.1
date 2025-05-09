@@ -384,9 +384,9 @@ public class ViewApplHistoryBackingBean extends
 		log.info("-------------------------------------------------------------------"+SmCommonUtil.getInstance().ssmActive());
 		if(SmCommonUtil.getInstance().ssmActive() && businessTypeTovalidateWithSSM(getManagedBean().getSmAppl().getSmSupplier().getRegNo(),getManagedBean().getSmAppl().getSmSupplier().getBusinessType()) && this.getManagedBean().getSsmResDTO() != null && !this.getManagedBean().isCheckRoleSSM()){			
 			//List<SmPersonnel> personnelsRole = this.getManagedBean().getPersonnelsRole();
-			//start #29956
-			getManagedBean().setResubmitAppl(resubmission);
 			
+			//start #29956
+			getManagedBean().setResubmitAppl(resubmission);			
 			boolean displayPopupDowngradeSSMOwner = displayPopupDowngradeSSMOwner(this.getManagedBean().getSmAppl(), this.getManagedBean().getSsmResDTO());
 			
 			if(displayPopupDowngradeSSMOwner){

@@ -23,7 +23,6 @@ public class AuditReportConst implements Serializable {
 	//JSP Report for Audit Trail Details for all module
 	public static final String RPT_AUDIT_TRAIL_DP = "AU_DP.jsp";
 	public static final String RPT_AUDIT_TRAIL_FL = "AU_FL.jsp"; //35508
-
 	private AuditReportConst(){
 		
 	}

@@ -182,7 +182,6 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
-//#25790
 
 /**
  * The Class RequestNoteBackingBean.
@@ -4460,10 +4459,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		try {
 			fos = new FileOutputStream(getActualFilePath(attachment));
-			DocumentGenerator.getInstance().generatePdfFromVelocity(
-	    			"/sc/directPurchase/pi-report.vm", 
-	    			context, 
-	    			fos);
+			DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/directPurchase/pi-report.vm", context, fos);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

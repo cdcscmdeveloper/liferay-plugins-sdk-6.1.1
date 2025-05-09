@@ -451,6 +451,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					//if ssm, disable role.
 					this.getManagedBean().setDisableRole(true);
 				}
+				
 				//24819
 				this.getManagedBean().getSmSupp().setSsmNewRegNo(ssmResDTO.getSsmNewRegNo());
 				this.getManagedBean().setSmSuppOwners(ssmResDTO.getSmSupplierOwners());
