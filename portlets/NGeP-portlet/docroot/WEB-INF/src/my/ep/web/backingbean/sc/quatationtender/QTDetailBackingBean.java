@@ -1201,11 +1201,18 @@ public class QTDetailBackingBean extends
 	 * 				the previous page url.
 	 * @return the navigation page
 	 */
-	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl) {
+	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl, ScLoaForQt scLoaQT) {	// Bug #37978@Syazani 22/04/2025
 		debugLogger("viewDirectLOADetails");
 		
 		Long qtId = scQt.getQtId();
-		Long loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		// Bug #37978@Syazani 22/04/2025 -- Start
+		Long loaId;
+		if (scLoaQT != null) {
+			loaId = scLoaQT.getLoaId();
+		} else {
+			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
+		}
+		// Bug #37978@Syazani 22/04/2025 -- End
 		
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}	
@@ -1331,8 +1338,8 @@ public class QTDetailBackingBean extends
 								scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true);
 						/* Bug #27412 END */
 					} else {
-						if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
-							return viewDirectLOADetails(scQt, previousPageUrl);
+						if (ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())) {
+							return viewDirectLOADetails(scQt, previousPageUrl, scLoaForQt); // Bug #37978@Syazani 22/04/2025
 						} else {
 							otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
 							bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
@@ -1357,8 +1364,8 @@ public class QTDetailBackingBean extends
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
 					
-					return viewDirectLOADetails(scQt, previousPageUrl);
-				}else{	
+					return viewDirectLOADetails(scQt, previousPageUrl, null); // Bug #37978@Syazani 22/04/2025
+				} else{	
 					QtLOABackingBean bb = new QtLOABackingBean();
 					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
 					
