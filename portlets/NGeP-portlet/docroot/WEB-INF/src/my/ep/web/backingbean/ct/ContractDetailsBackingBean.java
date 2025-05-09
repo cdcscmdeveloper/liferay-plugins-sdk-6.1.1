@@ -1356,12 +1356,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
 				auCtData.setRoleName(getUserRole());
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
+								.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
 					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
 					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-				}
-
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
 					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
 				}
