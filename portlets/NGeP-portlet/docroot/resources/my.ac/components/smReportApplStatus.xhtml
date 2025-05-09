@@ -12,9 +12,23 @@
 		<cc:attribute name="disabled" default="false" />
 		<cc:attribute name="showItemAll" default="false" />
 		<cc:attribute name="id" default="#{cc.id}"/>
+		<!-- 32521 - START -->
+		<cc:attribute name="statusApplication" default="false" />
+		<!-- 32521 - END -->
 	</cc:interface>
 
 	<cc:implementation>
+		<!-- 32521 - START -->
+		<c:choose>
+			<c:when test="#{cc.attrs.statusApplication}">
+				<p:selectOneMenu value="#{cc.attrs.bBean.managedBean.applStatus}"
+						style="width:300px;" required="#{cc.attrs.required}">
+						<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="" />
+						<f:selectItems value="#{cc.attrs.bBean.retrieveReportApplStatus()}"/>
+						<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
+				</p:selectOneMenu>
+			</c:when>
+			<c:otherwise>
 		<ui:param name="paramRequired" value="#{cc.attrs.showItemAll ? false : cc.attrs.required}" />
 		<ui:param name="defaultLabel" value="#{cc.attrs.showItemAll ? 'lbl.rpt.all' : 'lbl.rpt.selectOne'}" />
 		<p:selectOneMenu label="#{lbl['lbl.rpt.applStatus']}" id="#{cc.attrs.id}" 
@@ -29,5 +43,8 @@
 			<p:ajax event="change" partialSubmit="true"
 				update="@([id$=Msg])" />
 		</p:selectOneMenu>
+			</c:otherwise>
+		</c:choose>
+		<!-- 32521 - END -->
 	</cc:implementation>
 </ui:composition>

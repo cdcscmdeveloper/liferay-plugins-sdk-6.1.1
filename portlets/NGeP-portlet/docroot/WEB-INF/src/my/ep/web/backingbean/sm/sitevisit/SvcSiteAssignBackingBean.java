@@ -19,12 +19,14 @@ import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvTaskGroup;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -36,6 +38,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmSvcAssignmentVO;
@@ -336,36 +339,48 @@ public class SvcSiteAssignBackingBean extends
 		}
 	}
 	
+	/**
+	 * Get a list of all non-duplicate category codes for site visit
+	 */
 	private void getAllSiteVisitCategoryCode(){
 		SmAppl smAppl = getManagedBean().getSmAppl();
 		
 		getManagedBean().setCategoryLs(new ArrayList<SmSupplierCategory>());
-		
-		List<String> tempCatLs = new ArrayList<String>();
-		
+		//28775 - Site Visit Grouping Enhancement - 28775 - start
+		List<SmSupplierCategory> tempL = new ArrayList<>();
+		//max loop: 39
 		for(SmSvTask svTask : smAppl.getSmSvTasks()){
-			if(svTask.getPmCategoryL3() != null){
-				List<SmSupplierCategory> suppCatLs = SmCommonUtil.getInstance().
-						retrieveSupplierCategoryByApplIdAndCategoryId(smAppl.getApplId(), svTask.getPmCategoryL3().getCategoryL3Id());
-				//CR 28774: Static Code Analysis
-				if(!suppCatLs.isEmpty()){
-					for(SmSupplierCategory suppCat : suppCatLs){
-						StringBuilder catrStr = new StringBuilder();
-						catrStr.append(suppCat.getPmCategoryL1().getCategoryL1Code());
-						catrStr.append(suppCat.getPmCategoryL2().getCategoryL2Code());
-						catrStr.append(suppCat.getPmCategoryL3().getCategoryL3Code());
-						
-						if(!tempCatLs.contains(catrStr.toString())){
-							if(suppCat != null){
-								getManagedBean().getCategoryLs().add(suppCat);
-							}
-							tempCatLs.add(catrStr.toString());
-						}
-					}
+			tempL.addAll(getSiteVisitCategoryCode(smAppl, svTask.getPmCategoryL3()));
+			if(smAppl.isSiteVisitGroup() && svTask.getSmSvTaskGroups() != null){
+				for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
+					tempL.addAll(getSiteVisitCategoryCode(smAppl, svTGroup.getPmCategoryL3()));
 				}
 			}
 		}
+		for(SmSupplierCategory catTemp : tempL){
+			boolean duplicate = false;
+			for(SmSupplierCategory catBean : getManagedBean().getCategoryLs()){
+				if(catTemp.getPmCategoryL3().getCategoryL3Id().equals(
+						catBean.getPmCategoryL3().getCategoryL3Id())){
+					duplicate = true;
+					break;
+				}
+			}
+			if(!duplicate){
+				getManagedBean().getCategoryLs().add(catTemp);
+			}
+		}
+		SmApplicationUtil.sortSupplierCategory(getManagedBean().getCategoryLs());
 	}
+	
+	private List<SmSupplierCategory> getSiteVisitCategoryCode(SmAppl appl, PmCategoryL3 l3){
+		if(appl == null || l3 == null || appl.getApplId() == null || l3.getCategoryL3Id() == null){
+			return new ArrayList<>();
+		}
+		return SmCommonUtil.getInstance().retrieveSupplierCategoryByApplIdAndCategoryId(
+				appl.getApplId(), l3.getCategoryL3Id(), appl.getApplType());
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 	
 	private PmUser getSupplierMOFAdmin(){
 		PmUser pmUser = null;
@@ -391,4 +406,38 @@ public class SvcSiteAssignBackingBean extends
 		
 		return pmUser;
 	} 
+	
+	//28775 - Site Visit Grouping Enhancement - 28775 - start
+	/**
+	 * @param svTask
+	 * @return facility type and category code(s)
+	 */
+	public String getFacilityType(SmSvTask svTask){
+		if(svTask == null || svTask.getSmSvAddress() == null){
+			return "";
+		}
+		String facTypes = "";
+		if(svTask.getSmSvAddress().getFacilityType() != null){
+			facTypes = svTask.getSmSvAddress().getFacilityType();
+		}
+		if(svTask.getPmCategoryL3() != null){
+			facTypes += "<br/>" + svTask.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ svTask.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
+					+ svTask.getPmCategoryL3().getCategoryL3Code();
+		}		
+		if(!getManagedBean().getSmAppl().isSiteVisitGroup()){
+			return facTypes;
+		}
+		
+		for(SmSvTaskGroup svTGroup : svTask.getSmSvTaskGroups()){
+			String catCode = svTGroup.getPmCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code()
+					+ svTGroup.getPmCategoryL3().getPmCategoryL2().getCategoryL2Code()
+					+ svTGroup.getPmCategoryL3().getCategoryL3Code();
+			if(!facTypes.contains(catCode)){
+				facTypes = facTypes.concat("<br/>"+catCode);
+			}
+		}
+		return facTypes;
+	}
+	//28775 - Site Visit Grouping Enhancement - 28775 - end
 }

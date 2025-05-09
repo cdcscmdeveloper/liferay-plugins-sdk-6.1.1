@@ -15,11 +15,15 @@
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
+						<!-- #34159 - START - add param disablevalidation -->
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" onclick="this.disabled=true;"
 							onstart="blockWidget.show()" oncomplete="this.disabled=false;blockWidget.hide();" 
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
-							update=":form" style="margin-bottom:5px;" />
+							update=":form" style="margin-bottom:5px;" >
+							<f:param name="disableValidation" value="true" />
+						</p:commandButton>
+						<!-- #34159 - END -->
 					</div>
 				</p:outputPanel> <ui:include
 					src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
@@ -41,10 +45,14 @@
 					<table style="width: 100%">
 						<tr>
 							<td><div align="right" style="width: 100%">
+									<!-- #34159 - START - add param disablevalidation -->
 									<p:commandButton value="#{lbl['lbl.sm.next.section']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 										actionListener="#{backingBean.setTabValue('0','1')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForApplcatcodes,SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
-										update=":form" />
+										update=":form" >
+										<f:param name="disableValidation" value="true" />
+									</p:commandButton>
+									<!-- #34159 - END -->
 								</div></td>
 						</tr>
 					</table>

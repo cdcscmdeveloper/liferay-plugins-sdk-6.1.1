@@ -614,8 +614,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtDemoTechnicalCommitteeRemark> demoTechnicalCommitteeRemark;
 	private boolean demoWip;//#28784 WIP @idham
 	private int retainPageNumber;//#28784 WIP @Idham
+	private String otherchecklistScore;
+	private BigDecimal maxPackageTsScore;
+	private BigDecimal maxPackageOtherElementsScore;
+	private BigDecimal maxItemAllOtherElementsScore;
+	private BigDecimal maxItemOtherElementsScore;
+	private String maxDemoScore;//Needed String for (-) if not select item yet or no demo for selected item
+	private BigDecimal demoWeightage;
+	private BigDecimal maxItemTsPercentage;
+	private BigDecimal maxItemAllOtherElementsPercentage;
+	private BigDecimal itemTsPercentage;
+	private BigDecimal itemAllOtherElementsPercentage;
+	private BigDecimal maxItemTsScore;
 	//#28784 - end
 	private boolean fecIndexPreRender;//#10542
+	private boolean allSupplierRejectEpv;//#21692
 
 	/** The total technical package max score. */
 	private String totalMaxScore;
@@ -673,6 +686,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Bug #33178
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
 	/*#29187 End Vinod*/
 	
 	//34528-uat 4serangkai 
@@ -4355,14 +4371,40 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
 	}
 	//#28784 add remarks - end
-	/*#29187 Start Vinod*/
+	/* #29187 Start Vinod */
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
 	}
+
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
-	/*#29187 End Vinod*/
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+
+	/* #29187 End Vinod */
 	
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
@@ -4405,4 +4447,112 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationContext(Map<String, Object> evaluationContext) {
 		this.evaluationContext = evaluationContext;
 	}
+
+	//#28784 Demo Summary GAP - Start
+	public String getOtherchecklistScore() {
+		return otherchecklistScore;
+	}
+
+	public void setOtherchecklistScore(String otherchecklistScore) {
+		this.otherchecklistScore = otherchecklistScore;
+	}
+	
+	public BigDecimal getMaxPackageTsScore() {
+		return maxPackageTsScore;
+	}
+
+	public void setMaxPackageTsScore(BigDecimal maxPackageTsScore) {
+		this.maxPackageTsScore = maxPackageTsScore;
+	}
+
+	public BigDecimal getMaxPackageOtherElementsScore() {
+		return maxPackageOtherElementsScore;
+	}
+
+	public void setMaxPackageOtherElementsScore(BigDecimal maxPackageOtherElementsScore) {
+		this.maxPackageOtherElementsScore = maxPackageOtherElementsScore;
+	}
+
+	public BigDecimal getMaxItemAllOtherElementsScore() {
+		return maxItemAllOtherElementsScore;
+	}
+
+	public void setMaxItemAllOtherElementsScore(BigDecimal maxItemAllOtherElementsScore) {
+		this.maxItemAllOtherElementsScore = maxItemAllOtherElementsScore;
+	}
+
+	public BigDecimal getMaxItemOtherElementsScore() {
+		return maxItemOtherElementsScore;
+	}
+
+	public void setMaxItemOtherElementsScore(BigDecimal maxItemOtherElementsScore) {
+		this.maxItemOtherElementsScore = maxItemOtherElementsScore;
+	}
+
+	public String getMaxDemoScore() {
+		return maxDemoScore;
+	}
+
+	public void setMaxDemoScore(String maxDemoScore) {
+		this.maxDemoScore = maxDemoScore;
+	}
+
+	public BigDecimal getDemoWeightage() {
+		return demoWeightage;
+	}
+
+	public void setDemoWeightage(BigDecimal demoWeightage) {
+		this.demoWeightage = demoWeightage;
+	}
+
+	public BigDecimal getMaxItemTsPercentage() {
+		return maxItemTsPercentage;
+	}
+
+	public void setMaxItemTsPercentage(BigDecimal maxItemTsPercentage) {
+		this.maxItemTsPercentage = maxItemTsPercentage;
+	}
+
+	public BigDecimal getMaxItemAllOtherElementsPercentage() {
+		return maxItemAllOtherElementsPercentage;
+	}
+
+	public void setMaxItemAllOtherElementsPercentage(BigDecimal maxItemAllOtherElementsPercentage) {
+		this.maxItemAllOtherElementsPercentage = maxItemAllOtherElementsPercentage;
+	}
+
+	public BigDecimal getItemTsPercentage() {
+		return itemTsPercentage;
+	}
+
+	public void setItemTsPercentage(BigDecimal itemTsPercentage) {
+		this.itemTsPercentage = itemTsPercentage;
+	}
+
+	public BigDecimal getItemAllOtherElementsPercentage() {
+		return itemAllOtherElementsPercentage;
+	}
+
+	public void setItemAllOtherElementsPercentage(BigDecimal itemAllOtherElementsPercentage) {
+		this.itemAllOtherElementsPercentage = itemAllOtherElementsPercentage;
+	}
+
+	public BigDecimal getMaxItemTsScore() {
+		return maxItemTsScore;
+	}
+
+	public void setMaxItemTsScore(BigDecimal maxItemTsScore) {
+		this.maxItemTsScore = maxItemTsScore;
+	}
+	//#28784 Demo Summary GAP - End
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }

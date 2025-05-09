@@ -411,6 +411,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#29007 End Vinod
 	
 	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+
+	//#21692 - Start
+	private boolean ableToCancelLOI;
+	private boolean ableToCancelLOIWithoutBPM;
+	private boolean ableToSubmitLOI;
+	//#21692 - End
 	
     /**
      * Gets the spki backing bean.
@@ -2358,5 +2364,41 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.supplierBranchList = supplierBranchList;
 	}
 	//#28777 & #29729 - End
+
+	//#36339, #21692 - Start
+	public boolean isAbleToCancelLOI() {
+		return ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#36339, #21692 - Start
+	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
+		this.ableToCancelLOI = ableToCancelLOI;
+	}
+	//#36339, #21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOI() {
+		return ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
+		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOIWithoutBPM() {
+		return ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOIWithoutBPM(boolean ableToCancelLOIWithoutBPM) {
+		this.ableToCancelLOIWithoutBPM = ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
 	
 }

@@ -936,6 +936,12 @@ public class TaskReassignmentBackingBean extends
 		}
 		
 		if (this.getManagedBean().getReassigneeList().isEmpty()) {
+			// #35325 Start
+			// Workaround to reset already loaded data and error messages since  
+			// existing handling is throwing exception before performing other actions
+			reloadAllTaskList();
+			checkPendingTaskRemove();
+			// #35325 End
 			throw new EpException(MessageConst.ERROR_770208);
 		} else {
 			if (this.getManagedBean().getTaskAssignmentSearchBean().getUser() != null) {
@@ -2930,6 +2936,14 @@ public class TaskReassignmentBackingBean extends
 										.getUserId())),searchBean);
 				
 			}
+		
+			//#37794 - Start
+			if (!Arrays.toString(roleList.toArray()).replace("[", "")
+					.replace("]", "")
+					.equalsIgnoreCase(RoleCode.DESK_OFFICER.value())) {
+				getManagedBean().setCommitteeUpdate(true);
+			}
+			//#37794 - End
 			
 			isSearched = true;
 			break;

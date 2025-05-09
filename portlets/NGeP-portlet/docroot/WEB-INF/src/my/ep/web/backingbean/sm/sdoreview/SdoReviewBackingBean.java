@@ -23,6 +23,7 @@ import org.primefaces.model.StreamedContent;
 
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -33,6 +34,7 @@ import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
+import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
@@ -454,6 +456,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//#11641 - START
 		this.getManagedBean().setEmptyMandatoryDocHistory(true);
 		this.getManagedBean().setEmptyNonMandatoryDocHistory(true);
+		// #34392 - start
+		resetSmApplSupportDocInquiries();
+		// #34392 - end
 		for(SmApplSupportDocInquiry historySupportDoc: this.getManagedBean().getSelectedInquiryResponse().getSmApplSupportDocInquiries()){
 			if(historySupportDoc.getPmDocument().isMandatory()){
 				this.getManagedBean().setEmptyMandatoryDocHistory(false);
@@ -466,6 +471,26 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		RequestContext.getCurrentInstance().update("resOutPanelId");
 
 	}
+	
+	// #34392 - start
+	/**
+	 * re-select inquiry before opening popup
+	 */
+	public void resetSmApplSupportDocInquiries() {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+		SupportingDocInquiryResDTO resDTO = reqSO
+				.retrieveInquiryByApplInquiryId(this.getManagedBean()
+						.getSelectedInquiryResponse().getApplInquiryId());
+		this.getManagedBean()
+				.getSelectedInquiryResponse()
+				.setSmApplSupportDocInquiries(
+						resDTO.getSmApplInquiry()
+								.getSmApplSupportDocInquiries());
+	}
+
+	// #34392 - end
 	
 	/**
 	 * update unselectedSuppLs when user check/ uncheck the receive status

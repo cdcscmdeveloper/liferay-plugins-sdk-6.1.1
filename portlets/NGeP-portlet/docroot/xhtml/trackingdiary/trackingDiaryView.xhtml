@@ -25,7 +25,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			 <td>
 			 <div align="right" style="width: 100%">
 			 <ui:remove>#Bug:28933,#Bug:28934,#Bug:28985,#Bug:28983 - Remove attribute disable="true" for hyperlink Print</ui:remove>
-			  <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+			  <p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false" style="color:#009ae5 !important;"><!-- Fix - #30866 -->
 				<p:fileDownload value="#{pmTrackingDiaryBackingBean.generateReport(pmTrackingDiaryBackingBean.managedBean.selectedDocType, pmTrackingDiaryBackingBean.managedBean.selectedDocId)}" />
 			  </p:commandLink>
 			  </div>

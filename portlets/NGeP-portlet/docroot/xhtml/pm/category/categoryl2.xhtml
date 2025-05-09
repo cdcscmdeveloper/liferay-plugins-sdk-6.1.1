@@ -96,17 +96,16 @@
 						</c:if>
 						
 						<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
-							<p:inputTextarea 
-							style="text-transform:uppercase;"
-							required="#{!categoryBackingBean.descriptionEditDisable}"
-							disabled="#{categoryBackingBean.descriptionEditDisable}"
-							cols="40" maxlength="255"  
-							value="#{categoryBackingBean.managedBean.updatedCategoryDesc}"							
-							/>
+							<p:inputTextarea style="text-transform:uppercase;"
+								required="#{!categoryBackingBean.descriptionEditDisable}"
+								disabled="#{categoryBackingBean.descriptionEditDisable}"
+								cols="40" maxlength="255"
+								value="#{categoryBackingBean.managedBean.updatedCategoryDesc}" />
 							&#160; 
-							<p:commandLink action="#{categoryBackingBean.enableDiscription}" style="vertical-align: top;"
-								update="catLevel" disabled="#{!categoryBackingBean.descriptionEditDisable}">
-								<p:graphicImage library="ep/images/design" 
+							<p:commandLink action="#{categoryBackingBean.enableDiscription}"
+								style="vertical-align: top;" update="catLevel"
+								disabled="#{!categoryBackingBean.descriptionEditDisable}">
+								<p:graphicImage library="ep/images/design"
 									title="#{lbl['lbl.pm.edit.description']}"
 									value="/css/images/design/edit.png" />
 							</p:commandLink>
@@ -139,7 +138,7 @@
 							value="#{categoryBackingBean.managedBean.pmCategoryL2.recordStatusFlg}">
 							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{categoryBackingBean.onchangeDiscription}"/> <!-- #29665 add listener -->
+								update="@form" listener="#{categoryBackingBean.onChangeDescription}"/> <!-- #29665 add listener -->
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -208,7 +207,7 @@
 				</f:facet>
 						<h:outputText value="#{pmCategoryL3.categoryL3Code}" />
 					</p:column>
-					<p:column>
+					<p:column style="max-width:400px;word-wrap: break-word;overflow-wrap: break-word;white-space: normal;"> <!-- #35590 - wrap text -->
 				<!-- start #29665 rename column header -->
 						<f:facet name="header">
 					#{lbl['lbl.pm.ctrl.description']}

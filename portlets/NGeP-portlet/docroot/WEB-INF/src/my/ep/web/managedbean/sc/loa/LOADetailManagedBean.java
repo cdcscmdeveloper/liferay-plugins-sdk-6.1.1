@@ -350,7 +350,9 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	//#27797 - start
 	private ScLoiLoaItem highestZoneScLoiLoaItem;
 	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
-	public BigDecimal highestZonePrice = new BigDecimal(0);
+	//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+	private  BigDecimal highestZonePrice = new BigDecimal(0);
+	//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 	private List<ScLoiLoaItem> nameZoneScLoiLoaItemList;
 	private List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList;
 	private List<ScLoiLoaItem> dtlScLoiLoaItemList;
@@ -358,7 +360,9 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Map<Long, BigDecimal> reqItemMaxSubTotalMap;
 	private Long reqItemSession = 0L;
 	private Long reqItemSubTotalSession = 0L;
-	public BigDecimal totalZonePrice = new BigDecimal(0);
+	//start - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
+	private  BigDecimal totalZonePrice = new BigDecimal(0);
+	//stop - Sonarqube DP Vulnerability Minor Zairul Rizwan [8/8/2023]
 	//#27797 - end
 	
 	//#32280 - start
@@ -369,7 +373,11 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	private Long supplierBankId = null;
 	//Bug #33674@Syazani - End
 	
-	private String firstZone;//Bug #34757
+	//Bug #34757 - Start
+	private String firstZone;
+	private List<Long> itemList;
+	private List<Long> loaItemIds;
+	//Bug #34757 - End
 	
 	private int retainPageNumber = 0;//#34242
 	
@@ -2003,7 +2011,7 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	
 	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
 		if(highestZoneScLoiLoaItemList ==null) {
-			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+			highestZoneScLoiLoaItemList = new ArrayList<>(); //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
 		}
 		return highestZoneScLoiLoaItemList;
 	}
@@ -2198,6 +2206,22 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 			this.listSpecAnswer = listSpecAnswer;
 		}
 		//29006 @zaim end
+
+		public List<Long> getItemList() {
+			return itemList;
+		}
+
+		public void setItemList(List<Long> itemList) {
+			this.itemList = itemList;
+		}
+
+		public List<Long> getLoaItemIds() {
+			return loaItemIds;
+		}
+
+		public void setLoaItemIds(List<Long> loaItemIds) {
+			this.loaItemIds = loaItemIds;
+		}
 }
 
 

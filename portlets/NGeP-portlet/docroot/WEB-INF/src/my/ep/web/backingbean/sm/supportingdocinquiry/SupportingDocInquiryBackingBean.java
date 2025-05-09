@@ -168,7 +168,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 		//this.getManagedBean().setAppId(1258837L);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
-		
+		// #37775 - Start
+		reqSO.recheckSupportDocFileAndDocFileInquiry(reqDTO.getAppId());
+		// #37775 - End
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
 		this.getManagedBean().setSmApplInquiry(resDTO.getSmApplInquiry());
 		//#11641 - START
@@ -613,6 +615,17 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}
 		this.getManagedBean().setSmApplDocFile(null);
 	}
+	
+	//#34392 - start
+	public void deleteInquirySupDocFileAttachment() {
+		SmApplSupportDoc smApplSupportDoc = getManagedBean().getSupportDoc();
+		if(this.getManagedBean().getSmApplDocFile() != null){
+			smApplSupportDoc.getSmApplDocFiles().remove(this.getManagedBean().getSmApplDocFile());
+			smApplSupportDoc.getNewAddedFiles().remove(this.getManagedBean().getSmApplDocFile());
+		}
+		this.getManagedBean().setSmApplDocFile(null);
+	}
+	//#34392 - end
 	
 	public void assignSelectedSupportDocIndex(SmApplSupportDoc doc, int index) {
 		this.getManagedBean().setAttachedFileIndex(index);

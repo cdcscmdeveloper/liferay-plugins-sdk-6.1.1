@@ -80,14 +80,14 @@
 					</p:commandButton>
 				</h:panelGroup>
 			</p:column>
-			<!-- #29187 Start Vinod -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification']}" rendered="#{templateSpecBackingBean.displayMandatorySpecColumn(templateSpecBean)}">
 				<h:panelGroup rendered="#{!isSpecTypeFinancial}">
 					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec ? lbl['lbl.txt.yes']:''}" rendered="#{!isQuestionTypeItem}"/>
 					<ac:iconTooltip rendered="#{tplSpecAnswer.tplSpecQuestion.mandatorySpec and !isQuestionTypeItem}" value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.instruction']}" />
 				</h:panelGroup>
 			</p:column>
-			<!-- #29187 End Vinod -->
+			<ui:remove>#29187 End Vinod</ui:remove>
 			<!-- #31134 Farid Start 25/6/2021-->
 			<!---remove here #32952 -->
 			<p:column style="width:5%;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.tier.title']}" rendered="#{isPriceTypeTier and isSpecTypeFinancial or !isSqSpec and isSpecTypeFinancial and templateSpecBackingBean.checkPriceTierEnableColumn(templateSpecBean)}">
@@ -168,7 +168,7 @@
 		</p:inputText>
 		<!-- Enhancement #3657@Syazani 04/10/2023 - Start -->
 		<h:panelGroup
-			rendered="#{(tplSpecAnswer.componentEmpty) and (!facesContext.validationFailed)}">
+			rendered="#{editable and (tplSpecAnswer.componentEmpty) and (!facesContext.validationFailed)}">
 			<h:panelGroup
 				class="ui-message-error ui-widget ui-corner-all ui-message-icon-only ui-helper-clearfix">
 				<h:outputText class="ui-message-error-icon" />
@@ -334,22 +334,32 @@
 	
 	<c:if test="#{isZonal}"><!-- #34108 allow resize text area-->
 		<h:panelGroup rendered="#{!isRepeated}">
+		<ui:remove>#36681 - start</ui:remove>
 			<p:inputTextarea id="answerSqZonalRemarks" label="#{lbl[remarklbl]}" style="resize: vertical;width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
-			disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
-			onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
+			disabled="#{!editable}" rows="1"
+			maxlength="1000"
+			validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+			onkeyup="limitTextAreaWithBreakline(this,1000);" onkeydown="limitTextAreaWithBreakline(this,1000);"
+			onmouseout="limitTextAreaWithBreakline(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
 			<p:ajax partialSubmit="true" process="@this" update="@this" />
 			<f:validateLength for="answerSqZonalRemarks" maximum="1000" />
 			</p:inputTextarea>
+		<ui:remove>#36681 - end</ui:remove>
 			<p:message id="answerSqZonalRemarksMsg" for="answerSqZonalRemarks" display="icon" />
 		</h:panelGroup>	
 	</c:if>	
 	<c:if test="#{!isZonal}"><!-- #34108 allow resize text area-->
+	<ui:remove>#36681 - start</ui:remove>
 		<p:inputTextarea id="answerSqRemarks" label="#{lbl[remarklbl]}" style="resize: vertical;width:calc(100% - 15px);" value="#{tplSpecAnswer.answerRemark}" 
-		disabled="#{!editable}" rows="1"  onkeyup="limitTextArea(this,1000);" onkeydown="limitTextArea(this,1000);"
-		onmouseout="limitTextArea(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
+		disabled="#{!editable}" rows="1"
+		maxlength="1000"
+		validatorMessage="#{lbl['lbl.sc.validate.onethousand.charLimit']}"
+		onkeyup="limitTextAreaWithBreakline(this,1000);" onkeydown="limitTextAreaWithBreakline(this,1000);"
+		onmouseout="limitTextAreaWithBreakline(this,1000);" rendered="#{!isSqSpec or (isSqSpec and isQuestionTypeItem)}">
 		<p:ajax partialSubmit="true" process="@this" update="@this" />
 		<f:validateLength for="answerSqRemarks" maximum="1000" />
 		</p:inputTextarea>
+	<ui:remove>#36681 - end</ui:remove>	
 		<p:message id="answerSqRemarksMsg" for="answerSqRemarks" display="icon" />
 	</c:if>	
 		

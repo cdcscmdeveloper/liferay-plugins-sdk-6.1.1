@@ -156,8 +156,7 @@
 												  or !(supplierDtl.scQtRecommendDtl.get(0).loiAwarded) 
 												  or lOIDetailBackingBean.managedBean.readOnly 
 												  or (supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions 
-												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA) 
-												  or lOIDetailBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(supplierDtl.qtEvaluationResult)}" /> <ui:remove> #28777#29729 </ui:remove>
+												  and !supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.warningDA)}" /> 
 							<ui:remove>
 								#31061 - SHAFFUL (END)
 							</ui:remove>
@@ -196,15 +195,12 @@
 										<ui:remove>
 											31061 - SHAFFUL (Added filter disciplinaryAction)
 										</ui:remove>
-										<ui:remove> #28777#29729 - Start </ui:remove>
-										<ui:param name="isQTBranchDeleted" value="#{lOIDetailBackingBean.disableRadioButtonOrCheckBoxIfSupplierBranchDeleted(recommendedSuppl.qtEvaluationResult)}" />
-										<ui:remove> #28777#29729 - End </ui:remove>
 										<p:selectBooleanCheckbox
 											value="#{recommendedSuppl.scQtRecommendDtl.get(0).recordStatus}"
 											disabled="#{!isPendingNegotiationStatus or 
 															!(recommendedSuppl.scQtRecommendDtl.get(0).loiAwarded) or lOIDetailBackingBean.managedBean.readOnly
-															or recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions or isQTBranchDeleted}"
-											style="margin-right:1px !important;"> <ui:remove> #28777#29729 </ui:remove>
+															or recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.disciplinaryActions}"
+											style="margin-right:1px !important;">
 											<p:ajax event="change" partialSubmit="true" process="@this"
 													update="@this, @([id$=recommendTbl])"
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(

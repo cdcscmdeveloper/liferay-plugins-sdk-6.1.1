@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.applicationView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -16,7 +17,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRegStatus;
-import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmGstSupplier;
@@ -33,6 +33,10 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
+//#28175
+import my.ep.persistence.entity.pm.common.PmRemarkCategory;
+//#28895_35501_DA - AUDIT TRAIL SM DA
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -66,27 +70,6 @@ public class ViewSuppProfileManagedBean extends
 	private boolean hasRegStatusChanged = false;
 	private boolean hasMofExpiryDateChanged = false;
 	private Long existingStatusId;
-	//26238 - start - #28281
-	/*
-	private boolean warningExist;
-	private boolean warning;
-	private boolean cancelCategoryCode;
-	private boolean suspendRegistration;
-	private boolean cancelRegistration;
-	private boolean blacklistOwnerOrDirector;
-	private boolean bumiputeraStatusCancel;
-	private boolean manufacturerStatusCancel;
-	private List<DisciplinaryActionVO> disciplinaryActionVoList;
-	private List<DisciplinaryActionVO> disciplineVOs; 
-	private List<SmPersonnel> ownerAndDirectorList; 
-	private List<SmPersonnel> selectedOwnerAndDirectorList; 
-	private String applType; 
-	private boolean viewFlag; 
-	private SmSupplier smSupp; 
-	private boolean viewMode; 
-	private boolean disciplinaryAction;
-	private boolean mofNoExist;
-	*/
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<PmFinancialOrg> financialOrgLs;
 	
@@ -192,6 +175,16 @@ public class ViewSuppProfileManagedBean extends
 	
 	private boolean hasActiveDA; //#34626
 	
+	private Map<Long, String> tempCategoryLs; //#34209
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private SmAppl oldSmAppl;
+	private List<SmSupplierCategory> oldApprovedCategoryList;
+	private String oldPoApprOverlappedRemark;
+	private String oldApproverRemark;
+	// #28895_35501 End
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	private SmDisciplinaryAction oldSmDisciplinaryAction;
+	
 	public ViewSuppProfileManagedBean() {
 
 	}
@@ -278,12 +271,10 @@ public class ViewSuppProfileManagedBean extends
 				if(isBasicAccountMaintenance()){
 					return getBasicSupplierResultBean(reqDTO);
 				} else {
-					return new SearchResultBean<SmSupplier>();
+					return new SearchResultBean();
 				}
 			} catch (Exception ex) {
-				return new SearchResultBean<SmSupplier>();
-			} finally {
-				reqDTO = null;
+				return new SearchResultBean();
 			}
 		}
 		
@@ -303,10 +294,9 @@ public class ViewSuppProfileManagedBean extends
 			reqDTO.setSmAppl(smAppl);
 			// 28273: Disciplinary Action - end - 26238
 			
-			ISearchResultBean<SmSupplier> resultBean = SmServiceLookup.getSmApplRevisionSO()
+			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveBasicSupplierForMaintenance(reqDTO)
 					.getSupplierResultBean();
-			return resultBean;
 		}
 	} 
 	
@@ -778,23 +768,7 @@ public class ViewSuppProfileManagedBean extends
 	public void setSmSuppOwners(List<SmSupplierOwner> smSuppOwners) {
 		this.smSuppOwners = smSuppOwners;
 	}
-	/*	#28281
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
-
-	public boolean isWarningExist() {
-		return warningExist;
-	}
-
-	public void setWarningExist(boolean warningExist) {
-		this.warningExist = warningExist;
-	} 
-	*/
+	
 	//27437 : Disciplinary Action 
 	/**
 	 * Search supplier latest application
@@ -950,14 +924,6 @@ public class ViewSuppProfileManagedBean extends
 		this.divisionBox = divisionBox;
 	}
 
-	public List<Long> getBumiCodeList() {
-		return bumiCodeList;
-	}
-
-	public void setBumiCodeList(List<Long> bumiCodeList) {
-		this.bumiCodeList = bumiCodeList;
-	}
-
 	public boolean isDisabledApprovedCategories() {
 		return disabledApprovedCategories;
 	}
@@ -1011,4 +977,54 @@ public class ViewSuppProfileManagedBean extends
 		this.hasActiveDA = hasActiveDA;
 	}
 	//#34626 - end
+
+	public Map<Long, String> getTempCategoryLs() {
+		return tempCategoryLs;
+	}
+
+	public void setTempCategoryLs(Map<Long, String> tempCategoryLs) {
+		this.tempCategoryLs = tempCategoryLs;
+	}
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public SmAppl getOldSmAppl() {
+		return oldSmAppl;
+	}
+
+	public void setOldSmAppl(SmAppl oldSmAppl) {
+		this.oldSmAppl = oldSmAppl;
+	}
+
+	public List<SmSupplierCategory> getOldApprovedCategoryList() {
+		return oldApprovedCategoryList;
+	}
+
+	public void setOldApprovedCategoryList(List<SmSupplierCategory> oldApprovedCategoryList) {
+		this.oldApprovedCategoryList = oldApprovedCategoryList;
+	}
+
+	public String getOldPoApprOverlappedRemark() {
+		return oldPoApprOverlappedRemark;
+	}
+
+	public void setOldPoApprOverlappedRemark(String oldPoApprOverlappedRemark) {
+		this.oldPoApprOverlappedRemark = oldPoApprOverlappedRemark;
+	}
+
+	public String getOldApproverRemark() {
+		return oldApproverRemark;
+	}
+
+	public void setOldApproverRemark(String oldApproverRemark) {
+		this.oldApproverRemark = oldApproverRemark;
+	}
+	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public SmDisciplinaryAction getOldSmDisciplinaryAction() {
+	    return oldSmDisciplinaryAction;
+	}
+
+	public void setOldSmDisciplinaryAction(SmDisciplinaryAction oldSmDisciplinaryAction) {
+	    this.oldSmDisciplinaryAction = oldSmDisciplinaryAction;
+	}
+	// #28895_35501_DA End
 }
