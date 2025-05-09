@@ -2,6 +2,8 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
@@ -40,12 +42,13 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	String actionType;
 	String docNo;
 
-	BigInteger auditPmParameterLvlId;
-	String levelCode3;
 	OrganisationManagedBean managedBean;
 	PmOrgProfile orgProfile;
 	PmOrgProfile oldOrgProfile;
 	String orgType;
+	
+	private Map<String, String> lvl3Code = createLvl3CodeMap();
+	private Map<String, BigInteger> pmParameterLevelId = createPmParameterLevelIdMap();
 
 	@Override
 	public String getRoleCode() {
@@ -65,7 +68,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		docType = orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly().get(0).getCodeName();
 		docNo = orgProfile.getOrgCode();
 		orgType = managedBean.getOrgType();
-		docId = orgProfile.getOrgProfileId();
+		docId = managedBean.getNewProfileId();
 		this.roleCode = roleCode;
 
 		if (!orgProfile.isBrandNew())
@@ -75,99 +78,28 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 		setAddUpdateGeneralDetails();
 		auditPMReqDTO.setObjList(objList);
-		managedBean.setBillingAddressType(null);
+		managedBean.setAuditBillingAddress(null);
+		managedBean.setAuditContactPerson(null);
 		managedBean.setOldReceivingAddressList(null);
 		managedBean.setAuditOldPMOrgProfile(null);
 		return auditPMReqDTO;
 	}
 
 	private void setMethod(String orgType) {
-		switch (orgType) {
-		case ParameterConst.ORG_TYPE_SYS:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_SYS_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_SYS;
+		
+		if(orgType.equals(ParameterConst.ORG_TYPE_SYS)){
 			setSys();
-			break;
-
-		case ParameterConst.ORG_TYPE_MINISTRY:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_FMI_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_MINISTRY;
+		} else if (orgType.equals(ParameterConst.ORG_TYPE_MINISTRY)) {
 			setMinistryCase();
-			break;
-
-		case ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_FPP_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL;
+		} else if (orgType.equals(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL)) {
 			setMinistry();
-			break;
-
-		case ParameterConst.ORG_TYPE_PTJ_GROUP:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_FPJ_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_PTJ_GROUP;
-			break;
-
-		case ParameterConst.ORG_TYPE_PTJ:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_FJA_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_PTJ;
+		} else if (orgType.equals(ParameterConst.ORG_TYPE_PTJ)) {
 			setPTJGroup();
-			break;
-
-		case ParameterConst.ORG_TYPE_BPK:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_BPK_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_BPK;
+		} else if (orgType.equals(ParameterConst.ORG_TYPE_BPK) || orgType.equals(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA) ||
+				orgType.equals(ParameterConst.ORG_TYPE_SUPPORT)) {
 			setOrgName();
-			break;
-
-		case ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_AUN_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA;
-			setOrgName();
-			break;
-
-		case ParameterConst.ORG_TYPE_SUPPORT:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_SPT_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_SUPPORT;
-			setOrgName();
-			break;
-
-		case ParameterConst.ORG_TYPE_GLC:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_GLC_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_GLC;
+		} else if (!orgType.equals(ParameterConst.ORG_TYPE_PTJ_GROUP)) {
 			setOtherCategory();
-			break;
-
-		case ParameterConst.ORG_TYPE_STATUTORY_BODY:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_STB_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_STATUTORY_BODY;
-			setOtherCategory();
-			break;
-
-		case ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_STS_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY;
-			setOtherCategory();
-			break;
-
-		case ParameterConst.ORG_TYPE_STATE_GOVT:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_STG_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_STATE_GOVT;
-			setOtherCategory();
-			break;
-
-		case ParameterConst.ORG_TYPE_LOCAL_AUTHORITY:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_LAT_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_LOCAL_AUTHORITY;
-			setOtherCategory();
-			break;
-
-		case ParameterConst.ORG_TYPE_OTHERS:
-			auditPmParameterLvlId = AuditConst.PM_AUD_OPM_OTH_PMPARAMETERLVLID;
-			levelCode3 = ParameterConst.ORG_TYPE_OTHERS;
-			setOtherCategory();
-			break;
-
-		default:
-			break;
 		}
 	}
 
@@ -205,65 +137,67 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setAddUpdateGeneralDetails() {
-		if (managedBean.getBillingAddressType() != null) {
-
-			PmContact pmContact = managedBean.getBillingAddressType().getPmContacts().get(0);
-			PmAddress pmAddress = managedBean.getBillingAddressType().getPmAddress();
+		PmAddress pmAddress = managedBean.getOfficeAddress();
+		if (pmAddress != null) {
 			String address = pmAddress.getAddress1() + pmAddress.getAddress2() + pmAddress.getAddress3();
 
 			if (orgProfile.isBrandNew()) {
 				actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-				docId = pmAddress.getAddressId();
 				detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, null, address);
-				docId = pmContact.getContactId();
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, null, pmContact.getContactName());
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, null, pmContact.getEmail());
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, null, pmContact.getMobileNo());
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, null, pmContact.getPhoneNo());
-
-			} else {
-
-				PmContact oldPmContact = oldOrgProfile.getPmAddressTypes().get(0).getPmContacts().get(0);
-				PmAddress oldPmAddress = oldOrgProfile.getPmAddressTypes().get(0).getPmAddress();
-				actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-
-				if (!pmAddress.getAddress1().equals(oldPmAddress.getAddress1())
-						|| !pmAddress.getAddress2().equals(oldPmAddress.getAddress2())
-						|| !pmAddress.getAddress3().equals(oldPmAddress.getAddress3())) {
-					docId = pmAddress.getAddressId();
-					String oldAddress = pmAddress.getAddress1() + pmAddress.getAddress2() + pmAddress.getAddress3();
-					detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, oldAddress, address);
+				
+				PmContact pmContact = managedBean.getOfficeContactPerson();
+				if(pmContact != null ){
+					setNewContactPerson(pmContact);
 				}
-
-				setContact(pmContact, oldPmContact);
+			} else {
+				PmAddress oldPmAddress = managedBean.getAuditBillingAddress();
+				actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+				String oldAddressAppend = oldPmAddress.getAddress1() + oldPmAddress.getAddress2() + oldPmAddress.getAddress3();
+				
+				if (!address.equals(oldAddressAppend)){
+					docId = pmAddress.getAddressId();
+					detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, oldAddressAppend, address);
+				}
+				setContact();
 			}
-
 		}
 	}
 
-	private void setContact(PmContact pmContact, PmContact oldPmContact) {
+	private void setNewContactPerson(PmContact pmContact){
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, null, pmContact.getContactName());
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, null, pmContact.getEmail());
+		if(!pmContact.getMobileNo().isEmpty()){
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, null, pmContact.getMobileNo());}
+		if(!pmContact.getPhoneNo().isEmpty()){
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, null, pmContact.getPhoneNo());}
+	}
+	
+	private void setContact() {
+		PmContact pmContact = managedBean.getOfficeContactPerson();
+		PmContact oldPmContact = managedBean.getAuditContactPerson();
+		
+		if(pmContact != null){
+			docId = pmContact.getContactId();
 
-		docId = pmContact.getContactId();
+			if (!pmContact.getContactName().equals(oldPmContact.getContactName())) {
+				detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, oldPmContact.getContactName(),
+						pmContact.getContactName());
+			}
 
-		if (!pmContact.getContactName().equals(oldPmContact.getContactName())) {
-			detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, oldPmContact.getContactName(),
-					pmContact.getContactName());
+			if (!pmContact.getEmail().equals(oldPmContact.getEmail())) {
+				detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, oldPmContact.getEmail(), pmContact.getEmail());
+
+			}
+			if (pmContact.getMobileNo() !=null && !pmContact.getMobileNo().equals(oldPmContact.getMobileNo())) {
+				detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, oldPmContact.getMobileNo(),
+						pmContact.getMobileNo());
+
+			}
+			if (pmContact.getPhoneNo() != null && !pmContact.getPhoneNo().equals(oldPmContact.getPhoneNo())) {
+				detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, oldPmContact.getPhoneNo(),
+						pmContact.getPhoneNo());
+			}
 		}
-
-		if (!pmContact.getEmail().equals(oldPmContact.getEmail())) {
-			detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, oldPmContact.getEmail(), pmContact.getEmail());
-
-		}
-		if (!pmContact.getMobileNo().equals(oldPmContact.getMobileNo())) {
-			detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, oldPmContact.getMobileNo(),
-					pmContact.getMobileNo());
-
-		}
-		if (!pmContact.getPhoneNo().equals(oldPmContact.getPhoneNo())) {
-			detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, oldPmContact.getPhoneNo(),
-					pmContact.getPhoneNo());
-		}
-
 	}
 
 	private void setMinistry() {
@@ -288,10 +222,9 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private void setOrganisationDetail() {
 		if (orgProfile.isBrandNew()) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			detailObj(AuditConst.PM_AUD_OPM_ORGCATEGORY_FIELDLABELCODE, null, orgProfile.getPmOrgValidity()
-					.getOrgName());
-			detailObj(AuditConst.PM_AUD_OPM_ORGTYPE_FIELDLABELCODE, null, managedBean.getOrgType()); // doctype
-			detailObj(AuditConst.PM_AUD_OPM_ORGCODE_FIELDLABELCODE, null, managedBean.getOrgProfile().getOrgCode()); // docno
+			detailObj(AuditConst.PM_AUD_OPM_ORGCATEGORY_FIELDLABELCODE, null, AuditConst.PM_AUD_FEDERAL_GOVT); // 167
+			detailObj(AuditConst.PM_AUD_OPM_ORGTYPE_FIELDLABELCODE, null, managedBean.getOrgType()); // 168 
+			detailObj(AuditConst.PM_AUD_OPM_ORGCODE_FIELDLABELCODE, null, managedBean.getOrgProfile().getOrgCode()); // 169
 		}
 	}
 
@@ -513,10 +446,10 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(docType);
 		dtlObj.setDocNo(docNo);
-		dtlObj.setPmParameterLvlId(auditPmParameterLvlId);
+		dtlObj.setPmParameterLvlId(pmParameterLevelId.get(orgType));
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OPM);
-		dtlObj.setLvlCode3(levelCode3);
+		dtlObj.setLvlCode3(lvl3Code.get(orgType));
 		dtlObj.setDocId(BigInteger.valueOf(docId));
 		dtlObj.setDocGroupId(BigInteger.valueOf(docId));
 		dtlObj.setFieldLabelCode(fieldLabelId);
@@ -527,5 +460,52 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		dtlObj.setActionType(actionType);
 		objList.add(dtlObj);
 		return objList;
+	}
+	
+	/**
+	 * @return
+	 */
+	private static Map<String, String> createLvl3CodeMap(){
+		Map<String, String> map = new HashMap<>();
+		map.put(ParameterConst.ORG_TYPE_SYS, ParameterConst.ORG_TYPE_SYS); 
+		map.put(ParameterConst.ORG_TYPE_MINISTRY, ParameterConst.ORG_TYPE_MINISTRY);
+		map.put(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL, ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL);
+		map.put(ParameterConst.ORG_TYPE_PTJ_GROUP, ParameterConst.ORG_TYPE_PTJ_GROUP);
+		map.put(ParameterConst.ORG_TYPE_PTJ, ParameterConst.ORG_TYPE_PTJ);
+		map.put(ParameterConst.ORG_TYPE_BPK, ParameterConst.ORG_TYPE_BPK);
+		map.put(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA, ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA);
+		map.put(ParameterConst.ORG_TYPE_SUPPORT, ParameterConst.ORG_TYPE_SUPPORT);
+		map.put(ParameterConst.ORG_TYPE_GLC, ParameterConst.ORG_TYPE_GLC);
+		map.put(ParameterConst.ORG_TYPE_STATUTORY_BODY, ParameterConst.ORG_TYPE_STATUTORY_BODY);
+		map.put(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY, ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
+		map.put(ParameterConst.ORG_TYPE_STATE_GOVT, ParameterConst.ORG_TYPE_STATE_GOVT);
+		map.put(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY, ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+		map.put(ParameterConst.ORG_TYPE_OTHERS, ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+		
+		return map;
+	}
+	
+	/**
+	 * @return
+	 */
+	
+	private static Map<String, BigInteger> createPmParameterLevelIdMap(){
+		Map<String, BigInteger> map = new HashMap<>();
+		map.put(ParameterConst.ORG_TYPE_SYS, AuditConst.PM_AUD_OPM_SYS_PMPARAMETERLVLID); 
+		map.put(ParameterConst.ORG_TYPE_MINISTRY, AuditConst.PM_AUD_OPM_FMI_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_PEGAWAI_PENGAWAL, AuditConst.PM_AUD_OPM_FPP_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_PTJ, AuditConst.PM_AUD_OPM_FPJ_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_PTJ_GROUP, AuditConst.PM_AUD_OPM_FJA_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_BPK, AuditConst.PM_AUD_OPM_BPK_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_JABATAN_AUDIT_NEGARA, AuditConst.PM_AUD_OPM_AUN_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_SUPPORT, AuditConst.PM_AUD_OPM_SPT_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_GLC, AuditConst.PM_AUD_OPM_GLC_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_STATUTORY_BODY, AuditConst.PM_AUD_OPM_STB_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY, AuditConst.PM_AUD_OPM_STS_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_STATE_GOVT, AuditConst.PM_AUD_OPM_STG_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY, AuditConst.PM_AUD_OPM_LAT_PMPARAMETERLVLID);
+		map.put(ParameterConst.ORG_TYPE_OTHERS, AuditConst.PM_AUD_OPM_OTH_PMPARAMETERLVLID);
+		
+		return map;
 	}
 }
