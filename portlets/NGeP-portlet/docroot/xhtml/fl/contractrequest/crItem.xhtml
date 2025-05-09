@@ -690,10 +690,12 @@
 		modal="true" width="900" height="550" resizable="false">
 		<table style="width: 100%">
 			<tr>
+			<!-- 28855 start -->
 				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
-				<td><p:inputText disabled="true"
+				<td><p:inputTextarea disabled="true"
 						value="#{contractRequestBackingBean.managedBean.itemName}"
-						size="60" /></td>
+						cols="60" rows="3" autoResize="false"></p:inputTextarea></td>
+			<!-- 28855 end  -->
 			</tr>
 			<!--  		
 			<tr>
