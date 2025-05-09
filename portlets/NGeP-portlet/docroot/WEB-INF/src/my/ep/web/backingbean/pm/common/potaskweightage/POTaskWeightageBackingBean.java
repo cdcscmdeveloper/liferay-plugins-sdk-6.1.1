@@ -240,14 +240,16 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		
 		IPoRoleTaskSO reqSO = (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
+		PoRoleTaskResDTO resDTO = reqSO.updateRoleTask(reqDTO);
 		
 		/************ AUDIT START #28895-35509 *************/
 		AuditPMBackingBeanTemplate auTemplate = new AuditPMRoleTaskWeightageBackingBean();
 		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
+		if (resDTO.isSuccessful() && pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_TASK_WEIGHTAGE)) {
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_TASK_WEIGHTAGE);
+		}
 		/************ AUDIT END #28895-35509 *************/
-		
-		PoRoleTaskResDTO resDTO = reqSO.updateRoleTask(reqDTO);
 		
 		if(resDTO.getUser() != null){
 			PmUser user = resDTO.getUser();
@@ -269,15 +271,7 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		
 		FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,msg));
-		
-		/************ AUDIT START #28895-35509 *************/
-		if (resDTO.isSuccessful()) {
-			// updated user
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_TASK_WEIGHTAGE)) {
-				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_TASK_WEIGHTAGE);
-			}
-		}
-		/************ AUDIT END #28895-35509 *************/
+
 	}
 	
 	public void resetWeightage(){
