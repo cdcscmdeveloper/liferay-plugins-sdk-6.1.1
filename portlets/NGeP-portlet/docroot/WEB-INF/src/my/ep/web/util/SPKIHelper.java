@@ -54,6 +54,7 @@ public class SPKIHelper {
 				reqDTO.setAnswer(answer.toString());
 				log.info("question : " + question);
 				log.info("answer : " + answer);
+
 			}
 		}
 		try {
