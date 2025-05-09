@@ -3525,18 +3525,4 @@ public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
-
-	// Bug #36730@Syazani 07/01/2025 -- Start
-	private void reinstateZoneLocationLevel(Long eventLocationLevelId) {
-		PmParameter zoneLocationLevel = new PmParameter();
-		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt().getScQtSupplierCriteria();
-		Long sourceLocationLevelId = null != supplierCriteria && null != supplierCriteria.getLocationLevel()
-				&& null != supplierCriteria.getLocationLevel().getParameterId() ? supplierCriteria.getLocationLevel().getParameterId() : 0L;
-		zoneLocationLevel.setParameterId(eventLocationLevelId);
-		this.getManagedBean().getQt().setZoneLocationLevel(zoneLocationLevel);
-		if (!sourceLocationLevelId.equals(eventLocationLevelId) && 0l != sourceLocationLevelId && null != supplierCriteria) {
-			supplierCriteria.setLocationLevel(zoneLocationLevel);
-		}
-	}
-	// Bug #36730@Syazani 07/01/2025 -- End
 }
