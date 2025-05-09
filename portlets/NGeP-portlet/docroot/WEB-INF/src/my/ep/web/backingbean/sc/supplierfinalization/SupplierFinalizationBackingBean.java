@@ -2279,7 +2279,6 @@ public class SupplierFinalizationBackingBean extends
 					) {
 
 				this.getManagedBean().setSubmit(true);
-
 			}
 			
 			// Bug #32682 #27502 & #34921 - Start

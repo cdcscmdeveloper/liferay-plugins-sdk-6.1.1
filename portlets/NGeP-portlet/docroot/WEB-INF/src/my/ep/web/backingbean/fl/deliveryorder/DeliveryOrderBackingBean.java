@@ -1669,7 +1669,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 		}
 	}
 	// 36361-End
-	
+
 	//38009-Start
 	/**
 	 * Validates the expected delivery date for each delivery address in the fulfilment request.

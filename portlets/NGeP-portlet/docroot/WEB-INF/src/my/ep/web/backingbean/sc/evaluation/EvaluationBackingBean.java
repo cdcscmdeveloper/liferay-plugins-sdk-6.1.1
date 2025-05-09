@@ -1517,9 +1517,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setEvalStage(null);
 			reqDTO.setProposalChecklistSearchBean(null);
-			
 			reqDTO.setProposalChecklist(proposalCheckList); //Bug #38123 CRM#5224901: MOE issue 16/4/2025
-			
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 
 			if (null != resDTO
@@ -2370,7 +2368,6 @@ public class EvaluationBackingBean extends
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT) 
 						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF)))
-						
 						// #35384 recalculate when at endorse or sign off -end-
 				) {
 					// #25638 -end-
@@ -2536,7 +2533,6 @@ public class EvaluationBackingBean extends
 					|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 					&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
 					|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))
-					
 					// #35384 recalculate at endorse or sign off -end-
 			) { 
 				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
@@ -2570,7 +2566,6 @@ public class EvaluationBackingBean extends
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
 						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_SIGN_OFF)))
-						
 				        // #35384 recalculate at endorse or sign off -end-
 				) {
 					financialCheckListStatusCheck();
@@ -6568,7 +6563,6 @@ public class EvaluationBackingBean extends
 							&& null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 							&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT)
 							|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_SIGN_OFF))
-							
 							// #35384 recalculate at endorse or sign off -end-
 					) {
 						if (null == this.getManagedBean().getScQt()
