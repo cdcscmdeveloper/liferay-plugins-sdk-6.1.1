@@ -882,7 +882,7 @@ public class NoticeBoardBackingBean extends
 		managedBean.setBriefingDtls(null);
 		
 		//#28777 & #29729 - Start
-		if(smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
+		if(!managedBean.getScQt().isZonal() && smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
 			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
 					MessageUtils.getMessage(MessageConst.INFO_760522, 
