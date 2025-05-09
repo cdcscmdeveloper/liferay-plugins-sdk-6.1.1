@@ -26,16 +26,15 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #34159 - START - add param disablevalidation -->
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.save}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" >
+				<!-- #34159 - START - add param disablevalidation, #34400 -->
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 				<!-- #34159 - END -->
 				</td>
 			</tr>
 		</table>
-
 
 		<p:panel id="UserProfile" toggleable="true">
 			<f:facet name="header">
@@ -797,6 +796,13 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
-		
+		<!-- #34400 -->
+		<ac:confirmationPopupSM id="confirmSaveDlg" widget="confirmSaveDlg"
+			okAction="smPersonnelBackingBean.save"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
+		<ac:smEmailAlertPopup bBean="#{backingBean}" title="#{lbl['lbl.sm.email.change.header']}" dialogId="emailPopUp" 
+		btnOkLabel="#{lbl['lbl.btn.ok']}" />
 	</ui:define>
 </ui:composition>
