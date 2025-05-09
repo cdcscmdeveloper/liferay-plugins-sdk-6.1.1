@@ -11,7 +11,7 @@ import javax.faces.bean.RequestScoped;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
+import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
@@ -60,7 +60,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	private boolean checkCompExpDraftExist() {
-		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setSupplierId(this.getManagedBean().getSupplier().getSupplierId());
 		return getCompExpSo().checkCompExpDraftExist(reqDTO);
 	}
@@ -80,9 +80,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * @param fromCT
 	 */
 	public void redirectToDraftUpdate(SmCompExpDraft draft) {
-		SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
-		reqDTO.setDraftId(draft.getCompExpDraftId());
-		this.getManagedBean().setSelectedDraft(getCompExpSo().retrieveCompExpDraft(reqDTO).getExpDraf());
+		initSelectedDraft(draft);
+
 		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.sm", null));
 		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
@@ -98,14 +97,33 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().setContractEffDateTemp(null);
 		}
+		
 		dateChange();
+		initSelectedDraftDoc();
+		initSelectedCatDraft();
+
+		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
+	}
+
+	private void initSelectedDraft(SmCompExpDraft draft) {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setDraftId(draft.getCompExpDraftId());
+		this.getManagedBean().setSelectedDraft(getCompExpSo().retrieveCompExpDraft(reqDTO).getExpDraf());
+	}
+
+	private void initSelectedDraftDoc() {
 		List<SmCompExpMasterDoc> compExpDocList = new ArrayList<SmCompExpMasterDoc>();
 		this.getManagedBean().setCompExpDocList(compExpDocList);
 		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH)
 				+ this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo() + "/"
 				+ DateUtils.dateToString("yyyyMMdd_HHmmss", Calendar.getInstance().getTime()) + "/";
 		this.getManagedBean().setCompExpFilePath(filePath);
-		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
+	}
+
+	private void initSelectedCatDraft() {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setCompExpDraft(this.getManagedBean().getSelectedDraft());
+		this.getManagedBean().setCompExpCatCodeList(getCompExpSo().retrieveCompExpCatDraft(reqDTO).getCompExpCatCodeList());
 	}
 
 	public void clientTypeChange() {

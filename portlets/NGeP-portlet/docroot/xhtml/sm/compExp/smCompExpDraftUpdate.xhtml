@@ -251,12 +251,15 @@
 									value="#{compExpBB.getShortFileName(doc.fileName)}">
 									<p:fileDownload
 										value="#{compExpBB.commonDownload(doc.filePath,doc.fileName)}" />
+									<f:ajax partialSubmit="true" process="@this" update=":form"
+										onclick="blockWidget.show()" oncomplete="blockWidget.hide()" />
 								</h:commandLink>
 								<p:tooltip for="file" value="#{doc.fileName}" position="top" />
 								<p:spacer width="10" />
-								<p:commandLink
+								<p:commandLink partialSubmit="true" process="@this"
+									update=":form"
 									action="#{compExpBB.onDeleteSupDocFileAttachment(doc)}"
-									update="@form">
+									onclick="blockWidget.show()" oncomplete="blockWidget.hide()">
 									<p:graphicImage value="/css/images/design/trash.png" />
 								</p:commandLink>
 							</ui:repeat>
@@ -264,6 +267,15 @@
 				</tr>
 			</table>
 		</div>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
+			toggleable="true">
+			<p:dataTable id="compExpCatCodesId" rowKey=""
+				rowIndexVar="index"
+				value="#{compExpMB.compExpCatCodeList}"
+				var="compExpCatCode" widgetVar="compExpCatCodesWV">
+			</p:dataTable>
+
+		</p:panel>
 		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
 		<p:dialog dynamic="true" header="#{lbl['lbl.bpm.choose.file']}"
 			height="200" id="compExpSuppDocUploadDialogId" modal="true"

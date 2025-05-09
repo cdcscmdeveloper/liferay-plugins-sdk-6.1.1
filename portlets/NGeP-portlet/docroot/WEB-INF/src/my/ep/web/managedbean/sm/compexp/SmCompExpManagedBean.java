@@ -12,8 +12,9 @@ import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.sm.compexp.SmCompExpDraftReqDTO;
+import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -50,6 +51,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private List<SmCompExpMasterDoc> compExpDocList;
 	private String compExpFilePath;
 	private SmCompExpMasterDoc compExpDoc;
+	private List<SmCompExpCatDraft> compExpCatCodeList;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -86,7 +88,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
 
-			SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			reqDTO.setSupplierId(supplier.getSupplierId());
 			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_SM);
 
@@ -121,7 +123,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
 
-			SmCompExpDraftReqDTO reqDTO = new SmCompExpDraftReqDTO();
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			reqDTO.setSupplierId(supplier.getSupplierId());
 			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_CT);
 
@@ -215,6 +217,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setCompExpDoc(SmCompExpMasterDoc compExpDoc) {
 		this.compExpDoc = compExpDoc;
+	}
+
+	public List<SmCompExpCatDraft> getCompExpCatCodeList() {
+		return compExpCatCodeList;
+	}
+
+	public void setCompExpCatCodeList(List<SmCompExpCatDraft> compExpCatCodeList) {
+		this.compExpCatCodeList = compExpCatCodeList;
 	}
 
 }
