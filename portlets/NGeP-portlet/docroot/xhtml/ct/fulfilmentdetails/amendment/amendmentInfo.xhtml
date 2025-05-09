@@ -12,14 +12,14 @@
 		font-size: 12px;
 		font-weight: bold;
 		color: #0000FF;
-		height: 35px;
 		vertical-align: middle;
-		margin: 10px;
 		background-color: #CCE6FF;
+  		border: 1px solid #BADDFF;
 		border-bottom-left-radius: 4px;
 		border-bottom-right-radius: 4px;
 		border-top-left-radius: 4px;
 		border-top-right-radius: 4px;
+		height: auto;
 	}
 	
 	.disciplinaryNotifyCssAlign {
@@ -27,38 +27,36 @@
 	}
 	</style>
 
-	<table style="width: 100%;">
-		<tr>
-			<td valign="top" class="disciplinaryNotifyCss">
-				<div class="disciplinaryNotifyCssAlign">
-					<h:outputText
-						rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
-						value="#{amendmentBackingBean.managedBean.disciplinaryActionMsg}" />
+	<!-- #34097 start-->
+	<div class="disciplinaryNotifyCss">
+		<div class="disciplinaryNotifyCssAlign">
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+				value="#{amendmentBackingBean.managedBean.disciplinaryActionMsg}" />
 
-					<p:commandLink onstart="blockWidget.show()"
-						oncomplete="blockWidget.hide()"
-						rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
-						action="#{amendmentBackingBean.onViewDisciplinaryAction}"
-						process="@this" partialSubmit="true" update=":form">
-						<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}"
-								style="color:blue;" /></u>
-					</p:commandLink>
-					<p:spacer width="2" />
+			<p:commandLink onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()"
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+				action="#{amendmentBackingBean.onViewDisciplinaryAction}"
+				process="@this" partialSubmit="true" update=":form">
+				<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}"
+						style="color:blue;" /></u>
+			</p:commandLink>
+			<p:spacer width="2"
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}" />
 
-					<h:outputText
-						rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
-						value="#{lbl['lbl.sm.supplier.to.view.disc.action.details']}" />
-					<!-- #34097 start-->
-					<h:outputText
-						rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or not empty amendmentBackingBean.managedBean.supplierMsg}"
-						value="&lt;br /&gt;" escape="false"/>
-					<h:outputText
-						rendered="#{not empty amendmentBackingBean.managedBean.supplierMsg}"
-						value="#{amendmentBackingBean.managedBean.supplierMsg}" />
-				</div> <!-- #34097 end-->
-			</td>
-		</tr>
-	</table>
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}"
+				value="#{lbl['lbl.sm.supplier.to.view.disc.action.details']}" />
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg and not empty amendmentBackingBean.managedBean.supplierMsg}"
+				value="&lt;br /&gt;" escape="false" />
+			<h:outputText
+				rendered="#{not empty amendmentBackingBean.managedBean.supplierMsg}"
+				value="#{amendmentBackingBean.managedBean.supplierMsg}" />
+		</div>
+	</div>
+	<!-- #34097 end-->
 
 	<ac:disciplinaryActionHistory
 		voList="#{amendmentBackingBean.managedBean.disciplineVOs}"

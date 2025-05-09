@@ -2399,9 +2399,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 			}
-			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
-			this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
-			this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+			//#38079 START
+			if(reset){
+				this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+			}//#38079 END
 			//#34159 - END
 		}
 			

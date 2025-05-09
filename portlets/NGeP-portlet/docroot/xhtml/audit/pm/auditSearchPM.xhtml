@@ -24,7 +24,7 @@
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="paramLevel1"
 						styleClass="ppDropDownWidthM" required="true"
-						label="#{lbl['lbl.pm.audit.sys.config']}"
+						label="#{lbl['lbl.pm.audit.config.type']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.systemConfigParamLevel1}"
 						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -50,7 +50,7 @@
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.categoryConfigParamLevel2}"
 						style="width: 275px;margin-bottom: 5px;"
 						disabled="#{searchPMAuditBackingBean.managedBean.searchBean.systemConfigParamLevel1 eq null}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" 
 							itemValue="#{null}" />
 						<f:selectItems
 							value="#{searchPMAuditBackingBean.getDropdownLevel2()}"
@@ -92,14 +92,14 @@
 						value="#{lbl['lbl.pm.audit.itemCode']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemCode}"
-						id="itemCode" size="32" /></td>
+						id="itemCode" size="32" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemCode']}" /></td>
 			</tr>
 			<tr>
 				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.itemName']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemName}"
-						id="itemName" size="32" /></td>
+						id="itemName" size="32" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
@@ -138,7 +138,7 @@
 						value="#{lbl['lbl.pm.audit.actiondateFrom']}" /></td>
 				<td><p:calendar id="fromDate" showOn="button" size="32"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}">
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}" readonly="true">
 						<p:ajax event="dateSelect" update="fromDate,toDate" />
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
@@ -147,7 +147,7 @@
 						required="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom ne null or !searchPMAuditBackingBean.managedBean.searchBean.dateFrom eq ''}"
 						mindate="#{searchPMAuditBackingBean.managedBean.searchBean.dateFrom}"
 						id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateTo}">
+						value="#{searchPMAuditBackingBean.managedBean.searchBean.dateTo}" readonly="true">
 					</p:calendar></td>
 			</tr>
 			<tr>

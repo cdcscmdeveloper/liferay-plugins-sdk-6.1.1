@@ -30,8 +30,6 @@ public class FlReportMainBackingBean extends FlReportBackingBean<FlReportMainMan
 	/** The Constant log. */
 	private static final Logger log = EpLogger
 			.getLogger(FlReportMainBackingBean.class);
-
-	Long userId = getFacesScopes().getUserSessionBean().getUserId();
 	
 	private static final String serviceFeeCode = "SF"; //#29554
 
@@ -40,12 +38,6 @@ public class FlReportMainBackingBean extends FlReportBackingBean<FlReportMainMan
 		this.renewSesionObject();
 		retrieveReportCategoryListByModuleCode(ModuleCodeConst.ORDER_FULFILLMENT.toUpperCase());
 
-		/*
-		String userRole = retrieveRoleByUserId(userId);
-
-		if (userRole != null) {
-			getManagedBean().setUserRole(userRole);
-		}*/
 		//#29554 start
 		getManagedBean().setShowRptCategory(true);
 		if(isGovCollector()){

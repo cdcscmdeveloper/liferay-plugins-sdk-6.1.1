@@ -10628,6 +10628,15 @@ private void retriveCommitteeRemarksList(){
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
+					String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+					boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
+					boolean isComplianceNull = questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+							&& isMandatorySpec && tplSpecAnswer.getCompliance() == null;
+					if (isComplianceNull) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
 					boolean isCompliance = tplSpecAnswer.getCompliance() != null
 							&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
 					String remark = tplSpecAnswer.getUserRemark();
@@ -17177,6 +17186,46 @@ private void retriveCommitteeRemarksList(){
 		}
 		this.getManagedBean().getNoOfContractsProposalScore().setUserScore(sampleScore);
 	}//#11104_End
+	
+	// 11104 -start-
+	/**
+	 * check checklist type is Sample or others.
+	 * 
+	 * @param checkList
+	 * @return boolean
+	 */
+	public boolean checklistSample(ScQtCheckList checkList) {
+		String paramCode = checkList.getDefinationType().getParameterCode();
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+				.equalsIgnoreCase(paramCode)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	// 11104 -end-
+
+	// 11104 -start-
+	/**
+	 * fetch sample sample status description based on statusId.
+	 * 
+	 * @param proposalCheckList
+	 * @return String
+	 */
+	public String sampleStatusDesc(ScQtProposalChecklist proposalCheckList) {
+		Long statusId = null != proposalCheckList.getEvaluationStatus() ? proposalCheckList
+				.getEvaluationStatus().getStatusId() : QTStatusConst.PR_PENDING;
+		if (QTStatusConst.PR_PENDING.equals(statusId)) {
+			return ResourceBundleUtils.getMessage(
+					QTConstants.SAMPLE_PENDING_SUBMISSION,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+		}
+		return getStatusDescById(statusId);
+	}
+
+	// 11104 -end-
+
 
 	/** #21695 Farid */	
 	/**

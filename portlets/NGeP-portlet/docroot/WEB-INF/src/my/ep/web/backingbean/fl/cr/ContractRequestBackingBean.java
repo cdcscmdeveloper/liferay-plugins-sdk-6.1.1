@@ -5270,6 +5270,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
 				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
+				contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());//#25296
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
 					
 					if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
@@ -5285,19 +5286,22 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						}else{//#25296
 							ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
 							if(!contractBondWaiver.isBondWaiverPeriod()){
-								//25296 - asyraf - to handle WIP transaction
-								if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-									if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
-										throw new EpException(MessageConst.ERROR_740066);
-									} else {
-										throw new EpException(MessageConst.ERROR_740051);
-									}									
-								}else{
-									if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
-										throw new EpException(MessageConst.ERROR_740067);
-									} else {
-										throw new EpException(MessageConst.ERROR_740052);
-									}//25296 - end - asyraf									
+								ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
+								if(!contractResp.isBondComplete()){
+									//25296 - asyraf - to handle WIP transaction
+									if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+										if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+											throw new EpException(MessageConst.ERROR_740066);
+										} else {
+											throw new EpException(MessageConst.ERROR_740051);
+										}									
+									}else{
+										if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
+											throw new EpException(MessageConst.ERROR_740067);
+										} else {
+											throw new EpException(MessageConst.ERROR_740052);
+										}//25296 - end - asyraf									
+									}
 								}
 							}													
 						}// end #25296
