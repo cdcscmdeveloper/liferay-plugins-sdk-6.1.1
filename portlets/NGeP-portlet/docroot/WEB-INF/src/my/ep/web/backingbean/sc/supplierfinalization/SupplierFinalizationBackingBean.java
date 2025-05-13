@@ -104,7 +104,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;	// Bug #37829@Syazani 13/03/2024
-import my.ep.persistence.entity.sc.common.ScActor; //Bug #32682
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
@@ -205,8 +204,7 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = EpLogger
-			.getLogger(SupplierFinalizationBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(SupplierFinalizationBackingBean.class);
 
 	private int currentTab;
 	private String textBeforeSign;
@@ -327,9 +325,7 @@ public class SupplierFinalizationBackingBean extends
 							QTConstants.FC_SUPPLIER_FINALIZATION_PAGE);
 		} catch (Exception e) {
 			handleException(e);
-			fc.getApplication().getNavigationHandler()
-			  .handleNavigation(fc, null,
-					CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);
 		}
 	}
 
@@ -338,26 +334,21 @@ public class SupplierFinalizationBackingBean extends
 	 * @param qtId
 	 */
 	private void loadInitialData(Long qtId) {
-		SCEvaluationDataType dataType = (SCEvaluationDataType) 
-				this.getManagedBean().getPayLoad();
+		SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
 		getManagedBean().setCommitteeType(dataType.getCommitteeType());
 		
 		retrieveQTDetails(qtId);
 		
-		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
-				.equals(dataType.getFcDecision())) {
+		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES.equals(dataType.getFcDecision())) {
 			getManagedBean().setInitialDecisionFwdHighAuth(true);
-		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK
-						.equals(dataType.getFcDecision()) || isQTRefinalized()) && 
-					QTStatusConst.SF_PENDING_ESCALATION_TO_BPK
-							.equals(getManagedBean().getCurrentStatusId())) {
+		} else if ((ParameterConst.DECISION_FORWARD_TO_BPK.equals(dataType.getFcDecision()) 
+				|| isQTRefinalized()) && QTStatusConst.SF_PENDING_ESCALATION_TO_BPK.equals(getManagedBean().getCurrentStatusId())) {
 			getManagedBean().setCommitteeType(StringUtils.EMPTY);
 			getManagedBean().setInitialDecisionFwdToBPK(true);
 		}
 		
 		String committeeType = getManagedBean().getCommitteeType();
-		if (StringUtils.isNotBlank(committeeType) && 
-				!StringUtils.equalsIgnoreCase(committeeType, "null")) {
+		if (StringUtils.isNotBlank(committeeType) && !StringUtils.equalsIgnoreCase(committeeType, "null")) {
 			loadPreparationTabDetails();
 			checkIfLoggedinUserIsSecretary();
 		}
@@ -367,16 +358,13 @@ public class SupplierFinalizationBackingBean extends
 		// #17376-start
 		if (isQTMaintenanceScreen()) {
 			// 17376-165 -start-
-			if (null == dataType.getCommitteeType() || StringUtils.isEmpty(dataType.getCommitteeType())
-					|| StringUtils.isBlank(dataType.getCommitteeType())) {
+			if (null == dataType.getCommitteeType() || StringUtils.isEmpty(dataType.getCommitteeType()) || StringUtils.isBlank(dataType.getCommitteeType())) {
 				// #30451-Start.
 				if (null != this.getManagedBean().getScQt().getFinalizationCommitte()) {
 					// #30451-End.
-					dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte()
-							.getParameterCode());
+					dataType.setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
 					
-					this.getManagedBean().setCommitteeType(
-							this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
+					this.getManagedBean().setCommitteeType(this.getManagedBean().getScQt().getFinalizationCommitte().getParameterCode());
 				// #30451-Start.
 				}
 				// #30451-End.
@@ -398,8 +386,7 @@ public class SupplierFinalizationBackingBean extends
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
 			//Bug #36187 - start
 			if (null == getManagedBean().getScQtFinalization().getLoiLoaBy()){
-				getManagedBean().getScQtFinalization()
-						.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
+				getManagedBean().getScQtFinalization().setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
 			}
 			//Bug #36187 - end
 			getManagedBean().setPreparationTabIndex(-1);
@@ -432,24 +419,19 @@ public class SupplierFinalizationBackingBean extends
 	private void retrieveQTDetails(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(qtId);
 
-			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
-												.retrieveQTDtls(reqDTO);
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveQTDtls(reqDTO);
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 			getManagedBean().setScQt(scQt);
 			evaluateWIP(scQt);//34865,34866,34867 - 29021 WIP
-			getManagedBean().setOriginalFinalizationSecretaryUserId(
-						scQt.getFinalizationSecratery().getUserId());
+			getManagedBean().setOriginalFinalizationSecretaryUserId(scQt.getFinalizationSecratery().getUserId());
 
-			boolean isMedicalProcCategory = isMultipleProposalCategory(
-					scQt, null);
+			boolean isMedicalProcCategory = isMultipleProposalCategory(scQt, null);
 			if(isMedicalProcCategory){
 				this.getManagedBean().getScQt().setEvaluateBy(SourcingConstants.EVALUATE_BY__ITEM);
 			}
@@ -467,9 +449,7 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void onTabMenuChangeAction() {
 		Integer selectedTabIndex = null; 
-		String selectedTabIndexStr = FacesContext
-				.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("selectedTabIndex");
+		String selectedTabIndexStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("selectedTabIndex");
 		
 		if (StringUtils.isNotBlank(selectedTabIndexStr)) {
 			selectedTabIndex = Integer.valueOf(selectedTabIndexStr);
@@ -528,8 +508,7 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void navigateToPreparationTab() {
-		this.getManagedBean().setActiveIndex(
-				this.getManagedBean().getPreparationTabIndex());
+		this.getManagedBean().setActiveIndex(this.getManagedBean().getPreparationTabIndex());
 		this.getManagedBean().setPrepareActiveIndex(
 				PREPARE_ACTIVE_INDEX_MEETING);
 	}
@@ -548,20 +527,17 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void navigateToBriefingPaperTab() {
-		this.getManagedBean().setActiveIndex(
-				this.getManagedBean().getReportTabIndex());
+		this.getManagedBean().setActiveIndex(this.getManagedBean().getReportTabIndex());
 	}
 
 	// #18685 - Start
 	private void navigateToEvaluationReportTab() {
-		this.getManagedBean().setActiveIndex(
-				this.getManagedBean().getEvaluationReportIndex());
+		this.getManagedBean().setActiveIndex(this.getManagedBean().getEvaluationReportIndex());
 	}
 	// #18685 - End
 	
 	private void navigateToSupplierFinalizationTab() {
-		this.getManagedBean().setActiveIndex(
-				this.getManagedBean().getFinalizationTabIndex());
+		this.getManagedBean().setActiveIndex(this.getManagedBean().getFinalizationTabIndex());
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 		//6906 note 117 - start
@@ -1379,7 +1355,7 @@ public class SupplierFinalizationBackingBean extends
 			finalizationReports.addAll(this.getManagedBean().getEndorsementReports());
 			finalizationReports = new ArrayList<>(new HashSet<>(finalizationReports));//35381 - Related 6906
 			scQtFinalization.setScQtFinalizationReports(finalizationReports);
-			//6906 - note 117 - start
+			// 6906 - start - note 117
 			String desicion = scQtFinalization.getDecision() ==null ? null: scQtFinalization.getDecision().getParameterCode();
 			List<String> decisionList = new ArrayList<String>();
 			if (this.getManagedBean().getDecisionDropdown() != null
@@ -1399,14 +1375,13 @@ public class SupplierFinalizationBackingBean extends
 					scQtFinalization.getDecision().setParameterCode(ParameterConst.DECISION_RECOMMEND_SUPPLIER);
 				}
 			} 
-			//6906 - note 117 - end
+			// 6906 - end - note 117
 			SuppFinalizationReqDTO reqDTO = null;
 			
 			// Save Preparation and Supplier finalization tab(s) data 
 			ScQtCommittee scQtCommittee = null;
 			
-			if (activeIndex == 0 && 
-					!getManagedBean().isInitialDecisionFwdToBPK()) {
+			if (activeIndex == 0 && !getManagedBean().isInitialDecisionFwdToBPK()) {
 				this.getManagedBean().setSubmit(Boolean.FALSE); //32613
 //				this.getManagedBean().setSubmit(true); //#26189
 
@@ -5035,21 +5010,20 @@ public class SupplierFinalizationBackingBean extends
 		// START - #26169
 		else {
 			// If no available/qualified supplier, exclude the defined decision type(s)
-			if(!getManagedBean().isHasSupplierQualifiedForCurrentSelection()){	//6906 note 202
+			if(!getManagedBean().isHasSupplierQualified()){// Bug #37969
 				if (excludedDecisionList == null) {
 					excludedDecisionList = new ArrayList<String>();
 				}
-				
+
 				excludedDecisionList.add(ParameterConst.DECISION_RECOMMEND_SUPPLIER);
 				excludedDecisionList.add(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY);
-				//6906 note 117 - start
-				if(CollectionUtils.isEmpty(this.getManagedBean().getDisqualifiedStages())){
-					excludedDecisionList.add(
-							ParameterConst.DECISION_RE_EVALUATION);
-					excludedDecisionList.add(
-							ParameterConst.DECISION_RBP);
+				// 6906 - start - note 117
+				if (CollectionUtils.isEmpty(this.getManagedBean().getDisqualifiedStages())) {
+					excludedDecisionList.add(ParameterConst.DECISION_RE_EVALUATION);
+					excludedDecisionList.add(ParameterConst.DECISION_RBP);
+
 				}
-				//6906 note 117 - end
+				// 6906 - end - note 117
 			}
 		}
 		// END - #26169
