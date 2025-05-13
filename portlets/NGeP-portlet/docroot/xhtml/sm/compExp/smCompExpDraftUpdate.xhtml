@@ -273,35 +273,76 @@
 				value="#{compExpMB.compExpCatCodeList}" var="compExpCatCode"
 				widgetVar="compExpCatCodesWV">
 				<ac:paginator for="compExpCatCodesId" />
-				<p:column style="width:4%">
+				<p:column style="width:2%">
 					<f:facet name="header">
 						<p:selectBooleanCheckbox
 							disabled="#{not compExpMB.compExpCatCodeListEmpty}"
 							value="#{compExpMB.selectedAll}">
-							<p:ajax event="change" listener="#{compExpBB.selectCatCode}"
-								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								process="@this" partialSubmit="true" update=":form" />
+							<p:ajax listener="#{compExpBB.selectAllCatCodes}"
+								partialSubmit="true" process="@this"
+								update=":#{p:component('compExpCatCodesId')}" />
 						</p:selectBooleanCheckbox>
 					</f:facet>
-					<p:selectBooleanCheckbox
-						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
-						value="#{compExpMB.selected}">
-						<p:ajax event="change" listener="#{compExpBB.selectAllCatCodes}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							process="@this" partialSubmit="true" update=":form" />
+					<p:selectBooleanCheckbox value="#{compExpMB.selected}"
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}">
+						<p:ajax listener="#{compExpBB.selectCatCode(index)}"
+							partialSubmit="true" process="@this"
+							update=":#{p:component('compExpCatCodesId')}" />
 					</p:selectBooleanCheckbox>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sm.catCodes.mainCat']}">
-					<p:selectOneMenu required="true"
-						label="#{lbl['lbl.sm.catCodes.mainCat']}"
-						id="mainCatCodes#{index}" value="#{compExpCatCode.categoryL1}"
-						disabled="#{not compExpMB.compExpCatCodeListEmpty}">
+				<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<h:outputText styleClass="mandatory"
+						rendered="#{compExpMB.compExpCatCodeListEmpty}" value="*" />
+					<p:selectOneMenu
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+						label="#{lbl['lbl.sm.projDtls.mainCat']}" required="true"
+						value="#{compExpCatCode.categoryL1.categoryL1Id}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems itemLabel="#{main.categoryName}"
-							itemValue="#{main}"
+							itemValue="#{main.categoryL1Id}"
 							value="#{compExpMB.supplierMainCatList}" var="main" />
+						<p:ajax event="change" update="@this"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							listener="#{compExpBB.getSupplierSubCatList(compExpCatCode.categoryL1.categoryL1Id,
+							compExpCatCode.categoryL2,compExpCatCode.categoryL3)}"
+							process="@this" partialSubmit="true" />
 					</p:selectOneMenu>
 				</p:column>
+				<!-- p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<h:outputText styleClass="mandatory"
+						rendered="#{compExpMB.compExpCatCodeListEmpty}" value="*" />
+					<p:selectOneMenu
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+						label="#{lbl['lbl.sm.projDtls.subCat']}" required="true"
+						value="#{compExpCatCode.categoryL1.categoryL1Id}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{sub.categoryName}"
+							itemValue="#{sub.categoryL2Id}"
+							value="#{compExpMB.supplierSubCatList}" var="sub" />
+						<p:ajax event="change" update=":#{p:component('subDiv')"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							listener="#{compExpBB.getSupplierSubDivCatList(compExpCatCode.categoryL2.categoryL2Id,
+							compExpCatCode.categoryL3)}"
+							process="@this" partialSubmit="true" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+					<h:outputText styleClass="mandatory"
+						rendered="#{compExpMB.compExpCatCodeListEmpty}" value="*" />
+					<p:selectOneMenu
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+						label="#{lbl['lbl.sm.projDtls.subCatDiv']}" required="true"
+						value="#{compExpCatCode.categoryL1.categoryL1Id}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{subDiv.categoryName}"
+							itemValue="#{subDiv.categoryL2Id}"
+							value="#{compExpMB.supplierSubDivCatList}" var="subDiv" />
+						<p:ajax event="change" update=":#{p:component('subDiv')"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							listener="#{compExpBB.checkDuplicateCatCode(compExpCatCode)}"
+							process="@this" partialSubmit="true" />
+					</p:selectOneMenu>
+				</p:column -->
 			</p:dataTable>
 		</p:panel>
 		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
