@@ -269,12 +269,40 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
-			<p:dataTable id="compExpCatCodesId" rowKey=""
-				rowIndexVar="index"
-				value="#{compExpMB.compExpCatCodeList}"
-				var="compExpCatCode" widgetVar="compExpCatCodesWV">
+			<p:dataTable id="compExpCatCodesId" rows="10" rowIndexVar="index"
+				value="#{compExpMB.compExpCatCodeList}" var="compExpCatCode"
+				widgetVar="compExpCatCodesWV">
+				<ac:paginator for="compExpCatCodesId" />
+				<p:column style="width:4%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox
+							disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+							value="#{compExpMB.selectedAll}">
+							<p:ajax event="change" listener="#{compExpBB.selectCatCode}"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								process="@this" partialSubmit="true" update=":form" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+						value="#{compExpMB.selected}">
+						<p:ajax event="change" listener="#{compExpBB.selectAllCatCodes}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							process="@this" partialSubmit="true" update=":form" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.mainCat']}">
+					<p:selectOneMenu required="true"
+						label="#{lbl['lbl.sm.catCodes.mainCat']}"
+						id="mainCatCodes#{index}" value="#{compExpCatCode.categoryL1}"
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{main.categoryName}"
+							itemValue="#{main}"
+							value="#{compExpMB.supplierMainCatList}" var="main" />
+					</p:selectOneMenu>
+				</p:column>
 			</p:dataTable>
-
 		</p:panel>
 		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
 		<p:dialog dynamic="true" header="#{lbl['lbl.bpm.choose.file']}"

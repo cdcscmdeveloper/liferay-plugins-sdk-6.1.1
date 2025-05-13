@@ -14,6 +14,9 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
@@ -52,6 +55,13 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private String compExpFilePath;
 	private SmCompExpMasterDoc compExpDoc;
 	private List<SmCompExpCatDraft> compExpCatCodeList;
+	private boolean compExpCatCodeListEmpty;
+	private boolean selectedAll;
+	private boolean selected;
+	private List<SmCompExpCatDraft> selectedCompExpCatCode;
+	private List<PmCategoryL1> supplierMainCatList;
+	private List<PmCategoryL2> supplierSubCatList;
+	private List<PmCategoryL3> supplierSubDivCatList;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -225,6 +235,62 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setCompExpCatCodeList(List<SmCompExpCatDraft> compExpCatCodeList) {
 		this.compExpCatCodeList = compExpCatCodeList;
+	}
+
+	public boolean isCompExpCatCodeListEmpty() {
+		return compExpCatCodeListEmpty;
+	}
+
+	public void setCompExpCatCodeListEmpty(boolean compExpCatCodeListEmpty) {
+		this.compExpCatCodeListEmpty = compExpCatCodeListEmpty;
+	}
+
+	public boolean isSelectedAll() {
+		return selectedAll;
+	}
+
+	public void setSelectedAll(boolean selectedAll) {
+		this.selectedAll = selectedAll;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public List<SmCompExpCatDraft> getSelectedCompExpCatCode() {
+		return selectedCompExpCatCode;
+	}
+
+	public void setSelectedCompExpCatCode(List<SmCompExpCatDraft> selectedCompExpCatCode) {
+		this.selectedCompExpCatCode = selectedCompExpCatCode;
+	}
+
+	public List<PmCategoryL1> getSupplierMainCatList() {
+		return supplierMainCatList;
+	}
+
+	public void setSupplierMainCatList(List<PmCategoryL1> supplierMainCatList) {
+		this.supplierMainCatList = supplierMainCatList;
+	}
+
+	public List<PmCategoryL2> getSupplierSubCatList() {
+		return supplierSubCatList;
+	}
+
+	public void setSupplierSubCatList(List<PmCategoryL2> supplierSubCatList) {
+		this.supplierSubCatList = supplierSubCatList;
+	}
+
+	public List<PmCategoryL3> getSupplierSubDivCatList() {
+		return supplierSubDivCatList;
+	}
+
+	public void setSupplierSubDivCatList(List<PmCategoryL3> supplierSubDivCatList) {
+		this.supplierSubDivCatList = supplierSubDivCatList;
 	}
 
 }

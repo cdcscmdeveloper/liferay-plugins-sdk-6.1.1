@@ -8,11 +8,15 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -97,7 +101,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().setContractEffDateTemp(null);
 		}
-		
+
 		dateChange();
 		initSelectedDraftDoc();
 		initSelectedCatDraft();
@@ -121,9 +125,37 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	private void initSelectedCatDraft() {
+		List<SmCompExpCatDraft> catCodeList = new ArrayList<SmCompExpCatDraft>();
+		this.getManagedBean().setCompExpCatCodeList(catCodeList);
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setCompExpDraft(this.getManagedBean().getSelectedDraft());
-		this.getManagedBean().setCompExpCatCodeList(getCompExpSo().retrieveCompExpCatDraft(reqDTO).getCompExpCatCodeList());
+		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		catCodeList = getCompExpSo().retrieveCompExpCatDraft(reqDTO).getCompExpCatCodeList();
+		if (catCodeList.isEmpty()) {
+			this.getManagedBean().setCompExpCatCodeListEmpty(true);
+		} else {
+			this.getManagedBean().setCompExpCatCodeList(catCodeList);
+			this.getManagedBean().setCompExpCatCodeListEmpty(false);
+		}
+		getSupplierMainCatList();
+	}
+
+	public void selectAllCatCodes() {
+	}
+
+	public void selectCatCode(int index) {
+	}
+
+	public void getSupplierMainCatList() {
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
+		if (resDTO != null) {
+			this.getManagedBean().setSupplierMainCatList(resDTO.getCategoryL1List());
+		} else {
+			this.getManagedBean().setSupplierMainCatList(null);
+		}
 	}
 
 	public void clientTypeChange() {
