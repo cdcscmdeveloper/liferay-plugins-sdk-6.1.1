@@ -461,6 +461,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
 		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
+		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
 		map.put(AuditContractConst.AU_SECTION_PC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PC));
@@ -572,6 +573,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(12, AuditContractConst.AU_SECTION_FNS);
 			tabViews.put(13, AuditContractConst.AU_SECTION_CO);
 			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
+			tabViews.put(15, AuditContractConst.AU_SECTION_DCA);
 		}
 
 		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
