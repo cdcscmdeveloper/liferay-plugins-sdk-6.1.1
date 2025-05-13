@@ -810,10 +810,10 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}"
 								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
-						<td><p:inputText disabled="true"
+						<td><p:inputTextarea disabled="true"
 								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
 								value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}"
-								size="35" /> <ac:iconTooltip
+								cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
 								value="#{lbl['lbl.fl.supp.offer.tooltip']}"
 								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
 					</tr>
@@ -821,10 +821,10 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}"
 								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
-						<td><p:inputText disabled="true"
+						<td><p:inputTextarea disabled="true"
 								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
 								value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
-								size="35" /> <ac:iconTooltip
+								cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
 								value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
 								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
 					</tr>
