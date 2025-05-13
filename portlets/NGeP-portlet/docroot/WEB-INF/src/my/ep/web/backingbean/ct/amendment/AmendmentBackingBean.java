@@ -1596,7 +1596,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);				
 			}
+			
+			// 24333 - Start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
+				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
+				if (ctloa.getGstAmt() == null) {
+					ctloa.setGstAmt(BigDecimal.ZERO);
+				}
+				if (ctloa.getSstAmt() == null) {
+					ctloa.setSstAmt(BigDecimal.ZERO);
+				}
+				ctBackingBean.getManagedBean().setOriginalOverallAmount(
+						ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
 
+			}
+			// 24333 - Start
 			
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
