@@ -607,7 +607,7 @@ public class ViewSuppProfileBackingBean extends
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		String status = null;
 		if (disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist()) {
-			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner ", null,
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", null,
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else if (disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel()) {
 			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null,
