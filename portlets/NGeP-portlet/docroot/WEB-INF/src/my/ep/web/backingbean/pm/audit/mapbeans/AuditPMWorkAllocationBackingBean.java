@@ -111,7 +111,7 @@ public class AuditPMWorkAllocationBackingBean extends AuditPMBackingBeanTemplate
 		}
 
 		auditPMReqDTO.setObjList(objList);
-		managedBean.setOriPoJobTypeRatio(null);
+		managedBean.setBrandNew(false);
 		return auditPMReqDTO;
 	}
 
