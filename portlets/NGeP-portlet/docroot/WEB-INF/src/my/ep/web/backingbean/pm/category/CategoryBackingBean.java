@@ -1779,12 +1779,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			this.getManagedBean().setOldCategoryL3(oldCategoryL3);
 
 			if (resDTO.isSuccessful()) {
-				/************ AUDIT 35509*************/
+				/************ AUDIT 35509 START*************/
 				this.getManagedBean().setAuditUpdatedCategoryL3(resDTO.getCategoryL3());
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_CATEGORY_CODE)) {
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_CODE_CATEGORY);
 				}
-				/************ AUDIT *************/
+				/************ AUDIT 35509 END*************/
 				reset();
 				if (this.getManagedBean().isNewCategory()) {
 					this.getManagedBean().setPmCategoryL3(
