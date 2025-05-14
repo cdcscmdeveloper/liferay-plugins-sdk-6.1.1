@@ -836,6 +836,7 @@ public class ConsolidationReportBackingBean extends
 			}
 			
 			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.getManagedBean().setQt(null);//#38191
 			qtBackingBean.retrieveQuationTenderDetails(scQt.getQtId());
 
 			validateEvaluationReports(SourcingConstants.CONSOLIDATION_TASK);
