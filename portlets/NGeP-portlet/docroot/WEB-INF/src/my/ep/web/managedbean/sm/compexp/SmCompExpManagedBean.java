@@ -56,6 +56,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private SmCompExpMasterDoc compExpDoc;
 	private List<SmCompExpCatDraft> compExpCatCodeList;
 	private boolean compExpCatCodeListEmpty;
+	private boolean catCodeNotComplete;
 	private boolean selectedAll;
 	private boolean selected;
 	private List<SmCompExpCatDraft> selectedCompExpCatCode;
@@ -243,6 +244,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setCompExpCatCodeListEmpty(boolean compExpCatCodeListEmpty) {
 		this.compExpCatCodeListEmpty = compExpCatCodeListEmpty;
+	}
+
+	public boolean isCatCodeNotComplete() {
+		return catCodeNotComplete;
+	}
+
+	public void setCatCodeNotComplete(boolean catCodeNotComplete) {
+		this.catCodeNotComplete = catCodeNotComplete;
 	}
 
 	public boolean isSelectedAll() {

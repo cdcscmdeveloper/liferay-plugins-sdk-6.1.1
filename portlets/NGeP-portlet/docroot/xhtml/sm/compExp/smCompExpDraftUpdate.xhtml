@@ -267,5 +267,118 @@
 				</tr>
 			</table>
 		</div>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
+			toggleable="true">
+			<p:dataTable id="compExpCatCodesId" rows="10" rowIndexVar="index"
+				value="#{compExpMB.compExpCatCodeList}" var="compExpCatCode"
+				widgetVar="compExpCatCodesWV">
+				<ac:paginator for="compExpCatCodesId" />
+				<p:column style="width:2%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox
+							disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+							value="#{compExpMB.selectedAll}">
+							<p:ajax listener="#{compExpBB.selectAllCatCodes}"
+								partialSubmit="true" process="@this"
+								update=":#{p:component('compExpCatCodesId')}" />
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{compExpMB.selected}"
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}">
+						<p:ajax listener="#{compExpBB.selectCatCode(index)}"
+							partialSubmit="true" process="@this"
+							update=":#{p:component('compExpCatCodesId')}" />
+					</p:selectBooleanCheckbox>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+					<h:outputText styleClass="mandatory"
+						rendered="#{compExpMB.compExpCatCodeListEmpty}" value="*" />
+					<p:selectOneMenu
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+						label="#{lbl['lbl.sm.projDtls.mainCat']}" required="true"
+						value="#{compExpCatCode.categoryL1.categoryL1Id}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{main.categoryName}"
+							itemValue="#{main.categoryL1Id}"
+							value="#{compExpMB.supplierMainCatList}" var="main" />
+						<p:ajax event="change" update="@this" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							listener="#{compExpBB.getSupplierSubCatList()}" process="@this"
+							partialSubmit="true" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+					<h:outputText styleClass="mandatory"
+						rendered="#{compExpMB.compExpCatCodeListEmpty}" value="*" />
+					<p:selectOneMenu
+						disabled="#{not compExpMB.compExpCatCodeListEmpty}"
+						label="#{lbl['lbl.sm.projDtls.subCat']}" required="true"
+						value="#{compExpCatCode.categoryL1.categoryL1Id}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems itemLabel="#{sub.categoryName}"
+							itemValue="#{sub.categoryL2Id}"
+							value="#{compExpMB.supplierSubCatList}" var="sub" />
+						<p:ajax event="change" update="@this" onstart="blockWidget.show()"
+							oncomplete="blockWidget.hide()"
+							listener="#{compExpBB.getSupplierSubDivCatList()}"
+							process="@this" partialSubmit="true" />
+					</p:selectOneMenu>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton action="#{compExpBB.addCompExpCat()}"
+					disabled="#{compExpMB.catCodeNotComplete}"
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+					partialSubmit="true" process="@this"
+					rendered="#{compExpMB.compExpCatCodeListEmpty}" update=":form"
+					value="#{lbl['lbl.sm.button.add']}">
+				</p:commandButton>
+				<p:commandButton action="#{compExpBB.delCompExpCat()}"
+					disabled="#{empty compExpMB.selectedCompExpCatCode}"
+					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
+					partialSubmit="true" process="@this"
+					rendered="#{compExpMB.compExpCatCodeListEmpty}" update=":form"
+					value="#{lbl['lbl.sm.button.delete']}">
+				</p:commandButton>
+			</div>
+		</p:panel>
+		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
+		<p:dialog dynamic="true" header="#{lbl['lbl.bpm.choose.file']}"
+			height="200" id="compExpSuppDocUploadDialogId" modal="true"
+			onShow="singleUploadListener(uploadWV);"
+			onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;"
+			styleClass="pop_up_top" resizable="false"
+			widgetVar="compExpSuppDocUploadDialogWV" width="700px">
+			<p:fileUpload allowTypes="/(\.|\/)(pdf)$/"
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				fileUploadListener="#{compExpBB.handleSupDocFileAttachment}"
+				invalidFileMessage="#{lbl['lbl.sm.comp.exp.update.supp.doc.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+				label="#{lbl['lbl.btn.addfile']}" multiple="true"
+				showButtons="false"
+				sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+				update=":#{p:component('compExpSuppDocListPanelId')}"
+				uploadLabel="#{lbl['lbl.btn.upload']}" widgetVar="uploadWV" />
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.update.supp.doc.instruction']}"
+				escape="false" />
+		</p:dialog>
+		<p:confirmDialog closable="true"
+			header="#{lbl['lbl.sm.upload.delete.confirm.header']}"
+			id="confirmDelSuppDocDialogId"
+			message="#{lbl['lbl.sm.upload.delete.message']}" severity="alert"
+			widgetVar="confirmDelSuppDocDialogWV">
+			<div align="right">
+				<p:commandButton action="#{compExpBB.delSuppDocFileAttachment}"
+					onclick="confirmDelSuppDocDialogWV.hide();"
+					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+					partialSubmit="true" process="@this"
+					update=":#{p:component('compExpSuppDocListPanelId')}"
+					value="#{lbl['lbl.btn.delete']}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					onclick="confirmDelSuppDocDialogWV.hide();" />
+			</div>
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>

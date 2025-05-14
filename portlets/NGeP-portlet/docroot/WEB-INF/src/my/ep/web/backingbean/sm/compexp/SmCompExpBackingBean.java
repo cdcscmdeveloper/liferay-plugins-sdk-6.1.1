@@ -16,6 +16,9 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.compexp.SmCompExpReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
@@ -131,6 +134,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
 		catCodeList = getCompExpSo().retrieveCompExpCatDraft(reqDTO).getCompExpCatCodeList();
 		if (catCodeList.isEmpty()) {
+			addCompExpCat();
 			this.getManagedBean().setCompExpCatCodeListEmpty(true);
 		} else {
 			this.getManagedBean().setCompExpCatCodeList(catCodeList);
@@ -145,10 +149,23 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void selectCatCode(int index) {
 	}
 
+	public void addCompExpCat() {
+		SmCompExpCatDraft newCat = new SmCompExpCatDraft();
+		newCat.setCategoryL1(new PmCategoryL1());
+		newCat.setCategoryL2(new PmCategoryL2());
+		newCat.setCategoryL3(new PmCategoryL3());
+		this.getManagedBean().getCompExpCatCodeList().add(newCat);
+		this.getManagedBean().setCatCodeNotComplete(true);
+	}
+
+	public void delCompExpCat() {
+	}
+
 	public void getSupplierMainCatList() {
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
+		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 		if (resDTO != null) {
@@ -156,6 +173,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		} else {
 			this.getManagedBean().setSupplierMainCatList(null);
 		}
+	}
+
+	public void getSupplierSubCatList() {
+		
+	}
+
+	public void getSupplierSubDivCatList() {
+		
 	}
 
 	public void clientTypeChange() {
