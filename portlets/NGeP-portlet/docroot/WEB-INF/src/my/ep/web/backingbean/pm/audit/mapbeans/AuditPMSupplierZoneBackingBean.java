@@ -124,13 +124,13 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
 				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
 				detailObj(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID, null, st.getPmState().getStateCode(),
-						AuditConst.PM_AUD_ACTION_TYPE_UPD);
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 			if (st.getPmState().getStateName() != null && st.isBrandNew()) {
 				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
 				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
 				detailObj(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID, null, st.getPmState().getStateName(),
-						AuditConst.PM_AUD_ACTION_TYPE_UPD);
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 		}
 		managedBeans.setZoneStateListNewAdded(new ArrayList<PmZoneState>());
