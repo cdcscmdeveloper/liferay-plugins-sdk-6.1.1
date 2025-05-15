@@ -23,10 +23,10 @@
 		</p:blockUI>
 		
 		<p:outputPanel id="supplierProfilePanelId">
-		
+		#{viewSmApplBackingBean.rePopulateApplFacilitiesList()} <!-- #34209 -->
 		<!-- Enhancement 26238 - START -->
 		<p:outputPanel style="color:red;font-weight:bold;" rendered="#{!viewSmApplBackingBean.managedBean.supplierUser
-			and viewApplHistoryBackingBean.managedBean.disciplinaryAction}">
+			and !viewApplHistoryBackingBean.managedBean.noDisciplinary}">
 			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.supplier.disciplinary.action.msg']}" escape="false"/><p:spacer width="2"/>
 			<h:outputText styleClass="warning" value="#{lbl['lbl.sm.disciplinary.click']}" escape="false"/>
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -395,6 +395,15 @@
 					viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileCatalogueInfo.xhtml" />
 					</c:if>
+					<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+					<c:if
+						test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5 and 
+						viewSmApplBackingBean.managedBean.smSupplier.businessType ne SupplierMgmtConst.smSupplierBusinessTypeIndividual and
+						viewSmApplBackingBean.managedBean.auditAccess}">
+						<ui:include
+							src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step13ViewAuditTrailInfo.xhtml" />
+					</c:if>
+					<ui:remove>#28895_35501 End</ui:remove>
 				</ac:smPanel>
 				</c:when>	
 				<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.SUPP_TYPE_GOVT_TO_GOVT}">
@@ -412,6 +421,14 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
 						<ui:include src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step5ViewProfileCatalogueInfo.xhtml" />
 					</c:if>
+					<ui:remove>#28895_35501 Start - AUDIT TRAIL SM</ui:remove>
+					<c:if
+						test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4 and
+						viewSmApplBackingBean.managedBean.auditAccess}">
+						<ui:include
+							src="/xhtml/sm/revisionSmApplView/viewSupplierProfile/step13ViewAuditTrailInfo.xhtml" />
+					</c:if>
+					<ui:remove>#28895_35501 End</ui:remove>
 				</ac:smPanel>
 				</c:when>
 				

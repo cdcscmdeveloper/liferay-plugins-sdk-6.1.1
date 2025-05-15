@@ -95,7 +95,9 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//start - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
+			log.error("Error : " + e.getMessage());
+			//stop - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
@@ -179,7 +181,9 @@ BaseBackingBean<DpTrackingDiaryManagedBean> {
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//start - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
+				log.error("Error : " + e.getMessage());
+				//stop - Sonarqube DP Vulnerability Minor Ruzaimah [22/4/2024]
 			}
 			return resDTO.getResultBean();
 

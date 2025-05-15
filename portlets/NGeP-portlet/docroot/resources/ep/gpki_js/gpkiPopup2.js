@@ -5,14 +5,15 @@
  */
 var hostOTP = "";
 var hostBroker = "";
+var gpkiNonce;
 var gpki = {};
+var gpkiRequestTime = 0;
 (function () {
   var nric = "";
   var email = "";
   var modeUsed = "";
   var appCode = "";
   var agencyId = "";
-  var nonce = "";
   var signType = "";
   var saluran = "";
   var text = "";
@@ -32,8 +33,13 @@ var gpki = {};
     }
     hostOTP = args.hostOTP;
     hostBroker = args.hostBroker;
+    gpkiNonce = args.gpkiNonce;
+    gpkiRequestTime = Number(args.nonceTime);
+    if (typeof gpkiRequestTime !== "number" || isNaN(gpkiRequestTime)) {
+    	gpkiRequestTime = 0;
+    }
     this.requestMedium();
-  }
+  };
 
   this.requestMedium = function () {
     request_mediumList(nric, appCode, modeUsed);
@@ -43,17 +49,16 @@ var gpki = {};
     request_otp(nric, agencyId, nric, modeUsed, otpExp, saluran, email);
   };
 
-  this.setNonce = function (n) { nonce = n; };
-
   this.signToken = function (a) {
     gpkiBlockWidget.show();
     text = a[0];
+    data = encodeURIComponent(Gpki.hash(a[0]));
     const pin = a[1];
     if (pin === "") {
       this.mandatoryError(a[2]);
       return;
     }
-    sign("token", nric, pin, text, "false", "data");
+    sign("token", nric, pin, data, "false", "data");
   };
 
   this.signRoam = function (a) {
@@ -69,13 +74,21 @@ var gpki = {};
       this.mandatoryError(a[4]);
       return;
     }
+	// check if undefined, null, NaN, empty string, etc.
+	if (!gpkiNonce) {
+	  errorAction([{ name: 'gpkiNonceNull', value: 'invalid nonce'}]);
+	  gpkiBlockWidget.hide();
+	  return;
+	}
     const data = encodeURIComponent(Gpki.hash(text));
-    sign_roaming(nric, nonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
+    sign_roaming(nric, gpkiNonce, otpCode, data, pin, agencyId, modeUsed, signType, 0);
   };
 
   this.otpExp = function () { return otpExp; };
   
   this.textBeforeSign = function () { return text; };
+
+  this.nric = function () { return nric; };
 
   this.mandatoryError = function (f) {
     errorAction([{ name: 'field', value: f }]);
@@ -92,35 +105,36 @@ function parseResultMedium(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       const response = obj.response;
-      var mediumTypeId = 0;
+      var mediumTypeId;
       if (obj.status) {
         var mediumArr = jQuery.parseJSON(response);
-        var mediumTypeId = mediumArr[0].id;
-        var id = -1;
+        mediumTypeId = mediumArr[0].id;
+        var id;
         //pick roaming otp over token
         for (var i = 0; i < mediumArr.length; i++) {
           id = parseInt(mediumArr[i].id, 10);
           if (id === 5) {
             mediumTypeId = 5;
             break;
-          } else if (id === 4 && mediumTypeId != 4) {
-            id = 4;
+          } else if (id === 4 && mediumTypeId !== 4) {
+        	mediumTypeId = 4;
           }
         }
         setMediumType([{ name: 'message', value: obj.message },
                        { name: 'mediumTypeId', value: mediumTypeId },
-                       { name: 'response', value: response }]);
+                       { name: 'response', value: msg },
+                       { name: 'js_nric', value: gpki.nric()} ]);
         if (mediumTypeId === 5) {
           gpki.requestOtp();
-        } else if (mediumTypeId != 4) {
+        } else if (mediumTypeId !== 4) {
           gpki_dlg.hide();
           gpki_dlg2.show();
-          showError(obj.status, "Medium Token atau Roaming OTP sahaja");
+          showError(obj.status, "Medium Token atau Roaming OTP sahaja", msg);
         }
       } else {
         gpki_dlg.hide();
         gpki_dlg2.show();
-        showError(obj.status, obj.message);
+        showError(obj.status, obj.message, msg);
       }
     });
 }
@@ -134,12 +148,14 @@ function parseTxResultRequestOTP(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
-        disableOtpTimeout();
+    	gpkiRequestTime = Date.now();
+    	disableOtpTimeout();
         const response = jQuery.parseJSON(obj.response);
-        gpki.setNonce(response.nonce);
-        alert("OTP code: " + response.otp);	//alert - DO NOT MERGE TO PROD!
+        gpkiNonce = response.nonce;
+        saveNonce([ { name: 'gpkiNonce', value: gpkiNonce }]);
       } else {
-        showError(obj.status, obj.message)
+    	disableOtpTimeout();
+        showError(obj.status, obj.message, msg);
       }
     });
 }
@@ -156,9 +172,10 @@ function parseSignResult(msg) {
         postSignOTP([ { name: 'message', value: obj.message },
                       { name: 'subjectDN', value: obj.subject_dn },
                       { name: 'textBeforeSign', value: gpki.textBeforeSign() },
-                      { name: 'signedText', value: obj.signed_data }]);
+                      { name: 'signedText', value: obj.signed_data },
+                      { name: 'response', value: msg }]);
       } else {
-        showError(obj.status_code, obj.status_message);
+        showError(obj.status_code, obj.status_message, msg);
       }
       gpkiBlockWidget.hide();
     });
@@ -173,19 +190,39 @@ function parseTxResultSigningRoaming(msg) {
     function () {
       const obj = jQuery.parseJSON(msg);
       if (obj.status) {
+    	clearTimeout(otpTimeoutId);
         const response = jQuery.parseJSON(obj.response);
         postSignOTP([{ name: 'message', value: obj.message },
 			         { name: 'subjectDN', value: response.subject_dn },
 			         { name: 'textBeforeSign', value: gpki.textBeforeSign() },
-			         { name: 'signedText', value: response.signed_data }]);
+			         { name: 'signedText', value: response.signed_data },
+			         { name: 'response', value: msg }]);
       } else {
-        showError(obj.status, obj.message);
+        showError(obj.status, obj.message, msg);
       }
       gpkiBlockWidget.hide();
     });
 }
 
-function showError(code, msg) {
+function showError(code, msg, response) {
   errorAction([{ name: 'statusCode', value: code },
-               { name: 'statusMsg', value: msg }]);
+               { name: 'statusMsg', value: msg },
+               { name: 'response', value: response }]);
+}
+
+/**
+ * Get timeout in ms, depending on when OTP was last requested
+ * @returns {Number}
+ */
+function getTimeoutMillis(){
+  const DEFAULT_TIMEOUT = 120 * 1000;
+  try {
+    const timeout = gpki.otpExp() * 1000;
+    const diff = Date.now() - gpkiRequestTime;
+    if (isNaN(timeout) || isNaN(diff) || diff < 0 || diff > timeout) {
+      return DEFAULT_TIMEOUT;
+    }
+	return Math.max(timeout - diff, 0);
+  } catch (e){ }
+  return DEFAULT_TIMEOUT;
 }

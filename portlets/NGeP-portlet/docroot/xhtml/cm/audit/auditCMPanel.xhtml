@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<div align="right" style="width: 100%">
+						<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
+							<p:fileDownload
+								value="#{auditCodificationManagementReportBackingBean.generatePDFByDocType()}" />
+						</p:commandLink>
+						&#160;
+						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
+							<p:fileDownload
+								value="#{auditCodificationManagementReportBackingBean.generateExcelByDocType()}" />
+						</p:commandLink>
+						&#160;
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div align="left" style="width: 100%">
+						<p:tabView id="tabCodeType"
+							activeIndex="#{auditCodificationManagementReportBackingBean.managedBean.activeIndex}">
+
+							<p:tab title="#{lbl['lbl.cm.item.code']}">
+								<p:dataTable id="searchCIID" var="obj" rows="10" width="100%"
+									value="#{auditCodificationManagementReportBackingBean.searchCI}"
+									rowIndexVar="index" lazy="true">
+									<ac:paginator for="searchCIId"></ac:paginator>
+									<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
+										style="white-space: normal!important;" width="5%">
+										<h:outputText value="#{obj.createdDate}">
+											<f:convertDateTime
+												pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
+										style="white-space: normal!important;" width="5%">
+										<h:outputText rendered="#{obj.actionType == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.actionType != null}"
+											value="#{obj.actionType}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
+										style="white-space: normal!important;" width="5%">
+										<h:outputText value="#{obj.actionBy}" escape="false" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
+										style="white-space: normal!important;" width="10%">
+										<h:outputText value="#{obj.orgName}" escape="false" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.role']}"
+										width="5%">
+										<h:outputText value="#{obj.roleName}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.docType']}"
+										width="5%">
+										<h:outputText value="#{obj.docType}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
+										width="10%">
+										<h:outputText value="#{obj.docNo}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
+										style="white-space: pre-line;" width="15%">
+										<h:outputText rendered="#{obj.extAttribute == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.extAttribute != null}"
+											value="#{obj.extAttribute}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
+										style="white-space: pre-line;" width="15%">
+										<h:outputText rendered="#{obj.oldValue == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.oldValue != null}"
+											value="#{obj.oldValue}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
+										style="white-space: pre-line;" width="15%">
+										<h:outputText rendered="#{obj.newValue == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.newValue != null}"
+											value="#{obj.newValue}" />
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+
+							<p:tab title="#{lbl['lbl.cm.extension.code']}">
+								<p:dataTable id="searchCEID" var="obj" rows="10" width="100%"
+									value="#{auditCodificationManagementReportBackingBean.searchCE}"
+									rowIndexVar="index" lazy="true">
+									<ac:paginator for="searchCEId"></ac:paginator>
+									<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
+										style="white-space: normal!important;" width="5%">
+										<h:outputText value="#{obj.createdDate}">
+											<f:convertDateTime
+												pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.action.type']}"
+										style="white-space: normal!important;" width="5%">
+										<h:outputText rendered="#{obj.actionType == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.actionType != null}"
+											value="#{obj.actionType}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.action.by']}"
+										style="white-space: normal!important;" width="5%">
+										<h:outputText value="#{obj.actionBy}" escape="false" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.org.name']}"
+										style="white-space: normal!important;" width="10%">
+										<h:outputText value="#{obj.orgName}" escape="false" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.role']}"
+										width="5%">
+										<h:outputText value="#{obj.roleName}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.docType']}"
+										width="5%">
+										<h:outputText value="#{obj.docType}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.docNo']}"
+										width="10%">
+										<h:outputText value="#{obj.docNo}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.fieldName']}"
+										style="white-space: pre-line;" width="15%">
+										<h:outputText rendered="#{obj.extAttribute == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.extAttribute != null}"
+											value="#{obj.extAttribute}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
+										style="white-space: pre-line;" width="15%">
+										<h:outputText rendered="#{obj.oldValue == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.oldValue != null}"
+											value="#{obj.oldValue}" />
+									</p:column>
+									<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
+										style="white-space: pre-line;" width="15%">
+										<h:outputText rendered="#{obj.newValue == null}"
+											value="#{lbl['lbl.audit.no.available']}" />
+										<h:outputText rendered="#{obj.newValue != null}"
+											value="#{obj.newValue}" />
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+
+						</p:tabView>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

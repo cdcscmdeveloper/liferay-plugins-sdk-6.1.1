@@ -45,8 +45,8 @@
 						<p:selectOneRadio value="#{flDocumentBackingBean.managedBean.searchFunctionType}" 
 							rendered="#{flDocumentBackingBean.showFunctionType()}" >
 							<f:selectItems value="#{flDocumentBackingBean.getFunctionType()}" />
-							<p:ajax event="change" update=":form" />
-						</p:selectOneRadio>
+							<p:ajax event="change" update=":form" listener="#{flDocumentBackingBean.resetSearchResult}" />
+						</p:selectOneRadio><!-- #36386 - Reset Search Result  -->
 					</td>
 				</tr>
 			</table>

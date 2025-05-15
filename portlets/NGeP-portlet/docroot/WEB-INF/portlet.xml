@@ -5950,7 +5950,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pm/notify/prerenderPmNotify.xhtml
+				/xhtml/pm/notify/notify.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -11116,6 +11116,40 @@
 		<portlet-info>
 			<title>MyGPKI POC</title>
 			<short-title>MyGPKI</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>testSpki</portlet-name>
+		<display-name>Test SPKI</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/testSpki/testSpki.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Test SPKI</title>
+			<short-title>Test SPKI</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
