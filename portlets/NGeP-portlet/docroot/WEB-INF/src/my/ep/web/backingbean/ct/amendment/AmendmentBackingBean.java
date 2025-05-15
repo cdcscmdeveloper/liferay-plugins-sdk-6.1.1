@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,6 +29,7 @@ import java.util.Set;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -526,11 +528,32 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractReqDTO ctReqDTO = null;
 		ContractResDTO resDTO = null;
-		try{
+		try {
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
+			//#25956 - Start (view Contract Amendment url from notification)
+			String contractVerId = originalServletRequest.getParameter(ContractConst.PARAMETER_ID);
+			
+			// #25956 - Start (view Contract Amendment url from notification)
+			if (contractVerId != null) {
+				ctReqDTO = new ContractReqDTO();
+				ctReqDTO.setContractVerId(Long.parseLong(contractVerId));
+				ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+				ctReqDTO.setUpdateAction(false);
+				ctReqDTO.setViewOnly(true);
+				getManagedBean().setBackToNtf("notifications"); // 25956
+				getManagedBean().setViewOnly(true);
+				getManagedBean().setSelectedTabIndex(0);
 
+				setAmendmentContractVer(ctReqDTO);
+				ctBackingBean.getManagedBean().setViewContract(true); // 25956
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true); // 25956
+				ConstructTabSideMenu();
+				getManagedBean().setTaskId(taskId);
+				return;
+			}
+			// #25956 - End (view Contract Amendment url from notification)
 			if (taskId == null) {
 				ConstructTabSideMenu();
 
@@ -571,6 +594,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setSelectedTabIndex(0);
 			CTContractAmendmentDataType dataType =  super.getBpmTaskDetails(CTContractAmendmentDataType.class, null);		
 
+			//#25956 - Start
+			/* re-Setting Cancel button*/
+			if (this.getManagedBean().getOutComes()!= null) {
+				String[] str_array = this.getManagedBean().getOutComes();
+				List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+				
+				if(list.contains(BpmOutcomeConst.BPM_CANCEL)) {
+					list.remove(BpmOutcomeConst.BPM_CANCEL);
+					list.add(BpmOutcomeConst.BPM_CANCEL);
+					str_array = list.toArray(new String[0]);
+					this.getManagedBean().setOutComes(null);
+					this.getManagedBean().setOutComes(str_array);
+				}
+			}
+			//#25956 - End
+			
 			/* Setting save button as per requirement*/
 			String[] outcome = new String[getManagedBean().getOutComes().length];
 			int i = 0; 
@@ -611,6 +650,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setPrepareLOA(false);
 			getManagedBean().setDecisionPbQcLOA(false);
 			getManagedBean().setSignOffDecision(false);
+			
+//			getManagedBean().setViewOnly(false); /*#25956 notification setting*/
 
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class); 
 			if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -709,9 +750,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to navigate to contract maintenance screen.
 	 * 
 	 * @return the navigate URL 
+	 * @throws IOException
+	 * //#25956 
 	 */
-	public String backAction() {
-		this.getManagedBean().setSecretaryList(null);
+	public String backAction() throws IOException {
+		
+		// 25956 - Start ( Back to notification pages )
+		if (getManagedBean().getBackToNtf() != null) {
+			getManagedBean().setBackToNtf("");
+			getManagedBean().setViewOnly(false);
+			ctBackingBean.getManagedBean().setViewContract(false);
+			ctBackingBean.getManagedBean().setDisableAmendDetails(false);
+
+			String commonUrl = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_APPLICATION_URL);
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(commonUrl + "notifications");
+
+			return null;
+		}
+		// 25956 - End ( Back to notification pages )
 		return CONTRACT_MAINT_PAGE;
 	}
 
@@ -1204,7 +1261,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			//#29403 end
+			//#29403 end			
+			
+			// #25956 start
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(
+							CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(
+									CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME) || getManagedBean()
+							.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME))) {
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+			}
+			// #25956 end
 			
 		} finally {
 			contractAmendmentSO = null;
@@ -1243,7 +1312,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if(!ctBackingBean.getManagedBean().getContractVer().getCtContractValue().isPid()){
 				ctBackingBean.getManagedBean().getContractVer().setCtPidReasons(null);
 			}
-			validateContractAmendment(outcome);
+			//#25956 - Start			
+			if (!isCancelOrRejectProcess(outcome)) {
+				validateContractAmendment(outcome);
+			}
+			//#25956 - End
 
 			// Generate Supplier Acknowledgement Receipt
 			if (getManagedBean().getTaskName() != null 
@@ -1445,6 +1518,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				ctBackingBean.scheduleProgressiveDate();
 			}
+			//#25956 - Start
+			getContractAdminlist();
+			//#25956 - End
+
 			//26753 - start
 			if(ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()) 
 					|| ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId())) { //#26688
@@ -1464,6 +1541,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setDeleteAgencyMap(ctBackingBean.getManagedBean().getDeleteAgencyMap());
 			reqDTO.setUpdateZoneMap(ctBackingBean.getManagedBean().getUpdateZoneMap());
 			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
+			reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist()); //#25956
 
 			if (getManagedBean().getPmDigiSign() != null) {
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
@@ -1531,13 +1609,30 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 					}
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					messageId = MessageConst.INFO_700008;
+					//#25956 - Start
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+						messageId = MessageConst.INFO_700082;					 
+						params[0] =  this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo();										
+					} else {
+						messageId = MessageConst.INFO_700118;
+						params[0] =  this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo();																							   
+					}
+					//#25956 - End
 				} else if( outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+					//#25956 - Start
 					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 						messageId = MessageConst.INFO_700001;
+					} else if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME)){
+						messageId = MessageConst.INFO_700120;
+						params[0] = this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo();
+					} else if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME)){
+						messageId = MessageConst.INFO_700121;
+						params[0] =  this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo();
 					} else {
 						messageId = MessageConst.INFO_700011;
 					}
+					//#25956 - End
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					if (getManagedBean().getTaskName() == null
 							|| (getManagedBean().getTaskName() != null
@@ -1575,11 +1670,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						}
 					}
 				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					messageId = MessageConst.INFO_700010;
+					// #25956 start
+					if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+						messageId = MessageConst.INFO_700119;
+						params[0] = this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo();
+					} else {
+						messageId = MessageConst.INFO_700083;
+						params[0] = this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo();
+					}
+					// #25956 - End
 				}
 
 				//SIR#14189: Replace the doc type in acknowledge message for Supplemental Contract Letter process
-				if (getManagedBean().getTaskName() != null
+				if (getManagedBean().getTaskName() != null && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) && !outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)//#25956
 						&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
 								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)
 								|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)
@@ -1635,8 +1739,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					&& (supplierRemark == null || supplierRemark.length() == 0)) {
 				setTabValue("AD");
 				throw new EpException(MessageConst.ERROR_100022, 
-						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark", 
-								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+						new String[]{ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", 
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())}); //#25956
 			}
 		}/*Remark validation end*/
 
@@ -2013,42 +2117,60 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						new String[]{ResourceBundleUtils.getMessage("lbl.ct.amendment.desc", 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
-			// Start Fix - #33952
-			if ((ctBackingBean.getManagedBean().getContractVer()
-					.getCtAmendment().isContractExtend() && ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
-					&& ctBackingBean.getManagedBean().isContractExpired()
-					&& ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
-									.getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_SIGN_OFF.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_LOA_SUBMISSION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_VERIFICATION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_LOA_APPROVAL.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_LOA_REVISION.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							|| (ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							//related to #25956 
-							//|| (ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-							//|| (ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId()))
-					)
-					) 
-			{
-				setTabValue("AD");
-				throw new EpException(MessageConst.ERROR_750075);
-			} else {
-			// Validation for amendment extension period for expired contract
-			//28848
-			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() 
-					&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0){
-			   setTabValue("AD");
-			   throw new EpException(MessageConst.ERROR_750048);
-			  }
+			// Start Fix - #33952, #25956
+			if ((ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend() && ctBackingBean
+					.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0)
+					&& ctBackingBean.getManagedBean().isContractExpired()) {
+
+				if ((ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))
+						|| (ContractStatusConst.FA_PENDING_MEETING_CONFIRMATION_REVISION.equals(ctBackingBean
+								.getManagedBean().getContractVer().getStatus().getStatusId()))
+						|| (ContractStatusConst.FA_PENDING_MEETING_DECISION.equals(ctBackingBean.getManagedBean()
+								.getContractVer().getStatus().getStatusId()))
+						|| (ContractStatusConst.FA_PENDING_MEETING_DECISION_REVISION.equals(ctBackingBean
+								.getManagedBean().getContractVer().getStatus().getStatusId()) 
+						|| (ContractStatusConst.FA_PENDING_LOA_SUBMISSION.equals(ctBackingBean.
+								getManagedBean().getContractVer().getStatus().getStatusId()) 
+						|| (ContractStatusConst.FA_PENDING_LOA_REVISION.equals(ctBackingBean.
+								getManagedBean().getContractVer().getStatus().getStatusId()) 
+						|| (ContractStatusConst.FA_PENDING_MOF_MEETING_DECISION.equals(ctBackingBean.
+								getManagedBean().getContractVer().getStatus().getStatusId()) 
+						|| (ContractStatusConst.FA_PENDING_VERIFICATION.equals(ctBackingBean.
+								getManagedBean().getContractVer().getStatus().getStatusId()))))))) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_750076, new String[] { this.ctBackingBean.getManagedBean()
+							.getContractVer().getCtContract().getContractNo() });
+				} else if ((ContractStatusConst.FA_PENDING_LOA_APPROVAL.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))
+						|| (ContractStatusConst.FA_PENDING_LOA_REVISION_APPROVAL.equals(ctBackingBean.getManagedBean()
+								.getContractVer().getStatus().getStatusId()))) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_750077, new String[] { this.ctBackingBean.getManagedBean()
+							.getContractVer().getCtContract().getContractNo() });
+				} else if ((ContractStatusConst.FA_PENDING_LOA_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_750078, new String[] { this.ctBackingBean.getManagedBean()
+							.getContractVer().getCtContract().getContractNo() });
+				} else if ((ContractStatusConst.FA_PENDING_SIGN_OFF.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))
+						|| (ContractStatusConst.FA_PENDING_CHAIRPERSON_SIGN_OFF.equals(ctBackingBean.getManagedBean()
+								.getContractVer().getStatus().getStatusId()))) {
+					setTabValue("AD");
+					throw new EpException(MessageConst.ERROR_750079, new String[] { this.ctBackingBean.getManagedBean()
+							.getContractVer().getCtContract().getContractNo() });
+				} else {
+					// Validation for amendment extension period for expired contract
+					// 28848
+					if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
+							&& ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() == 0) {
+						setTabValue("AD");
+						throw new EpException(MessageConst.ERROR_750048);
+					}
+				}
 			}
-			// End Fix - #33952
+			// End Fix - #33952, #25956
 
 			// Validation for amendment effective date
 			if (!ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()
@@ -5791,6 +5913,47 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 			} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
 					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+				// #25956 - Start
+				if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+					userRole = RoleCode.DESK_OFFICER.value();
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_DESK_OFFICER";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+				// #25956 - End
+				//#25956 - Start - Fixing for _Secretary Role		
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.QCA_SECRETARY.value())) {
+						userRole = RoleCode.QCA_SECRETARY.value();
+					} else if (getFacesScopes().hasRoleUser(RoleCode.QCB_SECRETARY.value())) {
+						userRole = RoleCode.QCB_SECRETARY.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+					
+				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD) 
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
+						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
+					if (getFacesScopes().hasRoleUser(RoleCode.PBB_SECRETARY.value())) {
+						userRole = RoleCode.PBB_SECRETARY.value();
+					} else if (getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) {
+						userRole = RoleCode.PPB_SECRETARY.value();
+					}
+				} else {
+					String roleCode = getManagedBean().getCommitteeType() + "_SECRETARY";
+					if (getFacesScopes().hasRoleUser(roleCode)) {
+						userRole = roleCode;
+					}
+				}
+				//#25956 - End - Fixing for _Secretary Role	
+					
 				if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
 						|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
 					if (getFacesScopes().hasRoleUser(RoleCode.FPB_SECRETARY.value()) || getFacesScopes().hasRoleUser(RoleCode.PPB_SECRETARY.value())) { //#29740
@@ -6232,7 +6395,49 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		// #30879 - End
-				
+		
+	/**
+	 * The method used to retrieve the contract administrator list.
+	 * This method will get the all contract administrators with 
+	 * contract owner organization profile when the loa's administrator 
+	 * is invalid.
+	 */
+	private void getContractAdminlist() {
+		IUserSO userSO = null;
+		UserReqDTO userReqDTO = null;
+		try{
+			if (getManagedBean().getContractAdminlist() == null) {
+				getManagedBean().setContractAdminlist(new ArrayList<PmUser>());
+
+				String roleCode = (ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.CONTRACT_TYPE_MINISTRY)) 
+						? RoleCode.MIN_CONTRACT_ADMIN.value() 
+								: RoleCode.BPK_CCA.value();
+
+						CtContractVer ctContractVer =
+								(ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer() != null)
+								? ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer()
+										:   ctBackingBean.getManagedBean().getContractVer().getCtContract().getLatestContractVer();				
+								CtActor ctActor = retrieveContractActor(
+										ctContractVer.getContractVerId(),
+										ctContractVer.getDocType(),
+										roleCode);
+
+								if (ctActor != null) {
+									getManagedBean().getContractAdminlist().add(ctActor.getUser());
+								} else {
+									userReqDTO = new UserReqDTO();	      	  		
+									userReqDTO.setRoleCode(roleCode);
+									userReqDTO.setOrgProfileId(ctBackingBean.getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+									userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IUserSO.class);
+									getManagedBean().setContractAdminlist(userSO.retrieveUserListByRole(userReqDTO).getUserList());			
+								}
+			}
+		} finally {
+			userSO = null;
+		}	
+	}
+			
 	//26753 - start
 				
 	//#29403 start
@@ -6699,6 +6904,73 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	//26753 - end
 	
+	// #25956 - Start
+	/**
+	 * The method used to authenticate user during reject for approval the
+	 * contract amendment. This method will invoke a confirmation dialog for
+	 * user authentication.
+	 * 
+	 * @param outcome
+	 *            the user action on this contract
+	 * @return result of the saveContractAmendment process
+	 * @throws Exception
+	 *             if an exception occurred
+	 * @see Exception
+	 */
+	public String preRejectContractAmendment(String outcome) throws Exception {
+		if ((BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+
+			setSecretary();
+			validateRemarkCancel(outcome);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+			sb.append(ContractConst.SEPRATE_LINE);
+			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+			} else {
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				sb.append(ContractConst.SEPRATE_LINE);
+				sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			}
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(newOverallContractAmount());
+			sb.append(ContractConst.SEPRATE_LINE);
+			sb.append(outcome);
+			sb.append(new FacesScopes().getUserSessionBean().getIdentificationNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+			
+		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome) && isSupplierRole()
+				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+			validateRemarkCancel(outcome);
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			
+			if (hasGovtSellerRole()) {
+				getManagedBean().setTextBeforeSign(prepareSupplierOriginalText());
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} else {
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			}
+			return null;
+			
+		} else {
+			return saveContractAmendment(outcome);
+		}
+	}
+	// #25956 - End
+	
 	//#25956 - Start
 	/**
 	 * The method used for validating Remark Cancel Button.
@@ -6724,8 +6996,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (message != null
 				&& ((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (supplierRemark == null || supplierRemark.length() == 0))) {
 			setTabValue("AD");
-			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
+			throw new EpException(message, new String[] { ResourceBundleUtils.getMessage("lbl.ct.remark.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()) }); //#25956
 		}
 		// #26688 end
 	}
@@ -6933,4 +7205,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		});
 	}
 	// End Fix - #34110 , #34950
+	
+	// #25956 - Start
+	/**
+	 * The method used to check this process is cancellation.
+	 * 
+	 * @return true, if is cancellation process. false, if is not cancellation
+	 *         process.
+	 */
+	public boolean isCancelOrRejectProcess(String action) {
+		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action
+				.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))
+				|| (ContractStatusConst.FA_PENDING_REJECTION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))
+				|| (ContractStatusConst.FA_PENDING_CANCELLATION_ACKNOWLEDGEMENT.equals(ctBackingBean.getManagedBean()
+						.getContractVer().getStatus().getStatusId()))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// #25956 - Start
 }
