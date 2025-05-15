@@ -216,16 +216,18 @@
 							  </p:menuitem>
 					 		 
 					 		<p:menuitem id="menuItemId4" value="#{(data.agStatus == 1) ? lbl['lbl.ct.amendment.without.supplement'] : lbl['lbl.ct.fulfilment.details.update']}"  icon="ui-icon-update" 
-					 		      rendered="#{(contractDetailsBackingBean.isContractAdmin() 
+					 		      rendered="#{contractDetailsBackingBean.isContractAdmin() 
 					 		      			  and contractDetailsBackingBean.isSelectedCtAdmin(data.assignedCtAdminId,data.assignedCtAdminFlag)
 					 		      			  and data.ctStatus == 1
 					 		      			  and data.ctContract.recordStatusFlg==1 and !data.pendingFinalistAgreement
 					 		      			  and !contractDetailsBackingBean.managedBean.trackingDiarySearch
-					 		      			  and !data.allowAgreementCreation) and data.contractStatus != 2 }" 
+					 		      			  and !data.allowAgreementCreation
+					 		      			  and ((data.agStatus == 2 or data.agStatus == 0) 
+                             				  or (data.agStatus == 1 and data.contractStatus != 2))}" 
 					 		      			  process="@this" partialSubmit="true"
                              	  action="#{contractDetailsBackingBean.gotoUpdatePage(data.ctContract.contractId, data.agStatus)}"
 								  onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-					        </p:menuitem>
+					        </p:menuitem>>
 					        <!--#29374 start-->
 					        <p:menuitem id="menuItemId15" value="#{lbl['lbl.ct.notification.setting']}" icon="ui-icon-edit" 
 						          rendered="#{contractDetailsBackingBean.isContractAdmin() 
