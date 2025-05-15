@@ -9,6 +9,8 @@ public class SpkiVO implements Serializable {
 	 */
 	private static final long serialVersionUID = -6100649175683372366L;
 	private String errMsg;
+	private String statusCode;
+	private String statusMsg;
 	private byte[] signedData;
 
 	public String getErrMsg() {
@@ -25,5 +27,21 @@ public class SpkiVO implements Serializable {
 
 	public void setSignedData(byte[] signedData) {
 		this.signedData = signedData;
+	}
+
+	public String getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(String statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	public String getStatusMsg() {
+		return statusMsg;
+	}
+
+	public void setStatusMsg(String statusMsg) {
+		this.statusMsg = statusMsg;
 	}
 }
