@@ -57,6 +57,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO; // Fix - #33491
+import my.ep.biz.service.sc.requestitem.IRequestItemSO; //#28854
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -125,6 +126,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;//#28854
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory; // Fix - #33491
@@ -3718,14 +3720,84 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 	}
 
+	// #28854 - Start
 	/**
-	 * The method used to invoke 
-	 * and initiate the item specification dialog.
+	 * The method used to invoke and initiate the item specification dialog.
 	 */
 	public void viewItemSpecDlg(CtContractItem ctContractItem) {
+		// Start of method implementation
 		getManagedBean().setSelectedItemForSpec(ctContractItem);
+		IRequestItemSO requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IRequestItemSO.class);
+
+		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
+		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+
+		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+			handleDirectPurchaseMode(itemSpecOfferList);
+		} else if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)
+				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)
+				|| procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+			handleQuotationTenderOrDirectNegoMode(itemSpecOfferList);
+		}
+
 		RequestContext.getCurrentInstance().execute("itemSpecDlg.show()");
 	}
+
+	/**
+	 * Handles the logic specific to the direct purchase procurement mode.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleDirectPurchaseMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
+		List<String> itemSpecList = new ArrayList<>();
+
+		for (ScRequestItemSpecOffer itemSpecOffer : itemSpecOfferList) {
+			String questionType = itemSpecOffer.getQuestionType();
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+				getManagedBean().setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+				getManagedBean().setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+			} else if (ContractConst.QUESTION_TYPE_SPEC.equals(questionType)) {
+				itemSpecList.add(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			}
+		}
+		getManagedBean().setItemSpecification(itemSpecList);
+	}
+
+	/**
+	 * Handles the logic for procurement modes that involve quotations, tenders,
+	 * or direct negotiations.
+	 * 
+	 * @param requestItemSO
+	 *            the service object used to retrieve item specifications; must
+	 *            not be null
+	 * @param requestItemId
+	 *            the ID of the request item; must not be null
+	 */
+	private void handleQuotationTenderOrDirectNegoMode(List<ScRequestItemSpecOffer> itemSpecOfferList) {
+
+		for (Iterator<ScRequestItemSpecOffer> iterator = itemSpecOfferList.iterator(); iterator.hasNext();) {
+			ScRequestItemSpecOffer itemSpecOffer = iterator.next();
+
+			// Encoding by directly applying to non-null fields
+			itemSpecOffer.setItemSpec(encodeHtmlStringOrNull(itemSpecOffer.getItemSpec()));
+			itemSpecOffer.setSupplierOffer(encodeHtmlStringOrNull(itemSpecOffer.getSupplierOffer()));
+			itemSpecOffer.setNewOfferSpec(encodeHtmlStringOrNull(itemSpecOffer.getNewOfferSpec()));
+
+			// Remove items with specific question type
+			if (ContractConst.QUESTION_TYPE_ITEM.equals(itemSpecOffer.getQuestionType())) {
+				iterator.remove();
+			}
+		}
+
+		getManagedBean().setScRequestItemSpecOfferList(itemSpecOfferList);
+	}
+	// #28854 - End
 	
 	// 21533 - start
 	public List<CtAgreement> filterAgreementList() {
