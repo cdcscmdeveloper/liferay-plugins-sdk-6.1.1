@@ -175,6 +175,15 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
+
+//29466 -start-
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+//29466 -end-
+
 /**
  * @author siew mei
  * 
@@ -3515,6 +3524,40 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	// 33410 - END
+	
+	// #29466 - START
+	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
+		boolean manufacturer = false;
+
+		if (null != scQt && !scQt.isPanel()) {
+			List<ScQtCategory> qtCategories = null;
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+
+			reqDTO.setQtId(scQt.getQtId());
+
+			qtCategories = getQtDetailSO().getQtCategoryByQtId(reqDTO).getCategories();
+
+			if (null != qtCategories && CollectionUtils.isNotEmpty(qtCategories)) {
+				for (ScQtCategory category : qtCategories) {
+					if (SourcingConstants.MANUFACTURER_CATEGORY_CODE.equals(category.getPmCategoryL3().getCategoryL3Code())) {
+						manufacturer = true;
+						break;
+					}
+				}
+			}
+		} else {
+			manufacturer = false;
+		}
+
+		return manufacturer;
+	}
+	// #29466 -end-
+
+	// #29466 -start-
+	private IQTDetailSO getQtDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+	// #29466 - END
 	
 	//#21387 - Start
 	/**
