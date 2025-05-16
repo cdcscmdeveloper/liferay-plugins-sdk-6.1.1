@@ -1356,12 +1356,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
 				auCtData.setRoleName(getUserRole());
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
+								.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
 					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
 					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-				}
-
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
 					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
 				}
@@ -2812,7 +2812,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			
 			trBB = new TerminationBackingBean();
-			trBB.renewSesionObject();// Fix - #36707
 			trBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			trBB.getManagedBean().setButtonHideActive(true);
@@ -4537,7 +4536,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				bondNew.add(createNewBondFrom(emptyNewBond));
 			}
 		}
+	    // Sorting both lists by bond name (case-insensitive)
+	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
+	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
+	            return b1.getRefNo().compareToIgnoreCase(b2.getRefNo());
+	        }
+	    };
 
+	    Collections.sort(bondNew, nameComparator);
+	    Collections.sort(bondOriginal, nameComparator);
 		contractAmt.setCtPerformanceBondsNew(bondNew);
 		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}

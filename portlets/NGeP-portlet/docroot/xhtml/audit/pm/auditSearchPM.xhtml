@@ -24,7 +24,7 @@
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="paramLevel1"
 						styleClass="ppDropDownWidthM" required="true"
-						label="#{lbl['lbl.pm.audit.sys.config']}"
+						label="#{lbl['lbl.pm.audit.config.type']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.systemConfigParamLevel1}"
 						style="width: 275px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -99,7 +99,7 @@
 						value="#{lbl['lbl.pm.audit.itemName']}"></p:outputLabel></td>
 				<td width="275px;"><p:inputText
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemName}"
-						id="itemName" size="32" /></td>
+						id="itemName" size="32" /><ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.itemName']}" /></td>
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
