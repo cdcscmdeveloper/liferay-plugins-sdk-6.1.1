@@ -949,7 +949,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750043, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			} else if (getManagedBean().getCtAgreement().getCtAmendment() != null
+			} else if (getManagedBean().isBondReq() && getManagedBean().getCtAgreement().getCtAmendment() != null
 					&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend() && !getManagedBean().isBondAttachmentCompleted()) { // #24333,//#bug_38138																																																																										// Start
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_750043, new String[] { ResourceBundleUtils.getMessage(getManagedBean().getCtContract()

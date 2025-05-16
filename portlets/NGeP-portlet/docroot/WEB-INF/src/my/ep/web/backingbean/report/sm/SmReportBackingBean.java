@@ -3424,6 +3424,48 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		return getManagedBean().getApplStatusList();
 	}
+	
+	public String getConditionFieldsCompany(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		return "smSupplier.smAppl.supplierType^" + suppType;
+	}
+	
+	/**
+	 * Get condition fields for PO and/or Approver roles.
+	 * @param includeApprover
+	 * @return
+	 */
+	public String getConditionFieldsPO(boolean includeApprover){
+		StringBuilder sb = new StringBuilder();
+		String role = "pmUserOrgs.pmUserRoles.pmRole.roleCode^";
+		sb.append(role + SupplierManagementConst.PO_HQ);
+		if (includeApprover){
+			sb.append("*" + role + SupplierManagementConst.APPROVER_HQ);
+		}
+		
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return sb.toString();
+		}
+		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String zone = getManagedBean().getZone();
+		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			sb.append(searchZone + "1");
+			
+		} else if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				sb.append(searchZone + "1");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				sb.append(searchZone + "2");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				sb.append(searchZone + "3");
+			}
+		}
+		return sb.toString();
+	}
 	//#32521 - END
 	
 	////#7754_#35984 - Start
@@ -3440,36 +3482,4 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		return getManagedBean().getZone();
 	}
 	//#7754_#35984 - End
-	
-	//#32521 - start
-	public String getConditionFieldsCompany(){
-		String suppType = getManagedBean().getSupplierType();
-		if (StringUtils.isBlank(suppType)){
-			return "";
-		}
-		return "smSupplier.smAppl.supplierType^" + suppType;
-	}
-	
-	public String getConditionFieldsPO(){
-		String suppType = getManagedBean().getSupplierType();
-		if (StringUtils.isBlank(suppType)){
-			return "";
-		}
-		String searchZone = "pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
-		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
-			return searchZone + "1";
-		}
-		String zone = getManagedBean().getZone();
-		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !StringUtils.isBlank(zone)){
-			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
-				return searchZone + "1";
-			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
-				return searchZone + "2";
-			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
-				return searchZone + "3";
-			}
-		}
-		return "";
-	}
-	//#32521 - end
 }

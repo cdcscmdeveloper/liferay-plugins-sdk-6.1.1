@@ -10628,6 +10628,15 @@ private void retriveCommitteeRemarksList(){
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
+					String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+					boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
+					boolean isComplianceNull = questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+							&& isMandatorySpec && tplSpecAnswer.getCompliance() == null;
+					if (isComplianceNull) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
 					boolean isCompliance = tplSpecAnswer.getCompliance() != null
 							&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
 					String remark = tplSpecAnswer.getUserRemark();

@@ -1356,12 +1356,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
 				auCtData.setRoleName(getUserRole());
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
+								.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
 					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
 					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-				}
-
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
 					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
 				}
@@ -2810,6 +2810,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);	
 			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
+			
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
@@ -4509,17 +4510,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
-
 		boolean hasNewBond = false;
-		CtPerformanceBond emptyNewBond = null;
 
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
+			CtPerformanceBond emptyNewBond = null;
 			if (bond.isBondNew()) {
 				hasNewBond = true;
-		        if (bond.isBrandNew()) {
-		            bond.setFileName(null);
-		            bond.setFilePath(null);
-		        }
+				if (bond.isBrandNew()) {
+					bond.setFileName(null);
+					bond.setFilePath(null);
+				}
 				bondNew.add(bond);
 			} else {
 				bondOriginal.add(bond);
@@ -4531,13 +4531,20 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					emptyNewBond = bond;
 				}
 			}
+			// Only create new bond if NONE exist
+			if (!hasNewBond && emptyNewBond != null) {
+				bondNew.add(createNewBondFrom(emptyNewBond));
+			}
 		}
+	    // Sorting both lists by bond name (case-insensitive)
+	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
+	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
+	            return b1.getRefNo().compareToIgnoreCase(b2.getRefNo());
+	        }
+	    };
 
-		// Only create new bond if NONE exist
-		if (!hasNewBond && emptyNewBond != null) {
-			bondNew.add(createNewBondFrom(emptyNewBond));
-		}
-
+	    Collections.sort(bondNew, nameComparator);
+	    Collections.sort(bondOriginal, nameComparator);
 		contractAmt.setCtPerformanceBondsNew(bondNew);
 		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}

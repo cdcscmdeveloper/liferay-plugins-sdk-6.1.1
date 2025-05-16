@@ -29,7 +29,7 @@ public class AuditPMSoftCertBackingBean extends AuditPMBackingBeanTemplate {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO detailProvider = new AuditPMSPDTO();
 	AuditPMSPDTO detailEffDate = new AuditPMSPDTO();
-	String pattern = "dd-MM-yyyy";
+	String pattern = "dd/MM/yyyy";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();

@@ -4646,7 +4646,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			getManagedBean().setDpFlag(true);
 			String supplierOffer = getManagedBean().getSupplierOffer();
 			if (supplierOffer != null && supplierOffer.length() > 0) {
-				String trimWipDpZone = supplierOffer.replace("<br/>", "");
+				String trimWipDpZone = supplierOffer.replace("<br/>", " ");
 				getManagedBean().setSupplierOffer(trimWipDpZone);
 			}
 		} else {
@@ -5270,6 +5270,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 				contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
 				contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 				contractReqDTO.setAsAtDate(new Date());
+				contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());//#25296
 				CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
 					
 					if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
@@ -5285,7 +5286,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 						}else{//#25296
 							ContractResDTO contractBondWaiver=contractSO.validateBondWaiverPeriod(contractReqDTO);//25296 - asyraf - move to new line
 							if(!contractBondWaiver.isBondWaiverPeriod()){
-								ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);//25296 - asyraf - move to new line
+								ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
 								if(!contractResp.isBondComplete()){
 									//25296 - asyraf - to handle WIP transaction
 									if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
