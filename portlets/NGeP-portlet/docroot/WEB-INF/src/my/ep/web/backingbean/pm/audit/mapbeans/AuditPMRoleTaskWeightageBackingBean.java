@@ -7,15 +7,17 @@ import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPoRoleTask;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.common.potaskweightage.POTaskWeightageManagedBean;
 
 /**
- * AuditPMRoleTaskWeightageBackingBean
- * processing officer role task
+ * AuditPMRoleTaskWeightageBackingBean processing officer role task
  * 
  * @author haiza 28895_35509
  */
@@ -27,10 +29,7 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlWeightage = new AuditPMSPDTO();
-	AuditPMSPDTO detailSupplierType = new AuditPMSPDTO();
-	AuditPMSPDTO detailApplicationType = new AuditPMSPDTO();
-	AuditPMSPDTO detailCategoryType = new AuditPMSPDTO();
-	
+
 	String docNo;
 	BigInteger docId;
 	String docType;
@@ -54,6 +53,8 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 		POTaskWeightageManagedBean managedBean = (POTaskWeightageManagedBean) manageBean;
 		PmUser selectedUser = managedBean.getSelectedUser();
 
+		docType = selectedUser.getUserName();
+		docNo = selectedUser.getIdentificationNo();
 		updateWeightage(roleCode, selectedUser);
 
 		for (PmPoRoleTask roleTask : selectedUser.getPmPoRoleTasks()) {
@@ -63,14 +64,14 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				if (roleTask.getRecordStatusFlg() != existingRoleTask.getRecordStatusFlg()) {
 					AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 					detailStatus.setRoleCode(roleCode);
-					detailStatus.setDocType(AuditConst.PM_AUD_TASK_WEIGHTAGE);
+					detailStatus.setDocType(docType);
+					detailStatus.setDocNo(docNo);
 					detailStatus.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
 					detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 					detailStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
 					detailStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
 					detailStatus.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
 					detailStatus.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
-					detailStatus.setDocNo(selectedUser.getIdentificationNo());
 					detailStatus.setFieldLabelCode(AuditConst.PM_AUD_PORTW_STATUS_FIELDLABELID);
 					detailStatus.setOldValue(existingRoleTask.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 							: AuditConst.PM_AUD_INACTIVE);
@@ -83,8 +84,9 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 
 			} else {
 				/** supplier **/
+				AuditPMSPDTO detailSupplierType = new AuditPMSPDTO();
 				detailSupplierType.setRoleCode(roleCode);
-				detailSupplierType.setDocType(AuditConst.PM_AUD_TASK_WEIGHTAGE);
+				detailSupplierType.setDocType(docType);
 				detailSupplierType.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
 				detailSupplierType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailSupplierType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
@@ -93,13 +95,14 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailSupplierType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailSupplierType.setDocNo(selectedUser.getIdentificationNo());
 				detailSupplierType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_SUPPLIER_TYPE_FIELDLABELID);
-				detailSupplierType.setNewValue(roleTask.getSupplierType());
+				detailSupplierType.setNewValue(checkPMParameterCode("ST", roleTask.getSupplierType()));
 				detailSupplierType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailSupplierType);
 
 				/** application **/
+				AuditPMSPDTO detailApplicationType = new AuditPMSPDTO();
 				detailApplicationType.setRoleCode(roleCode);
-				detailApplicationType.setDocType(AuditConst.PM_AUD_TASK_WEIGHTAGE);
+				detailApplicationType.setDocType(docType);
 				detailApplicationType.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
 				detailApplicationType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailApplicationType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
@@ -108,28 +111,32 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailApplicationType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailApplicationType.setDocNo(selectedUser.getIdentificationNo());
 				detailApplicationType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_APPLICATION_TYPE_FIELDLABELID);
-				detailApplicationType.setNewValue(roleTask.getApplType());
+				detailApplicationType.setNewValue(checkPMParameterCode("AT", roleTask.getApplType()));
 				detailApplicationType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailApplicationType);
 
 				/** category **/
-				detailCategoryType.setRoleCode(roleCode);
-				detailCategoryType.setDocType(AuditConst.PM_AUD_TASK_WEIGHTAGE);
-				detailCategoryType.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
-				detailCategoryType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-				detailCategoryType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
-				detailCategoryType.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
-				detailCategoryType.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
-				detailCategoryType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
-				detailCategoryType.setDocNo(selectedUser.getIdentificationNo());
-				detailCategoryType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_CATEGORY_TYPE_FIELDLABELID);
-				detailCategoryType.setNewValue(roleTask.getCategoryType());
-				detailCategoryType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-				objList.add(detailCategoryType);
+				// check null
+				if (roleTask.getCategoryType() != null) {
+					AuditPMSPDTO detailCategoryType = new AuditPMSPDTO();
+					detailCategoryType.setRoleCode(roleCode);
+					detailCategoryType.setDocType(docType);
+					detailCategoryType.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
+					detailCategoryType.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
+					detailCategoryType.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
+					detailCategoryType.setLvlCode3(AuditConst.PM_LVL_CODE_3_PORTW);
+					detailCategoryType.setDocId(BigInteger.valueOf(selectedUser.getUserId()));
+					detailCategoryType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
+					detailCategoryType.setDocNo(selectedUser.getIdentificationNo());
+					detailCategoryType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_CATEGORY_TYPE_FIELDLABELID);
+					detailCategoryType.setNewValue(checkSMCategoryCode(roleTask.getCategoryType()));
+					detailCategoryType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+					objList.add(detailCategoryType);
+				}
 
 				AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 				detailStatus.setRoleCode(roleCode);
-				detailStatus.setDocType(AuditConst.PM_AUD_TASK_WEIGHTAGE);
+				detailStatus.setDocType(docType);
 				detailStatus.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
 				detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 				detailStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
@@ -153,26 +160,40 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 		this.roleCode = roleCode;
 		docId = BigInteger.valueOf(selectedUser.getUserId());
 		docNo = selectedUser.getIdentificationNo();
-		
-		if(selectedUser.getPmPoWeightage() != null) {
-			if (selectedUser.getPmPoWeightage().getNewWeight() != selectedUser.getPmPoWeightage().getWeightEnter()) {
 
-				String oldValue = String.valueOf(selectedUser.getPmPoWeightage().getNewWeight());
-				String newValue = String.valueOf(selectedUser.getPmPoWeightage().getWeightEnter());
-				 
-				detailObj(oldValue, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			}else {
-				String newValue = String.valueOf(selectedUser.getPmPoWeightage().getWeightEnter());
-				detailObj(null, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		if (selectedUser.getPmPoWeightage() != null
+				&& (selectedUser.getPmPoWeightage().getNewWeight() != selectedUser.getPmPoWeightage().getWeightEnter())) {
+
+			String oldValue = String.valueOf(selectedUser.getPmPoWeightage().getNewWeight());
+			String newValue = String.valueOf(selectedUser.getPmPoWeightage().getWeightEnter());
+
+			detailObj(oldValue, newValue, AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		}
+	}
+
+	private String checkPMParameterCode(String parameterType, String pidDocType) {
+
+		PmParameter contractRequestParam = getParameterByTypeAndCode(parameterType, pidDocType);
+		String description = null;
+
+		for (PmParameterDesc desc : contractRequestParam.getPmParameterDescs()) {
+			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+				description = desc.getCodeDesc();
 			}
 		}
-		
+		return description;
+
 	}
+
+	private String checkSMCategoryCode(String pidDocType) {
+		return pidDocType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL) ? "Biasa" : "Khusus";
+	}
+
 	private ArrayList<AuditPMSPDTO> detailObj(String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(docType);
-		dtlObj.setDocNo(actionType);
+		dtlObj.setDocNo(docNo);
 		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_PORTW_PMPARAMETERLVLID);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_PORTW);
@@ -186,7 +207,7 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 		dtlObj.setNewValue(newValue);
 		dtlObj.setActionType(actionType);
 		objList.add(dtlObj);
-		
+
 		return objList;
 	}
 
