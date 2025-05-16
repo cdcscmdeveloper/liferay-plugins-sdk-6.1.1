@@ -971,6 +971,7 @@ public class ReportConst implements Serializable{
 	public static final String PARAM_REPORT_BUFFERS = "buffers"; 
 	public static final int BUFFER_SIZE = 1024; 
 	//Bug #33714 - end
+	public static final int MAX_BUFFER_SIZE = 4096;	//Bug #37911
 
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";

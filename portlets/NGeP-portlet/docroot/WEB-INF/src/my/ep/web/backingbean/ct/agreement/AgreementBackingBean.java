@@ -1205,6 +1205,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 			FacesContext fc = FacesContext.getCurrentInstance();
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.getManagedBean().setIconForDL(true); //28854
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
