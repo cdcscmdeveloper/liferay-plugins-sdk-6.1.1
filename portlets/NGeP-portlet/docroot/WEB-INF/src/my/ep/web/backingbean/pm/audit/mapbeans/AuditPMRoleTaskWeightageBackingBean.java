@@ -15,6 +15,7 @@ import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.common.potaskweightage.POTaskWeightageManagedBean;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * AuditPMRoleTaskWeightageBackingBean processing officer role task
@@ -95,7 +96,7 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailSupplierType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailSupplierType.setDocNo(selectedUser.getIdentificationNo());
 				detailSupplierType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_SUPPLIER_TYPE_FIELDLABELID);
-				detailSupplierType.setNewValue(checkPMParameterCode("ST", roleTask.getSupplierType()));
+				detailSupplierType.setNewValue(getSupplierDesc(roleTask.getSupplierType()));
 				detailSupplierType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailSupplierType);
 
@@ -111,7 +112,7 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 				detailApplicationType.setDocGroupId(BigInteger.valueOf(selectedUser.getUserId()));
 				detailApplicationType.setDocNo(selectedUser.getIdentificationNo());
 				detailApplicationType.setFieldLabelCode(AuditConst.PM_AUD_PORTW_APPLICATION_TYPE_FIELDLABELID);
-				detailApplicationType.setNewValue(checkPMParameterCode("AT", roleTask.getApplType()));
+				detailApplicationType.setNewValue(getApplDesc(roleTask.getApplType()));
 				detailApplicationType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 				objList.add(detailApplicationType);
 
@@ -171,22 +172,31 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 		}
 	}
 
-	private String checkPMParameterCode(String parameterType, String pidDocType) {
-
-		PmParameter contractRequestParam = getParameterByTypeAndCode(parameterType, pidDocType);
-		String description = null;
-
-		for (PmParameterDesc desc : contractRequestParam.getPmParameterDescs()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
-				description = desc.getCodeDesc();
-			}
+	/**
+	 * 
+	 * @param supplierType
+	 * @return
+	 */
+	private String getSupplierDesc(String supplierType){
+		if(supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
+			return SmCommonUtil.getMessage("lbl.sm.contractor",null);
+		} else{
+			return SmCommonUtil.getMessage("lbl.sm.consultant",null); // SupplierManagementConst.SUPP_TYPE_CONSULTANT
 		}
-		return description;
-
 	}
-
+	
+	/**
+	 * 
+	 * @param applType
+	 * @return
+	 */
+	private String getApplDesc(String applType){
+		String label = "lbl.pm.po.task.appltype_" + applType;
+		return SmCommonUtil.getMessage(label,null);
+	}
+	
 	private String checkSMCategoryCode(String pidDocType) {
-		return pidDocType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL) ? "Biasa" : "Khusus";
+		return pidDocType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL) ? SmCommonUtil.getMessage("lbl.sm.catCodes.norm",null) : SmCommonUtil.getMessage("lbl.sm.catCodes.spl",null);
 	}
 
 	private ArrayList<AuditPMSPDTO> detailObj(String oldValue, String newValue, String actionType) {
