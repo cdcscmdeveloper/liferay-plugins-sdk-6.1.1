@@ -239,21 +239,16 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		IPoRoleTaskSO reqSO = (IPoRoleTaskSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IPoRoleTaskSO.class);
 		
+		PoRoleTaskResDTO resDTO = reqSO.updateRoleTask(reqDTO);
+		
 		/************ AUDIT START #28895-35509 *************/
 		AuditPMBackingBeanTemplate auTemplate = new AuditPMRoleTaskWeightageBackingBean();
 		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
-		/************ AUDIT END #28895-35509 *************/
-		
-		PoRoleTaskResDTO resDTO = reqSO.updateRoleTask(reqDTO);
-		/************ AUDIT START #28895-35509 *************/
-		if (resDTO.isSuccessful()) {
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_TASK_WEIGHTAGE)) {
+		if (resDTO.isSuccessful() && pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_TASK_WEIGHTAGE)) {
 				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_TASK_WEIGHTAGE);
-			}
 		}
 		/************ AUDIT END #28895-35509 *************/
-		
 		if(resDTO.getUser() != null){
 			PmUser user = resDTO.getUser();
 			if(resDTO.getUser().getPmPoWeightage() == null){
@@ -267,14 +262,12 @@ public class POTaskWeightageBackingBean extends BaseBackingBean<POTaskWeightageM
 		}
 	
 		editUser(resDTO.getUser());
-		//getManagedBean().setSelectedUser(resDTO.getPmUser());
-		//RequestContext.getCurrentInstance().update("pnlPoRoleTask");
 		
 		String msg = SmCommonUtil.getOutputMsgBundle(MessageConst.INFO_100002,null);
 		
 		FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,msg));
-
+		
 	}
 	
 	public void resetWeightage(){

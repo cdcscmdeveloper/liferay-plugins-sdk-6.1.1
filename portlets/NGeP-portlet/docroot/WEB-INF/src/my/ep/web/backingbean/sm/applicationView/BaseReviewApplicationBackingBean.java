@@ -1870,6 +1870,33 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
 	}
+	
+	// #37771 - Start
+	/**
+	 * Assign selected and latest association body
+	 * 
+	 * @param assocBean
+	 */
+	public void assignSelAssocBodyExclPersonnel(SmAssociationBody assocBean) {
+		getManagedBean().setSelectedAssocBody(assocBean);
+		if (getManagedBean().getLatestAppl() != null
+				&& getManagedBean().getLatestAppl().getSmAssociationBodies() != null) {
+			List<SmAssociationBody> copiedList = new ArrayList<>(getManagedBean().getLatestAppl()
+					.getSmAssociationBodies());
+			Iterator<SmAssociationBody> iterator = copiedList.iterator();
+			while (iterator.hasNext()) {
+				SmAssociationBody associationBody = iterator.next();
+				if (associationBody.getSmPersonnel() != null) {
+					iterator.remove();
+				}
+			}
+			getManagedBean().setLatestProfBody(
+					(SmAssociationBody) EntityHelper.getEntityByMultiplePropertiesFromList(assocBean, copiedList, null,
+							new String[] { "pmCertBody" }, null));
+
+		}
+	}
+	// #37771 - End
 
 	/**
 	 * Redirect back to personnel section
@@ -2311,10 +2338,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//#32008 - start
 		getManagedBean().setSelectedStaffAcademic(aca);
 		if (getManagedBean().getLatestPersonnel() != null) {
+			//#37771 - Start
 			getManagedBean().setLatestStaffAcademic(
 				(SmStaffAcademic) EntityHelper.getEntityByMultiplePropertiesFromList(aca, 
 				getManagedBean().getLatestPersonnel().getSmStaffAcademics(), null,
-				new String[] { "pmEduField", "pmEduLevel" }, null));
+				new String[] { "pmEduField" }, null));
+			//#37771 - End
 		}
 		//#32008 - end
 		closeBlockUI();
