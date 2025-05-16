@@ -199,12 +199,13 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * @param sectionId
 	 * 
 	 */
-	public void generateReport(Long docId, BigInteger sectionId) throws IOException {
+	public void generateReport(Long docId, BigInteger sectionId, String ctType) throws IOException {
 
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(AuditReportConst.PARAM_DOC_ID, docId.toString());// P_DOCID
 		paramMap.put(AuditReportConst.PARAM_USER_ID, getUserIdSessionFromLoginId().toString());
 		paramMap.put(AuditReportConst.PARAM_GROUP_SECTION_ID, sectionId.toString());// P_GROUP_SECTION_ID
+		paramMap.put(AuditReportConst.PARAM_CT_TYPE, ctType);// P_CT_TYPE														   
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_CT, paramMap);
 	}
@@ -215,11 +216,12 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * @param docId
 	 * @throws IOException
 	 */
-	public void generateAllReport(BigInteger docId) throws IOException {
+	public void generateAllReport(BigInteger docId, String ctType) throws IOException {
 
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(AuditReportConst.PARAM_USER_ID, getUserIdSessionFromLoginId().toString());
 		paramMap.put(AuditReportConst.PARAM_DOC_ID, docId.toString());
+		paramMap.put(AuditReportConst.PARAM_CT_TYPE, ctType);// P_CT_TYPE														   
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_CT, paramMap);
 	}
@@ -459,6 +461,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
 		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
+		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
 		map.put(AuditContractConst.AU_SECTION_PC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PC));
@@ -469,6 +472,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_CL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CL));
 		map.put(AuditContractConst.AU_SECTION_ID, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ID));
 		map.put(AuditContractConst.AU_SECTION_IS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IS));
+		map.put(AuditContractConst.AU_SECTION_IPS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IPS));																								  
 		return map;
 	}
 
@@ -569,6 +573,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(12, AuditContractConst.AU_SECTION_FNS);
 			tabViews.put(13, AuditContractConst.AU_SECTION_CO);
 			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
+			tabViews.put(15, AuditContractConst.AU_SECTION_DCA);
 		}
 
 		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
@@ -587,6 +592,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(3, AuditContractConst.AU_SECTION_RCT);
 			tabViews.put(4, AuditContractConst.AU_SECTION_ID);
 			tabViews.put(5, AuditContractConst.AU_SECTION_IS);
+			tabViews.put(6, AuditContractConst.AU_SECTION_IPS);										  
 		}
 
 		return tabViews;

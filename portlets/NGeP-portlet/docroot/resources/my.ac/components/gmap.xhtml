@@ -15,17 +15,31 @@
 	<cc:attribute name="locationName" 	required="false" />
 	<cc:attribute name="showButton" 	default="true" />
 	<cc:attribute name="disabled" 		default="false" />
+	<cc:attribute name="isShow" 		default="false"/>
+	<cc:attribute name="oriLatValue" 	required="true" />
+	<cc:attribute name="currLatValue" 	required="true" />
+	<cc:attribute name="alertLatValue" 	required="true"  />
+	<cc:attribute name="oriLongValue" 	required="true" />
+	<cc:attribute name="currLongValue" 	required="true" />
+	<cc:attribute name="alerLongtValue" required="true"  />
 </cc:interface>
 
 <cc:implementation>
 	<h:panelGroup id="#{cc.attrs.id}">
-
+		<!-- 37771 -->
 		<ac:gmapInput id="gmapInput" 
 			latitude="#{cc.attrs.latitude}" 
 			longitude="#{cc.attrs.longitude}" 
 			address="#{cc.attrs.address}"
 			showButton="#{cc.attrs.showButton}"
-			disabled="#{cc.attrs.disabled}" />
+			disabled="#{cc.attrs.disabled}" 
+			isShow="#{cc.attrs.isShow}"
+			oriLatValue="#{cc.attrs.oriLatValue}" 
+			currLatValue="#{cc.attrs.currLatValue}" 
+			alertLatValue="#{cc.attrs.alertLatValue}"
+			oriLongValue="#{cc.attrs.oriLongValue}" 
+			currLongValue="#{cc.attrs.currLongValue}" 
+			alertLongValue="#{cc.attrs.alertLongValue}"/>
 		
 		<ac:gmapDialog id="gmapDialog" 
 			latitude="#{cc.attrs.latitude}" 

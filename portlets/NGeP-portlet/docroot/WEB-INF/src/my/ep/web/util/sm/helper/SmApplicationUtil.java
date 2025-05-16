@@ -2232,9 +2232,9 @@ public class SmApplicationUtil {
 		}
 		if (!validPersonnels && managedBean.isSupplierUser()){//#31130
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
+			/*setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722599,
-					new String[] { sb.toString() });
+					new String[] { sb.toString() });*/ //Commented for #31130 230425
 		}else if (!validPersonnels && (managedBean.isApproverUser()|| managedBean.isPoUser())){
 			managedBean.setPoApproverAcedemicErr(true);
 			managedBean.setMsgPersonnelErr(sb.toString());
@@ -2333,7 +2333,14 @@ public class SmApplicationUtil {
 				validPersonnels = false;
 			}
 			//#30444 --END--25082021--
-			if(!validPersonnel){
+			//#31130 --START--050525--
+			if(per.getPmUser() != null && per.getEpRole() != null
+					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT) 
+					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
+					|| (per.isEquityOwner() && (per.getSmStaffExperiences() == null || per.getSmStaffExperiences().isEmpty()))
+					|| (per.isEquityOwner() && (per.getSmAssociationBodies() == null || per.getSmAssociationBodies().isEmpty())))))){
+				//#31130 --END--050525--
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				// sb.append(",  ");
@@ -13594,8 +13601,8 @@ public class SmApplicationUtil {
 					sb2 = new StringBuilder();
 					sb2.append(exp.getCompanyName());
 					sb2.append(exp.getDesignation());
-
-					if (bean.getSelectedJobFunction().getStaffExpCode() == null
+					//#37771 START
+/*					if (bean.getSelectedJobFunction().getStaffExpCode() == null
 							|| (expCode != null
 									&& exp.getStaffExpCode() != null && expCode
 									.compareTo(exp.getStaffExpCode()) != 0)) {
@@ -13616,7 +13623,29 @@ public class SmApplicationUtil {
 							throw new EpException(MessageConst.ERROR_722639,
 									new String[] { exp.getCompanyName() });
 						}
-					}
+					}*/
+					if (bean.getSelectedJobFunction().getStaffExperienceId() == null
+							/*|| (expCode != null
+									&& exp.getStaffExpCode() != null && expCode
+									.compareTo(exp.getStaffExpCode()) != 0)*/) {
+						if (sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(exp.getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(exp.getToYear())) {
+							throw new EpException(MessageConst.ERROR_722639,
+									new String[] { exp.getCompanyName() });
+						} 
+					}else{
+						if (bean.getLatestJobFunction() != null && sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(bean.getLatestJobFunction().getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(bean.getLatestJobFunction().getToYear())) {
+							throw new EpException(MessageConst.ERROR_722638,
+									new String[] { exp.getCompanyName() });
+						}
+					}//#37771 END
 				}
 			}
 		}
@@ -13754,7 +13783,7 @@ public class SmApplicationUtil {
 			bean.setLatestStaffAcademic((SmStaffAcademic) EntityHelper
 					.getEntityByMultiplePropertiesFromList(aca, bean
 							.getLatestPersonnel().getSmStaffAcademics(), null,
-							new String[] { "pmEduField", "pmEduLevel" }, null));
+							new String[] { "pmEduField" }, null)); //37771
 		}
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (bean.isShowPersonnelViewOnly()) {
@@ -13799,8 +13828,8 @@ public class SmApplicationUtil {
 		for (PmEduField edu : bean.getEduFieldList()) {
 			if (bean.getSelectedStaffAcademic().getPmEduField().getEduFieldId()
 					.equals(edu.getEduFieldId())) {
-				bean.getSelectedStaffAcademic().setPmEduField(edu);
-				break;
+				bean.getSelectedStaffAcademic().setPmEduField((PmEduField) edu.cloneEntity()); //37771
+				/*break;*/
 			}
 		}
 

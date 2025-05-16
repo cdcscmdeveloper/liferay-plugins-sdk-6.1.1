@@ -10318,27 +10318,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
 			FacesContext
-					.getCurrentInstance()
-					.addMessage(
+			.getCurrentInstance()
+			.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
 							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.INFO_721222,
-													new String[] {
-															getParameterDesc(
-																	ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-																	getManagedBean()
-																			.getSmAppl()
-																			.getApplType()),
+							MessageUtils
+									.getMessage(
+											MessageConst.INFO_721222,
+											new String[] {
+													getParameterDesc(
+															ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
 															getManagedBean()
 																	.getSmAppl()
-																	.getApplNo() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+																	.getApplType()),
+													getManagedBean()
+															.getSmAppl()
+															.getApplNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+													.getUserLocale())));
 		}
 	}
 
@@ -10394,20 +10394,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 																	.getUserLocale())));
 				} else {
 					SmCommonUtil
-							.redirectToPage(
-									SmApplicationUtil.getApplicationErrorPage(),
-									MessageConst.INFO_721204,
-									new String[] {
-											getParameterDesc(
-													ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-													getManagedBean()
-															.getSmAppl()
-															.getApplType()),
-											getManagedBean().getSmAppl()
-													.getApplNo(),
-											SmApplicationUtil
-													.getMofApplicationSaveDraftUrl(getManagedBean()
-															.getSmAppl()) });
+					.redirectToPage(
+							SmApplicationUtil.getApplicationErrorPage(),
+							MessageConst.INFO_721204,
+							new String[] {
+									getParameterDesc(
+											ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+											getManagedBean()
+													.getSmAppl()
+													.getApplType()),
+									getManagedBean().getSmAppl()
+											.getApplNo(),
+									SmApplicationUtil
+											.getMofApplicationSaveDraftUrl(getManagedBean()
+													.getSmAppl()) });
 					renewSesionObject();
 				}
 			}
