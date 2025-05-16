@@ -179,9 +179,9 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 	 */
 	private String getSupplierDesc(String supplierType){
 		if(supplierType.equalsIgnoreCase(SupplierManagementConst.SUPP_TYPE_CONTRACTOR)){
-			return SmCommonUtil.getMessage("lbl.sm.contractor",null);
+			return SmCommonUtil.getMessageMalay("lbl.sm.contractor",null);
 		} else{
-			return SmCommonUtil.getMessage("lbl.sm.consultant",null); // SupplierManagementConst.SUPP_TYPE_CONSULTANT
+			return SmCommonUtil.getMessageMalay("lbl.sm.consultant",null); // SupplierManagementConst.SUPP_TYPE_CONSULTANT
 		}
 	}
 	
@@ -192,11 +192,11 @@ public class AuditPMRoleTaskWeightageBackingBean extends AuditPMBackingBeanTempl
 	 */
 	private String getApplDesc(String applType){
 		String label = "lbl.pm.po.task.appltype_" + applType;
-		return SmCommonUtil.getMessage(label,null);
+		return SmCommonUtil.getMessageMalay(label,null);
 	}
 	
 	private String checkSMCategoryCode(String pidDocType) {
-		return pidDocType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL) ? SmCommonUtil.getMessage("lbl.sm.catCodes.norm",null) : SmCommonUtil.getMessage("lbl.sm.catCodes.spl",null);
+		return pidDocType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_CATEGORY_TYPE_NORMAL) ? SmCommonUtil.getMessageMalay("lbl.sm.catCodes.norm",null) : SmCommonUtil.getMessageMalay("lbl.sm.catCodes.spl",null);
 	}
 
 	private ArrayList<AuditPMSPDTO> detailObj(String oldValue, String newValue, String actionType) {
