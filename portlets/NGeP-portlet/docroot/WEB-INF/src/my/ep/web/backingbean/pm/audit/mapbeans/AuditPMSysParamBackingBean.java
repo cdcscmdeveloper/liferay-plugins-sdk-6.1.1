@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	String roleCode = null;
 	String lvlCode2 = null;
 	BigInteger docId;
+	String pattern = "dd/MM/yyyy";
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
 	@Override
 	public String getRoleCode() {
@@ -131,12 +134,12 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 		if ((updateVal.getExpDate() == null && approval.getExpDate() != null) || updateVal.getExpDate() != null
 				&& !approval.getExpDate().equals(updateVal.getExpDate())) {
 			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EXPDATE_FIELDLABELID,
-					updateVal.getExpDate() != null ? updateVal.getExpDate().toString() : null, approval.getExpDate().toString(),
+					updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null, simpleDateFormat.format(approval.getExpDate()),
 					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 		if (updateVal.getEffDate() != null && !approval.getEffDate().equals(updateVal.getEffDate())) {
-			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EFFDATE_FIELDLABELID, updateVal
-					.getEffDate().toString(), approval.getEffDate().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_EFFDATE_FIELDLABELID, 
+					simpleDateFormat.format(updateVal.getEffDate()), simpleDateFormat.format(approval.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 		if (updateVal.getProcureAmt() != null && !approval.getProcureAmt().equals(updateVal.getProcureAmt())) {
 			qtValuesAddUpdateDeleteAuditDetail(approval, AuditConst.PM_AUD_SYSPARAM_SPQTV_LIMIT_FIELDLABELID, updateVal
@@ -179,11 +182,11 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	public String retrieverCreateDeleteEffDateVal(PmPtjSpecialApproval approval, PmPtjSpecialApproval deletedItem) {
 		// set New Value
 		if (approval != null && approval.getEffDate() != null) {
-			return approval.getEffDate().toString();
+			return simpleDateFormat.format(approval.getEffDate());
 		}
 		// set old Value
 		if (deletedItem != null && deletedItem.getEffDate() != null) {
-			return deletedItem.getEffDate().toString();
+			return simpleDateFormat.format(deletedItem.getEffDate());
 		}
 		return null;
 	}
@@ -195,10 +198,10 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	public String retrieverCreateDeleteExpDateVal(PmPtjSpecialApproval approval, PmPtjSpecialApproval deletedItem) {
 		if (approval != null && approval.getExpDate() != null) {
-			return approval.getExpDate().toString();
+			return simpleDateFormat.format(approval.getExpDate());
 		}
 		if (deletedItem != null && deletedItem.getExpDate() != null) {
-			return deletedItem.getExpDate().toString();
+			return simpleDateFormat.format(deletedItem.getExpDate());
 		}
 		return null;
 	}
@@ -369,12 +372,12 @@ public class AuditPMSysParamBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	public void yepProcessFeeExemption(PmFeeExemption exemption, PmFeeExemption exemptionOld, String lvlCode, BigInteger lvlId) {
 		if (exemption.getEffDate() != null && !exemption.getEffDate().equals(exemptionOld.getEffDate())) {
-			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, exemptionOld.getEffDate()
-					.toString(), exemption.getEffDate().toString(), lvlId);
+			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
+					simpleDateFormat.format(exemptionOld.getEffDate()), simpleDateFormat.format(exemption.getEffDate()), lvlId);
 		}
 		if (exemption.getExpDate() != null && !exemption.getExpDate().equals(exemptionOld.getExpDate())) {
-			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, exemptionOld.getExpDate()
-					.toString(), exemption.getExpDate().toString(), lvlId);
+			yepAddAuditDetail(exemption, lvlCode, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, 
+					simpleDateFormat.format(exemptionOld.getExpDate()), simpleDateFormat.format(exemption.getExpDate()), lvlId);
 		}
 	}
 
