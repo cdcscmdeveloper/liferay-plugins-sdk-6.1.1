@@ -244,9 +244,9 @@ public class DisciplinaryActionRest {
 					DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 					Date today = formatter.parse(formatter.format(new Date()));
 					if(completedPendingSmDa.getStartDate().compareTo(today) == 0){
-						completedPendingSmDa.setFutureImposed(true);
+//						completedPendingSmDa.setFutureImposed(true);
 					} else {
-						completedPendingSmDa.setFutureImposed(false);
+//						completedPendingSmDa.setFutureImposed(false);
 					}
 					completedPendingSmDa.getSmSupplier();
 					SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);

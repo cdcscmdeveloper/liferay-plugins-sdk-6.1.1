@@ -10185,11 +10185,11 @@ private void retriveCommitteeRemarksList(){
 								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()) });
 					}
-					String remark = item.getRemarkMandatorySpec();
+//					String remark = item.getRemarkMandatorySpec();
 					boolean isNotComply = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
-					if (isNotComply && StringUtils.isEmpty(remark)) {
-						throw new EpException(MessageConst.ERROR_775180);
-					}
+//					if (isNotComply && StringUtils.isEmpty(remark)) {
+//						throw new EpException(MessageConst.ERROR_775180);
+//					}
 					/* #29187 End Vinod */
 			}
 				/* #29187 Start Vinod */
