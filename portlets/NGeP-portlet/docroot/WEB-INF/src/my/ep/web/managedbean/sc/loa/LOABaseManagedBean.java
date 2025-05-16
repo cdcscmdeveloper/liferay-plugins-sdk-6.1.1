@@ -31,12 +31,6 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 	private Long periodicScheduleParamId;
 	//20230111@Haziq - #12487&29693
 	private PmUserOrg selectedUserPtj;
-	//#29661 start
-	private List<SmSupplierCategory> supplierCategoryList;
-	private List<SmSupplierCategory> selectedCategoryList;
-	private List<SmSupplierCategory> procurementRelatedCategoryList;
-	private boolean selectAll;
-	//#29661 end
 
 	public PmParameter getSelectedOrgType() {
 		if (this.selectedOrgType == null) {
@@ -134,38 +128,6 @@ public abstract class LOABaseManagedBean extends BaseManagedBean {
 
 	public void setSelectedUserPtj(PmUserOrg selectedUserPtj) {
 		this.selectedUserPtj = selectedUserPtj;
-	}
-
-	public List<SmSupplierCategory> getSupplierCategoryList() {
-		return supplierCategoryList;
-	}
-
-	public void setSupplierCategoryList(List<SmSupplierCategory> supplierCategoryList) {
-		this.supplierCategoryList = supplierCategoryList;
-	}
-
-	public List<SmSupplierCategory> getSelectedCategoryList() {
-		return selectedCategoryList;
-	}
-
-	public void setSelectedCategoryList(List<SmSupplierCategory> selectedCategoryList) {
-		this.selectedCategoryList = selectedCategoryList;
-	}
-
-	public List<SmSupplierCategory> getProcurementRelatedCategoryList() {
-		return procurementRelatedCategoryList;
-	}
-
-	public void setProcurementRelatedCategoryList(List<SmSupplierCategory> procurementRelatedCategoryList) {
-		this.procurementRelatedCategoryList = procurementRelatedCategoryList;
-	}
-
-	public boolean isSelectAll() {
-		return selectAll;
-	}
-
-	public void setSelectAll(boolean selectAll) {
-		this.selectAll = selectAll;
 	}
 
 	
