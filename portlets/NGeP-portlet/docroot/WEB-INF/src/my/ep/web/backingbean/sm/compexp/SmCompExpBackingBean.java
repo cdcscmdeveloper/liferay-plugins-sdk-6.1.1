@@ -144,9 +144,45 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void selectAllCatCodes() {
+
+		// if (getManagedBean().isSelectedAll()) {
+		// getManagedBean().setSelected(true);
+		// getManagedBean().setSelectedCompExpCats(
+		// getManagedBean().getSelectedCompanyExperience()
+		// .getSmCompanyExperienceCats());
+		// } else {
+		// getManagedBean().setSelected(false);
+		// getManagedBean().setSelectedCompExpCats(null);
+		//
+		// }
+
 	}
 
 	public void selectCatCode(int index) {
+
+		// List<SmCompanyExperienceCat> selectedCompExpCatsList =
+		// getManagedBean()
+		// .getSelectedCompExpCats();
+		//
+		// if (getManagedBean().isSelected()) {
+		// if (selectedCompExpCatsList == null) {
+		// selectedCompExpCatsList = new ArrayList<SmCompanyExperienceCat>();
+		// }
+		// selectedCompExpCatsList.add(getManagedBean()
+		// .getSelectedCompanyExperience()
+		// .getSmCompanyExperienceCats().get(index));
+		//
+		// } else {
+		//
+		// if (selectedCompExpCatsList.contains(getManagedBean()
+		// .getSelectedCompanyExperience()
+		// .getSmCompanyExperienceCats().get(index))) {
+		// selectedCompExpCatsList.remove(getManagedBean()
+		// .getSelectedCompanyExperience()
+		// .getSmCompanyExperienceCats().get(index));
+		// }
+		// }
+		// getManagedBean().setSelectedCompExpCats(selectedCompExpCatsList);
 	}
 
 	public void addCompExpCat() {
@@ -162,11 +198,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void getSupplierMainCatList() {
+		this.getManagedBean().setSupplierSubCatList(null);
+		this.getManagedBean().setSupplierSubDivCatList(null);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
 		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 		if (resDTO != null) {
 			this.getManagedBean().setSupplierMainCatList(resDTO.getCategoryL1List());
@@ -175,12 +214,60 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 	}
 
-	public void getSupplierSubCatList() {
-		
+	public void getSupplierSubCatList(Long categoryL1Id, int index) {
+		this.getManagedBean().setSupplierSubDivCatList(null);
+		this.getManagedBean().getCompExpCatCodeList().get(index).setCategoryL2(null);
+		this.getManagedBean().getCompExpCatCodeList().get(index).setCategoryL3(null);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
+		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
+		if (resDTO != null) {
+			this.getManagedBean().setSupplierSubCatList(resDTO.getCategoryL2List());
+		} else {
+			this.getManagedBean().setSupplierSubCatList(null);
+		}
 	}
 
-	public void getSupplierSubDivCatList() {
-		
+	public void getSupplierSubDivCatList(Long categoryL2Id, int index) {
+		this.getManagedBean().getCompExpCatCodeList().get(index).setCategoryL3(null);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
+		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICategoryCodeSO.class);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+		if (resDTO != null) {
+			this.getManagedBean().setSupplierSubDivCatList(resDTO.getCategoryL3List());
+		} else {
+			this.getManagedBean().setSupplierSubDivCatList(null);
+		}
+	}
+
+	public void checkDuplicateCatCode(int index) {
+		// log.info("**** Validate the category Codes ********** ");
+		// for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
+		// if (expCat.equals(cat)) {
+		// log.info(" *** Same Obj ****"
+		// + cat.getPmCategoryL1().getCategoryL1Code() + " -- --"
+		// + expCat.getPmCategoryL1().getCategoryL1Code());
+		//
+		// } else if (cat.getPmCategoryL1().getCategoryL1Id()
+		// .equals(expCat.getPmCategoryL1().getCategoryL1Id())
+		// && cat.getPmCategoryL2().getCategoryL2Id()
+		// .equals(expCat.getPmCategoryL2().getCategoryL2Id())
+		// && cat.getPmCategoryL3().getCategoryL3Id()
+		// .equals(expCat.getPmCategoryL3().getCategoryL3Id())) {
+		// expCat.getPmCategoryL3().setCategoryL3Id(null);
+		// throw new EpException(MessageConst.ERROR_722533);
+		// }
+		// }
 	}
 
 	public void clientTypeChange() {
