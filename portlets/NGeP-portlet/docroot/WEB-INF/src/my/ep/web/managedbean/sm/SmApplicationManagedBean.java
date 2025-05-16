@@ -622,6 +622,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// 31043 START
 	private boolean showFacilityMachine;
 	// 31043 END
+	
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 		
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
@@ -4440,6 +4443,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.specialCategoryRechecked = specialCategoryRechecked;
 	}
 	
+
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
+
 	//30974 - start
 	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
 		return selectedRecommendRejectReasonDescs;
