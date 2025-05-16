@@ -313,7 +313,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 *  comparison status
 	 */
 	public void compareFinancialService(Integer newStatus, Integer oldStatus, String parameterCode){
-		if(newStatus.equals(oldStatus)){
+		if(!newStatus.equals(oldStatus)){
 			
 			if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
