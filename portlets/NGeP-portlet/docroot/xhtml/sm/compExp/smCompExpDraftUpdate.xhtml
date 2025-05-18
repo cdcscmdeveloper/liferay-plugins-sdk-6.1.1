@@ -299,7 +299,7 @@
 								value="#{compExpMB.supplierMainCatList}" var="main" />
 							<p:ajax event="change" update="subDDId,subDivDDId"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{compExpBB.getSupplierSubCatList(compExpCatCode.categoryL1.categoryL1Id)}"
+								listener="#{compExpBB.getSupplierSubCatList(compExpCatCode.categoryL1.categoryL1Id, index)}"
 								process="@this" partialSubmit="true" />
 						</p:selectOneMenu>
 					</p:column>
@@ -314,7 +314,7 @@
 								value="#{compExpMB.supplierSubCatList}" var="sub" />
 							<p:ajax event="change" update="subDivDDId"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-								listener="#{compExpBB.getSupplierSubDivCatList(compExpCatCode.categoryL2.categoryL2Id)}"
+								listener="#{compExpBB.getSupplierSubDivCatList(compExpCatCode.categoryL2.categoryL2Id, index)}"
 								process="@this" partialSubmit="true" />
 						</p:selectOneMenu>
 					</p:column>

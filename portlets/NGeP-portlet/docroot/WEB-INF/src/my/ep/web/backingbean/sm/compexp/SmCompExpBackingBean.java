@@ -216,8 +216,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	public void getSupplierSubCatList(Long categoryL1Id, int index) {
 		this.getManagedBean().setSupplierSubDivCatList(null);
-		this.getManagedBean().getCompExpCatCodeList().get(index).setCategoryL2(null);
-		this.getManagedBean().getCompExpCatCodeList().get(index).setCategoryL3(null);
+		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL2().setCategoryL2Code("");
+		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Code("");
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
@@ -234,7 +234,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void getSupplierSubDivCatList(Long categoryL2Id, int index) {
-		this.getManagedBean().getCompExpCatCodeList().get(index).setCategoryL3(null);
+		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Code("");
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
