@@ -27,6 +27,7 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO dtlStatus = new AuditPMSPDTO();
+	String docType;
 
 	@Override
 	public String getRoleCode() {
@@ -45,6 +46,8 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 		BusinessNatureManagedBean managedBean = (BusinessNatureManagedBean) manageBean;
 		PmBusinessNature newBusinessNature = managedBean.getPmBusinessNature();
 
+		docType = newBusinessNature.getLevelName();
+		
 		if (managedBean.isBrandNew()) {
 			updateDetailsNew(roleCode, newBusinessNature, auditPMReqDTO);
 
@@ -62,6 +65,7 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 
 		dtlStatus.setRoleCode(roleCode);
 		dtlStatus.setDocNo(newBusinessNature.getLevelCode());
+		dtlStatus.setDocType(docType);
 		dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_BN);
 		dtlStatus.setDocId(BigInteger.valueOf(newBusinessNature.getBusinessNatureId()));
@@ -72,19 +76,15 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 
 		if (AuditConst.PM_AUD_BN_SECTION.equals(newBusinessNature.getBusinessLevel())) {
 			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_SECTION_PMPARAMETERLVLID);
-			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_SECTION);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLSEC);
 		} else if (AuditConst.PM_AUD_BN_DIVISION.equals(newBusinessNature.getBusinessLevel())) {
 			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_DIVISION_PMPARAMETERLVLID);
-			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_DIVISION);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLDIV);
 		} else if (AuditConst.PM_AUD_BN_GROUP.equals(newBusinessNature.getBusinessLevel())) {
 			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_GROUP_PMPARAMETERLVLID);
-			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_GROUP);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLG);
 		} else if (AuditConst.PM_AUD_BN_CLASS.equals(newBusinessNature.getBusinessLevel())) {
 			dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_CLASS_PMPARAMETERLVLID);
-			dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_CLASS);
 			dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLC);
 		}
 
@@ -98,6 +98,7 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 
 		dtlStatus.setRoleCode(roleCode);
 		dtlStatus.setDocNo(newBusinessNature.getLevelCode());
+		dtlStatus.setDocType(docType);
 		dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 		dtlStatus.setLvlCode2(AuditConst.PM_LVL_CODE_2_BN);
 		dtlStatus.setDocId(BigInteger.valueOf(newBusinessNature.getBusinessNatureId()));
@@ -112,19 +113,15 @@ public class AuditPMBusinessNatureBackingBean extends AuditPMBackingBeanTemplate
 
 			if (AuditConst.PM_AUD_BN_SECTION.equals(newBusinessNature.getBusinessLevel())) {
 				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_SECTION_PMPARAMETERLVLID);
-				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_SECTION);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLSEC);
 			} else if (AuditConst.PM_AUD_BN_DIVISION.equals(newBusinessNature.getBusinessLevel())) {
 				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_DIVISION_PMPARAMETERLVLID);
-				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_DIVISION);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLDIV);
 			} else if (AuditConst.PM_AUD_BN_GROUP.equals(newBusinessNature.getBusinessLevel())) {
 				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_GROUP_PMPARAMETERLVLID);
-				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_GROUP);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLG);
 			} else if (AuditConst.PM_AUD_BN_CLASS.equals(newBusinessNature.getBusinessLevel())) {
 				dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_BN_CLASS_PMPARAMETERLVLID);
-				dtlStatus.setDocType(AuditConst.PM_AUD_BN_DOC_TYPE_CLASS);
 				dtlStatus.setLvlCode3(AuditConst.PM_LVL_CODE_3_BNLVLC);
 			}
 
