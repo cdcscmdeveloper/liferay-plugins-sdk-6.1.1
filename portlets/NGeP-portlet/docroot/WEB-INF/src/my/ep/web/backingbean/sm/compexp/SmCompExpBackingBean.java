@@ -10,11 +10,13 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.compexp.SmCompExpReqDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -250,24 +252,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 	}
 
-	public void checkDuplicateCatCode(int index) {
-		// log.info("**** Validate the category Codes ********** ");
-		// for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
-		// if (expCat.equals(cat)) {
-		// log.info(" *** Same Obj ****"
-		// + cat.getPmCategoryL1().getCategoryL1Code() + " -- --"
-		// + expCat.getPmCategoryL1().getCategoryL1Code());
-		//
-		// } else if (cat.getPmCategoryL1().getCategoryL1Id()
-		// .equals(expCat.getPmCategoryL1().getCategoryL1Id())
-		// && cat.getPmCategoryL2().getCategoryL2Id()
-		// .equals(expCat.getPmCategoryL2().getCategoryL2Id())
-		// && cat.getPmCategoryL3().getCategoryL3Id()
-		// .equals(expCat.getPmCategoryL3().getCategoryL3Id())) {
-		// expCat.getPmCategoryL3().setCategoryL3Id(null);
-		// throw new EpException(MessageConst.ERROR_722533);
-		// }
-		// }
+	public void checkDuplicateCatCode(Long categoryL3Id, int index) {
+		int i = 0;
+		for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
+			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+				throw new EpException(MessageConst.ERROR_775222);
+			}
+		}
+		this.getManagedBean().setCatCodeNotComplete(false);
 	}
 
 	public void clientTypeChange() {
