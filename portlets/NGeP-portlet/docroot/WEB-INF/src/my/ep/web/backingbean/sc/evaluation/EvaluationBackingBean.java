@@ -189,6 +189,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.constant.sc.SLALogConstant;
 import my.ep.web.managedbean.sc.evaluation.EvaluationManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -10628,11 +10629,21 @@ private void retriveCommitteeRemarksList(){
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
-					String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+					TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
+					boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+					boolean isUserScore = question.getScoreTypeCode() != null
+							&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
+							&& tplSpecAnswer.getUserScore() == null;
+					if (!isNotOffered && isUserScore) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
+					String questionType = question.getQuestionType();
 					boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
 					boolean isComplianceNull = questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 							&& isMandatorySpec && tplSpecAnswer.getCompliance() == null;
-					if (isComplianceNull) {
+					if (isComplianceNull && !isNotOffered) {
 						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()) });
