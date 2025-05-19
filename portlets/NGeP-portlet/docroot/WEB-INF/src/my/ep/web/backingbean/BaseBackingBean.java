@@ -66,6 +66,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.vendorcode.IVendorCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -77,6 +78,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -88,6 +90,7 @@ import my.ep.dto.pm.common.language.LanguageReqDTO;
 import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
 import my.ep.dto.sm.common.ssm.SsmResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
@@ -112,6 +115,8 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pp.procurementplan.PpAddress;
 import my.ep.persistence.entity.sc.common.ScAddress;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmEquityCompany;
@@ -174,15 +179,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-
-
-//29466 -start-
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-//29466 -end-
 
 /**
  * @author siew mei
@@ -3524,7 +3520,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 	}
 	// 33410 - END
-	
+
 	// #29466 - START
 	public boolean checkManufacturerCategoryCodes(ScQt scQt) {
 		boolean manufacturer = false;

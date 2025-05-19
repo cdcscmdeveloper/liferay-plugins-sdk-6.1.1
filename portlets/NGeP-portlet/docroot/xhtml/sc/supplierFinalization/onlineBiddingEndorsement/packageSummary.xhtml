@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<!-- #29466 - START -->
 	<ui:param name="manufacturercategoryCode"
 		value="#{suppFinalBiddingBackingBean.checkManufacturerCategoryCodes(suppFinalBiddingBackingBean.managedBean.scQt)}"></ui:param>
@@ -45,8 +45,10 @@
 			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%; text-align:center;">
 				<p:outputLabel value="#{price.ranking}" />
 			</p:column>
-			
+
+			<!-- #29466 -start- -->
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; text-align:center;">
+			<!-- #29466 -end- -->
 				<p:commandLink oncomplete="suppDetailsPopup.show(); return false;"
 							   process="@this" update="@([id$=suppDetailsPopupId])">
 					<f:setPropertyActionListener value="#{price.scQtProposal}"

@@ -263,10 +263,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> deletedMemberList;
 	private SupplierFinalizationMeetingBackingBean meetingBB;
 	// 25037 - end
-	
-	// #29466 -start-
-	private ScQt checkCategoryCodeQt;
-	// #29466 -end- 
+
+	private ScQt checkCategoryCodeQt; // #29466
 
 	/**
 	 * @return the activeIndex
@@ -2194,22 +2192,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	// 28834 end
 	
-	// #29466 - START
-	/**
-	 * @return the checkCategoryCodeQt
-	 */
-	public ScQt getCheckCategoryCodeQt() {
-		return checkCategoryCodeQt;
-	}
-
-	/**
-	 * @param checkCategoryCodeQt the checkCategoryCodeQt to set
-	 */
-	public void setCheckCategoryCodeQt(ScQt checkCategoryCodeQt) {
-		this.checkCategoryCodeQt = checkCategoryCodeQt;
-	}
-	// #29466 - END
-	
 	// 25037 - start
 	public List<ScCommitteeMember> getDeletedMemberList() {
 		return deletedMemberList;
@@ -2227,7 +2209,24 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.meetingBB = meetingBB;
 	}
 	// 25037 - end
-	
+
+	// #29466 - START
+	/**
+	 * @return the checkCategoryCodeQt
+	 */
+	public ScQt getCheckCategoryCodeQt() {
+		return checkCategoryCodeQt;
+	}
+
+	/**
+	 * @param checkCategoryCodeQt
+	 *            the checkCategoryCodeQt to set
+	 */
+	public void setCheckCategoryCodeQt(ScQt checkCategoryCodeQt) {
+		this.checkCategoryCodeQt = checkCategoryCodeQt;
+	}
+	// #29466 - END
+
 	// 6906 note 117 - start
 	public SelectItem[] getDecisionDropdown() {
 		return decisionDropdown;
