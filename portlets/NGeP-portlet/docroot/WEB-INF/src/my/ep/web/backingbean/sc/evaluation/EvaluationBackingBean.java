@@ -8957,7 +8957,11 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setFecIndexPreRender(false);
 					retriveFinancialEvaluationStage();
 					financialCheckListStatusCheck();
-					financialCheckListStatusCheckPackage();
+					//#38213 - Start
+					if (!this.getManagedBean().getSingleSpecQuestion()) {
+						financialCheckListStatusCheckPackage();
+					}
+					//#38213 - End
 				}
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
