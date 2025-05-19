@@ -3235,17 +3235,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							performanceBond.remove();
 						}
 					}
-				}
-
-				if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
-					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
-					while (performanceBond.hasNext()) {
-						CtPerformanceBond  bond = performanceBond.next();
-						if (bond.isSelectedCheckBox()) {
-							performanceBond.remove();
-						}
-					}
-				}		
+				}	
 			}
 		//#24333 - End
 			getManagedBean().setSelectAll(false);
