@@ -8972,7 +8972,11 @@ public void saveComplianceSample() {
 				if(this.getManagedBean().getFecIndexPreRender()){
 					retriveFinancialEvaluationStage();
 					financialCheckListStatusCheck();
-					financialCheckListStatusCheckPackage();
+					//#38213 - Start
+					if (!this.getManagedBean().getSingleSpecQuestion()) {
+						financialCheckListStatusCheckPackage();
+					}
+					//#38213 - End
 				}
 				retrieveReportTabDtl();
 			
