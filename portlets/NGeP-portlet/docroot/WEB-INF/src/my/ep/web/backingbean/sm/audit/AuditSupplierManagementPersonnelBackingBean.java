@@ -12,6 +12,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 // #35501_Reopen#38
 import my.ep.web.util.pm.helper.PmCommonUtil;
+//#35501_Reopen#140
+import org.apache.log4j.Logger;
 
 /**
  * @author Firdaus Omar
@@ -21,6 +23,8 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 public class AuditSupplierManagementPersonnelBackingBean extends AuditSupplierManagementBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
+	//#35501_Reopen#140
+	public static Logger log = Logger.getLogger(AuditSupplierManagementPersonnelBackingBean.class);
 
 	/**
 	 * Prepares audit data
@@ -37,10 +41,14 @@ public class AuditSupplierManagementPersonnelBackingBean extends AuditSupplierMa
 		SmPersonnelManagedBean mBean = (SmPersonnelManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
 		String oldRole = mBean.getOldRole();
+		// #35501_Reopen#140
+		log.info("#35501_Reopen#140 - language code: " + AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA);
 		// #35501_Reopen#38 Start
 		if (null != oldRole && !oldRole.isEmpty()) {
 			// #35501_Reopen#132
 			oldRole = PmCommonUtil.getRoleDescByRoleCodeAndLanguage(mBean.getOldRole(), AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA);
+			// #35501_Reopen#140
+			log.info("#35501_Reopen#140 - old role: " + oldRole);
 		}
 		// #35501_Reopen#38 End
 		String newRole = mBean.getNewRole();
@@ -48,6 +56,8 @@ public class AuditSupplierManagementPersonnelBackingBean extends AuditSupplierMa
 		if (null != newRole && !newRole.isEmpty() && !newRole.equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)) {
 			// #35501_Reopen#132
 			newRole = PmCommonUtil.getRoleDescByRoleCodeAndLanguage(mBean.getNewRole(), AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA);
+			// #35501_Reopen#140
+			log.info("#35501_Reopen#140 - old role: " + newRole);
 		}
 		// #35501_Reopen#38 End
 
