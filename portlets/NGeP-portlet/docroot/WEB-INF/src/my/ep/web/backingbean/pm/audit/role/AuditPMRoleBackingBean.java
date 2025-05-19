@@ -169,7 +169,7 @@ public class AuditPMRoleBackingBean {
 	 * @return
 	 */
 	public String roleSoftCert() {
-		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) ? RoleCode.EP_ADMIN.value() : getFacesScopes()
+		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN_1.value()) ? RoleCode.EP_ADMIN_1.value() : getFacesScopes()
 				.hasRoleUser(RoleCode.EP_ADMIN_2.value()) ? RoleCode.EP_ADMIN_2.value() : getFacesScopes().hasRoleUser(
 				RoleCode.SUPPORT_APPL.value()) ? RoleCode.SUPPORT_APPL.value() : null;
 	}
