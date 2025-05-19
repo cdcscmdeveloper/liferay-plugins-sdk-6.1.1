@@ -2210,7 +2210,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 
-		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {//#25956
 			if (getManagedBean().getTaskName() != null
 					&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
 							|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME))){
@@ -2288,7 +2288,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_750002);
 			}		
 		}
-		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+		if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {//#25956
 			// Check all the member role must be selected
 			if (getManagedBean().getTaskName() != null 
 					&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) 
@@ -2440,7 +2440,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) 
 				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
-				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
+				|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)))) {//#25956
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo());
@@ -2492,8 +2493,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)
-				|| (BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !isSupplierRole()) {
+			
 			setSecretary();
 			validateContractAmendment(outcome);
 			// Temp setTextBeforeSign : DocNo+Type
@@ -2523,7 +2524,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)
 				&& isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 			validateContractAmendment(outcome);	
@@ -2539,9 +2540,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		}
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
-			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
+//			validateContractAmendment(outcome);
+			//#25956 - START
+			validateRemarkCancel(outcome);
+			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+				RequestContext.getCurrentInstance().execute("cancelofficerConfirmDlg.show()");				
+			}else{
+				RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");	
+			}			
+			return null;
+		} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+//			validateContractAmendment(outcome);
+			validateRemarkCancel(outcome);
+			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				RequestContext.getCurrentInstance().execute("supplierrejectConfirmDlg.show()");
+			
+			}else {
+				RequestContext.getCurrentInstance().execute("rejectConfirmDlg.show()");				
+			}
 			return null;
 		}
+		//#25956 - END
 		//#26688 start
 		else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
 			validateRemarkCancel(outcome);
