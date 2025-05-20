@@ -4467,9 +4467,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
 		boolean hasNewBond = false;
-
+		CtPerformanceBond emptyNewBond = null;
+		
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			CtPerformanceBond emptyNewBond = null;
 			if (bond.isBondNew()) {
 				hasNewBond = true;
 				if (bond.isBrandNew()) {
@@ -4487,11 +4487,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					emptyNewBond = bond;
 				}
 			}
-			// Only create new bond if NONE exist
-			if (!hasNewBond && emptyNewBond != null) {
-				bondNew.add(createNewBondFrom(emptyNewBond));
-			}
 		}
+		// Only create new bond if NONE exist
+		if (!hasNewBond && emptyNewBond != null) {
+			bondNew.add(createNewBondFrom(emptyNewBond));
+		}
+		
 	    // Sorting both lists by bond name (case-insensitive)
 	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
 	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
