@@ -3235,17 +3235,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 							performanceBond.remove();
 						}
 					}
-				}
-
-				if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null) {
-					Iterator<CtPerformanceBond> performanceBond = getManagedBean().getCtContractAmount().getCtPerformanceBonds().iterator();
-					while (performanceBond.hasNext()) {
-						CtPerformanceBond  bond = performanceBond.next();
-						if (bond.isSelectedCheckBox()) {
-							performanceBond.remove();
-						}
-					}
-				}		
+				}	
 			}
 		//#24333 - End
 			getManagedBean().setSelectAll(false);
@@ -4428,7 +4418,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return newCtAgreementList
 	 */
 	public List<CtAgreement> filterAgreementList() {
-		List<CtAgreement> newCtAgreementList = new ArrayList<CtAgreement>();
+		List<CtAgreement> newCtAgreementList = new ArrayList<>();
 		List<CtAgreement> currentCtAgreementList = getManagedBean().getCtAgreementList();
 
 		CtAgreement tempCtAgreement = null;
@@ -4917,14 +4907,28 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * The method used to navigate to Original contract details screen
 	 * for view purpose.
 	 * 
+	 * @param scLoa current loa
 	 * @return the navigate URL 
 	 */
 	public void goToOriginalLoaView(ScLoa scLoa) {
+		//#38198 start
+		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.getManagedBean().setIconForDL(true); 
+			directLoaBackingBean.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX); 
+			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+			loaDetailBackingBean.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX); 
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+		}
+		//#38198 end
 	}
 	//Enhancement 15851 - End
 		
@@ -4999,4 +5003,31 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return false;
 	}
 	// #35137,#24333 - End
+	
+	// 24333 - Start
+	/**
+	 * The method used to calculate overall amount with GST AND STAX From LOA
+	 * 
+	 * @return BigDecimal total amount
+	 */
+	public BigDecimal calculateOriginalOverallAmount() {
+		BigDecimal gstAmt = BigDecimal.ZERO;
+		BigDecimal staxAmt = BigDecimal.ZERO;
+		BigDecimal contractAmt = BigDecimal.ZERO;
+
+		if (getManagedBean().getContractVer().getCtContract().getLoa() != null) {
+			if (getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt() != null)
+				gstAmt = getManagedBean().getContractVer().getCtContract().getLoa().getGstAmt();
+
+			if (getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt() != null)
+				staxAmt = getManagedBean().getContractVer().getCtContract().getLoa().getSstAmt();
+
+			if (getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt() != null)
+				contractAmt = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+		}
+
+		BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
+		return total;
+	}
+	// 24333 - End
 }  

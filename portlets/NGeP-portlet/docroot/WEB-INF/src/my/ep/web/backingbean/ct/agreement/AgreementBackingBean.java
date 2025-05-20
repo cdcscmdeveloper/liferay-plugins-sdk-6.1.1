@@ -565,15 +565,15 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 		}
 		
 		// #24333 - Start
-		if (getManagedBean().getCtAgreement().getCtAmendment() != null && getManagedBean().getCtAgreement().getCtAmendment().isContractExtend()) { //#bug_38138
-			if (getManagedBean().getContractVer().getCtContractAmounts() != null) {
-				for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
-					if (contractAmt.getEffDate().getTime() <= getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime()
-							&& contractAmt.getExpDate().getTime() >= getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime()
-							&& (contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)  && contractAmt.isBondReq()) {
-						getManagedBean().setBondAttachmentCompleted(true);
-						break;
-					}
+		if (getManagedBean().getCtAgreement().getCtAmendment() != null && getManagedBean().getCtAgreement().getCtAmendment().isContractExtend()
+				&& getManagedBean().getContractVer().getCtContractAmounts() != null) {
+			long expDate = getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime();
+			for (CtContractAmount contractAmt : resDTO.getCtContractVer().getCtContractAmounts()) {
+				if (contractAmt.getEffDate().getTime() <= expDate && contractAmt.getExpDate().getTime() >= expDate
+						&& (contractAmt.getIsBondAttachment() == null || contractAmt.getIsBondAttachment() == ContractConst.STATUS_COMPLETE)
+						&& contractAmt.isBondReq()) {
+					getManagedBean().setBondAttachmentCompleted(true);
+					break;
 				}
 			}
 		}
@@ -949,7 +949,7 @@ public class AgreementBackingBean extends ContractBaseBackingBean<AgreementManag
 				throw new EpException(MessageConst.ERROR_750043, 
 						new String[]{ResourceBundleUtils.getMessage(getManagedBean().getCtContract().getContractNo(), 
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-			} else if (getManagedBean().getCtAgreement().getCtAmendment() != null
+			} else if (getManagedBean().isBondReq() && getManagedBean().getCtAgreement().getCtAmendment() != null
 					&& getManagedBean().getCtAgreement().getCtAmendment().isContractExtend() && !getManagedBean().isBondAttachmentCompleted()) { // #24333,//#bug_38138																																																																										// Start
 				getManagedBean().setSelectedTabIndex(0);
 				throw new EpException(MessageConst.ERROR_750043, new String[] { ResourceBundleUtils.getMessage(getManagedBean().getCtContract()

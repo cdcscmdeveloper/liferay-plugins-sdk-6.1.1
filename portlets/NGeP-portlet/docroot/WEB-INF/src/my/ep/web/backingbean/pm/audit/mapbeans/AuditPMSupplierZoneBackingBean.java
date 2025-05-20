@@ -24,6 +24,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
 	String docNo;
+	String docType;
 	BigInteger docId;
 	BigInteger docGroupId;
 
@@ -44,7 +45,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getPmZone().getZoneCode();
-
+		this.docType = managedBeans.getPmZone().getZoneName();
 		if (null != managedBeans.getPmZone().getZoneId() && managedBeans.getPmZoneOld().getZoneId() != null) {
 			updateDetail(managedBeans);
 		} else {
@@ -123,13 +124,13 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
 				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
 				detailObj(AuditConst.PM_AUD_SPZ_STATECODE_FIELDLABELID, null, st.getPmState().getStateCode(),
-						AuditConst.PM_AUD_ACTION_TYPE_UPD);
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 			if (st.getPmState().getStateName() != null && st.isBrandNew()) {
 				this.docGroupId = BigInteger.valueOf(st.getPmZone().getZoneId());
 				this.docId = BigInteger.valueOf(st.getPmState().getStateId());
 				detailObj(AuditConst.PM_AUD_SPZ_STATENAME_FIELDLABELID, null, st.getPmState().getStateName(),
-						AuditConst.PM_AUD_ACTION_TYPE_UPD);
+						AuditConst.PM_AUD_ACTION_TYPE_INS);
 			}
 		}
 		managedBeans.setZoneStateListNewAdded(new ArrayList<PmZoneState>());
@@ -155,7 +156,7 @@ public class AuditPMSupplierZoneBackingBean extends AuditPMBackingBeanTemplate {
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditConst.PM_AUD_SPZ);
+		dtlObj.setDocType(this.docType);
 		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_SPZ_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);

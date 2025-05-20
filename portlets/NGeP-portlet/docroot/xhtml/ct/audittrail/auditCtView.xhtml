@@ -146,6 +146,13 @@
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							update="@form">
 						</p:menuitem>
+						
+						<p:menuitem style="white-space:normal;"
+							value="#{lbl['lbl.ct.audit.tab.designation.contract.details']}"
+							actionListener="#{auditContractBackingBean.handleButtonClick(15)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							update="@form">
+						</p:menuitem>
 					</p:tabMenu>
 					</tr>
 					</table>
