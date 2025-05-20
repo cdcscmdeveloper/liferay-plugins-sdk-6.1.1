@@ -3706,7 +3706,7 @@ public class LOIDetailBackingBean extends
 				context.put("scNegoTerms", selectedNegoTerms);
 			} else if (scLoi.getScNegoTerms() != null
 					&& scLoi.getScNegoTerms().size() > 0) {
-				context.put("scNegoTerms", scLoi.getScNegoTerms());
+				context.put("scNegoTerms", null);//#38142
 				context.put("Keputusan", Keputusan);
 			}
 
