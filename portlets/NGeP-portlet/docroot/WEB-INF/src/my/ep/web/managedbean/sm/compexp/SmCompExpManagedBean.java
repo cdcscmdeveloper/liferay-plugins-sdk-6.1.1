@@ -63,6 +63,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private List<PmCategoryL1> supplierMainCatList;
 	private List<PmCategoryL2> supplierSubCatList;
 	private List<PmCategoryL3> supplierSubDivCatList;
+	private boolean agreeDeclare;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -300,6 +301,14 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSupplierSubDivCatList(List<PmCategoryL3> supplierSubDivCatList) {
 		this.supplierSubDivCatList = supplierSubDivCatList;
+	}
+
+	public boolean isAgreeDeclare() {
+		return agreeDeclare;
+	}
+
+	public void setAgreeDeclare(boolean agreeDeclare) {
+		this.agreeDeclare = agreeDeclare;
 	}
 
 }

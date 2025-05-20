@@ -23,7 +23,9 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
+import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
@@ -108,9 +110,12 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		}
 
 		dateChange();
-		initSelectedDraftDoc();
-		initSelectedCatDraft();
-
+		initDraftDoc();
+		initCatDraft();
+		this.getManagedBean().setSelectedAll(false);
+		this.getManagedBean().setSelected(false);
+		this.getManagedBean().setSelectedCompExpCatCode(null);
+		this.getManagedBean().setAgreeDeclare(false);
 		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
 	}
 
@@ -120,7 +125,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSelectedDraft(getCompExpSo().retrieveCompExpDraft(reqDTO).getExpDraf());
 	}
 
-	private void initSelectedDraftDoc() {
+	private void initDraftDoc() {
 		List<SmCompExpMasterDoc> compExpDocList = new ArrayList<SmCompExpMasterDoc>();
 		this.getManagedBean().setCompExpDocList(compExpDocList);
 		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH)
@@ -129,7 +134,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setCompExpFilePath(filePath);
 	}
 
-	private void initSelectedCatDraft() {
+	private void initCatDraft() {
 		List<SmCompExpCatDraft> catCodeList = new ArrayList<SmCompExpCatDraft>();
 		this.getManagedBean().setCompExpCatCodeList(catCodeList);
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
@@ -146,45 +151,38 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void selectAllCatCodes() {
-
-		// if (getManagedBean().isSelectedAll()) {
-		// getManagedBean().setSelected(true);
-		// getManagedBean().setSelectedCompExpCats(
-		// getManagedBean().getSelectedCompanyExperience()
-		// .getSmCompanyExperienceCats());
-		// } else {
-		// getManagedBean().setSelected(false);
-		// getManagedBean().setSelectedCompExpCats(null);
-		//
-		// }
-
+		List<SmCompExpCatDraft> selectedList = new ArrayList<SmCompExpCatDraft>();
+		if (this.getManagedBean().isSelectedAll()) {
+			this.getManagedBean().setSelected(true);
+			for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
+				cat.setSelected(true);
+				selectedList.add(cat);
+			}
+		} else {
+			this.getManagedBean().setSelected(false);
+			for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
+				cat.setSelected(false);
+				selectedList.remove(cat);
+			}
+		}
+		this.getManagedBean().setSelectedCompExpCatCode(selectedList);
 	}
 
 	public void selectCatCode(int index) {
-
-		// List<SmCompanyExperienceCat> selectedCompExpCatsList =
-		// getManagedBean()
-		// .getSelectedCompExpCats();
-		//
-		// if (getManagedBean().isSelected()) {
-		// if (selectedCompExpCatsList == null) {
-		// selectedCompExpCatsList = new ArrayList<SmCompanyExperienceCat>();
-		// }
-		// selectedCompExpCatsList.add(getManagedBean()
-		// .getSelectedCompanyExperience()
-		// .getSmCompanyExperienceCats().get(index));
-		//
-		// } else {
-		//
-		// if (selectedCompExpCatsList.contains(getManagedBean()
-		// .getSelectedCompanyExperience()
-		// .getSmCompanyExperienceCats().get(index))) {
-		// selectedCompExpCatsList.remove(getManagedBean()
-		// .getSelectedCompanyExperience()
-		// .getSmCompanyExperienceCats().get(index));
-		// }
-		// }
-		// getManagedBean().setSelectedCompExpCats(selectedCompExpCatsList);
+		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedCompExpCatCode();
+		if (null == selectedList || selectedList.isEmpty()) {
+			selectedList = new ArrayList<SmCompExpCatDraft>();
+		}
+		SmCompExpCatDraft selected = this.getManagedBean().getCompExpCatCodeList().get(index);
+		if (selected.isSelected()) {
+			selected.setSelected(true);
+			selectedList.add(selected);
+		} else {
+			this.getManagedBean().setSelectedAll(false);
+			selected.setSelected(false);
+			selectedList.remove(selected);
+		}
+		this.getManagedBean().setSelectedCompExpCatCode(selectedList);
 	}
 
 	public void addCompExpCat() {
@@ -197,6 +195,24 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void delCompExpCat() {
+		List<SmCompExpCatDraft> catList = this.getManagedBean().getCompExpCatCodeList();
+		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedCompExpCatCode();
+		this.getManagedBean().setCatCodeNotComplete(true);
+		for (SmCompExpCatDraft selected : selectedList) {
+			catList.remove(selected);
+			if (null == selected.getCategoryL3().getCategoryL3Id()) {
+				this.getManagedBean().setCatCodeNotComplete(false);
+			}
+		}
+		if (catList.isEmpty()) {
+			addCompExpCat();
+			this.getManagedBean().setSupplierSubCatList(null);
+			this.getManagedBean().setSupplierSubDivCatList(null);
+
+		} else {
+			this.getManagedBean().setCompExpCatCodeList(catList);
+		}
+		this.getManagedBean().setSelectedCompExpCatCode(null);
 	}
 
 	public void getSupplierMainCatList() {
@@ -218,8 +234,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	public void getSupplierSubCatList(Long categoryL1Id, int index) {
 		this.getManagedBean().setSupplierSubDivCatList(null);
-		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL2().setCategoryL2Code("");
-		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Code("");
+		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL2().setCategoryL2Id(null);
+		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Id(null);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
@@ -236,7 +252,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void getSupplierSubDivCatList(Long categoryL2Id, int index) {
-		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Code("");
+		this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Id(null);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
@@ -256,6 +272,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		int i = 0;
 		for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
 			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
+				this.getManagedBean().getCompExpCatCodeList().get(index).getCategoryL3().setCategoryL3Id(null);
 				throw new EpException(MessageConst.ERROR_775222);
 			}
 		}
@@ -354,5 +371,56 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().getCompExpDocList().remove(suppDoc);
 		}
 		this.getManagedBean().setCompExpDoc(null);
+	}
+
+	public void onDeclare() {
+		// if (null == this.getManagedBean().getSelectedDraft().getAgencyName()
+		// ||
+		// this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
+		// throw new EpException(MessageConst.ERROR_775223);
+		// }
+		// if (null ==
+		// this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+		// ||
+		// this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()
+		// || null ==
+		// this.getManagedBean().getSelectedDraft().getFileExtensionNo()
+		// ||
+		// this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty())
+		// {
+		// throw new EpException(MessageConst.ERROR_775224);
+		// }
+		// if (null ==
+		// this.getManagedBean().getSelectedDraft().getContractExpDate()) {
+		// throw new EpException(MessageConst.ERROR_775225);
+		// }
+		// if (null == this.getManagedBean().getCompExpDocList() ||
+		// this.getManagedBean().getCompExpDocList().isEmpty()) {
+		// throw new EpException(MessageConst.ERROR_775226);
+		// }
+		// for (SmCompExpCatDraft cat :
+		// this.getManagedBean().getCompExpCatCodeList()) {
+		// if (null == cat.getCategoryL3().getCategoryL3Id()) {
+		// throw new EpException(MessageConst.ERROR_775227);
+		// }
+		// }
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
+		reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
+		reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
+		if (getCompExpSo().checkDuplicateExist(reqDTO)) {
+			RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
+		} else {
+			declareComExp();
+		}
+
+	}
+
+	public void declareComExp() {
+
+	}
+
+	public void delCompExp() {
+
 	}
 }
