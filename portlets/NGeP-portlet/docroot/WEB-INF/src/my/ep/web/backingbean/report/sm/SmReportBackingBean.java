@@ -504,9 +504,7 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 
 	public List<SelectItem> retrieveApplStatus() {
-		if (EntityHelper
-				.isCollectionEmpty(getManagedBean().getApplStatusList())
-				&& null != new FacesScopes().getUserSessionBean().getUserId()) {
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 
 			getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()

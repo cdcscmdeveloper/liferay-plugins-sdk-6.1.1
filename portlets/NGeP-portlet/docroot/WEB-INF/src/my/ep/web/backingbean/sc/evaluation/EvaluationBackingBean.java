@@ -8972,7 +8972,11 @@ public void saveComplianceSample() {
 				if(this.getManagedBean().getFecIndexPreRender()){
 					retriveFinancialEvaluationStage();
 					financialCheckListStatusCheck();
-					financialCheckListStatusCheckPackage();
+					//#38213 - Start
+					if (!this.getManagedBean().getSingleSpecQuestion()) {
+						financialCheckListStatusCheckPackage();
+					}
+					//#38213 - End
 				}
 				retrieveReportTabDtl();
 			
@@ -10628,11 +10632,21 @@ private void retriveCommitteeRemarksList(){
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
-					String questionType = tplSpecAnswer.getTplSpecQuestion().getQuestionType();
+					TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
+					boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+					boolean isUserScore = question.getScoreTypeCode() != null
+							&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
+							&& tplSpecAnswer.getUserScore() == null;
+					if (!isNotOffered && isUserScore) {
+						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+								QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()) });
+					}
+					String questionType = question.getQuestionType();
 					boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
 					boolean isComplianceNull = questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
 							&& isMandatorySpec && tplSpecAnswer.getCompliance() == null;
-					if (isComplianceNull) {
+					if (isComplianceNull && !isNotOffered) {
 						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()) });
