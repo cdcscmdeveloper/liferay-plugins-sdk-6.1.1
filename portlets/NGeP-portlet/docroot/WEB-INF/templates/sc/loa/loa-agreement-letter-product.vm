@@ -1722,14 +1722,18 @@ u.underline {
 		<br/>
 	  #else 
 		#set($whitespace = "&nbsp;")
+			#set($rowCount = 0)	
 		  	#foreach( $tplspecMaster in $masters )
 		  	
 					#set($itemType = $bean.getParameterDescForReport($tplspecMaster.itemTypeCode)) 
 					#set($specType = $tplspecMaster.specTypeCode.parameterCode) 
 					#if ($itemType == "Produk" || $itemType == "Product")
 					##26130 - start 03032022
-					#set($rowCount = 0)	
 					#if($tplspecMaster.tplSpecQuestions.size() > 0)
+					#if ($rowCount > 0)
+						<div class="break-after"><br/></div>
+						#set($rowCount = 0)	
+					#end
 					<table width="100%" border="1" cellpadding="0" cellspacing="-1">
 						<body>
 					##26130 - end 03032022
@@ -1896,9 +1900,9 @@ u.underline {
 																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$whiteSpace</td>
 																				
 																#else
-																		#set ($feedback = $combine.feedback)
-																		#set($feedback = $feedback.replace(">", "&#62;"))
-																		#set($feedback = $feedback.replace("<", "&#60;"))
+																	#set ($feedback = $combine.feedback)
+																	#set($feedback = $feedback.replace(">", "&#62;"))
+																	#set($feedback = $feedback.replace("<", "&#60;"))
 																		<td valign="top" class="title border left"   style="text-align: left; padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
 																			
 																#end
@@ -1922,7 +1926,6 @@ u.underline {
 														</tr>
 													#end
 													#end
-			 
 											
 											#end	
 									
@@ -1995,16 +1998,16 @@ u.underline {
 																#set($count = 1)
 
 																	#if ($combine.feedback)
-																			#set ($feedback = $combine.feedback)
-																			#set($feedback = $feedback.replace(">", "&#62;"))
-																			#set($feedback = $feedback.replace("<", "&#60;"))
-																			<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																			
 																	#else
-																			#set ($feedback = $combine.feedback)
-																			#set($feedback = $feedback.replace(">", "&#62;"))
-																			#set($feedback = $feedback.replace("<", "&#60;"))
-																			<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
+																		#set ($feedback = $combine.feedback)
+																		#set($feedback = $feedback.replace(">", "&#62;"))
+																		#set($feedback = $feedback.replace("<", "&#60;"))
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">feedback</td>
 																		
 																	#end
 																		
@@ -2026,9 +2029,10 @@ u.underline {
 																<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$serviceScope</td>
 															#end
 														#end
+														</tr>
 												#end
 												#end
-											</tr>
+											
 									
 									#end
 									##26130 - zaim end	
@@ -2043,9 +2047,7 @@ u.underline {
 						##26130 - start 03032022
 						</tbody>
 						</table>
-						#if ($rowCount > 0)
-						<div class="break-after"><br/></div>
-						#end
+						
 						#end
 						##26130 - end 03032022	
 					#end
@@ -2490,10 +2492,10 @@ u.underline {
 													##specval
 													#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-																#set ($specVal = $combine.specVal)
-																#set($specVal = $specVal.replace(">", "&#62;"))
-																#set($specVal = $specVal.replace("<", "&#60;"))
-																<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
+															#set ($specVal = $combine.specVal)
+															#set($specVal = $specVal.replace(">", "&#62;"))
+															#set($specVal = $specVal.replace("<", "&#60;"))
+															<td valign="top" colspan="6" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.specVal</td>
 												
 															##feedback
 															
@@ -2508,10 +2510,7 @@ u.underline {
 																		<td valign="top" class="standard border-bottom left" style="text-align: left; padding-left: 5px; padding-right: 5px;">$feedback</td>
 																				
 																#else
-																		#set ($feedback = $combine.feedback)
-																		#set($feedback = $feedback.replace(">", "&#62;"))
-																		#set($feedback = $feedback.replace("<", "&#60;"))
-																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$feedback</td>
+																		<td valign="top" class="title border left"   style="text-align: left;  padding-left: 5px; padding-right: 5px; font-size:12px;">$combine.feedback</td>
 																			
 																#end
 																			
@@ -2606,10 +2605,10 @@ u.underline {
 												##specval
 												#foreach($combine in $tplspecQuestion.listCombineSpec)
 														<tr style="border-bottom: 1px solid black;">
-														#set ($specVal = $combine.specVal)
-														#set($specVal = $specVal.replace(">", "&#62;"))
-														#set($specVal = $specVal.replace("<", "&#60;"))
-												<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
+															#set ($specVal = $combine.specVal)
+															#set($specVal = $specVal.replace(">", "&#62;"))
+															#set($specVal = $specVal.replace("<", "&#60;"))
+															<td valign="top" colspan="5" class="title border left"   style="text-align: justify;  padding-left: 5px; padding-right: 5px; font-size:12px;">$specVal</td>
 											
 														##feedback
 														
@@ -2824,8 +2823,6 @@ u.underline {
 	#end
 	## 35295 - end
 	 #else
-     
-	 
 		<tr align='left'>
 			<td><span
 				style='font-weight: bold; font-size: 10px; font-family: Times New Roman;'>
@@ -2862,11 +2859,12 @@ u.underline {
 
 
 ##26130 - start 18052022
-#if ($scLoa.scLoiLoa.docType != "QT")	
+#if ($scLoa.scLoiLoa.docType == "NG")	
 	<div class="break-after"><br/></div>
   #end
 ##26130 - end 18052022
-
+##26130 & 26226 - end
+<div class="break-after"><br/></div>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr>
 			<td align="right"> <span class="text_family"> <b><i>Lampiran A5</i></b></span></td>

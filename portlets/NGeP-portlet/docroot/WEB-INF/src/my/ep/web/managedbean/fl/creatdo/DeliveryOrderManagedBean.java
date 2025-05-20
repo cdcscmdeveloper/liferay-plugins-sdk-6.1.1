@@ -1336,6 +1336,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 	//28855 - End
 	
+	// #35508 start
 	public String getOriginalSupplierDoRef() {
 		return originalSupplierDoRef;
 	}
@@ -1346,4 +1347,5 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setOriginalSupplierDoRef(String originalSupplierDoRef) {
 		this.originalSupplierDoRef = originalSupplierDoRef;
 	}
+	// #35508 end
 }

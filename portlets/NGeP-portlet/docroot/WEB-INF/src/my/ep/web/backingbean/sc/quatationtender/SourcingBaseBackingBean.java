@@ -5149,7 +5149,6 @@ ATTACHMENT scAttachment, String contentType)
 							// #25025 - End fixing sonarlint
 
 							/** This code is for LOA with Single Item Details **/
-
 							if (items.size() == 1) {
 								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
 										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId

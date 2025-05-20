@@ -692,7 +692,7 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 						flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 						flReqDTO.setSectionId(FulfilmentConst.REMARK_SECTION_INVOICE_REVISION);
 						flresDTO = paymentMatchSO.retrieveRemarkAndAttachmentSection(flReqDTO);
-						List remarklist = flresDTO.getRemarkList();
+						List<FlRemark> remarklist = flresDTO.getRemarkList();
 						initializeRemarkRevision(null, remarklist,false);
 
 					}
@@ -1397,7 +1397,6 @@ public class InvoiceBackingBean extends FulfilmentBaseBackingBean<InvoiceManaged
 		
 		if(finOrgResDTO.isSuccessful()) {
 			if(finOrgResDTO.getPmAddressType()!=null){
-				//TODO NEW
 				getManagedBean().getInvoice().setPaymentBankAddress(convertFinAccAddressToFlAddress(finOrgResDTO.getPmAddressType()));
 			}
 			
