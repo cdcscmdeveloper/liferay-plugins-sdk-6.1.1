@@ -1223,7 +1223,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		try{
 	    	String path = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_REPORT_DIR);
 	    	String fullPath = path+"/"+requestId+".xlsx";
-	    	//String fullPath = "D://reports//dev//"+requestId+".xlsx";
 	    	//log.info("FULL PATH (CREATE FILE) == "+fullPath);
 	    	FileOutputStream out = new FileOutputStream(new File(fullPath));
 	    	wb.write(out);
