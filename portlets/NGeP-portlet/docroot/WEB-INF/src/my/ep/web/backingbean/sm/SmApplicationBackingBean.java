@@ -4051,10 +4051,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for 31130 --210525
 					//#31130 -end
 					
 					//#32236 start
@@ -4126,10 +4126,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}//#31130 -end
+					}*/ //Commented for 31130 --210525
+					//#31130 -end
 					
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
