@@ -14560,7 +14560,6 @@ if (null != checklist && !checklist.isEmpty()) {
 					&& null == scQtCheckList.getQtChecklistId()) {
 				if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
 					Integer localChecckListseq = SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC;
-					int technicalSpecCount = 0;
 					// Bug #33249@Syazani 24/11/2022
 					
 					// Bug #38095@Syazani 20/05/2025 -- Start
@@ -14582,11 +14581,7 @@ if (null != checklist && !checklist.isEmpty()) {
 					log.info("QTID:" + getManagedBean().getQt().getQtId()
 							+ "localChecckListseq" + localChecckListseq);
 					
-					// Bug #38095@Syazani 20/05/2025 -- Start
-					if (totalSeq > 0) {
-						scQtCheckList.setChecklistSeq(localChecckListseq + totalSeq);
-					}
-					// Bug #38095@Syazani 20/05/2025 -- End
+					scQtCheckList.setChecklistSeq(localChecckListseq + totalSeq);	// Bug #38095@Syazani 20/05/2025 
 				}
 				if (null != finanicalAllCheckList
 						&& !finanicalAllCheckList.isEmpty()) {
