@@ -1915,6 +1915,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCtContract> viewLoaContractDataModel;
 	private Map<Long, VCtContract> checkLoaContract;
 	// 25791-End
+	// #33787 Start Vinod
+	private boolean minPaidUpCapitalWIP;
+	// #33787 End Vinod
 
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
@@ -12202,6 +12205,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
 	}
 
+	// #33787 Start Vinod
+	public boolean isMinPaidUpCapitalWIP() {
+		return minPaidUpCapitalWIP;
+	}
+
+	public void setMinPaidUpCapitalWIP(boolean minPaidUpCapitalWIP) {
+		this.minPaidUpCapitalWIP = minPaidUpCapitalWIP;
+	}
+
+	// #33787 End Vinod
 	/**
 	 * @return the loaContractTrackingDtls
 	 */

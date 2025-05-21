@@ -188,6 +188,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 //#29732 End
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -13911,6 +13912,27 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
+	// #33787 Start Vinod
+    private void checkMinPaidUpCapitalWIP(){
+    	IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+    	ScQt qt = this.getManagedBean().getQt();
+		
+		if(null != qt.getPublishDate()){
+			Date publishDate = qt.getPublishDate();
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_33787);
+			
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+			
+			Date effDate = appVerDtls.getEffDate();
+			
+			if(publishDate.before(effDate)){
+				this.getManagedBean().setMinPaidUpCapitalWIP(true);
+			}
+		}
+    }
+    // #33787 End Vinod
 	//12471 - start
 	/**
 	 * Validate selected approver from picklist
