@@ -11199,8 +11199,8 @@ public class SmApplicationBackingBean extends
 			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),  getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
 		}
 		//#28777 - END
-		return submitPOorApproverReviewToBPM(decision);
-
+		//#34400
+		return "";
 	}
 
 	//#31386 - START

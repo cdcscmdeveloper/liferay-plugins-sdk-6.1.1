@@ -39,13 +39,15 @@ public class AuditSupplierManagementPersonnelBackingBean extends AuditSupplierMa
 		String oldRole = mBean.getOldRole();
 		// #35501_Reopen#38 Start
 		if (null != oldRole && !oldRole.isEmpty()) {
-			oldRole = PmCommonUtil.getRoleDescByRoleCode(mBean.getOldRole());
+			// #35501_Reopen#132
+			oldRole = PmCommonUtil.getRoleDescByRoleCodeAndLanguage(mBean.getOldRole(), AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA);
 		}
 		// #35501_Reopen#38 End
 		String newRole = mBean.getNewRole();
 		// #35501_Reopen#38 Start
 		if (null != newRole && !newRole.isEmpty() && !newRole.equalsIgnoreCase(SupplierManagementConst.EPROLE_DELETED)) {
-			newRole = PmCommonUtil.getRoleDescByRoleCode(mBean.getNewRole());
+			// #35501_Reopen#132
+			newRole = PmCommonUtil.getRoleDescByRoleCodeAndLanguage(mBean.getNewRole(), AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA);
 		}
 		// #35501_Reopen#38 End
 

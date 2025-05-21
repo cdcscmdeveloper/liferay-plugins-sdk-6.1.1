@@ -8957,7 +8957,11 @@ public class EvaluationBackingBean extends
 					this.getManagedBean().setFecIndexPreRender(false);
 					retriveFinancialEvaluationStage();
 					financialCheckListStatusCheck();
-					financialCheckListStatusCheckPackage();
+					//#38213 - Start
+					if (!this.getManagedBean().getSingleSpecQuestion()) {
+						financialCheckListStatusCheckPackage();
+					}
+					//#38213 - End
 				}
 				retrieveReportTabDtl();
 			} else if (outputTab == 5) {
@@ -10624,17 +10628,47 @@ private void retriveCommitteeRemarksList(){
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
-					Boolean isComplianceNull = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()
+					TplSpecQuestion question = tplSpecAnswer
+							.getTplSpecQuestion();
+					boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+					boolean isUserScore = question.getScoreTypeCode() != null
+							&& ParameterConst.SCORE_TYPE_USER.equals(question
+									.getScoreTypeCode().getParameterCode())
+							&& tplSpecAnswer.getUserScore() == null;
+					if (!isNotOffered && isUserScore) {
+						throw new EpException(
+								MessageConst.ERROR_100022,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE,
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
+					}
+					String questionType = question.getQuestionType();
+					boolean isMandatorySpec = tplSpecAnswer
+							.getTplSpecQuestion().isMandatorySpec();
+					boolean isComplianceNull = questionType
+							.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
+							&& isMandatorySpec
 							&& tplSpecAnswer.getCompliance() == null;
-					if (isComplianceNull) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
+					if (isComplianceNull && !isNotOffered) {
+						throw new EpException(
+								MessageConst.ERROR_100022,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												QTConstants.LBL_SC_TEC_COMPLIANCE,
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
 					}
 					boolean isCompliance = tplSpecAnswer.getCompliance() != null
-							&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+							&& tplSpecAnswer.getCompliance().equals(
+									Boolean.FALSE);
 					String remark = tplSpecAnswer.getUserRemark();
-					if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
+					if (QTConstants.TECHNICAL_EVALUATION
+							.equalsIgnoreCase(getManagedBean()
+									.getCheckListType())
 							&& isCompliance && StringUtils.isEmpty(remark)) {
 						throw new EpException(MessageConst.ERROR_775180);
 					}
