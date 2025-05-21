@@ -379,6 +379,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private void updatedCreatedCompTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
+		if(null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty()){
 		for (PmDocumentRestr restNew : managedBeans.getNewCompanyCodeTypeAuditList()) {
 			for (PmDocumentRestr rest : managedBeans.getComTypeRestrictions()) {
 				if (rest.getCompanyTypeCode().getParameterId() == restNew.getCompanyTypeCode().getParameterId()) {
@@ -387,7 +388,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			}
 		}
 
-		objList.addAll(newListMapBean.updatedNewCreateRowComTypeTabList(managedBeans, roleCode, updated));
+			objList.addAll(newListMapBean.updatedNewCreateRowComTypeTabList(managedBeans, roleCode, updated));
+		}
 	}
 
 	private void updatedCreatedSuppTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
@@ -415,6 +417,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private void updatedCreatedCatTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
+		if (null != managedBeans.getNewCategoryL3AuditList() && !managedBeans.getNewCategoryL3AuditList().isEmpty()) {
 		for (PmDocumentRestr restNew : managedBeans.getNewCategoryL3AuditList()) {
 			for (PmDocumentRestr rest : managedBeans.getCategoryRestrictions()) {
 				if (rest.getPmCategoryL3().getCategoryL3Id() == restNew.getPmCategoryL3().getCategoryL3Id()) {
@@ -423,6 +426,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			}
 		}
 		objList.addAll(newListMapBean.updatedNewCreateRowCategoryTypeTabList(managedBeans, roleCode, updated));
+		}
 	}
 
 	private void updatedCreatedCertBodyTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
