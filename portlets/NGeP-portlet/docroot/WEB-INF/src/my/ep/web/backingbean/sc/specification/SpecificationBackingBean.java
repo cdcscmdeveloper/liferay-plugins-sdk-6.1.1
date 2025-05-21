@@ -14563,25 +14563,13 @@ if (null != checklist && !checklist.isEmpty()) {
 					int technicalSpecCount = 0;
 					// Bug #33249@Syazani 24/11/2022
 					
-					// 38095 -- start
+					// Bug #38095@Syazani 20/05/2025 -- Start
 					int totalSeq = specSO.getTotalSequenceForScQtChecklistByQTIdNDocDefTypeNDocCat(this
 							.getManagedBean().getQt().getQtId(), SourcingConstants.DOC_DEF_KEY_TECH_SPECIFICATION,
 							SourcingConstants.TECHNICAL_DOCTYPE);
-					// 38095 -- end
+					// Bug #38095@Syazani 20/05/2025 -- End
 
-					for (ScQtCheckList techlist : technicalCheckList) {
-//						38095 -- start
-//						if (QTConstants.TEMPLETE_SPEC_CODE
-//								.equalsIgnoreCase(techlist.getDefinationType()
-//										.getParameterCode())) {
-//							technicalSpecCount++;
-//							localChecckListseq = localChecckListseq < techlist
-//									.getChecklistSeq() ? techlist
-//									.getChecklistSeq() : localChecckListseq;
-//
-//						}
-//						38095 -- end
-						
+					for (ScQtCheckList techlist : technicalCheckList) {				
 						// Bug #33249@Syazani 27/07/2022 -- Start
 						String techlistTitle = techlist.getTitle() + "_"
 								+ (techlist.getDefinationType() != null ? techlist.getDefinationType().getParameterId() : "");
@@ -14593,17 +14581,12 @@ if (null != checklist && !checklist.isEmpty()) {
 					}
 					log.info("QTID:" + getManagedBean().getQt().getQtId()
 							+ "localChecckListseq" + localChecckListseq);
-//					38095 -- start
-//					if (technicalSpecCount > 0) {
-//						scQtCheckList.setChecklistSeq(localChecckListseq + 1);
-//					}
-//					38095 -- end
 					
-					// 38095 -- start
+					// Bug #38095@Syazani 20/05/2025 -- Start
 					if (totalSeq > 0) {
 						scQtCheckList.setChecklistSeq(localChecckListseq + totalSeq);
 					}
-					// 38095 -- end
+					// Bug #38095@Syazani 20/05/2025 -- End
 				}
 				if (null != finanicalAllCheckList
 						&& !finanicalAllCheckList.isEmpty()) {
