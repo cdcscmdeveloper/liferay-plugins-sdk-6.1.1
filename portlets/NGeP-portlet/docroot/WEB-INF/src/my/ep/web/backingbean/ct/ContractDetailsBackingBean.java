@@ -1921,7 +1921,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					} 
 				}
 			}	
-						
+			log.info("validateCtContractVer method test : Start Checking ");			
 			//#24333 - Start
 		    List<CtPerformanceBond> originalBonds = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal();
 		    List<CtPerformanceBond> newBonds = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew();
@@ -1932,6 +1932,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    if (newBonds != null) {
 		        validateBonds(newBonds, action);
 		    }
+		    log.info("validateCtContractVer method test : End Checking ");
 		  //#24333 - End
 		}
 		validationPerformanceBond(action); //#13847
@@ -4462,13 +4463,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
 			return;
 		}
-
+		log.info("processPerformanceBonds method test : set List ");
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
 		boolean hasNewBond = false;
 		CtPerformanceBond emptyNewBond = null;
-		
+		log.info("processPerformanceBonds method test : Start Loop ");
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
 			if (bond.isBondNew()) {
 				hasNewBond = true;
@@ -4488,6 +4489,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
+		log.info("processPerformanceBonds method test : End Loop ");
+		log.info("processPerformanceBonds method test : Checking New Bond ");
 		// Only create new bond if NONE exist
 		if (!hasNewBond && emptyNewBond != null) {
 			bondNew.add(createNewBondFrom(emptyNewBond));
@@ -4499,7 +4502,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	            return b1.getRefNo().compareToIgnoreCase(b2.getRefNo());
 	        }
 	    };
-
+	    log.info("processPerformanceBonds method test : set sorting ");
 	    Collections.sort(bondNew, nameComparator);
 	    Collections.sort(bondOriginal, nameComparator);
 		contractAmt.setCtPerformanceBondsNew(bondNew);
@@ -4549,6 +4552,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 *             if any validation check fails
 	 */
 	private void validateBonds(List<CtPerformanceBond> bonds, String action) throws EpException {
+		log.info("validateBonds method test : Start ");
 		if (bonds == null || bonds.isEmpty())
 			return;
 
@@ -4594,6 +4598,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				throw new EpException(MessageConst.ERROR_750016);
 			}
 		}
+		log.info("validateBonds method test : End ");
 	}
 	// #24333 - End
 	
