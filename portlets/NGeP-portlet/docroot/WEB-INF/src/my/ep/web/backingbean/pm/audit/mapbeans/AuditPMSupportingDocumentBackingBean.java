@@ -355,15 +355,18 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private void updatedCreatedAppTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-			for (PmDocumentRestr pmDocumentRestrApp : managedBeans.getAppTypeRestrictions()) {
-				if (pmDocumentRestr.isBrandNew()
-						&& managedBeans.getSelectedDocument().isByAppType()
-						&& pmDocumentRestr.getAppTypeCode() != null
-						&& pmDocumentRestrApp.getAppTypeCode().getParameterId() == pmDocumentRestr.getAppTypeCode()
-								.getParameterId()) {
-					pmDocumentRestr.setDocumentRestrId(pmDocumentRestrApp.getDocumentRestrId());
-					appTypeRestrictionsNew.add(pmDocumentRestrApp);
+		if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()
+				&& !managedBeans.getMandatoryUpdatedPmDocumentRestrList().isEmpty()) {
+			for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+				for (PmDocumentRestr pmDocumentRestrApp : managedBeans.getAppTypeRestrictions()) {
+					if (pmDocumentRestr.isBrandNew()
+							&& managedBeans.getSelectedDocument().isByAppType()
+							&& pmDocumentRestr.getAppTypeCode() != null
+							&& pmDocumentRestrApp.getAppTypeCode().getParameterId() == pmDocumentRestr.getAppTypeCode()
+									.getParameterId()) {
+						pmDocumentRestr.setDocumentRestrId(pmDocumentRestrApp.getDocumentRestrId());
+						appTypeRestrictionsNew.add(pmDocumentRestrApp);
+					}
 				}
 			}
 		}
@@ -389,15 +392,18 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private void updatedCreatedSuppTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-			for (PmDocumentRestr pmDocumentRestrSupp : managedBeans.getSuppTypeRestrictions()) {
-				if (pmDocumentRestr.isBrandNew()
-						&& managedBeans.getSelectedDocument().isBySupplierType()
-						&& pmDocumentRestr.getSupplierTypeCode() != null
-						&& pmDocumentRestrSupp.getSupplierTypeCode().getParameterId() == pmDocumentRestr.getSupplierTypeCode()
-								.getParameterId()) {
-					pmDocumentRestr.setDocumentRestrId(pmDocumentRestrSupp.getDocumentRestrId());
-					suppTypeRestrictionsNew.add(pmDocumentRestrSupp);
+		if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()
+				&& !managedBeans.getMandatoryUpdatedPmDocumentRestrList().isEmpty()) {
+			for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+				for (PmDocumentRestr pmDocumentRestrSupp : managedBeans.getSuppTypeRestrictions()) {
+					if (pmDocumentRestr.isBrandNew()
+							&& managedBeans.getSelectedDocument().isBySupplierType()
+							&& pmDocumentRestr.getSupplierTypeCode() != null
+							&& pmDocumentRestrSupp.getSupplierTypeCode().getParameterId() == pmDocumentRestr
+									.getSupplierTypeCode().getParameterId()) {
+						pmDocumentRestr.setDocumentRestrId(pmDocumentRestrSupp.getDocumentRestrId());
+						suppTypeRestrictionsNew.add(pmDocumentRestrSupp);
+					}
 				}
 			}
 		}
@@ -421,15 +427,18 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 
 	private void updatedCreatedCertBodyTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
-			for (PmDocumentRestr pmDocumentRestrCertBody : managedBeans.getCertBodyRestrictions()) {
-				if (pmDocumentRestr.isBrandNew()
-						&& pmDocumentRestr.getPmCertBody() != null
-						&& pmDocumentRestr.getPmCertBody().getCertBodyId() == pmDocumentRestrCertBody.getPmCertBody()
-								.getCertBodyId()) {
-					pmDocumentRestr.setDocumentRestrId(pmDocumentRestrCertBody.getDocumentRestrId());
-					certBodyRestrictionsNew.add(pmDocumentRestr);
+		if (null != managedBeans.getMandatoryUpdatedPmDocumentRestrList()
+				&& !managedBeans.getMandatoryUpdatedPmDocumentRestrList().isEmpty()) {
+			for (PmDocumentRestr pmDocumentRestr : managedBeans.getMandatoryUpdatedPmDocumentRestrList()) {
+				for (PmDocumentRestr pmDocumentRestrCertBody : managedBeans.getCertBodyRestrictions()) {
+					if (pmDocumentRestr.isBrandNew()
+							&& pmDocumentRestr.getPmCertBody() != null
+							&& pmDocumentRestr.getPmCertBody().getCertBodyId() == pmDocumentRestrCertBody.getPmCertBody()
+									.getCertBodyId()) {
+						pmDocumentRestr.setDocumentRestrId(pmDocumentRestrCertBody.getDocumentRestrId());
+						certBodyRestrictionsNew.add(pmDocumentRestr);
 
+					}
 				}
 			}
 		}
