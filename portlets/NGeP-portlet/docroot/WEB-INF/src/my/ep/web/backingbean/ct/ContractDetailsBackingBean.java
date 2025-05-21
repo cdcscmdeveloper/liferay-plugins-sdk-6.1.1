@@ -4469,7 +4469,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB.isContractExtendOrIsBond();
 		boolean hasNewBond = false;
 		CtPerformanceBond emptyNewBond = null;
-		log.info("processPerformanceBonds method test : Start Loop ");
+
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
 			if (bond.isBondNew()) {
 				hasNewBond = true;
@@ -4489,20 +4489,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-		log.info("processPerformanceBonds method test : End Loop ");
-		log.info("processPerformanceBonds method test : Checking New Bond ");
+
 		// Only create new bond if NONE exist
 		if (!hasNewBond && emptyNewBond != null) {
-			bondNew.add(createNewBondFrom(emptyNewBond));
+			for (CtPerformanceBond bond : bondOriginal) {
+			bondNew.add(createNewBondFrom(bond));
+			}
 		}
-		
+
 	    // Sorting both lists by bond name (case-insensitive)
 	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
 	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
 	            return b1.getRefNo().compareToIgnoreCase(b2.getRefNo());
 	        }
 	    };
-	    log.info("processPerformanceBonds method test : set sorting ");
+
 	    Collections.sort(bondNew, nameComparator);
 	    Collections.sort(bondOriginal, nameComparator);
 		contractAmt.setCtPerformanceBondsNew(bondNew);
