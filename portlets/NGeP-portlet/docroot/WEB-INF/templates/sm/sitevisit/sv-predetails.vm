@@ -4,7 +4,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;font-weight: bold;font-size: 10pt;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.prep.title')</font>
+	            <font style='color:#ffffff;font-weight: bold;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.prep.title')</font>
 	        </td>
     	</tr>
 	</table>

@@ -24,7 +24,6 @@ import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.dto.cm.audit.AuditCodificationManagementSPDTO;
 import my.ep.exception.EpException;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.LoggerUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.cm.AuditCMSearchBean;
@@ -71,8 +70,7 @@ public class AuditCodificationManagementReportBackingBean extends
 	 * Only this role is accessible for Audit Trail hyperlink
 	 */
 	public boolean isAuditTrailView() {
-		LoggerUtils.getInstance().logCodeCoverage("Executing isAuditTrailView");
-		return hasAnyRole(RoleCode.CD_OFFICER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
+		return hasAnyRole(RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
 				RoleCode.AUDITOR_GENERAL.value(), RoleCode.EP_ADMIN.value());
 	}
 

@@ -184,7 +184,9 @@
 					onclick="cancelConfirmDlg.hide();" />
 			</div>
 		</p:confirmDialog>	
+		<!--#26279 Start-->
 		<ac:disciplinaryActionHistory voList="#{receivedNoteBackingBean.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />
+		<!--#26279 End-->
 	</ui:define>
 </ui:composition>

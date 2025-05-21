@@ -118,7 +118,8 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelWorkShopSaveorUpdate}"/>
 		
-		<p:outputPanel layout="block" id="workShopBlockPanel">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel layout="block" id="workShopBlockPanel" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 			<p:messages id="workShopDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 				

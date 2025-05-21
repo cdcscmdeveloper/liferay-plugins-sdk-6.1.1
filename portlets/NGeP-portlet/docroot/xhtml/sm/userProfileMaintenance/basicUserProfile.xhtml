@@ -542,9 +542,10 @@
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
 											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<!-- #36718 - Change listener method call -->
 											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
-												partialSubmit="true" process="@this @([id$=MailingAddressInfo])" resetValues="true"
-												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
+												partialSubmit="true" process="@this @([id$=MailingAddressInfo])"
+												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
 												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
 										</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 									<td></td>				
@@ -762,7 +763,8 @@
 											</p:outputPanel>
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="10" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+												<!-- #36718 - add !empty param['disableValidation'] in required condition -->
+												<p:inputText maxlength="10" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
@@ -800,10 +802,8 @@
 			</div>
 		</p:confirmDialog>
 		<!-- #34400 -->
-		<ac:confirmationPopup id="confirmSaveDlg" widget="confirmSaveDlg"
+		<ac:confirmationPopupSM id="confirmSaveDlg" widget="confirmSaveDlg"
 			okAction="smPersonnelBackingBean.save"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.confirm.user.profile']}" 
 			update=":form"
 			loadingWidget="blockWidget" />

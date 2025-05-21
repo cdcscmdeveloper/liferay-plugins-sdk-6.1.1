@@ -89,9 +89,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
   	private boolean isBranchNeedToBeChanged;
   	private Long branchCode;
   	//29728 - end
-	public ContractRequestManagedBean(){
-
-	}
 	
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
 	private FlShippingInstr shippingInstr;
@@ -329,9 +326,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private static String catalogueFlag;
     //13984-end
     
-  //29555 start
-    private String preparedBy;
-    //29555 end
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
     
  // 28855 - Start
  	private boolean dpFlag;
@@ -360,6 +357,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int deleteOverallItem;
   //11076 - end
     private boolean bondIncomplete = false;//35024
+    
+    public ContractRequestManagedBean(){
+
+	}
         
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3308,11 +3309,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//29728 - end
 	
 	//29555 start
-	public String getpreparedBy() {
+	public String getPreparedBy() {
 		return preparedBy;
 	}
 
-	public void setpreparedBy(String preparedBy) {
+	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
 	//29555 end

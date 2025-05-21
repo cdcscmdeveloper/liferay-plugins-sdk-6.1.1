@@ -48,10 +48,16 @@
 				</div>
 			</p:panel>
 		</p:outputPanel>
-		<br />
 		<!-- #29007 End Vinod -->
-		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
-			value="#{lbl['lbl.sc.item.codification.instruction']}" />
+		<!-- #31503 Start -->
+		<h:outputText styleClass="instruction"
+			rendered="#{isSupplierAckStatus}"
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction']}" />
+		<br />
+		<h:outputText styleClass="instruction"
+			rendered="#{isSupplierAckStatus}"
+			value="#{lbl['lbl.sc.qt.assign.item.code.instruction2']}" />
+		<!-- #31503 End -->
 		<table width="100%">
 			<tr>
 				<td valign="top" width="20%"><h:outputLabel

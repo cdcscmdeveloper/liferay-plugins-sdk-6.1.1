@@ -41,11 +41,9 @@
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
 		</div>
-		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 			bean="#{complaintBackingBean}"
 			okAction="lodgeComplaint"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.confirm.complaint']}" 
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
