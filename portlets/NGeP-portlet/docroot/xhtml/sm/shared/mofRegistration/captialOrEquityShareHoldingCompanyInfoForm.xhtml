@@ -234,9 +234,9 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" /></td>
 				</tr> 
-				<tr> 
+				<tr> <!-- #36718 - change to backingBean for divisionName -->
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.division']}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDivision.divisionName}" rendered="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.adoptDivision}" /></td>
 				</tr> 
 				<tr> 
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
@@ -408,6 +408,8 @@
 							alertValue="#{backingBean.managedBean.latestEquityCompany.smAddress.address3}"/>
 					</td>
 				</tr>
+				<!-- #36718 - START - add panel for refresh address -->
+				<p:panel id="suppEquityCompAddrPanelId" style="border: none;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -457,7 +459,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiState"
 								value="#{backingBean.managedBean.equiCompanyStates}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 								listener="#{backingBean.onChangeState(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 								update="divisionCapitalLabelPanelId,divisionCapitalDropdownPanelId,equiDist,equiCity" />
 						</p:selectOneMenu> 
@@ -497,7 +500,8 @@
 							value="#{backingBean.managedBean.equiCompanyDivisions}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel when change address dropdown -->
+						<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 							listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 							update="equiDist,equiCity"/>
 					</p:selectOneMenu>
@@ -531,7 +535,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiDist"
 								value="#{backingBean.managedBean.equiCompanyDistricts}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 								listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 								update="equiCity" />
 						</p:selectOneMenu> 
@@ -562,7 +567,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="equiCity"
 								value="#{backingBean.managedBean.equiCompanyCities}" />
-							<p:ajax event="change" process="@this"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@this @([id$=suppEquityCompAddrPanelId])"
 								listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedEquityCompany.smAddress,SupplierManagementConst.SM_EQUI_COMPANY_PANEL)}"
 								update="equiCity" />
 						</p:selectOneMenu> 
@@ -578,6 +584,8 @@
 						<p:message id="equiCityMsg" for="equiCity" showSummary="true"
 							showDetail="false" display="icon" /></td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>

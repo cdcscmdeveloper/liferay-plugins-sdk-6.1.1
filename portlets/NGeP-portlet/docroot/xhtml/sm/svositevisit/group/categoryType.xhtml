@@ -14,7 +14,8 @@
 			<ui:param name="catCode" 
 			value="#{tmp.suppCategory.pmCategoryL1.categoryL1Code}#{tmp.suppCategory.pmCategoryL2.categoryL2Code}#{tmp.suppCategory.pmCategoryL3.categoryL3Code}"/>
 			<ui:param name="template" value="#{tmp}"/>
-			<p:panel header="#{svoSiteVisitBackingBean.managedBean.parameterDesc} - #{catCode}" toggleable="true">
+			<p:panel header="#{svoSiteVisitBackingBean.managedBean.parameterDesc} - #{catCode}" 
+				toggleable="true" collapsed="true">
 			
 				<c:if test="#{code == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/group/equipment.xhtml" />

@@ -34,7 +34,7 @@
        	  var value = 0;
        	  total = element.value.split(/\n[\r\n]*/).length;
        		  <!-- #18685 - Start -->
-        	  if ( total > limit-total-1) { 
+        	  if ( element.value.length > limit-total-1) { 
                    element.value = element.value.substring(0, limit-total-1); 
               } 
         	  <!-- #18685 - End -->

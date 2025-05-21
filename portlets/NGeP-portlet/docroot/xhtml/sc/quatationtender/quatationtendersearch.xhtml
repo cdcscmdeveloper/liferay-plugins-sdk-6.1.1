@@ -224,8 +224,8 @@
 						    <p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}" styleClass="commandLink_link"
 								rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isDeskOfficer() and (qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_ARCHIVED) or qTDetailBB.isQTCloneStatus(scQt.qtStatus.statusId))}" 
 								icon="ui-icon-edit" update=":form:displayk" title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
-								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" 
-								partialSubmit="true" process="@this"/>
+								action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" oncomplete="disableSpecificNodes()"
+								partialSubmit="true" process="@this"/> <ui:remove>#25635 - start</ui:remove>
 								<ui:remove>#25791 end </ui:remove>
 						</p:menuButton>
 					</p:column>
@@ -339,14 +339,14 @@
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
-									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED ne qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)}"
-									partialSubmit="true" process="@this" />
+									rendered="#{listType eq 'loaList' and (QTStatusConst.LOA_COMPLETED ne qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)  or qTDetailBB.isMofSupplier())}"
+									partialSubmit="true" process="@this" />	<ui:remove> #25791 end </ui:remove>
 
 								<p:menuitem value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewLoaContractTrackingDtls(listItem, view.viewId)}"
-									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED eq qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)}"
+									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED eq qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses) and !qTDetailBB.isMofSupplier()}"
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>
 

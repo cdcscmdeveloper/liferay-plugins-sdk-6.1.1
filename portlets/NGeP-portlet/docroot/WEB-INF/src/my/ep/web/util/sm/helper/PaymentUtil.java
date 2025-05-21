@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
@@ -185,7 +186,8 @@ public class PaymentUtil {
 		sb.append("merchantCode#").append(merchantCode).append(";");
 		sb.append("clientSecret#").append(clientKey).append(";");
 		sb.append("orderId#").append(orderId).append(";");
-		sb.append("amount#").append(amount).append(";");
+		sb.append("amount#").append(amount.setScale(2, RoundingMode.HALF_UP))
+				.append(";");
 		sb.append("billName#").append(billName).append(";");
 		sb.append("email#").append(email).append(";");
 		sb.append("mobile#").append(mobile).append(";");

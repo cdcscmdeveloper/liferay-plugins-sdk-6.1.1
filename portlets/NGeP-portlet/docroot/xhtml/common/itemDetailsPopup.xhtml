@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:confirmDialog id="itemDescDialogId"
+		header="#{lbl['lbl.sc.item.details']}" widgetVar="itemDescDialogId"
+		width="600" resizable="false" closable="true">
+
+		<table style="border: hidden;">
+			<tr>
+				<td><h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.qt.assign.item.code.instruction5']}"
+						style="text-align: left; color: #009ae5; font-style:italic" /></td>
+			</tr>
+		</table>
+
+		<p:panel id="itemDetailPanel">
+			<p:dataTable id="itemTableId" value="#{codificationBackingBean}"
+				rows="10" var="cbb" rowIndexVar="index" lazy="true">
+				<ac:paginator for="measurementSR" />
+				<p:column headerText="#{lbl['lbl.sc.product.code']}"
+					style="width:15%; font-weight: bold; text-align: center">
+					<div align="left">
+						<h:outputText value="#{cbb.managedBean.familyCode}"
+							style="white-space: normal!important;" />
+					</div>
+				</p:column>
+				<p:column headerText="
+							#{lbl['lbl.sc.qt.item.name']}"
+					style="width:50%; font-weight: bold; text-align: center">
+					<div align="left">
+						<h:outputText value="#{cbb.managedBean.familyTitle}"
+							style="white-space: normal!important;" />
+					</div>
+				</p:column>
+			</p:dataTable>
+
+			<table
+				style="width: 100%; margin-bottom: 4px; margin-bottom: 6px; border: hidden !important;">
+				<tr style="border: hidden !important;">
+					<td width="15%" style="border: hidden !important; padding: 0;">
+						<p:outputLabel style="font-weight: bold;"
+							value="#{lbl['lbl.cm.commodity.code']}" />
+					</td>
+					<td width="30%" style="border: hidden !important; padding: 0;">
+						<h:outputText style="white-space: normal!important;"
+							value="#{codificationBackingBean.managedBean.commodityCode}" />
+					</td>
+					<td width="15%" style="border: hidden !important; padding: 0;">
+						<p:outputLabel style="font-weight: bold;"
+							value="#{lbl['lbl.cm.commodity.title']}" />
+					</td>
+					<td style="border: hidden !important; padding: 0;"><h:outputText
+							style="white-space: normal!important;"
+							value="#{codificationBackingBean.managedBean.commodityTitle}" /></td>
+				</tr>
+				<tr style="border: hidden !important;">
+					<td width="15%" style="border: hidden !important; padding: 0;"><p:outputLabel
+							style="font-weight: bold;"
+							value="#{lbl['lbl.sc.qt.extension.code']}" /></td>
+					<td width="30%" style="border: hidden !important; padding: 0;"><h:outputText
+							style="white-space: normal!important;"
+							value="#{codificationBackingBean.managedBean.segmentCode}" /></td>
+					<td width="15%" style="border: hidden !important; padding: 0;"><p:outputLabel
+							style="font-weight: bold;"
+							value="#{lbl['lbl.sc.qt.extension.title']}" /></td>
+					<td style="border: hidden !important; padding: 0;"><h:outputText
+							style="white-space: normal!important;"
+							value="#{codificationBackingBean.managedBean.segmentTitle}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</p:confirmDialog>
+
+</ui:composition>

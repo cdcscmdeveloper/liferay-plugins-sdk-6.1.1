@@ -16,6 +16,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.util.LoggerUtils;
 import my.ep.web.constant.report.PmReportConst;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.managedbean.report.sm.SuppPerformRptManagedBean;
@@ -36,6 +37,7 @@ public class SuppPerformRptBackingBean extends
 	 */
 	private static final long serialVersionUID = -7400800649761552705L;
 	private static final Logger log = EpLogger.getLogger(SuppPerformRptBackingBean.class);
+	private static final LoggerUtils logger = LoggerUtils.getInstance();
 
 	public SuppPerformRptBackingBean() {
 		// #33741 - start
@@ -51,6 +53,10 @@ public class SuppPerformRptBackingBean extends
 		Long supplierId = null;
 		boolean isSprMv = false;
 		// #31893 - end
+		
+		//#36125 - START
+		ValidateSupplierPerformanceReport();
+		//#36125 - END
 		
 		if (getManagedBean().getSelectedSupplierPerformance() == null && getManagedBean().getMofNo().isEmpty() && getManagedBean().getEpNo().isEmpty() ) { //36125 - Change to view table
 				throw new EpException(MessageConst.ERROR_REPORT_780044);		
@@ -250,4 +256,26 @@ public class SuppPerformRptBackingBean extends
 		}
 	}
 	//#33741 - END
+	//#36125 - START
+	/**
+     * Validates if the Supplier Performance Report exists.
+     * If the report does not exist, an EpException will be thrown.
+     */
+	public void ValidateSupplierPerformanceReport(){
+		logger.logCodeCoverage("Start ValidateSupplierPerformanceReport method");
+		SupplierSearchReqDTO ssReqDTO = new SupplierSearchReqDTO();
+		ssReqDTO.setMofAccountNo(getManagedBean().getMofNo());
+		ssReqDTO.setEpNo(getManagedBean().getEpNo());
+		ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+		Boolean ssResDTO = supplierSearchSO.isSupplierPerformanceReportExist(ssReqDTO);
+		if(!ssResDTO){
+			logger.logCodeCoverage("Test Case 1: Supplier Performance Report does not exist. Throwing EpException with message ERROR_REPORT_780056.");
+			logger.logCodeCoverage("Test Case 1: Validate if exception is thrown when report does not exist");
+			throw new EpException(MessageConst.ERROR_REPORT_780056);
+		}
+		logger.logCodeCoverage("Test Case 2: Supplier Performance Report exists, proceeding with normal flow.");
+		logger.logCodeCoverage("Test Case 2: Validate if no exception is thrown when report exists");
+		logger.logCodeCoverage("End ValidateSupplierPerformanceReport method");
+	}
+	//#36125 - END
 }

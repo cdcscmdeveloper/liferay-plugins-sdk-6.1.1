@@ -686,6 +686,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Bug #33178
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
 	/*#29187 End Vinod*/
 	//34528-uat 4serangkai 
 	private Paginator financialPackagePaginator;
@@ -4371,9 +4374,35 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
 	}
+
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+	
 	/*#29187 End Vinod*/
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {

@@ -21,7 +21,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.employee.info']}" toggleable="true"
 		id="pnlEmployeeInfo">
-		<h:outputText styleClass="splNotesFontInstruction"
+		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sm.insertemployee.instruction']}" escape="false">
 		</h:outputText>
 		<br />
@@ -31,14 +31,15 @@
 			selection="#{backingBean.managedBean.selectedWorkers}"
 			id="empInfoId" rowKey="#{empInfo}">
 
-			<p:ajax event="rowSelectCheckbox" update=":#{p:component('deleteEmpBtnId')}" />
-			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('deleteEmpBtnId')}" />
-			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
-        	<p:ajax event="rowUnselect" update=":#{p:component('deleteEmpBtnId')}" />
-        	<p:ajax event="toggleSelect" update=":#{p:component('deleteEmpBtnId')}" />
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{not empty backingBean.managedBean.selectedWorkShopFacility.smSvWorkers
 							and !backingBean.managedBean.upsCannotEdit}" />
+
+			<p:ajax event="rowSelectCheckbox" update=":#{p:component('pnlEmployeeInfo')}" />
+			<p:ajax event="rowUnselectCheckbox" update=":#{p:component('pnlEmployeeInfo')}" />
+			<p:ajax event="rowSelect" update=":#{p:component('deleteEmpBtnId')}" />
+        	<p:ajax event="rowUnselect" update=":#{p:component('pnlEmployeeInfo')}" />
+        	<p:ajax event="toggleSelect" update=":#{p:component('pnlEmployeeInfo')}" />
 
 			<p:column style="white-space:normal;">
 				<f:facet name="header">
@@ -47,14 +48,14 @@
 				</f:facet>
 				<p:inputText id="empNameId" value="#{empInfo.name}"
 					label="#{lbl['lbl.sm.employee.name']}" size="50"
-					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					required="#{!empty param['disableValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
 					maxlength="80" style="width: 80% !important;">
 				</p:inputText><p:message id="empNameIdMsg" for="empNameId"
 								showSummary="true" showDetail="false" display="icon" />
 			</p:column>
 
-			<p:column style="white-space:normal;">
+			<p:column style="white-space:normal;width:15%;">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.employee.idtype']}
@@ -63,10 +64,10 @@
 
 					<p:selectOneMenu id="empIdTypeId" size="50"
 						label="#{lbl['lbl.sm.employee.idtype']}"
-						required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+						required="#{!empty param['disableValidation'] and backingBean.managedBean.valueReqd}"
 						disabled="#{backingBean.managedBean.upsCannotEdit}"
 						value="#{empInfo.identificationTypeId}"
-						style="width: 80% !important;margin-bottom: 5px !important;">
+						style="width: 90%;margin-bottom: 5px;background-color:white;">
 						<f:selectItems
 							value="#{backingBean.managedBean.identificationTypes}" />
 						<p:ajax event="change" process="@this" update="pnlIdentType,@this" />
@@ -83,7 +84,7 @@
 				<p:inputText id="empIcId" value="#{empInfo.identificationNo}"
 					label="#{lbl['lbl.sm.employee.icno']}"
 					rendered="#{empInfo.identificationTypeId eq '115'}"
-					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					required="#{!empty param['disableValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
 					maxlength="12" size="30" style="width: 80% !important;"
 					validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
@@ -94,9 +95,9 @@
 				<p:inputText id="empPassId" value="#{empInfo.identificationNo}"
 					label="#{lbl['lbl.sm.employee.icno']}"
 					rendered="#{empInfo.identificationTypeId ne '115'}"
-					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					required="#{!empty param['disableValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
-					maxlength="12" size="30" style="width: 80% !important;">
+					maxlength="15" size="30" style="width: 80% !important;">
 				</p:inputText><p:message id="empPassIdMsg" for="empPassId"
 								showSummary="true" showDetail="false" display="icon" />
 				</p:outputPanel>
@@ -110,7 +111,7 @@
 				<p:inputTextarea id="empSpclId" value="#{empInfo.expertise}"
 					rows="1" cols="30" autoResize="false" maxlength="2000"
 					label="#{lbl['lbl.sm.employee.specialization']}"
-					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					required="#{!empty param['disableValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
 					style="width: 75% !important;">
 				</p:inputTextarea><p:message id="empSpclIdMsg" for="empSpclId"
@@ -124,7 +125,7 @@
 				</f:facet>
 				<p:inputText id="empExpId" value="#{empInfo.workExpYear}" size="30"
 					label="#{lbl['lbl.sm.employee.experience']}" maxlength="2"
-					required="#{empty param['disabledValidation'] and backingBean.managedBean.valueReqd}"
+					required="#{!empty param['disableValidation'] and backingBean.managedBean.valueReqd}"
 					disabled="#{backingBean.managedBean.upsCannotEdit}"
 					style="width: 80% !important;">
 				</p:inputText><p:message id="empExpIdMsg" for="empExpId"
@@ -134,16 +135,15 @@
 
 		<p:outputPanel rendered="#{!backingBean.managedBean.upsCannotEdit}">
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
-					process="@this,empInfoId" action="#{backingBean.addEmployee}"
-					id="addEmpBtnId" update=":#{p:component('workShopBlockPanel')},@this" />
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this,:#{p:component('empInfoId')}" action="#{backingBean.addEmployee}"
+					id="addEmpBtnId" update=":#{p:component('empInfoId')}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					partialSubmit="true" process="@this,:#{p:component('workShopBlockPanel')}"
+					process="@this,:#{p:component('workShopBlockPanel')}"
 					disabled="#{empty backingBean.managedBean.selectedWorkers}"
 					id="deleteEmpBtnId" oncomplete="empDeletePopUp.show()"
 					update="@this">
-					<f:param name="disabledValidation" value="true" />
 				</p:commandButton>
 			</div>
 		</p:outputPanel>

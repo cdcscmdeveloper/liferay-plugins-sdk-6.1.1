@@ -53,7 +53,9 @@
 			action="#{svoSiteVisitBackingBean.addPrintWork()}" />
 		<p:commandButton value="#{lbl['lbl.sm.button.delete']}"  update="@parent"  rendered="#{!viewFlag}" 
 			action="#{svoSiteVisitBackingBean.setSelectedTemplate(template)}" oncomplete="printingWorkDeletePopUp.show();"
-			disabled="#{empty template.selectedPrintWorks}"/>
+			disabled="#{empty template.selectedPrintWorks}">
+			<f:param name="disabledValidation" value="true" />
+		</p:commandButton>
 		</div>
 	</p:panel>
 

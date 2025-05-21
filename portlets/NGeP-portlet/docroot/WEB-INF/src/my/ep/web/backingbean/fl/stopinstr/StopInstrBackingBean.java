@@ -993,9 +993,9 @@ public class StopInstrBackingBean extends FulfilmentBaseBackingBean<StopInstrMan
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 			
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}

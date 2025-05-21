@@ -2,7 +2,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;font-weight: bold;font-size: 12pt;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.compinfo')</font>
+	            <font style='color:#ffffff;font-weight: bold;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.compinfo')</font>
 	        </td>
     	</tr>
 	</table>
@@ -80,7 +80,7 @@
     	</tr>
     	
    	    <tr>
-	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no').</b></td>
+	        <td width="30%"><b>$smVmUtil.getDescByLabel('lbl.sm.sv.templ.mof.reg.no')</b></td>
 	        <td>$mofNo</td>
     	</tr>
     	
