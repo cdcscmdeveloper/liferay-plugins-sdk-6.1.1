@@ -771,9 +771,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
 			// fetch pid item for request note item	
 			List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
-			//#38228 - Start
-			//List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
-			//#38228 - End
+			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 			if(requestNoteDtlList != null && requestNoteDtlList.size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteDtlList) {
 					//ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
@@ -798,10 +796,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					
 				}
 			}
-			//#38228 - Start
-			this.getManagedBean().setRequestNoteDtls(requestNoteDtlList);
-			getManagedBean().getRequestNote().setRequestNoteDtls(requestNoteDtlList);
-			//#38228 - End
+			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			getManagedBean().getRequestNote().setRequestNoteDtls(requestNoteDtls);
 			getManagedBean().getRequestNote().setRequestNoteItems(requestNoteItems);
 			
 		} finally {
