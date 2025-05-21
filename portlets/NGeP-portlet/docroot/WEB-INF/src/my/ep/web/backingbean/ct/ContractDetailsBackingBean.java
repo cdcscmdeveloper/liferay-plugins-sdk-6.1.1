@@ -1896,83 +1896,41 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
 							// Bug #25359 
 							// Fahmi alter condition with putra
-							if (contractAmt.getCtPerformanceBonds().size() > 0
-							&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
-							|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
+							//#24333 - Start
+							if (ctBB.isContractExtendOrIsBond()) {
+								if (contractAmt.getCtPerformanceBondsNew().size() > 0
+										&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() == null || ctBB.getManagedBean()
+												.getCtContractAmount().getCtPerformanceBondsNew().isEmpty())) {
+									setTabValue("PB");
+									throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
+								}
+							}
+							if (contractAmt.getCtPerformanceBondsOriginal().size() > 0
+									&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() == null || ctBB.getManagedBean()
+											.getCtContractAmount().getCtPerformanceBondsOriginal().isEmpty())) {
 								setTabValue("PB");
 								throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
 							}
+							//#24333 - End
 						}
 					} 
 				}
 			}	
-			
-			
-			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null 
-					&& ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().size() > 0) {
-				double bondAmount = 0.0;
-				for (CtPerformanceBond performanceBond : ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
-					bondAmount = bondAmount + performanceBond.getBondAmount();
-					if (performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
-						setTabValue("PB");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.no");
-					}						
-
-					if (performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
-						setTabValue("PB");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.financial.org");
-					}						
-
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-						if (performanceBond.getBondAmount() == 0) {
-							setTabValue("PB");
-							throwExceptions(MessageConst.ERROR_100033, "lbl.ct.pb.amount");
-						}
-					}						
-
-					if (performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
-						setTabValue("PB");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.letter");
-					} 
-				}//End for loop		
-				
-				/** Enhancement #24333: New Rules Changes to Original Bond**/
-				if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
-						&& (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null)) {
-					DecimalFormat df = new DecimalFormat("#.00");
-					
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null) {//#35137,//#35552
-						setTabValue("PB");
-						throw new EpException(MessageConst.ERROR_750021);
-					} else {
-						bondAmount = Double.valueOf(df.format(bondAmount));
-						double oriBondAmount = 0.0;
-						if(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null){
-							oriBondAmount = Double.valueOf(df.format(
-									ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue()));
-						}
-//						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){					
-//						if(oriBondAmountList.getTotalBondAmt() != null){
-//							bondAmount = Double.valueOf(df.format(
-//									oriBondAmountList.getTotalBondAmt().doubleValue()));
-//							}						
-//						}
-						int retval = Double.compare(bondAmount, oriBondAmount);
-						/** Enhancement #20025: Changes for GST in Contract Management
-						if (retval >0) {
-							setTabValue("PB");
-							throw new EpException(MessageConst.ERROR_750015);
-						}
-						**/
 						
-						if (retval < 0) {
-							setTabValue("PB");
-							throw new EpException(MessageConst.ERROR_750016);  
-						}	
-					}
-				}
+			// #24333 - Start
+			List<CtPerformanceBond> originalBonds = ctBB.getManagedBean().getCtContractAmount()
+					.getCtPerformanceBondsOriginal();
+			List<CtPerformanceBond> newBonds = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew();
+
+			if (originalBonds != null) {
+				validateBonds(originalBonds, action);
 			}
+			if (newBonds != null) {
+				validateBonds(newBonds, action);
+			}
+			// #24333 - End
 		}
+		
 		validationPerformanceBond(action); //#13847
 		
 		// Validation for Approver
@@ -4368,6 +4326,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	// End - #30866
 	
+	// #24333,#36491 - Start
 	/**
 	 * Processes performance bonds by classifying them as new or original and
 	 * handles bond requirements based on document type and amendment status.
@@ -4394,9 +4353,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
 		boolean hasNewBond = false;
+		CtPerformanceBond emptyNewBond = null;
 		
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			CtPerformanceBond emptyNewBond = null;
 			if (bond.isBondNew()) {
 				hasNewBond = true;
 		        if (bond.isBrandNew()) {
@@ -4414,11 +4373,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					emptyNewBond = bond;
 				}
 			}
-			// Only create new bond if NONE exist
-			if (!hasNewBond && emptyNewBond != null) {
-				bondNew.add(createNewBondFrom(emptyNewBond));
+		}
+		
+		// Only create new bond if NONE exist
+		if (!hasNewBond && emptyNewBond != null) {
+			for (CtPerformanceBond bond : bondOriginal) {
+			bondNew.add(createNewBondFrom(bond));
 			}
 		}
+		
 	    // Sorting both lists by bond name (case-insensitive)
 	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
 	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
@@ -4460,5 +4423,70 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return newBond;
 	}
 	// #24333,#36491 - End
+	
+	// #24333 - Start
+	/**
+	 * Validates a list of performance bonds based on required fields and
+	 * contract rules.
+	 * 
+	 * @param bonds
+	 *            the performance bonds to validate
+	 * @param action
+	 *            the user action triggering validation (e.g. submit, approve)
+	 * @throws EpException
+	 *             if any validation check fails
+	 */
+	private void validateBonds(List<CtPerformanceBond> bonds, String action) throws EpException {
+		log.info("validateBonds method test : Start ");
+		if (bonds == null || bonds.isEmpty())
+			return;
+
+		double bondAmount = 0.0;
+		String contractType = ctBB.getManagedBean().getContractVer().getCtContract().getContractType()
+				.getParameterCode();
+		boolean isCentral = ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(contractType);
+
+		for (CtPerformanceBond bond : bonds) {
+			bondAmount += bond.getBondAmount();
+
+			if (bond.getRefNo() == null || bond.getRefNo().isEmpty()) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.no");
+			}
+
+			if (bond.getFinancialOrg() == null || bond.getFinancialOrg().getFinancialOrgId() == null) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.financial.org");
+			}
+
+			if (isCentral && bond.getBondAmount() == 0) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100033, "lbl.ct.pb.amount");
+			}
+
+			if (bond.getFileName() == null || bond.getFileName().isEmpty()) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.letter");
+			}
+		}
+
+		if ((BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_APPROVE
+				.equalsIgnoreCase(action))
+				&& ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null) {
+
+			DecimalFormat df = new DecimalFormat("#.00");
+
+			bondAmount = Double.valueOf(df.format(bondAmount));
+			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract()
+					.getLoa().getBondAmt().doubleValue()));
+
+			if (Double.compare(bondAmount, originalBondAmt) < 0) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_750016);
+			}
+		}
+		log.info("validateBonds method test : End ");
+	}
+	// #24333 - End
 	
 }
