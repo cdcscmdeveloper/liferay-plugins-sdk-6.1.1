@@ -31,11 +31,13 @@
 			<tr>
 				<td>
 					<span id="blinkId3">
-						<font color="red">&#x26A0;</font>&#160;
-						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />
+						<p:graphicImage id="alert-img"
+						style="vertical-align:top"
+						value="/css/images/design/icon_alert.png" />
+						<strong><h:outputText styleClass="warning" value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
 					</span>
 					<span style="opacity: 0.0;">
-						<h:outputText styleClass="instruction" value="#{lbl['lbl.txt.alert']}" />
+						<strong><h:outputText styleClass="instruction" value="&#160; #{lbl['lbl.txt.alert']}" /></strong>
 					</span>
 				</td>
 			</tr>
@@ -96,12 +98,10 @@
 					<h:outputText rendered="#{backingBean.managedBean.supplierUser}" value="*" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sm.justification']}" />
 				</f:facet>
-				<!-- Disable for UPS 32008 - START -->
 				<p:inputTextarea value="#{overlap.overlapReason}" maxlength="200" 
 					style="width : auto;" rows="3" cols="80"
 					label="#{lbl['lbl.sm.justification']}" id="overlapCaReasonId"
 					disabled="#{backingBean.managedBean.upsCannotEdit}">
-				<!-- Disable for UPS 32008 - END -->
 					<p:ajax process="@this" update="overlapCatSuppDocDtId,@this" event="blur"/>
 					<f:validateLength maximum="200" />
 				</p:inputTextarea>
