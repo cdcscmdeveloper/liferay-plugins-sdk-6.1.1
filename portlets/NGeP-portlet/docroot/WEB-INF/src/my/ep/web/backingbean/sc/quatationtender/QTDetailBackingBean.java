@@ -13913,26 +13913,27 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 	//9019 - End (Harun)
 	// #33787 Start Vinod
-    private void checkMinPaidUpCapitalWIP(){
-    	IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-    	ScQt qt = this.getManagedBean().getQt();
-		
-		if(null != qt.getPublishDate()){
+	private void checkMinPaidUpCapitalWIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getQt();
+
+		if (null != qt.getPublishDate()) {
 			Date publishDate = qt.getPublishDate();
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_33787);
-			
+
 			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-			
+
 			Date effDate = appVerDtls.getEffDate();
-			
-			if(publishDate.before(effDate)){
+
+			if (publishDate.before(effDate)) {
 				this.getManagedBean().setMinPaidUpCapitalWIP(true);
 			}
 		}
-    }
-    // #33787 End Vinod
+	}
+
+	// #33787 End Vinod
 	//12471 - start
 	/**
 	 * Validate selected approver from picklist

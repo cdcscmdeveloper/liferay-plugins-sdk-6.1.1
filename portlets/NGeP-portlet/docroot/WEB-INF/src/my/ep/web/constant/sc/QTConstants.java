@@ -337,7 +337,7 @@ public interface QTConstants {
 	public static final Long COMPOSITE_VALIDITY_ID_DP=29006L;
 	//#29007 End Vinod
 	// #33787 Start Vinod
-	public static final String APP_VERSION_REDMINE_NO_33787 = "33787";
+	public static final Long APP_VERSION_REDMINE_NO_33787 = 33787L;
 	//#33787 End Vinod
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
