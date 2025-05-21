@@ -51,8 +51,10 @@
 					
 					<br />
 					<p:outputPanel rendered="#{tasks.overlappedCategory}">
-						<font color="red">&#x26A0;</font>&#160;
-						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />&#160;
+						<p:graphicImage id="alert-img"
+						style="vertical-align:top"
+						value="/css/images/design/icon_alert.png" />
+						<h:outputText styleClass="warning" value="&#160; #{lbl['lbl.txt.alert']}" />&#160;
 					</p:outputPanel>
 					
 					<table style="width: 100%">
