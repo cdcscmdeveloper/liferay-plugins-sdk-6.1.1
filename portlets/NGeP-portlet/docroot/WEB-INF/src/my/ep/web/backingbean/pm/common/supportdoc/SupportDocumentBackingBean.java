@@ -7,7 +7,7 @@
  * Copyright � 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
- */
+*/
 package my.ep.web.backingbean.pm.common.supportdoc;
 
 import java.util.ArrayList;
@@ -94,12 +94,14 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
  */
 @ManagedBean(name = "supportDocBackingBean")
 @ViewScoped
-public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentManagedBean> {
+public class SupportDocumentBackingBean extends
+		BaseBackingBean<SupportDocumentManagedBean> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(SupportDocumentBackingBean.class);
+	private static Logger log = Logger
+			.getLogger(SupportDocumentBackingBean.class);
 	// Navigation Details
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/supportingdocument/supportingDocumentMaintain.xhtml";
 	public static final String NAV_TO_SEARCH = "supportingDocument";
@@ -137,17 +139,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void preLoading() {
 		log.info("preLoading");
 		this.resetSupportDocSearchBean();
-		this.getManagedBean().setSelectedTabIndex(0);
+		this.getManagedBean().setSelectedTabIndex(0);		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
-
+	
 	public void preLoadingSupplierDoc() {
 		log.info("preLoading");
 		this.resetSupportDocSearchBean();
-		this.getManagedBean().setSelectedTabIndex(0);
+		this.getManagedBean().setSelectedTabIndex(0);		
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH_SUP);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, NAV_TO_SEARCH_SUP);
 	}
 
 	/**
@@ -155,7 +159,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public void resetSupportDocSearchBean() {
 		log.info("resetSupportDocSearchBean");
-		this.getManagedBean().setSupportDocSearchBean(new SupportDocumentSearchBean());
+		this.getManagedBean().setSupportDocSearchBean(
+				new SupportDocumentSearchBean());
 		pmDocumentDataModel = new PmDocumentDataModel();
 	}
 
@@ -184,29 +189,38 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		return NAV_TO_MAINTAIN;
 	}
 
-	public void fillSupplierDocDependencies() {
+	public void fillSupplierDocDependencies(){
 		log.info("fillSupplierDocDependencies - start");
 		this.getManagedBean().setCheckList(true);
 		// load default value for checklist
-
+		
 		if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 
-			if (this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode() != null
-					&& this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode().getParameterId() != null) {
-				this.getManagedBean().setSupplierActionItems(initialSupplierActionItems());
-			} else {
-				this.getManagedBean().getSelectedDocument().setChecklistActionCode(new PmParameter());
+			if (this.getManagedBean().getSelectedDocument()
+					.getDocDefinitionTypeCode()!=null && this.getManagedBean().getSelectedDocument()
+					.getDocDefinitionTypeCode().getParameterId() != null) {
+				this.getManagedBean().setSupplierActionItems(
+						initialSupplierActionItems());
+			}else{
+				this.getManagedBean().getSelectedDocument()
+				.setChecklistActionCode(new PmParameter());
 			}
-
-			this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(new PmParameter());
-
-		}
+			
+			this.getManagedBean().getSelectedDocument()
+					.setDocDefinitionTypeCode(new PmParameter());			
+			
+		}			
 		if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 			this.getManagedBean().getSelectedDocument().setPmZone(null);
-		}
-
+		}  
+		
+		
+	
 	}
-
+	
+	
+	
+	
 	/**
 	 * redirect to Support Doc Details
 	 * 
@@ -262,19 +276,18 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	private void retrieveDocCategoryMap() {
 		log.info("retrieveDocCategoryMap");
-		// List<PmParameterDesc> parameterDescs =
-		// getDocumentCategoryFilteredOptions();
-		List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
+//		List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
+		List<PmParameterDesc> parameterDescs =getDocumentCategoryFilteredOptions();
 		docCategoryMapper = new HashMap<Long, Object>();
 		for (PmParameterDesc pmDesc : parameterDescs) {
-			docCategoryMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
-
-			if (pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)
-					&& pmDesc.getPmParameter().getParameterType().equals(ParameterTypeConst.DOCUMENT_CATEGORY)) {
+			docCategoryMapper.put(pmDesc.getPmParameter().getParameterId(),
+					pmDesc.getPmParameter());
+			
+			if(pmDesc.getPmParameter().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT) && pmDesc.getPmParameter().getParameterType().equals(ParameterTypeConst.DOCUMENT_CATEGORY)){
 				this.getManagedBean().setSupplierDocParameter(pmDesc.getPmParameter());
 			}
 		}
-
+		
 	}
 
 	/**
@@ -283,18 +296,27 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void docCategorySearchChange() {
 		log.info("docCategorySearchChange");
 		if (this.getManagedBean().getSupportDocSearchBean() != null) {
-			if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(this.getManagedBean().getSupportDocSearchBean()
+			if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(this
+					.getManagedBean().getSupportDocSearchBean()
 					.getDocCategoryParamCode())) {
-				this.getManagedBean().getSupportDocSearchBean().setProcureCatParam(null);
-			} else if (ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(this.getManagedBean()
-					.getSupportDocSearchBean().getDocCategoryParamCode())
-					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(this.getManagedBean()
-							.getSupportDocSearchBean().getDocCategoryParamCode())) {
-				this.getManagedBean().getSupportDocSearchBean().setAppTypeParam(null);
-				this.getManagedBean().getSupportDocSearchBean().setBusinessCategory(null);
-				this.getManagedBean().getSupportDocSearchBean().setComTypeParam(null);
+				this.getManagedBean().getSupportDocSearchBean()
+						.setProcureCatParam(null);
+			} else if (ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST
+					.equals(this.getManagedBean().getSupportDocSearchBean()
+							.getDocCategoryParamCode())
+					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST
+							.equals(this.getManagedBean()
+									.getSupportDocSearchBean()
+									.getDocCategoryParamCode())) {
+				this.getManagedBean().getSupportDocSearchBean()
+						.setAppTypeParam(null);
+				this.getManagedBean().getSupportDocSearchBean()
+						.setBusinessCategory(null);
+				this.getManagedBean().getSupportDocSearchBean()
+						.setComTypeParam(null);
 				this.getManagedBean().getSupportDocSearchBean().setPmZone(null);
-				this.getManagedBean().getSupportDocSearchBean().setSuppTypeParam(null);
+				this.getManagedBean().getSupportDocSearchBean()
+						.setSuppTypeParam(null);
 			}
 		}
 	}
@@ -304,89 +326,94 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public void docCategoryChange() {
 		log.info("docCategoryChange");
-		log.info(".........this.getManagedBean().getSelectedDocument().getDocCategoryCode()="
-				+ this.getManagedBean().getSelectedDocument().getDocCategoryCode());
-		if (this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterId() != null) {
-			PmParameter pmParameter = (PmParameter) docCategoryMapper.get(this.getManagedBean().getSelectedDocument()
+		log.info(".........this.getManagedBean().getSelectedDocument().getDocCategoryCode()="+this.getManagedBean().getSelectedDocument().getDocCategoryCode());
+		if (this.getManagedBean().getSelectedDocument().getDocCategoryCode()
+				.getParameterId() != null) {
+			PmParameter pmParameter = (PmParameter) docCategoryMapper.get(this
+					.getManagedBean().getSelectedDocument()
 					.getDocCategoryCode().getParameterId());
-			log.info("......pmParameter=" + pmParameter);
-			this.getManagedBean().getSelectedDocument().getDocCategoryCode().setParameterCode(pmParameter.getParameterCode());
-			getManagedBean().getSelectedDocument().getDocCategoryCode().setParameterType(pmParameter.getParameterType());
-			if (!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmParameter.getParameterCode())) {
+			log.info("......pmParameter="+pmParameter);
+			this.getManagedBean().getSelectedDocument().getDocCategoryCode()
+					.setParameterCode(pmParameter.getParameterCode());
+			getManagedBean().getSelectedDocument().getDocCategoryCode()
+					.setParameterType(pmParameter.getParameterType());
+			if (!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
+					.equals(pmParameter.getParameterCode())) {
 				this.getManagedBean().setCheckList(true);
 				// load default value for checklist
-
+				
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 
-					if (this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode() != null
-							&& this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode().getParameterId() != null) {
-						this.getManagedBean().setSupplierActionItems(initialSupplierActionItems());
-					} else {
-						this.getManagedBean().getSelectedDocument().setChecklistActionCode(new PmParameter());
+					if (this.getManagedBean().getSelectedDocument()
+							.getDocDefinitionTypeCode()!=null && this.getManagedBean().getSelectedDocument()
+							.getDocDefinitionTypeCode().getParameterId() != null) {
+						this.getManagedBean().setSupplierActionItems(
+								initialSupplierActionItems());
+					}else{
+						this.getManagedBean().getSelectedDocument()
+						.setChecklistActionCode(new PmParameter());
+					}
+					
+					this.getManagedBean().getSelectedDocument()
+							.setDocDefinitionTypeCode(new PmParameter());			
+					
+				}
+				
+				/*if (this.getManagedBean().getSelectedDocument().isBrandNew()
+						&& this.getManagedBean().getSelectedDocument()
+								.getDocDefinitionTypeCode() == null) {
+					if (this.getManagedBean().getSelectedDocument()
+							.getDocDefinitionTypeCode() == null) {
+						this.getManagedBean().getSelectedDocument()
+								.setDocDefinitionTypeCode(new PmParameter());
+
+					}
+					
+					
+					 * PmParameter tempParam = PmCommonUtil.retrievePmParameter(
+					 * ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
+					 * ProfileManagementConst.DEFAULT_DOC_DEFINITION);
+					 * this.getManagedBean().getSelectedDocument()
+					 * .getDocDefinitionTypeCode()
+					 * .setParameterId(tempParam.getParameterId());
+					 
+				}*/
+				/*if (this.getManagedBean().getSelectedDocument().isBrandNew()
+						&& this.getManagedBean().getSelectedDocument()
+								.getChecklistActionCode() == null) {
+					if (this.getManagedBean().getSelectedDocument()
+							.getChecklistActionCode() == null) {
+						this.getManagedBean().getSelectedDocument()
+								.setChecklistActionCode(new PmParameter());
 					}
 
-					this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(new PmParameter());
-
-				}
-
-				/*
-				 * if (this.getManagedBean().getSelectedDocument().isBrandNew()
-				 * && this.getManagedBean().getSelectedDocument()
-				 * .getDocDefinitionTypeCode() == null) { if
-				 * (this.getManagedBean().getSelectedDocument()
-				 * .getDocDefinitionTypeCode() == null) {
-				 * this.getManagedBean().getSelectedDocument()
-				 * .setDocDefinitionTypeCode(new PmParameter());
-				 * 
-				 * }
-				 * 
-				 * 
-				 * PmParameter tempParam = PmCommonUtil.retrievePmParameter(
-				 * ParameterTypeConst.DOCUMENT_DEFINITION_TYPE,
-				 * ProfileManagementConst.DEFAULT_DOC_DEFINITION);
-				 * this.getManagedBean().getSelectedDocument()
-				 * .getDocDefinitionTypeCode()
-				 * .setParameterId(tempParam.getParameterId());
-				 * 
-				 * }
-				 */
-				/*
-				 * if (this.getManagedBean().getSelectedDocument().isBrandNew()
-				 * && this.getManagedBean().getSelectedDocument()
-				 * .getChecklistActionCode() == null) { if
-				 * (this.getManagedBean().getSelectedDocument()
-				 * .getChecklistActionCode() == null) {
-				 * this.getManagedBean().getSelectedDocument()
-				 * .setChecklistActionCode(new PmParameter()); }
-				 * 
-				 * 
-				 * PmParameter tempParam = PmCommonUtil.retrievePmParameter(
-				 * ParameterTypeConst.SC_SUPPLIER_ACTION,
-				 * ProfileManagementConst.DEFAULT_SUPPLIER_ACTION);
-				 * this.getManagedBean().getSelectedDocument()
-				 * .getChecklistActionCode()
-				 * .setParameterId(tempParam.getParameterId());
-				 * 
-				 * }
-				 */
-
+					
+					 * PmParameter tempParam = PmCommonUtil.retrievePmParameter(
+					 * ParameterTypeConst.SC_SUPPLIER_ACTION,
+					 * ProfileManagementConst.DEFAULT_SUPPLIER_ACTION);
+					 * this.getManagedBean().getSelectedDocument()
+					 * .getChecklistActionCode()
+					 * .setParameterId(tempParam.getParameterId());
+					 
+				}*/				
+	             
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 					this.getManagedBean().getSelectedDocument().setPmZone(null);
 				}
-
+				
 			} else {
 				if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
 					this.getManagedBean().setCheckList(false);
-					this.getManagedBean().getSelectedDocument().setPmZone(new PmZone());
-					this.getManagedBean().getSelectedDocument().getPmZone().setZoneId(0L); // if
-																							// zone
-																							// selected
-																							// is
-																							// All.
-					this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(null);
-					this.getManagedBean().getSelectedDocument().setChecklistActionCode(null);
+					this.getManagedBean().getSelectedDocument()
+							.setPmZone(new PmZone());
+					this.getManagedBean().getSelectedDocument().getPmZone()
+							.setZoneId(0L); // if zone selected is All.
+					this.getManagedBean().getSelectedDocument()
+							.setDocDefinitionTypeCode(null);
+					this.getManagedBean().getSelectedDocument()
+							.setChecklistActionCode(null);
 				}
-
+   
 			}
 		} else {
 			if (this.getManagedBean().getSelectedDocument().isBrandNew()) {
@@ -424,7 +451,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		this.getManagedBean().setCheckList(false);
 		this.getManagedBean().setSelectedTabIndex(0);
 		this.getManagedBean().setSupplierActionItems(null);
-
+		
 		log.info("initialSupportDoc - End");
 	}
 
@@ -436,8 +463,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		try {
 			initialSupportDoc();
 			PmDocument pmDocument = retrieveDocumentById(id);
-			log.info("......pmDocument.getDocCategoryCode().getParameterCode()="
-					+ pmDocument.getDocCategoryCode().getParameterCode());
+			log.info("......pmDocument.getDocCategoryCode().getParameterCode()="+pmDocument.getDocCategoryCode().getParameterCode());
 			if (pmDocument.getDocCategoryCode() == null) {
 				pmDocument.setDocCategoryCode(new PmParameter());
 			}
@@ -446,7 +472,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			docCategoryChange();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770062, new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770062,
+					new String[] { e.getMessage() });
 
 		}
 		log.info("loadSupportDoc - End");
@@ -480,7 +507,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void loadRestriction(PmDocument pmDocument) {
 		log.info("loadRestriction - Start");
 		if (pmDocument != null && pmDocument.getDocCategoryCode() != null) {
-			if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
+			if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
+					.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
 				if (pmDocument.getPmZone() == null) {
 					pmDocument.setPmZone(new PmZone());
 				}
@@ -490,38 +518,53 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				List<PmDocumentRestr> suppTypeRestrictions = new ArrayList<PmDocumentRestr>();
 				List<PmDocumentRestr> categoryRestrictions = new ArrayList<PmDocumentRestr>();
 				List<PmDocumentRestr> certBodyRestrictions = new ArrayList<PmDocumentRestr>();
-				for (PmDocumentRestr pmDocumentRestr : pmDocument.getPmDocumentRestrs()) {
-					if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-						if (pmDocument.isByAppType() && pmDocumentRestr.getAppTypeCode() != null) {
+				for (PmDocumentRestr pmDocumentRestr : pmDocument
+						.getPmDocumentRestrs()) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr
+							.getRecordStatusFlg()) {
+						if (pmDocument.isByAppType()
+								&& pmDocumentRestr.getAppTypeCode() != null) {
 							appTypeRestrictions.add(pmDocumentRestr);
 						}
-						if (pmDocument.isByCompType() && pmDocumentRestr.getCompanyTypeCode() != null) {
+						if (pmDocument.isByCompType()
+								&& pmDocumentRestr.getCompanyTypeCode() != null) {
 							comTypeRestrictions.add(pmDocumentRestr);
 						}
-						if (pmDocument.isBySupplierType() && pmDocumentRestr.getSupplierTypeCode() != null) {
+						if (pmDocument.isBySupplierType()
+								&& pmDocumentRestr.getSupplierTypeCode() != null) {
 							suppTypeRestrictions.add(pmDocumentRestr);
 						}
-						if (pmDocument.isByCategory() && pmDocumentRestr.getPmCategoryL3() != null) {
-							pmDocumentRestr.setPmCategoryL3(retrieveCategoryL3DtlById(pmDocumentRestr.getPmCategoryL3()
-									.getCategoryL3Id()));
+						if (pmDocument.isByCategory()
+								&& pmDocumentRestr.getPmCategoryL3() != null) {
+							pmDocumentRestr
+									.setPmCategoryL3(retrieveCategoryL3DtlById(pmDocumentRestr
+											.getPmCategoryL3()
+											.getCategoryL3Id()));
 							categoryRestrictions.add(pmDocumentRestr);
 						}
-						if (pmDocument.isByCertBody() && pmDocumentRestr.getPmCertBody() != null) {
+						if (pmDocument.isByCertBody()
+								&& pmDocumentRestr.getPmCertBody() != null) {
 							certBodyRestrictions.add(pmDocumentRestr);
 						}
 					}
 				}
-				this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
-				this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
-				this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
-				this.getManagedBean().setCategoryRestrictions(categoryRestrictions);
-				this.getManagedBean().setCertBodyRestrictions(certBodyRestrictions);
+				this.getManagedBean().setAppTypeRestrictions(
+						appTypeRestrictions);
+				this.getManagedBean().setComTypeRestrictions(
+						comTypeRestrictions);
+				this.getManagedBean().setSuppTypeRestrictions(
+						suppTypeRestrictions);
+				this.getManagedBean().setCategoryRestrictions(
+						categoryRestrictions);
+				this.getManagedBean().setCertBodyRestrictions(
+						certBodyRestrictions);
 
 				defaultTab(pmDocument);
-			} else if (ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(pmDocument.getDocCategoryCode()
-					.getParameterCode())
-					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(pmDocument.getDocCategoryCode()
-							.getParameterCode())) {
+			} else if (ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST
+					.equals(pmDocument.getDocCategoryCode().getParameterCode())
+					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST
+							.equals(pmDocument.getDocCategoryCode()
+									.getParameterCode())) {
 				if (pmDocument.getDocDefinitionTypeCode() == null) {
 					pmDocument.setDocDefinitionTypeCode(new PmParameter());
 				}
@@ -530,13 +573,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				}
 
 				List<PmDocumentRestr> checklistRestriction = new ArrayList<PmDocumentRestr>();
-				for (PmDocumentRestr pmDocumentRestr : pmDocument.getPmDocumentRestrs()) {
-					if (pmDocument.isByProcureCat() && pmDocumentRestr.getProcurementCatCode() != null
-							&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
+				for (PmDocumentRestr pmDocumentRestr : pmDocument
+						.getPmDocumentRestrs()) {
+					if (pmDocument.isByProcureCat()
+							&& pmDocumentRestr.getProcurementCatCode() != null
+							&& DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr
+									.getRecordStatusFlg()) {
 						checklistRestriction.add(pmDocumentRestr);
 					}
 				}
-				this.getManagedBean().setCheckListRestrictions(checklistRestriction);
+				this.getManagedBean().setCheckListRestrictions(
+						checklistRestriction);
 
 			}
 		}
@@ -557,25 +604,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 		}
 		log.info("redirectToSearchSupportDoc - End");
-
-		// if(!this.getManagedBean().getSelectedDocument().isBrandNew()){
-		// log.info("...........this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode()="+this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode());
-		// if(this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)){
-		// return NAV_TO_SEARCH_SUP;
-		// }else{
-		// return NAV_TO_SEARCH;
-		// }
-		// }else{//brandNew, create
-		if (this.getManagedBean().getSelectedDocument().getDocCategoryCode() != null
-				&& this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode() != null
-				&& this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)) {
+		
+//	if(!this.getManagedBean().getSelectedDocument().isBrandNew()){
+//		log.info("...........this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode()="+this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode());
+//		if(this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)){
+//			return NAV_TO_SEARCH_SUP;
+//		}else{
+//		    return NAV_TO_SEARCH;
+//		}
+//	}else{//brandNew, create
+		if(this.getManagedBean().getSelectedDocument().getDocCategoryCode() != null && this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode() != null && this.getManagedBean().getSelectedDocument().getDocCategoryCode().getParameterCode().equals(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT)){
 			return NAV_TO_SEARCH_SUP;
-		} else {
-			return NAV_TO_SEARCH;
+		}else{
+			 return NAV_TO_SEARCH;
 		}
-
-		// }
+		
+//	}
 
 	}
 
@@ -592,162 +636,173 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			PmDocumentRestr pmDocumentRestr = new PmDocumentRestr();
 			if (restrictionType == RESTR_APP) {
 				if (this.getManagedBean().getAppTypeRestrictions() == null) {
-					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmDocumentRestr>());
+					this.getManagedBean().setAppTypeRestrictions(
+							new ArrayList<PmDocumentRestr>());
 				}
 				pmDocumentRestr.setAppTypeCode(new PmParameter());
-				this.getManagedBean().getAppTypeRestrictions().add(pmDocumentRestr);
+				this.getManagedBean().getAppTypeRestrictions()
+						.add(pmDocumentRestr);
 			} else if (restrictionType == RESTR_COMP) {
 				if (this.getManagedBean().getComTypeRestrictions() == null) {
-					this.getManagedBean().setComTypeRestrictions(new ArrayList<PmDocumentRestr>());
+					this.getManagedBean().setComTypeRestrictions(
+							new ArrayList<PmDocumentRestr>());
 				}
 				pmDocumentRestr.setCompanyTypeCode(new PmParameter());
-				this.getManagedBean().getComTypeRestrictions().add(pmDocumentRestr);
+				this.getManagedBean().getComTypeRestrictions()
+						.add(pmDocumentRestr);
 			} else if (restrictionType == RESTR_SUPP) {
 				if (this.getManagedBean().getSuppTypeRestrictions() == null) {
-					this.getManagedBean().setSuppTypeRestrictions(new ArrayList<PmDocumentRestr>());
+					this.getManagedBean().setSuppTypeRestrictions(
+							new ArrayList<PmDocumentRestr>());
 				}
 				pmDocumentRestr.setSupplierTypeCode(new PmParameter());
-				this.getManagedBean().getSuppTypeRestrictions().add(pmDocumentRestr);
+				this.getManagedBean().getSuppTypeRestrictions()
+						.add(pmDocumentRestr);
 			} else if (restrictionType == RESTR_CATEGORY) {
 				if (this.getManagedBean().getCategoryRestrictions() == null) {
-					this.getManagedBean().setCategoryRestrictions(new ArrayList<PmDocumentRestr>());
+					this.getManagedBean().setCategoryRestrictions(
+							new ArrayList<PmDocumentRestr>());
 				}
 				pmDocumentRestr.setPmCategoryL3(new PmCategoryL3());
-				this.getManagedBean().getCategoryRestrictions().add(pmDocumentRestr);
+				this.getManagedBean().getCategoryRestrictions()
+						.add(pmDocumentRestr);
 			} else if (restrictionType == CHECKLIST) {
 				if (this.getManagedBean().getCheckListRestrictions() == null) {
-					this.getManagedBean().setCheckListRestrictions(new ArrayList<PmDocumentRestr>());
+					this.getManagedBean().setCheckListRestrictions(
+							new ArrayList<PmDocumentRestr>());
 				}
 				pmDocumentRestr.setProcurementCatCode(new PmParameter());
-				this.getManagedBean().getCheckListRestrictions().add(pmDocumentRestr);
+				this.getManagedBean().getCheckListRestrictions()
+						.add(pmDocumentRestr);
 			}
 		}
 	}
 
-	// /**
-	// * delete document restriction
-	// *
-	// * @param restrictionType
-	// */
-	// public void deleteRestrictions(int restrictionType) {
-	// log.info("deleteRestrictions");
-	// if (restrictionType == RESTR_APP) {
-	// if (this.getManagedBean().getDeleteAppTypeRestrictions() != null
-	// && !this.getManagedBean().getDeleteAppTypeRestrictions()
-	// .isEmpty()) {
-	// if (this.getManagedBean().getAppTypeRestrictions() == null) {
-	// this.getManagedBean().setAppTypeRestrictions(
-	// new ArrayList<PmDocumentRestr>());
-	// }
-	// for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-	// .getDeleteAppTypeRestrictions()) {
-	// this.getManagedBean().getAppTypeRestrictions()
-	// .remove(pmDocumentRestr);
-	// }
-	// this.getManagedBean().getDeleteAppTypeRestrictions().clear();
-	//
-	// } else {
-	// throw new EpException(MessageConst.ERROR_770063);
-	// }
-	// } else if (restrictionType == RESTR_COMP) {
-	// if (this.getManagedBean().getDeleteComTypeRestrictions() != null
-	// && !this.getManagedBean().getDeleteComTypeRestrictions()
-	// .isEmpty()) {
-	// if (this.getManagedBean().getComTypeRestrictions() == null) {
-	// this.getManagedBean().setComTypeRestrictions(
-	// new ArrayList<PmDocumentRestr>());
-	// }
-	// for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-	// .getDeleteComTypeRestrictions()) {
-	// this.getManagedBean().getComTypeRestrictions()
-	// .remove(pmDocumentRestr);
-	// }
-	// this.getManagedBean().getDeleteComTypeRestrictions().clear();
-	//
-	// } else {
-	// throw new EpException(MessageConst.ERROR_770063);
-	// }
-	// } else if (restrictionType == RESTR_SUPP) {
-	// if (this.getManagedBean().getDeleteSuppTypeRestrictions() != null
-	// && !this.getManagedBean().getDeleteSuppTypeRestrictions()
-	// .isEmpty()) {
-	// if (this.getManagedBean().getSuppTypeRestrictions() == null) {
-	// this.getManagedBean().setSuppTypeRestrictions(
-	// new ArrayList<PmDocumentRestr>());
-	// }
-	// for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-	// .getDeleteSuppTypeRestrictions()) {
-	// this.getManagedBean().getSuppTypeRestrictions()
-	// .remove(pmDocumentRestr);
-	// }
-	// this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
-	//
-	// } else {
-	// throw new EpException(MessageConst.ERROR_770063);
-	// }
-	// } else if (restrictionType == RESTR_CATEGORY) {
-	// if (this.getManagedBean().getDeleteCategoryRestrictions() != null
-	// && !this.getManagedBean().getDeleteCategoryRestrictions()
-	// .isEmpty()) {
-	// if (this.getManagedBean().getCategoryRestrictions() == null) {
-	// this.getManagedBean().setCategoryRestrictions(
-	// new ArrayList<PmDocumentRestr>());
-	// }
-	// for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-	// .getDeleteCategoryRestrictions()) {
-	// this.getManagedBean().getCategoryRestrictions()
-	// .remove(pmDocumentRestr);
-	// }
-	// this.getManagedBean().getDeleteCategoryRestrictions().clear();
-	//
-	// } else {
-	// throw new EpException(MessageConst.ERROR_770063);
-	// }
-	// } else if (restrictionType == CHECKLIST) {
-	// if (this.getManagedBean().getDeleteCheckListRestrictions() != null
-	// && !this.getManagedBean().getDeleteCheckListRestrictions()
-	// .isEmpty()) {
-	// if (this.getManagedBean().getCheckListRestrictions() == null) {
-	// this.getManagedBean().setCheckListRestrictions(
-	// new ArrayList<PmDocumentRestr>());
-	// }
-	// for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-	// .getDeleteCheckListRestrictions()) {
-	// this.getManagedBean().getCheckListRestrictions()
-	// .remove(pmDocumentRestr);
-	// }
-	// this.getManagedBean().getDeleteCheckListRestrictions().clear();
-	//
-	// } else {
-	// throw new EpException(MessageConst.ERROR_770063);
-	// }
-	// } else if (restrictionType == RESTR_CERTBODY) {
-	// if (this.getManagedBean().getDeleteCertBodyRestrictions() != null
-	// && !this.getManagedBean().getDeleteCertBodyRestrictions()
-	// .isEmpty()) {
-	// if (this.getManagedBean().getCertBodyRestrictions() == null) {
-	// this.getManagedBean().setCertBodyRestrictions(
-	// new ArrayList<PmDocumentRestr>());
-	// }
-	// for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
-	// .getDeleteCertBodyRestrictions()) {
-	// this.getManagedBean().getCertBodyRestrictions()
-	// .remove(pmDocumentRestr);
-	// }
-	// this.getManagedBean().getDeleteCertBodyRestrictions().clear();
-	//
-	// } else {
-	// throw new EpException(MessageConst.ERROR_770063);
-	// }
-	//
-	// }
-	// }
+//	/**
+//	 * delete document restriction
+//	 * 
+//	 * @param restrictionType
+//	 */
+//	public void deleteRestrictions(int restrictionType) {
+//		log.info("deleteRestrictions");
+//		if (restrictionType == RESTR_APP) {
+//			if (this.getManagedBean().getDeleteAppTypeRestrictions() != null
+//					&& !this.getManagedBean().getDeleteAppTypeRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getAppTypeRestrictions() == null) {
+//					this.getManagedBean().setAppTypeRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteAppTypeRestrictions()) {
+//					this.getManagedBean().getAppTypeRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_COMP) {
+//			if (this.getManagedBean().getDeleteComTypeRestrictions() != null
+//					&& !this.getManagedBean().getDeleteComTypeRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getComTypeRestrictions() == null) {
+//					this.getManagedBean().setComTypeRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteComTypeRestrictions()) {
+//					this.getManagedBean().getComTypeRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteComTypeRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_SUPP) {
+//			if (this.getManagedBean().getDeleteSuppTypeRestrictions() != null
+//					&& !this.getManagedBean().getDeleteSuppTypeRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getSuppTypeRestrictions() == null) {
+//					this.getManagedBean().setSuppTypeRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteSuppTypeRestrictions()) {
+//					this.getManagedBean().getSuppTypeRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_CATEGORY) {
+//			if (this.getManagedBean().getDeleteCategoryRestrictions() != null
+//					&& !this.getManagedBean().getDeleteCategoryRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getCategoryRestrictions() == null) {
+//					this.getManagedBean().setCategoryRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteCategoryRestrictions()) {
+//					this.getManagedBean().getCategoryRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteCategoryRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == CHECKLIST) {
+//			if (this.getManagedBean().getDeleteCheckListRestrictions() != null
+//					&& !this.getManagedBean().getDeleteCheckListRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getCheckListRestrictions() == null) {
+//					this.getManagedBean().setCheckListRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteCheckListRestrictions()) {
+//					this.getManagedBean().getCheckListRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteCheckListRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//		} else if (restrictionType == RESTR_CERTBODY) {
+//			if (this.getManagedBean().getDeleteCertBodyRestrictions() != null
+//					&& !this.getManagedBean().getDeleteCertBodyRestrictions()
+//							.isEmpty()) {
+//				if (this.getManagedBean().getCertBodyRestrictions() == null) {
+//					this.getManagedBean().setCertBodyRestrictions(
+//							new ArrayList<PmDocumentRestr>());
+//				}
+//				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+//						.getDeleteCertBodyRestrictions()) {
+//					this.getManagedBean().getCertBodyRestrictions()
+//							.remove(pmDocumentRestr);
+//				}
+//				this.getManagedBean().getDeleteCertBodyRestrictions().clear();
+//
+//			} else {
+//				throw new EpException(MessageConst.ERROR_770063);
+//			}
+//
+//		}
+//	}
 
 	public void deleteRestrictions(int restrictionType, int rowIndex) {
 		log.info("deleteRestrictions");
 		PmDocumentRestr pmDocRestr = null;
 		if (restrictionType == RESTR_APP) {
-			pmDocRestr = getManagedBean().getAppTypeRestrictions().get(rowIndex);
+			pmDocRestr = getManagedBean().getAppTypeRestrictions()
+					.get(rowIndex);
 			pmDocRestr.setDeleted(true);
 			if (this.getManagedBean().getDeleteAppTypeRestrictionsAuditList() == null) {
 				this.getManagedBean().setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
@@ -800,14 +855,15 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			 */
 		}
 	}
-
+	
 	public void deleteRestrictions(int restrictionType) {
 		log.info("deleteRestrictions");
 		PmDocumentRestr pmDocRestr = null;
 		Integer rowIndex = getManagedBean().getDeleteRowIndex();
-		if (rowIndex != null) {
+		if(rowIndex != null){
 			if (restrictionType == RESTR_APP) {
-				pmDocRestr = getManagedBean().getAppTypeRestrictions().get(rowIndex.intValue());
+				pmDocRestr = getManagedBean().getAppTypeRestrictions()
+						.get(rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
 				if (this.getManagedBean().getDeleteAppTypeRestrictionsAuditList() == null) {
 					this.getManagedBean().setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
@@ -815,7 +871,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				getManagedBean().getDeleteAppTypeRestrictionsAuditList().add(pmDocRestr);
 				getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
 			} else if (restrictionType == RESTR_COMP) {
-				pmDocRestr = getManagedBean().getComTypeRestrictions().get(rowIndex.intValue());
+				pmDocRestr = getManagedBean().getComTypeRestrictions()
+						.get(rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
 				if (this.getManagedBean().getDeleteComTypeRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteComTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
@@ -824,7 +881,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				getManagedBean().getComTypeRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_SUPP) {
-				pmDocRestr = getManagedBean().getSuppTypeRestrictions().get(rowIndex.intValue());
+				pmDocRestr = getManagedBean().getSuppTypeRestrictions().get(
+						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
 				if (this.getManagedBean().getDeleteSuppTypeRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
@@ -834,7 +892,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				getManagedBean().getSuppTypeRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_CATEGORY) {
-				pmDocRestr = getManagedBean().getCategoryRestrictions().get(rowIndex.intValue());
+				pmDocRestr = getManagedBean().getCategoryRestrictions().get(
+						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
 				if (this.getManagedBean().getDeleteCategoryRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteCategoryRestrictionsAudit(new ArrayList<PmDocumentRestr>());
@@ -844,12 +903,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				getManagedBean().getCategoryRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == CHECKLIST) {
-				pmDocRestr = getManagedBean().getCheckListRestrictions().get(rowIndex.intValue());
+				pmDocRestr = getManagedBean().getCheckListRestrictions().get(
+						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
 				getManagedBean().getCheckListRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_CERTBODY) {
-				pmDocRestr = getManagedBean().getCertBodyRestrictions().get(rowIndex.intValue());
+				pmDocRestr = getManagedBean().getCertBodyRestrictions().get(
+						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
 				if (this.getManagedBean().getDeleteCertBodyRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteCertBodyRestrictionsAudit(new ArrayList<PmDocumentRestr>());
@@ -861,7 +922,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 			if (pmDocRestr != null && !pmDocRestr.isBrandNew()) {
 				if (getManagedBean().getDeleteRestrictions() == null) {
-					getManagedBean().setDeleteRestrictions(new ArrayList<PmDocumentRestr>());
+					getManagedBean().setDeleteRestrictions(
+							new ArrayList<PmDocumentRestr>());
 				}
 				pmDocRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 				pmDocRestr.setDeleted(true);
@@ -870,11 +932,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				/*
 				 * try { oldDeleteRestrictions =
 				 * (List<PmDocumentRestr>)BeanUtils.cloneBean
-				 * (getManagedBean().getDeleteRestrictions()); } catch
-				 * (Exception e) { e.printStackTrace(); }
+				 * (getManagedBean().getDeleteRestrictions()); } catch (Exception e)
+				 * { e.printStackTrace(); }
 				 * 
-				 * this.getManagedBean().setOldDeleteRestrictions(
-				 * oldDeleteRestrictions );
+				 * this.getManagedBean().setOldDeleteRestrictions(oldDeleteRestrictions
+				 * );
 				 */
 			}
 		}
@@ -890,17 +952,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		this.getManagedBean().setSelectedCategoryL3(pmCategoryL3);
 		if (pmCategoryL3 != null) {
 			if (this.getManagedBean().getCategoryRestrictions() == null) {
-				this.getManagedBean().setCategoryRestrictions(new ArrayList<PmDocumentRestr>());
+				this.getManagedBean().setCategoryRestrictions(
+						new ArrayList<PmDocumentRestr>());
 			}
 			if (isUniqueCategoryL3()) {
-
-				PmDocumentRestr categoryRestr = new PmDocumentRestr();
-				// categoryRestr
-				// .setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3
-				// .getCategoryL3Id()));
-				categoryRestr.setPmCategoryL3(pmCategoryL3);
-				this.getManagedBean().getCategoryRestrictions().add(categoryRestr);
-				// this.getManagedBean().setSelectedCategoryL3(null);
+				
+					PmDocumentRestr categoryRestr = new PmDocumentRestr();
+//					categoryRestr
+//							.setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3
+//									.getCategoryL3Id()));
+					categoryRestr.setPmCategoryL3(pmCategoryL3);
+					this.getManagedBean().getCategoryRestrictions()
+							.add(categoryRestr);
+//				this.getManagedBean().setSelectedCategoryL3(null);
 			} else {
 				throw new EpException(MessageConst.ERROR_770064);
 			}
@@ -917,18 +981,24 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		boolean isUnique = true;
 		if (this.getManagedBean().getSelectedCategoryL3() != null) {
 			if (this.getManagedBean().getCategoryRestrictions() != null
-					&& !this.getManagedBean().getCategoryRestrictions().isEmpty()) {
+					&& !this.getManagedBean().getCategoryRestrictions()
+							.isEmpty()) {
 				List<Long> categoryL3Id = new ArrayList<Long>();
 
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean().getCategoryRestrictions()) {
-					if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-						categoryL3Id.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
+				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+						.getCategoryRestrictions()) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr
+							.getRecordStatusFlg()) {
+						categoryL3Id.add(pmDocumentRestr.getPmCategoryL3()
+								.getCategoryL3Id());
 					}
 				}
 
-				if (categoryL3Id.contains(this.getManagedBean().getSelectedCategoryL3().getCategoryL3Id())) {
-					isUnique = false;
-				}
+
+					if (categoryL3Id.contains( this.getManagedBean().getSelectedCategoryL3().getCategoryL3Id())) {
+						isUnique = false;
+					}
+
 
 				// Set<Long> tempRestrictIdSet = new
 				// HashSet<Long>(tempRestrictIdList);
@@ -951,7 +1021,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("updateCertBody");
 		if (pmCertBodies != null) {
 			if (this.getManagedBean().getCertBodyRestrictions() == null) {
-				this.getManagedBean().setCertBodyRestrictions(new ArrayList<PmDocumentRestr>());
+				this.getManagedBean().setCertBodyRestrictions(
+						new ArrayList<PmDocumentRestr>());
 			}
 			if (isUniqueCertBody()) {
 				PmDocumentRestr certBodyRestr = null;
@@ -959,7 +1030,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					PmCertBody pmCertBody = (PmCertBody) pmCertBodies.get(i);
 					certBodyRestr = new PmDocumentRestr();
 					certBodyRestr.setPmCertBody(pmCertBody);
-					this.getManagedBean().getCertBodyRestrictions().add(certBodyRestr);
+					this.getManagedBean().getCertBodyRestrictions()
+							.add(certBodyRestr);
 				}
 				this.getManagedBean().getSelectedCertBodies().clear();
 			} else {
@@ -976,18 +1048,24 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	private boolean isUniqueCertBody() {
 		log.info("isUniqueCertBody");
 		boolean isUnique = true;
-		if (this.getManagedBean().getSelectedCertBodies() != null && !this.getManagedBean().getSelectedCertBodies().isEmpty()) {
+		if (this.getManagedBean().getSelectedCertBodies() != null
+				&& !this.getManagedBean().getSelectedCertBodies().isEmpty()) {
 			if (this.getManagedBean().getCertBodyRestrictions() != null
-					&& !this.getManagedBean().getCertBodyRestrictions().isEmpty()) {
+					&& !this.getManagedBean().getCertBodyRestrictions()
+							.isEmpty()) {
 				List<Long> certBodyId = new ArrayList<Long>();
 
-				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean().getCertBodyRestrictions()) {
-					if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
-						certBodyId.add(pmDocumentRestr.getPmCertBody().getCertBodyId());
+				for (PmDocumentRestr pmDocumentRestr : this.getManagedBean()
+						.getCertBodyRestrictions()) {
+					if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr
+							.getRecordStatusFlg()) {
+						certBodyId.add(pmDocumentRestr.getPmCertBody()
+								.getCertBodyId());
 					}
 				}
 
-				for (PmCertBody pmCertBody : this.getManagedBean().getSelectedCertBodies()) {
+				for (PmCertBody pmCertBody : this.getManagedBean()
+						.getSelectedCertBodies()) {
 					if (certBodyId.contains(pmCertBody.getCertBodyId())) {
 						isUnique = false;
 						break;
@@ -1010,15 +1088,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		try {
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
 			reqDTO.setDocumentId(docId);
-			IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IDocumentSO.class);
+			IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDocumentSO.class);
 			DocumentResDTO resDTO = reqSO.retrieveDocumentDtlById(reqDTO);
 			if (resDTO.isSuccessful()) {
 				pmDocument = resDTO.getDocument();
 			}
 
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770062, new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770062,
+					new String[] { e.getMessage() });
 		}
 		log.info("retrieveDocumentById - End");
 		return pmDocument;
@@ -1035,10 +1115,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_EQUALS.value(),
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(),
 						ParameterConst.BASIC_ACCOUNT));
 
-		return super.getDropdownValuesBySearchBean(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, searchBean);
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, searchBean);
 	}
 
 	/**
@@ -1058,14 +1140,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public SelectItem[] supplierTypeOptions() {
 		log.info("supplierTypeOptions");
-		List<PmParameterDesc> paramDescs = PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.SUPPLIER_TYPES,
-				Arrays.asList(ProfileManagementConst.SUPP_TYPE_EXCLUDE), null);
+		List<PmParameterDesc> paramDescs = PmCommonUtil
+				.retrieveFilteredParamDesc(
+						ParameterTypeConst.SUPPLIER_TYPES,
+						Arrays.asList(ProfileManagementConst.SUPP_TYPE_EXCLUDE),
+						null);
 		SelectItem[] items = new SelectItem[paramDescs.size() + 1];
-		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+		items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+				"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				getFacesScopes().getUserLocale()));
 		int i = 1;
 		for (PmParameterDesc paramDesc : paramDescs) {
-			items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterId(), paramDesc.getCodeName());
+			items[i++] = new SelectItem(paramDesc.getPmParameter()
+					.getParameterId(), paramDesc.getCodeName());
 		}
 		return items;
 	}
@@ -1077,21 +1164,25 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public SelectItem[] docDefinitionOptions() {
 		log.info("docDefinitionOptions");
-		SelectItem[] selectdocTypeOptions = null;
-		if (!getManagedBean().getSelectedDocument().isBrandNew()) {
-			selectdocTypeOptions = getDropdownValuesBySearchBeanNew(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, null);
-		} else {
+		SelectItem[]  selectdocTypeOptions = null;
+		if(!getManagedBean().getSelectedDocument().isBrandNew()){
+			selectdocTypeOptions=getDropdownValuesBySearchBeanNew(
+					ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, null);			
+		}else{
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-
+			
 			List<String> docDefinitionForNew = new ArrayList<String>();
 			docDefinitionForNew.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
 			docDefinitionForNew.add(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION);
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), docDefinitionForNew));
-
-			selectdocTypeOptions = getDropdownValuesBySearchBeanNew(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_IN.value(),
+							docDefinitionForNew));
+			
+			selectdocTypeOptions=getDropdownValuesBySearchBeanNew(
+					ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, searchBean);
 		}
-
+		
 		this.getManagedBean().setDocDefinitionOptions(selectdocTypeOptions);
 		return selectdocTypeOptions;
 	}
@@ -1106,26 +1197,32 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 *            the search bean instance
 	 * @return array of SelectItem
 	 */
-	public SelectItem[] getDropdownValuesBySearchBeanNew(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+	public SelectItem[] getDropdownValuesBySearchBeanNew(String parameterType,
+			ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
 		FacesScopes face = new FacesScopes();
 
 		try {
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBeanNew(
-					parameterType, searchBean);
+			List<PmParameterDesc> parameterDescs = ParameterHelper
+					.getInstance().getParameterDescListBySearchBeanNew(
+							parameterType, searchBean);
 
 			items = new SelectItem[parameterDescs.size() + 1];
 
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+				items[i++] = new SelectItem(parameterDesc.getPmParameter()
+						.getParameterId(), parameterDesc.getCodeName());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
 
 		return items;
@@ -1162,15 +1259,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("supplierZoneOptions");
 		List<PmZone> zoneList = new ArrayList<PmZone>();
 		try {
-			IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IZoneSO.class);
+			IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IZoneSO.class);
 			ZoneResDTO resDTO = reqSO.retrieveActiveZoneList();
 			if (resDTO.isSuccessful()) {
 				zoneList = resDTO.getZoneList();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770065, new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770065,
+					new String[] { e.getMessage() });
 		}
 		return zoneList;
 	}
@@ -1183,30 +1282,35 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	private List<PmParameterDesc> getDocumentCategoryFilteredOptions() {
 		log.info("getDocumentCategoryFilteredOptions");
-		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(PmParameterDesc.class, "somDocCate");
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somDocCate");
 		SearchFilterBean bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 		bean.setSearchField("pmParameter.parameterCode");
-		bean.setSearchValue(new ArrayList<String>(Arrays.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY)));
+		bean.setSearchValue(new ArrayList<String>(Arrays
+				.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY)));
 		searchBean.getDataFilterBeans().add(bean);
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
 	}
-
 	/**
-	 * Get only applicable doc category except supplier Doc(Technical Check
-	 * List, Financial Check List)
+	 * Get only applicable doc category except supplier Doc(Technical Check List, Financial Check
+	 * List)
 	 * 
 	 * @return
 	 */
 	private List<PmParameterDesc> getDocCategoryFilteredOptionsExceptSupp() {
 		log.info("getDocCategoryFilteredOptionsExceptSupp");
-		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(PmParameterDesc.class, "somDocCate");
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somDocCate");
 		SearchFilterBean bean = new SearchFilterBean();
 		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 		bean.setSearchField("pmParameter.parameterCode");
-		bean.setSearchValue(new ArrayList<String>(Arrays.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY_NEW)));
+		bean.setSearchValue(new ArrayList<String>(Arrays
+				.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY_NEW)));
 		searchBean.getDataFilterBeans().add(bean);
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
 	}
 
 	/**
@@ -1221,28 +1325,32 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
 
 			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
 			int i = 1;
 			if (byId) {
 				for (PmParameterDesc parameterDesc : parameterDescs) {
-					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterId(), parameterDesc.getCodeName());
 				}
 			} else {
 				for (PmParameterDesc parameterDesc : parameterDescs) {
-					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
 
 		return items;
 	}
-
 	/**
 	 * retrieve document category without supplier doc(parameterId)
 	 * 
@@ -1255,28 +1363,32 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			List<PmParameterDesc> parameterDescs = getDocCategoryFilteredOptionsExceptSupp();
 
 			items = new SelectItem[parameterDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
 			int i = 1;
 			if (byId) {
 				for (PmParameterDesc parameterDesc : parameterDescs) {
-					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterId(), parameterDesc.getCodeName());
 				}
 			} else {
 				for (PmParameterDesc parameterDesc : parameterDescs) {
-					items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName());
+					items[i++] = new SelectItem(parameterDesc.getPmParameter()
+							.getParameterCode(), parameterDesc.getCodeName());
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
 
 		return items;
 	}
-
 	/**
 	 * retrieve categoryL3 details
 	 * 
@@ -1287,8 +1399,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("supplierZoneOptions");
 		PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
 		try {
-			ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+			ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICategoryCodeSO.class);
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			reqDTO.setCategoryL3Id(id);
 			CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3DtlById(reqDTO);
@@ -1297,7 +1411,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770066, new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770066,
+					new String[] { e.getMessage() });
 		}
 		return pmCategoryL3;
 	}
@@ -1328,15 +1443,18 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * @param restrictList
 	 * @param restrictType
 	 */
-	private void validateRestriction(PmDocument pmDocument, List<PmDocumentRestr> restrictList, int restrictType) {
+	private void validateRestriction(PmDocument pmDocument,
+			List<PmDocumentRestr> restrictList, int restrictType) {
 		log.info("validateRestriction");
 		// if(restrictList!=null){
 		boolean isSelected = true;
 		boolean isNotEmpty = true;
-		if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
+		if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
+				.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
 			// Validation for mandatory field
 			if (RESTR_APP == restrictType && pmDocument.isByAppType()) {
-				if (restrictList == null || (restrictList != null && restrictList.isEmpty())) {
+				if (restrictList == null
+						|| (restrictList != null && restrictList.isEmpty())) {
 					isNotEmpty = false;
 				} else {
 					for (PmDocumentRestr pmDocumentRestr : restrictList) {
@@ -1346,28 +1464,35 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					}
 				}
 			} else if (RESTR_COMP == restrictType && pmDocument.isByCompType()) {
-				if (restrictList == null || (restrictList != null && restrictList.isEmpty())) {
+				if (restrictList == null
+						|| (restrictList != null && restrictList.isEmpty())) {
 					isNotEmpty = false;
 				} else {
 					for (PmDocumentRestr pmDocumentRestr : restrictList) {
-						if (pmDocumentRestr.getCompanyTypeCode().getParameterId() == null) {
+						if (pmDocumentRestr.getCompanyTypeCode()
+								.getParameterId() == null) {
 							isSelected = false;
 						}
 					}
 				}
-			} else if (RESTR_SUPP == restrictType && pmDocument.isBySupplierType()) {
+			} else if (RESTR_SUPP == restrictType
+					&& pmDocument.isBySupplierType()) {
 
-				if (restrictList == null || (restrictList != null && restrictList.isEmpty())) {
+				if (restrictList == null
+						|| (restrictList != null && restrictList.isEmpty())) {
 					isNotEmpty = false;
 				} else {
 					for (PmDocumentRestr pmDocumentRestr : restrictList) {
-						if (pmDocumentRestr.getSupplierTypeCode().getParameterId() == null) {
+						if (pmDocumentRestr.getSupplierTypeCode()
+								.getParameterId() == null) {
 							isSelected = false;
 						}
 					}
 				}
-			} else if (RESTR_CATEGORY == restrictType && pmDocument.isByCategory()) {
-				if (restrictList == null || (restrictList != null && restrictList.isEmpty())) {
+			} else if (RESTR_CATEGORY == restrictType
+					&& pmDocument.isByCategory()) {
+				if (restrictList == null
+						|| (restrictList != null && restrictList.isEmpty())) {
 					isNotEmpty = false;
 				} else {
 					for (PmDocumentRestr pmDocumentRestr : restrictList) {
@@ -1376,8 +1501,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 						}
 					}
 				}
-			} else if (RESTR_CERTBODY == restrictType && pmDocument.isByCertBody()) {
-				if (restrictList == null || (restrictList != null && restrictList.isEmpty())) {
+			} else if (RESTR_CERTBODY == restrictType
+					&& pmDocument.isByCertBody()) {
+				if (restrictList == null
+						|| (restrictList != null && restrictList.isEmpty())) {
 					isNotEmpty = false;
 				} else {
 					for (PmDocumentRestr pmDocumentRestr : restrictList) {
@@ -1389,11 +1516,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 		} else {
 			if (CHECKLIST == restrictType) {
-				if (restrictList == null || (restrictList != null && restrictList.isEmpty())) {
+				if (restrictList == null
+						|| (restrictList != null && restrictList.isEmpty())) {
 					isNotEmpty = false;
 				} else {
 					for (PmDocumentRestr pmDocumentRestr : restrictList) {
-						if (pmDocumentRestr.getProcurementCatCode().getParameterId() == null) {
+						if (pmDocumentRestr.getProcurementCatCode()
+								.getParameterId() == null) {
 							isSelected = false;
 						}
 					}
@@ -1460,23 +1589,30 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		if (pmDocumentRestrs != null && pmDocumentRestrs.size() > 1) {
 			List<Long> tempRestrictIdList = new ArrayList<Long>();
 			for (PmDocumentRestr pmDocumentRestr : pmDocumentRestrs) {
-				if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr
+						.getRecordStatusFlg()) {
 					if (RESTR_APP == restrictType) {
-						tempRestrictIdList.add(pmDocumentRestr.getAppTypeCode().getParameterId());
+						tempRestrictIdList.add(pmDocumentRestr.getAppTypeCode()
+								.getParameterId());
 					} else if (RESTR_COMP == restrictType) {
-						tempRestrictIdList.add(pmDocumentRestr.getCompanyTypeCode().getParameterId());
+						tempRestrictIdList.add(pmDocumentRestr
+								.getCompanyTypeCode().getParameterId());
 					} else if (RESTR_SUPP == restrictType) {
-						tempRestrictIdList.add(pmDocumentRestr.getSupplierTypeCode().getParameterId());
+						tempRestrictIdList.add(pmDocumentRestr
+								.getSupplierTypeCode().getParameterId());
 					} else if (RESTR_CATEGORY == restrictType) {
-						tempRestrictIdList.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
+						tempRestrictIdList.add(pmDocumentRestr
+								.getPmCategoryL3().getCategoryL3Id());
 					} else if (CHECKLIST == restrictType) {
-						tempRestrictIdList.add(pmDocumentRestr.getProcurementCatCode().getParameterId());
+						tempRestrictIdList.add(pmDocumentRestr
+								.getProcurementCatCode().getParameterId());
 					}
 				}
 			}
 
 			Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
-			if (!tempRestrictIdList.isEmpty() && (tempRestrictIdSet.size() != tempRestrictIdList.size())) {
+			if (!tempRestrictIdList.isEmpty()
+					&& (tempRestrictIdSet.size() != tempRestrictIdList.size())) {
 				isUnique = false;
 				if (RESTR_APP == restrictType) {
 					throw new EpException(MessageConst.ERROR_770077);
@@ -1500,34 +1636,45 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * 
 	 * @param pmDocumentRestrs
 	 */
-	private void addDocRestrToDocument(PmDocument pmDocument, List<PmDocumentRestr> pmDocumentRestrs, DocumentReqDTO reqDTO,
+	private void addDocRestrToDocument(PmDocument pmDocument,
+			List<PmDocumentRestr> pmDocumentRestrs, DocumentReqDTO reqDTO,
 			Long statusId) {
 		log.info("addDocRestrToDocument");
 		if (pmDocumentRestrs != null && pmDocumentRestrs.size() > 0) {
 			int activeRecord = 0;
 			for (PmDocumentRestr documentRestr : pmDocumentRestrs) {
-				if (DbValueConst.RECORD_STATUS_ACTIVE == documentRestr.getRecordStatusFlg()) {
+				if (DbValueConst.RECORD_STATUS_ACTIVE == documentRestr
+						.getRecordStatusFlg()) {
 					activeRecord++;
 				}
 				if (documentRestr.isBrandNew()) {
 					if (!documentRestr.isSelected()) {
 						if (pmDocument.getPmDocumentRestrs() == null) {
-							pmDocument.setPmDocumentRestrs(new ArrayList<PmDocumentRestr>());
+							pmDocument
+									.setPmDocumentRestrs(new ArrayList<PmDocumentRestr>());
 						}
 						pmDocument.addPmDocumentRestrs(documentRestr);
-						getAddedAndDeletedRestrToDocument(pmDocument, documentRestr, reqDTO, statusId);
+						getAddedAndDeletedRestrToDocument(pmDocument,
+								documentRestr, reqDTO, statusId);
 						documentRestr.setSelected(true);
 					}
 				} else {
 					if (!documentRestr.isSelected()) {
 						PmDocumentRestr pmDocumentRestr = null;
-						for (int i = 0; i < pmDocument.getPmDocumentRestrs().size(); i++) {
-							pmDocumentRestr = pmDocument.getPmDocumentRestrs().get(i);
+						for (int i = 0; i < pmDocument.getPmDocumentRestrs()
+								.size(); i++) {
+							pmDocumentRestr = pmDocument.getPmDocumentRestrs()
+									.get(i);
 							if (pmDocumentRestr != null
-									&& pmDocumentRestr.getDocumentRestrId().equals(documentRestr.getDocumentRestrId())) {
-								pmDocument.getPmDocumentRestrs().set(i, documentRestr);
+									&& pmDocumentRestr.getDocumentRestrId()
+											.equals(documentRestr
+													.getDocumentRestrId())) {
+								pmDocument.getPmDocumentRestrs().set(i,
+										documentRestr);
 								if (documentRestr.isDeleted()) {
-									getAddedAndDeletedRestrToDocument(pmDocument, documentRestr, reqDTO, statusId);
+									getAddedAndDeletedRestrToDocument(
+											pmDocument, documentRestr, reqDTO,
+											statusId);
 								}
 								break;
 							}
@@ -1537,7 +1684,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 				}
 			}
-			if (!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
+			if (!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
+					.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
 				if (activeRecord > 0) {
 					pmDocument.setByProcureCat(true);
 				}
@@ -1558,7 +1706,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		// }
 	}
 
-	private void getAddedAndDeletedRestrToDocument(PmDocument pmDocument, PmDocumentRestr documentRestr, DocumentReqDTO reqDTO,
+	private void getAddedAndDeletedRestrToDocument(PmDocument pmDocument,
+			PmDocumentRestr documentRestr, DocumentReqDTO reqDTO,
 			Long statusId) {
 
 		String docRestreMessageId = "";
@@ -1567,73 +1716,96 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		if (pmDocument.isByAppType() && documentRestr.getAppTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80804;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80805;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			}
 		}
-		if (pmDocument.isByCompType() && documentRestr.getCompanyTypeCode() != null) {
+		if (pmDocument.isByCompType()
+				&& documentRestr.getCompanyTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80806;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80807;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			}
 
 		}
-		if (pmDocument.isBySupplierType() && documentRestr.getSupplierTypeCode() != null) {
+		if (pmDocument.isBySupplierType()
+				&& documentRestr.getSupplierTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80808;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80809;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			}
 		}
 
-		if (pmDocument.isByCategory() && documentRestr.getPmCategoryL3() != null) {
+		if (pmDocument.isByCategory()
+				&& documentRestr.getPmCategoryL3() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80810;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80811;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			}
 		}
 		if (pmDocument.isByCertBody() && documentRestr.getPmCertBody() != null) {
 			if (!documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80812;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80813;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			}
 		}
-		if (pmDocument.isByProcureCat() && documentRestr.getProcurementCatCode() != null) {
+		if (pmDocument.isByProcureCat()
+				&& documentRestr.getProcurementCatCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80802;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80803;
-				commonTrackingDiaryData(pmDocument, reqDTO, statusId, docRestreMessageId);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusId,
+						docRestreMessageId);
 			}
 
 		}
 	}
 
-	private void commonTrackingDiaryData(PmDocument pmDocument, DocumentReqDTO reqDTO, Long statusId, String docRestreMessageId) {
+	private void commonTrackingDiaryData(PmDocument pmDocument,
+			DocumentReqDTO reqDTO, Long statusId,
+			String docRestreMessageId) {
 		String[] commonMsgParam;
 		commonMsgParam = new String[] { pmDocument.getDocName() };
-		trackingDairyData(pmDocument, reqDTO, statusId, docRestreMessageId, commonMsgParam);
+		trackingDairyData(pmDocument, reqDTO, statusId, docRestreMessageId,
+				commonMsgParam);
 	}
 
-	private void trackingDairyData(PmDocument pmDocument, DocumentReqDTO reqDTO, Long statusId, String docRestreMessageId,
-			String[] commonMsgParam) {
+	private void trackingDairyData(PmDocument pmDocument,
+			DocumentReqDTO reqDTO, Long statusId,
+			String docRestreMessageId, String[] commonMsgParam) {
 		reqDTO.getTrackDairyVOs().add(
-				PmCommonUtil.assignTrackingDairyForSupportingDocument(pmDocument.getDocumentId(), pmDocument.getDocCategoryCode()
-						.getParameterCode(), statusId, getPmActionDesc(docRestreMessageId, commonMsgParam)));
+				PmCommonUtil.assignTrackingDairyForSupportingDocument(
+						pmDocument.getDocumentId(),
+						pmDocument.getDocCategoryCode().getParameterCode(),
+						statusId,
+						getPmActionDesc(docRestreMessageId, commonMsgParam)));
 	}
 
 	/**
@@ -1643,24 +1815,30 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	private void validateRestrictions(PmDocument pmDocument) {
 		log.info("validateRestrictions");
-		// 29857 - Start
-		// Update condition when validtion is not null by Mohd Nur Naim
-		if (getManagedBean().getAppTypeRestrictions() != null) {
-			for (PmDocumentRestr pmDocumentRestr : getManagedBean().getAppTypeRestrictions()) {
-				if (!pmDocumentRestr.isHomeOffice() && !pmDocumentRestr.isBusinessOffice()) {
+		//29857 - Start
+		//Update condition when validtion is not null by Mohd Nur Naim 
+		if (getManagedBean().getAppTypeRestrictions() != null){
+			for(PmDocumentRestr pmDocumentRestr : getManagedBean().getAppTypeRestrictions()){
+				if(!pmDocumentRestr.isHomeOffice() && !pmDocumentRestr.isBusinessOffice()){
 					throw new EpException(MessageConst.ERROR_770233);
 				}
 			}
 		}
-		// 29857 - End
-
+		//29857 - End
+		
 		// validate required field
-		validateRestriction(pmDocument, this.getManagedBean().getAppTypeRestrictions(), RESTR_APP);
-		validateRestriction(pmDocument, this.getManagedBean().getComTypeRestrictions(), RESTR_COMP);
-		validateRestriction(pmDocument, this.getManagedBean().getSuppTypeRestrictions(), RESTR_SUPP);
-		validateRestriction(pmDocument, this.getManagedBean().getCategoryRestrictions(), RESTR_CATEGORY);
-		validateRestriction(pmDocument, this.getManagedBean().getCertBodyRestrictions(), RESTR_CERTBODY);
-		validateRestriction(pmDocument, this.getManagedBean().getCheckListRestrictions(), CHECKLIST);
+		validateRestriction(pmDocument, this.getManagedBean()
+				.getAppTypeRestrictions(), RESTR_APP);
+		validateRestriction(pmDocument, this.getManagedBean()
+				.getComTypeRestrictions(), RESTR_COMP);
+		validateRestriction(pmDocument, this.getManagedBean()
+				.getSuppTypeRestrictions(), RESTR_SUPP);
+		validateRestriction(pmDocument, this.getManagedBean()
+				.getCategoryRestrictions(), RESTR_CATEGORY);
+		validateRestriction(pmDocument, this.getManagedBean()
+				.getCertBodyRestrictions(), RESTR_CERTBODY);
+		validateRestriction(pmDocument, this.getManagedBean()
+				.getCheckListRestrictions(), CHECKLIST);
 
 		// validate unique field
 		validateUniqueRestrType(RESTR_APP);
@@ -1671,23 +1849,32 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		validateUniqueRestrType(CHECKLIST);
 	}
 
-	private void getAllRestrictions(PmDocument pmDocument, DocumentReqDTO reqDTO, Long statusId) {
+	private void getAllRestrictions(PmDocument pmDocument,
+			DocumentReqDTO reqDTO, Long statusId) {
 		log.info("getAllRestrictions");
 		try {
 
 			// add doc restr to document
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getAppTypeRestrictions(), reqDTO, statusId);
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getComTypeRestrictions(), reqDTO, statusId);
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getSuppTypeRestrictions(), reqDTO, statusId);
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getCategoryRestrictions(), reqDTO, statusId);
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getCertBodyRestrictions(), reqDTO, statusId);
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getCheckListRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getAppTypeRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getComTypeRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getSuppTypeRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getCategoryRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getCertBodyRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getCheckListRestrictions(), reqDTO, statusId);
 			// update delete doc restr to 9
-			addDocRestrToDocument(pmDocument, this.getManagedBean().getDeleteRestrictions(), reqDTO, statusId);
+			addDocRestrToDocument(pmDocument, this.getManagedBean()
+					.getDeleteRestrictions(), reqDTO, statusId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770082, new String[] { e.getMessage() });
+			throw new EpException(MessageConst.ERROR_770082,
+					new String[] { e.getMessage() });
 
 		}
 	}
@@ -1704,39 +1891,50 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 		String displaySeq = pmDocument.getDisplaySeq();
 		if (StringUtils.isBlank(displaySeq)) {
-			throw new EpException(MessageConst.ERROR_770086, new String[] { ResourceBundleUtils.getMessage(
-					LABEL_dISPLAY_PRIORITY_KEY, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()) });
+			throw new EpException(MessageConst.ERROR_770086,
+					new String[] { ResourceBundleUtils.getMessage(
+							LABEL_dISPLAY_PRIORITY_KEY,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()) });
 
 		} else if (!StringUtils.isNumeric(displaySeq)) {
 
 			throw new EpException(MessageConst.ERROR_770201, new String[] {
-					ResourceBundleUtils.getMessage(LABEL_dISPLAY_PRIORITY_KEY, MessageUtils.BUNDLE_COMMON_MESSAGES,
+					ResourceBundleUtils.getMessage(LABEL_dISPLAY_PRIORITY_KEY,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()), displaySeq });
 		}
 
-		if (!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
+		if (!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
+				.equals(pmDocument.getDocCategoryCode().getParameterCode())) {
 			if (StringUtils.isBlank(pmDocument.getDocName())) {
 				throw new EpException(MessageConst.ERROR_770084);
 			} else {
-
+					
 				// validate Display Seq
 				pmDocument.setDisplaySeq(displaySeq.trim());
 				if (validateDisplaySequence(pmDocument)) {
-					throw new EpException(MessageConst.ERROR_770200, new String[] { ResourceBundleUtils.getMessage(
-							LABEL_dISPLAY_PRIORITY_KEY, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()) });
+					throw new EpException(MessageConst.ERROR_770200,
+							new String[] { ResourceBundleUtils.getMessage(
+									LABEL_dISPLAY_PRIORITY_KEY,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale()) });
 				}
-
-				if (DbValueConst.RECORD_STATUS_ACTIVE == pmDocument.getRecordStatusFlg()) {
+				
+				if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocument.getRecordStatusFlg()){
 					// doc name unique
 					SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
 
 					// docCategoryCode
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("docCategoryCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),
-									pmDocument.getDocCategoryCode().getParameterCode()));
+							new SearchFilterBean("docCategoryCode.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									pmDocument.getDocCategoryCode()
+											.getParameterCode()));
 					// recordStatusFlg
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
+							new SearchFilterBean("recordStatusFlg",
+									SearchOperator.OPERATOR_EQUALS.value(),
 									DbValueConst.RECORD_STATUS_ACTIVE));
 
 					// docName
@@ -1750,20 +1948,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					// documentId
 					if (!pmDocument.isBrandNew()) {
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("documentId", SearchOperator.OPERATOR_NOT_EQUALS.value(), pmDocument
-										.getDocumentId()));
+								new SearchFilterBean("documentId",
+										SearchOperator.OPERATOR_NOT_EQUALS.value(),
+										pmDocument.getDocumentId()));
 					}
 					if (searchDocument(searchBean)) {
-						if (pmDocument.isBrandNew()) {
+						if(pmDocument.isBrandNew()){
 							throw new EpException(MessageConst.ERROR_770085);
-						} else {
-							throw new EpException(MessageConst.ERROR_770220,
-									new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.document.name") });
+						}else{
+							throw new EpException(MessageConst.ERROR_770220, new String[] {
+									PmCommonUtil.getResourceBundleLabels("lbl.pm.document.name")
+							});	
 						}
-
+						
 					}
 				}
-
+				
 			}
 
 			/*
@@ -1801,15 +2001,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				throw new EpException(MessageConst.ERROR_770084);
 			}
 
-			if (pmDocument.getPmZone().getZoneId() != null && pmDocument.getPmZone().getZoneId() == 0) {
+			if (pmDocument.getPmZone().getZoneId() != null
+					&& pmDocument.getPmZone().getZoneId() == 0) {
 				throw new EpException(MessageConst.ERROR_770088);
 			}
 
 			// validate Display Seq
 			pmDocument.setDisplaySeq(displaySeq.trim());
 			if (validateDisplaySequence(pmDocument)) {
-				throw new EpException(MessageConst.ERROR_770200, new String[] { ResourceBundleUtils.getMessage(
-						LABEL_dISPLAY_PRIORITY_KEY, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()) });
+				throw new EpException(MessageConst.ERROR_770200,
+						new String[] { ResourceBundleUtils.getMessage(
+								LABEL_dISPLAY_PRIORITY_KEY,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale()) });
 			}
 
 			// doc name unique + zone id unique
@@ -1817,8 +2021,9 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 			// docCategoryCode
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("docCategoryCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), pmDocument
-							.getDocCategoryCode().getParameterCode()));
+					new SearchFilterBean("docCategoryCode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(), pmDocument
+									.getDocCategoryCode().getParameterCode()));
 
 			// docName
 			SearchFilterBean bean = new SearchFilterBean();
@@ -1830,7 +2035,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 			// recordStatusFlg
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(),
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
 							DbValueConst.RECORD_STATUS_ACTIVE));
 
 			/*
@@ -1843,22 +2049,24 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			// zoneId
 			if (pmDocument.getPmZone() != null) {
 				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("pmZone.zoneId", SearchOperator.OPERATOR_EQUALS.value(), pmDocument.getPmZone()
-								.getZoneId()));
+						new SearchFilterBean("pmZone.zoneId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								pmDocument.getPmZone().getZoneId()));
 			}
 
 			// documentId
 			if (!pmDocument.isBrandNew()) {
-				searchBean.getDataFilterBeans()
-						.add(new SearchFilterBean("documentId", SearchOperator.OPERATOR_NOT_EQUALS.value(), pmDocument
-								.getDocumentId()));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("documentId",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								pmDocument.getDocumentId()));
 			}
 			if (searchDocument(searchBean) && DbValueConst.RECORD_STATUS_ACTIVE == pmDocument.getRecordStatusFlg().intValue()) {
-				if (pmDocument.isBrandNew()) {
+				if(pmDocument.isBrandNew()){
 					throw new EpException(MessageConst.ERROR_770089);
-				} else {
+				}else{
 					throw new EpException(MessageConst.ERROR_770220,
-							new String[] { PmCommonUtil.getResourceBundleLabels("lbl.pm.document.name") });
+							new String[]{PmCommonUtil.getResourceBundleLabels("lbl.pm.document.name")});
 				}
 			}
 		}
@@ -1868,12 +2076,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	private boolean searchDocument(ISearchBean<PmDocument> searchBean) {
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
 		reqDTO.setDocumentSearchBean(searchBean);
-		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				IDocumentSO.class);
+		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDocumentSO.class);
 		DocumentResDTO resDTO = reqSO.retrieveDocumentBySearchBean(reqDTO);
 		if (resDTO.isSuccessful()) {
 
-			return (resDTO.getDocumentResultBean() != null && resDTO.getDocumentResultBean().getResultList() != null && !resDTO
+			return (resDTO.getDocumentResultBean() != null
+					&& resDTO.getDocumentResultBean().getResultList() != null && !resDTO
 					.getDocumentResultBean().getResultList().isEmpty());
 		}
 		return false;
@@ -1886,7 +2096,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public String saveSupportDoc() {
 		log.info("saveSupportDoc - Start");
-
+		
 		// #26666 - start
 		PmUser user = new FacesScopes().getUserSessionBean();
 		log.info("userId == " + user.getUserId() + "| userName == " + user.getUserName());
@@ -1934,16 +2144,21 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
 			// #26666 - end
 
-			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg().longValue());
+			getAllRestrictions(pmDocument, reqDTO, pmDocument.getRecordStatusFlg()
+					.longValue());
 			reqDTO.setTrackingStatus(true);
 			reqDTO.getTrackDairyVOs().add(
-					PmCommonUtil.assignTrackingDairyForSupportingDocument(pmDocument.getDocumentId(), pmDocument
-							.getDocCategoryCode().getParameterCode(), pmDocument.getRecordStatusFlg().longValue(),
+					PmCommonUtil.assignTrackingDairyForSupportingDocument(
+							pmDocument.getDocumentId(),
+							pmDocument.getDocCategoryCode().getParameterCode(),
+							pmDocument.getRecordStatusFlg()
+							.longValue(),
 							getPmActionDesc(messageId, msgParam)));
 
 			reqDTO.setPmDocument(pmDocument);
-			reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IDocumentSO.class);
+			reqSO = (IDocumentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDocumentSO.class);
 
 			/************ AUDIT #28895_35509 - START *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1982,9 +2197,15 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
 				if (createAction) {
-					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
-							MessageConst.INFO_770094, new String[] { getParameterDesc(pmDocument.getDocCategoryCode()),
-									pmDocument.getDocName() });
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(), 
+							FacesMessage.SEVERITY_INFO, 
+							MessageConst.INFO_770094, 
+							new String[] {
+									getParameterDesc(pmDocument
+											.getDocCategoryCode()),
+									pmDocument
+.getDocName() });
 					/************ AUDIT #28895_35509 - START **************/
 					getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
 					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
@@ -1995,8 +2216,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					/************ END AUDIT #28895_35509 - END *************/
 					return redirectToSearchSupportDoc();
 				} else {
-					PmCommonUtil.showFacesMsg(FacesContext.getCurrentInstance(), FacesMessage.SEVERITY_INFO,
-							MessageConst.INFO_770095, new String[] { getParameterDesc(pmDocument.getDocCategoryCode()) });
+					PmCommonUtil.showFacesMsg(
+							FacesContext.getCurrentInstance(),
+							FacesMessage.SEVERITY_INFO, 
+							MessageConst.INFO_770095, 
+							new String[] { getParameterDesc(pmDocument
+									.getDocCategoryCode()) });
 					redirectToMaintainDoc(pmDocument.getDocumentId());
 					/************ AUDIT #28895_35509 - START *************/
 					pmDocument.getPmDocumentRestrs();
@@ -2033,7 +2258,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	private String getPmActionDesc(String messageId, String[] params) {
 		Locale myLocale = new Locale("ms", "MY");
-		return MessageUtils.getMessage(messageId, params, MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
+		return MessageUtils.getMessage(messageId, params,
+				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
 
 	/**
@@ -2044,56 +2270,82 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * **/
 	public void checkDocumentRestrictions(int index) {
 		if (getManagedBean().getDeleteRestrictions() == null) {
-			getManagedBean().setDeleteRestrictions(new ArrayList<PmDocumentRestr>());
+			getManagedBean().setDeleteRestrictions(
+					new ArrayList<PmDocumentRestr>());
 		}
 
 		int tabIndex = index - 1;
-		if (tabIndex == 0 && !getManagedBean().getSelectedDocument().isByAppType()) {
-			if (getManagedBean().getAppTypeRestrictions() != null && !getManagedBean().getAppTypeRestrictions().isEmpty()) {
-				for (PmDocumentRestr documentRestr : getManagedBean().getAppTypeRestrictions()) {
+		if (tabIndex == 0
+				&& !getManagedBean().getSelectedDocument().isByAppType()) {
+			if (getManagedBean().getAppTypeRestrictions() != null
+					&& !getManagedBean().getAppTypeRestrictions().isEmpty()) {
+				for (PmDocumentRestr documentRestr : getManagedBean()
+						.getAppTypeRestrictions()) {
 					if (!documentRestr.isBrandNew()) {
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
+						documentRestr
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(
+								documentRestr);
 					}
 				}
 				getManagedBean().getAppTypeRestrictions().clear();
 			}
-		} else if (tabIndex == 1 && !getManagedBean().getSelectedDocument().isByCompType()) {
-			if (getManagedBean().getComTypeRestrictions() != null && !getManagedBean().getComTypeRestrictions().isEmpty()) {
-				for (PmDocumentRestr documentRestr : getManagedBean().getComTypeRestrictions()) {
+		} else if (tabIndex == 1
+				&& !getManagedBean().getSelectedDocument().isByCompType()) {
+			if (getManagedBean().getComTypeRestrictions() != null
+					&& !getManagedBean().getComTypeRestrictions().isEmpty()) {
+				for (PmDocumentRestr documentRestr : getManagedBean()
+						.getComTypeRestrictions()) {
 					if (!documentRestr.isBrandNew()) {
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
+						documentRestr
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(
+								documentRestr);
 					}
 				}
 				getManagedBean().getComTypeRestrictions().clear();
 			}
-		} else if (tabIndex == 2 && !getManagedBean().getSelectedDocument().isBySupplierType()) {
-			if (getManagedBean().getSuppTypeRestrictions() != null && !getManagedBean().getSuppTypeRestrictions().isEmpty()) {
-				for (PmDocumentRestr documentRestr : getManagedBean().getSuppTypeRestrictions()) {
+		} else if (tabIndex == 2
+				&& !getManagedBean().getSelectedDocument().isBySupplierType()) {
+			if (getManagedBean().getSuppTypeRestrictions() != null
+					&& !getManagedBean().getSuppTypeRestrictions().isEmpty()) {
+				for (PmDocumentRestr documentRestr : getManagedBean()
+						.getSuppTypeRestrictions()) {
 					if (!documentRestr.isBrandNew()) {
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
+						documentRestr
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(
+								documentRestr);
 					}
 				}
 				getManagedBean().getSuppTypeRestrictions().clear();
 			}
-		} else if (tabIndex == 3 && !getManagedBean().getSelectedDocument().isByCategory()) {
-			if (getManagedBean().getCategoryRestrictions() != null && !getManagedBean().getCategoryRestrictions().isEmpty()) {
-				for (PmDocumentRestr documentRestr : getManagedBean().getCategoryRestrictions()) {
+		} else if (tabIndex == 3
+				&& !getManagedBean().getSelectedDocument().isByCategory()) {
+			if (getManagedBean().getCategoryRestrictions() != null
+					&& !getManagedBean().getCategoryRestrictions().isEmpty()) {
+				for (PmDocumentRestr documentRestr : getManagedBean()
+						.getCategoryRestrictions()) {
 					if (!documentRestr.isBrandNew()) {
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
+						documentRestr
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(
+								documentRestr);
 					}
 				}
 				getManagedBean().getCategoryRestrictions().clear();
 			}
-		} else if (tabIndex == 4 && !getManagedBean().getSelectedDocument().isByCertBody()) {
-			if (getManagedBean().getCertBodyRestrictions() != null && !getManagedBean().getCertBodyRestrictions().isEmpty()) {
-				for (PmDocumentRestr documentRestr : getManagedBean().getCertBodyRestrictions()) {
+		} else if (tabIndex == 4
+				&& !getManagedBean().getSelectedDocument().isByCertBody()) {
+			if (getManagedBean().getCertBodyRestrictions() != null
+					&& !getManagedBean().getCertBodyRestrictions().isEmpty()) {
+				for (PmDocumentRestr documentRestr : getManagedBean()
+						.getCertBodyRestrictions()) {
 					if (!documentRestr.isBrandNew()) {
-						documentRestr.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						getManagedBean().getDeleteRestrictions().add(documentRestr);
+						documentRestr
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						getManagedBean().getDeleteRestrictions().add(
+								documentRestr);
 					}
 				}
 				getManagedBean().getCertBodyRestrictions().clear();
@@ -2112,15 +2364,20 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		defaultTab(getManagedBean().getSelectedDocument());
 
 		int tabIndex = index - 1;
-		if (tabIndex == 0 && getManagedBean().getSelectedDocument().isByAppType()) {
+		if (tabIndex == 0
+				&& getManagedBean().getSelectedDocument().isByAppType()) {
 			getManagedBean().setSelectedTabIndex(tabIndex);
-		} else if (tabIndex == 1 && getManagedBean().getSelectedDocument().isByCompType()) {
+		} else if (tabIndex == 1
+				&& getManagedBean().getSelectedDocument().isByCompType()) {
 			getManagedBean().setSelectedTabIndex(tabIndex);
-		} else if (tabIndex == 2 && getManagedBean().getSelectedDocument().isBySupplierType()) {
+		} else if (tabIndex == 2
+				&& getManagedBean().getSelectedDocument().isBySupplierType()) {
 			getManagedBean().setSelectedTabIndex(tabIndex);
-		} else if (tabIndex == 3 && getManagedBean().getSelectedDocument().isByCategory()) {
+		} else if (tabIndex == 3
+				&& getManagedBean().getSelectedDocument().isByCategory()) {
 			getManagedBean().setSelectedTabIndex(tabIndex);
-		} else if (tabIndex == 4 && getManagedBean().getSelectedDocument().isByCertBody()) {
+		} else if (tabIndex == 4
+				&& getManagedBean().getSelectedDocument().isByCertBody()) {
 			getManagedBean().setSelectedTabIndex(tabIndex);
 		}
 
@@ -2135,15 +2392,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public void searchDocument() {
 		log.info("searchDocument - Start");
-		if (this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode() == null
-				|| StringUtils.isBlank(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())) {
+		if (this.getManagedBean().getSupportDocSearchBean()
+				.getDocCategoryParamCode() == null
+				|| StringUtils.isBlank(this.getManagedBean()
+						.getSupportDocSearchBean().getDocCategoryParamCode())) {
 			throw new EpException(MessageConst.ERROR_770083);
 		}
 		pmDocumentDataModel.reloadData();
 		log.info("searchDocument - End");
 
 	}
-
 	public void searchDocumentForSup() {
 		log.info("searchDocumentForSup - Start");
 		this.getManagedBean().getSupportDocSearchBean()
@@ -2158,16 +2416,20 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * 
 	 * @return ISearchBean<PmDocument>
 	 */
-	private ISearchBean<PmDocument> getSearchBeanData(ISearchBean<PmDocument> searchBean) {
+	private ISearchBean<PmDocument> getSearchBeanData(
+			ISearchBean<PmDocument> searchBean) {
 		log.info("getSearchBeanData - Start");
 
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
-		SupportDocumentSearchBean sdSearchBean = this.getManagedBean().getSupportDocSearchBean();
+		SupportDocumentSearchBean sdSearchBean = this.getManagedBean()
+				.getSupportDocSearchBean();
 
 		// Doc Category
-		if (sdSearchBean.getDocCategoryParamCode() != null && !"".equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
-			log.info("+ docCategoryParamCode " + sdSearchBean.getDocCategoryParamCode());
+		if (sdSearchBean.getDocCategoryParamCode() != null
+				&& !"".equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
+			log.info("+ docCategoryParamCode "
+					+ sdSearchBean.getDocCategoryParamCode());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("docCategoryCode.parameterCode");
@@ -2176,18 +2438,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			isEmpty = false;
 		}
 		// Document Name
-		if (sdSearchBean.getDocName() != null && !"".equalsIgnoreCase(sdSearchBean.getDocName())) {
+		if (sdSearchBean.getDocName() != null
+				&& !"".equalsIgnoreCase(sdSearchBean.getDocName())) {
 			log.info("+ docName " + sdSearchBean.getDocName());
-			SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+			SearchFilterBean bean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
 			bean.setCaseInsensitive(true);
 			bean.setSearchField("docName");
 			bean.setSearchValue(sdSearchBean.getDocName());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
-		if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
+		if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
+				.equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
 			// App Type
-			if (sdSearchBean.getAppTypeParam() != null && sdSearchBean.getAppTypeParam() > 0L) {
+			if (sdSearchBean.getAppTypeParam() != null
+					&& sdSearchBean.getAppTypeParam() > 0L) {
 				log.info("+ appTypeParam " + sdSearchBean.getAppTypeParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -2198,7 +2464,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				isEmpty = false;
 			}
 			// Comp Type
-			if (sdSearchBean.getComTypeParam() != null && sdSearchBean.getComTypeParam() > 0L) {
+			if (sdSearchBean.getComTypeParam() != null
+					&& sdSearchBean.getComTypeParam() > 0L) {
 				log.info("+ comTypeParam " + sdSearchBean.getComTypeParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -2209,7 +2476,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				isEmpty = false;
 			}
 			// Supp Type
-			if (sdSearchBean.getSuppTypeParam() != null && sdSearchBean.getSuppTypeParam() > 0L) {
+			if (sdSearchBean.getSuppTypeParam() != null
+					&& sdSearchBean.getSuppTypeParam() > 0L) {
 				log.info("+ suppTypeParam " + sdSearchBean.getSuppTypeParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -2221,9 +2489,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 
 			// Business Category
-			if (sdSearchBean.getBusinessCategory() != null && !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
-				log.info("+ businessCategory " + sdSearchBean.getBusinessCategory());
-				SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+			if (sdSearchBean.getBusinessCategory() != null
+					&& !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
+				log.info("+ businessCategory "
+						+ sdSearchBean.getBusinessCategory());
+				SearchFilterBean bean = new SearchFilterBean(
+						SearchOperator.OPERATOR_LIKE.value());
 				bean.setCaseInsensitive(true);
 				bean.setSearchField("pmDocumentRestrs.pmCategoryL3.categoryName");
 				bean.setSearchValue(sdSearchBean.getBusinessCategory());
@@ -2241,12 +2512,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				searchBean.getDataFilterBeans().add(bean);
 
 				if (sdSearchBean.getPmZone() > 0L) {
-					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
+							.value());
 					bean.setSearchValue(sdSearchBean.getPmZone());
 
 				} else {
 					// if zone selected is All.
-					bean.setSearchOperator(SearchOperator.OPERATOR_IS_NULL.value());
+					bean.setSearchOperator(SearchOperator.OPERATOR_IS_NULL
+							.value());
 				}
 
 				isEmpty = false;
@@ -2254,8 +2527,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 		} else {
 			// Procurement Category
-			if (sdSearchBean.getProcureCatParam() != null && sdSearchBean.getProcureCatParam() > 0L) {
-				log.info("+ procureCatParam " + sdSearchBean.getProcureCatParam());
+			if (sdSearchBean.getProcureCatParam() != null
+					&& sdSearchBean.getProcureCatParam() > 0L) {
+				log.info("+ procureCatParam "
+						+ sdSearchBean.getProcureCatParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("pmDocumentRestrs.procurementCatCode.parameterId");
@@ -2290,7 +2565,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * @param pmDocumentDataModel
 	 *            the pmDocumentDataModel to set
 	 */
-	public void setPmDocumentDataModel(IPagingDataModel<PmDocument> pmDocumentDataModel) {
+	public void setPmDocumentDataModel(
+			IPagingDataModel<PmDocument> pmDocumentDataModel) {
 		this.pmDocumentDataModel = pmDocumentDataModel;
 	}
 
@@ -2314,7 +2590,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<PmDocument> pageChangeListener(ISearchBean<PmDocument> searchBean) {
+		public ISearchResultBean<PmDocument> pageChangeListener(
+				ISearchBean<PmDocument> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
@@ -2324,20 +2601,32 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				// getSearchBeanData(searchBean);
 				DocumentReqDTO reqDTO = new DocumentReqDTO();
 				reqDTO.setDocumentSearchBean(searchBean);
-				reqDTO.setDocCategoryCode(getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode());
-				reqDTO.setDocName(getManagedBean().getSupportDocSearchBean().getDocName());
-				reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean().getAppTypeParam());
-				reqDTO.setCompanyTypeId(getManagedBean().getSupportDocSearchBean().getComTypeParam());
-				reqDTO.setSupplierTypeId(getManagedBean().getSupportDocSearchBean().getSuppTypeParam());
-				reqDTO.setCategoryName(getManagedBean().getSupportDocSearchBean().getBusinessCategory());
-				reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean().getPmZone());
-				reqDTO.setProcurementCatId(getManagedBean().getSupportDocSearchBean().getProcureCatParam());
-				reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean().getDocStatus());
-				// reqDTO.setCertBodyName(getManagedBean()
-				// .getSupportDocSearchBean().getCertBodyName());
-				reqDTO.setCertBodyId(getManagedBean().getSupportDocSearchBean().getGlpCertBodyId());
-				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+				reqDTO.setDocCategoryCode(getManagedBean()
+						.getSupportDocSearchBean().getDocCategoryParamCode());
+				reqDTO.setDocName(getManagedBean().getSupportDocSearchBean()
+						.getDocName());
+				reqDTO.setAppTypeId(getManagedBean().getSupportDocSearchBean()
+						.getAppTypeParam());
+				reqDTO.setCompanyTypeId(getManagedBean()
+						.getSupportDocSearchBean().getComTypeParam());
+				reqDTO.setSupplierTypeId(getManagedBean()
+						.getSupportDocSearchBean().getSuppTypeParam());
+				reqDTO.setCategoryName(getManagedBean()
+						.getSupportDocSearchBean().getBusinessCategory());
+				reqDTO.setZoneId(getManagedBean().getSupportDocSearchBean()
+						.getPmZone());
+				reqDTO.setProcurementCatId(getManagedBean()
+						.getSupportDocSearchBean().getProcureCatParam());
+				reqDTO.setDocStatus(getManagedBean().getSupportDocSearchBean()
+						.getDocStatus());
+//				reqDTO.setCertBodyName(getManagedBean()
+//						.getSupportDocSearchBean().getCertBodyName());
+				reqDTO.setCertBodyId(getManagedBean()
+						.getSupportDocSearchBean().getGlpCertBodyId());
+				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IDocumentSO.class);
 				DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getDocumentResultBean();
@@ -2417,22 +2706,28 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
 		// docCategoryCode
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("docCategoryCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), pmDocument
-						.getDocCategoryCode().getParameterCode()));
+				new SearchFilterBean("docCategoryCode.parameterCode",
+						SearchOperator.OPERATOR_EQUALS.value(), pmDocument
+								.getDocCategoryCode().getParameterCode()));
 		// display Seq
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("displaySeq", SearchOperator.OPERATOR_EQUALS.value(), pmDocument.getDisplaySeq()));
+				new SearchFilterBean("displaySeq",
+						SearchOperator.OPERATOR_EQUALS.value(), pmDocument
+								.getDisplaySeq()));
 		// zoneId
 		if (pmDocument.getPmZone() != null) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmZone.zoneId", SearchOperator.OPERATOR_EQUALS.value(), pmDocument.getPmZone()
-							.getZoneId()));
+					new SearchFilterBean("pmZone.zoneId",
+							SearchOperator.OPERATOR_EQUALS.value(), pmDocument
+									.getPmZone().getZoneId()));
 		}
 
 		// documentId
 		if (!pmDocument.isBrandNew()) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("documentId", SearchOperator.OPERATOR_NOT_EQUALS.value(), pmDocument.getDocumentId()));
+					new SearchFilterBean("documentId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							pmDocument.getDocumentId()));
 		}
 
 		return searchDocument(searchBean);
@@ -2452,7 +2747,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		IParameterSO parameterSO = null;
 		SelectItem[] supplierActionItems = null;
 		FacesScopes face = new FacesScopes();
-		parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		parameterSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(parameterId);
 		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
@@ -2461,16 +2757,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		List<String> paramCodeList = new ArrayList<String>();
 		List<PmParameterDesc> parameterDescs = null;
 		if (pmParameter != null
-				&& (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD).equalsIgnoreCase(pmParameter.getParameterCode())) {
+				&& (ParameterTypeConst.DOCUMENT_DEFINITION_PTJ_UPLOAD)
+						.equalsIgnoreCase(pmParameter.getParameterCode())) {
 			// pass select * from pm_parameter where parameter_type='SAT' and
 			// parameter_code in('V','O');
 
 			paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_VIEW);
-			paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD);
+			paramCodeList
+					.add(ParameterTypeConst.SC_SUPPLIER_ACTION_DOWN_UPLOAD);
 			parameterDescs = getParameterDescByParamTypeAndParamCode(paramCodeList);
 
 		} else if (pmParameter != null
-				&& (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD).equalsIgnoreCase(pmParameter.getParameterCode())) {
+				&& (ParameterTypeConst.DOCUMENT_DEFINITION_SUPPLIER_UPLOAD)
+						.equalsIgnoreCase(pmParameter.getParameterCode())) {
 			// pass select * from pm_parameter where parameter_type='SAT' and
 			// parameter_code in('U');
 			paramCodeList.add(ParameterTypeConst.SC_SUPPLIER_ACTION_UPLOAD);
@@ -2480,11 +2779,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		if (null != parameterDescs && parameterDescs.size() > 0) {
 
 			supplierActionItems = new SelectItem[parameterDescs.size() + 1];
-			supplierActionItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			supplierActionItems[0] = new SelectItem(null,
+					ResourceBundleUtils.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				supplierActionItems[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
+				supplierActionItems[i++] = new SelectItem(parameterDesc
+						.getPmParameter().getParameterId(),
 						parameterDesc.getCodeName());
 
 			}
@@ -2508,16 +2810,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		if (null != parameterDescs && parameterDescs.size() > 0) {
 
 			supplierActionItems = new SelectItem[parameterDescs.size() + 1];
-			supplierActionItems[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			supplierActionItems[0] = new SelectItem(null,
+					ResourceBundleUtils.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale()));
 			int i = 1;
 			for (PmParameterDesc parameterDesc : parameterDescs) {
-				supplierActionItems[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(),
+				supplierActionItems[i++] = new SelectItem(parameterDesc
+						.getPmParameter().getParameterId(),
 						parameterDesc.getCodeName());
 
 			}
 		}
-		this.getManagedBean().setSupplierActionItems(supplierActionItems);
+        this.getManagedBean().setSupplierActionItems(supplierActionItems);
 		return supplierActionItems;
 	}
 
@@ -2528,62 +2833,72 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 *            the param code list
 	 * @return the parameter desc by param type and param code
 	 */
-	private List<PmParameterDesc> getParameterDescByParamTypeAndParamCode(List<String> paramCodeList) {
+	private List<PmParameterDesc> getParameterDescByParamTypeAndParamCode(
+			List<String> paramCodeList) {
 
 		List<PmParameterDesc> parameterDescs = new ArrayList<PmParameterDesc>();
 		for (String paramCode : paramCodeList) {
-			PmParameterDesc pmParameterDesc = ParameterHelper.getInstance().getParameterDescByParamTypeAndParamCode(
-					ParameterTypeConst.SC_SUPPLIER_ACTION, paramCode);
+			PmParameterDesc pmParameterDesc = ParameterHelper.getInstance()
+					.getParameterDescByParamTypeAndParamCode(
+							ParameterTypeConst.SC_SUPPLIER_ACTION, paramCode);
 			parameterDescs.add(pmParameterDesc);
 		}
 		return parameterDescs;
 	}
-
+	
+	
 	public void selectCategoryAction(PmCategoryL3 pmCategoryL3) {
 		log.info("*****selectCategoryAction*******");
 		this.getManagedBean().getSupportDocSearchBean().setBusinessCategory(pmCategoryL3.getCategoryName());
 	}
-
-	public List<PmCertBody> retrieveGlpList() {
+	
+	public List<PmCertBody> retrieveGlpList(){
 		ICertBodySO bodySO = null;
 		List<PmCertBody> certBodyList = new ArrayList<PmCertBody>();
-		try {
+		try{
 			ISearchBean<PmCertBody> searchBean = new SearchBean<PmCertBody>();
-
+			
 			List<String> activeAndInActiveStatus = new ArrayList<String>();
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_INACTIVE);
 			activeAndInActiveStatus.add(ParameterConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg", SearchOperator.OPERATOR_IN.value(), activeAndInActiveStatus));
-
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("isGlp", SearchOperator.OPERATOR_EQUALS.value(), true));
-
-			bodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_IN.value(), 
+							activeAndInActiveStatus));
+				
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("isGlp", SearchOperator.OPERATOR_EQUALS
+							.value(), true));
+			
+			bodySO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICertBodySO.class);
 			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
 			certBodyReqDTO.setCertBodySearchBean(searchBean);
-			ISearchResultBean<PmCertBody> certBodyResultBean = bodySO.retrieveBodyList(certBodyReqDTO).getCertBodyResultBean();
-			if (certBodyResultBean != null && certBodyResultBean.getResultList() != null
-					&& !certBodyResultBean.getResultList().isEmpty()) {
+			ISearchResultBean<PmCertBody> certBodyResultBean = 
+					bodySO.retrieveBodyList(certBodyReqDTO).getCertBodyResultBean();
+			if(certBodyResultBean != null && certBodyResultBean.getResultList() != null 
+					&& !certBodyResultBean.getResultList().isEmpty()){
 				certBodyList.addAll(certBodyResultBean.getResultList());
 			}
-		} finally {
+		}finally{
 			bodySO = null;
 		}
 		return certBodyList;
 	}
-
-	public void showsSectionPopup() {
+	
+	public void showsSectionPopup(){
 		log.info("showsSectionPopup");
 		PmDocumentRestr restr = getManagedBean().getSelectedAppTypeRestr();
-		if (restr != null) {
+		if(restr != null){
 			getManagedBean().setCompanyInfoChanged(restr.isCompanyInfoChanged());
 			getManagedBean().setAsscProjChanged(restr.isAsscProjChanged());
 			getManagedBean().setPersonnelBranchChanged(restr.isPersonnelBranchChanged());
 			getManagedBean().setBankChanged(restr.isBankChanged());
 			getManagedBean().setCapitalEquityChanged(restr.isCapitalEquityChanged());
 			RequestContext.getCurrentInstance().execute("dlRestApTypeSection.show();");
-
-		} else {
+			
+		}else{
 			getManagedBean().setCompanyInfoChanged(false);
 			getManagedBean().setAsscProjChanged(false);
 			getManagedBean().setPersonnelBranchChanged(false);
@@ -2591,51 +2906,51 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			getManagedBean().setCapitalEquityChanged(false);
 		}
 	}
-
-	public void okSectionAction() {
+	
+	public void okSectionAction(){
 		log.info("okSectionAction");
 		PmDocumentRestr restr = getManagedBean().getSelectedAppTypeRestr();
-		if (restr != null) {
+		if(restr != null){
 			restr.setCompanyInfoChanged(getManagedBean().isCompanyInfoChanged());
 			restr.setAsscProjChanged(getManagedBean().isAsscProjChanged());
 			restr.setPersonnelBranchChanged(getManagedBean().isPersonnelBranchChanged());
 			restr.setBankChanged(getManagedBean().isBankChanged());
 			restr.setCapitalEquityChanged(getManagedBean().isCapitalEquityChanged());
 		}
-
+		
 	}
-
-	public String constructSectionString(PmDocumentRestr restr) {
+	
+	public String constructSectionString(PmDocumentRestr restr){
 		StringBuilder sb = new StringBuilder();
-		if (restr.isCompanyInfoChanged()) {
+		if(restr.isCompanyInfoChanged()){
 			sb.append(PmCommonUtil.getMessage("lbl.sm.companyStepLbl", null));
 			sb.append(", ");
 		}
-
-		if (restr.isAsscProjChanged()) {
+		
+		if(restr.isAsscProjChanged()){
 			sb.append(PmCommonUtil.getMessage("lbl.sm.branchStepLbl", null));
 			sb.append(", ");
 		}
-
-		if (restr.isPersonnelBranchChanged()) {
+		
+		if(restr.isPersonnelBranchChanged()){
 			sb.append(PmCommonUtil.getMessage("lbl.sm.personStepLbl", null));
 			sb.append(", ");
 		}
-
-		if (restr.isCapitalEquityChanged()) {
+		
+		if(restr.isCapitalEquityChanged()){
 			sb.append(PmCommonUtil.getMessage("lbl.sm.capitalStepLbl", null));
 			sb.append(", ");
 		}
-
-		if (restr.isBankChanged()) {
-			sb.append(PmCommonUtil.getMessage("lbl.sm.bankStepLbl", null));
+		
+		if(restr.isBankChanged()){
+			sb.append(PmCommonUtil.getMessage("lbl.sm.bankStepLbl", null));		
 		}
-
+		
 		String sections = sb.toString();
-		if (StringUtils.isNotBlank(sections) && sections.endsWith(", ")) {
-			sections = sections.substring(0, sections.length() - 2);
+		if(StringUtils.isNotBlank(sections) && sections.endsWith(", ")){
+			sections = sections.substring(0,sections.length()-2);
 		}
-
+				
 		return sections;
 	}
 }
