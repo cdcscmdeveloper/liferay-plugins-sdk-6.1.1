@@ -4377,7 +4377,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		// Only create new bond if NONE exist
 		if (!hasNewBond && emptyNewBond != null) {
-			bondNew.add(createNewBondFrom(emptyNewBond));
+			for (CtPerformanceBond bond : bondOriginal) {
+			bondNew.add(createNewBondFrom(bond));
+			}
 		}
 		
 	    // Sorting both lists by bond name (case-insensitive)
