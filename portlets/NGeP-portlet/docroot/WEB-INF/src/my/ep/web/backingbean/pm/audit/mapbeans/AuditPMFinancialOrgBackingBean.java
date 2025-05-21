@@ -313,7 +313,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 *  comparison status
 	 */
 	public void compareFinancialService(Integer newStatus, Integer oldStatus, String parameterCode){
-		if(newStatus != oldStatus){
+		if(!newStatus.equals(oldStatus)){
 			
 			if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
@@ -323,10 +323,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
 								: AuditConst.PM_AUD_NO);
-			} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(parameterCode)) {
+			/**} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
-								: AuditConst.PM_AUD_NO);
+								: AuditConst.PM_AUD_NO);*/
 			} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES

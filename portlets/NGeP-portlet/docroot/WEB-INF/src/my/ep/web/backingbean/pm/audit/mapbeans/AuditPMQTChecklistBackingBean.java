@@ -210,16 +210,15 @@ public class AuditPMQTChecklistBackingBean extends AuditPMBackingBeanTemplate {
 				this.docId = BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId());
 				this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
 
-				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID,
-						deletepmDocumentRestr.isMandatory() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, null,
-						AuditConst.PM_AUD_ACTION_TYPE_DEL);
+				detailObj(AuditConst.PM_AUD_QTCHECKLIST_PROCUREMENT_CATEGORY_FIELDLABELID,deletepmDocumentRestr.getProcurementCatCode()
+						.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null, AuditConst.PM_AUD_ACTION_TYPE_DEL);
 			}
 			if (deletepmDocumentRestr.isMandatory() || !deletepmDocumentRestr.isMandatory()) {
 				this.docGroupId = BigInteger.valueOf(managedBeans.getResDTO().getDocument().getDocumentId());
 				this.docId = BigInteger.valueOf(deletepmDocumentRestr.getDocumentRestrId());
 				this.lvlCode3 = managedBeans.getSelectedDocument().getDocCategoryCode().getParameterCode();
-				detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID, deletepmDocumentRestr.getProcurementCatCode()
-						.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), null, AuditConst.PM_AUD_ACTION_TYPE_DEL);
+				detailObj(AuditConst.PM_AUD_QTCHECKLIST_MANDATORY_FIELDLABELID, deletepmDocumentRestr.isMandatory() ? 
+						AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, null, AuditConst.PM_AUD_ACTION_TYPE_DEL);
 			}
 		}
 	}
