@@ -27,8 +27,8 @@
 							<c:otherwise>
 								<p:commandButton value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()" style="float:right;" />
 							</c:otherwise>
-						</c:choose>	
-						<!-- 34445 end -->	
+						</c:choose>
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
@@ -38,15 +38,15 @@
 			okAction="locationBackingBean.saveLocation"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			content="#{lbl['lbl.pm.btn.save.msg']}"
 			update="@([id$=Msg])"/>
 			
 		<ac:confirmationPopup id="updateInfoDlg" widget="updateInfoDlg"
 			okAction="locationBackingBean.saveLocation"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.update.msg']}" 
-			update="@([id$=Msg])"/>	
+			content="#{lbl['lbl.pm.btn.update.msg']}"
+			update="@([id$=Msg])"/>
 		<!-- 34445 end -->
 	</p:outputPanel>
 </ui:composition>

@@ -33,12 +33,12 @@
 				<tr style="float:right">
 					<td>
 						<!-- 34445 start -->
-						<p:commandButton value="#{lbl['lbl.btn.submit']}" 
-							update="@([id$=Msg])"  onstart="" 
-							disabled="#{not accessApplBackingBean.managedBean.declarationChecked}" 
+						<p:commandButton value="#{lbl['lbl.btn.submit']}"
+							update="@([id$=Msg])"
+							disabled="#{not accessApplBackingBean.managedBean.declarationChecked}"
 							oncomplete="if(!args.validationFailed) submitApplDlg.show();"
 							rendered="#{isBrandNew}">
-							<f:param name="disableValidation" value="true" /> 
+							<f:param name="disableValidation" value="true" />
 						</p:commandButton>
 						<!-- 34445 end -->
 					</td>
@@ -48,19 +48,19 @@
 							<ui:repeat var="action" value="#{accessApplBackingBean.managedBean.outComes}" 
 								rendered ="#{not isBrandNew}">
 								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
-								<!-- 34445 start -->								
-								<p:commandButton value="#{lbl[buttonLabel]}" 
-									rendered="#{action=='APPROVE'}" 
+								<!-- 34445 start -->
+								<p:commandButton value="#{lbl[buttonLabel]}"
+									rendered="#{action=='APPROVE'}"
 									oncomplete="if(!args.validationFailed) approveApplDlg.show();">
-									<f:param name="disableValidation" value="true" /> 
+									<f:param name="disableValidation" value="true" />
 								</p:commandButton>
 								
-								<p:commandButton value="#{lbl[buttonLabel]}" 
+								<p:commandButton value="#{lbl[buttonLabel]}"
 									rendered="#{action=='REJECT'}"
 									oncomplete="if(!args.validationFailed) rejectApplDlg.show();">
-									<f:param name="disableValidation" value="true" /> 
+									<f:param name="disableValidation" value="true" />
 								</p:commandButton>
-								<!-- 34445 end -->								
+								<!-- 34445 end -->
 							</ui:repeat>
 						</ui:define>
 					</ui:decorate>
@@ -92,7 +92,7 @@
 			okParam="#{accessApplBackingBean.saveAccessApplication('REJECT')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.reject.msg']}" 
+			content="#{lbl['lbl.pm.btn.reject.msg']}"
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
 		<!-- 34445 end -->

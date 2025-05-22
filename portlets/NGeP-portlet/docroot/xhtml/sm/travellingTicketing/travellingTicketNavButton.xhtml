@@ -26,12 +26,13 @@
 							<c:otherwise>
 								<p:commandButton id="updateBtnId" value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()" style="float:right;"/>
 							</c:otherwise>
-						</c:choose>			
+						</c:choose>
 						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
 		</table>
+		
 		<!-- 34445 start -->
 		<ac:confirmationPopup id="saveInfoDlg" widget="saveInfoDlg"
 			okAction="travellingTicketBB.saveTravellingTicket"

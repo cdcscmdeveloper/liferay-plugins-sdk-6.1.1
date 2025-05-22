@@ -20,11 +20,11 @@
 					<!-- 34445 start -->
 					<c:choose>
 						<c:when test="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">
-				  			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;" oncomplete="saveInfoDlg.show();">     
+				  			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;" oncomplete="saveInfoDlg.show();">
 			  				</p:commandButton>
 				  		</c:when>
 				  		<c:otherwise>
-				  			<p:commandButton value="#{lbl['lbl.btn.update']}" style="float:right;" oncomplete="updateInfoDlg.show();">     
+				  			<p:commandButton value="#{lbl['lbl.btn.update']}" style="float:right;" oncomplete="updateInfoDlg.show();"> 
 			  				</p:commandButton>
 				  		</c:otherwise>
 				  	</c:choose>

@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-
+	
+	
+	
 	<table style="width: 100%">
 		<tr>
 			<td>
@@ -22,6 +22,7 @@
 			</td>
 		</tr>
 	</table>
+	
 	<!-- 34445 start -->
 	<ac:confirmationPopup id="saveOrgInfoDlg" widget="saveOrgInfoDlg"
 		okAction="ruleCatalogueBackingBean.saveFeeExemptionForOrgItem"
@@ -32,7 +33,6 @@
 		update=":form:settingTabId:feeSettingId"
 		loadingWidget="blockWidget" />
 	<!-- 34445 end -->
-
 
 	<p:dataTable id="feeByOrgItemTableID" var="feeObj" rows="10"
 		widgetVar="feeByOrgItemTableWidVar"

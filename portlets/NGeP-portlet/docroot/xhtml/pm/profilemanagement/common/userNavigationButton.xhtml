@@ -23,20 +23,20 @@
 					   <c:choose>
 					  		<!-- 34445 start -->
 					  		<c:when test="#{profileManagementBackingBean.managedBean.isNewUser}">
-					  			<p:commandButton value="#{lbl['lbl.btn.save']}" 
+					  			<p:commandButton value="#{lbl['lbl.btn.save']}"
 					  				disabled="#{profileManagementBackingBean.isUserRolesEmpty()}"
 					  				oncomplete="if (!args.validationFailed) saveInfoDlg.show();">
-				  					<f:param name="disableValidation" value="true" />     
+				  					<f:param name="disableValidation" value="true" />
 				  				</p:commandButton>
 					  		</c:when>
 					  		<c:otherwise>
 					  			<p:commandButton value="#{lbl['lbl.btn.update']}"
 					  				oncomplete="if (!args.validationFailed) updateInfoDlg.show();">
-					  				<f:param name="disableValidation" value="true" />     
+					  				<f:param name="disableValidation" value="true" />
 				  				</p:commandButton>
 					  		</c:otherwise>
 					  		<!-- 34445 end -->
-						</c:choose>	  		  
+						</c:choose>
 					</div>
 				</td>
 			</tr>
@@ -47,7 +47,7 @@
 			okAction="profileManagementBackingBean.saveUserProfile"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			content="#{lbl['lbl.pm.btn.save.msg']}"
 			update=":form"/>
 									
 		<ac:confirmationPopup id="updateInfoDlg" widget="updateInfoDlg"
@@ -55,8 +55,8 @@
 			okAction="profileManagementBackingBean.saveUserProfile"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.update.msg']}" 
+			content="#{lbl['lbl.pm.btn.update.msg']}"
 			update=":form"/>
-		<!-- 34445 end -->	
+		<!-- 34445 end -->
 	</p:outputPanel>
 </ui:composition>

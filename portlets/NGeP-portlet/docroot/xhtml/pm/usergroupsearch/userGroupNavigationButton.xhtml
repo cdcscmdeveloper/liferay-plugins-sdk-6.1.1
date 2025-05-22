@@ -18,9 +18,9 @@
 			<td>
 				<!-- 34445 start -->
 				<div align="right" style="width: 100%">
-					<p:commandButton id="userSaveBtnId" value="#{lbl['lbl.btn.save']}" 
+					<p:commandButton id="userSaveBtnId" value="#{lbl['lbl.btn.save']}"
 						style="float:right;"
-						onstart="saveInfoDlg.show();" oncomplete="userGroupBlockWidget.hide();" 
+						onstart="saveInfoDlg.show();" oncomplete="userGroupBlockWidget.hide();"
 						rendered ="#{usergroupBackingBean.managedBean.userGroup.brandNew}"/>
 						
 					<p:commandButton id="userUpdateBtnId" value="#{lbl['lbl.btn.update']}"
@@ -32,13 +32,14 @@
 			</td>
 		</tr>
 	</table>
+	
 	<!-- 34445 start -->
 	<ac:confirmationPopup id="saveInfoDlg" widget="saveInfoDlg"
 		loadingWidget="userGroupBlockWidget"
 		okAction="usergroupBackingBean.saveUserGroup"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		content="#{lbl['lbl.pm.btn.save.msg']}"
 		update="@([id$=Msg])"/>
 		
 	<ac:confirmationPopup id="updateInfoDlg" widget="updateInfoDlg"
@@ -46,7 +47,7 @@
 		okAction="usergroupBackingBean.saveUserGroup"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-		content="#{lbl['lbl.pm.btn.update.msg']}" 
+		content="#{lbl['lbl.pm.btn.update.msg']}"
 		update=":form"/>
 	<!-- 34445 end -->
 	</div>

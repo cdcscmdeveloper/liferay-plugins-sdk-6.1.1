@@ -87,18 +87,18 @@
 						style="float:left;"/></td>
 				<td>
 					<!-- 34445 start -->
-					<p:commandButton id="orgCreateBtnId" value="#{lbl['lbl.btn.save']}" 
+					<p:commandButton id="orgCreateBtnId" value="#{lbl['lbl.btn.save']}"
 						style="float:right;"
-						oncomplete="if (!args.validationFailed) saveInfoDlg.show();" 
+						oncomplete="if (!args.validationFailed) saveInfoDlg.show();"
 						rendered ="#{organisationBackingBean.managedBean.orgProfile.brandNew}">
-						<f:param name="disableValidation" value="true" /> 
+						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 					
 					<p:commandButton id="orgUpdateBtnId" value="#{lbl['lbl.btn.update']}"
 						style="float:right;"
 						oncomplete="if (!args.validationFailed) updateInfoDlg.show();"
 						rendered ="#{!organisationBackingBean.managedBean.orgProfile.brandNew}">
-						<f:param name="disableValidation" value="true" /> 
+						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 					<!-- 34445 end -->
 				</td>
@@ -161,7 +161,7 @@
 			okParam="#{organisationBackingBean.saveOrganization('SAVE')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			content="#{lbl['lbl.pm.btn.save.msg']}"
 			update="@([id$=Msg])"/>
 			
 		<ac:confirmationPopup id="updateInfoDlg" widget="updateInfoDlg"
@@ -169,7 +169,7 @@
 			okParam="#{organisationBackingBean.saveOrganization('UPDATE')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-			content="#{lbl['lbl.pm.btn.update.msg']}" 
+			content="#{lbl['lbl.pm.btn.update.msg']}"
 			update=":form"/>
 		<!-- 34445 end -->
 	</ui:define>

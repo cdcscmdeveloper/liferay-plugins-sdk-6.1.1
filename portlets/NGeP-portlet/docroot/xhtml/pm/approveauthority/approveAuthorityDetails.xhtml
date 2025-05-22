@@ -77,7 +77,7 @@
 	</p:blockUI>
 	<!-- 34445 end -->
 	<p:dialog id="updateCommitteeDialog" header="#{lbl['lbl.pm.approveAuthority.update']}" modal="true" 
-		widgetVar="updateCommitteeDialog" dynamic="true" width="600px" position="339,300">
+		widgetVar="updateCommitteeDialog" dynamic="true" width="800px" position="339,300">
 		<p:ajax event="close" update="@this" listener="#{ApproveAuthorityBackingBean.closePopup()}" />
 		<p:panel id="updateCommitteePanel" toggleable="true">
 			<h:panelGroup id="committeePopupPanel"> 	
@@ -129,6 +129,7 @@
 				                 process="@form"
 				                 oncomplete="if (!args.validationFailed) saveAprvAuthInfoDlg.show();" />
 							<!-- 34445 end -->
+							
 							<p:commandButton id="comCancel"
 								value="#{lbl['lbl.btn.cancel']}" process="@this"
 								action="#{ApproveAuthorityBackingBean.closePopup()}"
