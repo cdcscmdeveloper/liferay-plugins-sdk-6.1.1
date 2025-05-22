@@ -151,16 +151,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void deleteReasonApplicability(int rowIndex){
 		log.info("...............deleteReasonApplicability................");
 
-			//35509
-			if(getManagedBean().getDeletePIDReasonList() == null){
-				getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
-			}
-			
-			this.getManagedBean().getDeletePIDReasonList().add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex)); 
-			//35509
-			
+		// 35509
+		if (getManagedBean().getDeletePIDReasonList() == null) {
+			getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
+		}
+
+		this.getManagedBean().getDeletePIDReasonList()
+				.add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex));
+		// 35509
+		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
-			.remove(rowIndex);
+					.remove(rowIndex);
 	}
 	
 	/**
@@ -816,7 +817,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(resDTO.isSuccessful()){
 //				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("createRejectReason - successful"); //TODO 770015
-				getManagedBean().setNewPmReason(resDTO.getPmReason());
+				getManagedBean().setNewPmReason(resDTO.getPmReason()); // 35509 Audit PM
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
@@ -871,7 +872,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			rejectReason.getPmPIDReasonList().removeAll(toDeletePReasons);
 			rejectReason.getPmPIDReasonList().addAll(toReplacePReasons);
-			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason); // 
+			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason); // 35509
 			
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
