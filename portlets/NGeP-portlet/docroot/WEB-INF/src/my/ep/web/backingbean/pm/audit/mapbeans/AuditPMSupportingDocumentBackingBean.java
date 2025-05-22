@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -27,6 +29,7 @@ import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
 public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemplate {
 
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(AuditPMSupportingDocumentBackingBean.class);
 	private static final Set<String> HANDLED_CHECKBOXES;
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
@@ -380,6 +383,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	private void updatedCreatedCompTypeCodeTabList(SupportDocumentManagedBean managedBeans, boolean updated) {
 		AuditPMSupportingDocumentNewListBackingBean newListMapBean = new AuditPMSupportingDocumentNewListBackingBean();
 		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty()) {
+			log.info("managedBeans.getNewCompanyCodeTypeAuditList() ####__***::: "
+					+ managedBeans.getNewCompanyCodeTypeAuditList().size());
 			for (PmDocumentRestr restNew : managedBeans.getNewCompanyCodeTypeAuditList()) {
 				for (PmDocumentRestr rest : managedBeans.getComTypeRestrictions()) {
 					if (rest.getCompanyTypeCode().getParameterId() == restNew.getCompanyTypeCode().getParameterId()) {
