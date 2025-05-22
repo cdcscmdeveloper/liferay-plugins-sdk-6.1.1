@@ -71,14 +71,11 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		this.roleCode = roleCode;
 		docNo = reason.getReasonCode();
 		this.docType = checkDocType(reason.getPmReasonDescs());
-		this.parameterCode = reason.getReasonCategoryCode().getParameterCode(); // SIT
+		this.parameterCode = reason.getReasonCategoryCode().getParameterCode(); // SIT different
 		parameterLevelId = new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value());
 
 		if (reason.isBrandNew()) {
 			PmReason savedReason = managedBeans.getNewPmReason();// new added
-																	// with
-																	// updated
-																	// id
 			docId = BigInteger.valueOf(savedReason.getReasonId());
 			setNewDescription(reason);
 
