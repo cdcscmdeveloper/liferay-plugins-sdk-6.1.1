@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import my.ep.constant.pm.AuditPMSupplierMgtConfigConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
@@ -18,6 +20,7 @@ import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
  * 
  */
 public class AuditPMSupportingDocumentNewListBackingBean {
+	private static Logger log = Logger.getLogger(AuditPMSupportingDocumentNewListBackingBean.class);
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
@@ -126,15 +129,24 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 			boolean updated) {
 		this.roleCode = roleCode;
 		this.docNo = managedBeans.getSelectedDocument().getDocName();
-		for (PmDocumentRestr pmDocumentRestr : managedBeans.getNewCompanyCodeTypeAuditList()) {
+		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty()) {
+			log.info("managedBeans.getNewCompanyCodeTypeAuditList()_AAA#&##& ::: "
+					+ managedBeans.getNewCompanyCodeTypeAuditList().size());
+			for (PmDocumentRestr pmDocumentRestr : managedBeans.getNewCompanyCodeTypeAuditList()) {
+				log.info("pmDocumentRestr.getDocumentRestrId()_BBB#&##& ::: " + pmDocumentRestr.getDocumentRestrId());
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
+				log.info("managedBeans.getSelectedDocument().getDocumentId()_CCC#&##& ::: "
+						+ managedBeans.getSelectedDocument().getDocumentId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
+				System.out
+						.println("pmDocumentRestr.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc()_DDD#&##& ::: "
+								+ pmDocumentRestr.getCompanyTypeCode().getPmParameterDescsSpecCallOnly().get(1).getCodeDesc());
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_COMPTYPE_FIELDLABELID, null, pmDocumentRestr.getCompanyTypeCode()
 					.getPmParameterDescsSpecCallOnly().get(1).getCodeDesc(), actionType(updated));
 		}
 
 		managedBeans.setComTypeRestrictionsNew(null);
-
+		}
 		return objList;
 	}
 
