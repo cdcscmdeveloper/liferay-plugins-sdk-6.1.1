@@ -151,14 +151,16 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void deleteReasonApplicability(int rowIndex){
 		log.info("...............deleteReasonApplicability................");
 
-			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
-					.remove(rowIndex);
 			//35509
 			if(getManagedBean().getDeletePIDReasonList() == null){
 				getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
 			}
 			
-			this.getManagedBean().getDeletePIDReasonList().add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex)); //35509
+			this.getManagedBean().getDeletePIDReasonList().add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex)); 
+			//35509
+			
+			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
+			.remove(rowIndex);
 	}
 	
 	/**
@@ -389,7 +391,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
 			}
-			this.getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
+			this.getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());// 35509
 		
 		}catch (Exception e){
 			e.printStackTrace();
@@ -840,11 +842,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		try{
 			List<PmPIDReason> toDeletePReasons  = new ArrayList<PmPIDReason>();
 			List<PmPIDReason> toReplacePReasons  = new ArrayList<PmPIDReason>();
+			List<PmPIDReason> auditPIDReason  = new ArrayList<>(); // 35509
 			for(PmPIDReason pidReason: rejectReason.getPmPIDReasonList()){
 				log.info(".............pidReason="+pidReason.getDocType());
 				if(pidReason.isBrandNew()){
 					log.info(".......pidReason.isBrandNew()"+pidReason.isBrandNew());
 					log.info(".......this.getPmPidListOrigin().size()"+this.getManagedBean().getPmPidListOrigin().size());
+					auditPIDReason.add(pidReason); // 35509
 					for(PmPIDReason pReason: this.getManagedBean().getPmPidListOrigin()){
 						log.info(".......pReason.getDocType="+pReason.getDocType());
 					    if(pidReason.getDocType().equals(pReason.getDocType())){
@@ -867,6 +871,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			rejectReason.getPmPIDReasonList().removeAll(toDeletePReasons);
 			rejectReason.getPmPIDReasonList().addAll(toReplacePReasons);
+			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason); // 
 			
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
