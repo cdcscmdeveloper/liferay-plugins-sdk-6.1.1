@@ -422,8 +422,8 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:confirmDialog closable="true" escape="false" id="delDuplicate"
-			message="#{lbl['lbl.sm.comp.exp.up1date.declare.duplicate']}"
+		<p:confirmDialog closable="true" id="delDuplicate"
+			message="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
 			severity="alert" widgetVar="delDuplicateDialogWV">
 			<div align="right">
 				<p:commandButton action="#{compExpBB.delCompExp()}"
