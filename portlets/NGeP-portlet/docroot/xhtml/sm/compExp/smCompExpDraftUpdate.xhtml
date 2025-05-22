@@ -328,8 +328,6 @@
 								listener="#{compExpBB.checkDuplicateCatCode(compExpCatCode.categoryL3.categoryL3Id, index)}"
 								process="@this" />
 						</p:selectOneMenu>
-						<p:message id="subDivDDIdMsg" for="subDivDDId" showSummary="true"
-							showDetail="false" display="icon" />
 					</p:column>
 				</c:if>
 				<c:otherwise>
@@ -366,7 +364,8 @@
 				<p:commandButton id="btnDeclare"
 					value="#{lbl['lbl.sm.comp.exp.update.declare.btn']}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					disabled="#{!compExpMB.agreeDeclare}" action="#{compExpBB.onDeclare}" />
+					partialSubmit="true" disabled="#{!compExpMB.agreeDeclare}"
+					action="#{compExpBB.onDeclare}" />
 			</div>
 		</p:panel>
 		<ac:smPtjPopup okAction="compExpBB.selectAgencyAction" />
@@ -422,9 +421,12 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
 			</div>
 		</p:confirmDialog>
-		<p:confirmDialog closable="true" id="delDuplicate"
-			message="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
-			severity="alert" widgetVar="delDuplicateDialogWV">
+		<p:dialog dynamic="true" height="100" id="delDuplicate" modal="true"
+			resizable="false" widgetVar="delDuplicateDialogWV" width="350px"
+			styleClass="pop_up_top">
+			<h:outputText
+				value="#{lbl['lbl.sm.comp.exp.update.declare.duplicate']}"
+				escape="false" />
 			<div align="right">
 				<p:commandButton action="#{compExpBB.delCompExp()}"
 					onclick="confirmDelSelectedCatDialogWV.hide();"
@@ -433,6 +435,6 @@
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="delDuplicateDialogWV.hide();" />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
 	</ui:define>
 </ui:composition>

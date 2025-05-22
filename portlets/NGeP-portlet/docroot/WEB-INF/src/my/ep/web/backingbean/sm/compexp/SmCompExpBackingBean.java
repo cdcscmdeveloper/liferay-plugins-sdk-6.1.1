@@ -5,8 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
@@ -26,10 +28,12 @@ import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.compexp.SmCompExpManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -374,36 +378,72 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void onDeclare() {
+		boolean err = false;
+		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
+			err = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775223,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
 		if (null == this.getManagedBean().getSelectedDraft().getAgencyName() || this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_775223);
+			err = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775224,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		if (null == this.getManagedBean().getSelectedDraft().getFileReferenceNo()
 				|| this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()
 				|| null == this.getManagedBean().getSelectedDraft().getFileExtensionNo()
 				|| this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_775224);
+			err = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775225,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == this.getManagedBean().getContractEffDateTemp()) {
+			err = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775226,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		if (null == this.getManagedBean().getSelectedDraft().getContractExpDate()) {
-			throw new EpException(MessageConst.ERROR_775225);
+			err = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		if (null == this.getManagedBean().getCompExpDocList() || this.getManagedBean().getCompExpDocList().isEmpty()) {
-			throw new EpException(MessageConst.ERROR_775226);
+			err = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
 			if (null == cat.getCategoryL3().getCategoryL3Id()) {
-				throw new EpException(MessageConst.ERROR_775227);
+				err = true;
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
-		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
-		reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
-		reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
-		if (getCompExpSo().checkDuplicateExist(reqDTO)) {
-			RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
-		} else {
-			declareComExp();
+		if (!err) {
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
+			reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
+			reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
+			if (getCompExpSo().checkDuplicateExist(reqDTO)) {
+				RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
+			} else {
+				declareComExp();
+			}
 		}
-
 	}
 
 	public void declareComExp() {
