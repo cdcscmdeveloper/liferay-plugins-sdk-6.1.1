@@ -14,18 +14,22 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
@@ -39,11 +43,14 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMEducationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.educationfield.EducationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -382,6 +389,19 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 							getPmActionDesc(eduField.isBrandNew() ? MessageConst.TD_81000 :MessageConst.TD_81001,
 									new String[] { this.getManagedBean().getPmEduField().getFieldName()})));
 
+			/************ AUDIT #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMEducationBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_EDUCATION) && eduField.getEduFieldId() != null) {
+				reqDTO.setEduFieldId(eduField.getEduFieldId());
+				EducationFieldResDTO oldField = educationfieldSO.retrieveEducationFieldById(reqDTO);
+				
+				getManagedBean().setOldAuditPmEduField(oldField.getEduField());
+			}
+			
+			/************ AUDIT #28895-35509 *************/
 			EducationFieldResDTO resDTO = educationfieldSO
 					.saveOrUpdateEduFieldDtls(reqDTO);
 			this.getManagedBean().setPmEduField(resDTO.getEduField());
@@ -414,6 +434,11 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 									resDTO.getEduField()
 											.getFieldName() });
 				}
+				/************ AUDIT #28895-35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_EDUCATION)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_EDUCATION);
+				}
+				/************ AUDIT #28895-35509 *************/
 			}
 
 		} catch (Exception e) {

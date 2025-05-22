@@ -224,7 +224,8 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+				<!-- #36718 - add id to panel -->
+				<p:outputPanel id="compFacilityAddrPanel" rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
 								style="padding-top :5px;" /> <p:outputLabel value="*"
@@ -256,7 +257,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="basicCountry"
 									value="#{backingBean.managedBean.countryItems}" />
-								<p:ajax event="change" process="@this"
+								<!-- #36718 - add more id id ajax process -->
+								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId" />
@@ -298,7 +300,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offState"
 									value="#{backingBean.managedBean.basicOffFacStates}" />
-								<p:ajax event="change" process="@this"
+								<!-- #36718 - add more id id ajax process -->
+								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="ofp,basicOffFacDist,
@@ -340,7 +343,8 @@
 							value="#{backingBean.managedBean.basicOffFacDivisions}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - add more id id ajax process -->
+						<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 								update="basicOffFacDist,basicOffFacCity" />
@@ -381,7 +385,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offDist"
 									value="#{backingBean.managedBean.basicOffFacDistricts}" />
-								<p:ajax event="change" process="@this"
+								<!-- #36718 - add more id id ajax process -->
+								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity" />
@@ -411,7 +416,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems var="offCity"
 									value="#{backingBean.managedBean.basicOffFacCities}" />
-								<p:ajax event="change" process="@this"
+								<!-- #36718 - add more id id ajax process -->
+								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="basicOffFacCity" />
@@ -501,13 +507,20 @@
 					      }
 						
 						</script>
-									 
+						<!-- 37771 -->			 
 						<ac:gmap id="acgmap2" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							latitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}"
 							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}"
-							disabled="#{backingBean.managedBean.upsCannotEdit}" />					
+							disabled="#{backingBean.managedBean.upsCannotEdit}" 
+							isShow="#{backingBean.managedBean.showFieldChanges}"
+							oriLatValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLatitude}" 
+							currLatValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}" 
+							alertLatValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLatitude}"
+							oriLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}" 
+							currLongValue="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}" 
+							alertLongValue="#{backingBean.managedBean.latestAppl.smFacilities[0].smAddress.mapLongitude}"/>					
 					</td>
 				</tr>
 				</p:outputPanel>

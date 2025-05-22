@@ -15,10 +15,11 @@
 		<ui:repeat var="storeCatVar" value="#{viewSmApplBackingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 			<table style="width: 100%;">
 				<tr>
-						<td style="white-space: nowrap; float: left;">
+						<td>
 						<!-- 29380 - Site Visit Grouping Enhancement -28775 -->
 					    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} 
-					    	(#{viewSmApplBackingBean.getSupplierCategoryName(storeCatVar, false, true)})" />
+					    	(#{viewSmApplBackingBean.getSupplierCategoryName(storeCatVar, false, true)})" 
+					    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 			</table>

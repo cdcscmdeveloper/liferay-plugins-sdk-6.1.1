@@ -21,25 +21,30 @@
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
 						immediate="true" update=":form" process="@this"
 						action="#{categoryBackingBean.backToSearch}" style="float:left;" /></td>
-				
-				<td>
+
 					<!-- Start #29665 change update button behaviour -->
-					<p:commandButton value="#{lbl['lbl.btn.update']}"
-						oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
-						rendered="#{!categoryBackingBean.managedBean.newCategory}"
-						style="float:right;width: auto;" />
-					<p:commandButton partialSubmit="true"
-						value="#{lbl['lbl.btn.save']}"		
-						action="#{categoryBackingBean.saveCategory}"
-						rendered="#{categoryBackingBean.managedBean.newCategory}"
-						update="@([id$=Msg])" style="float:right;width: auto;" /></td>				
+					<ui:remove>START : #29665 Add Style for button</ui:remove>	
+					<td style="display: #{!categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}">
+						<p:commandButton value="#{lbl['lbl.btn.update']}"
+							oncomplete="if(args &amp;&amp; !args.validationFailed) updateCategDialog.show();"
+							style="float:right;width: auto;" />
+					</td>
+					<td style="display: #{categoryBackingBean.managedBean.newCategory ? 'block' : 'none'}"> 
+						<p:commandButton partialSubmit="true"
+							value="#{lbl['lbl.btn.save']}"		
+							action="#{categoryBackingBean.saveCategory}"
+							update=":form" style="float:right;width: auto;" />
+					</td>				
+					<ui:remove>END : #29665 Add Style for button</ui:remove>
 					<!-- End #29665 change update button behaviour -->
 			</tr>
             
 		</table>
-			
+		
+		<ui:remove>START : #29665 Change id</ui:remove>	
 		<p:panel header="#{lbl['lbl.pm.category.level']}" toggleable="true"
-			id="catLevel">
+			id="catLevel1">
+		<ui:remove>END : #29665 Change id</ui:remove>
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 10%">
@@ -88,14 +93,16 @@
 								disabled="#{categoryBackingBean.descriptionEditDisable}"
 								cols="40" maxlength="255"
 								value="#{categoryBackingBean.managedBean.updatedCategoryDesc}" />
-							&#160; 
+							&#160;
+							<ui:remove>START : #29665 Change update</ui:remove> 
 							<p:commandLink action="#{categoryBackingBean.enableDiscription}"
-								style="vertical-align: top;" update="catLevel"
+								style="vertical-align: top;" update="catLevel1"
 								disabled="#{!categoryBackingBean.descriptionEditDisable}">
 								<p:graphicImage library="ep/images/design"
 									title="#{lbl['lbl.pm.edit.description']}"
 									value="/css/images/design/edit.png" />
 							</p:commandLink>
+							<ui:remove>END : #29665 Change update</ui:remove>
 						</c:if> 
 						<!-- End #29665 Add action -->
 					</td>
@@ -121,12 +128,15 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td>
-						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}" disabled="#{categoryBackingBean.managedBean.pmCategoryL1.brandNew}"
+						<ui:remove>START : #29665 Add id</ui:remove>
+						<p:selectOneMenu required="true" label="#{lbl['lbl.pm.status']}" id="somCategoryl1Status" 
+							disabled="#{categoryBackingBean.managedBean.pmCategoryL1.brandNew}"
 							value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}">
 							<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@form" listener="#{categoryBackingBean.onChangeDescription}"/> <!-- @29665 add listener -->
 						</p:selectOneMenu>
+						<ui:remove>END : #29665 Add id</ui:remove>
 					</td>
 				</tr>
 				<!-- Start #29665: Add Remark Field -->

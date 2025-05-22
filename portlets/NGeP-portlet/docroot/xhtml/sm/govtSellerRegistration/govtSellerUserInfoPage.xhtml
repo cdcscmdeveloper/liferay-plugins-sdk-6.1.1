@@ -108,12 +108,43 @@
 	</script>
 	
 	<div align="right">
+		<!-- #34400 - start -->
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@form" 
-				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{bb.submitRegistration}">
+				oncomplete="if (!args.validationFailed) firstUserTncDialog.show();" >
 				<f:param name="disableValidation" value="true" />
 		</p:commandButton>
 	</div>
+	
+	<p:dialog id="firstUserTncDialog" header="#{lbl['lbl.sm.suppadmin.appointment.header']}"
+		widgetVar="firstUserTncDialog" modal="true" width="600px" height="500px">
+		<h:outputText value="#{lbl['lbl.sm.confirm.supp.register']}"/>
+		<p:panel id="firstUserTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
+			
+			<p:scrollPanel style="height:350px;border:0;" mode="native">
+				<h:outputText escape="false" value="#{lbl['lbl.sm.suppadmin.appointment.msg']}" style="white-space : normal !important"/>
+			</p:scrollPanel>
+	
+			<table>
+				<tr>
+					<td width="10px" style="padding: 4px 2px 0px 4px;"><p:selectBooleanCheckbox
+							value="#{bb.managedBean.aggreeDeclareAdmin}">
+							<p:ajax event="change" update=":form:basCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+			</table>
+			
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
+					action="#{bb.submitRegistration}" 
+					update="@form" onclick="firstUserTncDialog.hide();"
+					disabled="#{!bb.managedBean.aggreeDeclareAdmin}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="firstUserTncDialog.hide();" />
+			</div>
+		</p:panel>
+	</p:dialog>
+	<!-- #34400 - end -->	
 
 		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" >
 			<table class="customTbl">
@@ -252,6 +283,8 @@
 		
 		<p:outputPanel id="pnlUsrInfo"> 
 			<table class="customTbl">
+				<!-- #36718 - START - add panel for refresh address -->
+				<p:panel id="g2gUsrInfoPanelId" style="border: none;">
 				<tr>
 					<td class="tdTitle">
 						<c:choose>
@@ -287,7 +320,8 @@
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{bb.managedBean.countryLs}" />
-							<p:ajax event="change"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
 								listener="#{bb.onChangeCountry(bb.managedBean.smPermenantAdd.pmCountry,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermState,cmbPermDivision,cmbPermDistrict,cmbPermCity,txtPermPostcodePanelId" />
 						</p:selectOneMenu> <p:message id="cmbPermCounrtyMsg" for="cmbPermCounrty"
@@ -308,7 +342,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="state"
 								value="#{bb.managedBean.permenantStateLs}" />
-							<p:ajax event="change"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
 								listener="#{bb.onChangeState(bb.managedBean.smPermenantAdd.pmState,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermDistrict,pnlUsrInfo,divisionUserInfoLabelPanelId,divisionUserInfoDropdownPanelId,cmbPermCity" />
 						</p:selectOneMenu>
@@ -336,7 +371,8 @@
 							value="#{bb.managedBean.permenantDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" 
+						<!-- #36718 - process panel when change address dropdown -->
+						<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
 							listener="#{bb.onChangeDivision(bb.managedBean.smPermenantAdd.pmDivision,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermDistrict,cmbPermCity" />
 					</p:selectOneMenu>
@@ -360,7 +396,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="dist"
 								value="#{bb.managedBean.permenantDistrictLs}" />
-							<p:ajax event="change"
+							<!-- #36718 - process panel when change address dropdown -->
+							<p:ajax event="change" process="@([id$=g2gUsrInfoPanelId])" 
 								listener="#{bb.onChangeDistrict(bb.managedBean.smPermenantAdd.pmDistrict,'USER_PERMANENT_ADDRESS')}"
 								update="cmbPermCity" />
 						</p:selectOneMenu>
@@ -384,6 +421,8 @@
 						<p:message id="cmbPermCityMsg" for="cmbPermCity" display="icon" />
 						</td>
 				</tr>
+				</p:panel>
+				<!-- #36718 - END -->
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent">

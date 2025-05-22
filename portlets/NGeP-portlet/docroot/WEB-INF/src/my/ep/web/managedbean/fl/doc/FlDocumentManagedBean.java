@@ -344,7 +344,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
 						if(null != orderInfo){	
 							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
-							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getDeliveryOrderId() , orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId()); //36361
+							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatusId(), orderInfo.getDeliveryOrderId() , orderInfo.getOrderStatusId(), orderInfo.getRole(), orderInfo.getOrderId(),reqDTO.getUserId()); //38104
 							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatusId(),docsearchResult.getDocId(),orderInfo.getRole(),orderInfo.getOrderId(),reqDTO.getUserId());
 							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
 								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
@@ -421,7 +421,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				receivedNoteSO  = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 				resDTO = receivedNoteSO.getReceivedNoteById(reqDTO);
 				if(null != resDTO.getFulfilmentNote()){
-					orderInfo.setDeliveryOrderId(resDTO.getFlDeliveryOrder().getDeliveryOrderId());//36361
+					orderInfo.setDeliveryOrderId(resDTO.getFlDeliveryOrder().getDeliveryOrderId());//38104
 					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 						orderInfo.setOrderId(reqDTO.getFlOrderId());
@@ -431,11 +431,25 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										if(isFlFulfilmentRecevingOfficer()) {
-											orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
-										} else if(isAcknowledgeOfficer()) {
-											orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+										// 36386-start
+										if (getSearchFunctionType() != null) {
+											if (getSearchFunctionType().equalsIgnoreCase(ParameterConst.ORG_TYPE_PTJ)) {
+												if (isFlFulfilmentRecevingOfficer()) {
+													orderInfo.setRole(RoleCode.RECEIVING_OFFICER.value());
+												} else if (isAcknowledgeOfficer()) {
+													orderInfo.setRole(RoleCode.ACKNOWLEDGE_OFFICER.value());
+												}
+											} else if (getSearchFunctionType().equalsIgnoreCase(
+													ParameterConst.ORG_TYPE_SUPPLIER)
+													&& isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+											}
+										} else {
+											if (isFlFulfilmentSupplier()) {
+												orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+											}
 										}
+										// 36386-end
 									}
 								}
 							}
@@ -830,6 +844,13 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			// 35508-end
 		}
 		
+		//36386 -Start
+		if(getSearchFunctionType() !=null && getSearchFunctionType().equalsIgnoreCase("ParameterConst.ORG_TYPE_SUPPLIER")){
+			flDocTypes.remove(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			flDocTypes.remove(ParameterConst.DOCTYPE_CONTRACT_REQUEST); 
+		}
+		//36386 -End
+		
 		return flDocTypes;
 	}
 	
@@ -856,7 +877,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		
 		private String coGSTRNo;
 		
-		private Long deliveryOrderId;//36361
+		private Long deliveryOrderId;//38104
 
 		/**
 		 * Gets the role.
@@ -966,7 +987,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			this.coGSTRNo = coGSTRNo;
 		}
 
-		//36361-Start
+		//38104-Start
 		/**
 		 * @return the deliveryOrderId
 		 */
@@ -980,7 +1001,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 		public void setDeliveryOrderId(Long deliveryOrderId) {
 			this.deliveryOrderId = deliveryOrderId;
 		}
-		//36361-End
+		//38104-End
 		
 		
 	}

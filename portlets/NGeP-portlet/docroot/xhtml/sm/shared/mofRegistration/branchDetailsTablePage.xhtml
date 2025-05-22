@@ -83,6 +83,8 @@
 					alertValue="#{backingBean.managedBean.latestBranch.smAddress.address3}"/>
 			</td>
 		</tr>
+		<!-- #36718 - START - add panel for refresh address -->
+		<p:panel id="supBrnAddrPanelId" style="border: none;">
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
@@ -98,7 +100,8 @@
 					<f:selectItems var="branchCountry"
 						value="#{backingBean.managedBean.countryItems}" />
 					<!-- #34135 START -->
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - process panel when change address dropdown -->
+					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeCountry(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="supBrnCntry,branchState,branchDivision,branchDist,branchCity,postCodeBranchPanelId,
 						divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId" />
@@ -136,7 +139,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnState"
 						value="#{backingBean.managedBean.branchCompanyStates}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - process panel when change address dropdown -->
+					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity" />
 				</p:selectOneMenu> 
@@ -178,8 +182,9 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDivision"
 						value="#{backingBean.managedBean.branchCompanyDivisions}" />
-					<p:ajax event="change" process="@this"
-					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
+					<!-- #36718 - process panel when change address dropdown -->
+					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
+						listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
 				</p:selectOneMenu>
 				<!-- #34159 - END -->
@@ -214,7 +219,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDist" 
 						value="#{backingBean.managedBean.branchCompanyDistricts}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - process panel when change address dropdown -->
+					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchDist,branchCity" />
 				</p:selectOneMenu> 
@@ -243,7 +249,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCity"
 						value="#{backingBean.managedBean.branchCompanyCities}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - process panel when change address dropdown -->
+					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
 						update="branchCity" />
 				</p:selectOneMenu>
@@ -260,6 +267,8 @@
 				<p:message id="branchCityMsg" for="branchCity" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
+		</p:panel>
+		<!-- #36718 - END -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>

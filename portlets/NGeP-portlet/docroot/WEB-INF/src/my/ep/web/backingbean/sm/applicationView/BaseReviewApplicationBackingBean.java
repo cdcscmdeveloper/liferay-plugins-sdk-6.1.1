@@ -164,6 +164,16 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 - AUDIT TRAIL SM
+import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
+//#34031 Start
+import my.ep.biz.service.sm.revisit.ISmRevisitSO;
+import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+import my.ep.persistence.entity.sm.SmRevisit;
+import my.ep.util.SLAUtils;
+import my.ep.web.constant.report.SmReportConst;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+//#34031 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -763,6 +773,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (getManagedBean().getSmAppl() != null) {
 			getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 		}
+		// #28895_35501 Start - AUDIT TRAIL SM
+		if(outputPageType.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_AUDIT_TRAIL)){
+			initAuditTab();
+		}
+		// #28895_35501 End
 	}
 
 	/**
@@ -884,10 +899,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					.retrieveMofCertsByApplId(certReqDTO).getSmMofCerts();
 
 			if (!EntityHelper.isCollectionEmpty(certs)) {
-				// #36401 - Start
-				int count = countCerts(certs);
-				assignMofCert(certs, count);
-				// #36401 - End
+				for (SmMofCert cert : certs) {
+					if (!cert.isBumiCert()) {
+						getManagedBean().setSmMofCert(cert);
+						break;
+					}
+				}
 			}
 		}
 
@@ -947,69 +964,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		
 		getManagedBean().setReviewApplicationExist(true);
 	}
-	
-	// #36401 - Start
-	/**
-	 * to count if non bumi certs more than 1
-	 * 
-	 * @param certs
-	 * @return
-	 */
-	private int countCerts(List<SmMofCert> certs) {
-		int count = 0;
-		for (SmMofCert cert : certs) {
-			if (!cert.isBumiCert()) {
-				count++;
-			}
-		}
-		return count;
-	}
-
-	/**
-	 * To assign non bumi cert to display at comp info
-	 * 
-	 * @param mofCerts
-	 * @param counter
-	 */
-	// Checking cert that is not bumi, if more than 1 cert assign the first one by asc order
-	public void assignMofCert(List<SmMofCert> mofCerts, int counter) {
-		if (counter > 1) {
-			sortMofCertsByDate(mofCerts);
-			List<SmMofCert> certs = filterCerts(mofCerts, false);
-			getManagedBean().setSmMofCert(certs.get(0));
-		} else {
-			for (SmMofCert cert : mofCerts) {
-				if (!cert.isBumiCert()) {
-					getManagedBean().setSmMofCert(cert);
-					break;
-				}
-			}
-		}
-	}
-
-	// Helper method to sort by asc order
-	private void sortMofCertsByDate(List<SmMofCert> mofCerts) {
-		if (mofCerts.size() > 1) {
-			Collections.sort(mofCerts, new Comparator<SmMofCert>() {
-				@Override
-				public int compare(SmMofCert cert1, SmMofCert cert2) {
-					return cert1.getCreatedDate().compareTo(cert2.getCreatedDate());
-				}
-			});
-		}
-	}
-
-	// Helper method to filter certs
-	private List<SmMofCert> filterCerts(List<SmMofCert> mofCerts, final boolean isBumi) {
-		List<SmMofCert> filteredCerts = new ArrayList<>();
-		for (SmMofCert mofCert : mofCerts) {
-			if (mofCert.isBumiCert() == isBumi) {
-				filteredCerts.add(mofCert);
-			}
-		}
-		return filteredCerts;
-	}
-	// #36401 - End
 
 	/**
 	 * Initialized revision application company information step
@@ -1916,6 +1870,33 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
 	}
+	
+	// #37771 - Start
+	/**
+	 * Assign selected and latest association body
+	 * 
+	 * @param assocBean
+	 */
+	public void assignSelAssocBodyExclPersonnel(SmAssociationBody assocBean) {
+		getManagedBean().setSelectedAssocBody(assocBean);
+		if (getManagedBean().getLatestAppl() != null
+				&& getManagedBean().getLatestAppl().getSmAssociationBodies() != null) {
+			List<SmAssociationBody> copiedList = new ArrayList<>(getManagedBean().getLatestAppl()
+					.getSmAssociationBodies());
+			Iterator<SmAssociationBody> iterator = copiedList.iterator();
+			while (iterator.hasNext()) {
+				SmAssociationBody associationBody = iterator.next();
+				if (associationBody.getSmPersonnel() != null) {
+					iterator.remove();
+				}
+			}
+			getManagedBean().setLatestProfBody(
+					(SmAssociationBody) EntityHelper.getEntityByMultiplePropertiesFromList(assocBean, copiedList, null,
+							new String[] { "pmCertBody" }, null));
+
+		}
+	}
+	// #37771 - End
 
 	/**
 	 * Redirect back to personnel section
@@ -2357,10 +2338,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//#32008 - start
 		getManagedBean().setSelectedStaffAcademic(aca);
 		if (getManagedBean().getLatestPersonnel() != null) {
+			//#37771 - Start
 			getManagedBean().setLatestStaffAcademic(
 				(SmStaffAcademic) EntityHelper.getEntityByMultiplePropertiesFromList(aca, 
 				getManagedBean().getLatestPersonnel().getSmStaffAcademics(), null,
-				new String[] { "pmEduField", "pmEduLevel" }, null));
+				new String[] { "pmEduField" }, null));
+			//#37771 - End
 		}
 		//#32008 - end
 		closeBlockUI();
@@ -3014,6 +2997,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		//#26238
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
+		// #34031
+		initSmRvHistory();
 		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
@@ -3319,8 +3304,16 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Redirect to Supplier Profile or Supplier History Page
 	 */
 	public void redirectToSupplierProfileOrHistoryPage() {
-		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
-				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
+		// #28895_35501 Start - AUDIT TRAIL SM
+		String isAudit;
+		if (this.getManagedBean().isAuditAccess()) {
+			isAudit = SmCommonUtil.md5("true");
+		} else {
+			isAudit = SmCommonUtil.md5("false");
+		}
+		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl() + "?supplierId=" + getManagedBean().getSupplierIdParam() + "&isAudit="
+				+ isAudit);
+		// #28895_35501 End
 	}
 
 	/**
@@ -4592,24 +4585,31 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @return
 	 */
 	public static List<DisciplinaryActionVO> getDisciplinaryActionVO(SmSupplier currSupp) {
-		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
-		return getDisciplinaryActionVOList(resultList, currSupp.getSupplierId());
+		List<DisciplinaryActionVO> voList = new ArrayList<>();
+		if(currSupp != null) {
+			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(currSupp);
+			voList = getDisciplinaryActionVOList(resultList, currSupp);
+		}
+		return voList;
 	}
 	
-	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, Long supplierId){
+	private static List<DisciplinaryActionVO> getDisciplinaryActionVOList(List<SmDisciplinaryAction> daList, SmSupplier currSupp){
 		List<DisciplinaryActionVO> voList = new ArrayList<>();
+		Long supplierId = currSupp.getSupplierId();
 		if (EntityHelper.isCollectionEmpty(daList) || supplierId == null){
 			return voList;
 		}
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		reqDTO.setRecordStatus(null);
-		PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO()
-				.retrievePersonnelBySupplierIdAndRecordStatus(reqDTO);
 		
 		boolean isMOF = false;
-		if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())){
-			String suppType = resDTO.getSmPersonnelList().get(0).getSmAppl().getSupplierType();
+		SupplierSearchReqDTO searchReqDTO = new SupplierSearchReqDTO();
+		searchReqDTO.setSupplierId(currSupp.getSupplierId());
+		SmAppl smAppl = SmServiceLookup.getSupplierSearchSO().retriveLatestApplBySupplierId(searchReqDTO).getSmAppl();
+		
+		if (smAppl != null) {
+			String suppType = smAppl.getSupplierType();
 			isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
 					|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
 		}
@@ -4638,9 +4638,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			// 28281 (bumi cat code) start
 			retVal.setCategoryCodeList(getCategoryCodeListDA(da));
-			if (!EntityHelper.isCollectionEmpty(resDTO.getSmPersonnelList())){
-				retVal.setBlacklistownerDirectorList(getBlacklistOwners(da, resDTO.getSmPersonnelList()));
-			}
+			retVal.setBlacklistownerDirectorList(getPersonnelBlacklist(da.getDisciplinaryActionId()));
 			retVal.setMofNoExist(isMOF);
 			voList.add(retVal);
 		}
@@ -5010,7 +5008,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public static List<DisciplinaryActionVO> getActiveDisciplinaryActionVO(SmSupplier currSupp) {
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(currSupp);
-		return getDisciplinaryActionVOList(resultList, currSupp.getSupplierId());
+		List<DisciplinaryActionVO> voList =  getDisciplinaryActionVOList(resultList, currSupp);
+		return voList;
 	}
 	//31033 end
 	
@@ -5032,31 +5031,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		// 28198: Disciplinary Action - end - 26238
 		return remList;
 	}
-	
-	private static List<BlacklistOwnerDirectorVO> getBlacklistOwners(SmDisciplinaryAction da, List<SmPersonnel> personnels){
-		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
-		if (!da.isSuspendRegistration() && !da.isCancelRegistration() && !da.isBlacklistOwner()){
-			return blacklist;
-		}
-		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-		for (SmPersonnel per : personnels){
-			if (!per.isDirector() && !per.isEquityOwner()) {
-				continue;
-			}
-			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			// 26238 - Disciplonary action - 28146 - start
-			reqDTO.setDirectorIdNo(per.getIdentificationNo());
-			
-			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
-			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
-				blacklistOwner.setIcNo(per.getIdentificationNo());
-				blacklist.add(blacklistOwner);
-			}
-		}
-		return blacklist;
-	}
-	//#26238 - end
 	
 	//3460 - Start
 		/**
@@ -5174,5 +5148,99 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				getManagedBean().getSuppProfileOrHistoryCategoryList(), catL3);
 	}
 	//29380 - Site Visit Grouping Enhancement -28775 - end
+	// #28895_35501 Start - AUDIT TRAIL SM
+	/**
+	 * Check if user have access to Audit Trail page
+	 */
+	public void checkAuditAccess() {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		if (PortalUtil.getCurrentURL(request).contains(SupplierManagementConst.SUPPLIER_APPL_SEARCH_URL)) {
+			FacesScopes facesScopes = new FacesScopes();
+			String[] roles = { RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_GENERAL.value(), RoleCode.AUDITOR_INTERNAL.value(),
+					RoleCode.EP_ADMIN.value(), RoleCode.UPS_APPROVER.value() };
+			for (String role : roles) {
+				if (facesScopes.hasRoleUser(role)) {
+					this.getManagedBean().setAuditAccess(true);
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * initialize Audit Trail data selected application
+	 */
+	public void initAuditTab() {
+		SmAppl suppAppl = getManagedBean().getSmAppl();
+		AuditSupplierManagementViewBackingBean auSmView = new AuditSupplierManagementViewBackingBean();
+		auSmView.initAuditTab(suppAppl);
+	}
+	// #28895_35501 End
+	// #34031 Start
+	/**
+	 * Initialize revisit history list
+	 */
+	public void initSmRvHistory() {
+		try {
+			SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
+			if (this.getManagedBean().isSupplierUser()) {
+				reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
+			} else if (null != getSupplierIdParam()) {
+				reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
+			} else {
+				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+			}
+			ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
+			List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
+			if (revisitList.isEmpty()) {
+				this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
+			} else {
+				setCurrentRevisit(revisitList);
+				this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
+			}
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+		}
+	}
+
+	private void setCurrentRevisit(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			if (revisit.isCurrent()) {
+				this.getManagedBean().setCurrentSmRevisit(revisit);
+				break;
+			}
+		}
+	}
+
+	private List<SmRevisit> updateSmRvCreatedUserName(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
+			revisit.setActionedBy(user.getUserName());
+		}
+		return revisitList;
+	}
+
+	/**
+	 * Displays the revisit history dialog
+	 */
+	public void onClickRevisitHistoryList() {
+		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
+	}
+
+	/**
+	 * Downloads the revisit history report.
+	 */
+	public void downloadRevisitHistory() {
+		try {
+			Map<String, String> paramMap = new HashMap<>();
+			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
+			generateReport("reportName", paramMap);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	// #34031 End
 	
 }

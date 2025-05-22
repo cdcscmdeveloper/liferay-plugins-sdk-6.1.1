@@ -60,7 +60,6 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
-import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -116,7 +115,6 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -160,6 +158,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -190,6 +189,7 @@ import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLSupplierItemVO;
 
@@ -536,9 +536,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 			getManagedBean().setEspkb(true);
 		}
-		//29555 start
-		getPreparedByName();
-	    //29555 end
+		getPreparedByName(); //29555
 	}
 
 	/**
@@ -1496,6 +1494,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			
 			log.info("end - PID validity process");
 			checkDisciplinaryAction(); //26279
+			checkSupplierDeleteBranch(); //29728
 		}
 		log.info("start - initializePRBeans");
 		initializePRBeans();
@@ -1548,25 +1547,15 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (isDisciplinaryActionPRPendingStatus()) {
+		if (isPRPendingStatus()) {
 			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
-			// 29728 - start
-			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
-					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
-							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
-				getManagedBean().setBranchNeedToBeChanged(true);
-
-				getManagedBean().setBranchCode(
-						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
-			}
-			// 29728 - end
 		}
 	}
 
@@ -1576,7 +1565,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return true if the PR's status is one of the pending statuses,
 	 *         false for otherwise statuses
 	 */
-	private boolean isDisciplinaryActionPRPendingStatus() {
+	private boolean isPRPendingStatus() {
 		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
 		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
 				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
@@ -1584,29 +1573,30 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
 		return pendingStatusIds.contains(statusId);
 	}
-
+	// 26279 - End
+	
+	// 29728 - start
 	/**
-	 * Sets the disciplinary action message
+	 * Checks if the supplier's branch is deleted and needs to be changed.
 	 * 
-	 * @param smDisciplinaryAction
+	 * If the branch is marked for deletion and is currently in a pending
+	 * status, this method sets the branch as needing a change and updates the
+	 * branch code.
 	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
+	private void checkSupplierDeleteBranch() {
+		if (isPRPendingStatus()) {
+			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
+					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
+							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
+				getManagedBean().setBranchNeedToBeChanged(true);
+
+				getManagedBean().setBranchCode(
+						getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode());
+			}
 		}
 	}
-	// 26279 - End
-
+	// 29728 - End
+	
 	/**
 	 * Calculate sub total based on quantity
 	 *
@@ -1649,6 +1639,11 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 					getManagedBean().getApproverIdList().clear();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
 						getManagedBean().getApproverIdList().add(groupUser.getPmUser().getUserId());
+					}
+					if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null || getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+						PmUserGroup pmUserGroup = new PmUserGroup();
+						getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
+						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 					}
 					
 				}
@@ -1746,25 +1741,32 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * set preparedby for managedbean by retrieving requistioner and docid
 	 */
 	public void getPreparedByName() {
-		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		FlActor actor = null;
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		FlActor actor;
 
-		actor = fulfilmentSO.retrieveFlActors(
-				getManagedBean().getFulfilmentRequest().getDocType(),
-				getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
-				FulfilmentConst.Requistioner_Role_Code);
+		if (getManagedBean().getFulfilmentRequest() != null
+				&& getManagedBean().getFulfilmentRequest().getDocType() != null
+				&& getManagedBean().getFulfilmentRequest().getFulfilmentReqId() != null) {
+			actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(),
+					getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
+					FulfilmentConst.ROLE_CODE_REQUISITIONER);
 
-		if(actor != null){
-			getManagedBean().setPreparedBy(actor.getUserName());
-		}else{
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-			if(userResDTO.getPmUser().getUserName() != null){
-				getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+			if (actor != null) {
+				getManagedBean().setPreparedBy(actor.getUserName());
+				return;
 			}
 		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getUserIdSessionFromLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+		if (userResDTO.getPmUser().getUserName() != null) {
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+		}
+
 	}
 	//29555 end
 	
@@ -2717,6 +2719,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	public void getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
+		initializeApproverGroup();
 		initializeDelAddr();
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
@@ -2899,10 +2902,13 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//28718 - start
 		getManagedBean().setTriggerPRErrorMsg(Boolean.FALSE);
 		//28718 - end
-		
+		if(selectedTabIndex==0){
+			initializeApproverGroup();
+		}
 		if(selectedTabIndex==1){
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
+			initializeApproverGroup();
 		}
 		if(selectedTabIndex==2){
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null) { 
@@ -3987,16 +3993,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 				}
 			}
 		}
-		//36560-Start
-		Map<String, BigDecimal> extensionCodeCache = new HashMap<>();
-		double thresoldAmt;
-
-		FlItemSummaryReqDTO paidPaReq = new FlItemSummaryReqDTO();
-		List<Long> flFulfilmentRequestList;
-		paidPaReq.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
-		paidPaReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
-		flFulfilmentRequestList = itemSummSO.retrievePaidFlFulfilmentRequest(paidPaReq);
-		// 36560-end
+		double thresoldAmt = 0;
 		for(Map.Entry<Long, BigDecimal> map : itemAmtMap.entrySet() ){
 			FlItemSummaryReqDTO summReq = new FlItemSummaryReqDTO();
 			summReq.setFlRequestId(getManagedBean().getFulfilmentRequest().getFulfilmentReqId());
@@ -4004,20 +4001,9 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 			summReq.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
 			summReq.setYear(getManagedBean().getFulfilmentRequest().getFinancialYear());
 			summReq.setItemId(requestItemMap.get(map.getKey()).getCmItem().getItemId());
-			
-			// 36560-Start
-			String extensionCode = requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8);
-			summReq.setExtensionCode(extensionCode);
-
-			BigDecimal sumAmt;
-
-			if (extensionCodeCache.containsKey(extensionCode)) {
-				sumAmt = extensionCodeCache.get(extensionCode);
-			} else {
-				sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq, flFulfilmentRequestList);
-				extensionCodeCache.put(extensionCode, sumAmt);
-			}
-			// 36560-End
+			summReq.setExtensionCode(requestItemMap.get(map.getKey()).getCmItem().getExtensionCode().substring(0, 8));
+			//BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYear(summReq);
+			BigDecimal sumAmt = itemSummSO.retrievePerItemPerPtjPerYearByExtensionCode(summReq);
 			
 			sumAmt = map.getValue().add(sumAmt);
 			if(sumAmt != null){
@@ -5046,20 +5032,18 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 	//26279 - end
 	//24893 - start
@@ -5255,18 +5239,19 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 		//#21416 end
 		
 		//29728  - start
-		private void resetSupplierInfo(){
-			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+		private void resetSupplierInfo() {
+			log.info("******* ENTER resetSupplierInfo METHOD ***********");
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
-			SmSupplier supplier = resDTO.getSmSupplier();
-			
+			reqDTO.setApplId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSmAppl().getApplId());
+			List<SmCompanyBasic> compBasicList = SmServiceLookup.getMofRegistrationSO()
+					.retrieveSmCompanyBasicByApplId(reqDTO).getCompanyBasicList();
+	
 			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
-			supplierDtl.setSupplierName(supplier.getCompanyName());		
+			supplierDtl.setSupplierName(getManagedBean().getFulfilmentRequest().getSmSupplier().getCompanyName());
 			supplierDtl.setBranchCode(null);
 			supplierDtl.setBranchName(null);
-			updateSupplierHqAddress(supplierDtl,supplier);
+			updateSupplierHqAddress(supplierDtl, getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId(),
+					compBasicList);
 		}
 		//29728 -end
 		

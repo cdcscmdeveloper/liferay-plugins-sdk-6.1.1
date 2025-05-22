@@ -17,13 +17,17 @@
 					</p:blockUI> 
 					   <ui:remove> #25077 Start </ui:remove> 
 						  <c:if test="#{qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}">
+						  		<ui:remove>#10141 Start Vinod Added warn and escape</ui:remove>
 	                            <p:messages id="specmessages" showDetail="true" autoUpdate="true"
-							     closable="true" showSummary="false" severity="info"/>
+							     closable="true" showSummary="false" severity="info, warn" escape="false"/>
+							     <ui:remove>#10141 End Vinod</ui:remove>
 	                      </c:if>
 	                      <c:if test="#{!qTDetailBB.managedBean.showPopUpBPKApprovalNeeded}">
 	                   <ui:remove> #25077 End </ui:remove> 
+	                   			<ui:remove>#10141 Start Vinod Added warn and escape</ui:remove>
 							    <p:messages id="specmessages" showDetail="true" autoUpdate="true"
-								 closable="true" showSummary="false" severity="error, info" />
+								 closable="true" showSummary="false" severity="error, info, warn" escape="false"/>
+								 <ui:remove>#10141 End Vinod</ui:remove>
 					   <ui:remove> #25077 Start </ui:remove> 
 						   </c:if> 
 					   <ui:remove> #25077 End </ui:remove>                   

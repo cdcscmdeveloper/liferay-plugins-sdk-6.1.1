@@ -31,11 +31,6 @@ public class SLALogConstant {
 	public static final String QT_SLA_DOT_SEPARATOR = ".";
 	//12471 - end
 
-	//#29187 Start Vinod
-	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
-	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
-	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
-	//#29187 End Vinod
 	public static final String QT_BASEBACKINGBEAN = "BaseBackingBean";
 	
 	// 25037 - start
@@ -63,7 +58,24 @@ public class SLALogConstant {
 	public static final String QT_CHECK_SPEC_COMPLIANCE = "checkTechnicalSpecCompliance";
 	public static final String QT_GET_MANDATORY_SPEC_DROPDOWN_VALUES = "getMandatorySpecDropdownValues";
 	public static final String QT_GET_MANDATORY_SPEC_AND_COMPLIANCE_DROPDOWN_VALUES = "getMandatorySpecAndComplianceDropdownValues";
+	public static final String QT_EVALUATION_BACKINGBEAN = "EvaluationBackingBean";
+	public static final String QT_SPECIFICATION_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_TEMPLATESPEC_BACKINGBEAN = "TemplateSpecBackingBean";
 	//#29187 End Vinod
+	//#10141 Start Vinod
+	public static final String QT_INITIATE_INACTIVE_CHECKLIST_PROCESS_FOR_DOC = "initiateInactiveChecklistProcessForDoc";
+	public static final String QT_SPEC_PRE_RENDER_VIEW = "preRenderView";
+	public static final String QT_DOWNLOAD_SCORE_REPORT = "downloadScoreReport";
+	public static final String QT_DOWNLOAD_REPORT_SPEC_PREPARE = "downloadReportSpecPrepare";
+	public static final String QT_PREVIEW_FILE = "previewFile";
+	public static final String QT_PREVIEW_FILE_BY_INPUT_STREAM = "previewFileByInputStream";
+	public static final String QT_DOWNLOAD_TECHNICAL_CHECKLIST_PRIVIEW = "downloadTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_FINANCIAL_CHECKLIST_PRIVIEW = "downloadFinancialChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_TECHNICAL_CHECKLIST_PRIVIEW = "downloadSelectedTechnicalChecklistPreview";
+	public static final String QT_DOWNLOAD_SELECTED_FINANCIAL_CHECKLIST_PRIVIEW = "downloadSelectedFinancialChecklistPreview";
+	public static final String QT_SPEC_SCORE_PREVIEW_BACKINGBEAN = "SpecificationBackingBean";
+	public static final String QT_GET_SCORE_REPORT = "getScoreReport";
+	//#10141 End Vinod
 	//#29468 Start Vinod
 	public static final String QT_CREATE_TEMPLATE_SPEC_PAGING_DATA_MODEL = "CreateTemplateSpecPagingDataModel";
 	public static final String QT_GET_CATEGORYCODES_FOR_CLONE = "getCategoryCodesForClone";

@@ -12,6 +12,19 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
 		</p:blockUI>
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{!suppFinalizationBackingBean.checkProposalValidityDateReach(
+		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate) and suppFinalizationBackingBean.managedBean.allSupplierDisagreeEPV}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{suppFinalizationBackingBean.getNoSupplierWarningMessage()}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
 
 		<ui:param name="isQTStatusReFinalized"
 			value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />

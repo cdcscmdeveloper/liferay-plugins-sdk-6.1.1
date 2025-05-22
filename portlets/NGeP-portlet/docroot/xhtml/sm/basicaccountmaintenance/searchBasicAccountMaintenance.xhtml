@@ -300,7 +300,8 @@
 						<td>
 							<p:spacer width="5" />
 							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.suspendRegistration}" 
-								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+								or supplierDataMaintenanceBackingBean.managedBean.suspendRegistrationExist}" style="float:left">
 					            <p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -313,7 +314,8 @@
 						<td>
 							<p:spacer width="5" />
 							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.cancelRegistration}" 
-								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+								or supplierDataMaintenanceBackingBean.managedBean.cancelRegistrationExist}" style="float:left">
 					            <p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
@@ -323,7 +325,8 @@
 						<td>	
 							<p:spacer width="5" />
 							<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirector}" 
-								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}" style="float:left">
+								disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
+								or supplierDataMaintenanceBackingBean.managedBean.blacklistOwnerOrDirectorExist}" style="float:left">
 					            <p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{supplierDataMaintenanceBackingBean.onTickPunishmentType()}"
 									update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
