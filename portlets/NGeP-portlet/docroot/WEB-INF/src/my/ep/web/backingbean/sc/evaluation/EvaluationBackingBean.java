@@ -10630,8 +10630,15 @@ private void retriveCommitteeRemarksList(){
 					// #29187 Start Vinod
 					TplSpecQuestion question = tplSpecAnswer
 							.getTplSpecQuestion();
+					String questionType = question.getQuestionType();
 					boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
-					boolean isUserScore = question.getScoreTypeCode() != null
+					boolean isTechSpec = QTConstants.TECHNICAL_EVALUATION
+							.equalsIgnoreCase(getManagedBean()
+									.getCheckListType())
+							&& questionType
+									.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
+					boolean isUserScore = isTechSpec
+							&& question.getScoreTypeCode() != null
 							&& ParameterConst.SCORE_TYPE_USER.equals(question
 									.getScoreTypeCode().getParameterCode())
 							&& tplSpecAnswer.getUserScore() == null;
@@ -10645,12 +10652,9 @@ private void retriveCommitteeRemarksList(){
 												new FacesScopes()
 														.getUserLocale()) });
 					}
-					String questionType = question.getQuestionType();
 					boolean isMandatorySpec = tplSpecAnswer
 							.getTplSpecQuestion().isMandatorySpec();
-					boolean isComplianceNull = questionType
-							.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-							&& isMandatorySpec
+					boolean isComplianceNull = isTechSpec && isMandatorySpec
 							&& tplSpecAnswer.getCompliance() == null;
 					if (isComplianceNull && !isNotOffered) {
 						throw new EpException(
