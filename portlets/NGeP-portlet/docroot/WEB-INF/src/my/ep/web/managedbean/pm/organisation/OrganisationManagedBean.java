@@ -149,6 +149,14 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private String selectedAddrDistrictName;
 	private Long selectedAddrCityId;
 	private String selectedAddrCityName;
+	
+	/************ AUDIT START #28895-35509 *************/
+	private PmOrgProfile auditOldPMOrgProfile;
+	private PmAddress auditBillingAddress;
+	private PmContact auditContactPerson;
+	private List<PmAddressType> oldReceivingAddressList = new ArrayList<>();
+	private Long newProfileId;
+	/************ AUDIT END #28895-35509 *************/
 
 	public OrganisationManagedBean() {
 
@@ -1248,7 +1256,47 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setStatus(Long status) {
 		this.status = status;
 	}
+	
+	/************ AUDIT START #28895-35509 *************/
+	public PmOrgProfile getAuditOldPMOrgProfile() {
+		return auditOldPMOrgProfile;
+	}
 
+	public void setAuditOldPMOrgProfile(PmOrgProfile auditOldPMOrgProfile) {
+		this.auditOldPMOrgProfile = auditOldPMOrgProfile;
+	}
 	
-	
+	public PmAddress getAuditBillingAddress() {
+		return auditBillingAddress;
+	}
+
+	public void setAuditBillingAddress(PmAddress auditBillingAddress) {
+		this.auditBillingAddress = auditBillingAddress;
+	}
+
+	public PmContact getAuditContactPerson() {
+		return auditContactPerson;
+	}
+
+	public void setAuditContactPerson(PmContact auditContactPerson) {
+		this.auditContactPerson = auditContactPerson;
+	}
+
+	public List<PmAddressType> getOldReceivingAddressList() {
+		return oldReceivingAddressList;
+	}
+
+	public void setOldReceivingAddressList(List<PmAddressType> oldReceivingAddressList) {
+		this.oldReceivingAddressList = oldReceivingAddressList;
+	}
+	/************ AUDIT END #28895-35509 *************/
+
+	public Long getNewProfileId() {
+		return newProfileId;
+	}
+
+	public void setNewProfileId(Long newProfileId) {
+		this.newProfileId = newProfileId;
+	}
+
 }

@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	String feeExemptionComodity;
 	String feeExemptionContract;
 	BigInteger itemName;
+	String pattern = "dd/MM/yyyy";
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
 	/**
 	 * @param managedBeans
@@ -209,15 +212,16 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 	}
 
 	private void getExpDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal, int pmfeeMainInt) {
-		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, pmfeeMainInt == 0 ? null
-				: pmfeeMain.getExpDate().toString(), updateVal.getExpDate() != null ? updateVal.getExpDate().toString() : null,
+		spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID, 
+				pmfeeMainInt == 0 ? null : simpleDateFormat.format(pmfeeMain.getExpDate()), 
+						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null,
 				AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
 	private void getEffDate(PmFeeExemption pmfeeMain, PmFeeExemption updateVal) {
 		if (updateVal.getEffDate() != null && !pmfeeMain.getEffDate().equals(updateVal.getEffDate())) {
-			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, pmfeeMain
-					.getEffDate().toString(), updateVal.getEffDate().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			spFeeAddUpdateDeleteAuditDetail(pmfeeMain, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
+					simpleDateFormat.format(pmfeeMain.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
@@ -320,18 +324,18 @@ public class AuditPMSysParamTransFeeExemptBackingBean {
 
 	private String getEffectiveDate(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		if (newCreatedItem != null && newCreatedItem.getEffDate() != null) {
-			return newCreatedItem.getEffDate().toString();
+			return simpleDateFormat.format(newCreatedItem.getEffDate());
 		} else if (deletedItem != null && deletedItem.getEffDate() != null) {
-			return deletedItem.getEffDate().toString();
+			return simpleDateFormat.format(deletedItem.getEffDate());
 		}
 		return null;
 	}
 
 	private String getExpiryDate(PmFeeExemption newCreatedItem, PmFeeExemption deletedItem) {
 		if (newCreatedItem != null && newCreatedItem.getExpDate() != null) {
-			return newCreatedItem.getExpDate().toString();
+			return simpleDateFormat.format(newCreatedItem.getExpDate());
 		} else if (deletedItem != null && deletedItem.getExpDate() != null) {
-			return deletedItem.getExpDate().toString();
+			return simpleDateFormat.format(deletedItem.getExpDate());
 		}
 		return null;
 	}

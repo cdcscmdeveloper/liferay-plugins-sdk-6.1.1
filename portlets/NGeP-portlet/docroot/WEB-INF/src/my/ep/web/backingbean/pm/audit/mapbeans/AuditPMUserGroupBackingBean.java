@@ -37,6 +37,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 	String grpStatusOld;
 	String grpStatusUpdate;
 	String actionType;
+	BigInteger grpOrgProfileId;
 
 	@Override
 	public String getRoleCode() {
@@ -58,6 +59,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		this.docNo = userGroup.getGroupCode();
 		this.docType = userGroup.getGroupName();
 		this.groupRole = userGroup.getRoleCode(); // FL_APPROVER,RN_APPROVER
+		this.grpOrgProfileId = BigInteger.valueOf(userGroup.getPmOrgProfile().getOrgProfileId());
 
 		/* update UserGroupUsers List */
 		HashMap<Long, Integer> hMap = managedBeans.getHmGroupUserFlagStatDb();
@@ -144,8 +146,13 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(this.docType);
-		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_OUSRG_PMPARAMETERLVLID);
+		if (this.groupRole != null && this.groupRole.equalsIgnoreCase("RN_APPROVER")) {
+			dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_OUSRG_PMPARAMETERLVLID_RNAPPR);
+		} else {
+			dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_OUSRG_PMPARAMETERLVLID_FULAPPR);
+		}
 		dtlObj.setDocNo(docNo);
+		dtlObj.setGroupOrgProfileId(this.grpOrgProfileId);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OUSRG);
 		dtlObj.setLvlCode3(this.groupRole.equals("FL_APPROVER") ? AuditConst.PM_LVL_CODE_3_OUSRG_FULAPPR
@@ -159,7 +166,6 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		} else {
 			dtlObj.setNewValue(newValue);
 		}
-
 		dtlObj.setActionType(this.actionType);
 		objList.add(dtlObj);
 	}

@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class AuditPMSysParamConstantRulesBackingBean {
 	String feeExemptionComodity;
 	String feeExemptionContract;
 	BigInteger itemName;
+	String pattern = "dd/MM/yyyy";
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
 	/**
 	 * @param managedBeans
@@ -148,14 +151,15 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 	private void getExpDate(PmConfigRuleValue ruleValueOld, PmConfigRuleValue updateVal, int ruleValueOldInt) {
 		spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAMETER_EXPDATE_FIELDLABELID,
-				ruleValueOldInt == 0 ? null : ruleValueOld.getExpDate().toString(), updateVal.getExpDate() != null ? updateVal
-						.getExpDate().toString() : null, AuditConst.PM_AUD_ACTION_TYPE_UPD);
+				ruleValueOldInt == 0 ? null : simpleDateFormat.format(ruleValueOld.getExpDate()), 
+						updateVal.getExpDate() != null ? simpleDateFormat.format(updateVal.getExpDate()) : null, AuditConst.PM_AUD_ACTION_TYPE_UPD);
 	}
 
 	private void getEffDate(PmConfigRuleValue ruleValueOld, PmConfigRuleValue updateVal) {
 		if (updateVal.getEffDate() != null && !ruleValueOld.getEffDate().equals(updateVal.getEffDate())) {
-			spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, ruleValueOld
-					.getEffDate().toString(), updateVal.getEffDate().toString(), AuditConst.PM_AUD_ACTION_TYPE_UPD);
+			spRuleValTypeAddUpdateDeleteAuditDetail(updateVal, AuditConst.PM_AUD_SYSPARAMETER_EFFDATE_FIELDLABELID, 
+					simpleDateFormat.format(ruleValueOld.getEffDate()), simpleDateFormat.format(updateVal.getEffDate()), 
+					AuditConst.PM_AUD_ACTION_TYPE_UPD);
 		}
 	}
 
@@ -352,18 +356,18 @@ public class AuditPMSysParamConstantRulesBackingBean {
 
 	private String getEffectiveDate(PmConfigRuleValue newCreatedItem, PmConfigRuleValue deletedItem) {
 		if (newCreatedItem != null && newCreatedItem.getEffDate() != null) {
-			return newCreatedItem.getEffDate().toString();
+			return simpleDateFormat.format(newCreatedItem.getEffDate());
 		} else if (deletedItem != null && deletedItem.getEffDate() != null) {
-			return deletedItem.getEffDate().toString();
+			return simpleDateFormat.format(deletedItem.getEffDate());
 		}
 		return null;
 	}
 
 	private String getExpiryDate(PmConfigRuleValue newCreatedItem, PmConfigRuleValue deletedItem) {
 		if (newCreatedItem != null && newCreatedItem.getExpDate() != null) {
-			return newCreatedItem.getExpDate().toString();
+			return simpleDateFormat.format(newCreatedItem.getExpDate());
 		} else if (deletedItem != null && deletedItem.getExpDate() != null) {
-			return deletedItem.getExpDate().toString();
+			return simpleDateFormat.format(deletedItem.getExpDate());
 		}
 		return null;
 	}

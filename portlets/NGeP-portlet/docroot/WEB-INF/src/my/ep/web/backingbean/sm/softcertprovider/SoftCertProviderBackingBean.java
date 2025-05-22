@@ -136,7 +136,7 @@ public class SoftCertProviderBackingBean extends BaseBackingBean<SoftCertProvide
 		}
 		
 	}
-	
+	/************ AUDIT START #28895-35509 *************/
 	/**
 	 * @param List<PmConfigRuleValue>
 	 * 
@@ -150,6 +150,7 @@ public class SoftCertProviderBackingBean extends BaseBackingBean<SoftCertProvide
 			}
 		}
 	}
+	/************ AUDIT END #28895-35509 *************/
 	
 	public void deleteSelectedRow(){
 		if(getManagedBean().getDeleteRuleValue() != null){

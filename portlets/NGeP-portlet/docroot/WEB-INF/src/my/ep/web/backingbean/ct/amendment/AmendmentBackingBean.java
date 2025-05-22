@@ -1615,6 +1615,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);				
 			}
 
+			// 24333 - Start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
+				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
+				if (ctloa.getGstAmt() == null) {
+					ctloa.setGstAmt(BigDecimal.ZERO);
+				}
+				if (ctloa.getSstAmt() == null) {
+					ctloa.setSstAmt(BigDecimal.ZERO);
+				}
+				ctBackingBean.getManagedBean().setOriginalOverallAmount(ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
+
+			}
+			// 24333 - Start
 			
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
@@ -1947,7 +1960,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						break;
 					}
 				}	     		
-			} else {
+			} else if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) { //Start Fix - #38210
+				String role;
+				for(CtCommitteeMember committeeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					committeeMember.setSignedOff(false);
+					if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+							|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { 
+						role = "FPB_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+					} else {
+						role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+					}
+					reqDTO.setUserRole(role);
+				} //End Fix - #38210
+			} else { 
 				reqDTO.setUserRole(getUserRole());
 			}
 			reqDTO.setTaskName(getManagedBean().getTaskName());
@@ -7932,8 +7958,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						.getLanguage() : sUsers.getPreferredLanguage();
 				reqDTO.setLanguage(language);
 
-				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier() != null) {
-					reqDTO.setSupplier(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier());
+				SmSupplier currentSupplier = getSupplier(); // #34097
+				if (currentSupplier != null) {
+					reqDTO.setSupplier(currentSupplier);
 				}
 
 				SupplierDataMaintenanceResDTO resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
@@ -7956,7 +7983,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * or “Cancellation of Manufacturer Status”, this Amendment With Supplemental process not able to proceed
 	**/
 	private void retrieveDA() { // #32712
-		SmSupplier currentSupplier = SmApplicationUtil.getCurrentSupplier();
+		SmSupplier currentSupplier = getSupplier(); // #34097
 		if (currentSupplier == null) {
 			return;
 		}
@@ -7964,8 +7991,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		this.getManagedBean().setDisciplinaryAction(false);
 		// #28527 start
 		List<SmDisciplinaryAction> resultList = SmApplicationUtil
-				.retrieveActiveSmDisciplinaryActionBySupplier(ctBackingBean.getManagedBean().getContractVer()
-						.getCtContract().getSmSupplier());
+				.retrieveActiveSmDisciplinaryActionBySupplier(currentSupplier); // #34097
 		// 28527 end
 
 		if (CollectionUtils.isNotEmpty(resultList)) {
