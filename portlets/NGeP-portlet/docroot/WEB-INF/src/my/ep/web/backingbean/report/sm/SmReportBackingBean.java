@@ -355,13 +355,6 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
-		
-		//#38227 - START
-		if(SmReportConst.SM_LIST_OF_APPLICATION_RPT_VAL.equals(getManagedBean().getReportCode())){
-			ListOfApplicationRptBackingBean listOfApplRpt = new ListOfApplicationRptBackingBean();
-			listOfApplRpt.resetSearch();
-		}
-		//#38227 - END
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
