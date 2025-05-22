@@ -3,7 +3,7 @@
 	<table width='100%'>
 		<tr align='center' style="background-color: #3366ff;">
 	        <td>
-	            <font style='color:#ffffff;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.checklist')</font>
+	            <font style='color:#ffffff;font-weight: bold;'>$templateType - $smVmUtil.getDescByLabel('lbl.sm.sv.templ.checklist')</font>
 	        </td>
     	</tr>
     	<tr><td><br /></td></tr>

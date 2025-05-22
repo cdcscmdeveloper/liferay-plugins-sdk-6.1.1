@@ -686,6 +686,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	//Bug #33178
 	/*#29187 Start Vinod*/
 	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
+	private String actualIdToUpdate;
 	/*#29187 End Vinod*/
 	
 	//34528-uat 4serangkai 
@@ -4368,14 +4372,48 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.demoTechnicalCommitteeRemark = demoTechnicalCommitteeRemark;
 	}
 	//#28784 add remarks - end
-	/*#29187 Start Vinod*/
+	/* #29187 Start Vinod */
 	public TplSpecZoneDtl getTplSpecZoneDtl() {
 		return tplSpecZoneDtl;
 	}
+
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
-	/*#29187 End Vinod*/
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+
+	public String getActualIdToUpdate() {
+		return actualIdToUpdate;
+	}
+
+	public void setActualIdToUpdate(String actualIdToUpdate) {
+		this.actualIdToUpdate = actualIdToUpdate;
+	}
+	
+	/* #29187 End Vinod */
 	
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {

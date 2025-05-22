@@ -59,7 +59,8 @@
 		<tr>
 			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.floor']}" /></td>
 			<td>
-				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.floor']}<br />
+				<!-- #38047 -->
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.cement']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.tarFloor}" />#{lbl['lbl.sm.sitevist.premiseloc.tar']}<br />
 				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}">
 					<p:ajax event="change" update="otherFloorRemarkId" listener="#{svoSiteVisitBackingBean.preLocationFloorEnvOnChange}" />

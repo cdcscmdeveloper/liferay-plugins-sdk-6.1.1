@@ -283,6 +283,8 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
+	//#11104 -end-
 	
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
 	
@@ -306,7 +308,7 @@ public interface QTConstants {
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//#21692
-	
+
 	// #29007 Start Vinod
 	public static final String LAMPIRAN_A3_LBL = "lbl.sc.doc.name.lampiran.a3";
 	public static final String LAMPIRAN_A3_UPDATE = "Updated";
@@ -330,7 +332,10 @@ public interface QTConstants {
 	public static final String LAMPIRAN_A3_TEXT_YA = "Ya";
 	public static final String LAMPIRAN_A3_TEXT_TIDAK = "Tidak";
 	public static final String NEW_OFFERED_SPECIFICATION_ERROR_NEXTLINE = " <p></p> ";
+	public static final Long COMPOSITE_VALIDITY_ID_QT = 29007L;
+	public static final Long COMPOSITE_VALIDITY_ID_DP = 29006L;
 	// #29007 End Vinod
+
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";
 	public static final String LBL_TXT_YES = "lbl.txt.yes";
@@ -340,6 +345,8 @@ public interface QTConstants {
 	public static final String VIEW_UOM_QUANTITY_DETAILS = "viewUOMQuantityDetails.show()";
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
 	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
+	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
 	
 	public static final String TEC_PRESENTATION_DEMO_REMARK = "TDR";

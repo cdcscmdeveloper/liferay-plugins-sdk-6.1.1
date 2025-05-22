@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:cc="http://java.sun.com/jsf/composite">
+	
+	<cc:interface>
+		<cc:attribute name="dialogWidth" default="1100px" />
+		<cc:attribute name="dialogHeight" default="500" />
+		<cc:attribute name="voObject" required="true" />
+	</cc:interface>
+	<cc:implementation>
+	<p:dialog id="disciplinaryActionRequestNoteDlgId" 
+		header="#{lbl['lbl.sc.rn.da.popup.header']}" 
+		closable="true"
+		widgetVar="disciplinaryActionRequestNoteDlg" modal="true" width="#{cc.attrs.dialogWidth}" height="auto"
+		resizable="false" style="display: block; overflow: hidden;">	
+			
+		<h:outputText value="#{cc.attrs.voObject}" />
+	
+	</p:dialog>
+	</cc:implementation>
+</ui:composition>

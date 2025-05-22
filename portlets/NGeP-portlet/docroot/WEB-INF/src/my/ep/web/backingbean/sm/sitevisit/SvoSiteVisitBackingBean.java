@@ -2759,8 +2759,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		if(getManagedBean().getSupplierCategory() != null && getManagedBean().getSupplierCategory().getPmCategoryL3() != null){
 			reqDTO.setCategoryL3Id(getManagedBean().getSupplierCategory().getPmCategoryL3().getCategoryL3Id());
 		}
-		List<PmDocument> documentLs = SmServiceLookup.getDocumentSO().retrieveLicenseSupportDocByCategoryL3AndApplId(reqDTO).getDocumentList();
-		//getManagedBean().getSmSvTask()
+		List<PmDocument> documentLs = retrieveSmSvDocLicense(reqDTO);	//38046
+		
 		SmSvTask svTask = getManagedBean().getSmSvTask();
 		svTask.setSmSvDocLicenses(new ArrayList<SmSvDocLicense>());
 		
@@ -2783,6 +2783,28 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				}
 			}
 		}
+	}
+	
+	//#38046
+	private List<PmDocument> retrieveSmSvDocLicense(DocumentReqDTO reqDTO){
+		SmSvTask task = getManagedBean().getSmSvTask();
+		if(reqDTO.getCategoryL3Id() == null && task.getPmCategoryL3() != null){
+			reqDTO.setCategoryL3Id(task.getPmCategoryL3().getCategoryL3Id());
+		}
+		List<PmDocument> documentLs = SmServiceLookup.getDocumentSO().
+				retrieveLicenseSupportDocByCategoryL3AndApplId(reqDTO).getDocumentList();
+		if(task.getSmAppl().isSiteVisitGroup() && !EntityHelper.isCollectionEmpty(getManagedBean().getTemplates())){
+			List<PmDocument> docs;
+			for(SmSvTemplate template : getManagedBean().getTemplates()){
+				if (template.getSuppCategory() != null && template.getSuppCategory().getPmCategoryL3() != null){
+					reqDTO.setCategoryL3Id(template.getSuppCategory().getPmCategoryL3().getCategoryL3Id());
+					docs = SmServiceLookup.getDocumentSO().
+							retrieveLicenseSupportDocByCategoryL3AndApplId(reqDTO).getDocumentList();
+					documentLs.addAll(docs);
+				}
+			}
+		}
+		return documentLs;
 	}
 	
 	private Map<String, String> getAllPurchaseMethod(){

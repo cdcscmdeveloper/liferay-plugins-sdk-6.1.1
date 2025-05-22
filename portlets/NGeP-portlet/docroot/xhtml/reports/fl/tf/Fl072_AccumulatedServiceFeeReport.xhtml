@@ -1,0 +1,196 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="4"><h:outputText
+					value="#{tfRptBB.managedBean.reportUrl}" /><br /> <br /></td>
+		</tr>
+		<!--<tr>
+			<td>
+			<p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+			<td colspan="3">
+				<ac:lov id="lovAccountingOff"
+					lovId="PM_AG_OFFICE" size="100" update="@form"
+					readonly="true" headerText="#{lbl['lbl.fl.accounting.ofc']}"
+					value="#{tfRptBB.managedBean.agOff.offDesc}"
+					saveObject="tfRptBB.managedBean.agOff"
+					label="#{lbl['lbl.fl.accounting.ofc']}"
+					conditionField="" /></td>
+		</tr>-->
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
+			<td colspan="3"><h:panelGroup styleClass="gosodoLov"
+					id="gosodoLov">
+					<p:inputText size="100" id="itSelectedAgOff"
+						value="#{tfRptBB.managedBean.pmAccountingOffice.officeName}"
+						readonly="true" />
+					&#160;	
+					<p:commandLink id="gosodo" partialSubmit="true" process="@this"
+						readonly="true" action="#{tfRptBB.resetOfficeSearchBean}"
+						oncomplete="accountCode.show();" update="@form">
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
+				</h:panelGroup></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel
+					value="#{lbl['lbl.pm.report.transation.date.from']}" /></td>
+			<td><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{tfRptBB.managedBean.transactionFromDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form" /></td>
+			<td><p:outputLabel
+					value="#{lbl['lbl.pm.report.transation.date.to']}" /></td>
+			<td><p:calendar showOn="button" navigator="true"
+					display="inline" readonlyInput="true"
+					value="#{tfRptBB.managedBean.transactionToDate}" size="9"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+					partialSubmit="true" process="@form">
+				</p:calendar></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.fl.yep.search.doc.type']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
+			<td><p:selectOneMenu value="#{tfRptBB.managedBean.documentType}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.pm.report.pdf']}"
+						itemValue="PDF"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.pm.report.excel']}"
+						itemValue="Excel"></f:selectItem>
+				</p:selectOneMenu></td>
+		</tr>
+	</table>
+	<div style="text-align: right;">
+		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
+			process="@form" onstart="blockWidget.show()"
+			oncomplete="blockWidget.hide()" update="@form"
+			action="#{tfRptBB.generateReport()}">
+			<f:setPropertyActionListener
+				target="#{tfRptBB.managedBean.reportCode}"
+				value="#{flReportBB.managedBean.reportCode}" />
+		</p:commandButton>
+		<p:commandButton id="resetBtnId" value="#{lbl['lbl.btn.reset']}"
+			process="@this" update="@form" action="#{tfRptBB.resetAction()}">
+		</p:commandButton>
+	</div>
+	<p:dialog id="confirmationId" widgetVar="confirmationId" modal="true"
+		width="500px" resizable="false" styleClass="pop_up_top">
+		<h:outputText escape="false" style="float:left;margin-left:5px;"
+			value="#{tfRptBB.managedBean.popUpMsg}">
+		</h:outputText>
+		<br />
+		<div style="float: right;">
+			<table style="width: 100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.rpt.btn.generate']}"
+							onclick="confirmationId.hide();" /> <p:commandButton
+							value="#{lbl['lbl.rpt.btn.viewreport']}"
+							action="#{tfRptBB.redirect()}">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</div>
+	</p:dialog>
+	<p:dialog id="accountCode"
+		header="#{lbl['lbl.fl.charge.asset.gosodo']}" widgetVar="accountCode"
+		showEffect="fade" hideEffect="fade" modal="true" width="700"
+		position="top" resizable="false">
+		<p:panel id="accountingPanel"
+			header="#{lbl['lbl.pm.accounting.search.location']}"
+			toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td width="5%"><p:outputLabel
+							value="#{lbl['lbl.fl.report.all.accounting']}"></p:outputLabel></td>
+					<td width="15%"><h:selectOneRadio
+							value="#{tfRptBB.managedBean.isAllAgOff}">
+							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+							<p:ajax event="change" process="@this"
+								listener="#{tfRptBB.allAgOffChecked}"
+								update=":form:selectOffDropdown , :form:inputOfficeName , :form:slbtn"
+								partialSubmit="true" />
+						</h:selectOneRadio>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.report.trans.tooltip']}" /></td>
+				</tr>
+				<tr>
+					<td width="20%"><p:selectOneMenu
+							value="#{tfRptBB.managedBean.offDropdown}" id="selectOffDropdown"
+							disabled="#{tfRptBB.managedBean.isAllAgOff eq 'true'}"
+							style="width:185px">
+							<f:selectItem itemLabel="#{lbl['lbl.pm.accounting.office.code']}"
+								itemValue="officeCode" />
+							<f:selectItem itemLabel="#{lbl['lbl.fl.report.account.name']}"
+								itemValue="officeName" />
+						</p:selectOneMenu></td>
+					<td width="70%" colspan="2"><p:inputText id="inputOfficeName"
+							value="#{tfRptBB.managedBean.inputAgOff}"
+							disabled="#{tfRptBB.managedBean.isAllAgOff eq 'true'}" size="70"
+							onkeypress="if (event.keyCode == 13) { accCodeSearch.jq.click(); return false; }" /></td>
+				</tr>
+				<tr>
+					<td colspan="3" width="100%">
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.search']}"
+								action="#{tfRptBB.searchAccountingOffice}"
+								update=":form:accountingOfficeResult" widgetVar="accCodeSearch"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+							&#160;
+							<p:commandButton value="#{lbl['lbl.btn.reset']}"
+								action="#{tfRptBB.resetOfficeSearchBean}" process="@this"
+								update=":form:accountingPanel, :form:accountingOfficeResult"
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+						</div>
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel id="accountingOfficeResult"
+			header="#{lbl['lbl.pm.accounting.search.result']}" toggleable="true">
+			<p:dataTable id="accountingSR"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				selection="#{tfRptBB.agOffice}" selectionMode="single"
+				value="#{tfRptBB.searchAccountingOffice}" rows="10"
+				var="accountingList" rowIndexVar="index" lazy="true">
+				<p:ajax event="rowSelect" update="@([id$=slbtn])" />
+				<p:ajax event="rowUnselect" update="@([id$=slbtn])" />
+				<p:ajax event="toggleSelect" update="@this" process="@this"
+					partialSubmit="true" />
+				<ac:paginator for="accountingSR" />
+
+				<p:column headerText="#{lbl['lbl.pm.accounting.code']}"
+					style="width:15%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{accountingList.officeCode}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.fl.report.account.name']}"
+					style="width:60%;white-space: normal;word-wrap: break-word;">
+					<h:outputText value="#{accountingList.pmAgValidity.officeName}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton id="slbtn" value="#{lbl['lbl.btn.select']}"
+				partialSubmit="true" process="@this" update="gosodoLov"
+				styleClass="BtnSpacing" action="#{tfRptBB.selectedAgOff}"
+				disabled="#{tfRptBB.isSelectButtonDisable()}"
+				oncomplete="accountCode.hide();" />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				partialSubmit="true" process="@this" update="@this"
+				styleClass="BtnSpacing" oncomplete="accountCode.hide();">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+</ui:composition>
