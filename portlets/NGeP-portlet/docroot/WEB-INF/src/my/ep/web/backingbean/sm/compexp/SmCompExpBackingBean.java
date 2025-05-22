@@ -374,36 +374,26 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void onDeclare() {
-		// if (null == this.getManagedBean().getSelectedDraft().getAgencyName()
-		// ||
-		// this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
-		// throw new EpException(MessageConst.ERROR_775223);
-		// }
-		// if (null ==
-		// this.getManagedBean().getSelectedDraft().getFileReferenceNo()
-		// ||
-		// this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()
-		// || null ==
-		// this.getManagedBean().getSelectedDraft().getFileExtensionNo()
-		// ||
-		// this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty())
-		// {
-		// throw new EpException(MessageConst.ERROR_775224);
-		// }
-		// if (null ==
-		// this.getManagedBean().getSelectedDraft().getContractExpDate()) {
-		// throw new EpException(MessageConst.ERROR_775225);
-		// }
-		// if (null == this.getManagedBean().getCompExpDocList() ||
-		// this.getManagedBean().getCompExpDocList().isEmpty()) {
-		// throw new EpException(MessageConst.ERROR_775226);
-		// }
-		// for (SmCompExpCatDraft cat :
-		// this.getManagedBean().getCompExpCatCodeList()) {
-		// if (null == cat.getCategoryL3().getCategoryL3Id()) {
-		// throw new EpException(MessageConst.ERROR_775227);
-		// }
-		// }
+		if (null == this.getManagedBean().getSelectedDraft().getAgencyName() || this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_775223);
+		}
+		if (null == this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+				|| this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()
+				|| null == this.getManagedBean().getSelectedDraft().getFileExtensionNo()
+				|| this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_775224);
+		}
+		if (null == this.getManagedBean().getSelectedDraft().getContractExpDate()) {
+			throw new EpException(MessageConst.ERROR_775225);
+		}
+		if (null == this.getManagedBean().getCompExpDocList() || this.getManagedBean().getCompExpDocList().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_775226);
+		}
+		for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
+				throw new EpException(MessageConst.ERROR_775227);
+			}
+		}
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
 		reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
