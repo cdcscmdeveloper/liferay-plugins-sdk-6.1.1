@@ -10253,6 +10253,9 @@ private void retriveCommitteeRemarksList(){
 			RequestContext.getCurrentInstance().update(
 					QTConstants.REQUESTCONTEXT_INSTANCE_UPDATE_ALL);
 			resetComplianceConfirmationFlag();
+			String actualButtonId = this.getManagedBean().getActualIdToUpdate();
+			// Trigger the hidden save button to update.
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
 			// #29187 End Vinod
 
 			successMessage(MessageConst.INFO_700004,
@@ -10781,6 +10784,9 @@ private void retriveCommitteeRemarksList(){
 			// #29187 Start moved update to backingbean for note #582 Vinod
 			RequestContext.getCurrentInstance().update(QTConstants.REQUESTCONTEXT_INSTANCE_UPDATE_ALL);
 			resetComplianceConfirmationFlag();
+			String actualButtonId = this.getManagedBean().getActualIdToUpdate();
+			// Trigger the hidden save button to update.
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
 			// #29187 End Vinod
 
 			successMessage(MessageConst.INFO_700004,
