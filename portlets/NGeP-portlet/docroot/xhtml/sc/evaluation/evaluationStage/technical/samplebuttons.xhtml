@@ -19,12 +19,19 @@
 							immediate="true"
 							action="#{evaluationBackingBean.technicalBackaction}" /> <ui:fragment
 							rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}">
-							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod</ui:remove>
+							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod
+							Added hidden button to update data note #721</ui:remove>
+							<p:commandButton style="display:none;" id="hidSaveButton"
+								value="#{lbl['lbl.btn.save']}"
+								update="@all"
+								binding="#{hidButton}" />
 							<p:commandButton value="#{lbl['lbl.btn.save']}"
 								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 								style="float:right;" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
-								action="#{evaluationBackingBean.saveProposalScoreDtls}" />
+								action="#{evaluationBackingBean.saveProposalScoreDtls}" >
+								<f:setPropertyActionListener target="#{evaluationBackingBean.managedBean.actualIdToUpdate}" value="#{hidButton.clientId}"></f:setPropertyActionListener>
+							</p:commandButton>
 							<ui:remove>#29187 End Vinod</ui:remove>
 						</ui:fragment></td>
 				</tr>
