@@ -360,7 +360,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setAuditDeleteSuppTypeRestrictions(List<PmSupplierReason> auditDeleteSuppTypeRestrictions) {
 		this.auditDeleteSuppTypeRestrictions = auditDeleteSuppTypeRestrictions;
 	}
-	/************ AUDIT START #28895-35509 *************/
 
 	public List<PmPIDReason> getDeletePIDReasonList() {
 		return deletePIDReasonList;
@@ -369,5 +368,6 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	public void setDeletePIDReasonList(List<PmPIDReason> deletePIDReasonList) {
 		this.deletePIDReasonList = deletePIDReasonList;
 	}
+	/************ AUDIT START #28895-35509 *************/
 	
 }
