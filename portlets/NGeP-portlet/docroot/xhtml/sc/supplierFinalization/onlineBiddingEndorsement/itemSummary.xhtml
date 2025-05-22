@@ -234,7 +234,7 @@
 			</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
 			    <h:outputText value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" 
-			    rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusDisqualifiedSupplierBranchDeleted}" />	
+			    rendered="#{itemSupplierDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}" />	
 			</p:column>		
 		</p:dataTable>  
         <ui:remove> #28777#29729 - End </ui:remove>

@@ -545,7 +545,7 @@
 							</p:column>
 							
 							<p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
-							    <h:outputText rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusDisqualifiedSupplierBranchDeleted}" 
+							    <h:outputText rendered="#{supplierDtlDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}" 
 							    value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />	
 							</p:column>
 							
@@ -806,7 +806,7 @@
 							</p:column>						
 							<ui:remove>#33267 - Start</ui:remove>	
 						    <p:column headerText="#{lbl['lbl.sc.disqualified.reason']}" style="text-align:center;">
-							     <h:outputText rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq DbValueConst.recordStatusDisqualifiedSupplierBranchDeleted}" 
+							     <h:outputText rendered="#{recommendedSupplDis.qtEvaluationResult.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}" 
 							     value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}" />	
 							</p:column>
 						</p:dataTable> 

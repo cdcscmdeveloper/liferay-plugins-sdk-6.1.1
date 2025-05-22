@@ -8790,7 +8790,7 @@ return	remarksNotFound;
 			if(isDisqualified){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
-								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
+								SearchOperator.OPERATOR_EQUALS.value(), SourcingConstants.RECORD_STATUS_DISQUALIFIED));	
 			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
@@ -9015,7 +9015,7 @@ return	remarksNotFound;
 			if(isDisqualified){
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
-								SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED));	
+								SearchOperator.OPERATOR_EQUALS.value(), SourcingConstants.RECORD_STATUS_DISQUALIFIED));	
 			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean(RECORD_STATUS_FLAG,
