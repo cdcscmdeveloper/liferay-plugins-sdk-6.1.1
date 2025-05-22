@@ -5263,6 +5263,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retriveZonesByCircularNo();
 				}
 			}
+			// #33787 Start Vinod
+			checkMinPaidUpCapitalWIP();
+			// #33787 End Vinod
 		} finally {
 			QtDetailsSO=null;
 		}
@@ -13917,9 +13920,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IQTDetailSO.class);
 		ScQt qt = this.getManagedBean().getQt();
+		Date publishDate = qt.getPublishDate();
 
-		if (null != qt.getPublishDate()) {
-			Date publishDate = qt.getPublishDate();
+		if (null != publishDate) {
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_33787);
 

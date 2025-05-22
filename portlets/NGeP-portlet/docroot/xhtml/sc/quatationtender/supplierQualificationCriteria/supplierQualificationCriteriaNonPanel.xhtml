@@ -217,7 +217,6 @@
 		<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP}">
 		<ui:remove>#33787 Vinod End</ui:remove>
 		<f:facet name="header">
-			<c:if test="#{qTDetailBB.isQTMaintenanceScreen and }">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
@@ -248,9 +247,7 @@
 						</p:selectBooleanCheckbox></td>
 				</tr>
 			</c:if>
-			<ui:remove>#33787 Vinod Start</ui:remove>
-			<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP}">
-			<ui:remove>#33787 Vinod End</ui:remove>
+			<ui:remove>#33787 Vinod Start remove "Minimum Paid Up Capital (RM)" as per 4.1 -> 1. -> 4.
 			<tr>
 				<td style="width: 210px"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
@@ -264,9 +261,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 			</tr>
-			<ui:remove>#33787 Vinod Start</ui:remove>
-			</c:if>
-			<ui:remove>#33787 Vinod End</ui:remove>
+			#33787 Vinod End</ui:remove>
 			<c:if
 				test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 				<tr>
