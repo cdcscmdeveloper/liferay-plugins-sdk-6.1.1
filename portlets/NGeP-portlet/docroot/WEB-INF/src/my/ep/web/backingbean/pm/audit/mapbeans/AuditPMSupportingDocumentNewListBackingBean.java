@@ -238,7 +238,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	}
 
 	private String actionType(boolean actionTypeUpdated) {
-		return actionTypeUpdated ? AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD
+		return actionTypeUpdated ? AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS
 				: AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS;
 	}
 
