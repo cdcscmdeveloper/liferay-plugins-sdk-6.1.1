@@ -22,6 +22,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	String roleCode;
 	String docNo;
+	String docType;
 	BigInteger docId;
 	BigInteger docGroupId;
 
@@ -34,7 +35,8 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	public List<AuditPMSPDTO> updatedNewCreateRowAppTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getAppTypeRestrictionsNew()) {
 			/*
 			 * Restriction Document - AppTypeList - Application Type
@@ -220,7 +222,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+		dtlObj.setDocType(docType);
 		dtlObj.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
@@ -238,7 +240,7 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	}
 
 	private String actionType(boolean actionTypeUpdated) {
-		return actionTypeUpdated ? AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_UPD
+		return actionTypeUpdated ? AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS
 				: AuditPMSupplierMgtConfigConst.PM_AUD_ACTION_TYPE_INS;
 	}
 
