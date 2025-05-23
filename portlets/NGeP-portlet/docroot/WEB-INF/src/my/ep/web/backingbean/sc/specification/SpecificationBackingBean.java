@@ -11485,20 +11485,18 @@ if (null != checklist && !checklist.isEmpty()) {
 			List<ScQtCheckList> deletefinCheckList = deleteInactiveChecklist(finCL);
 			finCL.removeAll(deletefinCheckList);
 
-			List<ScQtCheckList> technical = this.getManagedBean().getMarkDeletedTechChecklist();
-			if (CollectionUtils.isEmpty(technical)) {
-				technical = new ArrayList<>();
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())) {
+				this.getManagedBean().setMarkDeletedTechChecklist(new ArrayList<ScQtCheckList>());
 			}
 			if (CollectionUtils.isNotEmpty(deleteTechCheckList)) {
-				technical.addAll(deleteTechCheckList);
+				this.getManagedBean().getMarkDeletedTechChecklist().addAll(deleteTechCheckList);
 			}
 
-			List<ScQtCheckList> financial = this.getManagedBean().getMarkDeletedFinChecklist();
-			if (CollectionUtils.isEmpty(financial)) {
-				financial = new ArrayList<>();
+			if (CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedFinChecklist())) {
+				this.getManagedBean().setMarkDeletedFinChecklist(new ArrayList<ScQtCheckList>());
 			}
 			if (CollectionUtils.isNotEmpty(deletefinCheckList)) {
-				financial.addAll(deletefinCheckList);
+				this.getManagedBean().getMarkDeletedFinChecklist().addAll(deletefinCheckList);
 			}
 		}
 		// #10141 End Vinod
@@ -23789,14 +23787,16 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		validatePrepareQtChecklist();
 
 		String reportName = updateFileNameAndReportNameForScoreReport();
+		int activeIndex = this.getManagedBean().getActiveIndex();
 		ScQt scQt = getManagedBean().getQt();
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = facesScopes.getUserSessionBean();
+		
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
 		StringBuilder fileName = new StringBuilder(this.getManagedBean().getReportDownloadFileName());
 		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
 		reportAttachment.setFileName(fileName.toString());
 		reportAttachment.setDocNo(scQt.getQtNo());
-		// reportAttachment.setPrefixFileName();
-		// ScAttachment attachment = reportAttachment;
 		this.getManagedBean().setScoreAttachment(reportAttachment);
 		ScAttachment scoreAttachment = reportAttachment;
 
@@ -23805,15 +23805,24 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 			Map<String, String> paramMap = new HashMap<>();
 
-			paramMap.put(QtReportConst.PARAM_KEY_REPORT, ReportConst.SC_TEC_RPT_JSP);
-			paramMap.put(QtReportConst.PARAM_REPORT_CODE, ReportConst.SC_TECHINICAL_EVALUATION_COMMITTEE_RPT_VAL);
-			paramMap.put(QtReportConst.PARAM_USER_ID, "86577");
-			paramMap.put(QtReportConst.QUOTATION_TENDER_ID, "148735");
-
-			// paramMap.put(QTConstants.PARAM_MAP_PKEY,
-			// SourcingConstants.ORACLE_ENCRYPTION_KEY);
-			// paramMap.put(QTConstants.PARAM_MAP_QTID,
-			// getManagedBean().getQt().getQtId().toString());
+			paramMap.put(QtReportConst.PARAM_MAP_P_QTID, scQt.getQtId().toString());
+			paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
+			switch (activeIndex) {
+			case QTConstants.ACTIVE_INDEX_4:
+				ScQtScoreSetting techScoreSetting = this.getManagedBean().getTechnicalItemScoreSetting();
+				paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, techScoreSetting.isWeightageReq() ? "1" : "0");
+				break;
+			case QTConstants.ACTIVE_INDEX_5:
+				ScQtScoreSetting finScoreSetting = this.getManagedBean().getFinancialScoreSetting();
+				paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, finScoreSetting.isWeightageReq() ? "1" : "0");
+				break;
+			case QTConstants.ACTIVE_INDEX_6:
+				
+				break;
+			default:
+				break;
+			}
 
 			previewScoreDetails(reportName, paramMap, scoreAttachment);
 
@@ -24101,10 +24110,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			populateAttachmentDetails(attachment);
 
 			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(QTConstants.PARAM_MAP_QTID, scQt.getQtId().toString());
-			paramMap.put(QTConstants.PARAM_MAP_P_QTCHECKLISTIDS, selectedChecklist);
-			paramMap.put(QTConstants.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
-			paramMap.put(QTConstants.PARAM_MAP_PUSER, user.getUserId().toString());
+			paramMap.put(QtReportConst.QUOTATION_TENDER_ID, scQt.getQtId().toString());
+			paramMap.put(QtReportConst.PARAM_MAP_P_QTCHECKLISTIDS, selectedChecklist);
+			paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+			paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
 
 			downloadReportSpecPrepare(reportNameLocal, paramMap, attachment);
 		} catch (IOException e) {
