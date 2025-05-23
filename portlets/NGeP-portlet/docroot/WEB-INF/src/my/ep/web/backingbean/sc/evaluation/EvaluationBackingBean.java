@@ -19255,6 +19255,13 @@ private void retriveCommitteeRemarksList(){
 
 	// #29187 End Vinod
 	// #29187 Start Vinod
+	/**
+	 * This method is to validate and show the conformation message for
+	 * template, if all ok then click the actual button which is hidden.
+	 * 
+	 * @param actualButtonId
+	 * @return
+	 */
 	public void validateSaveTemplateForMandatorySpec(String actualButtonId) {
 		List<TplSpecAnswer> answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
 
@@ -19303,6 +19310,13 @@ private void retriveCommitteeRemarksList(){
 
 	/* #29187 End Vinod */
 	// #29187 Start Vinod
+	/**
+	 * This method is to validate and show the conformation message for
+	 * template, if all ok then click the actual button which is hidden.
+	 * 
+	 * @param actualButtonId
+	 * @return
+	 */
 	public void validateSaveSampleForMandatorySpec(String actualButtonId) {
 		List<ScQtSampleItem> sampleItemlist = this.getManagedBean().getSampleItemList();
 
