@@ -1343,30 +1343,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			
 			// #35506 Start
-			if (!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
-					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+			AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+			if (auditCtBean.getAuditCtConfigState()) {
+				if (!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+						&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+								|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
 
-				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
-				AuditContractReqDTO auCtData = new AuditContractReqDTO();
-				auCtData.setDocId(ctContractVer.getCtContract().getContractId());
-				auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
-				auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
-				auCtData.setDocType(resDTO.getCtContractVer().getDocType());
-				auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
-				auCtData.setRoleName(getUserRole());
+					AuditContractReqDTO auCtData = new AuditContractReqDTO();
+					auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+					auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+					auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+					auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+					auCtData.setRoleName(getUserRole());
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
-						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
-								.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
-					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+							|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
+									.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
+						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+						auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+						auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+					}
+
+					auditCtBean.saveAuditData(auCtData);
 				}
-
-				auditCtBean.saveAuditData(auCtData);
 			}
 			// #35506 End
 
