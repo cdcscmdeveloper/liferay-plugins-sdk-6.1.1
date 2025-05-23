@@ -46,7 +46,8 @@
 							<f:selectItem
 								itemLabel="#{lbl['lbl.sm.comp.exp.update.client.type.other']}"
 								itemValue="#{ParameterConst.clientTypeNonFederal}"></f:selectItem>
-						</p:selectOneRadio></td>
+						</p:selectOneRadio>
+						<p:message id="clientTypeMsg" for="clientType" display="icon"/></td>
 				</tr>
 				<p:outputPanel
 					rendered="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeFederal}">
@@ -365,6 +366,7 @@
 					value="#{lbl['lbl.sm.comp.exp.update.declare.btn']}"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					partialSubmit="true" disabled="#{!compExpMB.agreeDeclare}"
+					update=":form"
 					action="#{compExpBB.onDeclare}" />
 			</div>
 		</p:panel>

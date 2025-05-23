@@ -25,9 +25,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
-import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
-import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -130,7 +128,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	private void initDraftDoc() {
-		List<SmCompExpMasterDoc> compExpDocList = new ArrayList<SmCompExpMasterDoc>();
+		List<SmCompExpMasterDoc> compExpDocList = new ArrayList<>();
 		this.getManagedBean().setCompExpDocList(compExpDocList);
 		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH)
 				+ this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo() + "/"
@@ -139,7 +137,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	private void initCatDraft() {
-		List<SmCompExpCatDraft> catCodeList = new ArrayList<SmCompExpCatDraft>();
+		List<SmCompExpCatDraft> catCodeList = new ArrayList<>();
 		this.getManagedBean().setCompExpCatCodeList(catCodeList);
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
@@ -155,7 +153,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void selectAllCatCodes() {
-		List<SmCompExpCatDraft> selectedList = new ArrayList<SmCompExpCatDraft>();
+		List<SmCompExpCatDraft> selectedList = new ArrayList<>();
 		if (this.getManagedBean().isSelectedAll()) {
 			this.getManagedBean().setSelected(true);
 			for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
@@ -175,7 +173,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void selectCatCode(int index) {
 		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedCompExpCatCode();
 		if (null == selectedList || selectedList.isEmpty()) {
-			selectedList = new ArrayList<SmCompExpCatDraft>();
+			selectedList = new ArrayList<>();
 		}
 		SmCompExpCatDraft selected = this.getManagedBean().getCompExpCatCodeList().get(index);
 		if (selected.isSelected()) {
@@ -226,8 +224,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
 		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ICategoryCodeSO.class);
+		ICategoryCodeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
 		if (resDTO != null) {
 			this.getManagedBean().setSupplierMainCatList(resDTO.getCategoryL1List());
@@ -245,8 +242,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
 		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ICategoryCodeSO.class);
+		ICategoryCodeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
 		if (resDTO != null) {
 			this.getManagedBean().setSupplierSubCatList(resDTO.getCategoryL2List());
@@ -262,8 +258,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
 		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
 		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-				ICategoryCodeSO.class);
+		ICategoryCodeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 		if (resDTO != null) {
 			this.getManagedBean().setSupplierSubDivCatList(resDTO.getCategoryL3List());
@@ -296,7 +291,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	public void selectAgencyAction(PmOrgProfile orgProfile) {
 		this.getManagedBean().getSelectedDraft().setAgencyName(orgProfile.getPmOrgValidity().getOrgName());
-		this.getManagedBean().getSelectedDraft().setOrgProfile((orgProfile));
+		this.getManagedBean().getSelectedDraft().setOrgProfile(orgProfile);
 	}
 
 	public void trimFileReferenceNo() {
@@ -379,60 +374,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	public void onDeclare() {
 		boolean err = false;
-		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
-			err = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775223,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		if (null == this.getManagedBean().getSelectedDraft().getAgencyName() || this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
-			err = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775224,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		if (null == this.getManagedBean().getSelectedDraft().getFileReferenceNo()
-				|| this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()
-				|| null == this.getManagedBean().getSelectedDraft().getFileExtensionNo()
-				|| this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
-			err = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775225,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		if (null == this.getManagedBean().getContractEffDateTemp()) {
-			err = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775226,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		if (null == this.getManagedBean().getSelectedDraft().getContractExpDate()) {
-			err = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		if (null == this.getManagedBean().getCompExpDocList() || this.getManagedBean().getCompExpDocList().isEmpty()) {
-			err = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
-			if (null == cat.getCategoryL3().getCategoryL3Id()) {
-				err = true;
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-		}
+
+		err = validateDetail(err);
+		err = validateDate(err);
+		err = validateList(err);
+
 		if (!err) {
 			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 			reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
@@ -444,6 +390,75 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				declareComExp();
 			}
 		}
+	}
+
+	private boolean validateDetail(boolean err) {
+		boolean error = err;
+		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					"clientTypeMsg",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775223,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == this.getManagedBean().getSelectedDraft().getAgencyName() || this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775224,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == this.getManagedBean().getSelectedDraft().getFileReferenceNo()
+				|| this.getManagedBean().getSelectedDraft().getFileReferenceNo().isEmpty()
+				|| null == this.getManagedBean().getSelectedDraft().getFileExtensionNo()
+				|| this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775225,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return error;
+	}
+
+	private boolean validateDate(boolean err) {
+		boolean error = err;
+		if (null == this.getManagedBean().getContractEffDateTemp()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775226,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		if (null == this.getManagedBean().getSelectedDraft().getContractExpDate()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		return error;
+	}
+
+	private boolean validateList(boolean err) {
+		boolean error = err;
+		if (null == this.getManagedBean().getCompExpDocList() || this.getManagedBean().getCompExpDocList().isEmpty()) {
+			error = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		}
+		for (SmCompExpCatDraft cat : this.getManagedBean().getCompExpCatCodeList()) {
+			if (null == cat.getCategoryL3().getCategoryL3Id()) {
+				error = true;
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}
+		return error;
 	}
 
 	public void declareComExp() {
