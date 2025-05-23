@@ -10180,30 +10180,6 @@ private void retriveCommitteeRemarksList(){
 			if(this.getManagedBean().isItemSampleReq()){//#11104-start
 				log.info("============displayitemsamplerequired===");
 			List<ScQtSampleItem> sampleItemlist=this.getManagedBean().getSampleItemList();
-			for(ScQtSampleItem item:sampleItemlist){
-					/* #29187 Start Vinod */
-					Boolean isComplianceNull = item.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()
-							&& item.getCompliance() == null;
-					if (isComplianceNull) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-					}
-					String remark = item.getRemarkMandatorySpec();
-					boolean isNotComply = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
-					if (isNotComply && StringUtils.isEmpty(remark)) {
-						throw new EpException(MessageConst.ERROR_775180);
-					}
-					/* #29187 End Vinod */
-			}
-				/* #29187 Start Vinod */
-				boolean complaincePopup = checkSampleCompliance();
-				if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
-					RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
-					getManagedBean().setComplianceCnfrm(true);
-					return;
-				}
-				/* #29187 End Vinod */
 			reqDtO.setSampleComplianceList(sampleItemlist);
 			}//#11104-End
 			List<ScQtCheckList> qtCheckLists = null;
@@ -10631,43 +10607,8 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
-					// #29187 Start Vinod
-					TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
-					boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
-					boolean isUserScore = question.getScoreTypeCode() != null
-							&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
-							&& tplSpecAnswer.getUserScore() == null;
-					if (!isNotOffered && isUserScore) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-					}
-					String questionType = question.getQuestionType();
-					boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
-					boolean isComplianceNull = questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-							&& isMandatorySpec && tplSpecAnswer.getCompliance() == null;
-					if (isComplianceNull && !isNotOffered) {
-						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()) });
-					}
-					boolean isCompliance = tplSpecAnswer.getCompliance() != null
-							&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
-					String remark = tplSpecAnswer.getUserRemark();
-					if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
-							&& isCompliance && StringUtils.isEmpty(remark)) {
-						throw new EpException(MessageConst.ERROR_775180);
-					}
-					// #29187 End Vinod
+					
 				}
-				/* #29187 Start Vinod */
-				boolean complaincePopup = checkTechnicalSpecCompliance();
-				if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
-					RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
-					getManagedBean().setComplianceCnfrm(true);
-					return evalResDTO;
-				}
-				/* #29187 End Vinod */
 			}
 			//#29187 Start Vinod
 			List<String> evalstage = new ArrayList<>();
@@ -19313,6 +19254,98 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	// #29187 End Vinod
+	// #29187 Start Vinod
+	/**
+	 * This method is to validate and show the conformation message for
+	 * template, if all ok then click the actual button which is hidden.
+	 * 
+	 * @param actualButtonId
+	 * @return
+	 */
+	public void validateSaveTemplateForMandatorySpec(String actualButtonId) {
+		List<TplSpecAnswer> answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+
+		if (answers != null) {
+			for (TplSpecAnswer tplSpecAnswer : answers) {
+				TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
+				String questionType = question.getQuestionType();
+				boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+				boolean isTechSpec = QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean()
+						.getCheckListType()) && questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
+				boolean isUserScore = isTechSpec && question.getScoreTypeCode() != null
+						&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
+						&& tplSpecAnswer.getUserScore() == null;
+				if (!isNotOffered && isUserScore) {
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+				}
+				boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
+				boolean isComplianceNull = isTechSpec && isMandatorySpec && tplSpecAnswer.getCompliance() == null;
+				if (isComplianceNull && !isNotOffered) {
+					throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+							QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+				}
+				boolean isCompliance = tplSpecAnswer.getCompliance() != null
+						&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+				String remark = tplSpecAnswer.getUserRemark();
+
+				if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
+						&& isCompliance && StringUtils.isEmpty(remark)) {
+					throw new EpException(MessageConst.ERROR_775180);
+				}
+			}
+		}
+
+		boolean complaincePopup = checkTechnicalSpecCompliance();
+		if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
+			RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_CONFIRMATION_POPUP);
+			getManagedBean().setComplianceCnfrm(true);
+			return;
+		}
+
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
+	}
+
+	/* #29187 End Vinod */
+	// #29187 Start Vinod
+	/**
+	 * This method is to validate and show the conformation message for
+	 * template, if all ok then click the actual button which is hidden.
+	 * 
+	 * @param actualButtonId
+	 * @return
+	 */
+	public void validateSaveSampleForMandatorySpec(String actualButtonId) {
+		List<ScQtSampleItem> sampleItemlist = this.getManagedBean().getSampleItemList();
+
+		for (ScQtSampleItem item : sampleItemlist) {
+			Boolean isComplianceNull = item.getScRequestItem().getTplSpecQuestion().isMandatorySpecForSample()
+					&& item.getCompliance() == null;
+			if (isComplianceNull) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
+			String remark = item.getRemarkMandatorySpec();
+			boolean isNotComply = item.getCompliance() != null && item.getCompliance().equals(Boolean.FALSE);
+			if (isNotComply && StringUtils.isEmpty(remark)) {
+				throw new EpException(MessageConst.ERROR_775180);
+			}
+		}
+
+		boolean complaincePopup = checkSampleCompliance();
+		if (complaincePopup && !getManagedBean().isComplianceCnfrm()) {
+			RequestContext.getCurrentInstance().execute(QTConstants.COMPLIANCE_SAMPLE_CONFIRMATION_POPUP);
+			getManagedBean().setComplianceCnfrm(true);
+			return;
+		}
+
+		RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
+	}
+
+	/* #29187 End Vinod */
 	
 	//32373 - saperate for recalculate pref margin after done financial package -Start
 		private boolean generatePrefMargin() { 
