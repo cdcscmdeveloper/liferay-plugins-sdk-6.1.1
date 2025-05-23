@@ -10257,6 +10257,9 @@ private void retriveCommitteeRemarksList(){
 			// #29187 Start moved update to backingbean Vinod
 			RequestContext.getCurrentInstance().update(QTConstants.REQUESTCONTEXT_INSTANCE_UPDATE_ALL);
 			resetComplianceConfirmationFlag();
+			String actualButtonId = this.getManagedBean().getActualIdToUpdate();
+			// Trigger the hidden save button to update.
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
 			// #29187 End Vinod
 
 			successMessage(MessageConst.INFO_700004,
@@ -10633,8 +10636,11 @@ private void retriveCommitteeRemarksList(){
 							getManagedBean().getSelectedZone());
 					// #29187 Start Vinod
 					TplSpecQuestion question = tplSpecAnswer.getTplSpecQuestion();
+					String questionType = question.getQuestionType();
 					boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
-					boolean isUserScore = question.getScoreTypeCode() != null
+					boolean isTechSpec = QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean()
+							.getCheckListType()) && questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
+					boolean isUserScore = isTechSpec && question.getScoreTypeCode() != null
 							&& ParameterConst.SCORE_TYPE_USER.equals(question.getScoreTypeCode().getParameterCode())
 							&& tplSpecAnswer.getUserScore() == null;
 					if (!isNotOffered && isUserScore) {
@@ -10642,10 +10648,8 @@ private void retriveCommitteeRemarksList(){
 								QTConstants.LBL_TPL_SPEC_CONTENT_USER_SCORE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 								new FacesScopes().getUserLocale()) });
 					}
-					String questionType = question.getQuestionType();
 					boolean isMandatorySpec = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec();
-					boolean isComplianceNull = questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)
-							&& isMandatorySpec && tplSpecAnswer.getCompliance() == null;
+					boolean isComplianceNull = isTechSpec && isMandatorySpec && tplSpecAnswer.getCompliance() == null;
 					if (isComplianceNull && !isNotOffered) {
 						throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
 								QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -10762,6 +10766,9 @@ private void retriveCommitteeRemarksList(){
 			// #29187 Start moved update to backingbean for note #582 Vinod
 			RequestContext.getCurrentInstance().update(QTConstants.REQUESTCONTEXT_INSTANCE_UPDATE_ALL);
 			resetComplianceConfirmationFlag();
+			String actualButtonId = this.getManagedBean().getActualIdToUpdate();
+			// Trigger the hidden save button to update.
+			RequestContext.getCurrentInstance().execute("document.getElementById('" + actualButtonId + "').click()");
 			// #29187 End Vinod
 
 			successMessage(MessageConst.INFO_700004,

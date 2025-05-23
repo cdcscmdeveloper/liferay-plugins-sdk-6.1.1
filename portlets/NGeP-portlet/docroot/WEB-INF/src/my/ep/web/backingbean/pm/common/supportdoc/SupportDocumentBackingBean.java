@@ -54,6 +54,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -2195,6 +2196,14 @@ public class SupportDocumentBackingBean extends
 			}
 			/************ AUDIT #28895_35509 - START *************/
 			if (resDTO.isSuccessful()) {
+				IZoneSO zoneSo = (IZoneSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IZoneSO.class);
+				ZoneReqDTO zoneReqDto = new ZoneReqDTO();
+				zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
+				
+				this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
+				
 				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
 				if (createAction) {
 					PmCommonUtil.showFacesMsg(

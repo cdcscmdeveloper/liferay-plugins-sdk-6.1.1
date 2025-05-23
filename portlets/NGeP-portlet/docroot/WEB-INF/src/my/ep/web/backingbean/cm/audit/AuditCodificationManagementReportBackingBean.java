@@ -44,6 +44,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.event.TabChangeEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -146,6 +147,19 @@ public class AuditCodificationManagementReportBackingBean extends
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditCMSearchBean().setSearching(true);
 		searchCE.reloadData();
+	}
+	
+	/**
+	 * Reload item code and extension code data on selected tab
+	 */
+	public void onTabChange() {
+		int activeIndex = getManagedBean().getActiveIndex();
+
+		if (activeIndex == 0) {
+			loadCIDetails();
+		} else {
+			loadCEDetails();
+		}
 	}
 
 	/**
