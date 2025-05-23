@@ -20,12 +20,10 @@
 					<!-- 34445 start -->
 					<c:choose>
 						<c:when test="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">
-				  			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;" oncomplete="saveInfoDlg.show();">
-			  				</p:commandButton>
+				  			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;" oncomplete="saveInfoDlg.show();"/>
 				  		</c:when>
 				  		<c:otherwise>
-				  			<p:commandButton value="#{lbl['lbl.btn.update']}" style="float:right;" oncomplete="updateInfoDlg.show();"> 
-			  				</p:commandButton>
+				  			<p:commandButton value="#{lbl['lbl.btn.update']}" style="float:right;" oncomplete="updateInfoDlg.show();"/>
 				  		</c:otherwise>
 				  	</c:choose>
 					<!-- 34445 end -->
@@ -39,14 +37,14 @@
 		okAction="profcertifiedbodyBackingBean.saveCertBodyDtls"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		content="#{lbl['lbl.pm.btn.save.msg']}"
 		update="@([id$=Msg])"/>
 								
 	<ac:confirmationPopup id="updateInfoDlg" widget="updateInfoDlg"
 		okAction="profcertifiedbodyBackingBean.saveCertBodyDtls"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
-		content="#{lbl['lbl.pm.btn.update.msg']}" 
+		content="#{lbl['lbl.pm.btn.update.msg']}"
 		update="@([id$=Msg])"/>
 	<!-- 34445 end -->
 </ui:composition>
