@@ -389,6 +389,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 				for (PmDocumentRestr rest : managedBeans.getComTypeRestrictions()) {
 					if (rest.getCompanyTypeCode().getParameterId() == restNew.getCompanyTypeCode().getParameterId()) {
 						restNew.setDocumentRestrId(rest.getDocumentRestrId());
+					} else {
+						restNew.setDocumentRestrId(rest.getDocumentRestrId());
 					}
 				}
 			}
