@@ -32,7 +32,9 @@
 								<p:inputText id="rejectReasonSearchId"
 									label="#{lbl['lbl.sm.rejection.reasons']}"
 									value="#{backingBean.managedBean.searchRejectReason}"
-									size="35" >
+									onkeypress="if (event.keyCode == 13) { rejectReasonSearch.jq.click(); return false;}"
+									size="35" 
+									partialSubmit="true">
 									<p:ajax event="blur" process="@this" update="@this"/>
 								</p:inputText>
 							</td>
@@ -43,7 +45,7 @@
 									<p:commandButton value="#{lbl['lbl.btn.search']}" 
 										action="#{backingBean.searchRejectedReason()}"
 										onstart="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide()"
-										update="rejectBlockPanel" process="@this">
+										update="rejectBlockPanel" process="@this, rejectReasonSearchId" widgetVar="rejectReasonSearch">
 									</p:commandButton>
 									<p:commandButton value="#{lbl['lbl.btn.reset']}" process="@this"
 										action="#{backingBean.resetSearchRejectedReason}"
@@ -55,7 +57,7 @@
 						</tr>
 					</table>
 					
-					<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultRejectedReasonPanelId">
+					<p:panel header="#{lbl['lbl.sm.result']}" toggleable="true" id="resultRejectedReasonPanelId">
 						<p:dataTable var="reason" widgetVar="reasonWidgetVar"
 							editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							value="#{backingBean.managedBean.reasonDescList}"
@@ -64,22 +66,22 @@
 							styleClass="selectRejectReasonTable">
 							
 							<ac:paginator for="reasonDtId" />
-							<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickReason}"
+							<p:ajax event="rowSelect" listener="#{backingBean.onTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowUnselect"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.unTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowSelectCheckbox"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.onTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowUnselectCheckbox"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.unTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="rowDblselect"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.onTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							<p:ajax event="toggleSelect"
-								listener="#{backingBean.onTickOrUnTickReason}"
+								listener="#{backingBean.allOnTickOrUnTickRecommendReason}"
 								update=":#{p:component('rejectBlockPanel')}"></p:ajax>
 							
 							<p:column selectionMode="multiple" width="1%" />
@@ -112,6 +114,9 @@
 									required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
 									maxlength="4000">
 									<f:validateLength maximum="4000" />
+									<!-- 30974 - start -->
+									<p:ajax event="blur" process="@this" update="@this"/>
+									<!-- 30974 - end -->
 								</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
 									for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
 									display="icon" /></td>

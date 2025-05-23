@@ -11602,16 +11602,16 @@ public class QTDetailBackingBean extends
 
 
 	// 37892,25635 -start-
-		/**
-		 * check other approval tab loaded during clone.
-		 */
-		private void setOtherApprovalLoaded() {
-			List<TabBean> approvalOthersTab = this.getManagedBean()
-					.getTabOtherApproval();
-			if (CollectionUtils.isEmpty(approvalOthersTab)) {
-				this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
-			}
+	/**
+	 * check other approval tab loaded during clone.
+	 */
+	private void setOtherApprovalLoaded() {
+		List<TabBean> approvalOthersTab = this.getManagedBean()
+				.getTabOtherApproval();
+		if (CollectionUtils.isEmpty(approvalOthersTab)) {
+			this.getManagedBean().setApproverTabLoaded(Boolean.FALSE);
 		}
-		// 37892,25635 -end-
+	}
+	// 37892,25635 -end-
 
 }
