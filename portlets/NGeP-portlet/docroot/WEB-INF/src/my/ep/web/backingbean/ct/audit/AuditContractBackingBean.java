@@ -219,7 +219,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * Generate Report: All Tab in PDF Format
 	 * 
 	 * @param docId
-	 * @param docId ctType
+	 * @param ctType
 	 * @throws IOException
 	 */
 	public void generateAllReport(BigInteger docId, String ctType) throws IOException {
