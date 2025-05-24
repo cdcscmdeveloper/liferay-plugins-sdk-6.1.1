@@ -128,6 +128,11 @@ th{
 		<tr>
 			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">TEMPOH SAH LAKU :</span> $validityPeriod</td>
 		</tr>
+		## 37613 -start-
+		<tr>
+			<td align="left"><span style="font-family:Arial;font-size:12pt;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JUMLAH HARGA INDIKATIF (RM) :</span> $estimatedAmount</td>
+		</tr>
+		## 37613 -end-
 		#if($panel == "true")
 			
 		#else
