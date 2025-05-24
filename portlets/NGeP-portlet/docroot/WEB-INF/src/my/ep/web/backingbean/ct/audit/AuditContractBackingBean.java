@@ -201,6 +201,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * @param docId
 	 *            ,referring to selected P_DOCID = CONTRACT_ID
 	 * @param sectionId
+	 * @param ctType
 	 * 
 	 */
 	public void generateReport(Long docId, BigInteger sectionId, String ctType) throws IOException {
@@ -218,6 +219,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * Generate Report: All Tab in PDF Format
 	 * 
 	 * @param docId
+	 * @param docId ctType
 	 * @throws IOException
 	 */
 	public void generateAllReport(BigInteger docId, String ctType) throws IOException {
