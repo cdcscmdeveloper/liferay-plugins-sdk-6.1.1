@@ -128,7 +128,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	 * @return the string
 	 */
 	public String backToSearch() {
-		this.getManagedBean().setLazy(true);		
+		this.getManagedBean().setLazy(true);
+		//START: #35509
+		getManagedBean().setZoneStateListDeleted(null);
+		getManagedBean().setZoneStateListNewAdded(null);
+		//END: #35509
 		return NAV_TO_MAIN;
 	}
 
@@ -193,7 +197,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							IZoneSO.class);
 			ZoneReqDTO reqDTO = new ZoneReqDTO();
 			reqDTO.setPmZone(zone);
-			/************ AUDIT #28895_35509 *************/
+			
+			/************ START: AUDIT #28895_35509 *************/
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMSupplierZoneBackingBean();
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
@@ -204,7 +209,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
 				getManagedBean().setPmZoneOld(resDTO.getPmZone());
 			}
-			/************ AUDIT #28895_35509 *************/
+			/************ END: AUDIT #28895_35509 *************/
+			
 			ZoneResDTO resDTO = zoneSO.saveOrUpdateZone(reqDTO);	
 			if (resDTO.isSuccessful()) {
 				result = resDTO.isSuccessful();
@@ -227,7 +233,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 									resDTO.getPmZone().getZoneCode(),
 									resDTO.getPmZone().getZoneName()});
 				}
-				/************ AUDIT #28895_35509 *************/
+				/************ START: AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ZONE)) {
 					zoneReqDTO.setZoneId(resDTO.getPmZone().getZoneId());
 					ZoneResDTO zonResDTOnew = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
@@ -235,7 +241,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 					getManagedBean().setResZone(resDTO.getPmZone());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SPZ);
 				}
-				/************ END AUDIT #28895_35509 *************/
+				/************ END: AUDIT #28895_35509 *************/
 			}
 		}catch(Exception e){
 			throw e;
@@ -416,23 +422,25 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				selectedList.add(zonelist);
 			}
 		}
-		/************ END AUDIT #28895_35509 *************/
+		
+		/************ START: AUDIT #28895_35509 *************/
 		if (getManagedBean().getZoneStateListDeleted() == null) {
 			getManagedBean().setZoneStateListDeleted(new ArrayList<PmZoneState>());
 		}
-		/************ END AUDIT #28895_35509 *************/
+		/************ END: AUDIT #28895_35509 *************/
+		
 		if (zoneList.size() == selectedList.size()) {
-			/************ END AUDIT #28895_35509 *************/
+			/************ START: AUDIT #28895_35509 *************/
 			for (PmZoneState zoneState : selectedList) {
 				this.getManagedBean().getZoneStateListDeleted().add(zoneState);
 			}
-			/************ END AUDIT #28895_35509 *************/
+			/************ END: AUDIT #28895_35509 *************/
 			zoneList.clear();
 		} else {
 			for (PmZoneState zoneState : selectedList) {
-				/************ END AUDIT #28895_35509 *************/
+				/************ START: AUDIT #28895_35509 *************/
 				this.getManagedBean().getZoneStateListDeleted().add(zoneState);
-				/************ END AUDIT #28895_35509 *************/
+				/************ END: AUDIT #28895_35509 *************/
 				zoneList.remove(zoneState);
 			}
 		}
@@ -446,11 +454,13 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
 		StateReqDTO reqStateDTO = new StateReqDTO();
-		/************ END AUDIT #28895_35509 START *************/
+		
+		/************ START: AUDIT #28895_35509 *************/
 		if (getManagedBean().getZoneStateListNewAdded() == null) {
 			getManagedBean().setZoneStateListNewAdded(new ArrayList<PmZoneState>());
 		}
-		/************ END AUDIT #28895_35509 START *************/
+		/************ END: AUDIT #28895_35509 *************/
+		
 		for (PmState state : getManagedBean().getSelectedStates()) {
 			PmZoneState zoneState = new PmZoneState();
 			reqStateDTO.setStateId(state.getStateId());
@@ -459,7 +469,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			zoneState.setPmState(newState);
 			zoneState.setPmZone(getManagedBean().getPmZone());
 			this.getManagedBean().getZoneStateList().add(zoneState);
+			//START: #35509
 			this.getManagedBean().getZoneStateListNewAdded().add(zoneState);
+			//END: #35509
 		}
 		if (getManagedBean().getSelectedStates().isEmpty()&&getManagedBean().getZoneStateList().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
