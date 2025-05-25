@@ -308,7 +308,7 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 		this.childNatures = childNatures;
 	}
 
-	/*********************AUDIT**********/
+	/************ AUDIT START #28895-35509 *************/
 	public PmBusinessNature getOldPmBusinessNature() {
 		return oldPmBusinessNature;
 	}
@@ -316,5 +316,5 @@ public class BusinessNatureManagedBean extends BaseManagedBean {
 	public void setOldPmBusinessNature(PmBusinessNature oldPmBusinessNature) {
 		this.oldPmBusinessNature = oldPmBusinessNature;
 	}
-	/*********************AUDIT**********/
+	/************ AUDIT END #28895-35509 *************/
 }

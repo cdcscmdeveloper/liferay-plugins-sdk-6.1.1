@@ -429,12 +429,12 @@ public class AuthorizedSignatoryBackingBean extends
 		/************ AUDIT 35509 END *************/
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
+			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
 			/************ AUDIT 35509 Start*************/
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_AUTHORIZED_SIGNATORY)) {
 				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_AUTHORIZED);
 			}
 			/************ AUDIT 35509 END*************/
-			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
 			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 		     FacesMessage.SEVERITY_INFO,
