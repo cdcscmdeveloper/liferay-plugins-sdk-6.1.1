@@ -15,7 +15,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.supplierperformanceCriteria.CriteriaManagedBean;
 
 /**
- * AuditPMUOMBackingBean - 28895-35509
+ * #28895,#35509
+ * Audit Trail(PM): Supplier Performance Criteria Maintenance
  * 
  * @author normuliana
  * 

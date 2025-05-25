@@ -285,17 +285,17 @@ public class RaceBackingBean extends
 			 raceSO = EpEjbBusinessDelegate.getInstance().
 					 getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRaceSO.class);
 			 
-			 /************ AUDIT #28895_35509 *************/
-				AuditPMBackingBeanTemplate auTemplate = new AuditPMRaceBackingBean();
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
+			/************ START: AUDIT #28895_35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMRaceBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
 
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE) && race.getRaceId() != null) {
-					RaceResDTO oldResDTO = raceSO.retriveRaceById(reqDTO);
-					getManagedBean().setOldPmRace(oldResDTO.getRace());
-				}
-				/************ END AUDIT #28895_35509 *************/
-			 
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE) && race.getRaceId() != null) {
+				RaceResDTO oldResDTO = raceSO.retriveRaceById(reqDTO);
+				getManagedBean().setOldPmRace(oldResDTO.getRace());
+			}
+			/************ END: AUDIT #28895_35509 *************/
+				
 			 RaceResDTO resDTO= raceSO.saveOrUpdateRaceDtls(reqDTO);			 
 			 if(resDTO.isSuccessful()){
 				 this.getManagedBean().setPmRace(resDTO.getRace());
@@ -315,11 +315,13 @@ public class RaceBackingBean extends
 								 FacesMessage.SEVERITY_INFO, 
 								 MessageConst.INFO_779103,new String[]{});				
 					}
-				 /************ AUDIT #28895_35509 *************/
+				 
+				 	/************ START: AUDIT #28895_35509 *************/
 					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_RACE)) {
 						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_RACE);
 					}
-					/************ END AUDIT #28895_35509 *************/
+					/************ END: AUDIT #28895_35509 *************/
+					
 				}
 		 }catch(Exception e){
 			 throw e;

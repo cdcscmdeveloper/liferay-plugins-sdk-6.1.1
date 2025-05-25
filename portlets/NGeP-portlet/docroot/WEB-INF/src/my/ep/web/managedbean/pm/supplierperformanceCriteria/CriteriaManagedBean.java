@@ -25,11 +25,10 @@ public class CriteriaManagedBean extends BaseManagedBean {
 	private PmCriteria pmCriteria;
 	private PmCriteria selectedCriteria;
 	private boolean isLazy = false;
-	/*** AUDIT #28895_35509 ***/
-	private PmCriteria pmCriteriaOld;
-
-	/*** AUDIT #28895_35509 ***/
 	
+	/*** START: AUDIT #28895_35509 ***/
+	private PmCriteria pmCriteriaOld;
+	/*** END: AUDIT #28895_35509 ***/
 
 	public CriteriaSearchBean getCriteriaSearchBean() {
 		if(criteriaSearchBean==null)
@@ -70,7 +69,7 @@ public class CriteriaManagedBean extends BaseManagedBean {
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
 	}
-
+	
 	/*** AUDIT #28895_35509 ***/
 	public PmCriteria getPmCriteriaOld() {
 		return pmCriteriaOld;
@@ -80,4 +79,5 @@ public class CriteriaManagedBean extends BaseManagedBean {
 		this.pmCriteriaOld = pmCriteriaOld;
 	}
 	/*** AUDIT #28895_35509 ***/
+
 }

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
+import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -14,7 +15,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
- * @author normuliana - 28895-35509
+ * #28895,#35509
+ * @author normuliana
  * 
  */
 public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
@@ -55,10 +57,15 @@ public abstract class AuditPMBackingBeanTemplate extends BaseBackingBean<BaseMan
 	 * @param auditPMReqDTO
 	 */
 	private void pmAuditSO(AuditPMReqDTO auditPMReqDTO, String modName) {
-		new LogKey(getUserIdSessionFromLoginId());
+		// new LogKey(getUserIdSessionFromLoginId());
 
 		IAuditPMSO auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 				IAuditPMSO.class);
+
+		for (AuditPMSPDTO dto : auditPMReqDTO.getObjList()) {
+			dto.setChangedBy(getUserIdSessionFromLoginId());
+			dto.setCreatedBy(getUserIdSessionFromLoginId());
+		}
 		try {
 			if (null != auditPMReqDTO.getObjList() && !auditPMReqDTO.getObjList().isEmpty()) {
 				auditPMSO.insertAuditStoreProc(auditPMReqDTO.getObjList(), modName);
