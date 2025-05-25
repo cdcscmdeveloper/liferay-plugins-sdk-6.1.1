@@ -308,16 +308,16 @@ public class SalutationBackingBean extends
 			 salutationSO = EpEjbBusinessDelegate.getInstance().
 					 getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
 			 
-			 /************ AUDIT #28895_35509 *************/
-				AuditPMBackingBeanTemplate auTemplate = new AuditPMSalutationBackingBean();
-				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IAuditPMSO.class);
+			/************ START: AUDIT #28895_35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMSalutationBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
 
-				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION) && salutation.getSalutationId() != null) {
-					SalutationResDTO oldResDTO = salutationSO.retriveSalutaionById(reqDTO);
-					getManagedBean().setOldPmSalutation(oldResDTO.getSalutation());
-				}
-				/************ END AUDIT #28895_35509 *************/
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION) && salutation.getSalutationId() != null) {
+				SalutationResDTO oldResDTO = salutationSO.retriveSalutaionById(reqDTO);
+				getManagedBean().setOldPmSalutation(oldResDTO.getSalutation());
+			}
+			/************ END: AUDIT #28895_35509 *************/
 			 
 			 SalutationResDTO resDTO= salutationSO.saveOrUpdateSaluationDtls(reqDTO);
 			 this.getManagedBean().setPmSalutation(resDTO.getSalutation());
@@ -341,11 +341,13 @@ public class SalutationBackingBean extends
 											resDTO.getSalutation().getSalutationCode(),
 											resDTO.getSalutation().getSalutationCode()});					
 					}
-				 /************ AUDIT #28895_35509 *************/
+				 
+					/************ START: AUDIT #28895_35509 *************/
 					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SALUTATION)) {
 						auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SALUTATION);
 					}
-					/************ END AUDIT #28895_35509 *************/
+					/************ END: AUDIT #28895_35509 *************/
+					
 				}
 		 }catch(Exception e){
 			 throw e;

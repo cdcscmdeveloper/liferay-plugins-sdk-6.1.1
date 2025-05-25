@@ -421,7 +421,7 @@ public class UnitOfMeasurementBackingBean extends
 							pmUom.getRecordStatusFlg().longValue(),
 							getPmActionDesc(messageId, msgParam)));
 
-			/************ AUDIT #28895_35509 *************/
+			/************ START: AUDIT #28895_35509 *************/
 			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IAuditPMSO.class);
 			AuditPMBackingBeanTemplate auTemplate = new AuditPMUOMBackingBean();
@@ -432,7 +432,7 @@ public class UnitOfMeasurementBackingBean extends
 				UomResDTO resDTO = iUomSO.retrieveUomByUomId(uomReqDTO);
 				getManagedBean().setAuditUomOldVal(resDTO.getPmUom());
 			}
-			/************ AUDIT #28895_35509 *************/
+			/************ END: AUDIT #28895_35509 *************/
 			
 			UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
 			reloadUOMData(resDTO.getPmUom());
@@ -476,13 +476,15 @@ public class UnitOfMeasurementBackingBean extends
 															new FacesScopes()
 																	.getUserLocale())));
 				}
-				/************ AUDIT #28895_35509 *************/
+				
+				/************ START: AUDIT #28895_35509 *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_UOM)) {
 					uomReqDTO.setUomId(resDTO.getPmUom().getUomId());
 					getManagedBean().setUomResDTO(resDTO);
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_UOM);
 				}
-				/************ AUDIT #28895_35509 *************/
+				/************ END: AUDIT #28895_35509 *************/
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
