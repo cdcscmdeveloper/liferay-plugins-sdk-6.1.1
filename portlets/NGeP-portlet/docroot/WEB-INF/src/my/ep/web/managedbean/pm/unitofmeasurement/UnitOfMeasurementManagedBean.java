@@ -37,13 +37,13 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	
 	private PmUom oldPmUom;
 
-	/************ AUDIT #28895_35509 *************/
+	/************ START: AUDIT #28895_35509 *************/
 	private UomResDTO uomResDTO;
 
 	/** The AUDIT PM UOM OLD Value. */
 	private PmUom auditUomOldVal;
 
-	/************ AUDIT #28895_35509 *************/
+	/************ END: AUDIT #28895_35509 *************/
 	
 	public UnitOfMeasurementManagedBean(){}
 	
@@ -129,7 +129,7 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 		this.oldPmUom = oldPmUom;
 	}
 
-	/************ AUDIT #28895_35509 *************/
+	/************ START: AUDIT #28895_35509 *************/
 	public PmUom getAuditUomOldVal() {
 		return auditUomOldVal;
 	}
@@ -145,5 +145,6 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	public void setUomResDTO(UomResDTO uomResDTO) {
 		this.uomResDTO = uomResDTO;
 	}
-	/************ AUDIT #28895_35509 *************/
+	/************ END: AUDIT #28895_35509 *************/
+	
 }
