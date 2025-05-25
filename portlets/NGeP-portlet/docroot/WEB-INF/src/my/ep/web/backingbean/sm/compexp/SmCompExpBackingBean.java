@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -397,14 +398,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					"clientTypeMsg",
+					getComponentId("clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775223,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}
-		if (null == this.getManagedBean().getSelectedDraft().getAgencyName() || this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
+		} else if (null == this.getManagedBean().getSelectedDraft().getAgencyName()
+				|| this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					null,
+					getComponentId("clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775224,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -414,7 +415,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				|| this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					null,
+					getComponentId("clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775225,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -426,14 +427,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null == this.getManagedBean().getContractEffDateTemp()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					null,
+					getComponentId("clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775226,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		if (null == this.getManagedBean().getSelectedDraft().getContractExpDate()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					null,
+					getComponentId("clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -445,7 +446,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null == this.getManagedBean().getCompExpDocList() || this.getManagedBean().getCompExpDocList().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					null,
+					getComponentId("clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -453,12 +454,17 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			if (null == cat.getCategoryL3().getCategoryL3Id()) {
 				error = true;
 				FacesContext.getCurrentInstance().addMessage(
-						null,
+						getComponentId("clientType"),
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
 		return error;
+	}
+
+	private String getComponentId(String id) {
+		UIComponent component = FacesContext.getCurrentInstance().getViewRoot().findComponent(id);
+		return component.getClientId(FacesContext.getCurrentInstance());
 	}
 
 	public void declareComExp() {
