@@ -308,6 +308,7 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
+	//START: #35509
 	public StateResDTO getStateOldVal() {
 		return stateOldVal;
 	}
@@ -371,4 +372,6 @@ public class LocationManagedBean extends BaseManagedBean {
 	public void setCityOldVal(CityResDTO cityOldVal) {
 		this.cityOldVal = cityOldVal;
 	}
+	//END: #35509
+	
 }
