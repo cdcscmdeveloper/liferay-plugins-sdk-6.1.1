@@ -86,9 +86,7 @@ public class ZoneManagedBean extends BaseManagedBean {
 	/** The pm zone. */
 	private PmZone resZone;
 
-	/**
-	 * ZoneResDTO
-	 */
+	/** ZoneResDTO */
 	private ZoneResDTO zoneResDTO;
 
 	/** The zone state list. */
@@ -98,6 +96,7 @@ public class ZoneManagedBean extends BaseManagedBean {
 	private List<PmZoneState> zoneStateListNewAdded = new ArrayList<PmZoneState>();
 
 	/************ END AUDIT #28895_35509 END *************/
+	
 	/**
 	 * Instantiates a new zone managed bean.
 	 */
@@ -373,6 +372,7 @@ public class ZoneManagedBean extends BaseManagedBean {
 		this.showParentMsg = showParentMsg;
 	}
 
+	//START: #35509
 	public PmZone getPmZoneOld() {
 		return pmZoneOld;
 	}
@@ -412,4 +412,6 @@ public class ZoneManagedBean extends BaseManagedBean {
 	public void setZoneStateListNewAdded(List<PmZoneState> zoneStateListNewAdded) {
 		this.zoneStateListNewAdded = zoneStateListNewAdded;
 	}
+	//END: #35509
+
 }
