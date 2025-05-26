@@ -44,7 +44,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.company.limited.by.guarantee']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smAppl.smCompanyBasic.companyTypeSSM eq QTConstants.COMPANY_TYPE_SSM_G ? supplierProposalDetailBackingBean.getMessageCommon(QTConstants.LBL_TXT_YES) : supplierProposalDetailBackingBean.getMessageCommon(QTConstants.LBL_TXT_NO)}" /></td>
+						value="#{supplierProposalDetailBackingBean.getCompanyLimitedByGuarantee(smAppl.smCompanyBasic)}" /></td>
 			</c:if>
 
 			<c:if
