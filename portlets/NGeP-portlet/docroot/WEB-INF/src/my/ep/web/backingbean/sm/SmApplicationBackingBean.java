@@ -4051,10 +4051,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for 31130 --210525
 					//#31130 -end
 					
 					//#32236 start
@@ -4126,10 +4126,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}//#31130 -end
+					}*/ //Commented for 31130 --210525
+					//#31130 -end
 					
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
@@ -7052,12 +7053,25 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	public void addOrUpdateWorkshopToSmAppl() {
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
 		final int minEmployee = 2;
-		if(getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().size() < minEmployee){
+		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		
+		if(smFac.getSmSvWorkers().size() < minEmployee){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
 		}
+		//validate for no duplicate IC/passport
+		for(SmSvWorker worker1 : smFac.getSmSvWorkers()){
+			for(SmSvWorker worker2 : smFac.getSmSvWorkers()){
+				if(!worker1.equals(worker2) 
+						&& worker1.getIdentificationNo().equals(worker2.getIdentificationNo())){
+					throw new EpException(MessageConst.ERROR_722524,
+							new String[] { worker1.getIdentificationNo() });
+				}
+			}
+			
+		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
-		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		
 		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -10191,18 +10205,29 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		try {
 			valid = deleteDraftApplciationTask();
 			if (valid) {
-				//#34831 - Start
-				String label = StringUtils.EMPTY;
-
-				if (getManagedBean().isBasicSupplier()) {
-					label = SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null);
-				} else {
-					label = getParameterDesc(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, getManagedBean()
-							.getSmAppl().getApplType());
-				}
-
-				deleteApplicationMessage(label);
-				//#34831 - End
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_721205,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																		getManagedBean()
+																				.getSmAppl()
+																				.getApplType()),
+																getManagedBean()
+																		.getSmAppl()
+																		.getApplNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				return null;
@@ -10211,23 +10236,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		}
 	}
-	
-	//#34831 - Start
-	/**
-	 * Display message based on parameter label
-	 * 
-	 * @param String
-	 *            label
-	 */
-	public void deleteApplicationMessage(String label) {
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721205,
-						new String[] { label, getManagedBean().getSmAppl().getApplNo() },
-						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		renewSesionObject();
-	}
-	//#34831 - End
 
 	/**
 	 * Click print icon and process offline supporting document checklist pdf
@@ -10323,27 +10331,28 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			}
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH);
-			//#34831 - Start
-			if (getManagedBean().isBasicSupplier()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_721222,
-								new String[] { SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null),
-										getManagedBean().getSmAppl().getApplNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-								MessageConst.INFO_721222,
-								new String[] {
-										getParameterDesc(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-												getManagedBean().getSmAppl().getApplType()),
-										getManagedBean().getSmAppl().getApplNo() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}
-			//#34831 - End
+			FacesContext
+			.getCurrentInstance()
+			.addMessage(
+					null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils
+									.getMessage(
+											MessageConst.INFO_721222,
+											new String[] {
+													getParameterDesc(
+															ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+															getManagedBean()
+																	.getSmAppl()
+																	.getApplType()),
+													getManagedBean()
+															.getSmAppl()
+															.getApplNo() },
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+													.getUserLocale())));
 		}
 	}
 
@@ -10397,24 +10406,22 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
-				//#34831 - Start
-				} else if (!isActiveAppl && getManagedBean().isBasicSupplier()) {
-					SmCommonUtil.redirectToPage(
-							SmApplicationUtil.getApplicationErrorPage(),
-							MessageConst.INFO_721204,
-							new String[] { SmCommonUtil.getMessage("lbl.sm.upgrade.acc.appl", null),
-									getManagedBean().getSmAppl().getApplNo(),
-									SmApplicationUtil.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl()) });
-					renewSesionObject();
 				} else {
-					SmCommonUtil.redirectToPage(
+					SmCommonUtil
+					.redirectToPage(
 							SmApplicationUtil.getApplicationErrorPage(),
 							MessageConst.INFO_721204,
 							new String[] {
-									getParameterDesc(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, getManagedBean()
-											.getSmAppl().getApplType()), getManagedBean().getSmAppl().getApplNo(),
-									SmApplicationUtil.getMofApplicationSaveDraftUrl(getManagedBean().getSmAppl()) });
-					// #34831 - End
+									getParameterDesc(
+											ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+											getManagedBean()
+													.getSmAppl()
+													.getApplType()),
+									getManagedBean().getSmAppl()
+											.getApplNo(),
+									SmApplicationUtil
+											.getMofApplicationSaveDraftUrl(getManagedBean()
+													.getSmAppl()) });
 					renewSesionObject();
 				}
 			}

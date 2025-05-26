@@ -884,7 +884,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					noOfDays += processWaiverDetail(waiverDetail);
 				}
 
-				ctBB.getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
+				ctBB.getManagedBean().setDisableDeferment(noOfDays >= ctBB.MAX_DEFERMENT_BOND_DAYS);
 
 				sortBondWaiverDefermentHistory();
 			}
@@ -894,8 +894,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaivedAttachment",
 					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaivedAttachment",
 					getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1048,7 +1046,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		try {
 			// Process history
-			tempAttachmentId = processBondWaiverHistory(bondWaiverFull, waiverAttachmentFull, status, outcome, tempAttachmentId);
+			tempAttachmentId = processBondWaiverHistory(bondWaiverFull, waiverAttachmentFull, status, outcome,
+					tempAttachmentId);
 
 			// Process latest bond waiver
 			if (bondWaiverLatest != null) {
@@ -1065,8 +1064,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "setBondWaiverLatestHistory",
 					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"setBondWaiverLatestHistory", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return bondWaiverFull;
@@ -1108,9 +1105,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @param tempAttachmentId The temporary attachment ID to be assigned.
 	 */
 	private void processLatestBondWaiver(CtBondWaiverDetail bondWaiverLatest, Long tempAttachmentId) {
-	    bondWaiverLatest.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-	    bondWaiverLatest.setTempAttachmentId(tempAttachmentId);
-	    bondWaiverLatest.getCtAttachment().setTempAttachmentId(tempAttachmentId);
+		bondWaiverLatest.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+		bondWaiverLatest.setTempAttachmentId(tempAttachmentId);
+		bondWaiverLatest.getCtAttachment().setTempAttachmentId(tempAttachmentId);
 	}
 	//#13847 end
 	
@@ -1278,9 +1275,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		
 		//#13847 start
-		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()!=null 
-				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() !=null){
-			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action,ctBB.getManagedBean().getContractVer().getStatus().getStatusId()));
+		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
+				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
+			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, ctBB.getManagedBean()
+					.getContractVer().getStatus().getStatusId()));
 		}
 		//#13847 end
 		
@@ -1343,30 +1341,32 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			
 			// #35506 Start
-			if (!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
-					&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
+			AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+			if (auditCtBean.getAuditCtConfigState()) {
+				if (!ctBB.getManagedBean().getContractVer().getDocType().equals(ParameterConst.DOCTYPE_CONTRACT_CREATION)
+						&& (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+								|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))) {
 
-				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
-				AuditContractReqDTO auCtData = new AuditContractReqDTO();
-				auCtData.setDocId(ctContractVer.getCtContract().getContractId());
-				auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
-				auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
-				auCtData.setDocType(resDTO.getCtContractVer().getDocType());
-				auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
-				auCtData.setRoleName(getUserRole());
+					AuditContractReqDTO auCtData = new AuditContractReqDTO();
+					auCtData.setDocId(ctContractVer.getCtContract().getContractId());
+					auCtData.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+					auCtData.setPrevContractVerId(ctContractVer.getCtContract().getLatestContractVer().getContractVerId());
+					auCtData.setDocType(resDTO.getCtContractVer().getDocType());
+					auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
+					auCtData.setRoleName(getUserRole());
 
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-					auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
+							|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
+									.equals(ParameterConst.DOCTYPE_CONTRACT_OWNER_MANAGEMENT))) {
+						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+						auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+						auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+					}
+
+					auditCtBean.saveAuditData(auCtData);
 				}
-
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-					auCtData.setCtIsApproved(AuditContractConst.CT_NO);
-				}
-
-				auditCtBean.saveAuditData(auCtData);
 			}
 			// #35506 End
 
@@ -1901,82 +1901,39 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
 							// Bug #25359 
 							// Fahmi alter condition with putra
-							if (contractAmt.getCtPerformanceBonds().size() > 0
-							&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
-							|| ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
+							//#24333 - Start
+							if (ctBB.isContractExtendOrIsBond()) {
+								if (contractAmt.getCtPerformanceBondsNew().size() > 0
+										&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() == null || ctBB.getManagedBean()
+												.getCtContractAmount().getCtPerformanceBondsNew().isEmpty())) {
+									setTabValue("PB");
+									throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
+								}
+							}
+							if (contractAmt.getCtPerformanceBondsOriginal().size() > 0
+									&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() == null || ctBB.getManagedBean()
+											.getCtContractAmount().getCtPerformanceBondsOriginal().isEmpty())) {
 								setTabValue("PB");
 								throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
 							}
+							//#24333 - End
 						}
 					} 
 				}
 			}	
-			
-			
-			if (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null 
-					&& ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds().size() > 0) {
-				double bondAmount = 0.0;
-				for (CtPerformanceBond performanceBond : ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds()) {
-					bondAmount = bondAmount + performanceBond.getBondAmount();
-					if (performanceBond.getRefNo() == null || performanceBond.getRefNo().isEmpty()) {
-						setTabValue("PB");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.no");
-					}						
+			log.info("validateCtContractVer method test : Start Checking ");			
+			//#24333 - Start
+		    List<CtPerformanceBond> originalBonds = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal();
+		    List<CtPerformanceBond> newBonds = ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew();
 
-					if (performanceBond.getFinancialOrg() == null || performanceBond.getFinancialOrg().getFinancialOrgId() == null) {
-						setTabValue("PB");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.financial.org");
-					}						
-
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-						if (performanceBond.getBondAmount() == 0) {
-							setTabValue("PB");
-							throwExceptions(MessageConst.ERROR_100033, "lbl.ct.pb.amount");
-						}
-					}						
-
-					if (performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) {
-						setTabValue("PB");
-						throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.letter");
-					} 
-				}//End for loop		
-				
-				/** Enhancement #24333: New Rules Changes to Original Bond**/
-				if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE))
-						&& (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null)) {
-					DecimalFormat df = new DecimalFormat("#.00");
-					
-					if (ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() == null) {//#35137,//#35552
-						setTabValue("PB");
-						throw new EpException(MessageConst.ERROR_750021);
-					} else {
-						bondAmount = Double.valueOf(df.format(bondAmount));
-						double oriBondAmount = 0.0;
-						if(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null){
-							oriBondAmount = Double.valueOf(df.format(
-									ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue()));
-						}
-//						for(CtContractAmount oriBondAmountList : ctBB.getManagedBean().getContractVer().getCtContractAmounts()){					
-//						if(oriBondAmountList.getTotalBondAmt() != null){
-//							bondAmount = Double.valueOf(df.format(
-//									oriBondAmountList.getTotalBondAmt().doubleValue()));
-//							}						
-//						}
-						int retval = Double.compare(bondAmount, oriBondAmount);
-						/** Enhancement #20025: Changes for GST in Contract Management
-						if (retval >0) {
-							setTabValue("PB");
-							throw new EpException(MessageConst.ERROR_750015);
-						}
-						**/
-						
-						if (retval < 0) {
-							setTabValue("PB");
-							throw new EpException(MessageConst.ERROR_750016);  
-						}	
-					}
-				}
-			}
+		    if (originalBonds != null) {
+		        validateBonds(originalBonds, action);
+		    }
+		    if (newBonds != null) {
+		        validateBonds(newBonds, action);
+		    }
+		    log.info("validateCtContractVer method test : End Checking ");
+		  //#24333 - End
 		}
 		validationPerformanceBond(action); //#13847
 		
@@ -2037,24 +1994,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @throws EpException if any validation fails, indicating the specific error.
 	 */
 	public void validationPerformanceBond(String action) {
-	    Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
-	    CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
-	    
-	    if (isBondValidationRequired(action)) {
-	    	if(!isBondWaiverConditionsMet(latestWaiver)){
-		        setTabValue("PB");
-		        throw new EpException(MessageConst.ERROR_750061);
-	    	}else{
-		        validateWaiverDates(latestWaiver);
-		        
-		        if (approvalStatus.containsValue(status) && !isBondWaiverInHistory(latestWaiver)) {
-		            setTabValue("PB");
-		            throw new EpException(MessageConst.ERROR_750071);
-		        }
-	    	}
-	    }
-	    
-	    validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
+		Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
+		CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+
+		if (isBondValidationRequired(action)) {
+			if (!isBondWaiverConditionsMet(latestWaiver)) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_750061);
+			} else {
+				validateWaiverDates(latestWaiver);
+
+				if (approvalStatus.containsValue(status) && !isBondWaiverInHistory(latestWaiver)) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_750071);
+				}
+			}
+		}
+
+		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
 	}
 
 	/**
@@ -2812,7 +2769,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctBB.renewSesionObject();//Bug 34142, 15851 - shaqimi start 06/12/2022
 			
 			trBB = new TerminationBackingBean();
-			trBB.renewSesionObject();// Fix - #36707
 			trBB.getManagedBean().setViewContract(false);
 			ctBB.getManagedBean().setNotificationSetting(false);/*#26083 start - basri*/
 			trBB.getManagedBean().setButtonHideActive(true);
@@ -4507,14 +4463,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
 			return;
 		}
-
+		log.info("processPerformanceBonds method test : set List ");
 		List<CtPerformanceBond> bondNew = new ArrayList<>();
 		List<CtPerformanceBond> bondOriginal = new ArrayList<>();
 		ctBB.isContractExtendOrIsBond();
 		boolean hasNewBond = false;
+		CtPerformanceBond emptyNewBond = null;
 
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
-			CtPerformanceBond emptyNewBond = null;
 			if (bond.isBondNew()) {
 				hasNewBond = true;
 				if (bond.isBrandNew()) {
@@ -4532,12 +4488,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					emptyNewBond = bond;
 				}
 			}
-			// Only create new bond if NONE exist
-			if (!hasNewBond && emptyNewBond != null) {
-				bondNew.add(createNewBondFrom(emptyNewBond));
+		}
+
+		// Only create new bond if NONE exist
+		if (!hasNewBond && emptyNewBond != null) {
+			for (CtPerformanceBond bond : bondOriginal) {
+			bondNew.add(createNewBondFrom(bond));
 			}
 		}
 
+	    // Sorting both lists by bond name (case-insensitive)
+	    Comparator<CtPerformanceBond> nameComparator = new Comparator<CtPerformanceBond>() {
+	        public int compare(CtPerformanceBond b1, CtPerformanceBond b2) {
+	            return b1.getRefNo().compareToIgnoreCase(b2.getRefNo());
+	        }
+	    };
+
+	    Collections.sort(bondNew, nameComparator);
+	    Collections.sort(bondOriginal, nameComparator);
 		contractAmt.setCtPerformanceBondsNew(bondNew);
 		contractAmt.setCtPerformanceBondsOriginal(bondOriginal);
 	}
@@ -4571,5 +4539,68 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 
 	// #24333,#36491 - End
+	
+	// #24333 - Start
+	/**
+	 * Validates a list of performance bonds based on required fields and
+	 * contract rules.
+	 * 
+	 * @param bonds
+	 *            the performance bonds to validate
+	 * @param action
+	 *            the user action triggering validation (e.g. submit, approve)
+	 * @throws EpException
+	 *             if any validation check fails
+	 */
+	private void validateBonds(List<CtPerformanceBond> bonds, String action) throws EpException {
+		log.info("validateBonds method test : Start ");
+		if (bonds == null || bonds.isEmpty())
+			return;
+
+		double bondAmount = 0.0;
+		String contractType = ctBB.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode();
+		boolean isCentral = ParameterConst.CONTRACT_TYPE_CENTRAL.equalsIgnoreCase(contractType);
+
+		for (CtPerformanceBond bond : bonds) {
+			bondAmount += bond.getBondAmount();
+
+			if (bond.getRefNo() == null || bond.getRefNo().isEmpty()) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.no");
+			}
+
+			if (bond.getFinancialOrg() == null || bond.getFinancialOrg().getFinancialOrgId() == null) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.financial.org");
+			}
+
+			if (isCentral && bond.getBondAmount() == 0) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100033, "lbl.ct.pb.amount");
+			}
+
+			if (bond.getFileName() == null || bond.getFileName().isEmpty()) {
+				setTabValue("PB");
+				throwExceptions(MessageConst.ERROR_100022, "lbl.ct.pb.ref.letter");
+			}
+		}
+
+		if ((BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action))
+				&& ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null) {
+
+			DecimalFormat df = new DecimalFormat("#.00");
+
+			bondAmount = Double.valueOf(df.format(bondAmount));
+			double originalBondAmt = Double.valueOf(df.format(ctBB.getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()
+					.doubleValue()));
+
+			if (Double.compare(bondAmount, originalBondAmt) < 0) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_750016);
+			}
+		}
+		log.info("validateBonds method test : End ");
+	}
+	// #24333 - End
 	
 }
