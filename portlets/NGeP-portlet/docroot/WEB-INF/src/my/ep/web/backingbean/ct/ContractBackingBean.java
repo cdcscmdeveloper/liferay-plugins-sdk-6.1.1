@@ -2519,10 +2519,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * 
 	 * @throws EpException
 	 */
-	public void checkPerformanceBondExceedDate(){
+	public void checkPerformanceBondExceedDate() {
 		CtBondWaiverDetail bondWaiverLatest = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
-		if(bondWaiverLatest.getWaiverStartDate()!=null && bondWaiverLatest.getWaiverEndDate()!=null){
-			if(findDifference(bondWaiverLatest.getWaiverStartDate(), bondWaiverLatest.getWaiverEndDate()) > MAX_DEFERMENT_BOND_DAYS){
+		if (bondWaiverLatest.getWaiverStartDate() != null && bondWaiverLatest.getWaiverEndDate() != null) {
+			if (findDifference(bondWaiverLatest.getWaiverStartDate(), bondWaiverLatest.getWaiverEndDate()) > MAX_DEFERMENT_BOND_DAYS) {
 				throw new EpException(MessageConst.ERROR_750070);
 			}
 			if (bondWaiverLatest.getWaiverStartDate().compareTo(bondWaiverLatest.getWaiverEndDate()) > 0) {
@@ -2536,14 +2536,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * 
 	 * @exception SLAUtils
 	 */
-	public void bondExempDocReset(){
-		try{
-			if(!getManagedBean().getCtContractAmount().isBondExempted()){
+	public void bondExempDocReset() {
+		try {
+			if (!getManagedBean().getCtContractAmount().isBondExempted()) {
 				delBondExemptedDoc();
 			}
-		}catch(Exception e){
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset", 
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset", getUserIdSessionFromLoginId(), e);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "bondExempReset",
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "bondExempReset",
+					getUserIdSessionFromLoginId(), e);
 		}
 	}
 	//Enhancement 13847 - end
@@ -2765,22 +2766,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void chkBondWaiverAction(){
 		try {
 			getManagedBean().setDisableDeferment(false);
-			
+
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
 				removeDefermentLatest();
-				removeUnactiveDefermentHistory();
-				
+				removeInactiveDefermentHistory();
+
 				if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null) {
 					getManagedBean().getContractVer().setCtBondWaiverDetails(null);
-				} 
-			}else{
+				}
+			} else {
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
 			checkDaysDefermentBondHistory();
-			
+
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction", 
-					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction", getUserIdSessionFromLoginId(), e);
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaiverAction",
+					getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaiverAction",
+					getUserIdSessionFromLoginId(), e);
 		}
 		
 	}
@@ -2800,12 +2802,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	/**
 	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment history
 	 */
-	private void removeUnactiveDefermentHistory(){
+	private void removeInactiveDefermentHistory(){
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
-		//remove bond waiver that hasn't been approved
-		if(CollectionUtils.isNotEmpty(historyDeferment)){
+		// remove bond waiver that hasn't been approved
+		if (CollectionUtils.isNotEmpty(historyDeferment)) {
 			Iterator<CtBondWaiverDetail> iter = historyDeferment.iterator();
-			while(iter.hasNext()){
+			while (iter.hasNext()) {
 				CtBondWaiverDetail bondWaiverHistory = iter.next();
 				if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					removeAttachmentIfExist(bondWaiverHistory.getCtAttachment());
@@ -2833,7 +2835,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private void checkDaysDefermentBondHistory(){
 		int noOfDays = 0;
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
-		if(CollectionUtils.isNotEmpty(historyDeferment)){
+		if (CollectionUtils.isNotEmpty(historyDeferment)) {
 			for (CtBondWaiverDetail bondWaiverHistory : historyDeferment) {
 				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 			}

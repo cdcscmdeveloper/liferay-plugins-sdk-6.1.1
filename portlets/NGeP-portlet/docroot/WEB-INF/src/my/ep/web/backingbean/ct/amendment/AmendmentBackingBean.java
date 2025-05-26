@@ -9310,15 +9310,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	private void chkBondWaivedAttachment() {
-		try{ 
+		try {
 			resetBondWaiverDetails();
-			
-			if (CollectionUtils.isNotEmpty(ctBackingBean.getManagedBean().getContractVer().getCtBondWaiverDetails())){
+
+			if (CollectionUtils.isNotEmpty(ctBackingBean.getManagedBean().getContractVer().getCtBondWaiverDetails())) {
 				List<CtBondWaiverDetail> bondWaiverDetails = ctBackingBean.getManagedBean().getContractVer()
 						.getCtBondWaiverDetails();
 				List<CtAttachment> bondWaiverAttachments = ctBackingBean.getManagedBean().getContractVer()
 						.getBondWaiverAttachments();
-				
+
 				for (CtBondWaiverDetail waiverDetail : bondWaiverDetails) {
 					updateWaiverDetailAttachment(waiverDetail, bondWaiverAttachments);
 					processWaiverDetail(waiverDetail);
