@@ -72,7 +72,7 @@
 		</div>
 		
 		<!-- 34445 start -->
-		<ac:confirmationPopup id="submitApplDlg" widget="submitApplDlg"
+		<ac:confirmationPopupSM id="submitApplDlg" widget="submitApplDlg"
 			okParam="#{accessApplBackingBean.saveAccessApplication('SAVE')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
@@ -80,7 +80,7 @@
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
 			
-		<ac:confirmationPopup id="approveApplDlg" widget="approveApplDlg"
+		<ac:confirmationPopupSM id="approveApplDlg" widget="approveApplDlg"
 			okParam="#{accessApplBackingBean.saveAccessApplication('APPROVE')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
@@ -88,7 +88,7 @@
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
 			
-		<ac:confirmationPopup id="rejectApplDlg" widget="rejectApplDlg"
+		<ac:confirmationPopupSM id="rejectApplDlg" widget="rejectApplDlg"
 			okParam="#{accessApplBackingBean.saveAccessApplication('REJECT')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
