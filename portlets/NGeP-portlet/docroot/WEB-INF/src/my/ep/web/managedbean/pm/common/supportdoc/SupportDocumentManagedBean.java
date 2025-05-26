@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -62,7 +63,7 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private boolean isCapitalEquityChanged;
 	private boolean isBankChanged;
 	
-	/************ AUDIT #28895_35509 *************/
+	/************ START: AUDIT #28895_35509 *************/
 	private PmDocument selectedDocumentOld;
 	private DocumentReqDTO reqDTO;
 	private DocumentResDTO resDTO;
@@ -90,8 +91,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List<PmDocumentRestr> newCompanyCodeTypeAuditList = new ArrayList<>();
 	private List<PmDocumentRestr> newCategoryL3AuditList = new ArrayList<>();
 	private boolean deletedAuditList;
-
-	/************ AUDIT #28895_35509 *************/
+	private PmZone auditPmZone;
+	/************ END: AUDIT #28895_35509 *************/
 	
 	public SupportDocumentManagedBean(){}
 
@@ -489,8 +490,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	public void setBankChanged(boolean isBankChanged) {
 		this.isBankChanged = isBankChanged;
 	}
-
-	/************ AUDIT #28895_35509 *************/
+	
+	/************ START: AUDIT #28895_35509 *************/
 	public PmDocument getSelectedDocumentOld() {
 		return selectedDocumentOld;
 	}
@@ -706,5 +707,20 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	public void setNewCategoryL3AuditList(List<PmDocumentRestr> newCategoryL3AuditList) {
 		this.newCategoryL3AuditList = newCategoryL3AuditList;
 	}
-	/************ AUDIT #28895_35509 *************/	
+
+	/**
+	 * @return the auditPmZone
+	 */
+	public PmZone getAuditPmZone() {
+		return auditPmZone;
+	}
+
+	/**
+	 * @param auditPmZone the auditPmZone to set
+	 */
+	public void setAuditPmZone(PmZone auditPmZone) {
+		this.auditPmZone = auditPmZone;
+	}
+	/************ END: AUDIT #28895_35509 *************/
+	
 }

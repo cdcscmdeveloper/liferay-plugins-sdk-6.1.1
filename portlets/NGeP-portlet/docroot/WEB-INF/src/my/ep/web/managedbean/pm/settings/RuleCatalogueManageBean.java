@@ -151,7 +151,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Long selectedZoneId;
 	/* 27827 - END */
 
-	/************ AUDIT #28895_35509 *************/
+	/************ START: AUDIT #28895_35509 *************/
 	private FeeExemptionResDTO resDTO;
 	private FeeExemptionResDTO resDTOOld;
 
@@ -186,8 +186,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private String auditLevelCode;
 	private String auditFeeExemptionType;
 
-	/************ AUDIT #28895_35509 *************/
-
+	/************ END: AUDIT #28895_35509 *************/
 	
 	public RuleCatalogueManageBean() {
 
@@ -1542,7 +1541,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.selectedZoneId = selectedZoneId;
 	}
 
-	/************ AUDIT #28895_35509 *************/
+	/************ START: AUDIT #28895_35509 *************/
 	public FeeExemptionResDTO getResDTO() {
 		if (resDTO == null) {
 			resDTO = new FeeExemptionResDTO();
@@ -1863,5 +1862,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setAuditResDTOSelectedRuleValueList(List<PmConfigRuleValue> auditResDTOSelectedRuleValueList) {
 		this.auditResDTOSelectedRuleValueList = auditResDTOSelectedRuleValueList;
 	}
-	/************ AUDIT #28895_35509 *************/
+	/************ END: AUDIT #28895_35509 *************/
+	
 }
