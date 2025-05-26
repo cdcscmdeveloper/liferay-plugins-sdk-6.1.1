@@ -4666,6 +4666,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().getSmSupp().setRegNo(null);
 		getManagedBean().getSmSupp().setBusinessType(null);
 		getManagedBean().getSmAppl().setSupplierType(null);
+		getManagedBean().getSmAppl().setApplValidWithSsm(false);
+		getManagedBean().setRegIcCheckSSM(null);
 		// #37900 -end
 		return termAndCondition;
 
