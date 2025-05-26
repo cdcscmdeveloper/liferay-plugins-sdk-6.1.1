@@ -2222,8 +2222,10 @@ public class SmApplicationUtil {
 		managedBean.setPoApproverAcedemicErr(false);//#31130
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-			if (per.getSmStaffAcademics() == null
-					|| per.getSmStaffAcademics().isEmpty()) {
+			//#31130 --START 210525
+			if (per.getPmUser() != null && per.getEpRole() != null && (per.getSmStaffAcademics() == null
+					|| per.getSmStaffAcademics().isEmpty())) {
+				//#31130 --END 210525
 				sb.append("<br/>");
 				sb.append(++i + ". ");
 				sb.append(per.getName());
