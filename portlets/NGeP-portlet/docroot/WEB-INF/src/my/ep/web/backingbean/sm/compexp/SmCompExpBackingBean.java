@@ -19,6 +19,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sm.compexp.SmCompExpReqDTO;
+import my.ep.dto.sm.compexp.SmCompExpResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -398,14 +400,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					getComponentId("clientType"),
+					getComponentId("form:clientType"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775223,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		} else if (null == this.getManagedBean().getSelectedDraft().getAgencyName()
-				|| this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
+		}
+		if (null == this.getManagedBean().getSelectedDraft().getAgencyName() || this.getManagedBean().getSelectedDraft().getAgencyName().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					getComponentId("clientType"),
+					getComponentId("form:agencyName"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775224,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -415,7 +417,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				|| this.getManagedBean().getSelectedDraft().getFileExtensionNo().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					getComponentId("clientType"),
+					getComponentId("form:fileExtensionNo"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775225,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -427,14 +429,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null == this.getManagedBean().getContractEffDateTemp()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					getComponentId("clientType"),
+					getComponentId("form:contractEffDate"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775226,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 		if (null == this.getManagedBean().getSelectedDraft().getContractExpDate()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					getComponentId("clientType"),
+					getComponentId("form:contractExpDate"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775227,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -446,7 +448,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (null == this.getManagedBean().getCompExpDocList() || this.getManagedBean().getCompExpDocList().isEmpty()) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
-					getComponentId("clientType"),
+					getComponentId("form:suppDoc"),
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
@@ -454,7 +456,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			if (null == cat.getCategoryL3().getCategoryL3Id()) {
 				error = true;
 				FacesContext.getCurrentInstance().addMessage(
-						getComponentId("clientType"),
+						getComponentId("form:compExpCatCodes"),
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775229,
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
@@ -468,10 +470,48 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	}
 
 	public void declareComExp() {
-
+		SmCompExpDraft draft =  this.getManagedBean().getSelectedDraft();
+		SmCompExpMaster master = new SmCompExpMaster();
+		master.setSmSupplier(draft.getSmSupplier());
+		master.setSmAppl(draft.getSmSupplier().getSmAppl());
+		master.setTitle(draft.getTitle());
+		master.setProcumentMode(draft.getProcumentMode());
+		master.setOriAgencyName(draft.getOriAgencyName());
+		master.setAgencyName(draft.getAgencyName());
+		master.setOrgProfile(draft.getOrgProfile());
+		master.setFileReferenceNo(draft.getFileReferenceNo());
+		master.setFileExtensionNo(draft.getFileExtensionNo());
+		master.setLoaNo(draft.getLoaNo());
+		master.setContractValue(draft.getContractValue());
+		master.setPaymentMethod(draft.getPaymentMethod());
+		master.setClientType(draft.getClientType());
+		master.setContractEffDate(draft.getContractEffDate());
+		master.setContractExpDate(draft.getContractExpDate());
+		master.setContractStatus(draft.getContractStatus());
+		
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterExp(master);
+		
+		SmCompExpResDTO resDTO = new SmCompExpResDTO();
+		resDTO = getCompExpSo().declareDraft(reqDTO);
+		if (resDTO.isSuccessful()) {
+			
+			
+			this.getManagedBean().getDraftSmDataModel().reloadData();
+			this.getManagedBean().getDraftCtDataModel().reloadData();
+			redirectToDraft();
+		}
 	}
 
 	public void delCompExp() {
-
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		SmCompExpResDTO resDTO = new SmCompExpResDTO();
+		resDTO = getCompExpSo().deleteDraft(reqDTO);
+		if (resDTO.isSuccessful()) {
+			this.getManagedBean().getDraftSmDataModel().reloadData();
+			this.getManagedBean().getDraftCtDataModel().reloadData();
+			redirectToDraft();
+		}
 	}
 }

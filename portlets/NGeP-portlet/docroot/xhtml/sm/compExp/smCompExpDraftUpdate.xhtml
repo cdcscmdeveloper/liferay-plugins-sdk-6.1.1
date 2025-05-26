@@ -62,40 +62,30 @@
 								for="oriAgencyNameToolTipsId"
 								value="#{lbl['lbl.sm.comp.exp.update.ori.agency.name.tooltip']}" /></td>
 					</tr>
-					<tr>
-						<td style="width: 34%"><p:outputLabel
-								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td style="width: 66%"><p:inputText size="60" id="agencyName"
-								value="#{compExpMB.selectedDraft.agencyName}" readonly="true" />
+				</p:outputPanel>
+				<tr>
+					<td style="width: 34%"><p:outputLabel
+							styleClass="outputLabel-view-label2"
+							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
+							value="*"
+							rendered="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeFederal}"
+							styleClass="mandatory" /></td>
+					<td style="width: 66%"><p:inputText size="60" id="agencyName"
+							value="#{compExpMB.selectedDraft.agencyName}"
+							readonly="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeFederal}" />
+						<p:outputPanel
+							rendered="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeFederal}">
 							<p:commandLink process="@this" update=":form"
 								action="#{smPtjPopupBB.initPopup}" onclick="blockWidget.show()"
 								oncomplete="blockWidget.hide(),smPtjPopupWV.show()">
 								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
-							</p:commandLink> <p:graphicImage id="agencyNameToolTipsId"
-								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="agencyNameToolTipsId"
+							</p:commandLink>
+							<p:graphicImage id="agencyNameToolTipsId"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip for="agencyNameToolTipsId"
 								value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" />
-							<p:message for="agencyName" display="icon" /></td>
-					</tr>
-				</p:outputPanel>
-				<p:outputPanel
-					rendered="#{compExpMB.selectedDraft.clientType == ParameterConst.clientTypeNonFederal}">
-					<tr>
-						<td style="width: 34%"><p:outputLabel
-								styleClass="outputLabel-view-label2"
-								value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /></td>
-						<td style="width: 66%"><p:outputLabel
-								rendered="#{not empty compExpMB.selectedDraft.agencyName}"
-								styleClass="outputLabel-view"
-								value="#{compExpMB.selectedDraft.agencyName}" /> <p:inputText
-								id="agencyName"
-								rendered="#{empty compExpMB.selectedDraft.agencyName}"
-								value="#{compExpMB.selectedDraft.agencyName}" /> <p:message
-								for="agencyName" display="icon" /></td>
-					</tr>
-				</p:outputPanel>
+						</p:outputPanel> <p:message for="agencyName" display="icon" /></td>
+				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
@@ -268,23 +258,23 @@
 		</div>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
 			toggleable="true">
-			<p:dataTable id="compExpCatCodesId" rows="10" rowIndexVar="index"
+			<p:dataTable id="compExpCatCodes" rows="10" rowIndexVar="index"
 				value="#{compExpMB.compExpCatCodeList}" var="compExpCatCode"
 				widgetVar="compExpCatCodesWV">
-				<ac:paginator for="compExpCatCodesId" />
+				<ac:paginator for="compExpCatCodes" />
 				<c:if test="#{compExpMB.compExpCatCodeListEmpty}">
 					<p:column style="width:2%">
 						<f:facet name="header">
 							<p:selectBooleanCheckbox value="#{compExpMB.selectedAll}">
 								<p:ajax listener="#{compExpBB.selectAllCatCodes}"
 									process="@this"
-									update=":#{p:component('compExpCatCodesId')}, :#{p:component('delCatBtn')}" />
+									update=":#{p:component('compExpCatCodes')}, :#{p:component('delCatBtn')}" />
 							</p:selectBooleanCheckbox>
 						</f:facet>
 						<p:selectBooleanCheckbox value="#{compExpCatCode.selected}">
 							<p:ajax listener="#{compExpBB.selectCatCode(index)}"
 								process="@this"
-								update=":#{p:component('compExpCatCodesId')}, :#{p:component('delCatBtn')}" />
+								update=":#{p:component('compExpCatCodes')}, :#{p:component('delCatBtn')}" />
 						</p:selectBooleanCheckbox>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
@@ -327,16 +317,25 @@
 								itemValue="#{subDiv.categoryL3Id}"
 								value="#{compExpMB.supplierSubDivCatList}" var="subDiv" />
 							<p:ajax event="change"
-								update=":#{p:component('compExpCatCodesId')}, :#{p:component('addCatBtn')}"
+								update=":#{p:component('compExpCatCodes')}, :#{p:component('addCatBtn')}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								listener="#{compExpBB.checkDuplicateCatCode(compExpCatCode.categoryL3.categoryL3Id, index)}"
 								process="@this" />
 						</p:selectOneMenu>
-						<p:message for="subDivDDId" display="icon" />
+						<p:message for="compExpCatCodes" display="icon" />
 					</p:column>
 				</c:if>
-				<c:otherwise>
-				</c:otherwise>
+				<c:if test="#{!compExpMB.compExpCatCodeListEmpty}">
+					<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+						<h:outputText value="#{compExpCatCode.categoryL1.categoryName}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+						<h:outputText value="#{compExpCatCode.categoryL2.categoryName}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+						<h:outputText value="#{compExpCatCode.categoryL3.categoryName}" />
+					</p:column>
+				</c:if>
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
@@ -345,7 +344,7 @@
 					disabled="#{compExpMB.catCodeNotComplete}"
 					onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
 					process="@this" rendered="#{compExpMB.compExpCatCodeListEmpty}"
-					update=":#{p:component('compExpCatCodesId')}, @this"
+					update=":#{p:component('compExpCatCodes')}, @this"
 					value="#{lbl['lbl.sm.button.add']}">
 				</p:commandButton>
 				<p:commandButton id="delCatBtn"
@@ -420,7 +419,7 @@
 					onclick="confirmDelSelectedCatDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 					process="@this"
-					update=":#{p:component('compExpCatCodesId')}, :#{p:component('delCatBtn')}, :#{p:component('addCatBtn')}"
+					update=":#{p:component('compExpCatCodes')}, :#{p:component('delCatBtn')}, :#{p:component('addCatBtn')}"
 					value="#{lbl['lbl.btn.delete']}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="confirmDelSelectedCatDialogWV.hide();" />
@@ -434,7 +433,7 @@
 				escape="false" />
 			<div align="right">
 				<p:commandButton action="#{compExpBB.delCompExp()}"
-					onclick="confirmDelSelectedCatDialogWV.hide();"
+					onclick="delDuplicateDialogWV.hide();"
 					oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 					process="@this" update=":form" value="#{lbl['lbl.btn.delete']}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
