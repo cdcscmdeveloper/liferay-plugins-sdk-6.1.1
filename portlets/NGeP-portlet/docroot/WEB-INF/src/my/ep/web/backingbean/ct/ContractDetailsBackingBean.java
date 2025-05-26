@@ -884,7 +884,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					noOfDays += processWaiverDetail(waiverDetail);
 				}
 
-				ctBB.getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
+				ctBB.getManagedBean().setDisableDeferment(noOfDays >= ctBB.MAX_DEFERMENT_BOND_DAYS);
 
 				sortBondWaiverDefermentHistory();
 			}
@@ -894,8 +894,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaivedAttachment",
 					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaivedAttachment",
 					getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1048,7 +1046,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		try {
 			// Process history
-			tempAttachmentId = processBondWaiverHistory(bondWaiverFull, waiverAttachmentFull, status, outcome, tempAttachmentId);
+			tempAttachmentId = processBondWaiverHistory(bondWaiverFull, waiverAttachmentFull, status, outcome,
+					tempAttachmentId);
 
 			// Process latest bond waiver
 			if (bondWaiverLatest != null) {
@@ -1065,8 +1064,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "setBondWaiverLatestHistory",
 					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"setBondWaiverLatestHistory", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return bondWaiverFull;
@@ -1108,9 +1105,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @param tempAttachmentId The temporary attachment ID to be assigned.
 	 */
 	private void processLatestBondWaiver(CtBondWaiverDetail bondWaiverLatest, Long tempAttachmentId) {
-	    bondWaiverLatest.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
-	    bondWaiverLatest.setTempAttachmentId(tempAttachmentId);
-	    bondWaiverLatest.getCtAttachment().setTempAttachmentId(tempAttachmentId);
+		bondWaiverLatest.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
+		bondWaiverLatest.setTempAttachmentId(tempAttachmentId);
+		bondWaiverLatest.getCtAttachment().setTempAttachmentId(tempAttachmentId);
 	}
 	//#13847 end
 	
@@ -1278,9 +1275,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		
 		//#13847 start
-		if(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest()!=null 
-				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() !=null){
-			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action,ctBB.getManagedBean().getContractVer().getStatus().getStatusId()));
+		if (ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest() != null
+				|| ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory() != null) {
+			ctContractVer.setCtBondWaiverDetails(setBondWaiverLatestHistory(action, ctBB.getManagedBean()
+					.getContractVer().getStatus().getStatusId()));
 		}
 		//#13847 end
 		
@@ -1996,24 +1994,24 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @throws EpException if any validation fails, indicating the specific error.
 	 */
 	public void validationPerformanceBond(String action) {
-	    Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
-	    CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
-	    
-	    if (isBondValidationRequired(action)) {
-	    	if(!isBondWaiverConditionsMet(latestWaiver)){
-		        setTabValue("PB");
-		        throw new EpException(MessageConst.ERROR_750061);
-	    	}else{
-		        validateWaiverDates(latestWaiver);
-		        
-		        if (approvalStatus.containsValue(status) && !isBondWaiverInHistory(latestWaiver)) {
-		            setTabValue("PB");
-		            throw new EpException(MessageConst.ERROR_750071);
-		        }
-	    	}
-	    }
-	    
-	    validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
+		Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
+		CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
+
+		if (isBondValidationRequired(action)) {
+			if (!isBondWaiverConditionsMet(latestWaiver)) {
+				setTabValue("PB");
+				throw new EpException(MessageConst.ERROR_750061);
+			} else {
+				validateWaiverDates(latestWaiver);
+
+				if (approvalStatus.containsValue(status) && !isBondWaiverInHistory(latestWaiver)) {
+					setTabValue("PB");
+					throw new EpException(MessageConst.ERROR_750071);
+				}
+			}
+		}
+
+		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
 	}
 
 	/**
