@@ -2460,7 +2460,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		try {
 			if (CollectionUtils.isEmpty(defermentHistory)) {
-				getManagedBean().getContractVer().setBondWaiverDefermentHistory(new ArrayList<CtBondWaiverDetail>());
+				defermentHistory = new ArrayList<>();
 			}
 
 			// reverse list to insert new data at first row
@@ -2492,6 +2492,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			for (CtBondWaiverDetail bondWaiverHistory : defermentHistory) {
 				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 			}
+			getManagedBean().getContractVer().setBondWaiverDefermentHistory(defermentHistory);
 			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 
 		} catch (Exception e) {
