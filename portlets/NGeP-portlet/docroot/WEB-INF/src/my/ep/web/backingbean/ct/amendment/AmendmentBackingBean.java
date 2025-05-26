@@ -9724,12 +9724,28 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return The type of cancellation (e.g., BUMI or DA).
 	 */
 	public String getContractCancelType() {
+		acknowledgedValidation();
 		if (this.getManagedBean().isDisciplinaryActionCancel()) {
 			return ContractConst.CANCEL_DA;
 		} else if (this.getManagedBean().isSupplierBumiCancel()) {
 			return ContractConst.CANCEL_BUMI;
 		}
 		return null;
+	}
+	
+	/**
+	 * Method to check when no DA cancel and no Bumi Cancel during acknowledged
+	 * after has been cancel by DA/Bumi
+	 */
+	public void acknowledgedValidation() {
+		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
+		if (!this.getManagedBean().isDisciplinaryActionCancel() && !this.getManagedBean().isSupplierBumiCancel()) {
+			if (statusId.equals(ContractStatusConst.FA_DISCIPLINARY_PENDING_CANCELLATION_ACKNOWLEDGEMENT)) {
+				this.getManagedBean().setDisciplinaryActionCancel(true);
+			} else if (statusId.equals(ContractStatusConst.FA_BUMI_PENDING_CANCELLATION_ACKNOWLEDGEMENT)) {
+				this.getManagedBean().setSupplierBumiCancel(true);
+			}
+		}
 	}
 	
 	/**
