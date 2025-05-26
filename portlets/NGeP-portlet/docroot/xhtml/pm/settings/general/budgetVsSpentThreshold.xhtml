@@ -22,14 +22,14 @@
 		</table>
 
 		<!-- 34445 start -->
-		<ac:confirmationPopup id="saveBudgetThreInfoDlg" widget="saveBudgetThreInfoDlg"
+		<ac:confirmationPopupSM id="saveBudgetThreInfoDlg" widget="saveBudgetThreInfoDlg"
 			okParam="#{ruleCatalogueBackingBean.saveThresholds(2)}"
 			hasParam="true"
 			okProcess="@([id$=budgetThresholdPanel])"
 			width="400" height="100"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}" 
-			update=":form"
+			update="@form"
 			loadingWidget="blockWidget" />
 		<!-- 34445 end -->
 		

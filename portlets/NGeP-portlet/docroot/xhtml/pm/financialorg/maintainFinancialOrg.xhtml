@@ -49,7 +49,7 @@
 	    <ui:include src="generalFinancialdetails.xhtml" />
 	    
 	    <!-- 34445 start -->
-		<ac:confirmationPopup id="saveInfoDlg" widget="saveInfoDlg"
+		<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
 			loadingWidget="blockWidget"
 			okParam="#{financialOrgBackingBean.saveFinancialOrg('SAVE')}"
 			width="400" height="100" hasParam="true"
@@ -57,7 +57,7 @@
 			content="#{lbl['lbl.pm.btn.save.msg']}"
 			update="@([id$=Msg])"/>
 			
-		<ac:confirmationPopup id="updateInfoDlg" widget="updateInfoDlg"
+		<ac:confirmationPopupSM id="updateInfoDlg" widget="updateInfoDlg"
 			loadingWidget="blockWidget"
 			okParam="#{financialOrgBackingBean.saveFinancialOrg('UPDATE')}"
 			width="400" height="100" hasParam="true"
