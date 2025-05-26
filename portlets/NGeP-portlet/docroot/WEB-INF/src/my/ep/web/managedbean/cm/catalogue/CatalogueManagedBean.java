@@ -577,7 +577,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean addPromotion = false;
 	//#30457 - end 1/08/2022
 	//38255-Start
-	private static List<ScheduleInfo> schInfo;
+	private List<ScheduleInfo> schInfo;
 	//38255-End
 
 	private class ExpiredSearchPagingDataModel extends
@@ -4477,7 +4477,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	//38255-Start
 	public List<ScheduleInfo> getSchInfo() {
 		if (schInfo == null)
-			schInfo = new ArrayList<ScheduleInfo>();
+			schInfo = new ArrayList<>();
 		return schInfo;
 	}
 
