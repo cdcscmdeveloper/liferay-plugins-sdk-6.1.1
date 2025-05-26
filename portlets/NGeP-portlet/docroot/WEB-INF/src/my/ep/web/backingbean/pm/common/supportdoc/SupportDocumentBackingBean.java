@@ -4,7 +4,7 @@
  *                ePerolehan 
  * Release 1.00    
  *    
- * Copyright ï¿½ 2013 Archisoft. All rights reserved.
+ * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
 */
@@ -50,6 +50,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -804,10 +805,12 @@ public class SupportDocumentBackingBean extends
 			pmDocRestr = getManagedBean().getAppTypeRestrictions()
 					.get(rowIndex);
 			pmDocRestr.setDeleted(true);
+			//START: #35509
 			if (this.getManagedBean().getDeleteAppTypeRestrictionsAuditList() == null) {
 				this.getManagedBean().setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
 			}
 			getManagedBean().getDeleteAppTypeRestrictionsAuditList().add(pmDocRestr);
+			//END: #35509
 			getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
 		} else if (restrictionType == RESTR_COMP) {
 			pmDocRestr = getManagedBean().getComTypeRestrictions()
@@ -871,41 +874,49 @@ public class SupportDocumentBackingBean extends
 				pmDocRestr = getManagedBean().getAppTypeRestrictions()
 						.get(rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				//START: #35509
 				if (this.getManagedBean().getDeleteAppTypeRestrictionsAuditList() == null) {
 					this.getManagedBean().setDeleteAppTypeRestrictionsAuditList(new ArrayList<PmDocumentRestr>());
 				}
 				getManagedBean().getDeleteAppTypeRestrictionsAuditList().add(pmDocRestr);
+				//END: #35509
 				getManagedBean().getAppTypeRestrictions().remove(pmDocRestr);
 			} else if (restrictionType == RESTR_COMP) {
 				pmDocRestr = getManagedBean().getComTypeRestrictions()
 						.get(rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				//START: #35509
 				if (this.getManagedBean().getDeleteComTypeRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteComTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
 				}
 				getManagedBean().getDeleteComTypeRestrictionsAudit().add(pmDocRestr);
+				//END: #35509
 				getManagedBean().getComTypeRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_SUPP) {
 				pmDocRestr = getManagedBean().getSuppTypeRestrictions().get(
 						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				//START: #35509
 				if (this.getManagedBean().getDeleteSuppTypeRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
 				}
-				;
+				
 				getManagedBean().getDeleteSuppTypeRestrictionsAudit().add(pmDocRestr);
+				//END: #35509
 				getManagedBean().getSuppTypeRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == RESTR_CATEGORY) {
 				pmDocRestr = getManagedBean().getCategoryRestrictions().get(
 						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				//START: #35509
 				if (this.getManagedBean().getDeleteCategoryRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteCategoryRestrictionsAudit(new ArrayList<PmDocumentRestr>());
 				}
-				;
+				
 				getManagedBean().getDeleteCategoryRestrictionsAudit().add(pmDocRestr);
+				//END: #35509
 				getManagedBean().getCategoryRestrictions().remove(pmDocRestr);
 
 			} else if (restrictionType == CHECKLIST) {
@@ -918,10 +929,12 @@ public class SupportDocumentBackingBean extends
 				pmDocRestr = getManagedBean().getCertBodyRestrictions().get(
 						rowIndex.intValue());
 				pmDocRestr.setDeleted(true);
+				//START: #35509
 				if (this.getManagedBean().getDeleteCertBodyRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteCertBodyRestrictionsAudit(new ArrayList<PmDocumentRestr>());
 				}
 				getManagedBean().getDeleteCertBodyRestrictionsAudit().add(pmDocRestr);
+				//END: #35509
 				getManagedBean().getCertBodyRestrictions().remove(pmDocRestr);
 
 			}
@@ -2137,14 +2150,16 @@ public class SupportDocumentBackingBean extends
 				System.out.println("1. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				pmDocument.setCreatedBy(user.getUserId());
 				messageId = MessageConst.TD_80800;
-				/** AUDIT 35509 **/
+				/** START: AUDIT 35509 **/
 				getManagedBean().setUpdated(false);
-				/** AUDIT 35509 **/
+				/** END: AUDIT 35509 **/
 			} else {
 				System.out.println("2. getUserId = " + user.getUserId() + "| userName == " + user.getUserName());
 				messageId = MessageConst.TD_80801;
+				//START: #35509
 				getManagedBean().setUpdated(true);
 				getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
+				//END: #35509
 			}
 			log.info("setChangedBy|| userId == " + user.getUserId() + "| userName == " + user.getUserName());
 			pmDocument.setChangedBy(user != null ? user.getUserId() : null);
@@ -2182,10 +2197,10 @@ public class SupportDocumentBackingBean extends
 			/************ AUDIT #28895_35509 - START *************/
 			this.getManagedBean().setNewCompanyCodeTypeAuditList(resDTO.getNewCompanyCodeTypeAuditList());
 			this.getManagedBean().setNewCategoryL3AuditList(resDTO.getNewCategoryL3AuditList());
-			/************ AUDIT #28895_35509 - START *************/
-
+			/************ AUDIT #28895_35509 - END *************/
+			
 			reloadEditData(resDTO.getDocument().getDocumentId());
-
+			
 			/************ AUDIT #28895_35509 - START *************/
 			AuditPMBackingBeanTemplate auTemplate;
 			String modName;
@@ -2199,9 +2214,21 @@ public class SupportDocumentBackingBean extends
 				auTemplate = new AuditPMSupportingDocumentBackingBean();
 				modName = AuditPMSupplierMgtConfigConst.PM_AUD_SD;
 			}
-			/************ AUDIT #28895_35509 - START *************/
+			/************ AUDIT #28895_35509 - END *************/
+
 			if (resDTO.isSuccessful()) {
+				// loadSupportDoc(resDTO.getDocument().getDocumentId());
+				//START: #35509
+				IZoneSO zoneSo = (IZoneSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IZoneSO.class);
+				ZoneReqDTO zoneReqDto = new ZoneReqDTO();
+				zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
+				
+				this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
+				
 				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
+				//END: #35509
 				if (createAction) {
 					PmCommonUtil.showFacesMsg(
 							FacesContext.getCurrentInstance(), 
@@ -2211,7 +2238,8 @@ public class SupportDocumentBackingBean extends
 									getParameterDesc(pmDocument
 											.getDocCategoryCode()),
 									pmDocument
-.getDocName() });
+											.getDocName()});				
+					
 					/************ AUDIT #28895_35509 - START **************/
 					getManagedBean().setMandatoryUpdatedPmDocumentRestrList(pmDocument.getPmDocumentRestrs());
 					if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_QTCHECKLISTCFG)
@@ -2220,6 +2248,7 @@ public class SupportDocumentBackingBean extends
 						auTemplate.auditSaveData(getManagedBean(), modName);
 					}
 					/************ END AUDIT #28895_35509 - END *************/
+					
 					return redirectToSearchSupportDoc();
 				} else {
 					PmCommonUtil.showFacesMsg(
@@ -2237,7 +2266,7 @@ public class SupportDocumentBackingBean extends
 						auTemplate.auditSaveData(getManagedBean(), modName);
 					}
 					/************ END AUDIT #28895_35509 - END *************/
-
+					
 					return null;
 				}
 			}
