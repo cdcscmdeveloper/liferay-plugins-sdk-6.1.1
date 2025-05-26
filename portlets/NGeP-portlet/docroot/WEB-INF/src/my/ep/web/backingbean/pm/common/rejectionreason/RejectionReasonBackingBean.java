@@ -828,13 +828,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		try{
 			List<PmPIDReason> toDeletePReasons  = new ArrayList<PmPIDReason>();
 			List<PmPIDReason> toReplacePReasons  = new ArrayList<PmPIDReason>();
-			List<PmPIDReason> auditPIDReason  = new ArrayList<>(); // 35509
+			List<PmPIDReason> auditPIDReason  = new ArrayList<>(); // 28895-35509
 			for(PmPIDReason pidReason: rejectReason.getPmPIDReasonList()){
 				log.info(".............pidReason="+pidReason.getDocType());
 				if(pidReason.isBrandNew()){
 					log.info(".......pidReason.isBrandNew()"+pidReason.isBrandNew());
 					log.info(".......this.getPmPidListOrigin().size()"+this.getManagedBean().getPmPidListOrigin().size());
-					auditPIDReason.add(pidReason); // 35509
+					auditPIDReason.add(pidReason); // 28895-35509
 					for(PmPIDReason pReason: this.getManagedBean().getPmPidListOrigin()){
 						log.info(".......pReason.getDocType="+pReason.getDocType());
 					    if(pidReason.getDocType().equals(pReason.getDocType())){
@@ -857,8 +857,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			rejectReason.getPmPIDReasonList().removeAll(toDeletePReasons);
 			rejectReason.getPmPIDReasonList().addAll(toReplacePReasons);
+			/************ AUDIT #28895-35509 START*************/
+			if (getManagedBean().getAuditAddPIDReasonList() == null) {
+				getManagedBean().setAuditAddPIDReasonList(new ArrayList<PmPIDReason>());
+			}
 			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason); // 35509
-			
+			/************ AUDIT #28895-35509 END*************/
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
