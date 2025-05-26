@@ -92,10 +92,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
-import my.ep.constant.ct.audit.AuditContractConst; //35506
-import my.ep.dto.ct.audit.AuditContractReqDTO; //35506
-import my.ep.web.backingbean.ct.audit.AuditContractBackingBean; //35506
-
 /**
  * Backing Bean For Supplier
  *  * 
@@ -651,37 +647,6 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
-				
-				// #35506 Start
-				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
-				if (auditCtBean.getAuditCtConfigState()) {
-					if (getManagedBean().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_UPDATE_FACTORING)
-							&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-						
-						AuditContractReqDTO auCtData = new AuditContractReqDTO();
-						auCtData.setDocId(getManagedBean().getCtContract().getContractId());
-						auCtData.setContractVerId(getManagedBean().getContractVer().getContractVerId());
-						auCtData.setPrevContractVerId(getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
-						auCtData.setDocType(getManagedBean().getDocType());
-						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
-						auCtData.setRoleName(getUserRole());
-
-						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-						}
-
-						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
-						}
-
-						auditCtBean.saveAuditData(auCtData);
-					}
-				}
-				// #35506 End
-				
 				String messageId = MessageConst.INFO_700043;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					messageId = MessageConst.INFO_700011;
