@@ -538,7 +538,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 							flReqDTO.setOrgProfileId(orgProfileId);
 							//38255-Start
-							List<FulfilmentResDTO> scheduleDetails = requestSO.getFulfilmentScheduleDetails(flReqDTO);//all CR under this contract filter by contractId,profile id -#28469
+							List<FulfilmentResDTO> scheduleDetails = requestSO.getFulfilmentScheduleDetails(flReqDTO);
 
 							List<VCtActiveContract> infoActiveContractList = contractSO
 									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();//all schedule list under this contract
@@ -3423,7 +3423,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		// 38255-Start
 		public List<ScheduleInfo> getSchInfo() {
 			if (schInfo == null)
-				schInfo = new ArrayList<ScheduleInfo>();
+				schInfo = new ArrayList<>();
 	
 			return schInfo;
 		}
