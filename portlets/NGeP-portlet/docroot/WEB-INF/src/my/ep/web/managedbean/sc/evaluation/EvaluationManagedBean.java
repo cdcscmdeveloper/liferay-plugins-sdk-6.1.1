@@ -689,7 +689,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean isComplianceCnfrm;
 	private boolean isComplianceOldNull;
 	private boolean isComplianceOldNo;
-	private String actualIdToUpdate;
 	/*#29187 End Vinod*/
 	
 	//34528-uat 4serangkai 
@@ -4403,14 +4402,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	public void setComplianceOldNo(boolean isComplianceOldNo) {
 		this.isComplianceOldNo = isComplianceOldNo;
-	}
-
-	public String getActualIdToUpdate() {
-		return actualIdToUpdate;
-	}
-
-	public void setActualIdToUpdate(String actualIdToUpdate) {
-		this.actualIdToUpdate = actualIdToUpdate;
 	}
 	
 	/* #29187 End Vinod */
