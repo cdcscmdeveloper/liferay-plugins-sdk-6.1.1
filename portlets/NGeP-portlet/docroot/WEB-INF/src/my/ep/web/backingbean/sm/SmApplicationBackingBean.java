@@ -7054,12 +7054,25 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateWorkshopToSmAppl() {
 		// 29379 - Site Visit Grouping Enhancement -28775 - start
 		final int minEmployee = 2;
-		if(getManagedBean().getSelectedWorkShopFacility().getSmSvWorkers().size() < minEmployee){
+		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		
+		if(smFac.getSmSvWorkers().size() < minEmployee){
 			throw new EpException(
 					SmCommonUtil.getMessage("lbl.sm.insertemployee.instruction",null), null);
 		}
+		//validate for no duplicate IC/passport
+		for(SmSvWorker worker1 : smFac.getSmSvWorkers()){
+			for(SmSvWorker worker2 : smFac.getSmSvWorkers()){
+				if(!worker1.equals(worker2) 
+						&& worker1.getIdentificationNo().equals(worker2.getIdentificationNo())){
+					throw new EpException(MessageConst.ERROR_722524,
+							new String[] { worker1.getIdentificationNo() });
+				}
+			}
+			
+		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
-		SmFacility smFac = getManagedBean().getSelectedWorkShopFacility();
+		
 		SmCommonUtil.getInstance().setUserDetails(smFac);
 		SmApplicationUtil.addOrUpdateFacilityCategory(getManagedBean(), smFac);
 		EntityHelper.addOrUpdateEntityToList(smFac, getManagedBean()
@@ -11199,8 +11212,8 @@ public class SmApplicationBackingBean extends
 			sourcingIntegrationSO.checkQTSupplierBranchDeleted(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(),  getManagedBean().getSmAppl().getSmSupplierBranches(), getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0));
 		}
 		//#28777 - END
-		return submitPOorApproverReviewToBPM(decision);
-
+		//#34400
+		return "";
 	}
 
 	//#31386 - START

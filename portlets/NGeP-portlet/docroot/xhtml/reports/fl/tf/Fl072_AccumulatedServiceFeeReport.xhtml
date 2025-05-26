@@ -72,7 +72,9 @@
 	</table>
 	<div style="text-align: right;">
 		<p:commandButton id="generateBtnId" value="#{lbl['lbl.btn.generate']}"
-			process="@form" update="@form" action="#{tfRptBB.generateReport()}">
+			process="@form" onstart="blockWidget.show()"
+			oncomplete="blockWidget.hide()" update="@form"
+			action="#{tfRptBB.generateReport()}">
 			<f:setPropertyActionListener
 				target="#{tfRptBB.managedBean.reportCode}"
 				value="#{flReportBB.managedBean.reportCode}" />

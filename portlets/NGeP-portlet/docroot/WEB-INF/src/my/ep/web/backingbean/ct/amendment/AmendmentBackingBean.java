@@ -1596,7 +1596,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getNewStaxAmount() == null) {
 				ctBackingBean.getManagedBean().getContractVer().getCtAmendment().setNewStaxAmount(BigDecimal.ZERO);				
 			}
+			
+			// 24333 - Start
+			if (ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa() != null) {
+				ScLoa ctloa = ctBackingBean.getManagedBean().getContractVer().getCtContract().getLoa();
+				if (ctloa.getGstAmt() == null) {
+					ctloa.setGstAmt(BigDecimal.ZERO);
+				}
+				if (ctloa.getSstAmt() == null) {
+					ctloa.setSstAmt(BigDecimal.ZERO);
+				}
+				ctBackingBean.getManagedBean().setOriginalOverallAmount(
+						ctloa.getLoaAmt().add(ctloa.getGstAmt().add(ctloa.getSstAmt())));
 
+			}
+			// 24333 - Start
 			
 			// Amendment process	  
 			// Redmine 19600 - Amendment with Supplement
@@ -1914,6 +1928,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						break;
 					}
 				}	     		
+			} else if (getManagedBean().getTaskName() != null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)
+					&& outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) { //Start Fix - #38210
+				String role;
+				for(CtCommitteeMember committeeMember : ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+					committeeMember.setSignedOff(false);
+					if(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH) 
+							|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) { 
+						role = "FPB_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+					} else {
+						role = getManagedBean().getCommitteeType() + "_" + MemberRole.getDisplayName(committeeMember.getMemberRole().getParameterCode());
+					}
+					reqDTO.setUserRole(role);
+				} //End Fix - #38210
 			} else {
 				reqDTO.setUserRole(getUserRole());
 			}

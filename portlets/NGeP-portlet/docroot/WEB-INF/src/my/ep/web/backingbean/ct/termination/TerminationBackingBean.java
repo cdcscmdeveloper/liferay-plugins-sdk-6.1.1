@@ -581,6 +581,13 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 
 		try {
 			flush();
+			//Start - Fix #36707
+			if (getManagedBean().getContractVer().getTerminationLetterAttachments() != null) {
+				while (!getManagedBean().getContractVer().getTerminationLetterAttachments().isEmpty()) {
+					 ctBB.deleteTerminationLetterAction(0);
+				}
+			}
+			//End - Fix #36707
 			String parameterCode = ParameterHelper.getInstance().getPmParameterById(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()).getParameterCode();
 			if (parameterCode.equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
 				getManagedBean().setRemedy(true);
