@@ -884,7 +884,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					noOfDays += processWaiverDetail(waiverDetail);
 				}
 
-				ctBB.getManagedBean().setDisableDeferment(noOfDays >= 60?true:false);
+				ctBB.getManagedBean().setDisableDeferment(noOfDays >= ctBB.MAX_DEFERMENT_BOND_DAYS);
 
 				sortBondWaiverDefermentHistory();
 			}
@@ -894,8 +894,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaivedAttachment",
 					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(), "chkBondWaivedAttachment",
 					getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 	}
 	
@@ -1065,8 +1063,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "setBondWaiverLatestHistory",
 					ctBB.getManagedBean().getContractVer().getCtContract().getContractNo(),
 					"setBondWaiverLatestHistory", getUserIdSessionFromLoginId(), e);
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		}
 
 		return bondWaiverFull;
