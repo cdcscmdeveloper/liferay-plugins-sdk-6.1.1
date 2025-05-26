@@ -40,7 +40,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	private static final long serialVersionUID = 1L;
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-	String docno;
+	String docNo;
 	String docType;
 	String roleCode;
 	BigInteger docId;
@@ -74,7 +74,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		String serviceType = managedBean.getServiceTypes().get(0);
 		checkLevelCode3(serviceType);
 		this.roleCode = roleCode;
-		docno = financialOrg.getBizRegNumber();
+		docNo = financialOrg.getBizRegNumber();
 		docType = financialOrg.getFinOrgName();
 		retrieveServiceTypeMap();
 		PmFinancialOrg savedFinancialOrg = managedBean.getSavedFinancialOrg();
@@ -99,7 +99,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			// financial services
 			addFinancialService(savedFinancialOrg.getPmFinancialSvcs());
 			// new main address
-			// new // contact person
+			// new contact person
 			newMainAddressDetail(savedFinancialOrg.getPmAddressTypes());
 		}
 		else{
@@ -284,6 +284,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	// modify tab no 2
 	private void modifyFinancialService(List<PmFinancialSvc> financialService, List<PmFinancialSvc> olfFinancialService) {
 		PmFinancialSvc oldFinancialService=null;
+		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 		
 		if(CollectionUtils.isNotEmpty(financialService)){
 			for(PmFinancialSvc svc : financialService){
@@ -312,7 +313,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	 *  comparison status
 	 */
 	public void compareFinancialService(Integer newStatus, Integer oldStatus, String parameterCode){
-		if(newStatus != oldStatus){
+		if(!newStatus.equals(oldStatus)){
 			
 			if (ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_FACTORING_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
@@ -322,10 +323,10 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PBOND_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
 								: AuditConst.PM_AUD_NO);
-			} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(parameterCode)) {
+			/**} else if (ParameterConst.BANK_SERVICES_PAYMENT_BANK.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_PAYMENT_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
-								: AuditConst.PM_AUD_NO);
+								: AuditConst.PM_AUD_NO);*/
 			} else if (ParameterConst.BANK_SERVICES_REGISTRATION.equalsIgnoreCase(parameterCode)) {
 				detailObj(AuditConst.PM_AUD_OFO_FINANCE_REG_FIELDLABELID, oldStatus==1? AuditConst.PM_AUD_YES
 						: AuditConst.PM_AUD_NO, newStatus==1? AuditConst.PM_AUD_YES
@@ -351,7 +352,6 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 
 		for (PmFinancialSvc financialService : financialServiceList) {
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialService.getServiceTypeCode().getParameterId());
-					
 			setNewFinancialService(pmParameter.getParameterCode());
 		}
 	}
@@ -399,6 +399,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocType(docType);
+		dtlObj.setDocNo(docNo);
 		dtlObj.setPmParameterLvlId(parameterLvlId);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OFO);

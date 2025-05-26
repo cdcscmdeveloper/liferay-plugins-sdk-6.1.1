@@ -1581,38 +1581,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 			// sm module
 			// worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 			// sm module
-
 			MofRegistrationResDTO mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
 			StringBuilder sb = new StringBuilder();
 			sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(),
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-
-			// #34831 - Start
-			if (title.equalsIgnoreCase("lbl.sm.new.registerAccountDraft")) {
-				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-				reqDTO.setApplNo(worklistItemVO.getDocNumber());
-				List<SmPersonnel> personnels = SmServiceLookup.getPersonnelSO().retrievePersonnelsByApplNo(reqDTO)
-						.getSmPersonnelList();
-
-				for (SmPersonnel personnel : personnels) {
-					if (personnel.getPmUser().getUserId() != null) {
-						PmUser user = SmCommonUtil.getUserByUserId(personnel.getPmUser().getUserId());
-						List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-						for (PmUserRole userRole : userRoles) {
-							if (userRole.getPmRole().getRoleCode()
-									.equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-								sb = new StringBuilder();
-								sb.append(ResourceBundleUtils.getMessage("lbl.sm.upgrade.acc.appl",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-								break;
-							}
-						}
-					}
-				}
-			}
-			// }
-			// #34831 - Start
-
 			if (mofResDto.getCompanyName() != null) {
 				sb.append(" ( ");
 				sb.append(mofResDto.getCompanyName());
@@ -1623,6 +1595,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				// }
 				// Enhancement #28766 - Remove GLP flag - End
 			}
+
 			worklistItemVO.setTitle(sb.toString());
 		} else if (title.startsWith("lbl.cd")) {
 

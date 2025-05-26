@@ -28,21 +28,6 @@
 
 	<!--  	<h:outputScript library="my.ac/js" name="cc.js" />-->
 	<script>
-		
-		(function() {
-	     // 1) Replace the initial entry so it has a state we recognize
-	     history.replaceState({ page: 1 }, "", location.href);
-	     // 2) Push a second entry so Back will fire a popstate
-	     history.pushState   ({ page: 2 }, "", location.href);
-
-	     // 3) Whenever they try to go back...
-	     window.addEventListener('popstate', function(event) {
-	       // (optionally check event.state.page === 1)
-	       // Immediately push them forward again
-	       history.go(1);
-	     });
-	  	
-	   })();
 	
 		 function limitTextArea(element, limit) { 
        	  var total = 0;
@@ -161,7 +146,6 @@
 				  }
 				}
 		 <!--#36681 - end -->
-		 
 	</script>
 </h:head>
 
