@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<!-- #29661 -->
 	<ui:param name="editable"
 		value="#{!isPendingVerification}" />
 					
@@ -21,9 +22,9 @@
 		header="#{lbl['lbl.sc.category.code.registered']}" toggleable="true">
 		<p:row>
 			<p:column>
-				<p:dataTable id="supplierPnlId" var="categorySM" lazy="true"
+				<p:dataTable id="supplierPnlId" var="categorySM" 
 					value="#{directLOABackingBean.managedBean.supplierCategoryList}"
-					rowIndexVar="index" rows="10"
+					rowIndexVar="index" rows="10" 
 					selection="#{directLOABackingBean.managedBean.selectedCategoryList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					rowKey="#{categorySM}">
@@ -108,7 +109,7 @@
 		header="#{lbl['lbl.sc.category.code.procurement']}" toggleable="true">
 		<p:row>
 			<p:column>
-				<p:dataTable id="selectedCategoryTable" var="categorySelected" lazy="true"
+				<p:dataTable id="selectedCategoryTable" var="categorySelected" 
 					value="#{directLOABackingBean.managedBean.procurementRelatedCategoryList}"
 					rowIndexVar="index" rows="10"
 					selection="#{directLOABackingBean.managedBean.selectedCategoryList}"

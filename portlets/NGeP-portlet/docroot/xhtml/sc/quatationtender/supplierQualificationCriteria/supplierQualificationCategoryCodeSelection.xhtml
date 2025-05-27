@@ -20,11 +20,10 @@
 				<p:row>
 					<p:column>
 						<!-- category codes -->
-						<p:dataTable id="openPnlId" var="categoryCT" widgetVar="openCodes"
-							lazy="true" rowIndexVar="index" rows="10"
+						<p:dataTable id="openPnlId" var="categoryCT" rowIndexVar="index"
 							value="#{qTDetailBB.managedBean.ctPanelCategoryCode}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-							rowKey="#{categoryCT}">
+							rowKey="#{categoryCT}" rows="10" >
 
 							<ac:paginator for="openPnlId"></ac:paginator>
 
@@ -64,12 +63,12 @@
 					<p:column>
 						<!-- category codes -->
 						<p:dataTable id="restrictedPnlId" var="categorySC"
-							widgetVar="restrictedPnlId" lazy="true" rowIndexVar="index"
+							rowIndexVar="index"
 							rows="10" value="#{qTDetailBB.managedBean.qtCategoryList}"
 							emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 							rowKey="#{categorySC}">
 
-							<ac:paginator for="restrictedPnlId"></ac:paginator>
+							 <ac:paginator for="restrictedPnlId"></ac:paginator>
 
 							<p:column headerText="#{lbl['lbl.sc.sr.cat.code']}">
 									#{categorySC.pmCategoryL1.categoryL1Code}#{categorySC.pmCategoryL2.categoryL2Code}#{categorySC.pmCategoryL3.categoryL3Code}

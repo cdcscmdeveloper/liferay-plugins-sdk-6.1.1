@@ -66,6 +66,14 @@
 							<ui:remove>9019 -end</ui:remove>
 							</p:menuitem>	
 					</c:if>
+					<ui:remove>#29661 Start</ui:remove>
+					<p:menuitem value="#{lbl['lbl.sc.category.code.list']}"
+						action="#{qTDetailBB.qtDetailsTabChange(11)}" update="@form"
+						process="@form" 
+						rendered="#{qTDetailBB.displayMenuItem(qTDetailBB.menuItemApproval)}">						
+						<f:param name="skipmenuvalidation" value="0" />						
+					</p:menuitem>
+					<ui:remove>#29661 End</ui:remove>
 					##-----------------------------------
 					<c:if test="#{qTDetailBB.managedBean.isScEditSupplierQualificationCriteria and (statusId eq QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT or statusId eq QTStatusConst.QT_REVISION_PUBLICATION)}">
 						<p:menuitem value="#{lbl['lbl.sc.supplier.qulification.criteria']}"
@@ -259,6 +267,11 @@
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
 						<ui:include src="/xhtml/sc/quatationtender/quotationTenderDetails/quotationTenderGeneralDetails.xhtml" />
 					</c:if>
+					<!-- #29661 Start -->
+					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '11'}">
+						<ui:include src="/xhtml/sc/quatationtender/supplierQualificationCriteria/supplierQualificationCategoryCodeSelection.xhtml" />
+					</c:if>
+					<!-- #29661 End -->
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '1'}">
 						<ui:include src="/xhtml/sc/quatationtender/supplierQualificationCriteria/supplierQualificationCriteria.xhtml" />
 					</c:if>

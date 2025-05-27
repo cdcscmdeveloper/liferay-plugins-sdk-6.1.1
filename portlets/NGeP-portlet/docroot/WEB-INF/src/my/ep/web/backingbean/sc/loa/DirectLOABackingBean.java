@@ -546,7 +546,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			updateContractDetails(scLoa);
 			validateContractDetails(scLoa);
 			validateContractAdmin(scLoa);  // #26474 validate contract admin
-			validateSupplierCategory(scLoa,outcome);//29661
+			
+			//#29661 Start
+			List<SmSupplierCategory> procurementSmCategory = this.getManagedBean().getProcurementRelatedCategoryList();
+			List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
+			List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
+			validateSupplierCategory(scLoa,outcome);
+			//#29661 End
 			// #25726 START
 			
 			if (null != scLoa && CollectionUtils.isNotEmpty(scLoa.getScLoaReports())) {
@@ -638,7 +644,16 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			reqDTO.setUserLocale(new FacesScopes().getUserLocale());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.submitDirectAwardDetails(reqDTO);
-
+			
+			//#29661 Start
+			if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+				this.getManagedBean().setScQt(resDTO.getLoa().getScQt());
+				insertSupplierCategoryCodeToScQtCategory(procurementSmCategory);
+			} else {
+				deleteScQtCategory(addedCategoryList, deletedSmCategory);
+				insertSupplierCategoryCodeToScQtCategory(addedCategoryList);
+			}
+			//#29661 End
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
 				RenameTempLoaNoRepoDirByLoaNo(scLoa);
@@ -5582,7 +5597,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
         			// #26770 - End.
         			//20231122@asyrafhaziq_25726 - Issue 18
         			validateDuration(this.getManagedBean().getScLoa());
-        			validateSupplierCategory(this.getManagedBean().getScLoa(),outcome);//29661
+        			validateSupplierCategory(this.getManagedBean().getScLoa(),outcome);//#29661
         			
 					RequestContext.getCurrentInstance().execute("loaApprovalPopUp.show()");
 			}
@@ -5595,7 +5610,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 					//Reopen #25726 note 187 - issue 9
         			validateDuration(this.getManagedBean().getScLoa());
-        			validateSupplierCategory(this.getManagedBean().getScLoa(),outcome);//29661
 					//IF REVISE BUT NOT REVISE DOCUMENT STAGE
 					updateBpmTaskAction(outcome);
 				}
@@ -13470,7 +13484,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			smCategory.setPmCategoryL3(categoryResDTO.getCategoryL3());
 		}
 	    
-	    if (null != getManagedBean().getScQt()){
+	    if (null != getManagedBean().getScQt()) {
 	    List<ScQtCategory> scQtCategoriesList = specSO.retrieveScQtCategorytByQtID(getManagedBean().getScQt().getQtId());
 	    this.getManagedBean().setQtCategoryList(scQtCategoriesList);
 	    convertScQtCategoriesToSmSupplierCategory(scQtCategoriesList,categoryCodeSO);
@@ -13515,11 +13529,10 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param event
 	 */
 	public void selectAllCategory(AjaxBehaviorEvent event) {
-		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource())
-				.isSelected();
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<SmSupplierCategory> supplierCategoryList = this.getManagedBean().getSupplierCategoryList();
 		List<SmSupplierCategory> selectedCategoryList = new ArrayList<>();
-		for(SmSupplierCategory supplierCategory: supplierCategoryList){
+		for (SmSupplierCategory supplierCategory : supplierCategoryList) {
 			supplierCategory.setSelected(isSelectAll ? true : false);
 			selectedCategoryList.add(supplierCategory);
 		}
@@ -13558,7 +13571,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		List<SmSupplierCategory> currentCategoryList = new ArrayList<>();
 		
 		for (SmSupplierCategory supplierCategory : supplierCategoryList) {
-			if (supplierCategory.isSelected()){
+			if (supplierCategory.isSelected()) {
 				if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)
 						&& (CollectionUtils.isEmpty(procurementRelatedCategoryList) || !procurementRelatedCategoryList.contains(supplierCategory))) {
 					procurementRelatedCategoryList.add(supplierCategory);
@@ -13609,9 +13622,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				
 		SmSupplierCategory deleteCategory;
 		Iterator<SmSupplierCategory> it = procurementRelatedCategoryList.iterator();
-		while(it.hasNext()){
+		while(it.hasNext()) {
 			deleteCategory = it.next();
-			if (deleteCategory.isSelected()){
+			if (deleteCategory.isSelected()) {
 				if (!QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 					deletedCategoryList.add(deleteCategory);
 				}
@@ -13633,7 +13646,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				.isSelected();
 		List<SmSupplierCategory> procurementRelatedCategoryList = this.getManagedBean().getProcurementRelatedCategoryList();
 		List<SmSupplierCategory> toBeRemovedCategoryList = new ArrayList<>();
-		for(SmSupplierCategory supplierCategory: procurementRelatedCategoryList){
+		for(SmSupplierCategory supplierCategory: procurementRelatedCategoryList) {
 			supplierCategory.setSelected(isSelectAll ? true : false);
 			toBeRemovedCategoryList.add(supplierCategory);
 		}
@@ -13666,19 +13679,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	public void validateSupplierCategory(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId();
 		List<SmSupplierCategory> procurementSmCategory = this.getManagedBean().getProcurementRelatedCategoryList();
-		List<SmSupplierCategory> deletedSmCategory = this.getManagedBean().getDeletedCategoryList();
-		List<SmSupplierCategory> addedCategoryList = this.getManagedBean().getAddedCategoryList();
 
 		if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
 				&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
 			if (CollectionUtils.isEmpty(procurementSmCategory)) {
-				throw new EpException(MessageConst.ERROR_760800);// to change
+				throw new EpException(MessageConst.ERROR_760800);
 			}
-		}
-		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-			insertSupplierCategoryCodeToScQtCategory(procurementSmCategory);
-		} else {
-			updateScQtCategory(addedCategoryList, deletedSmCategory);
 		}
 	}
 	
@@ -13688,9 +13694,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param supplierCategoryCodeList
 	 */
 	private void insertSupplierCategoryCodeToScQtCategory(List<SmSupplierCategory> supplierCategoryCodeList) {
-		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);	
-		
+		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTSpecSO.class);
 		if (CollectionUtils.isNotEmpty(supplierCategoryCodeList)) {
 			for (SmSupplierCategory supplierCategoryCode : supplierCategoryCodeList) {
 				ScQtCategory scQtCategory = new ScQtCategory();
@@ -13701,11 +13705,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scQtCategory.setPmCategoryL1Name(supplierCategoryCode.getPmCategoryL1().getCategoryName());
 				scQtCategory.setPmCategoryL2Name(supplierCategoryCode.getPmCategoryL2().getCategoryName());
 				scQtCategory.setPmCategoryL3Name(supplierCategoryCode.getPmCategoryL3().getCategoryName());
-				scQtCategory.setMandatory(false);			
+				scQtCategory.setMandatory(false);
 				scQtCategory.setScQt(this.getManagedBean().getScQt());
+	
 				specSO.insertCategoryCode(scQtCategory);
 			}
-		} 
+		}
 	}
 	
 	/**
@@ -13714,31 +13719,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 * @param supplierCategoryCodeList
 	 * @param deletedSmCategory
 	 */
-	private void updateScQtCategory(List<SmSupplierCategory> addedCategoryList, List<SmSupplierCategory> deletedSmCategory) {
+	private void deleteScQtCategory(List<SmSupplierCategory> addedCategoryList, List<SmSupplierCategory> deletedSmCategory) {
 		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-		if(CollectionUtils.isNotEmpty(deletedSmCategory)){
+		if(CollectionUtils.isNotEmpty(deletedSmCategory)) {
 			for (SmSupplierCategory supplierCategoryCode : deletedSmCategory) {
 				specSO.deleteScQtCategory(supplierCategoryCode.getQtCategoryId());
 			}		
 		}
-		
-		
-		if (CollectionUtils.isNotEmpty(addedCategoryList)) {
-			for (SmSupplierCategory supplierCategoryCode : addedCategoryList) {
-				ScQtCategory scQtCategory = new ScQtCategory();
-				scQtCategory.setCategoryType(String.valueOf(supplierCategoryCode.getPmCategoryL3().getCategoryTypeCode().getParameterId()));
-				scQtCategory.setPmCategoryL1(supplierCategoryCode.getPmCategoryL1());
-				scQtCategory.setPmCategoryL2(supplierCategoryCode.getPmCategoryL2());
-				scQtCategory.setPmCategoryL3(supplierCategoryCode.getPmCategoryL3());
-				scQtCategory.setPmCategoryL1Name(supplierCategoryCode.getPmCategoryL1().getCategoryName());
-				scQtCategory.setPmCategoryL2Name(supplierCategoryCode.getPmCategoryL2().getCategoryName());
-				scQtCategory.setPmCategoryL3Name(supplierCategoryCode.getPmCategoryL3().getCategoryName());
-				scQtCategory.setMandatory(false);			
-				scQtCategory.setScQt(this.getManagedBean().getScQt());
-				specSO.insertCategoryCode(scQtCategory);
-			}
-		} 
 	}		
 	//#29661 end
 	

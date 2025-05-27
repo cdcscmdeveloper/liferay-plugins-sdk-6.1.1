@@ -1214,7 +1214,7 @@ public class SpecificationBackingBean extends
 				validatePrepareQtChecklist();
 			}
 			break;
-		case 1:
+		case 2: //+1 from original no due to #29661
 			//Bug #35688@Syazani 10/07/2024 -- Start
 			specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_SUPPLIER_QUALIFICATION_CRITERIA,isFromTabSpecCommitteDtlsLoad)
 					.getScQt());
@@ -1224,7 +1224,7 @@ public class SpecificationBackingBean extends
 			}
 			break;
 
-		case 2:
+		case 3: //+1 from original no due to #29661
 			// ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_CHECKLIST,isFromTabSpecCommitteDtlsLoad));	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			//#34656 move to top
@@ -1255,7 +1255,7 @@ public class SpecificationBackingBean extends
 			specSo.validateCheckList(specReqDTO);
 
 			break;
-		case 3:
+		case 4://+1 from original no due to #29661
 			// ScQt scQtFinChecklist = constructSpecCommitteDtls().getScQt();
 			specSo.validateCheckList(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FINANCIAL_CHECKLIST,isFromTabSpecCommitteDtlsLoad));	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(scQtFinChecklist);
@@ -1265,7 +1265,7 @@ public class SpecificationBackingBean extends
 			}
 			break;
 
-		case 4:
+		case 5://+1 from original no due to #29661
 			ScQt scQtTechScore = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_TECHNICAL_SCORING,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			if (!this.getManagedBean().isReadOnly()) {
 				checktemplateSpecStatus(scQtTechScore);
@@ -1290,7 +1290,7 @@ public class SpecificationBackingBean extends
 			specSo.validateSCScoreSettings(specReqDTO);
 			break;
 
-		case 5:
+		case 6://+1 from original no due to #29661
 
 			ScQt scQtFinScore = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FINANCIAL_SCORING,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			if (!this.getManagedBean().isReadOnly()) {
@@ -1313,7 +1313,7 @@ public class SpecificationBackingBean extends
 			specSo.validateSCScoreSettings(specReqDTO);
 
 			break;
-		case 6:
+		case 7://+1 from original no due to #29661
 
 			ScQt scQtRecommendation = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_OVERALL_SCORING,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			if (!this.getManagedBean().isReadOnly()) {
@@ -1341,7 +1341,7 @@ public class SpecificationBackingBean extends
 			scoreSetting = null;
 			break;
 
-		case 7:
+		case 8://+1 from original no due to #29661
 			ScQt deliveryAddress = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_DELIVERY_ADDRESS,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(deliveryAddress);
 			// checkFinancialSpecStatus(deliveryAddress);
@@ -1368,12 +1368,12 @@ public class SpecificationBackingBean extends
 			break;
 
 			//#29474 - start
-			case 8:
+			case 9://+1 from original no due to #29661
 				specReqDTO.setScQt(constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_PAYMENT_DEDUCTION,isFromTabSpecCommitteDtlsLoad).getScQt());	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				specSo.validateDeductionDtls(specReqDTO);
 				break;
 
-			case 9:
+			case 10://+1 from original no due to #29661
 
 				ScQt fulfilMentDtls = constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_FULFILMENT_SCHEDULE,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 				// checktemplateSpecStatus(fulfilMentDtls);
@@ -1390,7 +1390,7 @@ public class SpecificationBackingBean extends
 
 				break;
 
-			case 10://#29474 - end
+			case 11://#29474 - end //+1 from original no due to #29661
 			constructSpecCommitteDtls("Prev" + QTConstants.TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS,isFromTabSpecCommitteDtlsLoad).getScQt();	//Bug #35688@Syazani 10/07/2024 #29732 adding param
 			// checktemplateSpecStatus(committeeEndorsment);
 			// checkFinancialSpecStatus(committeeEndorsment);
@@ -1402,11 +1402,17 @@ public class SpecificationBackingBean extends
 
 			retriveSpecdetails(this.getManagedBean().getQt().getQtId());
 			break;
+		// #29661 Start
 		case 1:
+			QTDetailBackingBean qtBackingBean = new QTDetailBackingBean();
+			qtBackingBean.getPanelCategory();
+			break;
+		// #29661 End	
+		case 2://+1 from original no due to #29661
 			retriveSupplierQualificationCriteria("SC");
 			break;
 
-		case 2:
+		case 3://+1 from original no due to #29661
 			//1873 note 182 start
 			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
 				retriveTechnicalCheckList();
@@ -1423,7 +1429,7 @@ public class SpecificationBackingBean extends
 				addDemoTechnicalCheckList(); // #28784
 			}
 			break;
-		case 3:
+		case 4://+1 from original no due to #29661
 			//1873 note 195 start
 			if(CollectionUtils.isEmpty(this.getManagedBean().getMarkDeletedTechChecklist())){
 				retriveTechnicalCheckList();//1873 note 86
@@ -1436,7 +1442,7 @@ public class SpecificationBackingBean extends
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			break;
 
-		case 4:
+		case 5://+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
@@ -1447,7 +1453,7 @@ public class SpecificationBackingBean extends
 			retriveTechnicalScoring();
 			break;
 
-		case 5:
+		case 6://+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
@@ -1458,7 +1464,7 @@ public class SpecificationBackingBean extends
 			retriveFinancialScoring("tabChange");	// Bug #35688@Syazani 10/07/2024
 			break;
 
-		case 6:
+		case 7://+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
@@ -1469,7 +1475,7 @@ public class SpecificationBackingBean extends
 			}
 			break;
 
-		case 7:
+		case 8://+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
@@ -1479,14 +1485,14 @@ public class SpecificationBackingBean extends
 			break;
 
 			//#29474 - start
-		case 8:
+		case 9://+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
 			retrieveDeductionPaymentTabDtl();
 			break;
 
-		case 9:
+		case 10://+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
@@ -1508,15 +1514,14 @@ public class SpecificationBackingBean extends
 			}
 			break;
 
-		case 10:// #29474 - end
+		case 11:// #29474 - end //+1 from original no due to #29661
 			//#34656 validate - start
 			specSo.validateSpecZoneQtyZero(specReqDTO);
 			//#34656 validate - end
 			retriveCommitteeEndorsment();
 			// checktemplateSpecStatus(this.getManagedBean().getQt());
 			// checkFinancialSpecStatus(this.getManagedBean().getQt());
-			break;
-
+			break;	
 		}
 		if (getManagedBean().getTempIndex() < activeIndex) {
 			getManagedBean().setTempIndex(activeIndex);
@@ -17615,7 +17620,7 @@ if (null != checklist && !checklist.isEmpty()) {
 		// 25037 - start
 		assertSpecCommitteeMaintenanceInProgress(this.getManagedBean().getQt(), true);// 25037
 		if (this.getManagedBean().getInactiveSCMemberStr().length() > 0) {
-			this.qtChecklistTabChange(10);
+			this.qtChecklistTabChange(11);//+1 from original no due to #29661
 			RequestContext.getCurrentInstance().execute("inactiveSCMembersPopup.show()");
 			return;
 		}
@@ -21191,7 +21196,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	
 	public void getMethodHandlerOnConfirmation(){
 		if(this.getManagedBean().isFromSubmit()){
-			qtChecklistTabChange(3);
+			qtChecklistTabChange(4);//+1 from original no due to #29661
 			this.getManagedBean().setFromSubmit(false);
 		}else{
 			//32204 - start

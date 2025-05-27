@@ -7896,6 +7896,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				 }
 				//#25692-End
 				break;
+			//#29661 Start	
+			case 11:	
+				getPanelCategory();
+				break;
+			//#29661 End	
 			case 50: //BPK Approval
 				
 			}

@@ -2224,6 +2224,7 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	}
 	// #29766 End Vinod
 
+	//#29661 Start
 	public List<SmSupplierCategory> getSupplierCategoryList() {
 		return supplierCategoryList;
 	}
@@ -2279,5 +2280,5 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	public void setAddedCategoryList(List<SmSupplierCategory> addedCategoryList) {
 		this.addedCategoryList = addedCategoryList;
 	}
-	
+	//#29661 End
 }
