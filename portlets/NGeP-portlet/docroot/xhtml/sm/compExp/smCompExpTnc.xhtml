@@ -1,12 +1,12 @@
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_compExp_WAR_NGePportlet').find('.portlet-title-text')
+			$('#portlet_smCompExp_WAR_NGePportlet').find('.portlet-title-text')
 					.html("#{lbl['lbl.sm.comp.exp.screen.name']}");
 		</script>
 	</ui:define>
@@ -15,24 +15,24 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:panel header="#{lbl['lbl.sm.comp.exp.tnc.header']}">
-			<h:outputText value="#{lbl['lbl.sm.comp.exp.tnc.msg']}"
-				escape="false" />
+			<h:outputText escape="false"
+				value="#{lbl['lbl.sm.comp.exp.tnc.msg']}" />
 		</p:panel>
 		<table>
 			<tr>
-				<td><p:selectBooleanCheckbox value="#{compExpMB.agreeTnC}">
-						<p:ajax update="btnProceed" partialSubmit="true" process="@this"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<td><p:selectBooleanCheckbox value="#{smCompExpMB.agreeTnC}">
+						<p:ajax oncomplete="blockWidget.hide()"
+							onstart="blockWidget.show()" partialSubmit="true" process="@this"
+							update="btnProceed" />
 					</p:selectBooleanCheckbox></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.comp.exp.tnc.agree']}" /></td>
 			</tr>
 		</table>
 		<div align="right">
-			<p:commandButton id="btnProceed"
-				value="#{lbl['lbl.sm.comp.exp.tnc.btn.proceed']}"
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				disabled="#{!compExpMB.agreeTnC}"
-				action="#{compExpBB.proceedAfterAcceptTnC}" />
+			<p:commandButton action="#{smCompExpBB.proceedAfterTnC}"
+				disabled="#{!smCompExpMB.agreeTnC}" id="btnProceed"
+				oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
+				value="#{lbl['lbl.sm.comp.exp.tnc.btn.proceed']}" />
 		</div>
 	</ui:define>
 </ui:composition>

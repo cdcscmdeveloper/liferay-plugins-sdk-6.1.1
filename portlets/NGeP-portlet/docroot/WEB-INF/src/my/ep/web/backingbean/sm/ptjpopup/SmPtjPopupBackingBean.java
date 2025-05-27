@@ -33,6 +33,15 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		reset();
 	}
 
+	public void reset() {
+		this.getManagedBean().setMinistryProfileId(null);
+		this.getManagedBean().setJabatanProfileId(null);
+		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
+		this.getManagedBean().setPtjCodeNameValue(null);
+		this.getManagedBean().getOrgProfileDataModel().resetData();
+		this.getManagedBean().setDisabledSelect(true);
+	}
+
 	public SelectItem[] getMinistryDropdown() {
 		return PmCommonUtil.getMinistryDropdown();
 	}
@@ -61,16 +70,6 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 			throw new EpException(MessageConst.ERROR_775221);
 		}
 		this.getManagedBean().getOrgProfileDataModel().reloadData();
-	}
-
-	public void reset() {
-		this.getManagedBean().setMinistryProfileId(null);
-		this.getManagedBean().setJabatanProfileId(null);
-		this.getManagedBean().setPtjCodeNameKey(ProfileManagementConst.PTJ_CODE);
-		this.getManagedBean().setPtjCodeNameValue(null);
-		this.getManagedBean().setPtjCodeNameValue(null);
-		this.getManagedBean().getOrgProfileDataModel().resetData();
-		this.getManagedBean().setDisabledSelect(true);
 	}
 
 	public void enableSelect() {

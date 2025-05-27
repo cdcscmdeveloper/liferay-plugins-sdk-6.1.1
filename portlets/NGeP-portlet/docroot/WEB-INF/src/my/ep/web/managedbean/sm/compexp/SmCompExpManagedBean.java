@@ -33,7 +33,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * 
  * @author firdaus.omar
  */
-@ManagedBean(name = "compExpMB")
+@ManagedBean(name = "smCompExpMB")
 @SessionScoped
 public class SmCompExpManagedBean extends BaseManagedBean {
 
@@ -44,26 +44,25 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private boolean agreeTnC;
 	private boolean draftExist;
 	private transient IPagingDataModel<SmCompExpDraft> draftSmDataModel = new DraftSmPagingDataModel();
-	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
 	private SmCompExpDraft selectedDraft;
 	private String headerTitle;
 	private boolean disableClienType;
-	private Date maxEffDate;
 	private Date contractEffDateTemp;
+	private Date maxEffDate;
 	private Date minExpDate;
-	private List<SmCompExpMasterDoc> compExpDocList;
-	private String compExpFilePath;
-	private SmCompExpMasterDoc compExpDoc;
-	private List<SmCompExpCatDraft> compExpCatCodeList;
-	private boolean compExpCatCodeListEmpty;
-	private boolean catCodeNotComplete;
-	private boolean selectedAll;
-	private boolean selected;
-	private List<SmCompExpCatDraft> selectedCompExpCatCode;
+	private List<SmCompExpMasterDoc> smCompExpDocList;
+	private String smCompExpFilePath;
+	private List<SmCompExpCatDraft> smCompExpCatDraftList;
+	private boolean smCompExpCatDraftListEmpty;
+	private boolean smCompExpCatDrafNotComplete;
 	private List<PmCategoryL1> supplierMainCatList;
 	private List<PmCategoryL2> supplierSubCatList;
 	private List<PmCategoryL3> supplierSubDivCatList;
+	private boolean selectedAll;
+	private boolean selected;
+	private List<SmCompExpCatDraft> selectedSmCompExpCatDraft;
 	private boolean agreeDeclare;
+	private SmCompExpMasterDoc smCompExpDoc;
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -94,7 +93,7 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public DraftSmPagingDataModel() {
-			super("draftSmDataTableId", true);
+			super("draftSmDataTable", true);
 		}
 
 		@Override
@@ -105,8 +104,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_SM);
 
 			try {
-				ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
-				return compExpSo.retriveCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
 			} catch (Exception e) {
 				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
 						"ISmCompExpSO", logKey.getUserId(), e);
@@ -122,41 +121,6 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setDraftSmDataModel(IPagingDataModel<SmCompExpDraft> draftSmDataModel) {
 		this.draftSmDataModel = draftSmDataModel;
-	}
-
-	private class DraftCtPagingDataModel extends PagingDataModel<SmCompExpDraft> {
-
-		private static final long serialVersionUID = 1L;
-
-		public DraftCtPagingDataModel() {
-			super("draftCtDataTableId", true);
-		}
-
-		@Override
-		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
-
-			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-			reqDTO.setSupplierId(supplier.getSupplierId());
-			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_CT);
-
-			try {
-				ISmCompExpSO compExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
-				return compExpSo.retriveCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
-			} catch (Exception e) {
-				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
-						"ISmCompExpSO", logKey.getUserId(), e);
-				throw new EpException(MessageConst.ERROR_000001);
-			}
-		}
-
-	}
-
-	public IPagingDataModel<SmCompExpDraft> getDraftCtDataModel() {
-		return draftCtDataModel;
-	}
-
-	public void setDraftCtDataModel(IPagingDataModel<SmCompExpDraft> draftCtDataModel) {
-		this.draftCtDataModel = draftCtDataModel;
 	}
 
 	public SmCompExpDraft getSelectedDraft() {
@@ -183,20 +147,20 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.disableClienType = disableClienType;
 	}
 
-	public Date getMaxEffDate() {
-		return maxEffDate;
-	}
-
-	public void setMaxEffDate(Date maxEffDate) {
-		this.maxEffDate = maxEffDate;
-	}
-
 	public Date getContractEffDateTemp() {
 		return contractEffDateTemp;
 	}
 
 	public void setContractEffDateTemp(Date contractEffDateTemp) {
 		this.contractEffDateTemp = contractEffDateTemp;
+	}
+
+	public Date getMaxEffDate() {
+		return maxEffDate;
+	}
+
+	public void setMaxEffDate(Date maxEffDate) {
+		this.maxEffDate = maxEffDate;
 	}
 
 	public Date getMinExpDate() {
@@ -207,76 +171,44 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.minExpDate = minExpDate;
 	}
 
-	public List<SmCompExpMasterDoc> getCompExpDocList() {
-		return compExpDocList;
+	public List<SmCompExpMasterDoc> getSmCompExpDocList() {
+		return smCompExpDocList;
 	}
 
-	public void setCompExpDocList(List<SmCompExpMasterDoc> compExpDocList) {
-		this.compExpDocList = compExpDocList;
+	public void setSmCompExpDocList(List<SmCompExpMasterDoc> smCompExpDocList) {
+		this.smCompExpDocList = smCompExpDocList;
 	}
 
-	public String getCompExpFilePath() {
-		return compExpFilePath;
+	public String getSmCompExpFilePath() {
+		return smCompExpFilePath;
 	}
 
-	public void setCompExpFilePath(String compExpFilePath) {
-		this.compExpFilePath = compExpFilePath;
+	public void setSmCompExpFilePath(String smCompExpFilePath) {
+		this.smCompExpFilePath = smCompExpFilePath;
 	}
 
-	public SmCompExpMasterDoc getCompExpDoc() {
-		return compExpDoc;
+	public List<SmCompExpCatDraft> getSmCompExpCatDraftList() {
+		return smCompExpCatDraftList;
 	}
 
-	public void setCompExpDoc(SmCompExpMasterDoc compExpDoc) {
-		this.compExpDoc = compExpDoc;
+	public void setSmCompExpCatDraftList(List<SmCompExpCatDraft> smCompExpCatDraftList) {
+		this.smCompExpCatDraftList = smCompExpCatDraftList;
 	}
 
-	public List<SmCompExpCatDraft> getCompExpCatCodeList() {
-		return compExpCatCodeList;
+	public boolean isSmCompExpCatDraftListEmpty() {
+		return smCompExpCatDraftListEmpty;
 	}
 
-	public void setCompExpCatCodeList(List<SmCompExpCatDraft> compExpCatCodeList) {
-		this.compExpCatCodeList = compExpCatCodeList;
+	public void setSmCompExpCatDraftListEmpty(boolean smCompExpCatDraftListEmpty) {
+		this.smCompExpCatDraftListEmpty = smCompExpCatDraftListEmpty;
 	}
 
-	public boolean isCompExpCatCodeListEmpty() {
-		return compExpCatCodeListEmpty;
+	public boolean isSmCompExpCatDrafNotComplete() {
+		return smCompExpCatDrafNotComplete;
 	}
 
-	public void setCompExpCatCodeListEmpty(boolean compExpCatCodeListEmpty) {
-		this.compExpCatCodeListEmpty = compExpCatCodeListEmpty;
-	}
-
-	public boolean isCatCodeNotComplete() {
-		return catCodeNotComplete;
-	}
-
-	public void setCatCodeNotComplete(boolean catCodeNotComplete) {
-		this.catCodeNotComplete = catCodeNotComplete;
-	}
-
-	public boolean isSelectedAll() {
-		return selectedAll;
-	}
-
-	public void setSelectedAll(boolean selectedAll) {
-		this.selectedAll = selectedAll;
-	}
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-
-	public List<SmCompExpCatDraft> getSelectedCompExpCatCode() {
-		return selectedCompExpCatCode;
-	}
-
-	public void setSelectedCompExpCatCode(List<SmCompExpCatDraft> selectedCompExpCatCode) {
-		this.selectedCompExpCatCode = selectedCompExpCatCode;
+	public void setSmCompExpCatDrafNotComplete(boolean smCompExpCatDrafNotComplete) {
+		this.smCompExpCatDrafNotComplete = smCompExpCatDrafNotComplete;
 	}
 
 	public List<PmCategoryL1> getSupplierMainCatList() {
@@ -303,12 +235,44 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 		this.supplierSubDivCatList = supplierSubDivCatList;
 	}
 
+	public boolean isSelectedAll() {
+		return selectedAll;
+	}
+
+	public void setSelectedAll(boolean selectedAll) {
+		this.selectedAll = selectedAll;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public List<SmCompExpCatDraft> getSelectedSmCompExpCatDraft() {
+		return selectedSmCompExpCatDraft;
+	}
+
+	public void setSelectedSmCompExpCatDraft(List<SmCompExpCatDraft> selectedSmCompExpCatDraft) {
+		this.selectedSmCompExpCatDraft = selectedSmCompExpCatDraft;
+	}
+
 	public boolean isAgreeDeclare() {
 		return agreeDeclare;
 	}
 
 	public void setAgreeDeclare(boolean agreeDeclare) {
 		this.agreeDeclare = agreeDeclare;
+	}
+
+	public SmCompExpMasterDoc getSmCompExpDoc() {
+		return smCompExpDoc;
+	}
+
+	public void setSmCompExpDoc(SmCompExpMasterDoc smCompExpDoc) {
+		this.smCompExpDoc = smCompExpDoc;
 	}
 
 }

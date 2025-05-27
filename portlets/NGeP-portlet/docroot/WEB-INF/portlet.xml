@@ -11337,7 +11337,7 @@
 	</portlet>
 	<!-- #9299 start -->
 	<portlet>
-		<portlet-name>compExp</portlet-name>
+		<portlet-name>smCompExp</portlet-name>
 		<display-name>Update Company Experience Information</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
