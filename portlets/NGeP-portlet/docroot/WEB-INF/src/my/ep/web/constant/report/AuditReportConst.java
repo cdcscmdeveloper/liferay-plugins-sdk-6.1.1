@@ -20,6 +20,7 @@ public class AuditReportConst implements Serializable {
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_DOC_ID = "P_DOCID";
 	public static final String PARAM_DOC_TYPE = "P_DOCTYPE"; //35508
+	public static final String PARAM_CT_TYPE = "P_CT_TYPE"; //35506
 	// #28895_35501 - AUDIT TRAIL SM
 	public static final String PARAM_GROUP_SECTION_ID = "P_GROUP_SECTION_ID";
 	
@@ -29,6 +30,7 @@ public class AuditReportConst implements Serializable {
 	public static final String RPT_AUDIT_TRAIL_QT = "AU_QT.jsp"; //35500
 	public static final String RPT_AUDIT_TRAIL_CM = "AU_CM.jsp"; //35503
 	public static final String RPT_AUDIT_TRAIL_PP = "AU_PP.jsp"; //35502
+	public static final String RPT_AUDIT_TRAIL_CT = "AU_CT.jsp"; //35506
 	// #28895_35501 - AUDIT TRAIL SM
 	public static final String RPT_AUDIT_TRAIL_SM = "AU_SM.jsp";
 	
