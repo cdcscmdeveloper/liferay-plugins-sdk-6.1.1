@@ -58,13 +58,17 @@
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
 							update=":form" process="@this"
 							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
-								<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:red;" /></u>
+								<u style="text-decoration-color: red;"><strong>
+									<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:red;" />
+								</strong></u>
 						</p:commandLink>
 						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
 							update=":form" process="@this"
 							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
-								<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:red;" /></u>
+								<u style="text-decoration-color: red;"><strong>
+									<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:red;" />
+								</strong></u>
 						</p:commandLink>
 						<p:spacer width="2"/>
 						
