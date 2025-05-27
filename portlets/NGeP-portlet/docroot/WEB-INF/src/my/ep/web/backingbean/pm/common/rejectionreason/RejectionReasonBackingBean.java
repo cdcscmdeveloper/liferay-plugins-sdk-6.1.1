@@ -872,8 +872,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			rejectReason.getPmPIDReasonList().removeAll(toDeletePReasons);
 			rejectReason.getPmPIDReasonList().addAll(toReplacePReasons);
-			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason); // 35509
-			
+			/************ AUDIT #28895-35509 START*************/
+			if (getManagedBean().getAuditAddPIDReasonList() == null) {
+				getManagedBean().setAuditAddPIDReasonList(new ArrayList<PmPIDReason>());
+			}
+			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason);
+			/************ AUDIT #28895-35509 END*************/
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
