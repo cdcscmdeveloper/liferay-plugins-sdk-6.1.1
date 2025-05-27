@@ -2241,12 +2241,29 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
 					//Start 25294  - Site Visit Grouping Enhancement -28775
 					String poName = reqDTO.getPoName();			//#32304
-					//Start pass second parameter to INFO_721210 #25294  - Site Visit Grouping Enhancement -28775
-					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-							MessageUtils.getMessage(MessageConst.INFO_721210,
-							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(),poName},
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
+					// #38224 - Start
+					StringBuilder bf = new StringBuilder();
+					bf.append("<b>" + poName + "</b>");
+					// Start pass second parameter to INFO_721210 #25294 - Site
+					// Visit Grouping Enhancement -28775
+					fc.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													MessageConst.INFO_721210,
+													new String[] {
+															this.getManagedBean()
+																	.getSmSvTask()
+																	.getSmAppl()
+																	.getApplNo(),
+															bf.toString() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+					// #38224 - End
 					//End 25294  - Site Visit Grouping Enhancement -28775
 					//9608 - Site Visit Grouping Enhancement - 28775 - start, 30550
 					return "/xhtml/common/acknowledge.xhtml";
