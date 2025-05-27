@@ -626,7 +626,9 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 			Long purchaseRequestId = purchaseRequest.getPurchaseRequestId();
 			Long supplierId = null; //#36119
 			System.out.println("Bug 28878 : purchaseRequestId : " + purchaseRequestId);
-			List<ScRequestNoteDtl> requestNoteDtls = null;
+			//#36729 - Start
+			List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+			//#36729 - End
 			ScRequestNote requestNote = null;
 			if (null != purchaseRequestId && null != getManagedBean().getDpDocumentDataModel()) {
 				requestNote = (ScRequestNote) prObj[7];
@@ -637,8 +639,12 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNoteDtlForCodificationBySupplier(
 						requestNoteReqDTO);
 				rnBackingBean.reloadRequestNoteForCodificationWrapper(requestNoteResDTO);
-				requestNoteDtls = rnBackingBean.getManagedBean().getRequestNoteDtls();
 				//#36119 - end
+				
+				//#36729 - Start
+				List<ScRequestNoteDtl> tempRnDtls = requestNoteResDTO.getRequestNoteDtlList();
+				requestNoteDtls = addSelectedRequestNoteDtls(tempRnDtls, purchaseRequestId);
+				//#36729 - End	
 			}
 			
 			if (!CollectionUtils.isEmpty(requestNoteDtls)) { 
@@ -1675,5 +1681,29 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 
 	}
 	// 25790 - end
+	
+	// 36729 - Start
+	/**
+	 * Compare with selected request note details and add into the request note
+	 * details selected list
+	 * 
+	 * @param tempRnDtls
+	 *            Temporary store all the selected request note details for
+	 *            matching.
+	 * @param purchaseRequestId
+	 *            The ID of the purchase request to match with id in request
+	 *            note details.
+	 * @return list of selected requestNoteDtls
+	 */
+	public List<ScRequestNoteDtl> addSelectedRequestNoteDtls(List<ScRequestNoteDtl> tempRnDtls, Long purchaseRequestId) {
+		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+		for (ScRequestNoteDtl rnDtl : tempRnDtls) {
+			if (purchaseRequestId.compareTo(rnDtl.getPurchaseRequest().getPurchaseRequestId()) == 0) {
+				requestNoteDtls.add(rnDtl);
+			}
+		}
+		return requestNoteDtls;
+	}
+	// 36729 - End
 }
 

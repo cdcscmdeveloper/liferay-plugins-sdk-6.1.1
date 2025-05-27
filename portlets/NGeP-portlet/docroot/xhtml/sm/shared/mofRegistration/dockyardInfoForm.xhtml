@@ -128,7 +128,8 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelDockyardSaveorUpdate}"/>
 		
-		<p:outputPanel id="dockYardBlockPanelId" layout="block">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel id="dockYardBlockPanelId" layout="block" rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<p:messages id="dockYardDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">

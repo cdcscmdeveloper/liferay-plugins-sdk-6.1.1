@@ -36,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import java.util.HashSet; //Bug #33988@Syazani - 27/09/2022
@@ -3959,37 +3960,41 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
 								&& (answer.getTplSpecQuestion().getClItem() != null)) {
-							// #25025 - Start.
+							// #25025 - Start fixing sonarlint
 							List<String> specList = null;
-							boolean addSpecList = false;
+
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getServiceAnswersTpl()) {
-								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
-										.getSpecQuestionId()) {
-									addSpecList = true;
-									continue;
+								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
+									continue; // Skip null values to prevent
+												// NullPointerException
+
 								}
-								if (addSpecList) {
-									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
-										if (specList == null) {
-											specList = new ArrayList<>();
-										}
-										//start #29006 - note 850,852,856
-										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
-									
-										specValue = specValue.replace("<", "#60;");
-										specValue = specValue.replace(">", "#62;");
-										specValue = specValue.replace("&", "#and;");
-										
-										specList.add(specValue);
-										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
-										//end #29006 - note 850,852,856
-									} else {
-										break;
+
+								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
+										.getTplSpecQuestion().getSpecQuestionId())
+										&& SSTConstant.specification.equals(tplSpecAns.getTplSpecQuestion()
+												.getQuestionType())
+										&& tplSpecAns.getTplSpecQuestion().getClSpecDetail() != null) {
+
+									if (specList == null) {
+										specList = new ArrayList<>();
 									}
+
+									// start #29006 - note 850,852,856
+									String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+
+									specValue = specValue.replace("<", "#60;");
+									specValue = specValue.replace(">", "#62;");
+									specValue = specValue.replace("&", "#and;");
+
+									specList.add(specValue);
+									tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+									// end #29006 - note 850,852,856
+
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
-							// #25025 - End.
+							// #25025 - End fixing sonarlint
 
 							/** This code is for LOA with Single Item Details **/
 
@@ -4136,37 +4141,39 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 						if ((days.equals(answer.getTplSpecQuestion().getClDeliveryTerm()))
 								&& (answer.getTplSpecQuestion().getClItem() != null)) {
-							// #25025 - Start.
+							// #25025 - Start fixing sonarlint
 							List<String> specList = null;
-							boolean addSpecList = false;
+
 							for (TplSpecAnswer tplSpecAns : quoteResDTO.getProductAnswersTpl()) {
-								if (tplSpecAns.getTplSpecQuestion().getSpecQuestionId() == answer.getTplSpecQuestion()
-										.getSpecQuestionId()) {
-									addSpecList = true;
-									//continue; //Sonarqube DP Code Smell Minor Zairul Rizwan [26/4/2024]
+								if (tplSpecAns == null || tplSpecAns.getTplSpecQuestion() == null) {
+									continue; // Skip null values to prevent
+												// NullPointerException
 								}
-								if (addSpecList) {
-									if (tplSpecAns.getTplSpecQuestion().getQuestionType().equals(SSTConstant.specification)) {
-										if (specList == null) {
-											specList = new ArrayList<>();
-										}
-										//start #29006 - note 850,852,856
-										String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
-									
-										specValue = specValue.replace("<", "#60;");
-										specValue = specValue.replace(">", "#62;");
-										specValue = specValue.replace("&", "#and;");
-										
-										specList.add(specValue);
-										tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
-										//end #29006 - note 850,852,856
-									} else {
-										break;
+								if (Objects.equals(tplSpecAns.getTplSpecQuestion().getSpecQuestionId(), answer
+										.getTplSpecQuestion().getSpecQuestionId())
+										&& SSTConstant.specification.equals(tplSpecAns.getTplSpecQuestion()
+												.getQuestionType())
+										&& tplSpecAns.getTplSpecQuestion().getClSpecDetail() != null) {
+
+									if (specList == null) {
+										specList = new ArrayList<>();
 									}
+
+									// start #29006 - note 850,852,856
+									String specValue = tplSpecAns.getTplSpecQuestion().getClSpecDetail();
+
+									specValue = specValue.replace("<", "#60;");
+									specValue = specValue.replace(">", "#62;");
+									specValue = specValue.replace("&", "#and;");
+
+									specList.add(specValue);
+									tplSpecAns.getTplSpecQuestion().setClSpecDetail(specValue);
+									// end #29006 - note 850,852,856
 								}
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
-							// #25025 - End.
+							// #25025 - End fixing sonarlint
+
 
 							/** This code is for LOA with Single Item Details **/
 
@@ -5664,41 +5671,43 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	// 18685 - END.
 
 	// #25729 #142 Start - Allow create QT below threshold RM20k
-		public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
-			
-			BigDecimal actualIntendedPrice = new BigDecimal(0);
-			if ("createQt".equals(ScreenType) && !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) { //36678 add condition status id related to 35061
-				actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
-				
-			}
-			else {
-				actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0) ;
-				//36678 related to 35061
-			}
-			
-			
-			if (!scQt.isPanel() && actualIntendedPrice != null) {
-				log.info(":::expectTotalIndPriceBelowThreshold() scQt.isPanel(): "+ scQt.isPanel() +" :::");
-				log.info(":::expectTotalIndPriceBelowThreshold() ExpectedIntendedPrice: "+ actualIntendedPrice +" :::");
-		 
-				// #25729 #174
-				//BugBug #35061 - asyrafhaziq
-				// get total indicative price threshold validation value
-				BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
-				
-				if ((actualIntendedPrice.compareTo(indPriceThreshold) <=0))
+	public boolean expectTotalIndPriceBelowThreshold(ScQt scQt, String ScreenType) {
 
-				{
-					return Boolean.TRUE;
-				}
-			}
-			//#36678 set null if user change above 50k. related to 35061
-			if(scQt.getJustificationProcValue() != null && scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)){
-				scQt.setJustificationProcValue(null);
-			}
-			return Boolean.FALSE;
+		BigDecimal actualIntendedPrice = new BigDecimal(0);
+
+		// 36678 add condition status id related to 35061 -start-
+		if ("createQt".equals(ScreenType)
+				&& !scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+			actualIntendedPrice = scQt.getTmpExpectedIntendedPrice();
+
+		} else {
+			actualIntendedPrice = scQt.getEstimatedAmount() != null ? scQt.getEstimatedAmount() : new BigDecimal(0);
+			// 36678 related to 35061 -end-
 		}
-		//#25729 - end -
+
+		if (!scQt.isPanel() && actualIntendedPrice != null) {
+			// #25729 #174
+			// BugBug #35061 - asyrafhaziq
+			// get total indicative price threshold validation value
+			BigDecimal indPriceThreshold = getTotalIndPriceThresholdAmount();
+
+			if ((actualIntendedPrice.compareTo(indPriceThreshold) <= 0))
+
+			{
+				return Boolean.TRUE;
+			}
+		}
+
+		// #36678 set null if user change above 50k. related to #35061,#37899
+		if (scQt.getJustificationProcValue() != null && scQt.getQtStatus() != null
+				&& scQt.getQtStatus().getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)) {
+			scQt.setJustificationProcValue(null);
+		}
+		// #36678, #35061, #37899 -end-
+
+		return Boolean.FALSE;
+	}
+	// #25729 - end -
 	
 		// #28215 - Start
 		/**
@@ -7113,4 +7122,56 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
+	// #29007 Start vinod
+	/**
+	 * This method will check the BPM version and status to insert item spec
+	 * offer.
+	 * 
+	 * @param scLoa
+	 *            .
+	 * @return boolean.
+	 */
+	public boolean checkWIPVersionAndInsertItemSpecOffer(ScLoa scLoa) {
+		Long workFlowStatus = scLoa.getPmStatus().getStatusId();
+		String docType = scLoa.getScLoiLoa().getDocType();
+
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICompositeValiditySO.class);
+
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(docType)) {
+			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_DP);
+		} else {
+			cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_QT);
+		}
+
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO)
+				.getPmCompositeValidity().getMinCompositeVersion();
+		String version = this.getManagedBean().getBpmVersionNo();
+
+		return isQualifiedToInsertItemSpecOffer(workFlowStatus, minVersion,
+				version);
+	}
+
+	// #29007 End vinod
+	// #29007 Start vinod
+	private boolean isQualifiedToInsertItemSpecOffer(Long workFlowStatus,
+			String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion)
+				&& StringUtils.isNotBlank(version)
+				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
+		boolean isPendingAcknowledgement = QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+				.equals(workFlowStatus);
+		boolean isPendingVerify = QTStatusConst.LOA_PENDING_VERIFICATION
+				.equals(workFlowStatus);
+
+		if ((isPendingAcknowledgement || isPendingVerify) && isOldVersion) {
+			return true;
+		}
+		return false;
+	}
+
+	// #29007 End vinod
 }

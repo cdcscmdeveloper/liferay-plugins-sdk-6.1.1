@@ -1666,6 +1666,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean nullEPVRemark;
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
+	private boolean noSupplierExistForEPV;
 	//#21692 - End
 	
 	// #29468 Vinod Start
@@ -12158,4 +12159,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	//37813,35384 -end
+	
+	//#21692 note-569 - Start
+	public boolean isNoSupplierExistForEPV() {
+		return noSupplierExistForEPV;
+	}
+
+	public void setNoSupplierExistForEPV(boolean noSupplierExistForEPV) {
+		this.noSupplierExistForEPV = noSupplierExistForEPV;
+	}
+	//#21692 note-569 - End
 }

@@ -26,16 +26,15 @@
 						immediate="true" action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 				</td>
 				<td style="white-space: nowrap; float: right;">
-				<!-- #34159 - START - add param disablevalidation -->
-					<p:commandButton value="#{lbl['lbl.sm.button.save']}" update=":form"
-						action="#{smPersonnelBackingBean.save}" onclick="blockWidget.show()" oncomplete="blockWidget.hide()" >
+				<!-- #34159 - START - add param disablevalidation, #34400 -->
+					<p:commandButton value="#{lbl['lbl.sm.button.save']}" 
+						oncomplete="if (!args.validationFailed) confirmSaveDlg.show();" process="@all" >
 						<f:param name="disableValidation" value="true" />
 					</p:commandButton>
 				<!-- #34159 - END -->
 				</td>
 			</tr>
 		</table>
-
 
 		<p:panel id="UserProfile" toggleable="true">
 			<f:facet name="header">
@@ -538,9 +537,10 @@
 									<td style="float: left;"><p:selectBooleanCheckbox
 											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
 											<!-- #36717 - add @([id$=MailingAddressInfo]) in ajax process -->
+											<!-- #36718 - Change listener method call -->
 											<p:ajax event="change" update="@([id$=MailingAddressInfo])"
 												partialSubmit="true" process="@this @([id$=MailingAddressInfo])" resetValues="true"
-												listener="#{smPersonnelBackingBean.onTickSameAsAddress(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
+												listener="#{smPersonnelBackingBean.onTickSameAsPermForMail(smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress,
 												smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress)}" />
 										</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 									<td></td>				
@@ -758,7 +758,8 @@
 											</p:outputPanel>
 											<p:outputPanel
 												rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.pmCountry.countryId!=smPersonnelBackingBean.managedBean.myCountryId}">
-												<p:inputText maxlength="10" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
+												<!-- #36718 - add !empty param['disableValidation'] in required condition -->
+												<p:inputText maxlength="10" required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm and !empty param['disableValidation']}"
 													label="#{lbl['lbl.sm.postcode']}" id="basicMailAddPostCodeForeign"
 													value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}"
 													readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
@@ -795,6 +796,11 @@
 					oncomplete="confirmDialog.hide();" />
 			</div>
 		</p:confirmDialog>
-		
+		<!-- #34400 -->
+		<ac:confirmationPopupSM id="confirmSaveDlg" widget="confirmSaveDlg"
+			okAction="smPersonnelBackingBean.save"
+			content="#{lbl['lbl.sm.confirm.user.profile']}" 
+			update=":form"
+			loadingWidget="blockWidget" />
 	</ui:define>
 </ui:composition>
