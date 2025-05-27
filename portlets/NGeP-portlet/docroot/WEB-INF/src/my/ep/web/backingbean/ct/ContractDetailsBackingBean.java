@@ -1903,14 +1903,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							// Fahmi alter condition with putra
 							//#24333 - Start
 							if (ctBB.isContractExtendOrIsBond()) {
-								if (contractAmt.getCtPerformanceBondsNew().size() > 0
+								if (contractAmt.getCtPerformanceBondsNew().size() == 0
 										&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsNew() == null || ctBB.getManagedBean()
 												.getCtContractAmount().getCtPerformanceBondsNew().isEmpty())) {
 									setTabValue("PB");
 									throwExceptions(MessageConst.ERROR_100022, "lbl.ct.menu.performance.bond");
 								}
 							}
-							if (contractAmt.getCtPerformanceBondsOriginal().size() > 0
+							if (contractAmt.getCtPerformanceBondsOriginal().size() == 0
 									&& (ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal() == null || ctBB.getManagedBean()
 											.getCtContractAmount().getCtPerformanceBondsOriginal().isEmpty())) {
 								setTabValue("PB");
