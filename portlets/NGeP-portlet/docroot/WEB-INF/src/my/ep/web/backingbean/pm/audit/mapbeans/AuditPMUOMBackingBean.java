@@ -76,7 +76,7 @@ public class AuditPMUOMBackingBean extends AuditPMBackingBeanTemplate {
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditConst.PM_AUD_UOM);
+		dtlObj.setDocType(this.docType);
 		dtlObj.setPmParameterLvlId(AuditConst.PM_AUD_UOM_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
