@@ -71,7 +71,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		this.roleCode = roleCode;
 		docNo = reason.getReasonCode();
 		this.docType = checkDocType(reason.getPmReasonDescs());
-		this.parameterCode = reason.getReasonCategoryCode().getParameterCode(); // SIT different
+		this.parameterCode = reason.getReasonCategoryCode().getParameterCode();
 		parameterLevelId = new BigInteger(ReasonParameterLevel.valueOf(parameterCode).value());
 
 		if (reason.isBrandNew()) {
@@ -385,7 +385,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		 */
 		if (CollectionUtils.isNotEmpty(existingReason.getPmSupplierReasons())) {
 			for (PmSupplierReason suppReason : existingReason.getPmSupplierReasons()) {
-				if (suppReason.isSelected()) {
+				if (suppReason.isBrandNew()) {
 					restrictionDetails.setRoleCode(roleCode);
 					restrictionDetails.setDocType(docType);
 					restrictionDetails.setDocNo(existingReason.getReasonCode());
@@ -507,8 +507,8 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		dtlObj.setDocType(docType);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setPmParameterLvlId(parameterLevelId);
-		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);
-		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OPM);
+		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
 		dtlObj.setLvlCode3(parameterCode);
 		dtlObj.setDocId(docId);
 		dtlObj.setDocGroupId(docId);
