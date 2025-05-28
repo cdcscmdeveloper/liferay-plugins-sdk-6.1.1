@@ -63,7 +63,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="blockWidget.show();"
 					oncomplete="complianceSampleConfirmPopUp.hide(); blockWidget.hide();"
 					partialSubmit="true" process="@form" 
-					action="#{evaluationBackingBean.saveProposalScoreDtls}" />
+					action="#{evaluationBackingBean.validateSaveSampleForMandatorySpec(hidSaveButton.clientId)}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="blockWidget.show();"
 					oncomplete="complianceSampleConfirmPopUp.hide(); blockWidget.hide();" 
 					action="#{evaluationBackingBean.resetComplianceConfirmationFlag}"
