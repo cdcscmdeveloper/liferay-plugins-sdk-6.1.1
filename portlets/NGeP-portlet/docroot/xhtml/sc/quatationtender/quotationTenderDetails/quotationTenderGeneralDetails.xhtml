@@ -1072,7 +1072,7 @@
 							<td><p:outputLabel value="#{lbl['lbl.sc.qt.sampel']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneRadio value="#{scQt.sampleReq}"
-									disabled="#{isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
+									disabled="#{scQt.partial or isReadOnly or createQtBB.isQTSampleStatus(scQt.qtStatus.statusId)}">
 									<f:selectItems
 										value="#{createQtBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 									<p:ajax event="change" partialSubmit="true"
