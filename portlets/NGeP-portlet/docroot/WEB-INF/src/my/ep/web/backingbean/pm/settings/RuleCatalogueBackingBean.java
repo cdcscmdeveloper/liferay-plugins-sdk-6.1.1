@@ -1743,18 +1743,6 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 	
-	/** AUDIT #28895_35509 START***/
-	/**
-	 * @param zoneId
-	 * @return zone name
-	 */
-	public String getZoneName(Long zoneId){
-		PmZone zone = (PmZone) my.ep.helper.EntityHelper.getEntityBySinglePropertyFromList(
-				zoneId, getManagedBean().getZoneList(), "zoneId");
-		return zone != null ? zone.getZoneName() : "";
-	}
-	/** AUDIT #28895_35509 END***/
-	
 	private void setupTrackingDiaryVal(RuleReqDTO reqDTO){
 		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 		for (PmConfigRuleDesc ruleTypeDesc : this.getManagedBean()
