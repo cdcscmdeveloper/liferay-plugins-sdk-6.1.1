@@ -172,7 +172,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	//28221 - end
 
 	//24956 start
-    private boolean CtTypeMinistry;
+    private boolean ctTypeMinistry;
     //24956 end
 
 	//29551 - start
@@ -1665,11 +1665,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	
 	//24956 - start
 	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
+		return ctTypeMinistry;
 	}
 
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
+		this.ctTypeMinistry = ctTypeMinistry;
 	}
 	//24956 - end
 
