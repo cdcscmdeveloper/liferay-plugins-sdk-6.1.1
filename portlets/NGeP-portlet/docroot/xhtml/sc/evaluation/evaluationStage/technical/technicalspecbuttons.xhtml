@@ -29,9 +29,10 @@
 							oncomplete="blockWidget.hide();"
 							action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
 							<p:commandButton 
-								value="#{lbl['lbl.btn.save']}"
-								style="float:right;"
-								action="#{evaluationBackingBean.validateSaveTemplateForMandatorySpec(hidSaveButton.clientId)}" /></td>
+							value="#{lbl['lbl.btn.save']}" style="float:right;"
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
+							action="#{evaluationBackingBean.validateSaveTemplateForMandatorySpec(hidSaveButton.clientId)}" /></td>
 							<ui:remove>#29187 End Vinod</ui:remove>
 				</tr>
 			</table>
