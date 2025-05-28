@@ -6050,6 +6050,18 @@ public class RuleCatalogueBackingBean extends
 	// 29650 - end
 	// #30672, #29669 - 29/01/2023 - Remove this code
 	
+	//#34397, #34398 , #35509 - start
+	/**
+	 * @param zoneId
+	 * @return zone name
+	 */
+	public String getZoneName(Long zoneId){
+		PmZone zone = (PmZone) my.ep.helper.EntityHelper.getEntityBySinglePropertyFromList(
+				zoneId, getManagedBean().getZoneList(), "zoneId");
+		return zone != null ? zone.getZoneName() : "";
+	}
+	//#34397, #34398, #35509 - end
+	
 	//START: #35509
 	void clearAllAuditBeanVal(RuleCatalogueManageBean managedBeans) {
 		managedBeans.getResDTO().setFeeExemptions(null);
