@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmZoneState;
@@ -78,6 +79,24 @@ public class ZoneManagedBean extends BaseManagedBean {
 	/** The pm zones list. */
 	private List<PmZone> pmZonesList;
 
+	/************ AUDIT #28895_35509 *************/
+	/** The pm zone OLD Value. */
+	private PmZone pmZoneOld;
+
+	/** The pm zone. */
+	private PmZone resZone;
+
+	/** ZoneResDTO */
+	private ZoneResDTO zoneResDTO;
+
+	/** The zone state list. */
+	private List<PmZoneState> zoneStateListDeleted = new ArrayList<PmZoneState>();
+
+	/** The zone state list. */
+	private List<PmZoneState> zoneStateListNewAdded = new ArrayList<PmZoneState>();
+
+	/************ END AUDIT #28895_35509 END *************/
+	
 	/**
 	 * Instantiates a new zone managed bean.
 	 */
@@ -353,5 +372,46 @@ public class ZoneManagedBean extends BaseManagedBean {
 		this.showParentMsg = showParentMsg;
 	}
 
+	//START: #35509
+	public PmZone getPmZoneOld() {
+		return pmZoneOld;
+	}
+
+	public void setPmZoneOld(PmZone pmZoneOld) {
+		this.pmZoneOld = pmZoneOld;
+	}
+
+	public PmZone getResZone() {
+		return resZone;
+	}
+
+	public void setResZone(PmZone resZone) {
+		this.resZone = resZone;
+	}
+
+	public ZoneResDTO getZoneResDTO() {
+		return zoneResDTO;
+	}
+
+	public void setZoneResDTO(ZoneResDTO zoneResDTO) {
+		this.zoneResDTO = zoneResDTO;
+	}
+
+	public List<PmZoneState> getZoneStateListDeleted() {
+		return zoneStateListDeleted;
+	}
+
+	public void setZoneStateListDeleted(List<PmZoneState> zoneStateListDeleted) {
+		this.zoneStateListDeleted = zoneStateListDeleted;
+	}
+
+	public List<PmZoneState> getZoneStateListNewAdded() {
+		return zoneStateListNewAdded;
+	}
+
+	public void setZoneStateListNewAdded(List<PmZoneState> zoneStateListNewAdded) {
+		this.zoneStateListNewAdded = zoneStateListNewAdded;
+	}
+	//END: #35509
 
 }
