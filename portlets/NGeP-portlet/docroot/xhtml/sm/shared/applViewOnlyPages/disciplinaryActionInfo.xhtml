@@ -14,7 +14,7 @@
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{viewSmApplBackingBean.onViewDisciplinaryAction}"
 				process="@this" partialSubmit="true" update=":form">
-					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+					<strong><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" escape="false" style="color:blue"/></strong>
 			</p:commandLink><p:spacer width="2"/>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>
@@ -139,9 +139,9 @@
 			</tr>
 		</table>
 	</p:panel>
-<!-- START - 32660, 32731 -->
-<c:if test="#{viewSmApplBackingBean.managedBean.portletUrlLabel == 'Supplier Application Status'}">
+<!-- START - 32660, 32731, 38293 -->
+<c:if test="#{viewSmApplBackingBean.managedBean.portletUrlLabel == lbl['lbl.sm.supplier.application.history']}">
 	<ac:disciplinaryActionHistory voList="#{viewSmApplBackingBean.managedBean.disciplineVOs}" />
 </c:if>
-	<!-- END - 28237, 28281, 32660, 32731 -->
+	<!-- END - 28237, 28281, 32660, 32731, 38293 -->
 </ui:composition>
