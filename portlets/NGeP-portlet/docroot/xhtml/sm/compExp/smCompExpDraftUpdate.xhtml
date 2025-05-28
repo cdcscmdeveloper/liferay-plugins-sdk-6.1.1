@@ -34,7 +34,7 @@
 							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
 							rendered="#{!smCompExpMB.disableClienType}"
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:selectOneRadio
+					<td style="width: 66%"><p:selectOneRadio required="true"
 							disabled="#{smCompExpMB.disableClienType}" id="clientType"
 							label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
 							value="#{smCompExpMB.selectedDraft.clientType}">
@@ -47,7 +47,7 @@
 							<f:selectItem
 								itemLabel="#{lbl['lbl.sm.comp.exp.update.client.type.other']}"
 								itemValue="#{ParameterConst.clientTypeNonFederal}"></f:selectItem>
-						</p:selectOneRadio> <p:message for="clientType" display="icon" /></td>
+						</p:selectOneRadio></td>
 				</tr>
 				<p:outputPanel
 					rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}">
@@ -70,9 +70,9 @@
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputText id="agencyName"
-							readonly="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal or 
-							(smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeNonFederal and 
-							smCompExpMB.selectedDraft.agencyName ne null)}"
+							required="true"
+							readonly="#{smCompExpMB.selectedDraft.clientType eq null or smCompExpMB.selectedDraft.agencyName ne null
+							or smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}"
 							size="60" value="#{smCompExpMB.selectedDraft.agencyName}" /> <p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}">
 							<p:commandLink action="#{smPtjPopupBB.initPopup}"
@@ -84,7 +84,7 @@
 								<p:tooltip for="agencyNameToolTipsId"
 									value="#{lbl['lbl.sm.comp.exp.update.agency.name.tooltip']}" />
 							</p:commandLink>
-						</p:outputPanel> <p:message for="agencyName" display="icon" /></td>
+						</p:outputPanel></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -92,12 +92,14 @@
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:inputText id="fileReferenceNo"
+							required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							value="#{smCompExpMB.selectedDraft.fileReferenceNo}">
 							<p:ajax event="blur"
 								listener="#{smCompExpBB.trimFileReferenceNo}"
 								update="fileReferenceNo" />
 						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
+							required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							maxlength="3" size="3"
 							value="#{smCompExpMB.selectedDraft.fileExtensionNo}">
@@ -109,13 +111,13 @@
 							for="fileReferenceNoToolTipsId">
 							<img
 								src="/NGeP-portlet/images/suratSetujuTerima_fileReference_tooltip.jpeg" />
-						</p:tooltip> <p:message for="fileExtensionNo" display="icon" /></td>
+						</p:tooltip></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
 							styleClass="outputLabel-view-label2"
 							value="#{lbl['lbl.sm.comp.exp.update.loa.no']}" /></td>
-					<td style="width: 66%"><p:inputText process=""
+					<td style="width: 66%"><p:inputText
 							value="#{smCompExpMB.selectedDraft.loaNo}" /></td>
 				</tr>
 				<tr>
@@ -163,7 +165,7 @@
 							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText> <p:calendar id="contractEffDate"
+						</h:outputText> <p:calendar id="contractEffDate" required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.contract.eff.date']}"
 							maxdate="#{smCompExpMB.maxEffDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -173,7 +175,7 @@
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								oncomplete="blockWidget.hide()" onstart="blockWidget.show()"
 								process="@form" update=":form" />
-						</p:calendar> <p:message for="contractEffDate" display="icon" /></td>
+						</p:calendar></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -181,6 +183,7 @@
 							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:calendar id="contractExpDate"
+							required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
 							mindate="#{smCompExpMB.minExpDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -189,7 +192,7 @@
 							<p:ajax event="dateSelect" listener="#{smCompExpBB.dateChange}"
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								process="@form" update=":form" />
-						</p:calendar> <p:message for="contractExpDate" display="icon" /></td>
+						</p:calendar></td>
 				</tr>
 				<tr>
 					<td style="width: 34%"><p:outputLabel
@@ -235,8 +238,7 @@
 							for="suppDocToolTipsId">
 							<img
 								src="/NGeP-portlet/images/suratSetujuTerima_suppDoc_tooltip.jpeg" />
-						</p:tooltip> <p:message for="suppDoc" display="icon" /> <p:outputPanel
-							id="smCompExpSuppDocListPanelId">
+						</p:tooltip> <p:outputPanel id="smCompExpSuppDocListPanelId">
 							<ui:repeat value="#{smCompExpMB.smCompExpDocList}" var="doc">
 								<br />
 								<h:commandLink id="file"
@@ -278,7 +280,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 							<h:outputText styleClass="mandatory" value="*" />
-							<p:selectOneMenu id="mainDDId"
+							<p:selectOneMenu id="mainDDId" required="true"
 								label="#{lbl['lbl.sm.projDtls.mainCat']}"
 								value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -292,7 +294,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 							<h:outputText styleClass="mandatory" value="*" />
-							<p:selectOneMenu id="subDDId"
+							<p:selectOneMenu id="subDDId" required="true"
 								label="#{lbl['lbl.sm.projDtls.subCat']}"
 								value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -306,7 +308,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 							<h:outputText styleClass="mandatory" value="*" />
-							<p:selectOneMenu id="subDivDDId"
+							<p:selectOneMenu id="subDivDDId" required="true"
 								label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 								value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -318,18 +320,17 @@
 									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 									listener="#{smCompExpBB.checkDuplicateCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
 							</p:selectOneMenu>
-							<p:message for="smCompExpCatCodes" display="icon" />
 						</p:column>
 					</c:if>
 					<c:if test="#{!smCompExpMB.smCompExpCatDraftListEmpty}">
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL1.categoryName}" />
+							<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL2.categoryName}" />
+							<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-							<h:outputText value="#{smCompExpCatCode.categoryL3.categoryName}" />
+							<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
 						</p:column>
 					</c:if>
 				</p:dataTable>

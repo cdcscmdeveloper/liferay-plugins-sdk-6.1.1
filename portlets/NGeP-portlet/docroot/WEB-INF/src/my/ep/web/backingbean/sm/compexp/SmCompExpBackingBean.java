@@ -39,6 +39,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -491,12 +492,16 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		error = validateList(error);
 
 		if (!error) {
-			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-			reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
-			reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
-			reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
-			if (getSmCompExpSo().checkDuplicateExist(reqDTO)) {
-				RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
+			if (null != this.getManagedBean().getSelectedDraft().getOrgProfile()) {
+				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+				reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
+				reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
+				reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
+				if (getSmCompExpSo().checkDuplicateExist(reqDTO)) {
+					RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
+				} else {
+					declareSmComExp();
+				}
 			} else {
 				declareSmComExp();
 			}
@@ -612,20 +617,36 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setContractEffDate(draft.getContractEffDate());
 		master.setContractExpDate(draft.getContractExpDate());
 		master.setContractStatus(draft.getContractStatus());
-//		master.setCompExpMasterDocs(this.getManagedBean().getSmCompExpDocList());
-		
+		master.setSourceType(SmApplicationUtil.retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
+		for (SmCompExpMasterDoc doc : this.getManagedBean().getSmCompExpDocList()) {
+			doc.setCompExpMaster(master);
+		}
+		master.setCompExpMasterDocs(this.getManagedBean().getSmCompExpDocList());
+
 		List<SmCompExpCatMaster> catMasterList = new ArrayList<>();
-		for(SmCompExpCatDraft catDraft : this.getManagedBean().getSmCompExpCatDraftList()){
+		for (SmCompExpCatDraft catDraft : this.getManagedBean().getSmCompExpCatDraftList()) {
 			SmCompExpCatMaster catMaster = new SmCompExpCatMaster();
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+
+			reqDTO.setCategoryL1Id(catDraft.getCategoryL1().getCategoryL1Id());
+			catDraft.setCategoryL1(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL1DtlById(reqDTO).getCategoryL1());
 			catMaster.setCategoryL1(catDraft.getCategoryL1());
-			catMaster.setCategoryL1Name(catDraft.getCategoryL1Name());
+			catMaster.setCategoryL1Name(catDraft.getCategoryL1().getCategoryName());
+
+			reqDTO.setCategoryL2Id(catDraft.getCategoryL2().getCategoryL2Id());
+			catDraft.setCategoryL2(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL2DtlById(reqDTO).getCategoryL2());
 			catMaster.setCategoryL2(catDraft.getCategoryL2());
-			catMaster.setCategoryL2Name(catDraft.getCategoryL2Name());
+			catMaster.setCategoryL2Name(catDraft.getCategoryL2().getCategoryName());
+
+			reqDTO.setCategoryL3Id(catDraft.getCategoryL3().getCategoryL3Id());
+			catDraft.setCategoryL3(SmServiceLookup.getCategoryCodeSO().retrieveCategoryL3DtlById(reqDTO).getCategoryL3());
 			catMaster.setCategoryL3(catDraft.getCategoryL3());
-			catMaster.setCategoryL3Name(catDraft.getCategoryL3Name());
+			catMaster.setCategoryL3Name(catDraft.getCategoryL3().getCategoryName());
+
+			catMaster.setCompExpMaster(master);
 			catMasterList.add(catMaster);
 		}
-//		master.setCompExpMasterCats(catMasterList);
+		master.setCompExpMasterCats(catMasterList);
 
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setDeclareMaster(master);
@@ -633,6 +654,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		SmCompExpResDTO resDTO;
 		resDTO = getSmCompExpSo().declareDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
+			deactivateDraft();
 			this.getManagedBean().getDraftSmDataModel().reloadData();
 			redirectToDraft();
 		}
@@ -643,6 +665,20 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void onDeleteDraft() {
 		RequestContext.getCurrentInstance().execute("confirmDelDraftDialogWV.show();");
+	}
+
+	/**
+	 * Delete selected Draft
+	 */
+	public void deactivateDraft() {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setDraftId(this.getManagedBean().getSelectedDraft().getCompExpDraftId());
+		SmCompExpResDTO resDTO;
+		resDTO = getSmCompExpSo().deactivateDraft(reqDTO);
+		if (resDTO.isSuccessful()) {
+			this.getManagedBean().getDraftSmDataModel().reloadData();
+			redirectToDraft();
+		}
 	}
 
 }
