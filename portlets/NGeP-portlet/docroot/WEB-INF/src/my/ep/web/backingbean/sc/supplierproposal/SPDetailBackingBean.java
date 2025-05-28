@@ -1134,25 +1134,6 @@ public class SPDetailBackingBean extends
 		*/
 		//Bug #31725 End
 
-		// #21695 - Start - fix completed financial proposal still ticked after
-		// technical proposal updated
-		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
-			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
-				if (finProposalChecklist.getScQtCheckList().getTitle()
-						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
-						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-					
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
-					prepareFinancialAction(finProposalChecklist);
-					saveFinancialSpecificationAction(false, true);
-					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
-					break;
-				}
-			}
-		}
-		// #21695 - End - fix completed financial proposal still ticked after technical proposal updated
-
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);
