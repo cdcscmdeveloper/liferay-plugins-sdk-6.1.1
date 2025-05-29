@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -24,6 +25,7 @@ import my.ep.web.bean.pm.AuditPMSearchBean;
 import my.ep.web.managedbean.pm.audit.AuditPMManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * @author normuliana
@@ -65,7 +67,23 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	public void searchMaster() {
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getSearchBean().setSearching(true);
+		validateAtLeastOneSearchCriteria();
 		searchMaster.reloadData();
+	}
+
+	protected void validateAtLeastOneSearchCriteria() {
+		if (!StringUtils.isBlank(getManagedBean().getSearchBean().getSystemConfigParamLevel1())
+				&& !StringUtils.isBlank(getManagedBean().getSearchBean().getCategoryConfigParamLevel2())) {
+			if (StringUtils.isBlank(getManagedBean().getSearchBean().getItemConfigParamLevel3())
+					&& StringUtils.isBlank(getManagedBean().getSearchBean().getItemCode())
+					&& StringUtils.isBlank(getManagedBean().getSearchBean().getItemName())
+					&& StringUtils.isBlank(getManagedBean().getSearchBean().getRoleCode())
+					&& null == getManagedBean().getSearchBean().getPmUser()
+					&& null == getManagedBean().getSearchBean().getDateFrom()
+					&& null == getManagedBean().getSearchBean().getDateTo()) {
+				throw new EpException(SmCommonUtil.getMessage("lbl.pm.audit.search.instruction1", null));
+			}
+		}
 	}
 
 	public void searchDetail() {
