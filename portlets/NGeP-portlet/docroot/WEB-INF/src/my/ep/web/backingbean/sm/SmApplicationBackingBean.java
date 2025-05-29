@@ -18507,10 +18507,18 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
         		addr.getPmDistrict().getDistrictName(), addr.getPmCity().getCityName(), addr.getPmDivision().getDivisionName(),
         		addr.getPmState().getStateName());
         
+        // Catter null address
+        List<String> cleanedAddr = new ArrayList<String>();
+        for (String addrs : addrlist) {
+            if (addrs != null && !addrs.trim().isEmpty()) {
+            	cleanedAddr.add(addrs);
+            }
+        }
+        
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < addrlist.size(); i++) {
-            sb.append(addrlist.get(i));
-            if (i < addrlist.size() - 1) {
+        for (int i = 0; i < cleanedAddr.size(); i++) {
+            sb.append(cleanedAddr.get(i));
+            if (i < cleanedAddr.size() - 1) {
                 sb.append(", ");
             }
         }
