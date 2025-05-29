@@ -867,7 +867,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	}
 	public void getServiceFeeBasedOnAccountingReport(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getServiceFeeBasedOnAccountingReport");
-		IAgOfficeSO agOfficeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		
 		List<Object[]> reportList = new ArrayList<Object[]>();
 		List<Object[]> summaryReportList = new ArrayList<Object[]>();
@@ -894,11 +893,6 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		summaryReportList = generateServiceFeeBasedOnAccountingReport(params, "S");
 		//sort data
 		int fiCount = 0;
-		BigDecimal summaryTotalAmt = BigDecimal.ZERO;
-		BigDecimal summaryDeductionAmt = BigDecimal.ZERO;
-		BigDecimal summaryGSTAmt = BigDecimal.ZERO;
-		BigDecimal summaryServiceFeeAmt = BigDecimal.ZERO;
-		BigDecimal summaryAmtPayableSupplier = BigDecimal.ZERO;
 		if(!reportList.isEmpty()){
 			for(int m=0; m<reportList.size(); m++){
 				Object[] row = (Object[]) reportList.get(m);
@@ -907,13 +901,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 				BigDecimal amtCBP = row[20] != null ? (BigDecimal)row[20] : BigDecimal.ZERO;
 				BigDecimal amtServiceFee = row[14] != null ? (BigDecimal)row[14] : BigDecimal.ZERO;
 				BigDecimal amtSupplier = row[17] != null ? (BigDecimal)row[17] : BigDecimal.ZERO;
-				//summary sheet calculation
-				summaryTotalAmt = (summaryTotalAmt).add(amtTransIncCBP);
-				summaryDeductionAmt = (summaryDeductionAmt).add(amtDeduction);
-				summaryGSTAmt = (summaryGSTAmt).add(amtCBP);
-				summaryServiceFeeAmt = (summaryServiceFeeAmt).add(amtServiceFee);
-				summaryAmtPayableSupplier = (summaryAmtPayableSupplier).add(amtSupplier);
-				//end summary sheet calculation
+				
 				fiList.put(fiCount, new Object[] {
 						//need to recheck query
 						row[6].toString(), //POCO DATE
@@ -928,7 +916,8 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 						amtCBP, //GST AMOUNT
 						amtServiceFee, //SERVICE FEE AMOUNT
 						amtSupplier, //AMT PAYABLE SUPPLIER
-						row[21].toString() //POCO STATUS
+						row[21].toString(), //POCO STATUS
+						row[4].toString(), //AG Office Code
 					});
 				fiCount++;
 			}
@@ -975,22 +964,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 			}
 			
 		}
-		//get accounting office name
-		String PmAccHeader = "";
 		
-		if (params.get("POFFICECODE") != null) {
-			String PmOfficeName = "";
-			String PmOfficeCode = params.get("POFFICECODE");
-			AgOfficeReqDTO agOfficeReqDTO = new AgOfficeReqDTO();
-			agOfficeReqDTO.setAgOfficeCode(params.get("POFFICECODE"));
-			AgOfficeResDTO agOfficee = agOfficeSO.retrieveAgOfficeByOfficeCode(agOfficeReqDTO);
-			if (agOfficee.getAgOffice() != null) {
-				PmOfficeName = agOfficee.getAgOffice().getPmAgValidity().getOfficeName();
-			}
-			PmAccHeader = PmOfficeCode + " " + PmOfficeName;
-		} else {
-			PmAccHeader = "All";
-		}
 		//start create sheet "Laporan"
 		Workbook wb = new XSSFWorkbook();
 		CreationHelper createHelper = wb.getCreationHelper();
@@ -1013,81 +987,66 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 		} else {
 			KadarFi = "All";
 		}
-	    //add gap row
-	    sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
-	    //start header report
-	    for(int i = 1; i <= rowHeaderItems.length; i++) {
-        	Row itemsDtlRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
-        	Cell cellItemsDtl = itemsDtlRow.createCell(1);
-        	cellItemsDtl.setCellValue(rowHeaderItems[i-1]);
-        	cellItemsDtl.setCellStyle(titleHeaderStyle(wb,true,false,false,false,true,true));
-        	
-        	Cell cellItemsVal = itemsDtlRow.createCell(4);
-        	if(i==1)cellItemsVal.setCellValue(PmAccHeader);        		
-        	if(i==2)cellItemsVal.setCellValue(KadarFi);
-        	cellItemsVal.setCellStyle(titleHeaderStyle(wb,false,false,false,false,true,false));
-        	sheetReportList.addMergedRegion(new CellRangeAddress(i+2,i+2,1,3));
-        	sheetReportList.addMergedRegion(new CellRangeAddress(i+2,i+2,4,columnHeaderList.size()));
-        	
-        	boxedRegion(cellItemsDtl,new CellRangeAddress(i+2,i+2,1,3),sheetReportList);
-        	boxedRegion(cellItemsVal,new CellRangeAddress(i+2,i+2,4,columnHeaderList.size()),sheetReportList);
-        }
-	    
-	    //start header table
-	    Row headerRowList = sheetReportList.createRow(sheetReportList.getLastRowNum()+2);
-        for(int i = 0; i < columnHeaderList.size(); i++) {
-            Cell cell = headerRowList.createCell(i+1);
-            cell.setCellValue(columnHeaderList.get(i).toString());
-            cell.setCellStyle(columnStyle(wb,createHelper,true,true,true,false,false,true,true));
-        }
-		// Resize all columns
-		for (int i = 1; i < columnHeaderList.size() + 1; i++) {
-			if (i == 1)
-				sheetReportList.setColumnWidth(i, 8 * 256);// Col : Bil
-			else if (i == 2)
-				sheetReportList.setColumnWidth(i, 17 * 256); // Col : date
-			else if (i == 3)
-				sheetReportList.setColumnWidth(i, 19 * 256); // Col : poco num
-			else if (i == 4)
-				sheetReportList.setColumnWidth(i, 20 * 256); // Col : type
-			else if (i == 5)
-				sheetReportList.setColumnWidth(i, 15 * 256); // Col : ptj code
-			else if (i == 6)
-				sheetReportList.setColumnWidth(i, 50 * 256); // Col : ptj name
-			else if (i == 7)
-				sheetReportList.setColumnWidth(i, 15 * 256); // Col : service fee
-			else if (i == 8)
-				sheetReportList.setColumnWidth(i, 40 * 256); // Col : title
-			else if (i == 9)
-				sheetReportList.setColumnWidth(i, 30 * 256); // Col : amount with gst
-			else if (i == 10)
-				sheetReportList.setColumnWidth(i, 15 * 256); // Col : deduction amt
-			else if (i == 11)
-				sheetReportList.setColumnWidth(i, 15 * 256); // Col : gst amt
-			else if (i == 12)
-				sheetReportList.setColumnWidth(i, 30 * 256); // Col : service fee amt
-			else if (i == 13)
-				sheetReportList.setColumnWidth(i, 30 * 256); // Col : supplier payable amt
-			else if (i == 14)
-				sheetReportList.setColumnWidth(i, 22 * 256); // Col : Status
-		}
         
 		// Start : Populate Record
 		if (!reportList.isEmpty()) {
 			Set<Integer> keyIdFi = fiList.keySet();
-			int rowCount = sheetReportList.getLastRowNum() + 1;
 			int bilRecord = 1;
+			//create header for first ag account
+			//underconstruct
+			Object[] firstData = fiList.get(0);
+			String agOfficeCodeInLoop = firstData[13].toString();
+			createHeaderForReportServiceFee(sheetReportList, rowHeaderItems,
+					getAGOfficeNameAndCodeForHeaderWithOfficeCode(agOfficeCodeInLoop), KadarFi, columnHeaderList, wb,
+					createHelper);	
+			
+			//initialize for summary each AG
+			BigDecimal summaryTotalAmtAG = BigDecimal.ZERO;
+			BigDecimal summaryDeductionAmtAG = BigDecimal.ZERO;
+			BigDecimal summaryGSTAmtAG = BigDecimal.ZERO;
+			BigDecimal summaryServiceFeeAmtAG = BigDecimal.ZERO;
+			BigDecimal summaryAmtPayableSupplierAG = BigDecimal.ZERO;
 
 			for (Integer key : keyIdFi) {
-				Row row = sheetReportList.createRow(rowCount++);
 				Object[] objectArr = fiList.get(key);
+				
+				//add for header if different ag
+				if(!objectArr[13].toString().equals(agOfficeCodeInLoop)){
+					//create footer summary for each ag office
+					createFooterForSummaryForEachAGOffice(sheetReportList, wb, createHelper, summaryTotalAmtAG,
+							summaryDeductionAmtAG, summaryGSTAmtAG, summaryServiceFeeAmtAG, summaryAmtPayableSupplierAG);
+					
+					createHeaderForReportServiceFee(sheetReportList, rowHeaderItems,
+							getAGOfficeNameAndCodeForHeaderWithOfficeCode(objectArr[13].toString()), KadarFi, columnHeaderList, wb,
+							createHelper);
+					agOfficeCodeInLoop = objectArr[13].toString();
+					bilRecord = 1;
+					// reset summary each AG
+					summaryTotalAmtAG = BigDecimal.ZERO;
+					summaryDeductionAmtAG = BigDecimal.ZERO;
+					summaryGSTAmtAG = BigDecimal.ZERO;
+					summaryServiceFeeAmtAG = BigDecimal.ZERO;
+					summaryAmtPayableSupplierAG = BigDecimal.ZERO;
+					
+				}
+				//add for header if different ag - end
+				
+				//calculate summary
+				summaryTotalAmtAG = summaryTotalAmtAG.add((BigDecimal)objectArr[7]);
+				summaryDeductionAmtAG = summaryDeductionAmtAG.add((BigDecimal)objectArr[8]);
+				summaryGSTAmtAG = summaryGSTAmtAG.add((BigDecimal)objectArr[9]);
+				summaryServiceFeeAmtAG = summaryServiceFeeAmtAG.add((BigDecimal)objectArr[10]);
+				summaryAmtPayableSupplierAG = summaryAmtPayableSupplierAG.add((BigDecimal) objectArr[11]);
+				//end calculate summary
+				
+				Row row = sheetReportList.createRow(sheetReportList.getLastRowNum() + 1);
 
 				int cellid = 2;
 				Cell cellBil = row.createCell(1);
 				cellBil.setCellValue(bilRecord++);
 				cellBil.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, false, false, false));
 
-				for (int x = 0; x < objectArr.length; x++) {
+				for (int x = 0; x < objectArr.length-1; x++) {
 					Cell cell = row.createCell(cellid);
 					if (objectArr[x] instanceof Date) {
 						cell.setCellValue((Date) objectArr[x]);
@@ -1111,7 +1070,14 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 					cellid++;
 				}
 			}
+			
+			createFooterForSummaryForEachAGOffice(sheetReportList, wb, createHelper, summaryTotalAmtAG,
+					summaryDeductionAmtAG, summaryGSTAmtAG, summaryServiceFeeAmtAG, summaryAmtPayableSupplierAG);
+			//calculate summary
+			
+			//end calculate summary
 			// summary report sheet
+			/*
 			int rowSummary = sheetReportList.getLastRowNum() + 1;
 			Row row = sheetReportList.createRow(rowSummary);
 			
@@ -1147,7 +1113,7 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	        CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary,rowSummary,13,14);
 		    sheetReportList.addMergedRegion(cellZoneSummaryAmt);
 		    
-		    boxedRegion(cellSummaryAmtPayableSupplier,cellZoneSummaryAmt,sheetReportList);
+		    boxedRegion(cellSummaryAmtPayableSupplier,cellZoneSummaryAmt,sheetReportList);*/
 		}
 		 if(reportList.isEmpty()){
 	        	Row noRecordRow = sheetReportList.createRow(sheetReportList.getLastRowNum()+1);
@@ -1316,6 +1282,172 @@ public class FlReportBackingBean<T extends FlReportManagedBean> extends ReportBa
 	    }
 	    
 	}
+	
+	/**
+	 * get footer of ag office for respective summary
+	 * 
+	 * @param sheetReportList
+	 * @param wb
+	 * @param createHelper
+	 * @param summaryTotalAmt
+	 * @param summaryDeductionAmt
+	 * @param summaryGSTAmt
+	 * @param summaryServiceFeeAmt
+	 * @param summaryAmtPayableSupplier
+	 */
+	public void createFooterForSummaryForEachAGOffice(Sheet sheetReportList, Workbook wb, CreationHelper createHelper,
+			BigDecimal summaryTotalAmt, BigDecimal summaryDeductionAmt, BigDecimal summaryGSTAmt, BigDecimal summaryServiceFeeAmt,
+			BigDecimal summaryAmtPayableSupplier) {
+		// summary report sheet
+		int rowSummary = sheetReportList.getLastRowNum() + 1;
+		Row row = sheetReportList.createRow(rowSummary);
+
+		Cell cellSummary = row.createCell(1);
+		cellSummary.setCellValue("Jumlah Keseluruhan (RM)");
+		cellSummary.setCellStyle(titleHeaderStyle(wb, true, true, false, false, true, true));
+		CellRangeAddress cellZone = new CellRangeAddress(rowSummary, rowSummary, 1, 8);
+		sheetReportList.addMergedRegion(cellZone);
+
+		boxedRegion(cellSummary, cellZone, sheetReportList);
+
+		// summary report sheet cell - total amount with gst
+		Cell cellSummaryTotalAmt = row.createCell(9);
+		cellSummaryTotalAmt.setCellValue(summaryTotalAmt.doubleValue());
+		cellSummaryTotalAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		// summary report sheet cell - deduction amount
+		Cell cellSummaryDeductionAmt = row.createCell(10);
+		cellSummaryDeductionAmt.setCellValue(summaryDeductionAmt.doubleValue());
+		cellSummaryDeductionAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+				false));
+		// summary report sheet cell - gst amount
+		Cell cellSummaryGSTAmt = row.createCell(11);
+		cellSummaryGSTAmt.setCellValue(summaryGSTAmt.doubleValue());
+		cellSummaryGSTAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false, false));
+		// summary report sheet cell - service fee amount
+		Cell cellSummaryServiceFeeAmt = row.createCell(12);
+		cellSummaryServiceFeeAmt.setCellValue(summaryServiceFeeAmt.doubleValue());
+		cellSummaryServiceFeeAmt.setCellStyle(columnStyle(wb, createHelper, false, false, false, false, true, false,
+				false));
+		// summary report sheet cell - accumulate amount payable supplier
+		Cell cellSummaryAmtPayableSupplier = row.createCell(13);
+		cellSummaryAmtPayableSupplier.setCellValue(summaryAmtPayableSupplier.doubleValue());
+		cellSummaryAmtPayableSupplier.setCellStyle(columnStyle(wb, createHelper, false, false, true, false, true,
+				false, false));
+
+		CellRangeAddress cellZoneSummaryAmt = new CellRangeAddress(rowSummary, rowSummary, 13, 14);
+		sheetReportList.addMergedRegion(cellZoneSummaryAmt);
+
+		boxedRegion(cellSummaryAmtPayableSupplier, cellZoneSummaryAmt, sheetReportList);
+	}
+	/**
+	 * get header ag office name and code
+	 * 
+	 * @param pmOfficeCode
+	 * @return AGOfficeNameAndCode for header
+	 */
+	public String getAGOfficeNameAndCodeForHeaderWithOfficeCode(String pmOfficeCode){
+		IAgOfficeSO agOfficeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
+		
+		String pmAccHeader;
+		if (pmOfficeCode != null) {
+			String pmOfficeName = "";
+			AgOfficeReqDTO agOfficeReqDTO = new AgOfficeReqDTO();
+			agOfficeReqDTO.setAgOfficeCode(pmOfficeCode);
+			AgOfficeResDTO agOfficee = agOfficeSO.retrieveAgOfficeByOfficeCode(agOfficeReqDTO);
+			if (agOfficee.getAgOffice() != null) {
+				pmOfficeName = agOfficee.getAgOffice().getPmAgValidity().getOfficeName();
+			}
+			pmAccHeader = pmOfficeCode + " " + pmOfficeName;
+		} else {
+			pmAccHeader = "All";
+		}
+		
+		return pmAccHeader;
+	}
+	
+	/**
+	 * create header for report service fee
+	 * 
+	 * 
+	 * @param sheetReportList
+	 * @param rowHeaderItems
+	 * @param pmAccHeader
+	 * @param kadarFi
+	 * @param columnHeaderList
+	 * @param wb
+	 * @param createHelper
+	 */
+	public void createHeaderForReportServiceFee(Sheet sheetReportList, String[] rowHeaderItems, String pmAccHeader,
+			String kadarFi, ArrayList<String> columnHeaderList, Workbook wb, CreationHelper createHelper) {
+		// add gap row
+		sheetReportList.createRow(sheetReportList.getLastRowNum() + 1);
+		// start header report
+		for (int i = 1; i <= rowHeaderItems.length; i++) {
+			Row itemsDtlRow = sheetReportList.createRow(sheetReportList.getLastRowNum() + 1);
+			int currentRow = sheetReportList.getLastRowNum();
+			Cell cellItemsDtl = itemsDtlRow.createCell(1);
+			cellItemsDtl.setCellValue(rowHeaderItems[i - 1]);
+			cellItemsDtl.setCellStyle(titleHeaderStyle(wb, true, false, false, false, true, true));
+
+			Cell cellItemsVal = itemsDtlRow.createCell(4);
+			if (i == 1)
+				cellItemsVal.setCellValue(pmAccHeader);
+			if (i == 2)
+				cellItemsVal.setCellValue(kadarFi);
+			cellItemsVal.setCellStyle(titleHeaderStyle(wb, false, false, false, false, true, false));
+			sheetReportList.addMergedRegion(new CellRangeAddress(currentRow, currentRow, 1, 3));
+			sheetReportList.addMergedRegion(new CellRangeAddress(currentRow, currentRow, 4, columnHeaderList.size()));
+
+			boxedRegion(cellItemsDtl, new CellRangeAddress(currentRow, currentRow, 1, 3), sheetReportList);
+			boxedRegion(cellItemsVal, new CellRangeAddress(currentRow, currentRow, 4, columnHeaderList.size()), sheetReportList);
+		}
+
+		// start header table
+		Row headerRowList = sheetReportList.createRow(sheetReportList.getLastRowNum() + 2);
+		for (int i = 0; i < columnHeaderList.size(); i++) {
+			Cell cell = headerRowList.createCell(i + 1);
+			cell.setCellValue(columnHeaderList.get(i).toString());
+			cell.setCellStyle(columnStyle(wb, createHelper, true, true, true, false, false, true, true));
+		}
+		// Resize all columns
+		for (int i = 1; i < columnHeaderList.size() + 1; i++) {
+			if (i == 1)
+				sheetReportList.setColumnWidth(i, 8 * 256);// Col : Bil
+			else if (i == 2)
+				sheetReportList.setColumnWidth(i, 17 * 256); // Col : date
+			else if (i == 3)
+				sheetReportList.setColumnWidth(i, 19 * 256); // Col : poco num
+			else if (i == 4)
+				sheetReportList.setColumnWidth(i, 20 * 256); // Col : type
+			else if (i == 5)
+				sheetReportList.setColumnWidth(i, 15 * 256); // Col : ptj code
+			else if (i == 6)
+				sheetReportList.setColumnWidth(i, 50 * 256); // Col : ptj name
+			else if (i == 7)
+				sheetReportList.setColumnWidth(i, 15 * 256); // Col : service
+																// fee
+			else if (i == 8)
+				sheetReportList.setColumnWidth(i, 40 * 256); // Col : title
+			else if (i == 9)
+				sheetReportList.setColumnWidth(i, 30 * 256); // Col : amount
+																// with gst
+			else if (i == 10)
+				sheetReportList.setColumnWidth(i, 15 * 256); // Col : deduction
+																// amt
+			else if (i == 11)
+				sheetReportList.setColumnWidth(i, 15 * 256); // Col : gst amt
+			else if (i == 12)
+				sheetReportList.setColumnWidth(i, 30 * 256); // Col : service
+																// fee amt
+			else if (i == 13)
+				sheetReportList.setColumnWidth(i, 30 * 256); // Col : supplier
+																// payable amt
+			else if (i == 14)
+				sheetReportList.setColumnWidth(i, 22 * 256); // Col : Status
+		}
+	}
+	
+	
 	public void getAccumulatedServiceFee(LinkedHashMap<String, String> params, BigDecimal requestId) throws Exception{
 		log.info("29554: start getAccumulatedServiceFee");
 		

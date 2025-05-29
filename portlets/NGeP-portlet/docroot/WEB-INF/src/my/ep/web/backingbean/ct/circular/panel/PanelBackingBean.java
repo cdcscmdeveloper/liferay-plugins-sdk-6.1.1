@@ -563,28 +563,32 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				log.debug("Record saved successfully");
 				
 				// #35506 Start
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-						|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
+				if (auditCtBean.getAuditCtConfigState()) {
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 
-					CtCircularVer ctCircularVer = getManagedBean().getCircularVer();
-					AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
-					AuditContractReqDTO auCtData = new AuditContractReqDTO();
-					auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
-					auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
-					auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-					auCtData.setDocType(resDTO.getCircularVer().getDocType());
-					auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
-					auCtData.setRoleName(getUserRole());
+						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();					
+						AuditContractReqDTO auCtData = new AuditContractReqDTO();
+						auCtData.setDocId(ctCircularVer.getCtCircular().getCircularId());
+						auCtData.setContractVerId(resDTO.getCircularVer().getCircularVerId());
+						if (ctCircularVer.getCtCircular().getLatestCircularVer() != null) {
+							auCtData.setPrevContractVerId(ctCircularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
+						}
+						auCtData.setDocType(resDTO.getCircularVer().getDocType());
+						auCtData.setCtType(ctCircularVer.getCtCircular().getCircularType());
+						auCtData.setRoleName(getUserRole());
 
-					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-						auCtData.setCtIsApproved(AuditContractConst.CT_YES);
-					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-						auCtData.setCtIsFinal(AuditContractConst.CT_YES);
-						auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_YES);
+						} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
+							auCtData.setCtIsApproved(AuditContractConst.CT_NO);
+						}
+
+						auditCtBean.saveAuditData(auCtData);
 					}
-
-					auditCtBean.saveAuditData(auCtData);
 				}
 				// #35506 End
 				

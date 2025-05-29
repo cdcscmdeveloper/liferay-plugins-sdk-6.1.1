@@ -19,7 +19,7 @@
 		
 	<!--#26186 start-->
 	<ui:fragment
-		rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
+		rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or not empty amendmentBackingBean.managedBean.supplierMsg}">
 		<ui:include src="amendmentInfo.xhtml" />
 	</ui:fragment>
 	<!--#26186 start-->

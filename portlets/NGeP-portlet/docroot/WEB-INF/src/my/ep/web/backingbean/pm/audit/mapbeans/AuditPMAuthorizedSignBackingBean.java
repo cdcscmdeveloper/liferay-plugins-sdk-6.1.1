@@ -36,7 +36,7 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 
 	String roleCode;
 
-	String pattern = "dd-MM-yyyy";
+	String pattern = "dd/MM/yyyy";
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
 	@Override
@@ -45,6 +45,10 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 		return auditPMRoleBackingBean.roleAuthorizedSign();
 	}
 
+	/**
+	 * @param manageBean
+	 * @return auditPMReqDTO
+	 */
 	@Override
 	public AuditPMReqDTO insert(BaseManagedBean manageBean, String roleCode) {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
@@ -69,13 +73,17 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 		return auditPMReqDTO;
 	}
 
+	/**
+	 * @param List PmCertSignatory
+	 * 
+	 */
 	private void addSignatory(List<PmCertSignatory> signatory, List<PmCertSignatory> listNew) {
 
 		for (PmCertSignatory newCertSign : listNew) {
 			for (PmCertSignatory savedCertSign : signatory) {
 				if (newCertSign.getEffDate().equals(savedCertSign.getEffDate())) {
 					signatoryName.setRoleCode(roleCode);
-					signatoryName.setDocType(AuditConst.PM_AUD_AUTHORIZED);
+					signatoryName.setDocType(savedCertSign.getSinnatoryName());
 					signatoryName.setDocNo(savedCertSign.getSinnatoryName());
 					signatoryName.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 					signatoryName.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -88,7 +96,7 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 					objList.add(signatoryName);
 
 					effectiveDate.setRoleCode(roleCode);
-					effectiveDate.setDocType(AuditConst.PM_AUD_AUTHORIZED);
+					effectiveDate.setDocType(savedCertSign.getSinnatoryName());
 					effectiveDate.setDocNo(savedCertSign.getSinnatoryName());
 					effectiveDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 					effectiveDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -100,24 +108,12 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 							.getEffDate()) : null);
 					effectiveDate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 					objList.add(effectiveDate);
-
-					expiryDate.setRoleCode(roleCode);
-					expiryDate.setDocType(AuditConst.PM_AUD_AUTHORIZED);
-					expiryDate.setDocNo(savedCertSign.getSinnatoryName());
-					expiryDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
-					expiryDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-					expiryDate.setLvlCode2(AuditConst.PM_LVL_CODE_2_AS);
-					expiryDate.setLvlCode3(AuditConst.PM_LVL_CODE_3_AS);
-					expiryDate.setDocId(BigInteger.valueOf(savedCertSign.getCertSignatoryId()));
-					expiryDate.setFieldLabelCode(AuditConst.PM_AUD_AS_EXP_DATE_FIELDLABELCODE);
-					expiryDate.setNewValue(savedCertSign.getExpDate() != null ? simpleDateFormat.format(savedCertSign
-							.getExpDate()) : null);
-					expiryDate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-					objList.add(expiryDate);
+					
+					setNewValueExpDate(savedCertSign);
 
 					AuditPMSPDTO addStatus = new AuditPMSPDTO();
 					addStatus.setRoleCode(roleCode);
-					addStatus.setDocType(AuditConst.PM_AUD_AUTHORIZED);
+					addStatus.setDocType(savedCertSign.getSinnatoryName());
 					addStatus.setDocNo(savedCertSign.getSinnatoryName());
 					addStatus.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 					addStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -136,33 +132,72 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 		}
 	}
 
+	private void setNewValueExpDate(PmCertSignatory savedCertSign){
+		if(savedCertSign.getExpDate() != null){
+			expiryDate.setRoleCode(roleCode);
+			expiryDate.setDocType(savedCertSign.getSinnatoryName());
+			expiryDate.setDocNo(savedCertSign.getSinnatoryName());
+			expiryDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
+			expiryDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
+			expiryDate.setLvlCode2(AuditConst.PM_LVL_CODE_2_AS);
+			expiryDate.setLvlCode3(AuditConst.PM_LVL_CODE_3_AS);
+			expiryDate.setDocId(BigInteger.valueOf(savedCertSign.getCertSignatoryId()));
+			expiryDate.setFieldLabelCode(AuditConst.PM_AUD_AS_EXP_DATE_FIELDLABELCODE);
+			expiryDate.setNewValue( simpleDateFormat.format(savedCertSign.getExpDate()));
+			expiryDate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(expiryDate);
+		}
+	}
+	
+	private void setValueExpDate(PmCertSignatory oldsignatory, PmCertSignatory signatory){
+		expiryDate.setRoleCode(roleCode);
+		expiryDate.setDocType(signatory.getSinnatoryName());
+		expiryDate.setDocNo(signatory.getSinnatoryName());
+		expiryDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
+		expiryDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
+		expiryDate.setLvlCode2(AuditConst.PM_LVL_CODE_2_AS);
+		expiryDate.setLvlCode3(AuditConst.PM_LVL_CODE_3_AS);
+		expiryDate.setDocId(BigInteger.valueOf(signatory.getCertSignatoryId()));
+		expiryDate.setFieldLabelCode(AuditConst.PM_AUD_AS_EXP_DATE_FIELDLABELCODE);
+		expiryDate.setOldValue(oldsignatory.getExpDate() != null ? simpleDateFormat.format(oldsignatory
+				.getExpDate()) : null);
+		expiryDate.setNewValue(signatory.getExpDate() != null ? simpleDateFormat.format(signatory.getExpDate())
+				: null);
+		expiryDate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		objList.add(expiryDate);
+	}
+	
+	/**
+	 * @param PmCertSignatory
+	 * 
+	 */
+	private void setDetailExpDate(PmCertSignatory oldsignatory, PmCertSignatory signatory){
+		if(oldsignatory.getExpDate() == null){
+			if(signatory.getExpDate() != null ){
+				setValueExpDate(oldsignatory, signatory);
+			}
+		}else 
+			if (!signatory.getExpDate().equals(oldsignatory.getExpDate())) {
+				setValueExpDate(oldsignatory, signatory);
+			}
+	}
+	
+	/**
+	 * @param List PmCertSignatory
+	 * @param managedBean
+	 * 
+	 */
 	private void updateSignatory(AuthorizedSignatoryManagedBean managedBean, List<PmCertSignatory> modifiedCertSign) {
 		for (PmCertSignatory signatory : modifiedCertSign) {
 
 			PmCertSignatory oldsignatory = managedBean.getExistingCertSignatoriesMap().get(
 					signatory.getCertSignatoryId());
 			
-			if (!signatory.getExpDate().equals(oldsignatory.getExpDate())) {
-				expiryDate.setRoleCode(roleCode);
-				expiryDate.setDocType(AuditConst.PM_AUD_AUTHORIZED);
-				expiryDate.setDocNo(signatory.getSinnatoryName());
-				expiryDate.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
-				expiryDate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-				expiryDate.setLvlCode2(AuditConst.PM_LVL_CODE_2_AS);
-				expiryDate.setLvlCode3(AuditConst.PM_LVL_CODE_3_AS);
-				expiryDate.setDocId(BigInteger.valueOf(signatory.getCertSignatoryId()));
-				expiryDate.setFieldLabelCode(AuditConst.PM_AUD_AS_EXP_DATE_FIELDLABELCODE);
-				expiryDate.setOldValue(oldsignatory.getExpDate() != null ? simpleDateFormat.format(oldsignatory
-						.getExpDate()) : null);
-				expiryDate.setNewValue(signatory.getExpDate() != null ? simpleDateFormat.format(signatory.getExpDate())
-						: null);
-				expiryDate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-				objList.add(expiryDate);
-			}
-
+			setDetailExpDate(oldsignatory, signatory);
+			
 			if (signatory.getRecordStatusFlg() != oldsignatory.getRecordStatusFlg()) {
 				detailStatus.setRoleCode(roleCode);
-				detailStatus.setDocType(AuditConst.PM_AUD_AUTHORIZED);
+				detailStatus.setDocType(signatory.getSinnatoryName());
 				detailStatus.setDocNo(signatory.getSinnatoryName());
 				detailStatus.setPmParameterLvlId(AuditConst.PM_AUD_AUTHORIZED_PMPARAMETERLVLID);
 				detailStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);

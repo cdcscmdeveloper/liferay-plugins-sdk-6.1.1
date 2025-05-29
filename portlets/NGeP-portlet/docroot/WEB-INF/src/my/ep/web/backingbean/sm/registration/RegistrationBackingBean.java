@@ -668,10 +668,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				if(this.getManagedBean().getSmPersonnel() != null ){
 					if(suppOwner.getIdentificationNo() != null){
 						//32851 - start
-						BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
-						reqDTO.setDirectorIdNo(suppOwner.getIdentificationNo());
 						SmPersonBlacklist ban = SmServiceLookup.getBlacklistDirectorSO()
-								.retrievePersonBlacklistByIdentificationNO(reqDTO).getPersonBlacklist();
+								.retrieveValidBlacklist(suppOwner.getIdentificationNo()).getPersonBlacklist();
 						if(ban != null){
 							throw new EpException(SmCommonUtil.getMessage("lbl.sm.not.allowed.to.proceed.due.to.disciplinary.action",null));
 						}
@@ -2401,9 +2399,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setPermenantDistrictLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmPermenantAdd().setPmDivision(new PmDivision());
 			}
-			this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
-			this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
-			this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+			//#38079 START
+			if(reset){
+				this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
+				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
+				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+			}//#38079 END
 			//#34159 - END
 		}
 			
@@ -4594,6 +4595,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().getSmSupp().setRegNo(null);
 		getManagedBean().getSmSupp().setBusinessType(null);
 		getManagedBean().getSmAppl().setSupplierType(null);
+		getManagedBean().getSmAppl().setApplValidWithSsm(false);
+		getManagedBean().setRegIcCheckSSM(null);
 		//#37900 -end
 		return termAndCondition;
 

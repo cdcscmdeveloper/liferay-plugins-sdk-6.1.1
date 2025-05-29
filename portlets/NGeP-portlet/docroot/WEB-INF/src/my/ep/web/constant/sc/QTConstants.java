@@ -285,7 +285,8 @@ public interface QTConstants {
 	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE="scQTPrepareSpec_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE="scSpecCommitteeMaintenance_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT="scSpecificationCommitteeEndorsement_WAR_NGePportlet";
-	
+	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
+	//#11104 -end-
 	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";//29007-start
 	
 	public static final String FINANCIAL_ITEM_SPEC_ANSWER="FISA";//32453
@@ -345,6 +346,7 @@ public interface QTConstants {
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
 	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
 	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
 	public static final String CONFIRM_BRIEF_POPUP = "confirmBriefPopup.show()";//sonarQube Issue 2 #91 # Vinod #Added
 	
@@ -462,10 +464,6 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
-	public static final String PARAM_MAP_QTID = "qtid";
-	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "p_qtchecklistids";
-	public static final String PARAM_MAP_P_LANGUAGE = "p_language";
-	public static final String PARAM_MAP_PUSER = "puser";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -523,6 +521,10 @@ public interface QTConstants {
 	// #36757 Start Vinod 04/12/2024
 	public static final String LBL_TPL_SPEC_CONTENT_UNIT_PRICE = "lbl.tpl.spec.content.unit.price";
 	// #36757 Start Vinod 04/12/2024
+	// #29766 Start Vinod
+	public static final String REVISE_FOR_PK7_POPUP = "reviseForPK7PopUp.show()";
+	public static final String UPDATE_REVISE_FOR_PK7_ID = "@([id$=reviseForPK7Id])";
+	// #29766 End Vinod
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";

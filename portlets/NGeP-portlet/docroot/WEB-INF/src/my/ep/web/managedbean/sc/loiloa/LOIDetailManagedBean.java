@@ -437,6 +437,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	//#28777 & #29729 - End
 
 	private boolean ableToCancelLOI;//#36339, #21692
+	private boolean ableToCancelLOIWithoutBPM;//#21692
+	private boolean ableToSubmitLOI;//#21692
 
 	
 	
@@ -2499,5 +2501,29 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.disqualifiedRecommendList = disqualifiedRecommendList;
 	}
 	//#28777 & #29729 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOIWithoutBPM() {
+		return ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOIWithoutBPM(boolean ableToCancelLOIWithoutBPM) {
+		this.ableToCancelLOIWithoutBPM = ableToCancelLOIWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOI() {
+		return ableToSubmitLOI;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOI(boolean ableToSubmitLOI) {
+		this.ableToSubmitLOI = ableToSubmitLOI;
+	}
+	//#21692 - End
 	
 }
