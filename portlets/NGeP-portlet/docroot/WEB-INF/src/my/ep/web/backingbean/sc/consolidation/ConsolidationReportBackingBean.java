@@ -2565,7 +2565,9 @@ public class ConsolidationReportBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		 return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
 	}
+	//#28777 & #29729 - End
 	
+	//#28777 & #29729 - Start
     /**
     * Method to check had disqualified supplier list
     * @param qtId
