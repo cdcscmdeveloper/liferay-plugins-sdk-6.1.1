@@ -8448,6 +8448,16 @@ public class EvaluationBackingBean extends
 						}
 						
 						//#34588 start
+						//status become null after user save at report train status. Set back condition to managebean.
+						if(null == this.getManagedBean().getWipStatusMax()){
+							IQTEvaluationSO evaluationSO = null;
+							evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
+							EvaluationReqDTO reqDTOwip = new EvaluationReqDTO();
+							reqDTOwip.setScQt(this.getManagedBean().getScQt());
+							int wipstatus = evaluationSO.checkWipScoreSetting(reqDTOwip);
+								this.getManagedBean().setWipStatusMax(wipstatus);
+						}
 						if (this.getManagedBean().getWipStatusMax() <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 							//#35011 start
 							retriveSummaryEvaluationStage();
