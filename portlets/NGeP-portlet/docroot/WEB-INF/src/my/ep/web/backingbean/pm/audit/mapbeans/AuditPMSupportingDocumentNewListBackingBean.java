@@ -128,7 +128,8 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	public List<AuditPMSPDTO> updatedNewCreateRowComTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		if (null != managedBeans.getNewCompanyCodeTypeAuditList() && !managedBeans.getNewCompanyCodeTypeAuditList().isEmpty()) {
 			log.info("managedBeans.getNewCompanyCodeTypeAuditList()_AAA#&##& ::: "
 					+ managedBeans.getNewCompanyCodeTypeAuditList().size());
@@ -159,7 +160,8 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	public List<AuditPMSPDTO> updatedNewCreateRowSuppTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getSuppTypeRestrictionsNew()) {
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
@@ -181,7 +183,9 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	public List<AuditPMSPDTO> updatedNewCreateRowCategoryTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getNewCategoryL3AuditList()) {
 			if (pmDocumentRestr.isBrandNew() && pmDocumentRestr.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
@@ -218,7 +222,8 @@ public class AuditPMSupportingDocumentNewListBackingBean {
 	public List<AuditPMSPDTO> updatedNewCreateRowCertBodyTypeTabList(SupportDocumentManagedBean managedBeans, String roleCode,
 			boolean updated) {
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getCertBodyRestrictionsNew()) {
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
