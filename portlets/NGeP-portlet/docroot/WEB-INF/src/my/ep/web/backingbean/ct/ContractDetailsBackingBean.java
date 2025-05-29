@@ -1259,9 +1259,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				        result = ListUtils.union(newBond, originalBond);
 						contractAmt.setCtPerformanceBonds( result);
 					}else{
-						contractAmt.setCtPerformanceBonds( ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBonds());	
+						contractAmt.setCtPerformanceBonds(ctBB.getManagedBean().getCtContractAmount().getCtPerformanceBondsOriginal());	
 					}
-						
+					//#24333 - End	
 				}
 				//#29713 - removed old commented block
 				
