@@ -11,9 +11,9 @@
 	<h:panelGroup id="recommendationid">
 			<p:panel id="package" toggleable="true">
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.by.package']}" />
+					<h:outputText value="#{lbl['lbl.sc.by.package.item']}" /><ui:remove><!-- #38151 label--></ui:remove>
 					<ac:iconTooltip
-						value="#{lbl['lbl.sc.by.package.recommendation.tooltip']}" />
+						value="#{lbl['lbl.sc.by.package.item.recommendation.tooltip']}" /><ui:remove><!-- #38151 tooltip--></ui:remove>
 				</f:facet>
 
 				<table>
@@ -26,8 +26,9 @@
 
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
-									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
+									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
 							</p:inputText></td>
+							<ui:remove>//#38151 edit listener</ui:remove>
 					</tr>
 					<tr>
 						<td><h:outputText value="*" styleClass="mandatory" /> <h:outputLabel
@@ -39,8 +40,9 @@
 
 								<p:ajax event="blur" update="@([id$=package])"
 									process="@this,package"
-									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
+									listener="#{specificationBackingBean.calculateonesetscoring(specificationBackingBean.managedBean.recommendationPackageScore,true)}"></p:ajax>
 							</p:inputText></td>
+							<ui:remove>//#38151 edit listener</ui:remove>
 					</tr>
 					<tr>
 						<td><h:outputLabel value="#{lbl['lbl.sc.total.percentage']}"></h:outputLabel></td>
@@ -62,9 +64,11 @@
 					</tr>
 				</table>
 			</p:panel>
-
-
-
+			
+			<ui:remove>
+			//#38151 start
+			//To apply the same scoring settings/calculation for both packages and items.
+			<!-- 
 			<p:panel id="item" toggleable="true">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.by.item']}" />
@@ -173,6 +177,10 @@
 
 
 			</p:panel>
+
+			 -->
+			
+			</ui:remove>
 		
 	</h:panelGroup>
 

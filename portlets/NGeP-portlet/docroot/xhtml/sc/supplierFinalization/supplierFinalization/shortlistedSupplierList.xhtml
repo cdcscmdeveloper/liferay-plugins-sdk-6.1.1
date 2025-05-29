@@ -215,12 +215,26 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 					
 				</p:column>
-	
+				<ui:remove>
+					<!-- #38151 add action link popup-->
+				</ui:remove>
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.totalScore}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+				<p:commandLink
+					action="#{suppFinalizationBackingBean.qualifiedSupplierListPopupScore(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+					process="@this"
+					update="@([id$=SuppDetailatestPopupId])"
+					styleClass="commandLink">
+
+					
+						<h:outputText value="#{shortlistedSupp.totalScore}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputText>
+						</h:outputText>
+						<ui:include src="supplierOverallScoreListPopup.xhtml" />
+					
+				</p:commandLink>
+				
 				</p:column>
 				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
@@ -454,12 +468,24 @@
 				</p:column>
 	
 				<p:column style="text-align:right;">
-					<h:outputText value="#{shortlistedSupp.totalScore}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(
+					<p:column style="text-align:right;">
+						<p:commandLink
+							action="#{suppFinalizationBackingBean.qualifiedSupplierListPopupScore(shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+							process="@this" update="@([id$=SuppDetailatestPopupId])"
+							styleClass="commandLink">
+
+							<h:outputText value="#{shortlistedSupp.totalScore}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(
 													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputText>
+							</h:outputText>
+
+	<ui:include src="supplierOverallScoreListPopup.xhtml" />
+
+						</p:commandLink>
+					</p:column>
 				</p:column>
-	
+
 				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
 				</p:column>
@@ -545,7 +571,7 @@
 					</p:selectBooleanCheckbox>	
 					<!-- #30999 Start -->
 				</p:column>
-				
+
 			</p:dataTable>
 		</p:outputPanel>
 		
