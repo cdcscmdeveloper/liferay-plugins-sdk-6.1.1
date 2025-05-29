@@ -144,14 +144,14 @@
 	</p:dialog>
 
 	<!-- 34445 start -->
-	<ac:confirmationPopup id="saveAuthInfoDlg" widget="saveAuthInfoDlg"
+	<ac:confirmationPopupSM id="saveAuthInfoDlg" widget="saveAuthInfoDlg"
 		okAction="ApproveAuthorityBackingBean.saveNewCommittee"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.pm.btn.save.msg']}" 
 		update="@([id$=listAuthTbl])"/>
 				
-	<ac:confirmationPopup id="saveAprvAuthInfoDlg" widget="saveAprvAuthInfoDlg"
+	<ac:confirmationPopupSM id="saveAprvAuthInfoDlg" widget="saveAprvAuthInfoDlg"
 		okAction="ApproveAuthorityBackingBean.updateAuthCommittee"
 		width="400" height="100"
 		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
