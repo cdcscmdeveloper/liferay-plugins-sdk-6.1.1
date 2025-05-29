@@ -17,6 +17,16 @@
 			<br />
 			<br />
 		</p:outputPanel>
+		<p:outputPanel>
+			<h:outputText styleClass="instruction"
+				rendered="#{searchPMAuditBackingBean.managedBean.searchBean.itemConfigParamLevel3 eq null and searchPMAuditBackingBean.managedBean.searchBean.itemCode eq null 
+					and searchPMAuditBackingBean.managedBean.searchBean.itemName eq null and searchPMAuditBackingBean.managedBean.searchBean.roleCode eq null
+					and searchPMAuditBackingBean.managedBean.searchBean.pmUser.userName eq null and searchPMAuditBackingBean.managedBean.searchBean.dateFrom eq null
+					and searchPMAuditBackingBean.managedBean.searchBean.dateTo eq null}"
+				value="#{lbl['lbl.pm.audit.search.instruction1']}" escape="false" />
+			<br />
+			<br />
+		</p:outputPanel>
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%"><p:outputLabel
