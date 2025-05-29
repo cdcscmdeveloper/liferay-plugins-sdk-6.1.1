@@ -261,7 +261,7 @@
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCountry(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId" />
+									update="basicOffFacState,divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -305,7 +305,7 @@
 									listener="#{backingBean.onChangeState(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
 									update="ofp,basicOffFacDist,
-									divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity" />
+									divisionOfficeLabelPanelId,divisionOfficeDropdownPanelId,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -347,7 +347,7 @@
 						<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 								listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-								update="basicOffFacDist,basicOffFacCity" />
+								update="basicOffFacDist,basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
 					</p:selectOneMenu>
 					<!-- #35086 -->
 					<ac:smFieldChangeAlert 
@@ -389,7 +389,7 @@
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeDistrict(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacCity" />
+									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -420,7 +420,7 @@
 								<p:ajax event="change" process="@this @([id$=compFacilityAddrPanel])"
 									listener="#{backingBean.onChangeCity(backingBean.managedBean.basicCompanyFacility.smAddress, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL)}"
-									update="basicOffFacCity" />
+									update="basicOffFacCity,postCodeOffFacPanelId,hqFacCoordinatePanelId" />
 							</p:selectOneMenu> 
 							<!-- #34159 - END -->
 							<ac:smFieldChangeAlert 
@@ -486,6 +486,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td colspan="3"  >
+					<!-- #36718 - START - put coordinate input into outputPanel to update using ajax -->
+					<p:outputPanel id="hqFacCoordinatePanelId">
 						<script>
 						
 					      function getAddress2() {
@@ -510,10 +512,12 @@
 						<ac:gmap id="acgmap2" 
 							address="getAddress2()"
 							locationName="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-							latitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLatitude}"
-							longitude="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.mapLongitude}"
+							latitude="#{backingBean.managedBean.basicCompanyFacility.smAddress.mapLatitude}"
+							longitude="#{backingBean.managedBean.basicCompanyFacility.smAddress.mapLongitude}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" />
 							<!-- Disable for UPS 32008 - END -->
+					</p:outputPanel>
+					<!-- #36718 - END -->
 					</td>
 				</tr>
 				</p:outputPanel>
