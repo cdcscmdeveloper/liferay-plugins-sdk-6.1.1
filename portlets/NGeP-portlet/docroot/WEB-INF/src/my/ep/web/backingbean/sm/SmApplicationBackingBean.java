@@ -11360,15 +11360,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
 		//#31043 & #36576 - end
-		//#38195
-		if(getManagedBean().getApplnRejectionRemarks() == null
-				|| getManagedBean().getApplnRejectionRemarks().trim() == ""
-				|| getManagedBean().getApplnRejectionRemarks().trim().isEmpty()){
-			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.del.pending.appl.reasons",
-							null) }));
-		}
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
 
