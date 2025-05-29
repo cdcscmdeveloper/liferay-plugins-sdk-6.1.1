@@ -385,7 +385,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		 */
 		if (CollectionUtils.isNotEmpty(existingReason.getPmSupplierReasons())) {
 			for (PmSupplierReason suppReason : existingReason.getPmSupplierReasons()) {
-				if (suppReason.isSelected()) {
+				if (suppReason.isBrandNew()) {
 					restrictionDetails.setRoleCode(roleCode);
 					restrictionDetails.setDocType(docType);
 					restrictionDetails.setDocNo(existingReason.getReasonCode());
