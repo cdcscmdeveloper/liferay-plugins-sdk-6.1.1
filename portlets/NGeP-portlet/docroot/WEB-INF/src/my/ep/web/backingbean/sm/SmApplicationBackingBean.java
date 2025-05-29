@@ -2978,8 +2978,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		Locale locale = new FacesScopes().getUserLocale();
 		StringBuilder sb = new StringBuilder();
 		boolean valid = true;
+		
 		if (getManagedBean().getSupplierRemarks() == null
-				|| getManagedBean().getSupplierRemarks().trim() == "") {
+				|| getManagedBean().getSupplierRemarks().trim() == ""
+				|| getManagedBean().getSupplierRemarks().trim().isEmpty()) { //#38195
 			sb.append(ResourceBundleUtils.getMessage(
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
@@ -3032,6 +3034,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * To open the confirmation dialog box for deleting pending application
 	 */
 	public void onDisplayConfirmDelPending() {
+		//#38195
+		if (getManagedBean().getSupplierRemarks() == null || getManagedBean().getSupplierRemarks().trim().isEmpty()) {
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.del.pending.appl.reasons",
+							null) }));
+        }
 		RequestContext.getCurrentInstance().execute("delPenRegConfirm.show()");
 	}
 
@@ -11230,6 +11239,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
+		//38195
+		if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
+			SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
+					.getSmAppl().getApplId(),
+					ParameterConst.SM_APPLN_FOR_DELETE_PENDING_APPL_DECISION_REJECT,
+					getManagedBean().getApplnRejectionRemarks(),  getManagedBean().getRoleCode());
+		}
 		return approveOrRejectPendingApplicationCancellation(decision);
 
 	}
@@ -11245,14 +11261,49 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		IReviewApplicationSO reqSO = null;
 
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+		//#38195
+		PmState state = this.getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+		if (state != null && state.getStateId() != null) {
+			PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+					.getStateId());
+			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
+			if (zone != null && zone.getZoneName() != null) {
+				reqDTO.setLocation(zone.getZoneName().toUpperCase());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_722568);
+		}
 		reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IReviewApplicationSO.class);
 		reqDTO.setOutcome(res);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-		reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+		/*reqDTO.setBpmPojo(getManagedBean().getPayLoad());*/ //#38195 START
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
+		reqDTO.setCompanyName(getManagedBean().getSmSupplier().getCompanyName());
+		reqDTO.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo());
+		reqDTO.setPoOrApproverDecision(getManagedBean().getApplnRejectionRemarks());
+		reqDTO.setSupplierRemarks(getManagedBean().getSupplierRemarks());
+		reqDTO.setMofNum(getManagedBean().getSmSupplier().getSmMofAccount().getMofNo());
+		reqDTO.setAddress(addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress())); 
+		
+		if (!StringUtils.isEmpty(reqDTO.getLocation())) {
+			if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SABAH)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sabah", null));
+			} else if (reqDTO.getLocation().equalsIgnoreCase(
+					SupplierManagementConst.SM_STATE_NAME_SARAWAK)) {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.sarawak", null));
+			} else {
+				reqDTO.setNotifSignAddr(SmCommonUtil.getMessage(
+						"lbl.sm.notifAddr.semunanjung", null));
+			}
+		}//#38195 END
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
 		log.info("31181-applNo:"+getManagedBean().getSmAppl().getApplNo()); //#31181 add log 
@@ -11292,7 +11343,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmApplicationUtil.checkCategoryRemark(getManagedBean());
 		}
 		//#31043 & #36576 - end
-		
+		//#38195
+		if(getManagedBean().getApplnRejectionRemarks() == null
+				|| getManagedBean().getApplnRejectionRemarks().trim() == ""
+				|| getManagedBean().getApplnRejectionRemarks().trim().isEmpty()){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage(
+							"lbl.sm.del.pending.appl.reasons",
+							null) }));
+		}
 		IReviewApplicationSO reqSO = null;
 		String retMsg = null;
 
@@ -18436,4 +18495,27 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	//#36587 END
+	//#38195
+	/**
+	 * To get full address from substring of address 
+	 * 
+	 * @param SmAddress
+	 * @return String
+	 */
+	public String addressFormat(SmAddress addr) {
+        List<String> addrlist = Arrays.asList(addr.getAddress1(), addr.getAddress2(), addr.getAddress3(), 
+        		addr.getPmDistrict().getDistrictName(), addr.getPmCity().getCityName(), addr.getPmDivision().getDivisionName(),
+        		addr.getPmState().getStateName());
+        
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < addrlist.size(); i++) {
+            sb.append(addrlist.get(i));
+            if (i < addrlist.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        String address = sb.toString();
+        log.info("Address Name: " + address);
+        return address;
+    }
 }
