@@ -70,8 +70,8 @@
 			<td class="tdContent">
 				<p:selectOneMenu value="#{categoryStatRptBB.managedBean.disciplinaryActionStatus}">
 				<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue=""></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.yes']}" itemValue="#{lbl['lbl.rpt.yes']}" />
-					<f:selectItem itemLabel="#{lbl['lbl.rpt.no']}" itemValue="#{lbl['lbl.rpt.no']}" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.yesLabel']}" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.noLabel']}" itemValue="0" />
 					<p:ajax event="change" partialSubmit="true" update="@([id$=Msg])" />
 				</p:selectOneMenu>
 			</td>

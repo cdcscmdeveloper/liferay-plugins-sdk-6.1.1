@@ -47,6 +47,7 @@ import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
+import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.constant.DbValueConst;
@@ -561,6 +562,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		SmAppl activeAppl = SmCommonUtil
 				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
 		boolean isOverlapCategoryRemarkChanged = false;
+		VirtualCertReqDTO certDTO = new VirtualCertReqDTO();
+		certDTO.setApplId(getManagedBean().getSmAppl().getApplId());
 
 		try {
 
@@ -579,6 +582,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setDeletedCategories(getManagedBean()
 					.getDeleteApprovedCategories());
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
+			reqDTO.getSmMofAccount().setSmMofCerts(
+					SmServiceLookup.getVirtualCertSO().retrieveMofCertsByApplId(certDTO).getSmMofCerts());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getEpBaseUrl());
@@ -809,7 +814,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	
 	private void validateUpdateDisciplinaryAction(SmDisciplinaryAction da){
-		if (da.getDisciplinaryActionId() == null){
+		validateRequiredPunishmentTypes();  //38289
+		if (da.getDisciplinaryActionId() == null || !getManagedBean().isEditDisciplinaryActionCheckBox()){ //38290
 			return;
 		}
 		SmDisciplinaryAction oldDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionByDisciplinaryId(
@@ -836,12 +842,33 @@ public class SupplierDataMaintenanceBackingBean extends
 		isSameType &= getManagedBean().isCancelCategoryCode() == oldDA.isCancelCategory();
 		isSameType &= getManagedBean().isManufacturerStatusCancel() == oldDA.isManufacturerCancel();
 		isSameType &= getManagedBean().isBumiputeraStatusCancel() == oldDA.isBumiputeraCancel();
-		if (isSameDates && isSameType && isSameRemarks){
+		
+		//#26238 - 38290 - MOF skip Remarks check
+		String suppType = getManagedBean().getSmAppl().getSupplierType();
+		boolean isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
+					|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
+		
+		if (isSameDates && isSameType && (isMOF || isSameRemarks)){
 			throw new EpException(MessageConst.ERROR_100045);
 		}
 	}
 	
-	//#26238 - START
+	//26238 - 38289
+	private void validateRequiredPunishmentTypes(){
+		if (!getManagedBean().isEditDisciplinaryActionCheckBox()){
+			return;
+		}
+		boolean hasDA = getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode();
+		hasDA |= getManagedBean().isManufacturerStatusCancel() || getManagedBean().isBumiputeraStatusCancel();
+		hasDA |= getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration();
+		hasDA |= getManagedBean().isBlacklistOwnerOrDirector();
+		if (!hasDA){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.punishment.type", null) }));
+		}
+	}
+	
+	//#26238 - start
 	private List<SmSupplierCategory> checkCatCodeSubmit(){
 		List<SmSupplierCategory> selectedCategory = new ArrayList<>();
 		List<SmSupplierCategory> catcodes = getManagedBean().getSelectedApprovedCategories();
@@ -2197,21 +2224,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (currSupp != null) {
 			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 
+			//38283 - START
 			if (!EntityHelper.isCollectionEmpty(voList)) {
 				disciplineVOs = voList;
-			} else {
-				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-				SmAppl smAppl = currSupp.getSmAppl();
-
-				if (smAppl != null) {
-					String suppType = smAppl.getSupplierType();
-					boolean isContractorOrConsultant = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType)
-							|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
-					retVal.setMofNoExist(isContractorOrConsultant);
-				}
-
-				disciplineVOs.add(retVal);
 			}
+			//38283 - END
 		}
 
 		getManagedBean().setDisciplineVOs(disciplineVOs);

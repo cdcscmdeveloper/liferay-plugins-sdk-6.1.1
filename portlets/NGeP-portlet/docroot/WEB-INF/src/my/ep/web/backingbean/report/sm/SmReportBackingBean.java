@@ -351,6 +351,13 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if (!StringUtils.isBlank(getManagedBean().getReportCode())) {
 			retrieveReportValueFromDb();
 		}
+		
+		//#38227 - START
+		if(SmReportConst.SM_LIST_OF_APPLICATION_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ListOfApplicationRptBackingBean listOfApplRpt = new ListOfApplicationRptBackingBean();
+			listOfApplRpt.resetSearch();
+		}
+		//#38227 - END
 	}
 
 	public void addCompanyNameParam(LinkedHashMap<String, String> params) {
@@ -500,9 +507,8 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 	}
 
 	public List<SelectItem> retrieveApplStatus() {
-		if (EntityHelper
-				.isCollectionEmpty(getManagedBean().getApplStatusList())
-				&& null != new FacesScopes().getUserSessionBean().getUserId()) {
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+
 
 			getManagedBean().setApplStatusList(new ArrayList<SelectItem>());
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -3414,21 +3420,62 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		}
 		return getManagedBean().getApplStatusList();
 	}
+	
+	public String getConditionFieldsCompany(){
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return "";
+		}
+		return "smSupplier.smAppl.supplierType^" + suppType;
+	}
+	
+	/**
+	 * Get condition fields for PO and/or Approver roles.
+	 * @param includeApprover
+	 * @return
+	 */
+	public String getConditionFieldsPO(boolean includeApprover){
+		StringBuilder sb = new StringBuilder();
+		String role = "pmUserOrgs.pmUserRoles.pmRole.roleCode^";
+		sb.append(role + SupplierManagementConst.PO_HQ);
+		if (includeApprover){
+			sb.append("*" + role + SupplierManagementConst.APPROVER_HQ);
+		}
+		
+		String suppType = getManagedBean().getSupplierType();
+		if (StringUtils.isBlank(suppType)){
+			return sb.toString();
+		}
+		String searchZone = "|pmUserOrgs.pmOrgProfile.pmZone.zoneId^";
+		String zone = getManagedBean().getZone();
+		if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONSULTANT)){
+			sb.append(searchZone + "1");
+			
+		} else if (suppType.equals(SupplierManagementConst.SUPP_TYPE_CONTRACTOR) && !StringUtils.isBlank(zone)){
+			if (zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SEMENANJUNG)){
+				sb.append(searchZone + "1");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SABAH)){
+				sb.append(searchZone + "2");
+			} else if(zone.equalsIgnoreCase(SupplierManagementConst.SM_STATE_NAME_SARAWAK)){
+				sb.append(searchZone + "3");
+			}
+		}
+		return sb.toString();
+	}
 	//#32521 - END
 	
-	// #7754_#35984 - Start
-	public String getZoneByUser() {
+	////#7754_#35984 - Start
+	public String getZoneByUser(){
 		PmZone zone = SmCommonUtil.getInstance().getUserZone();
-
-		if (zone != null) {
+		
+		if(zone != null){
 			getManagedBean().setZone(zone.getZoneName());
-		} else {
+		}else{
 			getManagedBean().setZone(null);
 		}
-
+		
 		log.info("User Zone>>>>>" + getManagedBean().getZone());
 		return getManagedBean().getZone();
 	}
-	// #7754_#35984 - End
-	
+	//#7754_#35984 - End
 }
