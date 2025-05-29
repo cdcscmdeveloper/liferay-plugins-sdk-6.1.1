@@ -2507,6 +2507,7 @@ public class ConsolidationReportBackingBean extends
 	//#28777 & #29729 - Start
 	/**
 	  * Method to display list of supplier branch had deleted or not with related current QT
+	  * @param supplierId    
 	  **/
     public void showSupplierBranchList(Long supplierId) {
 
@@ -2539,6 +2540,7 @@ public class ConsolidationReportBackingBean extends
     //#28777 & #29729 - Start
     /**
 	  * Method to display list of supplier branch
+	  * @param supplierId
 	  **/
 	private List<SmSupplierBranch> listSupplierBranchList(Long supplierId){
 		
@@ -2555,28 +2557,24 @@ public class ConsolidationReportBackingBean extends
 	//#28777 & #29729 - Start
     /**
 	  * Method to display instruction when had supplier deleted branch
+	  * @param qtId
+	  * @return true or false
 	  **/
 	public Boolean checkInstructionSupplierBranchDeleted(Long qtId){
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		
-		 if(sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId)){
-			 return Boolean.TRUE;
-		 }
-		 return Boolean.FALSE;
+		 return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
 	}
 	
     /**
     * Method to check had disqualified supplier list
+    * @param qtId
+    * @return true or false
     **/
 	public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId){
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		
-		 if(sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId)){
-			 return Boolean.TRUE;
-		 }
-		 return Boolean.FALSE;
+		 return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
 	}
 	//#28777 & #29729 - End
 	
