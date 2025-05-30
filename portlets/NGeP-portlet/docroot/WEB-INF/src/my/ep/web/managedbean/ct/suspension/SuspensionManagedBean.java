@@ -5,8 +5,6 @@ package my.ep.web.managedbean.ct.suspension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;//#28854
-import java.util.Comparator;//#28854
 import java.util.Date;//#29214
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +40,6 @@ import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.aut.SearchCondition;//#29214
-import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer; //#28854
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;//#29214
@@ -94,13 +91,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private HashMap<Long, CtContractItem> itemMap;	
 	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUser> userMap;
-	
-	//#28854 - start
-	private List<String> itemSpecification;
-	private String newOfferSpec;
-	private String supplierOffer;
-	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
-	//#28854 - end	
 
 private IPagingDataModel<CtContractItem> SuspensionProductListingPagingDataModel = new SuspensionProductListingPagingDataModel();
 //#29214
@@ -217,22 +207,9 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 				reqDTO.setContractItemSearchBean(searchBean);			
 
 				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-				//#36257,#28854 - Start
-				ContractItemResDTO resDTO = contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
-		        ISearchResultBean<CtContractItem> resultBean = resDTO.getContractItemResultBean();
-		        
-		     // Simplified sorting logic: itemType first, then itemName, both case-insensitive
-		        Collections.sort(resultBean.getResultList(), new Comparator<CtContractItem>() {
-		            @Override
-		            public int compare(CtContractItem item1, CtContractItem item2) {
-		                int itemTypeComparison = item1.getItemType().getParameterCode().compareToIgnoreCase(item2.getItemType().getParameterCode());
-		                return (itemTypeComparison != 0) 
-		                        ? itemTypeComparison 
-		                        : item1.getScRequestItem().getItemName().compareToIgnoreCase(item2.getScRequestItem().getItemName());
-		            }
-		        });
-				return resultBean;
-				//#36257,#28854 - End
+				ContractItemResDTO resDTO = null;
+				resDTO=contractItemSO.retrieveProductServiceContractItemDtls(reqDTO);
+				return resDTO.getContractItemResultBean();
 				//return null;
 				
 			} catch (Exception e) {
@@ -678,38 +655,4 @@ private IPagingDataModel<CtAgency> agencyPersistDataModel = new AgencyPersistDat
 		}
 	}
 	//Development #29214 - performance
-	
-	/* #28854 start*/
-	public String getNewOfferSpec() {
-		return newOfferSpec;
-	}
-
-	public void setNewOfferSpec(String newOfferSpec) {
-		this.newOfferSpec = newOfferSpec;
-	}
-
-	public String getSupplierOffer() {
-		return supplierOffer;
-	}
-
-	public void setSupplierOffer(String supplierOffer) {
-		this.supplierOffer = supplierOffer;
-	}	
-
-	public List<String> getItemSpecification() {
-		return itemSpecification;
-	}
-
-	public void setItemSpecification(List<String> itemSpecification) {
-		this.itemSpecification = itemSpecification;
-	}
-
-	public List<ScRequestItemSpecOffer> getScRequestItemSpecOfferList() {
-		return scRequestItemSpecOfferList;
-	}
-	
-	public void setScRequestItemSpecOfferList(List<ScRequestItemSpecOffer> scRequestItemSpecOfferList) {
-		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
-	}
-	/* #28854 end*/	
 }
