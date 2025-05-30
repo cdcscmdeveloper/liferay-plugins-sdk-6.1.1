@@ -23,6 +23,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	String roleCode;
 	String docNo;
 	BigInteger docId;
+	private String docType;
 	BigInteger docGroupId;
 
 	/**
@@ -33,7 +34,8 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	public List<AuditPMSPDTO> deleteAppType(SupportDocumentManagedBean managedBeans, String roleCode) {
 		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 		this.roleCode = roleCode;
-		this.docNo = managedBeans.getSelectedDocument().getDocName();
+		this.docNo = managedBeans.getSelectedDocument().getDisplaySeq();
+		this.docType = managedBeans.getSelectedDocument().getDocName();
 		Integer rowIndex = managedBeans.getDeleteRowIndex();
 		log.info("rowIndex ::: >>> ::: " + rowIndex);
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getDeleteAppTypeRestrictionsAuditList()) {
@@ -210,7 +212,7 @@ public class AuditPMSupportingDocumentDeletedBackingBean {
 	private AuditPMSPDTO detailObj(BigInteger fieldLabelId, String oldValue, String newValue, String actionType) {
 		AuditPMSPDTO dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
-		dtlObj.setDocType(AuditPMSupplierMgtConfigConst.PM_AUD_SD);
+		dtlObj.setDocType(docType);
 		dtlObj.setPmParameterLvlId(AuditPMSupplierMgtConfigConst.PM_AUD_SD_PMPARAMETERLVLID);
 		dtlObj.setDocNo(docNo);
 		dtlObj.setLvlCode1(AuditPMSupplierMgtConfigConst.PM_LVL_CODE_1_SD);
