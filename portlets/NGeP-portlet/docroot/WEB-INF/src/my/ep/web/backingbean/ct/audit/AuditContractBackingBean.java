@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.ct.audit.IAuditContractSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -65,6 +66,9 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	private static final String METHOD_NAME = "insertAudit";
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
+	
+	private transient IAuditTrailSO auditTrailAuSo = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 
 	/**
 	 * AuditContractBackingBean
@@ -461,6 +465,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
 		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
+		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
 		map.put(AuditContractConst.AU_SECTION_PC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PC));
@@ -572,6 +577,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(12, AuditContractConst.AU_SECTION_FNS);
 			tabViews.put(13, AuditContractConst.AU_SECTION_CO);
 			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
+			tabViews.put(15, AuditContractConst.AU_SECTION_DCA);
 		}
 
 		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
@@ -616,4 +622,18 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 					auCtData.getCreatedBy(), ex);
 		}
 	}
+	
+	/**
+	 * Retrieves the audit configuration state for the Audit CT module.
+	 *
+	 * @return {@code true} if the audit configuration for the Audit CT module is enabled;
+	 *         {@code false} otherwise.
+	 */
+	public boolean getAuditCtConfigState() {
+		boolean auditCtConf;
+		auditCtConf = auditTrailAuSo.isAuditConfig(AuditContractConst.CT_AU_CONF);
+
+		return auditCtConf;
+	}
+	
 }

@@ -110,7 +110,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		PmCategoryL1 pmCategoryL1 = managedBean.getPmCategoryL1();
 
 		statusL1.setRoleCode(roleCode);
-		statusL1.setDocType(AuditConst.PM_AUD_CODE_CATEGORY_L1);
+		statusL1.setDocType(pmCategoryL1.getCategoryName());
 		statusL1.setDocNo(pmCategoryL1.getCategoryL1Code());
 		statusL1.setPmParameterLvlId(AuditConst.PM_AUD_CCR_MAIN_PMPARAMETERLVLID);
 		statusL1.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -151,7 +151,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		BigInteger categoryL2Id = BigInteger.valueOf(managedBean.getAuditUpdatedCategoryL2().getCategoryL2Id());
 		
 		statusL2.setRoleCode(roleCode);
-		statusL2.setDocType(AuditConst.PM_AUD_CODE_CATEGORY_L2);
+		statusL2.setDocType(pmCategoryL2.getCategoryName());
 		statusL2.setDocNo(pmCategoryL2.getCategoryL2Code());
 		statusL2.setPmParameterLvlId(AuditConst.PM_AUD_CCR_SUB_PMPARAMETERLVLID);
 		statusL2.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPCM);
@@ -184,7 +184,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private void updateDetailPmCategoryL3(CategoryManagedBean managedBean, AuditPMReqDTO auditPMReqDTO) {
 
 		this.pmCategoryL3 = managedBean.getPmCategoryL3();
-		this.docType3 = AuditConst.PM_AUD_CODE_CATEGORY_L3;
+		this.docType3 = pmCategoryL3.getCategoryName();
 		this.docNo = pmCategoryL3.getCategoryL3Code();
 		PmCategoryL3 oldpmCategoryL3 = managedBean.getAuditOldCategoryL3();
 

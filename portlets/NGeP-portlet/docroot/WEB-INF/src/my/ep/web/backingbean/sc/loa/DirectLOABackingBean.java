@@ -10569,6 +10569,33 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 		TemplateSpecReqDTO specReqDto = new TemplateSpecReqDTO();
 		ScLoiLoaItem loiLoaItem = new ScLoiLoaItem();
+		boolean qtMaint = isQTMaintenanceScreen();
+		boolean checkLoiLoaItems = false;
+
+		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
+			getManagedBean().setSupPropSpecDisable(false);
+			checkLoiLoaItems = true;
+		} else if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
+				&& !qtMaint) {
+			getManagedBean().setSupPropSpecDisable(false);
+		} else {
+			getManagedBean().setSupPropSpecDisable(true);
+			checkLoiLoaItems = true;
+		}
+		
+		if(checkLoiLoaItems){
+			if (CollectionUtils.isEmpty(this.getManagedBean().getScLoa().getScLoiLoaItems())) {
+				DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
+				awardReqDTOnew.setScLoa(this.getManagedBean().getScLoa());
+
+				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
+
+				if (awardResDTOnew.isSuccessful()) {
+					this.getManagedBean().getScLoa().setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
+				}
+			}
+		}
 		for (ScLoiLoaItem scloiloaitem : this.getManagedBean().getScLoa().getScLoiLoaItems()) {
 			Long requestItemQuestionId = scloiloaitem.getScRequestItem().getTplSpecQuestion().getSpecQuestionId();// 29007-Start
 			Long specQuestionId = tplSpecQuestion1.getSpecQuestionId();
@@ -10607,29 +10634,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		}
 		specReqDto.setSpecSearchForApp(true);
-		boolean qtMaint = isQTMaintenanceScreen();
-		if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-				|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(getManagedBean().getScLoa().getPmStatus().getStatusId())
-				&& !qtMaint) {
-			getManagedBean().setSupPropSpecDisable(false);
-		} else {
-			getManagedBean().setSupPropSpecDisable(true);
-			TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
-
-			if (templateSpecResDTO.getSpecAnswerList().isEmpty()) {
-				specReqDto.setCheckingForWIP(true);
-				templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
-			}
-			if (templateSpecResDTO.getSpecAnswerList().isEmpty()) {
-				DirectAwardReqDTO awardReqDTOnew = new DirectAwardReqDTO();
-				awardReqDTOnew.setScLoa(this.getManagedBean().getScLoa());
-				DirectAwardResDTO awardResDTOnew = getQtDirectAwardSO().saveScloiloaitemforDirectLOA(awardReqDTOnew);
-				if (awardResDTOnew.isSuccessful()) {
-					log.info("WIP data Saved :" + templateSpecResDTO.getSpecAnswerList().size());
-					this.getManagedBean().getScLoa().setScLoiLoaItems(awardResDTOnew.getLoa().getScLoiLoaItems());
-				}
-			}
-		}
 
 		TemplateSpecResDTO templateSpecResDTO = templateSpecSO.searchSupplierSpecification(specReqDto);
 		List<TplSpecAnswer> afterTierCheckAnswerList = new ArrayList<>();
