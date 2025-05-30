@@ -1354,6 +1354,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					auCtData.setDocType(resDTO.getCtContractVer().getDocType());
 					auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
 					auCtData.setRoleName(getUserRole());
+					auCtData.setStatusId(resDTO.getStatusId());
 
 					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 							|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && ctBB.getManagedBean().getContractVer().getDocType()
