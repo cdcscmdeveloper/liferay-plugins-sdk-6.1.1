@@ -666,6 +666,18 @@ public class OrganisationBackingBean extends
 		log.info("orgProfile.getOrgTypeCode().getParameterCode()="
 				+ orgProfile.getOrgTypeCode().getParameterCode());
 
+		/********************************AUDIT 35509*****************************************/
+		if(getManagedBean().getOldReceivingAddressList() == null){
+			getManagedBean().setOldReceivingAddressList(new ArrayList<PmAddressType>());
+		}
+		if(getManagedBean().getEditedReceivingAddressList() == null){
+			getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+		}
+		if(getManagedBean().getNewReceivingAddressList() == null){
+			getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+		}
+		/********************************AUDIT 35509*****************************************/
+
 		// Pegawai Pengawal
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.PENGAWAI_PENGAWAL.value())) {
@@ -1855,9 +1867,6 @@ public class OrganisationBackingBean extends
 					.getSelectedAddressTypes()) {
 				if (address.isBrandNew() && address.getAddressTypeId() == null) {
 					getManagedBean().getAddressTypesList().remove(address);
-					/********************AUDIT 35509********************************/
-					getManagedBean().getDeletedReceivingAddressList().add(setManualPmAddressType(address));
-					/********************AUDIT 35509********************************/
 				}
 			}
 			getManagedBean().getSelectedAddressTypes().clear();

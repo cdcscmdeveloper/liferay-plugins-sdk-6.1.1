@@ -163,10 +163,6 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				address += pmAddress.getAddress3();
 			}
 			
-			officePhoneNo = officeContactPerson.getPhoneCountry() + officeContactPerson.getPhoneArea() + 
-					officeContactPerson.getPhoneNo();
-			officeMobileNo = officeContactPerson.getMobileCountry() + officeContactPerson.getMobileArea() + 
-					officeContactPerson.getMobileNo();
 
 			if (orgProfile.isBrandNew()) {
 				actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
@@ -176,10 +172,6 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				}
 				
 				detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, "", address);
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, "", officeContactPerson.getContactName());
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, "", officePhoneNo);
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, "", officeContactPerson.getEmail());
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, "", officeMobileNo);
 				detailObj(AuditConst.PM_AUD_OPM_STATE_FIELDLABELCODE, "", pmAddress.getPmState().getStateName());
 				detailObj(AuditConst.PM_AUD_OPM_DISTRICT_FIELDLABELCODE, "", pmAddress.getPmDistrict().getDistrictName());
 				detailObj(AuditConst.PM_AUD_OPM_CITY_TOWN_FIELDLABELCODE, "", pmAddress.getPmCity().getCityName());
@@ -187,9 +179,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				detailObj(AuditConst.PM_AUD_OPM_COUNTRY_FIELDLABELCODE, "", pmAddress.getPmCountry().getCountryName());
 				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, "", pmAddress.getPhoneFull());
 				
-				PmContact pmContact = managedBean.getOfficeContactPerson();
-				if(pmContact != null ){
-					setNewContactPerson(pmContact);
+				if(managedBean.getOfficeContactPerson() != null ){
+					setNewContactPerson(managedBean.getOfficeContactPerson());
 				}
 				
 			} else {
@@ -280,12 +271,15 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setNewContactPerson(PmContact pmContact){
-		detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, null, pmContact.getContactName());
-		detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, null, pmContact.getEmail());
-		if(!pmContact.getMobileNo().isEmpty()){
-		detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, null, pmContact.getMobileNo());}
-		if(!pmContact.getPhoneNo().isEmpty()){
-		detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, null, pmContact.getPhoneNo());}
+		String officePhoneNo = pmContact.getPhoneCountry() + pmContact.getPhoneArea() + 
+				pmContact.getPhoneNo();
+		String officeMobileNo = pmContact.getMobileCountry() + pmContact.getMobileArea() + 
+				pmContact.getMobileNo();
+
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, "", pmContact.getContactName());
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, "", officePhoneNo);
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, "", pmContact.getEmail());
+		detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, "", officeMobileNo);
 	}
 	
 	private void setContact() {
@@ -368,11 +362,6 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			setNewReceivingAddress(managedBean.getNewReceivingAddressList());
 		}
 		
-		if(managedBean.getDeletedReceivingAddressList().size() > 0){
-			setDeletedReceivingAddress(managedBean.getDeletedReceivingAddressList(),
-					managedBean.getOldReceivingAddressList());
-		}
-		
 		if(managedBean.getEditedReceivingAddressList().size() > 0){
 			setExistingReceivingAddress(managedBean.getEditedReceivingAddressList(), 
 					managedBean.getOldReceivingAddressList());
@@ -385,23 +374,6 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		for(PmAddressType addressType : receivingAddress){
 			detailObj(AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE, null, addressType.getPmAddress()
 					.getAddressName());
-		}
-	}
-	
-	private void setDeletedReceivingAddress(List<PmAddressType> receivingAddress, List<PmAddressType> oldAddressType) {
-		actionType = AuditConst.PM_AUD_ACTION_TYPE_DEL;
-		
-		for(PmAddressType deleted : receivingAddress){
-			for(PmAddressType current : oldAddressType){
-				if(current.getAddressTypeId().equals(deleted.getAddressTypeId())){
-					if(!current.getPmAddress().getAddressName().equals(deleted.getPmAddress().getAddressName())){
-						detailObj(AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE, 
-								current.getPmAddress().getAddressName(), 
-								deleted.getPmAddress().getAddressName());
-					}
-					break;
-				}
-			}
 		}
 	}
 
@@ -594,6 +566,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
 		}
+		dtlObj.setGroupOrgProfileId(BigInteger.valueOf(orgProfile.getOrgProfileId()));
 		dtlObj.setNewValue(newValue);
 		dtlObj.setActionType(actionType);
 		objList.add(dtlObj);
