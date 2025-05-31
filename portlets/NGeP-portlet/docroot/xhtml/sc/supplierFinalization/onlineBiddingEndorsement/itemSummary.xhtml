@@ -56,7 +56,7 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
         <ui:remove> #28777#29729 - Start </ui:remove>
 	    <c:if test="#{suppFinalBiddingBackingBean.checkInstructionSupplierBranchDeleted(suppFinalBiddingBackingBean.managedBean.scQt.qtId)}">
-	      <h:outputText styleClass="instruction" value="#{lbl['lbl.sc.list.branch.supplier.related.qt.deleted.pmlb']} " escape="false" />
+	      <h:outputText styleClass="instruction" value="#{lbl['lbl.sc.branch.related.deleted.instruction']} " escape="false" />
 	    </c:if>
         <ui:remove> #28777#29729 - End </ui:remove>
 		<h:outputText styleClass="instruction"

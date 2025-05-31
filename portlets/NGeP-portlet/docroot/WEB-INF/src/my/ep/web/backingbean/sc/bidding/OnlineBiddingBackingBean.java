@@ -316,7 +316,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean implements Seriali
 					if (checkDisqualifiedSupplierBranchDeleted(docId, supplierId)) {
 						FacesContext.getCurrentInstance().addMessage(
 								null,
-								new FacesMessage(FacesMessage.SEVERITY_FATAL, null, MessageUtils.getMessage(
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
 										MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 					}

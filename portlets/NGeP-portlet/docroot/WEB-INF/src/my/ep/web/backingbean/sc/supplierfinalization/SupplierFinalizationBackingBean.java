@@ -1438,7 +1438,7 @@ public class SupplierFinalizationBackingBean extends
 				.getExternalContext().getRequestParameterMap().get("evaluationStageId");
 		//#28777 & #29729 - Start
 		String isDisqualifiedId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("isDisqualifiedId");
-		boolean isDisqualified = (isDisqualifiedId!= null && Integer.parseInt(isDisqualifiedId) == 7) ? true : false;
+		boolean isDisqualified = (isDisqualifiedId!= null && Integer.parseInt(isDisqualifiedId) == SourcingConstants.RECORD_STATUS_DISQUALIFIED) ? true : false;
 	    //#28777 & #29729 - End
 		int evaluationStageId = 0;
 		//35087 start
