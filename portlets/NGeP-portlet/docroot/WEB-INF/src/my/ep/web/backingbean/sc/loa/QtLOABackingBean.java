@@ -266,7 +266,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				if (loiLoaList != null && loiLoaList.size() > 0) {
 					for (ScLoiLoa scLoiLoa : loiLoaList) {
-						SmSupplier smSupplier = qtAwardSO.retrieveActiveDisciplinaryActionBySupplier(scLoiLoa.getSmSupplier());
+						SmSupplier smSupplier = qtAwardSO.evaluateDisciplinaryActions(scLoiLoa.getSmSupplier(), qtId); // 26247
 						scLoiLoa.setSmSupplier(smSupplier);
 					}
 					getManagedBean().setScLoiLoaList(loiLoaList);
