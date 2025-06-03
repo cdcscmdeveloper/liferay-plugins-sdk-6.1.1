@@ -16,7 +16,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:messages id="supplierReg" showDetail="true" showSummary="false"
-			autoUpdate="true" closable="true" severity="error, info, fatal" /> <ui:remove> #28777#29729 </ui:remove>
+			autoUpdate="true" closable="true" />
 		<h:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td" >
 			<p:row>
@@ -27,23 +27,24 @@
 				</p:column>
 				<p:column width="100%" style="text-align:right">
 				<h:panelGroup id="registerBtnId">
-				
-				<ui:remove> #28777#29729 - Start </ui:remove>
-				   <c:if test="#{!noticeBoardBackingBean.managedBean.hideBSVRegisterBtn and !noticeBoardBackingBean.managedBean.hideZoneBSVRegisterBtn}">
-				<ui:remove> #28777#29729 - End </ui:remove>
-				
-				   	<p:commandButton value="#{lbl['lbl.btn.register']}"
-						disabled="#{!noticeBoardBackingBean.managedBean.validMofNo}"
-						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
-						style="float:right;" process="@all" update="@all"
-						rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}"
-						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" /> 
-						
-			    <ui:remove> #28777#29729 - Start </ui:remove>
-				   </c:if>
-				<ui:remove> #28777#29729 - End </ui:remove>
-						
-				</h:panelGroup>
+
+						<ui:remove> #28777#29729 - Start </ui:remove>
+						<c:if
+							test="#{!noticeBoardBackingBean.managedBean.hideBSVRegisterBtn and !noticeBoardBackingBean.managedBean.hideZoneBSVRegisterBtn}">
+							<ui:remove> #28777#29729 - End </ui:remove>
+
+							<p:commandButton value="#{lbl['lbl.btn.register']}"
+								disabled="#{!noticeBoardBackingBean.managedBean.validMofNo}"
+								action="#{noticeBoardBackingBean.registerSupplierForBSV}"
+								style="float:right;" process="@all" update="@all"
+								rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+
+							<ui:remove> #28777#29729 - Start </ui:remove>
+						</c:if>
+						<ui:remove> #28777#29729 - End </ui:remove>
+
+					</h:panelGroup>
 				</p:column>
 			</p:row>
 		</h:panelGrid>
@@ -94,17 +95,22 @@
 					<p:remoteCommand
 							name="bsvZoneTabChangeAction" update="@form" partialSubmit="true"
 							process="@this" action="#{noticeBoardBackingBean.bsvZoneTabChangeAction}" />
-							
-					<ui:remove> #28777#29729 </ui:remove><ac:zoneBriefingTabMenu tabList="#{noticeBoardBackingBean.managedBean.zoneBean}" 
+
+						<ui:remove> #28777#29729 </ui:remove>
+						<ac:zoneBriefingTabMenu
+							tabList="#{noticeBoardBackingBean.managedBean.zoneBean}"
 							activeIndex="#{noticeBoardBackingBean.managedBean.selectedZoneTabIndex}"
 							model="#{noticeBoardBackingBean.managedBean.zoneMenuModel}"
-							remoteCommand="bsvZoneTabChangeAction" update="@this" process="@form"/>
+							remoteCommand="bsvZoneTabChangeAction" update="@this"
+							process="@form" />
 					</td>
-					
-					<td width="80%">
-					<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" /> 
-					<ui:param name="isBranchDeactivated" value="#{noticeBoardBackingBean.managedBean.normalBsvBean.branchDeactivated}" /> <ui:remove> #28777#29729 </ui:remove>
-							<ui:include src="/xhtml/sc/noticeboard/bsvregistration/supplierRegistrationDtls.xhtml" /></td>
+
+					<td width="80%"><ui:param name="bsvDetails"
+							value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" /> <ui:param
+							name="isBranchDeactivated"
+							value="#{noticeBoardBackingBean.managedBean.normalBsvBean.branchDeactivated}" />
+						<ui:remove> #28777#29729 </ui:remove> <ui:include
+							src="/xhtml/sc/noticeboard/bsvregistration/supplierRegistrationDtls.xhtml" /></td>
 				</tr>
 			</table>
 			<ui:include
