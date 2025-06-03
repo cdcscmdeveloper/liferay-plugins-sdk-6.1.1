@@ -1108,12 +1108,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	private void decisionChecking(ScQtApprovalRequest approvalRequest, boolean enableDateMOF) {
 		if (approvalRequest.getDecisionType().getParameterId() == null) {
 			if (enableDateMOF) {
-				//#21692 - start
 				if (null != approvalRequest.getDecisionCertPBM().getParameterId()
 						&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
 					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
 				}
-				//#21692 - end
 			} else {
 				mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
 			}
