@@ -567,6 +567,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// Bug 34404 - related to 29007 - end
 		new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339, #21692
+		getSupplierRejectProposalValidityExtensionNotification(this.getManagedBean().getScLoa());//#21692
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -990,6 +991,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 				getManagedBean().setScLoa(scLoa);
 				
 			}
+			new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#21692
+			getSupplierRejectProposalValidityExtensionNotification(this.getManagedBean().getScLoa());//#21692
 			//note 870,872 - end
 			// #29006 - end
 			
@@ -3812,7 +3815,11 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// #29006 - end  - Bug #33903 end
 					}
 					parseLOADetails(scLoa, outcome);
-					validateLOADetails(scLoa, outcome);
+					//#21692 - Start
+					if (!isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
+						validateLOADetails(scLoa, outcome);
+					}
+					//#21692 - End
 					
 					// start - #26475 & #26474 - disable validation on save action
 					if (scLoa != null) // 20230706@asyrafhaziq- SQUBE Bug NullPointer#3
@@ -12070,14 +12077,17 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 * @return
 	 */
 	public Long isLOAStatusAbleToCancel() {
-		IScWorkFlowStatusSO workFlowStatusSO;
-		ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
-		workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IScWorkFlowStatusSO.class);
-		scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-		scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
+		if (this.getManagedBean().getScLoa().getLoaId() != null) {
+			IScWorkFlowStatusSO workFlowStatusSO;
+			ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+			scWreqDTO.setDocType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			scWreqDTO.setDocId(this.getManagedBean().getScLoa().getLoaId());
 
-		return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId();
+			return workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus().getPmStatus().getStatusId();
+		}
+		return CommonConstants.RETURN_ZERO_LONG_ID;
 	}
 	//#21692 - end
 	
@@ -12672,5 +12682,28 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 	}
 	//#21692 sonarlint - End
+	
+	//#21692 - Start
+	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {
+		if (scLoa != null && scLoa.getLoaId() != null
+				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())
+				&& checkProposalValidityDateReachByQt(getManagedBean().getScQt())) {
+			StringBuilder qtProposalExpiredMsg = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_ACCEPTANCE,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			qtProposalExpiredMsg.append(CommonConstants.DEFAULT_ENCRYPT_EMPTY_VALUE);
+			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(
+					SourcingConstants.LOI_LOA_SUPPLIER_REJECT_NOTIFICATION, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					locale));
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							qtProposalExpiredMsg.toString(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+	}
+	//#21692 - End
 }
 
