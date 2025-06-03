@@ -832,14 +832,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 	
 	// 26247 - start
 	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList,
-			List<BidItemBean> biddingItemPriceList) {
+			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {
 		ScQt scQt = this.getManagedBean().getScQt();
 		if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
 			for (BidPackageBean bidPackage : biddingPackagePriceList) {
 				SmSupplier supplier = bidPackage.getScBidSupplier().getSmSupplier();
 				getQTDetailSO().evaluateDisciplinaryActions(supplier, scQt.getQtId());
 			} 
-			getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+			if (!isDisqualified) {// #28777 & #29729
+				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+			}// #28777 & #29729
 		} else if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
 			for (BidItemBean bidItem : biddingItemPriceList) {
 				SmSupplier supplier = bidItem.getSupplier();
