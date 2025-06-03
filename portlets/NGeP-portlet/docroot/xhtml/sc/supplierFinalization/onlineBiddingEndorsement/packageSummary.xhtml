@@ -90,10 +90,6 @@
 				</p:commandLink>
 				<ui:remove> #28777#29729 - End </ui:remove>
 			</p:column>
-<<<<<<< HEAD
-			
-			<ui:remove>26247 - start</ui:remove>
-=======
 
 			<!-- #29466 - START Commented out by Nasim - Note-150-->
 			<!-- 			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="width:5%; text-align:right;"> -->
@@ -110,48 +106,18 @@
 					value="#{(price.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 
-			<ui:remove>
-				Bug 31101 - WIP Impact 
-			</ui:remove>
->>>>>>> refs/remotes/origin/release-sit
+			<ui:remove>26247 - start</ui:remove>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
 				</f:facet>
-<<<<<<< HEAD
 				<ac:disciplinaryActionYesNo
 					supplier="#{price.scBidSupplier.smSupplier}" index="#{rowIndex}"/>
-=======
-				<p:commandLink onstart="blockWidget.show()"
-					oncomplete="blockWidget.hide()"
-					style="color:red; font-weight:bold;"
-					rendered="#{price.scBidSupplier.smSupplier.disciplinaryActions}"
-					action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction(price.scBidSupplier.smSupplier)}"
-					process="@this" partialSubmit="true" update=":form">
-					<h:outputText value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
-						styleClass="warning" />
-				</p:commandLink>
-				<p:spacer width="2" />
-
-				<h:outputText
-					rendered="#{!price.scBidSupplier.smSupplier.disciplinaryActions}"
-					value="#{lbl['lbl.cm.dialog.cofirm.no']}" />
->>>>>>> refs/remotes/origin/release-sit
 			</p:column>
-<<<<<<< HEAD
 			<ui:remove>26247 - end</ui:remove>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal; text-align:right;">
-=======
-
-			<ui:remove>
-				Bug 31101 - END
-			</ui:remove>
-
-			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}"
-				style="width:10%; white-space:normal; text-align:right;">
->>>>>>> refs/remotes/origin/release-sit
 				<h:outputText value="#{price.scBidSupplier.packageStartPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -214,35 +180,18 @@
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-<<<<<<< HEAD
-			</p:column>			
+			</p:column>
 			<ui:remove>26247 - start</ui:remove>
 			<ui:param name="isDisciplinaryAction" value="#{suppFinalBiddingBackingBean.disabledQTProcess(price.scBidSupplier.smSupplier)}"/>
-			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;" 
-					  styleClass="td-check-box-spacing" selectionMode="single" 
-					  rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
-					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-=======
-			</p:column>
-			<ui:remove>
-				31101 - Added Disciplinary Action filter
-			</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.selection']}" style="width:10%;"
 				styleClass="td-check-box-spacing" selectionMode="single"
 				rendered="#{!suppFinalBiddingBackingBean.managedBean.disableSupplierSelection}"
 				disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
->>>>>>> refs/remotes/origin/release-sit
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-<<<<<<< HEAD
 					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or isDisciplinaryAction) or 
-					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" /> <ui:remove> 21692 </ui:remove>		
-			<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>	
-=======
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions) or 
 					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" />
 			<ui:remove> 21692 </ui:remove>
->>>>>>> refs/remotes/origin/release-sit
 		</p:dataTable>
 
 		<ui:remove> #28777#29729 - Start </ui:remove>
@@ -382,6 +331,7 @@
 					value="#{lbl['lbl.sc.disqualified.reason.eligibility.criteria.status']}"
 					rendered="#{priceDis.scQtProposal.scQtSupplier.recordStatusFlg eq SourcingConstants.recordStatusDisqualified}" />
 			</p:column>
+			<ui:remove>26247 - end - added isDisciplinaryAction</ui:remove>	
 		</p:dataTable>
 		<ui:remove> #28777#29729 - End </ui:remove>
 
