@@ -82,8 +82,16 @@
 	<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.softcert.admin.declaration']}"
 		widgetVar="confirmDialog" modal="true" width="750px" height="400px">
 		<p:panel id="dPanel" style="border: none;">
+			<!-- #34400 - start -->
+			<h:outputText value="#{lbl['lbl.sm.confirm.softcert']}" /><br/><br/>
 			<table style="width: 100%">
 				<tr>
+					<td width="10px" style="padding: 4px 2px 0px 4px;vertical-align:top;">
+						<p:selectBooleanCheckbox value="#{softCertBackingBean.managedBean.agreeDeclare}">
+							<p:ajax event="change" update=":form:btnYes" />
+						</p:selectBooleanCheckbox>
+					</td>
+					<!-- #34400 - end -->
 					<td>
 						<h:outputText value="#{lbl['lbl.sm.softcert.admin.himself.declare']}" 
 							rendered="#{!softCertBackingBean.managedBean.applySoftcertForOthers}" 
@@ -96,7 +104,9 @@
 			</table>
 		</p:panel>
 		<div align="right">
+			<!-- #34400 -->
 			<p:commandButton value="#{lbl['lbl.sm.declare']}" onclick="confirmDialog.hide();" 
+				disabled="#{!softCertBackingBean.managedBean.agreeDeclare}"
 				action="#{softCertBackingBean.onSubmit}" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" id="btnYes"/>
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="confirmDialog.hide();" />

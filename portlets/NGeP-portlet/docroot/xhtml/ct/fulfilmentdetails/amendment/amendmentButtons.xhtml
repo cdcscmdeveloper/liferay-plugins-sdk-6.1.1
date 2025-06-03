@@ -19,7 +19,7 @@
 		
 	<!--#26186 start-->
 	<ui:fragment
-		rendered="#{amendmentBackingBean.managedBean.disciplinaryActionMsg!=null and not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}">
+		rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg or not empty amendmentBackingBean.managedBean.supplierMsg}">
 		<ui:include src="amendmentInfo.xhtml" />
 	</ui:fragment>
 	<!--#26186 start-->
@@ -32,6 +32,7 @@
 	   	position = "left" style="color:red;" />
 	   	</h:panelGrid>
 	   	<!--#24333 end-->
+	   	
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}"

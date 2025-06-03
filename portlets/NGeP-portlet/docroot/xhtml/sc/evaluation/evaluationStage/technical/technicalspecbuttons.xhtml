@@ -18,14 +18,21 @@
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							immediate="true"
 							action="#{evaluationBackingBean.technicalSpecBackaction}" /> 
-							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod</ui:remove>
+							<ui:remove>#29187 Start Moved update to backingbean for note #582 Vinod
+							Added hidden button to update data note #721
+							</ui:remove>
 							<p:commandButton
-							value="#{lbl['lbl.btn.save']}"
+							value="#{lbl['lbl.btn.save']}" style="display:none;" id="hidSaveButton" binding="#{hidSaveButton}"
 							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
-							style="float:right;" onstart="blockWidget.show();"
+							update="@all" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
-							action="#{evaluationBackingBean.saveTempleateSpecDtls}" /></td>
+							action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
+							<p:commandButton 
+							value="#{lbl['lbl.btn.save']}" style="float:right;"
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+							or evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}"
+							action="#{evaluationBackingBean.validateSaveTemplateForMandatorySpec(hidSaveButton.clientId)}" /></td>
 							<ui:remove>#29187 End Vinod</ui:remove>
 				</tr>
 			</table>

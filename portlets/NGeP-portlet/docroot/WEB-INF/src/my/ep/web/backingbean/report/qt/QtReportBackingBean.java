@@ -185,6 +185,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 						IRPTRequestSO.class);
+		boolean isBuffMax = false;	//Bug #37911
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
 		
@@ -250,6 +251,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 					reportCode = ReportConst.SC_BRIEFING_PAPER_RPT_VAL;
 					reportName = ReportConst.SC_SUPPLIER_FINALIZATION_RPT_JSP;
 				}
+				isBuffMax = true;	//Bug #37911
 			}
 			this.getManagedBean().setReportName(reportName);
 			this.getManagedBean().setReportCode(reportCode);
@@ -262,6 +264,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 				.getReportCode());
 		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes()
 				.getUserSessionBean().getUserId().toString());
+		// Bug #37911 -- Start
+		if (isBuffMax) {
+			params.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.MAX_BUFFER_SIZE));
+		}
+		// Bug #37911 -- End
 
 		//Bug #28440 start
 		String userRoleLogin = getUserRoleLogin();
