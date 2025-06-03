@@ -185,7 +185,9 @@ public class NoticeBoardBackingBean extends
 	private static final String CHECK_SUPPLIER_QUAL_PAGE = "/xhtml/sc/noticeboard/supplierqualification/nbSupplierQulificationCriteria.xhtml";
 	private static final String PRICE_SCHEDULE_PAGE ="/xhtml/sc/noticeboard/priceshedule/nbPriceSchedule.xhtml";
 	private static final String VIEW_AWARD_SUPP_PAGE = "/xhtml/sc/noticeboard/awardsupplier/nbAwardSupplierView.xhtml";
-	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml"; //#28777 & #29729
+	// #28777 & #29729 - remove '?faces-redirect=true' - Start
+	private static final String BSV_SUPP_REGISTRATION_PAGE = "/xhtml/sc/noticeboard/bsvregistration/nbSupplierRegistration.xhtml";
+	// #28777 & #29729 - remove '?faces-redirect=true' - End
 	private static final String NB_MAIN_PAGE = "/xhtml/sc/noticeboard/resultview/nbMainPage.xhtml";
 	private static final String MOBILE_NB_MAIN_PAGE = "/xhtml/sc/noticeboard/mobileview/nbMainPage.xhtml";
 	
@@ -848,19 +850,21 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
 		
-		//#28777 & #29729 - Start
-		if(managedBean.getScQt().isZonal()){
+		// #28777 & #29729 - Start
+		if (managedBean.getScQt().isZonal()) {
 			BriefingZoneBean defaultBsvBean = this.getManagedBean().getZoneBean().get(0);
-			if(defaultBsvBean.isBranchDeactivated()){
+			if (defaultBsvBean.isBranchDeactivated()) {
 				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
-						MessageUtils.getMessage(MessageConst.INFO_760522, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			}else{
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			} else {
 				this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
 			}
 		}
-		//#28777 & #29729 - End
+		// #28777 & #29729 - End
 		
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
@@ -881,40 +885,46 @@ public class NoticeBoardBackingBean extends
 		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
-		//#28777 & #29729 - Start
-		if(!managedBean.getScQt().isZonal() && smSupplier != null && checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())){
+		// #28777 & #29729 - Start
+		if (!managedBean.getScQt().isZonal() && smSupplier != null
+				&& checkValidationSupplierBranchDeleted(qtId, smSupplier.getSupplierId())) {
 			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_YES);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
-					MessageUtils.getMessage(MessageConst.INFO_760522, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}else{
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} else {
 			this.getManagedBean().setHideBSVRegisterBtn(DbValueConst.FLAG_NO);
 		}
-		//#28777 & #29729 - End
+		// #28777 & #29729 - End
 		
 		return BSV_SUPP_REGISTRATION_PAGE;
 	}
 	
-    //#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	/**
-	* Method to return true, if branch in supplier has been deleted
-	* @param qtId
-	* @param supplierId
-	* @return true or false
-	**/
-	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId){
-		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTNoticeBoardSO.class);
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param qtId
+	 * @param supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkValidationSupplierBranchDeleted(Long qtId, Long supplierId) {
+		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 		NoticeBoardReqDTO supplierReqDTO = new NoticeBoardReqDTO();
 		supplierReqDTO.setSupplierId(supplierId);
 		supplierReqDTO.setQtId(qtId);
 		NoticeBoardResDTO supplierResDTO = boardSO.retrieveQtSupplierByQtIdNSupplierId(supplierReqDTO);
 		ScQtSupplier scQtSupplier = supplierResDTO.getScQtSupplier();
-		if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED_SUPPLIER_BRANCH_DELETED){
-			return Boolean.TRUE;
-	    }
-		return Boolean.FALSE;
+		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			return true;
+		}
+		return false;
 	}
-	//#28777 & #29729 - End
+
+	// #28777 & #29729 - End
 
 	
 	/**
@@ -934,7 +944,9 @@ public class NoticeBoardBackingBean extends
 		BriefingZoneBean selectedBsvBean = this.getManagedBean().getZoneBean()
 				.get(selectedZoneTabIndex);
 		
-		checkValidationForBranchDeactivated(selectedBsvBean); //#28777 & #29729
+		// #28777 & #29729 - Start
+		checkValidationForBranchDeactivated(selectedBsvBean);
+		// #28777 & #29729 - End
 		
 		this.getManagedBean().setNormalBsvBean(selectedBsvBean);
 		this.getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
@@ -942,22 +954,26 @@ public class NoticeBoardBackingBean extends
 		setSlectedHeaderName(null);
 	}
 	
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	/**
-	* Method to appear validation, if tab zone has been selected
-	* @param selectedBsvBean
-	**/
-	private void checkValidationForBranchDeactivated(BriefingZoneBean selectedBsvBean){
-		if(selectedBsvBean.isBranchDeactivated()){
+	 * Method to appear validation, if tab zone has been selected
+	 * 
+	 * @param selectedBsvBean
+	 **/
+	private void checkValidationForBranchDeactivated(BriefingZoneBean selectedBsvBean) {
+		if (selectedBsvBean.isBranchDeactivated()) {
 			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, null,
-					MessageUtils.getMessage(MessageConst.INFO_760522, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-		}else{
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+							MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		} else {
 			this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
 		}
 	}
-	//#28777 & #29729 - End
+
+	// #28777 & #29729 - End
 
 	/**
 	 * hide or show date fields based on date types.
@@ -2391,14 +2407,14 @@ public class NoticeBoardBackingBean extends
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv(),null);
 					
-					//#28777 & #29729 - Start
-				    briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES); 
-				    if(briefingZoneBean.isBranchDeactivated()){
-				    	this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
-				    }else{
-				    	this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
-				    }
-				    //#28777 & #29729 - End
+					// #28777 & #29729 - Start
+					briefingZoneBean.setBranchDeactivated(specZoneDtl.isBranchDeactivated() == DbValueConst.FLAG_YES);
+					if (briefingZoneBean.isBranchDeactivated()) {
+						this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_YES);
+					} else {
+						this.getManagedBean().setHideZoneBSVRegisterBtn(DbValueConst.FLAG_NO);
+					}
+					// #28777 & #29729 - End
 				    
 					bsvZoneBeans.add(briefingZoneBean);
 					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
