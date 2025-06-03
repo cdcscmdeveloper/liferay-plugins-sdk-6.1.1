@@ -153,6 +153,19 @@
 
 
 	<h:form id="form">
+		
+		<h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
+		
+	    <h:panelGroup id="globalMessages" style="position:absolute; top:0; width:100%;">
+	        <p:growl 
+	            id="#{CommonConstants.GLOBAL_MESSAGE_ID}" 
+	            globalOnly="true" 
+	            showDetail="true" 
+	            autoUpdate="true"
+	            sticky="true" 
+	            escape="false" />
+	    </h:panelGroup>
+	    
 		<div id="content" style="width: 100%;">
 		
 			<ui:insert name="titleSection"/>
