@@ -1161,7 +1161,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		this.getManagedBean().setQt(scQt);
 
-		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecisionType().getParameterCode());
@@ -1170,23 +1170,23 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (!enableDateMOF) {
 				approvalRequest.setDecisionCertPBM(null);
 			}
-
-			// add data for report/history usage - Start
+			
+			//add data for report/history usage - Start
 			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
-			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(),
+			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
 					Integer.parseInt(approvalRequest.getChangedValue())));
 			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
-			// ensure that is date of FC chairperson less than QT validity, date of MOF = null
+			//ensure that is date of FC chairperson less than QT validity, date of MOF = null
 			if (!scQt.isApprovalPBM()) {
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
 			checkValidityDateAndSupplierResponseDate();
-			// add data for report/history usage - End
+			//add data for report/history usage - End
 
-			// To remove attachments R1, R2, R3
+			//To remove attachments R1, R2, R3
 			approvalRequest = removeAttachments(approvalRequest);
-			// To add attachments from method epvHandleFileUpload, IF not empty
+			//To add attachments from method epvHandleFileUpload, IF not empty
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getAllEPVAttachments())) {
 				approvalRequest.setEpvApprovalReqAttachment(this.getManagedBean().getAllEPVAttachments());
 			}
@@ -1197,30 +1197,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		this.getManagedBean().setScQtApprovalRequestList(scQtApprovalRequests);
 		checkNullRemark();
-		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-
-			Long decessionType = approvalRequest.getDecisionType().getParameterId();
-
-			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decessionType.longValue()) { // 1834L || 1854L
-
-				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
-				notifyUsers(approvalRequest);
-
-			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decessionType.longValue()) { // 1835L || 1855L
-
-				reviseRemarkMandatory();// remark is mandatory for reject.
-				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
-				notifyUsers(approvalRequest);
-			} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decessionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decessionType.longValue()) {
-				reviseRemarkMandatory();
-				this.getManagedBean().setProposalValidityRevised(true);
-				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);// Revised, but use reject due to Revise flow == Reject flow
-				notifyUsers(approvalRequest);
-			}
-
+		for (ScQtApprovalRequest request : this.getManagedBean().getScQtApprovalRequestList()) {
+			procurementBoardSecretaryDecision(request);
 		}
 	}
 	//#21692 - End
