@@ -746,6 +746,11 @@ public class GovtSellerRegistrationBackingBean extends
 						new ArrayList<SelectItem>());
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (country != null) {
@@ -763,6 +768,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (country != null) {
@@ -780,6 +786,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (country != null) {
 				//#34159 - START
@@ -804,6 +811,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 
@@ -848,6 +856,11 @@ public class GovtSellerRegistrationBackingBean extends
 						districtLs);
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			//13320-Start
@@ -885,6 +898,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			//13320-Start
@@ -920,6 +934,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			//13320-Start
 			Long stateId = state.getStateId();
@@ -952,6 +967,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 
@@ -978,6 +994,12 @@ public class GovtSellerRegistrationBackingBean extends
 			} else {
 				getManagedBean().setBusinessCityLs(new ArrayList<SelectItem>());
 			}
+			//#36718 - START
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+			//#36718 - END
+
 		} else if (addrType != null
 				&& addrType.equals("USER_PERMANENT_ADDRESS")) {
 			if (district != null) {
@@ -987,6 +1009,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean()
 						.setPermenantCityLs(new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmPermenantAdd().setPostcode(""); //#36718
 		} else if (addrType != null
 				&& addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (district != null) {
@@ -996,6 +1019,7 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setResidentialCityLs(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSmResAdd().setPostcode(""); //#36718
 		} else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
 			if (district != null) {
 				//#34159 - START
@@ -1010,8 +1034,36 @@ public class GovtSellerRegistrationBackingBean extends
 				getManagedBean().setBranchCompanyCities(
 						new ArrayList<SelectItem>());
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
+	
+	//#36718 - START
+	/**
+	 * Reset postcode when change city DropDown
+	 * 
+	 * @param PmCity
+	 *            city
+	 * @param String
+	 *            addrType
+	 */
+	public void onChangeCity(PmCity city, String addrType) {
+		if (addrType != null && addrType.equals("COMPANY_ADDRESS")) {
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
+		}
+		else if (addrType != null && addrType.equals("BRANCH_ADDRESS")) {
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode("");
+		}
+		else if (addrType != null && addrType.equals("USER_PERMANENT_ADDRESS")) {
+			this.getManagedBean().getSmPermenantAdd().setPostcode("");
+		}
+		else if (addrType != null && addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
+			this.getManagedBean().getSmResAdd().setPostcode("");
+		}
+	}
+	//#36718 - END
 
 	/**
 	 * Proceed to user registration
@@ -2024,6 +2076,9 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPmCity(new PmCity());
 				//#34159 - END
 			}
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setPostcode("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLatitude("");
+			getManagedBean().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().setMapLongitude("");
 		} else if (addrType != null && addrType.equals("USER_RESIDENTIAL_ADDRESS")) {
 			if (division != null) {
 				//#34159 - START
@@ -2036,6 +2091,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().setResidentialCityLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
+				this.getManagedBean().getSmResAdd().setPostcode("");
 				//#34159 - END
 			}
 		} else if (addrType != null && addrType.equals("USER_PERMANENT_ADDRESS")) {
@@ -2050,6 +2106,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().setPermenantCityLs(new ArrayList<SelectItem>());
 				this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 				this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
+				this.getManagedBean().getSmPermenantAdd().setPostcode("");
 				//#34159 - END
 				
 			}
@@ -2067,6 +2124,7 @@ public class GovtSellerRegistrationBackingBean extends
 				this.getManagedBean().getSelectedBranch().getSmAddress().setPmCity(new PmCity());
 				//#34159 - END
 			}
+			this.getManagedBean().getSelectedBranch().getSmAddress().setPostcode(""); //#36718
 		}
 	}
 	//13320-End
