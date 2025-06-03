@@ -17,8 +17,8 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false" />
+		<p:messages autoUpdate="true" closable="true" id="messages"
+			showDetail="true" showSummary="false" />
 		<div align="left">
 			<p:commandButton action="#{smCompExpBB.redirectToDraft}"
 				onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
@@ -34,7 +34,7 @@
 							value="#{lbl['lbl.sm.comp.exp.update.project.for']}" /> <p:outputLabel
 							rendered="#{!smCompExpMB.disableClienType}"
 							styleClass="mandatory" value="*" /></td>
-					<td style="width: 66%"><p:selectOneRadio required="true"
+					<td style="width: 66%"><p:selectOneRadio
 							disabled="#{smCompExpMB.disableClienType}" id="clientType"
 							label="#{lbl['lbl.sm.comp.exp.update.project.for']}"
 							value="#{smCompExpMB.selectedDraft.clientType}">
@@ -70,7 +70,6 @@
 							value="#{lbl['lbl.sm.comp.exp.update.agency.name']}" /> <p:outputLabel
 							styleClass="mandatory" value="*" /></td>
 					<td style="width: 66%"><p:inputText id="agencyName"
-							required="true"
 							readonly="#{smCompExpMB.selectedDraft.clientType eq null or smCompExpMB.selectedDraft.agencyName ne null
 							or smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal}"
 							size="60" value="#{smCompExpMB.selectedDraft.agencyName}" /> <p:outputPanel
@@ -92,14 +91,12 @@
 							value="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:inputText id="fileReferenceNo"
-							required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							value="#{smCompExpMB.selectedDraft.fileReferenceNo}">
 							<p:ajax event="blur"
 								listener="#{smCompExpBB.trimFileReferenceNo}"
 								update="fileReferenceNo" />
 						</p:inputText> <p:spacer width="3px" /> <p:inputText id="fileExtensionNo"
-							required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.file.ref.no']}"
 							maxlength="3" size="3"
 							value="#{smCompExpMB.selectedDraft.fileExtensionNo}">
@@ -165,7 +162,7 @@
 							value="#{smCompExpMB.selectedDraft.contractEffDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText> <p:calendar id="contractEffDate" required="true"
+						</h:outputText> <p:calendar id="contractEffDate"
 							label="#{lbl['lbl.sm.comp.exp.update.contract.eff.date']}"
 							maxdate="#{smCompExpMB.maxEffDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -183,7 +180,6 @@
 							value="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td style="width: 66%"><p:calendar id="contractExpDate"
-							required="true"
 							label="#{lbl['lbl.sm.comp.exp.update.contract.exp.date']}"
 							mindate="#{smCompExpMB.minExpDate}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -280,7 +276,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
 							<h:outputText styleClass="mandatory" value="*" />
-							<p:selectOneMenu id="mainDDId" required="true"
+							<p:selectOneMenu id="mainDDId"
 								label="#{lbl['lbl.sm.projDtls.mainCat']}"
 								value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -294,7 +290,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 							<h:outputText styleClass="mandatory" value="*" />
-							<p:selectOneMenu id="subDDId" required="true"
+							<p:selectOneMenu id="subDDId"
 								label="#{lbl['lbl.sm.projDtls.subCat']}"
 								value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -308,7 +304,7 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 							<h:outputText styleClass="mandatory" value="*" />
-							<p:selectOneMenu id="subDivDDId" required="true"
+							<p:selectOneMenu id="subDivDDId"
 								label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 								value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />

@@ -29,10 +29,16 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Initialize PTJ popup dialog
+	 */
 	public void initPopup() {
 		reset();
 	}
 
+	/**
+	 * Reset all field to default value
+	 */
 	public void reset() {
 		this.getManagedBean().setMinistryProfileId(null);
 		this.getManagedBean().setJabatanProfileId(null);
@@ -42,10 +48,20 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		this.getManagedBean().setDisabledSelect(true);
 	}
 
+	/**
+	 * Retrieve Ministry dropdown list
+	 * 
+	 * @return SelectItem[]
+	 */
 	public SelectItem[] getMinistryDropdown() {
 		return PmCommonUtil.getMinistryDropdown();
 	}
 
+	/**
+	 * Retrieve PTJ Group dropdown list
+	 * 
+	 * @return SelectItem[]
+	 */
 	public SelectItem[] getPtjGroupDropdown() {
 		if (null != this.getManagedBean().getMinistryProfileId()) {
 			this.getManagedBean().setDisabledPtjGroup(false);
@@ -55,6 +71,11 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		return PmCommonUtil.getJabatanDropdown(this.getManagedBean().getMinistryProfileId());
 	}
 
+	/**
+	 * Retrieve PTJ Code Name dropdown list
+	 * 
+	 * @return SelectItem[]
+	 */
 	public static SelectItem[] getPtjCodeNameDropDown() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(ProfileManagementConst.PTJ_CODE, ResourceBundleUtils.getMessage("lbl.sm.ptj.popup.ptjCode",
@@ -64,6 +85,9 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		return items;
 	}
 
+	/**
+	 * Search PTJ list based on criteria
+	 */
 	public void search() {
 		if (null != this.getManagedBean().getPtjCodeNameValue() && !this.getManagedBean().getPtjCodeNameValue().isEmpty()
 				&& this.getManagedBean().getPtjCodeNameValue().length() < 3) {
@@ -72,6 +96,9 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		this.getManagedBean().getOrgProfileDataModel().reloadData();
 	}
 
+	/**
+	 * Listener to enable select button
+	 */
 	public void enableSelect() {
 		if (null != this.getManagedBean().getSelectedPtj()) {
 			this.getManagedBean().setDisabledSelect(false);
@@ -80,6 +107,12 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 		}
 	}
 
+	/**
+	 * Get method to return value of selected PTJ to main managed bean
+	 * 
+	 * @param methodActionStr
+	 *            String
+	 */
 	public void okAction(String methodActionStr) {
 		if (!methodActionStr.isEmpty()) {
 			MethodExpression methodExp = FacesScopes.createMethodExpression(FacesContext.getCurrentInstance(), methodActionStr, null,
