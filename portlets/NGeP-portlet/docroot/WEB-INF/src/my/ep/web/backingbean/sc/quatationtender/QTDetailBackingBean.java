@@ -14537,7 +14537,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				} else {
 					bidSearchBean
 							.getDataFilterBeans()
-							.add(new SearchFilterBean("bidNo",
+							.add(new SearchFilterBean(SourcingConstants.QT_SEARCH_BID_NUMBER,
 									SearchOperator.OPERATOR_LIKE.value(), docNo));
 				}
 
