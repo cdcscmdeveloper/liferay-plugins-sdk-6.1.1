@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -30,7 +29,6 @@ import my.ep.persistence.entity.sm.SmCompExpCatMaster;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
-import my.ep.util.LoggerUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -56,6 +54,11 @@ import org.primefaces.event.FileUploadEvent;
 public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> {
 
 	private static final long serialVersionUID = 1L;
+	private static String smCompExpTncXhtml = "smCompExpTnc.xhtml";
+	private static String smCompExpMainXhtml = "smCompExpMain.xhtml";
+	private static String smCompExpDraftXhtml = "smCompExpDraft.xhtml";
+	private static String smCompExpDraftUpdateXhtml = "smCompExpDraftUpdate.xhtml";
+	private static String filePathDateFormat = "yyyyMMdd_HHmmss";
 
 	/**
 	 * Prerender for Sm Company Experience
@@ -63,7 +66,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	public void preRenderSmCompExp() {
 		renewSesionObject();
 		this.getManagedBean().setSupplier(SmApplicationUtil.getCurrentSupplier());
-		SmCommonUtil.redirectToPage("smCompExpTnc.xhtml", "", null, null);
+		SmCommonUtil.redirectToPage(smCompExpTncXhtml, "", null, null);
 	}
 
 	/**
@@ -71,7 +74,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void proceedAfterTnC() {
 		this.getManagedBean().setDraftExist(checkSmCompExpDraftExist());
-		SmCommonUtil.redirectToPage("smCompExpMain.xhtml", "", null, null);
+		SmCommonUtil.redirectToPage(smCompExpMainXhtml, "", null, null);
 	}
 
 	private boolean checkSmCompExpDraftExist() {
@@ -88,7 +91,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Redirect to Sm Company Experience Draft list screen
 	 */
 	public void redirectToDraft() {
-		SmCommonUtil.redirectToPage("smCompExpDraft.xhtml", "", null, null);
+		SmCommonUtil.redirectToPage(smCompExpDraftXhtml, "", null, null);
 	}
 
 	/**
@@ -123,7 +126,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSelectedSmCompExpCatDraft(null);
 		this.getManagedBean().setAgreeDeclare(false);
 
-		SmCommonUtil.redirectToPage("smCompExpDraftUpdate.xhtml", "", null, null);
+		SmCommonUtil.redirectToPage(smCompExpDraftUpdateXhtml, "", null, null);
 	}
 
 	private void initSelectedDraft(SmCompExpDraft draft) {
@@ -177,7 +180,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.SM_COMP_EXP_FILE_PATH)
 				+ this.getManagedBean().getSelectedDraft().getSmSupplier().getRegNo() + "/"
-				+ DateUtils.dateToString("yyyyMMdd_HHmmss", Calendar.getInstance().getTime()) + "/";
+				+ DateUtils.dateToString(filePathDateFormat, Calendar.getInstance().getTime()) + "/";
 
 		this.getManagedBean().setSmCompExpFilePath(filePath);
 	}
