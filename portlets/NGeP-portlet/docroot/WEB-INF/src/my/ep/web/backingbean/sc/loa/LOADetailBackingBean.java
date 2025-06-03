@@ -3816,7 +3816,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					}
 					parseLOADetails(scLoa, outcome);
 					//#21692 - Start
-					if (!isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
+					if (this.validateSupportedTask(scLoa.getScQt().getQtNo(),
+							QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
 						validateLOADetails(scLoa, outcome);
 					}
 					//#21692 - End
