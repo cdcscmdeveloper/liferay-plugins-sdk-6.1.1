@@ -437,7 +437,9 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setLoiSupplierProposalspec(message);
 					ScLoi scLoi = getManagedBean().getScLoi();
 					Long statusId =scLoi.getScWorkFlowStatus().getPmStatus().getStatusId();//20230711@Asyrafhaziq-SQUBE Bug Minor #16
-						
+		isSupplierEPVStatusRejected(scLoi);// #21692
+		getSupplierRejectProposalValidityExtensionNotification(scLoi);// #21692
+		
 					List<ScLoiTerm> scNegoTerms = scLoi.getScNegoTerms();
 					if(null == scNegoTerms) {
 						scNegoTerms = new ArrayList<ScLoiTerm>();
@@ -2028,6 +2030,7 @@ public class LOIDetailBackingBean extends
 		}
 
 		isSupplierEPVStatusRejected(scLoi);//#21692
+		getSupplierRejectProposalValidityExtensionNotification(scLoi);//#21692
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
@@ -4120,7 +4123,12 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
-		validateLOIDetails(scLoi, outcome);
+		//#21692 - Start
+		if (this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
+			validateLOIDetails(scLoi, outcome);
+		}
+		//#21692 - End
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
@@ -7252,4 +7260,47 @@ public class LOIDetailBackingBean extends
 		}
 	}
 	// #37831 - #29007 End Vinod 23/04/2025
+	
+	//#21692 - Start
+	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
+		if (scLoi != null && scLoi.getLoiId() != null
+				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
+				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())) {
+			StringBuilder qtProposalExpiredMsg = new StringBuilder();
+			Locale locale = new FacesScopes().getUserLocale();
+			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			qtProposalExpiredMsg.append(CommonConstants.DEFAULT_ENCRYPT_EMPTY_VALUE);
+			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(
+					SourcingConstants.LOI_LOA_SUPPLIER_REJECT_NOTIFICATION, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					locale));
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							qtProposalExpiredMsg.toString(), MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * check supplier response for proposal validity extension
+	 * 
+	 * @param supplierId
+	 * @return TRUE IF supplier Rejected Validity Extension
+	 */
+	public boolean isSupplierStatusRejectedEPV(Long supplierId) {
+		boolean supplierStatus = false;
+
+		List<Long> suppList = new ArrayList<>();
+		if (null != supplierId) {
+			suppList.add(supplierId);
+			supplierStatus = getQTDetailSO().checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
+		}
+
+		return supplierStatus;
+	}
+	//#21692 - End
 }
