@@ -1264,15 +1264,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getSelectedZone().getSpecZoneId(),
 							getManagedBean().getTemplateSpecBean());
 				}
-				//28777 - start
+				
+				// #28777 & #29729, 35592 - Start
 				List<Long> deactivatedZones = new ArrayList<>();
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
-					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
-						if(zoneDtl.isBranchDeactivated())
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
+						if (zoneDtl.isBranchDeactivated())
 							deactivatedZones.add(zoneDtl.getSpecZoneId());
 					}
 				}
-				//28777 - end
+				// #28777 & #29729, 35592 - End
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1294,14 +1295,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
-				if (templateSpecBeans.size() > 0) {
+				// #28777 & #29729, 35592(35838) - Start
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
+					// #28777 & #29729, 35592(35838) - End
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
-						//28777 - start
-						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+						// #28777 & #29729, 35592 - Start
+						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
 							continue;
-						//28777 - end
+						// #28777 & #29729, 35592 - End
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -1369,7 +1372,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						}
 						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
-				}
+				}// #28777 & #29729, 35592(35838)
 				//#34363 - note 50 - Start - Vinod
 				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
 						&& null != getManagedBean().getQt()
@@ -4635,16 +4638,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
-			
-			//#28777 & #29729 - Start
+			// #28777 & #29729 - Start
 			boolean branchDeleted = checkValidationSupplierBranchDeleted();
-			if(branchDeleted){
+			if (branchDeleted) {
 				this.getManagedBean().setReadOnly(branchDeleted);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_760522, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 			}
-			//#28777 & #29729 - End
+			// #28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -6324,22 +6328,25 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-        //#28777 & #29729 - Start
+		// #28777 & #29729 - Start
 		/**
-		* Method to return true, if branch in supplier has been deleted
-		* @param supplier id 
-		* @return true or false
-		**/
-		public boolean checkValidationSupplierBranchDeleted(){
+		 * Method to return true, if branch in supplier has been deleted
+		 * 
+		 * @param supplier
+		 *            id
+		 * @return true or false
+		 **/
+		public boolean checkValidationSupplierBranchDeleted() {
 			boolean isSupplierBranchDeleted = false;
 			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
-			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
-					isSupplierBranchDeleted = true;
-					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
+			if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+				isSupplierBranchDeleted = true;
+				this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 			}
-		    return isSupplierBranchDeleted;
+			return isSupplierBranchDeleted;
 		}
-		//#28777 & #29729 - End
+		
+		// #28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){
