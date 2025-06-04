@@ -70,6 +70,12 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
+
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+
+//25791 -end-
+
 /**
  * Bidding Backing Bean
  * 
@@ -574,10 +580,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			if (resDto.isSuccessful()) {
 				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
 				getManagedBean().setBidPackages(resDto.getBidPackages());
-				//#28777 & #29729 - Start
+				// #28777 & #29729 - Start
 				this.getManagedBean().setBidPackagesDisqualified(resDto.getBidPackagesDisqualified());
 				this.getManagedBean().setDisqualified(resDto.isDisqualified());
-				//#28777 & #29729 - End
+				// #28777 & #29729 - End
 			}
 			QuationTenderReqDTO qtreqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO qtresDTO = new QuationTenderResDTO();
@@ -902,10 +908,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setBidPriceItems(resDTO.getBidPriceItems());
-				 //#28777 & 29729 - Start
-				this.getManagedBean().setBidPriceItemsDisqualified(resDTO.getBidPriceItemsDisqualified()); 
+				// #28777 & 29729 - Start
+				this.getManagedBean().setBidPriceItemsDisqualified(resDTO.getBidPriceItemsDisqualified());
 				this.getManagedBean().setDisqualified(resDTO.isDisqualified());
-				 //#28777 & 29729 - End
+				// #28777 & 29729 - End
 
 				if (resDTO.getBidPriceItems() != null
 						&& resDTO.getBidPriceItems().size() != 0) {
@@ -1262,8 +1268,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param previousPageUrl
 	 * @return Bidding screen.
 	 */
-	public String bidManagementQuotationTenderAction(ScBidSchedule bid, String previousPageUrl) {
-		getManagedBean().setScheduledBid(bid);
+	public String bidManagementQuotationTenderAction(ScBidScheduleForQt bid, String previousPageUrl) {//25791 
+		//25791 - remove bidding codes start -
+		//getManagedBean().setScheduledBid(bid);
+		//25791 - remove bidding codes end -
 
 		IBiddingSO biddingSO = null;
 		IQTDetailSO qTDetailSO = null;
@@ -1341,22 +1349,20 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	}
 	//#17376-144 End
 	
-	//#28777 & #29729 - Start
-    /**
-    * Method to check if this supplier disqualified
-    * @param Long qtId
-    * @param Long supplierId
-    * @return true or false
-    **/
-	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId){
+	// #28777 & #29729 - Start
+	/**
+	 * Method to check if this supplier disqualified
+	 * 
+	 * @param Long
+	 *            qtId
+	 * @param Long
+	 *            supplierId
+	 * @return true or false
+	 **/
+	public Boolean checkDisqualifiedSupplierBranchDeleted(Long qtId, Long supplierId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		
-		if(sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId,supplierId)){
-			
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
+		return sourcingIntegrationSO.flagBiddingDisqualifiedSupplierBranchDeleted(qtId, supplierId);
 	}
-	//#28777 & #29729 - End
+	// #28777 & #29729 - End
 }

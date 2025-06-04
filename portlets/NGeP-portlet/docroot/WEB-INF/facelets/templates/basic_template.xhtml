@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
 <h:head>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -153,6 +154,19 @@
 
 
 	<h:form id="form">
+		
+		<!-- <h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
+		
+	    <h:panelGroup id="globalMessages" style="position:absolute; top:0; width:100%;">
+	        <p:growl 
+	            id="#{CommonConstants.GLOBAL_MESSAGE_ID}" 
+	            globalOnly="true" 
+	            showDetail="true" 
+	            autoUpdate="true"
+	            sticky="true" 
+	            escape="false" />
+	    </h:panelGroup> -->
+	    
 		<div id="content" style="width: 100%;">
 		
 			<ui:insert name="titleSection"/>
