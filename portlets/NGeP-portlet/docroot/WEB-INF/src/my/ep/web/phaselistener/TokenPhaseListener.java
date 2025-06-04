@@ -47,7 +47,7 @@ public class TokenPhaseListener implements PhaseListener {
 			log.info(">>>>>>>>>>>>>>>>>>>>#38229 token is not valid!!");
 //			RequestContext.getCurrentInstance().execute(
 //					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
-			context.renderResponse(); // Block further processing
+//			context.renderResponse(); // Block further processing
 		}
 	}
 
