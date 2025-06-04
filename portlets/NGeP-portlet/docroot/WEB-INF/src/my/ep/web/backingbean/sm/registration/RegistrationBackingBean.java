@@ -2219,7 +2219,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(reset){
 				getManagedBean().getSmBusinessAdd().getPmState().setStateId(null);
 				 //#36718 - START
-				getManagedBean().getSmBusinessAdd().setPostcode("");
+				if(!getManagedBean().getSmBusinessAdd().isSsmData()){
+					getManagedBean().getSmBusinessAdd().setPostcode("");
+				}
 				getManagedBean().getSmBusinessAdd().setMapLatitude("");
 				getManagedBean().getSmBusinessAdd().setMapLongitude("");
 				 //#36718 - END
@@ -2305,7 +2307,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmSupp().setLocalAuthorityId(null);
 				//#34159 - END
 				 //#36718 - START
-				getManagedBean().getSmBusinessAdd().setPostcode(""); 
+				if(!getManagedBean().getSmBusinessAdd().isSsmData()){
+					getManagedBean().getSmBusinessAdd().setPostcode("");
+				}
 				getManagedBean().getSmBusinessAdd().setMapLatitude("");
 				getManagedBean().getSmBusinessAdd().setMapLongitude("");
 				 //#36718 - END
@@ -2478,7 +2482,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				getManagedBean().getSmSupp().setLocalAuthorityId(null);
 				//#34159 - End
 				 //#36718 - START
-				getManagedBean().getSmBusinessAdd().setPostcode(""); 
+				if(!getManagedBean().getSmBusinessAdd().isSsmData()){
+					getManagedBean().getSmBusinessAdd().setPostcode("");
+				} 
 				getManagedBean().getSmBusinessAdd().setMapLatitude("");
 				getManagedBean().getSmBusinessAdd().setMapLongitude("");
 				 //#36718 - END
@@ -2546,7 +2552,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmSupp().setLocalAuthorityId(null);
 			//#34159 - END
 			 //#36718 - START
-			getManagedBean().getSmBusinessAdd().setPostcode(""); 
+			if(!getManagedBean().getSmBusinessAdd().isSsmData()){
+				getManagedBean().getSmBusinessAdd().setPostcode("");
+			}
 			getManagedBean().getSmBusinessAdd().setMapLatitude("");
 			getManagedBean().getSmBusinessAdd().setMapLongitude("");
 		}
@@ -5564,7 +5572,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//#36718 - START - execute only if reset
 			if(reset){
 				getManagedBean().getSmSupp().setLocalAuthorityId(null);
-				getManagedBean().getSmBusinessAdd().setPostcode(""); 
+				if(!getManagedBean().getSmBusinessAdd().isSsmData()){
+					getManagedBean().getSmBusinessAdd().setPostcode("");
+				} 
 				getManagedBean().getSmBusinessAdd().setMapLatitude("");
 				getManagedBean().getSmBusinessAdd().setMapLongitude("");
 			}
