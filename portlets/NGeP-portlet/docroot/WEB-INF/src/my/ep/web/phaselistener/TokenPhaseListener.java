@@ -49,25 +49,25 @@ public class TokenPhaseListener implements PhaseListener {
 				break;
 			}
 		}
-
-		if (!TokenManager.isValidToken(submittedToken)) {
-			UIViewRoot viewRoot = context.getViewRoot();
-			UIComponent component = findComponentById(viewRoot,
-					CommonConstants.GLOBAL_MESSAGE_ID);
-
-			if (component != null) {
-				String growlClientId = component.getClientId();
-				context.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(
-										MessageConst.ERROR_760556, null,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-
-				context.renderResponse(); // Block further processing
-			}
-		}
+		
+//		if (!TokenManager.isValidToken(submittedToken)) {
+//			UIViewRoot viewRoot = context.getViewRoot();
+//			UIComponent component = findComponentById(viewRoot,
+//					CommonConstants.GLOBAL_MESSAGE_ID);
+//
+//			if (component != null) {
+//				String growlClientId = component.getClientId();
+//				context.addMessage(
+//						null,
+//						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+//								MessageUtils.getMessage(
+//										MessageConst.ERROR_760556, null,
+//										MessageUtils.BUNDLE_COMMON_MESSAGES,
+//										new FacesScopes().getUserLocale())));
+//
+//				context.renderResponse(); // Block further processing
+//			}
+//		}
 	}
 
 	@Override
