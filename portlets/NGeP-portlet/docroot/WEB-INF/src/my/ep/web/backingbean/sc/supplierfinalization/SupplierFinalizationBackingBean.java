@@ -270,6 +270,12 @@ public class SupplierFinalizationBackingBean extends
 			}
 			// Bug #37829@Syazani 13/03/2024 -- End
 			
+			// Bug #37829@Syazani 13/03/2024 -- Start
+			if (!validateCurrentStatus()) {
+				throw new EpException(MessageConst.ERROR_721018);
+			}
+			// Bug #37829@Syazani 13/03/2024 -- End
+			
 			// 28834 starts
 			if (getManagedBean().getQtRefinalized() && ArrayUtils.isNotEmpty(this.getManagedBean().getOutComes())
 					&& this.getManagedBean().getOutComes().length > 0) {
@@ -7879,8 +7885,7 @@ public class SupplierFinalizationBackingBean extends
 		boolean isZonal = scQt.isZonal(); 
 		boolean isItemized = true;
 		List<TplSpecZoneDtl> zoneDtls = getManagedBean().getZoneDetails();
-		String recommendTypeCode = getManagedBean().getScQtFinalization()
-									.getRecommendedTypeId().getParameterCode();
+		String recommendTypeCode = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 		if (ParameterConst.RECOMMEND_TYPE_PACKAGE
 						  .equals(recommendTypeCode)) {
 			isItemized = false;

@@ -902,7 +902,7 @@ public class QTDetailBackingBean extends
 			//bug #30435, Enhancement #25077 - end
 			
 			validateSupplierCriteriaIntegrity(scQt_);	// Bug #36730@Syazani 07/01/2025
-
+			
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
@@ -1213,6 +1213,7 @@ public class QTDetailBackingBean extends
 			loaId = findDocIdByDocType(qtId, ParameterConst.DOCTYPE_DIRECT_NEGO);
 		}
 		// Bug #37978@Syazani 22/04/2025 -- End
+		
 		return new DirectLOABackingBean().retriveLoaDetails(loaId, previousPageUrl, true);
 	}	
 	
@@ -1337,8 +1338,8 @@ public class QTDetailBackingBean extends
 								scLoaForQt.getScLoiLoa().getScQt().getQtId(), scLoaForQt.getLoaId(), previousPageUrl, true);
 						/* Bug #27412 END */
 					} else {
-						if(ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())){
-							return viewDirectLOADetails(scQt, previousPageUrl, scLoaForQt);	// Bug #37978@Syazani 22/04/2025
+						if (ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scLoaForQt.getScLoiLoa().getDocType())) {
+							return viewDirectLOADetails(scQt, previousPageUrl, scLoaForQt); // Bug #37978@Syazani 22/04/2025
 						} else {
 							otherArgs.put(MapKeyEnum.showTrackingDiary, Boolean.TRUE);
 							bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, otherArgs);
@@ -1357,20 +1358,20 @@ public class QTDetailBackingBean extends
 				viewLoiListDetails(scQt, previousPageUrl);
 				
 				return null;
-			} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)){
-				// ***19287#42 , ******17376#55  
-				if(scQt.getLoiLoa()!=null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())){
+			} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)) {
+				// ***19287#42 , ******17376#55
+				if (scQt.getLoiLoa() != null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())) {
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
-					
-					return viewDirectLOADetails(scQt, previousPageUrl, null);	// Bug #37978@Syazani 22/04/2025
-				}else{	
+
+					return viewDirectLOADetails(scQt, previousPageUrl, null); // Bug #37978@Syazani 22/04/2025
+				} else {
 					QtLOABackingBean bb = new QtLOABackingBean();
 					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
-					
+
 					return null;
 				}
-				
+
 			} else {
 				return null;
 			}
@@ -3553,7 +3554,7 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-
+		
 		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName) || SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod updated error message
 			ScQtApproval approverPublication = this.getManagedBean().getPublicationApproval();
