@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -24,6 +25,7 @@ import my.ep.web.bean.pm.AuditPMSearchBean;
 import my.ep.web.managedbean.pm.audit.AuditPMManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * #35509
