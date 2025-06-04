@@ -83,7 +83,7 @@
 			<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{supplierDataMaintenanceBackingBean.onViewDisciplinaryAction}" 
 				partialSubmit="true" update=":form">
-					<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></u>
+					<strong><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="color:blue;" escape="false"/></strong>
 			</p:commandLink><p:spacer width="2"/>
 			<h:outputText value="#{lbl['lbl.sm.disciplinary.to.view.history.disciplinary.action']}" escape="false"/><br />
 			<p:spacer height="2"/>
@@ -268,5 +268,6 @@
 		</table>
 	</p:panel>
 	<!-- 26238 onViewDisciplinaryAction -->
-	<ac:disciplinaryActionHistory voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" /> 
+	<ac:disciplinaryActionHistory voList="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVOs}" 
+		showCatCode="true"/> <!-- #38283 -->
 </ui:composition>

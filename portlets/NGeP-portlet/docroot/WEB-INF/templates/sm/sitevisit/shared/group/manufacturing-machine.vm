@@ -12,7 +12,9 @@
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.function')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.quantity')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.value')</th>
-			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purMthd')</th>
+			<!--#38310 - START -->
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchasingMthd')</th>
+      <!--#38310 - END -->
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.purchase.year')</th>
 			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.machine.guarnName')</th>
 		</tr>
