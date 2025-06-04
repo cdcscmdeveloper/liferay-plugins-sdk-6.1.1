@@ -12,7 +12,6 @@ import my.ep.web.util.TokenManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 public class TokenPhaseListener implements PhaseListener {
 
@@ -44,12 +43,12 @@ public class TokenPhaseListener implements PhaseListener {
 			}
 		}
 
-//		if (!TokenManager.isValidToken(submittedToken)) {
-//			log.info(">>>>>>>>>>>>>>>>>>>>#38229 token is not valid!!");
+		if (!TokenManager.isValidToken(submittedToken)) {
+			log.info(">>>>>>>>>>>>>>>>>>>>#38229 token is not valid!!");
 //			RequestContext.getCurrentInstance().execute(
 //					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
-//			context.renderResponse(); // Block further processing
-//		}
+			context.renderResponse(); // Block further processing
+		}
 	}
 
 	@Override
