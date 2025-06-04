@@ -198,6 +198,12 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private List<ScLoa> scLoaList = new ArrayList<>();
 	// #29624 - end
 	
+	// #28777 & #29729 - Start
+	private boolean hideBSVRegisterBtn;
+	private boolean hideZoneBSVRegisterBtn;
+
+	// #28777 & #29729 - End
+	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -1349,5 +1355,23 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.scLoaList = scLoaList;
 	}
 	// #29624 - end
+	
+	// #28777 & #29729 - Start
+	public boolean isHideBSVRegisterBtn() {
+		return hideBSVRegisterBtn;
+	}
+
+	public void setHideBSVRegisterBtn(boolean hideBSVRegisterBtn) {
+		this.hideBSVRegisterBtn = hideBSVRegisterBtn;
+	}
+
+	public boolean isHideZoneBSVRegisterBtn() {
+		return hideZoneBSVRegisterBtn;
+	}
+
+	public void setHideZoneBSVRegisterBtn(boolean hideZoneBSVRegisterBtn) {
+		this.hideZoneBSVRegisterBtn = hideZoneBSVRegisterBtn;
+	}
+	// #28777 & #29729 - End
 	
 }
