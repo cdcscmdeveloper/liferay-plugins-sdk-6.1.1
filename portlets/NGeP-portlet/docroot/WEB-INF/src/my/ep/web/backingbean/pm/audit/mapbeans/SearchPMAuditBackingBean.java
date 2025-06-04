@@ -67,7 +67,23 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	public void searchMaster() {
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getSearchBean().setSearching(true);
+		validateAtLeastOneSearchCriteria();
 		searchMaster.reloadData();
+	}
+
+	protected void validateAtLeastOneSearchCriteria() {
+		if (!StringUtils.isBlank(getManagedBean().getSearchBean().getSystemConfigParamLevel1())
+				&& !StringUtils.isBlank(getManagedBean().getSearchBean().getCategoryConfigParamLevel2())) {
+			if (StringUtils.isBlank(getManagedBean().getSearchBean().getItemConfigParamLevel3())
+					&& StringUtils.isBlank(getManagedBean().getSearchBean().getItemCode())
+					&& StringUtils.isBlank(getManagedBean().getSearchBean().getItemName())
+					&& StringUtils.isBlank(getManagedBean().getSearchBean().getRoleCode())
+					&& null == getManagedBean().getSearchBean().getPmUser()
+					&& null == getManagedBean().getSearchBean().getDateFrom()
+					&& null == getManagedBean().getSearchBean().getDateTo()) {
+				throw new EpException(SmCommonUtil.getMessage("lbl.pm.audit.search.instruction1", null));
+			}
+		}
 	}
 
 	public void searchDetail() {
