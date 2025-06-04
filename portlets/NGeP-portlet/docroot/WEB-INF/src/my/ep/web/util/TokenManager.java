@@ -31,6 +31,7 @@ public class TokenManager implements Serializable {
 	public static String generateToken() {
 		String token = UUID.randomUUID().toString();
 		getPortletSession().setAttribute(TOKEN_KEY, token);
+		log.info(">>>>>>>>>>>>>>>>>>>>#38229 after generate token:"+token);
 		return token;
 	}
 
