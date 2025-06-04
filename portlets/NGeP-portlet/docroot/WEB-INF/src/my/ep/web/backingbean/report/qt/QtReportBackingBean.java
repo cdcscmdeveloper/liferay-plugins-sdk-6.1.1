@@ -24,13 +24,10 @@ import java.util.regex.Pattern;
 
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.dto.rpt.ReportTempInfoReqDTO;
-import my.ep.biz.dto.rpt.ReportTempInfoResDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.rpt.IRPTRequestDtlSO;
 import my.ep.biz.service.rpt.IRPTRequestSO;
-import my.ep.biz.service.rpt.IReportTempInfoSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -45,7 +42,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.rpt.ReportTempInfo;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -166,20 +162,16 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 
 	public void generateSCReport(LinkedHashMap<String, String> params) {
-		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-						IRPTRequestSO.class);
+		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
 		boolean isBuffMax = null != this.getManagedBean().getReportCode()
 				&& QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode()) ? true : false; // Bug #37911
-
+		
 		log.info("generate reportCode" + getManagedBean().getReportCode());
 		log.info("generate reportName" + getManagedBean().getReportName());
-		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean()
-				.getReportName());
-		params.put(QtReportConst.PARAM_REPORT_CODE, getManagedBean()
-				.getReportCode());
-		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes()
-				.getUserSessionBean().getUserId().toString());
+		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
+		params.put(QtReportConst.PARAM_REPORT_CODE, getManagedBean().getReportCode());
+		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());
+		
 		//Bug #37911 -- Start
 		if (isBuffMax) {
 			params.put(ReportConst.PARAM_REPORT_BUFFERS, String.valueOf(ReportConst.MAX_BUFFER_SIZE));
@@ -194,8 +186,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		//Bug #28440 end
 		
 		RPTRequestReqDTO reqDTO = new RPTRequestReqDTO();
-		reqDTO.setDefaultOutputType(this.getManagedBean()
-				.getDefaultOutputType());
+		reqDTO.setDefaultOutputType(this.getManagedBean().getDefaultOutputType());
 		reqDTO.setTempAccess(this.getManagedBean().isTempAccess());
 		log.info("QtId" + this.getManagedBean().getQuotationId());
 		reqDTO.setParametersMap(params);
@@ -220,7 +211,6 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			
 			getPopUpMsg(String.valueOf(resDTO.getRequestId()));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -286,13 +276,11 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		IQTDetailSO QtDetailsSO;
 
 		try {
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 
 			tenderReqDTO.setQtId(qtId.longValue());
-			BigDecimal estimatedAmount = QtDetailsSO
-					.getdecryptedEstAmount(tenderReqDTO.getQtId());
+			BigDecimal estimatedAmount = QtDetailsSO.getdecryptedEstAmount(tenderReqDTO.getQtId());
 
 			return estimatedAmount;
 
@@ -304,26 +292,24 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 
 	}
 
-	private ReportTempInfoResDTO toSaveDecryptedAmountWithQNoAndQId(
-			BigDecimal qtId, BigDecimal estimatedAmount) {
+	/*
+	private ReportTempInfoResDTO toSaveDecryptedAmountWithQNoAndQId(BigDecimal qtId, BigDecimal estimatedAmount) {
 		IReportTempInfoSO reportTempSO;
-		reportTempSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ReportConst.RPT_MODULE_SER_OBJ, IReportTempInfoSO.class);
+		reportTempSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IReportTempInfoSO.class);
 
 		ReportTempInfo rptTmp = new ReportTempInfo();
 		rptTmp.setReportCode(this.getManagedBean().getReportCode());
 		rptTmp.setQtId(qtId.toString());
-		rptTmp.setEstimatedAmt(estimatedAmount != null ? estimatedAmount
-				.toString() : null);
+		rptTmp.setEstimatedAmt(estimatedAmount != null ? estimatedAmount.toString() : null);
 
 		ReportTempInfoReqDTO reqDTO = new ReportTempInfoReqDTO();
 		reqDTO.setReportTempInfo(rptTmp);
 
-		ReportTempInfoResDTO resDTO = reportTempSO
-				.saveDecryptedAmountWithQuotationNoAndQuotationId(reqDTO);
+		ReportTempInfoResDTO resDTO = reportTempSO.saveDecryptedAmountWithQuotationNoAndQuotationId(reqDTO);
 		reportTempSO = null;
 		return resDTO;
 	}
+	*/
 
 	public abstract void generateReport(LinkedHashMap<String, String> params);
 

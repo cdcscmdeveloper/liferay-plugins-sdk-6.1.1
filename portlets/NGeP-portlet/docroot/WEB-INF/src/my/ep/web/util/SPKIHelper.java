@@ -52,9 +52,6 @@ public class SPKIHelper {
 				Object answer = entry.getValue();
 				reqDTO.setSelectedQuestion(question.toString());
 				reqDTO.setAnswer(answer.toString());
-				log.info("question : " + question);
-				log.info("answer : " + answer);
-
 			}
 		}
 		try {

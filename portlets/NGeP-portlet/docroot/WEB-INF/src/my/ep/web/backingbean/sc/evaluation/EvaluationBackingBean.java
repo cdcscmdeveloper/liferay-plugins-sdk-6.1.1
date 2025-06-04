@@ -12215,8 +12215,7 @@ private void retriveCommitteeRemarksList(){
 		}
 		this.getManagedBean().setMeetingBB(meetingBB);
 		// 25037 - end - note 568
-		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType()
-				.getParameterCode());
+		meetingBB.retriveMeetingDetails(scQt.getQtId(), qtCommittee.getScCommittee().getCommitteeType().getParameterCode());
 		meetingBB.getManagedBean().setEvalBB(this);
 		meetingBB.getManagedBean().setTaskName(this.getManagedBean().getTaskName());
 		meetingBB.getManagedBean().setToken(this.getManagedBean().getToken());
@@ -12230,8 +12229,7 @@ private void retriveCommitteeRemarksList(){
 	 * Submit committee member changes and send for approval.
 	 */
 	public void submitCommitteeUpdate() {
-		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 		FacesScopes facesScopes = new FacesScopes();
 		EvaluationReqDTO reqDTO = evaluationPreparation();
 		reqDTO.setCommType(this.getManagedBean().getCommitteeType());
@@ -12276,28 +12274,21 @@ private void retriveCommitteeRemarksList(){
 	// Bug #36747@Syazani 20/01/2025 -- Start
 	private int evaluationStageSummaryForceViewCheck(int currentTab, int outputTab) throws Exception {
 		int outputTabEval = outputTab;
-		boolean isEvaluationCommittee = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this
-				.getManagedBean().getCommitteeType())
-				&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId()) || QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION
-						.equals(this.getManagedBean().getCurrentStatusId()));
+		boolean isEvaluationCommittee = ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+				&& (QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL.equals(this.getManagedBean().getCurrentStatusId()) 
+						|| QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION.equals(this.getManagedBean().getCurrentStatusId()));
 		
-		boolean isTecCommittee = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
-				.getManagedBean().getCommitteeType())
-				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL) || this
-						.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION));
+		boolean isTecCommittee = ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL) 
+						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL_REVISION));
 
-		boolean isFecCommittee = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this
-				.getManagedBean().getCommitteeType())
-				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL) || this
-						.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION));
+		boolean isFecCommittee = ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL) 
+						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL_REVISION));
 		
-		boolean isOcCommittee = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(this.getManagedBean()
-				.getCommitteeType())
-				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL) || this
-						.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION));
+		boolean isOcCommittee = ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+				&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL) 
+						|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.OC_PENDING_COMPLIANCE_VERIFICATION_REVISION));
 
 		boolean isCommittee2TierPass = isTecCommittee || isFecCommittee || isOcCommittee;
 
@@ -12396,10 +12387,8 @@ private void retriveCommitteeRemarksList(){
 	}
 
 	private boolean ecPendingComplianceFailedCheck() {
-		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId()
-				.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-				|| this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+				|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
 
 		boolean isDaysCheck = this.getManagedBean().getCountDays() > 0
 				|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() < 12);
@@ -12411,10 +12400,8 @@ private void retriveCommitteeRemarksList(){
 		boolean isDaysCheck = this.getManagedBean().getCountDays() < 0
 				|| (this.getManagedBean().getCountDays() == 0 && this.getManagedBean().getCurrentTime() >= 12);
 
-		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId()
-				.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-				|| this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
+		boolean isEcPendingComplianceCheck = this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+				|| this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL_REVISION);
 
 		return isDaysCheck && isEcPendingComplianceCheck;
 	}

@@ -2745,6 +2745,7 @@ public class TemplateSpecBackingBean extends
 					){
 					if (specEstimationId == specEstimation.getSpecEstimationId()){
 						specEstimation.setEstimatedCost(totalIndicativePrice); ///update value  Item Total Indicative Price (RM)
+						
 						totalEstAmount = totalEstAmount.add(specEstimation.getEstimatedCost()).setScale(2, 
 								QTConstants.QT_ROUNDING_MODE);	//Bug #35600@Syazani // bugs #26234 add decimal point
 					}
