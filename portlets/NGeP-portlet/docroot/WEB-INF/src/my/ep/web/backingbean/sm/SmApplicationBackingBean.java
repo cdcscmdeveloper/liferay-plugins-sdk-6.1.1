@@ -11242,13 +11242,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
-		//38195
-		if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
-			SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
-					.getSmAppl().getApplId(),
-					ParameterConst.SM_APPLN_FOR_DELETE_PENDING_APPL_DECISION_REJECT,
-					getManagedBean().getApplnRejectionRemarks(),  getManagedBean().getRoleCode());
-		}
+		
 		return approveOrRejectPendingApplicationCancellation(decision);
 
 	}
@@ -11265,6 +11259,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 		//#38195 START
+		if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
+			SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
+					.getSmAppl().getApplId(),
+					ParameterConst.SM_APPLN_FOR_DELETE_PENDING_APPL_DECISION_REJECT,
+					getManagedBean().getApplnRejectionRemarks(),  getManagedBean().getRoleCode());
+		}
+		
 		PmState state = this.getManagedBean().getSmAppl().getSmCompanyBasic()
 				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
 		if (state != null && state.getStateId() != null) {
