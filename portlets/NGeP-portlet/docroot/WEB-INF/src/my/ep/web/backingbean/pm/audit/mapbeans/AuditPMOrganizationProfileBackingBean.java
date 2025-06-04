@@ -287,7 +287,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		SmSupplierBank oldSmSupplierBankCompare = null;
 
 		for (SmSupplierBank smSupplierBank : orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
-			for (SmSupplierBank oldSmSupplierBank : orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
+			for (SmSupplierBank oldSmSupplierBank : oldOrgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
 				if (oldSmSupplierBank.getSupplierBankId() == smSupplierBank.getSupplierBankId()) {
 					oldSmSupplierBankCompare = oldSmSupplierBank;
 				}
