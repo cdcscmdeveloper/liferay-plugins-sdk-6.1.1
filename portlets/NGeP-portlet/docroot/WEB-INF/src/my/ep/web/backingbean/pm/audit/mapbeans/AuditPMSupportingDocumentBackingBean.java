@@ -429,6 +429,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 				for (PmDocumentRestr rest : managedBeans.getCategoryRestrictions()) {
 					if (rest.getPmCategoryL3().getCategoryL3Id() == restNew.getPmCategoryL3().getCategoryL3Id()) {
 						restNew.setDocumentRestrId(rest.getDocumentRestrId());
+					} else {
+						restNew.setDocumentRestrId(rest.getDocumentRestrId());
 					}
 				}
 			}
