@@ -1342,12 +1342,28 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 	
+	// 25791 - start added comments-
+	/**
+	 * check screen is qt maintenance or audit or technical supports.
+	 * 
+	 * @return boolean based on screen type.
+	 */
 	public boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())// ***17376#55
+
+				// 25791 -start-
+				|| QTConstants.PORTLET_NAME_QT_TECHSUPP
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+		// 25791 -end-
+
+		;
 	}
-	//#17376-144 End
+
+	// 25791 -end-
+	// #17376-144 End
 	
 	// #28777 & #29729 - Start
 	/**
