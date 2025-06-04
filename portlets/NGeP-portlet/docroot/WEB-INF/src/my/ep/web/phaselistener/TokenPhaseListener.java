@@ -44,12 +44,12 @@ public class TokenPhaseListener implements PhaseListener {
 			}
 		}
 
-		if (!TokenManager.isValidToken(submittedToken)) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 token is not valid!!");
-			RequestContext.getCurrentInstance().execute(
-					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
-			context.renderResponse(); // Block further processing
-		}
+//		if (!TokenManager.isValidToken(submittedToken)) {
+//			log.info(">>>>>>>>>>>>>>>>>>>>#38229 token is not valid!!");
+//			RequestContext.getCurrentInstance().execute(
+//					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+//			context.renderResponse(); // Block further processing
+//		}
 	}
 
 	@Override
