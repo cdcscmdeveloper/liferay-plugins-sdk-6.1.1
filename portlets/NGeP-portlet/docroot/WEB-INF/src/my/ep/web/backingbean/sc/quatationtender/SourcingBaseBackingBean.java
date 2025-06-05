@@ -810,6 +810,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
+	
+	//38343 - start
+	protected IDocumentSO getDocumentSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+	}
+	//38343 - end
 
 	/**
 	 * To initialize remarks.
