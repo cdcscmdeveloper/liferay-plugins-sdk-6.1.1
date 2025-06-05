@@ -1074,11 +1074,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		boolean enableDateMOF = scQt.isApprovalPBM();
 
 		if (scQt.getChmnFinalizationDate() == null) {
-			dateMandatoryMessage("lbl.sc.qt.proposal.approval.date.chairperson.finalization");
+			dateMandatoryMessage(SourcingConstants.ERROR_MSG_CHAIRPERSON_FINALIZATION_DATE);
 		}
 
 		if (enableDateMOF && !getManagedBean().isChmnFinalizationRejectEPV() && scQt.getMofDate() == null) {
-			dateMandatoryMessage("lbl.sc.qt.proposal.approval.date.mof");
+			dateMandatoryMessage(SourcingConstants.ERROR_MSG_MOF_DATE);
 		}
 
 		List<ScQtApprovalRequest> approvalRequests = reqDTO.getApprovalRequests();
@@ -1094,15 +1094,15 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			if (enableDateMOF) {
 				if (null != approvalRequest.getDecisionCertPBM().getParameterId()
 						&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
-					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
+					mandatoryByMessage(SourcingConstants.ERROR_MSG_DECISION_MOF);
 				}
 			} else {
-				mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
+				mandatoryByMessage(SourcingConstants.ERROR_MSG_DECISION_CHAIRPERSON_FINALIZATION);
 			}
 		}
 
 		if (enableDateMOF && approvalRequest.getDecisionCertPBM().getParameterId() == null) {
-			mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+			mandatoryByMessage(SourcingConstants.ERROR_MSG_DECISION_MOF);
 		}		
 	}
 	//#21692 - End
