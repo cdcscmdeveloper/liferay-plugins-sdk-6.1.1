@@ -45,9 +45,13 @@ public class TokenPhaseListener implements PhaseListener {
 
 		if (!TokenManager.isValidToken(submittedToken)) {
 			log.info(">>>>>>>>>>>>>>>>>>>>#38229 token is not valid!!");
-//			RequestContext.getCurrentInstance().execute(
-//					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
-//			context.renderResponse(); // Block further processing
+			// RequestContext.getCurrentInstance().execute(
+			// CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			// context.renderResponse(); // Block further processing
+		} else {
+			// Important: Generate new token for next submission to prevent
+			// duplicate submissions
+			TokenManager.regenerateToken();
 		}
 	}
 

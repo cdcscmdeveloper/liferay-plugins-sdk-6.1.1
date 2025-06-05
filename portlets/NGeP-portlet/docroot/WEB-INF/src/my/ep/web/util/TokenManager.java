@@ -28,10 +28,25 @@ public class TokenManager implements Serializable {
 				.equalsIgnoreCase("1")) ? true : false;
 	}
 
+	// Modified: Only generate if no token exists in session
 	public static String generateToken() {
+		PortletSession session = getPortletSession();
+		String existingToken = (String) session.getAttribute(TOKEN_KEY);
+
+		// Only generate new token if none exists
+		if (existingToken == null) {
+			existingToken = UUID.randomUUID().toString();
+			session.setAttribute(TOKEN_KEY, existingToken);
+		}
+
+		return existingToken;
+	}
+
+	// New method: Force generate new token (call this after successful form
+	// submission)
+	public static String regenerateToken() {
 		String token = UUID.randomUUID().toString();
 		getPortletSession().setAttribute(TOKEN_KEY, token);
-		log.info(">>>>>>>>>>>>>>>>>>>>#38229 after generate token:"+token);
 		return token;
 	}
 
