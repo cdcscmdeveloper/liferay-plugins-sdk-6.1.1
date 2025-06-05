@@ -666,6 +666,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						auCtData.setDocType(getManagedBean().getDocType());
 						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
 						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
 						if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 							auCtData.setCtIsFinal(AuditContractConst.CT_YES);
