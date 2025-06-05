@@ -273,7 +273,9 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml</value>
+			<!-- Bug 34142, 15851, 33096 - shaqimi start -->
+			<value>/xhtml/ct/fulfilmentdetails/amendment/preRenderAmendmentTab.xhtml</value>
+			<!-- Bug 34142, 15851, 33096 - shaqimi end -->
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
