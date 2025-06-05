@@ -276,6 +276,7 @@ public class RequestCtAdminBackingBean extends ContractBaseBackingBean<RequestCt
 						auCtData.setDocType(resDTO.getCtContractVer().getDocType());
 						auCtData.setCtType(ctContractVer.getCtContract().getContractType().getParameterCode());
 						auCtData.setRoleName(getUserRole());
+						auCtData.setStatusId(resDTO.getStatusId());
 
 						if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)
 								|| (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) || getFacesScopes()
