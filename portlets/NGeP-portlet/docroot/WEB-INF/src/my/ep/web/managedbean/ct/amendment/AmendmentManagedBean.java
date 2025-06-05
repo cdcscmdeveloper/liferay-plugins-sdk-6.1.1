@@ -154,6 +154,18 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean viewOnly = false; /*#25956 notification setting*/
 	private String backToNtf; //25956
 	
+	//Enhancement 15851 - shaqimi start
+	/** The back to previous page. */
+	private String backToPreviousPage;
+
+	/** The tracking dairy view. */
+	private boolean trackingDairyView;
+	
+	private Map<String, Integer> indexing;
+	
+	//Enhancement 15851 - shaqimi end
+	private String supplementalLoaNo = null;//Bug 33096 - shaqimi
+	
 	public void reassignValue(boolean value) 
 	{
 		readOnly = value;	
@@ -1473,4 +1485,35 @@ private class ContractListingPagingDataModel extends PagingDataModel<CtContractI
 		this.backToNtf = backToNtf;
 	}
 	// #25956 - End
+	
+	//15851 - shaqimi start
+	public String getBackToPreviousPage() {
+		return backToPreviousPage;
+	}
+	public void setBackToPreviousPage(String backToPreviousPage) {
+		this.backToPreviousPage = backToPreviousPage;
+	}
+	public boolean isTrackingDairyView() {
+		return trackingDairyView;
+	}
+	public void setTrackingDairyView(boolean trackingDairyView) {
+		this.trackingDairyView = trackingDairyView;
+	}
+	public Map<String, Integer> getIndexing() {
+		return indexing;
+	}
+	public void setIndexing(Map<String, Integer> indexing) {
+		this.indexing = indexing;
+	}
+
+	//Bug 34142, 15851 - shaqimi 04/12/2022 removed unnecessary code
+	//Bug 33096 - shaqimi start
+	public String getSupplementalLoaNo() {
+		return supplementalLoaNo;
+	}
+	public void setSupplementalLoaNo(String supplementalLoaNo) {
+		this.supplementalLoaNo = supplementalLoaNo;
+	}
+	//Bug 33096 - shaqimi end
+	//15851 - shaqimi end
 }
