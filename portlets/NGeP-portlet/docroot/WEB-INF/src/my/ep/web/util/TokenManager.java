@@ -8,60 +8,85 @@ import javax.portlet.PortletSession;
 
 import org.apache.log4j.Logger;
 
-import my.ep.constants.CommonConstants;
-import my.ep.util.EpPropertiesUtils;
-import my.ep.web.phaselistener.TokenPhaseListener;
-
 public class TokenManager implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String TOKEN_KEY = CommonConstants.TOKEN_UNIQUE_ID;
-	private static String BACK_BUTTON_ALLOWED = EpPropertiesUtils.getInstance()
-			.getProperty("back.btn.allowed");
 	private static Logger log = Logger.getLogger(TokenManager.class);
+
+	private static final String TOKEN_MAP_KEY = "viewTokens"; // Store tokens
+																// per
+																// view/session
+
+	// You might manage this dynamically or via configuration
+	private static final String BACK_BUTTON_ALLOWED = "0"; // Assuming 0 for not
+															// allowed
 
 	public static boolean isBackBtnAllowed() {
 		return (BACK_BUTTON_ALLOWED != null && BACK_BUTTON_ALLOWED.trim()
-				.equalsIgnoreCase("1")) ? true : false;
+				.equalsIgnoreCase("1"));
 	}
 
-	// Modified: Only generate if no token exists in session
-	public static String generateToken() {
-		PortletSession session = getPortletSession();
-		String existingToken = (String) session.getAttribute(TOKEN_KEY);
-
-		// Only generate new token if none exists
-		if (existingToken == null) {
-			existingToken = UUID.randomUUID().toString();
-			session.setAttribute(TOKEN_KEY, existingToken);
-		}
-
-		return existingToken;
-	}
-
-	// New method: Force generate new token (call this after successful form
-	// submission)
-	public static String regenerateToken() {
+	/**
+	 * Generates a new token and associates it with the current view/session.
+	 * This should typically be called when a new view is rendered.
+	 */
+	public static String generateTokenForNewView() {
 		String token = UUID.randomUUID().toString();
-		getPortletSession().setAttribute(TOKEN_KEY, token);
+		getPortletSession().setAttribute(TOKEN_MAP_KEY, token); // Store only
+																// the latest
+																// token for
+																// simplicity
+		log.info(">>>>>>>>>>>>>>>>>>>>#38229 new token:" + token);
 		return token;
 	}
 
-	public static boolean isValidToken(String submittedToken) {
-		String sessionToken = (String) getPortletSession().getAttribute(
-				TOKEN_KEY);
-		log.info(">>>>>>>>>>>>>>>>>>>>#38229 sessionToken:" + sessionToken
-				+ "    submittedToken:" + submittedToken);
-		return isBackBtnAllowed() ? true
-				: (submittedToken != null && submittedToken
-						.equals(sessionToken));
+	/**
+	 * Retrieves the token currently associated with the session.
+	 */
+	public static String getSessionToken() {
+		return (String) getPortletSession().getAttribute(TOKEN_MAP_KEY);
 	}
 
-	public static void invalidateToken() {
-		getPortletSession().removeAttribute(TOKEN_KEY);
+	/**
+	 * Validates the submitted token against the session token. If valid, it
+	 * optionally invalidates/updates the session token for the next request.
+	 */
+	public static boolean isValidToken(String submittedToken) {
+		if (isBackBtnAllowed()) {
+			return true; // If back button is allowed, always return true for
+							// token validation
+		}
+
+		String sessionToken = getSessionToken();
+
+		// If no session token, or submitted token is null, it's invalid
+		if (sessionToken == null || submittedToken == null) {
+			return false;
+		}
+
+		boolean isValid = submittedToken.equals(sessionToken);
+
+		// Crucial: Invalidate the token after a successful check to prevent
+		// reuse.
+		// For simple back button detection, you might just remove it or
+		// generate a new one.
+		// For more advanced scenarios (e.g., preventing multiple form
+		// submissions for the same action),
+		// you would generate a new one *after* the request is processed
+		// successfully.
+		if (isValid) {
+			// For simple back button detection, we can just remove the token
+			// after it's used.
+			// A new one will be generated when the page re-renders or on the
+			// next navigation.
+			getPortletSession().removeAttribute(TOKEN_MAP_KEY);
+		}
+
+		log.info(">>>>>>>>>>>>>>>>>>>>#38229 isValid:" + isValid);
+		return isValid;
 	}
 
 	private static PortletSession getPortletSession() {
