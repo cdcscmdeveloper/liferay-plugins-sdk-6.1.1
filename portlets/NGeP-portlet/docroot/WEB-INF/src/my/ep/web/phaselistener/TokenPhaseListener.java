@@ -53,7 +53,9 @@ public class TokenPhaseListener implements PhaseListener {
 				+ "  submittedToken:" + submittedToken);
 
 		// Check if the submitted token is valid
-		if (!TokenManager.isValidToken(submittedToken)) {
+		if (submittedToken != null && submittedToken.length() > 0
+				&& sessionToken != null && sessionToken.length() > 0
+				&& !TokenManager.isValidToken(submittedToken)) {
 
 			// This is the crucial part: if the tokens don't match or the
 			// session token is null
