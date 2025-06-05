@@ -47,12 +47,14 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItem;//#28854
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;//#28854
+import my.ep.persistence.entity.sc.loaloi.ScLoa;//#15851
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractBaseBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;//#15851
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -206,6 +208,12 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+			
+			//#15851 start
+			if(getManagedBean().getTaskId()!= null){
+				ctBB.getManagedBean().setContractVerIdFromTaskList(reqDTO.getContractVerId());//#15851
+			}
+			//#15851 end
 
 			//CT_CHANGE_LOG
 			ctBB.getManagedBean().setUpdateAgencyMap(resDTO.getUpdateAgencyMap());
@@ -952,4 +960,40 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			getManagedBean().getContractItemList().add(ctContractItem);
 		}*/
 	}
+	
+	//Enhancement 15851, 34142 - shaqimi start 02/12/2022
+	/**
+	 * The method used to navigate to contract details screen
+	 * for view purpose.
+	 * 
+	 * @return the navigate URL 
+	 */
+	@Override
+	public void goToLoaView(ScLoa scLoa) {
+		String slLoaNo = this.getManagedBean().getContractVer().getCtContractValue().getLoaNo();
+		Long contractId = this.getManagedBean().getContractVer().getCtContract().getContractId();
+
+		if(slLoaNo.substring(0,2).equals(ParameterConst.DOCTYPE_SUPPLEMENTAL_CONTRACT_LETTER)){
+			AmendmentBackingBean abb = new AmendmentBackingBean();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			abb.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId()+"?faces-redirect=true");
+			abb.getManagedBean().setTrackingDairyView(true);
+			abb.getManagedBean().setSupplementalLoaNo(slLoaNo);
+			
+			ctBB.getManagedBean().setViewSCL(true);
+			ctBB.getManagedBean().setDocTypeFromTaskList(this.getManagedBean().getContractVer().getDocType());
+			ctBB.getManagedBean().setStatusIdFromTaskList(getManagedBean().getContractVer().getStatus().getStatusId());
+			ctBB.getManagedBean().setContractIdFromTaskList(null);
+			ctBB.getManagedBean().setTaskNameFromTaskList(null);
+
+			if(ctBB.getManagedBean().isViewContractFromAgreement()){
+				ctBB.getManagedBean().setViewSCLFromContract(true);
+			}
+			abb.gotoAmendViewPage(contractId, scLoa.getLoaId());
+		} else {
+			super.goToLoaView(scLoa);
+		}
+	}
+	//Enhancement 15851, 34142 - shaqimi end 02/12/2022
 }
