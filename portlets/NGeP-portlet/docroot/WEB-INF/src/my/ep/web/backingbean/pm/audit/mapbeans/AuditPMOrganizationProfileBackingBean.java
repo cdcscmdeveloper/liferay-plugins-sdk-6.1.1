@@ -141,14 +141,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private void setAddUpdateGeneralDetails() {
 		PmAddress pmAddress = managedBean.getOfficeAddress();
 		PmAddress oldPmAddress = managedBean.getAuditBillingAddress();
-		PmContact officeContactPerson = managedBean.getOfficeContactPerson();
-		PmContact auditContactPerson = managedBean.getAuditContactPerson();
 		String address = "";
 		String oldAddressAppend = "";
-		String officePhoneNo = "";
-		String officeMobileNo = "";
-		String auditPhoneNo = "";
-		String auditMobileNo = "";
 		
 		if (pmAddress != null) {
 			if(!pmAddress.getAddress1().isEmpty()){
@@ -177,7 +171,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				detailObj(AuditConst.PM_AUD_OPM_CITY_TOWN_FIELDLABELCODE, "", pmAddress.getPmCity().getCityName());
 				detailObj(AuditConst.PM_AUD_OPM_POSTCODE_FIELDLABELCODE, "", pmAddress.getPostcode());
 				detailObj(AuditConst.PM_AUD_OPM_COUNTRY_FIELDLABELCODE, "", pmAddress.getPmCountry().getCountryName());
-				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, "", pmAddress.getPhoneFull());
+				detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, "", 
+						pmAddress.getPhoneCountry() + pmAddress.getPhoneArea() + pmAddress.getPhoneNo());
 				
 				if(managedBean.getOfficeContactPerson() != null ){
 					setNewContactPerson(managedBean.getOfficeContactPerson());
@@ -198,38 +193,9 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				    oldAddressAppend += oldPmAddress.getAddress3();
 				}
 				
-				if(!auditContactPerson.getPhoneNo().equals("")){
-					auditPhoneNo = auditContactPerson.getPhoneCountry() + auditContactPerson.getPhoneArea() + 
-							auditContactPerson.getPhoneNo();
-				}
-				if(!auditContactPerson.getMobileNo().equals("")){
-					auditMobileNo = auditContactPerson.getMobileCountry() + auditContactPerson.getMobileArea() + 
-							auditContactPerson.getMobileNo();
-				}
-				
 				if (!address.equals(oldAddressAppend)){
 					docId = pmAddress.getAddressId();
 					detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, oldAddressAppend, address);
-				}
-
-				if(!officeContactPerson.getContactName().equals(auditContactPerson.getContactName())){
-					detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, 
-							auditContactPerson.getContactName(), officeContactPerson.getContactName());					
-				}
-				
-				if(!officePhoneNo.equals(auditPhoneNo)){
-					detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, 
-							auditPhoneNo, officePhoneNo);					
-				}
-				
-				if(!officeContactPerson.getEmail().equals(auditContactPerson.getEmail())){
-					detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, 
-							auditContactPerson.getEmail(), officeContactPerson.getEmail());					
-				}
-				
-				if(!officeMobileNo.equals(auditMobileNo)){
-					detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, 
-							auditMobileNo, officeMobileNo);					
 				}
 				
 				if(pmAddress.getPmDivision() != null){
@@ -259,7 +225,9 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 					detailObj(AuditConst.PM_AUD_OPM_COUNTRY_FIELDLABELCODE, oldPmAddress.getPmCountry().getCountryName(), pmAddress.getPmCountry().getCountryName());
 				}
 				if(!pmAddress.getPhoneFull().equals(oldPmAddress.getPhoneFull())){
-					detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, oldPmAddress.getPhoneFull(), pmAddress.getPhoneFull());
+					detailObj(AuditConst.PM_AUD_OPM_TELNO_FIELDLABELCODE, 
+							oldPmAddress.getPhoneCountry() + oldPmAddress.getPhoneArea() + oldPmAddress.getPhoneNo(), 
+							pmAddress.getPhoneCountry() + pmAddress.getPhoneArea() + pmAddress.getPhoneNo());
 				}
 				if(!pmAddress.getFaxFull().equals(oldPmAddress.getFaxFull())){
 					detailObj(AuditConst.PM_AUD_OPM_FAXNO_FIELDLABELCODE, oldPmAddress.getFaxFull(), pmAddress.getFaxFull());
@@ -283,30 +251,50 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 	
 	private void setContact() {
-		PmContact pmContact = managedBean.getOfficeContactPerson();
-		PmContact oldPmContact = managedBean.getAuditContactPerson();
+		PmContact officeContactPerson = managedBean.getOfficeContactPerson();
+		PmContact auditContactPerson = managedBean.getAuditContactPerson();
+		String officePhoneNo = "";
+		String officeMobileNo = "";
+		String auditPhoneNo = "";
+		String auditMobileNo = "";
+
+		if(!auditContactPerson.getPhoneNo().equals("")){
+			auditPhoneNo = auditContactPerson.getPhoneCountry() + auditContactPerson.getPhoneArea() + 
+					auditContactPerson.getPhoneNo();
+		}
+		if(!auditContactPerson.getMobileNo().equals("")){
+			auditMobileNo = auditContactPerson.getMobileCountry() + auditContactPerson.getMobileArea() + 
+					auditContactPerson.getMobileNo();
+		}
 		
-		if(pmContact != null){
-			docId = pmContact.getContactId();
+		if(!officeContactPerson.getPhoneNo().equals("")){
+			officePhoneNo = officeContactPerson.getPhoneCountry() + officeContactPerson.getPhoneArea() + 
+					officeContactPerson.getPhoneNo();
+		}
+		
+		if(!officeContactPerson.getMobileNo().equals("")){
+			auditMobileNo = officeContactPerson.getMobileCountry() + officeContactPerson.getMobileArea() + 
+					officeContactPerson.getMobileNo();
+		}
 
-			if (!pmContact.getContactName().equals(oldPmContact.getContactName())) {
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, oldPmContact.getContactName(),
-						pmContact.getContactName());
-			}
-
-			if (!pmContact.getEmail().equals(oldPmContact.getEmail())) {
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, oldPmContact.getEmail(), pmContact.getEmail());
-
-			}
-			if (pmContact.getMobileNo() !=null && !pmContact.getMobileNo().equals(oldPmContact.getMobileNo())) {
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, oldPmContact.getMobileNo(),
-						pmContact.getMobileNo());
-
-			}
-			if (pmContact.getPhoneNo() != null && !pmContact.getPhoneNo().equals(oldPmContact.getPhoneNo())) {
-				detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, oldPmContact.getPhoneNo(),
-						pmContact.getPhoneNo());
-			}
+		if(!officeContactPerson.getContactName().equals(auditContactPerson.getContactName())){
+			detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, 
+					auditContactPerson.getContactName(), officeContactPerson.getContactName());					
+		}
+		
+		if(!officePhoneNo.equals(auditPhoneNo)){
+			detailObj(AuditConst.PM_AUD_OPM_CONTACTPHONE_FIELDLABELCODE, 
+					auditPhoneNo, officePhoneNo);					
+		}
+		
+		if(!officeContactPerson.getEmail().equals(auditContactPerson.getEmail())){
+			detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, 
+					auditContactPerson.getEmail(), officeContactPerson.getEmail());					
+		}
+		
+		if(!officeMobileNo.equals(auditMobileNo)){
+			detailObj(AuditConst.PM_AUD_OPM_CONTACTMOBILE_FIELDLABELCODE, 
+					auditMobileNo, officeMobileNo);					
 		}
 	}
 
