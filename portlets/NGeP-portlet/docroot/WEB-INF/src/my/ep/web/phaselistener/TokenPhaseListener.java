@@ -28,34 +28,34 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public void beforePhase(PhaseEvent event) {
-		FacesContext context = event.getFacesContext();
-		if (!context.isPostback()) {
-			return; // Only validate on postbacks
-		}
-
-		String submittedToken = StringUtils.EMPTY;
-		Map<String, String> params = context.getExternalContext()
-				.getRequestParameterMap();
+//		FacesContext context = event.getFacesContext();
+//		if (!context.isPostback()) {
+//			return; // Only validate on postbacks
+//		}
+//
+//		String submittedToken = StringUtils.EMPTY;
+//		Map<String, String> params = context.getExternalContext()
+//				.getRequestParameterMap();
 
 		// Iterate to find the token, as its name might be decorated by JSF
 		// (e.g., form:token_unique_id)
-		for (Map.Entry<String, String> entry : params.entrySet()) {
-			if (entry.getKey().contains(CommonConstants.TOKEN_UNIQUE_ID)) {
-				submittedToken = entry.getValue();
-				break;
-			}
-		}
+//		for (Map.Entry<String, String> entry : params.entrySet()) {
+//			if (entry.getKey().contains(CommonConstants.TOKEN_UNIQUE_ID)) {
+//				submittedToken = entry.getValue();
+//				break;
+//			}
+//		}
 
 		// Get the token from the session (the one rendered with the page)
-		String sessionToken = TokenManager.getSessionToken();
+//		String sessionToken = TokenManager.getSessionToken();
 
-		log.info(">>>>>>>>>>>>>>>>>>>>#38229 sessionToken:" + sessionToken
-				+ "  submittedToken:" + submittedToken);
+//		log.info(">>>>>>>>>>>>>>>>>>>>#38229 sessionToken:" + sessionToken
+//				+ "  submittedToken:" + submittedToken);
 
 		// Check if the submitted token is valid
-		if (submittedToken != null && submittedToken.length() > 0
-				&& sessionToken != null && sessionToken.length() > 0
-				&& !TokenManager.isValidToken(submittedToken)) {
+//		if (submittedToken != null && submittedToken.length() > 0
+//				&& sessionToken != null && sessionToken.length() > 0
+//				&& !TokenManager.isValidToken(submittedToken)) {
 
 			// This is the crucial part: if the tokens don't match or the
 			// session token is null
@@ -76,7 +76,7 @@ public class TokenPhaseListener implements PhaseListener {
 			// "It appears you may have used the browser's back button or the session has expired."));
 
 			// context.renderResponse(); // Block further processing
-		}
+//		}
 	}
 
 	@Override
