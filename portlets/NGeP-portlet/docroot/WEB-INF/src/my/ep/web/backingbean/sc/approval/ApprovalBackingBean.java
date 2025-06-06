@@ -1465,6 +1465,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
+			// #33787 Start Vinod
+			if (qt.getScQtSupplierCriteria() != null && qt.getScQtSupplierCriteria().getMinPaidUpCapital() != null) {
+				qt.getScQtSupplierCriteria().setMinPaidUpCapital(null);
+			}
+			// #33787 End Vinod
 			log.info("^^^^^ updateBpmTask call for QT: "+qt.getQtNo());
 
 			CommitteResDTO committeResDto = null;

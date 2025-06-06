@@ -339,6 +339,7 @@ public interface QTConstants {
 	// #33787 Start Vinod
 	public static final Long APP_VERSION_REDMINE_NO_33787 = 33787L;
 	public static final String COMPANY_TYPE_SSM_G = "G";
+	public static final String LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND = "lbl.sc.spec.paid.up.capital.initial.fund";
 	//#33787 End Vinod
 	// #29187 Start Vinod
 	public static final String LBL_TXT_SELECT = "lbl.txt.select";

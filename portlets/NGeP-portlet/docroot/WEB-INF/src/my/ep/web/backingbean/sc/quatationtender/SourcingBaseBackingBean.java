@@ -7491,4 +7491,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						mofRecordStatus);
 	}
 	// 26247 - end
+	// #33787 Start Vinod
+	/**
+	 * This method is added to display title if the checklist is
+	 * "Modal Berbayar" then display the title from lable.
+	 * 
+	 * @param scQtCheckList
+	 * 
+	 * @return String
+	 * 
+	 */
+	public String getChecklistTitle(ScQtCheckList scQtCheckList) {
+		return null != scQtCheckList.getPmDocument()
+				&& null != scQtCheckList.getPmDocument().getDocDefinitionKey()
+				&& scQtCheckList.getPmDocument().getDocDefinitionKey()
+						.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL) ? getMessageCommon(QTConstants.LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND)
+				: scQtCheckList.getTitle();
+
+	}
+	// #33787 End Vinod
 }

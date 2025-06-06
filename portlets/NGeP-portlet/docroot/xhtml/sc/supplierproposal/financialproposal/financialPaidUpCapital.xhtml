@@ -7,14 +7,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-
-	<p:panel id="supplierProposalandEvaluationPaidUpCapitalAndScoresId" header="#{lbl['lbl.sc.spec.paid.up.capital']}"
+	<ui:remove>#33787 start Vinod updated lable lbl.sc.spec.paid.up.capital to lbl.sc.spec.paid.up.capital.initial.fund 
+	for 3.->2. , 4.->4. and 5.->1.</ui:remove>
+	<p:panel id="supplierProposalandEvaluationPaidUpCapitalAndScoresId" header="#{lbl['lbl.sc.spec.paid.up.capital.initial.fund']}"
 		toggleable="true">
+		<ui:remove>#33787 End Vinod</ui:remove>
 		<table>
 			<tr>
+				<ui:remove>#33787 start Vinod updated lable lbl.sc.paid.up.capital.ringgit to lbl.sc.paid.up.capital.ringgit.initial.fund 
+				for 3.->2. , 4.->4. and 5.->1.</ui:remove>
 				<td style="width: 150px;"><p:outputLabel
-						value="#{lbl['lbl.sc.paid.up.capital.ringgit']}">
+						value="#{lbl['lbl.sc.paid.up.capital.ringgit.initial.fund']}">
 						</p:outputLabel></td>
+						<ui:remove>#33787 End Vinod</ui:remove>
 				<td><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
 						disabled="true">
