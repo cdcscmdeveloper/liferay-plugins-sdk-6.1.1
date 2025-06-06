@@ -1112,6 +1112,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 	
 	public void onChangeState(SmAddress addr, String addrType){
@@ -1153,6 +1154,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 	
 	public void onChangeDivision(SmAddress addr, String addrType){
@@ -1179,6 +1181,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 	
 	public void onChangeDistrict(SmAddress addr, String addrType){
@@ -1201,6 +1204,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+	
+	public void onChangeCity(SmAddress addr, String addrType){
+		addr.setPostcode("");
 	}
 	//#34159 - END
 
@@ -1584,8 +1592,6 @@ public class ForceReplaceSuppAdminBackingBean extends
 				address.setAddress2(new String(refAddress.getAddress2().toString()));
 			if (refAddress.getAddress3() != null)
 				address.setAddress3(new String(refAddress.getAddress3().toString()));
-			if (refAddress.getPostcode() != null)
-				address.setPostcode(new String(refAddress.getPostcode().toString()));
 
 			PmCountry country = new PmCountry();
 			PmState state = new PmState();
@@ -1633,8 +1639,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 			if(refAddress.getPmCity().getCityId() != null){
 				city = SmCommonUtil.getInstance().getCityById(refAddress.getPmCity().getCityId());
 			}
-			//#36716 - END
+			
 			address.setPmCity(city);
+			if (refAddress.getPostcode() != null)
+				address.setPostcode(new String(refAddress.getPostcode().toString()));
+			//#36716 - END
 		}
 	}
 	
