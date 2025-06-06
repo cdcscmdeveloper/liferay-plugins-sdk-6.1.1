@@ -70,6 +70,12 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 
+
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+
+//25791 -end-
+
 /**
  * Bidding Backing Bean
  * 
@@ -1262,8 +1268,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param previousPageUrl
 	 * @return Bidding screen.
 	 */
-	public String bidManagementQuotationTenderAction(ScBidSchedule bid, String previousPageUrl) {
-		getManagedBean().setScheduledBid(bid);
+	public String bidManagementQuotationTenderAction(ScBidScheduleForQt bid, String previousPageUrl) {//25791 
+		//25791 - remove bidding codes start -
+		//getManagedBean().setScheduledBid(bid);
+		//25791 - remove bidding codes end -
 
 		IBiddingSO biddingSO = null;
 		IQTDetailSO qTDetailSO = null;
@@ -1334,12 +1342,28 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 	
+	// 25791 - start added comments-
+	/**
+	 * check screen is qt maintenance or audit or technical supports.
+	 * 
+	 * @return boolean based on screen type.
+	 */
 	public boolean isQTMaintenanceScreen() {
-		return QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
-				|| QTConstants.PORTLET_NAME_QT_SEARCH.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId()) // ***17376#55
-				;
+		return QTConstants.PORTLET_NAME_QT_MAINTENANCE
+				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_SEARCH
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())// ***17376#55
+
+				// 25791 -start-
+				|| QTConstants.PORTLET_NAME_QT_TECHSUPP
+						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+		// 25791 -end-
+
+		;
 	}
-	//#17376-144 End
+
+	// 25791 -end-
+	// #17376-144 End
 	
 	// #28777 & #29729 - Start
 	/**
