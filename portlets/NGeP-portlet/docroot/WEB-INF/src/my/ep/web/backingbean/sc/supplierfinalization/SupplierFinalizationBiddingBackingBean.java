@@ -830,53 +830,26 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 	
-	/**
-	 * @see Bug #31101
-	 * @author shafful To Setting Disciplinary Action during online bidding
-	 *         recommendation Stage
-	 */
+	// 26247 - start
 	private void settingDisciplinaryAction(List<BidPackageBean> biddingPackagePriceList,
-			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {// #28777&#29729
-		IQTDetailSO qtDetailSO;
-		// #26247 - 32802 - Start.
-		Long qtId = null;
-		// #26247 - 32802 - End.
-		try {
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTDetailSO.class);
-			if (biddingPackagePriceList != null && biddingPackagePriceList.size() > 0) {
-				for (BidPackageBean bidPackage : biddingPackagePriceList) {
-					// #26247 - 32802 - Start.
-					if (null != bidPackage.getScQtProposal() && null != bidPackage.getScQtProposal().getScQtSupplier()
-							&& null != bidPackage.getScQtProposal().getScQtSupplier().getScQt()) {
-						qtId = bidPackage.getScQtProposal().getScQtSupplier().getScQt().getQtId();
-					}
-					// #26247 - 32802 - End.
-					bidPackage.getScBidSupplier().setSmSupplier(
-							qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(bidPackage
-									.getScBidSupplier().getSmSupplier(), qtId));
-				}
-
-				if (!isDisqualified) {// #28777 & #29729
-					getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
-				}// #28777 & #29729
-
-			} else {
-				for (BidItemBean bidItem : biddingItemPriceList) {
-					// #26247 - 32802 - Start.
-					if (null != bidItem.getScQtProposal() && null != bidItem.getScQtProposal().getScQtSupplier()
-							&& null != bidItem.getScQtProposal().getScQtSupplier().getScQt()) {
-						qtId = bidItem.getScQtProposal().getScQtSupplier().getScQt().getQtId();
-					}
-					// #26247 - 32802 - End.
-					bidItem.setSupplier(qtDetailSO.retrieveActiveDABySupplierExcludePendingTransaction(
-							bidItem.getSupplier(), qtId));
-				}
-			}
-		} finally {
-			qtDetailSO = null;
-		}
-	}
+			List<BidItemBean> biddingItemPriceList, boolean isDisqualified) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
+			for (BidPackageBean bidPackage : biddingPackagePriceList) {
+				SmSupplier supplier = bidPackage.getScBidSupplier().getSmSupplier();
+				getQTDetailSO().evaluateDisciplinaryActions(supplier, scQt.getQtId());
+			} 
+			if (!isDisqualified) {// #28777 & #29729
+				getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+			}// #28777 & #29729
+		} else if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
+			for (BidItemBean bidItem : biddingItemPriceList) {
+				SmSupplier supplier = bidItem.getSupplier();
+				getQTDetailSO().evaluateDisciplinaryActions(supplier, scQt.getQtId());
+			} 
+		} 
+	} 
+	// 26247 - end
 	
 	private void retrieveBiddingItems(ScheduleBiddingReqDTO reqDTO) {
 		IScheduleBiddingSO scheduleBiddingSO = null;

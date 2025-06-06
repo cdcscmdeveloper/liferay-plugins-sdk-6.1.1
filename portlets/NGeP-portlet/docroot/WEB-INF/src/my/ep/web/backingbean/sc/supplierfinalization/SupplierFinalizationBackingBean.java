@@ -8896,7 +8896,7 @@ public class SupplierFinalizationBackingBean extends
 							}
 							
 							//#21692 - Start
-							resetQualifiedSupplierForMLOI(qualSupplier);
+							resetQualifiedSupplierForMLOIAndBidding(qualSupplier);
 							//#21692 - End
 							
 							recommendationBean = updateCachedData(qualSupplier, 
@@ -9776,11 +9776,7 @@ public class SupplierFinalizationBackingBean extends
 		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
 				IBpmSO.class);
 	}
-	
-	private IQTSuppFinalizationSO getQtSuppFinalizationSO(){
-		return BusinessDelegate.getInstance().getServiceObject(IQTSuppFinalizationSO.class);
-	}
-	
+
 	/**
 	 * 
 	 * @return 
@@ -11659,7 +11655,7 @@ public class SupplierFinalizationBackingBean extends
 						evalResultDtl.isSuppSelectionDisabled(),
 						this.getManagedBean().isDisableSupplierSelection(),
 						isBidding,
-						(supplier.isDisciplinaryActions() && !supplier.isWarningDA()),
+						this.disabledQTProcess(supplier),// 26247
 						periodExtensionRejected, this.isQTMaintenanceScreen(),
 						!(this.getManagedBean().isSecretaryUser() || isBPKTaskAndClaimed) }).contains(Boolean.TRUE);
 	}
@@ -11760,9 +11756,9 @@ public class SupplierFinalizationBackingBean extends
 	//#21692 - End
 	
 	//#21692 - Start
-	private void resetQualifiedSupplierForMLOI(ScQtEvaluationResultDtl qualSupplier) {
-		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
-				.equals(getManagedBean().getFinalizationMethod())) {
+	private void resetQualifiedSupplierForMLOIAndBidding(ScQtEvaluationResultDtl qualSupplier) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod())
+				|| (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(getManagedBean().getFinalizationMethod()) && disagreeProposalValidityExtension(qualSupplier))) {
 			qualSupplier.setShortListed(false);
 		}
 	}
