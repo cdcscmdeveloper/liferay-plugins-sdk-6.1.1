@@ -1519,8 +1519,8 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
-			}
+				/*setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION); //#31181 & #29944
+*/			}
 
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
@@ -10488,7 +10488,6 @@ public class SmApplicationBackingBean extends
 		reqDTO.setChangedBy(new FacesScopes().getUserSessionBean().getUserId());
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
 
-		log.info("31181-applNo:"+getManagedBean().getSmAppl().getApplNo()); //#31181 add log
 		res = res.equals("REJECT") ? SmCommonUtil.getMessage(
 				"lbl.sm.cancelpending.reject.uppercase", null) : SmCommonUtil
 				.getMessage("lbl.sm.cancelpending.approve.uppercase", null);
@@ -10501,10 +10500,7 @@ public class SmApplicationBackingBean extends
 												.getApplNo(), res },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		
-		log.info("31181-message for reject before renew session:"+res); //#31181 add log
 		renewSesionObject();
-		log.info("31181-message for reject after renew session:"+res); //#31181 add log
 		return "cancelPendingAcknowledgePage";
 	}
 
