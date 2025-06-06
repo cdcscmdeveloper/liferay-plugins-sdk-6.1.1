@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Transient;
+
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
@@ -73,7 +75,11 @@ public class BriefingZoneBean implements Serializable {
 	private Long divisionId;
 	private Long cityId;//11104-End
 	
-	
+	// #28777 & #29729 - Start
+	@Transient
+	private boolean branchDeactivated;
+
+	// #28777 & #29729 - End
 
 	/**
 	 * Instantiates a new briefing zone bean.
@@ -438,5 +444,15 @@ public class BriefingZoneBean implements Serializable {
 		this.cityId = cityId;
 	}
 	//11104-End
+	
+	// #28777 & #29729 - Start
+	public boolean isBranchDeactivated() {
+		return branchDeactivated;
+	}
+
+	public void setBranchDeactivated(boolean branchDeactivated) {
+		this.branchDeactivated = branchDeactivated;
+	}
+	// #28777 & #29729 - End
 	
 }
