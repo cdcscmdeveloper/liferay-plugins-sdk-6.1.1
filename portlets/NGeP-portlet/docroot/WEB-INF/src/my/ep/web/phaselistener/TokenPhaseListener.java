@@ -8,6 +8,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
 import my.ep.constants.CommonConstants;
+import my.ep.web.util.TokenManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -42,21 +43,23 @@ public class TokenPhaseListener implements PhaseListener {
 		}
 		PhaseId currentPhaseId = event.getPhaseId();
 
+		String tokenSession = TokenManager.getTokenSession();
+
 		if (currentPhaseId == PhaseId.RESTORE_VIEW) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 RESTORE_VIEW phase token:"
-					+ submittedToken);
+			log.info(">>>>>>>>>>>>>>>>>>>>#38229 RESTORE_VIEW phase submittedToken:"
+					+ submittedToken + "  tokenSession:" + tokenSession);
 		} else if (currentPhaseId == PhaseId.APPLY_REQUEST_VALUES) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 APPLY_REQUEST_VALUES phase token:"
-					+ submittedToken);
+			log.info(">>>>>>>>>>>>>>>>>>>>#38229 APPLY_REQUEST_VALUES phase submittedToken:"
+					+ submittedToken + "  tokenSession:" + tokenSession);
 		} else if (currentPhaseId == PhaseId.PROCESS_VALIDATIONS) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 PROCESS_VALIDATIONS phase token:"
-					+ submittedToken);
+			log.info(">>>>>>>>>>>>>>>>>>>>#38229 PROCESS_VALIDATIONS phase submittedToken:"
+					+ submittedToken + "  tokenSession:" + tokenSession);
 		} else if (currentPhaseId == PhaseId.INVOKE_APPLICATION) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 INVOKE_APPLICATION phase token:"
-					+ submittedToken);
+			log.info(">>>>>>>>>>>>>>>>>>>>#38229 INVOKE_APPLICATION phase submittedToken:"
+					+ submittedToken + "  tokenSession:" + tokenSession);
 		} else if (currentPhaseId == PhaseId.RENDER_RESPONSE) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 RENDER_RESPONSE phase token:"
-					+ submittedToken);
+			log.info(">>>>>>>>>>>>>>>>>>>>#38229 RENDER_RESPONSE phase submittedToken:"
+					+ submittedToken + "  tokenSession:" + tokenSession);
 		}
 
 	}

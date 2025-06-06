@@ -29,20 +29,26 @@ public class TokenManager implements Serializable {
 
 	public static String generateToken() {
 		String token = UUID.randomUUID().toString();
-//		getPortletSession().setAttribute(TOKEN_KEY, token);
+		setTokenSession(token);
 		return token;
 	}
 
 	public static boolean isValidToken(String submittedToken) {
-		String sessionToken = (String) getPortletSession().getAttribute(
-				TOKEN_KEY);
-		return isBackBtnAllowed() ? true
-				: (submittedToken != null && submittedToken
-						.equals(sessionToken));
+		if (isBackBtnAllowed()) {
+			return true;
+		} else {
+			String sessionToken = getTokenSession();
+			return (submittedToken != null && submittedToken
+					.equals(sessionToken));
+		}
 	}
 
-	public static void invalidateToken() {
-		getPortletSession().removeAttribute(TOKEN_KEY);
+	public static String getTokenSession() {
+		return (String) getPortletSession().getAttribute(TOKEN_KEY);
+	}
+
+	public static void setTokenSession(String token) {
+		getPortletSession().setAttribute(TOKEN_KEY, token);
 	}
 
 	private static PortletSession getPortletSession() {

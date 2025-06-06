@@ -27,7 +27,9 @@ public class TokenManagerBean implements Serializable {
 		// first created)
 		// This ensures the token is generated only once per view load.
 		this.token = TokenManager.generateToken();
-		log.info(">>>>>>>>>>>>>>>>>>>>#38229 post construct hidden token:"+getToken());
+		log.info(">>>>>>>>>>>>>>>>>>>>#38229 post construct hidden token:"
+				+ getToken() + "  session token:"
+				+ TokenManager.getTokenSession());
 	}
 
 	public String getToken() {
