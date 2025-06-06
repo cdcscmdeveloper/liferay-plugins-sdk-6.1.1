@@ -48,42 +48,54 @@ public class TokenPhaseListener implements PhaseListener {
 		String loginId = new FacesScopes().getUserScreenName();
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
+		boolean isValid = true;
+		if (isNotEmpty(submittedToken) && isNotEmpty(tokenSession)) {
+			isValid = submittedToken.equals(tokenSession);
+		}
+
+		log.info(">>>>>>>>>>>>>>>>>>>>#38229 " + currentPhaseId
+				+ " submittedToken:" + getPartialToken(submittedToken)
+				+ "  tokenSession:" + getPartialToken(tokenSession)
+				+ "  loginId:" + loginId + " isValid:" + isValid);
 
 		if (currentPhaseId == PhaseId.RESTORE_VIEW) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 RESTORE_VIEW phase submittedToken:"
-					+ submittedToken
-					+ "  tokenSession:"
-					+ tokenSession
-					+ "  loginId:" + loginId);
+
 		} else if (currentPhaseId == PhaseId.APPLY_REQUEST_VALUES) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 APPLY_REQUEST_VALUES phase submittedToken:"
-					+ submittedToken
-					+ "  tokenSession:"
-					+ tokenSession
-					+ "  loginId:" + loginId);
+
 		} else if (currentPhaseId == PhaseId.PROCESS_VALIDATIONS) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 PROCESS_VALIDATIONS phase submittedToken:"
-					+ submittedToken
-					+ "  tokenSession:"
-					+ tokenSession
-					+ "  loginId:" + loginId);
+
 		} else if (currentPhaseId == PhaseId.INVOKE_APPLICATION) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 INVOKE_APPLICATION phase submittedToken:"
-					+ submittedToken
-					+ "  tokenSession:"
-					+ tokenSession
-					+ "  loginId:" + loginId);
+
 		} else if (currentPhaseId == PhaseId.RENDER_RESPONSE) {
-			log.info(">>>>>>>>>>>>>>>>>>>>#38229 RENDER_RESPONSE phase submittedToken:"
-					+ submittedToken
-					+ "  tokenSession:"
-					+ tokenSession
-					+ "  loginId:" + loginId);
+
 		}
 
 	}
 
 	@Override
 	public void afterPhase(PhaseEvent event) {
+	}
+
+	private String getPartialToken(String token) {
+		String firstPartial = "";
+		if (isNotEmpty(token)) {
+			try {
+				String[] parts = token.split("-");
+				if (parts.length > 0) {
+					firstPartial = parts[0];
+				}
+			} catch (Exception ex) {
+
+			}
+		}
+		return firstPartial;
+	}
+
+	private boolean isNotEmpty(String str) {
+		if (str != null && str.length() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
