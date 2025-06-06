@@ -1946,10 +1946,12 @@ public class LOIDetailBackingBean extends
 		} finally {
 		}
 
+		//#21692 - Start
 		if (null != getManagedBean().getRecSupplierList() && !getManagedBean().getRecSupplierList().isEmpty()) {
-			isSupplierEPVStatusRejected(scLoi);//#21692
-			getSupplierRejectProposalValidityExtensionNotification(scLoi);//#21692
+			isSupplierEPVStatusRejected(scLoi);
+			getSupplierRejectProposalValidityExtensionNotification(scLoi);
 		}
+		//#21692 - End
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
