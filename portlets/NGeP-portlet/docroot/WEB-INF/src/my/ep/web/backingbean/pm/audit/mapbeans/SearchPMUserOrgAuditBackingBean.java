@@ -112,9 +112,9 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 
 	AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 
-	public String redirectToDetails(String locationType, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
+	public String redirectToDetails(String paramLevel3, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
 			BigDecimal docGroupId) throws Exception {
-		getManagedBean().setLocationDetailType(locationType);
+		getManagedBean().setParamLevel3(paramLevel3);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
 		getManagedBean().getSearchBean().setRoleCode(roleCode);
