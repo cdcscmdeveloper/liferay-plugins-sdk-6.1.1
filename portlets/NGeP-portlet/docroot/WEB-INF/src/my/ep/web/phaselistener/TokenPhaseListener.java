@@ -54,41 +54,16 @@ public class TokenPhaseListener implements PhaseListener {
 		}
 
 		log.info(">>>>>>>>>>>>>>>>>>>>#38229 " + currentPhaseId
-				+ " submittedToken:" + getPartialToken(submittedToken)
-				+ "  tokenSession:" + getPartialToken(tokenSession)
-				+ "  loginId:" + loginId + " isValid:" + isValid);
-
-		if (currentPhaseId == PhaseId.RESTORE_VIEW) {
-
-		} else if (currentPhaseId == PhaseId.APPLY_REQUEST_VALUES) {
-
-		} else if (currentPhaseId == PhaseId.PROCESS_VALIDATIONS) {
-
-		} else if (currentPhaseId == PhaseId.INVOKE_APPLICATION) {
-
-		} else if (currentPhaseId == PhaseId.RENDER_RESPONSE) {
-
-		}
+				+ " submittedToken:"
+				+ TokenManager.getPartialToken(submittedToken)
+				+ "  tokenSession:"
+				+ TokenManager.getPartialToken(tokenSession) + "  loginId:"
+				+ loginId + " isValid:" + isValid);
 
 	}
 
 	@Override
 	public void afterPhase(PhaseEvent event) {
-	}
-
-	private String getPartialToken(String token) {
-		String firstPartial = "";
-		if (isNotEmpty(token)) {
-			try {
-				String[] parts = token.split("-");
-				if (parts.length > 0) {
-					firstPartial = parts[0];
-				}
-			} catch (Exception ex) {
-
-			}
-		}
-		return firstPartial;
 	}
 
 	private boolean isNotEmpty(String str) {

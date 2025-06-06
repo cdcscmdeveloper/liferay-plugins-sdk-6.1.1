@@ -51,6 +51,21 @@ public class TokenManager implements Serializable {
 		getPortletSession().setAttribute(TOKEN_KEY, token);
 	}
 
+	public static String getPartialToken(String token) {
+		String firstPartial = "";
+		if (token != null && token.length() > 0) {
+			try {
+				String[] parts = token.split("-");
+				if (parts.length > 0) {
+					firstPartial = parts[0];
+				}
+			} catch (Exception ex) {
+
+			}
+		}
+		return firstPartial;
+	}
+
 	private static PortletSession getPortletSession() {
 		return (PortletSession) FacesContext.getCurrentInstance()
 				.getExternalContext().getSession(false);

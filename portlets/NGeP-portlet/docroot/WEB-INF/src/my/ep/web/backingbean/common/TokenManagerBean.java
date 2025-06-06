@@ -8,6 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.TokenManager;
 
 @ManagedBean(name = "tokenManagerMB")
@@ -28,8 +29,9 @@ public class TokenManagerBean implements Serializable {
 		// This ensures the token is generated only once per view load.
 		this.token = TokenManager.generateToken();
 		log.info(">>>>>>>>>>>>>>>>>>>>#38229 post construct hidden token:"
-				+ getToken() + "  session token:"
-				+ TokenManager.getTokenSession());
+				+ TokenManager.getPartialToken(token) + "  session token:"
+				+ TokenManager.getPartialToken(TokenManager.getTokenSession())
+				+ "  loginId:" + new FacesScopes().getUserScreenName());
 	}
 
 	public String getToken() {
