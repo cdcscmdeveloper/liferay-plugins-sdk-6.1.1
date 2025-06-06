@@ -258,8 +258,9 @@
 						disabled="#{lOIDetailBackingBean.managedBean.readOnly}"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 							style="width: 276px;margin-bottom: 5px;"
-							required="#{!lOIDetailBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
+							required="#{!lOIDetailBackingBean.managedBean.readOnly
+							and !lOIDetailBackingBean.isSupplierStatusRejectEPVAndBPMValid(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId)}"
+							label="#{lbl['lbl.sc.loiloa.loi.signer']}"><ui:remove>21692</ui:remove>
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{lOIDetailBackingBean.managedBean.contractSigners}"
 								var="contractUser" itemLabel="#{contractUser.userName}"
@@ -282,7 +283,9 @@
 				</td>
 				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus or lOIDetailBackingBean.managedBean.readOnly}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
-						size="34" maxlength="100" required="#{!lOIDetailBackingBean.managedBean.readOnly}" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
+						size="34" maxlength="100" required="#{!lOIDetailBackingBean.managedBean.readOnly
+						and !lOIDetailBackingBean.isSupplierStatusRejectEPVAndBPMValid(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.supplierId)}"
+						label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}"><ui:remove>21692</ui:remove>
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
 										display="icon" /></td>
 			</tr>
