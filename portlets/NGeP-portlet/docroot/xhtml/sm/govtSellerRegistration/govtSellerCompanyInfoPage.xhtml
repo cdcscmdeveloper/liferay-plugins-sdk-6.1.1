@@ -80,7 +80,7 @@
 				<td class="tdContent">&#160;</td>
 			</tr>
 			<!-- #36718 - START - add panel for refresh address -->
-			<p:panel id="g2gCompAddrPanelId" style="border: none;">
+			<p:outputPanel id="g2gCompAddPanelId" style="border: none;">
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.agency.address']}" />
@@ -105,7 +105,7 @@
 						<f:selectItems var="counLs"
 							value="#{bb.managedBean.countryLs}" />
 						<!-- #36718 - process panel when change address dropdown -->
-						<p:ajax event="change" process="@([id$=g2gCompAddrPanelId])"
+						<p:ajax event="change" process="@([id$=g2gCompAddPanelId])"
 							listener="#{bb.onChangeCountry(registrationBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry,'COMPANY_ADDRESS')}"
 							update="busState,busDivision,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
@@ -131,10 +131,10 @@
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
 							value="#{bb.managedBean.businessStateLs}" />
-						<!-- #36718 - process panel when change address dropdown -->
-						<p:ajax event="change" process="@this @([id$=g2gCompAddrPanelId])"
+						<!-- #36718 - process panel when change address dropdown, update postcode -->
+						<p:ajax event="change" process="@this @([id$=g2gCompAddPanelId])"
 							listener="#{bb.onChangeState(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,'COMPANY_ADDRESS')}"
-							update="pnlCompInfo,busDistrict,divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="pnlCompInfo,busDistrict,divisionCompInfoLabelPanelId,divisionCompInfoDropdownPanelId,busCity,:form:acgmap:gmapInput:gmapInput,compPostCodePanelId" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
 			<!-- 13320 -->
@@ -160,10 +160,10 @@
 								value="#{bb.managedBean.businessDivisionLs}"
 								itemValue="#{divisionBus.divisionId}"
 								itemLabel="#{divisionBus.divisionName}" />
-							<!-- #36718 - process panel when change address dropdown -->
-							<p:ajax event="change" process="@this @([id$=g2gCompAddrPanelId])"
+							<!-- #36718 - process panel when change address dropdown, update postcode -->
+							<p:ajax event="change" process="@this @([id$=g2gCompAddPanelId])"
 								listener="#{bb.onChangeDivision(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDivision,'COMPANY_ADDRESS')}"
-								update="busDistrict,busCity" />
+								update="busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,compPostCodePanelId" />
 						</p:selectOneMenu>
 						<p:message id="busDivisionMsg" for="busDivision" display="icon" />
 						<!-- #34159 - END -->
@@ -190,10 +190,10 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{bb.managedBean.businessDistrictLs}" />
-						<!-- #36718 - process panel when change address dropdown -->
-						<p:ajax event="change" process="@([id$=g2gCompAddrPanelId])" 
+						<!-- #36718 - process panel when change address dropdown, update postcode -->
+						<p:ajax event="change" process="@([id$=g2gCompAddPanelId])" 
 							listener="#{bb.onChangeDistrict(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,'COMPANY_ADDRESS')}"
-							update="busCity,:form:acgmap:gmapInput:gmapInput" />
+							update="busCity,:form:acgmap:gmapInput:gmapInput,compPostCodePanelId" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
 			</tr>
 
@@ -212,12 +212,11 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{bb.managedBean.businessCityLs}" />
-						<!-- #36718 - process panel when change address dropdown -->
-						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput" process="@this @([id$=g2gCompAddrPanelId])"/>
+						<!-- #36718 - process panel, update postcode,listeer -->
+						<p:ajax event="change" update=":form:acgmap:gmapInput:gmapInput,compPostCodePanelId" process="@this @([id$=g2gCompAddPanelId])"
+							listener="#{bb.onChangeCity(bb.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity,'COMPANY_ADDRESS')}"/>
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
-			</p:panel>
-			<!-- #36718 - END -->
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
@@ -252,7 +251,8 @@
 					</p:outputPanel>
 				</td>
 			</tr>
-			
+			</p:outputPanel>
+			<!-- #36718 - END -->
 			<p:outputPanel rendered="#{bb.isShowNewChanges()}">
 			<tr>
 				<td>

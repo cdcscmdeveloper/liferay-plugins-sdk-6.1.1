@@ -300,6 +300,8 @@ public interface QTConstants {
 	
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";//#21692
 	
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
@@ -513,6 +515,10 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
+	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
+	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
+			
 	// 25791-End
 	
 	// 36671 - start
