@@ -24,8 +24,14 @@
 				<h:outputText value="#{historyDtls.approverId.userName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
+			<ui:remove>21692 - Start</ui:remove>
 				<h:outputText
-					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}" />
+					value="#{approvalBackingBean.getParameterDesc(historyDtls.approverAction)}"
+					rendered="#{historyDtls.decessionType eq null}"/>
+				<h:outputText
+					value="#{approvalBackingBean.retrieveApproverAction(historyDtls)}"
+					rendered="#{historyDtls.decessionType ne null}"/>
+			<ui:remove>21692 - End</ui:remove>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.date']}">
 				<h:outputText value="#{historyDtls.approverActionDate}">

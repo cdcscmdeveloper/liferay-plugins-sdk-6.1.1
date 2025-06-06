@@ -12,6 +12,19 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif" />
 		</p:blockUI>
+		<ui:remove>21692 - Start</ui:remove>
+		<c:if test="#{!suppFinalizationBackingBean.checkProposalValidityDateReach(
+		     				suppFinalizationBackingBean.managedBean.scQt.proposalValidityEndDate) and suppFinalizationBackingBean.managedBean.allSupplierDisagreeEPV}">
+			<div class="ui-messages ui-widget">
+				<div class="ui-messages-warn ui-corner-all">
+					<span class="ui-messages-warn-icon"></span>
+					<ul>
+						<li><span class="ui-messages-warn-detail">#{suppFinalizationBackingBean.getNoSupplierWarningMessage()}</span></li>
+					</ul>
+				</div>
+			</div>
+		</c:if>
+		<ui:remove>21692 - End</ui:remove>
 
 		<ui:param name="isQTStatusReFinalized"
 			value="#{suppFinalizationBackingBean.managedBean.qtRefinalized}" />
@@ -57,11 +70,23 @@
 			textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 			postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{suppFinalizationBackingBean.enableAutoUpdate()}" />
-		<div class="BtnSpacing" style="display: inline-block; width: 30%">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-				action="#{suppFinalizationBackingBean.backAction}"
-				rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
-		</div>
+		<ui:remove> #25791 start </ui:remove>
+		<table style="width: 100%">
+			<tr>
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}"
+						immediate="true"
+						action="#{suppFinalizationBackingBean.backAction}"
+						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" /></td>
+
+				<td style="vertical-align: bottom;" align="right"><p:commandLink
+						value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+						action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, suppFinalizationBackingBean.managedBean.scQt.qtId)}"
+						immediate="true"
+						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" /></td>
+			</tr>
+		</table>
+		<ui:remove> #25791 end </ui:remove>
+
 		<div align="right" class="BtnSpacing"
 			style="display: inline-block; width: 100%">
 			<ui:decorate

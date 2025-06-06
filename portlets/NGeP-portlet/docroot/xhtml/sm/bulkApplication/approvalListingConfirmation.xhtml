@@ -51,8 +51,14 @@
 					
 					<br />
 					<p:outputPanel rendered="#{tasks.overlappedCategory}">
-						<font color="red">&#x26A0;</font>&#160;
-						<h:outputText styleClass="warning" value="#{lbl['lbl.txt.alert']}" />&#160;
+						<!-- #13362 START -->
+						<p:graphicImage id="alert-img-overlapcat"
+							style="vertical-align:top"
+							value="/css/images/design/icon_alert.png" />
+						<strong><h:outputText
+								styleClass="warning"
+								value="&#160; #{lbl['lbl.txt.alert']}" /></strong>&#160;
+						<!-- #13362 END -->
 					</p:outputPanel>
 					
 					<table style="width: 100%">
@@ -107,7 +113,8 @@
 							<ui:param name="tableContentRejectedByPO" value="#{tasks.appliedPaginatorRejectedByPO}" />
 						</ui:include>
 					</p:outputPanel>
-					<p:outputPanel rendered="#{tasks.applType ne 'R'}">
+					<ui:remove>#36838</ui:remove>
+					<p:outputPanel rendered="#{tasks.applType ne 'R' and tasks.applType ne 'N'}">
 						<p:outputPanel rendered="#{not empty tasks.pendingApproveCategories}">
 							<ui:include src="approvedCategoryTable.xhtml" />
 							<br /><br />
@@ -117,6 +124,12 @@
 							<ui:include src="approvedCategoryTable.xhtml" />
 						</p:outputPanel>
 					</p:outputPanel>
+					<ui:remove>#36838 - Start</ui:remove>
+					<p:outputPanel
+						rendered="#{tasks.applType eq 'N' and not empty tasks.pendingApproveCategories}">
+						<ui:include src="appliedCategoryTable.xhtml" />
+					</p:outputPanel>
+					<ui:remove>#36838 - End</ui:remove>
 					
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.po.recommend']}" style="width: 20%;white-space: normal;vertical-align: top;word-break: break-all;">

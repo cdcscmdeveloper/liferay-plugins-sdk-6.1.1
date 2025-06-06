@@ -1,14 +1,14 @@
-<u class="txtBold">Manufacturing/Assembly Details</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacture.panHdr')</u>
 <br /><br />
 
 
 <table class="descTable" width="100%">
 		<tr style="background-color:#99ccff;" align="center">
 			<th width="5%" class="txtBold">No</th>
-			<th width="25%" class="txtBold">Product Type</th>
-			<th width="20%" class="txtBold">Brand</th>
-			<th width="10%" class="txtBold">Production Capacity/Month</th>
-			<th width="10%" class="txtBold">Unit of Measurement</th>
+			<th width="25%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacture.prdType')</th>
+			<th width="20%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacture.brand')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacture.prodCapMonth')</th>
+			<th width="10%" class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.manufacture.mesUnit')</th>
 		</tr>
 		
 		#if($manufacturingLs.size() > 0)
@@ -23,7 +23,7 @@
 			#end
 		#else
 			<tr>
-				<td colspan="8" align="center">No Record Found</td>
+				<td colspan="5" align="center">$smVmUtil.getDescByLabel('lbl.datatable.msg.no.records.found')</td>
 			</tr>
 		#end
 </table>

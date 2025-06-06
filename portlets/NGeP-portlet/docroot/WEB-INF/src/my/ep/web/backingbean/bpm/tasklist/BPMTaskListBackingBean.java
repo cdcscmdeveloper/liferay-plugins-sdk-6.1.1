@@ -383,7 +383,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//END - 22211
 			
 			//#25037-START
-			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME + SCProcessNameConst.REVISE_EVALUATION_MEETING, SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_APPROVE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.GENERIC_APPROVAL_REVISE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			//#25037-END
@@ -688,7 +687,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			//END - 22211
 			
 			// #25037-START
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME) + SCProcessNameConst.REVISE_EVALUATION_MEETING, SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.GENERIC_APPROVAL_APPROVE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME) + SCProcessNameConst.GENERIC_APPROVAL_REVISE, SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_REVISE);
 			// #25037-END
@@ -1117,7 +1115,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	    	bpmSO.claimTask(reqDTO);
 		}
 		*/
-
+        
+	   //#37924 - Start
+	   if(this.getManagedBean().getCurrentTaskDocType()!= null){
 		// #21387 - Start
 		if (this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)) {
 
@@ -1131,6 +1131,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					}
 				}
 			}// #21387 - End
+		  }//#37924 - End
 		} else {
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setCtxToken(token);

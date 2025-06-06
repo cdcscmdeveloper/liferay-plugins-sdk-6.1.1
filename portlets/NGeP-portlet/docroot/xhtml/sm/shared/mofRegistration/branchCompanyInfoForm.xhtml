@@ -218,12 +218,16 @@
 	
 			<br />
 			<div align="right">
+			<!-- #34159 - START - add param disableValidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="branchPopUpSaveBtn"
 					action="#{backingBean.addOrUpdateBranchToSmAppl}"
 					partialSubmit="true" process="banchDialog"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
-					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
+					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+			<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignCancelBranchBean}" />

@@ -26,7 +26,8 @@
 					divisionId="staffEquiPersPermDivision" 
 					districtId="staffEquiPersPermDist" cityId="staffEquiPersPermCity" 
 					postCodeId="staffEquiPersPermAddrPostCode"
-					addressType="#{SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL}"/>
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL}"
+					disableValidation="#{param['disableValidation']}"/> <!-- #34159 -->
 					
 				</p:outputPanel></td>
 			<td>
@@ -50,7 +51,8 @@
 					districtId="staffEquiPersMailDist" cityId="staffEquiPersMailCity" 
 					postCodeId="staffEquiPersMailAddrPostCode" showTick="true"
 					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}"
-					addressType="#{SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL}"/>
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL}"
+					disableValidation="#{param['disableValidation']}"/> <!-- #34159 -->
 					
 				</p:outputPanel></td>
 		</tr>
@@ -77,7 +79,8 @@
 					districtId="staffEquiPersResiDist" cityId="staffEquiPersResiCity" 
 					postCodeId="staffEquiPersResiAddrPostCode" showTick="true" 
 					tickLabel="#{lbl['lbl.sm.person.duplicateAddr']}" 
-					addressType="#{SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL}"/>
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL}"
+					disableValidation="#{param['disableValidation']}"/> <!-- #34159 -->
 					
 				</p:outputPanel></td>
 			<td><p:outputPanel id="staffOffcAddrPan" layout="block"
@@ -100,7 +103,8 @@
 					districtId="staffEquiPersOffcDist" cityId="staffEquiPersOffcCity" 
 					postCodeId="staffEquiPersOffcAddrPostCode" showTick="true"
 					tickLabel="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}"
-					addressType="#{SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL}"/>
+					addressType="#{SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL}"
+					disableValidation="#{param['disableValidation']}"/> <!-- #34159 -->
 					
 				</p:outputPanel></td>
 		</tr>

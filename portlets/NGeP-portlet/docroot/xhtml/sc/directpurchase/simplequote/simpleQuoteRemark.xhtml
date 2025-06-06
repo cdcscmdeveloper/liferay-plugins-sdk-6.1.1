@@ -8,6 +8,6 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
 		showAttachment="false"
-		readonly="#{!isEditable}" />
+		readonly="#{!isEditable or simpleQuoteBackingBean.managedBean.trackingDairyView}" /><ui:remove>25790</ui:remove>
 
 </ui:composition>
