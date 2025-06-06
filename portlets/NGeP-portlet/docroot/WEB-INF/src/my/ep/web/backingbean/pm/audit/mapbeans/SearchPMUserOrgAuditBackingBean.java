@@ -15,13 +15,12 @@ import org.primefaces.context.RequestContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.common.audit.IAuditPMSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.VAuditPMDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.profilemanagementsearch.ProfileManagementSearchBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -228,9 +227,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 				return resDTO;
 
 			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(MessageConst.ERROR_770005);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "SearchMasterPagingDataModel", "resDTO",
+						"searchResult", Long.parseLong(getManagedBean().getSearchBean().getCreatedBy()), e);
 			}
+			return null;
 		}
 	}
 
@@ -289,9 +289,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 				return resDTO;
 
 			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(MessageConst.ERROR_770005);
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "SearchDetailPagingDataModel", "resDTO",
+						"searchResult", Long.parseLong(getManagedBean().getSearchBean().getCreatedBy()), e);
 			}
+			return null;
 		}
 	}
 
