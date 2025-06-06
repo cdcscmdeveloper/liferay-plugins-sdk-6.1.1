@@ -79,6 +79,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private SmPersonnelAddress updateSmPersonnelOffAddress;
 	private SmPersonnelAddress updateSmPersonnelResAddress;
 	
+	//#36718 - START
+	private SmPersonnelAddress latestBasicSmPersonnelMailingAddress;
+	private SmPersonnelAddress latestBasicSmPersonnelResidentialAddress;
+	private SmPersonnelAddress latestBasicSmPersonnelOfficeAddress;
+	//#36718 - END
+	
 	private Long resDivisionId;
 	private boolean resDivisionBox=true;
 	private Long offDivisionId;
@@ -1176,4 +1182,30 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.oldOrg = oldOrg;
 	}
 	// #28895_35501 End
+
+	//#36718 - START
+	public SmPersonnelAddress getLatestBasicSmPersonnelMailingAddress() {
+		return latestBasicSmPersonnelMailingAddress;
+	}
+
+	public void setLatestBasicSmPersonnelMailingAddress(SmPersonnelAddress latestBasicSmPersonnelMailingAddress) {
+		this.latestBasicSmPersonnelMailingAddress = latestBasicSmPersonnelMailingAddress;
+	}
+
+	public SmPersonnelAddress getLatestBasicSmPersonnelResidentialAddress() {
+		return latestBasicSmPersonnelResidentialAddress;
+	}
+
+	public void setLatestBasicSmPersonnelResidentialAddress(SmPersonnelAddress latestBasicSmPersonnelResidentialAddress) {
+		this.latestBasicSmPersonnelResidentialAddress = latestBasicSmPersonnelResidentialAddress;
+	}
+
+	public SmPersonnelAddress getLatestBasicSmPersonnelOfficeAddress() {
+		return latestBasicSmPersonnelOfficeAddress;
+	}
+
+	public void setLatestBasicSmPersonnelOfficeAddress(SmPersonnelAddress latestBasicSmPersonnelOfficeAddress) {
+		this.latestBasicSmPersonnelOfficeAddress = latestBasicSmPersonnelOfficeAddress;
+	}
+	//#36718 - END
 }

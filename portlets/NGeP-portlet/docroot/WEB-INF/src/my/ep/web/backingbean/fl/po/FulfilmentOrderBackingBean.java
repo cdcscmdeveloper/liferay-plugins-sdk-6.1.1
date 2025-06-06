@@ -832,7 +832,7 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsg(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -852,28 +852,6 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				FulfilmentStatusConst.CO_PENDING_CANCELLATION_SUBMISSION));
 		return pendingStatusIds.contains(statusId);
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 */
-	public void setDisciplinaryActionMsg(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 	
 	/**
@@ -1673,9 +1651,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-//				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
 //				getManagedBean().setHyperLinkPage(true);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -1719,9 +1697,9 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 				}
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-//				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
 //				getManagedBean().setHyperLinkPage(true);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setSelectedTabIndex(0);
 				getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -2298,20 +2276,18 @@ public class FulfilmentOrderBackingBean extends FulfilmentBaseBackingBean<Fulfil
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFlRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFlRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFlRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
 	// 26279 - end

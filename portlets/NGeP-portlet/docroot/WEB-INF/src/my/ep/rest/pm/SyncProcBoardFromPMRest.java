@@ -297,18 +297,23 @@ public class SyncProcBoardFromPMRest {
 			reqDTO = new UserReqDTO();
 			reqDTO.setLoginId(loginId);
 			resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginId(reqDTO);
+			log.info("TB DEV ISLAND: AFTER GET USER");
 			if(resDTO.getPmUser() == null){
+				log.info("TB DEV ISLAND: GET USER INACTIVE");
 				resDTO = SmServiceLookup.getUserSO().retrieveUserByLoginIdInactive(reqDTO);
 			}
 			if(resDTO.isSuccessful() && resDTO.getPmUser()!=null)
-			{
-				userId = resDTO.getPmUser().getUserId();
+			{	
+				userId = resDTO.getPmUser().getUserId();log.info("TB DEV ISLAND:USERID="+userId);
 				reqDTO = new UserReqDTO();
 				reqDTO.setLoginId(loginId);
 				reqDTO.setUserId(userId);
 				reqDTO.setSupplierUser(false);
+				log.info("TB DEV ISLAND:START TO SYNC");
 				resDTO = SmServiceLookup.getUserSO().createnSyncLiferayAndOimRoleFromPm(reqDTO);
 				log.info("End Sync user by login Id: " + resDTO.isSuccessful());
+			}else{
+				log.info("TB DEV ISLAND:RESPONS IS FAIL TO GET USER OR USER IS NULL");
 			}
 			
 			log.info("Finished Sync By Login Id");			

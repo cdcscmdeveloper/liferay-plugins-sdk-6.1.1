@@ -29,7 +29,7 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ProfilePersonalizationManagedBean mBean = (ProfilePersonalizationManagedBean) managedBean;
@@ -37,24 +37,44 @@ public class AuditSupplierManagementUserProfileBackingBean extends AuditSupplier
 		PmUser oldUser = mBean.getOldSelectedUser();
 		PmUser newUser = mBean.getSelectedUser();
 
-		String oldPhoneNo = oldUser.getMobileCountry() + oldUser.getMobileArea() + oldUser.getMobileNo();
-		String newPhoneNo = newUser.getMobileCountry() + newUser.getMobileArea() + newUser.getMobileNo();
-
-		if (!oldPhoneNo.equalsIgnoreCase(newPhoneNo)) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_MOBILE_NO, oldPhoneNo, newPhoneNo, null, null,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_MOBILE_NO));
-		}
+		// #35501_Reopen#63 Start
+		String oldPhoneNo = getPhoneNo(oldUser);
+		String newPhoneNo = getPhoneNo(newUser);
+		if (getActionType(oldPhoneNo, newPhoneNo) != null) {
+			auDetails.add(createAuditData(getActionType(oldPhoneNo, newPhoneNo), AuditSupplierManagementConst.AU_FIELD_LABEL_ID_MOBILE_NO,
+					oldPhoneNo, newPhoneNo, null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_MOBILE_NO));
+		} 
+		// #35501_Reopen#63 End
 
 		if (!oldUser.getEmail().equalsIgnoreCase(newUser.getEmail())) {
-			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
-					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EMAIL, oldUser.getEmail(), newUser.getEmail(), null,
-					null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EMAIL));
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY, AuditSupplierManagementConst.AU_FIELD_LABEL_ID_EMAIL,
+					oldUser.getEmail(), newUser.getEmail(), null, null, AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_EMAIL));
 		}
 
 		auditBaseData(auObj, mBean.getCurrentProfile().getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO);
+				AuditSupplierManagementConst.AU_GROUP_SECTION_USER_INFO, loginUserId);
 		return auObj;
 	}
+	// #35501_Reopen#63 Start
+	private String getActionType(String oldValue, String newValue) {
+		String actionType = null;
+		if (oldValue == null && newValue != null) {
+			actionType = AuditSupplierManagementConst.AU_ACTION_TYPE_ADD;
+		} else if (oldValue != null && newValue != null && !oldValue.equalsIgnoreCase(newValue)) {
+			actionType = AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY;
+		} else if (oldValue != null && newValue == null) {
+			actionType = AuditSupplierManagementConst.AU_ACTION_TYPE_DELETE;
+		}
+		return actionType;
+	}
+ 
+	private String getPhoneNo(PmUser user) {
+		String phoneNo = null;
+		if (!"null".equalsIgnoreCase(user.getMobileNo()) && user.getMobileNo() != null && !user.getMobileNo().isEmpty()) {
+			phoneNo = user.getMobileCountry() + user.getMobileArea() + user.getMobileNo();
+		}
+		return phoneNo;
+	}
+	// #35501_Reopen#63 End
 
 }

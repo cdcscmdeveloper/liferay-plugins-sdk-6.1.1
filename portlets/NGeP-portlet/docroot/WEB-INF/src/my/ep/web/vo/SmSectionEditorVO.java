@@ -66,7 +66,7 @@ public class SmSectionEditorVO implements Serializable {
 	private boolean hasOverlapped;
 	
 	//#28895_35501 - AUDIT TRAIL SM
-	private boolean suppEditAduitTrail;
+	private boolean suppEditAuditTrail;
 	
 	public boolean isPoEditCompBasic() {
 		return poEditCompBasic;
@@ -335,12 +335,12 @@ public class SmSectionEditorVO implements Serializable {
 	//#31230 END
 	
 	//#28895_35501 Start - AUDIT TRAIL SM
-	public boolean isSuppEditAduitTrail() {
-		return suppEditAduitTrail;
+	public boolean isSuppEditAuditTrail() {
+		return suppEditAuditTrail;
 	}
 
-	public void setSuppEditAduitTrail(boolean suppEditAduitTrail) {
-		this.suppEditAduitTrail = suppEditAduitTrail;
+	public void setSuppEditAuditTrail(boolean suppEditAuditTrail) {
+		this.suppEditAuditTrail = suppEditAuditTrail;
 	}
 	//#28895_35501 End
 }

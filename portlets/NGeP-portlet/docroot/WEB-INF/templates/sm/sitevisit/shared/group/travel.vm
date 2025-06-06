@@ -12,10 +12,10 @@
 			<tr>
 				<td>$velocityCount</td>
 				<td>
-				#if(!$travel.machineId)
+				#if($!travel.systemName)
 					$!travel.systemName
 				#else
-					$!travel.machineDesc
+					$!travel.system.machineDesc
 				#end				
 				</td>
 			</tr>

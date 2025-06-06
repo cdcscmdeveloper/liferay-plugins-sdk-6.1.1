@@ -201,7 +201,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
-	
+
+	// #31503 - Start
+	private String itemCodeDesc;
+	private Object[] objSelected;
+	private boolean renderButtonAssignCode;
+	// #31503 - End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -1454,7 +1459,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setTempBrandName(String tempBrandName) {
 		this.tempBrandName = tempBrandName;
 	}
-
+	
+	//[#26282] disciplinary action - start
 	public boolean isDaWarning() {
 		return daWarning;
 	}
@@ -1486,7 +1492,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setDaBlacklistOwner(boolean daBlacklistOwner) {
 		this.daBlacklistOwner = daBlacklistOwner;
 	}
-
+	//[#26282] disciplinary action - End
+	
 	/*[#27625] begin*/
 	public String getTypeName() {
 		return typeName;
@@ -1512,4 +1519,30 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+
+	// #31503 -start-
+	public String getItemCodeDesc() {
+		return itemCodeDesc;
+	}
+
+	public void setItemCodeDesc(String itemCodeDesc) {
+		this.itemCodeDesc = itemCodeDesc;
+	}
+
+	public Object[] getObjSelected() {
+		return objSelected;
+	}
+
+	public void setObjSelected(Object[] objSelected) {
+		this.objSelected = objSelected;
+	}
+
+	public boolean isRenderButtonAssignCode() {
+		return renderButtonAssignCode;
+	}
+
+	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
+		this.renderButtonAssignCode = renderButtonAssignCode;
+	}
+	// #31503 -end-
 }

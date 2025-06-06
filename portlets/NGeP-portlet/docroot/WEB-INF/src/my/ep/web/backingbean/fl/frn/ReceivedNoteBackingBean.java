@@ -190,7 +190,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				
 				// 36247-Start
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-					validatePOCOCurrentStatus(action);// 36361
+					validatePOCOCurrentStatus(action, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());// 36361
 				}
 				// 36247-End
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
@@ -551,21 +551,27 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
 				//35024-Start - for performance bond checking
-				if(!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-					
-				}
-				else //35024-End
-				//28719-start
-				if(!resDTOInvoice.isSupplementContractComplete() && !resDTOInvoice.isCrComplete()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-					
-				}else//28719-end
-				if(!resDTOInvoice.isCrComplete()){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				if (!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
+
+				}// 35024-End
+				else if (!resDTOInvoice.isSupplementContractComplete() && !resDTOInvoice.isCrComplete()) { // 28719-start
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
+
+				} else if (!resDTOInvoice.isCrComplete()) { // 28719-end
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
 				}
 			}
 			/*#14650 - Ending*/
@@ -601,7 +607,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsgFRN(smDisciplinaryAction);
+				getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -621,28 +627,6 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				FulfilmentStatusConst.FN_PENDING_CANCEL_SUBMISSION, FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT));
 		return pendingStatusIds.contains(statusId);
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 */
-	public void setDisciplinaryActionMsgFRN(SmDisciplinaryAction smDisciplinaryAction) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 
 	/**
@@ -767,11 +751,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.act.received.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
-		
 		// 36361 - start
 		if (outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)
 				|| outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_APPROVE)) {
-			validatePOCOCurrentStatus(outcome);
+			validatePOCOCurrentStatus(outcome, getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 		}
 		// 36361 - end
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
@@ -1105,7 +1088,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
 				doBB.getManagedBean().setSmDisciplinaryAction(smDisciplinaryAction);
-				setDisciplinaryActionMsgDO(smDisciplinaryAction, doBB);
+				doBB.getManagedBean().setDisciplinaryActionMessage(getDisciplinaryActionMsg(smDisciplinaryAction));
 			} else {
 				doBB.getManagedBean().setDisciplinaryActionMessage(StringUtils.EMPTY);
 			}
@@ -1122,34 +1105,10 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	private boolean isDisciplinaryActionDOPendingStatus(DeliveryOrderBackingBean doBB) {
 		Long statusId = doBB.getManagedBean().getFulfilmentOrder().getStatus().getStatusId();
 		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
-				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_REVISION, FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
+				FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT, FulfilmentStatusConst.DO_PENDING_CANCELLATION_APPROVAL,
+				FulfilmentStatusConst.DO_PENDING_MODIFICATION_APRROVAL));
 		return pendingStatusIds.contains(statusId);
 	}
-
-	/**
-	 * Sets the disciplinary action message
-	 * 
-	 * @param smDisciplinaryAction
-	 * @param doBB
-	 */
-	public void setDisciplinaryActionMsgDO(SmDisciplinaryAction smDisciplinaryAction, DeliveryOrderBackingBean doBB) {
-		boolean isWarningOnly = false;
-		String warningOrDisciplinaryActionMsg;
-		String language = new FacesScopes().getUserLocale().getLanguage();
-		if (isWarningOnly(smDisciplinaryAction)) {
-			isWarningOnly = true;
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			doBB.getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		} else if (!isWarningOnly(smDisciplinaryAction)) {
-			warningOrDisciplinaryActionMsg = getDisciplinaryActionMsg(smDisciplinaryAction.getStartDate(),
-					smDisciplinaryAction.getEndDate(), language, isWarningOnly);
-			doBB.getManagedBean().setDisciplinaryActionMessage(warningOrDisciplinaryActionMsg);
-		}
-	}
-
 	// 26279 - End
 	
 	
@@ -1250,7 +1209,8 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				getManagedBean().setSelectedTabIndex(0);
-				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+				getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);//36519
+//				getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.//36519
 				getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 				getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
@@ -1858,23 +1818,21 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	 * View list of Disciplinary Action
 	 */
 	public void viewDisciplinaryAction() {
-		SmSupplier currSupp;
+		SmSupplier supplier;
 
 		if (getManagedBean().getFulfilmentRequest().getSmSupplier() != null) {
-			currSupp = getManagedBean().getFulfilmentRequest().getSmSupplier();
-		} else {
-			currSupp = SmApplicationUtil.getCurrentSupplier();
+			supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			supplier.setFlagSupplier(true);
+			supplier.setFlagDASuppProfile(true);
+
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
+					.getDisciplinaryActionVO(supplier);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
+			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
-
-		currSupp.setFlagSupplier(true);
-		currSupp.setFlagDASuppProfile(true);
-
-		List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean.getDisciplinaryActionVO(currSupp);
-		getManagedBean().setDisciplineVO(disciplinaryActionVOs);
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 	}
 
-	// 26279 - end	
+	// 26279 - end
 	
 	// 28855 - start
 	/**
@@ -1937,7 +1895,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setDpFlag(true);
 			String supplierOffer = getManagedBean().getSupplierOffer();
 			if (supplierOffer != null && supplierOffer.length() > 0) {
-				String trimWipDpZone = supplierOffer.replace("<br/>", "");
+				String trimWipDpZone = supplierOffer.replace("<br/>", " ");
 				getManagedBean().setSupplierOffer(trimWipDpZone);
 			}
 		} else {
@@ -1988,10 +1946,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 	/**
 	 * validate current POCO work flow status
 	 * @param action
+	 * @param deliveryOrderId
 	 * @throws EpException if not allow to proceed
 	 * 
 	 */
-	private void validatePOCOCurrentStatus(String action) {// 36361
+	private void validatePOCOCurrentStatus(String action, Long deliveryOrderId) {// 36361
 		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 				IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -2001,6 +1960,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		reqDTO.setDocType(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocType());
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 		reqDTO.setActionCode(action);// 36361
+		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();

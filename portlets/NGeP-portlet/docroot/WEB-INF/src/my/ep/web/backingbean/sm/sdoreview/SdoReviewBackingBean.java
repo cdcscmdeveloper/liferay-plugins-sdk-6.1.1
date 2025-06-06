@@ -487,6 +487,24 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	//#34392 - end
 	
 	/**
+	 * re-select doc file before opening popup
+	 * 
+	 * @param applInquiry
+	 */
+	public List<SmApplInquiryDocFile> reselectDocFileValue(
+			long applSupportDocInquiryId) {
+		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate
+				.getInstance().getServiceObject("sm",
+						ISupportingDocInquirySO.class);
+		
+		SupportingDocInquiryResDTO resDTO = reqSO
+				.retrieveInquiryFileByApplSupportDocId(applSupportDocInquiryId);
+
+		return resDTO.getSmApplInquiryDocFileList();
+	}
+	// #34392 - end
+	
+	/**
 	 * update unselectedSuppLs when user check/ uncheck the receive status
 	 * @param SmApplSupportDoc applSuppDoc
 	 */

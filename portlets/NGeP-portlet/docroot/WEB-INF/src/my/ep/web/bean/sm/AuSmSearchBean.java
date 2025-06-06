@@ -17,6 +17,7 @@ public class AuSmSearchBean implements Serializable {
 	private BigInteger docId;
 	private String docType;
 	private BigDecimal auGroupSection;
+	private BigInteger userId;
 
 	public String getLanguage() {
 		return language;
@@ -48,5 +49,13 @@ public class AuSmSearchBean implements Serializable {
 
 	public void setAuGroupSection(BigDecimal auGroupSection) {
 		this.auGroupSection = auGroupSection;
+	}
+
+	public BigInteger getUserId() {
+		return userId;
+	}
+
+	public void setUserId(BigInteger userId) {
+		this.userId = userId;
 	}
 }

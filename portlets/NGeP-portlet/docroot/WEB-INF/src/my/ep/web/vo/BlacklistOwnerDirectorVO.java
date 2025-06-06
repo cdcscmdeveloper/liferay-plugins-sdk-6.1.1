@@ -2,8 +2,7 @@ package my.ep.web.vo;
 
 import java.io.Serializable;
 
-import my.ep.persistence.entity.sm.SmAppl;
-
+/** @author  */
 public class BlacklistOwnerDirectorVO implements Serializable{
 	/**
 	 * 

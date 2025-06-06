@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
 <h:head>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -12,14 +13,18 @@
 	
 	<!-- #14118 - Start -->
 	<style>
-	.disabled { 
-    	background: #c1c1c1 none repeat scroll 0 0 !important;
-    	color: #f8f8f8 !important;
-    	cursor: default !important;
-    	font-size: 12px !important;
-   		font-weight: bold !important;
-	}
-	</style>
+.disabled {
+	background: #c1c1c1 none repeat scroll 0 0 !important;
+	color: #f8f8f8 !important;
+	cursor: default !important;
+	font-size: 12px !important;
+	font-weight: bold !important;
+}
+
+.commandLink_link { /*25791 start */
+	color: #009ae5 !important;
+} /*25791 end */
+</style>
 	<!-- #14118 - End -->
 
 	<!--  	<h:outputScript library="my.ac/js" name="cc.js" />-->
@@ -30,7 +35,7 @@
        	  var value = 0;
        	  total = element.value.split(/\n[\r\n]*/).length;
        		  <!-- #18685 - Start -->
-        	  if ( total > limit-total-1) { 
+        	  if ( element.value.length > limit-total-1) { 
                    element.value = element.value.substring(0, limit-total-1); 
               } 
         	  <!-- #18685 - End -->
@@ -129,7 +134,19 @@
 	    	  $(this).attr("autocomplete", "off");
 	    	})
 		})
-    	
+		
+		<!--#36681 - start -->
+			function limitTextAreaWithBreakline(element, limit) {
+				  const value = element.value;
+				  const valueTrim = value.substring(0, limit); 
+				  const newlines = valueTrim.split("\n").length - 1; // Count newlines
+				  const charCount = valueTrim.length + newlines; // Add 1 for each newline
+				  if (charCount > limit) {
+				    const allowedChars = limit - newlines; 
+				    element.value = valueTrim.substring(0, allowedChars); 
+				  }
+				}
+		 <!--#36681 - end -->
 	</script>
 </h:head>
 
@@ -137,6 +154,22 @@
 
 
 	<h:form id="form">
+		
+		 <h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
+		
+	    <!-- <p:dialog width="200px" height="50px" 
+				header="#{lbl['lbl.back.btn.err.header']}" widgetVar="#{CommonConstants.GLOBAL_MESSAGE_ID}"
+				resizable="false" showEffect="fade" closable="true" hideEffect="fade"
+				modal="true" id="#{CommonConstants.GLOBAL_MESSAGE_ID}">
+				<f:facet name="header">
+			        <h:panelGroup>
+			            <p:graphicImage value="/css/images/messages/error.png" width="16" height="16" style="margin-right: 8px; vertical-align: middle;" />
+			            <h:outputText value="#{lbl['lbl.back.btn.err.header']}" style="vertical-align: middle;" />
+			        </h:panelGroup>
+			    </f:facet>
+				<h:outputText style="font-weight:bold;" styleClass="warning" value="#{lbl['lbl.back.btn.err.msg']}" />
+		</p:dialog> -->
+	    
 		<div id="content" style="width: 100%;">
 		
 			<ui:insert name="titleSection"/>

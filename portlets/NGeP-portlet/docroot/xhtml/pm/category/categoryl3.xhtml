@@ -109,7 +109,7 @@
 							<!-- start #29665 add listener and update remark -->
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" process="@this" update="@this,remarkFieldId" 
-								listener="#{categoryBackingBean.onchangeDiscription}"
+								listener="#{categoryBackingBean.onChangeDescription}"
 								disabled="#{!categoryBackingBean.remarkDisable}" /> 
 							</c:if>
 							<c:if test="#{categoryBackingBean.managedBean.newCategory}">
@@ -212,7 +212,7 @@
 							<!-- start #29665 add ajax -->
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" update="remarkFieldId" 
-								listener="#{categoryBackingBean.onchangeDiscription}"
+								listener="#{categoryBackingBean.onChangeDescription}"
 								disabled="#{!categoryBackingBean.remarkDisable}" /> 
 							</c:if>
 							<!-- end #29665 add ajax-->
@@ -288,7 +288,7 @@
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" update="remarkFieldId"
 								disabled="#{!categoryBackingBean.remarkDisable}" 
-								listener="#{categoryBackingBean.onchangeDiscription}"/> 
+								listener="#{categoryBackingBean.onChangeDescription}"/> 
 							</c:if>
 							<!-- end #29665 add ajax-->
 						</p:selectOneMenu></td>
@@ -312,7 +312,7 @@
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" update="remarkFieldId"
 								 disabled="#{!categoryBackingBean.remarkDisable}"
-								 listener="#{categoryBackingBean.onchangeDiscription}"/> 
+								 listener="#{categoryBackingBean.onChangeDescription}"/> 
 							</c:if>
 						</p:selectBooleanCheckbox>
 					</td>
@@ -337,7 +337,7 @@
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" update="remarkFieldId"
 								disabled="#{!categoryBackingBean.remarkDisable}" 
-								listener="#{categoryBackingBean.onchangeDiscription}"/> 
+								listener="#{categoryBackingBean.onChangeDescription}"/> 
 							</c:if>
 							<!-- end #29665 add ajax -->
 						</p:selectOneMenu> <p:message id="supplierTypeUpdateIdMsg"
@@ -381,7 +381,7 @@
 							<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 								<p:ajax event="change" update="remarkFieldId"
 								disabled="#{!categoryBackingBean.remarkDisable}" 
-								listener="#{categoryBackingBean.onchangeDiscription}"/> 
+								listener="#{categoryBackingBean.onChangeDescription}"/> 
 							</c:if>
 							<!-- end #29665 add ajax -->
 						</p:selectOneMenu></td>
@@ -700,7 +700,7 @@
 											<p:ajax event="change"
 												disabled="#{!categoryBackingBean.remarkDisable}"
 												update=":form:remarkFieldId"
-												listener="#{categoryBackingBean.onchangeDiscription}" />
+												listener="#{categoryBackingBean.onChangeDescription}" />
 										</c:if>
 									</p:selectManyCheckbox>
 									<!-- end #29665 new checkbox -->
@@ -721,7 +721,7 @@
 										<p:ajax event="change"
 										disabled="#{!categoryBackingBean.remarkDisable}"
 										update=":form:remarkFieldId"
-										listener="#{categoryBackingBean.onchangeDiscription}"/> 
+										listener="#{categoryBackingBean.onChangeDescription}"/> 
 									</c:if>
 									
 								</p:inputText>

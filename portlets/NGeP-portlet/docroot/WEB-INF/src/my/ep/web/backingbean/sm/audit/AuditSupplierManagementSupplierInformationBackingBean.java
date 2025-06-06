@@ -33,7 +33,7 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 	 * @return AuditSupplierManagementDTO
 	 */
 	@Override
-	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org) {
+	public AuditSupplierManagementDTO prepareAuditData(BaseManagedBean managedBean, String roleCode, PmOrgProfile org, Long loginUserId) {
 		AuditSupplierManagementDTO auObj = new AuditSupplierManagementDTO();
 		ViewSuppProfileManagedBean mBean = (ViewSuppProfileManagedBean) managedBean;
 		List<AuditSupplierManagementDetailDTO> auDetails = new ArrayList<>();
@@ -45,20 +45,16 @@ public class AuditSupplierManagementSupplierInformationBackingBean extends Audit
 		reqDTO.setLanguageCode(AuditSupplierManagementConst.AU_LANGUAGE_CODE_BAHASA);
 		descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
 
-		if (!oldSmAppl.getPmRegStatus().getPmStatus().getStatusId()
-				.equals(newSmAppl.getPmRegStatus().getPmStatus().getStatusId())) {
-			auDetails.add(createAuditData(
-					AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
+		if (!oldSmAppl.getPmRegStatus().getPmStatus().getStatusId().equals(newSmAppl.getPmRegStatus().getPmStatus().getStatusId())) {
+			auDetails.add(createAuditData(AuditSupplierManagementConst.AU_ACTION_TYPE_MODIFY,
 					AuditSupplierManagementConst.AU_FIELD_LABEL_ID_REGISTRATION_STATUS,
-					getPmStatusDescs(descList, oldSmAppl.getPmRegStatus().getPmStatus()
-							.getStatusId()),
-					getPmStatusDescs(descList, newSmAppl.getPmRegStatus().getPmStatus()
-							.getStatusId()), oldSmAppl.getPmRegStatus().getPmStatus().getStatusId(), newSmAppl
-							.getPmRegStatus().getPmStatus().getStatusId(),
+					getPmStatusDescs(descList, oldSmAppl.getPmRegStatus().getPmStatus().getStatusId()),
+					getPmStatusDescs(descList, newSmAppl.getPmRegStatus().getPmStatus().getStatusId()), oldSmAppl.getPmRegStatus().getPmStatus()
+							.getStatusId(), newSmAppl.getPmRegStatus().getPmStatus().getStatusId(),
 					AuditSupplierManagementConst.AU_FIELD_LABEL_CODE_REGISTRATION_STATUS));
 		}
-		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails,
-				AuditSupplierManagementConst.AU_GROUP_SECTION_SUPPLIER_INFO);
+		auditBaseData(auObj, mBean.getSmSupplier(), roleCode, org, auDetails, AuditSupplierManagementConst.AU_GROUP_SECTION_SUPPLIER_INFO,
+				loginUserId);
 		return auObj;
 	}
 

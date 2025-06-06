@@ -524,9 +524,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_CANCELLATION_LOA_APPROVAL);
 			//END - 22211
 			//#25037-START
-			temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME
-					+ SCProcessNameConst.REVISE_EVALUATION_MEETING,
-					SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME
 					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
@@ -647,6 +644,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					"contract-suspension");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_SUSPEND_ACTIVE_PROCESS_NAME),
 					"contract-suspension");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_INIT_PROCESS_NAME), contractReqadminConstStr);
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_PROCESS_NAME), contractReqadminConstStr);
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.REQUEST_CONTRACT_ADMIN_APPROVER_INIT_PROCESS_NAME), contractReqadminConstStr);
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_CONTRACT_AMENDMENT,
 					"contract-amendment");
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME)+ ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
@@ -669,6 +669,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)+ CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME,
 					"change-bank-account");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_NAME), "contract-owner-management");
+			temp.put(getProcessNameRemoveSpace(CTProcessNameConst.CONTRACT_OWNER_MANAGEMENT_INITIATION_PROCESS_NAME), "contract-owner-management");
 
 			// Fulfilment Management - Start
 			temp.put(getProcessNameRemoveSpace(FLProcessNameConst.PHIS_CONTRACT_REQ_INITIATION_PROCESS_NAME)+ FLProcessNameConst.SUBMIT_PHIS_CR, "contract-request");
@@ -1073,9 +1075,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 					SourcingConstants.NAV_PAGE_FC_SUPPLIER_FINALIZATION);
 			// #27502 - End 
 			//#25037-START
-			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME)
-					+ SCProcessNameConst.REVISE_EVALUATION_MEETING,
-					SourcingConstants.NAV_PAGE_REVISE_EVAL_MEETING);
 			temp.put(getProcessNameRemoveSpace(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME)
 					+ SCProcessNameConst.GENERIC_APPROVAL_APPROVE,
 					SourcingConstants.NAV_PAGE_GENERIC_APPROVAL_APPROVE);
@@ -1575,7 +1574,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	    	bpmSO.claimTask(reqDTO);
 		}
 		*/
-
+	   
+	  //#37924 - Start
+	  if(this.getManagedBean().getCurrentTaskDocType()!= null){
 		//#21387 - Start
 		if(this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_AGREEMENT) || this.getManagedBean().getCurrentTaskDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
 			
@@ -1588,7 +1589,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 						 claimTaskByTaskId(getDocNumber.getTaskId());
 					 } 
 				 } 
-			}//#21387 - End			
+			}//#21387 - End
+		  }//#37924 - End
 		}else{
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 	    	reqDTO.setCtxToken(token);

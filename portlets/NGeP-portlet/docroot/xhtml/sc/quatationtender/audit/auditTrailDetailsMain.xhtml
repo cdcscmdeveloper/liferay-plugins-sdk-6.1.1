@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
+
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<div class="BtnSpacing" style="display: inline-block; width: 100%">
+						<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+							action="#{auditQTBackingBean.backAction}" />
+					</div>
+				</td>
+				<td>
+					<div align="right" style="width: 100%">
+						<p:commandLink value="#{lbl['lbl.txt.print.audit.all']}"
+							ajax="false">
+							<p:fileDownload
+								value="#{auditQTBackingBean.generateAllReport(auditQTBackingBean.managedBean.qtId)}" />
+						</p:commandLink>
+						&#160;
+						<p:commandLink value="#{lbl['lbl.txt.file.audit.download.all']}"
+							ajax="false">
+							<p:fileDownload
+								value="#{auditQTBackingBean.getAuditTrailDetailsForExlRpt(auditQTBackingBean.managedBean.qtId, null)}" />
+						</p:commandLink>
+						&#160;
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<p:tabMenu id="tab"
+			activeIndex="#{auditQTBackingBean.managedBean.activeIndex}"
+			style="width: 100%;">
+			<p:menuitem value="#{lbl['lbl.audit.tab.general.information']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(0)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.brief.site.visit']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(1)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.tab.supplier.list']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(2)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.desk.officer.assistant']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(3)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.tab.desk.officer']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(4)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.spec.committee.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(5)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.eval.committee.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(6)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.tech.committee.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(7)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.tab.finance.committee.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(8)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.opening.committee.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(9)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.quot.committee.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(10)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+			<p:menuitem value="#{lbl['lbl.audit.procurement.board.appoint']}"
+				actionListener="#{auditQTBackingBean.onTabMenuChangeAction(11)}"
+				process="@form" update="@form" partialSubmit="true"
+				style="width:80%;">
+			</p:menuitem>
+		</p:tabMenu>
+
+		<p:panel id="tabPanel">
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '0'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/generalInformationTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '1'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/briefingOrSiteVisitTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '2'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/supplierListTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '3'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/deskOfficerAssistantTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '4'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/deskOfficerTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '5'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/specComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '6'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/evalComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '7'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/techComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '8'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/financialComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '9'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/openingComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '10'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/quotationComAppointTab.xhtml" />
+			</c:if>
+			<c:if test="#{auditQTBackingBean.managedBean.activeIndex eq '11'}">
+				<ui:include
+					src="/xhtml/sc/quatationtender/audit/procureBoardAppointTab.xhtml" />
+			</c:if>
+		</p:panel>
+
+
+	</ui:define>
+</ui:composition>
