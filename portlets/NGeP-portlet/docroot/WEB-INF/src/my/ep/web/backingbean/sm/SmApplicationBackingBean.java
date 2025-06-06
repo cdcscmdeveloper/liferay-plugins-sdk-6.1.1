@@ -1519,8 +1519,8 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
-			}
+				/*setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION); //#31181 & #29944
+*/			}
 
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
