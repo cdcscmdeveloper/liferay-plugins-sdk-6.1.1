@@ -493,6 +493,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);
 		}
+		dtlObj.setGroupOrgProfileId(this.orgProfileId);
 		dtlObj.setNewValue(newValue);
 		dtlObj.setActionType(actionType);
 		objList.add(dtlObj);
