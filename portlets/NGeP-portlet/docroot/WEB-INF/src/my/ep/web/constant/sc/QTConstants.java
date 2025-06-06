@@ -308,8 +308,8 @@ public interface QTConstants {
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
 	
 	//#21692 - Start
-	public static final String PORTLET_NAME_QT_LOI_LIST="scLoiList_WAR_NGePportlet";
-	public static final String PORTLET_NAME_QT_LOI_REVIEW="scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOI_LIST = "scLoiList_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
 	//#21692 - End
 
 	// #29007 Start Vinod
