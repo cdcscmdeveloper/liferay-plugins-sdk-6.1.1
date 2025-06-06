@@ -11305,23 +11305,23 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (reqDTO.getOutcome()
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
 			SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
-			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName().isEmpty() 
+			notif.setCompanyName(!getManagedBean().getSmSupplier().getCompanyName().isEmpty() 
 					? getManagedBean().getSmSupplier().getCompanyName() : " ");
-			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo().isEmpty() 
+			notif.setBusinessRegNo(!getManagedBean().getSmSupplier().getRegNo().isEmpty() 
 					? getManagedBean().getSmSupplier().getRegNo() : " ");
 			notif.setNotifLink(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
 			notif.setApplSubmitDate(new Time(getManagedBean().getSmAppl().getApplSubmitDate().getTime()));
 			notif.setApplRejectDate(new Time(new Date().getTime()));
-			notif.setMofNo(getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
+			notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
 					? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
-			notif.setCompanyAddr(this.getManagedBean().getSmAppl().getSmCompanyBasic()
+			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getSmCompanyAddresses().isEmpty() ? addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
-			notif.setSuppReason(getManagedBean().getSupplierRemarks().isEmpty() 
+			notif.setSuppReason(!getManagedBean().getSupplierRemarks().isEmpty() 
 					? getManagedBean().getSupplierRemarks() : " ");
-			notif.setPoReason(getManagedBean().getApplnRejectionRemarks().isEmpty() 
+			notif.setPoReason(!getManagedBean().getApplnRejectionRemarks().isEmpty() 
 					? getManagedBean().getApplnRejectionRemarks() : " ");
 			smAppCanObj.setNotificationData(notif);
 		}
