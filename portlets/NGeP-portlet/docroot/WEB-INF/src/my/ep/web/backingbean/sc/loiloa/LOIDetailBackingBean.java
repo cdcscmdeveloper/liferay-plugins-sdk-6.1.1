@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -2029,8 +2030,12 @@ public class LOIDetailBackingBean extends
 			getLOITaskId();
 		}
 
-		isSupplierEPVStatusRejected(scLoi);//#21692
-		getSupplierRejectProposalValidityExtensionNotification(scLoi);//#21692
+		//#21692 - Start
+		if (null != getManagedBean().getRecSupplierList() && !getManagedBean().getRecSupplierList().isEmpty()) {
+			isSupplierEPVStatusRejected(scLoi);
+			getSupplierRejectProposalValidityExtensionNotification(scLoi);
+		}
+		//#21692 - End
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
@@ -6965,11 +6970,8 @@ public class LOIDetailBackingBean extends
 		List<Long> suppList = new ArrayList<>();
 		suppList.add(scLoi.getScLoiLoa().getSmSupplier().getSupplierId());
 
-		if (null != getManagedBean().getRecSupplierList() && !getManagedBean().getRecSupplierList().isEmpty()
-				&& !suppList.isEmpty()) {
-			// will return true if the supplier reject EPV
-			supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
-		}
+		// will return true if the supplier reject EPV
+		supplierStatus = detailSO.checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
 
 		// all status stated in FRS for 21692
 		List<Long> statusEnabledCancel = new ArrayList<>();
@@ -7011,8 +7013,8 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private boolean isLoiListPortlet() {
-		return QTConstants.PORTLET_NAME_QT_LOI_LIST
-				.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
+		return QTConstants.PORTLET_NAME_QT_LOI_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+				|| QTConstants.PORTLET_NAME_QT_LOI_REVIEW.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId());
 	}
 	//#21692 - End
 	
@@ -7301,6 +7303,54 @@ public class LOIDetailBackingBean extends
 		}
 
 		return supplierStatus;
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * check supplier response for proposal validity extension
+	 * and BPM validity for the task
+	 * 
+	 * @param supplierId
+	 * @return TRUE IF supplier Rejected Validity Extension
+	 */
+	public boolean isSupplierStatusRejectEPVAndBPMValid(Long supplierId) {
+		boolean supplierStatus = false;
+
+		List<Long> suppList = new ArrayList<>();
+		if (null != supplierId) {
+			suppList.add(supplierId);
+			supplierStatus = getQTDetailSO().checkSupplierEPVStatus(getManagedBean().getScQt().getQtId(), suppList);
+		}
+
+		return supplierStatus
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * check supplier response for proposal validity extension,
+	 * BPM validity for the task and status
+	 * 
+	 * @return TRUE IF all condition met
+	 */
+	public boolean isApproverAbleToSave() {
+		return !this.getManagedBean().isAbleToSubmitLOI()
+				&& this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_APPROVAL);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Do not render cancel button for approver when LOI at Approval
+	 * 
+	 * @return
+	 */
+	public boolean disableCancelForApprover() {
+		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
 	}
 	//#21692 - End
 }
