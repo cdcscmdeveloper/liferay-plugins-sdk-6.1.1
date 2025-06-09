@@ -11305,9 +11305,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (reqDTO.getOutcome()
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
 			SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
-			notif.setCompanyName(!getManagedBean().getSmSupplier().getCompanyName().isEmpty() 
+			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
 					? getManagedBean().getSmSupplier().getCompanyName() : " ");
-			notif.setBusinessRegNo(!getManagedBean().getSmSupplier().getRegNo().isEmpty() 
+			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
 					? getManagedBean().getSmSupplier().getRegNo() : " ");
 			notif.setNotifLink(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
@@ -11319,9 +11319,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getSmCompanyAddresses().isEmpty() ? addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
-			notif.setSuppReason(!getManagedBean().getSupplierRemarks().isEmpty() 
+			notif.setSuppReason(getManagedBean().getSupplierRemarks() != null 
 					? getManagedBean().getSupplierRemarks() : " ");
-			notif.setPoReason(!getManagedBean().getApplnRejectionRemarks().isEmpty() 
+			notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
 					? getManagedBean().getApplnRejectionRemarks() : " ");
 			smAppCanObj.setNotificationData(notif);
 		}
@@ -18513,9 +18513,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return String
 	 */
 	public String addressFormat(SmAddress addr) {
-        List<String> addrlist = Arrays.asList(addr.getAddress1(), addr.getAddress2(), addr.getAddress3(), 
-        		addr.getPmDistrict().getDistrictName(), addr.getPmCity().getCityName(), addr.getPmDivision().getDivisionName(),
-        		addr.getPmState().getStateName());
+		if (addr == null) {
+	        return "";
+	    }
+
+	    List<String> addrlist = Arrays.asList(
+	        addr.getAddress1(),
+	        addr.getAddress2(),
+	        addr.getAddress3(),
+	        (addr.getPmDistrict() != null ? addr.getPmDistrict().getDistrictName() : null),
+	        (addr.getPmCity() != null ? addr.getPmCity().getCityName() : null),
+	        (addr.getPmDivision() != null ? addr.getPmDivision().getDivisionName() : null),
+	        (addr.getPmState() != null ? addr.getPmState().getStateName() : null)
+	    );
         
         // Catter null address
         List<String> cleanedAddr = new ArrayList<String>();
