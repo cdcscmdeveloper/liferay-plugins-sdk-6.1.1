@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -6982,6 +6983,17 @@ public class LOIDetailBackingBean extends
 		return !this.getManagedBean().isAbleToSubmitLOI()
 				&& this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
 						.equals(QTStatusConst.LOI_PENDING_APPROVAL);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Do not render cancel button for approver when LOI at Approval
+	 * 
+	 * @return
+	 */
+	public boolean disableCancelForApprover() {
+		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
 	}
 	//#21692 - End
 }
