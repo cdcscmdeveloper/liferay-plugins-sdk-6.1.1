@@ -4893,6 +4893,9 @@ public class RuleCatalogueBackingBean extends
 									clone.getExpDate() != null ?  DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,clone.getExpDate()) : "-",
 									approval.getExpDate() != null ? DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,approval.getExpDate()) : "-"
 							};
+							/************ AUDIT #28895_35509 *************/
+							auditMatchedIdUpdateList(clone, 2);
+							/************ END AUDIT #28895_35509 *************/
 							addTrackingDiaryIntoList(messageId, params, approval, reqDTO);		
 						} 
 						/*

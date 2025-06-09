@@ -43,8 +43,10 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		ProfCertifiedBodyManagedBean managedBeans = (ProfCertifiedBodyManagedBean) manageBean;
 
+		String docType = managedBeans.getCertBody().getBodyName();
+		
 		dtlObjName.setRoleCode(roleCode);
-		dtlObjName.setDocType(AuditConst.PM_AUD_CERT_BODY);
+		dtlObjName.setDocType(docType);
 		dtlObjName.setPmParameterLvlId(AuditConst.PM_AUD_CERT_BODY_PMPARAMETERLVLID);
 		dtlObjName.setDocNo(managedBeans.getCertBody().getBodyCode());
 		dtlObjName.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -54,7 +56,7 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObjName.setFieldLabelCode(AuditConst.PM_AUD_CERT_BODY_NAME_FIELDLABELID);
 
 		dtlStatus.setRoleCode(roleCode);
-		dtlStatus.setDocType(AuditConst.PM_AUD_CERT_BODY);
+		dtlStatus.setDocType(docType);
 		dtlStatus.setPmParameterLvlId(AuditConst.PM_AUD_CERT_BODY_PMPARAMETERLVLID);
 		dtlStatus.setDocNo(managedBeans.getCertBody().getBodyCode());
 		dtlStatus.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -64,7 +66,7 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 		dtlStatus.setFieldLabelCode(AuditConst.PM_AUD_CERT_BODY_STATUS_FIELDLABELID);
 
 		dtlObjGLP.setRoleCode(roleCode);
-		dtlObjGLP.setDocType(AuditConst.PM_AUD_CERT_BODY);
+		dtlObjGLP.setDocType(docType);
 		dtlObjGLP.setPmParameterLvlId(AuditConst.PM_AUD_CERT_BODY_PMPARAMETERLVLID);
 		dtlObjGLP.setDocNo(managedBeans.getCertBody().getBodyCode());
 		dtlObjGLP.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -74,7 +76,7 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObjGLP.setFieldLabelCode(AuditConst.PM_AUD_CERT_BODY_GLP_FIELDLABELID);
 
 		dtlObjCertified.setRoleCode(roleCode);
-		dtlObjCertified.setDocType(AuditConst.PM_AUD_CERT_BODY);
+		dtlObjCertified.setDocType(docType);
 		dtlObjCertified.setPmParameterLvlId(AuditConst.PM_AUD_CERT_BODY_PMPARAMETERLVLID);
 		dtlObjCertified.setDocNo(managedBeans.getCertBody().getBodyCode());
 		dtlObjCertified.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -84,7 +86,7 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObjCertified.setFieldLabelCode(AuditConst.PM_AUD_CERT_BODY_CERT_FIELDLABELID);
 
 		dtlObjProfessional.setRoleCode(roleCode);
-		dtlObjProfessional.setDocType(AuditConst.PM_AUD_CERT_BODY);
+		dtlObjProfessional.setDocType(docType);
 		dtlObjProfessional.setPmParameterLvlId(AuditConst.PM_AUD_CERT_BODY_PMPARAMETERLVLID);
 		dtlObjProfessional.setDocNo(managedBeans.getCertBody().getBodyCode());
 		dtlObjProfessional.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
@@ -138,7 +140,7 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 
 		if (managedBeans.getOldAuditPmCertBody().getDescription() != null
 				&& !managedBeans.getOldAuditPmCertBody().getDescription()
-						.equalsIgnoreCase(managedBeans.getCertBody().getBodyName())) {
+						.equalsIgnoreCase(managedBeans.getCertBody().getDescription())) {
 
 			dtlObjName.setOldValue(managedBeans.getOldAuditPmCertBody().getDescription());
 			dtlObjName.setNewValue(managedBeans.getCertBody().getDescription());
@@ -147,8 +149,8 @@ public class AuditPMProfCertBodyBackingBean extends AuditPMBackingBeanTemplate {
 			auditPMReqDTO.setObjList(objList);
 		}
 
-		if (managedBeans.getCertBody().getRecordStatusFlg() != managedBeans.getOldAuditPmCertBody()
-				.getRecordStatusFlg()) {
+		if (!managedBeans.getCertBody().getRecordStatusFlg().equals(managedBeans.getOldAuditPmCertBody()
+				.getRecordStatusFlg())) {
 
 			dtlStatus
 					.setOldValue(managedBeans.getOldAuditPmCertBody().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE

@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.ct.audit.IAuditContractSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -65,6 +66,9 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	private static final String METHOD_NAME = "insertAudit";
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
+	
+	private transient IAuditTrailSO auditTrailAuSo = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 
 	/**
 	 * AuditContractBackingBean
@@ -618,4 +622,18 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 					auCtData.getCreatedBy(), ex);
 		}
 	}
+	
+	/**
+	 * Retrieves the audit configuration state for the Audit CT module.
+	 *
+	 * @return {@code true} if the audit configuration for the Audit CT module is enabled;
+	 *         {@code false} otherwise.
+	 */
+	public boolean getAuditCtConfigState() {
+		boolean auditCtConf;
+		auditCtConf = auditTrailAuSo.isAuditConfig(AuditContractConst.CT_AU_CONF);
+
+		return auditCtConf;
+	}
+	
 }

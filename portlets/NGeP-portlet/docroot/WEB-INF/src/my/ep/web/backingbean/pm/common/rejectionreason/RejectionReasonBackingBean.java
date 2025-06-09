@@ -22,10 +22,12 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -51,6 +53,8 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMReasonMaintenanceBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ReasonSearchBean;
@@ -147,6 +151,15 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void deleteReasonApplicability(int rowIndex){
 		log.info("...............deleteReasonApplicability................");
 
+		// 35509
+		if (getManagedBean().getDeletePIDReasonList() == null) {
+			getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());
+		}
+
+		this.getManagedBean().getDeletePIDReasonList()
+				.add(this.getManagedBean().getSelectedReason().getPmPIDReasonList().get(rowIndex));
+		// 35509
+		
 			this.getManagedBean().getSelectedReason().getPmPIDReasonList()
 					.remove(rowIndex);
 	}
@@ -379,6 +392,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
 			}
+			this.getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());// 35509
 		
 		}catch (Exception e){
 			e.printStackTrace();
@@ -523,6 +537,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				this.getManagedBean().getSelectedReason().setByAppType(true);
 				for(PmSupplierReason tempReason:this.getManagedBean().getAppTypeRestrictions()){
 					if(tempReason.isBrandNew()){
+						addAuditAppTypeRestrictions(tempReason); // 35509
 						if(!tempReason.isSelected()){
 							if(this.getManagedBean().getSelectedReason().getPmSupplierReasons()==null){
 								this.getManagedBean().getSelectedReason().setPmSupplierReasons(new ArrayList<PmSupplierReason>());
@@ -559,6 +574,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 							this.getManagedBean().getSelectedReason().addPmSupplierReason(tempReason);
 							tempReason.setSelected(true);
 						}
+						addAuditComTypeRestrictions(tempReason);// 35509
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
@@ -589,6 +605,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 							this.getManagedBean().getSelectedReason().addPmSupplierReason(tempReason);
 							tempReason.setSelected(true);
 						}
+						addAuditSuppTypeRestrictions(tempReason);// 35509
 					}else{
 						if(!tempReason.isSelected()){
 							for (int i=0; i <this.getManagedBean().getSelectedReason().getPmSupplierReasons().size(); i++){
@@ -719,13 +736,31 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				getManagedBean().getSelectedReason().getRecordStatusFlg().intValue()){
 			validateRejectionDesc();
 		}
+		/************ AUDIT #28895-35509*************/
+		AuditPMBackingBeanTemplate auTemplate = new AuditPMReasonMaintenanceBackingBean(); 
+		IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IAuditPMSO.class);
+		PmReason selectedPmReason = this.getManagedBean().getSelectedReason();
 		
+		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON) && selectedPmReason.getReasonId() != null) {
+			PmReason oldPmReason = retrieveReasonObjById(selectedPmReason.getReasonId());
+			getManagedBean().setOldPmReason(oldPmReason);
+		}
+		/************ AUDIT #28895-35509 END*************/
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
 			returnPage = createRejectReason(this.getManagedBean().getSelectedReason());
 		}else{
 			returnPage = updateRejectReason(this.getManagedBean().getSelectedReason());
 		}
 		log.info("saveRejectReason - End");
+		
+		/************ AUDIT *************/
+		if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_REASON)) {
+			
+			auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_REASON);
+		}
+		/************ AUDIT *************/
+		
 		return returnPage;
 //		if(isSuccess){
 //			return this.redirectToSearchReason();
@@ -785,6 +820,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(resDTO.isSuccessful()){
 //				loadRejectReason(resDTO.getPmReason().getReasonId());
 				log.info("createRejectReason - successful"); //TODO 770015
+				getManagedBean().setNewPmReason(resDTO.getPmReason()); // 35509 Audit PM
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
@@ -810,11 +846,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		try{
 			List<PmPIDReason> toDeletePReasons  = new ArrayList<PmPIDReason>();
 			List<PmPIDReason> toReplacePReasons  = new ArrayList<PmPIDReason>();
+			List<PmPIDReason> auditPIDReason  = new ArrayList<>(); // 35509
 			for(PmPIDReason pidReason: rejectReason.getPmPIDReasonList()){
 				log.info(".............pidReason="+pidReason.getDocType());
 				if(pidReason.isBrandNew()){
 					log.info(".......pidReason.isBrandNew()"+pidReason.isBrandNew());
 					log.info(".......this.getPmPidListOrigin().size()"+this.getManagedBean().getPmPidListOrigin().size());
+					auditPIDReason.add(pidReason); // 35509
 					for(PmPIDReason pReason: this.getManagedBean().getPmPidListOrigin()){
 						log.info(".......pReason.getDocType="+pReason.getDocType());
 					    if(pidReason.getDocType().equals(pReason.getDocType())){
@@ -837,7 +875,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			rejectReason.getPmPIDReasonList().removeAll(toDeletePReasons);
 			rejectReason.getPmPIDReasonList().addAll(toReplacePReasons);
-			
+			/************ AUDIT #28895-35509 START*************/
+			if (getManagedBean().getAuditAddPIDReasonList() == null) {
+				getManagedBean().setAuditAddPIDReasonList(new ArrayList<PmPIDReason>());
+			}
+			this.getManagedBean().getAuditAddPIDReasonList().addAll(auditPIDReason);
+			/************ AUDIT #28895-35509 END*************/
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setPmReason(rejectReason);
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);	
@@ -1559,21 +1602,28 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason = getManagedBean().getAppTypeRestrictions()
 					.get(rowIndex);
 			supplierReason.setDeleted(true);
-			getManagedBean().getAppTypeRestrictions().remove(supplierReason);		
+			getManagedBean().getAppTypeRestrictions().remove(supplierReason);
+			
+//			getManagedBean().getAuditDeleteSuppTypeRestrictions().add(supplierReason); // 35509
 		}else if(restrictionType == RESTR_COMP){
 			supplierReason = getManagedBean().getComTypeRestrictions()
 					.get(rowIndex);
 			supplierReason.setDeleted(true);
 			getManagedBean().getComTypeRestrictions().remove(supplierReason);	
-			
+//			getManagedBean().getAuditDeleteComTypeRestrictions().add(supplierReason); // 35509
 		}else if(restrictionType == RESTR_SUPP){
 			supplierReason = getManagedBean().getSuppTypeRestrictions()
 					.get(rowIndex);
 			supplierReason.setDeleted(true);
 			getManagedBean().getSuppTypeRestrictions().remove(supplierReason);
-			
+//			getManagedBean().getAuditDeleteSuppTypeRestrictions().add(supplierReason); //35509
 		}
-		
+		/**
+		 * 35509
+		 * private List <PmSupplierReason> auditDeleteAppTypeRestrictions;
+	private List <PmSupplierReason> auditDeleteComTypeRestrictions;
+	private List <PmSupplierReason> auditDeleteSuppTypeRestrictions;
+		 */
 		if(supplierReason != null && !supplierReason.isBrandNew()){
 			if(getManagedBean().getDeleteRestrictions() == null){
 				getManagedBean().setDeleteRestrictions(new ArrayList<PmSupplierReason>());
@@ -1804,4 +1854,38 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	//#8411 - END
+	
+	//35509
+	/**
+	 * 	private List <PmSupplierReason> auditAddAppTypeRestrictions;
+	private List <PmSupplierReason> auditAddComTypeRestrictions;
+	private List <PmSupplierReason> auditAddSuppTypeRestrictions;
+	 * @param pmSupplierReason
+	 */
+	private void addAuditAppTypeRestrictions(PmSupplierReason pmSupplierReason){
+		
+		if(this.getManagedBean().getAuditAddAppTypeRestrictions()==null){
+			this.getManagedBean().setAuditAddAppTypeRestrictions(new ArrayList<PmSupplierReason>());
+		}
+		this.getManagedBean().getAuditAddAppTypeRestrictions().add(pmSupplierReason);
+	}
+	
+	private void addAuditComTypeRestrictions(PmSupplierReason pmSupplierReason){
+		
+		if(this.getManagedBean().getAuditAddComTypeRestrictions()==null){
+			this.getManagedBean().setAuditAddComTypeRestrictions(new ArrayList<PmSupplierReason>());
+		}
+		this.getManagedBean().getAuditAddComTypeRestrictions().add(pmSupplierReason);
+	}
+
+	private void addAuditSuppTypeRestrictions(PmSupplierReason pmSupplierReason){
+	
+	if(this.getManagedBean().getAuditAddSuppTypeRestrictions()==null){
+		this.getManagedBean().setAuditAddSuppTypeRestrictions(new ArrayList<PmSupplierReason>());
+	}
+	this.getManagedBean().getAuditAddSuppTypeRestrictions().add(pmSupplierReason);
+}
+	
+	//35509 - END
+	
 }

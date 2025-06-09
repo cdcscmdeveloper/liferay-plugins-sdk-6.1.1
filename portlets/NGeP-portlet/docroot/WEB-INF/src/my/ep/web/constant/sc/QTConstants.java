@@ -300,6 +300,8 @@ public interface QTConstants {
 	
 	//21692 QT Bpm Composite Version Validity ID
 	public static final Long ALLOW_CANCEL_LOA_LOI_FOR_EPV = 21692L;
+
+	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";//#21692
 	
 	//#29468 Start Vinod
 	public static final String TEMPLATE_CHANGE_VALUE = "value";
@@ -346,6 +348,7 @@ public interface QTConstants {
 	public static final String VIEW_ZONE_QUANTITY_POPUP = "viewZoneQuantityPopup.show()";
 	public static final String REQUESTCONTEXT_INSTANCE_UPDATE_ALL = "@all";
 	public static final String LBL_SC_TEC_COMPLIANCE = "lbl.sc.tec.compliance";
+	public static final String LBL_TPL_SPEC_CONTENT_USER_SCORE = "lbl.tpl.spec.content.user.score";
 	// #29187 End Vinod
 	public static final String CONFIRM_BRIEF_POPUP = "confirmBriefPopup.show()";//sonarQube Issue 2 #91 # Vinod #Added
 	
@@ -463,10 +466,6 @@ public interface QTConstants {
 		FIN_CHECKLIST_DOC_DEFINATION_KEY_AL
 	};
 	public static final String FILE_EXTENSION_TYPE_PDF = ".pdf";
-	public static final String PARAM_MAP_QTID = "qtid";
-	public static final String PARAM_MAP_P_QTCHECKLISTIDS = "p_qtchecklistids";
-	public static final String PARAM_MAP_P_LANGUAGE = "p_language";
-	public static final String PARAM_MAP_PUSER = "puser";
 	// #10141 End Vinod
 	
 	public static final String PORTLET_ID = "PORTLET_ID";
@@ -511,6 +510,10 @@ public interface QTConstants {
 	public static final String CONTRACT_STATUS_COMPLETE = "lbl.ct.complete";
 	public static final String CONTRACT_STATUS_INCOMPLETE = "lbl.ct.incomplete";
 	public static final String CONTRACT_STATUS_NOT_APPLICABLE = "lbl.ct.not.applicable";
+	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
+	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
+	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
+			
 	// 25791-End
 	
 	// 36671 - start

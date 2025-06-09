@@ -829,7 +829,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	
 	private void validateUpdateDisciplinaryAction(SmDisciplinaryAction da){
-		if (da.getDisciplinaryActionId() == null){
+		validateRequiredPunishmentTypes();  //38289
+		if (da.getDisciplinaryActionId() == null || !getManagedBean().isEditDisciplinaryActionCheckBox()){ //38290
 			return;
 		}
 		SmDisciplinaryAction oldDA = SmApplicationUtil.retrieveActiveSmDisciplinaryActionByDisciplinaryId(
@@ -856,8 +857,29 @@ public class SupplierDataMaintenanceBackingBean extends
 		isSameType &= getManagedBean().isCancelCategoryCode() == oldDA.isCancelCategory();
 		isSameType &= getManagedBean().isManufacturerStatusCancel() == oldDA.isManufacturerCancel();
 		isSameType &= getManagedBean().isBumiputeraStatusCancel() == oldDA.isBumiputeraCancel();
-		if (isSameDates && isSameType && isSameRemarks){
+		
+		//#26238 - 38290 - MOF skip Remarks check
+		String suppType = getManagedBean().getSmAppl().getSupplierType();
+		boolean isMOF = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType) 
+					|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
+		
+		if (isSameDates && isSameType && (isMOF || isSameRemarks)){
 			throw new EpException(MessageConst.ERROR_100045);
+		}
+	}
+	
+	//26238 - 38289
+	private void validateRequiredPunishmentTypes(){
+		if (!getManagedBean().isEditDisciplinaryActionCheckBox()){
+			return;
+		}
+		boolean hasDA = getManagedBean().isWarning() || getManagedBean().isCancelCategoryCode();
+		hasDA |= getManagedBean().isManufacturerStatusCancel() || getManagedBean().isBumiputeraStatusCancel();
+		hasDA |= getManagedBean().isSuspendRegistration() || getManagedBean().isCancelRegistration();
+		hasDA |= getManagedBean().isBlacklistOwnerOrDirector();
+		if (!hasDA){
+			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
+					new String[] { SmCommonUtil.getMessage("lbl.sm.disciplinary.jktt.punishment.type", null) }));
 		}
 	}
 	
@@ -2218,21 +2240,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (currSupp != null) {
 			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
 
+			//38283 - START
 			if (!EntityHelper.isCollectionEmpty(voList)) {
 				disciplineVOs = voList;
-			} else {
-				DisciplinaryActionVO retVal = new DisciplinaryActionVO();
-				SmAppl smAppl = currSupp.getSmAppl();
-
-				if (smAppl != null) {
-					String suppType = smAppl.getSupplierType();
-					boolean isContractorOrConsultant = SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(suppType)
-							|| SupplierManagementConst.SUPP_TYPE_CONSULTANT.equals(suppType);
-					retVal.setMofNoExist(isContractorOrConsultant);
-				}
-
-				disciplineVOs.add(retVal);
 			}
+			//38283 - END
 		}
 
 		getManagedBean().setDisciplineVOs(disciplineVOs);

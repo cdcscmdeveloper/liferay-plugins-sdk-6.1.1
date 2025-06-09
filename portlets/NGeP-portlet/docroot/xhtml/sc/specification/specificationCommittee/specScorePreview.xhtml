@@ -9,7 +9,7 @@
 	<p:commandButton value="#{lbl['lbl.btn.print']}" immediate="true"
 				style="float:right;" update="@([id$=scoreDlgId])"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				 /><ui:remove>action="#{specificationBackingBean.generateSpecScoreReport()}"</ui:remove>
+				action="#{specificationBackingBean.generateSpecScoreReport()}" />
 
 	<p:dialog id="scoreDlgId" widgetVar="specScoreDlgWidget" modal="true"
 		header="#{specScorePreviewBackingBean.scoreReportPreviewHeader()}"
