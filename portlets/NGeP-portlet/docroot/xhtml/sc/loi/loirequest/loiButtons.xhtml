@@ -70,7 +70,7 @@
 				<ui:remove>36339, 21692</ui:remove>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					oncomplete="cancelPopup.show();"
-					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI}"
+					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI and lOIDetailBackingBean.disableCancelForApprover()}"
 					process="@form" update="@form" />
 				<ui:remove>36339, 21692</ui:remove>
 					
