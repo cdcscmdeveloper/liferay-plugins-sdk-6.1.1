@@ -10617,7 +10617,13 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
-					
+
+					//#29187 Start Vinod
+					if(QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean()
+									.getCheckListType())){
+						validateUserScoreForTemplate(tplSpecAnswer, false);
+					}
+					//#29187 End Vinod
 				}
 			}
 			//#29187 Start Vinod
