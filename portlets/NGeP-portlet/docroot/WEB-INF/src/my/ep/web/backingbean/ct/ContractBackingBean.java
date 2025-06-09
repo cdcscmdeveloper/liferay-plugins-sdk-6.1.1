@@ -4405,7 +4405,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333
-		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+		if((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
@@ -4657,7 +4657,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	            : null;
 
 	    // Check if the contract needs an extension or requires a bond
-	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && loa.isBondReq()
+	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
 
 	        isContractExtendOrIsBond = true;
@@ -4667,7 +4667,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	    // Check for contract amendment
 	    if (contractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
-	            && loa.isBondReq()
+	            && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 	            && contractVer.getCtAmendment() != null
 	            && contractVer.getCtAmendment().isContractExtend()) {
 	        
