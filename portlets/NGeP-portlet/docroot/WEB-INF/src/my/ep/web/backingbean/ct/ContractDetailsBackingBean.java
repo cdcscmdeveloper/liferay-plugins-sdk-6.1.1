@@ -1270,6 +1270,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (ctBB.getManagedBean().getCtContractAmount().isBondReq()
 					&& !ctBB.getManagedBean().isDirectPurchase()
 					&& !ctBB.getManagedBean().getCtContractAmount().isBondExempted()) {
+				//#24333 - Start
+				DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+				Date CurrentDate = new Date();
+				//#24333 - End
+
 				for (CtContractAmount contractAmt : ctContractVer.getCtContractAmounts()){
 					//#24333 - Start
 			        boolean hasNewBonds = contractAmt.getCtPerformanceBondsNew() != null
@@ -1278,8 +1283,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			                && !contractAmt.getCtPerformanceBondsOriginal().isEmpty();
 					//#24333 - End
 			        if ((contractAmt.getContractAmountId() != null && ctBB.getManagedBean().getCtContractAmount() != null
-							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue())
-							|| (hasNewBonds || hasOriginalBonds) ){ //#34012,#24333
+							&& contractAmt.getContractAmountId().intValue() == ctBB.getManagedBean().getCtContractAmount().getContractAmountId().intValue()
+							&& (hasNewBonds || hasOriginalBonds))
+							||( contractAmt.isBrandNew() && dateFormat.format(contractAmt.getEffDate()).compareTo(dateFormat.format(CurrentDate))<=0
+									&& dateFormat.format(contractAmt.getExpDate()).compareTo(dateFormat.format(CurrentDate)) >=0)){ //#34012,#24333
 						contractAmt.setTotalBondAmt(ctBB.getManagedBean().getCtContractAmount().getTotalBondAmt());
 						//#24333 - Start	
 						if(ctBB.isContractExtendOrIsBond() && hasNewBonds){
