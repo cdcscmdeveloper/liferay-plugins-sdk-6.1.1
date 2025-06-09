@@ -7806,10 +7806,6 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			RequestContext.getCurrentInstance().execute(
 					"gstConfirmPopupWid.show()");
 		}
-		
-		if(selectedTabIndex == 1 ){
-			getSmSupplierCategory();				
-		}
 
 	}
 
