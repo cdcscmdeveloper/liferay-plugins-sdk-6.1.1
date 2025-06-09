@@ -275,7 +275,11 @@
 				
 				<ui:remove>26247 - start</ui:remove>
 				<ui:param name="supplier"
+<<<<<<< HEAD
 					value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+=======
+					value="#{shortlistedSuppDisqualified.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+>>>>>>> refs/remotes/origin/release-sit
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
 				<p:column
@@ -284,9 +288,13 @@
 						value="#{suppFinalizationBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
 				<p:column>
+<<<<<<< HEAD
 					<ac:disciplinaryActionYesNo
 						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 						index="#{index}" />
+=======
+					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
+>>>>>>> refs/remotes/origin/release-sit
 				</p:column>
 				<ui:remove>26247 - end</ui:remove>
 				
@@ -518,7 +526,13 @@
 				</p:column>
 
 				<p:column>
+<<<<<<< HEAD
 					<ac:disciplinaryActionYesNo supplier="#{supplier}" index="#{index}" />
+=======
+					<ac:disciplinaryActionYesNo
+						supplier="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
+						index="#{index}" />
+>>>>>>> refs/remotes/origin/release-sit
 				</p:column>
 				<ui:remove>26247 - end</ui:remove>
 				
