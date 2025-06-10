@@ -24,7 +24,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.ANY_PHASE;
+		return PhaseId.PROCESS_VALIDATIONS;
 	}
 
 	@Override
@@ -42,35 +42,22 @@ public class TokenPhaseListener implements PhaseListener {
 				break;
 			}
 		}
-		PhaseId currentPhaseId = event.getPhaseId();
 
 		String tokenSession = TokenManager.getTokenSession();
 		String loginId = new FacesScopes().getUserScreenName();
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
-		boolean isValid = true;
-		if (isNotEmpty(submittedToken) && isNotEmpty(tokenSession)) {
-			isValid = submittedToken.equals(tokenSession);
-		}
+		boolean isValid = TokenManager.isValidToken(submittedToken);
+		String viewId = context.getViewRoot().getViewId();
 
-		log.info(">>>>>>>>>>>>>>>>>>>>#38229 " + currentPhaseId
-				+ " submittedToken:"
-				+ TokenManager.getPartialToken(submittedToken)
-				+ "  tokenSession:"
-				+ TokenManager.getPartialToken(tokenSession) + "  loginId:"
-				+ loginId + " isValid:" + isValid);
+		log.info("#38229||" + isValid + "||"
+				+ TokenManager.getPartialToken(submittedToken) + "||"
+				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
+				+ "||" + viewId);
 
 	}
 
 	@Override
 	public void afterPhase(PhaseEvent event) {
-	}
-
-	private boolean isNotEmpty(String str) {
-		if (str != null && str.length() > 0) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }
