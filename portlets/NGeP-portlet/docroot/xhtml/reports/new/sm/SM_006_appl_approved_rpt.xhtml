@@ -50,17 +50,6 @@
 					saveObject="applApprovedRptBB.managedBean.selectedOrgProfile" 
 					conditionField="#{applApprovedRptBB.getConditionFieldsCompany()}"/>	<!-- #32521 -->
 			</td>
-		</tr>
-		
-		<tr>
-			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}" />
-
-			</td>
-			<td class="tdContent">
-				<p:inputText maxlength="20" value="#{applApprovedRptBB.managedBean.mofNo}" 
-				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}"/>
-			</td>
 			<!-- 32521 - START -->
 			<td class="tdTitle">
 				<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" /></td>
@@ -80,10 +69,12 @@
 		
 		<tr>
 			<td class="tdTitle">
-				<p:outputLabel value="#{lbl['lbl.rpt.approveddatelabel']}" />
+				<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}" />
+
 			</td>
-			<td>
-				<ac:smReportDateFromTo bBean="#{applApprovedRptBB}" />
+			<td class="tdContent">
+				<p:inputText maxlength="20" value="#{applApprovedRptBB.managedBean.mofNo}" 
+				style="width:290px;" label="#{lbl['lbl.rpt.mofRegNo']}"/>
 			</td>
 			<!-- 32521 - START -->
 			<td class="tdTitle">
@@ -98,6 +89,15 @@
 						conditionField="#{applApprovedRptBB.getConditionFieldsPO(true)}"/>	<!-- #32521 -->
 			</td>
 			<!-- 32521 - END -->
+		</tr>
+		
+		<tr>
+			<td class="tdTitle">
+				<p:outputLabel value="#{lbl['lbl.rpt.approveddatelabel']}" />
+			</td>
+			<td>
+				<ac:smReportDateFromTo bBean="#{applApprovedRptBB}" />
+			</td>
 		</tr>
 	</table>
 	<ac:lovPopup />
