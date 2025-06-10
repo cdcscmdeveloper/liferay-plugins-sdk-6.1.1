@@ -15828,4 +15828,34 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37779 - End
+
+	//#37784 -STRAT
+	/**
+	 * Checks the application record status. If it is either DELETED or CANCELLED,
+	 * redirects the user to the application error page with an appropriate message.
+	 *
+	 * @param appl the application object to check
+	 */
+	public static void checkAndRedirectIfInvalid(SmAppl appl) {
+		if (appl != null) {
+			Long statusId = appl.getPmStatus().getStatusId();
+			boolean isDeletedOrCancelled = appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+					|| appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED;
+
+			boolean isPendingVerificationStatus = SupplierManagementConst.PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION
+					.equals(String.valueOf(statusId));
+
+			boolean isPendingPaymentStatus = statusId == SupplierManagementConst.PM_STATUS_PENDING_PROCESS_FEE;
+
+			if (isDeletedOrCancelled || isPendingVerificationStatus
+					|| isPendingPaymentStatus) {
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.ERROR_760556, null,
+						FacesMessage.SEVERITY_INFO);
+				return;
+			}
+		}
+	}
+	//#37784- END
 }
