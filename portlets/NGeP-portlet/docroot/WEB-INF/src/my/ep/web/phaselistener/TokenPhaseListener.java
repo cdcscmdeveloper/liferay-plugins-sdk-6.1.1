@@ -51,7 +51,10 @@ public class TokenPhaseListener implements PhaseListener {
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
 		boolean isValid = TokenManager.isValidToken(submittedToken);
-		String viewId = context.getViewRoot().getViewId();
+		String viewId = "N/A";
+		if (context.getViewRoot() != null) {
+			viewId = context.getViewRoot().getViewId();
+		}
 		PhaseId currentPhaseId = event.getPhaseId();
 
 		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
