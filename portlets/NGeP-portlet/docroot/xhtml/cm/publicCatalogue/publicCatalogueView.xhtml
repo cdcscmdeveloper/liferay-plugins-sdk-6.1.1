@@ -345,9 +345,9 @@
 												<table
 													style="width: 100%; height: 100%; padding-left: 10px; padding-right: 10px; padding-bottom: 10px; padding-top: 10px; vertical-align: top;">
 													<tr>
-														<td align="center"
+ - 														<td align="center"
 															style="text-align: center; padding-top: 14px; padding-bottom: 16px;"><h:panelGroup
-																rendered="#{supplierItem[7] == null }">
+																rendered="#{Integer.parseInt(supplierItem[7]) == null}">
 																<div align="center" style="width: 100%">
 																	<div align="center"
 																		style="height: 100px; width: 100px; left: 0px !important;">
@@ -358,12 +358,13 @@
 																	</div>
 																</div>
 															</h:panelGroup> <h:panelGroup
-																rendered="#{supplierItem[7] != null }">
+																rendered="#{Integer.parseInt(supplierItem[7])!= null}">
 																<img
-																	src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{supplierItem[7]}"
-																	style="height: 100px; width: 100px; left: 0px !important;" />
+																	src="/NGeP-portlet/image?imageName=#{supplierItem[5]}/#{Integer.parseInt(supplierItem[7])}"
+																	style="height: 100px; width: 100px; left: 0px !important;" /><ui:remove>#10747</ui:remove>
 															</h:panelGroup></td>
 													</tr>
+													<ui:remove>#10747- End</ui:remove>
 													<tr>
 													    <!-- Enhancement #31245 - start -->
 														<td align="center"
