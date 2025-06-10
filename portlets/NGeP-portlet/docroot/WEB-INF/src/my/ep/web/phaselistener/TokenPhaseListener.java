@@ -27,7 +27,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.PROCESS_VALIDATIONS;
+		return PhaseId.ANY_PHASE;
 	}
 
 	@Override
@@ -51,23 +51,27 @@ public class TokenPhaseListener implements PhaseListener {
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
 		boolean isValid = TokenManager.isValidToken(submittedToken);
-		String viewId = context.getViewRoot().getViewId();
+		String viewId = "N/A";
+		if (context.getViewRoot() != null) {
+			viewId = context.getViewRoot().getViewId();
+		}
+		PhaseId currentPhaseId = event.getPhaseId();
 
-		log.info("#38229||" + isValid + "||"
+		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
 				+ TokenManager.getPartialToken(submittedToken) + "||"
 				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
 				+ "||" + viewId);
 
 		if (!isValid) {
 			String message = ResourceBundleUtils.getMessage(
-					"lbl.sc.procurementtype.tooltip",
+					"lbl.back.btn.err.msg",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, null, message));
 			// Show error message
-//			RequestContext.getCurrentInstance().execute(
-//					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			// RequestContext.getCurrentInstance().execute(
+			// CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
 			context.renderResponse(); // Block further processing
 		}
 
