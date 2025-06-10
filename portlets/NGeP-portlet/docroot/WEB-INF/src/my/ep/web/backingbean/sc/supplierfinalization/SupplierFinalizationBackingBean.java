@@ -9413,6 +9413,9 @@ public class SupplierFinalizationBackingBean extends
 		
 		loadInitialData(scQt.getQtId());
 		
+		retrievescoresettings(scQt); //#38151
+		getManagedBean().getScQt().setScQtScoreSettings(this.getManagedBean().getScQt().getScQtScoreSettings()); //#38151
+		
 		if(isQTMaintenanceScreen()){
 			//if(QTStatusConst.SF_PENDING_SIGN_OFF.equals(getManagedBean().getCurrentStatusId()) || getManagedBean().getCurrentStatusId() == null){//17376-165
 				IQTSuppFinalizationSO qtSuppFinalizationSO = getQTSuppFinalizationSO();
@@ -9762,10 +9765,6 @@ public class SupplierFinalizationBackingBean extends
 	private IBpmSO getBpmSO() {
 		return (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(
 				IBpmSO.class);
-	}
-	
-	private IQTSuppFinalizationSO getQtSuppFinalizationSO(){
-		return BusinessDelegate.getInstance().getServiceObject(IQTSuppFinalizationSO.class);
 	}
 	
 	/**
@@ -11904,6 +11903,8 @@ public class SupplierFinalizationBackingBean extends
 		recommendationFinancialScore = totalScoreFinEval.multiply(scoresettsFin).divide(percentage,
 				SourcingConstants.DECIMAL_PRECISION, BigDecimal.ROUND_HALF_UP);
 
+		recommendationTotalScore = recommendationTechnicalScore.add(recommendationFinancialScore);
+		
 		WeightageScoreBean bean = new WeightageScoreBean(totalScoreTecEval.doubleValue(),
 				totalScoreFinEval.doubleValue(), recommendationTechnicalScore.doubleValue(),
 				recommendationFinancialScore.doubleValue(), recommendationTotalScore.doubleValue());
