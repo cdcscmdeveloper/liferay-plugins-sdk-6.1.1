@@ -17,9 +17,11 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
@@ -39,6 +41,8 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMCriteriaBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.CriteriaSearchBean;
@@ -288,30 +292,48 @@ public class CriteriaBackingBean extends
 			}
 			baseObject.setChangedBy(1L);
 	}
-	 private String updateCriteria(PmCriteria newCriteria){
-			log.info("updateCriteria");
-			try{		
-				CriteriaReqDTO reqDTO = new CriteriaReqDTO();
-				reqDTO.setPmCriteria(newCriteria);
-				ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
-				CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
-				if(resDTO.isSuccessful()){
-					loadCriteria(resDTO.getPmCriteria().getCriteriaId());
-					log.info("updateCriteria - successful");
-					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils.getMessage(MessageConst.INFO_779006, new String[]{newCriteria.getCriteriaCode()},
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
-				
-			}catch (Exception e){
-				log.info("updateCriteria - fail"); //TODO
-				e.printStackTrace();
-				throw new EpException(MessageConst.ERROR_770004);
+	private String updateCriteria(PmCriteria newCriteria){
+		log.info("updateCriteria");
+		try{		
+			CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+			reqDTO.setPmCriteria(newCriteria);
+			ICriteriaSO reqSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+			
+			/************ START: AUDIT #28895_35509 *************/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
+			reqDTO.setCriteriaId(newCriteria.getCriteriaId());
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA) && newCriteria.getCriteriaId() != null) {
+				getManagedBean().setPmCriteriaOld(reqSO.retrieveCriteriaById(reqDTO).getPmCriteria());
 			}
-			return null;
+			/************ END: AUDIT #28895_35509 *************/
+			
+			CriteriaResDTO resDTO = reqSO.updateSupCriteria(reqDTO);
+			if(resDTO.isSuccessful()){
+				loadCriteria(resDTO.getPmCriteria().getCriteriaId());
+				log.info("updateCriteria - successful");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_779006, new String[]{newCriteria.getCriteriaCode()},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				
+				/************ START: AUDIT #28895_35509 *************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+				}
+				/************ END: AUDIT #28895_35509 *************/					
+			}
+			
+		}catch (Exception e){
+			log.info("updateCriteria - fail"); //TODO
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770004);
 		}
+		return null;
+	}
 
 	 public PmCriteria retrieveCriteriaObjById(Long criteriaId) {
 			log.info("retrieveCriteriaObjById - Start");
@@ -483,6 +505,16 @@ public class CriteriaBackingBean extends
 												.getCriteriaCode() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+				
+				/************ START: AUDIT #28895_35509 *************/
+				IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IAuditPMSO.class);
+				AuditPMBackingBeanTemplate auTemplate = new AuditPMCriteriaBackingBean();
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_SUPPPERFCRITERIA)) {
+					getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_SUPPPERFCRITERIACFG);
+				}
+				/************ END: AUDIT #28895_35509 *************/
 
 				return redirectSupCriteriaSearch();
 			}
