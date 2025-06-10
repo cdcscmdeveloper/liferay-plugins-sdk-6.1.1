@@ -60,7 +60,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 		if (!isValid) {
 			String message = ResourceBundleUtils.getMessage(
-					"lbl.sc.procurementtype.tooltip",
+					"lbl.back.btn.err.msg",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
 			context.addMessage(null, new FacesMessage(
