@@ -9,8 +9,6 @@ import javax.portlet.PortletSession;
 import my.ep.constants.CommonConstants;
 import my.ep.util.EpPropertiesUtils;
 
-import org.apache.log4j.Logger;
-
 public class TokenManager implements Serializable {
 
 	/**
@@ -20,7 +18,6 @@ public class TokenManager implements Serializable {
 	private static final String TOKEN_KEY = CommonConstants.TOKEN_UNIQUE_ID;
 	private static String BACK_BUTTON_ALLOWED = EpPropertiesUtils.getInstance()
 			.getProperty("back.btn.allowed");
-	private static Logger log = Logger.getLogger(TokenManager.class);
 
 	public static boolean isBackBtnAllowed() {
 		return (BACK_BUTTON_ALLOWED != null && BACK_BUTTON_ALLOWED.trim()
@@ -34,13 +31,15 @@ public class TokenManager implements Serializable {
 	}
 
 	public static boolean isValidToken(String submittedToken) {
-		if (isBackBtnAllowed()) {
-			return true;
-		} else {
+		boolean isValid = true;
+		if (!isBackBtnAllowed()) {
 			String sessionToken = getTokenSession();
-			return (submittedToken != null && submittedToken
-					.equals(sessionToken));
+			if ((submittedToken != null && submittedToken.length() > 0)
+					&& (sessionToken != null && sessionToken.length() > 0)) {
+				isValid = submittedToken.equals(sessionToken);
+			}
 		}
+		return isValid;
 	}
 
 	public static String getTokenSession() {
