@@ -15851,7 +15851,7 @@ public class SmApplicationUtil {
 					|| isPendingPaymentStatus) {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.ERROR_760556, null,
+						MessageConst.ERROR_760600, null,
 						FacesMessage.SEVERITY_INFO);
 				return;
 			}
