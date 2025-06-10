@@ -7081,7 +7081,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							new String[] { worker1.getIdentificationNo() });
 				}
 			}
-			
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
