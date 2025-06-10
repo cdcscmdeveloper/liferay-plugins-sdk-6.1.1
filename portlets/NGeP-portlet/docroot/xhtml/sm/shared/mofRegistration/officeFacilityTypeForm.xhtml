@@ -224,14 +224,18 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 				</p:outputPanel>
-				<!-- #36718 - add id to panel -->
-				<p:outputPanel id="compFacilityAddrPanel" rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+
+				<p:outputPanel rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
+				<!-- #36718 - add panel for refresh address -->
+				<p:outputPanel id="compFacilityAddrPanel" >	
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
+						<td>
+							<!-- #36718 - change required condition -->
+							<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}"
 								style="padding-top :5px;" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
 						<td><p:inputText id="companyAdd1" size="35" maxlength="100"
-								required="true" label="#{lbl['lbl.sm.companyaddress']}"
+								required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.companyaddress']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" 
 								disabled="#{backingBean.managedBean.upsCannotEdit}" >
 								<p:ajax partialSubmit="true" process="@this" />
@@ -521,6 +525,7 @@
 					<!-- #36718 - END -->
 					</td>
 				</tr>
+				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser or (backingBean.managedBean.smAppl.resubmit and backingBean.managedBean.supplierUser)}">
 					<tr>
