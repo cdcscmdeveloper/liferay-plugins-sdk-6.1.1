@@ -412,7 +412,11 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private boolean renderInstruction = true;
 	//#29007 End Vinod
 	
-	private List<SmSupplierBranch> supplierBranchList; //#28777 & #29729 
+	// #28777 & #29729 - Start
+	private List<SmSupplierBranch> supplierBranchList;
+	private List<ScQtEvaluationResultDtl> disqualifiedSupplierList;
+	private List<ScQtRecommend> disqualifiedRecommendList;
+	// #28777 & #29729 - End
 
 	//#21692 - Start
 	private boolean ableToCancelLOI;
@@ -2373,6 +2377,22 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
+	}
+
+	public List<ScQtEvaluationResultDtl> getDisqualifiedSupplierList() {
+		return disqualifiedSupplierList;
+	}
+
+	public void setDisqualifiedSupplierList(List<ScQtEvaluationResultDtl> disqualifiedSupplierList) {
+		this.disqualifiedSupplierList = disqualifiedSupplierList;
+	}
+	
+	public List<ScQtRecommend> getDisqualifiedRecommendList() {
+		return disqualifiedRecommendList;
+	}
+
+	public void setDisqualifiedRecommendList(List<ScQtRecommend> disqualifiedRecommendList) {
+		this.disqualifiedRecommendList = disqualifiedRecommendList;
 	}
 	//#28777 & #29729 - End
 

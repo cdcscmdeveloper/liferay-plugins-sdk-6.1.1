@@ -101,8 +101,8 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private List<ScQtRecommendationPengesyoranRemarks> finalizationPengreysonremarks;
 	
 	// #28777 & #29729 - Start
-	private List<SmSupplierBranch> supplierBranchList; 
-	private Integer countSupplierBranchDeleted = 0;
+	private List<SmSupplierBranch> supplierBranchList;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel;
 	// #28777 & #29729 - End
 	
 	private boolean isSetNull ; //Bug #31364
@@ -647,7 +647,7 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#21695 End
 
-	//#28777 & #29729 - Start
+	// #28777 & #29729 - Start
 	public List<SmSupplierBranch> getSupplierBranchList() {
 		return supplierBranchList;
 	}
@@ -655,15 +655,17 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public void setSupplierBranchList(List<SmSupplierBranch> supplierBranchList) {
 		this.supplierBranchList = supplierBranchList;
 	}
-	
-	public Integer getCountSupplierBranchDeleted() {
-		return countSupplierBranchDeleted;
+
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisQualifiedSuppliersDataModel() {
+		return disQualifiedSuppliersDataModel;
 	}
 
-	public void setCountSupplierBranchDeleted(Integer countSupplierBranchDeleted) {
-		this.countSupplierBranchDeleted = countSupplierBranchDeleted;
+	public void setDisQualifiedSuppliersDataModel(
+			IPagingDataModel<ScQtEvaluationResultDtl> disQualifiedSuppliersDataModel) {
+		this.disQualifiedSuppliersDataModel = disQualifiedSuppliersDataModel;
 	}
-	//#28777 & #29729 - End
+
+	// #28777 & #29729 - End
 
 	public boolean isSetNull() {
 		return isSetNull;
