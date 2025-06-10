@@ -346,6 +346,16 @@ public class SelfRequestSupplierAdminBackingBean extends
 		SmServiceLookup.getSelfRequestSupplierAdminSO().submitSelfRequestAdmin(
 				reqDTO);
 
+		//#34159 - START
+		if (permAddr != null && permAddr.getAddressType().equalsIgnoreCase(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
+				&& !permAddr.getSmAddress().getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)
+				&& permAddr.getSmAddress().getPmDivision() != null && permAddr.getSmAddress().getPmDivision().getDivisionId() != null) {
+			SmAddress addr = SmServiceLookup.getSmAddressSO().retrieveSmAddressByAddressId(permAddr.getSmAddress().getAddressId());
+			addr.getPmDivision().setDivisionId(null);
+			SmServiceLookup.getSmAddressSO().updatePmDivisionByAddressId(addr.getPmDivision(), addr.getAddressId());
+		}
+		//#34159 - END
+				
 		FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
 				.clear();
 
@@ -596,9 +606,10 @@ public class SelfRequestSupplierAdminBackingBean extends
 		
 		if(!isPreRender){ 
 			addr.setPmState(new PmState());
-			addr.setPmDivision(new PmDivision());
+			//addr.setPmDivision(new PmDivision());
 			addr.setPmDistrict(new PmDistrict());
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 
@@ -632,9 +643,10 @@ public class SelfRequestSupplierAdminBackingBean extends
 		addr.setCityId(null);
 		
 		if(!isPreRender){
-			addr.setPmDivision(new PmDivision());
+			//addr.setPmDivision(new PmDivision());
 			addr.setPmDistrict(new PmDistrict());
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 
@@ -660,6 +672,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		//PR - preRender
 		if(!isPreRender){
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 	
@@ -686,6 +699,7 @@ public class SelfRequestSupplierAdminBackingBean extends
 		if(!isPreRender){
 			addr.setPmDistrict(new PmDistrict());
 			addr.setPmCity(new PmCity());
+			addr.setPostcode("");
 		}
 	}
 	//13320-End
@@ -696,6 +710,8 @@ public class SelfRequestSupplierAdminBackingBean extends
 		
 		if(isPreRender){
 			cityId = addr.getCityId() == null ? addr.getPmCity().getCityId() : addr.getCityId();
+		} else {
+			addr.setPostcode("");
 		}
 		if(cityId != null){
 			addr.setPmCity(SmCommonUtil.getInstance().getCityById(cityId));

@@ -60,6 +60,24 @@
 					</p:inputText>
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.rpt.tender.title']}" />
+				</td>
+				<td>
+					<p:inputTextarea id="tenderTitle"
+						label="#{lbl['lbl.sc.qt.epv.rpt.error.message']}" value="#{cc.attrs.bBean.managedBean.quotationTitle}" cols="110" rows="3"
+						required="#{scPropValidPeriodExtListReportBackingBean.showErrorWhenTitleAndNumberNull()}"
+						requiredMessage="#{lbl['lbl.sc.qt.epv.rpt.error.message']}"
+						onkeyup="limitTextArea(this,1000);"
+						onkeydown="limitTextArea(this,1000);"
+						onmouseout="limitTextArea(this,1000);"
+						style=" margin-bottom:5px; width: 714px;" maxlength="1000">
+					<p:ajax event="change" process="@this" update="@form" partialSubmit="true"
+						listener="#{scPropValidPeriodExtListReportBackingBean.clearTenderTitle()}"/>
+					</p:inputTextarea>
+				</td>
+			</tr>
 			
 			<c:if test="#{ptjEnableDisable}">
 				<tr>
@@ -100,15 +118,31 @@
 							style="margin-top:5px;width:130px;" />
 					</td>
 					
-					<td><ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+					<td>
+					<c:if test="#{scPropValidPeriodExtListReportBackingBean.managedBean.scReportSearchBean.ptjProfile eq null}">
+					<ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						headerText="#{lbl['lbl.rpt.agency']}"
+						selectionMode="single"
+						saveObject="scPropValidPeriodExtListReportBackingBean.managedBean.scReportSearchBean.ptjProfile"
+						size="106"
+						label="#{scPropValidPeriodExtListReportBackingBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
+						readonly="true"
+						update="@form"
+						conditionField="#{cc.attrs.bBean.constuctConditionFields()}" 
+						/>
+					</c:if>
+					<c:if test="#{scPropValidPeriodExtListReportBackingBean.managedBean.scReportSearchBean.ptjProfile ne null}">
+					<ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
 						headerText="#{lbl['lbl.rpt.agency']}"
 						selectionMode="single"
 						saveObject="scPropValidPeriodExtListReportBackingBean.managedBean.scReportSearchBean.ptjProfile"
 						size="106"
 						value="#{scPropValidPeriodExtListReportBackingBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
+						readonly="true"
 						update="@form"
 						conditionField="#{cc.attrs.bBean.constuctConditionFields()}" 
-						/></td>
+						/>
+					</c:if></td>
 				</tr>
 				
 				<tr>
@@ -145,7 +179,7 @@
 
 					</p:calendar></TD>
 				<TD class="columnDateToClass"><p:outputLabel
-						value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:25px;" /></TD>
+						value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:40px;" /></TD>
 				<TD><p:calendar showOn="button" navigator="true"
 						mindate="#{cc.attrs.bBean.handleMinDateForEPV()}"
 						maxdate="#{cc.attrs.bBean.handleMaxDateForEPV()}"
@@ -168,7 +202,8 @@
 					<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 							itemValue="#{null}"></f:selectItem>
 					<f:selectItems value="#{cc.attrs.bBean.generateApprovalStatusList()}" var="item" itemLabel="${item.label}" itemValue="#{item.value}"></f:selectItems>
-					<p:ajax event="change" process="@this" partialSubmit="true" />
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{scPropValidPeriodExtListReportBackingBean.clearDecisionStatus()}"/>
 				</p:selectOneMenu></td>
 			</TR>
 		</TABLE>

@@ -573,8 +573,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	// #29315
 	private boolean flagMandatoryEpfNo;
@@ -614,7 +612,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSvWorker> deletedWorkers;
 	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
-	// #28778 - Start
+	// #28778 -28775 - Start
 	private boolean specialCategoryRechecked;
 	// #28778 - End
 	
@@ -4103,15 +4101,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
 		this.personnelsSsm = personnelsSsm;
 	}
-
-	// 26238 - start
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} // 26238 - end
 
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;

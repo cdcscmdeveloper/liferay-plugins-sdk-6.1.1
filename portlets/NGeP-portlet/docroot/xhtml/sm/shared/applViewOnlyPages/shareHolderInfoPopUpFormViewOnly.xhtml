@@ -446,7 +446,18 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.year.to']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}" />
+						<!-- #37771 - Start --> 
+						<ac:smFieldChangeAlertView
+							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
+								and not empty viewSmApplBackingBean.managedBean.selectedJobFunction.staffExperienceId 
+								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
+							oriValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.toYear}"
+							currValue="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}"
+							alertValue="#{viewSmApplBackingBean.managedBean.latestJobFunction.toYear}" />
+							</td>
+					<!-- #37771 - End -->
 				</tr>
 			</table>
 		</p:scrollPanel>
@@ -718,14 +729,16 @@
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.institute']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/>
-						<!-- #32008 -->
-						<ac:smFieldChangeAlertView 
+						<!-- #32008 --> <!-- #37771 - Start --> 
+						<ac:smFieldChangeAlertView
 							isShow="#{viewSmApplBackingBean.managedBean.showFieldChanges
 								and not empty viewSmApplBackingBean.managedBean.latestStaffAcademic.staffAcademicId
 								and not empty viewSmApplBackingBean.managedBean.latestPersonnel}"
-							oriValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.instituteName}" 
-							currValue="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}" 
-							alertValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.instituteName}" /></td>
+							oriValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.year}"
+							currValue="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.year}"
+							alertValue="#{viewSmApplBackingBean.managedBean.latestStaffAcademic.year}" /> 
+							<!-- #37771 - End -->
+							</td>
 				</tr>
 				<tr>
 					<td style="vertical-align: baseline;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.qualification.level']}" /></td>

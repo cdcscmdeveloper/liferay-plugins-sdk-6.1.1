@@ -89,6 +89,14 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 	private boolean disabledRoleSemiPro = false;
 	private boolean disabledRoleClericalStaff = false;
 	//33563 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	private String oldIdentification;
+	private String newIdentifiction;
+	// #28895_35501 End
+	
+	//#36718 - START
+	private SmPersonnelAddress latestMailAddr;
+	//#36718 - END
 	
 	public ForceReplaceSuppAdminManagedBean() {
 		
@@ -524,4 +532,32 @@ public class ForceReplaceSuppAdminManagedBean extends BaseManagedBean {
 		this.mailDivisions = mailDivisions;
 	}
 	//#34159 - END
+	// #28895_35501 Start - AUDIT TRAIL SM
+	public String getOldIdentification() {
+		return oldIdentification;
+	}
+
+	public void setOldIdentification(String oldIdentification) {
+		this.oldIdentification = oldIdentification;
+	}
+
+	public String getNewIdentifiction() {
+		return newIdentifiction;
+	}
+
+	public void setNewIdentifiction(String newIdentifiction) {
+		this.newIdentifiction = newIdentifiction;
+	}
+	// #28895_35501 End
+
+	//#36718 - START
+	public SmPersonnelAddress getLatestMailAddr() {
+		return latestMailAddr;
+	}
+
+	public void setLatestMailAddr(SmPersonnelAddress latestMailAddr) {
+		this.latestMailAddr = latestMailAddr;
+	}
+	//#36718 - END
+	
 }

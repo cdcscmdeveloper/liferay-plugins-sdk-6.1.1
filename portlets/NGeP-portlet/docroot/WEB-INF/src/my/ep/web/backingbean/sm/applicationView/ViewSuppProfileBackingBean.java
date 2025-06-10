@@ -2,18 +2,22 @@ package my.ep.web.backingbean.sm.applicationView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Locale;
+import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -21,11 +25,14 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -36,12 +43,9 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
-import com.google.common.collect.Iterables;
 //#28175 start
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -51,6 +55,14 @@ import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 //#28175 ReOpen
 import my.ep.web.constant.sm.SupplierManagementConst;
 //#28175 end
+//#28895_35501 Start - AUDIT TRAIL SM
+import javax.servlet.http.HttpServletRequest;
+import com.liferay.compat.portal.util.PortalUtil;
+//#28895_35501 End
+//#34031 Start
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmRevisit;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
@@ -63,7 +75,7 @@ public class ViewSuppProfileBackingBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = 377766773512626830L;
-
+	private static final String SHOW_DA = "disciplinaryActionHistoryDlg.show();";
 	/**
 	 * Pre - render for View Supplier Profile
 	 */
@@ -76,6 +88,16 @@ public class ViewSuppProfileBackingBean extends
 		long subStartTime = 0L;
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 Start - AUDIT TRAIL SM
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String isAudit = originalServletRequest.getParameter("isAudit");
+		if (SmCommonUtil.md5("true").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(true);
+		} else if (SmCommonUtil.md5("false").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(false);
+		}
+		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
@@ -123,25 +145,9 @@ public class ViewSuppProfileBackingBean extends
 					"ViewSuppProfileBackingBean.preRenderViewSupplierProfile", startTime);
 			getManagedBean().setRenderedBackButton(false);
 			//26238 - start
-			if(supplier != null){
-				//28281
-				retrieveActiveDisciplinaryAction(supplier);
-			}
-			
+			retrieveActiveDisciplinaryAction(supplier);
 			List<SmDisciplinaryAction> resultList = SmApplicationUtil.retrieveSmDisciplinaryActionBySupplier(supplier);
-			if(resultList != null
-					&& resultList.size() > 0){
-				for(SmDisciplinaryAction disciplinaryAction : resultList){
-					if(disciplinaryAction.isWarning() || disciplinaryAction.isCancelCategory() 
-							|| disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-							|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-							|| disciplinaryAction.isBumiputeraCancel()){
-						getManagedBean().setDisciplinaryAction(true);
-					}
-				}				
-			} else {
-				getManagedBean().setDisciplinaryAction(false);
-			}
+			getManagedBean().setDisciplinaryAction(!EntityHelper.isCollectionEmpty(resultList));
 			//26238 - end
 		} else {
 			subStartTime = System.currentTimeMillis();
@@ -212,53 +218,37 @@ public class ViewSuppProfileBackingBean extends
 		return facesScopes;
 	}
 
+	/**
+	 * View Disciplinary Action
+	 */
 	public void onViewDisciplinaryAction() {
-		SmSupplier currSupp = null;
-		if(getManagedBean().isSupplierUser()){
+		SmSupplier currSupp = getManagedBean().getSmSupplier();
+		//27876: Disciplinary Action
+		if(currSupp == null || getManagedBean().isSupplierUser()){
 			currSupp = SmApplicationUtil.getCurrentSupplier();
-			
-			//27876: Disciplinary Action - start - <27876>
-			currSupp.setFlagSupplier(true);
-			//27876: Disciplinary Action - start - <27876>
-		} else {
-			//28281
-			//currSupp = getManagedBean().getSearchSupplier();
-			currSupp = getManagedBean().getSmSupplier();
-			currSupp.setFlagSupplier(false);
 		}
-		log.info(currSupp+"-------");
-		log.info(currSupp.getSupplierId()+"-------");
+		currSupp.setFlagSupplier(getManagedBean().isSupplierUser());
+		log.info("onViewDisciplinaryAction - "+currSupp.getSupplierId());
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
 		}
 		
 		// 28342 : Disciplinary Action - start, 28630 : Add additional role - start
-		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
-			// 28630 : Add additional role - end
-			getManagedBean().setDisableDownloadButtonDAHistory(true);
-		}
-		//	28342 : Disciplinary Action - end
+		getManagedBean().setDisableDownloadButtonDAHistory(disableDownloadDA());
 		
 		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
-		if(!EntityHelper.isCollectionEmpty(voList)
-				&& voList.size() > 0){
+		getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		if(!EntityHelper.isCollectionEmpty(voList)){
 			getManagedBean().setDisciplineVOs(voList);
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		}
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		RequestContext.getCurrentInstance().execute(SHOW_DA);
 	} 
 	
 	/**
 	 * 32560 - Added Checking to Get Active DA from the list
 	 * CHECKING TO SET START / END DATE FOR DISCIPLINARY ACTION POPUP
-	 * @return void
+	 * @param listDA
 	 */
 	public void findActiveDA(List<DisciplinaryActionVO> listDA) {
 			    Iterator<DisciplinaryActionVO> iterator = listDA.iterator();
@@ -276,20 +266,19 @@ public class ViewSuppProfileBackingBean extends
 	 * @param smSupplier
 	 */
 	public void onViewDisciplinaryAction(SmSupplier smSupplier) {
-		
+		displayDisciplinaryAction(smSupplier, false);
+	}
+	
+	private void displayDisciplinaryAction(SmSupplier smSupplier, boolean isActive) {
+		getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		//27876: Disciplinary Action - start - <27876>
 		smSupplier.setFlagSupplier(true);
-		//27876: Disciplinary Action - start - <27876>
-		
-		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(smSupplier);
-		
-		/*
-		 * 32560 - Added Checking Active DA
-		 */
+		List<DisciplinaryActionVO> voList = isActive ? getActiveDisciplinaryActionVO(smSupplier)
+				: getDisciplinaryActionVO(smSupplier);
+		//32560 - Added Checking Active DA
 		findActiveDA(voList);	
 
-		if(!EntityHelper.isCollectionEmpty(voList)
-				&& voList.size() > 0){
+		if(!EntityHelper.isCollectionEmpty(voList)){
 			getManagedBean().setDisciplineVOs(voList);
 			//#-29771 - Start.
 			getManagedBean().setSmSupplier(smSupplier);
@@ -303,58 +292,48 @@ public class ViewSuppProfileBackingBean extends
 			}
 			
 			reqDTO.setSupplier(smSupplier);
-			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-			SupplierDataMaintenanceResDTO resDTO = null;
-			
-			if (null != suppDataSO) {
-				resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
-				if(StringUtils.isNotEmpty(resDTO.getErrorMessage())){
-					if (resDTO.getErrorMessage().contains("Please click")) {
-						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Please click")[0]); 
-					}
-					if (resDTO.getErrorMessage().contains("Sila semak")) {
-						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Sila semak")[0]); 
-					}
-					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
-				} else {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
-				}
+			SupplierDataMaintenanceResDTO resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
+					.retrieveDisciplinaryActionMsg(reqDTO);
+			String msg = resDTO.getErrorMessage();
+			if (StringUtils.isEmpty(msg)){
+				msg = StringUtils.EMPTY;
+			} else if (msg.contains("Please click")){
+				msg = msg.split("Please click")[0];
+			} else if (msg.contains("Sila semak")){
+				msg = msg.split("Sila semak")[0];
 			}
-			
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+			this.getManagedBean().setDisciplinaryActionMsg(msg);	
 		}
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		RequestContext.getCurrentInstance().execute(SHOW_DA);
 	} 
 	
 	//28281
 	//26238 - end
-	//26238 -  STATR Disciplinary Action - 28111
+	//26238 - START Disciplinary Action - 28111
+	/**
+	 * View Disciplinary Action Supplier
+	 * @param currSupp
+	 */
 	public void onViewDisciplinaryActionSupp(SmSupplier currSupp) {		
-		log.info(currSupp+"-------");
-		log.info(currSupp.getSupplierId()+"-------");
+		if (currSupp == null || currSupp.getSupplierId() == null){
+			return;
+		}
+		log.info("onViewDisciplinaryActionSupp - "+currSupp.getSupplierId());
 		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())){
 			getManagedBean().setMofSupplier(true);
 		}
-		
 		// 28342 : Disciplinary Action - start, 28630 : Add additional role
-		if(getFacesScopes().hasRoleUser(RoleCode.UPS_SDO.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_PO.value()) || getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.UPS_SVC.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_SVO.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.UPS_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
-			// 28630 : Add additional role - end
-			getManagedBean().setDisableDownloadButtonDAHistory(true);
-		}
+		getManagedBean().setDisableDownloadButtonDAHistory(disableDownloadDA());
 		
 		//28637 - start, 28806
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setSupplierId(currSupp.getSupplierId());
 		SmAppl smAppl = SmServiceLookup.getSupplierSearchSO().retriveLatestApplBySupplierId(reqDTO).getSmAppl();
-		if(smAppl.getSupplierType().equals("K") || getManagedBean().isMofSupplier())
+		if(SupplierManagementConst.SUPP_TYPE_CONTRACTOR.equals(smAppl.getSupplierType()) 
+				|| getManagedBean().isMofSupplier()){
 			getManagedBean().setViewCatCode(true);
+		}
 		//28637 - end, 28806
 
 		//27876: Disciplinary Action - start - <27876>
@@ -365,17 +344,36 @@ public class ViewSuppProfileBackingBean extends
 		currSupp.setFlagDASuppProfile(true);
 		//30872: Disciplinary Action - end - <30872>
 		
-		List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
-		if(!EntityHelper.isCollectionEmpty(voList)
-				&& voList.size() > 0){
+		List<DisciplinaryActionVO> voList = getActiveDisciplinaryActionVO(currSupp);
+		getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
+		if(!EntityHelper.isCollectionEmpty(voList)){
 			getManagedBean().setDisciplineVOs(voList);
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		}
-		RequestContext.getCurrentInstance().execute(
-				"disciplinaryActionHistoryDlg.show();");
+		RequestContext.getCurrentInstance().execute(SHOW_DA);
 	} 
-	//26238 -  END Disciplinary Action - 28111
+	
+	private boolean disableDownloadDA(){
+		// 28342 : Disciplinary Action - start, 28630 : Add additional role
+		List<String> disableRoles = Arrays.asList(RoleCode.UPS_SDO.value(), RoleCode.UPS_PO.value(),
+				RoleCode.APPROVER.value(), RoleCode.UPS_SVC.value(), RoleCode.UPS_SVO.value(), 
+				RoleCode.UPS_APPROVER.value(), RoleCode.MOF_SUPPLIER_ADMIN.value(), RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		for (String role : disableRoles){
+			if (getFacesScopes().hasRoleUser(role)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//31033 start
+	/**
+	 * View Active Disciplinary Action
+	 * @param smSupplier
+	 */
+	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
+		displayDisciplinaryAction(smSupplier, true);
+	} 
+	//26238 -  END Disciplinary Action - 28111, //31033 end
 	
 	//#29482 - Start
 	public void assignSelAcadQualify(SmPersonnel smPersonnel) {
@@ -442,57 +440,263 @@ public class ViewSuppProfileBackingBean extends
 		return remarkList;
 	}
 	// #28175 end
-	
-	//31033 start
-	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
 
-		// 27876: Disciplinary Action - start - <27876>
-		smSupplier.setFlagSupplier(true);
-		// 27876: Disciplinary Action - start - <27876>
-
-		List<DisciplinaryActionVO> voList = getActiveDisciplinaryActionVO(smSupplier);
-		/*
-		 * 32560 - Added Checking Active DA
-		 */
-		findActiveDA(voList);	
-		
-		if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
-			getManagedBean().setDisciplineVOs(voList);
-			// #-29771 - Start.
-			getManagedBean().setSmSupplier(smSupplier);
-			// #-29771 - End.
-			SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			PmUser sUsers = facesScopes.getUserSessionBean();
-
-			if (sUsers != null && sUsers.getPreferredLanguage() != null) {
-				reqDTO.setLanguage(sUsers.getPreferredLanguage());
+	// #34031 Start
+	/**
+	 * Retrieves remarks related to a given revisit.
+	 * @param revisit
+	 * @return List<String>
+	 */
+	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
+		List<String> remarks = new ArrayList<>();
+		if (null != revisit) {
+			StringBuilder remarkOne = new StringBuilder();
+			remarkOne.append(
+					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())).append(" ");
+			if (null != revisit.getRevisitPrevRemark()) {
+				remarkOne.append(revisit.getRevisitPrevRemark());
+			} else {
+				remarkOne.append(
+						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+						.append(" ");
 			}
+			remarkOne.append(
+					ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale())).append(" ");
+			if (null != revisit.getRevisitRemark()) {
+				remarkOne.append(revisit.getRevisitRemark());
+			} else {
+				remarkOne.append(
+						ResourceBundleUtils.getMessage("lbl.txt.na", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()))
+						.append(" ");
+			}
+			remarks.add(remarkOne.toString());
+			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
+				List<PmStatusDesc> descList;
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+				StringBuilder remarkTwo = new StringBuilder();
+				remarkTwo
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()))
+						.append(" ")
+						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
+						.append(" ")
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())).append(" ")
+						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
+				remarks.add(remarkTwo.toString());
+			}
+			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
+				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.three", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				remarks.add(remarkThree);
+			}
+		}
+		return remarks;
+	}
 
-			reqDTO.setSupplier(smSupplier);
-			ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
-			SupplierDataMaintenanceResDTO resDTO = null;
+	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
+		String statusName = "";
 
-			if (null != suppDataSO) {
-				resDTO = suppDataSO.retrieveDisciplinaryActionMsg(reqDTO);
-				if (StringUtils.isNotEmpty(resDTO.getErrorMessage())) {
-					if (resDTO.getErrorMessage().contains("Please click")) {
-						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Please click")[0]);
-					}
-					if (resDTO.getErrorMessage().contains("Sila semak")) {
-						resDTO.setErrorMessage(resDTO.getErrorMessage().split("Sila semak")[0]);
-					}
-					this.getManagedBean().setDisciplinaryActionMsg(resDTO.getErrorMessage());
-				} else {
-					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
+		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			// Expected Max Size in loop (5) based on NGEP_PDS database
+			for (PmStatusDesc status : statusList) {
+				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
+					statusName = status.getStatusName();
+					break;
 				}
 			}
-
-		} else {
-			getManagedBean().setDisciplineVOs(new ArrayList<DisciplinaryActionVO>());
 		}
-		RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
-	} 
-	//31033 end
+		return statusName;
+	}
+	// #34031 End
+
+	// 26247 - start	
+	/**
+	 * Evaluate suspension status based on supplier. 
+	 * This supposed to be from SM. 
+	 * 
+	 * @param scQt
+	 * @param supplier
+	 * @return
+	 */
+	public String evaluateQTWarningMessage(SmSupplier supplier) {
+		if (null == supplier) {
+			return null;
+		}
+		Locale locale = new FacesScopes().getUserLocale();
+		List<String> messages = new ArrayList<>();
+	
+		if (evaluateCancellationBlacklist(supplier)) {
+			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
+		}
+
+		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
+			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
+					new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray(), ", ") },
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		}
+
+		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor()) && !supplier.isBumi();
+		if (noBumiAccount) {
+			messages.add(MessageUtils.getMessage(MessageConst.ERROR_760556, new String[] {},
+					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+		} 
+		return composeWarningMessages(messages);
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Retrieve message and set message to QT DA warning dialog
+	 * @param messages
+	 */
+	public void onViewQTAlertMessage(List<String> messages) {
+		this.getManagedBean().setDisciplinaryActionMsg(composeWarningMessages(messages));
+		RequestContext.getCurrentInstance().execute("suspendAlertWidget.show()");
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate the flag to show warning flag( for yes/no hyperlink) for
+	 * non/disciplinary action
+	 * 
+	 * @param supplier
+	 * @return flag to display alert icon
+	 */
+	public List<String> evaluateWarningTooltip(SmSupplier supplier) {
+		List<String> messages = new ArrayList<>();
+		if (supplier != null) {
+			Locale locale = new FacesScopes().getUserLocale();
+			if (evaluateCancellationBlacklist(supplier)) {
+				messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
+			}
+
+			List<String> cancelledCategoryCodes = new ArrayList<>();
+			cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
+			cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+
+			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
+					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
+			if (noCancelledCategory) {
+				messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
+						new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
+
+			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
+					&& !supplier.isBumi()
+					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
+			if (noBumiAccount) {
+				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
+			}
+		}
+		return messages;
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private String getCancelRegistrationOrBlacklistMessage(SmSupplier supplier, Locale locale) {
+		SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+		String statusDescription = ResourceBundleUtils.getMessage("lbl.sm.status.deleted.with.transaction", null,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		String status = null;
+		if (disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist()) {
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.blacklist.owner", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		} else if (disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel()) {
+			status = ResourceBundleUtils.getMessage("lbl.sm.disciplinary.jktt.cancel.registration", null,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		}
+
+		statusDescription = statusDescription.concat(" (" + status + ")");
+		return MessageUtils.getMessage(MessageConst.INFO_760553, new String[] { statusDescription },
+				MessageUtils.BUNDLE_COMMON_MESSAGES, locale);
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private boolean evaluateCancelledCategories(SmSupplier supplier) {
+		boolean cancelledCategory = false;
+		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			cancelledCategory = supplier.isDisciplinaryActions()
+					&& (disciplinaryAction.isCancelCategory() || disciplinaryAction.isManufacturerCancel());
+		}
+		return cancelledCategory;
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private boolean evaluateCancelledBumiAccount(SmSupplier supplier){
+		boolean cancelledBumiAccount = false;
+		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			cancelledBumiAccount = supplier.isDisciplinaryActions() && disciplinaryAction.isBumiputeraCancel();
+		}
+		return cancelledBumiAccount;
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate for suspend registration disciplinary action
+	 * @param supplier
+	 * @return
+	 */
+	public boolean evaluateSuspendRegistration(SmSupplier supplier){
+		if (null != supplier && CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			return disciplinaryAction.isSuspendRegistration();
+		}
+		return false;
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	/**
+	 * Evaluate for pending register cancellation or blacklist owner disciplinary action
+	 * @param supplier
+	 * @return
+	 */
+	public boolean evaluateCancellationBlacklist(SmSupplier supplier) {
+		if(null == supplier){
+			return false;
+		}
+		boolean suspendedBlacklisted = false;
+		boolean suspendedCancelled = false;
+
+		if (CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			suspendedBlacklisted = disciplinaryAction.isBlacklistOwner() && disciplinaryAction.isPendingBlacklist();
+			suspendedCancelled = disciplinaryAction.isCancelRegistration() && disciplinaryAction.isPendingCancel();
+		}
+		boolean blacklistedOrCancelled = suspendedBlacklisted || suspendedCancelled;
+		String mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg().toString();
+		return ParameterConst.RECORD_STATUS_ACTIVE.equals(mofRecordStatus) && blacklistedOrCancelled
+				&& !supplier.isDisciplinaryActions();
+	}
+	// 26247 - end
+	
+	// 26247 - start
+	private String composeWarningMessages(List<String> messages) {
+		StringBuilder messageSb = new StringBuilder();
+		int count = 0;
+		for (String message : messages) {
+			count++;
+			messageSb
+					.append("<img style='vertical-align: sub;' src='/NGeP-portlet/css/images/design/icon_error.png'>&nbsp;&nbsp;");
+			messageSb.append(message);
+			if (count < messages.size()) {
+				messageSb.append("<br/>");
+			}
+		}
+		return messageSb.toString();
+	}
+	// 26247 - end
 }

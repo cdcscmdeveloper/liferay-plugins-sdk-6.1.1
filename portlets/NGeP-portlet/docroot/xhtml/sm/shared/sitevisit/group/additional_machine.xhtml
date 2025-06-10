@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel header="#{lbl['lbl.sm.sitevisit.additional.machine']}" >
-		<p:dataTable value="#{template.smSvAdtMachines}" var="addMachineDtl" id="addMachTbl#{catCode}"
+		<p:dataTable value="#{template.smSvAdtMachines}" var="addMachineDtl" id="a#{catCode}addMachTbl"
 			selection="#{template.selectedAdtMachines}" rowKey="#{addMachineDtl}" 
 			emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag and not empty template.smSvAdtMachines}"/>

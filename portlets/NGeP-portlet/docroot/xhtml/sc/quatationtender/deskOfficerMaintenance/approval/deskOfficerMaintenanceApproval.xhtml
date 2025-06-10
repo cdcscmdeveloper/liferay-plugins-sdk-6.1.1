@@ -31,7 +31,7 @@
 		autoUpdate="#{DOMaintenanceBackingBean.managedBean.autoUpdate}"
 		closable="true" showSummary="false" severity="error, info" />
 		
-	<ac:gpkiPopup beforeSignText="#{DOMaintenanceBackingBean.textBeforeSign}"
+	<ac:gpkiPopup textBeforeSign="#{DOMaintenanceBackingBean.textBeforeSign}"
 				postSignAction="#{DOMaintenanceBackingBean.postGPKISignAction(gpkiBackingBean.pmDigiSign)}"
 				enableAutoUpdate="#{DOMaintenanceBackingBean.enableAutoUpdate()}" />
 				
