@@ -25,6 +25,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -80,10 +84,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 /**
  * Backing Bean for Support Document
@@ -2199,10 +2199,10 @@ public class SupportDocumentBackingBean extends
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IZoneSO.class);
 				ZoneReqDTO zoneReqDto = new ZoneReqDTO();
-				zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
-				
-				this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
-				
+				if (null != resDTO.getDocument().getPmZone()) {
+					zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
+					this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
+				}
 				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
 				if (createAction) {
 					PmCommonUtil.showFacesMsg(
