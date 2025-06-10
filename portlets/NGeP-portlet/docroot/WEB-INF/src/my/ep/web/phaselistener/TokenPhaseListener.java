@@ -27,7 +27,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.PROCESS_VALIDATIONS;
+		return PhaseId.ANY_PHASE;
 	}
 
 	@Override
@@ -52,8 +52,9 @@ public class TokenPhaseListener implements PhaseListener {
 				: loginId;
 		boolean isValid = TokenManager.isValidToken(submittedToken);
 		String viewId = context.getViewRoot().getViewId();
+		PhaseId currentPhaseId = event.getPhaseId();
 
-		log.info("#38229||" + isValid + "||"
+		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
 				+ TokenManager.getPartialToken(submittedToken) + "||"
 				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
 				+ "||" + viewId);
@@ -66,8 +67,8 @@ public class TokenPhaseListener implements PhaseListener {
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, null, message));
 			// Show error message
-//			RequestContext.getCurrentInstance().execute(
-//					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			// RequestContext.getCurrentInstance().execute(
+			// CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
 			context.renderResponse(); // Block further processing
 		}
 
