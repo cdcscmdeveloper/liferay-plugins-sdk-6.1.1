@@ -2,17 +2,20 @@ package my.ep.web.phaselistener;
 
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
 import my.ep.constants.CommonConstants;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.TokenManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 public class TokenPhaseListener implements PhaseListener {
 
@@ -24,7 +27,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.PROCESS_VALIDATIONS;
+		return PhaseId.ANY_PHASE;
 	}
 
 	@Override
@@ -48,12 +51,29 @@ public class TokenPhaseListener implements PhaseListener {
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
 		boolean isValid = TokenManager.isValidToken(submittedToken);
-		String viewId = context.getViewRoot().getViewId();
+		String viewId = "N/A";
+		if (context.getViewRoot() != null) {
+			viewId = context.getViewRoot().getViewId();
+		}
+		PhaseId currentPhaseId = event.getPhaseId();
 
-		log.info("#38229||" + isValid + "||"
+		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
 				+ TokenManager.getPartialToken(submittedToken) + "||"
 				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
 				+ "||" + viewId);
+
+		if (!isValid) {
+			String message = ResourceBundleUtils.getMessage(
+					"lbl.back.btn.err.msg",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, null, message));
+			// Show error message
+			// RequestContext.getCurrentInstance().execute(
+			// CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			context.renderResponse(); // Block further processing
+		}
 
 	}
 
