@@ -177,6 +177,7 @@ import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -11312,8 +11313,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			notif.setNotifLink(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
-			notif.setApplSubmitDate(new Time(getManagedBean().getSmAppl().getApplSubmitDate().getTime()));
-			notif.setApplRejectDate(new Time(new Date().getTime()));
+			notif.setApplSubmitDate(BpmCommonUtils.getCalendarValue(getManagedBean().getSmAppl().getApplSubmitDate()));
+			notif.setApplRejectDate(BpmCommonUtils.getCalendarValue(new Date()));
 			notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
 					? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
 			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
