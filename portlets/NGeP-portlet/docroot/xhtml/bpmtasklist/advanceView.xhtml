@@ -241,10 +241,11 @@
 			<h:outputText value="#{tasks.expirationDate.time}">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 			</h:outputText>
-			<!-- #30747 -->
+			<!-- #30747 - START -->
 			<p:outputPanel rendered="#{tasks.docStatus eq SupplierManagementConst.PM_STATUS_PO_ESCALTED_TO_APPROVER}">
 				<h:outputText value="#{bpmTasklistBackingBean.poKpiByCompanyState(tasks.docId, tasks.docStatus)}" escape="false"/>
 			</p:outputPanel>
+			<!-- #30747 - END -->
 			
 		</p:column>
 		
