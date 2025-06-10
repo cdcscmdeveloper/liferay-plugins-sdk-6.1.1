@@ -23792,7 +23792,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 			paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
 			switch (activeIndex) {
 			case QTConstants.ACTIVE_INDEX_4:
-				ScQtScoreSetting techScoreSetting = this.getManagedBean().getTechnicalItemScoreSetting();
+				ScQtScoreSetting techScoreSetting = this.getManagedBean().getTechnicalScoreSetting();
 				paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, techScoreSetting.isWeightageReq() ? "1" : "0");
 				break;
 			case QTConstants.ACTIVE_INDEX_5:
