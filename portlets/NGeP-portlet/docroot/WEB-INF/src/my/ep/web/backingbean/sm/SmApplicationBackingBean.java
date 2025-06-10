@@ -7081,7 +7081,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							new String[] { worker1.getIdentificationNo() });
 				}
 			}
-			
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
@@ -11306,6 +11311,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (reqDTO.getOutcome()
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
 			SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
+			
 			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
 					? getManagedBean().getSmSupplier().getCompanyName() : " ");
 			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
@@ -11313,8 +11320,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			notif.setNotifLink(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
-			notif.setApplSubmitDate(BpmCommonUtils.getCalendarValue(getManagedBean().getSmAppl().getApplSubmitDate()));
-			notif.setApplRejectDate(BpmCommonUtils.getCalendarValue(new Date()));
+			notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
+			notif.setApplRejectDate(sdf.format(new Date()).toString());
 			notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
 					? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
 			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
