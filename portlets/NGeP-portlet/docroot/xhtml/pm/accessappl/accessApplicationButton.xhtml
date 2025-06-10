@@ -88,12 +88,11 @@
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />
 			
-		<ac:confirmationPopupSM id="rejectApplDlg" widget="rejectApplDlg"
+		<ac:confirmationPopup id="rejectApplDlg" widget="rejectApplDlg"
 			okParam="#{accessApplBackingBean.saveAccessApplication('REJECT')}"
 			width="400" height="100" hasParam="true"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.reject.msg']}"
-			update="@([id$=Msg])"
-			loadingWidget="blockWidget" />
+			update="@([id$=Msg])"/>
 		<!-- 34445 end -->
 </ui:composition>
