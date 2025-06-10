@@ -389,6 +389,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 				for (PmDocumentRestr rest : managedBeans.getComTypeRestrictions()) {
 					if (rest.getCompanyTypeCode().getParameterId() == restNew.getCompanyTypeCode().getParameterId()) {
 						restNew.setDocumentRestrId(rest.getDocumentRestrId());
+					} else {
+						restNew.setDocumentRestrId(rest.getDocumentRestrId());
 					}
 				}
 			}
@@ -426,6 +428,8 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			for (PmDocumentRestr restNew : managedBeans.getNewCategoryL3AuditList()) {
 				for (PmDocumentRestr rest : managedBeans.getCategoryRestrictions()) {
 					if (rest.getPmCategoryL3().getCategoryL3Id() == restNew.getPmCategoryL3().getCategoryL3Id()) {
+						restNew.setDocumentRestrId(rest.getDocumentRestrId());
+					} else {
 						restNew.setDocumentRestrId(rest.getDocumentRestrId());
 					}
 				}
@@ -523,7 +527,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 	private void updatedRowFieldAppTypeTabValList(SupportDocumentManagedBean managedBeans) {
 		for (PmDocumentRestr pmDocumentRestr : managedBeans.getAppTypeRestrictions()) {
 			for (PmDocumentRestr pmDocumentRestrOld : managedBeans.getAppTypeRestrictionsOld()) {
-				if (pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
+				if (pmDocumentRestr.getDocumentRestrId().equals(pmDocumentRestrOld.getDocumentRestrId())) {
 					handleUpdatedRowFieldAppTypeTabValList(pmDocumentRestrOld, pmDocumentRestr, managedBeans);
 				}
 			}
@@ -596,7 +600,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 			SupportDocumentManagedBean managedBeans) {
 		/* Facility Type : Home Office (Y/N) */
 		if (pmDocumentRestrOld.isHomeOffice() != pmDocumentRestr.isHomeOffice()
-				&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
+				&& pmDocumentRestr.getDocumentRestrId().equals(pmDocumentRestrOld.getDocumentRestrId())) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_FACILITYHOME_FIELDLABELID,
@@ -605,7 +609,7 @@ public class AuditPMSupportingDocumentBackingBean extends AuditPMBackingBeanTemp
 		}
 		/* Facility Type : Business Office (Y/N) */
 		if (pmDocumentRestrOld.isBusinessOffice() != pmDocumentRestr.isBusinessOffice()
-				&& pmDocumentRestr.getDocumentRestrId() == pmDocumentRestrOld.getDocumentRestrId()) {
+				&& pmDocumentRestr.getDocumentRestrId().equals(pmDocumentRestrOld.getDocumentRestrId())) {
 			this.docGroupId = BigInteger.valueOf(managedBeans.getSelectedDocument().getDocumentId());
 			this.docId = BigInteger.valueOf(pmDocumentRestr.getDocumentRestrId());
 			detailObj(AuditPMSupplierMgtConfigConst.PM_AUD_SD_FACILITYOFFICE_FIELDLABELID,
