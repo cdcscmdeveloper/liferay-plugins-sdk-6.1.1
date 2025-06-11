@@ -27,7 +27,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.ANY_PHASE;
+		return PhaseId.APPLY_REQUEST_VALUES;
 	}
 
 	@Override
@@ -36,6 +36,7 @@ public class TokenPhaseListener implements PhaseListener {
 		if (!context.isPostback())
 			return;
 
+		TokenManager tokenManager = new TokenManager();
 		String submittedToken = StringUtils.EMPTY;
 		Map<String, String> params = context.getExternalContext()
 				.getRequestParameterMap();
@@ -46,11 +47,11 @@ public class TokenPhaseListener implements PhaseListener {
 			}
 		}
 
-		String tokenSession = TokenManager.getTokenSession();
+		String tokenSession = tokenManager.getTokenSession();
 		String loginId = new FacesScopes().getUserScreenName();
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
-		boolean isValid = TokenManager.isValidToken(submittedToken);
+		boolean isValid = tokenManager.isValidToken(submittedToken);
 		String viewId = "N/A";
 		if (context.getViewRoot() != null) {
 			viewId = context.getViewRoot().getViewId();
@@ -58,8 +59,8 @@ public class TokenPhaseListener implements PhaseListener {
 		PhaseId currentPhaseId = event.getPhaseId();
 
 		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
-				+ TokenManager.getPartialToken(submittedToken) + "||"
-				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
+				+ tokenManager.getPartialToken(submittedToken) + "||"
+				+ tokenManager.getPartialToken(tokenSession) + "||" + loginId
 				+ "||" + viewId);
 
 		if (!isValid && currentPhaseId != PhaseId.RESTORE_VIEW) {
@@ -72,6 +73,7 @@ public class TokenPhaseListener implements PhaseListener {
 			// Show error message
 			RequestContext.getCurrentInstance().execute(
 					"alert('" + message + "');");
+			log.info("#38229 after blocking for " + loginId);
 			context.renderResponse(); // Block further processing
 		}
 
