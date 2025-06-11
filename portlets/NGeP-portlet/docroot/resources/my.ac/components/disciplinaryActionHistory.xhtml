@@ -38,7 +38,7 @@
 		<ui:param name="isMOF" value="#{empty cc.attrs.voList ? false : cc.attrs.voList.get(0).mofNoExist}" />
 							
 		<p:dataTable value="#{cc.attrs.voList}" var="disciplinaryAction" id="disciplinaryActionDtId"
-		 sortBy="#{disciplinaryAction.endDate}" rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
+		  rowIndexVar="index" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" 
 		 scrollable="#{cc.attrs.voList.size() gt 1}"
 		 scrollHeight="#{cc.attrs.voList.size() gt 5 ? 470 : ''}" 	 
 		 style="table-layout: fixed; width: 97%; margin: 0; padding: 0;">
