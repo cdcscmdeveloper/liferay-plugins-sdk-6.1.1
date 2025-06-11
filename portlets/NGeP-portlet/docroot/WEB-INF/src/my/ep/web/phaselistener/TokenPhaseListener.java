@@ -62,7 +62,7 @@ public class TokenPhaseListener implements PhaseListener {
 				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
 				+ "||" + viewId);
 
-		if (!isValid) {
+		if (!isValid && currentPhaseId != PhaseId.RESTORE_VIEW) {
 			String message = ResourceBundleUtils.getMessage(
 					"lbl.back.btn.err.msg",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
