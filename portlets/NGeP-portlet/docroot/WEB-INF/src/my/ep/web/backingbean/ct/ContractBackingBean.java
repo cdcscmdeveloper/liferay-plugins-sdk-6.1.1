@@ -2819,62 +2819,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 		}
 	}
-	
-	/**
-	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment latest
-	 */
-	private void removeDefermentLatest(){
-		CtBondWaiverDetail latestDeferment = getManagedBean().getContractVer().getBondWaiverDefermentLatest();
-		if (latestDeferment != null && latestDeferment.getCtAttachment() != null
-				&& latestDeferment.getCtAttachment().getAttachmentId() != null) {
-			getManagedBean().getDeleteAttachmentList().add(latestDeferment.getCtAttachment());
-		}
-		getManagedBean().getContractVer().setBondWaiverDefermentLatest(null);
-	}
-	
-	/**
-	 * Method to remove/delete any non-active bond waiver records and their attachments for deferment history
-	 */
-	private void removeInactiveDefermentHistory(){
-		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
-		// remove bond waiver that hasn't been approved
-		if (CollectionUtils.isNotEmpty(historyDeferment)) {
-			Iterator<CtBondWaiverDetail> iter = historyDeferment.iterator();
-			while (iter.hasNext()) {
-				CtBondWaiverDetail bondWaiverHistory = iter.next();
-				if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-					removeAttachmentIfExist(bondWaiverHistory.getCtAttachment());
-					iter.remove();
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Method to remove attachment in the database if exist.
-	 * 
-	 * @param attachment The attachment that need to be deleted
-	 */
-	public void removeAttachmentIfExist(CtAttachment attachment){
-		if(attachment!=null && attachment.getAttachmentId() != null){
-			getManagedBean().getDeleteAttachmentList().add(attachment);
-		}
-	}
-	
-	/**
-	 * Method to check how many days the deferment Bond has.
-	 * If got more than MAX_DEFERMENT_BOND_DAYS, deferment will be disabled.
-	 */
-	private void checkDaysDefermentBondHistory(){
-		int noOfDays = 0;
-		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
-		if (CollectionUtils.isNotEmpty(historyDeferment)) {
-			for (CtBondWaiverDetail bondWaiverHistory : historyDeferment) {
-				noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
-			}
-			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
-		}
-	}
 	//#13847 end
 	
 	/**
