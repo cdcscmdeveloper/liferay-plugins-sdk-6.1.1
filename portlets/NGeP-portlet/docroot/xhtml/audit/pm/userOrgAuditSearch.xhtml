@@ -42,7 +42,7 @@
 			<br />
 			<br />
 		</p:outputPanel>
-		<table class="ppTwoTable">	
+		<table class="ppTwoTable">
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.config.type']}" /> <h:outputLabel
@@ -67,7 +67,6 @@
 						id="dropdownMainOrgUserMsg" display="icon" /></td>
 				<td>&#160;</td>
 			</tr>
-			<!--  <td class="header-info-text">-->
 			<!-- *** OPM START ORGANIZATION PROFILE MGT *** -->
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
@@ -341,7 +340,7 @@
 				</tr>
 			</c:if>
 			<!-- *** OUSRG END *** -->
-			<!--</td>-->
+
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.Role']}" /></th>
@@ -411,7 +410,7 @@
 					</div>
 				</td>
 			</tr>
-</table>
+		</table>
 		<ac:lovPopupAudit />
 		<ac:lovPopupAuditOrg />
 	</p:panel>
