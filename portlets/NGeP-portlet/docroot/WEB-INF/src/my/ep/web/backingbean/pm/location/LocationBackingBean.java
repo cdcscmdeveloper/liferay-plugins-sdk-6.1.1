@@ -336,7 +336,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getDivision().getDivisionId();
 				/************ AUDIT #28895_35509 START *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
-					StateResDTO stateResDTO = stateSO.retriveStateByStateId(reqDTO.getStateId());
+					StateResDTO stateResDTO = stateSO.retrieveStateByStateId(reqDTO.getStateId());
 					getManagedBean().setState(stateResDTO.getPmState());
 					getManagedBean().setResDivision(resDTO.getPmDivision());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
