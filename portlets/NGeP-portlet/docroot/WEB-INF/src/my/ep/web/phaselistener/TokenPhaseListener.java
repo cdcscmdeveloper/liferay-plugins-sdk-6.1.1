@@ -71,8 +71,10 @@ public class TokenPhaseListener implements PhaseListener {
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, null, message));
 			// Show error message
-			RequestContext.getCurrentInstance().execute(
-					"alert('" + message + "');");
+			RequestContext
+					.getCurrentInstance()
+					.execute(
+							"showCustomDialog('Session Expired', 'Your session will expire in 5 minutes.')");
 			log.info("#38229 after blocking for " + loginId);
 			context.renderResponse(); // Block further processing
 		}
