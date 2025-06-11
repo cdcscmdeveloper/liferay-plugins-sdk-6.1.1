@@ -152,7 +152,7 @@
 
 <h:body>
 	
-	<p:dialog width="200px" height="50px" 
+	<!-- <p:dialog width="200px" height="50px" 
 			header="#{lbl['lbl.back.btn.err.header']}" widgetVar="#{CommonConstants.GLOBAL_MESSAGE_ID}"
 			resizable="false" showEffect="fade" closable="true" hideEffect="fade"
 			modal="true" id="#{CommonConstants.GLOBAL_MESSAGE_ID}">
@@ -163,6 +163,13 @@
 		        </h:panelGroup>
 		    </f:facet>
 			<h:outputText style="font-weight:bold;" styleClass="warning" value="#{lbl['lbl.back.btn.err.msg']}" />
+	</p:dialog> -->
+	
+	<p:dialog widgetVar="#{CommonConstants.GLOBAL_MESSAGE_ID}" modal="true" 
+		id="#{CommonConstants.GLOBAL_MESSAGE_ID}"
+		dynamic="true" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.back.btn.err.header']}">
+		<h:outputText style="font-weight:bold;" styleClass="warning" value="#{lbl['lbl.back.btn.err.msg']}" />
 	</p:dialog>
 
 	<h:form id="form">
