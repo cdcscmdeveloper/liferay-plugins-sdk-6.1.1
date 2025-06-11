@@ -177,23 +177,10 @@
 
 <h:body>
 	
-	<!-- <p:dialog width="200px" height="50px" 
-			header="#{lbl['lbl.back.btn.err.header']}" widgetVar="#{CommonConstants.GLOBAL_MESSAGE_ID}"
-			resizable="false" showEffect="fade" closable="true" hideEffect="fade"
-			modal="true" id="#{CommonConstants.GLOBAL_MESSAGE_ID}">
-			<f:facet name="header">
-		        <h:panelGroup>
-		            <p:graphicImage value="/css/images/messages/error.png" width="16" height="16" style="margin-right: 8px; vertical-align: middle;" />
-		            <h:outputText value="#{lbl['lbl.back.btn.err.header']}" style="vertical-align: middle;" />
-		        </h:panelGroup>
-		    </f:facet>
-			<h:outputText style="font-weight:bold;" styleClass="warning" value="#{lbl['lbl.back.btn.err.msg']}" />
-	</p:dialog> -->
-	
 	<div id="customDialog" style="display: none; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
 	    <h3 id="dialogTitle">Attention Required</h3>
 	    <p id="dialogMessage"></p>
-	    <button id="dialogCloseBtn" onclick="closeCustomDialog()">Close</button>
+	    <!-- <button id="dialogCloseBtn" onclick="closeCustomDialog()">Close</button> -->
 	</div>
 
 	<h:form id="form">
