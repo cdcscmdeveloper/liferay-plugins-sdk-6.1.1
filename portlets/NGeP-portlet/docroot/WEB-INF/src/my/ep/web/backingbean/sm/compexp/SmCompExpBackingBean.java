@@ -29,6 +29,7 @@ import my.ep.persistence.entity.sm.SmCompExpCatMaster;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
 import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -225,9 +226,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().setSupplierSubDivCatList(null);
 
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
-		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
-		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
+		SmSupplier supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
+		reqDTO.setApplId(supplier.getSmAppl().getApplId());
 
 		ICategoryCodeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1s(reqDTO);
@@ -243,10 +245,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Listener for clienType
 	 */
 	public void clientTypeChange() {
+		String oriAgencyName = this.getManagedBean().getSelectedDraft().getOriAgencyName();
 		if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_NON_FEDERAL)) {
-			if (null != this.getManagedBean().getSelectedDraft().getOriAgencyName()
-					&& !this.getManagedBean().getSelectedDraft().getOriAgencyName().isEmpty()) {
-				this.getManagedBean().getSelectedDraft().setAgencyName(this.getManagedBean().getSelectedDraft().getOriAgencyName());
+			if (null != oriAgencyName && !oriAgencyName.isEmpty()) {
+				this.getManagedBean().getSelectedDraft().setAgencyName(oriAgencyName);
 			}
 		} else if (this.getManagedBean().getSelectedDraft().getClientType().equalsIgnoreCase(ParameterConst.CLIENT_TYPE_FEDERAL)) {
 			this.getManagedBean().getSelectedDraft().setAgencyName(null);
@@ -346,12 +348,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		if (this.getManagedBean().isSelectedAll()) {
 			this.getManagedBean().setSelected(true);
+			// Expected Max Size in loop (30) based on NGEP_PDS database
 			for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
 				cat.setSelected(true);
 				selectedList.add(cat);
 			}
 		} else {
 			this.getManagedBean().setSelected(false);
+			// Expected Max Size in loop (30) based on NGEP_PDS database
 			for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
 				cat.setSelected(false);
 				selectedList.remove(cat);
@@ -403,9 +407,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
-		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
-		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
-		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
+		SmSupplier supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
+		reqDTO.setApplId(supplier.getSmAppl().getApplId());
 
 		ICategoryCodeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
@@ -430,9 +435,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		reqDTO.setSupplierTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getSupplierType());
-		reqDTO.setBusinessTypeCode(this.getManagedBean().getSelectedDraft().getSmSupplier().getBusinessType());
-		reqDTO.setApplId(this.getManagedBean().getSelectedDraft().getSmSupplier().getSmAppl().getApplId());
+		SmSupplier supplier = this.getManagedBean().getSelectedDraft().getSmSupplier();
+		reqDTO.setSupplierTypeCode(supplier.getSmAppl().getSupplierType());
+		reqDTO.setBusinessTypeCode(supplier.getBusinessType());
+		reqDTO.setApplId(supplier.getSmAppl().getApplId());
 
 		ICategoryCodeSO reqSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
@@ -453,6 +459,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void checkDuplicateCatCode(Long categoryL3Id, int index) {
 		int i = 0;
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
 			if (i != index && cat.getCategoryL3().getCategoryL3Id().equals(categoryL3Id)) {
 				this.getManagedBean().getSmCompExpCatDraftList().get(index).getCategoryL3().setCategoryL3Id(null);
@@ -469,6 +476,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		List<SmCompExpCatDraft> catList = this.getManagedBean().getSmCompExpCatDraftList();
 		List<SmCompExpCatDraft> selectedList = this.getManagedBean().getSelectedSmCompExpCatDraft();
 		this.getManagedBean().setSmCompExpCatDrafNotComplete(true);
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft selected : selectedList) {
 			catList.remove(selected);
 			if (null == selected.getCategoryL3().getCategoryL3Id()) {
@@ -569,6 +577,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_775228,
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft cat : this.getManagedBean().getSmCompExpCatDraftList()) {
 			if (null == cat.getCategoryL3().getCategoryL3Id()) {
 				error = true;
@@ -623,6 +632,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setCompExpMasterDocs(this.getManagedBean().getSmCompExpDocList());
 
 		List<SmCompExpCatMaster> catMasterList = new ArrayList<>();
+		// Expected Max Size in loop (30) based on NGEP_PDS database
 		for (SmCompExpCatDraft catDraft : this.getManagedBean().getSmCompExpCatDraftList()) {
 			SmCompExpCatMaster catMaster = new SmCompExpCatMaster();
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
