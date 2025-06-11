@@ -70,8 +70,8 @@ public class TokenPhaseListener implements PhaseListener {
 			context.addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, null, message));
 			// Show error message
-			// RequestContext.getCurrentInstance().execute(
-			// CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			RequestContext.getCurrentInstance().execute(
+					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
 			context.renderResponse(); // Block further processing
 		}
 
