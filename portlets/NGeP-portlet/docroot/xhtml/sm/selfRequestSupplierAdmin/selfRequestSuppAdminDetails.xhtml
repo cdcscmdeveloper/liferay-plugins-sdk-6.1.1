@@ -317,7 +317,7 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.stateItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeState(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity" />
+							update="divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity,postCodePermPanelId" />
 
 					</p:selectOneMenu>
 					<!-- #34159 - END -->
@@ -351,7 +351,7 @@
 							value="#{selfRequestSupplierAdminBackingBean.managedBean.divisionItems}" />
 							<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeDivision(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="suppAdminPermDist,suppAdminPermCity" />
+							update="suppAdminPermDist,suppAdminPermCity,postCodePermPanelId" />
 						</p:selectOneMenu>
 						<p:message id="suppAdminPermDivisionMsg" for="suppAdminPermDivision" showSummary="true" showDetail="false" display="icon" />
 						<!-- #34159 - END -->
@@ -385,7 +385,7 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.districtItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeDistrict(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="suppAdminPermCity" />
+							update="suppAdminPermCity,postCodePermPanelId" />
 					</p:selectOneMenu>
 					<!-- #34159 - END -->
 					<p:message id="suppAdminPermDistMsg" for="suppAdminPermDist"
@@ -433,7 +433,7 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.cityItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeCity(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="suppAdminPermCity" />
+							update="suppAdminPermCity,postCodePermPanelId" />
 					</p:selectOneMenu>
 					<!-- #34159 - END -->
 					<p:message id="suppAdminPermCityMsg" for="suppAdminPermCity"
@@ -449,7 +449,8 @@
 					<p:outputPanel id="postCodePermPanelId">
 						<p:outputPanel
 							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId==selfRequestSupplierAdminBackingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="5" required="true"
+							<!-- #36718 - START - change required value -->
+							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 								id="suppAdminPermAddrPostCodeMy"
 								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.postcode}"
@@ -465,7 +466,8 @@
 						</p:outputPanel>
 						<p:outputPanel
 							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId!=selfRequestSupplierAdminBackingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="10" required="true"
+							<!-- #36718 - START - change required value -->
+							<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 								id="suppAdminPermAddrPostCodeForeign"
 								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.postcode}"

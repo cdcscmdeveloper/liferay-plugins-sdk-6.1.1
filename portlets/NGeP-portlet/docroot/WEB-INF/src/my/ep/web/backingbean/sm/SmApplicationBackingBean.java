@@ -177,6 +177,7 @@ import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -7080,7 +7081,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							new String[] { worker1.getIdentificationNo() });
 				}
 			}
-			
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
@@ -11242,13 +11248,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
-		//38195
-		if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
-			SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
-					.getSmAppl().getApplId(),
-					ParameterConst.SM_APPLN_FOR_DELETE_PENDING_APPL_DECISION_REJECT,
-					getManagedBean().getApplnRejectionRemarks(),  getManagedBean().getRoleCode());
-		}
+		
 		return approveOrRejectPendingApplicationCancellation(decision);
 
 	}
@@ -11265,6 +11265,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 		ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 		//#38195 START
+		if (StringUtils.isNotBlank(getManagedBean().getApplnRejectionRemarks())) {
+			SmApplicationUtil.manageAndSaveNewSmRemarksWithRoleCode(getManagedBean()
+					.getSmAppl().getApplId(),
+					ParameterConst.SM_APPLN_FOR_DELETE_PENDING_APPL_DECISION_REJECT,
+					getManagedBean().getApplnRejectionRemarks(),  getManagedBean().getRoleCode());
+		}
+		
 		PmState state = this.getManagedBean().getSmAppl().getSmCompanyBasic()
 				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
 		if (state != null && state.getStateId() != null) {
@@ -11304,18 +11311,28 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (reqDTO.getOutcome()
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
 			SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
-			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName());
-			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
+			
+			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
+					? getManagedBean().getSmSupplier().getCompanyName() : " ");
+			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
+					? getManagedBean().getSmSupplier().getRegNo() : " ");
+			notif.setPaymentMethods(" ");
 			notif.setNotifLink(" ");
+			notif.setNotifDescription(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
-			notif.setApplSubmitDate(new Time(getManagedBean().getSmAppl().getApplSubmitDate().getTime()));
-			notif.setApplRejectDate(new Time(new Date().getTime()));
-			notif.setMofNo(getManagedBean().getSmSupplier().getSmMofAccount().getMofNo());
-			notif.setCompanyAddr(addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses().get(0).getSmAddress()));
-			notif.setSuppReason(getManagedBean().getSupplierRemarks());
-			notif.setPoReason(getManagedBean().getApplnRejectionRemarks());
+			notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
+			notif.setApplRejectDate(sdf.format(new Date()).toString());
+			notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
+					? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
+			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().isEmpty() ? addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
+			notif.setSuppReason(getManagedBean().getSupplierRemarks() != null 
+					? getManagedBean().getSupplierRemarks() : " ");
+			notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
+					? getManagedBean().getApplnRejectionRemarks() : " ");
 			smAppCanObj.setNotificationData(notif);
 		}
 		reqDTO.setBpmPojo(smAppCanObj); 
@@ -13085,16 +13102,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 
 	/**
@@ -13140,15 +13156,14 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 				}
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 		//#36483 - END
 		
 		/*//13320-start
@@ -13205,16 +13220,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& addr.getDistrictId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 
 	/**
@@ -13234,16 +13248,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& addr.getCityId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 
 	/**
@@ -16936,16 +16949,15 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					&& addr.getDivisionId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 	//13320-End	
 	
@@ -18511,9 +18523,19 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * @return String
 	 */
 	public String addressFormat(SmAddress addr) {
-        List<String> addrlist = Arrays.asList(addr.getAddress1(), addr.getAddress2(), addr.getAddress3(), 
-        		addr.getPmDistrict().getDistrictName(), addr.getPmCity().getCityName(), addr.getPmDivision().getDivisionName(),
-        		addr.getPmState().getStateName());
+		if (addr == null) {
+	        return "";
+	    }
+
+	    List<String> addrlist = Arrays.asList(
+	        addr.getAddress1(),
+	        addr.getAddress2(),
+	        addr.getAddress3(),
+	        (addr.getPmDistrict() != null ? addr.getPmDistrict().getDistrictName() : null),
+	        (addr.getPmCity() != null ? addr.getPmCity().getCityName() : null),
+	        (addr.getPmDivision() != null ? addr.getPmDivision().getDivisionName() : null),
+	        (addr.getPmState() != null ? addr.getPmState().getStateName() : null)
+	    );
         
         // Catter null address
         List<String> cleanedAddr = new ArrayList<String>();
