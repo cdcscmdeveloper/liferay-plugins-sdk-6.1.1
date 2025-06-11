@@ -25,6 +25,7 @@
 		<!-- Header file for all sub screens -->
 		<ui:param name="scQtCheckList"
 					value="#{supplierProposalDetailBackingBean.managedBean.financialQtChecklist}"></ui:param>
+	    <ui:remove> #28777#29729, 35592 - Start </ui:remove>	
 		<c:if test="#{supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}">
 			<div class="ui-messages ui-widget">
 				<div class="ui-messages-warn ui-corner-all">
@@ -35,6 +36,7 @@
 				</div>
 			</div>
 		</c:if>
+		<ui:remove> #28777#29729, 35592 - End </ui:remove>	
 		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<!-- inclueded page for respecitive checklist -->
 		<p:spacer height="4"></p:spacer>

@@ -30,6 +30,7 @@
 								action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 							<p:commandButton value="#{lbl['lbl.btn.save']}"
 								style="float:right;"
+								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
 								action="#{evaluationBackingBean.validateSaveSampleForMandatorySpec(hidSaveButton.clientId)}" />
 							<ui:remove>#29187 End Vinod</ui:remove>
 						</ui:fragment></td>

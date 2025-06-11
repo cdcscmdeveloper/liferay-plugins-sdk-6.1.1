@@ -454,16 +454,16 @@ public class SmApplicationBackingBean extends
 		
 		//START: Generate Report In Excel
 		String[] colHeaderReportList = {
-					"No.", 
-					"Nama Personnel", 
-					"No. Pengenalan", 
-					"Peranan dalam Syarikat",
-					"Nama Syarikat", 
-					"No. MOF",  
-					"Tarikh Luput",
-					"No. Pendaftaran Perniagaan",
-					"No. Permohonan",
-					"Status Permohonan"
+					SmCommonUtil.getMessageMalay("lbl.sm.userprofile.num", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.name", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.idno", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.rolename", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.compname", null), 
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.mofno", null),  
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.expdate", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.regno", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.overlapped.category.personnel.applno", null),
+					SmCommonUtil.getMessageMalay("lbl.sm.application.status", null)
 		};
 		
 		//CREATE WORKBOOK
@@ -492,7 +492,7 @@ public class SmApplicationBackingBean extends
 		//CREATE ROW & CELL(COLUMN) - MAKLUMAT PERTINDIHAN BIDANG
 		Row titleRow = sheetLaporan.createRow(0); //Create Row
 		Cell cellTitleRow = titleRow.createCell(0);//Create Cell (Column)
-		cellTitleRow.setCellValue("MAKLUMAT PERTINDIHAN BIDANG"); // Set Column Value
+		cellTitleRow.setCellValue(StringUtils.upperCase(SmCommonUtil.getMessageMalay("lbl.sm.overlapping.category", null))); // Set Column Value
 		cellTitleRow.setCellStyle(titleStyle);  
 		sheetLaporan.addMergedRegionUnsafe(new CellRangeAddress(0,0,0,9)); //to merge cell in selected row
 		
@@ -4053,10 +4053,10 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for 31130 --210525
 					//#31130 -end
 					
 					//#32236 start
@@ -4128,10 +4128,11 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
 					}
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
-					if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
+					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
 						throw new EpException(MessageConst.ERROR_722599, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}//#31130 -end
+					}*/ //Commented for 31130 --210525
+					//#31130 -end
 					
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
@@ -7069,7 +7070,12 @@ public class SmApplicationBackingBean extends
 							new String[] { worker1.getIdentificationNo() });
 				}
 			}
-			
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
@@ -13047,16 +13053,16 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().getBasicCompanyFacility().getOwnershipType().equalsIgnoreCase(SupplierManagementConst.SM_FACILITY_OWNERSHIP_OWN)){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCountryId(addr.getCountryId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 
 	/**
@@ -13102,15 +13108,15 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(null);
 				}
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 		//#36483 - END
 		
 		/*//13320-start
@@ -13167,16 +13173,15 @@ public class SmApplicationBackingBean extends
 					&& addr.getDistrictId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDistrictId(addr.getDistrictId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 
 	/**
@@ -13196,16 +13201,15 @@ public class SmApplicationBackingBean extends
 					&& addr.getCityId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setCityId(addr.getCityId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 
 	/**
@@ -16888,16 +16892,15 @@ public class SmApplicationBackingBean extends
 					&& addr.getDivisionId()!=null){
 				getManagedBean().getBasicCompanyFacility().getSmAddress().setDivisionId(addr.getDivisionId());
 			}
-			
-			if(!addr.isSsmData()){
-				addr.setPostcode("");
-			}
-			//#36718 - START
-			addr.setMapLatitude("");
-			addr.setMapLongitude("");
-			//#36718 - END
 		}
 		//#36483 - END
+		//#36718 - START
+		if(!addr.isSsmData()){
+			addr.setPostcode("");
+		}
+		addr.setMapLatitude("");
+		addr.setMapLongitude("");
+		//#36718 - END
 	}
 	//13320-End	
 	
