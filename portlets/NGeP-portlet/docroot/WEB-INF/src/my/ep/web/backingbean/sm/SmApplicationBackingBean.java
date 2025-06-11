@@ -177,6 +177,7 @@ import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.BpmCommonUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -7080,7 +7081,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							new String[] { worker1.getIdentificationNo() });
 				}
 			}
-			
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
@@ -11305,15 +11311,16 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (reqDTO.getOutcome()
 				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
 			SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
+			
 			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
 					? getManagedBean().getSmSupplier().getCompanyName() : " ");
 			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
 					? getManagedBean().getSmSupplier().getRegNo() : " ");
-			notif.setNotifLink(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
-			notif.setApplSubmitDate(new Time(getManagedBean().getSmAppl().getApplSubmitDate().getTime()));
-			notif.setApplRejectDate(new Time(new Date().getTime()));
+			notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
+			notif.setApplRejectDate(sdf.format(new Date()).toString());
 			notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
 					? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
 			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
