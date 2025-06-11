@@ -151,24 +151,23 @@
 </h:head>
 
 <h:body>
-
+	
+	<!-- <p:dialog width="200px" height="50px" 
+			header="#{lbl['lbl.back.btn.err.header']}" widgetVar="#{CommonConstants.GLOBAL_MESSAGE_ID}"
+			resizable="false" showEffect="fade" closable="true" hideEffect="fade"
+			modal="true" id="#{CommonConstants.GLOBAL_MESSAGE_ID}">
+			<f:facet name="header">
+		        <h:panelGroup>
+		            <p:graphicImage value="/css/images/messages/error.png" width="16" height="16" style="margin-right: 8px; vertical-align: middle;" />
+		            <h:outputText value="#{lbl['lbl.back.btn.err.header']}" style="vertical-align: middle;" />
+		        </h:panelGroup>
+		    </f:facet>
+			<h:outputText style="font-weight:bold;" styleClass="warning" value="#{lbl['lbl.back.btn.err.msg']}" />
+	</p:dialog> -->
 
 	<h:form id="form">
 		
 		 <h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
-		
-	    <!-- <p:dialog width="200px" height="50px" 
-				header="#{lbl['lbl.back.btn.err.header']}" widgetVar="#{CommonConstants.GLOBAL_MESSAGE_ID}"
-				resizable="false" showEffect="fade" closable="true" hideEffect="fade"
-				modal="true" id="#{CommonConstants.GLOBAL_MESSAGE_ID}">
-				<f:facet name="header">
-			        <h:panelGroup>
-			            <p:graphicImage value="/css/images/messages/error.png" width="16" height="16" style="margin-right: 8px; vertical-align: middle;" />
-			            <h:outputText value="#{lbl['lbl.back.btn.err.header']}" style="vertical-align: middle;" />
-			        </h:panelGroup>
-			    </f:facet>
-				<h:outputText style="font-weight:bold;" styleClass="warning" value="#{lbl['lbl.back.btn.err.msg']}" />
-		</p:dialog> -->
 	    
 		<div id="content" style="width: 100%;">
 		
