@@ -1,24 +1,21 @@
 package my.ep.web.phaselistener;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 
-import my.ep.constant.MessageConst;
 import my.ep.constants.CommonConstants;
-import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.TokenManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 public class TokenPhaseListener implements PhaseListener {
 
@@ -30,7 +27,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.PROCESS_VALIDATIONS;
+		return PhaseId.ANY_PHASE;
 	}
 
 	@Override
@@ -42,49 +39,45 @@ public class TokenPhaseListener implements PhaseListener {
 		String submittedToken = StringUtils.EMPTY;
 		Map<String, String> params = context.getExternalContext()
 				.getRequestParameterMap();
-
 		for (Map.Entry<String, String> entry : params.entrySet()) {
 			if (entry.getKey().contains(CommonConstants.TOKEN_UNIQUE_ID)) {
 				submittedToken = entry.getValue();
 				break;
 			}
 		}
-		
-//		if (!TokenManager.isValidToken(submittedToken)) {
-//			UIViewRoot viewRoot = context.getViewRoot();
-//			UIComponent component = findComponentById(viewRoot,
-//					CommonConstants.GLOBAL_MESSAGE_ID);
-//
-//			if (component != null) {
-//				String growlClientId = component.getClientId();
-//				context.addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-//								MessageUtils.getMessage(
-//										MessageConst.ERROR_760556, null,
-//										MessageUtils.BUNDLE_COMMON_MESSAGES,
-//										new FacesScopes().getUserLocale())));
-//
-//				context.renderResponse(); // Block further processing
-//			}
-//		}
+
+		String tokenSession = TokenManager.getTokenSession();
+		String loginId = new FacesScopes().getUserScreenName();
+		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
+				: loginId;
+		boolean isValid = TokenManager.isValidToken(submittedToken);
+		String viewId = "N/A";
+		if (context.getViewRoot() != null) {
+			viewId = context.getViewRoot().getViewId();
+		}
+		PhaseId currentPhaseId = event.getPhaseId();
+
+		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
+				+ TokenManager.getPartialToken(submittedToken) + "||"
+				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
+				+ "||" + viewId);
+
+		if (!isValid) {
+			String message = ResourceBundleUtils.getMessage(
+					"lbl.back.btn.err.msg",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+			context.addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, null, message));
+			// Show error message
+			// RequestContext.getCurrentInstance().execute(
+			// CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			context.renderResponse(); // Block further processing
+		}
+
 	}
 
 	@Override
 	public void afterPhase(PhaseEvent event) {
-	}
-
-	public UIComponent findComponentById(UIComponent root, String id) {
-		UIComponent component = null;
-		Iterator<UIComponent> itr = root.getFacetsAndChildren();
-
-		while (itr.hasNext() && component == null) {
-			component = findComponentById(itr.next(), id);
-		}
-
-		if (component == null && id.contains(root.getId())) {
-			component = root;
-		}
-		return component;
 	}
 }
