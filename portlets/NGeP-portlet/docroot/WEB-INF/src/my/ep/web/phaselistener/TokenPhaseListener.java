@@ -68,13 +68,15 @@ public class TokenPhaseListener implements PhaseListener {
 					"lbl.back.btn.err.msg",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
-			context.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, null, message));
+			String header = ResourceBundleUtils.getMessage(
+					"lbl.back.btn.err.header",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+			// context.addMessage(null, new FacesMessage(
+			// FacesMessage.SEVERITY_ERROR, null, message));
 			// Show error message
-			RequestContext
-					.getCurrentInstance()
-					.execute(
-							"showCustomDialog('Session Expired', 'Your session will expire in 5 minutes.')");
+			RequestContext.getCurrentInstance().execute(
+					"showCustomDialog('" + header + "', '" + message + "')");
 			log.info("#38229 after blocking for " + loginId);
 			context.renderResponse(); // Block further processing
 		}
