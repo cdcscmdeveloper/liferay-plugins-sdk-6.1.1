@@ -240,7 +240,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<!-- #34159 - START - change required condition -->
+				<!-- #34159 - START - change required condition -->
 					<p:selectOneMenu
 						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.country']}"
 						required="#{!empty param['disableValidation']}" id="suppAdminPermCntry"
@@ -253,7 +253,7 @@
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeCountry(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
 							update="suppAdminPermState,divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity,postCodePermPanelId" />
 					</p:selectOneMenu>
-					<!-- #34159 - END -->
+				<!-- #34159 - END -->
 					<p:message id="suppAdminPermCntryMsg" for="suppAdminPermCntry"
 						showSummary="true" showDetail="false" display="icon" />
 				</td>
@@ -308,7 +308,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<!-- #34159 - START - change required condition -->
+				<!-- #34159 - START - change required condition -->
 					<p:selectOneMenu
 						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.state']}"
 						required="#{!empty param['disableValidation']}" style="width: 207px;margin-bottom: 5px;" id="suppAdminPermState"
@@ -317,10 +317,10 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.stateItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeState(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity" />
+							update="divisionSrLabelPanelId,divisionSrDropdownPanelId,suppAdminPermDist,suppAdminPermCity,postCodePermPanelId" />
 
 					</p:selectOneMenu>
-					<!-- #34159 - END -->
+				<!-- #34159 - END -->
 					<p:message id="suppAdminPermStateMsg" for="suppAdminPermState"
 						showSummary="true" showDetail="false" display="icon" />
 						</td>
@@ -351,7 +351,7 @@
 							value="#{selfRequestSupplierAdminBackingBean.managedBean.divisionItems}" />
 							<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeDivision(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="suppAdminPermDist,suppAdminPermCity" />
+							update="suppAdminPermDist,suppAdminPermCity,postCodePermPanelId" />
 						</p:selectOneMenu>
 						<p:message id="suppAdminPermDivisionMsg" for="suppAdminPermDivision" showSummary="true" showDetail="false" display="icon" />
 						<!-- #34159 - END -->
@@ -376,7 +376,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.district']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<!-- #34159 - START - change required condition -->
+				<!-- #34159 - START - change required condition -->
 					<p:selectOneMenu
 						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.district']}"
 						required="#{!empty param['disableValidation']}" style="width: 207px;margin-bottom: 5px;" id="suppAdminPermDist"
@@ -385,9 +385,9 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.districtItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeDistrict(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="suppAdminPermCity" />
+							update="suppAdminPermCity,postCodePermPanelId" />
 					</p:selectOneMenu>
-					<!-- #34159 - END -->
+				<!-- #34159 - END -->
 					<p:message id="suppAdminPermDistMsg" for="suppAdminPermDist"
 						showSummary="true" showDetail="false" display="icon" />
 				</td>
@@ -423,7 +423,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td>
-					<!-- #34159 - START - change required condition -->
+				<!-- #34159 - START - change required condition -->
 					<p:selectOneMenu
 						label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.towncity']}"
 						required="#{!empty param['disableValidation']}" style="width: 207px;margin-bottom: 5px;"
@@ -433,9 +433,9 @@
 						<f:selectItems value="#{selfRequestSupplierAdminBackingBean.managedBean.cityItems}" />
 						<p:ajax event="change" process="@this"
 							listener="#{selfRequestSupplierAdminBackingBean.onChangeCity(selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress, false)}"
-							update="suppAdminPermCity" />
+							update="suppAdminPermCity,postCodePermPanelId" />
 					</p:selectOneMenu>
-					<!-- #34159 - END -->
+				<!-- #34159 - END -->
 					<p:message id="suppAdminPermCityMsg" for="suppAdminPermCity"
 						showSummary="true" showDetail="false" display="icon" />
 				</td>
@@ -449,7 +449,8 @@
 					<p:outputPanel id="postCodePermPanelId">
 						<p:outputPanel
 							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId==selfRequestSupplierAdminBackingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="5" required="true"
+							<!-- #36718 - START - change required value -->
+							<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 								id="suppAdminPermAddrPostCodeMy"
 								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.postcode}"
@@ -465,7 +466,8 @@
 						</p:outputPanel>
 						<p:outputPanel
 							rendered="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.countryId!=selfRequestSupplierAdminBackingBean.managedBean.myCountryId}">
-							<p:inputText maxlength="10" required="true"
+							<!-- #36718 - START - change required value -->
+							<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
 								id="suppAdminPermAddrPostCodeForeign"
 								value="#{selfRequestSupplierAdminBackingBean.managedBean.selectedAdminPermAddr.smAddress.postcode}"
@@ -495,7 +497,7 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 						action="#{selfRequestSupplierAdminBackingBean.redirectToMainPage}"
 						update="@form" />
-					<!-- #34159 - START - add param disablevalidation -->
+				<!-- #34159 - START - add param disablevalidation -->
 					<p:commandButton id="btnSubmitSuppAdminDetails" value="#{lbl['lbl.btn.submit']}" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"
 						action="#{selfRequestSupplierAdminBackingBean.submit}" >

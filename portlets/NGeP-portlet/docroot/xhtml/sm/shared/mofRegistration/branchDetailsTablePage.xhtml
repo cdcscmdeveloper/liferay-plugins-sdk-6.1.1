@@ -139,7 +139,7 @@
 						value="#{backingBean.managedBean.branchCompanyStates}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity" />
+						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
@@ -181,7 +181,7 @@
 						value="#{backingBean.managedBean.branchCompanyDivisions}" />
 					<p:ajax event="change" process="@this"
 					listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchDist,branchCity" />
+						update="branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu>
 				<!-- #34159 - END -->
 				<!-- #35086 -->
@@ -217,7 +217,7 @@
 						value="#{backingBean.managedBean.branchCompanyDistricts}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchDist,branchCity" />
+						update="branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
@@ -246,9 +246,8 @@
 						value="#{backingBean.managedBean.branchCompanyCities}" />
 					<p:ajax event="change" process="@this"
 						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchCity" />
+						update="branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
-			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
 					isShow="#{backingBean.managedBean.showFieldChanges
 							and not empty backingBean.managedBean.selectedBranch.supplierBranchId}"

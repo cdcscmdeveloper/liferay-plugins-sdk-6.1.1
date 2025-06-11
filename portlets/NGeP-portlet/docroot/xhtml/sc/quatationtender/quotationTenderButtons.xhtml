@@ -29,10 +29,20 @@
 	<ui:remove> #30477 End </ui:remove>
 		<table width="100%">
 		<tr>
-		<td style="vertical-align: bottom;" align="right"><p:commandLink value="#{lbl['lbl.td.doc.trackingDiary']}"
-					style="float:right;"
+			<ui:remove> #35500 Start </ui:remove>
+			<td style="vertical-align: bottom; float:right;" >
+				<p:commandLink value="#{lbl['lbl.audit.link.auditTrail']}" 
+					action="#{auditQTBackingBean.redirectToAuditTrailsViews(qTDetailBB.managedBean.qt.qtId)}"
+					immediate="true" rendered="#{qTDetailBB.managedBean.auditViewRole}" />
+					&#160;&#160;&#160;
+					
+				<p:commandLink
+					value=" #{lbl['lbl.td.doc.trackingDiary']} " 
 					action="#{pmTrackingDiaryBackingBean.redirectToTrackingDiary(ParameterConst.doctypeQuotation, qTDetailBB.managedBean.qt.qtId)}"
-					immediate="true" rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}"/></td>
+					immediate="true"
+					rendered="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen}" />
+			</td>
+		<ui:remove> #35500 End </ui:remove>		
 		</tr>
 		<ui:remove>//29464-start</ui:remove>
 		<c:if test="#{qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.approvalScreen and not empty qTDetailBB.managedBean.qt.childQt}">
@@ -68,17 +78,17 @@
 				
 				<div class="ppRightBtn">
 					<ui:remove>
-						#13344 Start				
+						#13344 Start, 36671				
 					</ui:remove>				
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{qTDetailBB.saveQtCAApproval}" process="@form" partialSubmit="true"
+					action="#{approvalBackingBean.saveQtCAApproval}" process="@form" partialSubmit="true"
 					onclick="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
 					update="@form"
 					rendered="#{isCommitteeApprovalTask}" 
 					disabled="#{!qTDetailBB.managedBean.ptjPresent}"/>
 					<ui:remove>
-						#13344 End					
+						#13344 End, 36671					
 					</ui:remove>
 										
 					<h:panelGroup id="approverBtns">
@@ -218,11 +228,6 @@
 						<ui:remove>9019 end</ui:remove>	
 						</c:when>
 						<c:otherwise>
-							<ui:remove>#29472 - start</ui:remove>
-							<p:commandButton value="#{lbl['lbl.btn.update']}"
-								onclick="updateConfirmPopup.show();"
-								rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}"/>
-							<ui:remove>#29472 - end</ui:remove>
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								styleClass="amendButton"
 								action="#{qTDetailBB.submitQtDetailsFormMaintanace(isQTStatusPendingScoringEndorsement)}"
@@ -230,7 +235,7 @@
 								oncomplete="blockWidget.hide();"
 								rendered="#{(qTDetailBB.isQTStatusInBetween(qTDetailBB.managedBean.qt.qtStatus.statusId, QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING, QTStatusConst.QT_PENDING_LOA))}"
 								disabled="#{qTDetailBB.isQTStatusEvaluation(qTDetailBB.managedBean.qt.qtStatus.statusId) and !(qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_RE_FINALIZATION or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_EVALUATION_PROPOSAL) and
-								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance or qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION}" /><ui:remove>#29472</ui:remove>
+								(empty qTDetailBB.managedBean.amendMentBean or !qTDetailBB.managedBean.amendMentBean.brandNew) and !qTDetailBB.managedBean.changesOnQTMaintenance}" />
 						</c:otherwise>
 					</c:choose>
 					<!-- 26095@hatta - start -->
@@ -422,32 +427,6 @@
 			</div>
 		</p:dialog>
 		<!-- 15391 End  -->
-		<ui:remove>#29472 - start</ui:remove>
-		<p:dialog id="updateConfirmId" widgetVar="updateConfirmPopup"
-			header="#{lbl['lbl.sc.approval.confirm']}" resizable="false"
-			width="30%" height="100" closable="false">
-			<table>
-				<tr>
-					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.qt.maintenance.update.dialog.tender']} #{qTDetailBB.managedBean.qt.qtNo} #{lbl['lbl.qt.maintenance.update.dialog2']}" 
-							rendered="#{qTDetailBB.managedBean.qt.procurementMode.parameterCode eq 'T'}"/></td>
-					<td align="center"><p:outputLabel
-							value="#{lbl['lbl.qt.maintenance.update.dialog.quotation']} #{qTDetailBB.managedBean.qt.qtNo} #{lbl['lbl.qt.maintenance.update.dialog2']}" 
-							rendered="#{qTDetailBB.managedBean.qt.procurementMode.parameterCode eq 'Q'}"/></td>
-				</tr>
-			</table>
-			<p:spacer height="1" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
-				    onclick="updateConfirmPopup.hide(); blockWidget.show();"
-				    action="#{qTDetailBB.reviseQtDocument}"
-					oncomplete="blockWidget.hide();"
-					partialSubmit="true" process="@form" update="@form"/>
-				<p:commandButton value="#{lbl['lbl.btn.no']}" 
-					onclick="updateConfirmPopup.hide();" type="button" partialSubmit="true"  process="@this"/>
-			</div>
-		</p:dialog>
-		<ui:remove>#29472 - end</ui:remove>
 		
 		<ui:remove>#25077 - Start</ui:remove>	
 		    <c:if test="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_PUBLICATION_APPROVAL || qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.qtPendingPublicationApprovalReschedule || isCommitteeApprovalTask}"> <ui:remove>#34694, #35527</ui:remove>

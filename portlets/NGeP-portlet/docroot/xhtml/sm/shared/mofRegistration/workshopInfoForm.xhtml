@@ -13,10 +13,11 @@
 			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
-						<td style="white-space: nowrap; float: left;">
-						    <!-- #28175 -->
+						<td>
+							<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 						    <p:outputLabel value="#{workshopCatVarStatus.index + 1}. #{workshopCatVar.fullCatcode} 
-						    	(#{backingBean.getSupplierCategoryName(workshopCatVar)})" />
+						    	(#{backingBean.getSupplierCategoryName(workshopCatVar, false, true)})" 
+						    	style="word-wrap:break-word; float:left !important; text-align:left !important;"/>
 						</td>
 					</tr>
 				</table>
@@ -111,14 +112,16 @@
 		</p:outputPanel>
 
 	</p:panel>
-	<p:dialog width="700px" height="500px"
+	<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
+	<p:dialog width="1200px" height="500px"
 		header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
 		
 		<p:ajax event="close" listener="#{backingBean.cancelWorkShopSaveorUpdate}"/>
 		
-		<p:outputPanel layout="block" id="workShopBlockPanel">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel layout="block" id="workShopBlockPanel" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 			<p:messages id="workShopDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 				
@@ -126,9 +129,10 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.workshop.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35" maxlength="50"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" id="smWrkShpName"
+							label="#{lbl['lbl.sm.facility.workshop.name']}" id="smWrkShpName"
 							value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
 							<p:ajax process="@this" update="@this"/>
@@ -157,7 +161,8 @@
 							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedWorkShopFacility.smSupplierCategoryFacilities}">
 								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
-									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3)})" style="float:left"/><br/> <!-- #28175 -->
+									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3, false, false)})" style="float:left"/><br/> 
+								<!-- #28175, 29380 - Site Visit Grouping Enhancement -28775 -->
 							</ui:repeat>
 						</p:outputPanel>
 						<p:message id="workshopCategoryIdMsg" for="workshopCategoryId"
@@ -289,7 +294,8 @@
 				</tr>
 	
 			</table>
-			
+			<!-- 29379 - Site Visit Grouping Enhancement -28775 -->
+			<ui:include src="/xhtml/sm/shared/mofRegistration/employeeInfoForm.xhtml" />
 			<br />
 			<div align="right">
 				<!-- #34159 - START - add param disablevalidation -->
@@ -315,9 +321,16 @@
 	
 	<ac:confirmationPopup id="workshopDeletePopUpId"
 		widget="workshopDeletePopUp"
-		okAction="backingBean.deleteSelectedWorkShops"
-		width="400" height="100"
+		okAction="backingBean.deleteSelectedWorkShops" width="400"
+		height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+		content="#{lbl['lbl.msg.confirm.delete']}"
+		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])" />
+
+	<!-- 29379 - Site Visit Grouping Enhancement -28775  START-->
+	<ac:confirmationPopup id="empDeletePopUpId" widget="empDeletePopUp"
+		okAction="backingBean.removeEmployee()" width="400" height="100"
 		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirm.delete']}" 
-		update=":#{p:component('smWorkShopDtPanel')}, @([id$=Msg])"/>
+		content="#{lbl['lbl.msg.confirm.delete']}"
+		update=":#{p:component('pnlEmployeeInfo')}" />
+	<!-- 29379 - Site Visit Grouping Enhancement -28775  END-->
 </ui:composition>

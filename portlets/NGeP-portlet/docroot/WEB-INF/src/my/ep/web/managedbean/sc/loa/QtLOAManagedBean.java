@@ -73,6 +73,12 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	
 	/** The back to previous page. */
 	private String backToPreviousPage;
+	
+	//#21692 - Start
+	private boolean ableToCancelLOA;
+	private boolean ableToCancelLOAWithoutBPM;
+	private boolean ableToSubmitLOA;
+	//#21692 - End
 
 
 	/**
@@ -337,6 +343,42 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
 	}
+
+	//#36339, #21692 - Start
+	public boolean isAbleToCancelLOA() {
+		return ableToCancelLOA;
+	}
+	//#36339, #21692 - End
+
+	//#36339, #21692 - Start
+	public void setAbleToCancelLOA(boolean ableToCancelLOA) {
+		this.ableToCancelLOA = ableToCancelLOA;
+	}
+	//#36339, #21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToSubmitLOA() {
+		return ableToSubmitLOA;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToSubmitLOA(boolean ableToSubmitLOA) {
+		this.ableToSubmitLOA = ableToSubmitLOA;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public boolean isAbleToCancelLOAWithoutBPM() {
+		return ableToCancelLOAWithoutBPM;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	public void setAbleToCancelLOAWithoutBPM(boolean ableToCancelLOAWithoutBPM) {
+		this.ableToCancelLOAWithoutBPM = ableToCancelLOAWithoutBPM;
+	}
+	//#21692 - End
 	
 	
 

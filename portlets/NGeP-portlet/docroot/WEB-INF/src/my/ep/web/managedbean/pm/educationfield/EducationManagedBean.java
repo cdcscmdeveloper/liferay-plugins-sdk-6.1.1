@@ -56,6 +56,10 @@ public class EducationManagedBean extends BaseManagedBean {
 	/** The is lazy. */
 	private boolean isLazy = false;
 	
+	/************ START: AUDIT #28895-35509 *************/
+	private PmEduField oldAuditPmEduField;
+	/************ END: AUDIT #28895-35509 *************/
+	
 	public EducationManagedBean(){}
 
 	/**
@@ -206,4 +210,13 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.oldPmEduField = oldPmEduField;
 	}
 
+	/************ START: AUDIT #35509 *************/
+	public PmEduField getOldAuditPmEduField() {
+		return oldAuditPmEduField;
+	}
+
+	public void setOldAuditPmEduField(PmEduField oldAuditPmEduField) {
+		this.oldAuditPmEduField = oldAuditPmEduField;
+	}
+	/************ END: AUDIT #35509 *************/
 }

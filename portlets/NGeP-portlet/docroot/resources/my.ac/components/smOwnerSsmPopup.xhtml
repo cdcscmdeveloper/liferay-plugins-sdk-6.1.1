@@ -96,7 +96,8 @@
 				<p:commandButton value="#{cc.attrs.btnOkLabel}"
 					process="#{cc.attrs.btnOkProcess}" partialSubmit="true"
 					immediate="true" action="#{cc.attrs.bBean.changeRoleAndProceed()}"
-					update="#{cc.attrs.btnOkUpdate}" />
+					update="#{cc.attrs.btnOkUpdate}" 
+					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />
 					
 				<p:commandButton value="#{cc.attrs.btnCancelLabel}" immediate="true" partialSubmit="true" action="#{cc.attrs.bBean.resetRoleValue()}"
 					oncomplete="#{cc.attrs.dialogId}ChangeWidgetVar.hide()}" />

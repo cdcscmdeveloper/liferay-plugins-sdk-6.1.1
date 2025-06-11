@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
@@ -39,6 +40,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 //20201105@Jacky - Enhancement#28836 - Start
 import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.AuditConst;
 //20201105@Jacky - Enhancement#28836 - End
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -97,6 +99,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMOrganizationProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -909,6 +913,7 @@ public class OrganisationBackingBean extends
 
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
+					getManagedBean().setAuditBillingAddress(pmAddressType.getPmAddress()); // 35509
 					getManagedBean().setSelectedStateId(
 							pmAddressType.getPmAddress().getPmState()
 									.getStateId());
@@ -919,6 +924,7 @@ public class OrganisationBackingBean extends
 							&& !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setOfficeContactPerson(
 								pmAddressType.getPmContacts().get(0));
+						getManagedBean().setAuditContactPerson(pmAddressType.getPmContacts().get(0)); // 35509
 						log.info("Contact Exist");
 						contactExist = true;
 					}
@@ -1226,6 +1232,20 @@ public class OrganisationBackingBean extends
 			reqDTO.setUser(currentUser);
 			//#30651 - end
 			
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMOrganizationProfileBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE) && !orgProfile.isBrandNew()){
+				// retrieve old data
+				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+				OrgProfileResDTO res = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
+				getManagedBean().setAuditOldPMOrgProfile(res.getPmOrgProfile());
+//				getManagedBean().setOldReceivingAddressList(getManagedBean().getAddressTypesList());
+				// OldReceivingAddressList
+			}
+			/************ AUDIT *************/
+			
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1258,6 +1278,12 @@ public class OrganisationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								message));
+				/************ AUDIT 35509*************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
+					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORG_PROFILE);
+				}
+				/************ AUDIT *************/
 			}
 		} finally {
 			orgProfileSO = null;
@@ -3976,4 +4002,26 @@ public class OrganisationBackingBean extends
 	}
 	//END #3790
 	
+	//#36489 - Start
+	public void checkUserProfile(Long userId, Integer index) {
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		reqDTO.setOrgProfileId(this.getManagedBean().getOrgProfile()
+				.getOrgProfileId());
+
+		UserResDTO resDTO = userSO
+				.findInactiveUserIdByUserIdAndOrgProfileId(reqDTO);
+
+		if (resDTO.isSuccessful() && resDTO.getUserId().longValue() > 0) {
+			this.getManagedBean().getSmPersonnels().get(index)
+					.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+			throw new EpException(MessageConst.ERROR_775220);
+		}
+	}
+	//#36489 - End
 }

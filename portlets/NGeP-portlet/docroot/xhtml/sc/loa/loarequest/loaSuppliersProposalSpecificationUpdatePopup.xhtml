@@ -89,8 +89,8 @@
 				</td>
 				<td colspan="3">
 					<br /><br />
-					<h:outputText style="width:24%;white-space: normal;word-break:break-all;"
-					value="#{lOADetailBackingBean.managedBean.itemNamePopup}" />
+					<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false"
+					value="#{lOADetailBackingBean.replaceAllSpecialCharactersAndNewline(lOADetailBackingBean.managedBean.itemNamePopup)}" />
 				</td>
 			</tr>
 			<tr>
@@ -101,7 +101,7 @@
 					<p:inputTextarea label="#{lbl['lbl.sc.justification']}" id="justification" 		
 					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
 					value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
-					style="width:800px; margin-bottom:5px;" maxlength="1000"  rows="5" autoResize="false">
+					style="width:800px; margin-bottom:5px;" onmouseout="limitTextArea(this,1000);" rows="5" autoResize="false">
 						<p:ajax event="change" process="@this" update="@this" />
 						<f:validateLength for="justification" maximum="1000" />		
 					</p:inputTextarea>
@@ -136,7 +136,7 @@
 		</p:columnGroup>
 		
 		<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" value="#{spec.tplSpecQuestion.clSpecDetail}" /><br/>
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" value="#{lOADetailBackingBean.replaceAllSpecialCharactersAndNewline(spec.tplSpecQuestion.clSpecDetail)}" /><br/>
 			<p:commandLink id="addNewSpec" update="specList"
 						action="#{lOADetailBackingBean.addNewOfferedSpec(spec)}"
 						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
@@ -155,7 +155,7 @@
 			</p:commandLink>
 		</p:column>
 		<p:column style="width:30%; text-align: left;">
-			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" value="#{lOADetailBackingBean.supplierRemarks(spec.answerRemark)}" />
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" value="#{lOADetailBackingBean.supplierRemarks(spec.answerRemark)}" />
 		</p:column>
 		<p:column style="width:40%; text-align: center;">
 			<p:inputTextarea id="newOfferedSpec"
