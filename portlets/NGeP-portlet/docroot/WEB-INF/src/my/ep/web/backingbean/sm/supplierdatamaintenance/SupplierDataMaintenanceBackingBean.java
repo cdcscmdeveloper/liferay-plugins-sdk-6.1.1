@@ -2792,18 +2792,22 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @param supplier
 	 */
 	public void downloadDAHistory(SmSupplier supplier) throws IOException {
+		log.info("TB 38345---START");
 		SmSupplier supp = supplier != null ? supplier : getManagedBean().getSmSupplier();
 		if(supp == null){
 			supp = SmApplicationUtil.getCurrentSupplier();
 		}
+		log.info("TB 38345---SUPPLIERID-"+supp.getSupplierId().toString());
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(ReportConst.SM_PARAM_KEY_SUPPLIER_ID, supp.getSupplierId().toString());
 		if(supp.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)){
+			log.info("TB 38345---BASIC");
 			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY_BASIC, paramMap);
 		} else {
+			log.info("TB 38345---MOF");
 			generateReport(ReportConst.SM_DISCIPLINARY_ACTION_HISTORY, paramMap);
 		}
-		
+		log.info("TB 38345---END");
 	}
 	//26238 : Disciplinary Action - end 28111
 	
