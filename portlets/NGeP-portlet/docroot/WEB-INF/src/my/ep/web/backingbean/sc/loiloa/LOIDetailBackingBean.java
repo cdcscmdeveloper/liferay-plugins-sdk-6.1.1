@@ -7267,7 +7267,9 @@ public class LOIDetailBackingBean extends
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
 		if (scLoi != null && scLoi.getLoiId() != null
 				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())) {
+				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
@@ -7338,8 +7340,10 @@ public class LOIDetailBackingBean extends
 	 */
 	public boolean isApproverAbleToSave() {
 		return !this.getManagedBean().isAbleToSubmitLOI()
-				&& this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
-						.equals(QTStatusConst.LOI_PENDING_APPROVAL);
+				&& (this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_APPROVAL) || this.getManagedBean().getScLoi()
+						.getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL));
 	}
 	//#21692 - End
 	
