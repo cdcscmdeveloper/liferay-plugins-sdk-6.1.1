@@ -184,7 +184,9 @@
 	</div>
 
 	<h:form id="form">
-		
+		 
+		 <p:remoteCommand actionListener="#{tokenManagerMB.processHiddenField}" autoRun="true" />
+		 
 		 <h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
 	    
 		<div id="content" style="width: 100%;">

@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 
 import my.ep.web.phaselistener.TokenPhaseListener;
 import my.ep.web.util.FacesScopes;
@@ -51,6 +52,10 @@ public class TokenManagerBean implements Serializable {
 				+ " sess bean:"
 				+ tokenManager.getPartialToken(currTokenSessionBean)
 				+ "  loginId:" + new FacesScopes().getUserScreenName());
+	}
+
+	public void processHiddenField(ActionEvent event) {
+		log.info("#38229 on remote hidden token:" + this.token);
 	}
 
 	public String getToken() {
