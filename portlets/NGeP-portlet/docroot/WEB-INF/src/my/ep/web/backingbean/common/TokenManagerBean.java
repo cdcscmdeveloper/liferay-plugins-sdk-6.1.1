@@ -54,10 +54,6 @@ public class TokenManagerBean implements Serializable {
 				+ "  loginId:" + new FacesScopes().getUserScreenName());
 	}
 
-	public void initHiddenToken() {
-		log.info("#38229 init hidden token:" + token);
-	}
-
 	public String getToken() {
 		return token;
 	}
