@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
 
 import my.ep.web.phaselistener.TokenPhaseListener;
 import my.ep.web.util.FacesScopes;
@@ -21,6 +23,14 @@ public class TokenManagerBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(TokenPhaseListener.class);
+
+	@ManagedProperty(value = "#{tokenSessionMB}")
+	private TokenSessionBean tokenSessionBean;
+
+	public void setTokenSessionBean(TokenSessionBean tokenSessionBean) {
+		this.tokenSessionBean = tokenSessionBean;
+	}
+
 	private String token;
 
 	@PostConstruct
@@ -29,11 +39,23 @@ public class TokenManagerBean implements Serializable {
 		// first created)
 		// This ensures the token is generated only once per view load.
 		TokenManager tokenManager = new TokenManager();
+		String currTokenSession = tokenManager.getTokenSession();
+		String currTokenSessionBean = tokenSessionBean == null ? "N/A"
+				: tokenSessionBean.getSessToken();
 		this.token = tokenManager.generateToken();
+		tokenSessionBean.setSessToken(token);
 		log.info("#38229 post construct hidden token:"
 				+ tokenManager.getPartialToken(token) + "  session token:"
 				+ tokenManager.getPartialToken(tokenManager.getTokenSession())
+				+ " current sess token:"
+				+ tokenManager.getPartialToken(currTokenSession)
+				+ " sess bean:"
+				+ tokenManager.getPartialToken(currTokenSessionBean)
 				+ "  loginId:" + new FacesScopes().getUserScreenName());
+	}
+
+	public void initHiddenToken() {
+		log.info("#38229 init hidden token:" + token);
 	}
 
 	public String getToken() {
