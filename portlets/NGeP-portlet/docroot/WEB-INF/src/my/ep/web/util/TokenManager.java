@@ -55,7 +55,7 @@ public class TokenManager implements Serializable {
 		String tokenSess = "N/A";
 		TokenSessionBean tokenSessionBean = (TokenSessionBean) FacesContext
 				.getCurrentInstance().getExternalContext().getSessionMap()
-				.get("mySessionBean");
+				.get("tokenSessionMB");
 		tokenSess = tokenSessionBean != null ? tokenSessionBean.getSessToken()
 				: tokenSess;
 		return tokenSess;
