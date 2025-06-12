@@ -18,7 +18,6 @@ public class TokenManager implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String TOKEN_KEY = CommonConstants.TOKEN_UNIQUE_ID;
-	private static final String TOKEN_HISTORY_KEY = TOKEN_KEY + "_HISTORY";
 	private static String BACK_BUTTON_ALLOWED = EpPropertiesUtils.getInstance()
 			.getProperty("back.btn.allowed");
 	private static Logger log = Logger.getLogger(TokenPhaseListener.class);
@@ -30,21 +29,11 @@ public class TokenManager implements Serializable {
 
 	public String generateToken() {
 		FacesScopes fs = new FacesScopes();
-		List<String> tokenHistory = (List<String>) fs
-				.getSessionScope(TOKEN_HISTORY_KEY);
-		if (tokenHistory == null) {
-			tokenHistory = new ArrayList<String>();
-		}
 		String currTokenSession = getTokenSession();
-		if (currTokenSession != null && !currTokenSession.isEmpty()) {
-			tokenHistory.add(currTokenSession);
-			fs.setSessionScope(TOKEN_HISTORY_KEY, tokenHistory);
-		}
-		for (String history : tokenHistory) {
-			log.info("#38229 history:" + history);
-		}
 		String token = UUID.randomUUID().toString();
-		new FacesScopes().setSessionScope(TOKEN_KEY, token);
+		log.info("#38229 curr token:" + currTokenSession + " new token:"
+				+ token);
+		fs.setSessionScope(TOKEN_KEY, token);
 		return token;
 	}
 
