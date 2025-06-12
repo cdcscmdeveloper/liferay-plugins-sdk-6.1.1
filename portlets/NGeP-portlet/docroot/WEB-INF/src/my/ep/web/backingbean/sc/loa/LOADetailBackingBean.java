@@ -535,8 +535,12 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			this.getManagedBean().setLoiLoaItemsResult(null);
 		}
 		// Bug 34404 - related to 29007 - end
-		new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339, #21692
-		getSupplierRejectProposalValidityExtensionNotification(this.getManagedBean().getScLoa());//#21692
+		//#21692 - Start
+		if (QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
+			new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339
+			getSupplierRejectProposalValidityExtensionNotification(this.getManagedBean().getScLoa());
+		}
+		//#21692 - End
 		return QTConstants.LOA_PAGE;
 	}
 	
@@ -3758,12 +3762,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 						// #29006 - end  - Bug #33903 end
 					}
 					parseLOADetails(scLoa, outcome);
-					//#21692 - Start
-					if (this.validateSupportedTask(scLoa.getScQt().getQtNo(),
-							QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
-						validateLOADetails(scLoa, outcome);
-					}
-					//#21692 - End
+					validateLOADetails(scLoa, outcome);
 					
 					// start - #26475 & #26474 - disable validation on save action
 					//validateContractDetails(scLoa);
@@ -12629,7 +12628,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {
 		if (scLoa != null && scLoa.getLoaId() != null
 				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReachByQt(getManagedBean().getScQt())) {
+				&& checkProposalValidityDateReachByQt(getManagedBean().getScQt())
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_ACCEPTANCE,
@@ -12645,6 +12646,38 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 							qtProposalExpiredMsg.toString(), MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
 		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	public boolean isSupplierAbleToSaveWithoutValidation(ScLoa scLoa) {
+		return this.validateSupportedTask(scLoa.getScQt().getQtNo(),
+				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * check supplier response for proposal validity extension,
+	 * BPM validity for the task and status
+	 * 
+	 * @return TRUE IF all condition met
+	 */
+	public boolean isApproverAbleToSave() {
+		return this.getManagedBean().getScLoa().getPmStatus().getStatusId().equals(QTStatusConst.LOA_PENDING_APPROVAL)
+				|| this.getManagedBean().getScLoa().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Do not render cancel button for approver when LOA at Approval
+	 * 
+	 * @return
+	 */
+	public boolean disableCancelForApprover() {
+		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
 	}
 	//#21692 - End
 }
