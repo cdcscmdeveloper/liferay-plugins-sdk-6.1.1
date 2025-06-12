@@ -73,10 +73,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 
 	public void preLoading() {
 		this.resetOrganisationSearchBean();
-		// this.setCurrentActiveOrg();
 		log.info("preLoading User Org");
 		getManagedBean().setLazy(false);
-		// this.retrieveOrgTypeMap();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -121,11 +119,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		getManagedBean().getSearchBean().setMasterLabel1("ORGUAD");
 		getManagedBean().getSearchBean().setpDocGroupId(docGroupId);
-
-		// this.setCurrentActiveOrg();
-		// this.generateAdditionalFilter();
-		// this.retrieveIdentityTypeMap();
-		// this.retrieveOrgTypeMap();
 
 		return NAV_TO_MAINTAIN;
 	}
@@ -297,7 +290,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	}
 
 	public void autoSelectOrgType() {
-		// RequestContext.getCurrentInstance().execute("if($(\"input[id$=':form:sorSearchOrgTypeId:0']\").is(':disabled')){console.log(\"0\"); $(\"input[id$=':form:sorSearchOrgTypeId:1']\").prop('checked', true);$(\"input[id$=':form:sorSearchOrgTypeId:1']\").change();}else if($(\"input[id$=':form:sorSearchOrgTypeId:1']\").is(':disabled')){ console.log(\"1\"); $(\"input[id$=':form:sorSearchOrgTypeId:0']\").prop('checked', true);$(\"input[id$=':form:sorSearchOrgTypeId:0']\").change();}else{ console.log(\"2\");$(\"input[id$=':form:sorSearchOrgTypeId:0']\").prop('checked', true);	$(\"input[id$=':form:sorSearchOrgTypeId:0']\").change();");
 		if (!getManagedBean().isNotFirstRun()) {
 			log.info("updateAuto");
 			RequestContext.getCurrentInstance().execute("autoSelectOrgType();");
@@ -423,7 +415,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setDateTo(null);
 		getManagedBean().getSearchBean().setDateFrom(null);
 		getManagedBean().getSearchBean().setRoleCode(null);
-		// searchMaster = new SearchMasterPagingDataModel();
 	}
 
 	public void search() {
@@ -441,14 +432,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setMasterLabel4(orgTypeId.toString());
 	}
 
-	// public String constructConditionFields() {
-	// StringBuilder sb = new StringBuilder();
-	// sb.append("orgTypeCode.parameterId^");
-	// sb.append(getManagedBean().getSelectedOrgType());
-	// sb.append("|recordStatus^1");
-	// return sb.toString();
-	// }
-
 	/**
 	 * get faces scopes
 	 * 
@@ -458,27 +441,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
-	// public String constructConditionFields() {
-	// StringBuilder sb = new StringBuilder();
-	// sb.append("orgTypeCode.parameterId^");
-	// sb.append(this.getManagedBean().getOrgTypeParamId());
-	// sb.append("|recordStatus^1");
-	// log.info("....getManagedBean().getSelectedOrgType().getParameterCode()="
-	// + getManagedBean().getSearchBean().getMasterLabel3());
-	// log.info("....this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()="
-	// + this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-	// log.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="
-	// + getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
-	//
-	// sb.append(OrgProfileUtil.retrieveAuthorizationLovSb(getManagedBean().getSearchBean().getMasterLabel3(),
-	// getManagedBean()
-	// .getCurrentActiveOrg().getOrgProfileId(),
-	// getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()),
-	// getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()),
-	// getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())));
-	// return sb.toString();
-	// }
 
 	public void changeOrgType() {
 		log.info("changeResOrgType");
@@ -500,53 +462,9 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		}
 	}
 
-	// public void changeOrgType() {
-	//     List<VAuditPMDTO> orgTypeItems = getOrgTypeDropdownValues();
-	//     if (orgTypeItems != null && !orgTypeItems.isEmpty()) {
-	//         OrgTypeItem firstItem = orgTypeItems.get(0);
-	//         // Do something with firstItem
-	//     }
-	// }
-
 	public void changeOrgUnit(BaseEntity entity) {
 		log.info("changeOrgUnit");
 	}
-
-	/**
-	 * reset search bean fields
-	 */
-	// public void resetSearchBean() {
-	// log.info("resetLocationSearchBean");
-	// getManagedBean().setLazy(false);
-	// AuditPMUserOrgSearchBean searchBean = new AuditPMUserOrgSearchBean();
-	// this.getManagedBean().setSearchBean(searchBean);
-	// searchMaster = new SearchMasterPagingDataModel();
-	// getManagedBean().setSelectedType(null);
-	// }
-	// public SelectItem[] getOrgTypeDropdownValues() {
-	// ISearchBean<PmParameterDesc> searchBean = null;
-	// if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
-	// searchBean = getOrgTypeSearchBean("orgTypeFederalList");
-	// } else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
-	// searchBean = getOrgTypeSearchBean("orgTypeOthersList");
-	// }
-	// SelectItem[] items = null;
-	// if (searchBean != null) {
-	// searchBean.getSortColumns();
-	// items =
-	// getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES,
-	// searchBean);
-	// }
-	//
-	// return items;
-	// }
-
-	// private ISearchBean<PmParameterDesc> getOrgTypeSearchBean(String
-	// componentId) {
-	// ISearchBean<PmParameterDesc> orgTypeSearchBean =
-	// super.createSearchBean(PmParameterDesc.class, componentId);
-	// return orgTypeSearchBean;
-	// }
 
 	/**
 	 * The method used for generating a list of available display type of status
@@ -629,94 +547,4 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	public void setProfileManagementSearchBackingBean(ProfileManagementSearchBackingBean profileManagementSearchBackingBean) {
 		this.profileManagementSearchBackingBean = profileManagementSearchBackingBean;
 	}
-
-	/**
-	 * retrieve and set the current active org
-	 */
-	// private void setCurrentActiveOrg() {
-	// log.info("setCurrentActiveOrg");
-	// boolean isFactoring = false;
-	// if (getFacesScopes().getUserSessionBean().getUserId() == null) {
-	// throw new EpException(MessageConst.ERROR_770149);
-	// }
-	// if (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
-	// isFactoring = true;
-	// }
-	// List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrgWithoutRole(
-	// getFacesScopes().getUserSessionBean().getUserId(), isFactoring);
-	//
-	// if (userOrgList == null || userOrgList.isEmpty()) {
-	// throw new EpException(MessageConst.ERROR_770105);
-	// }
-	//
-	// PmOrgProfile pmOrgProfile = userOrgList.get(0).getPmOrgProfile();
-	// this.getManagedBean().setCurrentActiveOrg(pmOrgProfile);
-	// }
-
-	// private void generateAdditionalFilter() {
-	// log.info("generateAdditionalFilter");
-	// this.getManagedBean().setAdditionalOrgFilter("");
-	// // generate additional filter
-	// if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-	// this.getManagedBean().setAdditionalOrgFilter(
-	// "|orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
-	// + "*parentOrgProfile.orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-	// } else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value()))
-	// {
-	// this.getManagedBean().setAdditionalOrgFilter(
-	// "|orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
-	// + "*parentOrgProfile.orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-	// } else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-	// this.getManagedBean().setAdditionalOrgFilter(
-	// "|orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-	// } else if (getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value()))
-	// {
-	// this.getManagedBean().setAdditionalOrgFilter(
-	// "|orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-	// } else if
-	// (getFacesScopes().hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
-	// this.getManagedBean().setAdditionalOrgFilter(
-	// "orgProfileId^" +
-	// this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-	// }
-	// }
-
-	/**
-	 * retrieve all identity type into mapper
-	 */
-	// private void retrieveIdentityTypeMap() {
-	// List<PmParameterDesc> parameterDescs =
-	// ParameterHelper.getInstance().getParameterDescListBySearchBean(
-	// ParameterTypeConst.IDENTIFICATION_TYPES, null);
-	//
-	// identityTypeMapper = new HashMap<String, Object>();
-	// for (PmParameterDesc pmDesc : parameterDescs) {
-	// identityTypeMapper.put(pmDesc.getPmParameter().getParameterCode(),
-	// pmDesc.getPmParameter());
-	// }
-	// }
-
-	/**
-	 * retrieve all org type into mapper
-	 */
-	// private void retrieveOrgTypeMap() {
-	// log.info("....retrieveOrgTypeMap....");
-	// List<PmParameterDesc> parameterDescs =
-	// PmCommonUtil.retrieveFilteredParamDesc(ParameterTypeConst.ORGANISATION_TYPES,
-	// null, null);
-	//
-	// orgTypeMapper = new HashMap<Long, Object>();
-	// for (PmParameterDesc pmDesc : parameterDescs) {
-	// orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(),
-	// pmDesc.getPmParameter());
-	// }
-	//
-	// }
-
 }
