@@ -54,8 +54,8 @@ public class TokenManagerBean implements Serializable {
 				+ "  loginId:" + new FacesScopes().getUserScreenName());
 	}
 
-	public void processHiddenField(ActionEvent event) {
-		log.info("#38229 on remote hidden token:" + this.token);
+	public void initHiddenToken() {
+		log.info("#38229 init hidden token:" + token);
 	}
 
 	public String getToken() {
