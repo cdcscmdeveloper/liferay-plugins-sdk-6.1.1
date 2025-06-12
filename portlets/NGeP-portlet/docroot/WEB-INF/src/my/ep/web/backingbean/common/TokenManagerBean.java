@@ -28,10 +28,11 @@ public class TokenManagerBean implements Serializable {
 		// Generate a token when the bean is initialized (i.e., when the view is
 		// first created)
 		// This ensures the token is generated only once per view load.
-		this.token = TokenManager.generateToken();
+		TokenManager tokenManager = new TokenManager();
+		this.token = tokenManager.generateToken();
 		log.info("#38229 post construct hidden token:"
-				+ TokenManager.getPartialToken(token) + "  session token:"
-				+ TokenManager.getPartialToken(TokenManager.getTokenSession())
+				+ tokenManager.getPartialToken(token) + "  session token:"
+				+ tokenManager.getPartialToken(tokenManager.getTokenSession())
 				+ "  loginId:" + new FacesScopes().getUserScreenName());
 	}
 

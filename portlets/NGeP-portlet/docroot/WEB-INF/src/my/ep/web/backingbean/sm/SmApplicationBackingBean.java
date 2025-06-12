@@ -11317,7 +11317,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					? getManagedBean().getSmSupplier().getCompanyName() : " ");
 			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
 					? getManagedBean().getSmSupplier().getRegNo() : " ");
-			notif.setNotifLink(" ");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
 			notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
