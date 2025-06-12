@@ -193,12 +193,11 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					auditPMReqDTO.setpLvl1Code(lSearchBean.getpLvl1OldVal());
 					auditPMReqDTO.setpLvl2Code(lSearchBean.getpLvl2OldVal());
 					auditPMReqDTO.setpLvl3Code(lSearchBean.getpLvl3OldVal());
-					auditPMReqDTO.setpLvl4(lSearchBean.getpLvl4OldVal()); // setpItemCode
-					auditPMReqDTO.setpLvl5(lSearchBean.getpLvl5OldVal()); // setpItemName
+					auditPMReqDTO.setpLvl4(lSearchBean.getpLvl4OldVal());
+					auditPMReqDTO.setpLvl5(lSearchBean.getpLvl5OldVal());
 					auditPMReqDTO.setpLvl6(lSearchBean.getpLvl6OldVal());
 					auditPMReqDTO.setpLvl7(lSearchBean.getpLvl7OldVal());
 
-					// auditPMReqDTO.setpRoleCode(lSearchBean.getRoleCodeOldVal());
 					auditPMReqDTO.setPdateFrom(lSearchBean.getDateFromOldVal());
 					auditPMReqDTO.setPdateTo(lSearchBean.getDateToOldVal());
 				}
@@ -210,7 +209,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 				}
 
 				auditPMReqDTO.setCategoryConfigParamLevel2(getManagedBean().getSearchBean().getMasterLabel2());
-				// lSearchBean.setPmParameterLvlIdOldval(lSearchBean.getPmParameterLvlId());
 				auditPMReqDTO.setPmParameterLvlId(lSearchBean.getPmParameterLvlId());
 				auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 
@@ -481,7 +479,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 */
 	public void resetOrganisationSearchBean() {
 		log.info("resetOrgSearchBean");
-		// this.getManagedBean().setOrganisationSearchBean(null);
 		getManagedBean().setLazy(false);
 		AuditPMUserOrgSearchBean searchBean = new AuditPMUserOrgSearchBean();
 		getManagedBean().setSearchBean(searchBean);
