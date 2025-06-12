@@ -26,6 +26,10 @@ public class TokenManagerBean implements Serializable {
 	@ManagedProperty(value = "#{tokenSessionMB}")
 	private TokenSessionBean tokenSessionBean;
 
+	public void setTokenSessionBean(TokenSessionBean tokenSessionBean) {
+		this.tokenSessionBean = tokenSessionBean;
+	}
+
 	private String token;
 
 	@PostConstruct

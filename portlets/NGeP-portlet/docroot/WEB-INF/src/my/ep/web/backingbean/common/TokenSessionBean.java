@@ -3,10 +3,10 @@ package my.ep.web.backingbean.common;
 import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 
 @ManagedBean(name = "tokenSessionMB")
-@ViewScoped
+@SessionScoped
 public class TokenSessionBean implements Serializable {
 
 	/**
