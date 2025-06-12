@@ -173,10 +173,6 @@
 	        jQuery("#dialogBackdrop").remove();
 	    }
 	    
-	 // Execute after the page loads
-	    window.onload = function() {
-	    initHiddenToken(); // Calls the remote command
-	    };
 	</script>
 </h:head>
 
@@ -189,9 +185,6 @@
 	</div>
 
 	<h:form id="form">
-		 
-		 <!-- Remote command to update the hidden field -->
-	     <p:remoteCommand name="initHiddenToken" action="#{tokenManagerMB.initHiddenToken}" />
 		 
 		 <h:inputHidden id="#{CommonConstants.TOKEN_UNIQUE_ID}" value="#{tokenManagerMB.token}" />
 	    
