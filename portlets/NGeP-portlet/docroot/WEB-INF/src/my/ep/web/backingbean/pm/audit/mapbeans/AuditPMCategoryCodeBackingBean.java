@@ -198,7 +198,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 					.toString());
 
 			detailObj(AuditConst.PM_AUD_CCR_BUMI_PERCENTAGE_FIELDLABELCODE, null, pmCategoryL3.getBumiPercentage()
-					.toString());
+					.toString()+ AuditConst.PM_AUD_PERCENTAGE);
 
 			detailObj(AuditConst.PM_AUD_CCR_SUPPLIER_TYPE_FIELDLABELCODE, null, pmCategoryL3.getSupplierTypeCode()
 					.getPmParameterDescs().get(1).getCodeName());
@@ -283,8 +283,8 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			bumiPercentage.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 			bumiPercentage.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 			bumiPercentage.setFieldLabelCode(AuditConst.PM_AUD_CCR_BUMI_PERCENTAGE_FIELDLABELCODE);
-			bumiPercentage.setOldValue(String.valueOf(oldpmCategoryL3.getBumiPercentage()));
-			bumiPercentage.setNewValue(String.valueOf(pmCategoryL3.getBumiPercentage()));
+			bumiPercentage.setOldValue(String.valueOf(oldpmCategoryL3.getBumiPercentage()) + AuditConst.PM_AUD_PERCENTAGE);
+			bumiPercentage.setNewValue(String.valueOf(pmCategoryL3.getBumiPercentage()) + AuditConst.PM_AUD_PERCENTAGE);
 			bumiPercentage.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(bumiPercentage);
 		}
