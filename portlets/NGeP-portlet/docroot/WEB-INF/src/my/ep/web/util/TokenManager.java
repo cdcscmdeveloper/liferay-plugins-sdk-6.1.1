@@ -1,15 +1,16 @@
 package my.ep.web.util;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import javax.faces.context.FacesContext;
 
 import my.ep.constants.CommonConstants;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.backingbean.common.TokenSessionBean;
 import my.ep.web.phaselistener.TokenPhaseListener;
+
+import org.apache.log4j.Logger;
 
 public class TokenManager implements Serializable {
 
@@ -29,10 +30,7 @@ public class TokenManager implements Serializable {
 
 	public String generateToken() {
 		FacesScopes fs = new FacesScopes();
-		String currTokenSession = getTokenSession();
 		String token = UUID.randomUUID().toString();
-		log.info("#38229 curr token:" + currTokenSession + " new token:"
-				+ token);
 		fs.setSessionScope(TOKEN_KEY, token);
 		return token;
 	}
@@ -51,6 +49,16 @@ public class TokenManager implements Serializable {
 
 	public String getTokenSession() {
 		return (String) new FacesScopes().getSessionScope(TOKEN_KEY);
+	}
+
+	public String getTokenSessionBean() {
+		String tokenSess = "N/A";
+		TokenSessionBean tokenSessionBean = (TokenSessionBean) FacesContext
+				.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("mySessionBean");
+		tokenSess = tokenSessionBean != null ? tokenSessionBean.getSessToken()
+				: tokenSess;
+		return tokenSess;
 	}
 
 	public String getPartialToken(String token) {

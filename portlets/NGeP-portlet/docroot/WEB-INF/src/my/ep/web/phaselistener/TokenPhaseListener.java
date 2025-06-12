@@ -48,6 +48,7 @@ public class TokenPhaseListener implements PhaseListener {
 		}
 
 		String tokenSession = tokenManager.getTokenSession();
+		String tokenSessionBean = tokenManager.getTokenSessionBean();
 		String loginId = new FacesScopes().getUserScreenName();
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
@@ -60,8 +61,9 @@ public class TokenPhaseListener implements PhaseListener {
 
 		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
 				+ tokenManager.getPartialToken(submittedToken) + "||"
-				+ tokenManager.getPartialToken(tokenSession) + "||" + loginId
-				+ "||" + viewId);
+				+ tokenManager.getPartialToken(tokenSession) + "||"
+				+ tokenManager.getPartialToken(tokenSessionBean) + "||"
+				+ loginId + "||" + viewId);
 
 		if (!isValid && currentPhaseId != PhaseId.RESTORE_VIEW) {
 			String message = ResourceBundleUtils.getMessage(
