@@ -663,7 +663,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
 						auCtData.setDocId(getManagedBean().getCtContract().getContractId());
-						auCtData.setContractVerId(resDTO.getFactoring().getFactoringId());
+						auCtData.setContractVerId(getManagedBean().getContractVer().getContractVerId());
 						auCtData.setPrevContractVerId(getManagedBean().getFactoring().getFactoringId());
 						auCtData.setDocType(getManagedBean().getDocType());
 						auCtData.setCtType(getManagedBean().getCtContract().getContractType().getParameterCode());
