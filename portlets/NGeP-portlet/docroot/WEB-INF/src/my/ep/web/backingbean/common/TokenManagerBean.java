@@ -54,6 +54,10 @@ public class TokenManagerBean implements Serializable {
 				+ "  loginId:" + new FacesScopes().getUserScreenName());
 	}
 
+	public void initAjax(ActionEvent event) {
+		log.info("#38229 ajax token:" + token);
+	}
+
 	public String getToken() {
 		return token;
 	}
