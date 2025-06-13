@@ -1055,6 +1055,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	public void onChangeState(SmAddress addr, String addrType){
@@ -1096,6 +1097,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		addr.setPmDivision(new PmDivision());
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	public void onChangeDivision(SmAddress addr, String addrType){
@@ -1122,6 +1124,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 		
 		addr.setPmDistrict(new PmDistrict());
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
 	}
 		
 	public void onChangeDistrict(SmAddress addr, String addrType){
@@ -1144,6 +1147,11 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 		
 		addr.setPmCity(new PmCity());
+		addr.setPostcode("");
+	}
+	
+	public void onChangeCity(SmAddress addr, String addrType){
+		addr.setPostcode("");
 	}
 	//#34159 & #36718 - END
 
@@ -1170,6 +1178,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			perm = new SmPersonnelAddress();
 			perm.setAddressType(SupplierManagementConst.PERM_ADD);
 			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			perm.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718
 			perm.setSmPersonnel(getManagedBean().getNewAdmin());
 			perm.setSameAsPerm(false);
 		} else {
@@ -1205,6 +1214,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			mail = new SmPersonnelAddress();
 			mail.setAddressType(SupplierManagementConst.MAIL_ADD);
 			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(countryMy));
+			mail.getSmAddress().setPmDivision(new PmDivision()); //#34159 & #36718
 			mail.setSmPersonnel(getManagedBean().getNewAdmin());
 			mail.setSameAsPerm(false);
 		} else {
@@ -1516,8 +1526,10 @@ public class ForceReplaceSuppAdminBackingBean extends
 				if(refAddress.getPmCity().getCityId() != null){
 					city = SmCommonUtil.getInstance().getCityById(refAddress.getPmCity().getCityId());
 				}
-				//#34159 & #36718 - END
 				address.setPmCity(city);
+				if (refAddress.getPostcode() != null)
+					address.setPostcode(new String(refAddress.getPostcode().toString()));
+				//#34159 & #36718 - END
 			}
 		}
 	}
