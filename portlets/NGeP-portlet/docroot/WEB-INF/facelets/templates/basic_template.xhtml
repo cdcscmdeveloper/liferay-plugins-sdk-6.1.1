@@ -173,6 +173,15 @@
 	        jQuery("#dialogBackdrop").remove();
 	    }
 	    
+	    function redirectToLogout() {
+	        // First, close the dialog
+	        jQuery("#customDialog").hide();
+	        jQuery("#dialogBackdrop").remove();
+
+	        // Then, redirect the user
+	        window.location.href = "http://ngepdevaus01.eperolehan.com.my:7777/oam/server/logout?end_url=http://ngepdevwps01.eperolehan.com.my:8888/c/portal/logout";
+	    }
+	    
 	</script>
 </h:head>
 
@@ -181,7 +190,7 @@
 	<div id="customDialog" style="display: none; background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
 	    <h3 id="dialogTitle">Attention Required</h3>
 	    <p id="dialogMessage"></p>
-	    <!-- <button id="dialogCloseBtn" onclick="closeCustomDialog()">Close</button> -->
+	    <button id="dialogCloseBtn" onclick="redirectToLogout()">OK</button>
 	</div>
 
 	<h:form id="form">
