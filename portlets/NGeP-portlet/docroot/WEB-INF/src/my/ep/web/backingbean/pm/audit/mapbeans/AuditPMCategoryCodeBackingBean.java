@@ -33,8 +33,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-	AuditPMSPDTO statusL1 = new AuditPMSPDTO();
-	AuditPMSPDTO statusL2 = new AuditPMSPDTO();
+	
 	AuditPMSPDTO bumiPercentage = new AuditPMSPDTO();
 	AuditPMSPDTO paidUpCapital = new AuditPMSPDTO();
 	AuditPMSPDTO supplierType = new AuditPMSPDTO();
@@ -108,6 +107,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private void updateDetailPmCategoryL1(CategoryManagedBean managedBean, AuditPMReqDTO auditPMReqDTO) {
 		PmCategoryL1 oldPmCategoryL1 = managedBean.getAuditOldCategoryL1();
 		PmCategoryL1 pmCategoryL1 = managedBean.getPmCategoryL1();
+		AuditPMSPDTO statusL1 = new AuditPMSPDTO();
 
 		statusL1.setRoleCode(roleCode);
 		statusL1.setDocType(pmCategoryL1.getCategoryName());
@@ -153,7 +153,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		PmCategoryL2 pmCategoryL2 = managedBean.getPmCategoryL2();
 		PmCategoryL2 oldPmCategoryL2 = managedBean.getAuditOldCategoryL2();
 		BigInteger categoryL2Id = BigInteger.valueOf(managedBean.getAuditUpdatedCategoryL2().getCategoryL2Id());
-		
+		AuditPMSPDTO statusL2 = new AuditPMSPDTO();
 		statusL2.setRoleCode(roleCode);
 		statusL2.setDocType(pmCategoryL2.getCategoryName());
 		statusL2.setDocNo(pmCategoryL2.getCategoryL2Code());
@@ -170,7 +170,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		if (managedBean.isNewCategory()) {
 			statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(statusL2);
-			
 
 		} else {
 			
@@ -181,7 +180,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				
 				objList.add(statusL2);
 			}
-			
 		}
 		auditPMReqDTO.setObjList(objList);
 	}
