@@ -38,18 +38,18 @@
 		header="#{lbl['lbl.pm.search.location']}" toggleable="true">
 		<p:outputPanel>
 			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.pm.audit.search.instruction']}" escape="false" />
+				value="#{lbl['lbl.pm.audit.search.instruction2']}" escape="false" />
 			<br />
 			<br />
 		</p:outputPanel>
 		<table class="ppTwoTable">
 			<tr>
-				<th width="20%"><p:outputLabel
-						value="#{lbl['lbl.pm.audit.config.type']}" /> <h:outputLabel
+				<th width="22%"><p:outputLabel
+						value="#{lbl['lbl.pm.audit.orgUser.type']}" /> <h:outputLabel
 						value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="dropdownMainOrgUser"
 						styleClass="ppDropDownWidthM" required="true"
-						label="#{lbl['lbl.pm.audit.config.type']}"
+						label="#{lbl['lbl.pm.audit.orgUser.type']}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2}"
 						style="width: 275px;margin-bottom: 5px;">
 						<!--  <f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -71,7 +71,7 @@
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></th>
 					<td><p:selectOneRadio id="sorSearchOrgTypeId" layout="custom"
@@ -110,7 +110,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></th>
 					<td><p:selectOneMenu id="orgTypeFederalList"
@@ -149,7 +149,7 @@
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.organisation.orgCode']}" /></th>
 					<td><p:inputText id="orgCodeId" styleClass="ppDisplayTextM"
 							maxlength="10" size="40" style="width:12%"
@@ -158,7 +158,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.organisation.orgName']}" /></th>
 					<td><p:inputText id="orgNameId" styleClass="ppDisplayTextM"
 							size="40"
@@ -175,7 +175,7 @@
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.orgName']}" /></th>
 					<td><p:inputText id="orgNamePopulateId"
 							styleClass="ppDisplayTextM" size="40"
@@ -185,7 +185,7 @@
 					<td>&#160;</td>
 				</tr>
 				<!--  <tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.orgName']}" /></th>
 				<td><ac:lovAuditOrg isStoreProc="true" id="searchOrgNamelist"
 						lovId="PM_ORG_PROFILE" size="32" readonly="true"
@@ -199,7 +199,7 @@
 					</ac:lovAuditOrg></td>					
 					</tr>-->
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.identificationNo']}" /></th>
 					<td><p:inputText id="identificationNoId"
 							styleClass="ppDisplayTextM" size="40"
@@ -210,7 +210,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.userName']}" /></th>
 					<td><p:inputText id="userNameId" styleClass="ppDisplayTextM"
 							size="40"
@@ -227,7 +227,7 @@
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OFO'}">
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.serviceType']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></th>
 					<td><p:selectOneMenu id="serviceTypeId"
@@ -249,7 +249,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.businessRegNo']}" /></th>
 					<td><p:inputText id="businessRegNoId"
 							styleClass="ppDisplayTextM" maxlength="10" size="40"
@@ -259,7 +259,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.financialOrgName']}" /></th>
 					<td><p:inputText id="financialOrgNameId"
 							styleClass="ppDisplayTextM" size="40"
@@ -277,7 +277,7 @@
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSRG'}">
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.grpRole']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></th>
 					<td><p:selectOneMenu id="grpRoleId"
@@ -299,7 +299,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.grpCode']}" /></th>
 					<td><p:inputText id="grpCodeId" styleClass="ppDisplayTextM"
 							size="40"
@@ -309,7 +309,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.grpName']}" /></th>
 					<td><p:inputText id="grpNameId" styleClass="ppDisplayTextM"
 							size="40"
@@ -319,7 +319,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.ptjCode']}" /></th>
 					<td><p:inputText id="ptjCodeId" styleClass="ppDisplayTextM"
 							size="40"
@@ -329,7 +329,7 @@
 					<td>&#160;</td>
 				</tr>
 				<tr>
-					<th width="20%"><p:outputLabel
+					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.ptjName']}" /></th>
 					<td><p:inputText id="ptjNameId" styleClass="ppDisplayTextM"
 							size="40"
@@ -342,7 +342,7 @@
 			<!-- *** OUSRG END *** -->
 
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="22%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.Role']}" /></th>
 				<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM"
 						required="false" label="#{lbl['lbl.pm.audit.Role']}"
@@ -360,7 +360,7 @@
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="22%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
 				<td><ac:lovAudit isStoreProc="true" id="searchActionBylist"
 						lovId="PM_USER" size="32" readonly="true"
