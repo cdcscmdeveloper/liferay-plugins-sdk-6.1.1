@@ -89,11 +89,20 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.proposal.off.price']}" />
 			</td>
 			<td>
-				<p:inputText 
-					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="40" style="text-align:right;">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
+				<c:if test="#{!isZonalWithPaOrPs}">
+					<p:inputText 
+						value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
+						disabled="true" size="35" style="text-align:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</c:if>
+				<c:if test="#{isZonalWithPaOrPs}">
+					<p:inputText 
+						value="#{lOADetailBackingBean.managedBean.totalZonePrice}"
+						disabled="true" size="35" style="text-align:right;">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+				</c:if>
 			</td>
 		</tr>
 		<!-- Enhncement #24259 #24269 Workaround CJCP (LOA) - QT, DIRECT, DP -->
