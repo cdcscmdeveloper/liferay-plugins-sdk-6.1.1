@@ -141,6 +141,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteAttachment; //#26059
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
@@ -179,6 +180,7 @@ import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean
 import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.DPConstants;
+import my.ep.web.constant.SSTConstant; //#26059
 import my.ep.web.managedbean.sc.requestnote.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
@@ -203,6 +205,7 @@ import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent; //#26059
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -232,6 +235,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	/** The request note page. */
 	private String REQUEST_NOTE_PAGE = "requestNoteMain";
+
+	// start - #26059
+	/** The bpk approver request note page. */
+	private String BPK_APPROVER_REQUEST_NOTE_PAGE = "/xhtml/sc/directpurchase/requestnote/requestNoteBpkApproverMain.xhtml";
+	// end - #26059
 
 	// start - #25790
 	/** The request note continuity page. */
@@ -2008,6 +2016,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						sb.append(SearchOperator.OPERATOR_NOT_IN.value());
 					}
 				}
+
+				// #26059 - start
+				if (scRequestNoteDtl.isExceedThreshold()) {
+					getManagedBean().setRnExceedThreshold(Boolean.TRUE);
+				}
+				// #26059 - end
 
 				scRequestNoteDtl.setConditionField(sb.toString());
 				// }
@@ -6945,4 +6959,238 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return formattedItemName;
 	}
 	//36950 - end @zaim
+	
+	// start - #26059
+	/**
+			 */
+	public void viewBpkApproverRequestNote(long requestNoteId) {
+		debugLogger("viewBpkApproverRequestNote");
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNoteId(requestNoteId);
+		RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+		if (requestNoteResDTO.getRequestNoteDetail() != null) {
+			ScRequestNote requestNote = requestNoteResDTO.getRequestNoteDetail();
+			retrieveRequestNoteDetails(requestNote, null, Boolean.FALSE);
+			if (requestNote.getCurrentStatus() != null) {
+				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());
+			}
+
+			if (requestNote != null) {
+				getDocStatus(requestNote);
+			}
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+		getManagedBean().setViewOnly(Boolean.TRUE);
+		getManagedBean().setBpkApproverMode(Boolean.TRUE);
+		groupRequestNoteDtlsByUnspscId(getManagedBean().getRequestNoteDtls());
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, BPK_APPROVER_REQUEST_NOTE_PAGE);
+	}
+
+	public void groupRequestNoteDtlsByUnspscId(List<ScRequestNoteDtl> dtlsToGroup) {
+		Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId = new HashMap<>();
+		getManagedBean().getCommodityGroups().clear();
+
+		for (ScRequestNoteDtl dtl : dtlsToGroup) {
+			Long unspscId = 0L;
+			if (dtl != null && dtl.getRequestItem() != null && dtl.getRequestItem().getCmItem() != null
+					&& dtl.getRequestItem().getCmItem().getCmUnspsc() != null
+					&& dtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscId() != null) {
+
+				unspscId = dtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscId();
+			} else {
+				unspscId = dtl.getRequestItem().getRequestNoteItemId();
+			}
+
+			List<ScRequestNoteDtl> listForUnspsc = groupedByUnspscId.get(unspscId);
+			if (listForUnspsc == null) {
+				listForUnspsc = new ArrayList<>();
+				groupedByUnspscId.put(unspscId, listForUnspsc);
+			}
+			listForUnspsc.add(dtl);
+		}
+
+		for (Map.Entry<Long, List<ScRequestNoteDtl>> entry : groupedByUnspscId.entrySet()) {
+			List<ScRequestNoteDtl> dtlsInGroup = entry.getValue();
+
+			if (dtlsInGroup.isEmpty()) {
+				continue;
+			}
+
+			CommodityGroup group = new CommodityGroup();
+			group.setItems(dtlsInGroup);
+
+			BigDecimal sumTotalPrice = BigDecimal.ZERO;
+			StringBuilder itemCodeNameBuilder = new StringBuilder();
+
+			ScRequestNoteDtl firstDtlInGroup = dtlsInGroup.get(0);
+			Calendar cal = Calendar.getInstance();
+			if (firstDtlInGroup.getCreatedDate() != null) {
+				cal.setTimeInMillis(firstDtlInGroup.getCreatedDate().getTime());
+			} else {
+				cal.setTimeInMillis(System.currentTimeMillis());
+			}
+
+			String unspscCode = SSTConstant.EMPTY_STRING;
+			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null
+					&& firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc() != null) {
+				unspscCode = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode();
+
+				if (firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode() != null) {
+					FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+					flReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+					flReqDTO.setExtensionCode(firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode());
+					flReqDTO.setYear(cal.get(Calendar.YEAR));
+					IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+
+					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+					group.setAccumulativeAmountPerItemGroup(totalAmt);
+				}
+			}
+
+			String cmItemName = StringUtils.equals(new FacesScopes().getUserLocale().getLanguage(),
+					SSTConstant.LANGUAGE_CODE_EN) ? SSTConstant.NA : SSTConstant.TB;
+
+			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null) {
+				cmItemName = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
+			}
+
+			if (!unspscCode.isEmpty()) {
+				itemCodeNameBuilder.append(unspscCode).append(" - ").append(cmItemName);
+			}
+
+			group.setItemName(cmItemName);
+			group.setItemCodeName(itemCodeNameBuilder.toString().trim());
+
+			for (ScRequestNoteDtl dtl : dtlsInGroup) {
+				if (dtl.getTotalPricePerItemRounded() != null) {
+					sumTotalPrice = sumTotalPrice.add(dtl.getTotalPricePerItemRounded());
+				}
+			}
+			group.setCurrentItemTotalAmount(sumTotalPrice);
+			group.setDecision(SSTConstant.EMPTY_STRING);
+			getManagedBean().getCommodityGroups().add(group);
+		}
+
+		// --- Sort the final list using Collections.sort with an anonymous
+		// inner class ---
+		Collections.sort(getManagedBean().getCommodityGroups(), new Comparator<CommodityGroup>() {
+			@Override
+			public int compare(CommodityGroup group1, CommodityGroup group2) {
+				// Defensive null checks for itemCodeName before comparison
+				String name1 = group1.getItemCodeName();
+				String name2 = group2.getItemCodeName();
+
+				if (name1 == null && name2 == null) {
+					return 0; // Both are null, consider them equal for sorting
+								// purposes
+				}
+				if (name1 == null) {
+					return -1; // nulls come before non-nulls
+				}
+				if (name2 == null) {
+					return 1; // non-nulls come after nulls
+				}
+				// Perform the actual string comparison
+				return name1.compareTo(name2);
+			}
+		});
+	}
+
+	public void bpkApproverSubmit() {
+		StringBuilder updatedItems = new StringBuilder();
+		int count = 0;
+		Boolean isRemarkRequired = false;
+		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		String approve = ResourceBundleUtils.getMessage("lbl.sc.decision.approve",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		String reject = ResourceBundleUtils.getMessage("lbl.sc.decision.reject",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		List<CommodityGroup> commodityGroup = getManagedBean().getCommodityGroups();
+		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<>();
+
+		for (CommodityGroup group : commodityGroup) {
+
+			if (StringUtils.isBlank(group.getDecision())) {
+				throw new EpException(MessageConst.ERROR_760523);
+			}
+
+			for (ScRequestNoteDtl scRequestNoteDtl : group.getItems()) {
+				if (("0").equalsIgnoreCase(group.getDecision())) {
+					isRemarkRequired = true;
+				}
+				scRequestNoteDtl.setBpkThresholdDecision(group.getDecision());
+				requestNoteDtls.add(scRequestNoteDtl);
+			}
+			count++;
+			updatedItems.append(count + ". " + group.getItemName() + " <b>"
+					+ (("1").equalsIgnoreCase(group.getDecision()) ? approve : reject) + "</b></br>");
+
+		}
+		if (isRemarkRequired) {
+			validateRemark(requestNote);
+		}
+
+		try {
+			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+			requestNote.setRemarks(initializeRemarks(requestNote, requestNote.getCurrentStatus(),
+					requestNote.getRemarks(), ScRequestNoteRemark.class));
+			requestNoteReqDTO.setRequestNote(requestNote);
+			getRequestNoteSO().updateScRequestNote(requestNoteReqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
+					getManagedBean().getRequestNote().getRequestNoteNo(), "bpkApproverSubmit",
+					getUserIdSessionFromLoginId(), e);
+		}
+
+		if (count > 0) {
+			successMessage(MessageConst.INFO_723006, new String[] {
+					getManagedBean().getRequestNote().getRequestNoteNo(), updatedItems.toString() }, Boolean.TRUE);
+		}
+	}
+
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		log.debug("handleFileUpload - START");
+		List<ScRequestNoteAttachment> attachments = new ArrayList<ScRequestNoteAttachment>();
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScRequestNoteAttachment attachment = new ScRequestNoteAttachment();
+			ScRequestNote scRequestNote = this.getManagedBean().getRequestNote();
+
+			List<ScRequestNoteAttachment> scRequestNoteAttachments = scRequestNote.getScRequestNoteAttachments();
+			if (null == scRequestNoteAttachments) {
+				scRequestNoteAttachments = new ArrayList<ScRequestNoteAttachment>();
+			}
+			attachment.setScRequestNote(scRequestNote);
+			attachment.setDocNo(scRequestNote.getRequestNoteNo());
+			scRequestNoteAttachments.add(attachment);
+			scRequestNote.setScRequestNoteAttachments(scRequestNoteAttachments);
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			getManagedBean().setRequestNote(scRequestNote);
+			attachments.add(attachment);
+		}
+		log.debug("handleFileUpload - END");
+	}
+
+	private void validateRemark(ScRequestNote requestNote) {
+		boolean newRemark = false;
+		FacesScopes facesScopes = new FacesScopes();
+
+		for (ScRequestNoteRemark remark : requestNote.getRemarks()) {
+			// no new remark being insert
+			if (remark.getRemark() == null || remark.getRemark().equalsIgnoreCase("") || remark.getRemark().isEmpty()) {
+				newRemark = true;
+			}
+		}
+		if (newRemark) {
+			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
+		}
+	}
+
+	// end - #26059
 }

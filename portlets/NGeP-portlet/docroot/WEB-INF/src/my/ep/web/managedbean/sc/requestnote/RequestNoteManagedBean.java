@@ -44,6 +44,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.sc.requestnote.CommodityGroup;//#26059
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -405,6 +406,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The new sourcing dp bpm version flag */
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
+    
+	private boolean bpkApproverMode = Boolean.FALSE; //#26059
+	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
+    private List<CommodityGroup> commodityGroups =	new ArrayList<CommodityGroup>(); //#26059
     
     /**
      * Instantiates a new request note managed bean.
@@ -2405,4 +2410,29 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.disciplinaryActionWarning = disciplinaryActionWarning;
 	}
 	//#26284 - End
+	// #26059 - start
+	public boolean isBpkApproverMode() {
+		return bpkApproverMode;
+	}
+
+	public void setBpkApproverMode(boolean bpkApproverMode) {
+		this.bpkApproverMode = bpkApproverMode;
+	}
+
+	public List<CommodityGroup> getCommodityGroups() {
+		return commodityGroups;
+	}
+
+	public void setCommodityGroups(List<CommodityGroup> commodityGroups) {
+		this.commodityGroups = commodityGroups;
+	}
+
+	public boolean isRnExceedThreshold() {
+		return rnExceedThreshold;
+	}
+
+	public void setRnExceedThreshold(boolean rnExceedThreshold) {
+		this.rnExceedThreshold = rnExceedThreshold;
+	}
+	// #26059 - end
 }
