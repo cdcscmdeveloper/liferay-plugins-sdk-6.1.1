@@ -157,7 +157,9 @@
 											<p:outputLabel escape="false"
 												value="#{lbl['lbl.tooltip.physical.contract.no']}" />
 										</p:tooltip></td>
-									<td><p:outputLabel value="#{lbl['lbl.cm.circular.no']}" /></td>
+									<ui:remove>#31977 - start</ui:remove>	
+									<td><p:outputLabel value="#{lbl['lbl.cm.circular.pp.no']}" /></td>
+									<ui:remove>#31977 - end</ui:remove>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText>
 										<p:graphicImage id="circularID"
@@ -368,13 +370,14 @@
 										rendered="#{supplierItem.latestContractPhysicalNo != null}" />
 									<h:outputText value="#{supplierItem.contractNo}" />
 								</p:column>
-
-								<p:column width="8%" headerText="#{lbl['lbl.cm.circular.no']}"
+								<ui:remove>#31977 - start</ui:remove>
+								<p:column width="8%" headerText="#{lbl['lbl.cm.circular.pp.no']}"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									style="white-space: normal">
 									#{supplierItem.circularNo}
 								</p:column>
-
+								<ui:remove>#31977 - end</ui:remove>
+								
 								<p:column headerText="#{lbl['lbl.cm.supplier.name']}"
 									style="white-space: normal">
 									<h:outputText value="#{supplierItem.companyName}" />
