@@ -9,6 +9,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sm.compexp.ISmCompExpSO;
@@ -103,10 +104,21 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 */
 	public void redirectToDraftUpdate(SmCompExpDraft draft) {
 		initSelectedDraft(draft);
-
+		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
+		SelectItem clientTypeFederalItem = new SelectItem();
+		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.client.type.federal", null));
+		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.sm", null));
+			SelectItem clientTypeNonFederalItem = new SelectItem();
+			clientTypeNonFederalItem.setLabel(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.client.type.other", null));
+			clientTypeNonFederalItem.setValue(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+			this.getManagedBean().getClientTypeItems().add(clientTypeNonFederalItem);
+		} else if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
+			this.getManagedBean().setHeaderTitle(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.header.ct", null));
 		}
+
 		if (null == this.getManagedBean().getSelectedDraft().getClientType() || this.getManagedBean().getSelectedDraft().getClientType().isEmpty()) {
 			this.getManagedBean().setDisableClienType(false);
 		} else {
@@ -163,7 +175,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		Date curDate = new Date();
 		this.getManagedBean().getSelectedDraft().setContractStatus(null);
 
-		if (null != this.getManagedBean().getSelectedDraft().getContractExpDate() && null != this.getManagedBean().getContractEffDateTemp()) {
+		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)
+				&& this.getManagedBean().getSelectedDraft().getRecordStatusFlg().equals(ParameterConst.RECORD_STATUS_INACTIVE)) {
+			this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_TERMINATED);
+		} else if (null != this.getManagedBean().getSelectedDraft().getContractExpDate() && null != this.getManagedBean().getContractEffDateTemp()) {
 			if (curDate.before(this.getManagedBean().getContractEffDateTemp())) {
 				this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_INACTIVE);
 			} else if ((curDate.equals(this.getManagedBean().getContractEffDateTemp()) || curDate.after(this.getManagedBean()
@@ -570,7 +585,8 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 
 	private boolean validateList(boolean err) {
 		boolean error = err;
-		if (null == this.getManagedBean().getSmCompExpDocList() || this.getManagedBean().getSmCompExpDocList().isEmpty()) {
+		if (!this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)
+				&& (null == this.getManagedBean().getSmCompExpDocList() || this.getManagedBean().getSmCompExpDocList().isEmpty())) {
 			error = true;
 			FacesContext.getCurrentInstance().addMessage(
 					null,

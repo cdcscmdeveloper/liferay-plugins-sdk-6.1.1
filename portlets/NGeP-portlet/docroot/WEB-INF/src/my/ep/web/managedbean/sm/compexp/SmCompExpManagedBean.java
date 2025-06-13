@@ -1,10 +1,12 @@
 package my.ep.web.managedbean.sm.compexp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -63,6 +65,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private List<SmCompExpCatDraft> selectedSmCompExpCatDraft;
 	private boolean agreeDeclare;
 	private SmCompExpMasterDoc smCompExpDoc;
+	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
+	private List<SelectItem> clientTypeItems = new ArrayList<SelectItem>();
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -273,6 +277,49 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setSmCompExpDoc(SmCompExpMasterDoc smCompExpDoc) {
 		this.smCompExpDoc = smCompExpDoc;
+	}
+
+	private class DraftCtPagingDataModel extends PagingDataModel<SmCompExpDraft> {
+
+		private static final long serialVersionUID = 1L;
+
+		public DraftCtPagingDataModel() {
+			super("draftCtDataTable", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpDraft> pageChangeListener(ISearchBean<SmCompExpDraft> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setSourceType(ParameterConst.SOURCE_TYPE_ID_CT);
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpDraftList(reqDTO, searchBean).getDraftResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
+	public IPagingDataModel<SmCompExpDraft> getDraftCtDataModel() {
+		return draftCtDataModel;
+	}
+
+	public void setDraftCtDataModel(IPagingDataModel<SmCompExpDraft> draftCtDataModel) {
+		this.draftCtDataModel = draftCtDataModel;
+	}
+
+	public List<SelectItem> getClientTypeItems() {
+		return clientTypeItems;
+	}
+
+	public void setClientTypeItems(List<SelectItem> clientTypeItems) {
+		this.clientTypeItems = clientTypeItems;
 	}
 
 }
