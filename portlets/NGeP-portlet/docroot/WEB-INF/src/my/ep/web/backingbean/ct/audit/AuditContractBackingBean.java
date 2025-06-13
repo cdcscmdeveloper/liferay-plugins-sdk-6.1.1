@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.IAuditTrailSO;
 import my.ep.biz.service.ct.audit.IAuditContractSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -65,6 +66,9 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	private static final String METHOD_NAME = "insertAudit";
 
 	private static final Map<Long, TabHeaderPair> sectionTabHeaderMap = createSectionTabHeaderMap();
+	
+	private transient IAuditTrailSO auditTrailAuSo = BusinessDelegate.getInstance().getServiceObject(
+			ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 
 	/**
 	 * AuditContractBackingBean
@@ -118,9 +122,10 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			getManagedBean().setCtCircularType(AuditContractConst.CT_NULL);
 			getManagedBean().setCtType(AuditContractConst.CT_CONTRACT);
 		} else {
-			getManagedBean().setCtCircularType(ctType);
-			getManagedBean().setCtType(AuditContractConst.CT_CIRCULAR);
+			getManagedBean().setCtType(ctType);
 		}
+  
+		handleButtonClick(0); // Default to first tab									   
 		loadCTAuditTrail();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoneView);
 	}
@@ -198,12 +203,13 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * @param sectionId
 	 * 
 	 */
-	public void generateReport(Long docId, BigInteger sectionId) throws IOException {
+	public void generateReport(Long docId, BigInteger sectionId, String ctType) throws IOException {
 
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(AuditReportConst.PARAM_DOC_ID, docId.toString());// P_DOCID
 		paramMap.put(AuditReportConst.PARAM_USER_ID, getUserIdSessionFromLoginId().toString());
 		paramMap.put(AuditReportConst.PARAM_GROUP_SECTION_ID, sectionId.toString());// P_GROUP_SECTION_ID
+		paramMap.put(AuditReportConst.PARAM_CT_TYPE, ctType);// P_CT_TYPE														   
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_CT, paramMap);
 	}
@@ -214,11 +220,12 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 * @param docId
 	 * @throws IOException
 	 */
-	public void generateAllReport(BigInteger docId) throws IOException {
+	public void generateAllReport(BigInteger docId, String ctType) throws IOException {
 
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put(AuditReportConst.PARAM_USER_ID, getUserIdSessionFromLoginId().toString());
 		paramMap.put(AuditReportConst.PARAM_DOC_ID, docId.toString());
+		paramMap.put(AuditReportConst.PARAM_CT_TYPE, ctType);// P_CT_TYPE														   
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_CT, paramMap);
 	}
@@ -458,6 +465,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_FNS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FNS));
 		map.put(AuditContractConst.AU_SECTION_CO, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CO));
 		map.put(AuditContractConst.AU_SECTION_FT, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_FT));
+		map.put(AuditContractConst.AU_SECTION_DCA, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_DCA));
 
 		map.put(AuditContractConst.AU_SECTION_CC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CC));
 		map.put(AuditContractConst.AU_SECTION_PC, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_PC));
@@ -468,6 +476,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 		map.put(AuditContractConst.AU_SECTION_CL, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_CL));
 		map.put(AuditContractConst.AU_SECTION_ID, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_ID));
 		map.put(AuditContractConst.AU_SECTION_IS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IS));
+		map.put(AuditContractConst.AU_SECTION_IPS, new TabHeaderPair(ReportExcelAuditConstant.TAB_SECTION_IPS));																								  
 		return map;
 	}
 
@@ -513,22 +522,19 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 	 */
 	public void handleButtonClick(Integer activeIndex) {
 		log.info("handleButtonClick");
-		int prevIndex = this.getManagedBean().getActiveTab();
-
-		// Check if the clicked tab is already active; if so, do nothing.
-		if (prevIndex == activeIndex) {
-			return;
-		}
+		
+		int selectedIndex = (activeIndex != null) ? activeIndex : 0; // Default to first tab
 
 		// Update the tab view based on the selected tab index
-		updateTabView(activeIndex);
+		updateTabView(selectedIndex);
 
 		// Store the newly selected tab as the active tab
-		this.getManagedBean().setActiveTab(activeIndex);
+		this.getManagedBean().setActiveTab(selectedIndex);
 
 		// Load additional data for the selected tab
 		loadCTAuditTrail();
 	}
+
 
 	/**
 	 * Updates the audit tab view based on the given active index. If the index
@@ -571,9 +577,10 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(12, AuditContractConst.AU_SECTION_FNS);
 			tabViews.put(13, AuditContractConst.AU_SECTION_CO);
 			tabViews.put(14, AuditContractConst.AU_SECTION_FT);
+			tabViews.put(15, AuditContractConst.AU_SECTION_DCA);
 		}
 
-		if (getManagedBean().getCtCircularType().equals(AuditContractConst.CT_TYPE_CCR)) {
+		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_CCR)) {
 			tabViews.put(0, AuditContractConst.AU_SECTION_CC);
 			tabViews.put(1, AuditContractConst.AU_SECTION_PID);
 			tabViews.put(2, AuditContractConst.AU_SECTION_CPD);
@@ -582,13 +589,14 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 			tabViews.put(5, AuditContractConst.AU_SECTION_CL);
 		}
 
-		if (getManagedBean().getCtCircularType().equals(AuditContractConst.CT_TYPE_PCR)) {
+		if (getManagedBean().getCtType().equals(AuditContractConst.CT_TYPE_PCR)) {
 			tabViews.put(0, AuditContractConst.AU_SECTION_PC);
 			tabViews.put(1, AuditContractConst.AU_SECTION_PID);
 			tabViews.put(2, AuditContractConst.AU_SECTION_CPD);
 			tabViews.put(3, AuditContractConst.AU_SECTION_RCT);
 			tabViews.put(4, AuditContractConst.AU_SECTION_ID);
 			tabViews.put(5, AuditContractConst.AU_SECTION_IS);
+			tabViews.put(6, AuditContractConst.AU_SECTION_IPS);										  
 		}
 
 		return tabViews;
@@ -614,4 +622,18 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 					auCtData.getCreatedBy(), ex);
 		}
 	}
+	
+	/**
+	 * Retrieves the audit configuration state for the Audit CT module.
+	 *
+	 * @return {@code true} if the audit configuration for the Audit CT module is enabled;
+	 *         {@code false} otherwise.
+	 */
+	public boolean getAuditCtConfigState() {
+		boolean auditCtConf;
+		auditCtConf = auditTrailAuSo.isAuditConfig(AuditContractConst.CT_AU_CONF);
+
+		return auditCtConf;
+	}
+	
 }

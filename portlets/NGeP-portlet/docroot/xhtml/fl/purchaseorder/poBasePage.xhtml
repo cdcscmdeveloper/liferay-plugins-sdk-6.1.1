@@ -227,7 +227,9 @@
 				<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="gfmasError.hide();"/>
 			</div>
 		</p:dialog>		
+		<!--#26279 Start-->
 		<ac:disciplinaryActionHistory voList="#{flOrderBB.managedBean.disciplinaryActionVO}" 
 		dialogHeader="#{lbl['lbl.sm.view.details.disciplinary.action.headerlbl']}" dialogWidth="800px" dialogHeight="400px" btnView="true" />	
+		<!--#26279 End-->
 	</ui:define>
 </ui:composition>

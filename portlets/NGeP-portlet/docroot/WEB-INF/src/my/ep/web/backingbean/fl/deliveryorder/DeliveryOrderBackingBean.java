@@ -1762,7 +1762,7 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 			getManagedBean().setDpFlag(true);
 			String supplierOffer = getManagedBean().getSupplierOffer();
 			if (supplierOffer != null && supplierOffer.length() > 0) {
-				String trimWipDpZone = supplierOffer.replace("<br/>", "");
+				String trimWipDpZone = supplierOffer.replace("<br/>", " ");
 				getManagedBean().setSupplierOffer(trimWipDpZone);
 			}
 		} else {
@@ -1937,13 +1937,11 @@ public class DeliveryOrderBackingBean extends FulfilmentBaseBackingBean<Delivery
 	public void validateExpectedDeliveryDate() {
 		for (FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
 			Date estDelDate = selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate();
-			if (estDelDate != null) {
-				if (estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
-					getManagedBean().setSelectedTabIndex(1);
-					throw new EpException(MessageConst.ERROR_100067, new String[] {
-							ResourceBundleUtils.getMessage("lbl.fl.exp.del.date",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-				}
+			if (estDelDate != null && estDelDate.before(new GregorianCalendar(1900, Calendar.JANUARY, 1).getTime())) {
+				getManagedBean().setSelectedTabIndex(1);
+				throw new EpException(MessageConst.ERROR_100067, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.fl.exp.del.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
 			}
 		}
 	}

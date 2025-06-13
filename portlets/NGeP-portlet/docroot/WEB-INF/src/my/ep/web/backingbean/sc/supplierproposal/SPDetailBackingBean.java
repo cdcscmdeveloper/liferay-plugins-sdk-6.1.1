@@ -279,12 +279,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			} else {
 				resDTO = proposalSO.retrieveProposalDetail(reqDTO);
 			}
-			//32723
-			if (this.getManagedBean().getQt() != null) {
-				if (this.getManagedBean().getQt().getDisciplinaryActionPresent() != null) {
-					resDTO.getScQt().setDisciplinaryActionPresent(this.getManagedBean().getQt().getDisciplinaryActionPresent());
-				}
-			}
 			
 			ScQt scQt = resDTO.getScQt();
 			ScQtProposal scQtProposal=resDTO.getScQtProposal();
@@ -1098,12 +1092,22 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		*/
 		//Bug #31725 End
 		//#21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+		ScQtProposalChecklist completedFinSpec = null;
+		for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+					.equals(finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()) &&
+					finProposalChecklist.isSubmitted() &&
+					!finProposalChecklist.equals(scQtProposalChecklist)) {
+				completedFinSpec = finProposalChecklist;
+				break;
+			}
+		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION) && null != completedFinSpec) {
 					//#34726 start - flag to define process from technical, 
 					//save technical spec proposal is sending financialproposalchecklist(preparefinancialaction)
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
@@ -1260,15 +1264,15 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 							getManagedBean().getTemplateSpecBean());
 				}
 				
-				//28777 - start
+				// #28777 & #29729, 35592 - Start
 				List<Long> deactivatedZones = new ArrayList<>();
-				if(CollectionUtils.isNotEmpty(this.getManagedBean().getZones())){
-					for(TplSpecZoneDtl zoneDtl: this.getManagedBean().getZones()){
-						if(zoneDtl.isBranchDeactivated())
+				if (CollectionUtils.isNotEmpty(this.getManagedBean().getZones())) {
+					for (TplSpecZoneDtl zoneDtl : this.getManagedBean().getZones()) {
+						if (zoneDtl.isBranchDeactivated())
 							deactivatedZones.add(zoneDtl.getSpecZoneId());
 					}
 				}
-				//28777 - end
+				// #28777 & #29729, 35592 - End
 
 				if (null != getManagedBean().getQt().getQtStatus() && null != getManagedBean().getQt().getQtStatus().getStatusId()
 						&& (getManagedBean().getQt().getQtStatus().getStatusId().longValue() == QTStatusConst.QT_PROPOSAL_PREPARATION 
@@ -1290,14 +1294,16 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				templateSpecBeans.addAll(getManagedBean()
 						.getZoneTplSpecBeanMap().values());
 				List<TemplateSpecBean> activeTemplateSpecBeans = new ArrayList<>();//#34363 - note 50 - Added - Vinod
-				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {// 28777(35838) - fix sonarqube issue
+				// #28777 & #29729, 35592(35838) - Start
+				if (CollectionUtils.isNotEmpty(templateSpecBeans)) {
+					// #28777 & #29729, 35592(35838) - End
 					answers = new ArrayList<TplSpecAnswer>();
 					for (TemplateSpecBean templateSpecBean : templateSpecBeans) {
 						TplSpecZoneDtl specZoneDtl=getKeysByValue(getManagedBean().getZoneTplSpecBeanMap(), templateSpecBean);//#28785						
-						//28777 - start
-						if(deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
+						// #28777 & #29729, 35592 - Start
+						if (deactivatedZones.contains(specZoneDtl.getSpecZoneId()))
 							continue;
-						//28777 - end
+						// #28777 & #29729, 35592 - End
 						if (templateSpecBean.getSpecAnswerList() != null
 								&& templateSpecBean.getSpecAnswerList().size() > 0) {
 							List<TplSpecAnswer> toDeleteZoneAnswers = new ArrayList<TplSpecAnswer>();	
@@ -1318,11 +1324,13 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 									answers.add(specAnswer);
 								
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) == 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+												.getProcurementMode().getParameterCode())) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() == null
-										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0) {
+										&& specAnswer.getTplSpecZoneQty().getQty().compareTo(BigDecimal.ZERO) > 0 && !ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt()
+												.getProcurementMode().getParameterCode())) {
 									answers.add(specAnswer);
 							
 								}else if (specAnswer.getRatePerUom() != null && specAnswer.getRatePerUom().compareTo(BigDecimal.ZERO) == 0
@@ -1336,8 +1344,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								}
 								//Bug_34259 - End
 								else{
-									specAnswer.setDeleted(true);
-									toDeleteZoneAnswers.add(specAnswer);
+									//#21695 as is error for tender , 2times deleted if user null the value of the rate per uom.
+									 if (!ParameterConst.PROCUREMENT_MODE_TENDER.equalsIgnoreCase(this.getManagedBean().getQt().getProcurementMode().getParameterCode())) {
+										specAnswer.setDeleted(true);
+										toDeleteZoneAnswers.add(specAnswer);
+									 }
 								}
 							}
 							if(!toDeleteZoneAnswers.isEmpty() && (toDeleteZoneAnswers.size() != templateSpecBean
@@ -1360,7 +1371,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 						}
 						activeTemplateSpecBeans.add(templateSpecBean);//#34363 - note 50 - Added - Vinod
 					}
-				}
+				}// #28777 & #29729, 35592(35838)
 				//#34363 - note 50 - Start - Vinod
 				if (!activeTemplateSpecBeans.isEmpty() && isCompleted
 						&& null != getManagedBean().getQt()
@@ -1473,7 +1484,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 				}
 			}
 			// Enhancement #3657@Syazani 12/10/2023 -- End
-			
+	      if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){ //#21695
 			TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
 			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
 					.getTplSpecQuestion().getClPriceTypeCode()
@@ -1516,6 +1527,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					}
 				}
 			}
+	      }
 			proposalReqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			proposalReqDTO.setAnswersList(answers);
 			proposalReqDTO.setScQt(getManagedBean().getQt());
@@ -4634,15 +4646,17 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 			validateFinacialProposalAttachments(false);
 			}//#28792-End
 			evaluateWIP(this.getManagedBean().getQt()); //#21695
-			//#28777 & #29729 - Start
+			// #28777 & #29729 - Start
 			boolean branchDeleted = checkValidationSupplierBranchDeleted();
-			if(branchDeleted){
+			if (branchDeleted) {
 				this.getManagedBean().setReadOnly(branchDeleted);
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(MessageConst.INFO_760522, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
+								MessageConst.INFO_760522, MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 			}
-			//#28777 & #29729 - End
+			// #28777 & #29729 - End
 
 		} catch (EpException e) {
 			String message = e.getMessage();
@@ -5952,115 +5966,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		
 	}
 	
-	/**
-	 * @return
-	 */
-	public boolean checkDisciplinaryActionForQTCat() {
-		//#27233#note-36 for #26247 -start-
-		log.debug("Entered inside " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
-		if (null != this.getManagedBean().getQt()) {
-			if (StringUtils.isEmpty(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-				log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for QT No. : " + this.getManagedBean().getQt().getQtNo());
-				if (null != getManagedBean().getQtProposal() && null != getManagedBean().getQtProposal().getScQtSupplier()
-						&& null != getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier()) {
-					log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : checking DA for Supplier ID : " + getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
-					// #28338 - Start.
-					List<SmDisciplinaryAction> resultList = null;
-					SupplierDataMaintenanceReqDTO supReqDTO = new SupplierDataMaintenanceReqDTO();
-					supReqDTO.setSupplier(getManagedBean().getQtProposal().getScQtSupplier().getSmSupplier());
-					SupplierDataMaintenanceResDTO dataRes = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionBySupplier(supReqDTO);
-					
-					if(null != dataRes && dataRes.getSmDisciplinaryActions() != null && dataRes.getSmDisciplinaryActions().size() > 0){
-						resultList = dataRes.getSmDisciplinaryActions();
-						List<String> catCodeList = null;
-						
-						// #30609 - Start.
-						for(SmDisciplinaryAction disciplinaryAction: resultList){
-							if(disciplinaryAction.isSuspendRegistration()) {
-								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-								getManagedBean().setDisableUpdateProposal(true);
-								return true;
-							}
-						}
-						// #30609 - End.
-						
-						for(SmDisciplinaryAction disciplinaryAction: resultList){
-							if(disciplinaryAction.isSuspendRegistration() || disciplinaryAction.isCancelRegistration() 
-									|| disciplinaryAction.isBlacklistOwner() || disciplinaryAction.isManufacturerCancel()
-									|| disciplinaryAction.isBumiputeraCancel()){
-								this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-								log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-								return true;
-							} else if(disciplinaryAction.isCancelCategory()){
-								if (null == catCodeList) {
-									catCodeList = new ArrayList<>();
-								}
-								List<Object[]> catList = SmApplicationUtil.retrieveCancelCategory();
-								
-								if(!EntityHelper.isCollectionEmpty(catList)
-										&& catList.size() > 0){
-									for(Object[] arr : catList){
-										String catCode = StringUtils.EMPTY;
-										catCode = arr[3].toString() + arr[4].toString() + arr[5].toString() ;
-										catCodeList.add(catCode);
-									}						
-								}
-							}
-						}
-						
-						if (catCodeList != null && CollectionUtils.isNotEmpty(catCodeList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-							IQTDetailSO QtDetailsSO;
-							QuationTenderResDTO tenderResDTO;
-							
-							try {
-								QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-								QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-								// tenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-								tenderReqDTO.setQtdetail(this.getManagedBean().getQt());
-								
-								tenderResDTO = QtDetailsSO.retriveQTSuppQulCriDetails(tenderReqDTO);
-								
-								if (!this.getManagedBean().getQt().isPanel()) {
-									List<ScQtCategory> categoryResults = tenderResDTO
-											.getCategories();
-									if (CollectionUtils.isNotEmpty(categoryResults)) {
-										for (ScQtCategory category : categoryResults) {
-											String scQtCatCode = category.getPmCategoryL1().getCategoryL1Code().toString() 
-													+ category.getPmCategoryL2().getCategoryL2Code().toString() 
-													+ category.getPmCategoryL3().getCategoryL3Code().toString() ;
-											if (catCodeList.contains(scQtCatCode)) {
-												this.getManagedBean().getQt().setDisciplinaryActionPresent("true");
-												log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-												return true;
-											}
-										}
-										this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
-										log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-									}
-								}
-							} finally {
-								QtDetailsSO=null;
-							}
-						}
-					} else {
-						this.getManagedBean().getQt().setDisciplinaryActionPresent("false");
-						log.debug(this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA not found for QT No. : " + this.getManagedBean().getQt().getQtNo());
-					}
-					// #28338 - End.
-				}
-			}
-			else if ("true".equals(this.getManagedBean().getQt().getDisciplinaryActionPresent())) {
-				log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat() : DA already present for QT No. : " + this.getManagedBean().getQt().getQtNo());
-				return true;
-			}
-		}
-		log.debug("Exit " + this.getClass().getName() + ".checkDisciplinaryActionForQTCat()");
-		//#27233#note-36 for #26247 -end-
-		
-		return false;
-	}
-	
 	//#25089@hatta - start
 		public void onTabChange(TabChangeEvent event){
 			if(event.getTab().getId().equals("tab1")){
@@ -6327,22 +6232,25 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 }
 //#28785-End
 
-        //#28777 & #29729 - Start
-		/**
-		* Method to return true, if branch in supplier has been deleted
-		* @param supplier id 
-		* @return true or false
-		**/
-		public boolean checkValidationSupplierBranchDeleted(){
-			boolean isSupplierBranchDeleted = false;
-			ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
-			if(scQtSupplier.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DISQUALIFIED){
-					isSupplierBranchDeleted = true;
-					this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
-			}
-		    return isSupplierBranchDeleted;
+	// #28777 & #29729 - Start
+	/**
+	 * Method to return true, if branch in supplier has been deleted
+	 * 
+	 * @param supplier
+	 *            id
+	 * @return true or false
+	 **/
+	public boolean checkValidationSupplierBranchDeleted() {
+		boolean isSupplierBranchDeleted = false;
+		ScQtSupplier scQtSupplier = this.getManagedBean().getQtProposal().getScQtSupplier();
+		if (scQtSupplier.getRecordStatusFlg().intValue() == SourcingConstants.RECORD_STATUS_DISQUALIFIED) {
+			isSupplierBranchDeleted = true;
+			this.getManagedBean().setSupplierBranchDeleted(isSupplierBranchDeleted);
 		}
-		//#28777 & #29729 - End
+		return isSupplierBranchDeleted;
+	}
+
+	// #28777 & #29729 - End
 
 		//Bug #30073 Start
 		public void checkDuplicateSupplierAnswerItemSpec(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist){

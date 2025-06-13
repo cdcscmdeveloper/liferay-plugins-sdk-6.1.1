@@ -29,10 +29,12 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -83,6 +85,8 @@ import my.ep.util.MessageUtils;
 import my.ep.util.SLAUtils; //#36489
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMConfigUserBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
@@ -2804,7 +2808,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					if (userRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 							&& userRole.getPmRole().isLimitRequired()) {
 						//SQ: remove compareTo
-						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().intValue() != 1) {
+						if (userRole.getApprovalLimit() == null || userRole.getApprovalLimit().signum() <= 0) {
 							throw new EpException(MessageConst.ERROR_770148,
 									new String[] { getRoleDescByRoleCode(roleCode, languageCode) });
 						}
@@ -3104,6 +3108,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			validateUser(user, userOrg);
 			validatePreference(user);
 			validateRoles(userOrg);
+						
+			/** AUDIT 28895_35509 START **/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMConfigUserBackingBean();
+			
+			PmUserOrg oldPmUserOrg = !this.getManagedBean().getSelectedUser().isBrandNew() ? 
+					PmCommonUtil.retrieveUserOrgByUserIdAndOrgId(this.getManagedBean().getSelectedUser().getUserId(),
+							 this.getManagedBean().getSelectedUserOrg().getUserOrgId()) : null;
+			PmUser oldPmUser = oldPmUserOrg != null ? oldPmUserOrg.getPmUser() : null;
+			List<PmUserRole> oldPmUserRoles = oldPmUserOrg != null ? oldPmUserOrg.getPmUserRoles() : null;
+			List<PmAddressType> oldPmAddressTypes = oldPmUserOrg != null ? oldPmUserOrg.getPmUser().getPmAddressTypes() : null;
+			/** AUDIT 28895_35509 START END **/
 
 			reqDTO = new UserReqDTO();
 			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
@@ -3238,7 +3255,32 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
-
+				
+				/************ START AUDIT #28895_35509 START *************/
+				if(getManagedBean().getSelectedUser().isBrandNew()){
+					user.setUserId(resDTO.getPmUser().getUserId());
+				}
+				
+				if(getManagedBean().getSelectedUserOrg().isBrandNew()){
+					userOrg.setUserOrgId(resDTO.getPmUser().getActiveUserOrgs().get(0).getUserOrgId());
+				}
+				
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+					getManagedBean().setNewAuditPmUser(user);
+					getManagedBean().setNewAuditPmUserOrg(userOrg);
+					getManagedBean().setNewAuditPmUserRoles(userOrg.getPmUserRoles());
+					getManagedBean().setNewAuditPmAddressTypes(getManagedBean().getSelectedReceivingAddrTypes());
+					getManagedBean().setOldAuditPmUser(oldPmUser);
+					getManagedBean().setOldAuditPmUserOrg(oldPmUserOrg);
+					getManagedBean().setOldAuditPmUserRoles(oldPmUserRoles);
+					getManagedBean().setOldAuditPmAddressTypes(oldPmAddressTypes);
+				}
+				
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_OUSR);
+				}
+				/************ END AUDIT #28895_35509 END *************/
+				
 				uploadAttachments();
 				deleteAttachments();
 
@@ -3269,6 +3311,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						}
 					}
 				}
+				
 				//
 				logger.info("befor redirecting method");
 				if (isNewUser) {

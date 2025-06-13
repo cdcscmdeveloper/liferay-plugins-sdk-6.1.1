@@ -199,10 +199,6 @@ public abstract class BaseManagedBean implements Serializable {
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean forceReplace;
 	
-	//26238 - START
-	private List<DisciplinaryActionVO> disciplineVOs;
-	//26238 - END
-
 	public boolean isShowDetailSSM() {
 		return showDetailSSM;
 	}
@@ -1233,20 +1229,4 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 	// #28895_35501 End
 	
-	//26238 - START
-	/**
-	 * @return the disciplineVOs
-	 */
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
-	}
-
-	/**
-	 * @param disciplineVOs the disciplineVOs to set
-	 */
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
-	}
-	//26238 - END
-
 }

@@ -10,41 +10,6 @@
 		<script>
 			$('#portlet_ctContractMaintenance_WAR_NGePportlet').find('.portlet-title-text').html('#{auditContractBackingBean.getPortletTitle()}');
 		</script>
-		<style>
-/* Tabel Utama */
-.custom-table {
-	border-collapse: collapse;
-	border: 0;
-	cellspacing: 0;
-	cellpadding: 0;
-	width: 100%;
-	table-layout: fixed;
-}
-
-/* Kolom Rata Kanan */
-.column-align-right {
-	text-align: right !important;
-}
-
-/* Mencegah Teks Panjang Meluap */
-.truncate-text {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.sidemenu {
-	width: 250px; /* Sesuaikan dengan kebutuhan */
-	word-wrap: break-word;
-}
-
-.sidemenu .ui-menuitem-text {
-	white-space: normal !important;
-	word-wrap: break-word;
-	display: block;
-	text-align: left;
-}
-</style>
 	</h:head>
 
 
@@ -54,10 +19,10 @@
 		<table style="width: 100%">
 			<tr>
 				<td>
-					<div align="right" style="width: 100%">
+					<div align="right" style="width: 100% !important;">
 						<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload
-								value="#{auditContractBackingBean.generateReport(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView)}"
+								value="#{auditContractBackingBean.generateReport(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView, auditContractBackingBean.managedBean.ctType)}"
 								immediate="true" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" />
 						</p:commandLink>
@@ -74,9 +39,10 @@
 		<table class="custom-table">
 			<tr>
 				<!-- SideTab Menu -->
-				<td width="20%;" valign="top" class="sidemenutd"><p:tabMenu
-						id="sidemenuCircularId" styleClass="sidemenu"
-						rendered="#{auditContractBackingBean.managedBean.ctCircularType eq 'CCR' }"
+				<p:outputPanel style="width: 100% !important;">
+				<p:tabMenu
+						id="sidemenuCircularId" 
+						rendered="#{auditContractBackingBean.managedBean.ctType eq 'CCR' }"
 						activeIndex="#{auditContractBackingBean.managedBean.activeTab}">
 
 						<p:menuitem value="#{lbl['lbl.ct.audit.tab.central.contract']}"
@@ -119,13 +85,13 @@
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							update="@form">
 						</p:menuitem>
-					</p:tabMenu> <!-- SideTab Panel Circular --> <p:tabMenu id="sidemenuPanelId"
-						styleClass="sidemenu"
-						rendered="#{auditContractBackingBean.managedBean.ctCircularType eq 'PCR' }"
+					</p:tabMenu> 
+					<!-- SideTab Panel Circular --> 
+					<p:tabMenu id="sidemenuPanelId"
+						rendered="#{auditContractBackingBean.managedBean.ctType eq 'PCR' }"
 						activeIndex="#{auditContractBackingBean.managedBean.activeTab}">
 
-						<p:menuitem style="white-space:normal;"
-							value="#{lbl['lbl.ct.audit.tab.panel.contract']}"
+						<p:menuitem value="#{lbl['lbl.ct.audit.tab.panel.contract']}"
 							actionListener="#{auditContractBackingBean.handleButtonClick(0)}"
 							update="@form" onstart="blockWidget.show()"
 							oncomplete="blockWidget.hide()">
@@ -165,17 +131,26 @@
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							update="@form">
 						</p:menuitem>
-					</p:tabMenu></td>
+						
+						<p:menuitem style="white-space:normal;"
+							value="#{lbl['lbl.ct.audit.tab.item.supplier.panel']}"
+							actionListener="#{auditContractBackingBean.handleButtonClick(6)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							update="@form">
+						</p:menuitem>
+					</p:tabMenu>
+					</p:outputPanel>
+					</tr>
+					</table>
 
-				<td width="80%"><p:outputPanel>
 						<p:dataTable id="searchCircularId" var="obj" rows="10"
-							width="100%" value="#{auditContractBackingBean.searchCT}"
+							style="width:100%; table-layout: fixed;" value="#{auditContractBackingBean.searchCT}"
 							rowIndexVar="index" lazy="true">
 
 							<ac:paginator for="searchCTId"></ac:paginator>
 
 							<p:column headerText="#{lbl['lbl.audit.header.action.date']}"
-								style="white-space: normal!important;" width="5%">
+								style="white-space: normal !important;" width="5%">
 								<h:outputText value="#{obj.createdDate}">
 									<f:convertDateTime
 										pattern="#{CommonConstants.getDefault12hrDatetimesecondFormat()}" />
@@ -213,7 +188,7 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.audit.header.subDocNo']}"
-								style="white-space: pre-line;" width="40%">
+								style="width :10%">
 								<h:outputText value="#{obj.subDocNo}" escape="false" />
 							</p:column>
 
@@ -223,18 +198,15 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-								style="width :5%">
+								style="width :20%; white-space: pre-line;">
 								<h:outputText value="#{obj.oldValue}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-								style="width :5%">
+								style="width :20%; white-space: pre-line;">
 								<h:outputText value="#{obj.newValue}" />
 							</p:column>
 
 						</p:dataTable>
-					</p:outputPanel></td>
-			</tr>
-		</table>
 	</p:panel>
 </ui:composition>

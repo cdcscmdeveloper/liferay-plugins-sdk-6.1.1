@@ -207,6 +207,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = Logger.getLogger(BaseBackingBean.class);
+	private static final int MAX_LENGTH = 53; //#29418
 
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
@@ -1675,6 +1676,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		}
 		return filename;
 	}
+	
+	//#29418 start
+	/**
+	 * Gets the medium file name.
+	 *
+	 * @param filename the filename
+	 * @return the short file name
+	 */
+	public String getMediumFileName(String filename) {
+        if (StringUtils.isEmpty(filename) || filename.length() <= MAX_LENGTH) {
+            return filename;
+        }
+
+        StringBuilder truncatedFilename = new StringBuilder(filename.substring(0, MAX_LENGTH));
+        truncatedFilename.append("...");
+        
+        return truncatedFilename.toString();
+    }
+	//#29418 end
 
 	/**
 	 * Retrieve jabatan by org profile id.
@@ -4417,25 +4437,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	}
 	// #25000 - End
 	
+	@Deprecated
 	/**
 	 * Retrieves a list of personnel blacklisted under a specific supplier.
 	 *
 	 * @param supplierId
+	 * @param isActive
 	 * @return A list of {@code SmPersonBlacklist} objects representing blacklisted personnel associated with the supplier.
 	 */
-	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId) {
-		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO().retrieveSupplierHasPersonnelBlacklist(supplierId);
+	public static List<BlacklistOwnerDirectorVO> getSupplierHasPersonnelBlacklist(Long supplierId, boolean isActive) {
+		List<SmPersonBlacklist> blacklistPersonnel = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveSupplierHasPersonnelBlacklist(supplierId, isActive);
 		List<BlacklistOwnerDirectorVO> blacklist = new ArrayList<>();
 		if (blacklistPersonnel.isEmpty()){
 			return blacklist;
 		}
-		BlacklistDirectorReqDTO reqDTO = new BlacklistDirectorReqDTO();
 		for (SmPersonBlacklist per : blacklistPersonnel){
 			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			reqDTO.setDirectorIdNo(per.getIdentificationNo());
 			
 			BlacklistDirectorResDTO resDTO = SmServiceLookup.getBlacklistDirectorSO()
-					.retrieveAllPersonBlacklistByIdentificationNO(reqDTO);
+					.retrieveAllPersonBlacklistByIdentificationNO(per.getIdentificationNo(), isActive);
 			if (resDTO != null && resDTO.getPersonBlacklist() != null) {
 				blacklistOwner.setIcNo(per.getIdentificationNo());
 				blacklist.add(blacklistOwner);
@@ -4444,33 +4465,45 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		return blacklist;
 	}
 	
+	/**
+	 * Retrieve all blacklist owners/directors
+	 * @param disciplinaryActionId
+	 * @return
+	 */
+	public static List<BlacklistOwnerDirectorVO> getPersonnelBlacklist(Long disciplinaryActionId){
+		List<BlacklistOwnerDirectorVO> blacklistVO = new ArrayList<>();
+		List<SmPersonBlacklist> pblList = SmServiceLookup.getBlacklistDirectorSO()
+				.retrieveAllBlacklist(disciplinaryActionId);
+		if(EntityHelper.isCollectionEmpty(pblList)){
+			return blacklistVO;
+		}
+		for(SmPersonBlacklist pbl : pblList){
+			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
+			blacklistOwner.setIcNo(pbl.getIdentificationNo());
+			blacklistVO.add(blacklistOwner);
+		}
+		return blacklistVO;
+	}
+	
 	//26238 - START
 	/**
-	 * Handles the viewing of active disciplinary actions for a given supplier.
-	 *
-	 * This method updates the supplier's flags related to disciplinary actions
-	 * and retrieves the list of disciplinary actions associated with the supplier.
-	 * If the list is not empty, it is set in the managed bean; otherwise, an empty
-	 * list is assigned. Finally, it triggers the display of the disciplinary action
-	 * history dialog.
-	 *
-	 * @param smSupplier the supplier whose disciplinary actions are to be viewed
-	 * @throws EpException if an error occurs during processing
+	 * Retrieves the list of active disciplinary actions for the given supplier.
+	 * 
+	 * @param smSupplier The supplier for whom disciplinary actions are being retrieved.
+	 * @return A list of {@link DisciplinaryActionVO} representing the active disciplinary actions
+	 *         associated with the given supplier. If an error occurs, an {@link EpException} is thrown.
+	 * @throws EpException If there is an issue retrieving disciplinary actions.
 	 */
-	public void onViewActiveDisciplinaryAction(SmSupplier smSupplier) {
+	public static List<DisciplinaryActionVO> onDisplayActiveDisciplinaryAction(SmSupplier smSupplier) {
 		try {
 			// #30756 start
 			smSupplier.setFlagSupplier(true);
 			smSupplier.setFlagDASuppProfile(true);
 			// #30756 end
 
-			List<DisciplinaryActionVO> voList = ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
-
-			getManagedBean().setDisciplineVOs(
-					CollectionUtils.isNotEmpty(voList) ? voList : new ArrayList<DisciplinaryActionVO>());
-
-			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
+			return ViewSuppProfileBackingBean.getDisciplinaryActionVO(smSupplier);
 		} catch (Exception e) {
+			log.error("An error occurred while handling disciplinary actions for supplier: ", e);
 			throw new EpException(MessageConst.ERROR_770045, new String[] { e.getMessage() });
 		}
 	} 

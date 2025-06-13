@@ -12,44 +12,7 @@
 					'.portlet-title-text').html(
 					'#{auditContractBackingBean.getPortletTitle()}');
 		</script>
-		<style>
-/* Tabel Utama */
-.custom-table {
-	border-collapse: collapse;
-	border: 0;
-	cellspacing: 0;
-	cellpadding: 0;
-	width: 100%;
-	table-layout: fixed;
-}
-
-/* Kolom Rata Kanan */
-.column-align-right {
-	text-align: right !important;
-}
-
-/* Mencegah Teks Panjang Meluap */
-.truncate-text {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.sidemenu {
-	width: 250px; /* Sesuaikan dengan kebutuhan */
-	word-wrap: break-word;
-}
-
-.sidemenu .ui-menuitem-text {
-	white-space: normal !important;
-	word-wrap: break-word;
-	display: block;
-	text-align: left;
-}
-</style>
 	</h:head>
-
-
 
 	<!-- PanelGrid for Tab-Like Buttons -->
 	<p:panel header="#{lbl['lbl.audit.panel.view']}" toggleable="true">
@@ -59,25 +22,25 @@
 					<div align="right" style="width: 100%">
 						<p:commandLink value="#{lbl['lbl.btn.print']}" ajax="false">
 							<p:fileDownload
-								value="#{auditContractBackingBean.generateReport(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView)}"
+								value="#{auditContractBackingBean.generateReport(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView, auditContractBackingBean.managedBean.ctType)}"
 								immediate="true" onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();" />
 						</p:commandLink>
 						&#160;
 						<p:commandLink value="#{lbl['lbl.btn.download']}" ajax="false">
 							<p:fileDownload
-								value="#{auditContractBackingBean.getAuditTrailDetailsForExlRpt(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView,auditContractBackingBean.managedBean.ctType)}" />
+								value="#{auditContractBackingBean.getAuditTrailDetailsForExlRpt(auditContractBackingBean.managedBean.docId, auditContractBackingBean.managedBean.auTabView, auditContractBackingBean.managedBean.ctType)}" />
 						</p:commandLink>
 						&#160;
 					</div>
 				</td>
 			</tr>
 		</table>
-		<table class="custom-table">
-			<tr>
-				<!-- SideTab Menu -->
-				<td width="20%;" valign="top" class="sidemenutd"><p:tabMenu
-						id="sidemenuId" styleClass="sidemenu"
+				
+				<table class="custom-table">
+				<tr>
+				<p:tabMenu
+						id="sidemenuId" 
 						activeIndex="#{auditContractBackingBean.managedBean.activeTab}">
 
 						<p:menuitem value="#{lbl['lbl.ct.audit.tab.contract.summary']}"
@@ -183,10 +146,19 @@
 							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							update="@form">
 						</p:menuitem>
-					</p:tabMenu></td>
+						
+						<p:menuitem style="white-space:normal;"
+							value="#{lbl['lbl.ct.audit.tab.designation.contract.details']}"
+							actionListener="#{auditContractBackingBean.handleButtonClick(15)}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							update="@form">
+						</p:menuitem>
+					</p:tabMenu>
+					</tr>
+					</table>
 
-				<td width="80%"><p:outputPanel>
-						<p:dataTable id="searchCTId" var="obj" rows="10" width="100%"
+			<p:outputPanel style="width: 500px;">	
+						<p:dataTable id="searchCTId" var="obj" rows="10" style="width:100% !important; table-layout: fixed;"
 							value="#{auditContractBackingBean.searchCT}" rowIndexVar="index"
 							lazy="true">
 
@@ -231,7 +203,7 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.audit.header.subDocNo']}"
-								style="white-space: pre-line;" width="40%">
+								style="width :10%">
 								<h:outputText value="#{obj.subDocNo}" escape="false" />
 							</p:column>
 
@@ -241,18 +213,16 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.audit.header.oldValue']}"
-								style="width :5%">
+								style="width :20%; white-space: pre-line;">
 								<h:outputText value="#{obj.oldValue}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.audit.header.newValue']}"
-								style="width :5%">
+								style="width :20%; white-space: pre-line;">
 								<h:outputText value="#{obj.newValue}" />
 							</p:column>
 
 						</p:dataTable>
-					</p:outputPanel></td>
-			</tr>
-		</table>
+					</p:outputPanel>
 	</p:panel>
 </ui:composition>

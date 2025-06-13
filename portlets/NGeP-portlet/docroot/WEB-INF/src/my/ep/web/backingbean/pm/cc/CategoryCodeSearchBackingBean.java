@@ -672,6 +672,8 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 	 * @param bumiPercentage
 	 * @param categoryType
 	 * @param businessTypeCode
+	 * @param supplierId
+	 * @param activeCategoryList
 	 * @return
 	 */
 	//26238 - approver cannot add imposed category code - start
@@ -682,7 +684,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 			Integer bumiPercentage, String categoryType, Long supplierId, String businessTypeCode, List<SmSupplierCategory> activeCategoryList) {
 		//#33387 - END
 		if(categoryL2Id == 0) {
-			return new ArrayList<SelectItem>();
+			return new ArrayList<>();
 		}
 		
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
@@ -747,10 +749,10 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 				List<SmSupplierCategory> apprvList = new ArrayList<>();
 
 				getManagedBean().setSmAppl(SmApplicationUtil.getLatestApplBySupplierId(supplierId));
-				ISupplierCategorySO supplierCategorySO = (ISupplierCategorySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
+				ISupplierCategorySO supplierCategorySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierCategorySO.class);
 
 				SupplierCategoryReqDTO suppCatReqDTO = new SupplierCategoryReqDTO();
-				SupplierCategoryResDTO suppCatResDTO = new SupplierCategoryResDTO();
+				SupplierCategoryResDTO suppCatResDTO;
 				suppCatReqDTO.setSupplierId(supplierId);
 				suppCatResDTO = supplierCategorySO.retrieveCategoryBySupplierId(suppCatReqDTO);
 
