@@ -2,6 +2,8 @@ Body {
 	BACKGROUND: #FFFFFF;
 }
 
+b { font-weight: bold !important; }
+
 .EpBody {
 	font-size: 20px;
 }
