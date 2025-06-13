@@ -7745,7 +7745,10 @@ public class SmApplicationUtil {
 							SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 						managedBean.setShowFactoryPanel(true);
 					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+							SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+						//#28775 - 38380
+						|| facility.getFacilityType().equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 						managedBean.setShowStorePanel(true);
 					} else if (facility.getFacilityType().equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
