@@ -1659,6 +1659,11 @@ public class OrganisationBackingBean extends
 
 	}
 	
+	/**
+	 * START: #35509
+	 * @param pmAddressType
+	 * @return
+	 */
 	public PmAddressType setManualPmAddressType(PmAddressType pmAddressType){
 		PmAddressType manualPmAddressType = new PmAddressType();
 		PmAddress manualPmAddress = new PmAddress();
@@ -1669,6 +1674,7 @@ public class OrganisationBackingBean extends
 		
 		return manualPmAddressType;
 	}
+	//END - #35509
 
 	/**
 	 * 
