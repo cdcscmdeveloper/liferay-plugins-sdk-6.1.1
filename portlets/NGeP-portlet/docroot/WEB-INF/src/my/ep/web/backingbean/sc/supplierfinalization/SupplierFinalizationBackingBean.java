@@ -11710,9 +11710,15 @@ public class SupplierFinalizationBackingBean extends
 	//#21692 - End
 	
 	//#21692 - Start
+<<<<<<< HEAD
 	private void resetQualifiedSupplierForMLOI(ScQtEvaluationResultDtl qualSupplier) {
 		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
 				.equals(getManagedBean().getFinalizationMethod())) {
+=======
+	private void resetQualifiedSupplierForMLOIAndBidding(ScQtEvaluationResultDtl qualSupplier) {
+		if ((ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod())
+				|| ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(getManagedBean().getFinalizationMethod())) && disagreeProposalValidityExtension(qualSupplier)) {
+>>>>>>> refs/remotes/origin/release-sit
 			qualSupplier.setShortListed(false);
 		}
 	}

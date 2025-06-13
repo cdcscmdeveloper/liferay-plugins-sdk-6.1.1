@@ -2839,7 +2839,9 @@ public class ConsolidationReportBackingBean extends
 			int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
 			
 			//#28777#29729 condition
-			condition = condition + 1;
+			if (checkInstructionSupplierBranchDeleted(qtId)) {
+				condition = condition + 1;
+			}
 			
 			//#21692 condition, should be 5th instruction if above condition is TRUE, else 4th
 			if (new ApprovalBackingBean().isEPVApprovalRequestAccepted(qtId)) {
