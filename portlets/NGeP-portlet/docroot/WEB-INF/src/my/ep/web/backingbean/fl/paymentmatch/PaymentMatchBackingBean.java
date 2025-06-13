@@ -1615,8 +1615,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			}
 			validateDuplicateDeduction(outcome);
 			validateDeductionAmt();
+			
+			//36754-Start
+			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				validateOrderFulfiledAndDOFRNPendingCancellation();
+			}
+			//36754-End
+			
 			if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_MATCH)){
-				validateOrderFulfiledAndDOFRNPendingCancellation();//36754
 				calPmSummary();
 			}
 			
@@ -2691,9 +2697,9 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}
@@ -2805,16 +2811,14 @@ public class PaymentMatchBackingBean extends FulfilmentBaseBackingBean<PaymentMa
 	 *             if the order validation fails with a specific error code.
 	 */
 	private void validateOrderFulfiledAndDOFRNPendingCancellation() {
-		Boolean allowToProceed = true;
-		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = null;
 
 		reqDTO.setFlRequestId(getManagedBean().getPaymentAdvice().getFlRequest().getFulfilmentReqId());
 		reqDTO.setFlOrderId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getFulfilmentOrderId());
-		resDTO = orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
-		allowToProceed = resDTO.isAllowToProceed();
+		FulfilmentResDTO resDTO = orderSO.verifyOrderQtySDIAndDOFRNPendingCancellation(reqDTO);
+		Boolean allowToProceed = resDTO.isAllowToProceed();
 		if (!allowToProceed) {
 			throw new EpException(MessageConst.ERROR_740069);
 		}

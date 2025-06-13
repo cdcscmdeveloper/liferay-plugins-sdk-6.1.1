@@ -30,11 +30,12 @@
 				
 				<h:panelGroup rendered="#{svTask.smSvTaskGroups.size() > 0}">
 				<ui:repeat var="svGroup" value="#{svTask.smSvTaskGroups}">
-					<br/>
-					<h:outputText rendered="#{!svGroup.redundant}"
-						value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svGroup.smSvTemplate)}"/>
-					<h:outputText rendered="#{!svGroup.redundant and svGroup.smSvTemplate.suppCategory.otherDesc != null}"
-						value=" (#{svGroup.smSvTemplate.suppCategory.otherDesc})"/>
+					<h:panelGroup rendered="#{!svGroup.redundant}">
+				        <br/><br/>
+				        <h:outputText value="#{svoSiteVisitBackingBean.getTemplateCategoryCode(svGroup.smSvTemplate)}"/>
+				        <h:outputText rendered="#{svGroup.smSvTemplate.suppCategory.otherDesc != null}"
+				            value=" (#{svGroup.smSvTemplate.suppCategory.otherDesc})"/>
+				    </h:panelGroup>
 				</ui:repeat>
 				</h:panelGroup>
 			</p:column>

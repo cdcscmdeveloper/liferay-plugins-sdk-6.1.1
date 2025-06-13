@@ -2435,6 +2435,7 @@ public class EvaluationMeetingBackingBean extends
 			auditResDTO.setDocNo(this.getManagedBean().getQt().getQtNo());
 			auditResDTO.setCreatedBy(getUserIdSessionFromLoginId());
 			auditResDTO.setStatusId(QTStatusConst.CMT_PENDING_REAPPROVAL);
+			auditResDTO.setRoleCode(RoleCode.EC_SECRETARY.value());
 
 			ArrayList<AuditTrailReqDTO> auditReqList = new ArrayList<>();
 			if (CollectionUtils.isNotEmpty(newCommitteeMembers)) {

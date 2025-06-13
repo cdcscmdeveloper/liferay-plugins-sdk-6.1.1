@@ -551,21 +551,27 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 				resDTOInvoice=fulfilmentRequestSO.validateAP59(reqDTO);
 				
 				//35024-Start - for performance bond checking
-				if(!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-					
-				}
-				else //35024-End
-				//28719-start
-				if(!resDTOInvoice.isSupplementContractComplete() && !resDTOInvoice.isCrComplete()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
-					
-				}else//28719-end
-				if(!resDTOInvoice.isCrComplete()){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-					MessageUtils.getMessage(MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));					
+				if (!resDTOInvoice.isBondComplete() && !resDTOInvoice.isCrComplete()) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745091, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
+
+				}// 35024-End
+				else if (!resDTOInvoice.isSupplementContractComplete() && !resDTOInvoice.isCrComplete()) { // 28719-start
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_745090, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
+
+				} else if (!resDTOInvoice.isCrComplete()) { // 28719-end
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.INFO_721066, null, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									getFacesScopes().getUserLocale())));
 				}
 			}
 			/*#14650 - Ending*/
@@ -1819,9 +1825,9 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			supplier.setFlagSupplier(true);
 			supplier.setFlagDASuppProfile(true);
 
-			List<DisciplinaryActionVO> disciplinaryActionVOs = ViewSuppProfileBackingBean
+			List<DisciplinaryActionVO> disciplinaryActionVO = ViewSuppProfileBackingBean
 					.getDisciplinaryActionVO(supplier);
-			getManagedBean().setDisciplineVO(disciplinaryActionVOs);
+			getManagedBean().setDisciplinaryActionVO(disciplinaryActionVO);
 			RequestContext.getCurrentInstance().execute("disciplinaryActionHistoryDlg.show();");
 		}
 	}
@@ -1889,7 +1895,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			getManagedBean().setDpFlag(true);
 			String supplierOffer = getManagedBean().getSupplierOffer();
 			if (supplierOffer != null && supplierOffer.length() > 0) {
-				String trimWipDpZone = supplierOffer.replace("<br/>", "");
+				String trimWipDpZone = supplierOffer.replace("<br/>", " ");
 				getManagedBean().setSupplierOffer(trimWipDpZone);
 			}
 		} else {

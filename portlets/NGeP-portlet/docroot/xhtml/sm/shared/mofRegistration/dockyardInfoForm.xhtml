@@ -127,16 +127,18 @@
 		
 		<p:ajax event="close" listener="#{backingBean.cancelDockyardSaveorUpdate}"/>
 		
-		<p:outputPanel id="dockYardBlockPanelId" layout="block">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel id="dockYardBlockPanelId" layout="block" rendered="#{backingBean.managedBean.showDockyardPanel}">
 			<p:messages id="dockYardDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.facility.dockyard.name']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
+						<!-- #28775 - Site Visit Grouping Enhancement -28775 -->
 					<td><p:inputText size="35"
 							required="#{backingBean.managedBean.valueReqd}"
-							label="#{lbl['lbl.sm.facility.name']}" maxlength="50"
+							label="#{lbl['lbl.sm.facility.dockyard.name']}" maxlength="50"
 							id="smFacDockName"
 							value="#{backingBean.managedBean.selectedDockyardFacility.facilityName}"
 							disabled="#{backingBean.managedBean.upsCannotEdit}" >
