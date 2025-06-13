@@ -125,19 +125,23 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			statusL1.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			statusL1.setNewValue(pmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 					: AuditConst.PM_AUD_INACTIVE);
+			
+			objList.add(statusL1);
 
 		} else {
 			statusL1.setDocId(BigInteger.valueOf(pmCategoryL1.getCategoryL1Id()));
 			statusL1.setDocGroupId(BigInteger.valueOf(pmCategoryL1.getCategoryL1Id()));
 			statusL1.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			if (pmCategoryL1.getRecordStatusFlg() != oldPmCategoryL1.getRecordStatusFlg()) {
+			
+			if (!pmCategoryL1.getRecordStatusFlg().equals(oldPmCategoryL1.getRecordStatusFlg())) {
 				statusL1.setOldValue(oldPmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 						: AuditConst.PM_AUD_INACTIVE);
 				statusL1.setNewValue(pmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
 						: AuditConst.PM_AUD_INACTIVE);
+				
+				objList.add(statusL1);
 			}
 		}
-		objList.add(statusL1);
 		auditPMReqDTO.setObjList(objList);
 	}
 
@@ -165,15 +169,20 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 
 		if (managedBean.isNewCategory()) {
 			statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+			objList.add(statusL2);
 			
 
 		} else {
-			statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			statusL2.setOldValue(oldPmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
+			
+			if (!pmCategoryL2.getRecordStatusFlg().equals(oldPmCategoryL2.getRecordStatusFlg())) {
+				statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+				statusL2.setOldValue(oldPmCategoryL2.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+						: AuditConst.PM_AUD_INACTIVE);
+				
+				objList.add(statusL2);
+			}
+			
 		}
-
-		objList.add(statusL2);
 		auditPMReqDTO.setObjList(objList);
 	}
 
