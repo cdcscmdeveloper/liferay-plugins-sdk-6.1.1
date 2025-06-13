@@ -106,9 +106,9 @@
 
 			<p:column style="white-space:normal;">
 				<f:facet name="header">
-					38229 - #{lbl['lbl.bpm.description']}
+					#{lbl['lbl.bpm.description']}
 				</f:facet>
-				<p:commandLink actionListener="#{tokenManagerMB.initAjax}"
+				<p:commandLink 
 					action="#{bpmTasklistBackingBean.navigateToURL}">
 					<f:param name="taskId" value="#{tasks.taskId}" />
 					<f:param name="process" value="#{tasks.process}" />
