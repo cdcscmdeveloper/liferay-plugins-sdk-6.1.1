@@ -2120,7 +2120,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		switch (status) {
 		case DbValueConst.RECORD_STATUS_ACTIVE:
-			errorMessageSSM(supplier); 
+			errorMessageSSM(supplier);
 			throw new EpException(MessageConst.ERROR_721066, new String[] { regNoMsg, "" });
 		case DbValueConst.RECORD_STATUS_SUSPENDED:
 			throw new EpException(MessageConst.ERROR_721074, new String[] { regNoMsg, "" });
