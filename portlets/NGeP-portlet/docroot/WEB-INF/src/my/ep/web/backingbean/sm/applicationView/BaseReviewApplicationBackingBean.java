@@ -5229,6 +5229,56 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	/**
+	 * Retrieves remarks related to a given revisit.
+	 * 
+	 * @param revisit
+	 * @return List<String>
+	 */
+	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
+		List<String> remarks = new ArrayList<>();
+		if (null != revisit) {
+			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
+				List<PmStatusDesc> descList;
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+				StringBuilder remarkTwo = new StringBuilder();
+				remarkTwo
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale()))
+						.append(" ")
+						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
+						.append(" ")
+						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())).append(" ")
+						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
+				remarks.add(remarkTwo.toString());
+			}
+			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
+				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale());
+				remarks.add(remarkThree);
+			}
+		}
+		return remarks;
+	}
+
+	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
+		String statusName = "";
+
+		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			// Expected Max Size in loop (5) based on NGEP_PDS database
+			for (PmStatusDesc status : statusList) {
+				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
+					statusName = status.getStatusName();
+					break;
+				}
+			}
+		}
+		return statusName;
+	}
+
+	/**
 	 * Downloads the revisit history report.
 	 */
 	public void downloadRevisitHistory() {
