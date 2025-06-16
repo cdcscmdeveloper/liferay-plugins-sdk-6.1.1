@@ -2223,7 +2223,7 @@ public class SmApplicationUtil {
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
 			//#31130 --START 210525
-			if (per.getPmUser() != null || per.getEpRole() != null && (per.getSmStaffAcademics() == null
+			if ((per.getPmUser() != null || per.getEpRole() != null) && (per.getSmStaffAcademics() == null
 					|| per.getSmStaffAcademics().isEmpty())) {
 				//#31130 --END 210525
 				sb.append("<br/>");
@@ -2336,7 +2336,7 @@ public class SmApplicationUtil {
 			}
 			//#30444 --END--25082021--
 			//#31130 --START--050525--
-			if(per.getPmUser() != null || per.getEpRole() != null
+			if((per.getPmUser() != null || per.getEpRole() != null)
 					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT) 
 					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
