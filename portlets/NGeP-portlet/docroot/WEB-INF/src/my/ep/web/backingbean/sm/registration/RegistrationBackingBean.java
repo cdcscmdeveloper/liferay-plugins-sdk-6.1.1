@@ -2148,15 +2148,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	private void handleInProgressDifferentType(SmSupplier supplier,
 			String labelText) {
+
+		String existingType = supplier.getSmAppl().getSupplierType();
+
 		if (StringUtils.isBlank(supplier.getEpNo())) {
+			if (existingType
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+					|| existingType
+							.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
+				throw new EpException(MessageConst.ERROR_721062, new String[] {
+						supplier.getRegNo(), labelText });
+			}
 			throw new EpException(MessageConst.ERROR_721075, new String[] {
 					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
-		} else if (supplier.getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
-			throw new EpException(MessageConst.ERROR_721064, new String[] {
-					supplier.getRegNo(), labelText.toLowerCase(), labelText });
 		} else {
-			throw new EpException(MessageConst.ERROR_721083, new String[] {
+			throw new EpException(MessageConst.ERROR_721064, new String[] {
 					supplier.getRegNo(), labelText });
 		}
 	}
@@ -2206,13 +2212,40 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private void handleBasicActiveStatus(SmSupplier supplier, String regNoMsg) {
 		if (SupplierManagementConst.STYPE_CONTRACTOR.equalsIgnoreCase(supplier
 				.getSmAppl().getSupplierType())) {
-			throw new EpException(MessageConst.ERROR_721066,
-					new String[] { regNoMsg });
+			if (checkIfMofExp(supplier)) {
+				errorMessageSSM(supplier);
+			} else {
+				// Since if existing status 1 for K need different message if
+				// going errorMessageSSM first can have different message
+				throw new EpException(MessageConst.ERROR_721066,
+						new String[] { regNoMsg });
+			}
 		} else {
 			errorMessageSSM(supplier);
 			throw new EpException(MessageConst.ERROR_721066,
 					new String[] { regNoMsg });
 		}
+	}
+	
+	private boolean checkIfMofExp(SmSupplier supp) {
+	    if (supp.getSmAppl() == null 
+	        || supp.getSmAppl().getSmMofCerts() == null) {
+	        return false;
+	    }
+
+	    String applType = supp.getSmAppl().getApplType();
+	    if (!SupplierManagementConst.ACC_MOF.equalsIgnoreCase(applType) 
+	        && !SupplierManagementConst.ACC_BASIC_REACTIVATE.equalsIgnoreCase(applType)) {
+	        return false;
+	    }
+
+	    for (SmMofCert cert : supp.getSmAppl().getSmMofCerts()) {
+	        if (cert.getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED) {
+	            return true;
+	        }
+	    }
+
+	    return false;
 	}
 
 	private void validateInProgressBasic(SmSupplier supplier) {
