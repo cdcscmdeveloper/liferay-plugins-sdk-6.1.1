@@ -12652,7 +12652,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	//#21692 - Start
 	public boolean isSupplierAbleToSaveWithoutValidation(ScLoa scLoa) {
 		return this.validateSupportedTask(scLoa.getScQt().getQtNo(),
-				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
 	}
 	//#21692 - End
 	
