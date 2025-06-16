@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -200,9 +201,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			this.docId = categoryL3Id;
 			this.docGroupId = categoryL3Id;
 			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			DecimalFormat formatter = new DecimalFormat("#,##0.00");
 
-			detailObj(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE, null, pmCategoryL3.getPaidUpCapital()
-					.toString());
+			detailObj(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE, null, formatter.format(pmCategoryL3.getPaidUpCapital()));
 
 			detailObj(AuditConst.PM_AUD_CCR_BUMI_PERCENTAGE_FIELDLABELCODE, null, pmCategoryL3.getBumiPercentage()
 					.toString()+ AuditConst.PM_AUD_PERCENTAGE);
@@ -272,8 +273,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			paidUpCapital.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 			paidUpCapital.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 			paidUpCapital.setFieldLabelCode(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE);
-			paidUpCapital.setOldValue(String.valueOf(oldpmCategoryL3.getPaidUpCapital().setScale(2)));
-			paidUpCapital.setNewValue(String.valueOf(pmCategoryL3.getPaidUpCapital()));
+			DecimalFormat formatter = new DecimalFormat("#,##0.00");
+			paidUpCapital.setOldValue(formatter.format(oldpmCategoryL3.getPaidUpCapital().setScale(2)));
+			paidUpCapital.setNewValue(formatter.format(pmCategoryL3.getPaidUpCapital()));
 			paidUpCapital.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(paidUpCapital);
 		}
