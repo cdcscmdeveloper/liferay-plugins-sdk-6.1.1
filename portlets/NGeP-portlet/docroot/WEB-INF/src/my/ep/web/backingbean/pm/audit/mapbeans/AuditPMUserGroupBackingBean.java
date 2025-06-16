@@ -66,7 +66,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		if (managedBeans.getUserGroupUpdate() != null && managedBeans.getUserGroupUpdate().getPmUserGroupUsers() != null) {
 			for (PmUserGroupUser groupUser : managedBeans.getUserGroupUpdate().getPmUserGroupUsers()) {
 				if (hMap != null && !(hMap.isEmpty())) {
-					this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+					this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 					if (hMap.containsKey(groupUser.getPmUser().getUserId())) {
 						if (groupUser.getRecordStatusFlg().intValue() != hMap.get(groupUser.getPmUser().getUserId()).intValue()) {
 							this.docId = BigInteger.valueOf(groupUser.getUserGroupUserId());
@@ -111,7 +111,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 			this.ptjCodeName = managedBeans.getUserGroupNew().getPmOrgProfile().getPmOrgValidity().getOrgCode() + "/"
 					+ managedBeans.getUserGroupNew().getPmOrgProfile().getPmOrgValidity().getOrgName();
 			this.groupName = managedBeans.getUserGroupNew().getGroupName();
-			this.groupRole = managedBeans.getUserGroupNew().getRoleCode(); // FL_APPROVER,RN_APPROVER
+			this.groupRole = managedBeans.getUserGroupNew().getGroupName(); // FL_APPROVER,RN_APPROVER
 
 			detailObj(AuditConst.PM_AUD_OUSRG_GRPNAME_FIELDLABELID, null, this.groupName);// New
 			detailObj(AuditConst.PM_AUD_OUSRG_GROLE_FIELDLABELID, null, this.groupRole); // New
