@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-	AuditPMSPDTO statusL1 = new AuditPMSPDTO();
-	AuditPMSPDTO statusL2 = new AuditPMSPDTO();
+	
 	AuditPMSPDTO bumiPercentage = new AuditPMSPDTO();
 	AuditPMSPDTO paidUpCapital = new AuditPMSPDTO();
 	AuditPMSPDTO supplierType = new AuditPMSPDTO();
@@ -108,6 +108,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private void updateDetailPmCategoryL1(CategoryManagedBean managedBean, AuditPMReqDTO auditPMReqDTO) {
 		PmCategoryL1 oldPmCategoryL1 = managedBean.getAuditOldCategoryL1();
 		PmCategoryL1 pmCategoryL1 = managedBean.getPmCategoryL1();
+		AuditPMSPDTO statusL1 = new AuditPMSPDTO();
 
 		statusL1.setRoleCode(roleCode);
 		statusL1.setDocType(pmCategoryL1.getCategoryName());
@@ -153,7 +154,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		PmCategoryL2 pmCategoryL2 = managedBean.getPmCategoryL2();
 		PmCategoryL2 oldPmCategoryL2 = managedBean.getAuditOldCategoryL2();
 		BigInteger categoryL2Id = BigInteger.valueOf(managedBean.getAuditUpdatedCategoryL2().getCategoryL2Id());
-		
+		AuditPMSPDTO statusL2 = new AuditPMSPDTO();
 		statusL2.setRoleCode(roleCode);
 		statusL2.setDocType(pmCategoryL2.getCategoryName());
 		statusL2.setDocNo(pmCategoryL2.getCategoryL2Code());
@@ -170,7 +171,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		if (managedBean.isNewCategory()) {
 			statusL2.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 			objList.add(statusL2);
-			
 
 		} else {
 			
@@ -181,7 +181,6 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				
 				objList.add(statusL2);
 			}
-			
 		}
 		auditPMReqDTO.setObjList(objList);
 	}
@@ -202,9 +201,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			this.docId = categoryL3Id;
 			this.docGroupId = categoryL3Id;
 			this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			DecimalFormat formatter = new DecimalFormat("#,##0.00");
 
-			detailObj(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE, null, pmCategoryL3.getPaidUpCapital()
-					.toString());
+			detailObj(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE, null, formatter.format(pmCategoryL3.getPaidUpCapital()));
 
 			detailObj(AuditConst.PM_AUD_CCR_BUMI_PERCENTAGE_FIELDLABELCODE, null, pmCategoryL3.getBumiPercentage()
 					.toString()+ AuditConst.PM_AUD_PERCENTAGE);
@@ -274,8 +273,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			paidUpCapital.setDocId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 			paidUpCapital.setDocGroupId(BigInteger.valueOf(pmCategoryL3.getCategoryL3Id()));
 			paidUpCapital.setFieldLabelCode(AuditConst.PM_AUD_CCR_PAID_CAPITAL_FIELDLABELCODE);
-			paidUpCapital.setOldValue(String.valueOf(oldpmCategoryL3.getPaidUpCapital().setScale(2)));
-			paidUpCapital.setNewValue(String.valueOf(pmCategoryL3.getPaidUpCapital()));
+			DecimalFormat formatter = new DecimalFormat("#,##0.00");
+			paidUpCapital.setOldValue(formatter.format(oldpmCategoryL3.getPaidUpCapital().setScale(2)));
+			paidUpCapital.setNewValue(formatter.format(pmCategoryL3.getPaidUpCapital()));
 			paidUpCapital.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 			objList.add(paidUpCapital);
 		}
