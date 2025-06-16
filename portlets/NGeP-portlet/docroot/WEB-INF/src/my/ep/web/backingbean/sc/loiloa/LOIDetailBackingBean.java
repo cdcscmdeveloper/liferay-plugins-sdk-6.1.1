@@ -4128,12 +4128,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
-		//#21692 - Start
-		if (this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			validateLOIDetails(scLoi, outcome);
-		}
-		//#21692 - End
+		validateLOIDetails(scLoi, outcome);
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
