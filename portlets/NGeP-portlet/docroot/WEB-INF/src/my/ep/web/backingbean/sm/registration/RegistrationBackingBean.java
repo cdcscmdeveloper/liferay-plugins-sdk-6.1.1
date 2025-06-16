@@ -2120,21 +2120,30 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		switch (status) {
 		case DbValueConst.RECORD_STATUS_ACTIVE:
-			errorMessageSSM(supplier);
-			throw new EpException(MessageConst.ERROR_721066, new String[] { regNoMsg, "" });
+			handleBasicActiveStatus(supplier, regNoMsg);
+			break;
 		case DbValueConst.RECORD_STATUS_SUSPENDED:
-			throw new EpException(MessageConst.ERROR_721074, new String[] { regNoMsg, "" });
+			throw new EpException(MessageConst.ERROR_721074, new String[] { regNoMsg });
 		case DbValueConst.RECORD_STATUS_IN_PROGRESS:
 			validateInProgressBasic(supplier);
 			break;
 		case DbValueConst.RECORD_STATUS_PENDING_ACTIVATION:
-			throw new EpException(MessageConst.ERROR_721065, new String[] { regNoMsg, "" });
+			throw new EpException(MessageConst.ERROR_721065, new String[] { regNoMsg });
 		case DbValueConst.RECORD_STATUS_EXPIRED:
 			validateExpiredBasic(supplier);
 			break;
 		default:
 			// Optional logging or silent ignore
 			break;
+		}
+	}
+	
+	private void handleBasicActiveStatus(SmSupplier supplier, String regNoMsg) {
+		if (SupplierManagementConst.STYPE_CONTRACTOR.equalsIgnoreCase(supplier.getSmAppl().getSupplierType())) {
+			throw new EpException(MessageConst.ERROR_721066, new String[] { regNoMsg });
+		} else {
+			errorMessageSSM(supplier);
+			throw new EpException(MessageConst.ERROR_721066, new String[] { regNoMsg });
 		}
 	}
 
