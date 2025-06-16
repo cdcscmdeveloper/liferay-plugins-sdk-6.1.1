@@ -23,6 +23,7 @@
 					showAttachment="true"
 					disableUpload="true"
 					readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
+					showAttachments="#{requestNoteBackingBean.managedBean.showAttachments}"
 					instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />
 			</c:when>
 			<c:otherwise>

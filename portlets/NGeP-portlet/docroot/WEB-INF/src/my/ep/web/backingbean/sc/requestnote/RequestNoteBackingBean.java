@@ -1875,6 +1875,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setShowPurchaseInDefault(false);
 		getManagedBean().setScRequestNoteDtl(null);
 		//25790 - end
+		//#26059 - start
+		getManagedBean().setBpkApproverMode(false);
+		getManagedBean().setRnExceedThreshold(false);
+		getManagedBean().setShowAttachments(true);
+		//#26059 - end
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		if (requestNote.getRequestNoteDtls() != null && requestNote.getRequestNoteDtls().size() > 0) {
 			for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -2020,6 +2025,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// #26059 - start
 				if (scRequestNoteDtl.isExceedThreshold()) {
 					getManagedBean().setRnExceedThreshold(Boolean.TRUE);
+					
+					if (requestNote.getScRequestNoteAttachments().isEmpty()) {
+						getManagedBean().setShowAttachments(Boolean.FALSE);
+					}
 				}
 				// #26059 - end
 
@@ -7140,6 +7149,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestNote.getRemarks(), ScRequestNoteRemark.class));
 			requestNoteReqDTO.setRequestNote(requestNote);
 			getRequestNoteSO().updateScRequestNote(requestNoteReqDTO);
+			//bpkApprovalNotification();
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
 					getManagedBean().getRequestNote().getRequestNoteNo(), "bpkApproverSubmit",
@@ -7191,6 +7201,42 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					"lbl.sc.remark", ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()) });
 		}
 	}
+	
+//	/**
+//	 * To send notification for email and dashboard
+//	 */
+//	public void bpkApprovalNotification() {
+//		FacesScopes facesScopes = new FacesScopes();
+//		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+//		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+//		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+//
+//		if (getManagedBean().getRequestNoteDtl() != null
+//				&& getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
+//			
+//			
+//			long assignUser = getManagedBean().getRequestNoteDtl().getAssignedUser().getUserId();
+//			String userEmail = getManagedBean().getRequestNoteDtl().getAssignedUser().getEmail();
+//
+//			ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
+//			Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
+//			Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
+//			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+//			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+//			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+//		
+//			getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
+//					CommonConstants.DASHBOARD);
+//			getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
+//					CommonConstants.EMAIL);
+//		}else{
+//			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION,
+//					ParameterConst.DOCTYPE_REQUEST_NOTE.toUpperCase(),
+//					"RequestNoteBackingBean.approvalNotification : No notification send", 
+//					System.currentTimeMillis());
+//		}
+//
+//	}
 
 	// end - #26059
 }

@@ -61,7 +61,9 @@
 			<c:choose>
 				<c:when test="#{cc.attrs.showAttachment}">
 					<td class="TableFieldLeft" width="100px">
-						<p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" />
+						<c:if test="#{cc.attrs.showAttachments}"><ui:remove>#26059 - add conditon</ui:remove>
+							<p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" />
+						</c:if>
 					</td>
 					<td class="TableFieldRight" width="35%">
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -75,6 +77,7 @@
 								</td>
 							</tr>
 							<tr>
+							<c:if test="#{cc.attrs.showAttachments}"><ui:remove>#26059 - add conditon</ui:remove>
 								<td />
 								<td>
 									<p:dataGrid id="attachmentTbId"
@@ -116,6 +119,7 @@
 										</table>
 									</p:dataGrid>
 								</td>
+							</c:if>
 							</tr>
 						</table>
 					</td>

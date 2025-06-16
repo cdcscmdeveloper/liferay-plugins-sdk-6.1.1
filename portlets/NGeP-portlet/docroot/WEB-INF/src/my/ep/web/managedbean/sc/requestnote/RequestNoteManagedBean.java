@@ -409,6 +409,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
 	private boolean bpkApproverMode = Boolean.FALSE; //#26059
 	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
+	private boolean showAttachments = Boolean.TRUE; //#26059
     private List<CommodityGroup> commodityGroups =	new ArrayList<CommodityGroup>(); //#26059
     
     /**
@@ -2433,6 +2434,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	public void setRnExceedThreshold(boolean rnExceedThreshold) {
 		this.rnExceedThreshold = rnExceedThreshold;
+	}
+
+	public boolean isShowAttachments() {
+		return showAttachments;
+	}
+
+	public void setShowAttachments(boolean showAttachments) {
+		this.showAttachments = showAttachments;
 	}
 	// #26059 - end
 }
