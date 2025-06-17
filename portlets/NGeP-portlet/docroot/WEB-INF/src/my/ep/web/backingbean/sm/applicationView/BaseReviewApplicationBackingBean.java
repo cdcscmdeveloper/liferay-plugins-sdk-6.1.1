@@ -167,12 +167,12 @@ import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 - AUDIT TRAIL SM
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementViewBackingBean;
 //#34031 Start
-import my.ep.biz.service.sm.revisit.ISmRevisitSO;
-import my.ep.dto.sm.revisit.SmRevisitReqDTO;
-import my.ep.persistence.entity.sm.SmRevisit;
-import my.ep.util.SLAUtils;
-import my.ep.web.constant.report.SmReportConst;
-import my.ep.web.util.pm.helper.PmCommonUtil;
+//import my.ep.biz.service.sm.revisit.ISmRevisitSO;
+//import my.ep.dto.sm.revisit.SmRevisitReqDTO;
+//import my.ep.persistence.entity.sm.SmRevisit;
+//import my.ep.util.SLAUtils;
+//import my.ep.web.constant.report.SmReportConst;
+//import my.ep.web.util.pm.helper.PmCommonUtil;
 //#34031 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
@@ -2998,7 +2998,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		setSupplierProfileOrHistoryUrl(baseUrl, baseUrlLabel, smAppl
 				.getSmSupplier().getSupplierId().toString());
 		// #34031
-		initSmRvHistory();
+//		initSmRvHistory();
 		SmCommonUtil.redirectToPage(basePage, "", null);
 	}
 
@@ -5177,120 +5177,120 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 	// #28895_35501 End
 	// #34031 Start
-	/**
-	 * Initialize revisit history list
-	 */
-	public void initSmRvHistory() {
-		try {
-			SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
-			if (this.getManagedBean().isSupplierUser()) {
-				reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
-			} else if (null != getSupplierIdParam()) {
-				reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
-			} else {
-				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
-			}
-			ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
-			List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
-			if (revisitList.isEmpty()) {
-				this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
-			} else {
-				setCurrentRevisit(revisitList);
-				this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
-			}
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
-					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
-		}
-	}
-
-	private void setCurrentRevisit(List<SmRevisit> revisitList) {
-		for (SmRevisit revisit : revisitList) {
-			if (revisit.isCurrent()) {
-				this.getManagedBean().setCurrentSmRevisit(revisit);
-				break;
-			}
-		}
-	}
-
-	private List<SmRevisit> updateSmRvCreatedUserName(List<SmRevisit> revisitList) {
-		for (SmRevisit revisit : revisitList) {
-			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
-			revisit.setActionedBy(user.getUserName());
-		}
-		return revisitList;
-	}
-
-	/**
-	 * Displays the revisit history dialog
-	 */
-	public void onClickRevisitHistoryList() {
-		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
-	}
-
-	/**
-	 * Retrieves remarks related to a given revisit.
-	 * 
-	 * @param revisit
-	 * @return List<String>
-	 */
-	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
-		List<String> remarks = new ArrayList<>();
-		if (null != revisit) {
-			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
-				List<PmStatusDesc> descList;
-				StatusReqDTO reqDTO = new StatusReqDTO();
-				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
-				StringBuilder remarkTwo = new StringBuilder();
-				remarkTwo
-						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale()))
-						.append(" ")
-						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
-						.append(" ")
-						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())).append(" ")
-						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
-				remarks.add(remarkTwo.toString());
-			}
-			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
-				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-				remarks.add(remarkThree);
-			}
-		}
-		return remarks;
-	}
-
-	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
-		String statusName = "";
-
-		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
-			// Expected Max Size in loop (5) based on NGEP_PDS database
-			for (PmStatusDesc status : statusList) {
-				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
-					statusName = status.getStatusName();
-					break;
-				}
-			}
-		}
-		return statusName;
-	}
-
-	/**
-	 * Downloads the revisit history report.
-	 */
-	public void downloadRevisitHistory() {
-		try {
-			Map<String, String> paramMap = new HashMap<>();
-			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
-			generateReport("reportName", paramMap);
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
-					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
-		}
-	}
+//	/**
+//	 * Initialize revisit history list
+//	 */
+//	public void initSmRvHistory() {
+//		try {
+//			SmRevisitReqDTO reqDTO = new SmRevisitReqDTO();
+//			if (this.getManagedBean().isSupplierUser()) {
+//				reqDTO.setSupplierId(SmApplicationUtil.getCurrentSupplier().getSupplierId());
+//			} else if (null != getSupplierIdParam()) {
+//				reqDTO.setSupplierId(Long.parseLong(getSupplierIdParam()));
+//			} else {
+//				reqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+//			}
+//			ISmRevisitSO smRevisitSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRevisitSO.class);
+//			List<SmRevisit> revisitList = smRevisitSo.retrieveSmRevisitListBySupplierId(reqDTO).getSmRevisitList();
+//			if (revisitList.isEmpty()) {
+//				this.getManagedBean().setSmRevisitList(new ArrayList<SmRevisit>());
+//			} else {
+//				setCurrentRevisit(revisitList);
+//				this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
+//			}
+//		} catch (Exception e) {
+//			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+//					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+//		}
+//	}
+//
+//	private void setCurrentRevisit(List<SmRevisit> revisitList) {
+//		for (SmRevisit revisit : revisitList) {
+//			if (revisit.isCurrent()) {
+//				this.getManagedBean().setCurrentSmRevisit(revisit);
+//				break;
+//			}
+//		}
+//	}
+//
+//	private List<SmRevisit> updateSmRvCreatedUserName(List<SmRevisit> revisitList) {
+//		for (SmRevisit revisit : revisitList) {
+//			PmUser user = PmCommonUtil.retrieveUserById(revisit.getCreatedBy(), true);
+//			revisit.setActionedBy(user.getUserName());
+//		}
+//		return revisitList;
+//	}
+//
+//	/**
+//	 * Displays the revisit history dialog
+//	 */
+//	public void onClickRevisitHistoryList() {
+//		RequestContext.getCurrentInstance().execute("revisitHistoryDialogWV.show();");
+//	}
+//
+//	/**
+//	 * Retrieves remarks related to a given revisit.
+//	 * 
+//	 * @param revisit
+//	 * @return List<String>
+//	 */
+//	public List<String> getSupplierRvRemarks(SmRevisit revisit) {
+//		List<String> remarks = new ArrayList<>();
+//		if (null != revisit) {
+//			if (revisit.getOldPmRegStatus() != null && revisit.getNewPmRegStatus() != null) {
+//				List<PmStatusDesc> descList;
+//				StatusReqDTO reqDTO = new StatusReqDTO();
+//				reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+//				descList = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO).getStatusDescList();
+//				StringBuilder remarkTwo = new StringBuilder();
+//				remarkTwo
+//						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//								new FacesScopes().getUserLocale()))
+//						.append(" ")
+//						.append(getPmStatusDescs(descList, revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
+//						.append(" ")
+//						.append(ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.one.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//								new FacesScopes().getUserLocale())).append(" ")
+//						.append(getPmStatusDescs(descList, revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
+//				remarks.add(remarkTwo.toString());
+//			}
+//			if (null != revisit.getSmRvCatCodes() && !revisit.getSmRvCatCodes().isEmpty()) {
+//				String remarkThree = ResourceBundleUtils.getMessage("lbl.sm.rv.supp.remark.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+//						new FacesScopes().getUserLocale());
+//				remarks.add(remarkThree);
+//			}
+//		}
+//		return remarks;
+//	}
+//
+//	private String getPmStatusDescs(List<PmStatusDesc> statusList, Long pmStatusId) {
+//		String statusName = "";
+//
+//		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+//			// Expected Max Size in loop (5) based on NGEP_PDS database
+//			for (PmStatusDesc status : statusList) {
+//				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
+//					statusName = status.getStatusName();
+//					break;
+//				}
+//			}
+//		}
+//		return statusName;
+//	}
+//
+//	/**
+//	 * Downloads the revisit history report.
+//	 */
+//	public void downloadRevisitHistory() {
+//		try {
+//			Map<String, String> paramMap = new HashMap<>();
+//			paramMap.put(SmReportConst.PARAM_SUPPLIER_ID, String.valueOf(this.getManagedBean().getSmSupplier().getSupplierId()));
+//			generateReport("reportName", paramMap);
+//		} catch (Exception e) {
+//			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
+//					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
+//		}
+//	}
 	// #34031 End
 	
 }

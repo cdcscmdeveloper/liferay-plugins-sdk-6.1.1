@@ -82,7 +82,7 @@ import my.ep.web.vo.SmSectionEditorVO;
 
 import org.apache.commons.lang3.StringUtils;
 //#34031
-import my.ep.persistence.entity.sm.SmRevisit;
+//import my.ep.persistence.entity.sm.SmRevisit;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -391,8 +391,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	// #28895_35501 - AUDIT TRAIL SM
 	private boolean auditAccess;
 	// #34031 Start
-	private List<SmRevisit> smRevisitList;
-	private SmRevisit currentSmRevisit;
+//	private List<SmRevisit> smRevisitList;
+//	private SmRevisit currentSmRevisit;
 	// #34031 End
 	
 	public BaseReviewApplicationManagedBean() {
@@ -2611,20 +2611,20 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	}
 	// #28895_35501 End
 	// #34031 Start
-	public List<SmRevisit> getSmRevisitList() {
-		return smRevisitList;
-	}
-
-	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
-		this.smRevisitList = smRevisitList;
-	}
-
-	public SmRevisit getCurrentSmRevisit() {
-		return currentSmRevisit;
-	}
-
-	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
-		this.currentSmRevisit = currentSmRevisit;
-	}
+//	public List<SmRevisit> getSmRevisitList() {
+//		return smRevisitList;
+//	}
+//
+//	public void setSmRevisitList(List<SmRevisit> smRevisitList) {
+//		this.smRevisitList = smRevisitList;
+//	}
+//
+//	public SmRevisit getCurrentSmRevisit() {
+//		return currentSmRevisit;
+//	}
+//
+//	public void setCurrentSmRevisit(SmRevisit currentSmRevisit) {
+//		this.currentSmRevisit = currentSmRevisit;
+//	}
 	// #34031 End
 }

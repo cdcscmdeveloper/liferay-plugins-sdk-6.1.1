@@ -82,8 +82,8 @@ public class SmReportConst implements Serializable {
 	public static final String PARAM_USER_ID2 = "PUSER2"; //param indicator for second user_id in same report.
 	//#32521 - END
 	// #34031 Start
-	public static final String PARAM_VISIT_DATE_FROM = "PFROMVISITDATE";
-	public static final String PARAM_VISIT_DATE_TO = "PTOVISITDATE";
+//	public static final String PARAM_VISIT_DATE_FROM = "PFROMVISITDATE";
+//	public static final String PARAM_VISIT_DATE_TO = "PTOVISITDATE";
 	// #34031 End
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
@@ -166,7 +166,7 @@ public class SmReportConst implements Serializable {
 	public static final String SM_APPLICATION_PROCESSED_RPT_VAL = "SM_097";
 	//#32521 - END
 	// #34031
-	public static final String SM_REVISIT_RPT_VAL = "SM_101";
+//	public static final String SM_REVISIT_RPT_VAL = "SM_101";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";
@@ -703,8 +703,8 @@ public class SmReportConst implements Serializable {
 	}
 	//#32521 - END
 	// #34031 Start
-	public String getSmRevisitRptVal() {
-		return SM_REVISIT_RPT_VAL;
-	}
+//	public String getSmRevisitRptVal() {
+//		return SM_REVISIT_RPT_VAL;
+//	}
 	// #34031 End
 }

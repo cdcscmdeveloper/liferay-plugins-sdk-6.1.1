@@ -37,9 +37,9 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 import my.ep.persistence.entity.pm.common.PmRemarkCategory;
 //#34031 Start
 import my.ep.persistence.entity.sm.SmRevisit;
-import my.ep.persistence.entity.sm.SmRvAssistOfficer;
-import my.ep.persistence.entity.sm.SmRvDocFile;
-import my.ep.persistence.entity.sm.SmRvSuppDoc;
+//import my.ep.persistence.entity.sm.SmRvAssistOfficer;
+//import my.ep.persistence.entity.sm.SmRvDocFile;
+//import my.ep.persistence.entity.sm.SmRvSuppDoc;
 //#34031 End
 //#28895_35501_DA - AUDIT TRAIL SM DA
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
@@ -183,13 +183,13 @@ public class ViewSuppProfileManagedBean extends
 	// #34031 Start
 	private SmRevisit smRevisit;
 	private String svoRoleCode;
-	private SmRvAssistOfficer selectedRvAssistOfficer;
-	private boolean disableAddSmRvAssistOfficerBtn;
-	private int smRvAttachedFileIndex;
-	private String smRvFilePath;
-	private SmRvSuppDoc smRvSuppDoc;
-	private SmRvDocFile smRvDocFile;
-	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
+//	private SmRvAssistOfficer selectedRvAssistOfficer;
+//	private boolean disableAddSmRvAssistOfficerBtn;
+//	private int smRvAttachedFileIndex;
+//	private String smRvFilePath;
+//	private SmRvSuppDoc smRvSuppDoc;
+//	private SmRvDocFile smRvDocFile;
+//	private List<SmRvAssistOfficer> emptyRvAssistOfficers;
 	// #34031 End
 		
 	public ViewSuppProfileManagedBean() {
@@ -1052,60 +1052,60 @@ public class ViewSuppProfileManagedBean extends
 		this.svoRoleCode = svoRoleCode;
 	}
 
-	public SmRvAssistOfficer getSelectedRvAssistOfficer() {
-		return selectedRvAssistOfficer;
-	}
+//	public SmRvAssistOfficer getSelectedRvAssistOfficer() {
+//		return selectedRvAssistOfficer;
+//	}
+//
+//	public void setSelectedRvAssistOfficer(SmRvAssistOfficer selectedRvAssistOfficer) {
+//		this.selectedRvAssistOfficer = selectedRvAssistOfficer;
+//	}
 
-	public void setSelectedRvAssistOfficer(SmRvAssistOfficer selectedRvAssistOfficer) {
-		this.selectedRvAssistOfficer = selectedRvAssistOfficer;
-	}
+//	public boolean isDisableAddSmRvAssistOfficerBtn() {
+//		return disableAddSmRvAssistOfficerBtn;
+//	}
+//
+//	public void setDisableAddSmRvAssistOfficerBtn(boolean disableAddSmRvAssistOfficerBtn) {
+//		this.disableAddSmRvAssistOfficerBtn = disableAddSmRvAssistOfficerBtn;
+//	}
 
-	public boolean isDisableAddSmRvAssistOfficerBtn() {
-		return disableAddSmRvAssistOfficerBtn;
-	}
-
-	public void setDisableAddSmRvAssistOfficerBtn(boolean disableAddSmRvAssistOfficerBtn) {
-		this.disableAddSmRvAssistOfficerBtn = disableAddSmRvAssistOfficerBtn;
-	}
-
-	public int getSmRvAttachedFileIndex() {
-		return smRvAttachedFileIndex;
-	}
-
-	public void setSmRvAttachedFileIndex(int smRvAttachedFileIndex) {
-		this.smRvAttachedFileIndex = smRvAttachedFileIndex;
-	}
+//	public int getSmRvAttachedFileIndex() {
+//		return smRvAttachedFileIndex;
+//	}
+//
+//	public void setSmRvAttachedFileIndex(int smRvAttachedFileIndex) {
+//		this.smRvAttachedFileIndex = smRvAttachedFileIndex;
+//	}
 	
-	public String getSmRvFilePath() {
-	    return smRvFilePath;
-	}
+//	public String getSmRvFilePath() {
+//	    return smRvFilePath;
+//	}
+//
+//	public void setSmRvFilePath(String smRvFilePath) {
+//	    this.smRvFilePath = smRvFilePath;
+//	}
 
-	public void setSmRvFilePath(String smRvFilePath) {
-	    this.smRvFilePath = smRvFilePath;
-	}
+//	public SmRvSuppDoc getSmRvSuppDoc() {
+//		return smRvSuppDoc;
+//	}
+//
+//	public void setSmRvSuppDoc(SmRvSuppDoc smRvSuppDoc) {
+//		this.smRvSuppDoc = smRvSuppDoc;
+//	}
 
-	public SmRvSuppDoc getSmRvSuppDoc() {
-		return smRvSuppDoc;
-	}
+//	public SmRvDocFile getSmRvDocFile() {
+//		return smRvDocFile;
+//	}
+//
+//	public void setSmRvDocFile(SmRvDocFile smRvDocFile) {
+//		this.smRvDocFile = smRvDocFile;
+//	}
 
-	public void setSmRvSuppDoc(SmRvSuppDoc smRvSuppDoc) {
-		this.smRvSuppDoc = smRvSuppDoc;
-	}
-
-	public SmRvDocFile getSmRvDocFile() {
-		return smRvDocFile;
-	}
-
-	public void setSmRvDocFile(SmRvDocFile smRvDocFile) {
-		this.smRvDocFile = smRvDocFile;
-	}
-
-	public List<SmRvAssistOfficer> getEmptyRvAssistOfficers() {
-		return emptyRvAssistOfficers;
-	}
-
-	public void setEmptyRvAssistOfficers(List<SmRvAssistOfficer> emptyRvAssistOfficers) {
-		this.emptyRvAssistOfficers = emptyRvAssistOfficers;
-	}
+//	public List<SmRvAssistOfficer> getEmptyRvAssistOfficers() {
+//		return emptyRvAssistOfficers;
+//	}
+//
+//	public void setEmptyRvAssistOfficers(List<SmRvAssistOfficer> emptyRvAssistOfficers) {
+//		this.emptyRvAssistOfficers = emptyRvAssistOfficers;
+//	}
 	// #34031 End
 }
