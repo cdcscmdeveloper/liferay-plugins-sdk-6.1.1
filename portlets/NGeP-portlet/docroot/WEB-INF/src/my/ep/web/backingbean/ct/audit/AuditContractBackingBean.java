@@ -321,7 +321,7 @@ public class AuditContractBackingBean extends AuditCTBaseBackingBean<AuditContra
 					createCell(currRow, 5, rpt.getRoleName(), cellStyleString);
 					createCell(currRow, 6, rpt.getDocType(), cellStyleString);
 					createCell(currRow, 7, rpt.getDocNo(), cellStyleString);
-					createCell(currRow, 8, rpt.getSubDocNo(), cellStyleString);
+					createCell(currRow, 8, rpt.getDocStatus(), cellStyleString);
 					createCell(currRow, 9, rpt.getFieldName(), cellStyleString);
 					createCell(currRow, 10, rpt.getOldValue(), cellStyleString);
 					createCell(currRow, 11, rpt.getNewValue(), cellStyleString);
