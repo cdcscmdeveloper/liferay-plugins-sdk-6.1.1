@@ -565,8 +565,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				// #35506 Start
 				AuditContractBackingBean auditCtBean = new AuditContractBackingBean();
 				if (auditCtBean.getAuditCtConfigState()) {
-					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					if (getManagedBean().isUpdateAction() && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+							|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE))) {
 
 						CtCircularVer ctCircularVer = getManagedBean().getCircularVer();					
 						AuditContractReqDTO auCtData = new AuditContractReqDTO();
