@@ -4603,7 +4603,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-	    Double bondAmt = getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue();
+	    Double bondAmt = getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue();
 
 	    if (bondAmt == null || bondAmt == 0.0) {
 	        return "";
