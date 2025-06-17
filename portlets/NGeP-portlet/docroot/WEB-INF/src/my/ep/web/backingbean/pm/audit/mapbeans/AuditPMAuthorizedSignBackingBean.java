@@ -30,9 +30,7 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
 	AuditPMSPDTO signatoryName = new AuditPMSPDTO();
-	AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 	AuditPMSPDTO effectiveDate = new AuditPMSPDTO();
-	AuditPMSPDTO expiryDate = new AuditPMSPDTO();
 
 	String roleCode;
 
@@ -134,6 +132,7 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 
 	private void setNewValueExpDate(PmCertSignatory savedCertSign){
 		if(savedCertSign.getExpDate() != null){
+			AuditPMSPDTO expiryDate = new AuditPMSPDTO();
 			expiryDate.setRoleCode(roleCode);
 			expiryDate.setDocType(savedCertSign.getSinnatoryName());
 			expiryDate.setDocNo(savedCertSign.getSinnatoryName());
@@ -150,6 +149,7 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 	}
 	
 	private void setValueExpDate(PmCertSignatory oldsignatory, PmCertSignatory signatory){
+		AuditPMSPDTO expiryDate = new AuditPMSPDTO();
 		expiryDate.setRoleCode(roleCode);
 		expiryDate.setDocType(signatory.getSinnatoryName());
 		expiryDate.setDocNo(signatory.getSinnatoryName());
@@ -196,6 +196,7 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 			setDetailExpDate(oldsignatory, signatory);
 			
 			if (signatory.getRecordStatusFlg() != oldsignatory.getRecordStatusFlg()) {
+				AuditPMSPDTO detailStatus = new AuditPMSPDTO();
 				detailStatus.setRoleCode(roleCode);
 				detailStatus.setDocType(signatory.getSinnatoryName());
 				detailStatus.setDocNo(signatory.getSinnatoryName());
