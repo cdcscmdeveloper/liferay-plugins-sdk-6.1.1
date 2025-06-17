@@ -498,35 +498,49 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 	//26238 - end - updateBasicAccountInfo
 	//26238 - Disciplinary Action - 28798 - start
-	private void setBasicSupplierPostSubmit(){
-		if (getManagedBean().getSmSupplier() == null){
+	private void setBasicSupplierPostSubmit() {
+		if (getManagedBean().getSmSupplier() == null) {
 			return;
 		}
-		SupplierSearchReqDTO suppReqDTO = new SupplierSearchReqDTO();
-		suppReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-		SmSupplier supplier = SmServiceLookup.getSupplierSearchSO().retriveSupplierById(suppReqDTO).getSmSupplier();
+		
+		//38404 - START
+		SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+		reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+		reqDTO.setSmAppl(getManagedBean().getSmSupplier().getSmAppl());
+		reqDTO.setSupplierType(getManagedBean().getSmSupplier().getSmAppl().getSupplierType());
+		reqDTO.setDisplaySearchPage(true);
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		SmApplRevisionResDTO resDTO = SmServiceLookup.getSmApplRevisionSO().retrieveBasicSupplierForMaintenance(reqDTO);
+
+		SmSupplier supplier = new SmSupplier();
+		if (resDTO.getSupplierResultBean() != null
+				&& !EntityHelper.isCollectionEmpty(resDTO.getSupplierResultBean().getResultList())) {
+			supplier = resDTO.getSupplierResultBean().getResultList().get(0);
+		}
+		//38404 - END
+
 		//32329 - start
-		if (supplier.getRecordStatusFlg().equals(9) 
-				&& !EntityHelper.isCollectionEmpty(supplier.getSmDisciplinaryActions())){
+		if (supplier.getRecordStatusFlg().equals(9)
+				&& !EntityHelper.isCollectionEmpty(supplier.getSmDisciplinaryActions())) {
 			String type = "";
-			for(SmDisciplinaryAction da : supplier.getSmDisciplinaryActions()){
-				if (da.isCancelRegistration()){
+			for (SmDisciplinaryAction da : supplier.getSmDisciplinaryActions()) {
+				if (da.isCancelRegistration()) {
 					type = SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG;
-				} else if(da.isBlacklistOwner()){
+				} else if (da.isBlacklistOwner()) {
 					type = SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_BLACKLIST;
-				} else if (da.isSuspendRegistration()){
+				} else if (da.isSuspendRegistration()) {
 					type = SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_SUSPEND_REG;
 				}
-				if(!type.isEmpty()){
+				if (!type.isEmpty()) {
 					break;
 				}
 			}
 			supplier.setTypeDisciplinaryAction(type);
 		}
 		//32329 - end
+
 		getManagedBean().setSmSupplier(supplier);
-		getManagedBean().getBasicSupplierDataModel().getList().set(
-					getSupplierIndex(true), supplier);
+		getManagedBean().getBasicSupplierDataModel().getList().set(getSupplierIndex(true), supplier);
 	}
 	
 	private int getSupplierIndex(boolean isBasic){
