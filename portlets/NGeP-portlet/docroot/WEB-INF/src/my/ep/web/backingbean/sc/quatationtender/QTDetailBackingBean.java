@@ -3444,7 +3444,15 @@ public class QTDetailBackingBean extends
 		if (null == this.getManagedBean().getSupplierCriteria()) {
 			retrieveSuppQualificationTabDtl();
 		}
-		
+		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
+
+		if (this.getManagedBean().isPcbProcess()) {
+			qtReqDTO.setPcbProcess(true);
+		}
+
+		FacesScopes facesScopes = new FacesScopes();
+		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		String taskName = this.getManagedBean().getTaskName();
 		// Start Reopen 9019 #note-317
 		boolean emptyRemarksExist = false;
 
@@ -3487,16 +3495,6 @@ public class QTDetailBackingBean extends
 			}
 		}
 		// End Reopen 9019 #note-317
-
-		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
-
-		if (this.getManagedBean().isPcbProcess()) {
-			qtReqDTO.setPcbProcess(true);
-		}
-
-		FacesScopes facesScopes = new FacesScopes();
-		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		String taskName = this.getManagedBean().getTaskName();
 
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
