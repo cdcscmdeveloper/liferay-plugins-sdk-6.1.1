@@ -27,7 +27,7 @@ public class TokenPhaseListener implements PhaseListener {
 
 	@Override
 	public PhaseId getPhaseId() {
-		return PhaseId.APPLY_REQUEST_VALUES;
+		return PhaseId.PROCESS_VALIDATIONS;
 	}
 
 	@Override
