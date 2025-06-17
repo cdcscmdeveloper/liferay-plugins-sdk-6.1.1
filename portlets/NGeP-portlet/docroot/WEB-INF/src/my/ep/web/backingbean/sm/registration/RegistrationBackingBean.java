@@ -2151,8 +2151,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (StringUtils.isBlank(supplier.getEpNo())) {
 			if (supplier.getSmAppl().getSupplierType()
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_BASIC)) {
-				throw new EpException(MessageConst.ERROR_721083, new String[] {
-						supplier.getRegNo(), labelText });
+				throw new EpException(MessageConst.ERROR_721068,
+						new String[] {
+								SmCommonUtil.getMessage(supplier.getRegNo(),
+										null), "" });
 			} else {
 				throw new EpException(MessageConst.ERROR_721062, new String[] {
 						supplier.getRegNo(), labelText });
