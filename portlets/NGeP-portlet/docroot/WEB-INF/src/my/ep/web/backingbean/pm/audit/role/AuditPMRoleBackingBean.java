@@ -241,6 +241,7 @@ public class AuditPMRoleBackingBean {
 				RoleCode.UPS_ADMIN.value()) ? RoleCode.UPS_ADMIN.value() : getFacesScopes().hasRoleUser(
 				RoleCode.PTJ_ADMIN.value()) ? RoleCode.PTJ_ADMIN.value() : getFacesScopes().hasRoleUser(
 				RoleCode.MINISTRY_ADMIN.value()) ? RoleCode.MINISTRY_ADMIN.value() : getFacesScopes().hasRoleUser(
-				RoleCode.JABATAN_ADMIN.value()) ? RoleCode.JABATAN_ADMIN.value() : null;
+				RoleCode.JABATAN_ADMIN.value()) ? RoleCode.JABATAN_ADMIN.value() : getFacesScopes().hasRoleUser(
+				RoleCode.SUPPORT_ADMIN.value()) ? RoleCode.SUPPORT_ADMIN.value() : null;
 	}
 }
