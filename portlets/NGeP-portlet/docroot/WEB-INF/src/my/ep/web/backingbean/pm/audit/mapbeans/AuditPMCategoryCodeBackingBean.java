@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -34,6 +35,9 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
+	
+	/** The log. */
+	private static Logger log = Logger.getLogger(AuditPMCategoryCodeBackingBean.class);
 	
 	String roleCode;
 	String docType3;
@@ -235,6 +239,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		addRequiredCategory(managedBean);
 		addBusinessComType(managedBean);
 		addSpecialEquipment(managedBean);
+		log.info("checking code category 6");
 		auditPMReqDTO.setObjList(objList);
 	}
 
@@ -385,6 +390,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				for(PmCategoryRestr savedCatRestr : savedCategoryRestrList){
 					if (updatedCategoryRestr.isBrandNew() && updatedCategoryRestr.getCompanyTypeId().getParameterId() == savedCatRestr.getCompanyTypeId().getParameterId()) {
 						AuditPMSPDTO addBussCompType = new AuditPMSPDTO();
+						log.info("checking code category 4");
 						addBussCompType.setRoleCode(roleCode);
 						addBussCompType.setDocType(docType3);
 						addBussCompType.setDocNo(pmCategoryL3.getCategoryL3Code());
@@ -398,7 +404,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						addBussCompType.setNewValueId(BigInteger.valueOf(updatedCategoryRestr.getCompanyTypeId()
 								.getParameterId()));
 						addBussCompType.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
-						objList.add(addBussCompType);
+						this.objList.add(addBussCompType);
 						break;
 					}
 				}
@@ -423,7 +429,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						AuditPMSPDTO machineCode = new AuditPMSPDTO();
 						AuditPMSPDTO machineDesc = new AuditPMSPDTO();
 						AuditPMSPDTO displaySequence = new AuditPMSPDTO(); // add/modify
-						
+						log.info("checking code category 5");
 						machineCode.setRoleCode(roleCode);
 						machineCode.setDocType(docType3);
 						machineCode.setDocNo(pmCategoryL3.getCategoryL3Code());
@@ -513,18 +519,27 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		List<PmBasicCategory> updatedBasicCategory = updatedCategoryL3.getPmBasicCategory();
 		List<PmBasicCategory> newBasicCategory = pmCategoryL3.getPmBasicCategory();
 
+		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+		
 		if (CollectionUtils.isNotEmpty(newBasicCategory)) {
 
 			for (PmBasicCategory basicCategory : newBasicCategory) {
 				for (PmBasicCategory updateIdBasicCategory : updatedBasicCategory) {
 					if (basicCategory.isBrandNew()
 							&& updateIdBasicCategory.getBasicCategoryL3() == basicCategory.getBasicCategoryL3()) {
+						log.info("checking code category 1");
 						
-						AuditPMSPDTO addCategoryCode = new AuditPMSPDTO();
+						this.docId = BigInteger.valueOf(updateIdBasicCategory.getBasicCategoryId());
+						detailObj(AuditConst.PM_AUD_CCR_CATEGORY_CODE_FIELDLABELCODE, null, basicCategory.getCodeConcatenate());
+						
+						detailObj(AuditConst.PM_AUD_CCR_MAIN_DESC_FIELDLABELCODE, null, basicCategory.getBasicCategoryL1desc());
+						
+						log.info("checking code category 2");
+						/**AuditPMSPDTO addCategoryCode = new AuditPMSPDTO();
 						AuditPMSPDTO addMainCategoryDesc = new AuditPMSPDTO();
 						AuditPMSPDTO addSubCategoryDesc = new AuditPMSPDTO();
 						AuditPMSPDTO addSubDivisionDesc = new AuditPMSPDTO();
-						
+
 						addCategoryCode.setRoleCode(roleCode);
 						addCategoryCode.setDocType(docType3);
 						addCategoryCode.setDocNo(docNo);
@@ -538,7 +553,8 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						addCategoryCode.setNewValue(basicCategory.getCodeConcatenate());
 						addCategoryCode.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 						objList.add(addCategoryCode);
-
+						
+						log.info("checking code category 2");
 						addMainCategoryDesc.setRoleCode(roleCode);
 						addMainCategoryDesc.setDocType(docType3);
 						addMainCategoryDesc.setDocNo(docNo);
@@ -569,6 +585,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						addSubCategoryDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 						objList.add(addSubCategoryDesc);
 
+						log.info("checking code category 3");
 						addSubDivisionDesc.setRoleCode(roleCode);
 						addSubDivisionDesc.setDocType(docType3);
 						addSubDivisionDesc.setDocNo(docNo);
@@ -583,6 +600,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 						addSubDivisionDesc.setNewValueId(BigInteger.valueOf(basicCategory.getBasicCategoryL3()));
 						addSubDivisionDesc.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
 						objList.add(addSubDivisionDesc);
+						*/
 						
 						break;
 					}
