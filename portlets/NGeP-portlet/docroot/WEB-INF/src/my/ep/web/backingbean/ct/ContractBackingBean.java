@@ -2769,13 +2769,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
-				removeDefermentLatest();
 				removeInactiveDefermentHistory();
+				
+				if(!getManagedBean().isDisableDeferment()){
+					removeDefermentLatest();	
+				}
 
 				if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null) {
 					getManagedBean().getContractVer().setCtBondWaiverDetails(null);
 				}
-			} else {
+			} else if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
 			checkDaysDefermentBondHistory();
@@ -2807,14 +2810,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
 		// remove bond waiver that hasn't been approved
 		if (CollectionUtils.isNotEmpty(historyDeferment)) {
+			int noOfDays = 0;
 			Iterator<CtBondWaiverDetail> iter = historyDeferment.iterator();
 			while (iter.hasNext()) {
 				CtBondWaiverDetail bondWaiverHistory = iter.next();
 				if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					removeAttachmentIfExist(bondWaiverHistory.getCtAttachment());
 					iter.remove();
+				}else{
+					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 				}
 			}
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 		}
 	}
 	
@@ -4430,7 +4437,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333 - Start
-		if (getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+		if ((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 				&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 				&& !getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!getManagedBean().isCommonView() || getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
@@ -4644,7 +4651,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	            : null;
 
 	    // Check if the contract needs an extension or requires a bond
-	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && loa.isBondReq()
+	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
 
 	        isContractExtendOrIsBond = true;
@@ -4654,7 +4661,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	    // Check for contract amendment
 	    if (contractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
-	            && loa.isBondReq()
+	            && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 	            && contractVer.getCtAmendment() != null
 	            && contractVer.getCtAmendment().isContractExtend()) {
 	        
