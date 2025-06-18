@@ -57,9 +57,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<br/>  
 	 		<div class="ppRightBtn">
 			  <p:commandButton id="cmdItemRemarkOk" value="#{lbl['lbl.btn.ok']}" process=":form:opItemRemark" action="#{pPlanBackingBean.confirmRemarkCloseDialog}"  update="@form"/>
-			  <ui:remove>START : #35502 - Fix as-is bug</ui:remove>
+			  <!--#35502 Fix as-is bug - Start -->
 			  <p:commandButton id="cmdItemRemarkCancel" value="#{lbl['lbl.btn.cancel']}" process="@this" immediate="true"  oncomplete="dlItemRemarkWv.hide();" update="@form"/>		
-			  <ui:remove>END : #35502 - Fix as-is bug</ui:remove>
+			  <!--#35502 Fix as-is bug - End -->
 			</div>      
 		</p:outputPanel>
 	</p:dialog>

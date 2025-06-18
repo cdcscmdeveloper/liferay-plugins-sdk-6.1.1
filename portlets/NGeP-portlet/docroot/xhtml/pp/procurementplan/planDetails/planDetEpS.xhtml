@@ -269,7 +269,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <!--24975@azza - end -->
 	        <!--24975@20112020azza - start -->
 	        <p:column style="white-space:nowrap;text-align:center;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
-				<ui:remove>START : #35502 - Fix as-is bug</ui:remove>
+				<!--#35502 Fix as-is bug - Start -->
 				<p:commandLink oncomplete="dlItemRemarkWv.show();" update="@form"
 					action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 					id="clEpRemarkS"
@@ -280,7 +280,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						update="@form" />
 					<f:param name="disableValidation" value="" />
 				</p:commandLink>
-				<ui:remove>END : #35502 - Fix as-is bug</ui:remove>
+				<!--#35502 Fix as-is bug - End -->
 				<p:graphicImage
 				    rendered="#{epItem.indicator}"
 				    value="#{epItem.indicator ? '/css/images/design/exclamation.png' : ''}" update="@form" />
