@@ -680,6 +680,11 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		/** AUDIT 28895_35509 START **/
 		this.getManagedBean().setUserGroupUpdate(resDTO.getUserGroupUpdate());
 		this.getManagedBean().setUserGroupNew(resDTO.getUserGroupNew());
+		if (null != resDTO.getUserGroupNew()) {
+			this.getManagedBean().setRoleDesc(
+					PmCommonUtil.getRoleDescByRoleCodeAndLanguage(resDTO.getUserGroupNew().getRoleCode(), "ms"));
+		}
+
 		/** AUDIT 28895_35509 END **/
 		this.getManagedBean().setUserGroup(resDTO.getUserGroup());
 		if (resDTO.isSuccessful()) {
