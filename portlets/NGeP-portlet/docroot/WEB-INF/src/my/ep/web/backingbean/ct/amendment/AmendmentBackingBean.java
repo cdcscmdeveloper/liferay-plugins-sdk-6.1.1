@@ -2675,10 +2675,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 //									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 //				}
 				if (StringUtils.isEmpty(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getSclRefNo())){
-//					setTabValue("LOD");
-					getManagedBean().setSelectedTabIndex(getManagedBean().getIndexing().get(ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", 
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
-					
+					setTabValue("LOD");				
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.physical.no", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
