@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel header="#{lbl['lbl.sm.rv.section.name']}" toggleable="true"
 		id="revisitPanelId">
-		<!-- p:outputPanel>
+		<p:outputPanel>
 			<h:outputText value="#{lbl['lbl.sm.rv.history.link.part.one']}"
 				escape="false" />
 			<p:commandLink onstart="blockWidget.show()"
@@ -23,7 +23,7 @@
 				escape="false" />
 			<br />
 			<p:spacer height="2" />
-		</p:outputPanel-->
+		</p:outputPanel>
 		<table style="width: 50%; table-layout: fixed">
 			<tr>
 				<td><p:outputLabel styleClass="outputLabel-view-label"
@@ -42,13 +42,13 @@
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.rv.sv.officer']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><ac:lov id="lovTb" lovId="PM_USER_ID" readonly="true"
+					<td><ac:lov id="lovUser" lovId="PM_USER_ID" readonly="true"
 							size="40" headerText="#{lbl['lbl.sm.rv.sv.officer']}"
 							conditionField="pmUserOrgs.pmUserRoles.pmRole.roleCode^#{supplierDataMaintenanceBackingBean.managedBean.svoRoleCode}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitOfficer.userName}"
 							saveObject="supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitOfficer" /></td>
 				</tr>
-				<!-- tr>
+				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.sm.rv.assist.officer']}" /></td>
 					<td><ui:repeat var="rvAssistOfficer"
@@ -65,9 +65,9 @@
 								disabled="#{empty rvAssistOfficer.officerName}" />
 							<br />
 						</ui:repeat></td>
-				</tr-->
+				</tr>
 			</table>
-			<!-- div align="right">
+			<div align="right">
 				<p:commandButton id="addRvAssistOfficerbtnId"
 					value="#{lbl['lbl.sm.rv.btn.add']}" update="revisitPanelId"
 					action="#{supplierDataMaintenanceBackingBean.addSmRvAssistOfficer}"
@@ -128,19 +128,18 @@
 			<table style="width: 50%; table-layout: fixed">
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
-							value="#{lbl['lbl.sm.rv.visiting.remark']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sm.rv.visiting.remark']}" /></td>
 					<td><p:inputTextarea autoResize="false" cols="40"
 							id="revisitRemark" maxlength="3500"
-							label="#{lbl['lbl.sm.rv.visiting.remark']}" required="true"
+							label="#{lbl['lbl.sm.rv.visiting.remark']}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smRevisit.revisitRemark}" />
 					</td>
 				</tr>
-			</table -->
+			</table>
 		</p:outputPanel>
 	</p:panel>
 	<ac:lovPopup />
-	<!-- ac:confirmationPopup id="rvAssistOfficerDeletePopUpId"
+	<ac:confirmationPopup id="rvAssistOfficerDeletePopUpId"
 		widget="rvAssistOfficerDeletePopUpWV"
 		okAction="supplierDataMaintenanceBackingBean.removeSelectedSmRvAssistOfficer()"
 		width="400" height="100" title="#{lbl['lbl.sm.rv.txt.delete']}"
@@ -153,9 +152,9 @@
 		onShow="singleUploadListener(uploadWV);"
 		onHide="uploadWV.buttonBar.find('input[type=file]').get(0).disabled=false;">
 		<p:fileUpload widgetVar="uploadWV"
-			allowTypes="/(\.|\/)(jpg|gif|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv|zip)$/"
+			allowTypes="/(\.|\/)(pdf|doc|docx|zip)$/"
 			sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
-			invalidFileMessage="#{lbl['lbl.sm.rv.supp.doc.format.errmsg']}"
+			invalidFileMessage="#{lbl['lbl.sm.upload.suppDoc.format.errmsg']}"
 			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
 			fileUploadListener="#{supplierDataMaintenanceBackingBean.handleSupDocFileAttachment}"
 			update=":#{p:component('revisitSuppDocId')}"
@@ -180,5 +179,6 @@
 		</div>
 	</p:confirmDialog>
 	<ac:smRevisitHistoryPopUp dialogName="revisitHistoryDialog"
-		backingBean="#{supplierDataMaintenanceBackingBean}" officerView="true" /-->
+		smRevisitList="#{supplierDataMaintenanceBackingBean.managedBean.smRevisitList}"
+		backingBean="#{supplierDataMaintenanceBackingBean}" officerView="true"/>
 </ui:composition>
