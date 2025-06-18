@@ -3750,17 +3750,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				.getBusinessType())
 				&& StringUtils.isNotBlank(getManagedBean().getSmSupp()
 						.getRegNo())) {
-			//#32713 - Start
-			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-			reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
-					"sm", ISupplierSearchSO.class);
-			
-			if (supplierSearchSO.checkIsSupplierRegNoAlreadyExistAndInProgress(reqDTO).isRegNoInProgress()) {
-				throw new EpException(MessageConst.ERROR_722634);
-			}
-			//#32713 - End
-			
 			if (SmCommonUtil.isRegNoAlreadyExist(getManagedBean().getSmSupp()
 					.getRegNo(),
 					getManagedBean().getSmSupp().getBusinessType(),
