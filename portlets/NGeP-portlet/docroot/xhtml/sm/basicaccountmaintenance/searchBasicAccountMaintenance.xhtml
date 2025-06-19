@@ -31,10 +31,10 @@
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/basicApplicationSearchCriteria.xhtml" />
 			</p:panel>
-			
-			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true" id="resultSupplierProfilePanelId" 
+			<!--#38399 -START -->
+			<p:panel header="#{lbl['lbl.sm.result']}" toggleable="true" id="resultSupplierProfilePanelId" 
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
-			
+			<!--#38399 -END -->
 				<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
 					editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{supplierDataMaintenanceBackingBean.managedBean.basicSupplierDataModel}"
@@ -76,8 +76,10 @@
 					</p:column> -->
 					<!--#28273 -START 110620-->
 					<!-- new requirement for wording #29778 -START -->
-					<p:column headerText="#{lbl['lbl.sm.accountstatus']}"
+					<!--#38399 -START -->
+					<p:column headerText="#{lbl['lbl.sm.application.status']}"
 						style="width :15%;white-space : normal">
+						<!--#38399 -END -->
 						<!-- bug #29156 -START ,29690,29948  -->
 						<!-- 38340 - START -->
 						<h:outputText value="#{lbl['lbl.sm.status.active']}"
