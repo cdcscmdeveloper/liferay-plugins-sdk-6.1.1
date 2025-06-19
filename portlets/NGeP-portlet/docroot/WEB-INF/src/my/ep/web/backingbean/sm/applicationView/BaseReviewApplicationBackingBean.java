@@ -173,6 +173,7 @@ import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.util.SLAUtils;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.persistence.entity.sm.SmRvCatCode;
 //#34031 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
@@ -5197,6 +5198,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				setCurrentRevisit(revisitList);
 				this.getManagedBean().setSmRevisitList(updateSmRvCreatedUserName(revisitList));
+				this.getManagedBean().setSmRevisitList(getCombinedRemarks(revisitList));
 			}
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
@@ -5241,6 +5243,51 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
 		}
 	}
+
+	private List<SmRevisit> getCombinedRemarks(List<SmRevisit> revisitList) {
+		for (SmRevisit revisit : revisitList) {
+			StringBuilder combinedRemarks = new StringBuilder();
+			combinedRemarks.append(revisit.getRevisitRemark());
+			if(null != revisit.getSmRvCatCodes()){
+				combinedRemarks.append(getDeletedCatCodes(revisit.getSmRvCatCodes()));
+				combinedRemarks.append(getAddedCatCodes(revisit.getSmRvCatCodes()));
+				combinedRemarks.append(getUpdatedCatCodes(revisit.getSmRvCatCodes()));
+			}
+			revisit.setCombinedRemarks(combinedRemarks.toString());
+		}
+		return revisitList;
+	}
+
+	private String getDeletedCatCodes(List<SmRvCatCode> smRvCatCodes) {
+		StringBuilder deletedCatCodes = new StringBuilder();
+		
+		for(SmRvCatCode smRvCatCode : smRvCatCodes){
+			
+		}
+		
+		return deletedCatCodes.toString();
+	}
+
+	private String getAddedCatCodes(List<SmRvCatCode> smRvCatCodes) {
+		StringBuilder addedCatCodes = new StringBuilder();
+		
+		for(SmRvCatCode smRvCatCode : smRvCatCodes){
+			
+		}
+		
+		return addedCatCodes.toString();
+	}
+
+	private String getUpdatedCatCodes(List<SmRvCatCode> smRvCatCodes) {
+		StringBuilder updatedCatCodes = new StringBuilder();
+		
+		for(SmRvCatCode smRvCatCode : smRvCatCodes){
+			
+		}
+		
+		return updatedCatCodes.toString();
+	}
+
 	// #34031 End
 	
 }
