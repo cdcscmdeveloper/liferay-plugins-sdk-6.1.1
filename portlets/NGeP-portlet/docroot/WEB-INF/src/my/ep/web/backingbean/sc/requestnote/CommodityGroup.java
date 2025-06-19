@@ -5,12 +5,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-// This is now a PUBLIC top-level class
 public class CommodityGroup implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    // Properties for the "commodity header" part of the UI
     private String itemName;
+    private String itemCode;
     private String itemCodeName; // Derived from ScRequestNoteDtl.requestItem.cmItem...
     private BigDecimal currentItemTotalAmount; // Sum of totalPricePerItemRounded for items in this group
     private BigDecimal accumulativeAmountPerItemGroup; // Could be a sum, or a target, or a budget value.
@@ -28,6 +27,7 @@ public class CommodityGroup implements Serializable {
         this.items = new ArrayList<>(); // Initialize the list
         this.currentItemTotalAmount = BigDecimal.ZERO; // Initialize BigDecimal fields
         this.accumulativeAmountPerItemGroup = BigDecimal.ZERO;
+        this.itemCode = ""; 
         this.itemName = ""; 
         this.itemCodeName = ""; // Initialize String fields (optional, but good practice)
         this.decision = "";
@@ -35,14 +35,16 @@ public class CommodityGroup implements Serializable {
 
     /**
      * Instantiates a new CommodityGroup with initial values.
+     * @param itemCode the item code
      * @param itemName the item name
      * @param itemCodeName the item code name
      * @param currentItemTotalAmount the current item total amount
      * @param accumulativeAmountPerItemGroup the accumulative amount per item group
      * @param decision the decision
      */
-    public CommodityGroup(String itemName, String itemCodeName, BigDecimal currentItemTotalAmount,
+    public CommodityGroup(String itemCode, String itemName, String itemCodeName, BigDecimal currentItemTotalAmount,
                           BigDecimal accumulativeAmountPerItemGroup, String decision) {
+    	this.itemCode = itemCode;
     	this.itemName = itemName;
     	this.itemCodeName = itemCodeName;
         this.currentItemTotalAmount = currentItemTotalAmount;
@@ -50,6 +52,14 @@ public class CommodityGroup implements Serializable {
         this.decision = decision;
         this.items = new ArrayList<>(); // Still initialize the list here
     }
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
 
     public String getItemName() {
 		return itemName;

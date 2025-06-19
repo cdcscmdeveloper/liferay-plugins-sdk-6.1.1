@@ -71,6 +71,7 @@ import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.ContinuityDPConst; //#25790
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.sc.HtmlTemplateConstants; //#26059
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
@@ -189,6 +190,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
+import my.ep.web.util.sm.helper.SmCommonUtil; //#26059
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.BlacklistOwnerDirectorVO;
@@ -7070,6 +7072,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				itemCodeNameBuilder.append(unspscCode).append(" - ").append(cmItemName);
 			}
 
+			group.setItemCode(unspscCode);
 			group.setItemName(cmItemName);
 			group.setItemCodeName(itemCodeNameBuilder.toString().trim());
 
@@ -7127,7 +7130,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			for (ScRequestNoteDtl scRequestNoteDtl : group.getItems()) {
-				if (("0").equalsIgnoreCase(group.getDecision())) {
+				if ((HtmlTemplateConstants.ZERO_VAL).equalsIgnoreCase(group.getDecision())) {
 					isRemarkRequired = true;
 				}
 				scRequestNoteDtl.setBpkThresholdDecision(group.getDecision());
@@ -7135,7 +7138,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			count++;
 			updatedItems.append(count + ". " + group.getItemName() + " <b>"
-					+ (("1").equalsIgnoreCase(group.getDecision()) ? approve : reject) + "</b></br>");
+					+ ((HtmlTemplateConstants.ONE_VAL).equalsIgnoreCase(group.getDecision()) ? approve : reject) + "</b></br>");
 
 		}
 		if (isRemarkRequired) {
@@ -7145,11 +7148,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		try {
 			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 			requestNoteReqDTO.setRequestNoteDtls(requestNoteDtls);
+			requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+			requestNoteReqDTO.setRequestNoteNo(getManagedBean().getRequestNote().getRequestNoteNo());
 			requestNote.setRemarks(initializeRemarks(requestNote, requestNote.getCurrentStatus(),
 					requestNote.getRemarks(), ScRequestNoteRemark.class));
 			requestNoteReqDTO.setRequestNote(requestNote);
+			
 			getRequestNoteSO().updateScRequestNote(requestNoteReqDTO);
-			//bpkApprovalNotification();
+			
+			ScRequestNote updatedRequestNote = getRequestNoteSO().getRequestNote(requestNoteReqDTO).getRequestNoteDetail();
+			bpkApprovalNotification(commodityGroup,updatedRequestNote);
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean",
 					getManagedBean().getRequestNote().getRequestNoteNo(), "bpkApproverSubmit",
@@ -7202,41 +7210,96 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
-//	/**
-//	 * To send notification for email and dashboard
-//	 */
-//	public void bpkApprovalNotification() {
-//		FacesScopes facesScopes = new FacesScopes();
-//		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-//		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
-//		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
-//
-//		if (getManagedBean().getRequestNoteDtl() != null
-//				&& getManagedBean().getRequestNoteDtl().getAssignedUser() != null) {
-//			
-//			
-//			long assignUser = getManagedBean().getRequestNoteDtl().getAssignedUser().getUserId();
-//			String userEmail = getManagedBean().getRequestNoteDtl().getAssignedUser().getEmail();
-//
-//			ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
-//			Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
-//			Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
-//			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
-//			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
-//			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
-//		
-//			getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
-//					CommonConstants.DASHBOARD);
-//			getRequestNoteSO().sendRNNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
-//					CommonConstants.EMAIL);
-//		}else{
-//			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION,
-//					ParameterConst.DOCTYPE_REQUEST_NOTE.toUpperCase(),
-//					"RequestNoteBackingBean.approvalNotification : No notification send", 
-//					System.currentTimeMillis());
-//		}
-//
-//	}
+	/**
+	 * To send notification for email and dashboard
+	 */
+	public void bpkApprovalNotification(List<CommodityGroup> commodityGroup, ScRequestNote updatedRequestNote) {
+		String approve = ResourceBundleUtils.getMessage("lbl.sc.decision.approve",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		String reject = ResourceBundleUtils.getMessage("lbl.sc.decision.reject",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		FacesScopes facesScopes = new FacesScopes();
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
+		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
+		StringBuilder sb = new StringBuilder();
+		String htmlDataRow = SSTConstant.EMPTY_STRING;
+        
+		
+		for (CommodityGroup group : commodityGroup) {
+			htmlDataRow = generateSingleTableRowHtml(
+					SSTConstant.EMPTY_STRING.equalsIgnoreCase(group.getItemCode()) ? group.getItemName() : group
+							.getItemCode().concat(HtmlTemplateConstants.SPACING).concat(group.getItemName()), group
+							.getCurrentItemTotalAmount().toString(), group.getAccumulativeAmountPerItemGroup()
+							.toPlainString(), (HtmlTemplateConstants.ONE_VAL).equalsIgnoreCase(group.getDecision()) ? approve : reject);
+			sb.append(htmlDataRow);
+		}
+		
+		htmlDataRow = sb.toString();
+		
+
+		if (getManagedBean().getRequestNote() != null
+				&& getManagedBean().getRequestNote().getApprover() != null) {
+			
+			
+			long assignUser = getManagedBean().getRequestNote().getApprover().getUserId();
+			String userEmail = getManagedBean().getRequestNote().getApprover().getEmail();
+
+			ScRequestNote scRequestNote = requestNoteReqDTO.getRequestNote();
+			Long profileId = scRequestNote.getPmOrgProfile().getOrgProfileId();
+			Date createdDate = scRequestNote.getPmOrgProfile().getCreatedDate();
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(profileId);
+			String ministryName = pmOrgProfile.getPmOrgValidity().getOrgName();
+			String bpkApproverName = SmCommonUtil.getUserByUserId(
+					scRequestNote.getRequestNoteDtls().get(0).getChangedBy()).getUserName();
+			
+			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
+					CommonConstants.DASHBOARD, htmlDataRow, bpkApproverName, updatedRequestNote);
+			getRequestNoteSO().sendBpkApproverNotification(requestNoteReqDTO, assignUser, userEmail, ptjName, ministryName,
+					CommonConstants.EMAIL, htmlDataRow, bpkApproverName, updatedRequestNote);
+		}else{
+			SLAUtils.getInstance().logSLAInfo(ModuleCodeConst.SUPPLIER_SELECTION,
+					ParameterConst.DOCTYPE_REQUEST_NOTE.toUpperCase(),
+					"RequestNoteBackingBean.bpkApprovalNotification : No notification send", 
+					System.currentTimeMillis());
+		}
+
+	}
+	
+	
+	 public String generateSingleTableRowHtml(
+		        String var1Value,
+		        String var2Value,
+		        String var3Value,
+		        String var4Value) {
+		 
+		        String resultHtml = HtmlTemplateConstants.ROW_TEMPLATE;
+		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_1, escapeHtml(var1Value));
+		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_2, escapeHtml(var2Value));
+		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_3, escapeHtml(var3Value));
+		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_4, escapeHtml(var4Value));
+
+		        return resultHtml;
+		    }
+	
+	
+	/**
+	 * Helper method to escape HTML sensitive characters for values inserted
+	 * into HTML. This prevents XSS and ensures correct display of characters
+	 * like <, >, &.
+	 * 
+	 * @param text
+	 *            The text to escape.
+	 * @return The escaped text.
+	 */
+	private String escapeHtml(String text) {
+		if (text == null) {
+			return ""; // Return empty string for null input
+		}
+		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+				.replace("'", "&#x27;"); // For single quotes
+	}
 
 	// end - #26059
 }
