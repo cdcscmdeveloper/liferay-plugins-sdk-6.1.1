@@ -2404,14 +2404,17 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 
 				if (StringUtils.isNotBlank(getRequestNoteTitle())) {
 					SearchFilterBean filterBean = new SearchFilterBean(paramTitle,
-							SearchOperator.OPERATOR_LIKE.value(), getRequestNoteTitle());
+							SearchOperator.OPERATOR_LIKE.value(), String
+									.valueOf(SpecialCharacter.MODULO.getCharacter()).concat(getRequestNoteTitle())
+									.concat(String.valueOf(SpecialCharacter.MODULO.getCharacter())));
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 
 				if (getRequestNoteNo() != null && getRequestNoteNo() != "") {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(), String.valueOf(
-									SpecialCharacter.MODULO.getCharacter()).concat(getRequestNoteNo())));
+							new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(), String
+									.valueOf(SpecialCharacter.MODULO.getCharacter()).concat(getRequestNoteNo())
+									.concat(String.valueOf(SpecialCharacter.MODULO.getCharacter()))));
 				}
 				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("requestNoteDtls.isExceedThreshold", SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));

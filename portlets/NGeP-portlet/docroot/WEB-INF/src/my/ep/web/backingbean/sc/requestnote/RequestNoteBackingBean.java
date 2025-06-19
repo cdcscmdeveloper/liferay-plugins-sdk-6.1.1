@@ -7067,9 +7067,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null) {
 				cmItemName = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
 			}
+			else{
+				cmItemName = firstDtlInGroup.getRequestItem().getItemName();
+			}
 
 			if (!unspscCode.isEmpty()) {
 				itemCodeNameBuilder.append(unspscCode).append(" - ").append(cmItemName);
+			}
+			else{
+				itemCodeNameBuilder.append(firstDtlInGroup.getRequestItem().getItemName());				
 			}
 
 			group.setItemCode(unspscCode);

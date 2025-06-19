@@ -509,6 +509,13 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * Search.
 	 */
 	public void search() {
+		if ((StringUtils.isNotBlank(getManagedBean().getRequestNoteNo()) && getManagedBean().getRequestNoteNo().trim()
+				.length() < 3)
+				|| (StringUtils.isNotBlank(getManagedBean().getRequestNoteTitle()) && getManagedBean()
+						.getRequestNoteTitle().trim().length() < 3)) {
+			throw new EpException(MessageConst.ERROR_716019);
+		}
+
 		getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_REQUEST_NOTE);
 		getManagedBean().setDocumentTypeDesc(ParameterConst.RN_TITLE);
 		getManagedBean().getDpDocumentDataModel().reloadData();

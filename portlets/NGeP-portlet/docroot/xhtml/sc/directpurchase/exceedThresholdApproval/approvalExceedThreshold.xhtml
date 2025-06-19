@@ -15,7 +15,7 @@
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
 		<ac:lovPopup />
-		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search']}"
+		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search.button']}"
 			toggleable="true">
 			<table style="width: 100%;">
 				<tr>
@@ -80,20 +80,20 @@
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.request.note.title']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.title']}" /></td>
 					<td colspan="3"><p:inputText size="148"
 							value="#{approvalExceedThresholdBackingBean.managedBean.requestNoteTitle}"></p:inputText></td>
 				</tr>				
 			</table>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.sc.search.button']}"
 					action="#{approvalExceedThresholdBackingBean.search}" update="resultPanel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{approvalExceedThresholdBackingBean.reset(false)}" update=":form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</div>
 		</p:panel>
-		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result']}"
+		<p:panel id="resultPanel" header="#{lbl['lbl.sc.result.list']}"
 			toggleable="true">
 
 			<p:dataTable id="scDocumentTableID" lazy="true"
@@ -110,7 +110,7 @@
 				</p:column>
 				<p:column width="40%" style="text-align: left;">
 					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.request.note.title']}" style="display:block; text-align:center;" />
+						<h:outputText value="#{lbl['lbl.sc.title.result']}" style="display:block; text-align:center;" />
 					</f:facet>
 
 					<h:outputText value="#{Obj[5]}"
