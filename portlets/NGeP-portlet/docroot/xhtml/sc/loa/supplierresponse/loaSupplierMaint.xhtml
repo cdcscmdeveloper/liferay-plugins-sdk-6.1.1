@@ -13,12 +13,13 @@
 					closable="true" showSummary="false" />
 		<ui:param name="isEditableStatus" value="false" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
-	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
+	    <ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType eq ParameterConst.doctypeQuotation}" />
 	    <!-- 19336 note-33 -start- -->
 	    <ui:param name="isDocTypeDirectNego" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType eq ParameterConst.doctypeDirectNego}" />
 	    <!-- 19336 note-33 -end- -->
 	    <ui:param name="isBondReq" value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}" />
 	    <ui:param name="isLoaReviseStatus" value="#{lOADetailBackingBean.isLoaReviseStatus()}" />
+	    <ui:param name="isZonalWithPaOrPs" value="#{lOADetailBackingBean.isZonalWithPaOrPs()}" />
 		<ui:param name="isQtAudit" value="#{lOADetailBackingBean.isQtAudit()}" /> <!-- Bug #35078@Syazani - 14/09/2023 -->
 		<ui:param name="isFulfilmentTypeScheduled"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />

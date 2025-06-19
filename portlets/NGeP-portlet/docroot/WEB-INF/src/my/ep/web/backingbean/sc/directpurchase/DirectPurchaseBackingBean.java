@@ -1588,6 +1588,7 @@ public class DirectPurchaseBackingBean extends SourcingBaseBackingBean<DirectPur
 	 * @return The updated list of ScRequestNoteDtl associated with the
 	 *         specified purchase request ID.
 	 */
+	
 	/*
 	private List<ScRequestNoteDtl> loadScPurchaseRequest(Long purchaseRequestId, List<Object[]> objList) {
 		List<ScRequestNoteDtl> requestNoteDtls = null;

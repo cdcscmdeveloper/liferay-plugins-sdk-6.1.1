@@ -1363,7 +1363,6 @@ public class QTDetailBackingBean extends
 				if (scQt.getLoiLoa() != null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())) {
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
-
 					return viewDirectLOADetails(scQt, previousPageUrl, null); // Bug #37978@Syazani 22/04/2025
 				} else {
 					QtLOABackingBean bb = new QtLOABackingBean();
