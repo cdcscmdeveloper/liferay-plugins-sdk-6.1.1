@@ -1266,6 +1266,8 @@ public class OrganisationBackingBean extends
 				AddressReqDTO offRcvAddressReqDTO = new AddressReqDTO();
 				AddressResDTO offRcvAddressResDTO = new AddressResDTO();
 				
+				PmContact auditContactPerson = new PmContact();
+				
 				if(!orgProfile.isBrandNew()){
 					offReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
 					offRcvAddressReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1289,10 +1291,12 @@ public class OrganisationBackingBean extends
 					addressTypeReqDTO.setAddressTypeId(this.getManagedBean().getPmAddressTypeId());
 					
 					AddressResDTO addressTypeResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addressTypeReqDTO);
-					getManagedBean().setAuditContactPerson(addressTypeResDTO.getPmAddressType().getPmContacts().get(0));
-				} else {
-					getManagedBean().setAuditContactPerson(new PmContact());
+					if(addressTypeResDTO.getPmAddressType() != null && addressTypeResDTO.getPmAddressType().getPmContacts() != null){
+						auditContactPerson = addressTypeResDTO.getPmAddressType().getPmContacts().get(0);
+					}
 				}
+				
+				getManagedBean().setAuditContactPerson(auditContactPerson);
 				
 				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
 						new PmOrgProfile() : offResDTO.getPmOrgProfile());

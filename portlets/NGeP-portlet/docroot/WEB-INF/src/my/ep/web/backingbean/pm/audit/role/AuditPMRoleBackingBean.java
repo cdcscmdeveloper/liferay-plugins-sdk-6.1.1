@@ -13,7 +13,7 @@ import my.ep.web.util.FacesScopes;
  * 
  */
 public class AuditPMRoleBackingBean {
-	private List<String> roleConfUser = Arrays.asList(
+	private static final List<String> roleConfUser = Arrays.asList(
 	        RoleCode.EP_ADMIN.value(),
 	        RoleCode.EP_ADMIN_2.value(),
 	        RoleCode.BPK_ADMIN.value(),
