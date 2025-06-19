@@ -4260,11 +4260,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    DecimalFormat df = new DecimalFormat("#.00");
 	    String formattedAmount = df.format(bondAmt);
 
-	    if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-	        return NumberWordUtilEn.convert(formattedAmount);
-	    } else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-	        return NumberWordUtil.convert(formattedAmount);
-	    }
+		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+			return NumberWordUtilEn.convert(formattedAmount);
+		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+			return NumberWordUtil.convert(formattedAmount);
+		}
 
 	    return "";
 	}
