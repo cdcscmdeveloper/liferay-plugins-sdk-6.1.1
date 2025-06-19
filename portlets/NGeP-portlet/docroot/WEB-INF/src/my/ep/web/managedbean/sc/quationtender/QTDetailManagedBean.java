@@ -10663,5 +10663,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setTechPoints(BigDecimal techPoints) {
 		this.techPoints = techPoints;
 	}
-	// 37813,35384 -end
+	// 37813,35384 -end	
 }

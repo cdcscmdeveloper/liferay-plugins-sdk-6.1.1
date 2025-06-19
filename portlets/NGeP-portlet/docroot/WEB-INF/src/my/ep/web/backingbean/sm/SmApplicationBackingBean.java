@@ -16029,7 +16029,7 @@ public class SmApplicationBackingBean extends
 		}
 		return retVal;
 	}
-	
+
     /**
 	 * On tick checkbox during search recommend rejection reason
 	 * 
@@ -16120,24 +16120,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setSelectedRecommendReasonDescs(new ArrayList<PmReasonDesc>());
 				getManagedBean().setSelectedRecommendRejectReasonDescs(new ArrayList<PmReasonDesc>());
 			}	
-		}	
-		
-//		reasonIdList1.add(reasonEvent);
-//		getManagedBean().setSelectedRecommendRejectReasonDescs(reasonIdList1);
-		
-		//Comment to see data during submit
-/*		if (!EntityHelper.isCollectionEmpty(getManagedBean()
-				.getSelectedRecommendReasonDescs())) {
-			List<Long> reasonIdList = new ArrayList<Long>();
-			for (PmReasonDesc reason : getManagedBean()
-					.getSelectedRecommendReasonDescs()) {
-				reasonIdList.add(reason.getPmReason().getReasonId());
-			}
-			getManagedBean().setRecommendReasonId(
-					reasonIdList.toArray(new Long[reasonIdList.size()]));
-		}else{
-			getManagedBean().setRecommendReasonId(null);
-		}*/
+		}
 		
 		setReasonIdList();
 		if(getManagedBean().isShowDifferenceRejection()){

@@ -111,6 +111,7 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.common.ScRequestItem;//#31558, #28854
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -440,23 +441,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 
 		/** to concat Itemcode and Item Name */
+		//#31558/#28854 start
+		public ScRequestItem contactItem(CtContractItem ctItem) {
 
-		public String contactItem(CtContractItem ctItem) {
-			
-			String itemcode=ctItem.getScRequestItem().getCmItem().getExtensionCode();
-			String itemName=ctItem.getScRequestItem().getItemName();
-			if(itemcode==null)
-			{
-				itemcode=ParameterConst.ITEM_CODE;
+			String itemcode = ctItem.getScRequestItem().getCmItem().getExtensionCode();
+			String itemName = ctItem.getScRequestItem().getItemName();
+			if (itemcode == null) {
+				itemcode = ParameterConst.ITEM_CODE;
 			}
-			if(itemName==null)
-			{
-				itemName=ParameterConst.ITEM_NAME;
+			if (itemName == null) {
+				itemName = ParameterConst.ITEM_NAME;
 			}
-			String result = itemName +","+ itemcode;
-			
-			return result;		     
+			//String result = itemName +","+ itemcode;
+			ScRequestItem scRequestItem = new ScRequestItem();
+			scRequestItem.setItemName(itemName);
+			scRequestItem.setCmItem(ctItem.getScRequestItem().getCmItem());
+			scRequestItem.getCmItem().setExtensionCode(itemcode);
+				
+			return scRequestItem;
 		}
+		//#31558/#28854 end
 		
 		public String contactItemProd(CtContractItem ctItem) {
 			
@@ -1264,7 +1268,19 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					}
 				}
 			}
-			//#29403 end
+			//#29403 end			
+			
+			// #25956 start
+			if (getManagedBean().getTaskName() != null
+					&& (getManagedBean().getTaskName().equalsIgnoreCase(
+							CTProcessNameConst.ACK_FA_CANCEL_MEETING_HT_NAME)
+							|| getManagedBean().getTaskName().equalsIgnoreCase(
+									CTProcessNameConst.ACK_FA_CANCEL_MEETING_DECISION_HT_NAME) || getManagedBean()
+							.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_REJECT_LOA_HT_NAME))) {
+				ctBackingBean.getManagedBean().setDisableAmendDetails(true);
+				ctBackingBean.getManagedBean().setViewContract(true);
+			}
+			// #25956 end
 			
 			// #25956 start
 			if (getManagedBean().getTaskName() != null
@@ -2546,8 +2562,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)
-				|| (BpmOutcomeConst.BPM_REJECT.equals(outcome) && !isSupplierRole())) {
+		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome) && !isSupplierRole()) {
+			
 			setSecretary();
 			validateContractAmendment(outcome);
 			// Temp setTextBeforeSign : DocNo+Type
@@ -2577,7 +2593,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if ((BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome))
+		} else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(outcome)
 				&& isSupplierRole()
 				&& !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
 			validateContractAmendment(outcome);	
