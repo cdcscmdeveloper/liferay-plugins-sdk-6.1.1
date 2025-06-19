@@ -17,12 +17,16 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
  * AuditPMOrganizationProfileBackingBean
@@ -67,7 +71,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		AuditPMReqDTO auditPMReqDTO = new AuditPMReqDTO();
 		managedBean = (OrganisationManagedBean) manageBean;
 		orgProfile = managedBean.getOrgProfile();
-		docType = orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly().get(0).getCodeName();
+		docType = orgProfile.getPmOrgValidity().getOrgName();
 		docNo = orgProfile.getOrgCode();
 		orgType = managedBean.getOrgType();
 		docId = managedBean.getNewProfileId();
@@ -327,8 +331,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	private void setOrganisationDetail() {
 		if (orgProfile.isBrandNew()) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			detailObj(AuditConst.PM_AUD_OPM_ORGCATEGORY_FIELDLABELCODE, null, AuditConst.PM_AUD_FEDERAL_GOVT); // 167
-			detailObj(AuditConst.PM_AUD_OPM_ORGTYPE_FIELDLABELCODE, null, managedBean.getOrgType()); // 168 
+			detailObj(AuditConst.PM_AUD_OPM_ORGCATEGORY_FIELDLABELCODE, null, getOrgType()); // 167
+			detailObj(AuditConst.PM_AUD_OPM_ORGTYPE_FIELDLABELCODE, null, checkOrgType()); // 168 
 			detailObj(AuditConst.PM_AUD_OPM_ORGCODE_FIELDLABELCODE, null, managedBean.getOrgProfile().getOrgCode()); // 169
 		}
 	}
@@ -616,4 +620,27 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		
 		return map;
 	}
+	
+	/**
+	 * 
+	 * @param orgType
+	 * @return
+	 */
+	private String getOrgType(){
+		String label = "lbl.pm.org.federal.government";
+		return SmCommonUtil.getMessageMalay(label,null);
+	}
+	
+	private String checkOrgType() {
+		String description = null;
+
+		for (PmParameterDesc desc : orgProfile.getOrgTypeCode().getPmParameterDescsSpecCallOnly()) {
+			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+				description = desc.getCodeName();
+			}
+		}
+		return description;
+
+	}
+	
 }
