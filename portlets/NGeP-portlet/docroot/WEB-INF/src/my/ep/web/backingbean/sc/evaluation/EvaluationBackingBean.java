@@ -51,11 +51,13 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
+import my.ep.biz.service.sc.document.IQTDocumentSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -72,6 +74,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.document.QTDocumentReqDTO;
+import my.ep.dto.sc.document.QTDocumentResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
@@ -82,6 +86,8 @@ import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
@@ -124,6 +130,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtOpeningCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtTechnicalCommitteeRemark;
 import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
@@ -158,6 +165,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -1517,6 +1525,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setEvalStage(null);
 			reqDTO.setProposalChecklistSearchBean(null);
+
 			reqDTO.setProposalChecklist(proposalCheckList); //Bug #38123 CRM#5224901: MOE issue 16/4/2025
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 
@@ -2363,7 +2372,6 @@ public class EvaluationBackingBean extends
 				if (Arrays.asList(financialEvaluationStatus).contains(this.getManagedBean().getCurrentStatusId())
 						&& !this.getManagedBean().isReadOnly() && !getManagedBean().isFinancialSummaryGenerated()
 						// #35384 recalculate when at endorse or sign off -start-
-						
 						// #38074 remove status revision
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.FEC_PENDING_ENDORSEMENT) 
@@ -2528,7 +2536,6 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)
 					&& this.getManagedBean().getScQt().isTechEvaluationReq()
 					// #35384 recalculate at endorse or sign off -start-
-					
 					// #38074 remove status revision
 					|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 					&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
@@ -2561,7 +2568,6 @@ public class EvaluationBackingBean extends
 						&& !this.getManagedBean().isReadOnly()
 						&& !getManagedBean().isFinancialSummaryGenerated()
 						// #35384 recalculate at endorse or sign off -start-
-						
 						// #38074 remove status revision
 						|| (null == this.getManagedBean().getScQt().getFecEvaluationCheck()
 						&& (this.getManagedBean().getCurrentStatusId().equals(QTStatusConst.EC_PENDING_ENDORSEMENT) 
