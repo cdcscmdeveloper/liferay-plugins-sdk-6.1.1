@@ -1854,8 +1854,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void checkExistingBusinessRegNo(){
 
-		// #32713 - Start
-		// to validate if there is same reg_no that has inProgress status
 		if (StringUtils.isNotBlank(getManagedBean().getSmSupp().getRegNo())) {
 			//#35581
 			if (!validateString(getManagedBean().getSmSupp().getRegNo())) {
@@ -1869,17 +1867,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
 			}
-
-			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-			reqDTO.setRegNo(getManagedBean().getSmSupp().getRegNo());
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
-					"sm", ISupplierSearchSO.class);
-
-			if (supplierSearchSO.checkIsSupplierRegNoAlreadyExistAndInProgress(reqDTO).isRegNoInProgress()) {
-				throw new EpException(MessageConst.ERROR_722634);
-			}
 		}
-		// #32713 - End
 		
 		if (!StringUtils
 				.isBlank(getManagedBean().getSmSupp().getBusinessType())
