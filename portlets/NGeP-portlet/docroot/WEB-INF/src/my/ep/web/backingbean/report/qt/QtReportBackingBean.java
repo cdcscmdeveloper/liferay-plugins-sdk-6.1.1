@@ -162,12 +162,12 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 	 */
 
 	public void generateSCReport(LinkedHashMap<String, String> params) {
+
 		IRPTRequestSO rptRequestSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IRPTRequestSO.class);
+
 		boolean isBuffMax = null != this.getManagedBean().getReportCode()
 				&& QtReportConst.SC_BRIEFING_PAPER_RPT_VAL.equals(this.getManagedBean().getReportCode()) ? true : false; // Bug #37911
 		
-		log.info("generate reportCode" + getManagedBean().getReportCode());
-		log.info("generate reportName" + getManagedBean().getReportName());
 		params.put(QtReportConst.PARAM_KEY_REPORT, getManagedBean().getReportName());
 		params.put(QtReportConst.PARAM_REPORT_CODE, getManagedBean().getReportCode());
 		params.put(QtReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId().toString());

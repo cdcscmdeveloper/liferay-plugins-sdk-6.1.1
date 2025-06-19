@@ -148,6 +148,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean.FinalizationEndorsementReportDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -263,6 +264,12 @@ public class SupplierFinalizationBackingBean extends
 			// #18685 - Start.
 			getManagedBean().setDocNo(getManagedBean().getScQt().getQtNo());
 			// #18685 - End.
+			
+			// Bug #37829@Syazani 13/03/2024 -- Start
+			if (!validateCurrentStatus()) {
+				throw new EpException(MessageConst.ERROR_721018);
+			}
+			// Bug #37829@Syazani 13/03/2024 -- End
 			
 			// Bug #37829@Syazani 13/03/2024 -- Start
 			if (!validateCurrentStatus()) {
@@ -3636,7 +3643,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}*/
-	/*
+		/*
 		paramMap.put(ReportConst.PARAM_REMARK, ulasan.length() == 0 ? 
 				StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");

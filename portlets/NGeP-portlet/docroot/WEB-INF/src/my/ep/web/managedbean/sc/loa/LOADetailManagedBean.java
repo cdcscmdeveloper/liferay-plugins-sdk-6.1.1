@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.loa;
 
 import java.math.BigDecimal;
+import java.util.ArrayList; //#29006
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
@@ -29,7 +31,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
@@ -311,7 +315,64 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	// #29006 - start
+	private boolean specificationAndSupplierDialogFlag = false;
+	private boolean updateSupplierInstructionFlag = false;
+	private List<String> scLoiLoaItemSpecsList;
+	private boolean newSupplierUpdatedFlag = false;
+	private boolean updatedLampiranA3DownloadedFlag = false;
+	private String newSupplierOffered;
+	private String newSupplierJustification;
+	private String selectedSupplierOffer = null;
+	private boolean oldNewSuppOfferSameFlag;
+	private boolean updateSupplierLinkFlag = false;
+	private Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap;
+	private List<String> downloadedLoaReportsTitleList;
+	private Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap;
+	private Long selectedItemId;
+	private boolean multipleSuppOffer = Boolean.FALSE;
+	private List<TplSpecQuestion> listSpecAnswer;
+	// #29006 - end
+	
+	/* #29007 Start Vinod */
+	private boolean supPropSpecDisable = false;
+	private boolean supPropSpecUpdate = false;
+	private boolean uploadA3Templet = false;
+	private boolean specificationAndSupplierDialogFlagQT = false;
+	private String itemNamePopup;
+	private String specKeyword;
+	private String loaBpmVerify;
+	private ScLoiLoaItem scLoiLoaItem;
+	private List<TplSpecAnswer> tplSpecAnswerList;
+	private List<ScLoiLoaItem> loiLoaItemsResult; // fix issue 2 search action note 347
+	private int retainPageNumber = 0; // #34242
+	private boolean resetAll = false;
+	private boolean resetAllforNoReport = false;
+	// Bug #34757 -start-
+	private String firstZone;
+	private List<Long> itemList;
+	private List<Long> loaItemIds;
+	// Bug #34757 -end-
+	/* #29007 End Vinod */
 
+	// #27797 - start
+	private ScLoiLoaItem highestZoneScLoiLoaItem;
+	private List<ScLoiLoaItem> highestZoneScLoiLoaItemList;
+	public BigDecimal highestZonePrice = new BigDecimal(0);
+	private List<ScLoiLoaItem> nameZoneScLoiLoaItemList;
+	private List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList;
+	private List<ScLoiLoaItem> dtlScLoiLoaItemList;
+	private Map<Long, Integer> reqItemRowSpanMap;
+	private Map<Long, BigDecimal> reqItemMaxSubTotalMap;
+	private Long reqItemSession = 0L;
+	private Long reqItemSubTotalSession = 0L;
+	public BigDecimal totalZonePrice = new BigDecimal(0);
+	// #27797 - end
+	
+	// #32280 - start
+	private Long reqItemAssignButtonSession = 0L;
+	// #32280 - end
     /**
      * Gets the spki backing bean.
      *
@@ -1724,4 +1785,394 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 		this.readOnlyLOADownload = readOnlyLOADownload;
 	}
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	
+	// #29006 - start
+	public boolean isSpecificationAndSupplierDialogFlag() {
+		return specificationAndSupplierDialogFlag;
+	}
+
+	public void setSpecificationAndSupplierDialogFlag(
+			boolean specificationAndSupplierDialogFlag) {
+		this.specificationAndSupplierDialogFlag = specificationAndSupplierDialogFlag;
+	}
+
+	public boolean isUpdateSupplierInstructionFlag() {
+		return updateSupplierInstructionFlag;
+	}
+
+	public void setUpdateSupplierInstructionFlag(
+			boolean updateSupplierInstructionFlag) {
+		this.updateSupplierInstructionFlag = updateSupplierInstructionFlag;
+	}
+
+	public List<String> getScLoiLoaItemSpecsList() {
+		return scLoiLoaItemSpecsList;
+	}
+
+	public void setScLoiLoaItemSpecsList(List<String> scLoiLoaItemSpecsList) {
+		this.scLoiLoaItemSpecsList = scLoiLoaItemSpecsList;
+	}
+
+	public boolean isNewSupplierUpdatedFlag() {
+		return newSupplierUpdatedFlag;
+	}
+
+	public void setNewSupplierUpdatedFlag(boolean newSupplierUpdatedFlag) {
+		this.newSupplierUpdatedFlag = newSupplierUpdatedFlag;
+	}
+
+	public boolean isUpdatedLampiranA3DownloadedFlag() {
+		return updatedLampiranA3DownloadedFlag;
+	}
+
+	public void setUpdatedLampiranA3DownloadedFlag(
+			boolean updatedLampiranA3DownloadedFlag) {
+		this.updatedLampiranA3DownloadedFlag = updatedLampiranA3DownloadedFlag;
+	}
+
+	public String getNewSupplierOffered() {
+		return newSupplierOffered;
+	}
+
+	public void setNewSupplierOffered(String newSupplierOffered) {
+		this.newSupplierOffered = newSupplierOffered;
+	}
+
+	public String getNewSupplierJustification() {
+		return newSupplierJustification;
+	}
+
+	public void setNewSupplierJustification(String newSupplierJustification) {
+		this.newSupplierJustification = newSupplierJustification;
+	}
+
+	public boolean isOldNewSuppOfferSameFlag() {
+		return oldNewSuppOfferSameFlag;
+	}
+
+	public void setOldNewSuppOfferSameFlag(boolean oldNewSuppOfferSameFlag) {
+		this.oldNewSuppOfferSameFlag = oldNewSuppOfferSameFlag;
+	}
+
+	public boolean isUpdateSupplierLinkFlag() {
+		return updateSupplierLinkFlag;
+	}
+
+	public void setUpdateSupplierLinkFlag(boolean updateSupplierLinkFlag) {
+		this.updateSupplierLinkFlag = updateSupplierLinkFlag;
+	}
+
+	public Map<Long, List<TplSpecAnswer>> getScLoiLoaItemAnswerMap() {
+		return scLoiLoaItemAnswerMap;
+	}
+
+	public void setScLoiLoaItemAnswerMap(
+			Map<Long, List<TplSpecAnswer>> scLoiLoaItemAnswerMap) {
+		this.scLoiLoaItemAnswerMap = scLoiLoaItemAnswerMap;
+	}
+
+	public List<String> getDownloadedLoaReportsTitleList() {
+		return downloadedLoaReportsTitleList;
+	}
+
+	public void setDownloadedLoaReportsTitleList(
+			List<String> downloadedLoaReportsTitleList) {
+		this.downloadedLoaReportsTitleList = downloadedLoaReportsTitleList;
+	}
+
+	public Map<Long, List<String>> getScRequestItemIdNewSuppOfferAndJustMap() {
+		return scRequestItemIdNewSuppOfferAndJustMap;
+	}
+
+	public void setScRequestItemIdNewSuppOfferAndJustMap(
+			Map<Long, List<String>> scRequestItemIdNewSuppOfferAndJustMap) {
+		this.scRequestItemIdNewSuppOfferAndJustMap = scRequestItemIdNewSuppOfferAndJustMap;
+	}
+
+	public Long getSelectedItemId() {
+		return selectedItemId;
+	}
+
+	public void setSelectedItemId(Long selectedItemId) {
+		this.selectedItemId = selectedItemId;
+	}
+
+	public boolean isMultipleSuppOffer() {
+		return multipleSuppOffer;
+	}
+
+	public void setMultipleSuppOffer(boolean multipleSuppOffer) {
+		this.multipleSuppOffer = multipleSuppOffer;
+	}
+
+	public String getSelectedSupplierOffer() {
+		return selectedSupplierOffer;
+	}
+
+	public void setSelectedSupplierOffer(String selectedSupplierOffer) {
+		this.selectedSupplierOffer = selectedSupplierOffer;
+	}
+
+	// #29006 - end
+	
+	/* #29007 Start Vinod */
+	public List<TplSpecAnswer> getTplSpecAnswerList() {
+		return tplSpecAnswerList;
+	}
+
+	public void setTplSpecAnswerList(List<TplSpecAnswer> tplSpecAnswerList) {
+		this.tplSpecAnswerList = tplSpecAnswerList;
+	}
+
+	public String getItemNamePopup() {
+		return itemNamePopup;
+	}
+
+	public void setItemNamePopup(String itemNamePopup) {
+		this.itemNamePopup = itemNamePopup;
+	}
+
+	public String getSpecKeyword() {
+		return specKeyword;
+	}
+
+	public void setSpecKeyword(String specKeyword) {
+		this.specKeyword = specKeyword;
+	}
+
+	public ScLoiLoaItem getScLoiLoaItem() {
+		return scLoiLoaItem;
+	}
+
+	public void setScLoiLoaItem(ScLoiLoaItem scLoiLoaItem) {
+		this.scLoiLoaItem = scLoiLoaItem;
+	}
+
+	public boolean isSupPropSpecUpdate() {
+		return supPropSpecUpdate;
+	}
+
+	public void setSupPropSpecUpdate(boolean supPropSpecUpdate) {
+		this.supPropSpecUpdate = supPropSpecUpdate;
+	}
+
+	public boolean isSpecificationAndSupplierDialogFlagQT() {
+		return specificationAndSupplierDialogFlagQT;
+	}
+
+	public void setSpecificationAndSupplierDialogFlagQT(boolean specificationAndSupplierDialogFlagQT) {
+		this.specificationAndSupplierDialogFlagQT = specificationAndSupplierDialogFlagQT;
+	}
+
+	public String getLoaBpmVerify() {
+		return loaBpmVerify;
+	}
+
+	public void setLoaBpmVerify(String loaBpmVerify) {
+		this.loaBpmVerify = loaBpmVerify;
+	}
+
+	public boolean isSupPropSpecDisable() {
+		return supPropSpecDisable;
+	}
+
+	public void setSupPropSpecDisable(boolean supPropSpecDisable) {
+		this.supPropSpecDisable = supPropSpecDisable;
+	}
+
+	public boolean isUploadA3Templet() {
+		return uploadA3Templet;
+	}
+
+	public void setUploadA3Templet(boolean uploadA3Templet) {
+		this.uploadA3Templet = uploadA3Templet;
+	}
+	
+	public boolean isResetAll() {
+		return resetAll;
+	}
+
+	public void setResetAll(boolean resetAll) {
+		this.resetAll = resetAll;
+	}
+	
+	public boolean isResetAllforNoReport() {
+		return resetAllforNoReport;
+	}
+
+	public void setResetAllforNoReport(boolean resetAllforNoReport) {
+		this.resetAllforNoReport = resetAllforNoReport;
+	}
+	/* #29007 End Vinod */
+	
+	// #34242, #29007 - Start
+	/**
+	 * @return the retainPageNumber
+	 */
+	public int getRetainPageNumber() {
+		return retainPageNumber;
+	}
+
+	/**
+	 * @param retainPageNumber the retainPageNumber to set
+	 */
+	public void setRetainPageNumber(int retainPageNumber) {
+		this.retainPageNumber = retainPageNumber;
+	}
+	// #34242, #29007 - End
+	
+	// 29007 - fix issue 2 search action note 347 - start
+	public List<ScLoiLoaItem> getLoiLoaItemsResult() {
+		return loiLoaItemsResult;
+	}
+
+	public void setLoiLoaItemsResult(List<ScLoiLoaItem> loiLoaItemsResult) {
+		this.loiLoaItemsResult = loiLoaItemsResult;
+	}
+	// 29007 - fix issue 2 search action note 347 - end
+
+	// Bug #34757, #29007 -start-
+	public String getFirstZone() {
+		return firstZone;
+	}
+
+	public void setFirstZone(String firstZone) {
+		this.firstZone = firstZone;
+	}
+
+	public List<Long> getItemList() {
+		return itemList;
+	}
+
+	public void setItemList(List<Long> itemList) {
+		this.itemList = itemList;
+	}
+
+	public List<Long> getLoaItemIds() {
+		return loaItemIds;
+	}
+
+	public void setLoaItemIds(List<Long> loaItemIds) {
+		this.loaItemIds = loaItemIds;
+	}
+	// Bug #34757, #29007 -end-
+	
+	// #27797 - start
+	public ScLoiLoaItem getHighestZoneScLoiLoaItem() {
+		return highestZoneScLoiLoaItem;
+	}
+
+	public void setHighestZoneScLoiLoaItem(ScLoiLoaItem highestZoneScLoiLoaItem) {
+		this.highestZoneScLoiLoaItem = highestZoneScLoiLoaItem;
+	}
+
+	public List<ScLoiLoaItem> getHighestZoneScLoiLoaItemList() {
+		if (highestZoneScLoiLoaItemList == null) {
+			highestZoneScLoiLoaItemList = new ArrayList<ScLoiLoaItem>();
+		}
+		return highestZoneScLoiLoaItemList;
+	}
+
+	public void setHighestZoneScLoiLoaItemList(List<ScLoiLoaItem> highestZoneScLoiLoaItemList) {
+		this.highestZoneScLoiLoaItemList = highestZoneScLoiLoaItemList;
+	}
+
+	public BigDecimal getHighestZonePrice() {
+		return highestZonePrice;
+	}
+
+	public void setHighestZonePrice(BigDecimal highestZonePrice) {
+		this.highestZonePrice = highestZonePrice;
+	}
+
+	public List<ScLoiLoaItem> getNameZoneScLoiLoaItemList() {
+		return nameZoneScLoiLoaItemList;
+	}
+
+	public void setNameZoneScLoiLoaItemList(List<ScLoiLoaItem> nameZoneScLoiLoaItemList) {
+		this.nameZoneScLoiLoaItemList = nameZoneScLoiLoaItemList;
+	}
+
+	public List<ScLoiLoaItem> getSubTotalZoneScLoiLoaItemList() {
+		return subTotalZoneScLoiLoaItemList;
+	}
+
+	public void setSubTotalZoneScLoiLoaItemList(List<ScLoiLoaItem> subTotalZoneScLoiLoaItemList) {
+		this.subTotalZoneScLoiLoaItemList = subTotalZoneScLoiLoaItemList;
+	}
+
+	public List<ScLoiLoaItem> getDtlScLoiLoaItemList() {
+		return dtlScLoiLoaItemList;
+	}
+
+	public void setDtlScLoiLoaItemList(List<ScLoiLoaItem> dtlScLoiLoaItemList) {
+		this.dtlScLoiLoaItemList = dtlScLoiLoaItemList;
+	}
+
+	public Map<Long, Integer> getReqItemRowSpanMap() {
+		return reqItemRowSpanMap;
+	}
+
+	public void setReqItemRowSpanMap(Map<Long, Integer> reqItemRowSpanMap) {
+		this.reqItemRowSpanMap = reqItemRowSpanMap;
+	}
+
+	public Long getReqItemSession() {
+		return reqItemSession;
+	}
+
+	public void setReqItemSession(Long reqItemSession) {
+		this.reqItemSession = reqItemSession;
+	}
+
+	public Map<Long, BigDecimal> getReqItemMaxSubTotalMap() {
+		return reqItemMaxSubTotalMap;
+	}
+
+	public void setReqItemMaxSubTotalMap(Map<Long, BigDecimal> reqItemMaxSubTotalMap) {
+		this.reqItemMaxSubTotalMap = reqItemMaxSubTotalMap;
+	}
+
+	public Long getReqItemSubTotalSession() {
+		return reqItemSubTotalSession;
+	}
+
+	public void setReqItemSubTotalSession(Long reqItemSubTotalSession) {
+		this.reqItemSubTotalSession = reqItemSubTotalSession;
+	}
+
+	public BigDecimal getTotalZonePrice() {
+		return totalZonePrice;
+	}
+
+	public void setTotalZonePrice(BigDecimal totalZonePrice) {
+		this.totalZonePrice = totalZonePrice;
+	}
+
+	// #27797 - end
+	//#32280 - start
+	public Long getReqItemAssignButtonSession() {
+		return reqItemAssignButtonSession;
+	}
+
+	public void setReqItemAssignButtonSession(Long reqItemAssignButtonSession) {
+		this.reqItemAssignButtonSession = reqItemAssignButtonSession;
+	}	
+	//#32280 - end	
+	// 29006 @zaim start
+	/**
+	 * @return the listSpecAnswer
+	 */
+	public List<TplSpecQuestion> getListSpecAnswer() {
+		return listSpecAnswer;
+	}
+
+	/**
+	 * @param listSpecAnswer
+	 *            the listSpecAnswer to set
+	 */
+	public void setListSpecAnswer(List<TplSpecQuestion> listSpecAnswer) {
+		this.listSpecAnswer = listSpecAnswer;
+	}
+	// 29006 @zaim end
 }

@@ -182,10 +182,6 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
-//#25790
-//#25790
-//#25790
-//#25790
 
 /**
  * The Class RequestNoteBackingBean.
@@ -5071,9 +5067,34 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						}
 					}
 				}
-				for(ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
-					subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+				// - start- #27797
+				if (fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)
+						|| fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
+						) {
+					if (priceType.equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+						BigDecimal highestZonePrice = BigDecimal.ZERO;
+
+						for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+							int result = spItemPrice.getItemPrice().compareTo(highestZonePrice);
+
+							if (result == 1) {
+								highestZonePrice = spItemPrice.getItemPrice();
+							}
+						}
+						subTotalAmount = highestZonePrice.multiply(zonalSubTotalAmount);
+					} else {
+						for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+							subTotalAmount = subTotalAmount.add(spItemPrice.getItemPrice()
+									.multiply(zonalSubTotalAmount));
+						}
+					}
 				}
+				else {
+					for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
+						subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
+					}
+				}
+				// - end - #27797
 			} else {
 				ScSupplierItemPrice itemPrice = getTopZonalTierPrice(requestSupplierItem.getSupplierItemPrices(),
 						orderQuantity,
