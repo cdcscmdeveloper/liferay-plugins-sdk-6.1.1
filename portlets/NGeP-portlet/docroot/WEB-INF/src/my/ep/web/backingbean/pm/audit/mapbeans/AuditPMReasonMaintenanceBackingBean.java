@@ -144,6 +144,10 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		auditPMReqDTO.setObjList(objList);
 		managedBeans.setOldPmReason(null);
 		managedBeans.setNewPmReason(null);
+		managedBeans.setAuditAddAppTypeRestrictions(null);
+		managedBeans.setAuditAddComTypeRestrictions(null);
+		managedBeans.setAuditAddSuppTypeRestrictions(null);
+		managedBeans.setAuditAddPIDReasonList(null);
 		return auditPMReqDTO;
 	}
 
