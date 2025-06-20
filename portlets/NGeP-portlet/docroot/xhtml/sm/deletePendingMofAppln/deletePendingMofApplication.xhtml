@@ -98,7 +98,8 @@
 								id="delPendResn" label="#{lbl['lbl.sm.reason']}" 
 								value="#{backingBean.managedBean.supplierRemarks}"
 								maxlength="2500"
-								validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}">
+								validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
+								converter="trimConverter"> <!-- 38195 -->
 								<f:validateLength maximum="2500" />
 							</p:inputTextarea> <p:message id="delPendResnMsg" for="delPendResn" display="icon" /></td>
 	
