@@ -22,6 +22,9 @@
 					attachmentList="#{requestNoteBackingBean.managedBean.requestNote.scRequestNoteAttachments}"
 					showAttachment="true"
 					disableUpload="true"
+					documentHeader = "#{lbl['lbl.txt.attachment']}"
+					uploadButtonLabel = "#{lbl['lbl.txt.attach.doc']}"
+					recordsLabel = "#{lbl['lbl.sc.no.attachment.upload']}"		
 					readonly="#{requestNoteBackingBean.managedBean.viewOnly}"
 					showAttachments="#{requestNoteBackingBean.managedBean.showAttachments}"
 					instruction="#{isPendingApprovalStatus ? lbl['lbl.sc.requestnote.remarks.instruction'] : ''}" />

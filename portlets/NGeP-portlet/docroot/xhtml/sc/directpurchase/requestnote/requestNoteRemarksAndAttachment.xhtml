@@ -9,6 +9,9 @@
 	<ac:scRemarkAndAttachment
 		remarkList="#{requestNoteBackingBean.managedBean.requestNote.remarks}"
 		header = "#{lbl['lbl.sc.remarks.attachment']}"
+		documentHeader = "#{lbl['lbl.txt.attachment']}"
+		uploadButtonLabel = "#{lbl['lbl.txt.attach.doc']}"
+		recordsLabel = "#{lbl['lbl.sc.no.attachment.upload']}"		 
 		attachmentList="#{requestNoteBackingBean.managedBean.requestNote.scRequestNoteAttachments}"
 		fileUploadListener="requestNoteBackingBean.handleFileUpload"
 		instruction="#{lbl['lbl.sc.instruction.attachment']}" />
