@@ -54,12 +54,12 @@
 					update="@form" /><ui:remove>#21692</ui:remove>
 					
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					oncomplete="cancelPopup.show();"
+					action="#{lOIDetailBackingBean.validateBeforePopup(true)}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOI and lOIDetailBackingBean.disableCancelForApprover()}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
 					
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					oncomplete="cancelPopup2.show();"
+					action="#{lOIDetailBackingBean.validateBeforePopup(false)}"
 					rendered="#{lOIDetailBackingBean.managedBean.ableToCancelLOIWithoutBPM}"
 					process="@form" update="@form" /><ui:remove>36339, 21692</ui:remove>
 
