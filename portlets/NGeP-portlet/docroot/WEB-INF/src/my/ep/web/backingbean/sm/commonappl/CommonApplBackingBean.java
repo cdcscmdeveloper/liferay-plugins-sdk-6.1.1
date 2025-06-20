@@ -54,6 +54,7 @@ import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -672,8 +673,7 @@ public class CommonApplBackingBean extends
 			smApplBB.getManagedBean().setTaskId(taskId);
 			smApplBB.getManagedBean().setDraftedAppl(true);
 			setNavigationForDraftAppl(appl.getApplType());
-			// }
-
+			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT) || resDTO.getTaskName().equalsIgnoreCase(
 						SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT.replaceAll("\\s", ""))) {
