@@ -1259,14 +1259,14 @@ public class OrganisationBackingBean extends
 			
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)){
 				// retrieve old data
-				AddressReqDTO addressTypeReqDTO = new AddressReqDTO();
-				AddressResDTO addressTypeResDTO = new AddressResDTO();
 				OrgProfileReqDTO offReqDTO = new OrgProfileReqDTO();
 				OrgProfileResDTO offResDTO = new OrgProfileResDTO();
 				AddressReqDTO offAddressReqDTO = new AddressReqDTO();
 				AddressResDTO offAddressResDTO = new AddressResDTO();
 				AddressReqDTO offRcvAddressReqDTO = new AddressReqDTO();
 				AddressResDTO offRcvAddressResDTO = new AddressResDTO();
+				
+				PmContact auditContactPerson = new PmContact();
 				
 				if(!orgProfile.isBrandNew()){
 					offReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1285,14 +1285,18 @@ public class OrganisationBackingBean extends
 					addressSO = BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 				}
-				addressTypeReqDTO = new AddressReqDTO();
+				
 				if(this.getManagedBean().getPmAddressTypeId() != null){
+					AddressReqDTO addressTypeReqDTO = new AddressReqDTO();
 					addressTypeReqDTO.setAddressTypeId(this.getManagedBean().getPmAddressTypeId());
-					addressTypeResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addressTypeReqDTO);
-					getManagedBean().setAuditContactPerson(addressTypeResDTO.getPmAddressType().getPmContacts().get(0));
-				} else {
-					getManagedBean().setAuditContactPerson(new PmContact());
+					
+					AddressResDTO addressTypeResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addressTypeReqDTO);
+					if(addressTypeResDTO.getPmAddressType() != null && addressTypeResDTO.getPmAddressType().getPmContacts() != null){
+						auditContactPerson = addressTypeResDTO.getPmAddressType().getPmContacts().get(0);
+					}
 				}
+				
+				getManagedBean().setAuditContactPerson(auditContactPerson);
 				
 				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
 						new PmOrgProfile() : offResDTO.getPmOrgProfile());
