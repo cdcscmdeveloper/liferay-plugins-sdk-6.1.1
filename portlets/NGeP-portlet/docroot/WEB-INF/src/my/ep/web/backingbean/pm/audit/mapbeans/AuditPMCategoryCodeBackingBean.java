@@ -626,11 +626,14 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private String checkPmParameterDesc(PmParameter pmParameter) {
 		String description = null;
 
-		for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
-				description = desc.getCodeName();
+		if(CollectionUtils.isNotEmpty(pmParameter.getPmParameterDescsSpecCallOnly())) {
+			for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
+				if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+					description = desc.getCodeName();
+				}
 			}
 		}
+		
 		return description;
 
 	}

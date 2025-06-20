@@ -524,13 +524,16 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 	private String checkPmParameterDesc(PmParameter pmParameter) {
 		String description = null;
-		PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
-
-		for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
-				description = desc.getCodeName();
+		
+		if(pmParameter.getParameterId() != null) {
+			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
+			for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
+				if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+					description = desc.getCodeName();
+				}
 			}
 		}
+		
 		return description;
 
 	}

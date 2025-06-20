@@ -54,7 +54,10 @@ public class AuditPMAuthorizedSignBackingBean extends AuditPMBackingBeanTemplate
 		this.roleCode = roleCode;
 		AuthorizedSignatoryManagedBean managedBean = (AuthorizedSignatoryManagedBean) manageBean;
 		List<PmCertSignatory> certSignatories = managedBean.getCertSignatories();
-		docGroupId = BigInteger.valueOf(certSignatories.get(0).getPmZone().getZoneId());
+		
+		if (CollectionUtils.isNotEmpty(certSignatories)) {
+			this.docGroupId = BigInteger.valueOf(certSignatories.get(0).getPmZone().getZoneId());
+		}
 
 		if (CollectionUtils.isNotEmpty(managedBean.getNewCertSignatories())) {
 			List<PmCertSignatory> newAddedCertSign = managedBean.getNewCertSignatories();
