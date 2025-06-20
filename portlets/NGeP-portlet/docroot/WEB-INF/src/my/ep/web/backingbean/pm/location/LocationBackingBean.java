@@ -296,11 +296,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		String message = null;
 		String[] messageParam = null;
 		Long locationId = null;
+		
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IStateSO.class);
+		
 		if (ParameterConst.LOCATION_LEVEL_STATE.equals(getManagedBean().getSelectedType())){
-			StateReqDTO reqDTO = new StateReqDTO();
-			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStateSO.class);
+			StateReqDTO reqDTO = new StateReqDTO();			
 			PmState state = this.getManagedBean().getState();
 			state.setStateCode(state.getStateCode().toUpperCase());
 			state.setStateName(state.getStateName().trim());
@@ -379,6 +380,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				locationId = getManagedBean().getDivision().getDivisionId();
 				/************ AUDIT #28895_35509 START *************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF)) {
+					StateResDTO stateResDTO = stateSO.retrieveStateByStateId(reqDTO.getStateId());
+					getManagedBean().setState(stateResDTO.getPmState());
 					getManagedBean().setResDivision(resDTO.getPmDivision());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_LOCDTL);
 				}
