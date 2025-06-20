@@ -18,12 +18,11 @@ import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -76,6 +75,11 @@ public class ViewApplHistoryManagedBean extends
 	private SmApplInquiry poToSupplierInquiry;
 	
 	private Boolean displayResubmitButton; //#31248
+	
+	// #34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	// #34392 - end
 
 	public ViewApplHistoryManagedBean() {
 
@@ -92,30 +96,29 @@ public class ViewApplHistoryManagedBean extends
 		}
 
 		@Override
-		protected ISearchResultBean<Object[]> pageChangeListener(
-				ISearchBean<Object[]> searchBean) {
+		protected ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setObjArrSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
-			
+
 			//28771 - start
 			reqDTO.setsupportingDocMode(getSupportingDocMode());
 			//28771-end
-			
+
 			try {
 				if (!isSupplierUser()) {
 					if (!isSearchCriteriaEmpty()) {
 						return getApplicationHistoryResultBean(reqDTO);
 					} else {
-						return new SearchResultBean();
+						return new SearchResultBean<Object[]>();
 					}
 				} else {
 					return getApplicationHistoryResultBean(reqDTO);
 				}
 			} catch (Exception ex) {
-				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: "+ex.getMessage()); //to be included for #25792
-				return new SearchResultBean();
-			} 
+				log.error("File: ViewApplHistoryManagedBean Method: pageChangeListener Message: " + ex.getMessage()); //to be included for #25792
+				return new SearchResultBean<Object[]>();
+			}
 		}
 
 		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
@@ -170,7 +173,7 @@ public class ViewApplHistoryManagedBean extends
 			//Bug #25601 :
 			int[] indexToCheck = new int[]{0, 10, 11, 12, 13,1}; 
 			List<Object[]> resultListTemp = new ArrayList<Object[]>();
-			String previousAppl="applno,";
+			//String previousAppl="applno,";
 			try {
 				for (Object[] obj : retVal.getResultList()) {
 					//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration //10 = appl id & 11 = supplier id
@@ -255,6 +258,7 @@ public class ViewApplHistoryManagedBean extends
 			return retVal;
 		}
 	}
+	
 	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
 	private String getMofNo(Long supplierId,Long applId, String mofNo) {
 		if (StringUtils.isBlank(mofNo)) {
@@ -269,41 +273,42 @@ public class ViewApplHistoryManagedBean extends
 		return StringUtils.isBlank(mofNo) ? SmCommonUtil.getMessage(
 				"lbl.sm.no.available", null) : mofNo;
 	}
+	
 	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
-		private String getMofNoPrevious(Long supplierId,Long applId, String mofNo,Integer recordStatus) {
-			if (StringUtils.isBlank(mofNo)) {
-				SmMofAccount acc = SmCommonUtil.getPreviousMofAccountBySuppIdAndSuppType(
-						supplierId,applId, null,recordStatus);
-				if (acc != null) {
-					mofNo = acc.getMofNo();
-				}
+	private String getMofNoPrevious(Long supplierId,Long applId, String mofNo,Integer recordStatus) {
+		if (StringUtils.isBlank(mofNo)) {
+			SmMofAccount acc = SmCommonUtil.getPreviousMofAccountBySuppIdAndSuppType(
+					supplierId,applId, null,recordStatus);
+			if (acc != null) {
+				mofNo = acc.getMofNo();
 			}
-			return StringUtils.isBlank(mofNo) ? SmCommonUtil.getMessage(
-					"lbl.sm.no.available", null) : mofNo;
 		}
-		//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
-		public boolean checkNotMigratedAppl(String applNo){
-			boolean newePAppl = false;
-			if(applNo.contains("KN") || applNo.contains("KU") || applNo.contains("KB")|| applNo.contains("KA") || applNo.contains("JN") || applNo.contains("JU") || applNo.contains("JA")){
-				newePAppl = true;
-			}
-			return newePAppl;
+		return StringUtils.isBlank(mofNo) ? SmCommonUtil.getMessage(
+				"lbl.sm.no.available", null) : mofNo;
+	}
+	
+	//Bug #25601 : SM SHOWSTOPPER: Duplicate MOF Account for New Supplier Registration
+	public boolean checkNotMigratedAppl(String applNo){
+		boolean newePAppl = false;
+		if(applNo.contains("KN") || applNo.contains("KU") || applNo.contains("KB")|| applNo.contains("KA") || applNo.contains("JN") || applNo.contains("JU") || applNo.contains("JA")){
+			newePAppl = true;
 		}
-		
+		return newePAppl;
+	}
+	
+	/*
 	private String getWorkflowStatus(Long applId, String statusOri) {
-		SmWorkflowStatus st = SmCommonUtil
-				.getCurrentActiveWokFlowStatus(applId);
+		SmWorkflowStatus st = SmCommonUtil.getCurrentActiveWokFlowStatus(applId);
 		String retVal = statusOri;
-		if (st.getPmStatus() != null
-				&& st.getPmStatus().getStatusId() != null) {
-			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st
-					.getPmStatus().getStatusId());
+		if (st.getPmStatus() != null && st.getPmStatus().getStatusId() != null) {
+			PmStatusDesc sd = SmCommonUtil.getStatusDescByStatusId(st.getPmStatus().getStatusId());
 			if (sd != null) {
 				retVal = sd.getStatusName();
 			}
 		}
 		return retVal;
 	}
+	*/
 
 	/**
 	 * Search supplier application history
@@ -453,4 +458,23 @@ public class ViewApplHistoryManagedBean extends
 		this.emptyNonMandatoryDocHistory = emptyNonMandatoryDocHistory;
 	}
 	//#11641 - End
+	// #34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(
+			List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(
+			List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+	// #34392 - end
 }

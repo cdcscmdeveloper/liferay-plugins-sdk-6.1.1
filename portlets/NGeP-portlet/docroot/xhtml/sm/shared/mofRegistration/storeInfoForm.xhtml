@@ -14,7 +14,9 @@
 				<table style="width: 100%;">
 					<tr>
 						<td style="white-space: nowrap; float: left;">
-						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} (#{storeCatVar.categoryName})" />
+						    <!-- #28175 -->
+						    <p:outputLabel value="#{storeCatVarStatus.index + 1}. #{storeCatVar.fullCatcode} 
+						    	(#{backingBean.getSupplierCategoryName(storeCatVar)})" />
 						</td>
 					</tr>
 				</table>
@@ -150,7 +152,7 @@
 							<ui:repeat var="cat" value="#{backingBean.managedBean.selectedStoreFacility.smSupplierCategoryFacilities}">
 								<h:outputText value="#{cat.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}
 									#{cat.pmCategoryL3.pmCategoryL2.categoryL2Code} #{cat.pmCategoryL3.categoryL3Code}
-									(#{cat.pmCategoryL3.categoryName})" style="float:left"/><br/>
+									(#{backingBean.getSupplierCategoryName(cat.pmCategoryL3)})" style="float:left"/><br/> <!-- #28175 -->
 							</ui:repeat>
 						</p:outputPanel>
 						<p:message id="storeCategoryIdMsg" for="storeCategoryId"
@@ -282,11 +284,13 @@
 			</table>
 			<br />
 			<div align="right">
+				<!-- #34303 Start -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
-					action="#{backingBean.addOrUpdateStoreToSmAppl}"
+					action="#{backingBean.addOrUpdateStoreToSmApplNew}"
 					partialSubmit="true" process="storeDialog"
 					onclick="storeBlockWidget.show();" oncomplete="storeBlockWidget.hide();"
 					update=":#{p:component('smStrDtPanel')}, @([id$=Msg])" />
+				<!-- #34303 End -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="@this" partialSubmit="true"
 					action="#{backingBean.cancelStoreSaveorUpdate}"

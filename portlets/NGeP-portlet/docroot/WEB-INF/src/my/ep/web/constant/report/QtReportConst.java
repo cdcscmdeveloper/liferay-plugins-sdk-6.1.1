@@ -65,6 +65,7 @@ public class QtReportConst implements Serializable {
 	public static final String PARAM_PROCURE_PTJ_EQ = "ORGPROFILEID";
 	public static final String PARAM_LOGIN = "LOGIN";
 	
+	public static final String VELOCITY_CTX_KEY_MOFNO  = "mofNo";// 29819
 	
 	/**
 	 * @return the SC_QUOT_TENDER_OR_RPT_VAL

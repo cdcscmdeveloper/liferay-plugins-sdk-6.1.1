@@ -100,7 +100,8 @@
 					required="true" disabled="#{personnel.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
-					<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
+					<p:ajax event="change" partialSubmit="true" process="@this" update="@this"
+						listener="#{organisationBackingBean.checkUserProfile(personnel.pmUser.userId, index)}" /> <!-- #36489 -->
 				</p:selectOneMenu>
 
 			</p:column>

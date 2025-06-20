@@ -12,7 +12,9 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		<p:panel header="#{lbl['lbl.sm.questionaire.answer.header']}" id="questionPanel">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<!-- #35070 - Start  -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" escape="false"/>
+		<!-- #35070 - End -->
 			<table style="width: 100%">
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sm.questionaire.feedback.note1']}" escape="false"/></td>

@@ -89,7 +89,19 @@
 	    	  $(this).attr("autocomplete", "off");
 	    	})
 		})
-    	
+		
+		<!--#36681 - start -->
+			function limitTextAreaWithBreakline(element, limit) {
+				  const value = element.value;
+				  const valueTrim = value.substring(0, limit); 
+				  const newlines = valueTrim.split("\n").length - 1; // Count newlines
+				  const charCount = valueTrim.length + newlines; // Add 1 for each newline
+				  if (charCount > limit) {
+				    const allowedChars = limit - newlines; 
+				    element.value = valueTrim.substring(0, allowedChars); 
+				  }
+				}
+		 <!--#36681 - end -->
 	</script>
 </h:head>
 

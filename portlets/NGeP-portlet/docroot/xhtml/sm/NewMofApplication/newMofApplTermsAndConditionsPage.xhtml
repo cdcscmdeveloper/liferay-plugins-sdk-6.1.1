@@ -20,10 +20,12 @@
 		</p:blockUI>
 		
 		<p:panel id="gstTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
-			
+		
+			<!--#36594-Start-->
 			<p:scrollPanel style="height:300px;border:0;" mode="native">
-				<h:outputText escape="false" value="#{lbl['lbl.sm.upgradeMof.descData']}" style="white-space : normal !important"/>
+				<h:outputText escape="false" value="#{backingBean.setRenewalTnc('N')}" style="white-space : normal !important"/>
 			</p:scrollPanel>
+			<!--#36594-End-->
 
 			<table>
 				<tr>

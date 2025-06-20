@@ -23,7 +23,10 @@ public class DailyApplSubmitRptBackingBean extends
 	private static final long serialVersionUID = -5599569176798032965L;
 
 	public DailyApplSubmitRptBackingBean() {
-		initStates();
+		// #7754_#35984 - Start
+		getZoneByUser();
+		initStatesByZone();
+		// #7754_#35984 - End
 		setDefaultDateFromAndDateTo();
 	}
 

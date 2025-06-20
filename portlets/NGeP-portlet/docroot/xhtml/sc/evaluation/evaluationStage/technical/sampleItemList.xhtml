@@ -11,7 +11,7 @@
 			<p:panel header="#{lbl['lbl.sc.item.list']}"
 				id="evaluationStageTechnicalSampleItemsListForDatatable"
 				toggleable="true">
-				<!-- 11104 -start- -->
+				 <ui:remove> #11104 - start </ui:remove>
 				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="50"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{evaluationBackingBean.managedBean.sampleItemList}"
@@ -19,7 +19,7 @@
 					selection="#{evaluationBackingBean.managedBean.sampleItemSelection}"
 					editable="true" rowIndexVar="index" style="width:100%"
 					rowKey="#{sampleItem}">
-					<!-- 11104 -end- -->
+					<ui:remove> #11104 - end </ui:remove>
 
 					<ac:paginator for="techSampleEvaluateId" />
 
@@ -33,6 +33,8 @@
 							value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.tplSpecQuestion.clItem)}"
 							escape="false" style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
+					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove> #11104 - start </ui:remove>
 					<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
 						style="width:15%;">
 						<h:outputText
@@ -42,11 +44,16 @@
 							value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}"
 							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
 					</p:column>
+					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove> #11104 - start </ui:remove>
 					<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
 						style="width:15%">
 						#{sampleItem.scQtSampleLable.lableNo} - #{sampleItem.subLableNo}
 					</p:column>
-					<p:column style="width:15%">
+					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove> #11104 - start </ui:remove>
+					<p:column style="width:15%"
+						rendered="#{evaluationBackingBean.managedBean.itemSampleReq}">
 						<f:facet name="header">
 							<h:outputText value="*" styleClass="mandatory"></h:outputText>
 							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"></h:outputText>
@@ -75,19 +82,21 @@
 						<p:message id="sampleaddressmanualScoreEvaluationMessage"
 							for="sampleaddressmanualScoreEvaluation" display="icon"></p:message>
 					</p:column>
-					<!-- 11104 -end- -->
+					<ui:remove> #11104 - end </ui:remove>
 				</p:dataTable>
 				<p:spacer height="7px;"></p:spacer>
 				
-				<!-- 11104 -start- -->
+			<ui:remove> #11104 - start </ui:remove>
 				<h:panelGroup id="sampleTotalScoreGroupId">
 					<table>
 						<tr>
-							<td><p:outputLabel
+							<td>
+							<ui:remove> #11104 - start </ui:remove> <p:outputLabel
 									value="#{lbl[evaluationBackingBean.managedBean.itemSampleReq ? 'lbl.sc.spec.total.points' : 'lbl.tpl.spec.content.user.score']}"
 									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
 								<p:outputLabel value="* " styleClass="mandatory"
 									rendered="#{!evaluationBackingBean.managedBean.itemSampleReq}" />
+								<ui:remove> #11104 - end </ui:remove>
 							</td>
 							<td><p:inputText id="sampleaddressUserScoreId"
 									rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
@@ -95,9 +104,9 @@
 									disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
 								or evaluationBackingBean.managedBean.itemSampleReq
 								or evaluationBackingBean.managedBean.tabTechnicalIndex eq '2'}"
-									required="!evaluationBackingBean.managedBean.itemSampleReq"
+									required="#{!evaluationBackingBean.managedBean.itemSampleReq}"
 									value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
-									maxlength="18" style="text-align:right">
+									maxlength="18" style="text-align:right"><ui:remove> #11104 - start </ui:remove>
 									<ac:validateNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 										maxIntegerDigits="14" integerOnly="true" />

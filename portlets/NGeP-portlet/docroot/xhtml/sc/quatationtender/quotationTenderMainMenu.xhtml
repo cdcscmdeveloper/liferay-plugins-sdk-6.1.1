@@ -400,4 +400,11 @@
 
 		</c:otherwise>
 	</c:choose>
+
+	<ui:remove> #29732 Start </ui:remove>
+	<ac:qtCategoryChangeAlertPopup
+		catCodeList="#{qTDetailBB.managedBean.catCodeList}"
+		widget="catCodeChangeAlert" />
+	<ui:remove> #29732 End </ui:remove>
+
 </ui:composition>

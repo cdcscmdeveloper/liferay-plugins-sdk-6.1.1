@@ -225,7 +225,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 									softcertRequest.getPmDigiCert().getValidTo(), new Date(), new Date(), true);
 						}
 						if (!result) {
-							throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							//#30855 - START
+							FacesScopes fs = new FacesScopes();
+							if(fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value()) || 
+							   fs.hasRoleUser(RoleCode.G2G_SUPPLIER_ADMIN.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) ||
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776064);
+							}
+							if(fs.hasRoleUser(RoleCode.G2G_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()) || 
+							   fs.hasRoleUser(RoleCode.FL_USER.value())){
+								throw new EpException(MessageConst.ERROR_DIGICERT_776065);
+							}
+							//#30855 - END
 						}
 					}
 				}
@@ -548,12 +562,22 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						}
 
 					}
+					
+					//#29481 - Start
+					msgKey = MessageConst.INFO_721067;
 					params = new String[] { name, email };
+					if (!isSoftcertCurrentUserOnly(reqDTO.getFreeSofcertPersonnelList())
+							&& getManagedBean().getSupplierTmpPersonnel() == null){
+						msgKey = MessageConst.INFO_721068;
+						params = getSoftCertNameEmailMulti(reqDTO.getFreeSofcertPersonnelList());
+					}
+					//#29481 - End
+					
 				} else {
+					sbName = new StringBuilder();
 					if (!EntityHelper.isCollectionEmpty(reqDTO
 							.getSmPersonnelList())) {
 						for (SmPersonnel per : reqDTO.getSmPersonnelList()) {
-							sbName = new StringBuilder();
 							sbName.append(per.getName()).append(",");
 						}
 						name = sbName.toString();
@@ -576,6 +600,32 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 	}
+	
+	//#29481 - start
+	private boolean isSoftcertCurrentUserOnly(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels) || freeSoftcertPersonnels.size() > 1){
+			return false;
+		}
+		Long currentUserId = (new FacesScopes()).getUserSessionBean().getUserId();
+		SmPersonnel per = freeSoftcertPersonnels.get(0);
+		if (per.getPmUser() != null){
+			return per.getPmUser().getUserId().equals(currentUserId);
+		}
+		return false;
+	}
+	
+	private String[] getSoftCertNameEmailMulti(List<SmPersonnel> freeSoftcertPersonnels){
+		if (EntityHelper.isCollectionEmpty(freeSoftcertPersonnels)){
+			return new String[] { StringUtils.EMPTY, StringUtils.EMPTY }; 
+		}
+		int count = 1;
+		StringBuilder sb = new StringBuilder();
+		for (SmPersonnel per : freeSoftcertPersonnels){
+			sb.append(count++ +". " + per.getName() + " (" + per.getEmail() + ")<br />");
+		}
+		return new String[]{sb.toString()};
+	}
+	//#29481 - end
 
 	/**
 	 * Remove check box tick from data table
@@ -1136,9 +1186,14 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							int count = SmServiceLookup.getPersonnelSO()
 									.countPersonnelSoftcertBill(reqDTO);
 
-							if (count > 0) {
+							//#34964 - start
+							int countBillDtl = SmServiceLookup.getPersonnelSO()
+									.countPersonnelSoftcertBillDtl(reqDTO);
+
+							if (count > 0 && countBillDtl == 0) {
 								smPersonnel.setDisableRowSelection(true);
 							}
+							//#34964 - end
 						}
 					}
 				}

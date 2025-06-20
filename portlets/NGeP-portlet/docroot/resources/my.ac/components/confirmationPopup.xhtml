@@ -70,7 +70,7 @@
 			<p:blockUI block="#{cc.attrs.id}Popup" widgetVar="confirmPopupBlockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-			<h:panelGroup id="#{cc.attrs.id}Popup" layout="block">
+			<p:outputPanel id="#{cc.attrs.id}Popup" layout="block"> <!-- #29665 change component type -->
 			<table>
 				<tr><!-- #28765 START -->
 					<td align="center" style="white-space: normal; word-wrap: break-word !important;">
@@ -133,7 +133,7 @@
 				    </c:choose>
 				
 			</div>
-			</h:panelGroup>
+			</p:outputPanel> <!-- #29665 change component type -->
 		</p:dialog>
 	</cc:implementation>
 </ui:composition>

@@ -186,8 +186,8 @@
 									rendered="#{!qTDetailBB.isAuditor() and qTDetailBB.isQTMaintenanceScreen() and qTDetailBB.isDeskOfficer() and (qTDetailBB.isQTStatusInBetween(scQt.qtStatus.statusId, QTStatusConst.QT_PENDING_SC_COMMITTEE_APPROVAL, QTStatusConst.QT_ARCHIVED) or qTDetailBB.isQTCloneStatus(scQt.qtStatus.statusId))}"
 									icon="ui-icon-edit" update=":form:displayk"
 									title="#{lbl['lbl.sc.qt.create.btn.clone.tooltip']}"
-									action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}"
-									partialSubmit="true" process="@this" />
+									action="#{qtMultipleCloneBackingBean.clonePopupAction(scQt)}" oncomplete="disableSpecificNodes()"
+									partialSubmit="true" process="@this" /> <ui:remove>#25635 - start</ui:remove>
 								<!-- #25635 -end- -->
 							</p:menuButton>
 					</p:column>

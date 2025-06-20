@@ -63,6 +63,7 @@ public class StopInstrManagedBean extends BaseManagedBean {
     private boolean coGstr;
     private boolean prevHideRemarks;
     private String backToNtf;
+    private String searchFunctionType;//36386
     //26279 - start
     private String disciplinaryActionMessage;
     private List<DisciplinaryActionVO> disciplineVOs;
@@ -399,6 +400,23 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	public void setBackToNtf(String backToNtf) {
 		this.backToNtf = backToNtf;
 	}
+	
+	// 36386-start
+	/**
+	 * @return the searchFunctionType
+	 */
+	public String getSearchFunctionType() {
+		return searchFunctionType;
+	}
+
+	/**
+	 * @param searchFunctionType
+	 *            the searchFunctionType to set
+	 */
+	public void setSearchFunctionType(String searchFunctionType) {
+		this.searchFunctionType = searchFunctionType;
+	}
+	// 36386-end
 
 	//26279 - start
 	public String getDisciplinaryActionMessage() {
