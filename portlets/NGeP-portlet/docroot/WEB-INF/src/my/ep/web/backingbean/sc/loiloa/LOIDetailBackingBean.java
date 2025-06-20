@@ -6903,7 +6903,7 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
-		if (checkingForEPVNotification(scLoi)) {
+		if (scLoi != null && scLoi.getLoiId() != null && checkingForEPVNotification(scLoi)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
@@ -7008,14 +7008,19 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private boolean checkingForEPVNotification(ScLoi scLoi) {
-		return scLoi != null
-				&& scLoi.getLoiId() != null
-				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
+		//List of statuses to enable notification
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
+
+		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
 				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
 				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)
-				&& !scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
-						.equals(QTStatusConst.LOI_CANCELLED_NOT_AGREE_EPV) && !isQTMaintenanceScreen();
+				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())
+				&& !isQTMaintenanceScreen();
 	}
 	//#21692 - End
 }
