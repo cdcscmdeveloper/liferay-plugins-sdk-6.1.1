@@ -12673,5 +12673,19 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
 	}
 	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOA first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelLoaPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelLoaPopup2.show()");
+		}
+	}
+	//#21692 - End
 }
 

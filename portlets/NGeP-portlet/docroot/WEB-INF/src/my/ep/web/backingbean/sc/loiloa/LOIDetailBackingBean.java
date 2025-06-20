@@ -6903,11 +6903,7 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
-		if (scLoi != null && scLoi.getLoiId() != null
-				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
-				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)) {
+		if (checkingForEPVNotification(scLoi)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
@@ -6993,6 +6989,33 @@ public class LOIDetailBackingBean extends
 	 */
 	public boolean disableCancelForApprover() {
 		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOI first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelPopup2.show()");
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkingForEPVNotification(ScLoi scLoi) {
+		return scLoi != null
+				&& scLoi.getLoiId() != null
+				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
+				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)
+				&& !scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_CANCELLED_NOT_AGREE_EPV) && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
 }
