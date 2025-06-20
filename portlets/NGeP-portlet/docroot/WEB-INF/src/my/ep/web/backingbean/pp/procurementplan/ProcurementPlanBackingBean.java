@@ -1498,7 +1498,17 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 * @param reqSPDTO
 	 */
 	private void recordAudit(String action, AuditProcurementPlanSPDTO reqSPDTO) {
-		if (reqSPDTO.getCurrentStatusID() != null) {
+		
+		IAuditProcurementPlanSO reqSubmitSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
+		AuditProcurementPlanReqDTO reqSubmitDTO = new AuditProcurementPlanReqDTO();
+
+		reqSubmitDTO.setApproveCode(getApprovalCode());
+		reqSubmitDTO.setPlanId(this.getManagedBean().getPlanId());
+
+		AuditProcurementPlanResDTO resApproveDTO = reqSubmitSO.retrieveApproveStatus(reqSubmitDTO);
+		
+		if (reqSPDTO.getCurrentStatusID() != null || resApproveDTO.isSuccessful()) {
 			saveAuditData(action, Long.valueOf(1));
 		}
 	}
