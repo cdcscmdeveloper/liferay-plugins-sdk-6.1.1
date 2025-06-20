@@ -269,11 +269,11 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		String auditPhoneNo = "";
 		String auditMobileNo = "";
 
-		if(!auditContactPerson.getPhoneNo().equals("")){
+		if(auditContactPerson.getPhoneNo() != null && !auditContactPerson.getPhoneNo().equals("")){
 			auditPhoneNo = auditContactPerson.getPhoneCountry() + auditContactPerson.getPhoneArea() + 
 					auditContactPerson.getPhoneNo();
 		}
-		if(!auditContactPerson.getMobileNo().equals("")){
+		if(auditContactPerson.getMobileNo() != null && !auditContactPerson.getMobileNo().equals("")){
 			auditMobileNo = auditContactPerson.getMobileCountry() + auditContactPerson.getMobileArea() + 
 					auditContactPerson.getMobileNo();
 		}
@@ -284,7 +284,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		}
 		
 		if(!officeContactPerson.getMobileNo().equals("")){
-			auditMobileNo = officeContactPerson.getMobileCountry() + officeContactPerson.getMobileArea() + 
+			officeMobileNo = officeContactPerson.getMobileCountry() + officeContactPerson.getMobileArea() + 
 					officeContactPerson.getMobileNo();
 		}
 
@@ -310,9 +310,27 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setMinistry() {
-		if (!orgProfile.isBrandNew() && !orgProfile.getMinistryName().equals(oldOrgProfile.getMinistryName())) {
-			detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, oldOrgProfile.getMinistryName(),
-					orgProfile.getMinistryName());
+		String currentMinistryName = "";
+		String oldMinistryName = "";
+
+		currentMinistryName = orgProfile.getParentOrgProfile() != null ?
+				orgProfile.getParentOrgProfile().getPmOrgValidity().getOrgName() : 
+					orgProfile.getPmOrgValidity().getOrgName();
+				
+		oldMinistryName = oldOrgProfile.getParentOrgProfile() != null ?
+				oldOrgProfile.getParentOrgProfile().getPmOrgValidity().getOrgName() : 
+					oldOrgProfile.getPmOrgValidity().getOrgName();
+		
+		if (!orgProfile.isBrandNew()) {
+			if(!currentMinistryName.equalsIgnoreCase(oldMinistryName)){
+				actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+				detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, oldMinistryName, currentMinistryName);	
+			} else if (oldMinistryName == null) { //to cater for migration data
+				detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, "", currentMinistryName);
+			}
+		} else {
+			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			detailObj(AuditConst.PM_AUD_OPM_MINISTRYNAME_FIELDLABELCODE, "", currentMinistryName);	
 		}
 	}
 
@@ -592,7 +610,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		map.put(ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY, ParameterConst.ORG_TYPE_STATE_STATUTORY_BODY);
 		map.put(ParameterConst.ORG_TYPE_STATE_GOVT, ParameterConst.ORG_TYPE_STATE_GOVT);
 		map.put(ParameterConst.ORG_TYPE_LOCAL_AUTHORITY, ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
-		map.put(ParameterConst.ORG_TYPE_OTHERS, ParameterConst.ORG_TYPE_LOCAL_AUTHORITY);
+		map.put(ParameterConst.ORG_TYPE_OTHERS, ParameterConst.ORG_TYPE_OTHERS);
 		
 		return map;
 	}
