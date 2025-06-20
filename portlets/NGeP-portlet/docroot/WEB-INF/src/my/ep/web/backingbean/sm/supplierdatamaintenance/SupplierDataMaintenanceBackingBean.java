@@ -388,7 +388,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setSmRvFilePath(filePath);
 		
 		initSmRvHistory();
-		this.getManagedBean().getSmRevisit().setRevisitPrevRemark(getPrevRevisitRemark());
 		// #34031 End
 	}
 	

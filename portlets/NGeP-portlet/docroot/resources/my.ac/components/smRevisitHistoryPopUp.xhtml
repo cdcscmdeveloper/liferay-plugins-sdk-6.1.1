@@ -82,7 +82,21 @@
 				</p:column>
 				<p:column
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
-					<h:outputText value="#{revisit.combinedRemarks}" />
+					<h:outputText value="#{revisit.revisitRemark}" />
+					<ol style="list-style: decimal inside;">
+						<p:outputPanel
+							rendered="#{revisit.oldPmRegStatus ne null and revisit.newPmRegStatus ne null}">
+							<li><h:outputText
+									value="#{lbl['lbl.sm.rv.visiting.remark.regStatus.part.one']}" />
+								<p:spacer width="2" /> <h:outputText
+									value="#{cc.attrs.backingBean.getPmStatusDescs(revisit.oldPmRegStatus.getPmStatus().getStatusId())}" />
+								<p:spacer width="2" /> <h:outputText
+									value="#{lbl['lbl.sm.rv.visiting.remark.regStatus.part.two']}" />
+								<p:spacer width="2" /> <h:outputText
+									value="#{cc.attrs.backingBean.getPmStatusDescs(revisit.newPmRegStatus.getPmStatus().getStatusId())}" />.
+							</li>
+						</p:outputPanel>
+					</ol>
 				</p:column>
 				<p:column
 					rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}">
