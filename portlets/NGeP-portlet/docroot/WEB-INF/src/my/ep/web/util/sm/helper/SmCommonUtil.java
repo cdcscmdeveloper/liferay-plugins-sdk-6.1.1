@@ -85,6 +85,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sm.DisciplinaryActionConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -1355,6 +1356,38 @@ public class SmCommonUtil {
 
 		return msg;
 	}
+
+	//13362 - START
+	public static String getMessageMalay(String key, String[] params) {
+		String preferredLang = CommonConstants.LANGUAGE_CODE_MALAY;
+		Locale usrLocale = getLocaleByLang(preferredLang);
+		String msg = "";
+
+		log.info("ROLE NAME USRLOCALE VALUE =====>" + usrLocale);
+		if (params != null) {
+			msg = ResourceBundleUtils.getMessage(key, params,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		} else {
+			msg = ResourceBundleUtils.getMessage(key,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, usrLocale);
+		}
+
+		return msg;
+	}
+	
+	private static Locale getLocaleByLang(String lang){
+		if(StringUtils.isNotBlank(lang)){
+			if(lang.equalsIgnoreCase(CommonConstants.LANGUAGE_CODE_MALAY)){
+				return new Locale(CommonConstants.LANGUAGE_CODE_MALAY,CommonConstants.DEFAULT_COUNTRY_CODE);
+			}else{
+				return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+			}
+		}else{
+			return new Locale(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		}
+	}
+	//13362 - END
+
 
 	/**
 	 * Get message from Message Bundle
@@ -4142,6 +4175,12 @@ public class SmCommonUtil {
 			SmAddress smAddress) {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 		SelectItem item = null;
+		//#36718 - START
+		item = new SelectItem();
+		item.setLabel(SmCommonUtil.getMessage("lbl.txt.select", null));
+		item.setValue(null);
+		items.add(item);
+		//#36718 - END
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		if (SupplierManagementConst.LOCAL_AUTH_BUSINESS_TYPE
 				.contains(businessType)) {
@@ -4163,11 +4202,13 @@ public class SmCommonUtil {
 							.retrieveLocalAuthorityOrgProfileByAddress(reqDTO)
 							.getOrgProfileList();
 					if (!EntityHelper.isCollectionEmpty(orgProfileList)) {
-						item = new SelectItem();
+						//#36718 - START
+						/*item = new SelectItem();
 						item.setLabel(SmCommonUtil.getMessage("lbl.txt.select",
 								null));
 						item.setValue(null);
-						items.add(item);
+						items.add(item);*/
+						//#36718 - END
 						for (PmOrgProfile orgProfile : orgProfileList) {
 							item = new SelectItem();
 							item.setLabel(orgProfile.getPmOrgValidity()

@@ -26,6 +26,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
@@ -39,6 +40,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 //20201105@Jacky - Enhancement#28836 - Start
 import my.ep.constant.fl.FulfilmentStatusConst;
+import my.ep.constant.pm.AuditConst;
 //20201105@Jacky - Enhancement#28836 - End
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -97,6 +99,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMOrganizationProfileBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -662,6 +666,24 @@ public class OrganisationBackingBean extends
 		log.info("orgProfile.getOrgTypeCode().getParameterCode()="
 				+ orgProfile.getOrgTypeCode().getParameterCode());
 
+		/********************************AUDIT 35509*****************************************/
+		if(getManagedBean().getOldReceivingAddressList() == null){
+			getManagedBean().setOldReceivingAddressList(new ArrayList<PmAddressType>());
+		}
+		if(getManagedBean().getEditedReceivingAddressList() == null){
+			getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+		}
+		if(getManagedBean().getNewReceivingAddressList() == null){
+			getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+		}
+		if(getManagedBean().getAuditContactPerson() == null){
+			getManagedBean().setAuditContactPerson(new PmContact());
+		}
+		if(getManagedBean().getAuditBillingAddress() == null){
+			getManagedBean().setAuditBillingAddress(new PmAddress());
+		}
+		/********************************AUDIT 35509*****************************************/
+
 		// Pegawai Pengawal
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
 				OrganizationType.PENGAWAI_PENGAWAL.value())) {
@@ -919,6 +941,7 @@ public class OrganisationBackingBean extends
 							&& !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setOfficeContactPerson(
 								pmAddressType.getPmContacts().get(0));
+						getManagedBean().setAuditContactPerson(pmAddressType.getPmContacts().get(0)); // 35509
 						log.info("Contact Exist");
 						contactExist = true;
 					}
@@ -1225,7 +1248,40 @@ public class OrganisationBackingBean extends
 			reqDTO.setUserId(userLoginId.getUserId());
 			reqDTO.setUser(currentUser);
 			//#30651 - end
+			/************ AUDIT 35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMOrganizationProfileBackingBean(); 
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)){
+				// retrieve old data
+				OrgProfileReqDTO offReqDTO = new OrgProfileReqDTO();
+				OrgProfileResDTO offResDTO = new OrgProfileResDTO();
+				AddressReqDTO offAddressReqDTO = new AddressReqDTO();
+				AddressResDTO offAddressResDTO = new AddressResDTO();
+				AddressReqDTO offRcvAddressReqDTO = new AddressReqDTO();
+				AddressResDTO offRcvAddressResDTO = new AddressResDTO();
+				
+				if(!orgProfile.isBrandNew()){
+					offReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					offRcvAddressReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					offAddressReqDTO.setAddressId(this.getManagedBean().getOfficeAddress().getAddressId());
+					
+					offResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(offReqDTO);
+					offRcvAddressResDTO = addressSO.retrieveAddressTypeList(offRcvAddressReqDTO);
+					offAddressResDTO = addressSO.retrieveAddressDtlById(offAddressReqDTO);
+				}
+				
+				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
+						reqDTO.getPmOrgProfile() : offResDTO.getPmOrgProfile());
+				getManagedBean().setAuditBillingAddress(offAddressResDTO.getPmAddress() == null ? 
+						this.getManagedBean().getOfficeAddress() : offAddressResDTO.getPmAddress());
+				getManagedBean().setOldReceivingAddressList(offRcvAddressResDTO.getAddressTypeList() == null ?
+						getManagedBean().getAddressTypesList() : offRcvAddressResDTO.getAddressTypeList());
+			}
+			/************ AUDIT *************/
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1258,6 +1314,17 @@ public class OrganisationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								message));
+				/************ AUDIT 35509*************/
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
+					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORG_PROFILE);
+				}
+				
+				getManagedBean().setAuditContactPerson(new PmContact());
+				getManagedBean().setAuditBillingAddress(new PmAddress());
+				getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+				getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+				/************ AUDIT *************/
 			}
 		} finally {
 			orgProfileSO = null;
@@ -1591,6 +1658,23 @@ public class OrganisationBackingBean extends
 		getManagedBean().setDeliveryAddress(addressType);
 
 	}
+	
+	/**
+	 * START: #35509
+	 * @param pmAddressType
+	 * @return
+	 */
+	public PmAddressType setManualPmAddressType(PmAddressType pmAddressType){
+		PmAddressType manualPmAddressType = new PmAddressType();
+		PmAddress manualPmAddress = new PmAddress();
+		
+		manualPmAddressType.setAddressTypeId(pmAddressType.getAddressTypeId());
+		manualPmAddress.setAddressName(pmAddressType.getPmAddress().getAddressName());
+		manualPmAddressType.setPmAddress(manualPmAddress);
+		
+		return manualPmAddressType;
+	}
+	//END - #35509
 
 	/**
 	 * 
@@ -1647,6 +1731,9 @@ public class OrganisationBackingBean extends
 		if (manualAddr.isBrandNew() && !manualAddr.isModified()) {
 			getManagedBean().getAddressTypesList().add(deliveryAddr);
 			deliveryAddr.setPmAddress(manualAddr);
+			/**********************************AUDIT 35509******************************************/
+			getManagedBean().getNewReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
+			/**********************************AUDIT 35509******************************************/
 		} else {
 			for (int i = 0; i < getManagedBean().getAddressTypesList().size(); i++) {
 				PmAddressType adressType = getManagedBean()
@@ -1659,12 +1746,18 @@ public class OrganisationBackingBean extends
 								manualAddr.getAddressId())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
+					/**********************************AUDIT 35509******************************************/
+					getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
+					/**********************************AUDIT 35509******************************************/
 					break;
 				} else if (address.getAddressName() != null
 						&& address.getAddressName().equals(
 								manualAddr.getAddressName())) {
 					getManagedBean().getAddressTypesList().set(i, adressType);
 					deliveryAddr.setPmAddress(manualAddr);
+					/**********************************AUDIT 35509******************************************/
+					getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
+					/**********************************AUDIT 35509******************************************/
 				} else {
 					// Bug #22684
 					if (address.getAddressId() != null
@@ -1673,6 +1766,9 @@ public class OrganisationBackingBean extends
 						getManagedBean().getAddressTypesList().set(i,
 								adressType);
 						deliveryAddr.setPmAddress(manualAddr);
+						/**********************************AUDIT 35509******************************************/
+						getManagedBean().getEditedReceivingAddressList().add(setManualPmAddressType(deliveryAddr));
+						/**********************************AUDIT 35509******************************************/
 					}
 				}
 			}

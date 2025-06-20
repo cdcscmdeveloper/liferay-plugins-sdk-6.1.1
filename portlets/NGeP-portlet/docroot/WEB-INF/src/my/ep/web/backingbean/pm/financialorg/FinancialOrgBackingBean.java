@@ -80,6 +80,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+// 35509 START
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
+import my.ep.constant.pm.AuditConst;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMFinancialOrgBackingBean;
+//35509 END
 /**
  * Backing Bean for Financial Org
  * 
@@ -1042,6 +1048,21 @@ public class FinancialOrgBackingBean extends
 			
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
+			
+			/************ AUDIT #28895-35509 *************/
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMFinancialOrgBackingBean();
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION) && financialOrg.getFinancialOrgId() != null) {
+				reqDTO.setFinancialOrgId(financialOrg.getFinancialOrgId());
+				PmFinancialOrg oldFinancialOrg = financialOrgSO.retrieveFinancialOrgDtlById(reqDTO).getPmFinancialOrg();
+				//get old data
+				oldFinancialOrg.getRecordStatusFlg();
+				getManagedBean().setOldFinancialOrg(oldFinancialOrg);
+			}
+			/************ AUDIT #28895-35509 *************/
+			
 			FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrgDetails(reqDTO);
 	
 			if (resDTO.isSuccessful()) {
@@ -1074,6 +1095,12 @@ public class FinancialOrgBackingBean extends
 						    message
 				    		));
 	
+				/************ AUDIT #28895-35509 *************/
+				getManagedBean().setSavedFinancialOrg(resDTO.getPmFinancialOrg());
+				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION)) {
+					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_FINANCIAL_ORG);
+				}
+				/************ AUDIT #28895-35509 *************/
 			}
 		}
 		catch (Exception e) {

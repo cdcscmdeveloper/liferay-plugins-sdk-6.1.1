@@ -98,6 +98,12 @@ public class SSTConstant {
 		public static final String GREATER_THAN_SYMBOL = "&#62;";
 		public static final String AND_SYMBOL = "&#38;";
 		public static final String BREAKLINE ="<br />";
+		public static final String FILE_NO = "fileNo";
+		public static final String UNDERLINE_SHORT = "______________";
+		public static final String MOF_NO = "mofNo";
+		public static final String HEADER_TENDER = "Tender";
+		public static final String HEADER_SEBUT_HARGA = "Sebut Harga";
+		public static final String DOCUMENT_TYPE = "docType";
 		//25025 - end
 		//29006 start
 		
@@ -138,6 +144,17 @@ public class SSTConstant {
 		 */
 		public static final String HTML_ENTITY_LINE_SEPARATOR = "<br/>";
 
+		/**
+		 * Constant representing the prefix for a new supplier offer.
+		 * This is used as a standard identifier or key prefix in various parts of the application.
+		 */
+		public static final String NEW_SUPPLIER_OFFER_ = "NSO_";
+
+		/**
+		 * Constant representing the prefix for a new supplier offer justification.
+		 * This prefix is typically used to identify or reference justifications related to new supplier offers.
+		 */
+		public static final String NEW_SUPPLIER_OFFER_JUSTIFICATON_ = "NSOJ_";
 		//29006 end
 		//35295 @zaim - start
 		/**

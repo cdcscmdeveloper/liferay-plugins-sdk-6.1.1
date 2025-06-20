@@ -149,6 +149,16 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private String selectedAddrDistrictName;
 	private Long selectedAddrCityId;
 	private String selectedAddrCityName;
+	
+	/************ AUDIT START #28895-35509 *************/
+	private PmOrgProfile auditOldPMOrgProfile;
+	private PmAddress auditBillingAddress;
+	private PmContact auditContactPerson;
+	private List<PmAddressType> oldReceivingAddressList = new ArrayList<>();
+	private List<PmAddressType> editedReceivingAddressList = new ArrayList<>();
+	private List<PmAddressType> newReceivingAddressList = new ArrayList<>();
+	private Long newProfileId;
+	/************ AUDIT END #28895-35509 *************/
 
 	public OrganisationManagedBean() {
 
@@ -1248,7 +1258,75 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setStatus(Long status) {
 		this.status = status;
 	}
+	
+	/************ AUDIT START #28895-35509 *************/
+	public PmOrgProfile getAuditOldPMOrgProfile() {
+		return auditOldPMOrgProfile;
+	}
 
+	public void setAuditOldPMOrgProfile(PmOrgProfile auditOldPMOrgProfile) {
+		this.auditOldPMOrgProfile = auditOldPMOrgProfile;
+	}
 	
-	
+	public PmAddress getAuditBillingAddress() {
+		return auditBillingAddress;
+	}
+
+	public void setAuditBillingAddress(PmAddress auditBillingAddress) {
+		this.auditBillingAddress = auditBillingAddress;
+	}
+
+	public PmContact getAuditContactPerson() {
+		return auditContactPerson;
+	}
+
+	public void setAuditContactPerson(PmContact auditContactPerson) {
+		this.auditContactPerson = auditContactPerson;
+	}
+
+	public List<PmAddressType> getOldReceivingAddressList() {
+		return oldReceivingAddressList;
+	}
+
+	public void setOldReceivingAddressList(List<PmAddressType> oldReceivingAddressList) {
+		this.oldReceivingAddressList = oldReceivingAddressList;
+	}
+
+	/**
+	 * @return the editedReceivingAddressList
+	 */
+	public List<PmAddressType> getEditedReceivingAddressList() {
+		return editedReceivingAddressList;
+	}
+
+	/**
+	 * @param editedReceivingAddressList the editedReceivingAddressList to set
+	 */
+	public void setEditedReceivingAddressList(List<PmAddressType> editedReceivingAddressList) {
+		this.editedReceivingAddressList = editedReceivingAddressList;
+	}
+
+	/**
+	 * @return the newReceivingAddressList
+	 */
+	public List<PmAddressType> getNewReceivingAddressList() {
+		return newReceivingAddressList;
+	}
+
+	/**
+	 * @param newReceivingAddressList the newReceivingAddressList to set
+	 */
+	public void setNewReceivingAddressList(List<PmAddressType> newReceivingAddressList) {
+		this.newReceivingAddressList = newReceivingAddressList;
+	}
+	/************ AUDIT END #28895-35509 *************/
+
+	public Long getNewProfileId() {
+		return newProfileId;
+	}
+
+	public void setNewProfileId(Long newProfileId) {
+		this.newProfileId = newProfileId;
+	}
+
 }

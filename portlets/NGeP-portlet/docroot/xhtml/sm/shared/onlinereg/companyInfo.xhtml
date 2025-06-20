@@ -248,7 +248,8 @@
 				<p:message for="incomeTaxId" id="incomeTaxIdMsg" display="icon" /></td>
 				<td></td>
 			</tr>
-
+			<!-- #36718 - START - add panel for refresh -->
+			<p:panel id="compAddressPanelId" style="border: none;">	
 			<tr>
 				<td class="tdTitle">
 					<p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
@@ -280,7 +281,8 @@
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}"/>
-						<p:ajax event="change"
+						<!-- #36718 - process panel when change dropdown -->
+						<p:ajax event="change" process="@([id$=compAddressPanelId])" 
 							listener="#{registrationBackingBean.populateStateByAddType('business',true)}"
 							update="busState,busDistrict,busCity,compPostCodePanelId,:form:acgmap:gmapInput:gmapInput" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
@@ -312,9 +314,10 @@
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<!-- #34159 - Start -->
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel when change dropdown, update postcode -->
+						<p:ajax event="change" process="@this @([id$=compAddressPanelId])" 
 							listener="#{registrationBackingBean.populateDistrictByAddType('business', true)}"
-							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
+							update="divisionLabelPanelId,divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId,compPostCodePanelId" />
 						<!-- #34159 - End -->
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 					</tr>
@@ -344,9 +347,10 @@
 							value="#{registrationBackingBean.managedBean.businessDivisionLs}"
 							itemValue="#{division.divisionId}"
 							itemLabel="#{division.divisionName}" />
-						<p:ajax event="change" process="@this" 
+						<!-- #36718 - process panel when change dropdown, update postcode -->
+						<p:ajax event="change" process="@this @([id$=compAddressPanelId])" 
 							listener="#{registrationBackingBean.populateDivisionByAddType('business', true)}"
-							update="divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
+							update="divisionDropdownPanelId,busDistrict,busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId,compPostCodePanelId" />
 					</p:selectOneMenu>
 					<p:message id="busDivisionMsg" for="busDivision" display="icon" />
 					<!-- #34159 - END -->
@@ -376,9 +380,10 @@
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" />
-						<p:ajax event="change" process="@this"
+						<!-- #36718 - process panel when change dropdown, update postcode -->
+						<p:ajax event="change" process="@this @([id$=compAddressPanelId])" 
 							listener="#{registrationBackingBean.populateCityByAddType('business',true)}"
-							update="busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId" />
+							update="busCity,:form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId,compPostCodePanelId" />
 					</p:selectOneMenu> <p:message id="busDistrictMsg" for="busDistrict" display="icon" /></td>
 			</tr>
 
@@ -430,14 +435,15 @@
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" disabled="#{registrationBackingBean.managedBean.smAppl.applValidWithSsm}" />
 						<!-- #34159 - Start -->
+						<!-- #36718 - process panel when change dropdown, update postcode -->
 						<p:ajax event="change" 
-							update=":form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId"
-							process="@this"
+							update=":form:acgmap:gmapInput:gmapInput,localAuthLabelOutPanelId,localAuthInputOutPanelId,compPostCodePanelId"
+							process="@this @([id$=compAddressPanelId])" 
 							listener="#{registrationBackingBean.onSelectCity('business')}"/>
 						<!-- #34159 - End -->
 					</p:selectOneMenu> <p:message id="busCityMsg" for="busCity" display="icon" /></td>
 			</tr>
-
+			
 			<tr>
 				<td></td>
 				<td class="tdContent" ></td>
@@ -458,7 +464,8 @@
 					</p:outputPanel>
 				</td>
 			</tr>
-			
+			</p:panel>
+			<!-- #36718 - END -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.coordinate']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>

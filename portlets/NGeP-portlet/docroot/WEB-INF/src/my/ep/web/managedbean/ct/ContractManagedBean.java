@@ -156,6 +156,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	// #24333 - Start
 	private boolean extendContract = false;
 	private boolean disableOriginalBond = false;
+	private BigDecimal originalOverallAmount;
 	// #24333 - End
 	
 	// Start - 28479	
@@ -1725,4 +1726,12 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.inPage = inPage;
 	}
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
+
+	public BigDecimal getOriginalOverallAmount() {
+		return originalOverallAmount;
+	}
+
+	public void setOriginalOverallAmount(BigDecimal originalOverallAmount) {
+		this.originalOverallAmount = originalOverallAmount;
+	}
 }

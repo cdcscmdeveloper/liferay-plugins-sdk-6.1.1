@@ -71,7 +71,7 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			<!-- 3 -->
-			<p:column style="width :350px;white-space : normal;vertical-align: top;"
+			<p:column style="width :450px;white-space : normal;vertical-align: top;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText
@@ -95,13 +95,14 @@
 			</p:column>
 			
 			<!-- 5 -->
-			<p:column style="width : 25% !important;vertical-align: top;"
+			<p:column style="width : 30% !important;vertical-align: top;"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<p:inputTextarea id="otherDesc" maxlength="5000"
 					style="width : auto;" label="#{lbl['lbl.sm.catCodes.othDesc']}"
-					value="#{catBean.otherDesc}" rows="5" cols="40"
-					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}">
+					value="#{catBean.otherDesc}" rows="5" cols="90"
+					rendered="#{catBean.pmCategoryL3.otherDescReq eq 1}"
+					autoResize="false" > <!-- #37605 -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierDataMaintenanceBackingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:catCodeInfPan" />
@@ -120,7 +121,7 @@
 			</p:column>
 
 			<!-- 6 -->
-			<p:column style="vertical-align: top;"
+			<p:column style="vertical-align: top; width: 80px"
 				disabledSelection="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance 
 							or catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.pendingDec']}"
