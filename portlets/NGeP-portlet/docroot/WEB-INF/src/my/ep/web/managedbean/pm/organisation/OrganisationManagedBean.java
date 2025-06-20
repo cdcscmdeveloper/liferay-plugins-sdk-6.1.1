@@ -158,6 +158,7 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private List<PmAddressType> editedReceivingAddressList = new ArrayList<>();
 	private List<PmAddressType> newReceivingAddressList = new ArrayList<>();
 	private Long newProfileId;
+	private Long pmAddressTypeId;
 	/************ AUDIT END #28895-35509 *************/
 
 	public OrganisationManagedBean() {
@@ -1319,7 +1320,6 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setNewReceivingAddressList(List<PmAddressType> newReceivingAddressList) {
 		this.newReceivingAddressList = newReceivingAddressList;
 	}
-	/************ AUDIT END #28895-35509 *************/
 
 	public Long getNewProfileId() {
 		return newProfileId;
@@ -1328,5 +1328,14 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	public void setNewProfileId(Long newProfileId) {
 		this.newProfileId = newProfileId;
 	}
+
+	public Long getPmAddressTypeId() {
+		return pmAddressTypeId;
+	}
+
+	public void setPmAddressTypeId(Long pmAddressTypeId) {
+		this.pmAddressTypeId = pmAddressTypeId;
+	}
+	/************ AUDIT END #28895-35509 *************/
 
 }

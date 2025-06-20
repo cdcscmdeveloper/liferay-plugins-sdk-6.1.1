@@ -4657,12 +4657,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			return;
 		}
 		getManagedBean().setNoDisciplinary(false);
-		PersonnelReqDTO perReqDTO = new PersonnelReqDTO();
-		perReqDTO.setSmSupplierId(supplier.getSupplierId());
 		
-		//27915: Disciplinary Action - start - 26238
-		PersonnelResDTO personnelResDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelDABySupplierId(perReqDTO);
-		//27915: Disciplinary Action - end - 26238
 		for(SmDisciplinaryAction disc : discList){
 			if(!isValidDA(disc)){
 				continue;
@@ -4675,9 +4670,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().setBumiputeraStatusCancel(disc.isBumiputeraCancel());
 			getManagedBean().setManufacturerStatusCancel(disc.isManufacturerCancel());
 					
-			if(!disc.isWarning()){
-				setBlacklistownerDirectorList(personnelResDTO);
-			}
+			//#38419
+			getManagedBean().setBlacklistownerDirectorList(getPersonnelBlacklist(disc.getDisciplinaryActionId()));
 			getManagedBean().setCategoryCodeList(getCategoryCodeListDA(disc));
 			String pattern = "dd/MM/yyyy";
 			getManagedBean().setStartDate(DateUtils.dateToString(pattern, disc.getStartDate()));
@@ -4700,25 +4694,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		valid |= da.isSuspendRegistration() || da.isCancelRegistration() || da.isBlacklistOwner();
 		return valid;
 	}
-	
-	private void setBlacklistownerDirectorList(PersonnelResDTO personnelResDTO){
-		if(personnelResDTO == null || personnelResDTO.getSmPersonnelList().isEmpty()){
-			return;
-		}
-		List<BlacklistOwnerDirectorVO> blacklistownerDirectorList = new ArrayList<>();
-		
-		for(SmPersonnel per : personnelResDTO.getSmPersonnelList()){
-			BlacklistOwnerDirectorVO blacklistOwner = new BlacklistOwnerDirectorVO();
-			if(per.isCancelRegistration() || per.isSuspendRegistration() || per.isBlacklisted()){
-				if (per.isDirector() || per.isEquityOwner()){
-					blacklistOwner.setIcNo(per.getIdentificationNo());
-				}
-				blacklistownerDirectorList.add(blacklistOwner);
-			}
-		}
-		getManagedBean().setBlacklistownerDirectorList(blacklistownerDirectorList);
-	}
-	
 	
 	private static List<DisciplinaryActionCategoryVO> getCategoryCodeListDA(SmDisciplinaryAction da){
 		List<DisciplinaryActionCategoryVO> catVoList = new ArrayList<>();
