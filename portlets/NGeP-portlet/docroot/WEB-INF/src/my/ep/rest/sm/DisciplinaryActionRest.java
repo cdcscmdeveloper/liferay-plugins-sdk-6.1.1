@@ -261,7 +261,8 @@ public class DisciplinaryActionRest {
 								if (da.getEndDate().compareTo(todayWithZeroTime) < 0) {
 									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 								}
-								//38402 - END							}
+								//38402 - END
+							}
 						}
 					}
 					//26238 end
