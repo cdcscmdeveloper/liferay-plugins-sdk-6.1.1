@@ -258,15 +258,13 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	private String APPROVAL_EXCEED_THRESHOLD_PAGE_NAV = "/xhtml/sc/directpurchase/exceedThresholdApproval/approvalExceedThreshold.xhtml";
 	
-	// 25790 - start
 	/**
-	 * List of Goverment role code
+	 * List of allowed role code
 	 */
-	private static final List<String> ALLOWED_ROLES = Arrays.asList(RoleCode.REQUISITIONER.value(),
-			RoleCode.FL_APPROVER.value(), RoleCode.RECEIVING_OFFICER.value(), RoleCode.ACKNOWLEDGE_OFFICER.value(),
-			RoleCode.PAY_OFFICER.value(), RoleCode.DESK_OFFICER.value());
+	private static final List<String> ALLOWED_ROLES = Arrays.asList(RoleCode.BPK_APPROVER.value(),
+			RoleCode.BPK_APPROVER_SA.value(), RoleCode.BPK_APPROVER_SK.value(), RoleCode.BPK_CC_APPROVER.value(),
+			RoleCode.BPK_CQ_APPROVER.value(), RoleCode.BPK_PQ_APPROVER.value());
 
-	// 25790 - end
 
 	private void getDefaultDocumentValues() {
 		getManagedBean().setSearchDocumentType(ParameterConst.DOCTYPE_REQUEST_NOTE);
@@ -278,25 +276,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		debugLogger("preRenderView");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		// reset search info
-		reset(Boolean.FALSE);
-		
-	 
-		
-		if(isBPKApprover()){
-			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
-			getManagedBean().setGovernment(Boolean.TRUE);
-			
-			if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())
-					|| getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
-				getManagedBean().setDisableMinistryPtjLov(Boolean.TRUE);
-			}
-			
-			// show default Ministry, Kumpulan PTJ and PTJ
-			getDefaultPtjAndMinistryValues();
-
-		} else if(isSupplier()){
-			getManagedBean().setGovernment(Boolean.FALSE);
-		}
+		reset();
 		fc.getApplication()
 		.getNavigationHandler()
 		.handleNavigation(fc, null, APPROVAL_EXCEED_THRESHOLD_PAGE_NAV);
@@ -372,7 +352,12 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @return true, if is BPK Approver
 	 */
 	public boolean isBPKApprover() {
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
+		for (String role : ALLOWED_ROLES) {
+			if (getFacesScopes().hasRoleUser(role)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -834,14 +819,28 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	}
 
 	/**
-	 * Reset direct purchase search.
+	 * Reset
 	 */
-	public void reset(boolean isMaintenance){
+	public void reset(){
 		this.getManagedBean().setSearchFunctionType(null);
 		this.getManagedBean().setRequestNoteNo(null);
 		this.getManagedBean().setSearchStatusId(null);
 		this.getManagedBean().setRequestNoteTitle(null);
 		this.getManagedBean().resetDocumentDataModel();
+		this.getManagedBean().setDisablePtjGroupLov(true);
+		this.getManagedBean().setDisablePtjLov(true);
+		this.getManagedBean().setCounter(0);	
+		
+		if(isBPKApprover()){
+			getDocumentTypes(Boolean.TRUE, Boolean.FALSE);
+			getManagedBean().setGovernment(Boolean.TRUE);
+
+			// show default Ministry, Kumpulan PTJ and PTJ
+			getDefaultPtjAndMinistryValues();
+
+		} else if(isSupplier()){
+			getManagedBean().setGovernment(Boolean.FALSE);
+		}
 	}
 
 	/**
@@ -1027,42 +1026,70 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 */
 	public void postUpdateOrgProfileListener(BaseEntity orgProfile) {
 		debugLogger("postUpdateOrgProfileListener");
-		
+
+		getManagedBean().setCounter(0);
+
+		PmOrgProfile currentProcessingProfile = null;
+
 		if (orgProfile instanceof PmOrgProfile) {
-			PmOrgProfile pmOrgProfile = (PmOrgProfile)orgProfile;
-			String orgType = pmOrgProfile.getOrgTypeCode().getParameterCode();
-			
+			currentProcessingProfile = (PmOrgProfile) orgProfile;
+		} else {
+			return;
+		}
+
+		while (currentProcessingProfile != null) {
+			String orgType = currentProcessingProfile.getOrgTypeCode().getParameterCode();
+			PmOrgProfile nextProfileToProcess = null;
+
+			debugLogger("Processing orgType: " + orgType + ", Counter: " + getManagedBean().getCounter());
+
 			if (ParameterConst.ORG_TYPE_MINISTRY.equals(orgType)) {
 				PmOrgProfile ministryOrgProfile = new PmOrgProfile();
 				PmParameter orgTypeCode = new PmParameter();
 				orgTypeCode.setParameterCode(ParameterConst.ORG_TYPE_PTJ_GROUP);
 				ministryOrgProfile.setOrgTypeCode(orgTypeCode);
+
 				getManagedBean().setSearchPtjGroupProfile(ministryOrgProfile);
-				postUpdateOrgProfileListener(ministryOrgProfile);
-				
-				//showRoleType();
-				
-			} else { 
-				if (getManagedBean().getSearchMinistryProfile() == null || 
-						getManagedBean().getSearchMinistryProfile().getOrgProfileId() == null) {
-					getManagedBean().setSearchMinistryProfile(retrieveMinistryOrgProfile(
-							pmOrgProfile.getOrgProfileId()));	
+
+				getManagedBean().setCounter(1);
+
+				nextProfileToProcess = ministryOrgProfile;
+
+			} else {
+				if (getManagedBean().getSearchMinistryProfile() == null
+						|| getManagedBean().getSearchMinistryProfile().getOrgProfileId() == null) {
+					getManagedBean().setSearchMinistryProfile(
+							retrieveMinistryOrgProfile(currentProcessingProfile.getOrgProfileId()));
+					getManagedBean().setDisablePtjGroupLov(false);
+					getManagedBean().setDisablePtjLov(true);
 				}
-				
+
 				if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
 					getManagedBean().setSearchPtjProfile(new PmOrgProfile());
-					
-				} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
-					if (getManagedBean().getSearchPtjGroupProfile() == null || 
-							getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == null) {
-						getManagedBean().setSearchPtjGroupProfile(retrieveJabatanOrgProfile(
-								pmOrgProfile.getOrgProfileId()));	
+					getManagedBean().setDisablePtjGroupLov(false);
+					getManagedBean().setDisablePtjLov(false);
+
+					if (getManagedBean().getCounter() == 1) {
+						getManagedBean().setDisablePtjLov(true);
 					}
+					getManagedBean().setCounter(0);
+
+				} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+					getManagedBean().setDisablePtjGroupLov(false);
+					getManagedBean().setDisablePtjLov(false);
+					if (getManagedBean().getSearchPtjGroupProfile() == null
+							|| getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == null) {
+						getManagedBean().setSearchPtjGroupProfile(
+								retrieveJabatanOrgProfile(currentProcessingProfile.getOrgProfileId()));
+					}
+					getManagedBean().setCounter(0);
 				}
-				//showRoleType();
 			}
-				
+
+			currentProcessingProfile = nextProfileToProcess;
 		}
+
+		debugLogger("postUpdateOrgProfileListener end");
 	}
     
     /**
@@ -1541,21 +1568,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 				return false;
 			}
 			
-						
-			/**
-			 * Return boolean TRUE for dual role and PTJ, else FALSE
-			 * @return boolean
-			 */
-			public boolean showRoleType() {
-				if(hasGovernmentUserRole()) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-			
-			// end 25396
-			
+
 	// #36119 - start
 	/**
 	 * To validate supported task
@@ -1593,24 +1606,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		return false;
 	}
 	// #36199 - end
-	// 25790 - start
-	/**
-	 * Check is it login user is Government User
-	 * 
-	 * @return true, if user is Government User
-	 */
-	@Override
-	protected boolean hasGovernmentUserRole() {
-		for (String role : ALLOWED_ROLES) {
-			if (getFacesScopes().hasRoleUser(role)) {
-				return true;
-			}
-		}
-		return false;
 
-	}
-	// 25790 - end
-	
 	//36729 - Start
 	/**
 	 * Compare with selected request note details and add into the request note details selected list

@@ -452,6 +452,10 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     private boolean purchaseInquiryContinuity = Boolean.FALSE;
     //29557 - End
     
+    private boolean disablePtjGroupLov = Boolean.TRUE;
+
+    private boolean disablePtjLov = Boolean.TRUE;
+    
     private PurchaseRequestResDTO purchaseRequestResDTO;
     
     //#25790 - start
@@ -475,6 +479,8 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     /** The new sourcing dp bpm version flag */
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
     //#36119 - end
+    
+    private Integer counter = 0;
     
     /**
      * Instantiates a new request note managed bean.
@@ -2902,4 +2908,28 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setSearchDocumentType(String searchDocumentType) {
 		this.searchDocumentType = searchDocumentType;
 	}
+
+	public boolean isDisablePtjGroupLov() {
+		return disablePtjGroupLov;
+	}
+
+	public void setDisablePtjGroupLov(boolean disablePtjGroupLov) {
+		this.disablePtjGroupLov = disablePtjGroupLov;
+	}
+
+	public boolean isDisablePtjLov() {
+		return disablePtjLov;
+	}
+
+	public void setDisablePtjLov(boolean disablePtjLov) {
+		this.disablePtjLov = disablePtjLov;
+	}
+
+	public Integer getCounter() {
+		return counter;
+	}
+
+	public void setCounter(Integer counter) {
+		this.counter = counter;
+	}	
 }
