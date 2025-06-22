@@ -160,6 +160,7 @@ import my.ep.web.bean.ct.CtLetterOfAcceptance;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst; //#24333
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
@@ -174,6 +175,8 @@ import my.ep.web.util.pm.helper.RoleHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.vo.DisciplinaryActionVO;
+import my.ep.web.util.NumberWordUtil; //#24333
+import my.ep.web.util.NumberWordUtilEn; //#24333
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.SerializationUtils;
@@ -4259,11 +4262,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	    DecimalFormat df = new DecimalFormat("#.00");
 	    String formattedAmount = df.format(bondAmt);
 
-	    if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-	        return NumberWordUtilEn.convert(formattedAmount);
-	    } else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-	        return NumberWordUtil.convert(formattedAmount);
-	    }
+		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+			return NumberWordUtilEn.convert(formattedAmount);
+		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+			return NumberWordUtil.convert(formattedAmount);
+		}
 
 	    return "";
 	}
