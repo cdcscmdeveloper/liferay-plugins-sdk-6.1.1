@@ -267,7 +267,7 @@ public class DisciplinaryActionRest {
 								}
 								completedPendingSmDa.getSmSupplier();
 								//38402 - START
-								if (da.getEndDate().compareTo(todayWithZeroTime) < 0) {
+								if (da.getEndDate().compareTo(todayWithZeroTime) < 0 || completedPendingSmDa.isFutureImposed()) {
 									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
 								}
 								//38402 - END
