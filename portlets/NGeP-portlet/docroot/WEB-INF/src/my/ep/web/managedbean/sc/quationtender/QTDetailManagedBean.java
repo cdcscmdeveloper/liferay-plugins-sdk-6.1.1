@@ -1673,6 +1673,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
 	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
 	// #29468 Vinod Start
@@ -12192,4 +12193,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.noSupplierExistForEPV = noSupplierExistForEPV;
 	}
 	//#21692 note-569 - End
+
+	//#21692 - End
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
 }
