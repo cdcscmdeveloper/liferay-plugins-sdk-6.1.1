@@ -4284,11 +4284,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-	    Double bondAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
+		
+		if (ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+			return "";
+		}
 
-	    if (bondAmt == null || bondAmt == 0.0) {
-	        return "";
-	    }
+		Double bondAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
+
+		if (bondAmt == 0.0) {
+			return "";
+		}
 
 	    DecimalFormat df = new DecimalFormat("#.00");
 	    String formattedAmount = df.format(bondAmt);

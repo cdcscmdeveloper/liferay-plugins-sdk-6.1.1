@@ -4595,6 +4595,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return ctAttachments;
 	}
 	
+	//#24333 - Start	
 	/**
 	 * The method used to retrieve the bond amount
 	 * in text format.
@@ -4603,11 +4604,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-	    Double bondAmt = getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue();
+		
+	    if (getManagedBean().getCtContractAmount() == null ||
+		        getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
+		        return "";
+		    }
+		    Double bondAmt = getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue();
 
-	    if (bondAmt == null || bondAmt == 0.0) {
-	        return "";
-	    }
+		    if (bondAmt == 0.0) {
+		        return "";
+		    }
 
 	    DecimalFormat df = new DecimalFormat("#.00");
 	    String formattedAmount = df.format(bondAmt);
@@ -4621,7 +4627,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    return "";
 	}
 
-	//#24333 - Start
+
 	/**
 	 * The method used to retrieve thecontract period
 	 * 
