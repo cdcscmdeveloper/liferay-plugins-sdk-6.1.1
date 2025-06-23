@@ -1703,6 +1703,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
 	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
@@ -12380,4 +12381,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	//37813,35384 -end
+
+	//#21692 - End
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
 }
