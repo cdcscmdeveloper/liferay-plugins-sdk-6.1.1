@@ -20,7 +20,7 @@
 				<c:choose>
 					<c:when test="#{criteriaBackingBean.managedBean.selectedCriteria.brandNew}">
 						<p:commandButton id="btnCriteriaSave" value="#{lbl['lbl.btn.save']}"
-							oncomplete="saveInfoDlg.show()" style="float:right;"/>
+							oncomplete="if (!args.validationFailed) saveInfoDlg.show()" style="float:right;"/>
 					</c:when>
 					<c:otherwise>
 						<p:commandButton id="btnCriteriaUpdate" value="#{lbl['lbl.btn.update']}"
