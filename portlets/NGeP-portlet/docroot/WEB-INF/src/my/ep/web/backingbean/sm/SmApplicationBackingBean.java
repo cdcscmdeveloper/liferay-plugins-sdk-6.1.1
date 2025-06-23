@@ -3038,13 +3038,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * To open the confirmation dialog box for deleting pending application
 	 */
 	public void onDisplayConfirmDelPending() {
-		//#38195
-		if (getManagedBean().getSupplierRemarks() == null || getManagedBean().getSupplierRemarks().trim().isEmpty()) {
-			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.del.pending.appl.reasons",
-							null) }));
-        }
 		RequestContext.getCurrentInstance().execute("delPenRegConfirm.show()");
 	}
 
@@ -11317,7 +11310,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					? getManagedBean().getSmSupplier().getCompanyName() : " ");
 			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
 					? getManagedBean().getSmSupplier().getRegNo() : " ");
-			notif.setNotifLink(" ");
+			notif.setPaymentMethods("");
+			notif.setNotifLink("");
+			notif.setNotifDescription("");
 			notif.setAddress(reqDTO.getNotifSignAddr());
 			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
 			notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
