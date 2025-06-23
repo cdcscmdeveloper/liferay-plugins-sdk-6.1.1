@@ -266,7 +266,11 @@ public class DisciplinaryActionRest {
 									completedPendingSmDa.setFutureImposed(false);
 								}
 								completedPendingSmDa.getSmSupplier();
-								 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
+								//38402 - START
+								if (da.getEndDate().compareTo(todayWithZeroTime) < 0 || completedPendingSmDa.isFutureImposed()) {
+									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
+								}
+								//38402 - END
 							}
 						}
 					}
