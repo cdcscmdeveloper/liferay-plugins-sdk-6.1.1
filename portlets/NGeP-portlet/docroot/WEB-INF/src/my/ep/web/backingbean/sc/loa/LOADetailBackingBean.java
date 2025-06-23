@@ -12632,11 +12632,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {
-		if (scLoa != null && scLoa.getLoaId() != null
-				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReachByQt(getManagedBean().getScQt())
-				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)) {
+		if (scLoa != null && scLoa.getLoaId() != null && checkingForEPVNotification(scLoa)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_ACCEPTANCE,
@@ -12677,6 +12673,39 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	 */
 	public boolean disableCancelForApprover() {
 		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOA first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelLoaPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelLoaPopup2.show()");
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkingForEPVNotification(ScLoa scLoa) {
+		// List of statuses to enable notification
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOA_PENDING_REVISION_APPROVAL);
+		
+		boolean statusEnabled = isLOAStatusAbleToCancel() != null
+				&& statusEnabledCancel.contains(isLOAStatusAbleToCancel());
+		boolean isQTValid = checkProposalValidityDateReachByQt(getManagedBean().getScQt())
+				&& this.validateSupportedTask(scLoa.getScQt().getQtNo(), QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+
+		return isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId()) && statusEnabled
+				&& isQTValid && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
 }
