@@ -2251,11 +2251,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	        return false;
 	    }
 
-	    String applType = supp.getSmAppl().getApplType();
-	    if (!SupplierManagementConst.ACC_MOF.equalsIgnoreCase(applType) 
-	        && !SupplierManagementConst.ACC_BASIC_REACTIVATE.equalsIgnoreCase(applType)) {
-	        return false;
-	    }
+	    String suppType = supp.getSmAppl().getSupplierType();
+		if (!SupplierManagementConst.STYPE_CONSULTANT
+				.equalsIgnoreCase(suppType)
+				&& !SupplierManagementConst.STYPE_CONTRACTOR
+						.equalsIgnoreCase(suppType)) {
+			return false;
+		}
 
 	    for (SmMofCert cert : supp.getSmAppl().getSmMofCerts()) {
 	        if (cert.getSmMofAccount().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_EXPIRED) {
