@@ -7010,12 +7010,14 @@ public class LOIDetailBackingBean extends
 	private boolean checkingForEPVNotification(ScLoi scLoi) {
 		//List of statuses to enable notification
 		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_SUBMISSION);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
 
 		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
+				&& null != this.getManagedBean().getScLoi().getScWorkFlowStatus()
 				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
 				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
 						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)
