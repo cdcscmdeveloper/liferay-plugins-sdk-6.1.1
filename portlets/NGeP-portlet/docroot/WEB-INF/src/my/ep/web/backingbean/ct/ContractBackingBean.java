@@ -4603,20 +4603,23 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return  bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		String lang = new FacesScopes().getUserLocale().getLanguage();
-		
-	    if (getManagedBean().getCtContractAmount() == null ||
-		        getManagedBean().getCtContractAmount().getTotalBondAmt() == null) {
-		        return "";
-		    }
-		    Double bondAmt = getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue();
+	    String lang = new FacesScopes().getUserLocale().getLanguage();
 
-		    if (bondAmt == 0.0) {
-		        return "";
-		    }
+	    if (getManagedBean() == null) {
+	        return "";
+	    }
 
-	    DecimalFormat df = new DecimalFormat("#.00");
-	    String formattedAmount = df.format(bondAmt);
+	    CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+	    if (contractAmount == null || contractAmount.getTotalBondAmt() == null) {
+	        return "";
+	    }
+
+	    BigDecimal bondAmtDecimal = contractAmount.getTotalBondAmt();
+	    if (BigDecimal.ZERO.compareTo(bondAmtDecimal) == 0) {
+	        return "";
+	    }
+
+	    String formattedAmount = new DecimalFormat("#.00").format(bondAmtDecimal);
 
 	    if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
 	        return NumberWordUtilEn.convert(formattedAmount);
