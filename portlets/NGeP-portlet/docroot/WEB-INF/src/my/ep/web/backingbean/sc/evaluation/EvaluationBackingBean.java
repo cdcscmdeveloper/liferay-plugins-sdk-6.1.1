@@ -19299,7 +19299,7 @@ private void retriveCommitteeRemarksList(){
 				if (CollectionUtils.isEmpty(questionIds) || !questionIds.contains(question.getSpecQuestionId())) {
 					questionIds.add(question.getSpecQuestionId());
 					validateUserScoreForTemplate(tplSpecAnswer, isTechSpec);
-					validateMandatorySpecAndRemark(tplSpecAnswer, isComplianceNull);
+					validateMandatorySpecAndRemark(tplSpecAnswer, isTechSpec, isComplianceNull);
 				}
 			}
 		}
@@ -19334,7 +19334,10 @@ private void retriveCommitteeRemarksList(){
 
 	// #29187 End Vinod
 	// #29187 Start Vinod
-	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isComplianceNull) {
+	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isTechSpec, boolean isComplianceNull) {
+		if(!isTechSpec){
+			return;
+		}
 		boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
 		if (isComplianceNull && !isNotOffered) {
 			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
@@ -19345,7 +19348,7 @@ private void retriveCommitteeRemarksList(){
 				&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
 		String remark = tplSpecAnswer.getUserRemark();
 
-		if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType()) && isCompliance
+		if (isCompliance
 				&& StringUtils.isEmpty(remark)) {
 			throw new EpException(MessageConst.ERROR_775180);
 		}
