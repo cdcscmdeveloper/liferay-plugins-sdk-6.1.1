@@ -88,6 +88,7 @@ import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -109,6 +110,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -6613,4 +6615,22 @@ public TplSpecZoneDtl getKeysByValue(Map<Long, TemplateSpecBean> map, TemplateSp
 		}
 	}
 	// #34363 - note 50 - End - Vinod
+	// #33787 Start Vinod
+	/**
+	 * This method is added to display value in new column CompanyLimited By
+	 * Guarantee if CompanyTypeSSM is G then only display "yes" else display
+	 * "no".
+	 * 
+	 * @param smCompanyBasic
+	 * 
+	 * @return String
+	 * 
+	 */
+	public String getCompanyLimitedByGuarantee(SmCompanyBasic smCompanyBasic) {
+		return smCompanyBasic != null && StringUtils.isNotEmpty(smCompanyBasic.getCompanyTypeSSM())
+				&& smCompanyBasic.getCompanyTypeSSM().equals(QTConstants.COMPANY_TYPE_SSM_G) ? getMessageCommon(QTConstants.LBL_TXT_YES)
+				: getMessageCommon(QTConstants.LBL_TXT_NO);
+
+	}
+	// #33787 End Vinod
 }

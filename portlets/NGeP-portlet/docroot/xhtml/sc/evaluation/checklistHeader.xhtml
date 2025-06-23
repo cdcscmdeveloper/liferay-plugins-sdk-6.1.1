@@ -53,7 +53,9 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.checklist.title']}" /></td>
 					<td style="font-size: 12px;">:
-					#{evaluationBackingBean.managedBean.scQtChecklist.title}</td>				
+					<ui:remove>#33787 Start Vinod - updated title</ui:remove>
+					#{evaluationBackingBean.getChecklistTitle(evaluationBackingBean.managedBean.scQtChecklist)}</td>
+					<ui:remove>#33787 End Vinod</ui:remove>				
 				</tr>
 				
 			</table>
