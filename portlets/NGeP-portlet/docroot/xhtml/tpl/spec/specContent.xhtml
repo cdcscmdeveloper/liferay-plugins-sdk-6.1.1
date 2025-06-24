@@ -262,6 +262,9 @@
 			</ui:param>
 			<!-- #32110, #21695 -end- -->
 			<!-- #33859 - start --><!-- #32110, #21695 -start- -->
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			<ui:include src="uomAndQuantityDetailsPopUp.xhtml" />
+			<ui:remove>#29187 End Vinod</ui:remove>
 			<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 				value="#{templateSpecBean.specAnswerList}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
