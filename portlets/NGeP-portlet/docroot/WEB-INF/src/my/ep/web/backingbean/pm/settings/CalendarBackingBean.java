@@ -156,7 +156,7 @@ public class CalendarBackingBean extends
 		
 	}
 	
-	/* #34445 start */
+	/* #34445 start : remove ActionEvent parameter*/
 	public void addOrUpdateEvent() {
 	/* #34445 end */
 		log.info("......addOrUpdateEvent.......");
@@ -248,7 +248,7 @@ public class CalendarBackingBean extends
 		return new FacesScopes().getUserLocale().getLanguage();
 	}
 	
-	/* #34445 start */
+	/* #34445 start : remove ActionEvent parameter */
 	public void deleteEvent() {
 	/* #34445 end */
 		

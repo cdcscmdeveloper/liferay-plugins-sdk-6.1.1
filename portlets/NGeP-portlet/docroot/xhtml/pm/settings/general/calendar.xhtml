@@ -304,8 +304,7 @@
 						<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 							rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
 							partialSubmit="true" process="eventDetails"
-							update="eventDetails,calendarMessages"
-			                oncomplete="updateData.show()"/>
+							update="eventDetails,calendarMessages" oncomplete="updateData.show()"/>
 						<p:commandButton id="deleteButton" value="#{lbl['lbl.btn.delete']}"
 							rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}"
 							process="@this" oncomplete="deleteInfoDlg.show()" />
