@@ -16,6 +16,40 @@
 	
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
 		toggleable="true">
+		<ui:remove>  #29007 Start Vinod </ui:remove> 
+		<p:outputPanel id="supplierUpdateInstructionPanel"
+			rendered="#{directLOABackingBean.managedBean.iconForDL}">
+			<h:outputText styleClass="instruction" 
+				value="#{lbl['lbl.sc.loiloa.loa.zone.instruction']}" />
+				<p:graphicImage value="/css/images/design/ico-viewnedit.png"
+				id="supplierUpdateInstructionIconQT" 
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+			<p:spacer height="10" />
+			<p:panel id="supplierSearchCriteriaQT" 
+				header="#{lbl['lbl.sc.qt.sampel.technical.panel.search.criteria']}" toggleable="true">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="10%"><h:outputLabel
+								value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
+						<td width="90%"><p:inputText id="itemNameSearchInputQT"
+								value="#{directLOABackingBean.itemNameSearchCriteria}"
+								style="width:310px;">
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:inputText></td>
+					</tr>
+				</table>
+				<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="productAndServiceId"
+								 action="#{directLOABackingBean.searchSupplierItemByName}"
+								 styleClass="BtnSpacing" process="@this,itemNameSearchInputQT" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+								 action="#{directLOABackingBean.onResetSupplierCriteria()}"
+								 update="supplierUpdateInstructionPanel" />
+				</div>
+			</p:panel>
+		</p:outputPanel>
+		<br />
+		<ui:remove>  #29007 End Vinod </ui:remove> 
 		<h:outputText styleClass="instruction" rendered="#{isSupplierAckStatus}"
 			value="#{lbl['lbl.sc.item.codification.instruction']}" />
 		<table width="100%">

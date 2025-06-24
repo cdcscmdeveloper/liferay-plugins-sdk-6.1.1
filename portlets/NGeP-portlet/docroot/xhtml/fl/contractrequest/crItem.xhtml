@@ -14,29 +14,20 @@
 		<table style="width: 100%">
 			 <tr>
            		<br/>
-           		<br/>
-          
+           		<br/>          
            	</tr>
            	<tr>
            		<td>
-
-<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
-						<p:ajax event="change"
-							listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" 
-							update="delStartDate"/>                   
+					<p:selectBooleanCheckbox id="crGeneralRadio" required="true" value="#{contractRequestBackingBean.managedBean.flRequest.radioCheckDeliveryDate}">
+						<p:ajax event="change" listener="#{contractRequestBackingBean.upDateStartDateFromBpm}" update="delStartDate"/>                   
            			</p:selectBooleanCheckbox>
           		</td>
-           		<td>
-           		
-           		<p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/> 
+           		<td>           		
+           			<p:outputLabel style="float:left !important; color:red" value="#{lbl['lbl.fl.flag']}"/> 
            			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.flag']}"/>
-           			
-           		
            			<br/>
-           
             	</td>
 			</tr>
-
 		</table>
 		 </c:if>		
 
@@ -693,16 +684,20 @@
 		</div>
 	</p:dialog>
 	
+	<!-- 28855 Start -->
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
-		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="900" height="600" resizable="false" style="overflow:scroll">
+		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade" style="overflow:scroll"
+		modal="true" width="900" height="550" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item']}" /></td>
-				<td><p:inputText disabled="true"
+			<!-- 28855 start -->
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<td><p:inputTextarea disabled="true"
 						value="#{contractRequestBackingBean.managedBean.itemName}"
-						size="60" /></td>
+						cols="60" rows="3" autoResize="false"></p:inputTextarea></td>
+			<!-- 28855 end  -->
 			</tr>
+			<!--  		
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.item.desc']}" /></td>
 				<td><p:inputTextarea cols="61" rows="4" id="itemDesc"
@@ -712,6 +707,8 @@
 						value="#{contractRequestBackingBean.managedBean.itemDesc == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.itemDesc}" /> 
 				</td>
 			</tr>
+			-->
+	<!-- 28855 End -->
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.ct.max.order.qty']}" rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{!contractRequestBackingBean.managedBean.serviceItem}"
@@ -795,6 +792,87 @@
 						size="35" /></td>					
 			</tr>
 		</table> 
+		
+		<!-- 28855 start -->
+		<h:panelGroup>
+			<p:panel id="specificationPanel" header="#{lbl['lbl.fl.spec.panel']}"
+				toggleable="false">
+
+				<table style="width: 68%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.fl.supp.offer']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+						<td><p:inputTextarea disabled="true"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+								value="#{contractRequestBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.supplierOffer}"
+								cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
+								value="#{lbl['lbl.fl.supp.offer.tooltip']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.fl.new.supp.offer']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+						<td><p:inputTextarea disabled="true"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+								value="#{contractRequestBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.newOfferedSpec}"
+								cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
+								value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
+								rendered="#{contractRequestBackingBean.managedBean.dpFlag}" /></td>
+					</tr>
+				</table>
+				<p:dataTable id="specificationDt" var="specificationList"
+					value="#{contractRequestBackingBean.managedBean.itemSpecList}"
+					width="100%">
+					<ac:paginator for="specificationDt" />
+
+					<p:column headerText="#{lbl['lbl.fl.spec']}"
+						style="text-align:center"
+						rendered="#{contractRequestBackingBean.managedBean.dpFlag}">
+						<p:inputTextarea disabled="true"
+							rendered="#{contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" value="#{specificationList.itemSpec}"
+							cols="135" rows="2" style="width: 100% !important;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.fl.spec']}"
+						style="text-align:center"
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<p:inputTextarea cols="41" rows="6" id="itemSpecification"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.itemSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.itemSpec}" />
+					</p:column>
+					<p:column
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<f:facet name="header" style="text-align:center">
+							<h:outputText value="#{lbl['lbl.fl.supp.offer']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.supp.offer.spec.tooltip']}" />
+						</f:facet>
+						<p:inputTextarea cols="41" rows="6" id="supplierOffer"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.supplierOffer == null ? lbl['lbl.fl.supp.na'] : specificationList.supplierOffer}" />
+					</p:column>
+					<p:column
+						rendered="#{!contractRequestBackingBean.managedBean.dpFlag}">
+						<f:facet name="header" style="text-align:center">
+							<h:outputText value="#{lbl['lbl.fl.new.offer.spec']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.new.supp.offer.tooltip']}" />
+						</f:facet>
+						<p:inputTextarea cols="41" rows="6" id="newOfferedSpec"
+							rendered="#{!contractRequestBackingBean.managedBean.dpFlag}"
+							styleClass="colFloatLeft" autoResize="false"
+							style="width: 96% !important; margin-left:0px;" disabled="true"
+							value="#{specificationList.newOfferSpec == null ? lbl['lbl.fl.supp.na'] : specificationList.newOfferSpec}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
+		<!-- 28855 End -->
+		
 		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"

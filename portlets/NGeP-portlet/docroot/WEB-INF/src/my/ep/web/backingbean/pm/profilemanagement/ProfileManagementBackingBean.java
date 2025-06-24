@@ -2058,7 +2058,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				roleReqDTO.setBpk(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() != null
 						? getManagedBean().getSelectedUserOrg().getPmOrgProfile().getBpk() : false);
 				roleReqDTO.setAssignRole(true);
-				
 				logger.info("..getFacesScopes().getUserSessionBean().getUserId()=" + getFacesScopes().getUserSessionBean().getUserId());
 
 				roleReqDTO.setSearchRoleBean(searchBeanData);

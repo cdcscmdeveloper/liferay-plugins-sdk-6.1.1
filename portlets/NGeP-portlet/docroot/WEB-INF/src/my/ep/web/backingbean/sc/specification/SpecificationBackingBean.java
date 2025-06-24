@@ -5164,6 +5164,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
+				templateSpecBean.setWordBreakForQT(true);//#29007 Added Vinod
 
 				if (this.getManagedBean().getQt().isZonal()
 						&& this.getManagedBean().getQt().getQtType()
@@ -11910,7 +11911,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 									finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 									finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-									finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+									// Bug #38208@Syazani 12/06/2025 - line removed
 
 									localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 
@@ -12615,7 +12616,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							
 							finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 							finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-							finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+							// Bug #38208@Syazani 12/06/2025 - line removed
 							
 							scQtCheckList.setEdited(false);
 
