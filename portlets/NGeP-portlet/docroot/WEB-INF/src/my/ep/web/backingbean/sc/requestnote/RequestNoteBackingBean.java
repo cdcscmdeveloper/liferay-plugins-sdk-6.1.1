@@ -1158,7 +1158,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// #31689 - end
 
 			// validate RN
-			validateRequestNote(scRequestNote);
+			validateRequestNote(scRequestNote, outcome);//#26059 - add outcome
 
 			// remarks
 			if (!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)
@@ -1382,13 +1382,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param nonDeletedDtls
 	 *            the non deleted dtls
 	 */
-	private void validateRequestNote(ScRequestNote requestNote) {
+	private void validateRequestNote(ScRequestNote requestNote, String outcome) {//#26059 - add outcome
 		debugLogger("validateRequestNote");
 		// Temp(#34274 - Start)
-		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
+		//boolean isShowMessage = getManagedBean().isExceededAmountAlerted(); //#26059 - comment this line
 		// Temp(#34274 - End)
 		// show message for first submission, skip the message for second time
 		// submission
+		//#26059 - start
+		boolean isExceedThreshold = false;
+		StringBuilder thresholdItems = new StringBuilder();
+		int count = 0; 
+		BigDecimal thresholdValue = new BigDecimal(0);
+		//#26059 - end
 		if (requestNote.getRequestNoteDtls() != null && !requestNote.getRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 				if (!requestNoteDtl.isDeleted()) {
@@ -1483,30 +1489,34 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByTypeInCurrentDate(ruleReqDTO)
 									.getRuleValueList();
 
-							if (ruleValueList != null && ruleValueList.size() > 0) {
+							if (ruleValueList != null && !ruleValueList.isEmpty()) {//#26059
 								PmConfigRuleValue configRuleValue = ruleValueList.get(0);
+								thresholdValue = new BigDecimal(configRuleValue.getRuleValue());//#26059
 								// Temp(#34274 - Start)
 								// Rule : ITEM_THRESHOLD For 20k
-								if (totalAmt.compareTo(new BigDecimal(configRuleValue.getRuleValue())) > 0) {
-									if (!isShowMessage) {
-										getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-
-										FacesContext.getCurrentInstance().addMessage(
-												null,
-												new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-														.getMessage(MessageConst.ERROR_760036, new String[] {
-																requestNoteDtl.getRequestItem().getItemName(),
-																requestNoteDtl.getRequestItem().getCmItem()
-																		.getExtensionCode() },
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes().getUserLocale())));
+								if (totalAmt.compareTo(thresholdValue) > 0) {
+										//#26059 - start
+										//getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+										isExceedThreshold = true;
+										count++;
+										thresholdItems.append(count + ". " + requestNoteDtl.getRequestItem().getItemName() + "</br>");										
+//										FacesContext.getCurrentInstance().addMessage(
+//												null,
+//												new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+//														.getMessage(MessageConst.ERROR_760036, new String[] {
+//																requestNoteDtl.getRequestItem().getItemName(),
+//																requestNoteDtl.getRequestItem().getCmItem()
+//																		.getExtensionCode() },
+//																MessageUtils.BUNDLE_COMMON_MESSAGES,
+//																new FacesScopes().getUserLocale())));
+																
+										//#26059 - end
 
 										// throw new
 										// EpException(MessageConst.ERROR_760036,
 										// new String[]
 										// {requestNoteDtl.getRequestItem().getItemName(),
 										// requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
-									}
 								}
 								// Temp(#34274 - End)
 
@@ -1603,6 +1613,46 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// #31689 (end - comment out all)
 				}
 			}
+			//#26059 - start
+			Long profileId = requestNote.getPmOrgProfile().getOrgProfileId();
+			Date createdDate = requestNote.getPmOrgProfile().getCreatedDate();
+			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
+			
+			if (isExceedThreshold) {
+				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+
+				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+					scRequestNoteDtl.setExceedThreshold(true);
+				}
+
+				if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+					updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+					throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName, thresholdValue.toString(),
+							thresholdItems.toString(), });
+				} else {
+
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+									MessageConst.ERROR_760561, new String[] { ptjName, thresholdValue.toString(),
+											thresholdItems.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				}
+
+			} else{
+				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+
+				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
+					scRequestNoteDtl.setExceedThreshold(null);
+				}
+				
+				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
+			}
+			//#26059 - end
 		}
 
 		// approver group name validation
@@ -1619,6 +1669,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	//#26059 - start
+	/**
+	 * Updates ScRequestNoteDtl list via service, logs errors with SLAUtils.
+	 * @param scRequestNoteDtlList Details to update.
+	 */
+	private void updateScRequestNoteDtl(List<ScRequestNoteDtl> scRequestNoteDtlList) {
+		List<ScRequestNoteDtl> updateScRequestNoteDtlList = new ArrayList<>();
+		IRequestNoteSO requestNoteSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
+		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList) {
+			updateScRequestNoteDtlList.add(scRequestNoteDtl);
+
+		}
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		requestNoteReqDTO.setRequestNoteDtls(updateScRequestNoteDtlList);
+		try {
+			requestNoteSO.updateRequestNoteDetail(requestNoteReqDTO);
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError("DP", "RequestNoteBackingBean", getManagedBean().getRequestNote().getRequestNoteNo(),
+					"updateScRequestNoteDtl", getUserIdSessionFromLoginId(), e);
+		}
+	}
+	//#26059 - end
 	// #31689 - start
 	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
 		debugLogger("validateReqNoteIgnoreProcurement");
