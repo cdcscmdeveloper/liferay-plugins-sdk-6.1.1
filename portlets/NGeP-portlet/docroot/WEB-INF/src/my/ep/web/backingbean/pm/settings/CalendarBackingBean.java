@@ -211,7 +211,7 @@ public class CalendarBackingBean extends
 		}
 		
 	}
-    
+	
 	public void holidayTitleValChange(ValueChangeEvent event){
 		log.info("holidayTitleValChange");
 		log.info("event.getOldValue()="+event.getOldValue());
