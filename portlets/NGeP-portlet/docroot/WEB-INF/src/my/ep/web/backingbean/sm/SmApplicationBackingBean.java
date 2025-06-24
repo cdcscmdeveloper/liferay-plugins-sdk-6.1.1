@@ -18533,20 +18533,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (addr == null) {
 	        return "";
 	    }
-
-	    List<String> addrlist = Arrays.asList(
-	        addr.getAddress1(),
-	        addr.getAddress2(),
-	        addr.getAddress3(),
-	        (addr.getPmDivision() != null ? addr.getPmDivision().getDivisionName() : null),
-	        (addr.getPmDistrict() != null ? addr.getPmDistrict().getDistrictName() : null),
-	        addr.getPostcode(),
-	        (addr.getPmCity() != null ? addr.getPmCity().getCityName() : null),
-	        (addr.getPmState() != null ? addr.getPmState().getStateName() : null)
-	    );
+		
+		List<String> addrlist = Arrays.asList(
+			    addr.getAddress1(),
+			    addr.getAddress2(),
+			    addr.getAddress3(),
+			    getDivisionName(addr),
+			    getDistrictName(addr),
+			    addr.getPostcode(),
+			    getCityName(addr),
+			    getStateName(addr)
+			);
         
         // Catter null address
-        List<String> cleanedAddr = new ArrayList<String>();
+        List<String> cleanedAddr = new ArrayList<>();
         for (String addrs : addrlist) {
             if (addrs != null && !addrs.trim().isEmpty()) {
             	cleanedAddr.add(addrs);
@@ -18566,9 +18566,39 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
     }
 	
 	/**
-	 * This method will check the BPM version 
-	 * 
-	 * @param scLoa
+	 * Safely retrieves the division name from the given address.
+	 * Returns null if the division is not set.
+	 */
+	private String getDivisionName(SmAddress addr) {
+	    return (addr.getPmDivision() != null) ? addr.getPmDivision().getDivisionName() : null;
+	}
+
+	/**
+	 * Safely retrieves the district name from the given address.
+	 * Returns null if the district is not set.
+	 */
+	private String getDistrictName(SmAddress addr) {
+	    return (addr.getPmDistrict() != null) ? addr.getPmDistrict().getDistrictName() : null;
+	}
+
+	/**
+	 * Safely retrieves the city name from the given address.
+	 * Returns null if the city is not set.
+	 */
+	private String getCityName(SmAddress addr) {
+	    return (addr.getPmCity() != null) ? addr.getPmCity().getCityName() : null;
+	}
+
+	/**
+	 * Safely retrieves the state name from the given address.
+	 * Returns null if the state is not set.
+	 */
+	private String getStateName(SmAddress addr) {
+	    return (addr.getPmState() != null) ? addr.getPmState().getStateName() : null;
+	}
+	
+	/**
+	 * This method will compare between old and latest BPM version 
 	 *            .
 	 * @return boolean.
 	 */
