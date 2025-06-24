@@ -368,11 +368,20 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
 		}
 
-		if(orgProfile.getSmSupplier() != null){
+		if((managedBean.getSmSupplierBanks() != null && managedBean.getSmSupplierBanks().size() > 0)
+				 && orgProfile.isGovtSeller()){
 			setSupplierBank();
+		}
+		
+		if((managedBean.getSmPersonnels() != null && managedBean.getSmPersonnels().size() > 0) 
+				&& orgProfile.isGovtSeller()){
 			setLoginInfo();
 		}
-		setPTJList();
+		
+		if(managedBean.getProfileGroup() != null && managedBean.getProfileGroup().size() > 0){
+			setPTJList();	
+		}
+		
 		receivingAddress();
 	}
 
@@ -413,103 +422,101 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setSupplierBank() {
-		SmSupplierBank oldSmSupplierBankCompare = null;
-
-		for (SmSupplierBank smSupplierBank : orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
-			for (SmSupplierBank oldSmSupplierBank : orgProfile.getSmSupplier().getSmAppl().getSmSupplierBanks()) {
-				if (oldSmSupplierBank.getSupplierBankId() == smSupplierBank.getSupplierBankId()) {
-					oldSmSupplierBankCompare = oldSmSupplierBank;
-				}
-				break;
-			}
-
-			if (oldSmSupplierBankCompare != null) {
-				setExistingSupplierBank(smSupplierBank, oldSmSupplierBankCompare);
-			} else {
-				setNewSupplierBank(smSupplierBank);
-			}
+		if(managedBean.getNewAuditSmSupplierBanks().size() > 0){
+			setNewSupplierBank(managedBean.getNewAuditSmSupplierBanks());
+		}
+		
+		if(managedBean.getSmSupplierBanks().size() > 0){
+			setExistingSupplierBank(managedBean.getSmSupplierBanks(), 
+					managedBean.getAuditSmSupplierBanks());
 		}
 	}
 
-	private void setNewSupplierBank(SmSupplierBank smSupplierBank) {
+	private void setNewSupplierBank(List<SmSupplierBank> smSupplierBank) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-		docId = smSupplierBank.getSupplierBankId();
+		
+		for(SmSupplierBank banks : smSupplierBank){
+			detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, null, banks.getPmFinancialOrg()
+					.getFinOrgName());
 
-		detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, null, smSupplierBank.getPmFinancialOrg()
-				.getFinOrgName());
+			detailObj(AuditConst.PM_AUD_OPM_ACCTNO_FIELDLABELCODE, null, banks.getAccountNo());
 
-		detailObj(AuditConst.PM_AUD_OPM_ACCTNO_FIELDLABELCODE, null, smSupplierBank.getAccountNo());
-
-		detailObj(AuditConst.PM_AUD_OPM_STATUS_PAYMENT_FIELDLABELCODE, null,
-				smSupplierBank.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+			detailObj(AuditConst.PM_AUD_OPM_STATUS_PAYMENT_FIELDLABELCODE, null,
+					banks.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+		}
 	}
 
-	private void setExistingSupplierBank(SmSupplierBank smSupplierBank, SmSupplierBank oldSmSupplierBank) {
+	private void setExistingSupplierBank(List<SmSupplierBank> smSupplierBank, List<SmSupplierBank> oldSmSupplierBank) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-		docId = smSupplierBank.getSupplierBankId();
-		if (smSupplierBank.getPmFinancialOrg().getFinOrgName() != oldSmSupplierBank.getPmFinancialOrg().getFinOrgName()) {
-			detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, oldSmSupplierBank.getPmFinancialOrg()
-					.getFinOrgName(), smSupplierBank.getPmFinancialOrg().getFinOrgName());
-		}
+		for(SmSupplierBank edited : smSupplierBank){
+			for(SmSupplierBank current : oldSmSupplierBank){
+				if(current.getSupplierBankId().equals(edited.getSupplierBankId())){
+					if (edited.getPmFinancialOrg().getFinOrgName() != current.getPmFinancialOrg().getFinOrgName()) {
+						detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, current.getPmFinancialOrg()
+								.getFinOrgName(), edited.getPmFinancialOrg().getFinOrgName());
+					}
 
-		if (smSupplierBank.getAccountNo() != oldSmSupplierBank.getAccountNo()) {
-			detailObj(AuditConst.PM_AUD_OPM_ACCTNO_FIELDLABELCODE, oldSmSupplierBank.getAccountNo(),
-					smSupplierBank.getAccountNo());
-		}
+					if (edited.getAccountNo() != current.getAccountNo()) {
+						detailObj(AuditConst.PM_AUD_OPM_ACCTNO_FIELDLABELCODE, current.getAccountNo(),
+								edited.getAccountNo());
+					}
 
-		if (oldSmSupplierBank.getRecordStatusFlg() != smSupplierBank.getRecordStatusFlg()) {
-			detailObj(
-					AuditConst.PM_AUD_OPM_STATUS_PAYMENT_FIELDLABELCODE,
-					oldSmSupplierBank.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
-					smSupplierBank.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+					if (current.getRecordStatusFlg() != edited.getRecordStatusFlg()) {
+						detailObj(AuditConst.PM_AUD_OPM_STATUS_PAYMENT_FIELDLABELCODE,
+								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+										edited.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+					}
+					break;
+				}
+			}
 		}
 	}
 
 	private void setLoginInfo() {
-		SmPersonnel oldSmPersonnelCompare = null;
-
-		for (SmPersonnel smPersonnel : orgProfile.getSmSupplier().getSmAppl().getSmPersonnels()) {
-			for (SmPersonnel oldSmPersonnel : oldOrgProfile.getSmSupplier().getSmAppl().getSmPersonnels()) {
-				if (oldSmPersonnel.getPersonnelId() == smPersonnel.getPersonnelId()) {
-					oldSmPersonnelCompare = oldSmPersonnel;
-				}
-				break;
-			}
-
-			if (oldSmPersonnelCompare != null) {
-				setExistingSmPersonal(smPersonnel, oldSmPersonnelCompare);
-
-			} else {
-				setNewSmPersonal(smPersonnel);
-			}
+		if(managedBean.getNewAuditSmPersonnels().size() > 0){
+			setNewSmPersonal(managedBean.getNewAuditSmPersonnels());
+		}
+		
+		if(managedBean.getSmPersonnels().size() > 0){
+			setExistingSmPersonal(managedBean.getSmPersonnels(), 
+					managedBean.getAuditSmPersonnels());
 		}
 	}
 
-	private void setNewSmPersonal(SmPersonnel smPersonnel) {
+	private void setNewSmPersonal(List<SmPersonnel> smPersonnel) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-
-		PmUser user = smPersonnel.getPmUser();
-		detailObj(AuditConst.PM_AUD_OPM_LOGINID_FIELDLABELCODE, null, user.getLoginId());
-		detailObj(AuditConst.PM_AUD_OPM_USERNAME_FIELDLABELCODE, null, user.getUserName());
-		detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE, null,
-				smPersonnel.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+		
+		for(SmPersonnel personnel : smPersonnel){
+			detailObj(AuditConst.PM_AUD_OPM_LOGINID_FIELDLABELCODE, null, personnel.getPmUser().getLoginId());
+			detailObj(AuditConst.PM_AUD_OPM_USERNAME_FIELDLABELCODE, null, personnel.getPmUser().getUserName());
+			detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE, null,
+					personnel.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+		}
 	}
 
-	private void setExistingSmPersonal(SmPersonnel smPersonnel, SmPersonnel oldSmPersonnel) {
+	private void setExistingSmPersonal(List<SmPersonnel> smPersonnel, List<SmPersonnel> oldSmPersonnel) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-
-		PmUser user = smPersonnel.getPmUser();
-		PmUser oldUser = oldSmPersonnel.getPmUser();
-		if (user.getLoginId() != oldUser.getLoginId()) {
-			detailObj(AuditConst.PM_AUD_OPM_LOGINID_FIELDLABELCODE, oldUser.getLoginId(), user.getLoginId());
-		}
-		if (user.getUserName() != oldUser.getUserName()) {
-			detailObj(AuditConst.PM_AUD_OPM_USERNAME_FIELDLABELCODE, oldUser.getUserName(), user.getUserName());
-		}
-		if (oldSmPersonnel.getRecordStatusFlg() != smPersonnel.getRecordStatusFlg()) {
-			detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE,
-					oldSmPersonnel.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
-					smPersonnel.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+		for(SmPersonnel edited : smPersonnel){
+			for(SmPersonnel current : oldSmPersonnel){
+				if(current.getPersonnelId().equals(edited.getPersonnelId())){
+					if (current.getPmUser().getLoginId() != edited.getPmUser().getLoginId()) {
+						detailObj(AuditConst.PM_AUD_OPM_LOGINID_FIELDLABELCODE, current.getPmUser().getLoginId(), 
+								edited.getPmUser().getLoginId());
+					}
+					
+					if (current.getPmUser().getUserName() != edited.getPmUser().getUserName()) {
+						detailObj(AuditConst.PM_AUD_OPM_USERNAME_FIELDLABELCODE, current.getPmUser().getUserName(), 
+								edited.getPmUser().getUserName());
+					}
+					
+					if (current.getRecordStatusFlg() != edited.getRecordStatusFlg()) {
+						detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE,
+								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+										edited.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+					}
+					break;
+				}
+			}
 		}
 
 	}
