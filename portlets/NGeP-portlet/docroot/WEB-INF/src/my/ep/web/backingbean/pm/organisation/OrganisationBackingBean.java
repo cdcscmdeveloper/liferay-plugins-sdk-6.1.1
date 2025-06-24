@@ -154,7 +154,7 @@ public class OrganisationBackingBean extends
 	private Long selectedAddrForEdit;
 	private LogKey userLoginId; //#30651
 	private PmUser currentUser; //#30651
-
+	
 	/**
 	 * The constructor used for save user logging.
 	 * 
@@ -941,7 +941,9 @@ public class OrganisationBackingBean extends
 							&& !pmAddressType.getPmContacts().isEmpty()) {
 						this.getManagedBean().setOfficeContactPerson(
 								pmAddressType.getPmContacts().get(0));
-						getManagedBean().setAuditContactPerson(pmAddressType.getPmContacts().get(0)); // 35509
+						/**AUDIT 35509 - start **/
+						this.getManagedBean().setPmAddressTypeId(pmAddressType.getAddressTypeId());
+						/**AUDIT 35509 - end **/
 						log.info("Contact Exist");
 						contactExist = true;
 					}
@@ -1255,26 +1257,55 @@ public class OrganisationBackingBean extends
 			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			
-			AddressReqDTO offAddressReqDTO = new AddressReqDTO();
-			AddressResDTO offAddressResDTO = new AddressResDTO();
-			AddressReqDTO offRcvAddressReqDTO = new AddressReqDTO();
-			AddressResDTO offRcvAddressResDTO = new AddressResDTO();
-			
-			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE) && !orgProfile.isBrandNew()){
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)){
 				// retrieve old data
-				reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				offAddressReqDTO.setAddressId(this.getManagedBean().getOfficeAddress().getAddressId());
-				offRcvAddressReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+				OrgProfileReqDTO offReqDTO = new OrgProfileReqDTO();
+				OrgProfileResDTO offResDTO = new OrgProfileResDTO();
+				AddressReqDTO offAddressReqDTO = new AddressReqDTO();
+				AddressResDTO offAddressResDTO = new AddressResDTO();
+				AddressReqDTO offRcvAddressReqDTO = new AddressReqDTO();
+				AddressResDTO offRcvAddressResDTO = new AddressResDTO();
 				
-				OrgProfileResDTO res = orgProfileSO.retrieveOrgDetailsByOrgId(reqDTO);
-				offAddressResDTO = addressSO.retrieveAddressDtlById(offAddressReqDTO);
-				offRcvAddressResDTO = addressSO.retrieveAddressTypeList(offRcvAddressReqDTO);
+				PmContact auditContactPerson = new PmContact();
 				
-				getManagedBean().setAuditOldPMOrgProfile(res.getPmOrgProfile());
-				getManagedBean().setAuditBillingAddress(offAddressResDTO.getPmAddress());
-				getManagedBean().setOldReceivingAddressList(offRcvAddressResDTO.getAddressTypeList());
+				if(!orgProfile.isBrandNew()){
+					offReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					offRcvAddressReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					
+					offResDTO = orgProfileSO.retrieveOrgDetailsByOrgId(offReqDTO);
+					offRcvAddressResDTO = addressSO.retrieveAddressTypeList(offRcvAddressReqDTO);
+					
+					if(this.getManagedBean().getOfficeAddress().getAddressId() != null){
+						offAddressReqDTO.setAddressId(this.getManagedBean().getOfficeAddress().getAddressId());
+						offAddressResDTO = addressSO.retrieveAddressDtlById(offAddressReqDTO);
+					}
+				}
+
+				if(addressSO == null){
+					addressSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+				}
+				
+				if(this.getManagedBean().getPmAddressTypeId() != null){
+					AddressReqDTO addressTypeReqDTO = new AddressReqDTO();
+					addressTypeReqDTO.setAddressTypeId(this.getManagedBean().getPmAddressTypeId());
+					
+					AddressResDTO addressTypeResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addressTypeReqDTO);
+					if(addressTypeResDTO.getPmAddressType() != null && addressTypeResDTO.getPmAddressType().getPmContacts() != null){
+						auditContactPerson = addressTypeResDTO.getPmAddressType().getPmContacts().get(0);
+					}
+				}
+				
+				getManagedBean().setAuditContactPerson(auditContactPerson);
+				
+				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
+						new PmOrgProfile() : offResDTO.getPmOrgProfile());
+				getManagedBean().setAuditBillingAddress(offAddressResDTO.getPmAddress() == null ? 
+						this.getManagedBean().getOfficeAddress() : offAddressResDTO.getPmAddress());
+				getManagedBean().setOldReceivingAddressList(offRcvAddressResDTO.getAddressTypeList() == null ?
+						getManagedBean().getAddressTypesList() : offRcvAddressResDTO.getAddressTypeList());
 			}
-			/************ AUDIT *************/
+			/************ AUDIT 35509*************/
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());

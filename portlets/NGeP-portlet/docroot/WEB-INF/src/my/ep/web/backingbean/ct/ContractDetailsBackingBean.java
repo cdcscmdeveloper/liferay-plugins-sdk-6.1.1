@@ -2014,6 +2014,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		Long status = ctBB.getManagedBean().getContractVer().getStatus().getStatusId();
 		CtBondWaiverDetail latestWaiver = ctBB.getManagedBean().getContractVer().getBondWaiverDefermentLatest();
 
+		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
 		if (isBondValidationRequired(action)) {
 			if (!isBondWaiverConditionsMet(latestWaiver)) {
 				setTabValue("PB");
@@ -2027,8 +2028,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-
-		validateBondWaiverHistory(ctBB.getManagedBean().getContractVer().getBondWaiverDefermentHistory());
 	}
 
 	/**
