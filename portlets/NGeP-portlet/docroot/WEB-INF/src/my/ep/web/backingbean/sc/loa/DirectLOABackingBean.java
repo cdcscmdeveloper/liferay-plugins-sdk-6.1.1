@@ -938,6 +938,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			getManagedBean().setPayLoad(awardDateType);
 
 			getSupplierDeatilsByLoaId(loaId);
+			setDisciplinaryAction(this.getManagedBean().getScLoa()); // 26247
 			this.getManagedBean().setValidatewitness(Boolean.TRUE); //#17376-144
 
 		} catch (Exception e) {
@@ -2637,32 +2638,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				scLoa.setScLoiLoa(scLoiLoa);
 			}
 		}
-
+		setDisciplinaryAction(scLoa);// 26247
 	}
-
-
-	// #29451 -- #26247 -- Start.
-	/**
-	 * @param scLoa
-	 */
-	private void checkDA(ScLoa scLoa) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-		
-		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSuppFinalizationSO.class);
-			
-			if (null != qtSuppFinalizationSO) {
-//				SmSupplier smSupplier = qtSuppFinalizationSO.retrieveActiveDisciplinaryActionBySupplier(scLoa.getScLoiLoa().getSmSupplier());
-//				scLoa.getScLoiLoa().setSmSupplier(smSupplier);
-			}
-		} finally {
-			qtSuppFinalizationSO = null;
-		}
-		
-	}
-	// #29451 -- #26247 -- End.
 
 	public SelectItem[]  getSelectRadioButtonCodeValues(String type)
 	{
@@ -5328,6 +5305,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			scQt.setEstimatedAmount(scLoa.getEstimatedPrice());
 		}
 		
+		setDisciplinaryAction(scLoa);// 26247
 		
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getContractSignerList());
@@ -8393,7 +8371,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 *
 	 * @param selectedTabIndex the selected tab index
 	 */
-	public void tabChangeAction(int selectedTabIndex) {		
+	public void tabChangeAction(int selectedTabIndex) {
+
 		if (selectedTabIndex != 0 && this.getManagedBean().isDisplayAlert()) {
 			this.getManagedBean().setDisplayAlert(false);
 			RequestContext.getCurrentInstance().execute(
@@ -11412,7 +11391,14 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 					return Long.compare(s1.getTplSpecZoneDtl().getSpecZoneId(), s2.getTplSpecZoneDtl().getSpecZoneId());
 				}
 			});
-		} 
+		} else {
+			Collections.sort(loiLoaItems, new Comparator<ScLoiLoaItem>() {
+				@Override
+				public int compare(ScLoiLoaItem s1, ScLoiLoaItem s2) {
+					return Long.compare(s1.getLoiLoaItemId(), s2.getLoiLoaItemId());
+				}
+			});
+		}
 
 		return loiLoaItems;
 	}
@@ -13436,6 +13422,24 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 	// #29766 End Vinod
 
+	// 26247 - start
+	/**
+	 * Populate scLoa with disciplinary action informations
+	 * @param scLoa
+	 */
+	private void setDisciplinaryAction(ScLoa scLoa) {
+		if (scLoa.isBrandNew()) {
+			return;
+		}
+		Long qtId = scLoa.getScLoiLoa().getDocId();
+		if (!Arrays.asList(ParameterConst.DOCTYPE_DIRECT_NEGO, ParameterConst.DOCTYPE_QUOTATION).contains(
+				scLoa.getScLoiLoa().getDocType())) {
+			qtId = null;
+		}
+		SmSupplier smSupplier = this.getQtSuppFinalizationSO().evaluateDisciplinaryActions(
+				scLoa.getScLoiLoa().getSmSupplier(), qtId);
+		scLoa.getScLoiLoa().setSmSupplier(smSupplier);
+	}
 		
 	//#29661 start
 	/**
@@ -13682,9 +13686,17 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
 				&& BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)) {
+
 			if (CollectionUtils.isEmpty(procurementSmCategory)) {
+				log.info("[1] Validation failed: procurement category list is empty on submit.");
 				throw new EpException(MessageConst.ERROR_760800);
 			}
+
+			log.info("[2] Validation passed: procurement category list has entries.");
+		} else if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+			log.info("[3] Skipped validation due to status LOA_PENDING_VERIFICATION.");
+		} else {
+			log.info("[4] Skipped validation: outcome is not BPM_SUBMIT.");
 		}
 	}
 	
@@ -13722,11 +13734,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	private void deleteScQtCategory(List<SmSupplierCategory> addedCategoryList, List<SmSupplierCategory> deletedSmCategory) {
 		IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-		if(CollectionUtils.isNotEmpty(deletedSmCategory)) {
-			for (SmSupplierCategory supplierCategoryCode : deletedSmCategory) {
-				specSO.deleteScQtCategory(supplierCategoryCode.getQtCategoryId());
-			}		
-		}
+
+			if (CollectionUtils.isNotEmpty(deletedSmCategory)) {
+				for (SmSupplierCategory supplierCategoryCode : deletedSmCategory) {
+					specSO.deleteScQtCategory(supplierCategoryCode.getQtCategoryId());
+					log.info("[1] Deleted ScQtCategory with ID: " + supplierCategoryCode.getQtCategoryId());
+				}
+			} else {
+				log.info("[2] No deleted categories to process.");
+			}
 	}		
 	//#29661 end
 	
