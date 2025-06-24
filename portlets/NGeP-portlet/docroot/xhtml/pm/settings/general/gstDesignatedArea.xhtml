@@ -16,7 +16,7 @@
 				<div align="right" style="width: 100%">
 					<!-- 34445 start -->
 					<p:commandButton value="#{lbl['lbl.btn.save']}" id="daUpdateBtnId"
-						partialSubmit="true" oncomplete="saveGstInfoDlg.show();"/>
+						partialSubmit="true" oncomplete="if (!args.validationFailed) saveGstInfoDlg.show();"/>
 					<!-- 34445 end -->
 				</div>
 			</td>
