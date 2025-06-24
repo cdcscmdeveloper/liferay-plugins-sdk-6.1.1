@@ -17,6 +17,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+	<p:fileUpload mode="simple" rendered="false" /> <!-- #37900 -->
 	<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>  
@@ -62,7 +63,9 @@
 								width="1150" height="600"
 								resizable="false"/>
 		</p:outputPanel>
-		
-	
+		<!-- #37900 START -->
+        <!-- Manually load jQuery from CDN -->
+        <script src="https://code.jquery.com/jquery-1.9.2.min.js"></script> 
+		<!-- #37900 END -->
 	 	 </ui:define>
 </ui:composition>

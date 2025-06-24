@@ -22,10 +22,8 @@
 		<tr height="10"><td height="10"></td></tr>
 	</table>
 	<!-- #34400 -->
-	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 		okAction="bb.resendActivation"
-		width="400" height="100"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.sm.confirm.reactivate.email']} #{bb.managedBean.selectedExpiredActivationPersonnel.email}?" 
 		update="@form"
 		loadingWidget="blockWidget" />

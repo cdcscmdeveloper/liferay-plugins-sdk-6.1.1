@@ -58,11 +58,9 @@
 				</p:commandButton>
 			 <!--#12492-END-->
 			</div>
-			<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+			<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 				bean="#{registrationBackingBean}"
 				okAction="updateBasicSupplier"
-				width="400" height="100"
-				title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 				content="#{lbl['lbl.sm.confirm.basic.maintenance']}" 
 				update="@([id$=Msg])"
 				loadingWidget="blockWidget" />

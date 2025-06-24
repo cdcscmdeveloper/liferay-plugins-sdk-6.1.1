@@ -1548,16 +1548,15 @@ public class SmApplicationUtil {
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
 			//#37605 START
-			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.isSpecialCategory() && cat.getOtherDesc() != null 
-				        && !convertToAscii(cat.getOtherDesc())) {
-				    throw new EpException(MessageConst.ERROR_760555);
-				}
+		    Map<Long, SmSupplierCategory> newCat = buildCategoryMap(managedBean.getActiveCategoryList());
 
-				if (cat.isSpecialCategory() && cat.getOtherDesc() != null) {
-				    cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
-				}
-	        }
+		    for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
+		        updateCategoryDescription(cat, newCat);
+		        
+		        if (cat.isSpecialCategory()) {
+		            validateAndCleanCategory(cat);
+		        }
+		    }
 			//#37605 END
 			String errMsg = getCategoryOtherDescErrMsg(appl.getSmSupplierCategories());
 			if (!StringUtils.isBlank(errMsg)) {
@@ -2223,8 +2222,10 @@ public class SmApplicationUtil {
 		managedBean.setPoApproverAcedemicErr(false);//#31130
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-			if (per.getSmStaffAcademics() == null
-					|| per.getSmStaffAcademics().isEmpty()) {
+			//#31130 --START 210525
+			if ((per.getPmUser() != null || per.getEpRole() != null) && (per.getSmStaffAcademics() == null
+					|| per.getSmStaffAcademics().isEmpty())) {
+				//#31130 --END 210525
 				sb.append("<br/>");
 				sb.append(++i + ". ");
 				sb.append(per.getName());
@@ -2233,9 +2234,9 @@ public class SmApplicationUtil {
 		}
 		if (!validPersonnels && managedBean.isSupplierUser()){//#31130
 			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
+			/*setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722599,
-					new String[] { sb.toString() });
+					new String[] { sb.toString() });*/ //Commented for #31130 230425
 		}else if (!validPersonnels && (managedBean.isApproverUser()|| managedBean.isPoUser())){
 			managedBean.setPoApproverAcedemicErr(true);
 			managedBean.setMsgPersonnelErr(sb.toString());
@@ -2334,7 +2335,14 @@ public class SmApplicationUtil {
 				validPersonnels = false;
 			}
 			//#30444 --END--25082021--
-			if(!validPersonnel){
+			//#31130 --START--050525--
+			if((per.getPmUser() != null || per.getEpRole() != null)
+					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
+					SupplierManagementConst.STYPE_CONSULTANT) 
+					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
+					|| (per.isEquityOwner() && (per.getSmStaffExperiences() == null || per.getSmStaffExperiences().isEmpty()))
+					|| (per.isEquityOwner() && (per.getSmAssociationBodies() == null || per.getSmAssociationBodies().isEmpty())))))){
+				//#31130 --END--050525--
 				sb.append(++i + ". ");
 				sb.append(per.getName());
 				// sb.append(",  ");
@@ -4614,9 +4622,9 @@ public class SmApplicationUtil {
 					if(smDisciplinaryAction.getRecordStatusFlg() != null && smDisciplinaryAction.getRecordStatusFlg() == 1){
 						cat.setCancelCategory(true);
 						if(smDisciplinaryAction.isCancelCategory() || smDisciplinaryAction.isBumiputeraCancel()){
-							cat.setTypeDisciplinaryAction("C");
+							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_REG);
 						}else if(smDisciplinaryAction.isManufacturerCancel()){
-							cat.setTypeDisciplinaryAction("M");
+							cat.setTypeDisciplinaryAction(SupplierManagementConst.SM_BASIC_DISCIPLINARY_ACTION_CANCEL_MANUFACTURE);
 						}
 						apprvList.add(cat);
 					}
@@ -7321,13 +7329,8 @@ public class SmApplicationUtil {
 								new String[] { StringUtils
 										.lowerCase(SmCommonUtil.getMessage(
 												"lbl.sm.site.visit", null)) });
-					} else {
-						if (!facVO
-								.getL3()
-								.getFacilityType()
-								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
-								&& !EntityHelper.isListGotSelectedValue(facVO
-										.getFacilities())) {
+					//#28775
+					} else if (!EntityHelper.isListGotSelectedValue(facVO.getFacilities())) {
 							valid = false;
 							throw new EpException(MessageConst.ERROR_722627,
 									new String[] { SmCommonUtil.getMessage(
@@ -7337,22 +7340,7 @@ public class SmApplicationUtil {
 											+ " ("
 											+ facVO.getL3().getCategoryName()
 											+ ")" });
-						} else if (facVO
-								.getL3()
-								.getFacilityType()
-								.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)
-								&& !EntityHelper.isListGotSelectedValue(facVO
-										.getHeadQuarters())) {
-							valid = false;
-							throw new EpException(MessageConst.ERROR_722627,
-									new String[] { SmCommonUtil.getMessage(
-											"lbl.sm.catCodes.catcode", null)
-											+ " "
-											+ facVO.getL3().getFullCatcode()
-											+ " ("
-											+ facVO.getL3().getCategoryName()
-											+ ")" });
-						}
+					//#28775
 					}
 				}
 			}
@@ -7757,7 +7745,10 @@ public class SmApplicationUtil {
 							SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 						managedBean.setShowFactoryPanel(true);
 					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+							SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+						//#28775 - 38380
+						|| facility.getFacilityType().equalsIgnoreCase(
+							SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 						managedBean.setShowStorePanel(true);
 					} else if (facility.getFacilityType().equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
@@ -7894,16 +7885,18 @@ public class SmApplicationUtil {
 
 	private static List<PmCategoryL3> getBusinessOfficeSiteVisitVOList(
 			SmApplicationManagedBean bean) {
-		List<PmCategoryL3> businessOfficeSiteVisitList = new ArrayList<PmCategoryL3>();
-		for (SmSupplierCategory cat : bean.getSmAppl()
-				.getSmSupplierCategories()) {
-			if (cat.isSpecialCategory()
-					&& cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-					&& cat.getPmCategoryL3() != null
-					&& cat.getPmCategoryL3().getFacilityType() != null
-					&& cat.getPmCategoryL3()
-							.getFacilityType()
-							.equals(SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+		//#28775 - start
+		List<PmCategoryL3> businessOfficeSiteVisitList = new ArrayList<>();
+		for (SmSupplierCategory cat : bean.getSmAppl().getSmSupplierCategories()) {
+			if (!cat.isSpecialCategory() || cat.getPmCategoryL3() == null){
+				continue;
+			}
+			boolean isValid = cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+					|| cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL;
+			
+			if (SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE.equals(cat.getPmCategoryL3().getFacilityType()) 
+					&& isValid) {
+				//#28775 - end
 				businessOfficeSiteVisitList.add(cat.getPmCategoryL3());
 			}
 		}
@@ -10935,18 +10928,19 @@ public class SmApplicationUtil {
 	/**
 	 * Get pending activation category codes by category type Id
 	 * 
-	 * @param Long
-	 *            categoryTypeId
-	 * @param SmAppl
-	 *            appl
+	 * @param categoryTypeId
+	 * @param appl
 	 * @return List<SelectItem>
 	 */
 	public static List<SelectItem> getCategoryCodesItemsByCatTypeId(
 			Long categoryTypeId, SmAppl appl) {
-		List<SelectItem> categoryCodeItems = new ArrayList<SelectItem>();
+		//28778 - Site Visit Grouping Enhancement -28775 - start
+		List<SelectItem> categoryCodeItems = new ArrayList<>();
+		List<Integer> validStatus = Arrays.asList(
+				DbValueConst.RECORD_STATUS_PENDING_RE_APPROVAL, DbValueConst.RECORD_STATUS_PENDING_ACTIVATION);
 		if (!EntityHelper.isCollectionEmpty(appl.getSmSupplierCategories())) {
 			for (SmSupplierCategory cat : appl.getSmSupplierCategories()) {
-				if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
+				if (validStatus.contains(cat.getRecordStatusFlg())		//28778 - end
 						&& cat.getPmCategoryL3() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode() != null
 						&& cat.getPmCategoryL3().getCategoryTypeCode()
@@ -12088,26 +12082,14 @@ public class SmApplicationUtil {
 									.getSmCompanyBasic()
 									.getSmCompanyAddresses().get(0)));
 					retVal.add(vo);
+					vo = cloneFacilities(l3, vo);		//#28775
 				} else {
 					if (!EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
 						vo = new SmSiteVisitFacilityVO();
 						vo.setL3(l3);
 
 						// add Faciliies
-						vo.setFacilities(new ArrayList<SmFacility>());
-						for (SmFacility fac : l3.getFacilityList()) {
-
-							// check whether category share address with other
-							// categories
-							if (!EntityHelper.isCollectionEmpty(fac
-									.getSmSupplierCategoryFacilities())
-									&& fac.getSmSupplierCategoryFacilities()
-											.size() > 1) {
-								vo.setShareAddress(true);
-							}
-							vo.getFacilities().add(
-									(SmFacility) SerializationUtils.clone(fac));
-						}
+						vo = cloneFacilities(l3, vo);		//#28775
 
 						// add HQ
 						vo.setHeadQuarters(new ArrayList<SmCompanyAddress>());
@@ -12145,6 +12127,24 @@ public class SmApplicationUtil {
 			}
 		}
 		return retVal;
+	}
+	
+	//#28775
+	private static SmSiteVisitFacilityVO cloneFacilities(PmCategoryL3 l3, SmSiteVisitFacilityVO vo){
+		if (l3 == null || EntityHelper.isCollectionEmpty(l3.getFacilityList())){
+			return vo;
+		}
+		vo.setFacilities(new ArrayList<SmFacility>());
+		for (SmFacility fac : l3.getFacilityList()) {
+
+			// check whether category share address with other categories
+			if (!EntityHelper.isCollectionEmpty(fac.getSmSupplierCategoryFacilities())
+					&& fac.getSmSupplierCategoryFacilities().size() > 1) {
+				vo.setShareAddress(true);
+			}
+			vo.getFacilities().add((SmFacility) SerializationUtils.clone(fac));
+		}
+		return vo;
 	}
 
 	/**
@@ -13606,8 +13606,8 @@ public class SmApplicationUtil {
 					sb2 = new StringBuilder();
 					sb2.append(exp.getCompanyName());
 					sb2.append(exp.getDesignation());
-
-					if (bean.getSelectedJobFunction().getStaffExpCode() == null
+					//#37771 START
+/*					if (bean.getSelectedJobFunction().getStaffExpCode() == null
 							|| (expCode != null
 									&& exp.getStaffExpCode() != null && expCode
 									.compareTo(exp.getStaffExpCode()) != 0)) {
@@ -13628,7 +13628,29 @@ public class SmApplicationUtil {
 							throw new EpException(MessageConst.ERROR_722639,
 									new String[] { exp.getCompanyName() });
 						}
-					}
+					}*/
+					if (bean.getSelectedJobFunction().getStaffExperienceId() == null
+							/*|| (expCode != null
+									&& exp.getStaffExpCode() != null && expCode
+									.compareTo(exp.getStaffExpCode()) != 0)*/) {
+						if (sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(exp.getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(exp.getToYear())) {
+							throw new EpException(MessageConst.ERROR_722639,
+									new String[] { exp.getCompanyName() });
+						} 
+					}else{
+						if (bean.getLatestJobFunction() != null && sb1.toString().equals(sb2.toString())
+								&& bean.getSelectedJobFunction().getFromYear()
+										.equals(bean.getLatestJobFunction().getFromYear())
+								&& bean.getSelectedJobFunction().getToYear()
+										.equals(bean.getLatestJobFunction().getToYear())) {
+							throw new EpException(MessageConst.ERROR_722638,
+									new String[] { exp.getCompanyName() });
+						}
+					}//#37771 END
 				}
 			}
 		}
@@ -13766,7 +13788,7 @@ public class SmApplicationUtil {
 			bean.setLatestStaffAcademic((SmStaffAcademic) EntityHelper
 					.getEntityByMultiplePropertiesFromList(aca, bean
 							.getLatestPersonnel().getSmStaffAcademics(), null,
-							new String[] { "pmEduField", "pmEduLevel" }, null));
+							new String[] { "pmEduField" }, null)); //37771
 		}
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (bean.isShowPersonnelViewOnly()) {
@@ -13811,8 +13833,8 @@ public class SmApplicationUtil {
 		for (PmEduField edu : bean.getEduFieldList()) {
 			if (bean.getSelectedStaffAcademic().getPmEduField().getEduFieldId()
 					.equals(edu.getEduFieldId())) {
-				bean.getSelectedStaffAcademic().setPmEduField(edu);
-				break;
+				bean.getSelectedStaffAcademic().setPmEduField((PmEduField) edu.cloneEntity()); //37771
+				/*break;*/
 			}
 		}
 
@@ -14998,6 +15020,7 @@ public class SmApplicationUtil {
 	 * @param supplier
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static List<Object[]> retrieveCancelCategoryBySupplier(SmSupplier supplier) {
 		SupplierCategoryReqDTO reqDTO = new SupplierCategoryReqDTO();
 		Long supplierId = supplier.getSupplierId();
@@ -15723,6 +15746,53 @@ public class SmApplicationUtil {
         }
         return str;
 	}
+	
+	/**
+	 * Builds a map of active categories for fast lookup.
+	 * @param List
+	 *            - SmSupplierCategory object
+	 * @return category
+	 */
+	private static Map<Long, SmSupplierCategory> buildCategoryMap(List<SmSupplierCategory> activeCategoryList) {
+	    Map<Long, SmSupplierCategory> categoryMap = new HashMap<>();
+	    if (activeCategoryList != null && !activeCategoryList.isEmpty()) {
+	        for (SmSupplierCategory newCat : activeCategoryList) {
+	            if (newCat != null && newCat.getPmCategoryL3() != null) {
+	                categoryMap.put(newCat.getPmCategoryL3().getCategoryL3Id(), newCat);
+	            }
+	        }
+	    }
+	    return categoryMap;
+	}
+
+	/**
+	 * Updates the category description if a matching category exists.
+	 * @param SmSupplierCategory, Map<Long, SmSupplierCategory>
+	 *            
+	 * set other description
+	 */
+	private static void updateCategoryDescription(SmSupplierCategory cat, Map<Long, SmSupplierCategory> categoryMap) {
+	    if (cat.getPmCategoryL3() != null) {
+	        SmSupplierCategory category = categoryMap.get(cat.getPmCategoryL3().getCategoryL3Id());
+	        if (category != null && category.getPmCategoryL3().getCategoryL3Id().equals(cat.getPmCategoryL3().getCategoryL3Id())) {
+	            cat.setOtherDesc(category.getOtherDesc());
+	        }
+	    }
+	}
+	
+	/**
+	 * Validates and cleans the special category description.
+	 * @param cat
+	 *            - SmSupplierCategory object
+	 */
+	private static void validateAndCleanCategory(SmSupplierCategory cat) {
+	    if (cat.getOtherDesc() != null) {
+	        if (!convertToAscii(cat.getOtherDesc())) {
+	            throw new EpException(MessageConst.ERROR_760555);
+	        }
+	        cat.setOtherDesc(replaceTabWSpace(cat.getOtherDesc()));
+	    }
+	}
 	//#37605 END
 
 	// #37779 - Start
@@ -15761,4 +15831,34 @@ public class SmApplicationUtil {
 		}
 	}
 	// #37779 - End
+
+	//#37784 -STRAT
+	/**
+	 * Checks the application record status. If it is either DELETED or CANCELLED,
+	 * redirects the user to the application error page with an appropriate message.
+	 *
+	 * @param appl the application object to check
+	 */
+	public static void checkAndRedirectIfInvalid(SmAppl appl) {
+		if (appl != null) {
+			Long statusId = appl.getPmStatus().getStatusId();
+			boolean isDeletedOrCancelled = appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+					|| appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED;
+
+			boolean isPendingVerificationStatus = SupplierManagementConst.PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION
+					.equals(String.valueOf(statusId));
+
+			boolean isPendingPaymentStatus = statusId == SupplierManagementConst.PM_STATUS_PENDING_PROCESS_FEE;
+
+			if (isDeletedOrCancelled || isPendingVerificationStatus
+					|| isPendingPaymentStatus) {
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.ERROR_760600, null,
+						FacesMessage.SEVERITY_INFO);
+				return;
+			}
+		}
+	}
+	//#37784- END
 }

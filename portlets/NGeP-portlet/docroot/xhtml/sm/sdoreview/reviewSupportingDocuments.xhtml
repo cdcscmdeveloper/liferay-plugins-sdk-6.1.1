@@ -645,17 +645,15 @@
 			</p:dataTable>
 		</p:panel>
 		<!-- #34400 - start -->
-		<ac:confirmationPopup id="confirmEnquiryDlg" widget="confirmEnquiryDlg"
+		<ac:confirmationPopupSM id="confirmEnquiryDlg" widget="confirmEnquiryDlg"
 			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"
-			width="400" height="100" hasParam="true"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			hasParam="true"
 			content="#{lbl['lbl.sm.confirm.enquiry']}" 
 			update="@all"
 			loadingWidget="abcdeblockWidget" />
-		<ac:confirmationPopup id="submissionConfirmDlg" widget="submissionConfirmDlg"
+		<ac:confirmationPopupSM id="submissionConfirmDlg" widget="submissionConfirmDlg"
 			okParam="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
-			width="400" height="100" hasParam="true"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			hasParam="true"
 			content="#{lbl['lbl.sm.confirm.proceed']}" 
 			update="@all"
 			loadingWidget="blockWidget" />

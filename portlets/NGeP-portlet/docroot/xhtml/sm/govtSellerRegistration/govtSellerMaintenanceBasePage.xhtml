@@ -37,11 +37,9 @@
 		<!--#12492-END-->
 		</div>
 		<!-- #34400 -->
-		<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+		<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 			bean="#{bb}"
 			okAction="submitMaintenance"
-			width="400" height="100"
-			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.sm.confirm.g2g.maintenance']}" 
 			update="@([id$=Msg])"
 			loadingWidget="blockWidget" />

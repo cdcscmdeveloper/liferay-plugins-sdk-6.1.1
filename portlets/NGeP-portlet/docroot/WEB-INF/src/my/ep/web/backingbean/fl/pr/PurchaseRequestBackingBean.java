@@ -536,9 +536,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 
 			getManagedBean().setEspkb(true);
 		}
-		//29555 start
-		getPreparedByName();
-	    //29555 end
+		getPreparedByName(); //29555
 	}
 
 	/**
@@ -1549,7 +1547,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (isDisciplinaryActionPRPendingStatus()) {
+		if (isPRPendingStatus()) {
 			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
@@ -1567,7 +1565,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return true if the PR's status is one of the pending statuses,
 	 *         false for otherwise statuses
 	 */
-	private boolean isDisciplinaryActionPRPendingStatus() {
+	private boolean isPRPendingStatus() {
 		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
 		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
 				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
@@ -1579,21 +1577,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	// 29728 - start
 	/**
-	 * Checks if the current PR's status is one of the pending statuses
-	 * 
-	 * @return true if the PR's status is one of the pending statuses, false for
-	 *         otherwise statuses
-	 */
-	private boolean isSupplierDeleteBranchPRPendingStatus() {
-		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
-		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
-				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_REVISION, FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
-		return pendingStatusIds.contains(statusId);
-	}
-
-	/**
 	 * Checks if the supplier's branch is deleted and needs to be changed.
 	 * 
 	 * If the branch is marked for deletion and is currently in a pending
@@ -1601,7 +1584,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * branch code.
 	 */
 	private void checkSupplierDeleteBranch() {
-		if (isSupplierDeleteBranchPRPendingStatus()) {
+		if (isPRPendingStatus()) {
 			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
 					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
 							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {
@@ -1758,25 +1741,32 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * set preparedby for managedbean by retrieving requistioner and docid
 	 */
 	public void getPreparedByName() {
-		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
-		FlActor actor = null;
+		IFulfilmentSO fulfilmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
+				IFulfilmentSO.class);
+		FlActor actor;
 
-		actor = fulfilmentSO.retrieveFlActors(
-				getManagedBean().getFulfilmentRequest().getDocType(),
-				getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
-				FulfilmentConst.Requistioner_Role_Code);
+		if (getManagedBean().getFulfilmentRequest() != null
+				&& getManagedBean().getFulfilmentRequest().getDocType() != null
+				&& getManagedBean().getFulfilmentRequest().getFulfilmentReqId() != null) {
+			actor = fulfilmentSO.retrieveFlActors(getManagedBean().getFulfilmentRequest().getDocType(),
+					getManagedBean().getFulfilmentRequest().getFulfilmentReqId(),
+					FulfilmentConst.ROLE_CODE_REQUISITIONER);
 
-		if(actor != null){
-			getManagedBean().setPreparedBy(actor.getUserName());
-		}else{
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(getManagedBean().getFulfilmentRequest().getCreatedBy());
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-			if(userResDTO.getPmUser().getUserName() != null){
-				getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+			if (actor != null) {
+				getManagedBean().setPreparedBy(actor.getUserName());
+				return;
 			}
 		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setUserId(getUserIdSessionFromLoginId());
+		UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+		if (userResDTO.getPmUser().getUserName() != null) {
+			getManagedBean().setPreparedBy(userResDTO.getPmUser().getUserName());
+		}
+
 	}
 	//29555 end
 	

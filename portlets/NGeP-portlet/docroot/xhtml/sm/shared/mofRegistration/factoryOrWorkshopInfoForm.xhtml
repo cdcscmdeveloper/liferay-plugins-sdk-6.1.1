@@ -133,7 +133,8 @@
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="factoryDialog">
 		
-		<p:outputPanel layout="block" id="factoryBlockPanel">
+		<!-- #36718 - add rendered to not trigger mandatory when not shown -->
+		<p:outputPanel layout="block" id="factoryBlockPanel" rendered="#{backingBean.managedBean.showFactoryPanel}">
 			<p:messages id="factoryDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="false" closable="true" />
 			<table style="width: 100%">
@@ -278,7 +279,7 @@
 							<ui:fragment
 								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
 								<p:inputText id="smFacFactoryRent"
-									disabled="#{!backingBean.managedBean.valueReqd}"
+									disabled="#{!backingBean.managedBean.valueReqd or backingBean.managedBean.upsCannotEdit}"
 									label="#{lbl['lbl.sm.facility.rent.rm']}" maxlength="17"
 									validatorMessage="#{lbl['lbl.sm.facility.rent.rm']} - #{lbl['lbl.sm.rangeAmt.validMsg']}"
 									value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"

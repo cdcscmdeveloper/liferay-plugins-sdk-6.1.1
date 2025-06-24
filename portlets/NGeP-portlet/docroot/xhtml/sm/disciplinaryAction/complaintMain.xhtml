@@ -24,11 +24,9 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif" />
 	</p:blockUI>
-	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 		bean="#{complaintBackingBean}"
 		okAction="updateComplaint"
-		width="400" height="100" 
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.sm.confirm.complaint']}" 
 		update="@([id$=Msg])"
 		loadingWidget="blockWidget" />

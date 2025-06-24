@@ -226,6 +226,7 @@
 					update="searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
 					oncomplete="lovPopup.hide();"
 					process="resultPanel"
+					disabled="#{lovBackingBean.isSelectButtonDisable()}"
 					partialSubmit="true"  styleClass="BtnSpacing"/>
 															
 			    <p:commandButton rendered="#{!lovBackingBean.lovBean.itemUsageMonitoringReport}"

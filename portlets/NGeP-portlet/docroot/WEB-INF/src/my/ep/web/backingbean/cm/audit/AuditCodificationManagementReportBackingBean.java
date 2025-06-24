@@ -24,7 +24,6 @@ import my.ep.constant.rpt.ReportExcelAuditConstant;
 import my.ep.dto.cm.audit.AuditCodificationManagementSPDTO;
 import my.ep.exception.EpException;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.LoggerUtils;
 import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.cm.AuditCMSearchBean;
@@ -45,6 +44,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.event.TabChangeEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -71,8 +71,7 @@ public class AuditCodificationManagementReportBackingBean extends
 	 * Only this role is accessible for Audit Trail hyperlink
 	 */
 	public boolean isAuditTrailView() {
-		LoggerUtils.getInstance().logCodeCoverage("Executing isAuditTrailView");
-		return hasAnyRole(RoleCode.CD_OFFICER.value(), RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
+		return hasAnyRole(RoleCode.BPK_AUDITOR.value(), RoleCode.AUDITOR_INTERNAL.value(),
 				RoleCode.AUDITOR_GENERAL.value(), RoleCode.EP_ADMIN.value());
 	}
 
@@ -148,6 +147,19 @@ public class AuditCodificationManagementReportBackingBean extends
 		this.getManagedBean().setLazy(true);
 		this.getManagedBean().getAuditCMSearchBean().setSearching(true);
 		searchCE.reloadData();
+	}
+	
+	/**
+	 * Reload item code and extension code data on selected tab
+	 */
+	public void onTabChange() {
+		int activeIndex = getManagedBean().getActiveIndex();
+
+		if (activeIndex == 0) {
+			loadCIDetails();
+		} else {
+			loadCEDetails();
+		}
 	}
 
 	/**
