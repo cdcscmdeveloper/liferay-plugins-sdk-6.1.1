@@ -11305,11 +11305,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		
+		SMMOFAppCanDataType smAppCanObj = (SMMOFAppCanDataType) getManagedBean().getPayLoad();
+		//if old version & approve outcome use payload to set bpmpojo
 		if(checkWIPVersion(getManagedBean().getSmAppl())){
 			reqDTO.setBpmPojo(getManagedBean().getPayLoad()); 
 		}else{
-			SMMOFAppCanDataType smAppCanObj = (SMMOFAppCanDataType) getManagedBean().getPayLoad();
-			
 			if (reqDTO.getOutcome()
 					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
 				SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
@@ -11324,8 +11324,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				notif.setNotifDescription("");
 				notif.setAddress(reqDTO.getNotifSignAddr());
 				notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
-				notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
-				notif.setApplRejectDate(sdf.format(new Date()).toString());
+				notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()));
+				notif.setApplRejectDate(sdf.format(new Date()));
 				notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
 						? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
 				notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -11336,11 +11336,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
 						? getManagedBean().getApplnRejectionRemarks() : " ");
 				smAppCanObj.setNotificationData(notif);
+				reqDTO.setBpmPojo(smAppCanObj); 
+			}else{
+				reqDTO.setBpmPojo(getManagedBean().getPayLoad()); 
 			}
-			reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
-			reqDTO.setBpmPojo(smAppCanObj); 
+			
 		}
-		
+		reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		//#38195 END
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
