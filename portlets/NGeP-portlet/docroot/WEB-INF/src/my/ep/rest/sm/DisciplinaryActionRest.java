@@ -266,7 +266,11 @@ public class DisciplinaryActionRest {
 									completedPendingSmDa.setFutureImposed(false);
 								}
 								completedPendingSmDa.getSmSupplier();
-								 SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
+								//38402 - START
+								if (da.getEndDate().compareTo(todayWithZeroTime) < 0 || completedPendingSmDa.isFutureImposed()) {
+									SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
+								}
+								//38402 - END
 							}
 						}
 					}
@@ -277,47 +281,4 @@ public class DisciplinaryActionRest {
 			//26238
 		}
 	}
-<<<<<<< HEAD
-	
-	private void suspendEndDateAfterToday(SmDisciplinaryAction suspendList, Date todayWithZeroTime) throws ParseException{
-		// 32558: disciplinary action - 26238 Start
-		PmUser user = SmCommonUtil.getUserByUserId(suspendList.getChangedBy());
-		List<PmUserRole> userRoles = SmCommonUtil.getUserRolesByUserId(user.getUserId());
-
-		// 26238 start
-		// pending that expired
-		if (suspendList.getEndDate().compareTo(todayWithZeroTime) < 0) {
-
-			SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryActionForExpiredSuspend(suspendList, user, userRoles);
-		} else {
-			// pending that not expired
-			SmServiceLookup.getSupplierDataMaintenanceSO().updatePendingDisciplinaryAction(suspendList, user, userRoles);
-
-			Long disciplinaryActionId = suspendList.getDisciplinaryActionId();
-
-			// release DA if pending is completed
-			if (disciplinaryActionId != null) {
-				SmDisciplinaryAction completedPendingSmDa = SmServiceLookup.getSupplierDataMaintenanceSO().retrieveActiveDisciplinaryActionByDisciplinaryId(
-							disciplinaryActionId);
-
-				// 26238 - 32558 - 32710 - rollback code
-				// is for imposed suspen when supplier
-				// finish pending txn
-				if (completedPendingSmDa.isSuspendRegistration() && !completedPendingSmDa.isPendingSuspend()) {
-					DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-					Date today = formatter.parse(formatter.format(new Date()));
-					if(completedPendingSmDa.getStartDate().compareTo(today) == 0){
-//						completedPendingSmDa.setFutureImposed(true);
-					} else {
-//						completedPendingSmDa.setFutureImposed(false);
-					}
-					completedPendingSmDa.getSmSupplier();
-					SmServiceLookup.getSupplierDataMaintenanceSO().releaseDisciplinaryAction(completedPendingSmDa);
-				}
-			}
-		}
-		// 26238 end
-	} // 26238 end future date for suspend registration
-=======
->>>>>>> branch 'master' of http://192.168.120.16/cdc-application/ep-apps/liferay-plugins-sdk-6.1.1.git
 }
