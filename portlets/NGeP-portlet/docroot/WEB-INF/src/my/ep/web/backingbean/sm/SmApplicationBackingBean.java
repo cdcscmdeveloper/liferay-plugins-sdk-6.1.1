@@ -18577,7 +18577,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
 
 		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
-		//cReqDTO.setCompositeValidityId(QTConstants.COMPOSITE_VALIDITY_ID_DP);
+		cReqDTO.setCompositeValidityId(SupplierManagementConst.COMPOSITE_VALIDITY_ID_SM_DEL_PEN);
 
 		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
 				.getMinCompositeVersion();
