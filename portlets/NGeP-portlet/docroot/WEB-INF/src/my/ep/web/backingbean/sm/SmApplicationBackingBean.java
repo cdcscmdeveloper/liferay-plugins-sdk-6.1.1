@@ -11307,7 +11307,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		SMMOFAppCanDataType smAppCanObj = (SMMOFAppCanDataType) getManagedBean().getPayLoad();
 		//if old version & approve outcome use payload to set bpmpojo
-		if(checkWIPVersion(getManagedBean().getSmAppl())){
+		if(checkWIPVersion()){
 			reqDTO.setBpmPojo(getManagedBean().getPayLoad()); 
 		}else{
 			if (reqDTO.getOutcome()
@@ -18566,16 +18566,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
     }
 	
 	/**
-	 * This method will check the BPM version and status to insert item spec
-	 * offer.
+	 * This method will check the BPM version 
 	 * 
 	 * @param scLoa
 	 *            .
 	 * @return boolean.
 	 */
-	public boolean checkWIPVersion(SmAppl appl) {
-		Long workFlowStatus = appl.getPmStatus().getStatusId();
-
+	public boolean checkWIPVersion() {
 		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
 
@@ -18586,7 +18583,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				.getMinCompositeVersion();
 		String version = this.getManagedBean().getBpmVersionNo();
 
-		return isOldVersion(workFlowStatus, minVersion, version);
+		return isOldVersion(minVersion, version);
 	}
 
 	/**
@@ -18596,7 +18593,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 *            .
 	 * @return boolean.
 	 */
-	private boolean isOldVersion(Long workFlowStatus, String minVersion, String version) {
+	private boolean isOldVersion(String minVersion, String version) {
 		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
 				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
 		if (isOldVersion) {
