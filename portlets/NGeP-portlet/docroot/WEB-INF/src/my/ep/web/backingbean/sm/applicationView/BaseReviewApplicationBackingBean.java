@@ -173,6 +173,7 @@ import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.util.SLAUtils;
 import my.ep.web.constant.report.SmReportConst;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.persistence.entity.sm.SmRvCatCode;
 //#34031 End
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
@@ -5215,6 +5216,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "report",
 					this.getManagedBean().getSmAppl().getApplId().toString(), "SmRevisitSO", getUserIdSessionFromLoginId(), e);
 		}
+	}
+	
+	/**
+	 * @param statusList
+	 * @param pmStatusId
+	 * @return
+	 */
+	public String getPmStatusDescs(Long pmStatusId) {
+		String statusName = "";
+		List<PmStatusDesc> statusList = this.getManagedBean().getRegStatusDescList();
+
+		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
+			// Expected Max Size in loop (5) based on NGEP_PDS database
+			for (PmStatusDesc status : statusList) {
+				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
+					statusName = status.getStatusName();
+					break;
+				}
+			}
+		}
+		return statusName;
 	}
 	// #34031 End
 	
