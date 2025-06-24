@@ -11328,6 +11328,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					? getManagedBean().getApplnRejectionRemarks() : " ");
 			smAppCanObj.setNotificationData(notif);
 		}
+		reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
 		reqDTO.setBpmPojo(smAppCanObj); 
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		//#38195 END

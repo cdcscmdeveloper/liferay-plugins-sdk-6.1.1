@@ -4285,9 +4285,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
 		
-		 if (ctBackingBean == null ||
-			        ctBackingBean.getManagedBean() == null ||
-			        ctBackingBean.getManagedBean().getContractVer() == null ||
+		 if (ctBackingBean.getManagedBean().getContractVer() == null ||
 			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null ||
 			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null ||
 			        ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
