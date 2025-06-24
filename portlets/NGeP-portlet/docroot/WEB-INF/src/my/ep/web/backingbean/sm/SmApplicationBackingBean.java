@@ -18536,9 +18536,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	        addr.getAddress1(),
 	        addr.getAddress2(),
 	        addr.getAddress3(),
-	        (addr.getPmDistrict() != null ? addr.getPmDistrict().getDistrictName() : null),
-	        (addr.getPmCity() != null ? addr.getPmCity().getCityName() : null),
 	        (addr.getPmDivision() != null ? addr.getPmDivision().getDivisionName() : null),
+	        (addr.getPmDistrict() != null ? addr.getPmDistrict().getDistrictName() : null),
+	        addr.getPostcode(),
+	        (addr.getPmCity() != null ? addr.getPmCity().getCityName() : null),
 	        (addr.getPmState() != null ? addr.getPmState().getStateName() : null)
 	    );
         
