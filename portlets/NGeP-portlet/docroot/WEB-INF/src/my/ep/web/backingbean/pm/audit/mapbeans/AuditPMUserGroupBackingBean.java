@@ -135,12 +135,9 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 			this.ptjCodeName = getUserGroupNew.getPmOrgProfile().getPmOrgValidity().getOrgCode() + "/"
 					+ getUserGroupNew.getPmOrgProfile().getPmOrgValidity().getOrgName();
 			this.groupName = getUserGroupNew.getGroupName();
-			// if (null != getUserGroupNew.getPmRoleDesc()) {
-			this.groupRole = roleDesc;
-			// }
 
 			detailObj(AuditConst.PM_AUD_OUSRG_GRPNAME_FIELDLABELID, null, this.groupName);// New
-			detailObj(AuditConst.PM_AUD_OUSRG_GROLE_FIELDLABELID, null, this.groupRole); // New
+			detailObj(AuditConst.PM_AUD_OUSRG_GROLE_FIELDLABELID, null, roleDesc); // New
 			detailObj(AuditConst.PM_AUD_OUSRG_PTJCODENAME_FIELDLABELID, null, this.ptjCodeName);
 			detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID, null, this.grpStatus);
 		}

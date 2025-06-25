@@ -781,6 +781,7 @@ public class SupplierManagementConst {
 	public static final int BUMI_PERCENTAGE = 50;
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
