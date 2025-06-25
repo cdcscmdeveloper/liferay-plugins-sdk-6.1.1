@@ -10,7 +10,8 @@
 
 	<ui:define name="contentSection">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
-			showSummary="true"></p:messages>
+			showSummary="true">
+		</p:messages>
 
 		<div
 			style="display: flex; justify-content: space-between; align-items: center; min-height: 40px;">
@@ -28,61 +29,97 @@
 					rendered="#{auditCodificationManagementReportBackingBean.isAuditTrailView()}" />
 			</div>
 		</div>
-
-		<br />
-
+		<br/>
 		<h:panelGroup id="cmExtensionSearchID">
-
 			<p:panel header="#{lbl['lbl.cm.item.code.information']}"
 				toggleable="true">
-
 				<table style="width: 100%;">
 					<tr>
-						<td width="15%"><p:outputLabel
-								value="#{lbl['lbl.cm.segment.code']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td width="30%"><h:outputText
+						<td width="15%">
+							<p:outputLabel
+								value="#{lbl['lbl.cm.segment.code']}" style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td width="30%">
+							<h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.segmentCode}" /></td>
-						<td width="15%"><p:outputLabel
+								value="#{codificationBackingBean.managedBean.segmentCode}" />
+						</td>
+						<td width="15%">
+							<p:outputLabel
 								value="#{lbl['lbl.cm.segment.title']}"
-								style="font-weight: bold;"></p:outputLabel></td>
-						<td><h:outputText style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.segmentTitle}" /></td>
+								style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td>
+							<h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.segmentTitle}" />
+						</td>
 					</tr>
 					<tr>
-						<td width="15%"><p:outputLabel
-								value="#{lbl['lbl.cm.family.code']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td width="30%"><h:outputText
+						<td width="15%">
+							<p:outputLabel
+								value="#{lbl['lbl.cm.family.code']}" style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td width="30%">
+							<h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.familyCode}" /></td>
-						<td width="15%"><p:outputLabel
-								value="#{lbl['lbl.cm.family.title']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td><h:outputText style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.familyTitle}" /></td>
+								value="#{codificationBackingBean.managedBean.familyCode}" />
+						</td>
+						<td width="15%">
+							<p:outputLabel
+								value="#{lbl['lbl.cm.family.title']}" style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td>
+							<h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.familyTitle}" />
+						</td>
 					</tr>
 					<tr>
-						<td width="15%"><p:outputLabel
-								value="#{lbl['lbl.cm.class.code']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td width="30%"><h:outputText
+						<td width="15%">
+							<p:outputLabel
+								value="#{lbl['lbl.cm.class.code']}" style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td width="30%">
+							<h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.classCode}" /></td>
-						<td width="15%"><p:outputLabel
-								value="#{lbl['lbl.cm.class.title']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td><h:outputText style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.classTitle}" /></td>
+								value="#{codificationBackingBean.managedBean.classCode}" />
+						</td>
+						<td width="15%">
+							<p:outputLabel
+								value="#{lbl['lbl.cm.class.title']}" style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td>
+							<h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.classTitle}" />
+						</td>
 					</tr>
 					<tr>
-						<td width="15%"><p:outputLabel
+						<td width="15%">
+							<p:outputLabel
 								value="#{lbl['lbl.cm.commodity.code']}"
-								style="font-weight: bold;"></p:outputLabel></td>
-						<td width="30%"><h:outputText
+								style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td width="30%">
+							<h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
-						<td width="15%"><p:outputLabel
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" />
+						</td>
+						<td width="15%">
+							<p:outputLabel
 								value="#{lbl['lbl.cm.commodity.title']}"
-								style="font-weight: bold;"></p:outputLabel></td>
-						<td><h:outputText style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
+								style="font-weight: bold;">
+							</p:outputLabel>
+						</td>
+						<td>
+							<h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" />
+						</td>
 					</tr>
 				</table>
 			</p:panel>
