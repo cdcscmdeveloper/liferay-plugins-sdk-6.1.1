@@ -2987,8 +2987,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		boolean valid = true;
 		
 		if (getManagedBean().getSupplierRemarks() == null
-				|| getManagedBean().getSupplierRemarks().trim() == ""
-				|| getManagedBean().getSupplierRemarks().trim().isEmpty()) { //#38195
+				|| getManagedBean().getSupplierRemarks().trim() == "") { 
 			sb.append(ResourceBundleUtils.getMessage(
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
