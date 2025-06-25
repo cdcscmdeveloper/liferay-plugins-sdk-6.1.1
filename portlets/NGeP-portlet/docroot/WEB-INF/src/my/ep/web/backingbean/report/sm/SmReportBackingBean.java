@@ -356,6 +356,15 @@ public abstract class SmReportBackingBean<T extends SmReportManagedBean>
 		if(SmReportConst.SM_LIST_OF_APPLICATION_RPT_VAL.equals(getManagedBean().getReportCode())){
 			ListOfApplicationRptBackingBean listOfApplRpt = new ListOfApplicationRptBackingBean();
 			listOfApplRpt.resetSearch();
+		} else if(SmReportConst.SM_APPLICATION_APPROVED_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ApplApprovedRptBackingBean applApprovedRpt = new ApplApprovedRptBackingBean();
+			applApprovedRpt.resetSearch();
+		} else if(SmReportConst.SM_APPLICATION_PROCESSED_RPT_VAL.equals(getManagedBean().getReportCode())){
+			ApplProcessedRptBackingBean applProcessedRpt = new ApplProcessedRptBackingBean();
+			applProcessedRpt.resetSearch();
+		} else if(SmReportConst.SM_CATEGORY_STATISTIC_RPT_VAL.equals(getManagedBean().getReportCode())){
+			CategoryStatRptBackingBean catStatRpt = new CategoryStatRptBackingBean();
+			catStatRpt.resetSearch();
 		}
 		//#38227 - END
 	}
