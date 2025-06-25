@@ -4253,22 +4253,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-	    Double bondAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
 
-	    if (bondAmt == null || bondAmt == 0.0) {
-	        return "";
-	    }
+		if (ctBackingBean == null
+				|| ctBackingBean.getManagedBean() == null
+				|| ctBackingBean.getManagedBean().getContractVer() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+			return "";
+		}
 
-	    DecimalFormat df = new DecimalFormat("#.00");
-	    String formattedAmount = df.format(bondAmt);
+		BigDecimal bondAmount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+				.getBondAmt();
 
-		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+		if (bondAmount.compareTo(BigDecimal.ZERO) == 0) {
+			return "";
+		}
+
+		// Format the amount to two decimal places
+		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+		String formattedAmount = decimalFormat.format(bondAmount);
+
+		// Convert to words based on language
+		if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
 			return NumberWordUtilEn.convert(formattedAmount);
-		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+		}
+
+		if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
 			return NumberWordUtil.convert(formattedAmount);
 		}
 
-	    return "";
+		return "";
 	}
 	//#24333 - End
 	
