@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.constants.CommonConstants;
@@ -64,6 +65,7 @@ public class ApplProcessedRptBackingBean extends SmReportBackingBean<ApplProcess
 		//#38227 - START
 		getManagedBean().setDateFrom(null);
 		getManagedBean().setDateTo(null);
+		getManagedBean().setApplStatus(StringUtils.EMPTY);
 		//#38227 - END
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setSupplierType(null);
