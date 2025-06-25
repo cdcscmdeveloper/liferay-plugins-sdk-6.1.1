@@ -421,7 +421,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	}
 
 	public void resetGetOrgName() {
-		Long orgValidityId = getManagedBean().getSearchBean().getPmOrgValidity().getOrgValidityId();
+		log.info("getOrgValidityId() :::: " + getManagedBean().getSearchBean().getPmOrgValidity().getOrgValidityId());
 		getManagedBean().getSearchBean().setMasterLabel4(
 				getManagedBean().getSearchBean().getPmOrgValidity().getPmOrgProfile().getOrgProfileId().toString());
 		/**getManagedBean().getSearchBean().getPmOrgValidity().setOrgProfileId(new Long(orgValidityId));*/
