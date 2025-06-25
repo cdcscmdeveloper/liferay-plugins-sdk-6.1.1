@@ -19745,4 +19745,14 @@ private void retriveCommitteeRemarksList(){
 		return isDaysCheck && isEcPendingComplianceCheck;
 	}
 	// Bug #36747@Syazani 20/01/2025 -- End
+	
+	//#28784 - Start
+	public void checkingForBeforeDemoMeetingDetails() {
+		if (!this.getManagedBean().isReadOnly()) {
+			checkMeetingDetailsAndStatus(this.getManagedBean()
+					.getScQtMeetings());
+		}
+		RequestContext.getCurrentInstance().execute("confirmUpdatePresentationDemoPopup.show()");
+	}
+	//#28784 - End
 }
