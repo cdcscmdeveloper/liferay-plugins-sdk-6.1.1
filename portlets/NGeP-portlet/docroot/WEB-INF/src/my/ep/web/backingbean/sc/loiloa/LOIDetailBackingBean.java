@@ -7008,19 +7008,22 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private boolean checkingForEPVNotification(ScLoi scLoi) {
-		//List of statuses to enable notification
+		// List of statuses to enable notification
 		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_SUBMISSION);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
 		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
-
-		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
+		
+		boolean isStatusEnabled = scLoi.getScWorkFlowStatus() != null
+				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());
+		boolean isQTValid = checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
 				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)
-				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())
-				&& !isQTMaintenanceScreen();
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+
+		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId()) && isStatusEnabled
+				&& isQTValid && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
 }
