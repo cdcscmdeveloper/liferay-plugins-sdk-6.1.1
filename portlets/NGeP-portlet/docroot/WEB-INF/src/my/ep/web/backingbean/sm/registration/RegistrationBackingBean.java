@@ -2323,6 +2323,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void errorMessageSSM(SmSupplier supp){
 		//IF MOF CHECK MOF EXPIRED FIRST
 		if(supp.getSmAppl() != null){
+			//#38143 - Start
 			if(supp.getSmAppl().getApplType()
 					.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)
 					|| supp.getSmAppl()
@@ -2337,6 +2338,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							.getSupplierType()
 							.equalsIgnoreCase(
 									SupplierManagementConst.STYPE_CONSULTANT)){
+				//#38143 - End
 				if(supp.getSmAppl().getSmMofCerts() != null){
 					boolean expiredBelowOneYear = false;
 					//boolean expiredMoreOneYear = false;
