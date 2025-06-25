@@ -304,7 +304,7 @@
 						<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 							rendered="#{not calendarBackingBean.managedBean.disabledUpdate}"
 							partialSubmit="true" process="eventDetails"
-							update="eventDetails,calendarMessages" oncomplete="updateData.show()"/>
+							update="eventDetails,calendarMessages" oncomplete="if (!args.validationFailed) updateData.show()"/>
 						<p:commandButton id="deleteButton" value="#{lbl['lbl.btn.delete']}"
 							rendered="#{not calendarBackingBean.managedBean.newEvent and not calendarBackingBean.managedBean.disabledUpdate}"
 							process="@this" oncomplete="deleteInfoDlg.show()" />
@@ -331,7 +331,7 @@
 		
 		<!-- 34445 start -->
 		<ac:confirmationPopupSM id="updateData" widget="updateData"
-			width="400" height="100"
+			width="400" height="100" loadingWidget="blockWidget"
 			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 			content="#{lbl['lbl.pm.btn.save.msg']}"
 			okAction="calendarBackingBean.addOrUpdateEvent"
