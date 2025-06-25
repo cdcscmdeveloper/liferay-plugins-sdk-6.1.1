@@ -152,6 +152,10 @@ public class CategoryStatRptBackingBean extends SmReportBackingBean<CategoryStat
 		getManagedBean().setState(null);
 		getManagedBean().setDistrict(null);
 		resetCategory();
+		//#38227 - START
+		getManagedBean().setDateFrom(null);
+		getManagedBean().setDateTo(null);
+		//#38227 - END
 		//#32521 - START
 		setDefaultDateFromAndDateTo();
 		getManagedBean().setDisciplinaryActionStatus(null);
