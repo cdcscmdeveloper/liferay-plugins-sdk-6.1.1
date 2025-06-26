@@ -16,13 +16,11 @@
 					</p:outputLabel>
 				</td>
 				<td>
-					<h:outputText
-						value="#{codificationBackingBean.managedBean.segmentCode}"
+					<h:outputText value="#{codificationBackingBean.managedBean.segmentCode}"
 						size="25" />
 				</td>
 				<td width="15%">
-					<p:outputLabel style="font-weight: bold;"
-						value="#{lbl['lbl.cm.segment.title']} :">
+					<p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.segment.title']} :">
 					</p:outputLabel>
 				</td>
 				<td>
@@ -33,8 +31,7 @@
 			</tr>
 			<tr>
 				<td width="15%">
-					<p:outputLabel style="font-weight: bold;"
-						value="#{lbl['lbl.cm.family.code']} :">
+					<p:outputLabel style="font-weight: bold;" value="#{lbl['lbl.cm.family.code']} :">
 					</p:outputLabel>
 				</td>
 				<td>
@@ -92,12 +89,12 @@
 						action="#{codificationBackingBean.goToExtensionSearch(unspscObj1)}"
 						rendered="#{codificationBackingBean.productCode(unspscObj1.unspscCode) and (unspscObj1.unspscLevel eq 3)}">
 							#{unspscObj1.unspscCode}
-							</p:commandLink>			
+					</p:commandLink>			
 					<p:commandLink
 						action="#{codificationBackingBean.goToServiceSearch(unspscObj1)}"
 						rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}">
 							#{unspscObj1.unspscCode}
-							</p:commandLink>
+					</p:commandLink>
 					<p:commandLink
 						action="#{codificationBackingBean.unspscPopUpSearch(unspscObj1)}"
 						rendered="#{unspscObj1.unspscLevel ne 3}"

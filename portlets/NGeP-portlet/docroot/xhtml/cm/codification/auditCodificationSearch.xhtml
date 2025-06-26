@@ -15,7 +15,8 @@
 		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="panel">
 			<table style="width: 100%; height: 100%;">
 				<tr>
-					<td width="100%"><h:outputText styleClass="instruction"
+					<td width="100%">
+						<h:outputText styleClass="instruction"
 						style="float:left;margin-left:5px;" escape="false"
 						value="#{lbl['lbl.cm.search.insturction.support']}" />
 					</td>
@@ -43,14 +44,10 @@
 							title="#{lbl['lbl.cm.eight.digits']}" maxlength="8"
 							value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
 							completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
-							maxResults="15"  dropdown="false" forceSelection="false" />
-						<p:graphicImage id="itemNameID"
-							value="/css/images/design/tooltips.png" />
-						<p:tooltip
-							for="itemNameID">
-							<p:outputLabel escape="false"
-								style="text-align: left;"
-								value="#{lbl['lbl.tooltip.item.code']}" />
+							maxResults="15" dropdown="false" forceSelection="false" />
+						<p:graphicImage id="itemNameID" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="itemNameID">
+							<p:outputLabel escape="false" style="text-align: left;" value="#{lbl['lbl.tooltip.item.code']}" />
 						</p:tooltip>
 					</td>
 					<td>
@@ -60,12 +57,9 @@
 						<p:inputText title="#{lbl['lbl.cm.title.english']}" id="itemTitle"
 							value="#{codificationBackingBean.managedBean.titleFilterBean.searchValue}"
 							size="40" />
-						<p:graphicImage id="itemCodeID"
-							value="/css/images/design/tooltips.png" />
-						<p:tooltip
-							for="itemCodeID">
-							<p:outputLabel escape="false"
-								value="#{lbl['lbl.tooltip.product.service']}" />
+						<p:graphicImage id="itemCodeID" value="/css/images/design/tooltips.png" />
+						<p:tooltip for="itemCodeID">
+							<p:outputLabel escape="false" value="#{lbl['lbl.tooltip.product.service']}" />
 						</p:tooltip>
 					</td>
 				</tr>
@@ -90,24 +84,24 @@
 				
 				<p:column sortBy="#{unspscObj.unspscCode}" style="width: 100px; text-align: center; white-space: nowrap;">
 					<f:facet name="header">
-            		#{lbl['lbl.cm.unspsc.code']}
+            			#{lbl['lbl.cm.unspsc.code']}
         			</f:facet>
 					<h:panelGroup layout="block" style="overflow: hidden;">
 						<p:commandLink
 							action="#{codificationBackingBean.goToExtensionSearch(unspscObj)}"
 							rendered="#{codificationBackingBean.productCode(unspscObj.unspscCode) and (unspscObj.unspscLevel eq 3)}">
-                			#{unspscObj.unspscCode}
+                				#{unspscObj.unspscCode}
             			</p:commandLink>
 						<p:commandLink
 							action="#{codificationBackingBean.goToServiceSearch(unspscObj)}"
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
-                			#{unspscObj.unspscCode}
+                				#{unspscObj.unspscCode}
             			</p:commandLink>
 						<p:commandLink
 							action="#{codificationBackingBean.unspscPopUpSearch(unspscObj)}"
 							onclick="unspscPopUp.show()" update=":form:codificationPopUpId"
 							rendered="#{unspscObj.unspscLevel ne 3}">
-                			#{unspscObj.unspscCode}
+                				#{unspscObj.unspscCode}
             			</p:commandLink>
 					</h:panelGroup>
 				</p:column>
@@ -117,7 +111,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang']).concat(')')}
 					</f:facet>
-				#{unspscObj.unspscTitle}
+					#{unspscObj.unspscTitle}
 				</p:column>
 				<p:column
 					style="word-wrap: break-word !important; white-space: normal !important; width: 45% !important;"
@@ -125,7 +119,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.cm.unspsc.title'].concat(' (').concat(lbl['lbl.cm.lang.eng']).concat(')')}
 					</f:facet>
-				#{unspscObj.unspscTitleEng}
+					#{unspscObj.unspscTitleEng}
 				</p:column>
 			</p:dataTable>
 			<div class="clear" />
