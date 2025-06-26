@@ -1770,6 +1770,12 @@ public class OrganisationBackingBean extends
 
 	}
 	
+	/************************AUDIT 35509 - shaqimi start************************************************/
+	
+	/**
+	 * This method is used to set pm address manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
 	public PmAddressType setManualPmAddressType(PmAddressType pmAddressType){
 		PmAddressType manualPmAddressType = new PmAddressType();
 		PmAddress manualPmAddress = new PmAddress();
@@ -1780,6 +1786,11 @@ public class OrganisationBackingBean extends
 		
 		return manualPmAddressType;
 	}
+	
+	/**
+	 * This method is used to set sm supplier bank manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
 	
 	public SmSupplierBank setManualSmSupplierBank(SmSupplierBank smSupplierBank){
 		SmSupplierBank manualSmSupplierBank = new SmSupplierBank();
@@ -1799,6 +1810,11 @@ public class OrganisationBackingBean extends
 		return manualSmSupplierBank;
 	}
 	
+	/**
+	 * This method is used to set profile group manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
+	
 	public PmProfileGroup setManualProfileGroup(PmProfileGroup pmProfileGroup){
 		PmProfileGroup manualPmProfileGroup = new PmProfileGroup();
 		
@@ -1808,6 +1824,10 @@ public class OrganisationBackingBean extends
 		return manualPmProfileGroup;
 	}
 	
+	/**
+	 * This method is used to set sm personnel manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
 	public SmPersonnel setManualSmPersonnel(SmPersonnel smPersonnel){
 		SmPersonnel manualsmPersonnel = new SmPersonnel();
 		
@@ -1820,6 +1840,7 @@ public class OrganisationBackingBean extends
 		
 		return manualsmPersonnel;
 	}
+	/************************AUDIT 35509 - shaqimi end  ************************************************/
 
 	/**
 	 * 
