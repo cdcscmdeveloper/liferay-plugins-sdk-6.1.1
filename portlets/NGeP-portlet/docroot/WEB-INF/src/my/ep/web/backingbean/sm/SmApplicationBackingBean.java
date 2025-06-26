@@ -52,6 +52,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -76,6 +77,7 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
 import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
 import my.ep.dto.sm.bulkApplication.SmBulkApplOverlapCatVO;
 import my.ep.dto.sm.common.ssm.SsmReqDTO;
@@ -178,6 +180,7 @@ import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.BpmCommonUtils;
+import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -2984,8 +2987,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		boolean valid = true;
 		
 		if (getManagedBean().getSupplierRemarks() == null
-				|| getManagedBean().getSupplierRemarks().trim() == ""
-				|| getManagedBean().getSupplierRemarks().trim().isEmpty()) { //#38195
+				|| getManagedBean().getSupplierRemarks().trim() == "") { 
 			sb.append(ResourceBundleUtils.getMessage(
 					"lbl.sm.mof.reg.reason.delete",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
@@ -3038,13 +3040,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	 * To open the confirmation dialog box for deleting pending application
 	 */
 	public void onDisplayConfirmDelPending() {
-		//#38195
-		if (getManagedBean().getSupplierRemarks() == null || getManagedBean().getSupplierRemarks().trim().isEmpty()) {
-			throw new EpException(SmCommonUtil.getMessage("lbl.sm.required.msg",
-					new String[] { SmCommonUtil.getMessage(
-							"lbl.sm.del.pending.appl.reasons",
-							null) }));
-        }
 		RequestContext.getCurrentInstance().execute("delPenRegConfirm.show()");
 	}
 
@@ -4060,9 +4055,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
 						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
 					}//#30762 -End
-					if (getManagedBean().isPoApproverPersonnelErr()) {
+					/*if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for #31130
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
 					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
@@ -4135,9 +4130,9 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
 						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
 					}//#30762 -End
-					if (getManagedBean().isPoApproverPersonnelErr()) {
+					/*if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for #31130
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
 					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
@@ -11307,35 +11302,42 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		
 		SMMOFAppCanDataType smAppCanObj = (SMMOFAppCanDataType) getManagedBean().getPayLoad();
-		
+		//if old version & approve outcome use payload to set bpmpojo
 		if (reqDTO.getOutcome()
-				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
-			SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
-			SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
-			
-			notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
-					? getManagedBean().getSmSupplier().getCompanyName() : " ");
-			notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
-					? getManagedBean().getSmSupplier().getRegNo() : " ");
-			notif.setPaymentMethods("");
-			notif.setNotifLink("");
-			notif.setNotifDescription("");
-			notif.setAddress(reqDTO.getNotifSignAddr());
-			notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
-			notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()).toString());
-			notif.setApplRejectDate(sdf.format(new Date()).toString());
-			notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
-					? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
-			notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses().isEmpty() ? addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
-			notif.setSuppReason(getManagedBean().getSupplierRemarks() != null 
-					? getManagedBean().getSupplierRemarks() : " ");
-			notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
-					? getManagedBean().getApplnRejectionRemarks() : " ");
-			smAppCanObj.setNotificationData(notif);
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE) ) {
+			reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+		}else{
+			if(checkWIPVersion()){
+				reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+			}else{
+				SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
+				SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
+				
+				notif.setCompanyName(getManagedBean().getSmSupplier().getCompanyName() != null
+						? getManagedBean().getSmSupplier().getCompanyName() : " ");
+				notif.setBusinessRegNo(getManagedBean().getSmSupplier().getRegNo() != null
+						? getManagedBean().getSmSupplier().getRegNo() : " ");
+				notif.setPaymentMethods("");
+				notif.setNotifLink("");
+				notif.setNotifDescription("");
+				notif.setAddress(reqDTO.getNotifSignAddr());
+				notif.setApplNo(getManagedBean().getSmAppl().getApplNo());
+				notif.setApplSubmitDate(sdf.format(getManagedBean().getSmAppl().getApplSubmitDate()));
+				notif.setApplRejectDate(sdf.format(new Date()));
+				notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
+						? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
+				notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().isEmpty() ? addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
+				notif.setSuppReason(getManagedBean().getSupplierRemarks() != null 
+						? getManagedBean().getSupplierRemarks() : " ");
+				notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
+						? getManagedBean().getApplnRejectionRemarks() : " ");
+				smAppCanObj.setNotificationData(notif);
+				reqDTO.setBpmPojo(smAppCanObj); 
+			}
 		}
-		reqDTO.setBpmPojo(smAppCanObj); 
+		reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
 		//#38195 END
 		reqSO.approveOrRejectPendingApplicationCancellation(reqDTO);
@@ -18515,7 +18517,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		}
 	}
 	//#36587 END
-	//#38195
+	//#38195 START
 	/**
 	 * To get full address from substring of address 
 	 * 
@@ -18526,19 +18528,20 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		if (addr == null) {
 	        return "";
 	    }
-
-	    List<String> addrlist = Arrays.asList(
-	        addr.getAddress1(),
-	        addr.getAddress2(),
-	        addr.getAddress3(),
-	        (addr.getPmDistrict() != null ? addr.getPmDistrict().getDistrictName() : null),
-	        (addr.getPmCity() != null ? addr.getPmCity().getCityName() : null),
-	        (addr.getPmDivision() != null ? addr.getPmDivision().getDivisionName() : null),
-	        (addr.getPmState() != null ? addr.getPmState().getStateName() : null)
-	    );
+		
+		List<String> addrlist = Arrays.asList(
+			    addr.getAddress1(),
+			    addr.getAddress2(),
+			    addr.getAddress3(),
+			    getDivisionName(addr),
+			    getDistrictName(addr),
+			    addr.getPostcode(),
+			    getCityName(addr),
+			    getStateName(addr)
+			);
         
         // Catter null address
-        List<String> cleanedAddr = new ArrayList<String>();
+        List<String> cleanedAddr = new ArrayList<>();
         for (String addrs : addrlist) {
             if (addrs != null && !addrs.trim().isEmpty()) {
             	cleanedAddr.add(addrs);
@@ -18556,4 +18559,72 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
         log.info("Address Name: " + address);
         return address;
     }
+	
+	/**
+	 * Safely retrieves the division name from the given address.
+	 * Returns null if the division is not set.
+	 */
+	private String getDivisionName(SmAddress addr) {
+	    return (addr.getPmDivision() != null) ? addr.getPmDivision().getDivisionName() : null;
+	}
+
+	/**
+	 * Safely retrieves the district name from the given address.
+	 * Returns null if the district is not set.
+	 */
+	private String getDistrictName(SmAddress addr) {
+	    return (addr.getPmDistrict() != null) ? addr.getPmDistrict().getDistrictName() : null;
+	}
+
+	/**
+	 * Safely retrieves the city name from the given address.
+	 * Returns null if the city is not set.
+	 */
+	private String getCityName(SmAddress addr) {
+	    return (addr.getPmCity() != null) ? addr.getPmCity().getCityName() : null;
+	}
+
+	/**
+	 * Safely retrieves the state name from the given address.
+	 * Returns null if the state is not set.
+	 */
+	private String getStateName(SmAddress addr) {
+	    return (addr.getPmState() != null) ? addr.getPmState().getStateName() : null;
+	}
+	
+	/**
+	 * This method will compare between old and latest BPM version 
+	 *            .
+	 * @return boolean.
+	 */
+	public boolean checkWIPVersion() {
+		ICompositeValiditySO compositeSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICompositeValiditySO.class);
+
+		CompositeValidityReqDTO cReqDTO = new CompositeValidityReqDTO();
+		cReqDTO.setCompositeValidityId(SupplierManagementConst.COMPOSITE_VALIDITY_ID_SM_DEL_PEN);
+
+		String minVersion = compositeSO.getCompositeByValidityId(cReqDTO).getPmCompositeValidity()
+				.getMinCompositeVersion();
+		String version = this.getManagedBean().getBpmVersionNo();
+
+		return isOldVersion(minVersion, version);
+	}
+
+	/**
+	 * Method to check if bpm is old version will return true
+	 * 
+	 * @param Long workFlowStatus, String minVersion, String version
+	 *            .
+	 * @return boolean.
+	 */
+	private boolean isOldVersion(String minVersion, String version) {
+		boolean isOldVersion = StringUtils.isNotBlank(minVersion) && StringUtils.isNotBlank(version)
+				&& CustomUtils.compositeVersionComparator(version, minVersion) < 0;
+		if (isOldVersion) {
+			return true;
+		}
+		return false;
+	}
+	//#38195 END
 }

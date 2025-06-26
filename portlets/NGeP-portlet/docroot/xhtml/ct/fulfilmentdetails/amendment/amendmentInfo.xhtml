@@ -40,7 +40,7 @@
 				action="#{amendmentBackingBean.onViewDisciplinaryAction}"
 				process="@this" partialSubmit="true" update=":form">
 				<u><h:outputText value="#{lbl['lbl.sm.disciplinary.here']}"
-						style="color:blue;" /></u>
+						style="font-size: 12px; font-weight: bold; color: #0000FF;" /></u>
 			</p:commandLink>
 			<p:spacer width="2"
 				rendered="#{not empty amendmentBackingBean.managedBean.disciplinaryActionMsg}" />
@@ -56,6 +56,7 @@
 				value="#{amendmentBackingBean.managedBean.supplierMsg}" />
 		</div>
 	</div>
+	<br />
 	<!-- #34097 end-->
 
 	<ac:disciplinaryActionHistory
