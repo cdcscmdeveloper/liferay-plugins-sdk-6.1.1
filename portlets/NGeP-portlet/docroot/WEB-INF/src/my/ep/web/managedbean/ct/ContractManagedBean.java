@@ -189,7 +189,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private Long statusIdFromTaskList = null;
 	private String[] outcomesFromContract = null;
 	//Bug 34142, 15851 - shaqimi end 04/12/2022
-
+	
 	//#28854 - start
 	private List<String> itemSpecification;
 	private String newOfferSpec;
