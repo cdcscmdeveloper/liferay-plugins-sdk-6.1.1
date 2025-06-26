@@ -110,7 +110,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.persistence.entity.sm.SmRvAssistOfficer;
-import my.ep.persistence.entity.sm.SmRvCatCode;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
 import org.primefaces.event.FileUploadEvent;
@@ -3083,16 +3082,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
 			this.getManagedBean().getSmRevisit().setCurrent(true);
 			this.getManagedBean().getSmRevisit().setOldPmRegStatus(this.getManagedBean().getSmAppl().getPmRegStatus());
-			if (!this.getManagedBean().getDeleteApprovedCategories().isEmpty()) {
-				List<SmRvCatCode> deletedCatCode = new ArrayList<>();
-				for (SmSupplierCategory catCode : this.getManagedBean().getDeleteApprovedCategories()) {
-					SmRvCatCode smRvCoatCode = new SmRvCatCode();
-					smRvCoatCode.setSmRevisit(this.getManagedBean().getSmRevisit());
-					smRvCoatCode.setSmSupplierCategory(catCode);
-					deletedCatCode.add(smRvCoatCode);
-				}
-				this.getManagedBean().getSmRevisit().setSmRvCatCodes(deletedCatCode);
-			}
 			removeEmptyAssistOfficer();
 			reqDTO.setSmRevisit(this.getManagedBean().getSmRevisit());
 		}
@@ -3109,14 +3098,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		for (SmRvAssistOfficer emptyOfficer : this.getManagedBean().getEmptyRvAssistOfficers()) {
 			this.getManagedBean().getSmRevisit().getSmRvAssistOfficers().remove(emptyOfficer);
 		}
-	}
-
-	private String getPrevRevisitRemark() {
-		String remark = null;
-		if (this.getManagedBean().getCurrentSmRevisit() != null) {
-			remark = this.getManagedBean().getCurrentSmRevisit().getRevisitRemark();
-		}
-		return remark;
 	}
 
 	private void validateRevisit() {
