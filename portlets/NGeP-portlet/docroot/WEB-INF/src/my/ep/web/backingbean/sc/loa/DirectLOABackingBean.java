@@ -8332,8 +8332,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		// #26770 Note-#548 - Start
-		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		fileNo = fileNo.trim().replaceAll("Ã©", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("Ã‰", SSTConstant.PROTEGE_UPPERCASE_E);
 		// #26770 Note-#548 - End
 				
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
@@ -8404,8 +8404,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
 		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
 		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
-		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		title = title.replaceAll("Ã©", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("Ã‰", SSTConstant.PROTEGE_UPPERCASE_E);
 		// 26770 - end
 		context.put("loaTitle", title);
 		context.put("hasLoi", false); 

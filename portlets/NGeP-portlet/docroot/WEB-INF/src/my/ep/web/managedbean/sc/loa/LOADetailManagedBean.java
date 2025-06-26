@@ -37,7 +37,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LOADetailManagedBean.
  *
@@ -131,7 +130,6 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	/** The approver list. */
 	private List<PmUser> approverList;
 	
-	// TODO - To be removed
 	/** The comittee users. */
 	private List<SelectItem> comitteeUsers;
 	
@@ -374,11 +372,12 @@ public class LOADetailManagedBean extends LOABaseManagedBean {
 	// #32280 - start
 	private Long reqItemAssignButtonSession = 0L;
 	// #32280 - end
-	/**
-	 * /** Gets the spki backing bean.
-	 * 
-	 * @return the spki backing bean
-	 */
+	
+    /**
+     * Gets the spki backing bean.
+     *
+     * @return the spki backing bean
+     */
     public SpkiBackingBean getSpkiBackingBean() {
     	return spkiBackingBean;
     }
