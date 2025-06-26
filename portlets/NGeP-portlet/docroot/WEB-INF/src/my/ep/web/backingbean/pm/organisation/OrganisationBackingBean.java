@@ -1281,9 +1281,9 @@ public class OrganisationBackingBean extends
 			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ISupplierSearchSO.class);
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IPersonnelSO.class);
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)){
 				// retrieve old data
@@ -1299,6 +1299,9 @@ public class OrganisationBackingBean extends
 				
 				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
 				PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+
+				OrgProfileReqDTO profileOrgReqDTO = new OrgProfileReqDTO();
+				OrgProfileResDTO profileOrgResDTO = new OrgProfileResDTO();
 				
 				PmContact auditContactPerson = new PmContact();
 				List<PmProfileGroup> auditProfileGroup = new ArrayList<PmProfileGroup>();
@@ -1315,12 +1318,17 @@ public class OrganisationBackingBean extends
 						offAddressResDTO = addressSO.retrieveAddressDtlById(offAddressReqDTO);
 					}
 					
-					if(this.getManagedBean().getSmSupplier() != null){
-						supplierReqDTO.setSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+					if(orgProfile.getSmSupplier() != null){
+						supplierReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
 						supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
 						
-						personnelReqDTO.setSmSupplierId(this.getManagedBean().getSmSupplier().getSupplierId());
+						personnelReqDTO.setSmSupplierId(orgProfile.getSmSupplier().getSupplierId());
 						personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
+					}
+					
+					if(orgProfile.getMainProfileGroups() != null){
+						profileOrgReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+						profileOrgResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(profileOrgReqDTO);
 					}
 					
 					if(this.getManagedBean().getProfileGroup() != null && this.getManagedBean().getProfileGroup().size() > 0){
@@ -1351,6 +1359,18 @@ public class OrganisationBackingBean extends
 					}
 				}
 				
+				for(SmSupplierBank smSupplierBank : this.getManagedBean().getSmSupplierBanks()){
+					if(smSupplierBank.isBrandNew()){
+						getManagedBean().getNewAuditSmSupplierBanks().add(setManualSmSupplierBank(smSupplierBank));
+					}
+				}
+				
+				for(PmProfileGroup pmProfileGroup : this.getManagedBean().getProfileGroup()){
+					if(pmProfileGroup.isBrandNew()){
+						getManagedBean().getNewAuditProfileGroup().add(setManualProfileGroup(pmProfileGroup));
+					}
+				}
+				
 				getManagedBean().setAuditContactPerson(auditContactPerson);
 				
 				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
@@ -1363,7 +1383,8 @@ public class OrganisationBackingBean extends
 						new ArrayList<SmSupplierBank>() : supplierResDTO.getSmSupplierBankList());
 				getManagedBean().setAuditSmPersonnels(personnelResDTO.getSmPersonnelList() == null ? 
 						new ArrayList<SmPersonnel>() : personnelResDTO.getSmPersonnelList());
-				getManagedBean().setAuditProfileGroup(auditProfileGroup);
+				getManagedBean().setAuditProfileGroup(auditProfileGroup.size() == 0 ? 
+						new ArrayList<PmProfileGroup>() : auditProfileGroup);
 			}
 			/************ AUDIT 35509*************/
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
@@ -1764,11 +1785,27 @@ public class OrganisationBackingBean extends
 		SmSupplierBank manualSmSupplierBank = new SmSupplierBank();
 		
 		manualSmSupplierBank.setPmFinancialOrg(smSupplierBank.getPmFinancialOrg());
-		manualSmSupplierBank.setAccountPurpose(smSupplierBank.getAccountPurpose());
-		manualSmSupplierBank.setForHqFlg(smSupplierBank.getForHqFlg());
-		manualSmSupplierBank.setSmAppl(smSupplierBank.getSmAppl());
+		
+		for(PmFinancialOrg financialOrg : getManagedBean().getFinancialBanks()){
+			if(financialOrg.getFinancialOrgId().equals(smSupplierBank.getPmFinancialOrg().getFinancialOrgId())){
+				manualSmSupplierBank.getPmFinancialOrg().setFinOrgName(financialOrg.getFinOrgName());
+				break;
+			}
+		}
+		
+		manualSmSupplierBank.setAccountNo(smSupplierBank.getAccountNo());
+		manualSmSupplierBank.setRecordStatusFlg(smSupplierBank.getRecordStatusFlg());
 		
 		return manualSmSupplierBank;
+	}
+	
+	public PmProfileGroup setManualProfileGroup(PmProfileGroup pmProfileGroup){
+		PmProfileGroup manualPmProfileGroup = new PmProfileGroup();
+		
+		manualPmProfileGroup.setAuthorizedOrgProfile(pmProfileGroup.getAuthorizedOrgProfile());
+		manualPmProfileGroup.setRecordStatusFlg(pmProfileGroup.getRecordStatusFlg());
+		
+		return manualPmProfileGroup;
 	}
 	
 	public SmPersonnel setManualSmPersonnel(SmPersonnel smPersonnel){
@@ -2265,9 +2302,6 @@ public class OrganisationBackingBean extends
 			int index = this.getManagedBean().getSmSupplierBanks().size();
 			this.getManagedBean().getSmSupplierBanks()
 					.add(index, newSupplierBank);
-			/**********************************AUDIT 35509 - shaqimi start******************************************/
-			getManagedBean().getAuditSmSupplierBanks().add(setManualSmSupplierBank(newSupplierBank));
-			/**********************************AUDIT 35509 - shaqimi end  ******************************************/
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -2505,7 +2539,7 @@ public class OrganisationBackingBean extends
 									.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							addedPersonnelList.add(personnel);
 							/**********************************AUDIT 35509 - shaqimi start******************************************/
-							getManagedBean().getAuditSmPersonnels().add(setManualSmPersonnel(personnel));
+							getManagedBean().getNewAuditSmPersonnels().add(setManualSmPersonnel(personnel));
 							/**********************************AUDIT 35509 - shaqimi end  ******************************************/
 							found = true;
 						}

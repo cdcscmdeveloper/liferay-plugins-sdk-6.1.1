@@ -74,7 +74,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		docType = orgProfile.getPmOrgValidity().getOrgName();
 		docNo = orgProfile.getOrgCode();
 		orgType = managedBean.getOrgType();
-		docId = managedBean.getNewProfileId();
+		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 		this.roleCode = roleCode;
 
 		if (!orgProfile.isBrandNew())
@@ -198,7 +198,6 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 				}
 				
 				if (!address.equals(oldAddressAppend)){
-					docId = pmAddress.getAddressId();
 					detailObj(AuditConst.PM_AUD_OPM_OFFICEADDRESS_FIELDLABELCODE, oldAddressAppend, address);
 				}
 				
@@ -448,20 +447,20 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 	private void setExistingSupplierBank(List<SmSupplierBank> smSupplierBank, List<SmSupplierBank> oldSmSupplierBank) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-		for(SmSupplierBank edited : smSupplierBank){
-			for(SmSupplierBank current : oldSmSupplierBank){
+		for(SmSupplierBank current : oldSmSupplierBank){
+			for(SmSupplierBank edited : smSupplierBank){
 				if(current.getSupplierBankId().equals(edited.getSupplierBankId())){
-					if (edited.getPmFinancialOrg().getFinOrgName() != current.getPmFinancialOrg().getFinOrgName()) {
+					if (!edited.getPmFinancialOrg().getFinOrgName().equals(current.getPmFinancialOrg().getFinOrgName())) {
 						detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, current.getPmFinancialOrg()
 								.getFinOrgName(), edited.getPmFinancialOrg().getFinOrgName());
 					}
 
-					if (edited.getAccountNo() != current.getAccountNo()) {
+					if (!edited.getAccountNo().equals(current.getAccountNo())) {
 						detailObj(AuditConst.PM_AUD_OPM_ACCTNO_FIELDLABELCODE, current.getAccountNo(),
 								edited.getAccountNo());
 					}
 
-					if (current.getRecordStatusFlg() != edited.getRecordStatusFlg()) {
+					if (!current.getRecordStatusFlg().equals(edited.getRecordStatusFlg())) {
 						detailObj(AuditConst.PM_AUD_OPM_STATUS_PAYMENT_FIELDLABELCODE,
 								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 										edited.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
@@ -499,17 +498,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		for(SmPersonnel edited : smPersonnel){
 			for(SmPersonnel current : oldSmPersonnel){
 				if(current.getPersonnelId().equals(edited.getPersonnelId())){
-					if (current.getPmUser().getLoginId() != edited.getPmUser().getLoginId()) {
-						detailObj(AuditConst.PM_AUD_OPM_LOGINID_FIELDLABELCODE, current.getPmUser().getLoginId(), 
-								edited.getPmUser().getLoginId());
-					}
-					
-					if (current.getPmUser().getUserName() != edited.getPmUser().getUserName()) {
-						detailObj(AuditConst.PM_AUD_OPM_USERNAME_FIELDLABELCODE, current.getPmUser().getUserName(), 
-								edited.getPmUser().getUserName());
-					}
-					
-					if (current.getRecordStatusFlg() != edited.getRecordStatusFlg()) {
+					if (!current.getRecordStatusFlg().equals(edited.getRecordStatusFlg())) {
 						detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE,
 								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 										edited.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
@@ -522,59 +511,45 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setPTJList() {
-		PmProfileGroup oldProfileGrouptoCompare = null;
-
-		for (PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()) {
-			for (PmProfileGroup oldProfileGroup : oldOrgProfile.getMainProfileGroups()) {
-				if (oldProfileGroup.getProfileGroupId() == profileGroup.getProfileGroupId()) {
-					oldProfileGrouptoCompare = oldProfileGroup;
-
-				}
-				break;
-			}
-
-			if (oldProfileGrouptoCompare != null) {
-				setExistingPTJList(profileGroup, oldProfileGrouptoCompare);
-			} else {
-				setNewPTJList(profileGroup);
-			}
-
+		if(managedBean.getNewAuditProfileGroup().size() > 0){
+			setNewPTJList(managedBean.getNewAuditProfileGroup());
+		}
+		
+		if(orgProfile.getMainProfileGroups().size() > 0){
+			setExistingPTJList(orgProfile.getMainProfileGroups(), 
+					managedBean.getAuditProfileGroup());
 		}
 	}
 
-	private void setNewPTJList(PmProfileGroup profileGroup) {
+	private void setNewPTJList(List<PmProfileGroup> profileGroups) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-		detailObj(AuditConst.PM_AUD_OPM_PTJCODE_FIELDLABELCODE, null, profileGroup.getAuthorizedOrgProfile()
-				.getOrgValidity().getOrgCode());
-		detailObj(AuditConst.PM_AUD_OPM_PTJNAME_FIELDLABELCODE, null, profileGroup.getAuthorizedOrgProfile()
-				.getOrgValidity().getOrgCode());
-		detailObj(AuditConst.PM_AUD_OPM_PTJSTATUS_FIELDLABELCODE, null,
-				profileGroup.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
 
-	}
-
-	private void setExistingPTJList(PmProfileGroup profileGroup, PmProfileGroup oldProfileGroup) {
-		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-		if (profileGroup.getAuthorizedOrgProfile().getOrgValidity().getOrgCode() != oldProfileGroup
-				.getAuthorizedOrgProfile().getOrgValidity().getOrgCode()) {
-			detailObj(AuditConst.PM_AUD_OPM_PTJCODE_FIELDLABELCODE, oldProfileGroup.getAuthorizedOrgProfile()
-					.getOrgValidity().getOrgCode(), profileGroup.getAuthorizedOrgProfile().getOrgValidity()
-					.getOrgCode());
-		}
-
-		if (profileGroup.getAuthorizedOrgProfile().getOrgName() != oldProfileGroup.getAuthorizedOrgProfile()
-				.getOrgName()) {
-			detailObj(AuditConst.PM_AUD_OPM_PTJNAME_FIELDLABELCODE, oldProfileGroup.getAuthorizedOrgProfile()
-					.getOrgValidity().getOrgCode(), profileGroup.getAuthorizedOrgProfile().getOrgValidity()
-					.getOrgCode());
-		}
-
-		if (oldProfileGroup.getRecordStatusFlg() != profileGroup.getRecordStatusFlg()) {
-			detailObj(AuditConst.PM_AUD_OPM_PTJSTATUS_FIELDLABELCODE,
-					oldProfileGroup.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+		for(PmProfileGroup profileGroup : profileGroups){
+			detailObj(AuditConst.PM_AUD_OPM_PTJCODE_FIELDLABELCODE, null, profileGroup.getAuthorizedOrgProfile()
+					.getOrgValidity().getOrgCode());
+			detailObj(AuditConst.PM_AUD_OPM_PTJNAME_FIELDLABELCODE, null, profileGroup.getAuthorizedOrgProfile()
+					.getOrgValidity().getOrgName());
+			detailObj(AuditConst.PM_AUD_OPM_PTJSTATUS_FIELDLABELCODE, null,
 					profileGroup.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
 		}
 
+	}
+
+	private void setExistingPTJList(List<PmProfileGroup> profileGroups, List<PmProfileGroup> oldProfileGroups) {
+		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+
+		for(PmProfileGroup edited : profileGroups){
+			for(PmProfileGroup current : oldProfileGroups){
+				if(current.getProfileGroupId().equals(edited.getProfileGroupId())){
+					if (!current.getRecordStatusFlg().equals(edited.getRecordStatusFlg())) {
+						detailObj(AuditConst.PM_AUD_OPM_PTJSTATUS_FIELDLABELCODE,
+								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
+										edited.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
+					}
+					break;
+				}
+			}
+		}
 	}
 
 	private ArrayList<AuditPMSPDTO> detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
