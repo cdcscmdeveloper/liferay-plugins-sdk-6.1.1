@@ -1210,7 +1210,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (outcome.equals(BpmOutcomeConst.BPM_APPROVE) || outcome.equals(BpmOutcomeConst.BPM_REVISE)
 					|| outcome.equals(BpmOutcomeConst.BPM_REJECT)) {
 				approverAction(outcome);
-			} else {
+			}
+			//#26059 - start
+			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
+				if (getManagedBean().isExceededAmountAlerted()) {
+					if(getManagedBean().getCounter() > 1 ){
+						requestNoteSubmit(outcome);
+					}
+					
+				} else{
+					requestNoteSubmit(outcome);
+				}
+			}
+			//#26059 - end
+			else {
 				requestNoteSubmit(outcome);
 			}
 		}
@@ -1385,12 +1398,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private void validateRequestNote(ScRequestNote requestNote, String outcome) {//#26059 - add outcome
 		debugLogger("validateRequestNote");
 		// Temp(#34274 - Start)
-		//boolean isShowMessage = getManagedBean().isExceededAmountAlerted(); //#26059 - comment this line
+		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
 		// Temp(#34274 - End)
 		// show message for first submission, skip the message for second time
 		// submission
 		//#26059 - start
-		boolean isExceedThreshold = false;
 		StringBuilder thresholdItems = new StringBuilder();
 		int count = 0; 
 		BigDecimal thresholdValue = new BigDecimal(0);
@@ -1496,8 +1508,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								// Rule : ITEM_THRESHOLD For 20k
 								if (totalAmt.compareTo(thresholdValue) > 0) {
 										//#26059 - start
-										//getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
-										isExceedThreshold = true;
+										//isExceedThreshold = true;
 										count++;
 										thresholdItems.append(count + ". " + requestNoteDtl.getRequestItem().getItemName() + "</br>");										
 //										FacesContext.getCurrentInstance().addMessage(
@@ -1618,10 +1629,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			Date createdDate = requestNote.getPmOrgProfile().getCreatedDate();
 			String ptjName = retrievePTJByOrgProfileId(profileId, createdDate);
 			
-			if (isExceedThreshold) {
+			if (count > 0) {
 				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
 				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
+				getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(true);
@@ -1631,19 +1643,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
 					throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName, thresholdValue.toString(),
 							thresholdItems.toString(), });
-				} else {
-
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-									MessageConst.ERROR_760561, new String[] { ptjName, thresholdValue.toString(),
-											thresholdItems.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+				} else {					
+					getManagedBean().setCounter(getManagedBean().getCounter()+1);
+					if (getManagedBean().getCounter() == 1) {
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+										MessageConst.ERROR_760561, new String[] { ptjName, thresholdValue.toString(),
+												thresholdItems.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					}
 				}
 
 			} else{
+				getManagedBean().setExceededAmountAlerted(Boolean.FALSE);
 				RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
-				requestNoteReqDTO.setRequestNoteId(requestNote.getRequestNoteId());
+				requestNoteReqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
 				RequestNoteResDTO requestNoteResDTO = getRequestNoteSO().getRequestNote(requestNoteReqDTO);
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {

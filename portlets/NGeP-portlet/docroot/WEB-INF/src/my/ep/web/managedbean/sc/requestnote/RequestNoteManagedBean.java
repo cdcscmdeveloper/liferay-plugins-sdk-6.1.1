@@ -412,6 +412,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean showAttachments = Boolean.TRUE; //#26059
     private List<CommodityGroup> commodityGroups =	new ArrayList<CommodityGroup>(); //#26059
     
+    private	Integer	counter = 0; //#26059
+    
     /**
      * Instantiates a new request note managed bean.
      */
@@ -2442,6 +2444,14 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 
 	public void setShowAttachments(boolean showAttachments) {
 		this.showAttachments = showAttachments;
+	}
+
+	public Integer getCounter() {
+		return counter;
+	}
+
+	public void setCounter(Integer counter) {
+		this.counter = counter;
 	}
 	// #26059 - end
 }
