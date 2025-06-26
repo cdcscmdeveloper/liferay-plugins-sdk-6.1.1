@@ -4275,7 +4275,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+		
+		//#38491,#28854 - Start
+		Long loaId = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpecByLoaIdAndRequestItemId(loaId, requestItemId);
+		//#38491,#28854 - End
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			handleDirectPurchaseMode(itemSpecOfferList);
@@ -4622,22 +4626,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-		Double bondAmt = getManagedBean().getCtContractAmount().getTotalBondAmt().doubleValue();
 
-		if (bondAmt == null || bondAmt == 0.0) {
-			return "";
-		}
+	    if (getManagedBean() == null) {
+	        return "";
+	    }
 
-		DecimalFormat df = new DecimalFormat("#.00");
-		String formattedAmount = df.format(bondAmt);
+	    CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+	    if (contractAmount == null || contractAmount.getTotalBondAmt() == null) {
+	        return "";
+	    }
 
-		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			return NumberWordUtilEn.convert(formattedAmount);
-		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			return NumberWordUtil.convert(formattedAmount);
-		}
+	    BigDecimal bondAmtDecimal = contractAmount.getTotalBondAmt();
+	    if (BigDecimal.ZERO.compareTo(bondAmtDecimal) == 0) {
+	        return "";
+	    }
 
-		return "";
+	    String formattedAmount = new DecimalFormat("#.00").format(bondAmtDecimal);
+
+	    if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+	        return NumberWordUtilEn.convert(formattedAmount);
+	    } else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+	        return NumberWordUtil.convert(formattedAmount);
+	    }
+
+	    return "";
 	}
 	//#24333 - End
 	

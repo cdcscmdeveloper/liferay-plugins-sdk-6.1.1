@@ -19311,7 +19311,7 @@ private void retriveCommitteeRemarksList(){
 						|| !questionIds.contains(question.getSpecQuestionId())) {
 					questionIds.add(question.getSpecQuestionId());
 					validateUserScoreForTemplate(tplSpecAnswer, isTechSpec);
-					validateMandatorySpecAndRemark(tplSpecAnswer,
+					validateMandatorySpecAndRemark(tplSpecAnswer, isTechSpec,
 							isComplianceNull);
 				}
 			}
@@ -19349,22 +19349,24 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 
 	// #29187 Start Vinod
-	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isComplianceNull) {
-		boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isTechSpec, boolean isComplianceNull) {
+		if(isTechSpec){
+			boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
 
-		if (isComplianceNull && !isNotOffered) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
-		}
+			if (isComplianceNull && !isNotOffered) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
 
-		boolean isCompliance = tplSpecAnswer.getCompliance() != null
-				&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
-		String remark = tplSpecAnswer.getUserRemark();
+			boolean isCompliance = tplSpecAnswer.getCompliance() != null
+					&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+			String remark = tplSpecAnswer.getUserRemark();
 
-		if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType()) && isCompliance
-				&& StringUtils.isEmpty(remark)) {
-			throw new EpException(MessageConst.ERROR_775180);
+			if (isCompliance
+					&& StringUtils.isEmpty(remark)) {
+				throw new EpException(MessageConst.ERROR_775180);
+			}
 		}
 	}
 	// #29187 End Vinod
