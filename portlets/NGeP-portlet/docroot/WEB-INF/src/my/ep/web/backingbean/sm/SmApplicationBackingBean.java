@@ -11303,11 +11303,13 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 		
 		SMMOFAppCanDataType smAppCanObj = (SMMOFAppCanDataType) getManagedBean().getPayLoad();
 		//if old version & approve outcome use payload to set bpmpojo
-		if(checkWIPVersion()){
-			reqDTO.setBpmPojo(getManagedBean().getPayLoad()); 
+		if (reqDTO.getOutcome()
+				.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE) ) {
+			reqDTO.setBpmPojo(getManagedBean().getPayLoad());
 		}else{
-			if (reqDTO.getOutcome()
-					.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.REJECT) ) {
+			if(checkWIPVersion()){
+				reqDTO.setBpmPojo(getManagedBean().getPayLoad());
+			}else{
 				SMNotificationCommonDataType notif = new SMNotificationCommonDataType();
 				SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");	
 				
@@ -11333,10 +11335,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						? getManagedBean().getApplnRejectionRemarks() : " ");
 				smAppCanObj.setNotificationData(notif);
 				reqDTO.setBpmPojo(smAppCanObj); 
-			}else{
-				reqDTO.setBpmPojo(getManagedBean().getPayLoad()); 
 			}
-			
 		}
 		reqDTO.setCurrWorkflowStatus(smAppCanObj.getCurrWfStatus().longValue());
 		reqDTO.setChangedBy(getUserIdSessionFromLoginId()); // #31849 add log key
