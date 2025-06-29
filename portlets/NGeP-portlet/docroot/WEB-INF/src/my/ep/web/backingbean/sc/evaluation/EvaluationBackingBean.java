@@ -10609,6 +10609,9 @@ private void retriveCommitteeRemarksList(){
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			List<TplSpecAnswer> answers = getManagedBean()
 					.getTemplateSpecBean().getSpecAnswerList();
+			// #29187 Start Vinod
+			List<Long> questionIds = new ArrayList<>();
+			// #29187 End Vinod
 			if(answers != null){
 				for (TplSpecAnswer tplSpecAnswer : answers) {
 					tplSpecAnswer.setTplSpecSuppAnswer(tplSpecAnswer
@@ -10618,7 +10621,15 @@ private void retriveCommitteeRemarksList(){
 							getManagedBean().getSelectedZone());
 
 					// #29187 Start Vinod
-					if (QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())) {
+					if (QTConstants.FINANCIAL_EVALUATION
+							.equalsIgnoreCase(getManagedBean()
+									.getCheckListType())
+							&& (CollectionUtils.isEmpty(questionIds) || !questionIds
+									.contains(tplSpecAnswer
+											.getTplSpecQuestion()
+											.getSpecQuestionId()))) {
+						questionIds.add(tplSpecAnswer.getTplSpecQuestion()
+								.getSpecQuestionId());
 						validateUserScoreForTemplate(tplSpecAnswer, false);
 					}
 					// #29187 End Vinod
@@ -19285,6 +19296,7 @@ private void retriveCommitteeRemarksList(){
 	 */
 	public void validateSaveTemplateForMandatorySpec(String actualButtonId) {
 		List<TplSpecAnswer> answers = getManagedBean().getTemplateSpecBean().getSpecAnswerList();
+		List<Long> questionIds = new ArrayList<>();
 
 		if (answers != null) {
 			for (TplSpecAnswer tplSpecAnswer : answers) {
@@ -19295,8 +19307,13 @@ private void retriveCommitteeRemarksList(){
 				boolean isComplianceNull = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()
 						&& tplSpecAnswer.getCompliance() == null;
 
-				validateUserScoreForTemplate(tplSpecAnswer, isTechSpec);
-				validateMandatorySpecAndRemark(tplSpecAnswer, isComplianceNull);
+				if (CollectionUtils.isEmpty(questionIds)
+						|| !questionIds.contains(question.getSpecQuestionId())) {
+					questionIds.add(question.getSpecQuestionId());
+					validateUserScoreForTemplate(tplSpecAnswer, isTechSpec);
+					validateMandatorySpecAndRemark(tplSpecAnswer, isTechSpec,
+							isComplianceNull);
+				}
 			}
 		}
 
@@ -19332,22 +19349,24 @@ private void retriveCommitteeRemarksList(){
 	// #29187 End Vinod
 
 	// #29187 Start Vinod
-	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isComplianceNull) {
-		boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
+	private void validateMandatorySpecAndRemark(TplSpecAnswer tplSpecAnswer, boolean isTechSpec, boolean isComplianceNull) {
+		if(isTechSpec){
+			boolean isNotOffered = tplSpecAnswer.isNotOfferAll();
 
-		if (isComplianceNull && !isNotOffered) {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
-					QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()) });
-		}
+			if (isComplianceNull && !isNotOffered) {
+				throw new EpException(MessageConst.ERROR_100022, new String[] { ResourceBundleUtils.getMessage(
+						QTConstants.LBL_SC_TEC_COMPLIANCE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
+			}
 
-		boolean isCompliance = tplSpecAnswer.getCompliance() != null
-				&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
-		String remark = tplSpecAnswer.getUserRemark();
+			boolean isCompliance = tplSpecAnswer.getCompliance() != null
+					&& tplSpecAnswer.getCompliance().equals(Boolean.FALSE);
+			String remark = tplSpecAnswer.getUserRemark();
 
-		if (QTConstants.TECHNICAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType()) && isCompliance
-				&& StringUtils.isEmpty(remark)) {
-			throw new EpException(MessageConst.ERROR_775180);
+			if (isCompliance
+					&& StringUtils.isEmpty(remark)) {
+				throw new EpException(MessageConst.ERROR_775180);
+			}
 		}
 	}
 	// #29187 End Vinod

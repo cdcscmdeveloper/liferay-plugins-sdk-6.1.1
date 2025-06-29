@@ -3853,12 +3853,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
-		//#21692 - Start
-		if (this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			validateLOIDetails(scLoi, outcome);
-		}
-		//#21692 - End
+		validateLOIDetails(scLoi, outcome);
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
 				.longValue();
@@ -6908,9 +6903,7 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
-		if (scLoi != null && scLoi.getLoiId() != null
-				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())) {
+		if (scLoi != null && scLoi.getLoiId() != null && checkingForEPVNotification(scLoi)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
@@ -6981,8 +6974,10 @@ public class LOIDetailBackingBean extends
 	 */
 	public boolean isApproverAbleToSave() {
 		return !this.getManagedBean().isAbleToSubmitLOI()
-				&& this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
-						.equals(QTStatusConst.LOI_PENDING_APPROVAL);
+				&& (this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_APPROVAL) || this.getManagedBean().getScLoi()
+						.getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL));
 	}
 	//#21692 - End
 	
@@ -6994,6 +6989,41 @@ public class LOIDetailBackingBean extends
 	 */
 	public boolean disableCancelForApprover() {
 		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOI first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelPopup2.show()");
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkingForEPVNotification(ScLoi scLoi) {
+		// List of statuses to enable notification
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
+		
+		boolean isStatusEnabled = scLoi.getScWorkFlowStatus() != null
+				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());
+		boolean isQTValid = checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+
+		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId()) && isStatusEnabled
+				&& isQTValid && !isQTMaintenanceScreen();
 	}
 	//#21692 - End
 }

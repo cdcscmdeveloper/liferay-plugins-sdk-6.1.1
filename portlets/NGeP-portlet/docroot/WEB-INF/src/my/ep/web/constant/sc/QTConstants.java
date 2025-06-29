@@ -310,6 +310,7 @@ public interface QTConstants {
 	//#21692 - Start
 	public static final String PORTLET_NAME_QT_LOI_LIST = "scLoiList_WAR_NGePportlet";
 	public static final String PORTLET_NAME_QT_LOI_REVIEW = "scLoiReview_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_LOA_REVIEW = "scLoaReview_WAR_NGePportlet";
 	//#21692 - End
 
 	// #29007 Start Vinod

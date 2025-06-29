@@ -4049,9 +4049,9 @@ public class SmApplicationBackingBean extends
 					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
 						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
 					}//#30762 -End
-					if (getManagedBean().isPoApproverPersonnelErr()) {
+					/*if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for #31130
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
 					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
@@ -4124,9 +4124,9 @@ public class SmApplicationBackingBean extends
 					if (getManagedBean().isPoApproverPersonnelRoleMsg()) {
 						throw new EpException(MessageConst.ERROR_760551, new String[] {getManagedBean().getPersonnelRoleMsg() });
 					}//#30762 -End
-					if (getManagedBean().isPoApproverPersonnelErr()) {
+					/*if (getManagedBean().isPoApproverPersonnelErr()) {
 						throw new EpException(MessageConst.ERROR_721058, new String[] {getManagedBean().getMsgPersonnelErr() });
-					}
+					}*/ //Commented for #31130
 					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
 					/*if (getManagedBean().isPoApproverAcedemicErr() && getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(
 							SupplierManagementConst.STYPE_CONSULTANT)){
@@ -7070,7 +7070,12 @@ public class SmApplicationBackingBean extends
 							new String[] { worker1.getIdentificationNo() });
 				}
 			}
-			
+			//#28775 - 38366
+			worker1.setOldExpertise(worker1.getExpertise());
+			worker1.setOldIdentificationNo(worker1.getIdentificationNo());
+			worker1.setOldIdentificationTypeId(worker1.getIdentificationTypeId());
+			worker1.setOldName(worker1.getName());
+			worker1.setOldWorkExpYear(worker1.getWorkExpYear());
 		}
 		// 29379 - Site Visit Grouping Enhancement -28775 - end
 		
