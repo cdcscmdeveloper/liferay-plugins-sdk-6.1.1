@@ -81,7 +81,7 @@
 			<ui:param name="supplier" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"/>
 			<c:if test="#{not empty supplier.scQt}">
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
+					<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
 				</td>
 				<td>
 					<ac:disciplinaryActionYesNo supplier="#{supplier}" showTooltip="true" />
