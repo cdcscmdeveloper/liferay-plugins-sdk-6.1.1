@@ -34,6 +34,8 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.sst.ISupplierSstSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -64,6 +66,10 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.sst.SupplierSstReqDTO;
 import my.ep.dto.sm.sst.SupplierSstResDTO;
 import my.ep.exception.EpException;
@@ -682,6 +688,24 @@ public class OrganisationBackingBean extends
 		if(getManagedBean().getAuditBillingAddress() == null){
 			getManagedBean().setAuditBillingAddress(new PmAddress());
 		}
+		if(getManagedBean().getAuditSmSupplierBanks() == null){
+			getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		}
+		if(getManagedBean().getNewAuditSmSupplierBanks() == null){
+			getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		}
+		if(getManagedBean().getAuditSmPersonnels() == null){
+			getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
+		}
+		if(getManagedBean().getNewAuditSmPersonnels() == null){
+			getManagedBean().setNewAuditSmPersonnels(new ArrayList<SmPersonnel>());
+		}
+		if(getManagedBean().getAuditProfileGroup() == null){
+			getManagedBean().setAuditProfileGroup(new ArrayList<PmProfileGroup>());
+		}
+		if(getManagedBean().getNewAuditProfileGroup() == null){
+			getManagedBean().setNewAuditProfileGroup(new ArrayList<PmProfileGroup>());
+		}
 		/********************************AUDIT 35509*****************************************/
 
 		// Pegawai Pengawal
@@ -1256,6 +1280,10 @@ public class OrganisationBackingBean extends
 					IAuditPMSO.class);
 			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)){
 				// retrieve old data
@@ -1265,8 +1293,18 @@ public class OrganisationBackingBean extends
 				AddressResDTO offAddressResDTO = new AddressResDTO();
 				AddressReqDTO offRcvAddressReqDTO = new AddressReqDTO();
 				AddressResDTO offRcvAddressResDTO = new AddressResDTO();
+
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				SupplierSearchResDTO supplierResDTO = new SupplierSearchResDTO();
+				
+				PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+				PersonnelResDTO personnelResDTO = new PersonnelResDTO();
+
+				OrgProfileReqDTO profileOrgReqDTO = new OrgProfileReqDTO();
+				OrgProfileResDTO profileOrgResDTO = new OrgProfileResDTO();
 				
 				PmContact auditContactPerson = new PmContact();
+				List<PmProfileGroup> auditProfileGroup = new ArrayList<PmProfileGroup>();
 				
 				if(!orgProfile.isBrandNew()){
 					offReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1281,11 +1319,35 @@ public class OrganisationBackingBean extends
 					}
 				}
 
-				if(addressSO == null){
-					addressSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+				if(orgProfile.getSmSupplier() != null){
+					supplierReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
+					supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+					
+					personnelReqDTO.setSmSupplierId(orgProfile.getSmSupplier().getSupplierId());
+					personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
 				}
 				
+				if(orgProfile.getMainProfileGroups() != null){
+					profileOrgReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					profileOrgResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(profileOrgReqDTO);
+				}
+				
+				if(this.getManagedBean().getProfileGroup() != null && this.getManagedBean().getProfileGroup().size() > 0){
+					PmOrgProfile auditOrgProfile = PmCommonUtil.retrieveOrgProfileDtlById(orgProfile.getOrgProfileId());
+					
+					if(auditOrgProfile != null){
+						if (auditOrgProfile.getMainProfileGroups() != null
+								&& !auditOrgProfile.getMainProfileGroups().isEmpty()) {
+							for (PmProfileGroup profile : auditOrgProfile
+									.getMainProfileGroups()) {
+								if (profile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+										|| profile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+									auditProfileGroup.add(profile);
+								}
+							}
+						}
+					}
+				}
 				if(this.getManagedBean().getPmAddressTypeId() != null){
 					AddressReqDTO addressTypeReqDTO = new AddressReqDTO();
 					addressTypeReqDTO.setAddressTypeId(this.getManagedBean().getPmAddressTypeId());
@@ -1293,6 +1355,18 @@ public class OrganisationBackingBean extends
 					AddressResDTO addressTypeResDTO = addressSO.retrieveAddressTypeByAddressTypeId(addressTypeReqDTO);
 					if(addressTypeResDTO.getPmAddressType() != null && addressTypeResDTO.getPmAddressType().getPmContacts() != null){
 						auditContactPerson = addressTypeResDTO.getPmAddressType().getPmContacts().get(0);
+					}
+				}
+				
+				for(SmSupplierBank smSupplierBank : this.getManagedBean().getSmSupplierBanks()){
+					if(smSupplierBank.isBrandNew()){
+						getManagedBean().getNewAuditSmSupplierBanks().add(setManualSmSupplierBank(smSupplierBank));
+					}
+				}
+				
+				for(PmProfileGroup pmProfileGroup : this.getManagedBean().getProfileGroup()){
+					if(pmProfileGroup.isBrandNew()){
+						getManagedBean().getNewAuditProfileGroup().add(setManualProfileGroup(pmProfileGroup));
 					}
 				}
 				
@@ -1304,8 +1378,14 @@ public class OrganisationBackingBean extends
 						this.getManagedBean().getOfficeAddress() : offAddressResDTO.getPmAddress());
 				getManagedBean().setOldReceivingAddressList(offRcvAddressResDTO.getAddressTypeList() == null ?
 						getManagedBean().getAddressTypesList() : offRcvAddressResDTO.getAddressTypeList());
+				getManagedBean().setAuditSmSupplierBanks(supplierResDTO.getSmSupplierBankList() == null ?
+						new ArrayList<SmSupplierBank>() : supplierResDTO.getSmSupplierBankList());
+				getManagedBean().setAuditSmPersonnels(personnelResDTO.getSmPersonnelList() == null ? 
+						new ArrayList<SmPersonnel>() : personnelResDTO.getSmPersonnelList());
+				getManagedBean().setAuditProfileGroup(auditProfileGroup.size() == 0 ? 
+						new ArrayList<PmProfileGroup>() : auditProfileGroup);
 			}
-			/************ AUDIT 35509*************/
+			/************ AUDIT 35509 - shaqimi start*************/
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1348,7 +1428,13 @@ public class OrganisationBackingBean extends
 				getManagedBean().setAuditBillingAddress(new PmAddress());
 				getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
 				getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
-				/************ AUDIT *************/
+				getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+				getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+				getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
+				getManagedBean().setNewAuditSmPersonnels(new ArrayList<SmPersonnel>());
+				getManagedBean().setAuditProfileGroup(new ArrayList<PmProfileGroup>());
+				getManagedBean().setNewAuditProfileGroup(new ArrayList<PmProfileGroup>());
+				/************ AUDIT 35509 - shaqimi end  *************/
 			}
 		} finally {
 			orgProfileSO = null;
@@ -1683,10 +1769,11 @@ public class OrganisationBackingBean extends
 
 	}
 	
+	/************************AUDIT 35509 - shaqimi start************************************************/
+	
 	/**
-	 * START: #35509
-	 * @param pmAddressType
-	 * @return
+	 * This method is used to set pm address manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
 	 */
 	public PmAddressType setManualPmAddressType(PmAddressType pmAddressType){
 		PmAddressType manualPmAddressType = new PmAddressType();
@@ -1698,7 +1785,61 @@ public class OrganisationBackingBean extends
 		
 		return manualPmAddressType;
 	}
-	//END - #35509
+	
+	/**
+	 * This method is used to set sm supplier bank manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
+	
+	public SmSupplierBank setManualSmSupplierBank(SmSupplierBank smSupplierBank){
+		SmSupplierBank manualSmSupplierBank = new SmSupplierBank();
+		
+		manualSmSupplierBank.setPmFinancialOrg(smSupplierBank.getPmFinancialOrg());
+		
+		for(PmFinancialOrg financialOrg : getManagedBean().getFinancialBanks()){
+			if(financialOrg.getFinancialOrgId().equals(smSupplierBank.getPmFinancialOrg().getFinancialOrgId())){
+				manualSmSupplierBank.getPmFinancialOrg().setFinOrgName(financialOrg.getFinOrgName());
+				break;
+			}
+		}
+		
+		manualSmSupplierBank.setAccountNo(smSupplierBank.getAccountNo());
+		manualSmSupplierBank.setRecordStatusFlg(smSupplierBank.getRecordStatusFlg());
+		
+		return manualSmSupplierBank;
+	}
+	
+	/**
+	 * This method is used to set profile group manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
+	
+	public PmProfileGroup setManualProfileGroup(PmProfileGroup pmProfileGroup){
+		PmProfileGroup manualPmProfileGroup = new PmProfileGroup();
+		
+		manualPmProfileGroup.setAuthorizedOrgProfile(pmProfileGroup.getAuthorizedOrgProfile());
+		manualPmProfileGroup.setRecordStatusFlg(pmProfileGroup.getRecordStatusFlg());
+		
+		return manualPmProfileGroup;
+	}
+	
+	/**
+	 * This method is used to set sm personnel manually in audit
+	 * Reasons why is because data used as reference will change when the main data changes
+	 */
+	public SmPersonnel setManualSmPersonnel(SmPersonnel smPersonnel){
+		SmPersonnel manualsmPersonnel = new SmPersonnel();
+		
+		manualsmPersonnel.setBrandNew(smPersonnel.isBrandNew());
+		manualsmPersonnel.setRecordStatusFlg(smPersonnel.getRecordStatusFlg());
+
+		if (smPersonnel.getSmAppl() != null) {
+			manualsmPersonnel.setSmAppl(smPersonnel.getSmAppl());
+		}
+		
+		return manualsmPersonnel;
+	}
+	/************************AUDIT 35509 - shaqimi end  ************************************************/
 
 	/**
 	 * 
@@ -2417,6 +2558,9 @@ public class OrganisationBackingBean extends
 							personnel
 									.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							addedPersonnelList.add(personnel);
+							/**********************************AUDIT 35509 - shaqimi start******************************************/
+							getManagedBean().getNewAuditSmPersonnels().add(setManualSmPersonnel(personnel));
+							/**********************************AUDIT 35509 - shaqimi end  ******************************************/
 							found = true;
 						}
 					}
@@ -2431,6 +2575,9 @@ public class OrganisationBackingBean extends
 					}
 
 					addedPersonnelList.add(newSmPersonnel);
+					/**********************************AUDIT 35509 - shaqimi start******************************************/
+					getManagedBean().getAuditSmPersonnels().add(setManualSmPersonnel(newSmPersonnel));
+					/**********************************AUDIT 35509 - shaqimi end  ******************************************/
 				}
 			}
 		}
