@@ -59,10 +59,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import javax.servlet.http.HttpServletRequest;
 import com.liferay.compat.portal.util.PortalUtil;
 //#28895_35501 End
-//#34031 Start
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sm.SmRevisit;
 
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
