@@ -39,7 +39,6 @@ import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
@@ -68,8 +67,6 @@ import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.dto.sc.quationtender.SpecificationReqDTO;//#38151
-import my.ep.dto.sc.quationtender.SpecificationResDTO;//#38151
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -123,7 +120,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
-import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;//#38151
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -145,7 +141,6 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBiddingBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
-import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
@@ -832,11 +827,7 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setLoiLoaItemsMap(loiLoaItemsMap);
 				getManagedBean().setSupplierLoiLoaItemsMap(supplierLoiLoaItemsMap);
 				getManagedBean().setRecommendDtlIds(recommendDtlIds);
-				getManagedBean().setWeightageReq(scQtRecommendList.get(0).getRequestItem().getTplSpecQuestion().isWeightageReq());//#38151
-				//getManagedBean().setWeightageReq(true); //#38151
-				retrievescoresettings(getManagedBean().getScQt()); //#38151
-				getManagedBean().getScQt().setScQtScoreSettings(this.getManagedBean().getScQt().getScQtScoreSettings()); //#38151
-								
+				
 				String recommendType = scQtFinalization.getRecommendedTypeId()
 													   .getParameterCode();
 				if (isZonal) {
@@ -3862,12 +3853,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
-		//#21692 - Start
-		if (this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			validateLOIDetails(scLoi, outcome);
-		}
-		//#21692 - End
+		validateLOIDetails(scLoi, outcome);
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
 				.longValue();
@@ -6917,11 +6903,7 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
-		if (scLoi != null && scLoi.getLoiId() != null
-				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
-				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV)) {
+		if (scLoi != null && scLoi.getLoiId() != null && checkingForEPVNotification(scLoi)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
@@ -7010,165 +6992,38 @@ public class LOIDetailBackingBean extends
 	}
 	//#21692 - End
 	
-	//#38151 - Start
-	public void qualifiedSupplierListPopupScore(Long supplierId) {
-		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-
-		qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTSuppFinalizationSO.class);
-		log.info("===========================================" + supplierId);
-
-		BigDecimal totalScoreTecEval = null;
-		BigDecimal totalScoreFinEval = null;
-		BigDecimal scoresettsTec = null;
-		BigDecimal scoresettsFin = null;
-		BigDecimal recommendationTechnicalScore = null;
-		BigDecimal recommendationFinancialScore = null;
-		BigDecimal recommendationTotalScore = null;
-		BigDecimal percentage = new BigDecimal(SourcingConstants.IS_ONE_HUNDRED_PERCENT);
-		Long qtId = this.getManagedBean().getScQt().getQtId();
-		String currentEvalStage = null;
-		String evalstageT = null;
-		String evalstageF = null;
-		Long requestNoteItemId = null;
-		Long selectedZoneId = null;
-		
-		requestNoteItemId = (CollectionUtils.isNotEmpty(this.getManagedBean().getRecommendList()))
-			    ? this.getManagedBean().getRecommendList().get(0).getRequestItem().getRequestNoteItemId()
-			    : requestNoteItemId;
-		
-		selectedZoneId = (this.getManagedBean().getSelectedZone().getSpecZoneId() != null)
-			    ? this.getManagedBean().getSelectedZone().getSpecZoneId()
-			    : selectedZoneId;
-
-		if (null != this.getManagedBean().getRecommendedSupplierList()) {
-				if (null == this.getManagedBean().getSelectItemList()) {
-					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG;
-
-				} else {
-					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
-				}
+	//#21692 - Start
+	/**
+	 * Must validate html for LOI first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelPopup.show()");
 		} else {
-
-			for (ScQtRecommend recommendList : this.getManagedBean().getRecommendList()) {
-				if (recommendList.getTplSpecZoneDtl().getSpecZoneId().equals(selectedZoneId)) {
-					currentEvalStage = SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM;
-
-				}
-
-			}
+			RequestContext.getCurrentInstance().execute("cancelPopup2.show()");
 		}
-
-		if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)) {
-			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
-			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_PKG;
-		} else if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM)) {
-			//if WIP cannot use Evalstage TI have to change T, 4serangkai deployment only can use TI
-			//evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL;
-			evalstageT = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-			evalstageF = SourcingConstants.EVAL_STAGE_FINANCIAL_ITM;
-		}
-
-		List<Object[]> findListT = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageT, qtId, null);
-		for (Object[] row : findListT) {
-			BigDecimal suppId = (BigDecimal) row[0];
-			//BigDecimal supplierNo = (BigDecimal) row[1];
-			BigDecimal supplierTotalScore = (BigDecimal) row[3];
-			String evalStage = row[4].toString();
-			BigDecimal reqItemId = (BigDecimal) row[6];
-			// Handle each row
-			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageT)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
-				totalScoreTecEval = supplierTotalScore;
-				break;
-			}
-		}
-
-		for (ScQtScoreSetting scoresett : this.getManagedBean().getScQt().getScQtScoreSettings()) {
-			if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_PKG)
-					&& scoresett.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE) {
-				scoresettsTec = scoresett.getOverallTechnical();
-				scoresettsFin = scoresett.getOverallFin();
-
-				if (null != scoresett.getOverallOtherTechnical() || null != scoresett.getOverallOtherFin()) {
-					scoresettsTec = scoresett.getOverallTechnical().add(scoresett.getOverallOtherTechnical());
-					scoresettsFin = scoresett.getOverallFin().add(scoresett.getOverallOtherFin());
-				}
-				break;
-			} else if (currentEvalStage.equalsIgnoreCase(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM)
-					&& scoresett.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
-				scoresettsTec = scoresett.getOverallTechnical();
-				scoresettsFin = scoresett.getOverallFin();
-
-				if (null != scoresett.getOverallOtherTechnical() || null != scoresett.getOverallOtherFin()) {
-					scoresettsTec = scoresett.getOverallTechnical().add(scoresett.getOverallOtherTechnical());
-					scoresettsFin = scoresett.getOverallFin().add(scoresett.getOverallOtherFin());
-				}
-				break;
-			}
-		}
-		this.getManagedBean().setOverallTechnicalRecommendationPercent(scoresettsTec.longValue());
-		this.getManagedBean().setOverallFinancialRecommendationPercent(scoresettsFin.longValue());
-
-
-		List<Object[]> findListF = qtSuppFinalizationSO.retrieveQtEvaluationResultDtlsTFscore(evalstageF, qtId,
-				selectedZoneId);
-
-		for (Object[] row : findListF) {
-			BigDecimal suppId = (BigDecimal) row[0];
-			//BigDecimal supplierNo = (BigDecimal) row[1];
-			BigDecimal supplierTotalScore = (BigDecimal) row[3];
-			String evalStage = row[4].toString();
-			BigDecimal reqItemId = (BigDecimal) row[6];
-			// Handle each row
-
-			if (supplierId == suppId.longValue() && evalStage.equalsIgnoreCase(evalstageF)
-					&& (requestNoteItemId == null || reqItemId == null || requestNoteItemId == reqItemId.longValue())) {
-				totalScoreFinEval = supplierTotalScore;
-				break;
-			}
-		}
-
-		recommendationTechnicalScore = totalScoreTecEval.multiply(scoresettsTec).divide(percentage,
-				SourcingConstants.DECIMAL_PRECISION, BigDecimal.ROUND_HALF_UP);
-
-		recommendationFinancialScore = totalScoreFinEval.multiply(scoresettsFin).divide(percentage,
-				SourcingConstants.DECIMAL_PRECISION, BigDecimal.ROUND_HALF_UP);
-		
-		recommendationTotalScore = recommendationTechnicalScore.add(recommendationFinancialScore);
-		
-		WeightageScoreBean bean = new WeightageScoreBean(totalScoreTecEval.doubleValue(),
-				totalScoreFinEval.doubleValue(), recommendationTechnicalScore.doubleValue(),
-				recommendationFinancialScore.doubleValue(), recommendationTotalScore.doubleValue());
-
-		List<WeightageScoreBean> listlist = new ArrayList<>();
-		listlist.add(bean);
-
-		this.getManagedBean().setWeightageScoreBeans(listlist);
-
-		RequestContext.getCurrentInstance().execute("SuppScoreDetailsPopup.show()");
-
 	}
+	//#21692 - End
 	
-	public void retrievescoresettings(ScQt scqt) {
+	//#21692 - Start
+	private boolean checkingForEPVNotification(ScLoi scLoi) {
+		// List of statuses to enable notification
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
 		
-		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-		reqDTO.setScQt(scqt);
-		SpecificationResDTO resDTO = null;
-		IQTSpecSO specSo = null;
-		try {
-			List<Integer> settinglist = new ArrayList<Integer>();
-			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_PACKAGE);
-			settinglist.add(SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM);
+		boolean isStatusEnabled = scLoi.getScWorkFlowStatus() != null
+				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());
+		boolean isQTValid = checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
 
-			reqDTO.setSettingTypes(settinglist);
-			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-					IQTSpecSO.class);
-			resDTO = specSo.retrieveScoreSettingDtls(reqDTO);
-			this.getManagedBean().getScQt().setScQtScoreSettings(resDTO.getScoreSettingResultBean().getResultList());
-		} catch (Exception e) {
-			handleException(e);
-		}
+		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId()) && isStatusEnabled
+				&& isQTValid && !isQTMaintenanceScreen();
 	}
-		//#38151 - End
+	//#21692 - End
 }

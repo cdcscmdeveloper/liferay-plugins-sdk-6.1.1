@@ -13994,7 +13994,7 @@ public class SpecificationBackingBean extends
 									localCheckList.setTitle(tecSpecMaster.getSpecName());
 									finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 									finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-									finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+									// Bug #38208@Syazani 12/06/2025 - line removed
 									localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 									updatedCheckLists.add(localCheckList);
 									
@@ -14827,7 +14827,7 @@ public class SpecificationBackingBean extends
 							finChecklist.setTitle(tecSpecMaster.getSpecName());
 							finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 							finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-							finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+							// Bug #38208@Syazani 12/06/2025 - line removed
 							scQtCheckList.setEdited(false);
 							//1873 - start - note 97
 							updatedCheckLists.add(finChecklist); 

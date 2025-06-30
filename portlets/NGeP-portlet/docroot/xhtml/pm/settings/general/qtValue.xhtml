@@ -14,11 +14,10 @@
 						value="#{lbl['lbl.pm.settings.qt.tooltip']}" /></td>
 				<td>
 					<div align="right" style="width: 100%">
-						<p:commandButton value="#{lbl['lbl.btn.save']}"
-							id="qtValueSaveBtnId" partialSubmit="true"
-							process=":form:settingTabId:qtValuePnlId"
-							update=":form:settingTabId:qtValuePnlId"
-							action="#{ruleCatalogueBackingBean.saveQtValues}"></p:commandButton>
+						<!-- 34445 start -->
+						<p:commandButton value="#{lbl['lbl.btn.save']}" id="qtValueSaveBtnId"
+							partialSubmit="true" oncomplete="saveQtValueInfoDlg.show();"/>
+						<!-- 34445 end -->
 					</div>
 				</td>
 			</tr>
@@ -137,9 +136,16 @@
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}"
 			update=":form:settingTabId:qtValueTableId" />
-
-
-
-
+			
+		<!-- 34445 start -->
+		<ac:confirmationPopupSM id="saveQtValueInfoDlg" widget="saveQtValueInfoDlg"
+			okAction="ruleCatalogueBackingBean.saveQtValues"
+			okProcess=":form:settingTabId:qtValuePnlId"
+			width="400" height="100"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			content="#{lbl['lbl.pm.btn.save.msg']}" 
+			update=":form:settingTabId:qtValuePnlId"
+			loadingWidget="blockWidget" />
+		<!-- 34445 end -->
 	</p:panel>
 </ui:composition>
