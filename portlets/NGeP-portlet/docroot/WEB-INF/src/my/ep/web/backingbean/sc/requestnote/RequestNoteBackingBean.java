@@ -1213,14 +1213,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			//#26059 - start
 			else if (outcome.equals(BpmOutcomeConst.BPM_SUBMIT)){
-				if (getManagedBean().isExceededAmountAlerted()) {
-					if(getManagedBean().getCounter() > 1 ){
-						requestNoteSubmit(outcome);
-					}
-					
-				} else{
-					requestNoteSubmit(outcome);
-				}
+				proceedSubmit(outcome);
 			}
 			//#26059 - end
 			else {
@@ -1228,6 +1221,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		}
 	}
+
+	//#26059 - start
+	/**
+	 * Submits request note unless exceeded amount alerted and counter is 1 or less.
+	 * @param outcome Submission outcome.
+	 */
+	private void proceedSubmit(String outcome) {
+		if (getManagedBean().isExceededAmountAlerted()) {
+			if (getManagedBean().getCounter() > 1) {
+				requestNoteSubmit(outcome);
+			}
+		} else {
+			requestNoteSubmit(outcome);
+		}
+	}
+	//#26059 - end
 
 	// #27545 - start
 	public void validateAssignedUser(List<ScRequestNoteDtl> requestNoteDtls) {
@@ -1392,8 +1401,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * 
 	 * @param requestNote
 	 *            the request note
-	 * @param nonDeletedDtls
-	 *            the non deleted dtls
+	 * @param outcome The outcome string (e.g., BPM_APPROVE, BPM_SUBMIT) influencing validation behavior and messages.
 	 */
 	private void validateRequestNote(ScRequestNote requestNote, String outcome) {//#26059 - add outcome
 		debugLogger("validateRequestNote");
@@ -1641,18 +1649,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
 					updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
-					throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName, thresholdValue.toString(),
-							thresholdItems.toString(), });
+					triggerAlertApproval(thresholdItems, thresholdValue, ptjName, requestNoteResDTO);
 				} else {					
 					getManagedBean().setCounter(getManagedBean().getCounter()+1);
-					if (getManagedBean().getCounter() == 1) {
-						FacesContext.getCurrentInstance().addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
-										MessageConst.ERROR_760561, new String[] { ptjName, thresholdValue.toString(),
-												thresholdItems.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-					}
+					triggerAlertSubmission(thresholdItems, thresholdValue, ptjName);
 				}
 
 			} else{
@@ -1686,6 +1686,39 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	//#26059 - start
 	/**
+	 * Triggers an info message alert on first submission if threshold exceeded.
+	 * @param thresholdItems Exceeded items.
+	 * @param thresholdValue Exceeded threshold.
+	 * @param ptjName Related PTJ.
+	 */
+	private void triggerAlertSubmission(StringBuilder thresholdItems, BigDecimal thresholdValue, String ptjName) {
+		if (getManagedBean().getCounter() == 1) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(
+							MessageConst.ERROR_760561, new String[] { ptjName, thresholdValue.toString(),
+									thresholdItems.toString() }, MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+		}
+	}
+
+	/**
+	 * Throws exception if BPK approval is incomplete for request note details.
+	 * @param thresholdItems Exceeded items.
+	 * @param thresholdValue Exceeded threshold.
+	 * @param ptjName Related PTJ.
+	 * @param requestNoteResDTO Request note details.
+	 * @throws EpException if BPK approval incomplete.
+	 */
+	private void triggerAlertApproval(StringBuilder thresholdItems, BigDecimal thresholdValue, String ptjName,
+			RequestNoteResDTO requestNoteResDTO) {
+		if (!isBpkAprovalCompleted(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls())) {
+			throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName,
+					thresholdValue.toString(), thresholdItems.toString(), });
+		}
+	}
+
+	/**
 	 * Updates ScRequestNoteDtl list via service, logs errors with SLAUtils.
 	 * @param scRequestNoteDtlList Details to update.
 	 */
@@ -1706,6 +1739,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					"updateScRequestNoteDtl", getUserIdSessionFromLoginId(), e);
 		}
 	}
+	
+	/**
+	 * Checks if any detail in the list has a BPK threshold decision.
+	 * @param scRequestNoteDtlList List of request note details.
+	 * @return True if any decision exists, false otherwise.
+	 */	
+	private boolean isBpkAprovalCompleted(List<ScRequestNoteDtl> scRequestNoteDtlList) {
+		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList) {
+			if (scRequestNoteDtl.getBpkThresholdDecision()!= null){
+				return true;
+			}
+		}		
+		return false;
+	}	
 	//#26059 - end
 	// #31689 - start
 	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
@@ -7061,7 +7108,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	// start - #26059
 	/**
-			 */
+	 * Displays the BPK approver's view of a request note.
+	 *
+	 * @param requestNoteId The ID of the request note to view.
+	 */
 	public void viewBpkApproverRequestNote(long requestNoteId) {
 		debugLogger("viewBpkApproverRequestNote");
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -7086,6 +7136,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, BPK_APPROVER_REQUEST_NOTE_PAGE);
 	}
 
+	/**
+	 * Groups request note details by UNSPSC ID, calculates totals, and sorts the resulting commodity groups.
+	 */
 	public void groupRequestNoteDtlsByUnspscId(List<ScRequestNoteDtl> dtlsToGroup) {
 		Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId = new HashMap<>();
 		getManagedBean().getCommodityGroups().clear();
@@ -7205,6 +7258,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		});
 	}
 
+	/**
+	 * Handles the submission of BPK approver decisions for a request note.
+	 * This method iterates through commodity groups, validates decisions,
+	 * applies them to request note details, and triggers BPK approval notifications.
+	 * It also validates remarks if any decision is a rejection.
+	 * Updates the request note in the database and logs any errors during the process.
+	 */
 	public void bpkApproverSubmit() {
 		StringBuilder updatedItems = new StringBuilder();
 		int count = 0;
@@ -7264,23 +7324,30 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	/**
+	 * Handles the file upload event, associating the uploaded file as an attachment
+	 * to the current request note.
+	 *
+	 * @param event The {@link FileUploadEvent} containing the uploaded file.
+	 * @throws FileNotFoundException If the file specified by the path name does not exist.
+	 * @throws IOException If an I/O error occurs during the file upload process.
+	 */
 	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		log.debug("handleFileUpload - START");
-		List<ScRequestNoteAttachment> attachments = new ArrayList<ScRequestNoteAttachment>();
+		List<ScRequestNoteAttachment> attachments = new ArrayList<>();
 		if (event.getFile() != null) {
-			ScAttachment scAttachment = null;
 			ScRequestNoteAttachment attachment = new ScRequestNoteAttachment();
 			ScRequestNote scRequestNote = this.getManagedBean().getRequestNote();
 
 			List<ScRequestNoteAttachment> scRequestNoteAttachments = scRequestNote.getScRequestNoteAttachments();
 			if (null == scRequestNoteAttachments) {
-				scRequestNoteAttachments = new ArrayList<ScRequestNoteAttachment>();
+				scRequestNoteAttachments = new ArrayList<>();
 			}
 			attachment.setScRequestNote(scRequestNote);
 			attachment.setDocNo(scRequestNote.getRequestNoteNo());
 			scRequestNoteAttachments.add(attachment);
 			scRequestNote.setScRequestNoteAttachments(scRequestNoteAttachments);
-			scAttachment = attachment;
+			ScAttachment scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			getManagedBean().setRequestNote(scRequestNote);
 			attachments.add(attachment);
@@ -7288,13 +7355,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		log.debug("handleFileUpload - END");
 	}
 
+	/**
+	 * Validates if any new remark in the request note is empty or null.
+	 * Throws an exception if an empty or null new remark is found.
+	 *
+	 * @param requestNote The {@link ScRequestNote} containing the remarks to validate.
+	 */
 	private void validateRemark(ScRequestNote requestNote) {
 		boolean newRemark = false;
 		FacesScopes facesScopes = new FacesScopes();
 
 		for (ScRequestNoteRemark remark : requestNote.getRemarks()) {
 			// no new remark being insert
-			if (remark.getRemark() == null || remark.getRemark().equalsIgnoreCase("") || remark.getRemark().isEmpty()) {
+			if (remark.getRemark() == null || ("").equalsIgnoreCase(remark.getRemark()) || remark.getRemark().isEmpty()) {
 				newRemark = true;
 			}
 		}
@@ -7305,7 +7378,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * To send notification for email and dashboard
+	 * Sends BPK approval notifications to the relevant approver.
+	 * This method constructs an HTML table row summary of commodity groups
+	 * and then dispatches email and dashboard notifications.
+	 * It retrieves necessary information such as PTJ name, ministry name,
+	 * and BPK approver name to populate the notification content.
+	 * If the approver is not found, a log entry is created.
+	 *
+	 * @param commodityGroup A list of {@link CommodityGroup} objects containing item details and decisions.
+	 * @param updatedRequestNote The {@link ScRequestNote} object with the latest updates to be used in the notification.
 	 */
 	public void bpkApprovalNotification(List<CommodityGroup> commodityGroup, ScRequestNote updatedRequestNote) {
 		String approve = ResourceBundleUtils.getMessage("lbl.sc.decision.approve",
@@ -7317,19 +7398,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		requestNoteReqDTO.setRequestNote(getManagedBean().getRequestNote());
 		requestNoteReqDTO.setUserLocale(facesScopes.getUserLocale());
 		StringBuilder sb = new StringBuilder();
-		String htmlDataRow = SSTConstant.EMPTY_STRING;
-        
 		
 		for (CommodityGroup group : commodityGroup) {
-			htmlDataRow = generateSingleTableRowHtml(
+			String rowHtml = generateSingleTableRowHtml(
 					SSTConstant.EMPTY_STRING.equalsIgnoreCase(group.getItemCode()) ? group.getItemName() : group
 							.getItemCode().concat(HtmlTemplateConstants.SPACING).concat(group.getItemName()), group
 							.getCurrentItemTotalAmount().toString(), group.getAccumulativeAmountPerItemGroup()
 							.toPlainString(), (HtmlTemplateConstants.ONE_VAL).equalsIgnoreCase(group.getDecision()) ? approve : reject);
-			sb.append(htmlDataRow);
+			sb.append(rowHtml);
 		}
 		
-		htmlDataRow = sb.toString();
+		String htmlDataRow = sb.toString();
 		
 
 		if (getManagedBean().getRequestNote() != null
@@ -7362,21 +7441,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	
-	 public String generateSingleTableRowHtml(
-		        String var1Value,
-		        String var2Value,
-		        String var3Value,
-		        String var4Value) {
-		 
-		        String resultHtml = HtmlTemplateConstants.ROW_TEMPLATE;
-		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_1, escapeHtml(var1Value));
-		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_2, escapeHtml(var2Value));
-		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_3, escapeHtml(var3Value));
-		        resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_4, escapeHtml(var4Value));
+	/**
+	 * Generates an HTML table row using template constants and provided values.
+	 * @param var1Value Value for variable 1.
+	 * @param var2Value Value for variable 2.
+	 * @param var3Value Value for variable 3.
+	 * @param var4Value Value for variable 4.
+	 * @return Populated HTML table row string.
+	 */
+	public String generateSingleTableRowHtml(String var1Value, String var2Value, String var3Value, String var4Value) {
 
-		        return resultHtml;
-		    }
-	
+		String resultHtml = HtmlTemplateConstants.ROW_TEMPLATE;
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_1, escapeHtml(var1Value));
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_2, escapeHtml(var2Value));
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_3, escapeHtml(var3Value));
+		resultHtml = resultHtml.replace(HtmlTemplateConstants.VAR_4, escapeHtml(var4Value));
+
+		return resultHtml;
+	}	
 	
 	/**
 	 * Helper method to escape HTML sensitive characters for values inserted
@@ -7394,6 +7476,5 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
 				.replace("'", "&#x27;"); // For single quotes
 	}
-
 	// end - #26059
 }
