@@ -4604,6 +4604,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @param supplier
 	 */
 	public void retrieveActiveDisciplinaryAction(SmSupplier supplier){
+		//38441 - START
+		supplier.setEndDate(true);
+		//38441 - END
 		List<SmDisciplinaryAction> discList = SmApplicationUtil.retrieveActiveSmDisciplinaryActionBySupplier(supplier);
 		if(EntityHelper.isCollectionEmpty(discList)){
 			getManagedBean().setNoDisciplinary(true);
