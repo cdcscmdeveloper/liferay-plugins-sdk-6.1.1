@@ -49,7 +49,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;//#38151
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -87,8 +87,8 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.SpecificationReqDTO;
-import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;//#38151
+import my.ep.dto.sc.quationtender.SpecificationResDTO;//#38151
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
@@ -1339,7 +1339,12 @@ public class SupplierFinalizationBackingBean extends
 			evalStageId = tecfin;
 		}
 		// #38151 - End
-		log.info("evalStageId" + evalStageId);
+		// #28777 & #29729 - Start
+		String isDisqualifiedId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("isDisqualifiedId");
+		boolean isDisqualified = (isDisqualifiedId != null && Integer.parseInt(isDisqualifiedId) == SourcingConstants.RECORD_STATUS_DISQUALIFIED) ? true
+				: false;
+		// #28777 & #29729 - End
 		int evaluationStageId = 0;
 		if (evalStageId != null) {
 			evaluationStageId = Integer.parseInt(evalStageId);
@@ -9441,14 +9446,9 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setPayLoad(dataType);
 		}
 		
-		
-		
-		
-		
-		
-		
 		loadInitialData(scQt.getQtId());
-		
+		retrievescoresettings(scQt); //#38151
+		getManagedBean().getScQt().setScQtScoreSettings(this.getManagedBean().getScQt().getScQtScoreSettings()); //#38151
 		if(isQTMaintenanceScreen()){
 			//if(QTStatusConst.SF_PENDING_SIGN_OFF.equals(getManagedBean().getCurrentStatusId()) || getManagedBean().getCurrentStatusId() == null){//17376-165
 				IQTSuppFinalizationSO qtSuppFinalizationSO = getQTSuppFinalizationSO();
