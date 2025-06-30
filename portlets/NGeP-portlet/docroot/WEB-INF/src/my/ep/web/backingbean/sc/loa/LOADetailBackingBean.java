@@ -12634,7 +12634,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {
-		if (scLoa != null && scLoa.getLoaId() != null && checkingForEPVNotification(scLoa)) {
+		if (scLoa != null && scLoa.getLoaId() != null 
+				&& !ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())
+				&& checkingForEPVNotification(scLoa)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_ACCEPTANCE,
