@@ -5222,7 +5222,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 	
-	public String getCatCodeRemarks(SmRevisit revisit) {
+	public String getExtendedRemarks(SmRevisit revisit) {
 		StringBuilder extRemark = new StringBuilder();
 		extRemark.append("");
 		
@@ -5230,22 +5230,22 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		
 		if (null != revisit.getOldPmRegStatus() && null != revisit.getNewPmRegStatus()) {
 			extRemark
-					.append("<br />")
+					.append("<br /><br />")
 					.append(index)
 					.append(". ")
 					.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.one", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()))
 					.append(" ")
-					.append(getPmStatusDescs(revisit.getOldPmRegStatus().getPmStatus().getStatusId()))
+					.append(SmCommonUtil.getStatusDescByStatusId(revisit.getOldPmRegStatus().getPmStatus().getStatusId()).getStatusName())
 					.append(" ")
 					.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.regStatus.part.two", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale())).append(" ")
-					.append(getPmStatusDescs(revisit.getNewPmRegStatus().getPmStatus().getStatusId()));
+					.append(SmCommonUtil.getStatusDescByStatusId(revisit.getNewPmRegStatus().getPmStatus().getStatusId()).getStatusName());
 			index++;
 		}
 		if (null != revisit.getDeletedRvCatCodes() && !revisit.getDeletedRvCatCodes().isEmpty()){
 			extRemark
-					.append("<br />")
+					.append("<br /><br />")
 					.append(index)
 					.append(". ")
 					.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.deleted.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -5263,7 +5263,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		if (null != revisit.getAddedRvCatCodes() && !revisit.getAddedRvCatCodes().isEmpty()){
 			extRemark
-					.append("<br />")
+					.append("<br /><br />")
 					.append(index)
 					.append(". ")
 					.append(ResourceBundleUtils.getMessage("lbl.sm.rv.visiting.remark.added.categories", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -5282,7 +5282,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (null != revisit.getAddedRvCatCodes() && !revisit.getUpdatedRvCatCodes().isEmpty()) {
 			for (SmRvCatCode updatedRvCatCodes : revisit.getUpdatedRvCatCodes()) {
 				extRemark
-						.append("<br />")
+						.append("<br /><br />")
 						.append(index)
 						.append(". ")
 						.append(" ")
@@ -5301,27 +5301,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 		
 		return extRemark.toString();
-	}
-	
-	/**
-	 * @param statusList
-	 * @param pmStatusId
-	 * @return
-	 */
-	public String getPmStatusDescs(Long pmStatusId) {
-		String statusName = "";
-		List<PmStatusDesc> statusList = this.getManagedBean().getRegStatusDescList();
-
-		if (!SmCommonUtil.isCollectionEmpty(statusList) && pmStatusId != null) {
-			// Expected Max Size in loop (5) based on NGEP_PDS database
-			for (PmStatusDesc status : statusList) {
-				if (status.getPmStatus().getStatusId().equals(pmStatusId)) {
-					statusName = status.getStatusName();
-					break;
-				}
-			}
-		}
-		return statusName;
 	}
 	// #34031 End
 	

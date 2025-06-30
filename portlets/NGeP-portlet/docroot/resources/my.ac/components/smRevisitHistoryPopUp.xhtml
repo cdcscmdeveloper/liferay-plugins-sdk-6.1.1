@@ -84,7 +84,7 @@
 					style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
 					<h:outputText value="#{revisit.revisitRemark}" />
 					<h:outputText
-						value="#{cc.attrs.backingBean.getCatCodeRemarks(revisit)}"
+						value="#{cc.attrs.backingBean.getExtendedRemarks(revisit)}"
 						escape="false" />
 				</p:column>
 				<p:column
@@ -98,14 +98,17 @@
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
-			<div align="right">
-				<p:commandButton id="downloadRevisitHistoryId"
-					value="#{lbl['lbl.sm.rv.history.btn.download']}"
-					rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}">
-					<p:fileDownload
-						value="#{cc.attrs.backingBean.downloadRevisitHistory()}" />
-				</p:commandButton>
-			</div>
+			<p:outputPanel
+				rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}">
+				<div align="right">
+					<p:commandButton id="downloadRevisitHistoryId"
+						value="#{lbl['lbl.sm.rv.history.btn.download']}"
+						rendered="#{!cc.attrs.backingBean.managedBean.supplierUser}">
+						<p:fileDownload
+							value="#{cc.attrs.backingBean.downloadRevisitHistory()}" />
+					</p:commandButton>
+				</div>
+			</p:outputPanel>
 		</p:dialog>
 	</cc:implementation>
 </ui:component>
