@@ -1715,6 +1715,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if (!isBpkAprovalCompleted(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls())) {
 			throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName,
 					thresholdValue.toString(), thresholdItems.toString(), });
+		} else {
+			throw new EpException(MessageConst.ERROR_760563, new String[] { ptjName,
+					thresholdValue.toString(), thresholdItems.toString(), });
 		}
 	}
 
