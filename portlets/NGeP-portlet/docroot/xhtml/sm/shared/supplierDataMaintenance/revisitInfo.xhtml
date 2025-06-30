@@ -84,57 +84,25 @@
 				<td style="width: 25%; vertical-align: top"><p:outputLabel
 						styleClass="outputLabel-view-label" style="vertical-align:top"
 						value="#{lbl['lbl.sm.rv.history.visit.remark']}" /></td>
-				<td
-					style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-					<c:choose>
-						<c:when test="#{!viewSmApplBackingBean.managedBean.supplierUser}">
-							<p:outputLabel styleClass="outputLabel-view"
-								value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
-							<p:outputLabel styleClass="outputLabel-view"
-								rendered="#{empty viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}"
-								value="#{lbl['lbl.txt.na']}" />
-						</c:when>
-						<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser}">
-							<table>
-								<ui:repeat var="remark" varStatus="remarkIndex"
-									value="#{viewSmApplBackingBean.getSupplierRvRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}">
-									<tr>
-										<td style="width: 3%; vertical-align: top"><p:outputLabel
-												styleClass="outputLabel-view" style="vertical-align:top"
-												value="#{remarkIndex.index+1}." /></td>
-										<td
-											style="width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-											<p:outputLabel styleClass="outputLabel-view"
-												value="#{remark}" /> <p:outputPanel
-												rendered="#{remarkIndex.last}">
-												<br />
-												<table align="left">
-													<ui:repeat var="catCode" varStatus="sub"
-														value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.smRvCatCodes}">
-														<tr>
-															<td style="width: 3%; vertical-align: top"><p:outputLabel
-																	styleClass="outputLabel-view"
-																	style="vertical-align:top"
-																	value="#{remarkIndex.index+1}.#{sub.index+1}." /></td>
-															<td
-																style="width: 97%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-																<p:outputLabel styleClass="outputLabel-view">
-																#{catCode.smSupplierCategory.pmCategoryL1.categoryL1Code}#{catCode.smSupplierCategory.pmCategoryL2.categoryL2Code}#{catCode.smSupplierCategory.pmCategoryL3.categoryL3Code}
-																-
-																#{catCode.smSupplierCategory.categoryL3Name}
-															</p:outputLabel>
-															</td>
-														</tr>
-													</ui:repeat>
-												</table>
-											</p:outputPanel>
-										</td>
-									</tr>
-								</ui:repeat>
-							</table>
-						</c:when>
-					</c:choose>
-				</td>
+				<p:outputPanel
+					rendered="#{viewSmApplBackingBean.managedBean.supplierUser}">
+					<td
+						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+						<p:outputLabel styleClass="outputLabel-view"
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
+					</td>
+				</p:outputPanel>
+				<p:outputPanel
+					rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
+					<td
+						style="width: 75%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+						<h:outputText
+							value="#{viewSmApplBackingBean.managedBean.currentSmRevisit.revisitRemark}" />
+						<h:outputText
+							value="#{viewSmApplBackingBean.getExtendedRemarks(viewSmApplBackingBean.managedBean.currentSmRevisit)}"
+							escape="false" />
+					</td>
+				</p:outputPanel>
 			</tr>
 			<p:outputPanel
 				rendered="#{!viewSmApplBackingBean.managedBean.supplierUser}">
@@ -161,7 +129,5 @@
 		</table>
 	</p:panel>
 	<ac:smRevisitHistoryPopUp dialogName="revisitHistoryDialog"
-		smRevisitList="#{viewSmApplBackingBean.managedBean.smRevisitList}"
-		backingBean="#{viewSmApplBackingBean}"
-		officerView="#{!viewSmApplBackingBean.managedBean.supplierUser}" />
+		backingBean="#{viewSmApplBackingBean}" />
 </ui:composition>
