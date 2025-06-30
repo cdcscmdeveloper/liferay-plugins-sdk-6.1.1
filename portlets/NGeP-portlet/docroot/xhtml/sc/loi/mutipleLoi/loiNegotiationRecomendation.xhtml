@@ -156,15 +156,17 @@
 								</f:facet>
 								<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 							</p:column>
-							<p:column>
+							<ui:remove>26247 - start</ui:remove>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+										value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<ac:disciplinaryActionYesNo
 									supplier="#{supplier}" index="#{rowIndex}"/>
 							</p:column>
+							<ui:remove>26247 - end</ui:remove>							
 							<ui:remove>#30008 - Start</ui:remove>
 							<p:column selectionMode="single"
 								styleClass="td-check-box-spacing"
@@ -282,11 +284,11 @@
 								</ui:repeat>
 							</p:column>
 							<ui:remove>26247 - start</ui:remove>
-							<p:column>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+										value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
@@ -536,11 +538,11 @@
 							<ui:remove>
 								#31061 - SHAFFUL (START)
 							</ui:remove>
-							<p:column>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+										value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:commandLink onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()"
@@ -658,11 +660,11 @@
 							<ui:remove>
 								#31061 - SHAFFUL (START)
 							</ui:remove>
-							<p:column>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
 									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+										value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:dataList var="recommendedSupplDis"
 									value="#{item.notAwardSupplierList}" type="none"
