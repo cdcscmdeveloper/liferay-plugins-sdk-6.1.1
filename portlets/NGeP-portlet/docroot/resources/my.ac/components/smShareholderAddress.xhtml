@@ -168,7 +168,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeState(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+								update="divisionSharLabelPanelId,divisionSharDropdownPanelId,#{cc.attrs.districtId},#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
 						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
@@ -207,7 +207,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 							 listener="#{cc.attrs.bBean.onChangeDistrictByDivision(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.districtId},#{cc.attrs.cityId}" />
+								update="#{cc.attrs.districtId},#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
 						<!-- #34159 - END -->
 						<!-- #35086 -->
@@ -248,7 +248,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeDistrict(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.cityId}" />
+								update="#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
 						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
@@ -277,7 +277,7 @@
 							<!-- #36718 - add @([id$=shareholderAddrPanel]) to ajax process -->
 							<p:ajax event="change" process="@this @([id$=shareholderAddrPanel])"
 								listener="#{cc.attrs.bBean.onChangeCity(cc.attrs.addrObj.smAddress,cc.attrs.addressType)}"
-								update="#{cc.attrs.cityId}" />
+								update="#{cc.attrs.cityId},:#{p:component(cc.attrs.addrPanelId)}" />
 						</p:selectOneMenu> 
 						<!-- #34159 - END -->
 						<ac:smFieldChangeAlert 
