@@ -1,244 +1,72 @@
 package my.ep.web.backingbean.sc.requestnote;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import my.ep.util.SLAUtils; //#25790
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.bean.application.NgepApplicationBean;
-import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
-import my.ep.biz.service.ct.IContractSO; //#25790
-import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO; //#25790
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO; //#25790
-import my.ep.biz.service.osb.sc.IDPOsbSO; //#25790
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
-import my.ep.biz.service.sc.audit.IAuditDPRequestNoteSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO; //#25790
-import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
-import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
-import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
-import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.bpm.vo.WorklistVO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
-import my.ep.constant.sc.AuditDPRequestNoteConst;
 import my.ep.constant.sc.DPStatusConstants;
-import my.ep.constant.sc.ContinuityDPConst; //#25790
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.CommonConstants;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.ct.ContractReqDTO; //#25790
-import my.ep.dto.ct.ContractResDTO; //#25790
-import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
-import my.ep.dto.fl.FulfilmentReqDTO; //#25790
-import my.ep.dto.fl.FulfilmentResDTO; //#25790
-import my.ep.dto.osb.sc.DPOsbReqDTO; //#25790
-import my.ep.dto.osb.sc.DPOsbResDTO; //#25790
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
-import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
-import my.ep.dto.pm.general.settings.bpm.CompositeValidityReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierReqDTO; //#25790
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO; //#25790
-import my.ep.dto.sc.requestitem.RequestItemReqDTO;
-import my.ep.dto.sc.workflowstatus.ScWorkFlowStatusReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorReqDTO;
-import my.ep.dto.sm.blacklistDirector.BlacklistDirectorResDTO;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
-import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
-import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
-import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.helper.EntityHelper;
-import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
-import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
-import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmPricing;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.ct.CtContract; //#25790
-import my.ep.persistence.entity.ct.VCtContract; //#25790
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest; //#25790
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
-import my.ep.persistence.entity.sc.common.ScAttachment;
-import my.ep.persistence.entity.sc.common.ScRequestItem;
-import my.ep.persistence.entity.sc.common.ScRequestItemAttachment;
-import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
-import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
-import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
-import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
-import my.ep.persistence.entity.sc.loaloi.ScLoa; //#25790
-import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa; //#25790
-import my.ep.persistence.entity.sm.SmDisciplinaryAction;
-import my.ep.persistence.entity.sm.SmDisciplinaryActionRemarks;
-import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
-import my.ep.persistence.logging.LogKey;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.CustomUtils;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
-import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
-import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
-import my.ep.web.backingbean.ct.ContractDetailsBackingBean; //#25790
-import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean; //#25790
-import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean; //#25790
-import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBean;
-import my.ep.web.backingbean.sc.audit.AuditDPRequestNoteBackingBeanTemplate;
-//import my.ep.web.backingbean.sc.directpurchase.DirectPurchaseBackingBean.SearchTrackingDiaryPagingDataModel;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean; //#25790
-import my.ep.web.backingbean.sc.loacancelation.LOACancelDetailBackingBean;
-import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
-import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
-import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
-import my.ep.web.backingbean.trackingdiary.PmTrackingDiaryBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.sc.directpurchase.MarketSummaryAndPIBean;
-import my.ep.web.constant.report.ReportConst;
-import my.ep.web.constant.sc.DPConstants;
 import my.ep.web.managedbean.sc.requestnote.ApprovalExceedThresholdManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
-import my.ep.web.util.sc.helper.SourcingZoneHelper;
-import my.ep.web.util.sm.helper.SmApplicationUtil;
-import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.util.template.DocumentGenerator;
-import my.ep.web.vo.BlacklistOwnerDirectorVO;
-import my.ep.web.vo.DisciplinaryActionCategoryVO;
-import my.ep.web.vo.DisciplinaryActionVO;
-import my.ep.web.backingbean.ct.circular.CircularBackingBean; //#30866
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
-import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.apache.velocity.VelocityContext;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
-import org.primefaces.context.RequestContext;
 
-import com.liferay.portal.util.PortalUtil;
 
 // TODO: Auto-generated Javadoc
 
@@ -264,6 +92,10 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 			RoleCode.BPK_APPROVER_SA.value(), RoleCode.BPK_APPROVER_SK.value(), RoleCode.BPK_CC_APPROVER.value(),
 			RoleCode.BPK_CQ_APPROVER.value(), RoleCode.BPK_PQ_APPROVER.value());
 
+	
+	/**
+	 * Renders the view, resets search info, and navigates to the approval page.
+	 */
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -288,7 +120,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){ //#28837 - shafie 
+				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
 
 			return Boolean.TRUE;
 		}
