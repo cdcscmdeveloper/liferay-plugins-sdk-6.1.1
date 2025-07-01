@@ -14,15 +14,26 @@
 		<tr>
 			<td>
 				<div align="right" style="width: 100%">					
-					<p:commandButton value="#{lbl['lbl.btn.save']}"
-						id="yepSaveBtnId" partialSubmit="true"
-						process=":form:settingTabId:yepPnlId"
-						update=":form:settingTabId:yepPnlId"
-						action="#{ruleCatalogueBackingBean.saveYEPValues}" />
+					<!-- 34445 start -->
+					<p:commandButton value="#{lbl['lbl.btn.save']}" id="yepSaveBtnId"
+						partialSubmit="true" oncomplete="saveYetInfoDlg.show();"/>
+					<!-- 34445 end -->
 				</div>
 			</td>
 		</tr>
 	</table>
+	
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="saveYetInfoDlg" widget="saveYetInfoDlg"
+		okAction="ruleCatalogueBackingBean.saveYEPValues"
+		okProcess=":form:settingTabId:yepPnlId"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}" 
+		update=":form:settingTabId:yepPnlId"
+		loadingWidget="blockWidget" />
+	<!-- 34445 end -->
+	
 	<p:dataTable id="yearEndProcessTable"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForYepProcessing}"
 		var="feeObj" rowIndexVar="rowIndex" width="100%">

@@ -2672,11 +2672,21 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 			getManagedBean().setGstTotalAmount(staxAmt.add(gstAmt.add(contractAmt)));
 			
-			
+			// #24333 - Start
+			if (!getManagedBean().isDirectPurchase()
+					&& !getManagedBean().getCtContractAmount().isBondExempted()
+					&& (getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean()
+							.getContractVer().getCtContractAmount().isBondReq())) {
+				getManagedBean().getCtContractAmount().setTotalBondAmt(
+						getManagedBean().getContractVer().getCtContractAmount().getTotalBondAmt());
+			}
+			// #24333 - End
+
 
 		}
-		// Recalculate the performance bond amount
-		//#24333
+		
+		//#24333 Start - Remove Code
+		// Recalculate the performance bond amount		
 		// Start - Fix - #32663
 //		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
 //
@@ -2705,10 +2715,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		   }
 	    // End Fix - #33491
 		// End - Fix - #32663
+	//#24333 End - Remove Code
 
+	//#24333 - Start - Remove calculation the new performance bond amount.
 	/**
 	 * The method used to calculate the new performance bond amount.
 	 */
+	/**
 	private void calculateNewBondAmount() {
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -2733,6 +2746,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		//#24333 - End
 	}
+	**/
+	//#24333 - End - Remove calculation the new performance bond amount.
 	
 	//#13847 start
 	/**
@@ -2745,13 +2760,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			getManagedBean().setDisableDeferment(false);
 
 			if (!getManagedBean().getCtContractAmount().isBondWaived()) {
-				removeDefermentLatest();
 				removeInactiveDefermentHistory();
+				
+				if(!getManagedBean().isDisableDeferment()){
+					removeDefermentLatest();	
+				}
 
 				if (getManagedBean().getContractVer().getCtContract().getLatestContractVer() == null) {
 					getManagedBean().getContractVer().setCtBondWaiverDetails(null);
 				}
-			} else {
+			} else if(getManagedBean().getContractVer().getBondWaiverDefermentLatest()==null){
 				getManagedBean().getContractVer().setBondWaiverDefermentLatest(new CtBondWaiverDetail());
 			}
 			checkDaysDefermentBondHistory();
@@ -2783,14 +2801,18 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		List<CtBondWaiverDetail> historyDeferment = getManagedBean().getContractVer().getBondWaiverDefermentHistory();
 		// remove bond waiver that hasn't been approved
 		if (CollectionUtils.isNotEmpty(historyDeferment)) {
+			int noOfDays = 0;
 			Iterator<CtBondWaiverDetail> iter = historyDeferment.iterator();
 			while (iter.hasNext()) {
 				CtBondWaiverDetail bondWaiverHistory = iter.next();
 				if (!bondWaiverHistory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 					removeAttachmentIfExist(bondWaiverHistory.getCtAttachment());
 					iter.remove();
+				}else{
+					noOfDays += findDifference(bondWaiverHistory.getWaiverStartDate(), bondWaiverHistory.getWaiverEndDate());
 				}
 			}
+			getManagedBean().setDisableDeferment(noOfDays >= MAX_DEFERMENT_BOND_DAYS);
 		}
 	}
 	
@@ -4253,7 +4275,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+		
+		//#38491,#28854 - Start
+		Long loaId = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpecByLoaIdAndRequestItemId(loaId, requestItemId);
+		//#38491,#28854 - End
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			handleDirectPurchaseMode(itemSpecOfferList);
@@ -4405,7 +4431,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333
-		if(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()
+		if((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 						&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 						&& !getManagedBean().getCtContractAmount().isBondExempted()
 						&& (!getManagedBean().isCommonView()
@@ -4591,6 +4617,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		return ctAttachments;
 	}
 	
+	//#24333 - Start
 	/**
 	 * The method used to retrieve the bond amount
 	 * in text format.
@@ -4599,24 +4626,33 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-		Double bondAmt = getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt().doubleValue();
 
-		if (bondAmt == null || bondAmt == 0.0) {
-			return "";
-		}
+	    if (getManagedBean() == null) {
+	        return "";
+	    }
 
-		DecimalFormat df = new DecimalFormat("#.00");
-		String formattedAmount = df.format(bondAmt);
+	    CtContractAmount contractAmount = getManagedBean().getCtContractAmount();
+	    if (contractAmount == null || contractAmount.getTotalBondAmt() == null) {
+	        return "";
+	    }
 
-		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
-			return NumberWordUtilEn.convert(formattedAmount);
-		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
-			return NumberWordUtil.convert(formattedAmount);
-		}
+	    BigDecimal bondAmtDecimal = contractAmount.getTotalBondAmt();
+	    if (BigDecimal.ZERO.compareTo(bondAmtDecimal) == 0) {
+	        return "";
+	    }
 
-		return "";
+	    String formattedAmount = new DecimalFormat("#.00").format(bondAmtDecimal);
+
+	    if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+	        return NumberWordUtilEn.convert(formattedAmount);
+	    } else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+	        return NumberWordUtil.convert(formattedAmount);
+	    }
+
+	    return "";
 	}
-
+	//#24333 - End
+	
 	//#24333 - Start
 	/**
 	 * The method used to retrieve thecontract period
@@ -4657,7 +4693,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	            : null;
 
 	    // Check if the contract needs an extension or requires a bond
-	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && loa.isBondReq()
+	    if (isContractUpdateOrView(contractVer) && isAlreadyAmendment() && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 	            && currentPeriod != null && extendPeriod != null && !extendPeriod.equals(currentPeriod)) {
 
 	        isContractExtendOrIsBond = true;
@@ -4667,7 +4703,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 	    // Check for contract amendment
 	    if (contractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT)
-	            && loa.isBondReq()
+	            && (loa.isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
 	            && contractVer.getCtAmendment() != null
 	            && contractVer.getCtAmendment().isContractExtend()) {
 	        
@@ -5044,5 +5080,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		BigDecimal total = contractAmt.add(gstAmt).add(staxAmt);
 		return total;
 	}
+	
+	/**
+	 * Returns a list of PerformanceBond objects where the 'newbond' flag is equal to 1.
+	 * 
+	 * This method filters the list of performance bonds from the contract amount object,
+	 * and includes only those entries that are marked as 'new'.
+	 *
+	 * @return a list of PerformanceBond if with newbond == 1 else original bond
+	 */
+	public List<CtPerformanceBond> getBondListForAmend() {
+	    List<CtPerformanceBond> originalList = getManagedBean().getCtContractAmount().getCtPerformanceBonds();
+	    if (originalList == null) {
+	        return new ArrayList<CtPerformanceBond>();
+	    }
+
+	    List<CtPerformanceBond> filteredList = new ArrayList<CtPerformanceBond>();
+	    for (CtPerformanceBond bond : originalList) {
+	        if (bond.isBondNew()) {
+	            filteredList.add(bond);
+	        }
+	    }
+
+	    return filteredList.isEmpty() ? originalList : filteredList;
+	}
 	// 24333 - End
+
 }

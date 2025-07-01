@@ -144,6 +144,10 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		auditPMReqDTO.setObjList(objList);
 		managedBeans.setOldPmReason(null);
 		managedBeans.setNewPmReason(null);
+		managedBeans.setAuditAddAppTypeRestrictions(null);
+		managedBeans.setAuditAddComTypeRestrictions(null);
+		managedBeans.setAuditAddSuppTypeRestrictions(null);
+		managedBeans.setAuditAddPIDReasonList(null);
 		return auditPMReqDTO;
 	}
 
@@ -413,7 +417,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 					restrictionDetails.setLvlCode3(parameterCode);
 					restrictionDetails.setDocId(docId);
 					// ST / AT / SBT
-					restrictionDetails.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_DTL_APP_TYPE_FIELDLABELCODE);
+					restrictionDetails.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_DTL_BUSS_TYPE_FIELDLABELCODE);
 					restrictionDetails.setNewValue(checkPmParameterDesc(suppReason.getRestrType()));
 					restrictionDetails.setNewValueId(BigInteger.valueOf(suppReason.getRestrType().getParameterId()));
 					restrictionDetails.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -435,7 +439,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 					restrictionDetails.setLvlCode3(parameterCode);
 					restrictionDetails.setDocId(docId);
 					// ST / AT / SBT
-					restrictionDetails.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_DTL_APP_TYPE_FIELDLABELCODE);
+					restrictionDetails.setFieldLabelCode(AuditConst.PM_AUD_RC_RES_DTL_SUPPL_TYPE_FIELDLABELCODE);
 					restrictionDetails.setNewValue(checkPmParameterDesc(suppReason.getRestrType()));
 					restrictionDetails.setNewValueId(BigInteger.valueOf(suppReason.getRestrType().getParameterId()));
 					restrictionDetails.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
@@ -483,7 +487,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				reasonApplicability.setDocId(docId);
 				reasonApplicability.setFieldLabelCode(AuditConst.PM_AUD_RC_REASON_APPLICABILITY_FIELDLABELCODE);
 				reasonApplicability.setOldValue(checkPIDReason(pidReason.getDocType()));
-				reasonApplicability.setActionType(AuditConst.PM_AUD_ACTION_TYPE_INS);
+				reasonApplicability.setActionType(AuditConst.PM_AUD_ACTION_TYPE_DEL);
 				objList.add(reasonApplicability);
 			}
 		}
@@ -520,11 +524,13 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 	private String checkPmParameterDesc(PmParameter pmParameter) {
 		String description = null;
-		PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
-
-		for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
-			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
-				description = desc.getCodeName();
+		
+		if(pmParameter.getParameterId() != null) {
+			PmParameter parameter = ParameterHelper.getInstance().getPmParameterById(pmParameter.getParameterId());
+			for (PmParameterDesc desc : parameter.getPmParameterDescsSpecCallOnly()) {
+				if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_MS)) {
+					description = desc.getCodeName();
+				}
 			}
 		}
 		return description;

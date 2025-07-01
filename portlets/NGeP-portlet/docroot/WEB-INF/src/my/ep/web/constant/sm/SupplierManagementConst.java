@@ -771,6 +771,7 @@ public class SupplierManagementConst {
 	public static final int BUMI_PERCENTAGE = 50;
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
@@ -1317,6 +1318,12 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
+	
+	// #30747 - Start
+	public long getPM_STATUS_PO_ESCALTED_TO_APPROVER() {
+		return PM_STATUS_PO_ESCALTED_TO_APPROVER;
+	}
+	// #30747 - End
 
 	// 25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
