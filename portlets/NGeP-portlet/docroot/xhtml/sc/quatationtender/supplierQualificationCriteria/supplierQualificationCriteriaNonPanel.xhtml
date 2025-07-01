@@ -248,7 +248,7 @@
 				</tr>
 			</c:if>
 			<ui:remove>#33787 Vinod Start remove "Minimum Paid Up Capital (RM)" as per 4.1 -> 1. -> 4. and display in manintance</ui:remove>
-			<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP and qTDetailBB.managedBean.maintanceFlow}">
+			<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP and qTDetailBB.managedBean.maintanceFlow and !qTDetailBB.isApprovalScreenToHideMinPaidUpCapitalWIP()}">
 			<ui:remove>#33787 Vinod End</ui:remove>
 			<tr>
 				<td style="width: 210px"><p:outputLabel

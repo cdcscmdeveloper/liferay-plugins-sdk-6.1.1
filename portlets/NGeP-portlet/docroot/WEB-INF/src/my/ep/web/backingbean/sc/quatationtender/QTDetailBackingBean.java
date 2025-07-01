@@ -14012,6 +14012,14 @@ public void retrieveDemoQtDetails(Long qtId) {
 	}
 
 	// #33787 End Vinod
+	// #33787 Start Vinod
+	public boolean isApprovalScreenToHideMinPaidUpCapitalWIP() {
+		boolean isApproval = getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() || getUserTaskIsBPKApproval()
+				|| getUserTaskIsPublicationApproval();
+		return isApprovalScreen() && isApproval ? true : false;
+	}
+
+	// #33787 End Vinod
 	//12471 - start
 	/**
 	 * Validate selected approver from picklist
