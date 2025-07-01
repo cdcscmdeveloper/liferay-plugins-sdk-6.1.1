@@ -15,7 +15,8 @@
 			#foreach($adtLicense in $adtLicenseLs)
 				<tr>
 					<td>$velocityCount</td>
-					<td align="center">#if($adtLicense.available) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes')  #end</td>
+					<td>#if($adtLicense.available) $smVmUtil.getDescByLabel('lbl.sm.sme.txt.yes')
+						#else $smVmUtil.getDescByLabel('lbl.sm.sme.txt.no')  #end</td>
 					<td>$!adtLicense.smApplSupportDoc.pmDocument.docName</td>
 					<td>$!smVmUtil.formatDate($adtLicense.smApplSupportDoc.licenseExpDate)</td>
 					<td>$!adtLicense.smApplSupportDoc.licenseNo</td>

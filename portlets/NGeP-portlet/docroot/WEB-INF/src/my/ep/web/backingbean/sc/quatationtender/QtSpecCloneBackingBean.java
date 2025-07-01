@@ -738,7 +738,9 @@ public class QtSpecCloneBackingBean extends
 		if (null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 				.equalsIgnoreCase(copy.getDefinationType()
 						.getParameterCode())) {
-			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_COMPLETED));
+			// 37859,25635 -start-
+			copy.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
+			// 37859,25635 -end-
 		}
 		
 		if (null!=copy.getDefinationType() && ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -1048,6 +1050,7 @@ public class QtSpecCloneBackingBean extends
 		this.getManagedBean().getQt().setEstimateAmt(null);
 		this.getManagedBean().getQt().setEstimatedAmount(null);
 		//25635&34176-End
+		this.getManagedBean().getQt().setJustificationProcValue(null);//#38396 - reset this value
 		this.getManagedBean().getQt().setCloned(Boolean.TRUE);//34320&25635
 		specificationBackingBean.saveSpecificationCommitteeDtls();
 

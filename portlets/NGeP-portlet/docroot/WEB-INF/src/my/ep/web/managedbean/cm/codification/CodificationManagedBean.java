@@ -201,7 +201,19 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String docTitle;
 	
 	private boolean assignCodeFlg = false;
+
+	// #31503 - Start
+	private String itemCodeDesc;
+	private Object[] objSelected;
+	private boolean renderButtonAssignCode;
+	// #31503 - End
 	
+	//35503 Start
+	private String segmentTitleEng;
+	private String familyTitleEng;
+	private String classTitleEng;
+	private String commodityTitleEng;
+	//35503 End
 
 	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
 		return extensionSearchItemDataModel;
@@ -1514,4 +1526,64 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.typeList = typeList;
 	}
 	/*[#27625] end*/
+
+	// #31503 -start-
+	public String getItemCodeDesc() {
+		return itemCodeDesc;
+	}
+
+	public void setItemCodeDesc(String itemCodeDesc) {
+		this.itemCodeDesc = itemCodeDesc;
+	}
+
+	public Object[] getObjSelected() {
+		return objSelected;
+	}
+
+	public void setObjSelected(Object[] objSelected) {
+		this.objSelected = objSelected;
+	}
+
+	public boolean isRenderButtonAssignCode() {
+		return renderButtonAssignCode;
+	}
+
+	public void setRenderButtonAssignCode(boolean renderButtonAssignCode) {
+		this.renderButtonAssignCode = renderButtonAssignCode;
+	}
+	// #31503 -end-
+
+	//35503 Start
+	public String getSegmentTitleEng() {
+		return segmentTitleEng;
+	}
+
+	public void setSegmentTitleEng(String segmentTitleEng) {
+		this.segmentTitleEng = segmentTitleEng;
+	}
+
+	public String getFamilyTitleEng() {
+		return familyTitleEng;
+	}
+
+	public void setFamilyTitleEng(String familyTitleEng) {
+		this.familyTitleEng = familyTitleEng;
+	}
+
+	public String getClassTitleEng() {
+		return classTitleEng;
+	}
+
+	public void setClassTitleEng(String classTitleEng) {
+		this.classTitleEng = classTitleEng;
+	}
+
+	public String getCommodityTitleEng() {
+		return commodityTitleEng;
+	}
+
+	public void setCommodityTitleEng(String commodityTitleEng) {
+		this.commodityTitleEng = commodityTitleEng;
+	}
+	//35503 End
 }

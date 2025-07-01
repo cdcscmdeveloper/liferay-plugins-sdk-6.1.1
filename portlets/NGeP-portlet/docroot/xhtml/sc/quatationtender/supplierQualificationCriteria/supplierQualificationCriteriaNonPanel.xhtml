@@ -25,7 +25,8 @@
 			<p:ajax event="rowUnselectCheckbox" update="@([id$=supplierQualificationCriteriaNonpanelDeleteCategoryBtnId])" />
 			<p:ajax event="toggleSelect" update="@([id$=supplierQualificationCriteriaNonpanelDeleteCategoryBtnId])" />
 			<p:column selectionMode="multiple" style="width:1%"
-				rendered="#{!categoryCodeReadonly or qTDetailBB.managedBean.currentInSpecMaint or qTDetailBB.managedBean.categoryDescriptionChange and !specCommitteeReadOnly}" /><ui:remove>#29732 first time spec maint</ui:remove>
+				rendered="#{!categoryCodeReadonly or qTDetailBB.managedBean.categoryDescriptionChange and !specCommitteeReadOnly
+				or qTDetailBB.managedBean.currentInSpecMaint}" /><ui:remove>#29732 first time spec maint</ui:remove>
 
 			<p:column headerText="#{lbl['lbl.sc.category.code']}">
 				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
@@ -212,16 +213,30 @@
 		value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation}" />
 
 	<p:panel toggleable="true" id="supplierQualificationCriterialocationPaidUpcapitalPanel">
+		<ui:remove>#33787 Vinod Start</ui:remove>
+		<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP}">
+		<ui:remove>#33787 Vinod End</ui:remove>
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
 			<ac:iconTooltip
 				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
+		<ui:remove>#33787 Vinod Start</ui:remove>
+		</c:if>
+		<c:if test="#{!qTDetailBB.managedBean.minPaidUpCapitalWIP}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital.new']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip.new']}" />
+		</f:facet>
+		</c:if>
+		<ui:remove>#33787 Vinod End</ui:remove>
 
 		<table style="width: 100%">
 			<c:if test="#{!isQuotationThresHold}">
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
+					<ui:remove>#33787 Vinod Added Style</ui:remove>
+					<td style="width: 210px"><h:outputLabel value="#{lbl['lbl.sc.all.states']}"/></td>
 					<td><p:selectBooleanCheckbox
 							disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode.value() eq 'Peninsular' or qTDetailBB.managedBean.readOnly}"
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
@@ -232,6 +247,9 @@
 						</p:selectBooleanCheckbox></td>
 				</tr>
 			</c:if>
+			<ui:remove>#33787 Vinod Start remove "Minimum Paid Up Capital (RM)" as per 4.1 -> 1. -> 4. and display in manintance</ui:remove>
+			<c:if test="#{qTDetailBB.managedBean.minPaidUpCapitalWIP and qTDetailBB.managedBean.maintanceFlow}">
+			<ui:remove>#33787 Vinod End</ui:remove>
 			<tr>
 				<td style="width: 210px"><p:outputLabel
 						value="#{lbl['lbl.sc.paidup']}" /></td>
@@ -245,6 +263,9 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
 			</tr>
+			<ui:remove>#33787 Vinod Start</ui:remove>
+			</c:if>
+			<ui:remove>#33787 Vinod End</ui:remove>
 			<c:if
 				test="#{!qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 				<tr>

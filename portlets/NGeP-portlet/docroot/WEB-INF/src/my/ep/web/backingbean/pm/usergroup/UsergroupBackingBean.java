@@ -5,11 +5,17 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -20,6 +26,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.biz.service.pm.common.audit.IAuditPMSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -27,6 +34,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -62,6 +70,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
+import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMUserGroupBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserGroupSearchBean;
@@ -69,11 +79,6 @@ import my.ep.web.managedbean.pm.usergroup.UsergroupManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.liferay.taglib.ui.GroupSearchTag;
 
 /**
  * @author DK
@@ -663,8 +668,24 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		reqDto.setRoleCode(PmCommonUtil.getUserRoleValue());
 		reqDto.setPmUser(getFacesScopes().getUserSessionBean());
 
-		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
+		/** AUDIT 28895_35509 START **/
+		if (reqDto.getUserGroup() != null && reqDto.getUserGroup().getUserGroupId() != null && !userGroup.isBrandNew()) {
+			System.out.println("userGroup.isBrandNew() :::: " + userGroup.isBrandNew());
+			UserGroupResDTO resDTOOld = userGrpSo.retrieveUserGroupByUserGroupId(reqDto);
+			this.getManagedBean().setUserGroupOld(resDTOOld.getUserGroup());
+			/** AUDIT 28895_35509 END **/
+		}
 
+		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
+		/** AUDIT 28895_35509 START **/
+		this.getManagedBean().setUserGroupUpdate(resDTO.getUserGroupUpdate());
+		this.getManagedBean().setUserGroupNew(resDTO.getUserGroupNew());
+		if (null != resDTO.getUserGroupNew()) {
+			this.getManagedBean().setRoleDesc(
+					PmCommonUtil.getRoleDescByRoleCodeAndLanguage(resDTO.getUserGroupNew().getRoleCode(), "ms"));
+		}
+
+		/** AUDIT 28895_35509 END **/
 		this.getManagedBean().setUserGroup(resDTO.getUserGroup());
 		if (resDTO.isSuccessful()) {
 
@@ -682,6 +703,15 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 										new String[] { resDTO.getUserGroup().getGroupName() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
+			/************ AUDIT #28895_35509 *************/
+			IAuditPMSO pmauditSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					IAuditPMSO.class);
+			AuditPMBackingBeanTemplate auTemplate = new AuditPMUserGroupBackingBean();
+			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USERGROUP)) {
+				// getManagedBean().setSelectedCriteria(resDTO.getPmCriteria());
+				auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORGUSERGROUPCFG);
+			}
+			/************ END AUDIT #28895_35509 *************/
 		}
 		if (userGroup.isBrandNew()) {
 			return NAV_TO_MAIN;

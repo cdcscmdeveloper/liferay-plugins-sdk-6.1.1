@@ -100,11 +100,9 @@
 	<p:blockUI block="dlSuppTaskReassignmentPnl" widgetVar="blockWidget" />
 	</p:dialog>
 	
-	<ac:confirmationPopup id="confirmDlg" widget="confirmDlg"
+	<ac:confirmationPopupSM id="confirmDlg" widget="confirmDlg"
 		bean="#{supplierTaskReassignmentBackingBean}"
 		okAction="confirmReassignTask"
-		width="400" height="100"
-		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
 		content="#{lbl['lbl.sm.confirm.task']}" 
 		update=":form:dtTaskAssignResult,:form:dtGroupTaskAssignResult,:form:dtOthersTaskAssignResult,:form:messagesRole"
 		loadingWidget="blockWidget" />

@@ -313,6 +313,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 								c.setDisableRowSelection(true);
 							}
 						}
+						Collections.sort(scQtDemo.getScQtDemoContactList(), new PresentationDemoContactListComparator());//sort contact list
 						this.getManagedBean().setScQtDemoContactList(ct);
 						this.getManagedBean().setDemoRemark(scQtDemo.getDemoInvRemark());
 						this.getManagedBean().setScQtDemo(scQtDemo);
@@ -674,6 +675,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					 */
 					this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
 				}
+				Collections.sort(resDto.getScQtDemo().getScQtDemoContactList(), new PresentationDemoContactListComparator());//sort contact list
 				qtDemo = resDto.getScQtDemo();
 				this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 				this.getManagedBean().setDemoRemark(resDto.getScQtDemo().getDemoInvRemark());
@@ -708,6 +710,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 					qtDemo.setQtId(this.getManagedBean().getQt());
 					qtDemo.setDemoCategoryId(pmParam);
+					Collections.sort(qualifiedSupp, new QualifiedSupplierComparator());//sort supplier list
 
 					for (ScQtProposal p : qualifiedSupp) {
 						scQtDemoSchedule = new ScQtDemoSchedule();
@@ -777,6 +780,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					qtDemo.setDemoCategoryId(pmParam);
 					qualifiedSupp = checkQualifiedSupplier();
 					qualifiedSupp = checkQualifiedSupplierZoneAndItem(qualifiedSupp, specQuestionList);//#28784 remove supplier without spec answer
+					Collections.sort(qualifiedSupp, new QualifiedSupplierComparator());//sort supplier list
 
 					for (ScQtProposal p : qualifiedSupp) {
 						demoSupplier = new ScQtDemoSupplier();
@@ -834,6 +838,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				demoCtc.setDeskofficer(true);
 				demoCtc.setScQtDemo(qtDemo);
 				demoContactList.add(demoCtc);
+				Collections.sort(demoContactList, new PresentationDemoContactListComparator());//sort contact list
 				this.getManagedBean().setScQtDemoContactList(demoContactList);
 				this.getManagedBean().setCurrentOfficer(resDTO.getPmUser().getUserName());
 
@@ -904,6 +909,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 			qtDemo.setScQtDemoSupplierList(demoSuppList);
 			qtDemo.setScQtDemoItemList(demoItemList);
+			Collections.sort(demoContactList, new PresentationDemoContactListComparator());//sort contact list
 			qtDemo.setScQtDemoContactList(demoContactList);
 			qtDemo.setDemoCategoryId(pmParam);
 			this.getManagedBean().setScQtDemo(qtDemo);
@@ -1533,4 +1539,16 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		return qualifiedSupp;
 	}
 	//#28784 remove supplier without spec answer - End
+	
+	private static class PresentationDemoContactListComparator implements Comparator<ScQtDemoContact> {
+		public int compare(ScQtDemoContact s1, ScQtDemoContact s2) {
+			return s1.getDemoContactId().compareTo(s2.getDemoContactId());
+		}
+	}
+	
+	private static class QualifiedSupplierComparator implements Comparator<ScQtProposal> {
+		public int compare(ScQtProposal s1, ScQtProposal s2) {
+			return s1.getSupplierNo().compareTo(s2.getSupplierNo());
+		}
+	}
 }

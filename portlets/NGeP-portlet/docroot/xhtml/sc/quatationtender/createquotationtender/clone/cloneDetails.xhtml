@@ -6,6 +6,25 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	
+	<ui:remove>#25635 - start</ui:remove>
+	<h:outputScript>
+    function disableSpecificNodes() {
+        // Array node yang mau di-disable
+        var disabledNodes = ["Quotation / Tender Details","Perincian Tawaran Sebut Harga / Tender"];
+        // Loop semua checkbox dalam tree
+         $(".ui-treenode").each(function() {
+            var nodeText = $(this).find(".ui-treenode-label").text().trim();
+             if (disabledNodes.includes(nodeText)) {
+             	$(this).css("pointer-events", "none");
+             	$(this).find(".ui-chkbox").addClass("ui-state-disabled");
+             }
+           
+        });
+    }
+	</h:outputScript>
+	<ui:remove>#25635 - end</ui:remove>
+
 	<p:dialog id="cloneid2" header="#{lbl['lbl.sc.clone.qt']}"
 		widgetVar="screen3" width="970" height="600"
 		styleClass="cloneCommitteMember" position="top">
@@ -150,8 +169,8 @@
 
 					<ac:paginator for="clonesearchCommitteid2" />
 
-					<p:ajax event="rowSelect" update=":form:pnlid2"
-						listener="#{qTCloneBackingbean.onRowCloneAction}" />
+					<p:ajax event="rowSelect" update=":form:pnlid2" oncomplete="disableSpecificNodes()"
+						listener="#{qTCloneBackingbean.onRowCloneAction}" /><ui:remove>#25635 - start</ui:remove>
                 <p:ajax event="page"  listener="#{qTCloneBackingbean.searchActionPageChange}" update="@([id$=cloneCommitteeTreeBtnOnId2])"></p:ajax>
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
 						<h:outputText value="#{rscQt.qtNo}" style="white-space: normal;" />
