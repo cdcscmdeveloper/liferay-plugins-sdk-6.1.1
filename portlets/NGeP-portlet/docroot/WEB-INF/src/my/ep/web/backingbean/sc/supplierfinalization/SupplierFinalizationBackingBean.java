@@ -8914,7 +8914,8 @@ public class SupplierFinalizationBackingBean extends
 							/*
 							 * END BUG #31128
 							 */
-							// #21692 - Start
+
+							//#21692 - Start
 							awardedSupplierRejectEPV(recommendationBean);
 							//#21692 - End
 							
