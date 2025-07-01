@@ -19,7 +19,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.EpPropertiesConst;
@@ -35,8 +34,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.sc.SourcingIntegrationReqDTO;
-import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
@@ -49,7 +46,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.type.aut.SearchOperator;
@@ -102,27 +98,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		fc.getApplication()
 		.getNavigationHandler()
 		.handleNavigation(fc, null, approvalExceedThresholdPage);
-	}
-	
-	/**
-	 * Checks if is government.
-	 *
-	 * @return true, if is government
-	 */
-	private boolean isGovernment(){
-		if(getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value())  // Government 
-				|| getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
-
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
 	}
 	
 	/**
@@ -266,40 +241,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	}
 
 	/**
-	 * Retrieves a list of parent documents for a given document by recursively tracing its group document hierarchy.
-	 *
-	 * @param docType The document type of the child document.
-	 * @param docId The document ID of the child document.
-	 * @return A list of Object arrays, where each array contains the document type and ID of a parent document.
-	 */
-	private List<Object[]> getParentDocument(String docType, Long docId) {
-		List<Object[]> docParents = new ArrayList<Object[]>();
-
-		SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
-		searchReqDTO.setDocType(docType);
-		searchReqDTO.setDocId(docId);
-
-
-		Long groupDocId = docId;
-		String groupDocType = docType;
-
-		while(groupDocId != null && groupDocType != null) {
-			SourcingIntegrationResDTO resDTO = getSourcingIntegrationSO().retrieveGroupDocByDocIdAndDocType(searchReqDTO);
-			groupDocId = resDTO.getGroupDocId();
-			groupDocType = resDTO.getGroupDocType();
-			if(resDTO != null) {
-				if(groupDocId != null && groupDocType != null) {
-					docParents.add(new Object[]{groupDocType, groupDocId});
-				}
-			}
-			searchReqDTO.setDocType(groupDocType);
-			searchReqDTO.setDocId(groupDocId);
-		}
-
-		return docParents;
-	}
-
-	/**
 	 * Gets the user name.
 	 *
 	 * @param userId the user id
@@ -316,25 +257,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 			userName = pmUser.getUserName();
 		}
 		return userName;
-	}
-
-	/**
-	 * Retrieves the Sourcing Integration Service Object (SO) from the Business Delegate.
-	 *
-	 * @return An instance of {@link ISourcingIntegrationSO}.
-	 */
-	private ISourcingIntegrationSO getSourcingIntegrationSO() {
-		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-	}
-	
-	/**
-	 * Retrieves the Request Note Service Object (SO) from the Business Delegate.
-	 *
-	 * @return An instance of {@link IRequestNoteSO}.
-	 */
-	private IRequestNoteSO getRequestNoteSO() {
-		return BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	}
 
 	/**
@@ -369,13 +291,12 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		String orgName="";
 
 		if (orgProfileId != null) {
-			IOrgProfileSO orgProfileSO = null;
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 			orgProfileReqDTO.setOrgProfileId(orgProfileId);
 			OrgProfileResDTO orgProfileResDTO = orgProfileSO
-					.retrieveOrgProfileDtlByID(orgProfileReqDTO); //#27440
+					.retrieveOrgProfileDtlByID(orgProfileReqDTO);
 			if(orgProfileResDTO.getPmOrgProfile() != null){
 				orgName = orgProfileResDTO.getPmOrgProfile().getOrgName();
 			}
@@ -622,17 +543,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		}
 		
 		return pmOrgProfile;
-	}
-	
-	/**
-	 * set search bean description for tracking purpose
-	 *
-	 */
-	private void setSearchBeanDescription(ISearchBean<PmTrackingDiary> searchBean, SearchFilterBean searchFilterBean1, SearchFilterBean searchFilterBean2) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("[%s=%s]", searchFilterBean1.getSearchField(), searchFilterBean1.getSearchValue()));
-		sb.append(String.format("[%s=%s]", searchFilterBean2.getSearchField(), searchFilterBean2.getSearchValue()));
-		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:DirectPurchaseBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 	
 	/**
@@ -884,26 +794,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @param scRequestNote
 	 *            the sc request note
 	 */
-	private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
-		Date today = DateUtils.getCurrentDate();
-		Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
-		log.info("pID validity begin");
-		if (today.after(ExpDate)) {
-
-			throw new EpException(MessageConst.ERROR_760355,
-					new String[] { purchaseInDefault.getPurchaseInDefaultNo() });
-		}
-		log.info("pID validity end");
-	}
-
-	/**
-	 * Pid validity.
-	 * 
-	 * @param purchaseInDefault
-	 *            the purchase in default
-	 * @param scRequestNote
-	 *            the sc request note
-	 */
 	private boolean pidValidityBoolean(Date pidChangedDate, Integer pidValidDays) {
 		boolean valid = false;
 
@@ -937,18 +827,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
 
-	}
-
-	/**
-	 * Validate if user is RN Approver
-	 * 
-	 * @return boolean
-	 */
-	public boolean isRnApprover() {
-		if (getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
 	}
 
 	/**
