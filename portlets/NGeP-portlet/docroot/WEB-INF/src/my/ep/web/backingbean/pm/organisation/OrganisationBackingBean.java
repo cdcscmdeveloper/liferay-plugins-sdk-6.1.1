@@ -1317,37 +1317,38 @@ public class OrganisationBackingBean extends
 						offAddressReqDTO.setAddressId(this.getManagedBean().getOfficeAddress().getAddressId());
 						offAddressResDTO = addressSO.retrieveAddressDtlById(offAddressReqDTO);
 					}
-				}
 
-				if(orgProfile.getSmSupplier() != null){
-					supplierReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
-					supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+					if(orgProfile.getSmSupplier() != null){
+						supplierReqDTO.setSupplierId(orgProfile.getSmSupplier().getSupplierId());
+						supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
+						
+						personnelReqDTO.setSmSupplierId(orgProfile.getSmSupplier().getSupplierId());
+						personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
+					}
 					
-					personnelReqDTO.setSmSupplierId(orgProfile.getSmSupplier().getSupplierId());
-					personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
-				}
-				
-				if(orgProfile.getMainProfileGroups() != null){
-					profileOrgReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-					profileOrgResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(profileOrgReqDTO);
-				}
-				
-				if(this.getManagedBean().getProfileGroup() != null && this.getManagedBean().getProfileGroup().size() > 0){
-					PmOrgProfile auditOrgProfile = PmCommonUtil.retrieveOrgProfileDtlById(orgProfile.getOrgProfileId());
+					if(orgProfile.getMainProfileGroups() != null){
+						profileOrgReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+						profileOrgResDTO = orgProfileSO.retrieveProfileGroupByAuthorizedProfileId(profileOrgReqDTO);
+					}
 					
-					if(auditOrgProfile != null){
-						if (auditOrgProfile.getMainProfileGroups() != null
-								&& !auditOrgProfile.getMainProfileGroups().isEmpty()) {
-							for (PmProfileGroup profile : auditOrgProfile
-									.getMainProfileGroups()) {
-								if (profile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-										|| profile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-									auditProfileGroup.add(profile);
+					if(this.getManagedBean().getProfileGroup() != null && this.getManagedBean().getProfileGroup().size() > 0){
+						PmOrgProfile auditOrgProfile = PmCommonUtil.retrieveOrgProfileDtlById(orgProfile.getOrgProfileId());
+						
+						if(auditOrgProfile != null){
+							if (auditOrgProfile.getMainProfileGroups() != null
+									&& !auditOrgProfile.getMainProfileGroups().isEmpty()) {
+								for (PmProfileGroup profile : auditOrgProfile
+										.getMainProfileGroups()) {
+									if (profile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+											|| profile.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+										auditProfileGroup.add(profile);
+									}
 								}
 							}
 						}
 					}
 				}
+				
 				if(this.getManagedBean().getPmAddressTypeId() != null){
 					AddressReqDTO addressTypeReqDTO = new AddressReqDTO();
 					addressTypeReqDTO.setAddressTypeId(this.getManagedBean().getPmAddressTypeId());
