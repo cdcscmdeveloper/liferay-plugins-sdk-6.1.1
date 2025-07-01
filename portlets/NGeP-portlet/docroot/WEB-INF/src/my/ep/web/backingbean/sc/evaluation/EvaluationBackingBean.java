@@ -19295,8 +19295,17 @@ private void retriveCommitteeRemarksList(){
 						.getCheckListType()) && questionType.equals(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
 				boolean isComplianceNull = tplSpecAnswer.getTplSpecQuestion().isMandatorySpec()
 						&& tplSpecAnswer.getCompliance() == null;
+				//#21692 - Start
+				List<Integer> rejectStatus = new ArrayList<>();
+				rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+				rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);
+				ScQtProposalChecklist proposalChecklist = this.getManagedBean().getQtProposalChecklist();
+				boolean rejectEPV = proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod() != null
+						&& rejectStatus.contains(proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod());
+				//#21692 - End
 
-				if (CollectionUtils.isEmpty(questionIds) || !questionIds.contains(question.getSpecQuestionId())) {
+				if ((CollectionUtils.isEmpty(questionIds) || !questionIds.contains(question.getSpecQuestionId()))
+						&& !rejectEPV) {//#21692
 					questionIds.add(question.getSpecQuestionId());
 					validateUserScoreForTemplate(tplSpecAnswer, isTechSpec);
 					validateMandatorySpecAndRemark(tplSpecAnswer, isTechSpec, isComplianceNull);
