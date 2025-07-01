@@ -316,7 +316,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @throws NamingException the naming exception
 	 */
 	public SelectItem[] searchStatusDesc() throws NamingException {
-		//Redmine 20311: remove RN search
 		if(isSupplier() && getManagedBean().getSearchDocumentType() != null){
 			if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
 				SelectItem[] items = null;
@@ -357,14 +356,12 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 						getManagedBean().getSearchDocumentType());
 			}
 		}else{
-			//start - 36615
 			if(StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())){
 				return super.getStatusDropdownValues(
 						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
 						getManagedBean().getSearchDocumentType());
 			}
 				return null;
-			//end - 36615
 		}
 	}
 
@@ -782,7 +779,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		searchBean.setDescription("searchTrackingDiary" + sb.toString() + "[Caller:DirectPurchaseBackingBean.SearchTrackingDiaryPagingDataModel]");
 	}
 	
-	// 12177 - Start
 	/**
 	 * 
 	 * @param dpObj
@@ -873,12 +869,8 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	
 	public boolean isSqStillValid(Date sqEndDate){		
 		
-		Boolean validDate = true;	
-			
-		// Refactor: #12177 - Start
+		Boolean validDate = true;
 		Integer sqTimeValidity = NgepApplicationBean.getSqTimeValidity();
-		log.info("Refactor 12177 (DirectPurchaseBackingBean) : getSqTimeValidity - " + sqTimeValidity);
-		// Refactor: #12177 - End
 		
 		if(sqEndDate != null){
 				Date currentDate = new Date();
@@ -937,9 +929,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		return getStatusDescById(statusId);
 	}
 	
-	// 12177 - End
-	
-	//12183 - Start
 	/**
 	 * 
 	 * @param dpObj
@@ -1025,96 +1014,98 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	
 	}
 	
-		/**
-		 * Pid validity.
-		 *
-		 * @param purchaseInDefault the purchase in default
-		 * @param scRequestNote the sc request note
-		 */
-		private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
-			Date today  = DateUtils.getCurrentDate();
-			Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
-			log.info("pID validity begin");
-			if(today.after(ExpDate)){
+	/**
+	 * Pid validity.
+	 * 
+	 * @param purchaseInDefault
+	 *            the purchase in default
+	 * @param scRequestNote
+	 *            the sc request note
+	 */
+	private void pidValidity(ScPurchaseInDefault purchaseInDefault) {
+		Date today = DateUtils.getCurrentDate();
+		Date ExpDate = DateUtils.addDays(purchaseInDefault.getChangedDate(), purchaseInDefault.getPidValidDays());
+		log.info("pID validity begin");
+		if (today.after(ExpDate)) {
 
-				throw new EpException(
-						MessageConst.ERROR_760355,
-						new String[] {purchaseInDefault.getPurchaseInDefaultNo()});
-			}  
-			log.info("pID validity end");
+			throw new EpException(MessageConst.ERROR_760355,
+					new String[] { purchaseInDefault.getPurchaseInDefaultNo() });
 		}
-		
-		
-		/**
-		 * Pid validity.
-		 *
-		 * @param purchaseInDefault the purchase in default
-		 * @param scRequestNote the sc request note
-		 */
-		private boolean pidValidityBoolean(Date pidChangedDate, Integer pidValidDays) {
-			boolean valid = false;
-			
-			if(pidChangedDate != null && pidValidDays != null){
-				Date today  = DateUtils.getCurrentDate();
-				Date ExpDate = DateUtils.addDays(pidChangedDate, pidValidDays);
-							
-				if(today.after(ExpDate)){
-					valid = true;
-				}
+		log.info("pID validity end");
+	}
+
+	/**
+	 * Pid validity.
+	 * 
+	 * @param purchaseInDefault
+	 *            the purchase in default
+	 * @param scRequestNote
+	 *            the sc request note
+	 */
+	private boolean pidValidityBoolean(Date pidChangedDate, Integer pidValidDays) {
+		boolean valid = false;
+
+		if (pidChangedDate != null && pidValidDays != null) {
+			Date today = DateUtils.getCurrentDate();
+			Date ExpDate = DateUtils.addDays(pidChangedDate, pidValidDays);
+
+			if (today.after(ExpDate)) {
+				valid = true;
 			}
-			return valid;
 		}
-		
-		//12183 - end
-		public SelectItem[] getFunctionType() {
-				
-				List<String> typeList = new ArrayList<String>();
-				typeList.add(ParameterConst.ORG_TYPE_PTJ);
-				typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
-				
-				ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		return valid;
+	}
 
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",
-								SearchOperator.OPERATOR_IN.value(),typeList));
+	public SelectItem[] getFunctionType() {
 
-				return super.getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
-				
-				
-			}
-			
+		List<String> typeList = new ArrayList<String>();
+		typeList.add(ParameterConst.ORG_TYPE_PTJ);
+		typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
 
-			/**
-			 * Validate if user is RN Approver
-			 * @return boolean
-			 */
-			public boolean isRnApprover() {
-				if (getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())) {		
-					return Boolean.TRUE;
-				}
-				return Boolean.FALSE;
-			}
-		
-			/**
-			 * Validate if user is Desk Officer
-			 * @return boolean
-			 */
-			public boolean isDeskOfficer() {
-				if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {		
-					return Boolean.TRUE;
-				}
-				return Boolean.FALSE;
-			}
-			
-			/**
-			 * Return boolean TRUE for dual role only, else FALSE
-			 * @return boolean
-			 */
-			public boolean showFunctionType() {
-				if (hasSupplierRole() && hasGovernmentUserRole()) {
-					return true;
-				} 
-				return false;
-			}
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), typeList));
+
+		return super.getDropdownValuesBySearchBean(ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+
+	}
+
+	/**
+	 * Validate if user is RN Approver
+	 * 
+	 * @return boolean
+	 */
+	public boolean isRnApprover() {
+		if (getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	/**
+	 * Validate if user is Desk Officer
+	 * 
+	 * @return boolean
+	 */
+	public boolean isDeskOfficer() {
+		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+
+	/**
+	 * Return boolean TRUE for dual role only, else FALSE
+	 * 
+	 * @return boolean
+	 */
+	public boolean showFunctionType() {
+		if (hasSupplierRole() && hasGovernmentUserRole()) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Compare with selected request note details and add into the request note details selected list
