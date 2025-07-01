@@ -892,7 +892,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 			schInfo.setSchNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
 			schInfo.setCrNo(detail.getDocNo());
 			schInfo.setCrNoStatus("(" + getPmStatusDesc(detail.getDocStatus()) + ")");
-			schInfo.setCoNo(detail.getFlOrderDocNo());
+			schInfo.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
 			schInfo.setCoNoStatus("(" + getPmStatusDesc(detail.getFlOrderDocStatus()) + ")");
 
 			scheduleInfo.add(schInfo);
