@@ -14013,6 +14013,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 	// #33787 End Vinod
 	// #33787 Start Vinod
+	/**
+	 * This method is to check if it is accessed from approval screen.
+	 * 
+	 * @param 
+	 * @return boolean
+	 */
 	public boolean isApprovalScreenToHideMinPaidUpCapitalWIP() {
 		boolean isApproval = getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() || getUserTaskIsBPKApproval()
 				|| getUserTaskIsPublicationApproval();
