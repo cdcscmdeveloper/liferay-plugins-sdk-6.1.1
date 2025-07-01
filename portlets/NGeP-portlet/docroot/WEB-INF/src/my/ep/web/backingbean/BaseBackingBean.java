@@ -3500,7 +3500,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 	 * @param attachment
 	 * @return filePath.
 	 */
-	protected String getActualFilePath(ScAttachment attachment) {
+	/*protected String getActualFilePath(ScAttachment attachment) {
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
@@ -3508,7 +3508,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> implements Seri
 		actualFilePath.append(attachment.getFilePath());
 
 		return actualFilePath.toString();
-	}
+	}*/
 
 	/**
 	 * Generate report.
