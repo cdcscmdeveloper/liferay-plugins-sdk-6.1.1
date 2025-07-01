@@ -68,8 +68,6 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import org.apache.commons.lang.StringUtils;
 
 
-// TODO: Auto-generated Javadoc
-
 /**
  * The Class ApprovalExceedThresholdBackingBean.
  * 
@@ -83,7 +81,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String APPROVAL_EXCEED_THRESHOLD_PAGE_NAV = "/xhtml/sc/directpurchase/exceedThresholdApproval/approvalExceedThreshold.xhtml";
+	private String approvalExceedThresholdPage = "/xhtml/sc/directpurchase/exceedThresholdApproval/approvalExceedThreshold.xhtml";
 	
 	/**
 	 * List of allowed role code
@@ -103,7 +101,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		reset();
 		fc.getApplication()
 		.getNavigationHandler()
-		.handleNavigation(fc, null, APPROVAL_EXCEED_THRESHOLD_PAGE_NAV);
+		.handleNavigation(fc, null, approvalExceedThresholdPage);
 	}
 	
 	/**
@@ -150,9 +148,8 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	public SelectItem[] searchStatusDesc() throws NamingException {
 		if(isSupplier() && getManagedBean().getSearchDocumentType() != null){
 			if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
-				SelectItem[] items = null;
 				FacesScopes face = new FacesScopes();
-				List<PmStatusDesc> statusDescsTemp = new ArrayList<PmStatusDesc>();
+				List<PmStatusDesc> statusDescsTemp = new ArrayList<>();
 				
 				List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
 						.getStatusDescList(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
@@ -172,7 +169,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 				}
 				
 				int i = 1;
-				items = new SelectItem[statusDescsTemp.size() + 1];
+				SelectItem[] items = new SelectItem[statusDescsTemp.size() + 1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 						face.getUserLocale()));
@@ -198,7 +195,9 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	}
 
 	/**
-	 * Search.
+	 * Performs a search operation based on the provided request note number or title.
+	 * Throws an EpException if the search-related input fields are not valid (e.g., less than 3 characters).
+	 * Sets the document type and title for the search, then reloads the document data model.
 	 */
 	public void search() {
 		if ((StringUtils.isNotBlank(getManagedBean().getRequestNoteNo()) && getManagedBean().getRequestNoteNo().trim()
@@ -213,6 +212,11 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		getManagedBean().getDpDocumentDataModel().reloadData();
 	}
 
+	/**
+	 * Displays document details, populating tracking diary and viewing the request note.
+	 *
+	 * @param dpObj Array containing document ID, number, type, and status.
+	 */
 	public void viewDoc(Object[] dpObj){
 		debugLogger("viewDoc");
 		long docId = (long) dpObj[0];
@@ -238,7 +242,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	}
 
 	/**
-	 * Reset
+	 * Resets all search fields to default, configuring PTJ/Ministry based on user role.
 	 */
 	public void reset(){
 		this.getManagedBean().setSearchFunctionType(null);
@@ -261,14 +265,19 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		}
 	}
 
+	/**
+	 * Retrieves a list of parent documents for a given document by recursively tracing its group document hierarchy.
+	 *
+	 * @param docType The document type of the child document.
+	 * @param docId The document ID of the child document.
+	 * @return A list of Object arrays, where each array contains the document type and ID of a parent document.
+	 */
 	private List<Object[]> getParentDocument(String docType, Long docId) {
 		List<Object[]> docParents = new ArrayList<Object[]>();
 
 		SourcingIntegrationReqDTO searchReqDTO = new SourcingIntegrationReqDTO();
 		searchReqDTO.setDocType(docType);
-		//start - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
 		searchReqDTO.setDocId(docId);
-		//stop - Sonarqube DP Bug Minor Ruzaimah [22/4/2024]
 
 
 		Long groupDocId = docId;
@@ -309,15 +318,30 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		return userName;
 	}
 
+	/**
+	 * Retrieves the Sourcing Integration Service Object (SO) from the Business Delegate.
+	 *
+	 * @return An instance of {@link ISourcingIntegrationSO}.
+	 */
 	private ISourcingIntegrationSO getSourcingIntegrationSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 	}
 	
+	/**
+	 * Retrieves the Request Note Service Object (SO) from the Business Delegate.
+	 *
+	 * @return An instance of {@link IRequestNoteSO}.
+	 */
 	private IRequestNoteSO getRequestNoteSO() {
 		return BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
 	}
 
+	/**
+	 * Creates and returns a new instance of {@link FacesScopes}.
+	 *
+	 * @return A new {@code FacesScopes} object.
+	 */
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -699,6 +723,12 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		return sqExpired;
 	}
 	
+	/**
+	 * Checks if the SQ (Service Quote) is still valid based on its end date and a configured validity period.
+	 *
+	 * @param sqEndDate The end date of the Service Quote.
+	 * @return {@code true} if the SQ is still valid, {@code false} otherwise.
+	 */
 	public boolean isSqStillValid(Date sqEndDate){		
 		
 		Boolean validDate = true;
@@ -879,22 +909,28 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 
 		if (pidChangedDate != null && pidValidDays != null) {
 			Date today = DateUtils.getCurrentDate();
-			Date ExpDate = DateUtils.addDays(pidChangedDate, pidValidDays);
+			Date expDate = DateUtils.addDays(pidChangedDate, pidValidDays);
 
-			if (today.after(ExpDate)) {
+			if (today.after(expDate)) {
 				valid = true;
 			}
 		}
 		return valid;
 	}
 
+	/**
+	 * Retrieves an array of SelectItem objects representing the available function types.
+	 * These types are based on predefined organization types (PTJ and G2G_ROLECODE).
+	 *
+	 * @return An array of {@link SelectItem} containing the function types.
+	 */
 	public SelectItem[] getFunctionType() {
 
-		List<String> typeList = new ArrayList<String>();
+		List<String> typeList = new ArrayList<>();
 		typeList.add(ParameterConst.ORG_TYPE_PTJ);
 		typeList.add(ParameterConst.ORG_TYPE_G2G_ROLECODE);
 
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<>();
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_IN.value(), typeList));
@@ -916,30 +952,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	}
 
 	/**
-	 * Validate if user is Desk Officer
-	 * 
-	 * @return boolean
-	 */
-	public boolean isDeskOfficer() {
-		if (getFacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-			return Boolean.TRUE;
-		}
-		return Boolean.FALSE;
-	}
-
-	/**
-	 * Return boolean TRUE for dual role only, else FALSE
-	 * 
-	 * @return boolean
-	 */
-	public boolean showFunctionType() {
-		if (hasSupplierRole() && hasGovernmentUserRole()) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Compare with selected request note details and add into the request note details selected list
 	 * 
 	 * @param tempRnDtls
@@ -949,7 +961,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @return list of selected requestNoteDtls           
 	 */
 	public List<ScRequestNoteDtl> addSelectedRequestNoteDtls(List<ScRequestNoteDtl> tempRnDtls, Long purchaseRequestId){
-		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<>();
 		for(ScRequestNoteDtl rnDtl : tempRnDtls){
 			if(purchaseRequestId.compareTo(rnDtl.getPurchaseRequest().getPurchaseRequestId()) == 0){
 				requestNoteDtls.add(rnDtl);
