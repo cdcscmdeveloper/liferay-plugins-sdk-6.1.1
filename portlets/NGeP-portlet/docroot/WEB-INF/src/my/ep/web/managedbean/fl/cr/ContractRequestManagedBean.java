@@ -552,7 +552,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 							    contract.setScheduleNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
 							    contract.setCrNo(detail.getDocNo());
 							    contract.setCrNoStatus("("+getPmStatusDesc(detail.getDocStatus())+")");
-							    contract.setCoNo(detail.getFlOrderDocNo());
+							    contract.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
 							    contract.setCoNoStatus("("+getPmStatusDesc(detail.getFlOrderDocStatus())+")");
 
 							    convertedScheduleList.add(contract);
