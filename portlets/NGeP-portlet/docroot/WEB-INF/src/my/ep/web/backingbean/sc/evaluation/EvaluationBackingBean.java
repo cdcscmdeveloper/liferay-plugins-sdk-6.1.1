@@ -8403,10 +8403,19 @@ public class EvaluationBackingBean extends
 									retriveFinancialEvaluationStage();
 									retriveNonScoringComplianceFinancial(true); //#28856, #25138
 									
-									// #30722, #25138 - start
-									financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
-											.get(0).getDocCategory());
-									// #30722, #25138 - end
+								// #30722, #25138, #38528 - start
+								String docCategory = CollectionUtils
+										.isEmpty(this
+												.getManagedBean()
+												.getEvaluationStgTechnicalCheckList()) ? this
+										.getManagedBean()
+										.getEvaluationStgfinancialCheckList()
+										.get(0).getDocCategory()
+										: this.getManagedBean()
+												.getEvaluationStgTechnicalCheckList()
+												.get(0).getDocCategory();
+								financialSpecQuestionOneItem(docCategory);
+								// #30722, #25138, #38528 - end
 
 									outputTab = 3;
 									
