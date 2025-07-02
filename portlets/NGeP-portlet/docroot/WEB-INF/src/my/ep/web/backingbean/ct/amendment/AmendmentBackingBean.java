@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //26186
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.comparator.ct.CtContractZoneComparator;
 import my.ep.constant.BpmOutcomeConst;
@@ -9262,12 +9263,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void checkSupplierBumiputera(SmSupplier supplier) {
 		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
 		try {
 			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			
-			if (!suppBumiputera) {
+			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getContractNo());
+
+			if (!suppBumiputera && openFor) {
 				this.getManagedBean().setSupplierBumiCancel(true);
-				if(StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())){
+				if (StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())) {
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 				handleMessageSupplierMaintenance();
@@ -9275,8 +9280,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
-					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "checkSupplierBumiputera",
-					getUserIdSessionFromLoginId(), e);
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
