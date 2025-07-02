@@ -53,18 +53,28 @@
 </h:panelGroup>
 <!-- #32125 fix bug related to #21695 END-->
 <!-- #21695 farid END -->
-
-	<h:panelGroup id="techspecificationid">	
-
-	 <br/>
-	 <ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
-			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" /><br/>
-			<!-- Bug #33278 bug #33144 related to #21695 farid add rendered qt.partial  -->
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.prop.instruction']}" escape="false"
-			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />	
+	<h:panelGroup id="techspecificationid">
+		<br />
+		<ui:include src="/xhtml/sc/common/specGuideLineInstructions.xhtml"></ui:include>
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
+		<br />
+		<!-- Bug #33278 bug #33144 related to #21695 farid add rendered qt.partial  -->
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.prop.instruction']}" escape="false"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />
+		<br />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.prop.instruction.Points']}" escape="false"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />
+		<br />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.prop.instruction.two']}" escape="false"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />
 		<ac:templateSpec
-			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"/>
+			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
+			editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
 	</h:panelGroup>
 	<br />
 	<br />

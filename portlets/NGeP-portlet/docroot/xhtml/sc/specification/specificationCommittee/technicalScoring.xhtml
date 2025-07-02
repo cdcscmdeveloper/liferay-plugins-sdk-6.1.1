@@ -6,6 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:remove>#10141 Start Vinod</ui:remove>
+	<ui:include src="specScorePreview.xhtml" />
+	<p:spacer height="35"></p:spacer>
+	<ui:remove>#10141 End Vinod</ui:remove>
 <ui:remove>
 	<!-- //#25138(wip 4serangkai) bug -Start 8/6/2023 -->
 </ui:remove>
@@ -65,12 +69,12 @@
 							</f:facet>
 							<h:outputText value="#{tech.qtScoreWeightage.score}"
 								style="text-align:right"
-								rendered="#{tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample}" />
+								rendered="#{tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.managedBean.sampleShowHide)}" /><!--#11104Wip -->
 							<p:inputText value="#{tech.qtScoreWeightage.score}"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								id="techScoreWeight" required="true" maxlength="14"
 								label="#{lbl['lbl.sc.score']}" style="text-align:right"
-								rendered="#{((tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeNoAction) and tech.scoringReq)}">
+								rendered="#{((tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeNoAction or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and !specificationBackingBean.managedBean.sampleShowHide)) and tech.scoringReq)}"><!--#11104Wip -->
 								<ac:validateNumber integerOnly="
 					true"
 									maxIntegerDigits="14">
@@ -279,13 +283,13 @@
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					style="text-align:right"
 					rendered="#{(tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and specificationBackingBean.managedBean.newVersion) or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeTemplateSpecification or 
-					tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample }" /> <!-- #28784 Include Demo WIP-->
+					tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSystemDefined or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeWebForm or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and specificationBackingBean.managedBean.sampleShowHide) }" /> <!-- #28784#11104 Include Demo WIP-->
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					id="techScoreWeight" required="true" maxlength="14"
 					label="#{lbl['lbl.sc.score']}" style="text-align:right"
-					rendered="#{((tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'NA') or 
-					(tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and !specificationBackingBean.managedBean.newVersion) and tech.scoringReq)}"> <!-- #28784 Include Demo WIP-->
+					rendered="#{((tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload or tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeNoAction) or 
+					(tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypePresentationDemo and !specificationBackingBean.managedBean.newVersion) or (tech.definationType.parameterCode eq ParameterConst.documentDefinitionTypeSample and !specificationBackingBean.managedBean.sampleShowHide) and tech.scoringReq)}"> <!-- #28784#11104 Include Demo WIP-->
 					<ac:validateNumber integerOnly="
 					true" maxIntegerDigits="14">
 					</ac:validateNumber>

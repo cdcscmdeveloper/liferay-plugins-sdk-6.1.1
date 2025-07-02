@@ -36,8 +36,10 @@
 				<c:if test="#{approvalBackingBean.managedBean.taskName eq ParameterConst.fcApproveQTChange}" >
 					<tr>
 						<td style="width: 235px;">
-							<p:outputLabel value="*" styleClass="mandatory"/>
-							<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}" />
+							<span class="noWrap">
+							<p:outputLabel> 
+							<b style='color:red'>* </b>#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']} </p:outputLabel>
+							</span>
 						</td>
 						<td>
 							<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.chairperson.finalization']}"
@@ -57,10 +59,14 @@
 								<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_TIME_FORMAT}" />
 							</p:inputText>
 						</td>
-						<c:if test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true}"> 
+						<c:if test="#{approvalBackingBean.managedBean.qt.approvalPBM eq true
+										and approvalBackingBean.managedBean.chmnFinalizationRejectEPV eq false}"> 
 							<td style="width: 235px;">
-								<p:outputLabel value="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}" /> 
-								<p:outputLabel value="*" styleClass="mandatory"/></td>
+								<span class="noWrap">
+								<p:outputLabel> 
+								<b style='color:red'>* </b>#{lbl['lbl.sc.qt.proposal.approval.date.mof']} </p:outputLabel>
+								</span>
+							</td>
 							<td>
 								<p:calendar label="#{lbl['lbl.sc.qt.proposal.approval.date.mof']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
@@ -85,7 +91,7 @@
 			</c:if>
 			</table>
 			<table
-			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
+			style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse; margin-top: 1em;">
 			<tr
 				style="background-color: #F0EFEF; text-align: left; font-size: 12px; text-indent: 0.5em;">
 				<th
@@ -113,7 +119,7 @@
 			</tr>
 			<c:if
 				test="#{approvalBackingBean.managedBean.scQtApprovalRequestList.size() == 0}">
-				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em;">
+				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em; border: 1px solid #dddddd;">
 					<td style="padding: 5px;"><h:outputText
 							value="#{lbl['lbl.datatable.msg.no.records.found']}" /></td>
 				</tr>
@@ -121,7 +127,7 @@
 			<c:if
 				test="#{approvalBackingBean.managedBean.scQtApprovalRequestList.size() > 0 }">
 				<c:if test="#{approvalBackingBean.managedBean.qt.chmnFinalizationDate eq null}">
-				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em;">
+				<tr style="text-align: left; font-size: 12px; text-indent: 0.5em; border: 1px solid #dddddd;">
 					<td style="padding: 5px;"><h:outputText
 							value="#{lbl['lbl.datatable.msg.no.records.found']}" /></td>
 				</tr>
@@ -154,14 +160,15 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeid"
-									value="#{requestdetails.decessionType.parameterId}"
+									value="#{requestdetails.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest1)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" 
+										update="requestDetailsId"/>
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsg" for="decisiontypeid"
 									display="icon" /></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;">
@@ -252,14 +259,15 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeidRq3"
-									value="#{requestdetails.decessionType.parameterId}"
+									value="#{requestdetails.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}"
 									disabled="#{approvalBackingBean.managedBean.readOnly}"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionTypeRequest3)}" />
 									<p:ajax event="change"
-										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}" />
+										listener="#{approvalBackingBean.updateDecisionType(requestdetails)}"
+										update="requestDetailsId" />
 								</p:selectOneMenu> <p:message id="decisiontypeidhMsgRq3" for="decisiontypeidRq3"
 									display="icon" /></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;">
@@ -296,8 +304,12 @@
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sc.qt.supplier.response.period']}" />
 					</td>
-					<td>
-						<p:inputText value="#{approvalBackingBean.managedBean.scQtApprovalRequestList.get(0).responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" />
+					<td><ui:remove>21692 - Start</ui:remove>
+						<p:inputText value="#{approvalBackingBean.managedBean.scQtApprovalRequestList.get(0).responsePeriod}" style="width:200px;" disabled="#{approvalBackingBean.managedBean.readOnly}" >
+						<p:ajax event="change"
+							listener="#{approvalBackingBean.replaceResponsePeriodValue()}" />
+						</p:inputText>
+						<ui:remove>21692 - End</ui:remove>
 						<ac:iconTooltip value="#{lbl['lbl.sc.qt.response.period.tooltip5']}#{lbl['lbl.sc.qt.response.period.tooltip2']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.fromValue)} #{lbl['lbl.sc.qt.response.period.tooltip3']} #{qTDetailBB.retrieveResponsePeriod(ParameterConst.toValue)} #{lbl['lbl.sc.qt.response.period.tooltip4']}"/>
 					</td>
 					<td>

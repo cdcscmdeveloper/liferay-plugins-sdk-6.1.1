@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
@@ -21,6 +22,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.util.AESEncryptor;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -183,9 +185,10 @@ public class PaymentUtil {
 		String payload = "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("merchantCode#").append(merchantCode).append(";");
-		sb.append("clientSecret#").append(clientKey).append(";");
+//		sb.append("clientSecret#").append(clientKey).append(";");
 		sb.append("orderId#").append(orderId).append(";");
-		sb.append("amount#").append(amount).append(";");
+		sb.append("amount#").append(amount.setScale(2, RoundingMode.HALF_UP))
+				.append(";");
 		sb.append("billName#").append(billName).append(";");
 		sb.append("email#").append(email).append(";");
 		sb.append("mobile#").append(mobile).append(";");
@@ -193,7 +196,8 @@ public class PaymentUtil {
 		sb.append("country#").append(country).append(";");
 		sb.append("cancelUrl#").append(cancelUrl);
 		try {
-			payload = encryptTextUsingAES(sb.toString(), clientKey);
+			payload = AESEncryptor.encrypt(sb.toString(), clientKey);
+//			payload = encryptWithAES(sb.toString(), clientKey);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

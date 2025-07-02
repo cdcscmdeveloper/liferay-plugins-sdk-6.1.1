@@ -1,5 +1,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -48,9 +49,11 @@ label.ui-button>span.ui-button-text {
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<ui:param name="templateSpecId" value="#{cc.attrs.id}" />
 		<ui:param name="isMaintenanceFlow"
 			value="#{qTDetailBB.managedBean.maintanceFlow}" />
 		<ui:param name="isReadOnly" value="#{createQtBB.managedBean.readOnly}" />
+		<ui:param name="scoringSetPopup" value="#{templateSpecId}scoringSetPopup" />
 
 		<ui:include src="/xhtml/common/uompopinclude.xhtml"></ui:include>
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
@@ -492,9 +495,8 @@ label.ui-button>span.ui-button-text {
 
 											<div class="ppRightBtn">
 												<p:commandButton value="#{lbl['lbl.btn.ok']}"
-													action="#{templateSpecBackingBean.scoringOkActionDemo(specificationBackingBean.managedBean.templateSpecBean)}"
-													partialSubmit="true" process="@this, scoreSettPnl"
-													oncomplete="scoringSetPopup.hide()"
+													action="#{specificationBackingBean.scoringOkActionDemo(specificationBackingBean.managedBean.templateSpecBean)}"
+													partialSubmit="true" process="@this, scoreSettPnl"													
 													update="scoreSettPnl, @(.scoringBtn)">
 													<f:setPropertyActionListener
 														target="#{specificationBackingBean.managedBean.templateSpecBean.specComponentId}"
@@ -598,10 +600,6 @@ label.ui-button>span.ui-button-text {
 										</c:if>
 									</p:dialog>
 								</p:outputPanel>
-								<!-- 								<p:inputText id="demoPopTxt" -->
-								<!-- 									value="#{specificationBackingBean.getYesNoStatusDescByBoolean(question.itemReqDemo)}" -->
-								<!-- 									style="width:195px;" disabled="true" /> -->
-
 							</c:otherwise>
 						</c:choose>
 					</p:column>

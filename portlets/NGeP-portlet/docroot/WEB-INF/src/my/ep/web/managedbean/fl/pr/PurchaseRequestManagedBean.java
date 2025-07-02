@@ -295,7 +295,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	//26279 - start
 	private String disciplinaryActionMessage;
-	private List<DisciplinaryActionVO> disciplineVOs;
+	private List<DisciplinaryActionVO> disciplinaryActionVO;
 	private SmDisciplinaryAction smDisciplinaryAction;
 	//26279 - end
 	//24893 - start
@@ -314,7 +314,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//29555 start
     private String preparedBy;
     //29555 end
-    private String backToNtf; //35357
 
 /**
  * Gets the charge line item root.
@@ -3339,12 +3338,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.disciplinaryActionMessage = disciplinaryActionMessage;
 	}	
 	
-	public List<DisciplinaryActionVO> getDisciplineVOs() {
-		return disciplineVOs;
+	public List<DisciplinaryActionVO> getDisciplinaryActionVO() {
+		return disciplinaryActionVO;
 	}
 
-	public void setDisciplineVOs(List<DisciplinaryActionVO> disciplineVOs) {
-		this.disciplineVOs = disciplineVOs;
+	public void setDisciplinaryActionVO(List<DisciplinaryActionVO> disciplinaryActionVO) {
+		this.disciplinaryActionVO = disciplinaryActionVO;
 	}
 	
 	public SmDisciplinaryAction getSmDisciplinaryAction() {
@@ -3418,6 +3417,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	//29728 - end
 
+	// 29555-Start
 	public String getPreparedBy() {
 		return preparedBy;
 	}
@@ -3425,14 +3425,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setPreparedBy(String preparedBy) {
 		this.preparedBy = preparedBy;
 	}
-	
-	//35357-Start
-	public String getBackToNtf() {
-		return backToNtf;
-	}
+	// 29555-End
 
-	public void setBackToNtf(String backToNtf) {
-		this.backToNtf = backToNtf;
-	}
-	//35357-Start
 }

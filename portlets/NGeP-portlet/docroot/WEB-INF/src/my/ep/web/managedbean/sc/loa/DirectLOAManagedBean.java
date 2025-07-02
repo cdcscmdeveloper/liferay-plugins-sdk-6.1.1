@@ -366,6 +366,8 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 	private BigDecimal limit = new BigDecimal(500000);
 	private boolean AgreementReqChange = false;
 	private boolean above500K = true;
+	private boolean fullfilmentTypeChange = false; 
+	private boolean requiredAgreementChange = false; 
 	// #25726 END #Sqube Vulnerability Minor G47 end
 	
 	// Bug #33674@Syazani - Start
@@ -377,6 +379,9 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 
 	private Boolean readOnlyLOADownload = true;
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+	// #29766 Start Vinod
+	private String alertForInactivePK7;
+	// #29766 End Vinod
 	
 	/**
 	 * Gets the spki backing bean.
@@ -2065,6 +2070,21 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		above500K = above500k;
 	}
 	
+	public boolean isFullfilmentTypeChange() {
+		return fullfilmentTypeChange;
+	}
+
+	public void setFullfilmentTypeChange(boolean fullfilmentTypeChange) {
+		this.fullfilmentTypeChange = fullfilmentTypeChange;
+	}
+	
+	public boolean isRequiredAgreementChange() {
+		return requiredAgreementChange;
+	}
+
+	public void setRequiredAgreementChange(boolean requiredAgreementChange) {
+		this.requiredAgreementChange = requiredAgreementChange;
+	}
 	// #25726 END
 	
 	//#29468
@@ -2181,5 +2201,15 @@ public class DirectLOAManagedBean extends LOABaseManagedBean {
 		this.readOnlyLOADownload = readOnlyLOADownload;
 	}
 	// Bug #35078@Syazani -- 22/09/2023 -- End
+
+	// #29766 Start Vinod
+	public String getAlertForInactivePK7() {
+		return alertForInactivePK7;
+	}
+
+	public void setAlertForInactivePK7(String alertForInactivePK7) {
+		this.alertForInactivePK7 = alertForInactivePK7;
+	}
+	// #29766 End Vinod
 	
 }

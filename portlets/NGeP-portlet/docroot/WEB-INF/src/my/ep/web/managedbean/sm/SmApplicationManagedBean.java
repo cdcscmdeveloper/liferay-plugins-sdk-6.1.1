@@ -573,8 +573,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierBusiness> smSupplierBusinessSsm = new ArrayList<SmSupplierBusiness>();
 	private List<SmEquityCompany> smEquityCompaniesSsm = new ArrayList<SmEquityCompany>();
 
-	// 26238
-	private Long disabledCategoryL3Id;
 
 	// #29315
 	private boolean flagMandatoryEpfNo;
@@ -614,7 +612,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSvWorker> deletedWorkers;
 	// 29379 - Site Visit Grouping Enhancement -28775 - end
 	
-	// #28778 - Start
+	// #28778 -28775 - Start
 	private boolean specialCategoryRechecked;
 	// #28778 - End
 	
@@ -664,10 +662,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
 	private List<SmApplSupportDoc> missinDocsMandatory;
 	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
 	//#34393 - end
 	//#31043 START
 	private boolean allowedToSiteVisit;
 	//#31043 END
+	//#34831 - Start
+	private boolean basicSupplier;
+	//#34831 - End
 	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
@@ -748,6 +750,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			//#34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			//#34831 - End
 		}
 
 		defaultAddr = new SmAddress();
@@ -4094,15 +4102,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelsSsm = personnelsSsm;
 	}
 
-	// 26238 - start
-	public Long getDisabledCategoryL3Id() {
-		return disabledCategoryL3Id;
-	}
-
-	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
-		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} // 26238 - end
-
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
 	}
@@ -4622,7 +4621,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.personnelRoleMsg = personnelRoleMsg;
 	}
 	//#30762 -End 
-
+	//#34392 - start
 	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
 		return mandatoryDocsInquiry;
 	}
@@ -4654,6 +4653,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
 		this.missinDocsMandatory = missinDocsMandatory;
 	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
 	//#31043 START
 	public boolean isAllowedToSiteVisit() {
 		return allowedToSiteVisit;
@@ -4663,4 +4671,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.allowedToSiteVisit = allowedToSiteVisit;
 	}
 	//#31043 END
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
 }

@@ -469,10 +469,11 @@ public class AddressUtils {
 			//#34159 - START - Rearrange address as in comment/log #36 of this Redmine
 			//#34135 START
 			if (smAddress.getPmDivision() != null && smAddress.getPmDivision().getDivisionName() !=null && smAddress.getPmDivision().getDivisionName().length() > 0
-					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase("13")) {
+					&& smAddress.getPmState() != null && smAddress.getPmState().getStateCode().equalsIgnoreCase(SupplierManagementConst.SARAWAK_CODE)) {
 				address.append(smAddress.getPmDivision().getDivisionName());
 				address.append(separator);
 			}
+			//#34159 - END
 
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(System.getProperty("line.separator"));

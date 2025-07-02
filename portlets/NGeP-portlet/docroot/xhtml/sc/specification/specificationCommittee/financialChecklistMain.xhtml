@@ -333,7 +333,19 @@
 		<ui:param name="isReadOnlyOrSpecMain"
 			value="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.specMaintenanceScreen eq specificationBackingBean.getSpecMaintenance()}" />
 
+		<ui:remove>#10141 Start Vinod </ui:remove>
+		<ui:include src="/xhtml/sc/specification/specificationCommittee/financialChecklistPreview.xhtml"/>
+		<ui:remove>#10141 End Vinod </ui:remove>
 		<div align="right">
+			<ui:remove>#10141 Start Vinod -- Added new button for financial checklist preview</ui:remove>
+			<p:commandButton styleClass="BtnSpacing"
+				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"
+				value="#{lbl['lbl.sc.spec.btn.checklist.preview']}"
+				action="#{specificationBackingBean.financialCheckListPreview}"
+				onstart="blockWidget.show()"
+				oncomplete="financialChecklistPreview.show();"
+				process="@this" update="@([id$=financialChecklistTitleListId])"/>
+			<ui:remove>#10141 End Vinod </ui:remove>
 			<p:commandButton styleClass="BtnSpacing"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				rendered="#{!isReadOnlyOrSpecMain or specificationBackingBean.managedBean.isChecklist()}"

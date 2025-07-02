@@ -319,7 +319,7 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 					.getSupplierApplicationSO().retrieveEighthTab(reqDTO)
 					.getSmSupplierCategories();
 			
-			//#32809 - start
+			//#32809 - start - #30766
 			getManagedBean()
 					.setDockYardFacilitiesVOList(
 							getCategoryFacilityVO(
@@ -340,7 +340,7 @@ public abstract class BaseViewBackingBean<T extends BaseViewManagedBean>
 							getCategoryFacilityVO(
 									my.ep.web.constant.sm.SupplierManagementConst.SM_FACILITY_TYPE_FACTORY,
 									getManagedBean().getSmAppl(), facilities));
-			//#32809 - end
+			//#32809 - end - #30766
 			getManagedBean().setLoadFacilityInfo(true);
 		}
 	}

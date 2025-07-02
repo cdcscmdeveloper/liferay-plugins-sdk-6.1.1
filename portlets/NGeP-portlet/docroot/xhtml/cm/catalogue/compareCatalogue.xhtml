@@ -30,26 +30,55 @@
 				<tr>
 					<td style="width: 10%; padding-right: 10px;"><h:panelGroup
 							styleClass="comparelabelCss">
-
+							<ui:remove>#26284 - Start</ui:remove>
 							<table>
 								<tr height="67px;">
 									<td></td>
 								</tr>
 								<tr>
-									<td><ui:repeat var="label"
-											value="#{catalogueBackingBean.managedBean.compareLabel}">
-											<p:panel styleClass="comparePanelLabel">
-												<h:outputLabel value="#{label}" style="width:200px;" />
-											</p:panel>
-										</ui:repeat></td>
-
+									<td>							
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.action']}" style="width:200px; margin-bottom: 2px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.item.name']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.item.code']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.normal.price']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.uom']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.supplier.name']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.sku']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.min.order']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.delivery.term.days']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputLabel value="#{lbl['lbl.cm.basic.item.spec']}" style="width:200px;" />
+										</p:panel>
+										<p:panel styleClass="comparePanelLabel" >
+											<h:outputText value="" style="padding-left: 20px;"/>
+											<ac:iconTooltip
+												value="#{lbl['lbl.sc.tooltip.disciplinary.action.taken']}" /> 
+											<h:outputLabel
+												value="#{lbl['lbl.sc.discipline.action.taken']}"
+												style="width:160px;" />
+										</p:panel>	
+									</td>
 								</tr>
-
 							</table>
-
-
-
-
+							<ui:remove>#26284 - End</ui:remove>
 						</h:panelGroup></td>
 					<td width="100%;"><h:panelGroup styleClass="compareValueCss">
 

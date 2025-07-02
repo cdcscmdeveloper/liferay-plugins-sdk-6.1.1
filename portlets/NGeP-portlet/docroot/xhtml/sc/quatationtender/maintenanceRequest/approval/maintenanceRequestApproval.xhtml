@@ -16,7 +16,7 @@
 			autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" severity="error, info" />
 		<ac:gpkiPopup
-			beforeSignText="#{approvalBackingBean.textBeforeSign}"
+			textBeforeSign="#{approvalBackingBean.textBeforeSign}"
 			postSignAction="#{approvalBackingBean.updateGenericApprovalTask(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{approvalBackingBean.enableAutoUpdate()}" />
 		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}"/>
@@ -32,7 +32,7 @@
 							<ui:remove><!-- 25037 - note 510--></ui:remove>
 							<p:commandButton value="#{lbl[buttonLabel]}"
 								styleClass="ui-button" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();"
+								oncomplete="blockWidget.hide();" update="@form"
 								action="#{approvalBackingBean.preSubmitGenericApprovalTask(bpmAction)}"/>
 						</ui:repeat>
 					</ui:define>

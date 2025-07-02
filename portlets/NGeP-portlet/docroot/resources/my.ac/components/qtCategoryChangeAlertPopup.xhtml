@@ -40,10 +40,12 @@
 						</span>
 						<br />
 						<br />
-						<span> <h:outputText
+						<span> <h:outputText  rendered="#{!specificationBackingBean.managedBean.checkUserCanRevise}"
 								value="#{lbl['lbl.sc.category.change.alert.text.two']}" />&#160;
-							<h:outputText value="#{catCodeList}" />&#160; <h:outputText
-								value="#{lbl['lbl.sc.category.change.alert.text.three']}" />
+								<h:outputText rendered="#{specificationBackingBean.managedBean.checkUserCanRevise}"
+								value="#{lbl['lbl.sc.category.change.alert.text.two.a']}" />&#160;
+								<h:outputText value="#{catCodeList}" />&#160; 
+								<h:outputText value="#{lbl['lbl.sc.category.change.alert.text.three']}" />
 						</span>
 					</p:panel>
 				</h:panelGrid>

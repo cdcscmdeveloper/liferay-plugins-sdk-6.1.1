@@ -22,6 +22,14 @@
 	{
 	width: 250px;
 }
+
+.left-align {
+	text-align: left;
+}
+
+.left-align a {
+	text-align: left;
+}
 </style>
 		<!--     
  <script>
@@ -54,47 +62,53 @@
 				<p:column headerText="#{lbl['lbl.ct.circular.no']}"
 					style="width:15%;white-space:normal;"
 					styleClass="column-align-center">
-					<p:commandLink value="#{cqData.ctCircular.circularNo}"
-						styleClass="blue_font" style="text-align:left; float:left;"
-						action="#{circularBackingBean.gotoPage(cqData.circularVerId, cqData.docType)}"
-						onstart="blkContractSearchAuditTable.show()"
-						oncomplete="blkContractSearchAuditTable.hide()">
-					</p:commandLink>
+					<div class="left-align">
+						<p:commandLink value="#{cqData.ctCircular.circularNo}"
+							styleClass="blue_font" style="color:#009ae5 !important;"
+							action="#{circularBackingBean.gotoPage(cqData.circularVerId, cqData.docType)}"
+							onstart="blkContractSearchAuditTable.show()"
+							oncomplete="blkContractSearchAuditTable.hide()">
+						</p:commandLink>
+					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"
 					style="width:15%;white-space:normal;"
 					styleClass="column-align-center">
-					<div align="left">
+					<div class="left-align">
 						<h:outputText value="#{cqData.circularNo}" />
 					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.name']}"
 					style="width:25%;white-space:normal;"
 					styleClass="column-align-center">
-					<div align="left">
+					<div class="left-align">
 						<h:outputText value="#{cqData.name}" />
 					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.start.date']}"
 					style="width:10%;white-space:normal;"
 					styleClass="column-align-center">
-					<h:outputText value="#{cqData.startDate}" style="float:left;">
-						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-					</h:outputText>
+					<div class="left-align">
+						<h:outputText value="#{cqData.startDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
+					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.circular.end.date']}"
 					style="width:10%;white-space:normal;"
 					styleClass="column-align-center">
-					<h:outputText value="#{cqData.endDate}" style="float:left;">
-						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-					</h:outputText>
+					<div class="left-align">
+						<h:outputText value="#{cqData.endDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+						</h:outputText>
+					</div>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.status']}"
 					style="width:15%;white-space:normal;"
 					styleClass="column-align-center">
-					<div align="left">
+					<div class="left-align">
 						<h:outputText
 							value="#{circularBackingBean.getStatusDescById(cqData.status.statusId)}" />
 					</div>

@@ -56,6 +56,7 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
@@ -63,12 +64,15 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmKPIValue;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault; //#9133
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -80,6 +84,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -879,12 +884,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								 if (worklistItemVO.getDocStatus() != null && worklistItemVO.getDocStatus().intValue() == DPStatusConstants.RN_PENDING_ITEM_CODIFICATION.intValue()){
 									 IRequestNoteSO rnSO = BusinessDelegate.getInstance().getServiceObject(
 												ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-									 RequestNoteReqDTO NotereqDTO = new RequestNoteReqDTO();
+									//[Start] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
+									RequestNoteReqDTO noteReqDTO = new RequestNoteReqDTO();
 									if (worklistItemVO.getDocNumber() != null && !worklistItemVO.getDocNumber().isEmpty()) {
-										NotereqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
+										noteReqDTO.setRequestNoteNo(worklistItemVO.getDocNumber());
 									}
-									RequestNoteResDTO resDTO = rnSO.getRequestNote(NotereqDTO);
-
+									RequestNoteResDTO resDTO = rnSO.getRequestNote(noteReqDTO);
+									//[End] - Sonarqube DP Code Smell Minor Muhamad Za'im [26/4/2024]
 									if (resDTO.getRequestNoteDetail() != null) {
 										if (resDTO.getRequestNoteDetail().getRequestNoteDtls() != null
 												&& !resDTO.getRequestNoteDetail().getRequestNoteDtls().isEmpty()) {
@@ -1583,11 +1589,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				sb.append(" ( ");
 				sb.append(mofResDto.getCompanyName());
 				sb.append(" ) ");
-//				Enhancement #28766 - Remove GLP flag - Start
-//				if (viewGlpFlag() && mofResDto.isGlp()) {
-//					sb.append("<font color=\"red\">&#x26A0;GLP </font>");
-//				}
-//				Enhancement #28766 - Remove GLP flag - End
+				// Enhancement #28766 - Remove GLP flag - Start
+				// if (viewGlpFlag() && mofResDto.isGlp()) {
+				// sb.append("<font color=\"red\">&#x26A0;GLP </font>");
+				// }
+				// Enhancement #28766 - Remove GLP flag - End
 			}
 
 			worklistItemVO.setTitle(sb.toString());

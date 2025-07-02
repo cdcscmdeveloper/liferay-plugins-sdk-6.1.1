@@ -152,9 +152,9 @@
 					<!-- #27297 START -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					action="#{backingBean.validateCompanyBranch(backingBean.managedBean)}"
-					partialSubmit="true" process="brnInfPan, pendingQTPopUpId, closeandsubmitQTPopUpId, pendingQTPopUpAllId"
+					partialSubmit="true" process="brnInfPan, pendingQTPopUpId"
 					id="delBranchBtnId" disabled="#{empty backingBean.managedBean.smAppl.smSupplierBranches}"
-					update=":form:tt:dt, pendingQTPopUpId, closeandsubmitQTPopUpId, pendingQTPopUpAllId" />
+					update=":form:tt:dt, pendingQTPopUpId" />
 					<!-- #27297 END -->
 
 			</div>
@@ -218,12 +218,16 @@
 	
 			<br />
 			<div align="right">
+			<!-- #34159 - START - add param disableValidation -->
 				<p:commandButton value="#{lbl['lbl.sm.button.save']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					id="branchPopUpSaveBtn"
 					action="#{backingBean.addOrUpdateBranchToSmAppl}"
 					partialSubmit="true" process="banchDialog"
 					onclick="branchBlockWidget.show();" oncomplete="branchBlockWidget.hide();"
-					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" />
+					update=":form:tt:dt,:form:tt:personDt,@([id$=Msg]),:#{p:component('delBranchBtnId')}" >
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
+			<!-- #34159 - END -->
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this"
 					action="#{backingBean.assignCancelBranchBean}" />
@@ -266,21 +270,5 @@
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}" 
 		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
 		
-	<ac:confirmationPopup id="closeandsubmitQTPopUpId"
-		widget="closeandsubmitQTPopUp"
-		okAction="backingBean.deleteSelectedBranches"
-		width="400" height="100"
-		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
-		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
-	
-	<ac:confirmationPopup id="pendingQTPopUpAllId"
-		widget="pendingQTPopUpAll"
-		okAction="backingBean.deleteSelectedBranches"
-		width="400" height="100"
-		title="#{lbl['lbl.msg.confirm.delete.header']}"
-		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']} &lt;br&gt; &lt;br&gt;
-		#{lbl['lbl.msg.confirmation.deletebranch.qt.closeandsubmitproposal']}"
-		update=":form:tt:dt, @([id$=Msg]),:#{p:component('delBranchBtnId')} @this"/>
 	<!-- #29727 END -->
 </ui:composition>

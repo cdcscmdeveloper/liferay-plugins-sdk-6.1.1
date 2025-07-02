@@ -40,7 +40,18 @@
 					value="#{ctManagementReportBB.managedBean.selectedPTJ.pmOrgValidity.orgName}"
 					saveObject="ctManagementReportBB.managedBean.selectedPTJ"
 					conditionField="#{ctManagementReportBB.constructPTJConditionFields()}" /></td>
-		</tr>
+		</tr>		
+		<!-- Supplier Name -->
+		<tr>
+			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.name.supplier']}" rendered="#{ctManagementReportBB.managedBean.supplierVisible}"/></td>
+			<td colspan="3" >
+				<ac:lov id="ctSupplierName" readonly="true" size="100"
+					lovId="PM_ORG_PROFILE_WITH_SUPPLIER_REPORT" 
+					headerText="#{lbl['lbl.ct.name.supplier']}" update="@form"
+					value="#{ctManagementReportBB.managedBean.selectedSupplier.smSupplier.companyName}"
+					saveObject="ctManagementReportBB.managedBean.selectedSupplier"
+					rendered="#{ctManagementReportBB.managedBean.supplierVisible}" /></td>
+		</tr>	
 		<tr>
 			<td style="width:20%"><p:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 			<td>
@@ -53,7 +64,7 @@
 				<p:inputText value="#{ctManagementReportBB.managedBean.contractPhysicalNo}"  maxlength="100" style="width:300px">
 					<p:ajax event="blur" partialSubmit="true" />
 				</p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no_new']}" />
 			</td>
 		</tr>
 		<tr>

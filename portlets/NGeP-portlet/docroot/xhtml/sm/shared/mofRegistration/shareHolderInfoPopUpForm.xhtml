@@ -144,10 +144,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="equiPerIdenType" required="true"
+				<td>
+				<!--29582 & 35300-->
+				<p:selectOneMenu id="equiPerIdenType" required="true"
 						label="#{lbl['lbl.sm.identificationtype']}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryCode eq 'MY' 
-						or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'PR'}"
+						or backingBean.managedBean.selectedShareHolder.permanentResident}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
 						<f:selectItems
@@ -664,9 +666,14 @@
 			<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
 		</p:outputPanel>
 	</p:panel>
-
+<!-- #31130 230425- START -->
 	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true"
 		id="equiShrHldrJbFnc">
+		<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory" 
+				rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
+				<h:outputText value="#{lbl['lbl.sm.job.function']}" />
+		</f:facet>  
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -676,27 +683,18 @@
 			<p:column selectionMode="multiple" style="width:1%" rendered="#{not empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.designation']}" />
 				</f:facet>
 				<h:outputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
 				<h:outputText value="#{jf.fromYear}" maxlength="4"
@@ -704,9 +702,6 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
 				<h:outputText value="#{jf.toYear}" maxlength="4"
@@ -714,11 +709,9 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory" 
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
-					and backingBean.managedBean.selectedShareHolder.equityOwner}"/>
 					<h:outputText value="#{lbl['lbl.sm.label.action']}" />
 				</f:facet>
+<!-- #31130 230425- END --> 
 				<p:commandLink update=":#{p:component('equiJobFunctionInfo')}"
 					action="#{backingBean.assignSelShrHldrJobFunc(jf)}"
 					partialSubmit="true" process="@this" style="text-align: center  !important;">
@@ -834,6 +827,14 @@
 						<f:selectItems value="#{backingBean.getYearsWorkExp()}" />
 						<p:ajax process="@this" update="@this" partialSubmit="true"/>
 					</p:selectOneMenu>
+					<!-- #37771 -->
+					<ac:smFieldChangeAlert 
+						isShow="#{backingBean.managedBean.showFieldChanges
+							and not empty backingBean.managedBean.selectedJobFunction.staffExperienceId 
+							and not empty backingBean.managedBean.latestPersonnel}"
+						oriValue="#{backingBean.managedBean.latestJobFunction.toYear}" 
+						currValue="#{backingBean.managedBean.selectedJobFunction.toYear}" 
+						alertValue="#{backingBean.managedBean.latestJobFunction.toYear}"/>
 					<p:message id="equiJbFnInfYrToMsg" for=":#{p:component('equiJbFnInfYrTo')}"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -994,13 +995,14 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> 
+						<!-- 37771 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
 									and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.shareAmt}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}" 
-							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.shareAmt)}" />
+							alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestRelatedCompany.shareAmt)}" />
 						
 						<p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
 							showSummary="true" showDetail="false" display="icon" /></td>
@@ -1016,13 +1018,14 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText> 
+						<!-- 37771 -->
 						<ac:smFieldChangeAlert 
 							isShow="#{backingBean.managedBean.showFieldChanges
 									and not empty backingBean.managedBean.selectedRelatedCompany.relatedCompanyId
 									and not empty backingBean.managedBean.latestPersonnel}"
 							oriValue="#{backingBean.managedBean.latestRelatedCompany.sharePercentage}" 
 							currValue="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}" 
-							alertValue="#{backingBean.getPriceAmount(backingBean.managedBean.latestRelatedCompany.sharePercentage)}" />
+							alertValue="#{backingBean.getPriceAmountFormat(backingBean.managedBean.latestRelatedCompany.sharePercentage)}" />
 						<p:message id="equiRlCmpInfShrPercMsg" for="equiRlCmpInfShrPerc"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
@@ -1313,6 +1316,14 @@
 							<f:selectItems value="#{backingBean.getYearDropDown()}" />
 							<p:ajax process="@this" update="@this" partialSubmit="true"/>
 						</p:selectOneMenu>
+						<!-- #37771 -->
+						<ac:smFieldChangeAlert 
+							isShow="#{backingBean.managedBean.showFieldChanges
+								and not empty backingBean.managedBean.selectedStaffAcademic.staffAcademicId
+								and not empty backingBean.managedBean.latestPersonnel}"
+							oriValue="#{backingBean.managedBean.latestStaffAcademic.year}" 
+							currValue="#{backingBean.managedBean.selectedStaffAcademic.year}" 
+							alertValue="#{backingBean.managedBean.latestStaffAcademic.year}" />
 						<p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>

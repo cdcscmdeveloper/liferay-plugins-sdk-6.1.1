@@ -7,9 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:dialog id="specificationPopup" widgetVar="specificationPopup"
 		header="#{lbl['lbl.tpl.spec.content.specification']}" modal="true" dynamic="true" closable="false"
-		resizable="false" styleClass="pop_up_top" width="555">
-		<p:panel id="specificationId">
-			<h:panelGrid width="100%">
+		resizable="false" styleClass="pop_up_top">
+		<ui:remove> #36950 start @zaim</ui:remove>
+			<p:scrollPanel mode="native" style="width:550px;height:650px; border:none" >
+		<ui:remove> #36950 end @zaim</ui:remove> 	
 				<p:dataTable id="specificationListDataTable" var="specification"
 					style="white-space: normal;"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -18,16 +19,18 @@
 
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
 						style="white-space: normal;">
-						<h:outputText value="#{specification.clSpecDetail}" />
+						<ui:remove> #36950 start @zaim</ui:remove>
+						 <h:outputText value="#{requestNoteBackingBean.handleSpecialCharacterForView(specification.clSpecDetail)}" escape="false" />
+						<ui:remove> #36950 end @zaim</ui:remove> 
 						<p:spacer width="2px;" />
 					</p:column>
 				</p:dataTable>
-			</h:panelGrid>
-
+		<ui:remove> #36950 start @zaim</ui:remove>		
+			</p:scrollPanel>
+		<ui:remove> #36950 end @zaim</ui:remove> 	
 			<div class="ppRightBtn BtnSpacing">
 				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
 					process="@this" onclick="specificationPopup.hide()" />
 			</div>
-		</p:panel>
 	</p:dialog>
 </ui:composition>
