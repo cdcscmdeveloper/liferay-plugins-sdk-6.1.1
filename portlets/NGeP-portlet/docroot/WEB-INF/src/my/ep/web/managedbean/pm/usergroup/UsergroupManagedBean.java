@@ -59,7 +59,7 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private PmUserGroup userGroupOld;
 	private PmUserGroup userGroupUpdate;
 	private PmUserGroup userGroupNew;
-
+	private String roleDesc;
 	/** AUDIT 28895_35509 END **/
 
 	public UsergroupManagedBean() {
@@ -441,6 +441,14 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setUserGroupNew(PmUserGroup userGroupNew) {
 		this.userGroupNew = userGroupNew;
+	}
+	
+	public String getRoleDesc() {
+		return roleDesc;
+	}
+
+	public void setRoleDesc(String roleDesc) {
+		this.roleDesc = roleDesc;
 	}
 	/** AUDIT 28895_35509 END **/
 
