@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.requestnote;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -20,7 +19,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
-import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -35,8 +33,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -46,7 +42,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -56,7 +51,6 @@ import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.managedbean.sc.requestnote.ApprovalExceedThresholdManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.StatusHelper;
@@ -265,8 +259,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @return A new {@code FacesScopes} object.
 	 */
 	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
+		return new FacesScopes();
 	}
 
 	/**
@@ -312,7 +305,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 */
 	public String getPTJGroupCondition() {
 		debugLogger("getPTJGroupCondition");
-		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		StringBuilder condition = new StringBuilder("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
 		PmOrgProfile searchMinistryProfile = this.getManagedBean().getSearchMinistryProfile();
 		if (null != searchMinistryProfile && searchMinistryProfile.getOrgProfileId() != null) {
 			String minLevel = EpPropertiesUtils.getInstance().getProperty(
@@ -345,7 +338,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 */
 	public String getPtjCondition() {
 		debugLogger("getPTJCondition");
-		StringBuffer condition = new StringBuffer("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
+		StringBuilder condition = new StringBuilder("recordStatus" + SourcingConstants.LOV_CONDITION_SEPARATOR + DbValueConst.RECORD_STATUS_ACTIVE);
 		PmOrgProfile searchMinistryProfile = this.getManagedBean().getSearchMinistryProfile();
 		PmOrgProfile searchPtjGroupProfile = this.getManagedBean().getSearchPtjGroupProfile();
 		if (null != searchPtjGroupProfile && searchPtjGroupProfile.getOrgProfileId() != null) {
@@ -529,7 +522,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
 				if (resDTO.getUserOrgList() != null
-						&& resDTO.getUserOrgList().size() > 0) {
+						&& !resDTO.getUserOrgList().isEmpty()) {
 					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
 						if (pmUserOrg.getPmOrgProfile() != null) {
 							pmOrgProfile = pmUserOrg.getPmOrgProfile();
@@ -660,154 +653,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 			return validDate;	
 	}
 	
-	/**
-	 * Triggered from: directPurchaseSearch.xhtml - dataTable id="scDocumentTableID".
-	 * 
-	 * Code performance risk: Executed inside loop - records from search result. 
-	 * 
-	 * Mitigation: 
-	 * 1. Make sure logic and service calls is optimized. 
-	 * 2. Create new service to execute and return specific value. Fast execution time.
-	 * 3. Disable logging
-	 * 
-	 * @param dpObj
-	 * @return String
-	 */
-	public String getDocStatus(Object[] dpObj){
-		
-		if(dpObj == null){
-			return null;
-		}
-		
-		if(checkStatusPidExpired(dpObj)){
-			return getStatusDescById(DPStatusConstants.PID_EXPIRED);
-		}else if(checkStatusSqExpired(dpObj)){
-			return getStatusDescById(DPStatusConstants.SQ_EXPIRED);
-		}
-		Long statusId = null;
-		String docType = null;
-		
-		if(dpObj[3] != null){
-			docType = (String) dpObj[3];
-		}
-		if(dpObj[4] != null){
-			statusId = (Long) dpObj[4];
-		}		
-		if(docType.equals("PD")){
-			if(statusId.equals(DPStatusConstants.PID_EXPIRED)){
-				return getStatusDescById(DPStatusConstants.PID_COMPLETED);
-			}
-		}
-		return getStatusDescById(statusId);
-	}
-	
-	/**
-	 * 
-	 * @param dpObj
-	 * @return boolean
-	 */
-	public boolean checkStatusPidExpired(Object[] dpObj){
-		
-		String docNo = null;
-		Long docStatusId = null;
-		String docType = null;
-		Date pidChangedDate = null;
-		Integer pidValidDays = null;
-		
-		if(dpObj[1] != null){
-			docNo = (String) dpObj[1];
-		}
-		if(dpObj[4] != null){
-			docStatusId = (Long) dpObj[4];
-		}
-		if(dpObj[3] != null){
-			docType = (String) dpObj[3];
-		}
-		
-		ScPurchaseInDefault scPID = null;
-		
-		Long currentStatusId = docStatusId;
-		
-		if(docType.equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
-	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)
-	    			|| currentStatusId.equals(DPStatusConstants.SQ_PENDING_SUBMISSION) ){
-	    		
-	    		//scPID = (ScPurchaseInDefault)dpObj[8];
-	    		if(dpObj[8]!=null){
-	    			scPID = new ScPurchaseInDefault();
-		    		scPID.setPurchaseInDefaultId((Long) dpObj[8]);
-		    		scPID.setPurchaseInDefaultNo((String) dpObj[9]);
-		    		scPID.setPidValidDays((Integer) dpObj[10]);
-		    		scPID.setChangedDate((Timestamp) dpObj[11]);
-		    				    		
-		    		pidChangedDate = scPID.getChangedDate();
-		    		pidValidDays = scPID.getPidValidDays();
-	    		}
-	    		
-			}								   
-	    }else if(docType.equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
-	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_SUBMISSION)
-	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
-	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-	    		
-	    		
-	    		//scPID = (ScPurchaseInDefault)dpObj[8];
-	    		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-	    		RequestNoteResDTO resDTO = new RequestNoteResDTO();
-	    		IRequestNoteSO reqSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-	    		
-	    		reqDTO.setRequestNoteId((Long)dpObj[0]);
-	    		reqDTO.setRequestNoteNo(docNo);
-	    		// Refactor #20 - Start.
-	    		resDTO = reqSO.getPidDtlsByRnIdAndRnNo(reqDTO);
-
-	    		pidChangedDate = resDTO.getPidChangedDate();
-	    		pidValidDays = resDTO.getPidValidDays();
-	    		// Refactor #20 - End.
-	    		
-	    	}  	
-	    }else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
-	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
-			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		
-	    		scPID = (ScPurchaseInDefault)dpObj[8];
-
-	    		pidChangedDate = scPID.getChangedDate();
-	    		pidValidDays = scPID.getPidValidDays();
-	    	}
-	    }
-		
-		return pidValidityBoolean(pidChangedDate, pidValidDays);
-	
-	}
-	
-	/**
-	 * Pid validity.
-	 * 
-	 * @param purchaseInDefault
-	 *            the purchase in default
-	 * @param scRequestNote
-	 *            the sc request note
-	 */
-	private boolean pidValidityBoolean(Date pidChangedDate, Integer pidValidDays) {
-		boolean valid = false;
-
-		if (pidChangedDate != null && pidValidDays != null) {
-			Date today = DateUtils.getCurrentDate();
-			Date expDate = DateUtils.addDays(pidChangedDate, pidValidDays);
-
-			if (today.after(expDate)) {
-				valid = true;
-			}
-		}
-		return valid;
-	}
-
 	/**
 	 * Retrieves an array of SelectItem objects representing the available function types.
 	 * These types are based on predefined organization types (PTJ and G2G_ROLECODE).
