@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper; //#38514
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -195,8 +196,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private static final Map<String, String> months;
 	
 	//added for 28827 to check list of filter value
-	private List<CtAgency> filteredAgencies;	
-
+	private List<CtAgency> filteredAgencies;
+	
 	static
 	{
 		months = new HashMap<String, String>();
@@ -2408,7 +2409,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		// Recalculate the performance bond amount
 		// Start - Fix - #32663
-		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+		//Fix - #36708
+		//String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+		ContractBackingBean contractBackingB = new ContractBackingBean(); //#38514
+		String  proc_type =  EntityHelper.getStringNestedProperty(contractBackingB.getManagedBean(), "contractVer.ctContract.loa.qtType.parameterCode"); //#38514
 
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
 				if(proc_type != null){
