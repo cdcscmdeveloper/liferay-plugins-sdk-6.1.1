@@ -1496,14 +1496,16 @@ public class RuleCatalogueBackingBean extends
 					// next
 					// record\
 					continue;
-				} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc
-						.getRuleType().getRangeType() == 2)
-						&& baseValueToCompare.isError()) {// to value can not be
-															// less than from
-															// value
-					throw new EpException(MessageConst.ERROR_770210,
-							new String[] { ruleTypeDesc.getRuleDesc() });
 				}
+				// 29669 - start
+				else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
+						&& (baseValueToCompare.isError() || baseValueToCompare.isErrorToRequired())) {
+							// to value can not be less than from value
+							// or
+							// previous tier's TO value can not be changed to null if already add next tier
+					throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });				
+				}
+				// 29669 - end
 
 				// 30672 - start 19/07/2022
 				if (ruleTypeDesc.getRuleType().getRangeType() != 1
@@ -1528,20 +1530,16 @@ public class RuleCatalogueBackingBean extends
 					if (value.getRecordStatusFlg() == 0) {// if is inActive one
 						// go to next record
 						continue;
-					} else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc
-							.getRuleType().getRangeType() == 2)
-							&& value.isError()) { // to
-						// value
-						// can
-						// not
-						// be
-						// less
-						// than
-						// from
-						// value
-						throw new EpException(MessageConst.ERROR_770210,
-								new String[] { ruleTypeDesc.getRuleDesc() });
 					}
+					// 29669 - start
+					else if ((ruleTypeDesc.getRuleType().getRangeType() == 1 || ruleTypeDesc.getRuleType().getRangeType() == 2)
+							&& (value.isError() || value.isErrorToRequired())) { 
+						// to value can not be less than from value
+						// or
+						// previous tier's TO value can not be changed to null if already add next tier
+						throw new EpException(MessageConst.ERROR_770210, new String[] { ruleTypeDesc.getRuleDesc() });
+					}
+				    // 29669 - end
 
 					if (!ruleValueValidation(baseValueToCompare, value,
 							ruleTypeDesc.getRuleType())) {
@@ -3001,21 +2999,30 @@ public class RuleCatalogueBackingBean extends
 			if (rulevalue.getGroupValueId().equals(
 					configRuleType.getConfigRuleValues().get(index)
 							.getGroupValueId())) {
-				rulevalue.setFromValue(configRuleType.getConfigRuleValues()
-						.get(index).getToValue().add(new BigDecimal(0.01)));
+				// 29669 - start
+				if (configRuleType.getConfigRuleValues().get(index).getToValue() == null) {
+					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(true);
+				} else {
+					rulevalue.setFromValue(configRuleType.getConfigRuleValues()
+							.get(index).getToValue().add(new BigDecimal(0.01)));
+					configRuleType.getConfigRuleValues().get(index).setErrorToRequired(false);
+				}
+				// 29669 - end
 			}
 		}
 
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
+		// 29669 start
 		if (selectedValue.getFromValue() != null
 				&& selectedValue.getToValue() != null
 				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+						selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
+		// 29669 end
 	}
 
 	/**
@@ -3111,7 +3118,13 @@ public class RuleCatalogueBackingBean extends
 
 					newRuleValue.setGroupValueId(1);
 				}
-				newRuleValue.setFromValue(new BigDecimal(1));
+				// 29669 - start
+				if (configRuleType.getRuleType().equals(RuleTypeConst.QTPMM)) {
+					newRuleValue.setFromValue(new BigDecimal(0));
+				} else {
+					newRuleValue.setFromValue(new BigDecimal(1));
+				}
+				// 29669 - end
 			}
 			int index = configRuleType.getConfigRuleValues().size();
 			configRuleType.getConfigRuleValues().add(index, newRuleValue);
@@ -4558,22 +4571,13 @@ public class RuleCatalogueBackingBean extends
 				.getSelectedRuleDescType().getRuleType();
 		PmConfigRuleValue selectedValue = configRuleType.getConfigRuleValues()
 				.get(index);
-		if (selectedValue.getFromValue() != null
-				&& selectedValue.getToValue() != null
-				&& selectedValue.getFromValue().compareTo(
-						selectedValue.getToValue()) == 1) {
+		// 29669 start
+		if (selectedValue.getFromValue() != null && selectedValue.getToValue() != null && selectedValue.getFromValue().compareTo(selectedValue.getToValue()) >= 0) {
 			selectedValue.setError(true);
 		} else {
 			selectedValue.setError(false);
 		}
-		//
-		// if (selectedValue.getRuleValue() == null
-		// || selectedValue.getFromValue() == null) {
-		// this.getManagedBean().setError2(true);
-		// } else {
-		// this.getManagedBean().setError2(false);
-		// }
-
+		// 29669 end
 	}
 
 	/**
@@ -5385,6 +5389,9 @@ public class RuleCatalogueBackingBean extends
 	public void onRuleType(org.primefaces.event.SelectEvent event) {
 
 		String selectedRuleType = null;
+		// 29669,29641,29650 - start
+		RequestContext.getCurrentInstance().reset("form:settingTabId:ruleConfigId"); // reset form when select different Rule if UI validation error
+		// 29669,29641,29650 - end
 		
         if (getManagedBean().getSelectedRuleDescType() != null) {
         	selectedRuleType = getManagedBean().getSelectedRuleDescType()
