@@ -2593,6 +2593,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setCompliance(null);
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.checkChecklistForEPV(reqDTO);
 				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
 			}
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
@@ -10628,6 +10629,14 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
+					//#21692 - Start
+					List<Integer> rejectStatus = new ArrayList<>();
+					rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+					rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);
+					ScQtProposalChecklist proposalChecklist = this.getManagedBean().getQtProposalChecklist();
+					boolean rejectEPV = proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod() != null
+							&& rejectStatus.contains(proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod());
+					//#21692 - End
 
 					// #29187 Start Vinod
 					if (QTConstants.FINANCIAL_EVALUATION
@@ -10636,7 +10645,8 @@ private void retriveCommitteeRemarksList(){
 							&& (CollectionUtils.isEmpty(questionIds) || !questionIds
 									.contains(tplSpecAnswer
 											.getTplSpecQuestion()
-											.getSpecQuestionId()))) {
+											.getSpecQuestionId()))
+							&& !rejectEPV) {//#21692
 						questionIds.add(tplSpecAnswer.getTplSpecQuestion()
 								.getSpecQuestionId());
 						validateUserScoreForTemplate(tplSpecAnswer, false);
