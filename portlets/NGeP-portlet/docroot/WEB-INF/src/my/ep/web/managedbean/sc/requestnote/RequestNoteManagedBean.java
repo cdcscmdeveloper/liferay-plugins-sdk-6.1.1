@@ -410,7 +410,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean bpkApproverMode = Boolean.FALSE; //#26059
 	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
 	private boolean showAttachments = Boolean.TRUE; //#26059
-    private List<CommodityGroup> commodityGroups =	new ArrayList<CommodityGroup>(); //#26059
+    private List<CommodityGroup> commodityGroups =	new ArrayList<>(); //#26059
     
     private	Integer	counter = 0; //#26059
     
@@ -2414,42 +2414,101 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	//#26284 - End
 	// #26059 - start
+	/**
+	 * Checks if the current mode is BPK Approver mode.
+	 * 
+	 * @return {@code true} if in BPK Approver mode, {@code false} otherwise.
+	 */
 	public boolean isBpkApproverMode() {
 		return bpkApproverMode;
 	}
 
+	/**
+	 * Sets the BPK Approver mode.
+	 * 
+	 * @param bpkApproverMode
+	 *            {@code true} to enable BPK Approver mode, {@code false} to
+	 *            disable.
+	 */
 	public void setBpkApproverMode(boolean bpkApproverMode) {
 		this.bpkApproverMode = bpkApproverMode;
 	}
 
+	/**
+	 * Retrieves the list of commodity groups.
+	 * 
+	 * @return A list of {@link CommodityGroup} objects.
+	 */
 	public List<CommodityGroup> getCommodityGroups() {
 		return commodityGroups;
 	}
 
+	/**
+	 * Sets the list of commodity groups.
+	 * 
+	 * @param commodityGroups
+	 *            The list of {@link CommodityGroup} objects to set.
+	 */
 	public void setCommodityGroups(List<CommodityGroup> commodityGroups) {
 		this.commodityGroups = commodityGroups;
 	}
 
+	/**
+	 * Checks if the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @return {@code true} if the RN exceeds the threshold, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isRnExceedThreshold() {
 		return rnExceedThreshold;
 	}
 
+	/**
+	 * Sets whether the Request Note (RN) exceeds the threshold.
+	 * 
+	 * @param rnExceedThreshold
+	 *            {@code true} if the RN exceeds the threshold, {@code false}
+	 *            otherwise.
+	 */
 	public void setRnExceedThreshold(boolean rnExceedThreshold) {
 		this.rnExceedThreshold = rnExceedThreshold;
 	}
 
+	/**
+	 * Checks if attachments should be shown.
+	 * 
+	 * @return {@code true} if attachments should be shown, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isShowAttachments() {
 		return showAttachments;
 	}
 
+	/**
+	 * Sets whether attachments should be shown.
+	 * 
+	 * @param showAttachments
+	 *            {@code true} to show attachments, {@code false} to hide them.
+	 */
 	public void setShowAttachments(boolean showAttachments) {
 		this.showAttachments = showAttachments;
 	}
 
+	/**
+	 * Retrieves the current counter value.
+	 * 
+	 * @return The counter value as an {@link Integer}.
+	 */
 	public Integer getCounter() {
 		return counter;
 	}
 
+	/**
+	 * Sets the counter value.
+	 * 
+	 * @param counter
+	 *            The counter value to set.
+	 */
 	public void setCounter(Integer counter) {
 		this.counter = counter;
 	}
