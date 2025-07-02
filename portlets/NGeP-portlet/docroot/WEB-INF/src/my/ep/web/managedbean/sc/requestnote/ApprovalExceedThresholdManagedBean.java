@@ -20,7 +20,6 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.SpecialCharacter;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
@@ -2022,10 +2021,21 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.cloneReQuote = cloneReQuote;
 	}
 
+	/**
+	 * Checks if the operation is cancelled.
+	 * 
+	 * @return {@code true} if cancelled, {@code false} otherwise.
+	 */
 	public boolean isCancel() {
 		return cancel;
 	}
 
+	/**
+	 * Sets the cancellation status.
+	 * 
+	 * @param cancel
+	 *            {@code true} to mark as cancelled, {@code false} otherwise.
+	 */
 	public void setCancel(boolean cancel) {
 		this.cancel = cancel;
 	}
@@ -2058,18 +2068,42 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.selectedPrDtls = selectedPrDtls;
 	}
 
+	/**
+	 * Retrieves the currently selected condition.
+	 * 
+	 * @return The selected condition as a String.
+	 */
 	public String getSelectedCondition() {
 		return selectedCondition;
 	}
 
+	/**
+	 * Sets the selected condition.
+	 * 
+	 * @param selectedCondition
+	 *            The selected condition to set.
+	 */
 	public void setSelectedCondition(String selectedCondition) {
 		this.selectedCondition = selectedCondition;
 	}
-	
+
+	/**
+	 * Checks if the PID (Public Identification) validity has expired.
+	 * 
+	 * @return {@code true} if PID validity has expired, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isPidValidityExpired() {
 		return pidValidityExpired;
 	}
 
+	/**
+	 * Sets whether the PID (Public Identification) validity has expired.
+	 * 
+	 * @param pidValidityExpired
+	 *            {@code true} if PID validity has expired, {@code false}
+	 *            otherwise.
+	 */
 	public void setPidValidityExpired(boolean pidValidityExpired) {
 		this.pidValidityExpired = pidValidityExpired;
 	}
@@ -2088,59 +2122,144 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.docStatus = docStatus;
 	}
 
+	/**
+	 * Retrieves the string representation of normal and tier prices.
+	 * 
+	 * @return The normal and tier prices as a String.
+	 */
 	public String getNormalAndTierPriceStr() {
 		return normalAndTierPriceStr;
 	}
 
+	/**
+	 * Sets the string representation of normal and tier prices.
+	 * 
+	 * @param normalAndTierPriceStr
+	 *            The string representation of normal and tier prices to set.
+	 */
 	public void setNormalAndTierPriceStr(String normalAndTierPriceStr) {
 		this.normalAndTierPriceStr = normalAndTierPriceStr;
 	}
 
+	/**
+	 * Retrieves the complete list of commercial pricing.
+	 * 
+	 * @return A list of {@link CmPricing} objects representing the complete
+	 *         pricing list.
+	 */
 	public List<CmPricing> getCompleteCmPricingList() {
 		return completeCmPricingList;
 	}
 
+	/**
+	 * Sets the complete list of commercial pricing.
+	 * 
+	 * @param completeCmPricingList
+	 *            The complete list of {@link CmPricing} objects to set.
+	 */
 	public void setCompleteCmPricingList(List<CmPricing> completeCmPricingList) {
 		this.completeCmPricingList = completeCmPricingList;
 	}
 
+	/**
+	 * Retrieves the filtered list of commercial pricing.
+	 * 
+	 * @return A list of {@link CmPricing} objects representing the filtered
+	 *         pricing list.
+	 */
 	public List<CmPricing> getFilteredCmPricingList() {
 		return filteredCmPricingList;
 	}
 
+	/**
+	 * Sets the filtered list of commercial pricing.
+	 * 
+	 * @param filteredCmPricingList
+	 *            The filtered list of {@link CmPricing} objects to set.
+	 */
 	public void setFilteredCmPricingList(List<CmPricing> filteredCmPricingList) {
 		this.filteredCmPricingList = filteredCmPricingList;
 	}
-	
+
+	/**
+	 * Checks if the price type is represented as a string.
+	 * 
+	 * @return {@code true} if the price type is a string, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isPriceTypeStringFlag() {
 		return priceTypeStringFlag;
 	}
 
+	/**
+	 * Sets whether the price type is represented as a string.
+	 * 
+	 * @param priceTypeStringFlag
+	 *            {@code true} if the price type is a string, {@code false}
+	 *            otherwise.
+	 */
 	public void setPriceTypeStringFlag(boolean priceTypeStringFlag) {
 		this.priceTypeStringFlag = priceTypeStringFlag;
 	}
 
+	/**
+	 * Checks if the price type is represented as a table.
+	 * 
+	 * @return {@code true} if the price type is a table, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isPriceTypeTableFlag() {
 		return priceTypeTableFlag;
 	}
 
+	/**
+	 * Sets whether the price type is represented as a table.
+	 * 
+	 * @param priceTypeTableFlag
+	 *            {@code true} if the price type is a table, {@code false}
+	 *            otherwise.
+	 */
 	public void setPriceTypeTableFlag(boolean priceTypeTableFlag) {
 		this.priceTypeTableFlag = priceTypeTableFlag;
 	}
-	
+
+	/**
+	 * Checks if the pricing uses "from and to" quantity ranges.
+	 * 
+	 * @return {@code true} if using "from and to" quantity, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isFromAndToQuantityFlag() {
 		return fromAndToQuantityFlag;
 	}
 
+	/**
+	 * Sets whether the pricing uses "from and to" quantity ranges.
+	 * 
+	 * @param fromAndToQuantityFlag
+	 *            {@code true} if using "from and to" quantity, {@code false}
+	 *            otherwise.
+	 */
 	public void setFromAndToQuantityFlag(boolean fromAndToQuantityFlag) {
 		this.fromAndToQuantityFlag = fromAndToQuantityFlag;
 	}
-	
-	public List<String> getLoginIdAssignees(){
+
+	/**
+	 * Retrieves the list of Login IDs of assignees.
+	 * 
+	 * @return A list of Login IDs as Strings.
+	 */
+	public List<String> getLoginIdAssignees() {
 		return loginIdAssignees;
 	}
-	
-	public void setLoginIdAssignees(List<String> loginIdAssignees){
+
+	/**
+	 * Sets the list of Login IDs of assignees.
+	 * 
+	 * @param loginIdAssignees
+	 *            The list of Login IDs to set.
+	 */
+	public void setLoginIdAssignees(List<String> loginIdAssignees) {
 		this.loginIdAssignees = loginIdAssignees;
 	}
 	
@@ -2162,10 +2281,23 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.purchaseRequestId = purchaseRequestId;
 	}
 	
+	/**
+	 * Checks if the quantity field is in view-only mode.
+	 * 
+	 * @return {@code true} if the quantity is view-only, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isQtyViewOnly() {
 		return qtyViewOnly;
 	}
 
+	/**
+	 * Sets whether the quantity field should be in view-only mode.
+	 * 
+	 * @param qtyViewOnly
+	 *            {@code true} to make the quantity view-only, {@code false}
+	 *            otherwise.
+	 */
 	public void setQtyViewOnly(boolean qtyViewOnly) {
 		this.qtyViewOnly = qtyViewOnly;
 	}
@@ -2189,10 +2321,21 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
 	}
 
+	/**
+	 * Retrieves the Purchase Request Response Data Transfer Object (DTO).
+	 * 
+	 * @return The {@link PurchaseRequestResDTO} object.
+	 */
 	public PurchaseRequestResDTO getPurchaseRequestResDTO() {
 		return purchaseRequestResDTO;
 	}
 
+	/**
+	 * Sets the Purchase Request Response Data Transfer Object (DTO).
+	 * 
+	 * @param purchaseRequestResDTO
+	 *            The {@link PurchaseRequestResDTO} object to set.
+	 */
 	public void setPurchaseRequestResDTO(PurchaseRequestResDTO purchaseRequestResDTO) {
 		this.purchaseRequestResDTO = purchaseRequestResDTO;
 	}
@@ -2575,10 +2718,21 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.searchPtjProfile = searchPtjProfile;
 	}
 		
+	/**
+	 * Retrieves the function type used for searching.
+	 * 
+	 * @return The search function type as a String.
+	 */
 	public String getSearchFunctionType() {
 		return searchFunctionType;
 	}
 
+	/**
+	 * Sets the function type to be used for searching.
+	 * 
+	 * @param searchFunctionType
+	 *            The search function type to set.
+	 */
 	public void setSearchFunctionType(String searchFunctionType) {
 		this.searchFunctionType = searchFunctionType;
 	}
@@ -2597,50 +2751,128 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.isG2G = isG2G;
 	}
 
+	/**
+	 * Checks if the search is being performed for Letter of Award (LOA) by
+	 * Request Note (RN).
+	 * 
+	 * @return {@code true} if searching LOA by RN, {@code false} otherwise.
+	 */
 	public boolean isSearchLoaByRN() {
 		return searchLoaByRN;
 	}
 
+	/**
+	 * Sets whether the search should be performed for Letter of Award (LOA) by
+	 * Request Note (RN).
+	 * 
+	 * @param searchLoaByRN
+	 *            {@code true} to search LOA by RN, {@code false} otherwise.
+	 */
 	public void setSearchLoaByRN(boolean searchLoaByRN) {
 		this.searchLoaByRN = searchLoaByRN;
 	}
 
+	/**
+	 * Retrieves the list of Letters of Award (LOA).
+	 * 
+	 * @return A list of LOA identifiers as Strings.
+	 */
 	public List<String> getLoaList() {
 		return loaList;
 	}
 
+	/**
+	 * Sets the list of Letters of Award (LOA).
+	 * 
+	 * @param loaList
+	 *            The list of LOA identifiers to set.
+	 */
 	public void setLoaList(List<String> loaList) {
 		this.loaList = loaList;
 	}
-	
+
+	/**
+	 * Checks if the view is currently set for a PTJ (Perbadanan Tabung
+	 * Pendidikan Tinggi Nasional) user.
+	 * 
+	 * @return {@code true} if viewing as PTJ, {@code false} otherwise.
+	 */
 	public boolean isViewAsPTJ() {
 		return viewAsPTJ;
 	}
 
+	/**
+	 * Sets whether the view should be for a PTJ (Perbadanan Tabung Pendidikan
+	 * Tinggi Nasional) user.
+	 * 
+	 * @param viewAsPTJ
+	 *            {@code true} to view as PTJ, {@code false} otherwise.
+	 */
 	public void setViewAsPTJ(boolean viewAsPTJ) {
 		this.viewAsPTJ = viewAsPTJ;
 	}
 
+	/**
+	 * Checks if the view is currently set for a Supplier user.
+	 * 
+	 * @return {@code true} if viewing as Supplier, {@code false} otherwise.
+	 */
 	public boolean isViewAsSupplier() {
 		return viewAsSupplier;
 	}
-	
+
+	/**
+	 * Sets whether the view should be for a Supplier user.
+	 * 
+	 * @param viewAsSupplier
+	 *            {@code true} to view as Supplier, {@code false} otherwise.
+	 */
 	public void setViewAsSupplier(boolean viewAsSupplier) {
 		this.viewAsSupplier = viewAsSupplier;
 	}
 
+	/**
+	 * Checks if the Ministry/PTJ (Perbadanan Tabung Pendidikan Tinggi Nasional)
+	 * List of Values (LOV) is disabled.
+	 * 
+	 * @return {@code true} if the Ministry/PTJ LOV is disabled, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isDisableMinistryPtjLov() {
-		return disableMinistryPtjLov; 
+		return disableMinistryPtjLov;
 	}
-	
+
+	/**
+	 * Sets whether the Ministry/PTJ (Perbadanan Tabung Pendidikan Tinggi
+	 * Nasional) List of Values (LOV) should be disabled.
+	 * 
+	 * @param disableMinistryPtjLov
+	 *            {@code true} to disable the Ministry/PTJ LOV, {@code false} to
+	 *            enable.
+	 */
 	public void setDisableMinistryPtjLov(boolean disableMinistryPtjLov) {
 		this.disableMinistryPtjLov = disableMinistryPtjLov;
 	}
-	
+
+	/**
+	 * Checks if the Ministry/PTJ (Perbadanan Tabung Pendidikan Tinggi Nasional)
+	 * field should be shown.
+	 * 
+	 * @return {@code true} if the Ministry/PTJ field should be shown,
+	 *         {@code false} otherwise.
+	 */
 	public boolean isShowMinistryPtjField() {
-		return showMinistryPtjField; 
+		return showMinistryPtjField;
 	}
-	
+
+	/**
+	 * Sets whether the Ministry/PTJ (Perbadanan Tabung Pendidikan Tinggi
+	 * Nasional) field should be shown.
+	 * 
+	 * @param showMinistryPtjField
+	 *            {@code true} to show the Ministry/PTJ field, {@code false} to
+	 *            hide it.
+	 */
 	public void setShowMinistryPtjField(boolean showMinistryPtjField) {
 		this.showMinistryPtjField = showMinistryPtjField;
 	}
@@ -2681,34 +2913,83 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	    this.requestNoteTitle = requestNoteTitle;
 	}
 
+	/**
+	 * Retrieves the document type used for searching.
+	 *
+	 * @return The search document type as a String.
+	 */
 	public String getSearchDocumentType() {
 		return searchDocumentType;
 	}
 
+	/**
+	 * Sets the document type to be used for searching.
+	 * 
+	 * @param searchDocumentType
+	 *            The search document type to set.
+	 */
 	public void setSearchDocumentType(String searchDocumentType) {
 		this.searchDocumentType = searchDocumentType;
 	}
 
+	/**
+	 * Checks if the PTJ Group (Perbadanan Tabung Pendidikan Tinggi Nasional
+	 * Group) List of Values (LOV) is disabled.
+	 * 
+	 * @return {@code true} if the PTJ Group LOV is disabled, {@code false}
+	 *         otherwise.
+	 */
 	public boolean isDisablePtjGroupLov() {
 		return disablePtjGroupLov;
 	}
 
+	/**
+	 * Sets whether the PTJ Group List of Values (LOV) should be disabled.
+	 * 
+	 * @param disablePtjGroupLov
+	 *            {@code true} to disable the PTJ Group LOV, {@code false} to
+	 *            enable.
+	 */
 	public void setDisablePtjGroupLov(boolean disablePtjGroupLov) {
 		this.disablePtjGroupLov = disablePtjGroupLov;
 	}
 
+	/**
+	 * Checks if the PTJ (Perbadanan Tabung Pendidikan Tinggi Nasional) List of
+	 * Values (LOV) is disabled.
+	 * 
+	 * @return {@code true} if the PTJ LOV is disabled, {@code false} otherwise.
+	 */
 	public boolean isDisablePtjLov() {
 		return disablePtjLov;
 	}
 
+	/**
+	 * Sets whether the PTJ (Perbadanan Tabung Pendidikan Tinggi Nasional) List
+	 * of Values (LOV) should be disabled.
+	 * 
+	 * @param disablePtjLov
+	 *            {@code true} to disable the PTJ LOV, {@code false} to enable.
+	 */
 	public void setDisablePtjLov(boolean disablePtjLov) {
 		this.disablePtjLov = disablePtjLov;
 	}
 
+	/**
+	 * Retrieves the current counter value.
+	 * 
+	 * @return The counter value as an {@link Integer}.
+	 */
 	public Integer getCounter() {
 		return counter;
 	}
 
+	/**
+	 * Sets the counter value.
+	 * 
+	 * @param counter
+	 *            The counter value to set.
+	 */
 	public void setCounter(Integer counter) {
 		this.counter = counter;
 	}	
