@@ -14,8 +14,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -24,6 +26,7 @@ import my.ep.exception.EpException;
 import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -279,6 +282,31 @@ public class DisciplinaryActionRest {
 				// 32558: disciplinary action - 26238 end
 			}
 			//26238
+		}
+	}
+	
+	public void testjava78(){
+		ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
+		PmCategoryL1 oldPmCategoryL1 = new PmCategoryL1();
+		PmCategoryL1 pmCategoryL1 = new PmCategoryL1();
+		AuditPMSPDTO statusL1 = new AuditPMSPDTO();
+		if (!pmCategoryL1.getRecordStatusFlg().equals(oldPmCategoryL1.getRecordStatusFlg())) {
+			statusL1.setOldValue(oldPmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
+			statusL1.setNewValue(pmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
+			
+			objList.add(statusL1);
+		}
+		
+		statusL1.setDocId(BigInteger.valueOf(pmCategoryL1.getCategoryL1Id()));
+		statusL1.setDocGroupId(BigInteger.valueOf(pmCategoryL1.getCategoryL1Id()));
+		statusL1.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		if (pmCategoryL1.getRecordStatusFlg() != oldPmCategoryL1.getRecordStatusFlg()) {
+			statusL1.setOldValue(oldPmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
+			statusL1.setNewValue(pmCategoryL1.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE
+					: AuditConst.PM_AUD_INACTIVE);
 		}
 	}
 }
