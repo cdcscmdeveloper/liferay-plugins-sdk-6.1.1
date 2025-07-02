@@ -646,6 +646,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private boolean allowedToSiteVisit;
 	// 31043 END
+	// #34831 - Start
+	private boolean basicSupplier;
+	// #34831 - End
 	
 	// #34392 - start
 	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
@@ -743,6 +746,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				setMofSupplier(true);
 			}
+			
+			// #34831 - Start
+			if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
+					|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)) {
+				setBasicSupplier(true);
+			}
+			// #34831 - End
 		}
 		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
 		// setPoUser(true);
@@ -4792,5 +4802,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
 		this.showDifferenceRejection = showDifferenceRejection;
+	}
+
+	public boolean isBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(boolean basicSupplier) {
+		this.basicSupplier = basicSupplier;
 	}
 }
