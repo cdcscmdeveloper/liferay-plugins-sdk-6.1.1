@@ -620,8 +620,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}	
 		return false;
 	}
@@ -638,8 +637,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				return true;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return false;
 	}
@@ -658,8 +656,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 				getManagedBean().setServiceTaxAlertFlg(true);				
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -2914,7 +2911,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public void onSelectServiceItem() {
 		try{
-			ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
+			//ContractItemSearchBackingBean cisbb = new ContractItemSearchBackingBean();
 			if (getManagedBean().getSelectedItem() != null || getManagedBean().getServiceselectedItem()!=null) {
 				if (getManagedBean().getShowServiceItem() != null
 						&& getManagedBean().getShowServiceItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
@@ -3621,8 +3618,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_LAUNCH_DATE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -3636,8 +3632,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		try {
 			return DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, ContractConst.GST_RELIEF_DUE_DATE);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		return null;
 	}
@@ -3740,7 +3735,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 
 		Long requestItemId = getManagedBean().getSelectedItemForSpec().getScRequestItem().getRequestNoteItemId();
 		String procurementMode = getManagedBean().getContractVer().getCtContract().getLoa().getProcurementMode().getParameterCode();
-		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpec(requestItemId);
+		
+		//#38491,#28854 - Start
+		Long loaId = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
+		List<ScRequestItemSpecOffer> itemSpecOfferList = requestItemSO.retrieveNewOfferSpecByLoaIdAndRequestItemId(loaId, requestItemId);
+		//#38491,#28854 - End
 
 		if (procurementMode.equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			handleDirectPurchaseMode(itemSpecOfferList);
@@ -4049,41 +4048,30 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	// 21533 - end
 	
-	/**
-	 * The method used to retreive the factoring attachment from the list.
-	 */
-	@SuppressWarnings("null")
-	public List<CtAttachment> retrieveAttachmentList()
-	{	
-		/*#28868 - basri start*/
-		if(!getManagedBean().getContractVer().getCtContract().isFactoringExpired()){
+	public List<CtAttachment> retrieveAttachmentList() {
+		/* #28868 - basri start */
+		if (!getManagedBean().getContractVer().getCtContract().isFactoringExpired()) {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoring() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoring().getAttachement();
-				}
-				else{
+				} else {
 					return null;
 				}
-			}
-
-			else {
+			} else {
 				return null;
 			}
-		}else{
+		} else {
 			if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired() != null) {
 				if (getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement() != null) {
 					return getManagedBean().getContractVer().getCtContract().getCtFactoringExpired().getAttachement();
-				}
-				else{
+				} else {
 					return null;
 				}
-			}
-
-			else {
+			} else {
 				return null;
 			}
 		}
-		/*#28868 - basri end*/
+		/* #28868 - basri end */
 	}
 	
 	/*#21387 - basri start*/
