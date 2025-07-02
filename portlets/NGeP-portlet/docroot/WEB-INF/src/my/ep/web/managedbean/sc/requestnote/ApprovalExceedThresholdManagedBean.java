@@ -13,13 +13,11 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.DPStatusConstants;
@@ -30,7 +28,6 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
@@ -61,13 +58,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.sc.requestnote.ApprovalExceedThresholdManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-// TODO: Auto-generated Javadoc
 
 /**
  * The Class ApprovalExceedThresholdManagedBean.
@@ -78,10 +72,6 @@ import org.primefaces.model.DualListModel;
 @ManagedBean(name="approvalExceedThresholdMB")
 @SessionScoped
 public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
-	//to susun start
-	
-	private static Logger log = Logger.getLogger(ApprovalExceedThresholdManagedBean.class);
-
 	private static final long serialVersionUID = 1L;
 	
 	/** The search document type. */
@@ -121,12 +111,10 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	/** The is government. */
 	private boolean government;
 	
-	//#22211 - start
 	private List<String> loaList;
 	
 	private boolean searchLoaByRN;
-	//#22211 - end
-	// Redmine 25396:
+	
 	private String searchFunctionType;
 	
 	private boolean isG2G;
@@ -135,44 +123,33 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	
 	private boolean viewAsSupplier;
 	
-	//Start - #25396
 	private boolean disableMinistryPtjLov = false;
+	
 	private boolean showMinistryPtjField = true;
-	//End - #25396
-	
-	
-	//to susun end
-	
-	
-	
-	
-	
-	
-
 	
 	/** The source method. */
 	private String sourceMethod = ParameterConst.METHOD_SC;
 	
 	/** The request note. */
-	private	ScRequestNote	requestNote = new ScRequestNote(); //contain request list information
+	private	ScRequestNote	requestNote = new ScRequestNote();
 	
 	/** The request supplier items. */
-	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // list of request supplier item to be recommend
+	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<>();
 	
 	/** The selected remarks. */
-	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();
+	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<>();
 	
 	/** The request note dtls. */
-	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
+	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<>();
 	
 	/** The selected request note dtls. */
-	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<>();
 	
 	/** The request note items. */
-	private List<ScRequestItem>	requestNoteItems = new ArrayList<ScRequestItem>();
+	private List<ScRequestItem>	requestNoteItems = new ArrayList<>();
 	
 	/** The approval users. */
-	private	DualListModel<PmUser>	approvalUsers = new DualListModel<PmUser>();
+	private	DualListModel<PmUser>	approvalUsers = new DualListModel<>();
 	
 	/** The fulfillment type. */
 	private	String	fulfillmentType;
@@ -217,16 +194,16 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     private boolean procTypeOption;
     
     /** The item check. */
-    private boolean itemCheck; // For checking item whether service or product
+    private boolean itemCheck;
     
     /** The just dropdown. */
-    private SelectItem[] justDropdown; // justification drop down
-    
+    private SelectItem[] justDropdown;
+
     /** The price types. */
-    private SelectItem[] priceTypes; // price type drop down for add to cart
+    private SelectItem[] priceTypes;
     
     /** The procurement types. */
-    private SelectItem[] procurementTypes; // for procurement type dropdown
+    private SelectItem[] procurementTypes;
     
     /** The request note status. */
     private PmStatus requestNoteStatus;
@@ -256,7 +233,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     private boolean titleChecker = Boolean.TRUE;
     
     /** The pr inquiry id. */
-    private Long prInquiryId; // To get PI id to cancel in request note
+    private Long prInquiryId;
     
     /** The sc rn zone. */
     private ScRNZone scRNZone = new ScRNZone(); 
@@ -284,23 +261,23 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     private String createdBy;
 	
 	/** The supplier rec list. */
-	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
+	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<>();
 	
 	/** The pricing list. */
-	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<ScSupplierItemPrice>(); // For pricing pop to show all pricing
+	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<>();
     
     /** The req note data model. */
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     
     /** The compare supplier items. */
-    private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
+    private List<CmSupplierItem> compareSupplierItems = new ArrayList<>();
     
  
     /** The item search back btn. */
     private boolean itemSearchBackBtn = Boolean.TRUE;
     
     /** The delete request note dtls. */
-    private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+    private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<>();
     
     /** The zone dtl map. */
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
@@ -413,44 +390,36 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     	
 	private boolean cancel = Boolean.FALSE; 
 	
-	// 12177 - Start
 	/** The SQ end date */
 	private Calendar sqEndDate;
-	// 12177 - End
 	
 	private String selectedCondition;
 	
 	private	Object[] selectedPrDtls;
 	
-	//12183 - Start
 	private boolean pidValidityExpired = false;
-	//12183 - End
 	
-	// Refactor #18 - Start.
 	private String docStatus = "";
-	// Refactor #18 - End.
 	
-	// #28789 - start
 	private String normalAndTierPriceStr = StringUtils.EMPTY;
+	
 	private List<CmPricing> completeCmPricingList;
+	
 	private List<CmPricing> filteredCmPricingList;
+	
 	private boolean priceTypeStringFlag = Boolean.FALSE;
+	
 	private boolean priceTypeTableFlag = Boolean.FALSE;
+	
 	private boolean fromAndToQuantityFlag = Boolean.FALSE;
-	// #28789 - end
 	
-	//28878 - Start
 	private List<String> loginIdAssignees;
-	private Long purchaseRequestId;
-	//28878 - End
 	
-	//28865 - Start
-    private boolean qtyViewOnly = false;
-    //28865 - End
-    
-    //29557 - Start
+	private Long purchaseRequestId;
+	
+	private boolean qtyViewOnly = false;
+	
     private boolean purchaseInquiryContinuity = Boolean.FALSE;
-    //29557 - End
     
     private boolean disablePtjGroupLov = Boolean.TRUE;
 
@@ -458,7 +427,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     
     private PurchaseRequestResDTO purchaseRequestResDTO;
     
-    //#25790 - start
     /** The continuity page session */
     private String continuityPageSession = "";
     
@@ -473,12 +441,9 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     
     /** The request note dtl. */
     private ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
-    //#25790 - end
     
-    //#36119 - start
     /** The new sourcing dp bpm version flag */
     private boolean sourcingDpNewBpmVer = Boolean.FALSE;
-    //#36119 - end
     
     private Integer counter = 0;
     
@@ -2065,7 +2030,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.cancel = cancel;
 	}
 	
-	// 12177 - Start
 	/**
 	 * @return the taskExpiryDate
 	 */
@@ -2079,7 +2043,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setSqEndDate(Calendar sqEndDate) {
 		this.sqEndDate = sqEndDate;
 	}
-	// 12177 - End
 
 	/**
 	 * @return the selectedPrDtls
@@ -2103,9 +2066,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.selectedCondition = selectedCondition;
 	}
 	
-
-
-	//12183 - Start
 	public boolean isPidValidityExpired() {
 		return pidValidityExpired;
 	}
@@ -2113,9 +2073,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setPidValidityExpired(boolean pidValidityExpired) {
 		this.pidValidityExpired = pidValidityExpired;
 	}
-	//12183 - End
-
-	// Refactor #18 - Start.
+	
 	/**
 	 * @return the docStatus
 	 */
@@ -2129,9 +2087,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setDocStatus(String docStatus) {
 		this.docStatus = docStatus;
 	}
-	// Refactor #18 - End.
-	
-	// #28789 - start
+
 	public String getNormalAndTierPriceStr() {
 		return normalAndTierPriceStr;
 	}
@@ -2179,9 +2135,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setFromAndToQuantityFlag(boolean fromAndToQuantityFlag) {
 		this.fromAndToQuantityFlag = fromAndToQuantityFlag;
 	}
-	// #28789 - end
 	
-	//28878 - Start
 	public List<String> getLoginIdAssignees(){
 		return loginIdAssignees;
 	}
@@ -2207,9 +2161,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setPurchaseRequestId(Long purchaseRequestId) {
 		this.purchaseRequestId = purchaseRequestId;
 	}
-	//28878 - End
-
-	//28865 - Start
+	
 	public boolean isQtyViewOnly() {
 		return qtyViewOnly;
 	}
@@ -2217,9 +2169,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setQtyViewOnly(boolean qtyViewOnly) {
 		this.qtyViewOnly = qtyViewOnly;
 	}
-	//28865 - End
 
-	//29557 - Start
 	/**
 	 * Checks if is purchase inquiry continuity.
 	 *
@@ -2238,7 +2188,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setPurchaseInquiryContinuity(boolean purchaseInquiryContinuity) {
 		this.purchaseInquiryContinuity = purchaseInquiryContinuity;
 	}
-	//29557 - End	
+
 	public PurchaseRequestResDTO getPurchaseRequestResDTO() {
 		return purchaseRequestResDTO;
 	}
@@ -2247,7 +2197,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.purchaseRequestResDTO = purchaseRequestResDTO;
 	}
 	
-	//#25790 - start
 	/**
 	 * @return the continuityPageSession
 	 */
@@ -2333,9 +2282,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setScRequestNoteDtl(ScRequestNoteDtl scRequestNoteDtl) {
 		this.scRequestNoteDtl = scRequestNoteDtl;
 	}
-	//#25790 - end
-	
-	//#36119 - start
+
 	/**
 	 * @return the sourcingDpNewVerBpm
 	 */
@@ -2351,7 +2298,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setSourcingDpNewBpmVer(boolean sourcingDpNewBpmVer) {
 		this.sourcingDpNewBpmVer = sourcingDpNewBpmVer;
 	}
-	//#36119 - end
 
 	/**
 	 * The Class DocumentPagingDataModel.
@@ -2479,154 +2425,8 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 			return null;
 		}
 	}
-	// start - 36018
 
 	/**
-	 * Builds the search criteria for sourcing integration based on the provided DTO and search bean.
-	 *
-	 * @param forDPMreqDTO 
-	 * 		The DTO containing request details.
-	 * @param searchBean   
-	 * 		The search bean to which criteria will be applied.
-	 */
-	private void buildSearchBean(SourcingIntegrationReqDTO forDPMreqDTO, ISearchBean<Object[]> searchBean) {		
-
-		String paramPtj = "requestNote.pmOrgProfile.orgProfileId";
-		String paramTitle = "requestNote.title";
-		String paramPtjGroupAndMinistry = "pmOrgProfile";
-
-		if (isGovernment()) {
-			buildSearchBeanGov(searchBean, paramPtj, paramPtjGroupAndMinistry);
-		}
-
-		if (StringUtils.isNotBlank(getRequestNoteTitle())) {
-			buildSearchBeanDocTitle(searchBean, paramTitle);
-		}
-
-		if (getRequestNoteNo() != null && getRequestNoteNo() != "") {
-			buildSearchBeanDocumentNo(searchBean);
-		}
-		
-		buildSearchBeanPendingItemCodification(searchBean);
-
-		if (isReqOrApprover() && CollectionUtils.isNotEmpty(searchBean.getDataFilterMetadatas())) {
-			searchBean.getDataFilterMetadatas().clear();
-
-		}
-
-		if (!isGovernment()) {
-			// Filter By - supplierId
-			buildSearchBeanNonGov(forDPMreqDTO);
-		}
-	}
-
-	/**
-	 * Adds search criteria for pending item codification status to the provided search bean.
-	 *
-	 * @param searchBean 
-	 * 		The search bean to which the pending item codification criteria will be applied.
-	 */
-	private void buildSearchBeanPendingItemCodification(ISearchBean<Object[]> searchBean) {
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS.value(),
-						DPStatusConstants.RN_PENDING_ITEM_CODIFICATION));
-	}
-
-	/**
-	 * Adds search criteria for document title similarity to the provided search bean.
-	 *
-	 * @param searchBean        
-	 * 		The search bean to which the document title criteria will be applied.
-	 * @param paramTitle        
-	 * 		The parameter representing the document title field in the search criteria.
-	 */
-	private void buildSearchBeanDocTitle(ISearchBean<Object[]> searchBean, String paramTitle) {
-		SearchFilterBean filterBean = new SearchFilterBean(paramTitle, SearchOperator.OPERATOR_LIKE.value(),
-				getRequestNoteTitle());
-		searchBean.getDataFilterBeans().add(filterBean);
-	}
-
-	/**
-	 * Adds search criteria for document type to the provided search bean, and optionally filters by module code.
-	 *
-	 * @param searchBean 
-	 * 		The search bean to which the document type criteria will be applied.
-	 */
-	private void buildSearchBeanDocumentNo(ISearchBean<Object[]> searchBean) {
-		if (isSearchLoaByRN()) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("docNo", SearchOperator.OPERATOR_IN.value(), getLoaList()));
-		} else {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("docNo", SearchOperator.OPERATOR_LIKE.value(), String.valueOf(
-							SpecialCharacter.MODULO.getCharacter()).concat(getRequestNoteNo())));
-		}
-	}
-
-	/**
-	 * Sets supplier IDs in the provided DTO based on non-government user criteria.
-	 *
-	 * @param forDPMreqDTO 
-	 * 		The DTO containing request details.
-	 */
-	private void buildSearchBeanNonGov(SourcingIntegrationReqDTO forDPMreqDTO) {
-		ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-
-		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-		supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		List<SmSupplier> smSuppliers = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO).getResultBean()
-				.getResultList();
-
-		if (CollectionUtils.isNotEmpty(smSuppliers)) {
-			List<Long> supplierIds = new ArrayList<>();
-			for (SmSupplier smSupplier : smSuppliers) {
-				supplierIds.add(smSupplier.getSupplierId());
-			}
-			forDPMreqDTO.setSupplierIds(supplierIds);
-		} else {
-			if (isViewAsSupplier()) {
-				List<Long> supplierIds = new ArrayList<>();
-				supplierIds.add(supplierSearchReqDTO.getUserId());
-				forDPMreqDTO.setSupplierIds(supplierIds);
-			}
-		}
-	}
-
-	/**
-	 * Adds government-specific search criteria to the provided search bean based on organizational profiles.
-	 *
-	 * @param searchBean               
-	 * 		The search bean to which the government-specific criteria will be applied.
-	 * @param paramPtj                 
-	 * 		The parameter representing the organization profile ID field in the search criteria.
-	 * @param paramPtjGroupAndMinistry 
-	 * 		The parameter representing the combined organization profile and ministry/group field.
-	 */
-	private void buildSearchBeanGov(ISearchBean<Object[]> searchBean, String paramPtj, String paramPtjGroupAndMinistry) {
-		if (getSearchPtjProfile() != null && getSearchPtjProfile().getOrgProfileId() != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(paramPtj, SearchOperator.OPERATOR_EQUALS.value(),
-							getSearchPtjProfile().getOrgProfileId()));
-
-		} else if (getSearchPtjGroupProfile() != null && getSearchPtjGroupProfile().getOrgProfileId() != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(paramPtjGroupAndMinistry + "."
-							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
-							SearchOperator.OPERATOR_EQUALS.value(), getSearchPtjGroupProfile()
-									.getOrgProfileId()));
-
-		} else if (getSearchMinistryProfile() != null && getSearchMinistryProfile().getOrgProfileId() != null) {
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(paramPtjGroupAndMinistry + "."
-							+ OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
-							SearchOperator.OPERATOR_EQUALS.value(), getSearchMinistryProfile()
-									.getOrgProfileId()));
-		}
-	}
-	// end - #36018
-	
-    /**
      * Checks if is requisitioner or approver.
      *
      * @return true, if is requisitioner or approver
@@ -2775,7 +2575,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.searchPtjProfile = searchPtjProfile;
 	}
 		
-	// Redmine 25396: remove duplication option view by adding new drop down field
 	public String getSearchFunctionType() {
 		return searchFunctionType;
 	}
@@ -2783,7 +2582,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setSearchFunctionType(String searchFunctionType) {
 		this.searchFunctionType = searchFunctionType;
 	}
-	// end 25396:
 
 	/**
 	 * @return the isG2G
@@ -2815,7 +2613,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 		this.loaList = loaList;
 	}
 	
-	//Start - #25396
 	public boolean isViewAsPTJ() {
 		return viewAsPTJ;
 	}
@@ -2831,23 +2628,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setViewAsSupplier(boolean viewAsSupplier) {
 		this.viewAsSupplier = viewAsSupplier;
 	}
-	//End - #25396
 
-	/**
-	 * @return the dpmDocumentDataModel
-	 *//*
-	public IPagingDataModel<Object[]> getDpmDocumentDataModel() {
-		return dpmDocumentDataModel;
-	}
-
-	*//**
-	 * @param dpmDocumentDataModel the dpmDocumentDataModel to set
-	 *//*
-	public void setDpmDocumentDataModel(IPagingDataModel<Object[]> dpmDocumentDataModel) {
-		this.dpmDocumentDataModel = dpmDocumentDataModel;
-	}*/
-	
-	//Start - #25396
 	public boolean isDisableMinistryPtjLov() {
 		return disableMinistryPtjLov; 
 	}
@@ -2863,7 +2644,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setShowMinistryPtjField(boolean showMinistryPtjField) {
 		this.showMinistryPtjField = showMinistryPtjField;
 	}
-	//End - #25396
 
 	/**
 	 * Returns the request note number.
