@@ -240,7 +240,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 	// start - #26059
 	/** The bpk approver request note page. */
-	private String BPK_APPROVER_REQUEST_NOTE_PAGE = "/xhtml/sc/directpurchase/requestnote/requestNoteBpkApproverMain.xhtml";
+	private String requestNoteBpkApproverMainPage = "/xhtml/sc/directpurchase/requestnote/requestNoteBpkApproverMain.xhtml";
 	// end - #26059
 
 	// start - #25790
@@ -1516,60 +1516,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								// Rule : ITEM_THRESHOLD For 20k
 								if (totalAmt.compareTo(thresholdValue) > 0) {
 										//#26059 - start
-										//isExceedThreshold = true;
 										count++;
-										thresholdItems.append(count + ". " + requestNoteDtl.getRequestItem().getItemName() + "</br>");										
-//										FacesContext.getCurrentInstance().addMessage(
-//												null,
-//												new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-//														.getMessage(MessageConst.ERROR_760036, new String[] {
-//																requestNoteDtl.getRequestItem().getItemName(),
-//																requestNoteDtl.getRequestItem().getCmItem()
-//																		.getExtensionCode() },
-//																MessageUtils.BUNDLE_COMMON_MESSAGES,
-//																new FacesScopes().getUserLocale())));
-																
+										thresholdItems.append(count + ". " + requestNoteDtl.getRequestItem().getItemName() + "</br>");
 										//#26059 - end
-
-										// throw new
-										// EpException(MessageConst.ERROR_760036,
-										// new String[]
-										// {requestNoteDtl.getRequestItem().getItemName(),
-										// requestNoteDtl.getRequestItem().getCmItem().getExtensionCode()});
 								}
 								// Temp(#34274 - End)
 
 								// 26059 - start
-								// ScQuote quote = null;
-								// String sourceMethod =
-								// requestNote.getSourceMethod();
-								// if(sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ))
-								// {
-								// quote = requestNote.getQuote();
-								// }
-								// //Rule : ITEM_THRESHOLD For 20k
-								// if(totalAmt.compareTo(new
-								// BigDecimal(configRuleValue.getRuleValue())) >
-								// 0 && ((quote != null && !quote.isPanel())
-								// ||
-								// !sourceMethod.equals(ParameterConst.REQUEST_NOTE_SQ)))
-								// {
-								// String language = new
-								// FacesScopes().getUserLocale().getLanguage();
-								// String itemTitle;
-								// if(CommonConstants.DEFAULT_USER_LANGUAGE_CODE.equalsIgnoreCase(language))
-								// {
-								// itemTitle =
-								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitleEng();
-								// } else {
-								// itemTitle =
-								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscTitle();
-								// }
-								// throw new
-								// EpException(MessageConst.ERROR_760518,
-								// new String[] {itemTitle,
-								// requestNoteDtl.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode()});
-								// }
 								// 26059 - end
 							} else {
 								throw new EpException(MessageConst.ERROR_770222,
@@ -1577,59 +1530,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							}
 						}
 					}
-
-					// #31689 (start - comment out all)
-					// title validation
-					/*
-					 * if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle(
-					 * ))){ throw new EpException( MessageConst.ERROR_760315,
-					 * new String[] {ResourceBundleUtils.getMessage(
-					 * "lbl.sc.direct.purchase.title",
-					 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
-					 * FacesScopes().getUserLocale())}); }
-					 * 
-					 * // pid validity log.info("pID validity begin");
-					 * if(requestNoteDtl.getRequestItem() != null &&
-					 * requestNoteDtl.getRequestItem().getPurchaseInDefault() !=
-					 * null){ pidValidity(requestNoteDtl.getRequestItem().
-					 * getPurchaseInDefault(), requestNote); }
-					 * log.info("pID validity end");
-					 * 
-					 * // validate price type if(null ==
-					 * requestNoteDtl.getPriceType() || null ==
-					 * requestNoteDtl.getPriceType().getParameterId()){ throw
-					 * new EpException(MessageConst.ERROR_760343, new
-					 * String[]{requestNoteDtl.getRequestItem().getItemName()});
-					 * }
-					 * 
-					 * // validate recommended supplier if(null ==
-					 * requestNoteDtl.getScRequestSupplierItem() || null ==
-					 * requestNoteDtl.getScRequestSupplierItem().getSmSupplier()
-					 * || null ==
-					 * requestNoteDtl.getScRequestSupplierItem().getSmSupplier
-					 * ().getSupplierId() ){ throw new
-					 * EpException(MessageConst.ERROR_760356, new
-					 * String[]{requestNoteDtl.getRequestItem().getItemName()});
-					 * }
-					 * 
-					 * // quantity if( null != requestNoteDtl.getRequestItem()
-					 * && null == requestNoteDtl.getRequestItem().getQuantity()
-					 * ){ throw new EpException( MessageConst.ERROR_760315, new
-					 * String[]
-					 * {ResourceBundleUtils.getMessage("lbl.sc.quantity",
-					 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
-					 * FacesScopes().getUserLocale())}); }
-					 * 
-					 * //26221 - Start if (requestNoteDtl.getAssignedUser() ==
-					 * null || (requestNoteDtl.getAssignedUser() != null &&
-					 * requestNoteDtl.getAssignedUser().getUserId()==null)) {
-					 * throw new EpException(MessageConst.ERROR_100022, new
-					 * String[]{ ResourceBundleUtils.getMessage(
-					 * "lbl.sc.request.note.loa.prepare.by",
-					 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
-					 * FacesScopes().getUserLocale())}); //26221 - end }
-					 */
-					// #31689 (end - comment out all)
 				}
 			}
 			//#26059 - start
@@ -7127,20 +7027,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());
 			}
 
-			if (requestNote != null) {
-				getDocStatus(requestNote);
-			}
+			getDocStatus(requestNote);
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 		getManagedBean().setViewOnly(Boolean.TRUE);
 		getManagedBean().setBpkApproverMode(Boolean.TRUE);
 		groupRequestNoteDtlsByUnspscId(getManagedBean().getRequestNoteDtls());
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, BPK_APPROVER_REQUEST_NOTE_PAGE);
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, requestNoteBpkApproverMainPage);
 	}
 
 	/**
 	 * Groups request note details by UNSPSC ID, calculates totals, and sorts the resulting commodity groups.
+	 * @param dtlsToGroup The list of {@link ScRequestNoteDtl} objects to be grouped.
 	 */
 	public void groupRequestNoteDtlsByUnspscId(List<ScRequestNoteDtl> dtlsToGroup) {
 		Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId = new HashMap<>();
@@ -7236,26 +7135,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().getCommodityGroups().add(group);
 		}
 
-		// --- Sort the final list using Collections.sort with an anonymous
-		// inner class ---
 		Collections.sort(getManagedBean().getCommodityGroups(), new Comparator<CommodityGroup>() {
 			@Override
 			public int compare(CommodityGroup group1, CommodityGroup group2) {
-				// Defensive null checks for itemCodeName before comparison
 				String name1 = group1.getItemCodeName();
 				String name2 = group2.getItemCodeName();
 
 				if (name1 == null && name2 == null) {
-					return 0; // Both are null, consider them equal for sorting
-								// purposes
+					return 0;
 				}
 				if (name1 == null) {
-					return -1; // nulls come before non-nulls
+					return -1;
 				}
 				if (name2 == null) {
-					return 1; // non-nulls come after nulls
+					return 1;
 				}
-				// Perform the actual string comparison
 				return name1.compareTo(name2);
 			}
 		});
@@ -7336,7 +7230,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @throws IOException If an I/O error occurs during the file upload process.
 	 */
 	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
-		log.debug("handleFileUpload - START");
 		List<ScRequestNoteAttachment> attachments = new ArrayList<>();
 		if (event.getFile() != null) {
 			ScRequestNoteAttachment attachment = new ScRequestNoteAttachment();
@@ -7355,7 +7248,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setRequestNote(scRequestNote);
 			attachments.add(attachment);
 		}
-		log.debug("handleFileUpload - END");
 	}
 
 	/**
