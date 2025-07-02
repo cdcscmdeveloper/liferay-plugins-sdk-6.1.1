@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import my.ep.factory.EpLogger;
-import my.ep.helper.EntityHelper;
+import my.ep.helper.EntityHelper; //#38514
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -196,8 +196,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private static final Map<String, String> months;
 	
 	//added for 28827 to check list of filter value
-	private List<CtAgency> filteredAgencies;	
-
+	private List<CtAgency> filteredAgencies;
 	static
 	{
 		months = new HashMap<String, String>();
