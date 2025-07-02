@@ -197,6 +197,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	//added for 28827 to check list of filter value
 	private List<CtAgency> filteredAgencies;
+	
 	static
 	{
 		months = new HashMap<String, String>();
