@@ -14005,7 +14005,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			Date effDate = appVerDtls.getEffDate();
 
-			if (publishDate.before(effDate)) {
+			if (publishDate.before(effDate) && !isApprovalScreenToHideMinPaidUpCapitalWIP()) {
 				this.getManagedBean().setMinPaidUpCapitalWIP(true);
 			}
 		}
@@ -14019,7 +14019,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * @param 
 	 * @return boolean
 	 */
-	public boolean isApprovalScreenToHideMinPaidUpCapitalWIP() {
+	private boolean isApprovalScreenToHideMinPaidUpCapitalWIP() {
 		boolean isApproval = getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() || getUserTaskIsBPKApproval()
 				|| getUserTaskIsPublicationApproval();
 		return isApprovalScreen() && isApproval ? true : false;
