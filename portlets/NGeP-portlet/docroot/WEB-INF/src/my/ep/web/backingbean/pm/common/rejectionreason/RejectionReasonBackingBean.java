@@ -392,7 +392,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(pmReason.getSourceMethod() != null && pmReason.getSourceMethod().getParameterId() != null){
 					this.getManagedBean().setSelectedSourceMethodId(pmReason.getSourceMethod().getParameterId());
 			}
-			this.getManagedBean().setDeletePIDReasonList(new ArrayList<PmPIDReason>());// 35509
 		
 		}catch (Exception e){
 			e.printStackTrace();
