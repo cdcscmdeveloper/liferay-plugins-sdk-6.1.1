@@ -1422,7 +1422,12 @@ public class SupplierDataMaintenanceBackingBean extends
 				catList.add(cat);
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				cat.setEntryMode(cat.getOtherDesc());
+				// #34031 Start
+				// To avoid replacing initial entryMode value when user edit otherDesc first then add/delete category code
+				if(null == cat.getEntryMode()){
+					cat.setEntryMode(cat.getOtherDesc());
+				}
+				// #34031 End
 				//26238: Disciplinary Action - start - 28219
 				apprvList.add(cat);
 			}
