@@ -383,6 +383,7 @@
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId==backingBean.managedBean.myCountryId}">
 								<!-- #36483 - add ajax  for smSupPostCodeMy -->
+								<!-- #36718 - change required condition -->
 								<p:inputText maxlength="5" required="#{!empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeMy"
 									disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull) or backingBean.managedBean.upsCannotEdit}"
@@ -406,6 +407,7 @@
 							</p:outputPanel>
 							<p:outputPanel
 								rendered="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.countryId!=backingBean.managedBean.myCountryId}">
+								<!-- #36718 - change required condition -->
 								<p:inputText maxlength="10" required="#{!empty param['disableValidation']}"
 									label="#{lbl['lbl.sm.postcode']}" id="smSupPostCodeForeign"
 									disabled="#{backingBean.disableFieldSSm(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.ssmData,backingBean.managedBean.smAppl.applValidWithSsm,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcodeSsmNull) or backingBean.managedBean.upsCannotEdit}"
