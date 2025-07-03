@@ -110,7 +110,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmRevisit;
 import my.ep.persistence.entity.sm.SmRvAssistOfficer;
-import my.ep.persistence.entity.sm.SmRvCatCode;
 import my.ep.persistence.entity.sm.SmRvDocFile;
 import my.ep.persistence.entity.sm.SmRvSuppDoc;
 import org.primefaces.event.FileUploadEvent;
@@ -388,7 +387,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		this.getManagedBean().setSmRvFilePath(filePath);
 		
 		initSmRvHistory();
-		this.getManagedBean().getSmRevisit().setRevisitPrevRemark(getPrevRevisitRemark());
 		// #34031 End
 	}
 	
@@ -2896,6 +2894,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
 	public void unSelectCancelBumiCategories() {
+		unselectSuspendCategories();	//38391
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
 				|| getManagedBean().getSelectedPendingApprovedCategories() == null
 				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
@@ -2917,7 +2916,20 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedApprovedCategories(selectList);
 	}
 	//32618 - End
-	
+	//38391
+	private void unselectSuspendCategories() {
+		List<SmSupplierCategory> selectList = new ArrayList<>();
+		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
+		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
+		while (it.hasNext()) {
+			SmSupplierCategory cat = it.next();
+			if (!cat.isSuspendCategory() && prevSelect.contains(cat)){
+				selectList.add(cat);
+			}
+			cat.setSelectable(!cat.isSuspendCategory());
+		}
+		getManagedBean().setSelectedApprovedCategories(selectList);
+	}
 	//32891 - Checking category code for activeappl - 26238 - start
 	/**
 	 * retrieve CategoryCode
@@ -3084,16 +3096,6 @@ public class SupplierDataMaintenanceBackingBean extends
 			this.getManagedBean().getSmRevisit().setSmAppl(this.getManagedBean().getSmAppl());
 			this.getManagedBean().getSmRevisit().setCurrent(true);
 			this.getManagedBean().getSmRevisit().setOldPmRegStatus(this.getManagedBean().getSmAppl().getPmRegStatus());
-			if (!this.getManagedBean().getDeleteApprovedCategories().isEmpty()) {
-				List<SmRvCatCode> deletedCatCode = new ArrayList<>();
-				for (SmSupplierCategory catCode : this.getManagedBean().getDeleteApprovedCategories()) {
-					SmRvCatCode smRvCoatCode = new SmRvCatCode();
-					smRvCoatCode.setSmRevisit(this.getManagedBean().getSmRevisit());
-					smRvCoatCode.setSmSupplierCategory(catCode);
-					deletedCatCode.add(smRvCoatCode);
-				}
-				this.getManagedBean().getSmRevisit().setSmRvCatCodes(deletedCatCode);
-			}
 			removeEmptyAssistOfficer();
 			reqDTO.setSmRevisit(this.getManagedBean().getSmRevisit());
 		}
@@ -3110,14 +3112,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		for (SmRvAssistOfficer emptyOfficer : this.getManagedBean().getEmptyRvAssistOfficers()) {
 			this.getManagedBean().getSmRevisit().getSmRvAssistOfficers().remove(emptyOfficer);
 		}
-	}
-
-	private String getPrevRevisitRemark() {
-		String remark = null;
-		if (this.getManagedBean().getCurrentSmRevisit() != null) {
-			remark = this.getManagedBean().getCurrentSmRevisit().getRevisitRemark();
-		}
-		return remark;
 	}
 
 	private void validateRevisit() {

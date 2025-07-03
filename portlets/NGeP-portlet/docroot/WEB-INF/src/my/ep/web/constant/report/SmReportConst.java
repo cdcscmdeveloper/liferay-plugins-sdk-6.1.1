@@ -84,6 +84,7 @@ public class SmReportConst implements Serializable {
 	// #34031 Start
 	public static final String PARAM_VISIT_DATE_FROM = "PFROMVISITDATE";
 	public static final String PARAM_VISIT_DATE_TO = "PTOVISITDATE";
+	public static final String SM_REVISIT_RPT_VAL = "SM_101";
 	// #34031 End
 
 	public static final String SM_REG_COMPANY_IN_MOF_RPT_VAL = "SM_001";
@@ -165,8 +166,6 @@ public class SmReportConst implements Serializable {
 	//#32521 - START
 	public static final String SM_APPLICATION_PROCESSED_RPT_VAL = "SM_097";
 	//#32521 - END
-	// #34031
-	public static final String SM_REVISIT_RPT_VAL = "SM_098";
 
 	// Screen fields constants
 	public static final String SM_ZONE_SEMENANJUNG = "Semenanjung";

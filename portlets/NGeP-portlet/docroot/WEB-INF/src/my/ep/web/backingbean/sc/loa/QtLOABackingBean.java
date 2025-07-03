@@ -567,6 +567,12 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	}
 	//#21692 - End
 	
+	//#21692 - Start
+	public void renderEPVButtonForDP() {
+		getManagedBean().setAbleToSubmitLOA(true);
+	}
+	//#21692 - End
+	
 }
 
 
