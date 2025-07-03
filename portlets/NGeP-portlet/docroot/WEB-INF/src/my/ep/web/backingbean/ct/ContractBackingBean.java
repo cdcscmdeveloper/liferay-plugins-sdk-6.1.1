@@ -2415,7 +2415,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String  proc_type =  EntityHelper.getStringNestedProperty(contractBackingB.getManagedBean(), "contractVer.ctContract.loa.qtType.parameterCode"); //#38514
 
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-			if (proc_type != null) {
+			if (StringUtils.isNotEmpty(proc_type) && proc_type != null) {
 				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
 					// pk7 contract with bond from LOA
 					calculateNewBondAmount();
