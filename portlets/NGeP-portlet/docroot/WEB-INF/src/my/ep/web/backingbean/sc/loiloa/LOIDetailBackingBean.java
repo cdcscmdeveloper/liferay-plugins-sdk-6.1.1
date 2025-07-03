@@ -946,7 +946,7 @@ public class LOIDetailBackingBean extends
 	
 	private void processMultiLOIDetails(String recommendType, 
 										List<ScQtRecommend> scQtRecommendList) {
-		awardedSupplierRejectEPV(scQtRecommendList);
+		awardedSupplierRejectEPV(scQtRecommendList);//#21692
 		getManagedBean().setRecommendList(scQtRecommendList);
 		
 			if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
@@ -5497,13 +5497,16 @@ public class LOIDetailBackingBean extends
 						if (!supplierIds.contains(supplierId)
 								&& !checkDisqualifiedSupplierBranchDeleted(this.getManagedBean().getScQt().getQtId(),
 										supplierId)
+										//#21692 - Start
 								&& (scQtRecommendDtl.getScQtProposalAmount().getScQtProposal()
 										.getIsAgreeQtExtendPeriod() == null
 										|| scQtRecommendDtl.getScQtProposalAmount().getScQtProposal()
 												.getIsAgreeQtExtendPeriod()
 												.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_ACCEPTED) || scQtRecommendDtl
 										.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
-										.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_PENDING_RESPONSE))) {// #28777 & #29729
+										.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_PENDING_RESPONSE))) 
+						//#21692 - End
+						{// #28777 & #29729
 							selectItems.add(new SelectItem(supplierId, scQtRecommendDtl.getScQtProposalAmount()
 									.getScQtProposal().getSupplierNo().toString()));
 							supplierIds.add(supplierId);
@@ -5756,11 +5759,13 @@ public class LOIDetailBackingBean extends
 										new ArrayList<ScQtRecommendDtl>());
 						}
 						ScQtRecommendDtl recommendDtl = recommendDtlsMap.get(supplierId);
+						//#21692 - Start
 						if (evaluationResultDtl.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
 								&& evaluationResultDtl.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod().equals(
 										SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED)) {
 							recommendDtl.setRecordStatus(Boolean.FALSE);
 						}
+						//#21692 - End
 						evaluationResultDtl.getScQtRecommendDtl()
 							.add(recommendDtl);						
 						
@@ -7092,11 +7097,9 @@ public class LOIDetailBackingBean extends
 	//#21692 - End//#21692 - Start
 	private void awardedSupplierRejectEPV(List<ScQtRecommend> scQtRecommendList) {
 		boolean endorseOrSignOff = false;
-		// 38529 - start
 		if (ArrayUtils.isEmpty(this.getManagedBean().getOutComes())) {
 			return;
 		}
-		// 38529 - end
 		for (String outcome : this.getManagedBean().getOutComes()) {
 			if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
 				endorseOrSignOff = true;
@@ -7122,24 +7125,6 @@ public class LOIDetailBackingBean extends
 			recommendDtl.setRecordStatus(Boolean.FALSE);
 			recommendDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
 		}
-	}
-	//#21692 - End
-	
-	//#21692 - Start
-	private List<ScQtEvaluationResultDtl> removeSupplierRejectEPV(List<ScQtEvaluationResultDtl> shortlistedSupplierList) {
-		List<ScQtEvaluationResultDtl> supplierRejectEPV = new ArrayList<>();
-		if (CollectionUtils.isNotEmpty(shortlistedSupplierList)) {
-			for (ScQtEvaluationResultDtl resultDtl : shortlistedSupplierList) {
-				if (resultDtl.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
-						&& resultDtl.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod()
-						.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED)) {
-					supplierRejectEPV.add(resultDtl);
-				}
-			}
-			shortlistedSupplierList.removeAll(supplierRejectEPV);
-		}
-
-		return shortlistedSupplierList;
 	}
 	//#21692 - End
 }
