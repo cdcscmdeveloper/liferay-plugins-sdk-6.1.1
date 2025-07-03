@@ -539,9 +539,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 			this.getManagedBean().getSearchBean()
 					.setMasterLabel4(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
 		}
-		// searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmOrgValidity.orgName
-		// #{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}
-		// searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName
 		log.info("getSearchBean().getMasterLabel4( ::::  " + this.getManagedBean().getSearchBean().getMasterLabel4());
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		log.info("OrgProfileId from Entity ::::  " + orgProfile.getOrgProfileId());
