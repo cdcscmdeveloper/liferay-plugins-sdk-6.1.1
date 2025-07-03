@@ -11979,6 +11979,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	//#21692 - Start
 	private void awardedSupplierRejectEPV(QtEvaluationResultDtlBean recommendationBean) {
 		boolean endorseOrSignOff = false;
+		// 38529 - start
+		if (ArrayUtils.isEmpty(this.getManagedBean().getOutComes())) {
+			return;
+		}
+		// 38529 - end
 		for (String outcome : this.getManagedBean().getOutComes()) {
 			if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
 				endorseOrSignOff = true;

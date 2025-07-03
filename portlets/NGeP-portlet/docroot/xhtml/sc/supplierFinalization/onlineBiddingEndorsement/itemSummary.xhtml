@@ -123,10 +123,10 @@
 				<h:outputText value="#{(itemSupplier.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo
 					supplier="#{itemSupplier.supplier}" index="#{rowIndex}"/>
@@ -215,10 +215,10 @@
 					value="#{(itemSupplierDis.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo supplier="#{itemSupplierDis.supplier}"
 					index="#{rowIndex}" />
