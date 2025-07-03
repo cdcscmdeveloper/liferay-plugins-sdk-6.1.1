@@ -291,9 +291,7 @@
 								<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
 								</f:facet>
-								<p:dataList var="recommendedSuppl"
-									value="#{item.awardSupplierList}" type="none"
-									rendered="#{isPendingNegotiationStatus}" rowIndexVar="index">
+								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
 									<ui:param name="supplier" value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 									<ui:param name="mofExpired"
 										value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
