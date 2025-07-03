@@ -723,6 +723,8 @@ public class CommonApplBackingBean extends
 						srcObj.getSupplierList());
 			}*/
 			smApplBB.getManagedBean().setPayLoad(srcObj);
+			smApplBB.getManagedBean().setBpmVersionNo(resDTO.getBpmVersionNo()); //#38195
+			
 			SmRemaksResDTO remResDTO = getRemarksByDoc(
 					ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL,
 					appl.getApplId());
