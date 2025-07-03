@@ -10,7 +10,8 @@
 		id="smStrDtPanel" rendered="#{backingBean.managedBean.showStorePanel}">
 		<p:outputPanel id="storePan" rendered="#{backingBean.managedBean.showStorePanel}">
 			<br />
-			<ui:repeat var="storeCatVar" value="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="storeCatVar" items="#{backingBean.managedBean.storeFacilitiesVOList}" varStatus="storeCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
 						<td>
@@ -91,7 +92,7 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable><br />
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			
 			<p:spacer height="2px;" />
 			<div align="right">
