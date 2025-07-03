@@ -27,9 +27,11 @@
 			<tr>
 				<td>
 					<div align="left" style="width: 100%">
-						<p:tabView id="tabCodeType"
+						<p:tabView id="tabCodeType" dynamic="true" cache="false"
 							activeIndex="#{auditCodificationManagementReportBackingBean.managedBean.activeIndex}">
-
+							<p:ajax event="tabChange"
+								listener="#{auditCodificationManagementReportBackingBean.onTabChange}"
+								update="tabCodeType" />
 							<p:tab title="#{lbl['lbl.cm.item.code']}">
 								<p:dataTable id="searchCIID" var="obj" rows="10" width="100%"
 									value="#{auditCodificationManagementReportBackingBean.searchCI}"
