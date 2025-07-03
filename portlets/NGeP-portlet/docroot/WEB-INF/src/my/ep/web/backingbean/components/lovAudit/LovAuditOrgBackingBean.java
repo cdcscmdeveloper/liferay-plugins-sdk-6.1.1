@@ -39,7 +39,6 @@ import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.common.audit.ILovAuditSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cc.lov.LovReqDTO;
-import my.ep.dto.cc.lov.LovResDTO;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
@@ -182,10 +181,11 @@ public class LovAuditOrgBackingBean implements Serializable {
 			debugLogger("reqDTO: " + reqDTO);
 			debugLogger("reqDTO.getSearchBean(): " + reqDTO.getSearchBean());
 
-			LovResDTO resDTO = lovSO.getSearchOrgNameList(reqDTO);
-			ISearchResultBean resultBean = resDTO.getResultBean();
+			// LovResDTO resDTO = lovSO.getSearchOrgNameList(reqDTO);
+			// ISearchResultBean resultBean = resDTO.getResultBean();
 
-			return resultBean;
+			// return resultBean;
+			return null;
 		} finally {
 			lovSO = null;
 		}
