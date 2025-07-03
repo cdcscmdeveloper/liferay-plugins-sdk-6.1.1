@@ -3014,7 +3014,7 @@ public class LOIDetailBackingBean extends
 		//25638 - End
 		//#21692 - Start
 		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE)|| outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
-			checkSupplierAwardedRejectValidityExtension();//#21692
+			checkSupplierAwardedRejectValidityExtension();
 		}
 		//#21692 - End
 				
