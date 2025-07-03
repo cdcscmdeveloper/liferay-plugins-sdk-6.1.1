@@ -13141,6 +13141,10 @@ public class SmApplicationBackingBean extends
 		
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
 		//#36718 - END
 	}
 
@@ -13195,6 +13199,10 @@ public class SmApplicationBackingBean extends
 		
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
 		//#36718 - END
 		//#36483 - END
 		
@@ -13260,6 +13268,7 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
 		//#36718 - END
 	}
 
@@ -13288,6 +13297,10 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
 		//#36718 - END
 	}
 
@@ -16980,6 +16993,10 @@ public class SmApplicationBackingBean extends
 		}
 		addr.setMapLatitude("");
 		addr.setMapLongitude("");
+		getManagedBean().getSmSupplier().setLocalAuthorityId(null);
+		populateLocalAuthority(getManagedBean().getSmSupplier(),
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().get(0).getSmAddress());
 		//#36718 - END
 	}
 	//13320-End	
