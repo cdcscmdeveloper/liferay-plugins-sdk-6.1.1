@@ -14,12 +14,13 @@
 		</c:if>
 		<c:if test="#{!lOIDetailBackingBean.managedBean.scQt.zonal}">
 			.tdWidth { width: 100%; }
-		</c:if>	
+		</c:if>
 		/* 26247 - start */
-		.red-background {
-			background-color:red; 
-			color:white; 
-			font-weight:bold;
+		.pl-0{
+			padding-left: 0 !important;
+		}
+		.pr-0{
+			padding-right: 0 !important;
 		}
 		/* 26247 - end */
 	</style>	
@@ -288,6 +289,20 @@
 								</ui:repeat>
 							</p:column>
 							<ui:remove>26247 - start</ui:remove>
+							<p:column styleClass="pl-0 pr-0">
+								<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+								</f:facet>
+								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
+									<ui:param name="supplier" value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+									<ui:param name="mofExpired"
+										value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+										<h:panelGroup layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
+										</h:panelGroup>
+								</p:dataList>
+							</p:column>
 							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
