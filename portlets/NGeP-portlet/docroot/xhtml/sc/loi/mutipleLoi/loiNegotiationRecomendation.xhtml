@@ -14,12 +14,13 @@
 		</c:if>
 		<c:if test="#{!lOIDetailBackingBean.managedBean.scQt.zonal}">
 			.tdWidth { width: 100%; }
-		</c:if>	
+		</c:if>
 		/* 26247 - start */
-		.red-background {
-			background-color:red; 
-			color:white; 
-			font-weight:bold;
+		.pl-0{
+			padding-left: 0 !important;
+		}
+		.pr-0{
+			padding-right: 0 !important;
 		}
 		/* 26247 - end */
 	</style>	
@@ -162,16 +163,17 @@
 								</f:facet>
 								<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 							</p:column>
-							<p:column>
+							<ui:remove>26247 - start</ui:remove>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<ac:disciplinaryActionYesNo
 									supplier="#{supplier}" index="#{rowIndex}"/>
 							</p:column>
-
+							<ui:remove>26247 - end</ui:remove>
+							
 							<p:column selectionMode="single"
 								styleClass="td-check-box-spacing"
 								disabledSelection="#{!isPendingNegotiationStatus 
@@ -287,11 +289,24 @@
 								</ui:repeat>
 							</p:column>
 							<ui:remove>26247 - start</ui:remove>
-							<p:column>
+							<p:column styleClass="pl-0 pr-0">
+								<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+								</f:facet>
+								<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
+									<ui:param name="supplier" value="#{recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
+									<ui:param name="mofExpired"
+										value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+										<h:panelGroup layout="block" style="padding: 0 10px 0 10px" styleClass="#{mofExpired ? 'red-background':''}">
+											<h:outputText value="#{lOIDetailBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+											<h:outputText escape="false" value="&#60;br &#47;&#62;"/>
+										</h:panelGroup>
+								</p:dataList>
+							</p:column>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:dataList var="recommendedSuppl"
 									value="#{item.awardSupplierList}" type="none"
@@ -544,11 +559,10 @@
 							<ui:remove>
 								#31061 - SHAFFUL (START)
 							</ui:remove>
-							<p:column>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:commandLink onstart="blockWidget.show()"
 									oncomplete="blockWidget.hide()"
@@ -665,11 +679,10 @@
 							<ui:remove>
 								#31061 - SHAFFUL (START)
 							</ui:remove>
-							<p:column>
+							<p:column style="white-space:normal;width:18%;">
 								<f:facet name="header">
 									<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-									<ac:iconTooltip
-										value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 								</f:facet>
 								<p:dataList var="recommendedSupplDis"
 									value="#{item.notAwardSupplierList}" type="none"
