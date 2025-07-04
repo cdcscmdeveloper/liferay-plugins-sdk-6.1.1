@@ -122,7 +122,8 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 		
 	private boolean weightage35384WIP; //#38151
 	
-	private SupplierFinalizationBackingBean suppFinalBean;
+	private SupplierFinalizationBackingBean suppFinalBean; //#38151
+	
 	@SuppressWarnings("serial")
 	private final static List<String> directDownloadDocDefKeys = new ArrayList<String>() {
 		{

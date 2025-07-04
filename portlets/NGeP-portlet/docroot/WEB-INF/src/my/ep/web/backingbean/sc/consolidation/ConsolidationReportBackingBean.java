@@ -46,8 +46,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO; //#38151
-import my.ep.dto.sc.quationtender.SpecificationReqDTO;
-import my.ep.dto.sc.quationtender.SpecificationResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO; //#38151
+import my.ep.dto.sc.quationtender.SpecificationResDTO; //#38151
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
