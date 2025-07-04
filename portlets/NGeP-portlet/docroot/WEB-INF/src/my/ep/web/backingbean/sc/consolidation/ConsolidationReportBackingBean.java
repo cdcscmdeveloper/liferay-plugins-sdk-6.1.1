@@ -48,8 +48,8 @@ import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO; //#38151
 import my.ep.dto.sc.quationtender.SpecificationReqDTO; //#38151
 import my.ep.dto.sc.quationtender.SpecificationResDTO; //#38151
-import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
-import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO; //#38151
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO; //#38151
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
