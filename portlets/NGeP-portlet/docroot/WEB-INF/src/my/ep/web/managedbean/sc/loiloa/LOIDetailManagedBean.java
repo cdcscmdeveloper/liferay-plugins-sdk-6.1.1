@@ -432,7 +432,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtScoreSetting> scoreSettings;//#38151
 	
-	private boolean WeightageReq;
+	private boolean WeightageReq; //#38151
+	
+	private boolean weightage35384WIP; //#38151
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2471,6 +2474,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setWeightageReq(boolean weightageReq) {
 		WeightageReq = weightageReq;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
 	}
 	//#38151 - End
 }

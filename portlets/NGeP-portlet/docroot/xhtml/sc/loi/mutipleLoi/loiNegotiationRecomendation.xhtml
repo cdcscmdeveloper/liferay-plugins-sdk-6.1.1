@@ -133,14 +133,25 @@
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								</h:outputText>
 							</p:column>
-
+							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.total.score']}"
 								style="text-align: right;">
+								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
+								<p:commandLink action ="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}" 
+	 											  rendered="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBea.managedBean.weightage35384WIP}" process="@this" update="@([id$=SuppScoreDetailsPopupId])" styleClass="commandLink" >
+							
 								<h:outputText value="#{supplierDtl.totalScore}">
 									<f:convertNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(
 																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 								</h:outputText>
+								</p:commandLink>
+								<h:outputText value="#{supplierDtl.totalScore}" rendered="#{lOIDetailBackingBea.managedBean.weightage35384WIP}">
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(
+																				CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+								</h:outputText>
+								<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.ranking']}"
@@ -347,20 +358,41 @@
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</ui:repeat>
 							</p:column>
-
+							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 							<p:column headerText="#{lbl['lbl.sc.total.score']}"
 								style="text-align: right;">
-								<ui:repeat var="recommendedSuppl"
-									value="#{item.awardSupplierList}">
-									<h:outputText value="#{recommendedSuppl.totalScore}"
-										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
-										<f:convertNumber
-											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-									</h:outputText>
+							<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none"
+							rendered ="#{lOIDetailBackingBean.managedBean.weightageReq and !lOIDetailBackingBea.managedBean.weightage35384WIP}">
+									<p:commandLink
+										action="#{lOIDetailBackingBean.qualifiedSupplierListPopupScore(recommendedSuppl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.supplierId)}"
+										process="@this" update="@([id$=SuppScoreDetailsPopupId])"
+										rendered="#{!lOIDetailBackingBea.managedBean.weightage35384WIP}"
+										styleClass="commandLink">
+
+										<h:outputText value="#{recommendedSuppl.totalScore}"
+											rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}">
+											<f:convertNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+										</h:outputText>
+									
+
 									<h:outputText escape="false" value="&#60;br &#47;&#62;"
 										rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive}" />
-								</ui:repeat>
+								</p:commandLink>
+
+								</p:dataList>
+										<h:outputText value="#{recommendedSuppl.totalScore}"
+											rendered="#{lOIDetailBackingBea.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}">
+											<f:convertNumber
+												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+										</h:outputText>
+									
+
+									<h:outputText escape="false" value="&#60;br &#47;&#62;"
+										rendered="#{lOIDetailBackingBea.managedBean.weightage35384WIP and (isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.get(0).recordStatusFlg eq DbValueConst.recordStatusActive)}" />
+								
 							</p:column>
+							<ui:remove><!-- #38151 datatable value popup--></ui:remove>
 
 							<p:column headerText="#{lbl['lbl.sc.ranking']}"
 								style="text-align: center;">

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;  //#38151
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -153,6 +154,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -3232,14 +3234,18 @@ public class SpecificationBackingBean extends
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
 							this.getManagedBean().setRecommendationScore(
 									recommnendationSetting);
-							//#38151 start comment this
-//							calculateRecommendtechnicalScore(this
-//									.getManagedBean().getRecommendationScore());
-//							calculateRecommendFinancialScore(this
-//									.getManagedBean().getRecommendationScore());
-							//#38151 end comment this
-							calculateonesetscoring(this.getManagedBean()
-									.getRecommendationPackageScore(), false);
+							//#38151 start WIP
+							if(this.getManagedBean().isWeightage35384WIP()){
+								calculateRecommendtechnicalScore(this
+										.getManagedBean().getRecommendationScore());
+								calculateRecommendFinancialScore(this
+										.getManagedBean().getRecommendationScore());
+
+							}else{
+								calculateonesetscoring(this.getManagedBean()
+										.getRecommendationPackageScore(), false);
+							}
+							//#38151 end Wip
 						}
 
 					}
@@ -8646,11 +8652,16 @@ public class SpecificationBackingBean extends
 		try {
 			int value1 = technical.getOverallTechnical() != null ? technical
 					.getOverallTechnical().intValue() : 0;
-//#38151 start comment this
-//			int value2 = technical.getOverallOtherTechnical() != null ? technical
-//					.getOverallOtherTechnical().intValue() : 0;
-//			int local = value1 + value2;
-			int local = value1;
+			//#38151 start
+			int local = 0;
+			if(this.getManagedBean().isWeightage35384WIP()){
+				int value2 = technical.getOverallOtherTechnical() != null ? technical
+				.getOverallOtherTechnical().intValue() : 0;
+				 local = value1 + value2;
+			}else{
+				 local = value1;
+			}
+			//#38151 end
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
 			int financialScore = 0;
@@ -8660,12 +8671,14 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + financialScore));
-			//#38151 start comment this
-//			if ((null != this.getManagedBean().getTotalScore())
-//					&& this.getManagedBean().getTotalScore().intValue() > 100) {
-//				throw new EpException(MessageConst.ERROR_7602571);
-//			}
+			//#38151 Start			
+			if (this.getManagedBean().isWeightage35384WIP()
+					&& (null != this.getManagedBean().getTotalScore() && this.getManagedBean().getTotalScore()
+							.intValue() > 100)) {
+				throw new EpException(MessageConst.ERROR_7602571);
 
+			}
+			//#38151 End
 		} finally {
 
 		}
@@ -8682,11 +8695,16 @@ public class SpecificationBackingBean extends
 		try {
 			int value1 = financial.getOverallFin() != null ? financial
 					.getOverallFin().intValue() : 0;
-//          #38151 comment this
-//			int value2 = financial.getOverallOtherFin() != null ? financial
-//					.getOverallOtherFin().intValue() : 0;
-//			int local = value1 + value2;
-			int local = value1 ;
+//		    #38151 Start
+			int local = 0;
+			if (this.getManagedBean().isWeightage35384WIP()) {
+				int value2 = financial.getOverallOtherFin() != null ? financial.getOverallOtherFin().intValue() : 0;
+				 local = value1 + value2;
+			}else{
+				 local = value1 ;
+			}
+//          #38151 End
+
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
 
@@ -8697,12 +8715,13 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + technicalScore));
-//			#38151 comment this
-//			if ((null != this.getManagedBean().getTotalScore())
-//					&& this.getManagedBean().getTotalScore().intValue() > 100) {
-//				throw new EpException(MessageConst.ERROR_760257);
-//
-//			}
+//		    #38151 Start
+			if (this.getManagedBean().isWeightage35384WIP()
+					&& (null != this.getManagedBean().getTotalScore() && this.getManagedBean().getTotalScore()
+							.intValue() > 100)) {
+				throw new EpException(MessageConst.ERROR_760257);
+			}
+//			#38151 End
 
 		} finally {
 
@@ -9529,6 +9548,8 @@ public class SpecificationBackingBean extends
 			// #25638 - Start.
 			spReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 			// #25638 - End.
+			spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+
 			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getScQt();
@@ -11277,6 +11298,7 @@ public class SpecificationBackingBean extends
 		}
 		// #29732 @idham 25/07/2023 - End
 
+		checkWeightage35384WIP();// #38151
 		// 11104 -start-
 		// 11104-Wip -start-
 		boolean isSampleReq = this.getManagedBean().getQt().isSampleReq();
@@ -11814,9 +11836,9 @@ public class SpecificationBackingBean extends
 // #21695 farid, if partial set weightage to false			
 			if (this.getManagedBean().getQt().isPartial() == true){
 				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
-			}else{
-				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true); //#35181 set to weightage
-			}
+			}else if(!this.getManagedBean().isWeightage35384WIP() && !this.getManagedBean().getQt().isPartial()){
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true); //#38151 set to weightage
+			}//#38151 if not wip, set to true without partial offer
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
@@ -11865,10 +11887,28 @@ public class SpecificationBackingBean extends
 			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null
 					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newItemScoreSetting.setWeightageReq(itemScoreSetting.isWeightageReq());//Bug #34744 under 28784
-				newItemScoreSetting.setPassingScore(packageScoreSetting.getPassingScore()); //#38151 To apply the same scoring settings/calculation for both packages and items.
-				newItemScoreSetting.setOverallTechnical(packageScoreSetting.getOverallTechnical()); //#38151 To apply the same scoring settings/calculation for both packages and items.
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setPassingScore(
+					    this.getManagedBean().isWeightage35384WIP()
+					        ? itemScoreSetting.getPassingScore()
+					        : packageScoreSetting.getPassingScore()
+					);
+				
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallTechnical(
+					    !this.getManagedBean().isWeightage35384WIP()
+					        ? itemScoreSetting.getOverallTechnical()
+					        : packageScoreSetting.getOverallTechnical()
+					);
+				
 				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
-				newItemScoreSetting.setOverallFin(packageScoreSetting.getOverallFin()); //#38151 To apply the same scoring settings/calculation for both packages and items.
+				
+				//#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallFin(
+						    !this.getManagedBean().isWeightage35384WIP()
+						        ? itemScoreSetting.getOverallFin()
+						        : packageScoreSetting.getOverallFin()
+						);
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - end
@@ -12460,6 +12500,7 @@ public class SpecificationBackingBean extends
 
 				specReqDTO.setScoreSettings(scoreSetting);
 				specReqDTO.setScQt(delivery);
+				specReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151
 				if (!this.getManagedBean().isReadOnly()) {
 					calculateRecommendationPackageAndItemScores(
 							packageScoreSetting, itemScoreSetting);
@@ -12680,6 +12721,9 @@ public class SpecificationBackingBean extends
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		
+		checkWeightage35384WIP();// #38151
+		
 		if (member != null
 				&& member
 						.getMemberRole()
@@ -12910,6 +12954,8 @@ public class SpecificationBackingBean extends
 		// #25638 - Start.
 		specReqDTO.setSpecMaintenance(getManagedBean().isSpecMaintenance());
 		// #25638 - End.
+		specReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+
 		try {
 			resDTO = specSO.updateBPMAction(specReqDTO);
 
@@ -13306,6 +13352,8 @@ public class SpecificationBackingBean extends
 		spReqDTO.setBaseURL(SmCommonUtil.getBasePortalUrl());
 		spReqDTO.setTaskName(this.getManagedBean().getTaskName());
 		//29561 -end
+		spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.updateBPMAction(spReqDTO);
@@ -16944,10 +16992,12 @@ public class SpecificationBackingBean extends
 		}
 		if (null != recommendationItem) {
 			//#38151 start
-			//To apply the same scoring settings/calculation for both packages and items.
-			recommendationItem.setOverallTechnical(recommendationPackage.getOverallTechnical());
-			recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
-			recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
+			if(!this.getManagedBean().isWeightage35384WIP()){		
+				//To apply the same scoring settings/calculation for both packages and items.
+				recommendationItem.setOverallTechnical(recommendationPackage.getOverallTechnical());
+				recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
+				recommendationItem.setPassingScore(recommendationPackage.getPassingScore());			
+			}
 			//#38151 end
 			int itemPassingScore = 0;
 			int value1 = recommendationItem.getOverallTechnical() != null ? recommendationItem
@@ -17697,6 +17747,8 @@ public class SpecificationBackingBean extends
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());
 		//#25138 - end
 		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
+		spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
+		
 		SpecificationReqDTO specReqDto=new SpecificationReqDTO();//34852_start
 		specReqDto.setScQt(this.getManagedBean().getQt());
 		this.getManagedBean().setWipStatusMax(getSpecSO().checkWipScoreSettingMax(specReqDto));
@@ -17856,6 +17908,7 @@ public class SpecificationBackingBean extends
 		CommitteResDTO resDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		this.getManagedBean().setMaintanceFlow(true);
+		checkWeightage35384WIP();// #38151
 		ScCommitteeMember member = resDTO.getCommMember();
 		if (null != member) {
 
@@ -18017,7 +18070,7 @@ public class SpecificationBackingBean extends
 		// #1873 #34837 -start-
 		if (assertPendingFinancialSubmission() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT))
 			return;
-		//�#1873�#34837 -end-
+		// #1873 #34837 -end-
 		
 		FacesScopes facesScopes = new FacesScopes();
 
@@ -18237,6 +18290,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setOfferScoreType(this.getManagedBean().getOfferScoreType());//#25138
 		spReqDTO.setSingleItem(this.getManagedBean().isSingleItem());//32453
 		spReqDTO.setScoreOfferPriceList(this.getManagedBean().getOfferPricePackageList());//#25138
+		spReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP());//#38151
 
 		if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)){
 			//Bug #26214
@@ -23191,9 +23245,9 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 
 	}
-	
-	//#35181 start
-	public boolean isWip35181StatusId() {
+
+	//#38151 start
+	public boolean checkWeightage35384WIPbyStatus() {
 		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT
 						.equals(currentStatusId)
@@ -23207,5 +23261,42 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 		return Boolean.FALSE;	
 		}
-	//#35181 end
+	//#38151 end
+	
+	//#38151 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+		
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+			
+			if (createdDate.before(effTimestamp) && checkWeightage35384WIPbyStatus()) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}else{
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	//#38151 End
 }

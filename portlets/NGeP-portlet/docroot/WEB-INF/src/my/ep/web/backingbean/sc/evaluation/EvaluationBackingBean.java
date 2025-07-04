@@ -2326,7 +2326,8 @@ public class EvaluationBackingBean extends
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			reqDTO.setScQt(this.getManagedBean().getScQt()); // #29187 Added Vinod
-
+			reqDTO.setComingFromNextButton(this.getManagedBean().isComingFromNextButton()); //#38151
+			
 			evaluationSO.preInitializeChecklist(reqDTO); // 34496 4serangkai
 
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
@@ -2771,7 +2772,7 @@ public class EvaluationBackingBean extends
 					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 					reqDTO.setScQt(this.getManagedBean().getScQt());
 					int wipstatus = evaluationSO.checkWipScoreSetting(reqDTO);
-					
+					checkWeightage35384WIP(); //#38151
 					if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
 						this.getManagedBean().setEvaluatioStageActiveIndex(1); //#25138
 						this.getManagedBean().setTabTechnicalIndex(3);
@@ -3425,6 +3426,7 @@ public class EvaluationBackingBean extends
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 				resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg2);
+				summaryReqDTO.setWeightage35384WIP(this.getManagedBean().isWeightage35384WIP()); //#38151 
 				if (// #25638 -Start.
 						(this.getManagedBean()
 						.getCurrentStatusId()
@@ -5158,6 +5160,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			reqDTO.setCompliance(true);
+			checkWeightage35384WIP(); //#38151
 			EvaluationResDTO evalResDTO = evaluationSO
 					.retrieveComplainceCheckListsForSupplier(reqDTO);
 			this.getManagedBean().setTechnicalComplinaceList(
@@ -8096,6 +8099,7 @@ public class EvaluationBackingBean extends
 						}
 					}
 					if(outputTab == 2){
+						this.getManagedBean().setComingFromNextButton(true); //#38151
 						retriveTechnicalEvaluationStage();
 						retriveNonScoringComplianceTechnical();//#25138 Re-open 
 						this.getManagedBean().setTabFinancialIndex(0);
@@ -11161,6 +11165,7 @@ private void retriveCommitteeRemarksList(){
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType(), 1);
 		evaluateWIP(this.getManagedBean().getScQt());//34865,34866,34867 - 29021 WIP
+		checkWeightage35384WIP();//#38151
 		prepareUpdateCommitteeMember();//#25037								 
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
@@ -19784,4 +19789,41 @@ private void retriveCommitteeRemarksList(){
 		RequestContext.getCurrentInstance().execute("confirmUpdatePresentationDemoPopup.show()");
 	}
 	//#28784 - End
+	
+	//#38151 Start
+	private void checkWeightage35384WIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getScQt();
+		Date publishDate = qt.getPublishDate();
+		Date createdDate = qt.getCreatedDate();
+		
+		if (null == publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+			Timestamp effTimestamp = new Timestamp(effDate.getTime());
+			
+			if (createdDate.before(effTimestamp)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}else{
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
+			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate)) {
+				this.getManagedBean().setWeightage35384WIP(true);
+			}
+		}
+	}
+	//#38151 End
 }
