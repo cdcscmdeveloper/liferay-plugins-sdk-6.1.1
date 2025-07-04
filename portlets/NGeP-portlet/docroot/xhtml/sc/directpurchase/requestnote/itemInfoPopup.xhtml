@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="requestNoteDtl"
+					value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>
+					
+	<p:dialog id="itemInfoPopup" widgetVar="itemInfoPopup"
+		header="#{lbl['lbl.sc.panel.title.item.detail']}" modal="true" dynamic="true" closable="false"
+		resizable="false" styleClass="pop_up_top" width="555">
+		<p:panel id="itemDetailsId">
+			<p:messages id="itemDetMsg" showDetail="true"
+				autoUpdate="#{!requestNoteBackingBean.managedBean.autoUpdate}"
+				closable="false" showSummary="false" />
+			<ui:param name="uomCode"
+				value="#{requestNoteDtl.requestItem.uom.uomCode}" />
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
+					<td><p:inputText disabled="true" size="54"
+							value="#{requestNoteDtl.requestItem.cmItem.extensionCode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
+					<td><p:inputText disabled="true" size="54"
+							value="#{requestNoteDtl.requestItem.itemName}" /></td>
+				</tr>
+				<tr>
+					<td style="vertical-align: top; text-align: left;"><p:outputLabel
+							value="#{lbl['lbl.cm.basic.item.spec']}" /></td> <!-- #30457: change label -->
+					<td><p:inputTextarea disabled="true" rows="3" cols="58"
+							style="margin-bottom: 5px; width: 351px;"
+							value="#{requestNoteDtl.requestItem.itemDesc}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
+					<td valign="bottom"><p:inputText disabled="true" size="30"
+							value="#{requestNoteDtl.requestItem.uom.uomName}" /></td>
+				</tr>
+				<ui:fragment
+					rendered="#{requestNoteBackingBean.managedBean.itemCheck}">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" /></td>
+						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
+								size="30"
+								value="#{requestNoteDtl.requestItem.tplSpecQuestion.clUomFrequency}" />
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" /></td>
+						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
+								size="30"
+								value="#{requestNoteDtl.requestItem.tplSpecQuestion.clUomPerDay}" />
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" /></td>
+						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
+								size="30"
+								value="#{requestNoteDtl.requestItem.tplSpecQuestion.clUomPerMonth}" />
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.duration.month']}" /></td>
+						<td><p:inputText styleClass="ppNumericAlign" disabled="true"
+								size="30"
+								value="#{requestNoteDtl.requestItem.tplSpecQuestion.clDurationMonth}" />
+						</td>
+					</tr>
+				</ui:fragment>
+				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:inputText size="30" styleClass="ppRightBtn"
+								        required="true"
+										disabled="#{isViewOnly or isQtyViewOnly}"
+										id="qtyId" label="#{lbl['lbl.sc.quantity']}"
+										validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
+										value="#{requestNoteDtl.requestItem.quantity}">
+										<p:ajax partialSubmit="true" process="@this" update="@this" />
+										<p:ajax event="blur" update="itemTotalPriceId" listener="#{requestNoteBackingBean.calculatePricePerItem(requestNoteDtl)}" />
+										<ac:validateNumber
+											pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}"
+											maxIntegerDigits="10" />
+									</p:inputText><p:message id="qtyIdMsg" for="qtyId" display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.totalprice']}" /></td>
+					<td><p:inputText size="30" styleClass="ppRightBtn"
+							disabled="true" id="itemTotalPriceId"
+							label="#{lbl['lbl.sc.totalprice']}"
+							value="#{requestNoteDtl.totalPricePerItemRounded}">
+							<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.ceiling.price']}"
+							rendered="#{requestNoteBackingBean.managedBean.itemCheck}" /></td>
+					<td><p:inputText styleClass="ppRightBtn" disabled="true"
+							size="30"
+							rendered="#{requestNoteBackingBean.managedBean.itemCheck}" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.price.type']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><h:selectOneMenu id="priceType" style="width:217px;"
+							disabled="#{isViewOnly || requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}"
+							label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
+							value="#{requestNoteDtl.priceTypeId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
+								var="pmParameter"
+								itemLabel="#{requestNoteBackingBean.getParameterDesc(pmParameter)}"
+								itemValue="#{pmParameter.parameterId}" />
+
+							<p:ajax event="change" partialSubmit="true" process="@this" update="itemTotalPriceId"
+								listener="#{requestNoteBackingBean.priceTypeChangeListener(requestNoteDtl.priceTypeId, requestNoteDtl)}" />
+						</h:selectOneMenu> <p:message id="priceTypeMsg" for="priceType" display="icon" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.request.note.fulfill.type']}" /></td>
+					<td><p:inputText
+							value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}"
+							disabled="true" size="30" style="margin-top: 5px;" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.fulfilment.type.tooltip']}" /></td>
+				</tr>
+			</table>
+
+			<div class="ppRightBtn BtnSpacing">
+				<p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true"
+					process="@this" onclick="itemInfoPopup.hide()" />
+			</div>
+		</p:panel>
+	</p:dialog>
+</ui:composition>
