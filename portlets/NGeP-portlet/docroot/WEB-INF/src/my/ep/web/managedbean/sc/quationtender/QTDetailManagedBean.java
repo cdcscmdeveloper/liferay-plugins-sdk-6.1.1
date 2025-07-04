@@ -1706,6 +1706,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -12404,4 +12407,28 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+	
+	//#38151 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+	
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151 - end
 }

@@ -19,10 +19,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationPengesyoranRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendationUlasanRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting; //#38151
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationBackingBean; //#38151
 import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean; //#38151
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -108,6 +111,19 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	private boolean isDemoReq;
 	
 	private boolean allSupplierDisagreeEPV;//#21692
+	
+	private List<WeightageScoreBean> weightageScoreBeans;//#38151
+	
+	private Long overallTechnicalRecommendationPercent;//#38151
+	
+	private Long overallFinancialRecommendationPercent;//#38151
+	
+	private List<ScQtScoreSetting> scoreSettings;//#38151
+		
+	private boolean weightage35384WIP; //#38151
+	
+	private SupplierFinalizationBackingBean suppFinalBean; //#38151
+	
 	//20230711@Asyrafhaziq-SQUBE Bug Minor #16
 	private final static List<String> directDownloadDocDefKeys = setDirectDownloadDocDefKeys(); 
 	private static List<String> setDirectDownloadDocDefKeys(){
@@ -682,4 +698,56 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
+	}
+
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
+	}
+
+	public SupplierFinalizationBackingBean getSuppFinalBean() {
+		return suppFinalBean;
+	}
+
+	public void setSuppFinalBean(SupplierFinalizationBackingBean suppFinalBean) {
+		this.suppFinalBean = suppFinalBean;
+	}
+
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
+	}
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+	//#38151 - End
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
+	
 }
