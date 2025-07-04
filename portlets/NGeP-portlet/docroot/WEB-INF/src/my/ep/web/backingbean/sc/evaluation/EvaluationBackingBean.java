@@ -2597,6 +2597,7 @@ public void saveComplianceSample() {
 			reqDTO.setCompliance(null);
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
+				evaluationSO.checkChecklistForEPV(reqDTO);
 				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
 			}
 			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
@@ -8701,8 +8702,14 @@ public void saveComplianceSample() {
 							retriveFinancialEvaluationStage();
 							retriveNonScoringComplianceFinancial(true);//#28856
 							//#30722 - start 
-							financialSpecQuestionOneItem(this.getManagedBean().getEvaluationStgTechnicalCheckList()
-									.get(0).getDocCategory());//#25138 - one item only
+							// #38528 Start docCategory changed for one item
+							// because of nullpointer Vinod 02/07/2025.
+							String docCategory = CollectionUtils.isEmpty(this.getManagedBean()
+									.getEvaluationStgTechnicalCheckList()) ? this.getManagedBean()
+									.getEvaluationStgfinancialCheckList().get(0).getDocCategory() : this
+									.getManagedBean().getEvaluationStgTechnicalCheckList().get(0).getDocCategory();
+							financialSpecQuestionOneItem(docCategory);// #25138 - one item only
+							// #38528 End Vinod 02/07/2025.
 							//#30722 - end
 							outputTab = 3;
 							this.getManagedBean().setTabFinancialIndex(1);
@@ -10620,11 +10627,19 @@ private void retriveCommitteeRemarksList(){
 
 					tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
 							getManagedBean().getSelectedZone());
+					//#21692 - Start
+					List<Integer> rejectStatus = new ArrayList<>();
+					rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+					rejectStatus.add(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED);
+					ScQtProposalChecklist proposalChecklist = this.getManagedBean().getQtProposalChecklist();
+					boolean rejectEPV = proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod() != null
+							&& rejectStatus.contains(proposalChecklist.getScQtProposal().getIsAgreeQtExtendPeriod());
+					//#21692 - End
 
 					// #29187 Start Vinod
 					if (QTConstants.FINANCIAL_EVALUATION.equalsIgnoreCase(getManagedBean().getCheckListType())
 							&& (CollectionUtils.isEmpty(questionIds) || !questionIds.contains(tplSpecAnswer
-									.getTplSpecQuestion().getSpecQuestionId()))) {
+									.getTplSpecQuestion().getSpecQuestionId())) && !rejectEPV) {//#21692
 						questionIds.add(tplSpecAnswer.getTplSpecQuestion().getSpecQuestionId());
 						validateUserScoreForTemplate(tplSpecAnswer, false);
 					}

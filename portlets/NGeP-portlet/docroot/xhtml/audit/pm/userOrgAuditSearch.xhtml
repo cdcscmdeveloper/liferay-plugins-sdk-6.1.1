@@ -119,6 +119,7 @@
 							label="#{lbl['lbl.pm.organisation.orgType']}"
 							style="margin-bottom: 5px;"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems
 								value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
 								var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
@@ -263,7 +264,8 @@
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OFO'}">
 				<tr>
 					<th width="22%"><p:outputLabel
-							value="#{lbl['lbl.pm.audit.serviceType']}" /> <h:outputLabel
+							value="#{lbl['lbl.pm.audit.serviceType']}" />
+							<h:outputLabel
 							value="*" styleClass="mandatory" /></th>
 					<td><p:selectOneMenu id="serviceTypeId"
 							styleClass="ppDropDownWidthM" required="true"
@@ -271,7 +273,7 @@
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
 							style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
+								itemValue="" />
 							<f:selectItems
 								value="#{searchPMUserOrgAuditBackingBean.getServiceTypeDropdownValues()}"
 								var="lvlOFO" itemLabel="#{lvlOFO.codeName}"
@@ -321,7 +323,7 @@
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
 							style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="#{null}" />
+								itemValue="" />
 							<f:selectItems
 								value="#{searchPMUserOrgAuditBackingBean.getGroupRoleDropdownValues()}"
 								var="lvlGrpRole" itemLabel="#{lvlGrpRole.codeName}"
@@ -414,8 +416,8 @@
 				<td><p:calendar id="fromDate" showOn="button" size="32"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
-						readonly="true">
-						<p:ajax event="dateSelect" update="fromDate,toDate" />
+						readonlyInput="true">
+						<p:ajax event="dateSelect" update="toDate" />
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
 				<td><p:calendar showOn="button" size="25"
@@ -424,7 +426,7 @@
 						mindate="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
 						id="toDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateTo}"
-						readonly="true">
+						readonlyInput="true">
 					</p:calendar></td>
 			</tr>
 			<tr>
@@ -439,16 +441,15 @@
 							<!-- <f:param name="disableValidation" value="true" />  -->
 						</p:commandButton>
 
-						<p:commandButton value="#{lbl['lbl.btn.reset']}"
-							process="userOrgAuditPMSearchPanel"
-							update=":form:userOrgAuditPMSearchPanel,:form:searchMasters"
+						<p:commandButton value="#{lbl['lbl.btn.reset']}" partialSubmit="true" process="@this"
+							update="userOrgAuditPMSearchPanel,:form:searchMasters"						
 							action="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}" />
 					</div>
 				</td>
 			</tr>
 		</table>
 		<ac:lovPopupAudit />
-		<ac:lovPopup />
+		<ac:lovPopup />	
 		<h:panelGroup
 			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
 		  		or searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
@@ -456,6 +457,7 @@
 				orgTypeParamCode="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}"
 				okAction="searchPMUserOrgAuditBackingBean.selectPtjAction"
 				update=":form:userOrgAuditPMSearchPanel" />
-		</h:panelGroup>
+		</h:panelGroup>		
+		
 	</p:panel>
 </ui:composition>

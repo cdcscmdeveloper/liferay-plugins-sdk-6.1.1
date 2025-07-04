@@ -14005,10 +14005,24 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			Date effDate = appVerDtls.getEffDate();
 
-			if (publishDate.before(effDate)) {
+			if (publishDate.before(effDate) && !isApprovalScreenToHideMinPaidUpCapitalWIP()) {
 				this.getManagedBean().setMinPaidUpCapitalWIP(true);
 			}
 		}
+	}
+
+	// #33787 End Vinod
+	// #33787 Start Vinod
+	/**
+	 * This method is to check if it is accessed from approval screen.
+	 * 
+	 * @param 
+	 * @return boolean
+	 */
+	private boolean isApprovalScreenToHideMinPaidUpCapitalWIP() {
+		boolean isApproval = getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() || getUserTaskIsBPKApproval()
+				|| getUserTaskIsPublicationApproval();
+		return isApprovalScreen() && isApproval ? true : false;
 	}
 
 	// #33787 End Vinod

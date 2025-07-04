@@ -1422,7 +1422,16 @@ public class SupplierDataMaintenanceBackingBean extends
 				catList.add(cat);
 			} else if (cat.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				cat.setEntryMode(cat.getOtherDesc());
+				// #34031 Start 
+				/*
+				 * To avoid replacing initial entryMode value when user edit
+				 * otherDesc first then add/delete category code and cater empty
+				 * otherDesc
+				 */
+				if (null == cat.getEntryMode()) {
+					cat.setEntryMode((null == cat.getOtherDesc()) ? "" : cat.getOtherDesc());
+				} 
+				// #34031 End 
 				//26238: Disciplinary Action - start - 28219
 				apprvList.add(cat);
 			}
@@ -2894,7 +2903,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
 	public void unSelectCancelBumiCategories() {
-		unselectSuspendCategories();	//38391
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
 				|| getManagedBean().getSelectedPendingApprovedCategories() == null
 				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
@@ -2916,20 +2924,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedApprovedCategories(selectList);
 	}
 	//32618 - End
-	//38391
-	private void unselectSuspendCategories() {
-		List<SmSupplierCategory> selectList = new ArrayList<>();
-		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
-		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
-		while (it.hasNext()) {
-			SmSupplierCategory cat = it.next();
-			if (!cat.isSuspendCategory() && prevSelect.contains(cat)){
-				selectList.add(cat);
-			}
-			cat.setSelectable(!cat.isSuspendCategory());
-		}
-		getManagedBean().setSelectedApprovedCategories(selectList);
-	}
 	//32891 - Checking category code for activeappl - 26238 - start
 	/**
 	 * retrieve CategoryCode
