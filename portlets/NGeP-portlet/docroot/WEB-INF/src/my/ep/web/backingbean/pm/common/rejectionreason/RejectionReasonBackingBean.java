@@ -87,13 +87,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public static final String NAV_TO_MAINTAIN = "rejectionReasonMaintain";
 	public static final String NAV_TO_SEARCH = "rejectionReason";
 	//Mapper for DDL
-	private Map<Long, Object> reasonCategoryMapper;
+	private static Map<Long, Object> reasonCategoryMapper;
 	//Mapper for DDL
-	private Map<Long, Object> souringMethodParameterIdMapper;
+	private static Map<Long, Object> souringMethodParameterIdMapper;
 	//Mapper for DDL
-	private Map<Long, Object> conditionFieldMapper;
+	private static Map<Long, Object> conditionFieldMapper;
 	//Mapper for DDL
-	private Map<String, Object> souringMethodMapper;
+	private static Map<String, Object> souringMethodMapper;
 	//List for Paging
 	private IPagingDataModel<PmReasonDesc> pmReasonDescDataModel = new PmReasonPagingDataModel();
 	
