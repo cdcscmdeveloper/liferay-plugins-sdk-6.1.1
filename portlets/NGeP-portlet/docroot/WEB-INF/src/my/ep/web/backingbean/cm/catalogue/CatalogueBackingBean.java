@@ -11947,7 +11947,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void supplierDisciplinaryActionInfo(SmSupplier smSupplier) {
 		SmSupplier currSupp = smSupplier;
 		if (currSupp != null) {
-			List<DisciplinaryActionVO> voList = getDisciplinaryActionVO(currSupp);
+			List<DisciplinaryActionVO> voList = onDisplayActiveDisciplinaryAction(currSupp);
 			if (!EntityHelper.isCollectionEmpty(voList) && voList.size() > 0) {
 				getManagedBean().setDisciplineVOs(voList);
 			} else {
