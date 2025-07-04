@@ -525,8 +525,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 					        setOrgCode(orgCode);
 					        setOrgName(orgName);
 					        //38255-End
-							/*13984 Schedule/ Phase info List ENDING*/
-						}
+							/*13984 Schedule/ Phase info List ENDING*/						}
 					}
 					return resDTO.getActiveContractResultBean();
 				}
@@ -544,11 +543,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		 * @return statusDesc
 		 */
 		private String getPmStatusDesc(Long statusId) {
+			IStatusSO statusSO;
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			String statusDesc = StringUtils.EMPTY;
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(statusId);
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-			StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
 			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 				statusDesc = resDTO.getPmStatusDesc().getStatusName();
 			}
