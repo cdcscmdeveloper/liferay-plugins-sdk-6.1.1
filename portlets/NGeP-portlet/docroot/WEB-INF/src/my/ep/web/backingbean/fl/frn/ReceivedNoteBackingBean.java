@@ -255,8 +255,13 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			}
 			
 			reqDTO.setApproverUserList(getManagedBean().getApproverList());
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
-				(getManagedBean().getProcessName()!=null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME))){	
+			
+			//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)
+					|| (getManagedBean().getProcessName() != null && (getManagedBean().getProcessName().equalsIgnoreCase(
+							FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME) || getManagedBean().getProcessName().equalsIgnoreCase(
+							FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))))) {	
 				resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
 			} else {
 				if(getManagedBean().getPmDigiSign() !=null){
@@ -285,7 +290,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 						messageId = MessageConst.INFO_700008;
 					}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 						messageId = MessageConst.INFO_700018;
-						if(getManagedBean().getProcessName()!=null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)) {
+						
+						//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
+						if (getManagedBean().getProcessName() != null
+								&& (getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME) || getManagedBean()
+										.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME.replaceAll("\\s", "")))) {
 							messageId = MessageConst.INFO_700005;
 						}
 					}
@@ -365,7 +374,11 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 			
 			Object obj = super.getBpmTaskDetails(Object.class, new String[]{BpmOutcomeConst.BPM_SAVE});
 			getManagedBean().setBpmTaskName(this.getManagedBean().getTaskName());
-			if(this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
+			
+			//#34178 - added inside if statement to also include process name without space to cater Oracle 12C upgrade issue
+			if (this.getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)
+					|| this.getManagedBean().getProcessName()
+							.equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME.replaceAll("\\s", ""))) {
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
 				resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
@@ -1961,6 +1974,7 @@ public class ReceivedNoteBackingBean extends FulfilmentBaseBackingBean<ReceivedN
 		reqDTO.setTaskDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 		reqDTO.setActionCode(action);// 36361
 		reqDTO.setDeliveryOrderId(deliveryOrderId);// 36361
+		reqDTO.setFulfilmentNoteId(getManagedBean().getFulfilmentNote().getFulfilmentNoteId());//38104
 		FulfilmentResDTO resDTO = orderSO.validatePOCOCurrentStatus(reqDTO);
 
 		Boolean allowToProceed = resDTO.isFlag();

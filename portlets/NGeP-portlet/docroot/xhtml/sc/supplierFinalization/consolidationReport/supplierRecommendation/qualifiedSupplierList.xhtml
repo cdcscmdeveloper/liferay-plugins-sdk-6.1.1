@@ -190,8 +190,7 @@
 					value="#{qualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-				<p:column
-					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
@@ -440,8 +439,7 @@
 					value="#{disqualifiedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}" />
 				<ui:param name="mofExpired"
 					value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
-				<p:column
-					style="#{mofExpired ? 'background-color:red; color:white; font-weight:bold;':''}">
+				<p:column styleClass="#{mofExpired ? 'red-background':''}">
 					<h:outputText
 						value="#{consolidationReportBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
 				</p:column>
