@@ -519,30 +519,22 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 */
 	public void updateSearchCriteriaForOrgName(BaseEntity entity) {
 		log.info("updateSearchCriteriaForOrgName");
-
-		log.info("getFinOrgName() :::: " + this.getManagedBean().getSelectedOrgProfile());
-		if (this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity() != null) {
-			this.getManagedBean()
-					.getSearchBean()
-					.setMasterLabel4(
-							this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity().getOrgProfileId().toString());
-		}
-		if (null == this.getManagedBean().getSearchBean().getMasterLabel4()
-				&& null != this.getManagedBean().getSelectedOrgProfile().getPmFinancialOrg()) {
-			this.getManagedBean()
-					.getSearchBean()
-					.setMasterLabel4(
-							this.getManagedBean().getSelectedOrgProfile().getPmFinancialOrg().getOrgProfileId().toString());
-		}
-		if (null == this.getManagedBean().getSearchBean().getMasterLabel4()
-				&& null != this.getManagedBean().getSelectedOrgProfile().getSmSupplier()) {
-			this.getManagedBean().getSearchBean()
-					.setMasterLabel4(this.getManagedBean().getSelectedOrgProfile().getSmSupplier().getSupplierId().toString());
-		}
-		log.info("getSearchBean().getMasterLabel4( ::::  " + this.getManagedBean().getSearchBean().getMasterLabel4());
 		PmOrgProfile orgProfile = (PmOrgProfile) entity;
 		log.info("OrgProfileId from Entity ::::  " + orgProfile.getOrgProfileId());
 		this.getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(orgProfile.getOrgProfileId());
+
+		log.info("getFinOrgName() :::: " + this.getManagedBean().getSelectedOrgProfile());
+		if (null != orgProfile.getPmOrgValidity()) {
+			this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
+		}
+		if (null != orgProfile.getPmFinancialOrg()) {
+			this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
+		}
+		if (null != orgProfile.getSmSupplier()) {
+			this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
+		}
+		log.info("getSearchBean().getMasterLabel4( ::::  " + this.getManagedBean().getSearchBean().getMasterLabel4());
+
 	}
 
 	/**
