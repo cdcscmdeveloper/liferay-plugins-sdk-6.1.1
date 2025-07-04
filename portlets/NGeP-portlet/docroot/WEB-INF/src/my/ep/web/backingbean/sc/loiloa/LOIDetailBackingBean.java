@@ -7329,42 +7329,6 @@ public class LOIDetailBackingBean extends
 	}
 	//#21692 - End
 	
-	//#38151 Start
-	private void checkWeightage35384WIP() {
-		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-				IQTDetailSO.class);
-		ScQt qt = this.getManagedBean().getScQt();
-		Date publishDate = qt.getPublishDate();
-		Date createdDate = qt.getCreatedDate();
-		
-		if (null == publishDate) {
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-			Timestamp effTimestamp = new Timestamp(effDate.getTime());
-			
-			if (createdDate.before(effTimestamp)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		}else{
-			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_38151);
-			qtReqDTO.setPhase(QTConstants.APP_VERSION_REDMINE_NO_38151_PHASE);
-
-			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
-
-			Date effDate = appVerDtls.getEffDate();
-
-			if (publishDate.before(effDate)) {
-				this.getManagedBean().setWeightage35384WIP(true);
-			}
-		}
-	}
-	//#38151 End
 	//#21692 - Start
 	private void setRecommendDtlForSupplierRejectEPV(ScQtRecommendDtl recommendDtl) {
 		if (recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod() != null
