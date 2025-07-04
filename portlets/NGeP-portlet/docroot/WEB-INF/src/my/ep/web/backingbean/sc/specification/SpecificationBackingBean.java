@@ -3232,10 +3232,14 @@ public class SpecificationBackingBean extends
 						if (recommnendationSetting.getSettingType() == SourcingConstants.SCORE_SETTING_TYPE_RECOMMENDATION_BY_ITEM) {
 							this.getManagedBean().setRecommendationScore(
 									recommnendationSetting);
-							calculateRecommendtechnicalScore(this
-									.getManagedBean().getRecommendationScore());
-							calculateRecommendFinancialScore(this
-									.getManagedBean().getRecommendationScore());
+							//#38151 start comment this
+//							calculateRecommendtechnicalScore(this
+//									.getManagedBean().getRecommendationScore());
+//							calculateRecommendFinancialScore(this
+//									.getManagedBean().getRecommendationScore());
+							//#38151 end comment this
+							calculateonesetscoring(this.getManagedBean()
+									.getRecommendationPackageScore(), false);
 						}
 
 					}
@@ -8588,6 +8592,49 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	//#38151 start
+	/**
+	 * Calculate total package & item.calculate package & item Technical and Financial scores
+	 * in Recommendation Menu.
+	 * 
+	 * @param technical
+	 *            (ScQtScoreSetting package).
+	 */
+	public void calculateonesetscoring(ScQtScoreSetting technical,
+			boolean isValidationRequired) {
+		try {
+			if (null == technical.getOverallTechnical()) {
+				technical.setOverallTechnical(new BigDecimal(0));
+			}
+			if (null == technical.getOverallFin()) {
+				technical.setOverallFin(new BigDecimal(0));
+			}
+			BigDecimal passingScore = retrieveTechnicalEvalutionPassingScorePmrules(RuleTypeConst.SC_TECHNICAL_WEIGHTAGE);
+			if (null != passingScore
+					&& technical.getOverallTechnical().intValue() < passingScore
+							.intValue() && !this.getManagedBean().isReadOnly()
+					&& isValidationRequired) {
+				throw new EpException(MessageConst.ERROR_760365,
+						new String[] { String.valueOf(passingScore) });
+			}
+			int financialScore = 100 - technical.getOverallTechnical()
+					.intValue();
+			technical.setOverallFin(new BigDecimal(financialScore));
+			this.getManagedBean().setRecommendationPackageScore(technical);
+			int local = technical.getOverallTechnical().intValue()
+					+ technical.getOverallFin().intValue();
+
+			this.getManagedBean().setRecommendationPackageTotal(
+					new BigDecimal(local));
+			
+			calculateRecommendtechnicalScore(technical);
+			calculateRecommendFinancialScore(technical);
+		} finally {
+
+		}
+	}
+	//#38151 end
+	
 	/**
 	 * Calculate recommendtechnical score.calculate Item Technical Scores in
 	 * Recommendation Menu.
@@ -8599,9 +8646,11 @@ public class SpecificationBackingBean extends
 		try {
 			int value1 = technical.getOverallTechnical() != null ? technical
 					.getOverallTechnical().intValue() : 0;
-			int value2 = technical.getOverallOtherTechnical() != null ? technical
-					.getOverallOtherTechnical().intValue() : 0;
-			int local = value1 + value2;
+//#38151 start comment this
+//			int value2 = technical.getOverallOtherTechnical() != null ? technical
+//					.getOverallOtherTechnical().intValue() : 0;
+//			int local = value1 + value2;
+			int local = value1;
 			this.getManagedBean().setRecommendTechnicalScore(
 					new BigDecimal(local));
 			int financialScore = 0;
@@ -8611,12 +8660,11 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + financialScore));
-			if ((null != this.getManagedBean().getTotalScore())
-					&& this.getManagedBean().getTotalScore().intValue() > 100) {
-//#21695 Farid 30/7/2020 Start
-				throw new EpException(MessageConst.ERROR_7602571);
-
-			}
+			//#38151 start comment this
+//			if ((null != this.getManagedBean().getTotalScore())
+//					&& this.getManagedBean().getTotalScore().intValue() > 100) {
+//				throw new EpException(MessageConst.ERROR_7602571);
+//			}
 
 		} finally {
 
@@ -8634,9 +8682,11 @@ public class SpecificationBackingBean extends
 		try {
 			int value1 = financial.getOverallFin() != null ? financial
 					.getOverallFin().intValue() : 0;
-			int value2 = financial.getOverallOtherFin() != null ? financial
-					.getOverallOtherFin().intValue() : 0;
-			int local = value1 + value2;
+//          #38151 comment this
+//			int value2 = financial.getOverallOtherFin() != null ? financial
+//					.getOverallOtherFin().intValue() : 0;
+//			int local = value1 + value2;
+			int local = value1 ;
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
 
@@ -8647,11 +8697,12 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setTotalScore(
 					new BigDecimal(local + technicalScore));
-			if ((null != this.getManagedBean().getTotalScore())
-					&& this.getManagedBean().getTotalScore().intValue() > 100) {
-				throw new EpException(MessageConst.ERROR_760257);
-
-			}
+//			#38151 comment this
+//			if ((null != this.getManagedBean().getTotalScore())
+//					&& this.getManagedBean().getTotalScore().intValue() > 100) {
+//				throw new EpException(MessageConst.ERROR_760257);
+//
+//			}
 
 		} finally {
 
@@ -11763,6 +11814,8 @@ public class SpecificationBackingBean extends
 // #21695 farid, if partial set weightage to false			
 			if (this.getManagedBean().getQt().isPartial() == true){
 				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(false);
+			}else{
+				this.getManagedBean().getFinancialScoreSetting().setWeightageReq(true); //#35181 set to weightage
 			}
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
@@ -11812,10 +11865,10 @@ public class SpecificationBackingBean extends
 			if(newItemScoreSetting != null && newItemScoreSetting.getQtScoreSettingId() != null
 					&& !this.getManagedBean().getQt().isCloned()){//#28784 cloning error
 				newItemScoreSetting.setWeightageReq(itemScoreSetting.isWeightageReq());//Bug #34744 under 28784
-				newItemScoreSetting.setPassingScore(itemScoreSetting.getPassingScore());
-				newItemScoreSetting.setOverallTechnical(itemScoreSetting.getOverallTechnical());
+				newItemScoreSetting.setPassingScore(packageScoreSetting.getPassingScore()); //#38151 To apply the same scoring settings/calculation for both packages and items.
+				newItemScoreSetting.setOverallTechnical(packageScoreSetting.getOverallTechnical()); //#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallOtherTechnical(itemScoreSetting.getOverallOtherTechnical());
-				newItemScoreSetting.setOverallFin(itemScoreSetting.getOverallFin());
+				newItemScoreSetting.setOverallFin(packageScoreSetting.getOverallFin()); //#38151 To apply the same scoring settings/calculation for both packages and items.
 				newItemScoreSetting.setOverallOtherFin(itemScoreSetting.getOverallOtherFin());
 				itemScoreSetting = newItemScoreSetting;
 			}//#28784 - end
@@ -16890,6 +16943,12 @@ public class SpecificationBackingBean extends
 					new String[] { String.valueOf(passingScore) });
 		}
 		if (null != recommendationItem) {
+			//#38151 start
+			//To apply the same scoring settings/calculation for both packages and items.
+			recommendationItem.setOverallTechnical(recommendationPackage.getOverallTechnical());
+			recommendationItem.setOverallFin(recommendationPackage.getOverallFin());
+			recommendationItem.setPassingScore(recommendationPackage.getPassingScore());
+			//#38151 end
 			int itemPassingScore = 0;
 			int value1 = recommendationItem.getOverallTechnical() != null ? recommendationItem
 					.getOverallTechnical().intValue() : 0;
@@ -23133,4 +23192,20 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	}
 	
+	//#35181 start
+	public boolean isWip35181StatusId() {
+		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+		if (QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT
+						.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF
+						.equals(currentStatusId)
+				|| QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH
+						.equals(currentStatusId)
+				|| QTStatusConst.SE_PENDING_ENDORSMENT.equals(currentStatusId) 
+				|| QTStatusConst.SE_PENDING_SIGNOFF.equals(currentStatusId)) {
+			return  Boolean.TRUE;
+		}
+		return Boolean.FALSE;	
+		}
+	//#35181 end
 }

@@ -695,6 +695,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private Paginator financialPackagePaginator;
 	
 	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
+	
+	private boolean comingFromNextButton;//#38151
+
 		
 	/**tabIndex
 	 * Gets the today.
@@ -4555,4 +4558,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.allSupplierRejectEpv = allSupplierRejectEpv;
 	}
 	//#21692 - End
+	
+	//#38151 - start
+	/**
+	 * @return the flag from nextbutton
+	 */
+	public boolean isComingFromNextButton() {
+		return comingFromNextButton;
+	}
+
+	/**
+	 * @param set flag from nextbutton
+	 */
+	public void setComingFromNextButton(boolean comingFromNextButton) {
+		this.comingFromNextButton = comingFromNextButton;
+	}
+	//#38151 - end
 }

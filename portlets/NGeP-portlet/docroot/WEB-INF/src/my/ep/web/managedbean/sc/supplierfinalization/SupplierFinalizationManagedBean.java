@@ -32,6 +32,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;//#38151
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -42,6 +43,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierfinalization.SupplierFinalizationMeetingBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.sc.quatationtender.WeightageScoreBean;//#38151
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.key.sc.supplierfinalization.MapKey;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -322,6 +324,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQt checkCategoryCodeQt;//#29466
 	
 	private boolean allSupplierDisagreeEPV;//#21692
+	
+	private List<WeightageScoreBean> weightageScoreBeans;//#38151
+	
+	private Long overallTechnicalRecommendationPercent;//#38151
+	
+	private Long overallFinancialRecommendationPercent;//#38151
+	
+	private List<ScQtScoreSetting> scoreSettings;//#38151
+	
+	private boolean WeightageReq;//#38151
 	
 	/**
 	 * @return the activeIndex
@@ -2605,5 +2617,46 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
+	//#38151 - Start
+	public List<WeightageScoreBean> getWeightageScoreBeans() {
+		return weightageScoreBeans;
+	}
+
+	public void setWeightageScoreBeans(List<WeightageScoreBean> weightageScoreBeans) {
+		this.weightageScoreBeans = weightageScoreBeans;
+	}
+
+	public Long getOverallTechnicalRecommendationPercent() {
+		return overallTechnicalRecommendationPercent;
+	}
+
+	public void setOverallTechnicalRecommendationPercent(Long overallTechnicalRecommendationPercent) {
+		this.overallTechnicalRecommendationPercent = overallTechnicalRecommendationPercent;
+	}
+
+	public List<ScQtScoreSetting> getScoreSettings() {
+		return scoreSettings;
+	}
+
+	public void setScoreSettings(List<ScQtScoreSetting> scoreSettings) {
+		this.scoreSettings = scoreSettings;
+	}
+
+	public Long getOverallFinancialRecommendationPercent() {
+		return overallFinancialRecommendationPercent;
+	}
+
+	public void setOverallFinancialRecommendationPercent(Long overallFinancialRecommendationPercent) {
+		this.overallFinancialRecommendationPercent = overallFinancialRecommendationPercent;
+	}
+
+	public boolean isWeightageReq() {
+		return WeightageReq;
+	}
+
+	public void setWeightageReq(boolean weightageReq) {
+		WeightageReq = weightageReq;
+	}
+	//#38151 - End
 }
 // ***25201
