@@ -34,28 +34,33 @@
 					<table
 						style="border: 1px solid #e8e8e8; width: 100%; border-collapse: collapse;">
 						<tr bgcolor="#2c576e"
-							style="border: 1px solid #e8e8e8; border-collapse: collapse;">
-
-							<th style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: center;"
-								width="7%"><font color="white"><p:outputLabel
-										value="#{lbl['lbl.sc.item.code.name']}"
-										style="color: white !important;font-size: 12px;font-weight: bold;font-family:Arial;"></p:outputLabel></font></th>
-							<th style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: center; display: flex; justify-content: center; align-items: center; gap: 5px;"
-								width="7%"><font color="white"><p:outputLabel
-										value="#{lbl['lbl.sc.current.item.total.amount']}"
-										style="color: white !important;font-size: 12px;font-weight: bold;font-family:Arial;"></p:outputLabel></font>
-							<ac:iconTooltip
-									value="#{lbl['lbl.sc.tooltip.current.item.total.amount']}"/></th>
-							<th style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: center; display: flex; justify-content: center; align-items: center; gap: 5px;"
-								width="7%"><font color="white"><p:outputLabel
-										value="#{lbl['lbl.sc.accumulative.amount.per.item']}"
-										style="color: white !important;font-size: 12px;font-weight: bold;font-family:Arial;"></p:outputLabel></font>
-							<ac:iconTooltip
-									value="#{lbl['lbl.sc.tooltip.accumulative.amount.per.item']}"/></th>
-							<th style="border: 1px solid #e8e8e8; border-collapse: collapse; text-align: center;"
-								width="7%"><font color="white"><p:outputLabel
-										value="#{lbl['lbl.sc.decision']}"
-										style="color: white !important;font-size: 12px;font-weight: bold;font-family:Arial;"></p:outputLabel></font></th>
+							style="border: 1px solid #e8e8e8;">
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText value="#{lbl['lbl.sc.item.code.name']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+							</td>
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText value="#{lbl['lbl.sc.current.item.total.amount']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.tooltip.current.item.total.amount']}" />
+							</td>
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText
+									value="#{lbl['lbl.sc.accumulative.amount.per.item']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.tooltip.accumulative.amount.per.item']}" />
+							</td>
+							<td
+								style="border: 1px solid #e8e8e8; text-align: center; width: 7%;">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.decision']}"
+									style="color: white; font-size: 12px; font-weight: bold; font-family: Arial;" />
+							</td>
 						</tr>
 						<tr>
 							<td><h:outputText value="#{empty commodityGroup.itemCodeName ? lbl['lbl.txt.na'] : commodityGroup.itemCodeName}" /></td>
