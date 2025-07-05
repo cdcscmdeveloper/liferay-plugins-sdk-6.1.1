@@ -410,6 +410,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean bpkApproverMode = Boolean.FALSE; //#26059
 	private boolean rnExceedThreshold = Boolean.FALSE; //#26059
 	private boolean showAttachments = Boolean.TRUE; //#26059
+	private boolean containRejectDecision = Boolean.FALSE; //#26059
     private List<CommodityGroup> commodityGroups =	new ArrayList<>(); //#26059
     
     private	Integer	counter = 0; //#26059
@@ -2511,6 +2512,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCounter(Integer counter) {
 		this.counter = counter;
+	}
+	
+	/**
+	 * Checks if any item has a reject decision.
+	 */
+	public boolean isContainRejectDecision() {
+	    return containRejectDecision;
+	}
+
+	/**
+	 * Sets the reject decision status.
+	 */
+	public void setContainRejectDecision(boolean containRejectDecision) {
+	    this.containRejectDecision = containRejectDecision;
 	}
 	// #26059 - end
 }
