@@ -3144,16 +3144,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				/*
 				 * 38524 - start 
 				 * Update codes with caution! 
-				 * For uncatered roles, please add roleCodes in qtDetailDAO.prepareActorSubQuery
-				 * SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
-				 * To prevent unauthorize access from multi-role user only roles 
-				 * listed was allowed for the last fallback scenario
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
 				 */
 				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
 
-				if (isAuditor()) {
-					// Auditor got privilidge for global search
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
 					reqDTO.setPmUser(null);
 				} else if (isDeskOfficer() && isMaintenanceScreen
 						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
@@ -9483,6 +9482,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
+
+	// 38524 - start
+	private boolean isAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SUPPORT_TECHNICAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.SUPPORT_APPL.value())
+				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+
+	// 38524 - end
 	
 	/**
 	 * BUG 32050, BUG 32209
