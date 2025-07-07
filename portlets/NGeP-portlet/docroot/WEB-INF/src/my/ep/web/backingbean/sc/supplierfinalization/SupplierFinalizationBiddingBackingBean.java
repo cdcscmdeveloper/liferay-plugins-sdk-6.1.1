@@ -801,13 +801,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 				}
 				// #28777 & #29729 - End
 				if (supplierId.equals(awardedSupplierId)) {
-					/*
-					 * Bug 31101 - Added disciplinary Action filter
-					 */
-					getManagedBean()
-							.setSelectedPackageBean(
-									packageBean.getScBidSupplier().getSmSupplier().isDisciplinaryActions() ? null
-											: packageBean);
+					// 26247, 31101 - start
+					SmSupplier supplier = packageBean.getScBidSupplier().getSmSupplier();
+					getManagedBean().setSelectedPackageBean(null);
+					if(this.disabledQTProcess(supplier)){
+						getManagedBean().setSelectedPackageBean(packageBean);
+					}
+					// 26247, 31101 - end
 					if (getManagedBean().isZonal()) {
 						selectedPackageBeans.put(getManagedBean().getSelectedZone().getSpecZoneId(), packageBean);
 					}
@@ -1139,11 +1139,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 					itemBean.setScQtProposal(shortlistedSupplier.getQtEvaluationResult().getScQtProposal());
 					itemBean.setShortlistedSupplier(shortlistedSupplier);
 				}
-				/*
-				 * 31101 - Added Disciplinary Action Validation
-				 */
-				if (smSupplier.getSupplierId().equals(awardedSupplierId)
-						&& !itemBean.getSupplier().isDisciplinaryActions()) {
+				
+				// 26247, 31101 - start
+				SmSupplier supplier = itemBean.getSupplier();
+				if (smSupplier.getSupplierId().equals(awardedSupplierId) && !this.disabledQTProcess(supplier)) {
+				// 26247, 31101 - end
 					getManagedBean().setSelectedBidItemBean(itemBean);
 					selectedItemBeans.put(bidItem.getBidItemId(), itemBean);
 				}
