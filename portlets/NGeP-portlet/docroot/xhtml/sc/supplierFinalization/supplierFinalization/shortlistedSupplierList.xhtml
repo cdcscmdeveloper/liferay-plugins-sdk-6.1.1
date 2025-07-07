@@ -505,6 +505,8 @@
 													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText> 					
 				</p:column>
+
+				<ui:remove><!--  #38151 --></ui:remove>				
 				<p:column style="text-align:right;">
 					<p:column style="text-align:right;">
 						<p:commandLink
@@ -529,6 +531,7 @@
 							</h:outputText>
 					</p:column>
 				</p:column>
+				<ui:remove><!--  #38151 --></ui:remove>				
 	
 				<p:column style="text-align:center;" rendered="#{!suppFinalizationBackingBean.evaluateWIP(suppFinalizationBackingBean.managedBean.scQt)}">
 					<h:outputText value="#{empty shortlistedSupp.totalRating? 0: shortlistedSupp.totalRating}"/>
