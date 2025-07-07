@@ -14315,17 +14315,24 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 						.getSelectedShareHolders());
 	}
 
+	//#28775 - 38498
+	/**
+	 * Disable delete button
+	 * @param facilitiesVOList
+	 * @return
+	 */
 	public boolean disableDeleteBtnFacility(List<PmCategoryL3> facilitiesVOList) {
 		boolean retVal = true;
-		if (!EntityHelper.isCollectionEmpty(facilitiesVOList)) {
-			for (PmCategoryL3 l3 : facilitiesVOList) {
-				if (!EntityHelper.isCollectionEmpty(l3.getFacilityList())) {
-					for (SmFacility fac : l3.getFacilityList()) {
-						if (fac.isSelected()) {
-							retVal = false;
-							break;
-						}
-					}
+		if (EntityHelper.isCollectionEmpty(facilitiesVOList)){
+			return true;
+		}
+		for (PmCategoryL3 l3 : facilitiesVOList){
+			if (EntityHelper.isCollectionEmpty(l3.getFacilityList())){
+				continue;
+			}
+			for (SmFacility fac : l3.getFacilityList()){
+				if (fac.isSelected()){
+					return false;
 				}
 			}
 		}
