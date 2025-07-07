@@ -2415,27 +2415,26 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		String  proc_type =  EntityHelper.getStringNestedProperty(contractBackingB.getManagedBean(), "contractVer.ctContract.loa.qtType.parameterCode"); //#38514
 
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-				if(proc_type != null){
-					if(proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-						//pk7 contract with bond from LOA
+			if (StringUtils.isNotEmpty(proc_type) && proc_type != null) {
+				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+					// pk7 contract with bond from LOA
+					calculateNewBondAmount();
+					// Start Fix - #33491
+				} else if (StringUtils.isNotEmpty(proc_type) && !proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) { //#38514
+					if (isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa())&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+						// To carry over whatever setting regarding is_bond_req
+						// from LOA to set in CT
+						getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+						if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+							// recalculate the bond and set into
+							// CtcontractAmount
+							getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(),new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+						}
+					} else {
 						calculateNewBondAmount();
-					  } else if(!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-						// except pk7 and DP
-						calculateNewBondAmount();
-					  }
+					}
+				}
 			}
-		// Start Fix - #33491 
-		} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-	   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-	   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
-	   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
-	   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
-	   		        	//recalculate the bond and set into CtcontractAmount 
-	   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
-	   		        }
-	   		  }else{
-					calculateNewBondAmount(); 
-	   		  }
 		}
 		// End Fix - #33491
 		// End - Fix - #32663
