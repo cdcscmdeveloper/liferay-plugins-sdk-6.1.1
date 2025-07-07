@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.requestnote;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.SpecialCharacter;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
@@ -2512,6 +2514,10 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 									.concat(String.valueOf(SpecialCharacter.MODULO.getCharacter()))));
 				}
 				
+				searchBean.getDataFilterBeans().add(
+					    new SearchFilterBean("status", SearchOperator.OPERATOR_NOT_IN.value(),
+					        Arrays.asList(DPStatusConstants.RN_PENDING_SUBMISSION, DPStatusConstants.RN_PENDING_REVISION)));
+
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("requestNoteDtls.isExceedThreshold", SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
 	            searchBean.getDataFilterBeans().add(new SearchFilterBean("requestNoteDtls.bpkThresholdDecision", SearchOperator.OPERATOR_IS_NULL.value(), null));
 	            // --- END NEW FILTER ---

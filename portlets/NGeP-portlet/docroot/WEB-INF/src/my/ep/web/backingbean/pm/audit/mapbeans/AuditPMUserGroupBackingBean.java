@@ -3,12 +3,10 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import my.ep.constant.pm.AuditConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
@@ -117,6 +115,7 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 		if (getUserGroupUpdate != null && getUserGroupOld != null) {
 			String oldVal = getUserGroupOld.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
 			String newVal = getUserGroupUpdate.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
+			this.docId = BigInteger.valueOf(getUserGroupUpdate.getUserGroupId());
 			if (oldVal != newVal) {
 				this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
 				detailObj(AuditConst.PM_AUD_OUSRG_GSTATUS_FIELDLABELID,
@@ -156,15 +155,6 @@ public class AuditPMUserGroupBackingBean extends AuditPMBackingBeanTemplate {
 						usersGroup.getPmUser().getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
 			}
 		}
-	}
-
-	private String getGroupRoleDesc(List<PmRoleDesc> pmRoleDescs) {
-		for (PmRoleDesc roleDesc : pmRoleDescs) {
-			if ("ms".equalsIgnoreCase(roleDesc.getLanguageCode())) {
-				return roleDesc.getRoleName(); // FL_APPROVER,RN_APPROVER
-			}
-		}
-		return null;
 	}
 
 	private void detailObj(BigInteger fieldLabelId, String oldValue, String newValue) {
