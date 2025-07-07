@@ -17,12 +17,12 @@
 		<ac:lovPopup />
 		<p:panel id="searchPanel" header="#{lbl['lbl.sc.search.button']}"
 			toggleable="true">
-			<table style="width:100%;margin-left: auto;margin-right: auto;">
+			<table style="margin-left: auto;margin-right: auto;">
 				<tr>
 					<td><p:outputLabel id="searchMinistryLbL1"
 							value="#{lbl['lbl.sc.ministry']}"/></td>
 					<td colspan="3"><ac:lov id="searchMinistry1" 
-							lovId="PM_ORG_PROFILE_MINSTRY" size="118" readonly="true"
+							lovId="PM_ORG_PROFILE_MINSTRY" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.ministry']}"
 							disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null}"
 							value="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName}"
@@ -35,7 +35,7 @@
 					<td><p:outputLabel id="searchPtjGroupLbL1"
 							value="#{lbl['lbl.sc.kumpulan.ptj']}"/></td>
 					<td colspan="3"><ac:lov id="searchPtjGroup1" 
-							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="118" readonly="true"
+							lovId="PM_ORG_PROFILE_PTJ_GROUP" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.kumpulan.ptj']}"
 							disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null or approvalExceedThresholdBackingBean.managedBean.disablePtjGroupLov}"
 							value="#{approvalExceedThresholdBackingBean.managedBean.searchPtjGroupProfile.orgName}"
@@ -49,7 +49,7 @@
 					<td><p:outputLabel id="searchPtjLbL1"
 							value="#{lbl['lbl.sc.ptj']}"/></td>
 					<td colspan="3"><ac:lov id="searchPtj1" 
-							lovId="PM_ORG_PROFILE_PTJ" size="118" readonly="true"
+							lovId="PM_ORG_PROFILE_PTJ" size="148" readonly="true"
 							headerText="#{lbl['lbl.sc.ptj']}"
 							disabled="#{approvalExceedThresholdBackingBean.managedBean.searchMinistryProfile.orgName eq null or approvalExceedThresholdBackingBean.managedBean.disablePtjLov}"
 							value="#{approvalExceedThresholdBackingBean.managedBean.searchPtjProfile.orgName}"
