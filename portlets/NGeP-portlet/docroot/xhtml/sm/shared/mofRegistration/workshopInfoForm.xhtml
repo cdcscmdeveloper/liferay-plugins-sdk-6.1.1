@@ -10,7 +10,8 @@
 		id="smWorkShopDtPanel" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 		<p:outputPanel id="workShopPan" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 			<br />
-			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="workshopCatVar" items="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
 						<td>
@@ -93,7 +94,7 @@
 					</p:column>
 	
 				</p:dataTable><br />
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"

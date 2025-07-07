@@ -3773,3 +3773,11 @@ table.rptTbl {
 	opacity: 0.5;/* Optional: to visually indicate the button is disabled */
 }
 /* #35597 - end -*/
+
+/* 26247 - start */
+.red-background {
+	background-color:red; 
+	color:white; 
+	font-weight:bold;
+}
+/* 26247 - end */
