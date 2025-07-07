@@ -1547,7 +1547,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * 
 	 */
 	private void checkDisciplinaryAction() {
-		if (isDisciplinaryActionPRPendingStatus()) {
+		if (isPRPendingStatus()) {
 			SmSupplier smSupplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
 			SmDisciplinaryAction smDisciplinaryAction = getImposedDisciplinaryAction(smSupplier);
 			if (smDisciplinaryAction != null) {
@@ -1565,7 +1565,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * @return true if the PR's status is one of the pending statuses,
 	 *         false for otherwise statuses
 	 */
-	private boolean isDisciplinaryActionPRPendingStatus() {
+	private boolean isPRPendingStatus() {
 		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
 		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
 				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
@@ -1577,21 +1577,6 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	
 	// 29728 - start
 	/**
-	 * Checks if the current PR's status is one of the pending statuses
-	 * 
-	 * @return true if the PR's status is one of the pending statuses, false for
-	 *         otherwise statuses
-	 */
-	private boolean isSupplierDeleteBranchPRPendingStatus() {
-		Long statusId = getManagedBean().getFulfilmentRequest().getStatus().getStatusId();
-		Set<Long> pendingStatusIds = new HashSet<>(Arrays.asList(
-				FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION, FulfilmentStatusConst.PR_PENDING_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_REVISION, FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL,
-				FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION));
-		return pendingStatusIds.contains(statusId);
-	}
-
-	/**
 	 * Checks if the supplier's branch is deleted and needs to be changed.
 	 * 
 	 * If the branch is marked for deletion and is currently in a pending
@@ -1599,7 +1584,7 @@ public class PurchaseRequestBackingBean extends FulfilmentBaseBackingBean<Purcha
 	 * branch code.
 	 */
 	private void checkSupplierDeleteBranch() {
-		if (isSupplierDeleteBranchPRPendingStatus()) {
+		if (isPRPendingStatus()) {
 			if (getManagedBean().getFulfilmentRequest().getFlSupplierDtl().getBranchCode() != null
 					&& isSelectedBranchDeleted(getManagedBean().getFulfilmentRequest().getFlSupplierDtl()
 							.getBranchCode(), getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId())) {

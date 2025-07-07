@@ -50,6 +50,16 @@
 				<c:set var="listType" value="loiList" scope="view" /> 
 				<c:set var="dataModelLoiLoa" value="#{qTDetailBB.searchQtLoiDataModel}" scope="view" />
 			</c:when>
+			
+			<ui:remove> #25791 start </ui:remove>
+			<c:when test="#{ParameterConst.doctypeBidding  eq qTDetailBB.managedBean.qtnTenderSearchBean.docType}">
+			<c:set var="tableHeader"
+						value="#{lbl['lbl.sc.qt.loa.search.results']}" scope="view" />
+			<c:set var="listType" value="default" scope="view" />
+			<c:set var="dataModelScheduleBid" value="#{qTDetailBB.searchBidScheduleDataModel}" scope="view" />
+			</c:when>
+			<ui:remove> #25791 end </ui:remove>
+			
 			<c:otherwise>
 				<c:set var="tableHeader" value="#{lbl['lbl.sc.qtn.list']}" scope="view" />
 				<c:set var="listType" value="default" scope="view" />
@@ -60,13 +70,6 @@
 					<ui:remove> #25791 end </ui:remove>
 					<c:set var="listType" value="qtWithFinalizationList" scope="view" />
 				</c:if>
-				<ui:remove> #25791 start </ui:remove>
-				<c:if
-					test="#{ParameterConst.doctypeBidding  eq qTDetailBB.managedBean.qtnTenderSearchBean.docType}">
-					<c:set var="tableHeader"
-						value="#{lbl['lbl.sc.qt.loa.search.results']}" scope="view" />
-				</c:if>
-				<ui:remove> #25791 end </ui:remove>
 				<c:set var="dataModel" value="#{qTDetailBB.searchQTDataModel}" scope="view" />
 			</c:otherwise>
 		</c:choose>	
@@ -339,14 +342,14 @@
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewSupplierProposalDetailsGen(listItem, view.viewId)}"
-									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED ne qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)}"
-									partialSubmit="true" process="@this" />
+									rendered="#{listType eq 'loaList' and (QTStatusConst.LOA_COMPLETED ne qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)  or qTDetailBB.isMofSupplier())}"
+									partialSubmit="true" process="@this" />	<ui:remove> #25791 end </ui:remove>
 
 								<p:menuitem value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewLoaContractTrackingDtls(listItem, view.viewId)}"
-									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED eq qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses)}"
+									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED eq qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses) and !qTDetailBB.isMofSupplier()}"
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>
 
@@ -360,28 +363,121 @@
 					<!-- Enhancement #21694 - LOA Cancellation END-->
 				</p:dataTable>
 				</div>
+
+				<ui:remove>#25791 -start-</ui:remove>
+				<div id="searchBidScheduleDiv" style="display: none">
+					<p:dataTable id="searchQTBidSchedules"
+						value="#{dataModelScheduleBid}" var="bidSchedule"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						rowKey="#{bidSchedule}" rowIndexVar="index" lazy="true" rows="10">
+
+						<ac:paginator for="searchQTBidSchedules"></ac:paginator>
+
+						<ui:param name="scQt" value="#{bidSchedule.scBid.scQt}" />
+						<ui:param name="procurementMode" value="#{scQt.procurementMode}" />
+
+						<p:column headerText="#{lbl['lbl.sc.bidding.no']}" style="width:50px;">
+							<h:outputText value="#{bidSchedule.bidNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.document.no']}" style="width:50px;">
+							<h:outputText value="#{scQt.qtNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sc.title']}">
+							<h:outputText value="#{scQt.qtTitle}"
+								style="white-space: normal;word-wrap: break-word; min-width:200px" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+							style="width:100px;">
+
+							<h:outputText
+								value="#{qTDetailBB.getParameterDesc(procurementMode)}" />
+
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.created.date']}"
+							style="width:80px;">
+							<h:outputText value="#{scQt.createdDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.published.date']}"
+							style="width:80px;">
+							<h:outputText value="#{scQt.publishDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.closing.date']}"
+							style="width:80px;">
+							<h:outputText value="#{scQt.closingDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.status']}">
+							<h:outputText
+								style="white-space: normal;word-wrap: break-word; min-width:200px"
+								value="#{qTDetailBB.getStatusDescById(bidSchedule.pmStatus.statusId)}" />
+
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sc.action']}"
+							style="width:6%;text-align: center;">
+							<p:menuButton value="#{lbl['lbl.btn.option']}">
+								<p:menuitem id="menuBidView" value="#{lbl['lbl.btn.view']}"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									styleClass="commandLink_link" icon="ui-icon-view"
+									action="#{qTDetailBB.viewOnlineBidding(bidSchedule, view.viewId)}"
+									partialSubmit="true" process="@this" />
+
+
+							</p:menuButton>
+						</p:column>
+
+
+					</p:dataTable>
+
+				</div>
+
+				<ui:remove>#25791 -end-</ui:remove>
+
 			</h:panelGroup>
 			
 			
 		</p:panel>
 		
-		
+		<ui:remove>#25791 -start-</ui:remove>
 		<h:outputScript target="body">
 			function toggleView(v){
 				//console.log(v);
 				if(v == '#{ParameterConst.doctypeLetterOfAward}' || v == '#{ParameterConst.doctypeLetterOfIntent}'){
 					document.getElementById('searchQTDiv').style.display = 'none';
 					document.getElementById('searchQTLoaLoiDiv').style.display = 'block';
+					document.getElementById('searchBidScheduleDiv').style.display = 'none';
+					
+					
+				}
+				else if(v == '#{ParameterConst.doctypeBidding}'){
+					document.getElementById('searchQTDiv').style.display = 'none';
+					document.getElementById('searchQTLoaLoiDiv').style.display = 'none';
+					document.getElementById('searchBidScheduleDiv').style.display = 'block';
+					
 					
 				}
 				else{
 					document.getElementById('searchQTLoaLoiDiv').style.display = 'none';
 					document.getElementById('searchQTDiv').style.display = 'block';
+					document.getElementById('searchBidScheduleDiv').style.display = 'none';
 					
 				}
 			}
 		</h:outputScript>
-		
+		<ui:remove>#25791 -end-</ui:remove>
 				
 		<ac:lovPopup />
 	</ui:define>	

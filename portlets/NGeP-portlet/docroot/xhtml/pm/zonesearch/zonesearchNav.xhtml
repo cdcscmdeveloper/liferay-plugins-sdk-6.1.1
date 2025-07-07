@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table style="width: 100%">
 		<tr>
@@ -16,12 +17,34 @@
 			</td>
 			<td>
 				<div align="right" style="width: 100%">
-					<p:commandButton
-						value="#{zoneBackingBean.managedBean.pmZone.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}"
-						style="float:right;" action="#{zoneBackingBean.saveZone}"
-						update="@([id$=Msg])" />
+					<!-- 34445 start -->
+					<c:choose>
+						<c:when test="#{zoneBackingBean.managedBean.pmZone.brandNew}">
+							<p:commandButton value="#{lbl['lbl.btn.save']}" oncomplete="if (!args.validationFailed) saveInfoDlg.show()" style="float:right;" />
+						</c:when>
+						<c:otherwise>
+							<p:commandButton value="#{lbl['lbl.btn.update']}" oncomplete="updateInfoDlg.show()" style="float:right;" />
+						</c:otherwise>
+					</c:choose>
+					<!-- 34445 end -->
 				</div>
 			</td>
 		</tr>
 	</table>
+	
+	<!-- 34445 start -->
+	<ac:confirmationPopupSM id="saveInfoDlg" widget="saveInfoDlg"
+		okAction="zoneBackingBean.saveZone"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.save.msg']}"
+		update="@([id$=Msg])"/>
+		
+	<ac:confirmationPopupSM id="updateInfoDlg" widget="updateInfoDlg"
+		okAction="zoneBackingBean.saveZone"
+		width="400" height="100"
+		title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+		content="#{lbl['lbl.pm.btn.update.msg']}"
+		update="@([id$=Msg])"/>
+	<!-- 34445 end -->
 </ui:composition>

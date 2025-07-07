@@ -25,17 +25,20 @@
 		<p:spacer height="4"></p:spacer>
 		<ui:param name="scQtCheckList"
 					value="#{supplierProposalDetailBackingBean.managedBean.technicalQtChecklist}"></ui:param>
-		<c:if test="#{supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}">
-			<div class="ui-messages ui-widget">
-				<div class="ui-messages-warn ui-corner-all">
-					<span class="ui-messages-warn-icon"></span>
-					<ul>
-						<li><span class="ui-messages-warn-detail">#{lbl['lbl.sc.branch.deactivated']}</span></li>
-					</ul>
+			<ui:remove> #28777#29729 - Start </ui:remove>
+			<c:if
+				test="#{supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}">
+				<div class="ui-messages ui-widget">
+					<div class="ui-messages-warn ui-corner-all">
+						<span class="ui-messages-warn-icon"></span>
+						<ul>
+							<li><span class="ui-messages-warn-detail">#{lbl['lbl.sc.branch.deactivated']}</span></li>
+						</ul>
+					</div>
 				</div>
-			</div>
-		</c:if>
-		<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
+			</c:if>
+			<ui:remove> #28777#29729 - End </ui:remove>
+			<ui:include src="/xhtml/sc/supplierproposal/proposalcommon/checklistHeader.xhtml" />
 		<p:spacer height="4"></p:spacer>
 		</div>
 		<!-- 32112 END -->

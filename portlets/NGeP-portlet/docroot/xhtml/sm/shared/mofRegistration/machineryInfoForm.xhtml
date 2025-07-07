@@ -415,7 +415,8 @@
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="@this" 
-					action="#{backingBean.cancelMachineSaveorUpdate}" />
+					action="#{backingBean.cancelMachineSaveorUpdate}" 
+					update=":#{p:component('smMachVal')}" /> <!-- #28775 -->
 			</div>
 			<p:blockUI block="machineOutPanelId" widgetVar="machineOutWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>

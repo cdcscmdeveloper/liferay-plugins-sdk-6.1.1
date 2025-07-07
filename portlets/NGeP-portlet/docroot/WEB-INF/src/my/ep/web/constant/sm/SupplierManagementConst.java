@@ -763,6 +763,8 @@ public class SupplierManagementConst {
 	public static final String AU_TAB_ID_ADMIN_INFO = "adminInfoTab";
 	public static final String SUPPLIER_APPL_SEARCH_URL = "supplier-application-search";
 	// #28895_35501 End
+	// #28895_35501_DA - AUDIT TRAIL SM DA
+	public static final String AU_TAB_ID_DISCIPLINARY_ACTION_INFO = "disciplinaryActionInfoTab";
 	// #34031
 	public static final String SM_REVISIT_FILE_PATH = "/SM/REVISIT/";
 	
@@ -779,6 +781,7 @@ public class SupplierManagementConst {
 	public static final int BUMI_PERCENTAGE = 50;
 	public static final String CATEGORY_CAT_MANUFACTURING_CODE = "99";
 	//26238 - END
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 	
 	public String getCOMPANY_TYPE_CLBG() {
 		return COMPANY_TYPE_CLBG;
@@ -1330,6 +1333,11 @@ public class SupplierManagementConst {
 	public long getPM_STATUS_PO_REVIEW() {
 		return PM_STATUS_PO_REVIEW;
 	}
+	
+	//#30747
+	public long getPM_STATUS_PO_ESCALTED_TO_APPROVER(){
+		return PM_STATUS_PO_ESCALTED_TO_APPROVER;
+	}
 
 	// 25792 - start
 	public String getSmSupplierBusinessTypeIndividual() {
@@ -1536,5 +1544,10 @@ public class SupplierManagementConst {
 		return SUPPLIER_APPL_SEARCH_URL;
 	}
 	// #28895_35501 End
+	// #28895_35501_DA Start - AUDIT TRAIL SM DA
+	public String getAuTabIdDisciplinaryActionInfo() {
+		return AU_TAB_ID_DISCIPLINARY_ACTION_INFO;
+	}
+	// #28895_35501_DA End
 
 }

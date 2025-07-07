@@ -91,6 +91,7 @@
 			<portlet id="softCertProvider"></portlet>
 			<portlet id="pmSystemConfiguration"></portlet>
 			<portlet id="pmAuSearch"></portlet><!-- #35509 -->
+			<portlet id="pmAuUserOrgSearch"></portlet><!-- #35509 -->
 			<portlet id="pmSpecialService"></portlet><!-- #29644 -->
 			<portlet id="pmApproveAuthority"></portlet><!-- #27827 -->
 		</category>
@@ -169,6 +170,7 @@
 		    <portlet id="scBriefingSiteVisitRegistration"/>
 			<portlet id="scQuoteSearch"></portlet>
 			<portlet id="DirectPurchaseSearch"></portlet>
+			<portlet id="dpApprovalExceedThreshold"></portlet><!-- #26059 -->
 			<portlet id="scQuotationTenderSearch"></portlet>
 			<portlet id="scConsolidationReport"></portlet>
 			<portlet id="scQTRetry"/>

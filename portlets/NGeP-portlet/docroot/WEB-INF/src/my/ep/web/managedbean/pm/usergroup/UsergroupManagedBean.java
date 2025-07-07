@@ -45,15 +45,23 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private boolean brandNew = false;
 	private boolean selectGrp = false;
 	private boolean disabledOrg;
-	private HashMap<Long,Integer> hmGroupUserFlagStatDb = null;
-	
-	//#27629 start
+	private HashMap<Long, Integer> hmGroupUserFlagStatDb = null;
+
+	// #27629 start
 	private String userName;
 	private String identificationNo;
 	private List<PmUserGroupUser> userGroupUserSearch;
-	private boolean userSearch; //#29225 rename to avoid property not found in jsf
+	private boolean userSearch; // #29225 rename to avoid property not found in
+								// jsf
 	private String recordSearchStatusFlg;
-	//27629 end
+	// 27629 end
+
+	/** AUDIT 28895_35509 START **/
+	private PmUserGroup userGroupOld;
+	private PmUserGroup userGroupUpdate;
+	private PmUserGroup userGroupNew;
+	private String roleDesc;
+	/** AUDIT 28895_35509 END **/
 
 	public UsergroupManagedBean() {
 	}
@@ -147,8 +155,6 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	public void setRole(String role) {
 		this.role = role;
 	}
-
-	
 
 	/**
 	 * @return the pmOrgProfile
@@ -296,8 +302,7 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	 * @param selectedDeleteGroupUser
 	 *            the selectedDeleteGroupUser to set
 	 */
-	public void setSelectedDeleteGroupUser(
-			PmUserGroupUser selectedDeleteGroupUser) {
+	public void setSelectedDeleteGroupUser(PmUserGroupUser selectedDeleteGroupUser) {
 		this.selectedDeleteGroupUser = selectedDeleteGroupUser;
 	}
 
@@ -324,7 +329,8 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param usergroupSearchBean the usergroupSearchBean to set
+	 * @param usergroupSearchBean
+	 *            the usergroupSearchBean to set
 	 */
 	public void setUsergroupSearchBean(UserGroupSearchBean usergroupSearchBean) {
 		this.usergroupSearchBean = usergroupSearchBean;
@@ -338,14 +344,14 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param hmGroupUserFlagStatDb the hmGroupUserFlagStatDb to set
+	 * @param hmGroupUserFlagStatDb
+	 *            the hmGroupUserFlagStatDb to set
 	 */
-	public void setHmGroupUserFlagStatDb(
-			HashMap<Long, Integer> hmGroupUserFlagStatDb) {
+	public void setHmGroupUserFlagStatDb(HashMap<Long, Integer> hmGroupUserFlagStatDb) {
 		this.hmGroupUserFlagStatDb = hmGroupUserFlagStatDb;
 	}
-	
-	//#27628 start
+
+	// #27628 start
 	/**
 	 * @return the userName
 	 */
@@ -354,11 +360,13 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param userName the userName to set
+	 * @param userName
+	 *            the userName to set
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
 	/**
 	 * @return the identificationNo
 	 */
@@ -367,12 +375,13 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param identificationNo the identificationNo to set
+	 * @param identificationNo
+	 *            the identificationNo to set
 	 */
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
 	}
-	
+
 	/**
 	 * @return the userGroupUserSearch
 	 */
@@ -381,12 +390,13 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param userGroupUserSearch the userGroupUserSearch to set
+	 * @param userGroupUserSearch
+	 *            the userGroupUserSearch to set
 	 */
 	public void setUserGroupUserSearch(List<PmUserGroupUser> userGroupUserSearch) {
 		this.userGroupUserSearch = userGroupUserSearch;
 	}
-	
+
 	/**
 	 * @return the isUserSearch
 	 */
@@ -395,12 +405,13 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isUserSearch the isUserSearch to set
+	 * @param isUserSearch
+	 *            the isUserSearch to set
 	 */
 	public void setUserSearch(boolean userSearch) {
 		this.userSearch = userSearch;
 	}
-	
+
 	public String getRecordSearchStatusFlg() {
 		return recordSearchStatusFlg;
 	}
@@ -408,7 +419,40 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	public void setRecordSearchStatusFlg(String recordSearchStatusFlg) {
 		this.recordSearchStatusFlg = recordSearchStatusFlg;
 	}
-	
-	//#27629 end
 
+	// #27629 end
+
+	/** AUDIT 28895_35509 START **/
+	public PmUserGroup getUserGroupOld() {
+		return userGroupOld;
+	}
+
+	public void setUserGroupOld(PmUserGroup userGroupOld) {
+		this.userGroupOld = userGroupOld;
+	}
+
+	public PmUserGroup getUserGroupUpdate() {
+		return userGroupUpdate;
+	}
+
+	public void setUserGroupUpdate(PmUserGroup userGroupUpdate) {
+		this.userGroupUpdate = userGroupUpdate;
+	}
+
+	public PmUserGroup getUserGroupNew() {
+		return userGroupNew;
+	}
+
+	public void setUserGroupNew(PmUserGroup userGroupNew) {
+		this.userGroupNew = userGroupNew;
+	}
+
+	public String getRoleDesc() {
+		return roleDesc;
+	}
+
+	public void setRoleDesc(String roleDesc) {
+		this.roleDesc = roleDesc;
+	}
+	/** AUDIT 28895_35509 END **/
 }

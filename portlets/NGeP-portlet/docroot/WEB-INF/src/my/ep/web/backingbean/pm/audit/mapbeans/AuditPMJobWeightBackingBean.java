@@ -68,7 +68,6 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 			dtlModerate.setRoleCode(roleCode);
 			dtlModerate.setDocType(AuditConst.PM_AUD_JOB_WEIGHT_RATIO);
 			dtlModerate.setPmParameterLvlId(AuditConst.PM_AUD_JOB_WEIGHT_RATIO_PMPARAMETERLVLID);
-			dtlModerate.setDocNo(jobWeight.getWeightType().getParameterCode());
 			dtlModerate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlModerate.setLvlCode2(AuditConst.PM_LVL_CODE_2_JWR);
 			dtlModerate.setLvlCode3(AuditConst.PM_LVL_CODE_3_JWR);
@@ -84,7 +83,6 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 			dtlHigh.setRoleCode(roleCode);
 			dtlHigh.setDocType(AuditConst.PM_AUD_JOB_WEIGHT_RATIO);
 			dtlHigh.setPmParameterLvlId(AuditConst.PM_AUD_JOB_WEIGHT_RATIO_PMPARAMETERLVLID);
-			dtlHigh.setDocNo(jobWeight.getWeightType().getParameterCode());
 			dtlHigh.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlHigh.setLvlCode2(AuditConst.PM_LVL_CODE_2_JWR);
 			dtlHigh.setLvlCode3(AuditConst.PM_LVL_CODE_3_JWR);
@@ -100,7 +98,6 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 			dtlExtraHigh.setRoleCode(roleCode);
 			dtlExtraHigh.setDocType(AuditConst.PM_AUD_JOB_WEIGHT_RATIO);
 			dtlExtraHigh.setPmParameterLvlId(AuditConst.PM_AUD_JOB_WEIGHT_RATIO_PMPARAMETERLVLID);
-			dtlExtraHigh.setDocNo(jobWeight.getWeightType().getParameterCode());
 			dtlExtraHigh.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
 			dtlExtraHigh.setLvlCode2(AuditConst.PM_LVL_CODE_2_JWR);
 			dtlExtraHigh.setLvlCode3(AuditConst.PM_LVL_CODE_3_JWR);

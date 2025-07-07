@@ -88,9 +88,10 @@
 			<tr>
 				<td valign="top" width="25%"><p:outputLabel
 						value="#{lbl['lbl.fl.item.name']} :&#160;" /></td>
-				<td><p:inputText disabled="true" size="35" style="float:left;"
+				<td><p:inputTextarea disabled="true" size="35" style="float:left;"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}"
-						value="#{createDOBackingBean.managedBean.itemName}" /> <h:outputText
+						value="#{createDOBackingBean.managedBean.itemName}" cols="60" rows="3" autoResize="false"></p:inputTextarea>
+					<h:outputText
 						style="float:left;"
 						rendered="#{!createDOBackingBean.managedBean.dpFlag}"
 						value="#{createDOBackingBean.managedBean.itemName}" /></td>
@@ -99,11 +100,11 @@
 				<td valign="top" width="25%"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.offer']} :&#160;"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
-				<td><p:inputText disabled="true" style="float:left;"
+				<td><p:inputTextarea disabled="true" style="float:left;"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}"
 						escape="false"
 						value="#{createDOBackingBean.managedBean.supplierOffer == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.supplierOffer}"
-						size="35" /> <ac:iconTooltip
+						cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
 						value="#{lbl['lbl.fl.supp.offer.tooltip']}"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
 			</tr>
@@ -111,10 +112,10 @@
 				<td valign="top" width="25%"><p:outputLabel
 						value="#{lbl['lbl.fl.new.supp.offer']} :&#160;"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
-				<td><p:inputText disabled="true" style="float:left;"
+				<td><p:inputTextarea disabled="true" style="float:left;"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}"
 						value="#{createDOBackingBean.managedBean.newOfferedSpec == null ? lbl['lbl.fl.supp.na'] : createDOBackingBean.managedBean.newOfferedSpec}"
-						size="35" /> <ac:iconTooltip
+						cols="60" rows="3" autoResize="false"></p:inputTextarea> <ac:iconTooltip
 						value="#{lbl['lbl.fl.new.supp.offer.tooltip']}"
 						rendered="#{createDOBackingBean.managedBean.dpFlag}" /></td>
 			</tr>

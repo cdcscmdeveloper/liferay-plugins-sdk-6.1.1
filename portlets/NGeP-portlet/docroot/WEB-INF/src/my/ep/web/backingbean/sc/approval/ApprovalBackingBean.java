@@ -419,51 +419,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return imageFileName;
 	}
 
-	/*:::Enhancement #21692 #135 - start:::*/
-	/**
-	 * preRenderView(). user click on task list it will Render Approvals screens
-	 * for(Committee/BPK/Finalization/Publication).
-	 */
-	public void prepareTrackingDiary(ScQt scQt, Long decisionType) {
-		Long currentStatusId = this.getManagedBean().getCurrentStatusId();
-		FacesScopes facesScope = new FacesScopes();
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-		
-		qtReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
-		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		qtReqDTO.setStatusId(currentStatusId);
-		qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
-		qtReqDTO.setDeskOfficer(facesScope.getUserSessionBean());
-		qtReqDTO.setQtdetail(scQt);
-		qtReqDTO.setPmUser(facesScope.getUserSessionBean());
-		
-		String approvalType = this.getManagedBean().getApprovalType();
-		
-		if (approvalType.equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE) && 
-			currentStatusId.equals(QTStatusConst.EPV_PENDING_APPROVAL)) {
-
-			String fcSecretaryRole = null;
-			List<ScQtApproverSettings> approverSettings = this.getManagedBean().getScQtApproval().getApproverSettings();
-		
-			if (null != approverSettings && !approverSettings.isEmpty()) {
-								
-				if (approverSettings.get(0).getCommitteeType().getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD)) {
-					fcSecretaryRole = RoleCode.PBB_SECRETARY.value();
-				} else if (approverSettings.get(0).getCommitteeType().getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
-						|| approverSettings.get(0).getCommitteeType().getParameterCode().equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-					fcSecretaryRole = RoleCode.FPB_SECRETARY.value();
-				}					
-				
-				log.info(":::prepareTrackingDiary() roleCode: "+ fcSecretaryRole +", decisionType: "+ decisionType);
-
-				qtReqDTO.setRoleCode(fcSecretaryRole);
-			}						
-		}
-
-		getQTDetailSO().prepareTrackingDiaryByDecisionType(qtReqDTO, decisionType);
-	}
-	/*:::Enhancement #21692 #135 - end:::*/
-
 	public void preRenderView(){
 		Object obj = getBpmTaskDetails(Object.class, null);
 		String taskName = getManagedBean().getTaskName();
@@ -1069,6 +1024,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	//#21692 - Start
 	/**
 	 * Save used by Proposal Validity Extension, will save all data in
 	 * ScQtApprovalRequest, including attachments, dates, response period and etc.
@@ -1126,6 +1082,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					ParameterConst.DOCTYPE_QUOTATION, scQtDetail.getQtNo(), Boolean.TRUE);
 		}
 	}
+	//#21692 - End
 
 	//#21692 - Start
 	private void checkValidProposalPeriodExtension(QuationTenderReqDTO reqDTO) {
@@ -1142,23 +1099,27 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 		List<ScQtApprovalRequest> approvalRequests = reqDTO.getApprovalRequests();
 		for (ScQtApprovalRequest approvalRequest : approvalRequests) {
-			if (approvalRequest.getDecisionType().getParameterId() == null) {
-				if (enableDateMOF) {
-					//#21692 - start
-					if (null != approvalRequest.getDecisionCertPBM().getParameterId()
-							&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
-						mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
-					}
-					//#21692 - end
-				} else {
-					mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
+			decisionChecking(approvalRequest, enableDateMOF);
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void decisionChecking(ScQtApprovalRequest approvalRequest, boolean enableDateMOF) {
+		if (approvalRequest.getDecisionType().getParameterId() == null) {
+			if (enableDateMOF) {
+				if (null != approvalRequest.getDecisionCertPBM().getParameterId()
+						&& approvalRequest.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_ACKNOWLEDGE)) {
+					mandatoryByMessage("lbl.sc.qt.proposal.extension.mof");
 				}
-			}
-
-			if (enableDateMOF && approvalRequest.getDecisionCertPBM().getParameterId() == null) {
-				mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+			} else {
+				mandatoryByMessage("lbl.sc.qt.proposal.decision.chairperson.finalization");
 			}
 		}
+
+		if (enableDateMOF && approvalRequest.getDecisionCertPBM().getParameterId() == null) {
+			mandatoryByMessage("lbl.sc.qt.proposal.decision.mof");
+		}		
 	}
 	//#21692 - End
 
@@ -1173,6 +1134,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	}
 
 	//#21692 - Start
+	/**
+	 * Procurement Board Secretary's Submission action for status Pending Approval.
+	 * Approval will be based on Decision column in supplierFinalizationCommitteeApproval.xhtml
+	 * it can be Approved, Rejected, Revised.
+	 * Rejected and Revised will use same flow, but different Parameters and Notifications.
+	 */
 	public void submitAction() {
 		log.info("Submit proposal validity Period (Days) extension");
 
@@ -1180,16 +1147,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getQt();
 		checkResponsePeriod();
-		scQt.setResponsePeriod(this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod());
-
+		
 		reqDTO.setQtdetail(scQt);
 		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
 
 		checkValidProposalPeriodExtension(reqDTO);
-		//#21692 - start
-		responsePeriodValidations(reqDTO.getQtdetail());
+		responsePeriodValidations(this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod());
 		checkAttachedDocument(reqDTO);
-		//#21692 - end
 
 		boolean enableDateMOF = scQt.isApprovalPBM();
 		if (!enableDateMOF) {
@@ -1197,7 +1161,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 		this.getManagedBean().setQt(scQt);
 
-		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<ScQtApprovalRequest>();
+		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 			PmParameter pmParameter = getQTDetailSO().getPmParameterByTypeAndCode(
 					ParameterTypeConst.APPROVAL_DECISION_TYPE, approvalRequest.getDecisionType().getParameterCode());
@@ -1207,60 +1171,64 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				approvalRequest.setDecisionCertPBM(null);
 			}
 			
-			//#21692 add data for report/history usage - Start
+			//add data for report/history usage - Start
 			approvalRequest.setProposalValidityEndDateOri(this.getManagedBean().getQt().getProposalValidityEndDate());
 			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
 					Integer.parseInt(approvalRequest.getChangedValue())));
 			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
-			//#21692 - ensure that is date of FC chairperson less than QT validity, date of MOF = null
+			//ensure that is date of FC chairperson less than QT validity, date of MOF = null
 			if (!scQt.isApprovalPBM()) {
 				approvalRequest.setMofDate(null);
 			}
 			approvalRequest.setChmnFinalizationDate(this.getManagedBean().getQt().getChmnFinalizationDate());
 			checkValidityDateAndSupplierResponseDate();
-			//#21692 add data for report/history usage - End
+			//add data for report/history usage - End
 
-			//#21692 #note-504 - Start
 			//To remove attachments R1, R2, R3
 			approvalRequest = removeAttachments(approvalRequest);
 			//To add attachments from method epvHandleFileUpload, IF not empty
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getAllEPVAttachments())) {
 				approvalRequest.setEpvApprovalReqAttachment(this.getManagedBean().getAllEPVAttachments());
 			}
-			//#21692 #note-504 - End
 
 			scQtApprovalRequests.add(approvalRequest);
 		}
+		scQt.setResponsePeriod(this.getManagedBean().getScQtApprovalRequestList().get(0).getResponsePeriod());
 
 		this.getManagedBean().setScQtApprovalRequestList(scQtApprovalRequests);
 		checkNullRemark();
-		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
-
-			Long decisionType = approvalRequest.getDecisionType().getParameterId();
-
-			if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decisionType.longValue()
-					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decisionType.longValue()) { //1834L || 1854L
-				
-				approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
-				notifyUsers(approvalRequest);
-			} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decisionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decisionType.longValue()) { //1835L || 1855L
-
-				reviseRemarkMandatory();//#21692 remark is mandatory for reject.
-				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
-				notifyUsers(approvalRequest);
-//				prepareTrackingDiary(this.getManagedBean().getQt(), decisionType);//#21692 Re-open
-			} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decisionType.longValue()
-					|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decisionType.longValue()) {
-				reviseRemarkMandatory();
-				this.getManagedBean().setProposalValidityRevised(true);
-				approvalBpmTask(BpmOutcomeConst.BPM_REJECT);//Revised, but use reject due to Revise flow == Reject flow
-				notifyUsers(approvalRequest);
-			}
-			
+		for (ScQtApprovalRequest request : this.getManagedBean().getScQtApprovalRequestList()) {
+			procurementBoardSecretaryDecision(request);
 		}
 	}
 	//#21692 - End
+	
+	//#21692 sonarlint - Start
+	private void procurementBoardSecretaryDecision(ScQtApprovalRequest approvalRequest) {
+
+		Long decisionType = approvalRequest.getDecisionType().getParameterId();
+
+		if (QTStatusConst.PCB_RQ1_APPROVED.longValue() == decisionType.longValue()
+				|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == decisionType.longValue()) { //1834L || 1854L
+			
+			approvalBpmTask(BpmOutcomeConst.BPM_APPROVE);
+			notifyUsers(approvalRequest);
+		} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decisionType.longValue()
+				|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decisionType.longValue()) { //1835L || 1855L
+
+			reviseRemarkMandatory();//#21692 remark is mandatory for reject.
+			approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
+			notifyUsers(approvalRequest);
+			//previously line of code for Tracking Diary, removed to avoid duplication
+		} else if (QTStatusConst.PCB_RQ1_REVISED.longValue() == decisionType.longValue()
+				|| QTStatusConst.PCB_RQ3_REVISED.longValue() == decisionType.longValue()) {
+			reviseRemarkMandatory();
+			this.getManagedBean().setProposalValidityRevised(true);
+			approvalBpmTask(BpmOutcomeConst.BPM_REJECT);//Revised, but use reject due to Revise flow == Reject flow
+			notifyUsers(approvalRequest);
+		}
+	}
+	//#21692 sonarlint - End
 	
 	/**
 	 * Submit Approval Details. Event handle to submit data for bpm.
@@ -1491,6 +1459,11 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			ScQt qt = this.getManagedBean().getQt();
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
+			// #33787 Start Vinod
+			if (qt.getScQtSupplierCriteria() != null && qt.getScQtSupplierCriteria().getMinPaidUpCapital() != null) {
+				qt.getScQtSupplierCriteria().setMinPaidUpCapital(null);
+			}
+			// #33787 End Vinod
 			log.info("^^^^^ updateBpmTask call for QT: "+qt.getQtNo());
 
 			CommitteResDTO committeResDto = null;
@@ -1555,6 +1528,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 						.getScQtApprovalRemarks());
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setQtCommittee(qt.getScQtCommittees());
+				committeReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 
 				// committeReqDTO.setUser(new
 				// FacesScopes().getUserSessionBean());
@@ -1608,6 +1582,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				qtReqDTO.setUserLocale(new FacesScopes().getUserLocale());
+				qtReqDTO.setTaskName(taskName);	// 37906 temp 17/04/2025
 				
 				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				String approvalDocType = ParameterConst.DOCTYPE_QUOTATION;
@@ -1640,27 +1615,16 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE.equalsIgnoreCase(approvalCategoryCode)) { //FC
 
-					approvalRequests = proposalValidityWip(outcome);
+					approvalRequests = proposalValidityWip(outcome);//#21692
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						qtReqDTO.setRejected(true);
 						revertToOldValues(qt, approvalRequests);
 					} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
-						//#21692 - start
-						ScWorkFlowStatus wfStatus = retrieveStatusByTypeAndId(ParameterConst.DOCTYPE_QUOTATION, this.getManagedBean().getQt().getQtId());
-						wfStatus = wfStatus==null ? new ScWorkFlowStatus(): wfStatus;
-						if(wfStatus.getPmStatus()!=null
-								&& (QTStatusConst.QT_RE_FINALIZATION.equals(wfStatus.getPmStatus().getStatusId())
-								|| QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER.equals(wfStatus.getPmStatus().getStatusId()))) {
-							QuationTenderReqDTO qtReqDTO1 = new QuationTenderReqDTO();
-							qtReqDTO1.setQtdetail(qt);
-							QuationTenderResDTO qtResDTO1 = detailSO.updateDataTypeSupplierList(qtReqDTO1);
-							String[] supplierIdsArray = qtResDTO1.getDataTypeSupplierList();
-							dataType.getSupplierList().clear();
-
-							dataType.getSupplierList().addAll(
-									Arrays.asList(supplierIdsArray));
+						//#21692 WIP - Start
+						if (null == qt.getResponsePeriod()) {
+							qt.setResponsePeriod(ParameterConst.DEFAULT_RESP_DAYS);
 						}
-						//#21692 - end
+						//#21692 WIP - End
 						isFinalApproval = dataType != null && CollectionUtils.isEmpty(dataType.getSupplierList());
 						this.getManagedBean().setNoSupplierExistForEPV(CollectionUtils.isEmpty(dataType.getSupplierList()));//#21692 note-569
 						
@@ -2074,7 +2038,13 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return resDTO.getApprovalRequests();
 	}
 	
-	//#21692 - start
+	//#21692 - Start
+	/**
+	 * check for Proposal Validity Extension result
+	 * 
+	 * @param qtId
+	 * @return
+	 */
 	public boolean isEPVApprovalRequestAccepted(Long qtId) {
 
 		boolean epv = false;	
@@ -2092,27 +2062,23 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		
 		if (null != requestList && CollectionUtils.isNotEmpty(requestList)) {
 			for (ScQtApprovalRequest req : requestList) {
-				if (QTConstants.PORTLET_NAME_QT_MAINTENANCE
-						.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
-					if ((null != req.getApproverAction() && req
-							.getApproverAction()
-							.getParameterCode()
-							.equals(ParameterConst.APPROVAL_DECISION_TYPE_REJECTED))) {
-						epv = true;
-					}
-				} else {
-					if ((null != req.getApproverAction() && req
-							.getApproverAction()
-							.getParameterCode()
-							.equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED))) {
-						epv = true;
-					}
+				if (QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						&& (null != req.getApproverAction() && req.getApproverAction().getParameterCode()
+								.equals(ParameterConst.APPROVAL_DECISION_TYPE_REJECTED))) {
+					epv = true;
+				}
+				if (!QTConstants.PORTLET_NAME_QT_MAINTENANCE.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())
+						&& (null != req.getApproverAction() && req.getApproverAction().getParameterCode()
+								.equals(ParameterConst.APPROVAL_DECISION_TYPE_APPROVED))) {
+					epv = true;
 				}
 			}
 		}
 		return epv;
 		
 	}
+	//#21692 - End
+	//#21692 - Start
 	/**
 	 * Get latest status of Extension of Proposal Validity (EPV) return true if Approved
 	 * 
@@ -2139,7 +2105,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return false;
 		}
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	/**
 	 * Check if EPV workflow null or not, if null return true
 	 * 
@@ -2160,7 +2128,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		return null == workflowStatus;
 	
 	}
-	//#21692 - end
+	//#21692 - End
 
 	/**
 	 * View approval action.
@@ -2272,6 +2240,12 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		}
 	}
 
+	//#21692 - Start
+	/**
+	 * Update Finalization Committee Secretary decision
+	 * 
+	 * @param requestdetails
+	 */
 	public void updateDecisionType(ScQtApprovalRequest requestdetails) {
 		if (null != requestdetails) {
 			IParameterSO parameterSO = getParameterSOGlobal();
@@ -2298,7 +2272,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#21692 note-418 issue 3 - End
 		}
 	}
+	//#21692 - End
 
+	//#21692 - Start
 	/**
 	 * Update ScQtApprovalRequest DecisionCert's data
 	 * 
@@ -2355,6 +2331,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			//#21692 - end
 		}
 	}
+	//#21692 - End
 	/**
 	 * Gets the Status Details.
 	 * 
@@ -3427,7 +3404,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return facesScopes;
 		}
 				
-		//#21692 - start
+		//#21692 - Start
 		public String getNewValidityPeriod () {
 			String newValidity= null;
 			
@@ -3439,26 +3416,27 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			return newValidity;
 		}
-		
-		private void responsePeriodValidations(ScQt scQt) {
-			if (null == scQt.getResponsePeriod()) {
-				throw new EpException(MessageConst.ERROR_770243,
-						new String[] {ResourceBundleUtils.getMessage("lbl.sc.qt.supplier.response.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-								new FacesScopes().getUserLocale())});
+		//#21692 - End
+
+		//#21692 - Start
+		private void responsePeriodValidations(Integer responsePeriod) {
+			if (null == responsePeriod) {
+				throw new EpException(MessageConst.ERROR_770243, new String[] { ResourceBundleUtils.getMessage(
+						"lbl.sc.qt.supplier.response.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()) });
 			}
-			int newValue = scQt.getResponsePeriod();
 			String fromValue = retrieveResponsePeriod(ParameterConst.FROM_VALUE);
 			String toValue = retrieveResponsePeriod(ParameterConst.TO_VALUE);
-			if (newValue < Integer.parseInt(fromValue)) {
-				throw new EpException(MessageConst.ERROR_770244,
-						new String[] { fromValue });
+			if (responsePeriod < Integer.parseInt(fromValue)) {
+				throw new EpException(MessageConst.ERROR_770244, new String[] { fromValue });
 			}
-			if (newValue > Integer.parseInt(toValue)) {
-				throw new EpException(MessageConst.ERROR_770245,
-						new String[] { toValue });
+			if (responsePeriod > Integer.parseInt(toValue)) {
+				throw new EpException(MessageConst.ERROR_770245, new String[] { toValue });
 			}
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		private String retrieveResponsePeriod(String value) {
 			
 			String result = null;
@@ -3484,7 +3462,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			
 			return result;
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		private void checkAttachedDocument(QuationTenderReqDTO reqDTO) {
 			
 			ScQtApprovalRequest approvalRequest = reqDTO.getApprovalRequests().get(0);
@@ -3501,7 +3481,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		//doing this to enable date validation
 		/**
 		 * validate html first to make sure no error happen
@@ -3510,6 +3492,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String showDialog = "confirmUpdateValidityExtension.show()";
 			RequestContext.getCurrentInstance().execute(showDialog);
 		}
+		//#21692 - End
+		//#21692 - Start
 		/**
 		 * pop up reject screen with yes or no after use click on button submit
 		 */
@@ -3517,6 +3501,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			String showDialog = "supplierRejectConfirmation.show()";
 			RequestContext.getCurrentInstance().execute(showDialog);
 		}
+		//#21692 - End
 		//#21692 - Start
 		/**
 		 * Finalization committee message after use click on submit
@@ -3536,7 +3521,8 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return msgCode;
 		}
 		//#21692 - End
-		
+
+		//#21692 - Start
 		private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 			IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -3558,7 +3544,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			return null;
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		/**
 		 * check if FC approve EPV 
 		 * 
@@ -3569,7 +3557,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecisionType().getParameterId()
 					|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecisionType().getParameterId();
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		/**
 		 * enable each Type of Request to has attachment
 		 * 
@@ -3625,7 +3615,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 			//#21692 HashSet to remove duplicate, clear current list, add list to managedBean - End
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		/**
 		 * Needed to handle decisions if empty/null AFTER file upload/delete
 		 * 
@@ -3640,7 +3632,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				apprvRequest.setDecisionCertPBM(new PmParameter());
 			}
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		/**
 		 * overload method without Base Entity
 		 * 
@@ -3649,7 +3643,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		public void deleteEpvUploadFile(BaseEntity delEntity) {
 			deleteEpvUploadFile();
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		/**
 		 * delete EPV file update either R1, R2 or R3
 		 * 
@@ -3672,7 +3668,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			this.getManagedBean().getToBeRemoveEPVAttachments().add(typeOfRequest);
 			handleDecisionNull(apprvRequest);
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		/**
 		 * cannot assign value a constant directly from html, take the value to backing bean and return string
 		 * 
@@ -3682,7 +3680,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		public String assignValueForEpvAttachment(String epvType) {			
 			return epvType;
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		//make sure if epv attachment is not empty, assign each of them to their transient
 		private void setEpvAttachment(List<ScQtApprovalRequest> apprvReqList) {
 			ScQtApprovalRequest apprvReq = apprvReqList.get(0);
@@ -3699,7 +3699,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		//set decisions null for attachments
 		private void setDecisionsNull(ScQtApprovalRequest apprvRequest) {
 			if (this.getManagedBean().getQt().isApprovalPBM()) {
@@ -3712,22 +3714,6 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			} else {
 				if (apprvRequest.getDecisionType().getParameterId() == null) {
 					apprvRequest.setDecisionType(null);
-				}
-			}
-		}
-		
-		//set new param for null decisions
-		private void setDecisionsNewParam(ScQtApprovalRequest apprvReq) {
-			if (this.getManagedBean().getQt().isApprovalPBM()) {
-				if (apprvReq.getDecisionCertPBM() == null) {
-					apprvReq.setDecisionCertPBM(new PmParameter());
-				}
-				if (apprvReq.getDecisionType() == null) {
-					apprvReq.setDecisionType(new PmParameter());
-				}
-			} else {
-				if (apprvReq.getDecisionType() == null) {
-					apprvReq.setDecisionType(new PmParameter());
 				}
 			}
 		}
@@ -3760,7 +3746,9 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		private void checkRemarks(List<ScQtApprovalRemark> remarks) {
 			for (int i = 0; i < remarks.size(); i++) {
 				String userRemark = remarks.get(i).getRemark();
@@ -3768,9 +3756,10 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					throw new EpException(MessageConst.ERROR_770404);
 				}
 			}
-		
 		}
-		
+		//#21692 - End
+
+		//#21692 - Start
 		private void checkValidityDateAndSupplierResponseDate() {
 			ScQtApprovalRequest request = this.getManagedBean().getScQtApprovalRequestList().get(0);
 			Date date = new Date();
@@ -3876,88 +3865,90 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			}
 		}
 	}
-		
-		//#21692 - Start
-		/**
-		 * Send notification after Submission
-		 * Notification of Decision on the Extension of Validity Period for Tender
-		 * 
-		 * @param approvalRequest
-		 */
-		public void notifyUsers(ScQtApprovalRequest approvalRequest) {
-			Map<String, Object> epvObj = new HashMap<>();
-			ScQt scQt = this.getManagedBean().getQt();
-			try {
-				PmOrgProfile ptjProfile = scQt.getPmOrgProfile();
-				epvObj.put(CommonConstants.OBJ_PTJ_NAME, ptjProfile.getPmOrgValidity().getOrgName());
-				epvObj.put(CommonConstants.OBJ_PTJ_CODE, ptjProfile.getPmOrgValidity().getOrgCode());
-				PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(scQt.getPmOrgProfile().getOrgProfileId());
-				if (null != pmOrgProfile && null != pmOrgProfile.getPmOrgValidity()) {
-					epvObj.put(CommonConstants.OBJ_MINISTRY_NAME, pmOrgProfile.getPmOrgValidity().getOrgName());
-				}
-				
-				String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
-				if (this.getManagedBean().isNullEPVRemark()) {
-					userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale());
-				}
-				epvObj.put(CommonConstants.REMARK, userRemark);
-				
-				getQTDetailSO().sendEPVNotification(epvObj, scQt, approvalRequest);
-				
-			} catch(Exception e) {
-				SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "notifyUsers", scQt.getQtNo(), "notifyUsers",
-						getUserIdSessionFromLoginId(), e);
+
+	// #21692 - Start
+	/**
+	 * Send notification after Submission Notification of Decision on the
+	 * Extension of Validity Period for Tender
+	 * 
+	 * @param approvalRequest
+	 */
+	public void notifyUsers(ScQtApprovalRequest approvalRequest) {
+		Map<String, Object> epvObj = new HashMap<>();
+		ScQt scQt = this.getManagedBean().getQt();
+		try {
+			PmOrgProfile ptjProfile = scQt.getPmOrgProfile();
+			epvObj.put(CommonConstants.OBJ_PTJ_NAME, ptjProfile.getPmOrgValidity().getOrgName());
+			epvObj.put(CommonConstants.OBJ_PTJ_CODE, ptjProfile.getPmOrgValidity().getOrgCode());
+			PmOrgProfile pmOrgProfile = retrieveMinistryOrgProfile(scQt.getPmOrgProfile().getOrgProfileId());
+			if (null != pmOrgProfile && null != pmOrgProfile.getPmOrgValidity()) {
+				epvObj.put(CommonConstants.OBJ_MINISTRY_NAME, pmOrgProfile.getPmOrgValidity().getOrgName());
 			}
-		}
-		//#21692 - End
-		//#21692 - Start
-		private void reviseRemarkMandatory() {
-			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
-			if (null != remarks) {
-				for (int i = 0; i < remarks.size(); i++) {
-					String userRemark = remarks.get(i).getRemark();
-					
-					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(MessageConst.ERR_775152);
-					}
-				}
+
+			String userRemark = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks().get(0).getRemark();
+			if (this.getManagedBean().isNullEPVRemark()) {
+				userRemark = ResourceBundleUtils.getMessage(SourcingConstants.NOT_AVAILABLE,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 			}
+			epvObj.put(CommonConstants.REMARK, userRemark);
+
+			getQTDetailSO().sendEPVNotification(epvObj, scQt, approvalRequest);
+
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(SourcingConstants.SUPPLIER_SELECTION_DOC_TYPE, "notifyUsers",
+					scQt.getQtNo(), "notifyUsers", getUserIdSessionFromLoginId(), e);
 		}
-		//#21692 - End
-		//#21692 - Start
-		private void checkNullRemark() {
-			this.getManagedBean().setNullEPVRemark(false);
-			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
-			if (null != remarks) {
-				for (int i = 0; i < remarks.size(); i++) {
-					String userRemark = remarks.get(i).getRemark();
-					
-					if (null == userRemark || "".equals(userRemark)) {
-						this.getManagedBean().setNullEPVRemark(true);
-					}
+	}
+
+	// #21692 - End
+	// #21692 - Start
+	private void reviseRemarkMandatory() {
+		List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
+		if (null != remarks) {
+			for (int i = 0; i < remarks.size(); i++) {
+				String userRemark = remarks.get(i).getRemark();
+
+				if (null == userRemark || "".equals(userRemark)) {
+					throw new EpException(MessageConst.ERR_775152);
 				}
 			}
 		}
-		//#21692 - End
-		
-		//#21692 - Start
-		/**
-		 * retrieve the result of Proposal Validity Extension
-		 * from status Pending Approval
-		 * 
-		 * @param approvalRequest
-		 * @return 'Revise' if parameterCode 'V'
-		 */
-		public String retrieveApproverAction(ScQtApprovalRequest approvalRequest) {
-			if (approvalRequest.getDecisionType().getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_REVISED)) {
-				return ResourceBundleUtils.getMessage(SourcingConstants.STATUS_REVISE_ACTION_LABEL, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale());
-			} else {
-				return getParameterDesc(approvalRequest.getApproverAction());
+	}
+
+	// #21692 - End
+	// #21692 - Start
+	private void checkNullRemark() {
+		this.getManagedBean().setNullEPVRemark(false);
+		List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
+		if (null != remarks) {
+			for (int i = 0; i < remarks.size(); i++) {
+				String userRemark = remarks.get(i).getRemark();
+
+				if (null == userRemark || "".equals(userRemark)) {
+					this.getManagedBean().setNullEPVRemark(true);
+				}
 			}
 		}
-		//#21692 - End
+	}
+	// #21692 - End
+
+	// #21692 - Start
+	/**
+	 * retrieve the result of Proposal Validity Extension from status Pending
+	 * Approval
+	 * 
+	 * @param approvalRequest
+	 * @return 'Revise' if parameterCode 'V'
+	 */
+	public String retrieveApproverAction(ScQtApprovalRequest approvalRequest) {
+		if (approvalRequest.getDecisionType().getParameterCode().equals(ParameterConst.APPROVAL_DECISION_TYPE_REVISED)) {
+			return ResourceBundleUtils.getMessage(SourcingConstants.STATUS_REVISE_ACTION_LABEL,
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else {
+			return getParameterDesc(approvalRequest.getApproverAction());
+		}
+	}
+	// #21692 - End
 
 	// 36671 - start
 	private void prepareCommitteApprovalRequest(Long qtId) {
