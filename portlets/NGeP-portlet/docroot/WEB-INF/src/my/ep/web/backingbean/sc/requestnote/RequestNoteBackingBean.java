@@ -1405,9 +1405,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void validateRequestNote(ScRequestNote requestNote, String outcome) {//#26059 - add outcome
 		debugLogger("validateRequestNote");
-		// Temp(#34274 - Start)
-		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
-		// Temp(#34274 - End)
 		// show message for first submission, skip the message for second time
 		// submission
 		//#26059 - start
@@ -1615,11 +1612,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setContainRejectDecision(false);
 		
 		if (!isBpkAprovalCompleted(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls())) {
-			throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName,
-					thresholdValue.toString(), thresholdItems.toString(), });
-		} else {
 			if (getManagedBean().isContainRejectDecision()) {
 				throw new EpException(MessageConst.ERROR_760563, new String[] { ptjName, thresholdValue.toString(),
+						thresholdItems.toString(), });
+			} else {
+				throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName, thresholdValue.toString(),
 						thresholdItems.toString(), });
 			}
 		}
