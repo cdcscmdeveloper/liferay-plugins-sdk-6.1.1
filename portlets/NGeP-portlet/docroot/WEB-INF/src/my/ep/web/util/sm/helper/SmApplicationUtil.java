@@ -7479,7 +7479,7 @@ public class SmApplicationUtil {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
 		if(!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr)){
+				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr, siteType)){
 			return;
 		}
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
@@ -7538,14 +7538,15 @@ public class SmApplicationUtil {
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	/**
-	 * Create SmSvTaskGroup if the address and catcode type is the same with one of the SmSvTask(s)
+	 * Create SmSvTaskGroup if the address, facility type, and catcode type is the same with one of the SmSvTask(s)
 	 * @param svTaskList
 	 * @param facVO
 	 * @param addr
+	 * @param siteType
 	 * @return true if SmSvTaskGroup has been created
 	 */
 	private static boolean checkAddressAndParamSvTask(List<SmSvTask> svTaskList, 
-			SmSiteVisitFacilityVO facVO, SmAddress addr){
+			SmSiteVisitFacilityVO facVO, SmAddress addr, String siteType){
 		
 		if(facVO.getL3() == null || facVO.getL3().getCategoryTypeCode() == null){
 			return false;
@@ -7557,7 +7558,8 @@ public class SmApplicationUtil {
 		for(SmSvTask task : svTaskList){
 			String addr2 = AddressUtils.getSmFullFormattedAddress(task.getSmSvAddress().getAddress());
 			String param2 = task.getSmSvTemplate().getPmParameter().getParameterCode();
-			if(addr1.equals(addr2) && param1.equals(param2)){
+			String siteType2 = task.getSmSvAddress().getSiteType();
+			if(addr1.equals(addr2) && param1.equals(param2) && siteType.equals(siteType2)){
 				addSmSvTaskGroup(task, facVO);
 				return true;
 			}

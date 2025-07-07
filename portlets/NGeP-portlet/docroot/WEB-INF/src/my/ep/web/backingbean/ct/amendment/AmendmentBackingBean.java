@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //26186
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.comparator.ct.CtContractZoneComparator;
 import my.ep.constant.BpmOutcomeConst;
@@ -4253,22 +4254,37 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 	public String getBondAmountInText() {
 		String lang = new FacesScopes().getUserLocale().getLanguage();
-	    Double bondAmt = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue();
 
-	    if (bondAmt == null || bondAmt == 0.0) {
-	        return "";
-	    }
+		if (ctBackingBean == null
+				|| ctBackingBean.getManagedBean() == null
+				|| ctBackingBean.getManagedBean().getContractVer() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null
+				|| ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null) {
+			return "";
+		}
 
-	    DecimalFormat df = new DecimalFormat("#.00");
-	    String formattedAmount = df.format(bondAmt);
+		BigDecimal bondAmount = ctBackingBean.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()
+				.getBondAmt();
 
-		if (lang.equalsIgnoreCase(ReportConst.ENG_LANGUAGE_CODE)) {
+		if (bondAmount.compareTo(BigDecimal.ZERO) == 0) {
+			return "";
+		}
+
+		// Format the amount to two decimal places
+		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+		String formattedAmount = decimalFormat.format(bondAmount);
+
+		// Convert to words based on language
+		if (ReportConst.ENG_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
 			return NumberWordUtilEn.convert(formattedAmount);
-		} else if (lang.equalsIgnoreCase(ReportConst.MALAY_LANGUAGE_CODE)) {
+		}
+
+		if (ReportConst.MALAY_LANGUAGE_CODE.equalsIgnoreCase(lang)) {
 			return NumberWordUtil.convert(formattedAmount);
 		}
 
-	    return "";
+		return "";
 	}
 	//#24333 - End
 	
@@ -9247,12 +9263,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void checkSupplierBumiputera(SmSupplier supplier) {
 		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
 		try {
 			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			
-			if (!suppBumiputera) {
+			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getContractNo());
+
+			if (!suppBumiputera && openFor) {
 				this.getManagedBean().setSupplierBumiCancel(true);
-				if(StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())){
+				if (StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())) {
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 				handleMessageSupplierMaintenance();
@@ -9260,8 +9280,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
-					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "checkSupplierBumiputera",
-					getUserIdSessionFromLoginId(), e);
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
