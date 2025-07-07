@@ -1693,6 +1693,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.panelSuppliers = panelSuppliers;
 	}
 
+	private boolean comingFromNextButton;//#38151
+	private boolean weightage35384WIP; //#38151
+	
 	private ScQtApprovalRequest scQtApprovalDtls;
 
 	private IPagingDataModel<ScLoi> searchLoiDataModel;
@@ -12203,4 +12206,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
 	}
 	//#21692 - End
+	
+	//#38151
+	public boolean isWeightage35384WIP() {
+		return weightage35384WIP;
+	}
+
+	public void setWeightage35384WIP(boolean weightage35384WIP) {
+		this.weightage35384WIP = weightage35384WIP;
+	}
+	//#38151
 }
