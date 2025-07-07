@@ -1612,12 +1612,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void triggerAlertApproval(StringBuilder thresholdItems, BigDecimal thresholdValue, String ptjName,
 			RequestNoteResDTO requestNoteResDTO) {
+		getManagedBean().setContainRejectDecision(false);
+		
 		if (!isBpkAprovalCompleted(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls())) {
 			throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName,
 					thresholdValue.toString(), thresholdItems.toString(), });
 		} else {
-			throw new EpException(MessageConst.ERROR_760563, new String[] { ptjName,
-					thresholdValue.toString(), thresholdItems.toString(), });
+			if (getManagedBean().isContainRejectDecision()) {
+				throw new EpException(MessageConst.ERROR_760563, new String[] { ptjName, thresholdValue.toString(),
+						thresholdItems.toString(), });
+			}
 		}
 	}
 
@@ -1650,12 +1654,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */	
 	private boolean isBpkAprovalCompleted(List<ScRequestNoteDtl> scRequestNoteDtlList) {
 		for (ScRequestNoteDtl scRequestNoteDtl : scRequestNoteDtlList) {
-			if (scRequestNoteDtl.getBpkThresholdDecision()!= null){
-				return true;
+			if (scRequestNoteDtl.getBpkThresholdDecision() != null) {
+				if (scRequestNoteDtl.getBpkThresholdDecision().equalsIgnoreCase(HtmlTemplateConstants.ZERO_VAL)) {
+					getManagedBean().setContainRejectDecision(true);					
+					return false;
+				}
+			} else {
+				return false;
 			}
-		}		
-		return false;
-	}	
+		}
+		return true;
+	}
 	//#26059 - end
 	// #31689 - start
 	private void validateReqNoteIgnoreProcurement(ScRequestNote requestNote) {
