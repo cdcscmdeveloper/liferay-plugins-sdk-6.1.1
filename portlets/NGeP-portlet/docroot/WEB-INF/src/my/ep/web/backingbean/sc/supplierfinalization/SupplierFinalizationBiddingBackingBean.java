@@ -804,7 +804,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					// 26247, 31101 - start
 					SmSupplier supplier = packageBean.getScBidSupplier().getSmSupplier();
 					getManagedBean().setSelectedPackageBean(null);
-					if(this.disabledQTProcess(supplier)){
+					if(!this.disabledQTProcess(supplier)){
 						getManagedBean().setSelectedPackageBean(packageBean);
 					}
 					// 26247, 31101 - end
