@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -28,8 +27,8 @@
 				<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{storeCatVar.facilityList}"
-					rowKey="#{stor}" rowIndexVar="index" id="storeDt">
-					<ac:paginator for="storeDt" />
+					rowKey="#{stor}" rowIndexVar="index" id="storeDt_#{storeCatVarStatus.index}">
+					<ac:paginator for="storeDt_#{storeCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<!-- Disable for UPS 32008 - START -->
 					<p:column style="width: 5% !important;" rendered="#{not empty storeCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
@@ -102,9 +101,10 @@
 					action="#{backingBean.assignNewStoreBean}"
 					update=":form:tt:storeDialog" partialSubmit="true" process="@this" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					process="storePan" partialSubmit="true"
-					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtn(storeCatVar.facilityList)}"
+					id="delStoreBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.storeFacilitiesVOList)}"
 					update=":#{p:component('smStrDtPanel')},@this" oncomplete="storeDeletePopUp.show()" />
 			</div>
 			<br />
