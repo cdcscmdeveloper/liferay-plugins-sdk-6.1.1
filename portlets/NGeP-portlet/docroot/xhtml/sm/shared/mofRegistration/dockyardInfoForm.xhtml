@@ -36,8 +36,8 @@
 				<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{dockyardCatVar.facilityList}"
-					rowKey="#{doc}" rowIndexVar="index" id="docDt">
-					<ac:paginator for="docDt" />
+					rowKey="#{doc}" rowIndexVar="index" id="docDt_#{dockyardCatVarStatus.index}">
+					<ac:paginator for="docDt_#{dockyardCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<p:column style="width: 5% !important;" rendered="#{not empty dockyardCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}">
 						<f:facet name="header">
@@ -111,10 +111,11 @@
 					partialSubmit="true" action="#{backingBean.assignNewDockyardBean}"
 					update=":form:tt:dockYardDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					process="dockyardPan" partialSubmit="true" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					update=":#{p:component('smDocDtPanel')},@this" 
-					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtn(dockyardCatVar.facilityList)}"
+					id="delDockyardBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.dockYardFacilitiesVOList)}"
 					oncomplete="dockyardDeletePopUp.show()" />
 			</div>
 			<br />
