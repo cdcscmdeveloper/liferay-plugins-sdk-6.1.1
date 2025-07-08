@@ -184,6 +184,7 @@
 								headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
 								value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}"
 								postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
+								update=":form:orgNamePopupId:lovPopup"
 								saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
 								conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
 								displayResultWhenFirstLoad="false"
@@ -197,6 +198,7 @@
 								headerText="#{searchPMUserOrgAuditBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode)}"
 								value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}"
 								postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
+								update=":form:orgNamePopupId:lovPopup"
 								saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
 								conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
 								displayResultWhenFirstLoad="false"
@@ -228,6 +230,7 @@
 								value="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}"
 								saveObject="searchPMUserOrgAuditBackingBean.managedBean.selectedOrgProfile"
 								postUpdateListener="searchPMUserOrgAuditBackingBean.updateSearchCriteriaForOrgName"
+								update=":form:orgNamePopupId:lovPopup"
 								conditionField="#{searchPMUserOrgAuditBackingBean.constructConditionFields()}"
 								displayResultWhenFirstLoad="false"
 								displayResultWhenReset="false" />
@@ -391,11 +394,37 @@
 							value="#{searchPMUserOrgAuditBackingBean.getDropdownRoleList()}"
 							var="roleItem" itemLabel="#{roleItem.roleName}"
 							itemValue="#{roleItem.roleCode}" />
-						<p:ajax event="change" update="roles,searchActionBylist" />
+						<p:ajax event="change" update="roles,searchActionBylist" listener="#{searchPMUserOrgAuditBackingBean.getRoleCode()}"/>
 					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
 				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
 				<td>&#160;</td>
-			</tr>
+			</tr>	
+			<!--  <tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.audit.actionBy']}"/>
+				</th>
+				<td>
+					<p:inputText 
+						size="38"
+						id="searchActionBylist" 
+						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser.userName}" 
+						readonly="true"
+						isStoreProc="true" lovId="PM_USER" roleCode="searchPMUserOrgAuditBackingBean.getRoleCode()"
+						postUpdateListener="searchPMUserOrgAuditBackingBean.resetGetActionBy()"
+						update="@form"
+						saveObject="searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser"
+						/>
+					&#160;						
+					<p:commandLink id="roleSearchCL" partialSubmit="true"
+								process="@this" update=":form:actionById:lovPopupAudit"
+								action="#{searchPMUserOrgAuditBackingBean.getRoleCode()}"
+								oncomplete="lovPopupAudit.show();"
+								<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+							</p:commandLink>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>-->		
 			<tr>
 				<th width="22%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
@@ -405,7 +434,7 @@
 						headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser.userName}"
 						postUpdateListener="searchPMUserOrgAuditBackingBean.resetGetActionBy()"
-						update="@form"
+						update=":form:actionById:lovPopupAudit"
 						saveObject="searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser"
 						tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
 					</ac:lovAudit></td>
@@ -448,8 +477,9 @@
 				</td>
 			</tr>
 		</table>
-		<ac:lovPopupAudit />
-		<ac:lovPopup />	
+		<h:panelGroup>
+			<ac:lovPopup id="orgNamePopupId" />
+		</h:panelGroup>
 		<h:panelGroup
 			rendered="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtj
 		  		or searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode eq ParameterConst.orgTypePtjGroup}">
@@ -457,7 +487,9 @@
 				orgTypeParamCode="#{searchPMUserOrgAuditBackingBean.managedBean.selectedOrgType.parameterCode}"
 				okAction="searchPMUserOrgAuditBackingBean.selectPtjAction"
 				update=":form:userOrgAuditPMSearchPanel" />
-		</h:panelGroup>		
-		
+		</h:panelGroup>
+		<h:panelGroup>
+			<ac:lovPopupAudit id="actionById" />
+		</h:panelGroup>
 	</p:panel>
 </ui:composition>
