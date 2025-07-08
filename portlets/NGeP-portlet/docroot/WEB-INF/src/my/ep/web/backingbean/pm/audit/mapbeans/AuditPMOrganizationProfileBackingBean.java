@@ -355,6 +355,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setPTJGroup() {
+		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+		
 		if (orgProfile.isGovtSeller() != oldOrgProfile.isGovtSeller()) {
 			detailObj(AuditConst.PM_AUD_OPM_G2G_FIELDLABELCODE, null, orgProfile.isGovtSeller() ? AuditConst.PM_AUD_YES
 					: AuditConst.PM_AUD_NO);
@@ -363,8 +365,15 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			detailObj(AuditConst.PM_AUD_OPM_PTJ_IDENTIFIED_FIELDLABELCODE, null,
 					orgProfile.getEpPtj() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 		}
-		if (!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())) {
+		
+		if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() == null) {
 			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
+		} else if (orgProfile.getGroupOrgType() == null && oldOrgProfile.getGroupOrgType() != null) {
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), null);
+		} else if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() != null) {
+			if(!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())){
+				detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), orgProfile.getGroupOrgType());
+			}
 		}
 
 		if((managedBean.getSmSupplierBanks() != null && managedBean.getSmSupplierBanks().size() > 0)
