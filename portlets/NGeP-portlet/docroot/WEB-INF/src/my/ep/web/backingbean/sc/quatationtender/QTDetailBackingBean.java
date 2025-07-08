@@ -3749,7 +3749,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	public SelectItem[] retrieveFinalizationCommitteeType() {
 		
 		ScQt scQt = getManagedBean().getQt();
-		SelectItem[] finalizationSecratary = getManagedBean().getFinalizationSecratary();
+		SelectItem[] finalizationSecratary = this.getManagedBean().getFinalizationSecratary();
 		Long currentStatusId = scQt.getQtStatus().getStatusId();
 		
 		if (finalizationSecratary == null
@@ -3767,7 +3767,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				List<PmParameter> finalizationCommTypes = resDTO.getFinalizationSecratry();
 				if(CollectionUtils.isNotEmpty(finalizationCommTypes)){
 					finalizationSecratary = new SelectItem[finalizationCommTypes.size()];
-					for(int i=0;i<finalizationCommTypes.size();i++){
+					for(int i=0;i<finalizationCommTypes.size();i++){//----#36320, Populate drop down value from QCA,QCB to QQC
 						String commTypeDesc = getParameterDesc(
 								finalizationCommTypes.get(i),new FacesScopes().getUserLocale());
 						finalizationSecratary[i] = new SelectItem(
@@ -6996,7 +6996,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 
 			getManagedBean().getQt().setFinalizationCommitte(
 					parameterResDTO.getPmParameter());
-			getManagedBean().getQt().setFinalizationSecratery(new PmUser());
+			this.getManagedBean().getQt().setFinalizationSecratery(new PmUser());
 		}
 	}
 	
