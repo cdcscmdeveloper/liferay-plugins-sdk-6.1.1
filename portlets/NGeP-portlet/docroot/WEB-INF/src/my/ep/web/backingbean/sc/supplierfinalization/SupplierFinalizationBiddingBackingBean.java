@@ -1285,6 +1285,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.getManagedBean().setOnlineBiddingActiveIndex(
 				ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT);
 
+		//#38540 - Start
+		List<Long> statuses = new ArrayList<>();
+		statuses.add(QTStatusConst.SF_PENDING_ENDORSEMENT);
+		statuses.add(QTStatusConst.SF_PENDING_SIGN_OFF);
+		//#38540 - End
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		List<ScQtCommitteeActivity> committeeActivities = scQtCommittee
 				.getCommitteeActivities();
@@ -1316,6 +1321,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 					activity.setScQtCommittee(scQtCommittee);
 					activity.setScCommitteeMember(member);
+					activity.setAttended(statuses.contains(this.getManagedBean().getCurrentStatusId()));//#38540
 					setUserDetails(activity);
 					missingActivities.add(activity);
 				}
