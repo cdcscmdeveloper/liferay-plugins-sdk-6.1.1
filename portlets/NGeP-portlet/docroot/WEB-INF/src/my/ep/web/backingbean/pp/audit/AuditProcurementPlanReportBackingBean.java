@@ -340,6 +340,14 @@ public class AuditProcurementPlanReportBackingBean extends BaseBackingBean<Audit
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PP, paramMap);
 	}
+	
+	/**
+	 * Reformat the break line
+	 * 
+	 */
+	public String getFormattedValue(String value) {
+		return value.replaceAll("\n", "<br/>");
+	}
 
 	/**
 	 * To create record not found message in report
