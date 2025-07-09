@@ -164,6 +164,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -748,6 +749,7 @@ public class LOIDetailBackingBean extends
 			// #25638 - Start
 			displayReviseInstrn(getManagedBean().getFcActivityList());
 			// #25638 - End
+			checkSupplierAwardedRejectValidityExtensionPreRender();//#21692
 			
 			
 			
@@ -1014,6 +1016,7 @@ public class LOIDetailBackingBean extends
 	
 	private void processMultiLOIDetails(String recommendType, 
 										List<ScQtRecommend> scQtRecommendList) {
+		awardedSupplierRejectEPV(scQtRecommendList);//#21692
 		getManagedBean().setRecommendList(scQtRecommendList);
 		
 			if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
@@ -3274,6 +3277,11 @@ public class LOIDetailBackingBean extends
 			return;
 		}
 		//25638 - End
+		//#21692 - Start
+		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE)|| outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
+			checkSupplierAwardedRejectValidityExtension();//#21692
+		}
+		//#21692 - End
 				
 		this.getManagedBean().setAction(outcome);
 		String committeeType = getManagedBean().getCommitteeType();
@@ -4128,12 +4136,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
-		//#21692 - Start
-		if (this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
-				QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV) && !isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())) {
-			validateLOIDetails(scLoi, outcome);
-		}
-		//#21692 - End
+		validateLOIDetails(scLoi, outcome);
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId(); //20230711@Asyrafhaziq-SQUBE Bug Minor #16
 
@@ -5766,7 +5769,17 @@ public class LOIDetailBackingBean extends
 						// 26247 - end
 						if (!supplierIds.contains(supplierId)
 								&& !checkDisqualifiedSupplierBranchDeleted(this.getManagedBean().getScQt().getQtId(),
-										supplierId)) {// #28777 & #29729
+										supplierId)
+										//#21692 - Start
+								&& (scQtRecommendDtl.getScQtProposalAmount().getScQtProposal()
+										.getIsAgreeQtExtendPeriod() == null
+										|| scQtRecommendDtl.getScQtProposalAmount().getScQtProposal()
+												.getIsAgreeQtExtendPeriod()
+												.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_ACCEPTED) || scQtRecommendDtl
+										.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+										.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_PENDING_RESPONSE))) 
+						//#21692 - End
+						{// #28777 & #29729
 							selectItems.add(new SelectItem(supplierId, scQtRecommendDtl.getScQtProposalAmount()
 									.getScQtProposal().getSupplierNo().toString()));
 							supplierIds.add(supplierId);
@@ -6019,6 +6032,13 @@ public class LOIDetailBackingBean extends
 										new ArrayList<ScQtRecommendDtl>());
 						}
 						ScQtRecommendDtl recommendDtl = recommendDtlsMap.get(supplierId);
+						//#21692 - Start
+						if (evaluationResultDtl.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+								&& evaluationResultDtl.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod().equals(
+										SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED)) {
+							recommendDtl.setRecordStatus(Boolean.FALSE);
+						}
+						//#21692 - End
 						evaluationResultDtl.getScQtRecommendDtl()
 							.add(recommendDtl);						
 						
@@ -7265,9 +7285,7 @@ public class LOIDetailBackingBean extends
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoi scLoi) {
-		if (scLoi != null && scLoi.getLoiId() != null
-				&& isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId())
-				&& checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())) {
+		if (scLoi != null && scLoi.getLoiId() != null && checkingForEPVNotification(scLoi)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_INTENT,
@@ -7338,8 +7356,10 @@ public class LOIDetailBackingBean extends
 	 */
 	public boolean isApproverAbleToSave() {
 		return !this.getManagedBean().isAbleToSubmitLOI()
-				&& this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
-						.equals(QTStatusConst.LOI_PENDING_APPROVAL);
+				&& (this.getManagedBean().getScLoi().getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_APPROVAL) || this.getManagedBean().getScLoi()
+						.getScWorkFlowStatus().getPmStatus().getStatusId()
+						.equals(QTStatusConst.LOI_PENDING_REVISION_APPROVAL));
 	}
 	//#21692 - End
 	
@@ -7351,6 +7371,117 @@ public class LOIDetailBackingBean extends
 	 */
 	public boolean disableCancelForApprover() {
 		return !Arrays.asList(this.getManagedBean().getOutComes()).contains(BpmOutcomeConst.BPM_APPROVE);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Must validate html for LOI first
+	 * @param isWithBPM
+	 */
+	public void validateBeforePopup(boolean isWithBPM) {
+		if (isWithBPM) {
+			RequestContext.getCurrentInstance().execute("cancelPopup.show()");
+		} else {
+			RequestContext.getCurrentInstance().execute("cancelPopup2.show()");
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private boolean checkingForEPVNotification(ScLoi scLoi) {
+		// List of statuses to enable notification
+		List<Long> statusEnabledCancel = new ArrayList<>();
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_SUBMISSION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_APPROVAL);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_NEGOTIATION);
+		statusEnabledCancel.add(QTStatusConst.LOI_PENDING_REVISION_APPROVAL);
+		
+		boolean isStatusEnabled = scLoi.getScWorkFlowStatus() != null
+				&& statusEnabledCancel.contains(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId());
+		boolean isQTValid = checkProposalValidityDateReach(getManagedBean().getScQt().getProposalValidityEndDate())
+				&& this.validateSupportedTask(this.getManagedBean().getScQt().getQtNo(),
+						QTConstants.ALLOW_CANCEL_LOA_LOI_FOR_EPV);
+
+		return isSupplierStatusRejectedEPV(scLoi.getScLoiLoa().getSmSupplier().getSupplierId()) && isStatusEnabled
+				&& isQTValid && !isQTMaintenanceScreen();
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void checkSupplierAwardedRejectValidityExtensionPreRender() {
+		boolean endorseOrSignOff = false;
+		for (String outcome : this.getManagedBean().getOutComes()) {
+			if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
+				endorseOrSignOff = true;
+			}
+		}
+		for (ScQtRecommend scQtRecommend : getManagedBean().getScQtFinalization().getScQtRecommends()) {
+			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+				if (!endorseOrSignOff
+						&& getManagedBean().getSelectedSupplier() != null
+						&& getManagedBean().getSelectedSupplier().getScQtRecommendDtl().get(0).getScQtProposalAmount()
+								.getScQtProposal().getQtProposalId()
+								.equals(recommendDtl.getScQtProposalAmount().getScQtProposal().getQtProposalId())
+						&& recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+						&& (recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+								.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) || recommendDtl
+								.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+								.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED))) {
+					getManagedBean().setSelectedSupplier(null);
+				}
+			}
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void checkSupplierAwardedRejectValidityExtension() {
+		for (ScQtRecommend scQtRecommend : getManagedBean().getScQtFinalization().getScQtRecommends()) {
+			for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+				if (!recommendDtl.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_REJECTED)
+						&& recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+						&& (recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+								.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) ||
+								recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+						.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED))) {
+					throw new EpException(MessageConst.ERROR_770407);
+				}
+			}
+		}
+	}
+	//#21692 - End//#21692 - Start
+	private void awardedSupplierRejectEPV(List<ScQtRecommend> scQtRecommendList) {
+		boolean endorseOrSignOff = false;
+		if (ArrayUtils.isEmpty(this.getManagedBean().getOutComes())) {
+			return;
+		}
+		for (String outcome : this.getManagedBean().getOutComes()) {
+			if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
+				endorseOrSignOff = true;
+			}
+		}
+		if (!endorseOrSignOff) {
+			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+				for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+					setRecommendDtlForSupplierRejectEPV(recommendDtl);
+				}
+			}
+		}
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	private void setRecommendDtlForSupplierRejectEPV(ScQtRecommendDtl recommendDtl) {
+		if (recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod() != null
+				&& (recommendDtl.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+						.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED) || recommendDtl
+						.getScQtProposalAmount().getScQtProposal().getIsAgreeQtExtendPeriod()
+						.equals(SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED))) {
+			recommendDtl.setRecordStatus(Boolean.FALSE);
+			recommendDtl.setRecordStatusFlg(DbValueConst.RECORD_STATUS_REJECTED);
+		}
 	}
 	//#21692 - End
 }

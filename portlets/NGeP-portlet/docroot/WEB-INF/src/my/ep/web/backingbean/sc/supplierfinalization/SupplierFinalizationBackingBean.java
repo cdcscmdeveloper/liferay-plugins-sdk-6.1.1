@@ -4466,17 +4466,15 @@ return	remarksNotFound;
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		    // #28834 - End.
 		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				// #28834 - Start. 
-				if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
-					saveGeneraratedReport(scQtFinalizationReport);
-				}
-				// #28834 - End. 
+			// #38526 Start Vinod 09/07/2025
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			// #28834 - Start. 
+			if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
+				saveGeneraratedReport(scQtFinalizationReport);
 			}
+			// #28834 - End. 
+			// #38526 End Vinod 09/07/2025
 		}
 		downloadFile(reportAttachment);
 	}
@@ -11969,8 +11967,8 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	
 	//#21692 - Start
 	private void resetQualifiedSupplierForMLOIAndBidding(ScQtEvaluationResultDtl qualSupplier) {
-		if (ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod())
-				|| (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(getManagedBean().getFinalizationMethod()) && disagreeProposalValidityExtension(qualSupplier))) {
+		if ((ParameterConst.RECOMMEND_BY_MULTIPLE_LOI.equals(getManagedBean().getFinalizationMethod())
+				|| ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(getManagedBean().getFinalizationMethod())) && disagreeProposalValidityExtension(qualSupplier)) {
 			qualSupplier.setShortListed(false);
 		}
 	}
@@ -11979,6 +11977,11 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 	//#21692 - Start
 	private void awardedSupplierRejectEPV(QtEvaluationResultDtlBean recommendationBean) {
 		boolean endorseOrSignOff = false;
+		// 38529 - start
+		if (ArrayUtils.isEmpty(this.getManagedBean().getOutComes())) {
+			return;
+		}
+		// 38529 - end
 		for (String outcome : this.getManagedBean().getOutComes()) {
 			if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE) || outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
 				endorseOrSignOff = true;

@@ -13945,7 +13945,7 @@ if (null != checklist && !checklist.isEmpty()) {
 									localCheckList.setTitle(tecSpecMaster.getSpecName());
 									finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 									finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-									finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+									// Bug #38208@Syazani 12/06/2025 - line removed
 									localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 									updatedCheckLists.add(localCheckList);
 									
@@ -14770,7 +14770,7 @@ if (null != checklist && !checklist.isEmpty()) {
 						finChecklist.setTitle(tecSpecMaster.getSpecName());
 						finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 						finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-						finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+						// Bug #38208@Syazani 12/06/2025 - line removed
 						scQtCheckList.setEdited(false);
 						//1873 - start - note 97
 						updatedCheckLists.add(finChecklist); 
@@ -22460,24 +22460,24 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				//update demo weightage	
 				reqDTO1.setTobeRemoveList(demoTemplateList);
 				SpecificationResDTO resDTO = specSO.updateDemoScoreWeightage(reqDTO1);
-				ScQtCheckList demo = null;
+				ScQtCheckList demo = resDTO.getSavedCheckLists().get(0);
+				int demoIndex = 0;
+				int index = 0;
 				List<ScQtCheckList> demoUpdateList = new ArrayList<>();				
 				specCommitteeResetData();
 				
 					for (ScQtCheckList t : st2technicalproposalList) {
 						if (t.getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-							t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-							demo = t;
 							demoUpdateList.add(t);
+							demoIndex = index;
 							break;
 						}
+						index++;
 					}				
 				
 				if (demoUpdateList != null) {					
-					this.getManagedBean().getScQtCheckSt2techProposal().set(this.getManagedBean().getScQtCheckSt2techProposal().indexOf(demo)
-							, resDTO.getSavedCheckLists().get(0));
+					this.getManagedBean().getScQtCheckSt2techProposal().set(demoIndex, demo);
 				}
 				
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
