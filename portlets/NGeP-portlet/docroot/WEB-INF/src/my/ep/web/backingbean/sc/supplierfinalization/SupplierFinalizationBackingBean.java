@@ -4165,10 +4165,14 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			regenEvaluationDownload(reportAttachment, true);
+		//#28784 - Start
+		if (scQtFinalizationReport.getPmDocument() != null) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(reportAttachment, true);
+			}
 		}
+		//#28784 - End
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
@@ -4297,17 +4301,15 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		    // #28834 - End.
 		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				// #28834 - Start. 
-				if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
-					saveGeneraratedReport(scQtFinalizationReport);
-				}
-				// #28834 - End. 
+			// #38526 Start Vinod 09/07/2025
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			// #28834 - Start. 
+			if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
+				saveGeneraratedReport(scQtFinalizationReport);
 			}
+			// #28834 - End. 
+			// #38526 End Vinod 09/07/2025
 		}
 		downloadFile(reportAttachment);
 	}
