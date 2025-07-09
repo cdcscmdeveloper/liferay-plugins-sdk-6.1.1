@@ -1606,38 +1606,54 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						ScAddress scAddress = scQtSampleSubmission.getScAddress();
-						BriefingZoneBean briefingsamplebean=null;//11104-start
-						if(CollectionUtils.isNotEmpty(this.getManagedBean().getSampleAddressBean())){
-							for(BriefingZoneBean briefBean: this.getManagedBean().getSampleAddressBean()){
-								if(briefBean.getTplSpecZoneDtl().getSpecZoneId().equals(scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId())|| scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId()==scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId()){
-									briefingsamplebean=briefBean;	
-								}							
+						// 11104-start
+						BriefingZoneBean briefingsamplebean = null;
+
+						if (CollectionUtils.isNotEmpty(this.getManagedBean().getSampleAddressBean())) {
+							for (BriefingZoneBean briefBean : this.getManagedBean().getSampleAddressBean()) {
+								if (briefBean.getTplSpecZoneDtl().getSpecZoneId()
+										.equals(scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId())
+										|| scQtSampleSubmission.getTplSpecZoneDtl().getSpecZoneId() == scQtSampleSubmission
+												.getTplSpecZoneDtl().getSpecZoneId()) {
+									briefingsamplebean = briefBean;
+								}
 							}
-						}//11104-End
+						}
+						// 11104-End
+
 						if (null != scAddress) {
 							if (scAddress.getPmDivision() != null
 									&& scAddress.getPmDivision()
 											.getDivisionId() == null) {
 								scAddress.setPmDivision(null);
-								if(null!=briefingsamplebean && null!=briefingsamplebean.getDivisionId()){//11104-start
+
+								// 11104-start
+								if (null != briefingsamplebean && null != briefingsamplebean.getDivisionId()) {
 									scAddress.setPmDivision(retrievePmDivsById(briefingsamplebean.getDivisionId()));
-								}//11104-End
+								}
+								// 11104-End
 							}
-							if(null!=scAddress.getPmState() && scAddress.getPmState().getStateId()==null){//11104-start
-								if(null!=briefingsamplebean && null!=briefingsamplebean.getStateId()){
+
+							// 11104-start
+							if (null != scAddress.getPmState() && scAddress.getPmState().getStateId() == null) {
+								if (null != briefingsamplebean && null != briefingsamplebean.getStateId()) {
 									scAddress.setPmState(retrievePmStateById(briefingsamplebean.getStateId()));
 								}
 							}
-							if(null!=scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId()==null){
-								if(null!=briefingsamplebean && null!=briefingsamplebean.getDistrictid()){
+
+							if (null != scAddress.getPmDistrict() && scAddress.getPmDistrict().getDistrictId() == null) {
+								if (null != briefingsamplebean && null != briefingsamplebean.getDistrictid()) {
 									scAddress.setPmDistrict(retrievePmDistById(briefingsamplebean.getDistrictid()));
 								}
 							}
-							if(null!=scAddress.getPmCity() && scAddress.getPmCity().getCityId()==null){
-								if(null!=briefingsamplebean && null!=briefingsamplebean.getCityId()){
+
+							if (null != scAddress.getPmCity() && scAddress.getPmCity().getCityId() == null) {
+								if (null != briefingsamplebean && null != briefingsamplebean.getCityId()) {
 									scAddress.setPmCity(retrievePmCityById(briefingsamplebean.getCityId()));
 								}
-							}//11104-End
+							}
+							// 11104-End
+
 							scAddress.setPmCountry(retrieveCountry());
 						}
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
@@ -3393,9 +3409,7 @@ public class QTDetailBackingBean extends
 							.getScQtDocReportList());
 				}
 				if (this.getManagedBean().getQt().isSampleReq()) {
-					//11104 -start-
 					this.getManagedBean().setSubmit(true);
-					 //11104 -end-
 					retrieveScheduleTabDtl();
 					qt.setScQtSampleSubmission(this.getManagedBean()
 							.getScQtSampleSubmissionList());
@@ -6549,9 +6563,8 @@ public class QTDetailBackingBean extends
 					if (isMaintancePendingChklistStatus) {
 						retrieveDocumentTabDtl();
 					} else {
-                        //11104 -start-
-						this.getManagedBean().setSubmit(Boolean.FALSE);
-						//11104 -end-
+						this.getManagedBean().setSubmit(Boolean.FALSE); // 11104
+
 						retrieveScheduleTabDtl();
 					}
 				}
@@ -6821,13 +6834,14 @@ public class QTDetailBackingBean extends
 
 			updateApprovalDetails(this.getManagedBean().getQt());
 			retrieveApprovalTabDtl();
-			if (this.getManagedBean().getQt().isSampleReq()) {//11104-start
-				//11104 -start-
+
+			// 11104-start
+			if (this.getManagedBean().getQt().isSampleReq()) {
 				this.getManagedBean().setSubmit(true);
-				//11104 -end-
 				retrieveScheduleTabDtl();
-				
-			}//11104-End
+			}
+			// 11104-End
+
 			// 25037 - start
 			boolean showPopup = validateIsCommitteeFormed(confirmResetReendorse);
 			if (showPopup) {
@@ -10452,9 +10466,9 @@ public class QTDetailBackingBean extends
 		return 0;
 	}
 	// #29425 - end
-	
-	
-	/**11104-start
+
+	// 11104-start
+	/**
 	 * Retrieve pm state by id.
 	 * 
 	 * @param stateId
@@ -10462,16 +10476,19 @@ public class QTDetailBackingBean extends
 	 * @return PmState object
 	 */
 	public static PmState retrievePmStateById(Long stateId) {
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				IStateSO.class);
 		StateReqDTO reqDTO = new StateReqDTO();
+
 		reqDTO.setStateId(stateId);
+
 		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
 
 		return resDTO.getPmState();
 	}
-	
+	// 11104-End
+
+	// 11104-start
 	/**
 	 * Retrieve pm city by id.
 	 * 
@@ -10480,16 +10497,19 @@ public class QTDetailBackingBean extends
 	 * @return PmCity object
 	 */
 	public static PmCity retrievePmCityById(Long cityId) {
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICitySO.class);
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+				ICitySO.class);
 		CityReqDTO reqDTO = new CityReqDTO();
+
 		reqDTO.setCityId(cityId);
+
 		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
 
 		return resDTO.getPmCity();
 	}
+	// 11104-End
 
+	// 11104-start
 	/**
 	 * Retrieve pm dist by id.
 	 * 
@@ -10498,27 +10518,32 @@ public class QTDetailBackingBean extends
 	 * @return PmDistrict object
 	 */
 	public static PmDistrict retrievePmDistById(Long distId) {
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDistrictSO.class);
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
+
 		reqDTO.setDistrictId(distId);
+
 		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
 
 		return resDTO.getPmDistrict();
 	}
-	
+	// 11104-End
+
+	// 11104-start
 	public static PmDivision retrievePmDivsById(Long divnId) {
-		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IDivisionSO.class);
+		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
 		DivisionReqDTO reqDTO = new DivisionReqDTO();
+
 		reqDTO.setDivisionId(divnId);
+
 		DivisionResDTO resDTO = reqSO.retrieveDivisionById(reqDTO);
 
 		return resDTO.getPmDivision();
-	}//11104-End
-	
+	}
+	// 11104-End
+
 	// 25037 - start
 	/**
 	 * Prepare and navigate to committee history view.
