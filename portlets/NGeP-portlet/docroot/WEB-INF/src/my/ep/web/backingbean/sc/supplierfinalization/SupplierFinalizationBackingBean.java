@@ -4168,7 +4168,7 @@ public class SupplierFinalizationBackingBean extends
 		//#28784 - Start
 		if (scQtFinalizationReport.getPmDocument() != null) {
 			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-			if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
 				regenEvaluationDownload(reportAttachment, true);
 			}
 		}
