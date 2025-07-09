@@ -103,23 +103,29 @@
 						value="#{viewSmApplBackingBean.managedBean.remarks}" styleClass="outputLabel-view"/>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}" styleClass="outputLabel-view-label"/>
-				</td>
-				<td>
-					<p:outputLabel rendered="#{empty viewSmApplBackingBean.managedBean.categoryCodeList}"
-						value="#{lbl['lbl.sm.no.available']}" styleClass="outputLabel-view"/>
-					<p:outputLabel rendered="#{not empty viewSmApplBackingBean.managedBean.categoryCodeList}" styleClass="outputLabel-view">
-						<h:dataTable value="#{viewSmApplBackingBean.managedBean.categoryCodeList}"
-							var="categoryCodeList" style="border: none !important;">
+			<!-- 38490 - START -->
+			<c:if test="#{not empty viewSmApplBackingBean.managedBean.smSupplier.smMofAccounts}">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.disciplinary.list.cancel.category.code']}"
+							styleClass="outputLabel-view-label" /></td>
+					<td><p:outputLabel
+							rendered="#{empty viewSmApplBackingBean.managedBean.categoryCodeList}"
+							value="#{lbl['lbl.sm.no.available']}"
+							styleClass="outputLabel-view" /> <p:outputLabel
+							rendered="#{not empty viewSmApplBackingBean.managedBean.categoryCodeList}"
+							styleClass="outputLabel-view">
+							<h:dataTable
+								value="#{viewSmApplBackingBean.managedBean.categoryCodeList}"
+								var="categoryCodeList" style="border: none !important;">
 								<p:column style="border: none !important;">
-									<h:outputText value="#{categoryCodeList.categoryCode}"/>
+									<h:outputText value="#{categoryCodeList.categoryCode}" />
 								</p:column>
-						</h:dataTable>
-					</p:outputLabel>
-				</td>
-			</tr>
+							</h:dataTable>
+						</p:outputLabel></td>
+				</tr>
+			</c:if>
+			<!-- 38490 - END -->
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.list.of.ic.no.blacklist']}" styleClass="outputLabel-view-label"/>

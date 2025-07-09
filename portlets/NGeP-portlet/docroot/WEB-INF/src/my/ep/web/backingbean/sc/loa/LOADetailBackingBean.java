@@ -567,8 +567,10 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		// Bug 34404 - related to 29007 - end
 		//#21692 - Start
+		QtLOABackingBean qtLoa = new QtLOABackingBean();
+		qtLoa.renderEPVButtonForDP();
 		if (QTConstants.PORTLET_NAME_QT_LIST.equalsIgnoreCase(EpPortletUtil.getDisplayPortletId())) {
-			new QtLOABackingBean().isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339
+			qtLoa.isSupplierEPVStatusRejected(this.getManagedBean().getScLoa());//#36339
 			getSupplierRejectProposalValidityExtensionNotification(this.getManagedBean().getScLoa());
 		}
 		//#21692 - End
@@ -12693,7 +12695,9 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {
-		if (scLoa != null && scLoa.getLoaId() != null && checkingForEPVNotification(scLoa)) {
+		if (scLoa != null && scLoa.getLoaId() != null
+				&& !ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())
+				&& checkingForEPVNotification(scLoa)) {
 			StringBuilder qtProposalExpiredMsg = new StringBuilder();
 			Locale locale = new FacesScopes().getUserLocale();
 			qtProposalExpiredMsg.append(ResourceBundleUtils.getMessage(SourcingConstants.LETTER_OF_ACCEPTANCE,

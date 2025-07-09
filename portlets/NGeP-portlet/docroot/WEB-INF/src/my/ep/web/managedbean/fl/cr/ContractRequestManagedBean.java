@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -73,7 +74,6 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
 import org.apache.commons.lang.StringUtils;
@@ -346,7 +346,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
  // 28855 - End
  	
     //24956 start
-    private boolean CtTypeMinistry;
+    private boolean ctTypeMinistry;
     //24956 end
     
   //11076 - start
@@ -472,20 +472,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 										"fulfilment_type",
 										SearchOperator.OPERATOR_EQUALS.value(), 
 										searchTypesDD));
-					//start 24956
-					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"fulfilment_type",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										searchTypesDD));
-					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"fulfilment_type",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										searchTypesDD));	
-				//end 24956	
 					}
 				}
 				
@@ -529,8 +515,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				//FulfilmentResDTO resfDTO; -remove #38255
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
-						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-								|| vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) { //24956
+						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
 							contractReqDTO.setOrgProfileId(orgProfileId);//28469
@@ -551,7 +536,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 							    contract.setScheduleNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
 							    contract.setCrNo(detail.getDocNo());
 							    contract.setCrNoStatus("("+getPmStatusDesc(detail.getDocStatus())+")");
-							    contract.setCoNo(detail.getFlOrderDocNo());
+							    contract.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
 							    contract.setCoNoStatus("("+getPmStatusDesc(detail.getFlOrderDocStatus())+")");
 
 							    convertedScheduleList.add(contract);
@@ -583,11 +568,13 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		 * @return statusDesc
 		 */
 		private String getPmStatusDesc(Long statusId) {
+			IStatusSO statusSO;
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			String statusDesc = StringUtils.EMPTY;
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(statusId);
 			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-			StatusResDTO resDTO = SmServiceLookup.getStatusSO().retrieveStatusDescById(reqDTO);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
 			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 				statusDesc = resDTO.getPmStatusDesc().getStatusName();
 			}
@@ -3328,11 +3315,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	//24956 - start
 	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
+		return ctTypeMinistry;
 	}
 
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
+		this.ctTypeMinistry = ctTypeMinistry;
 	}
 	//24956 - end
 	//11076 -start
