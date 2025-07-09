@@ -207,6 +207,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneQty;
@@ -23768,45 +23769,25 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		log.info("generateSpecScoreReport");
 		validatePrepareQtChecklist();
 
-		String reportName = updateFileNameAndReportNameForScoreReport();
-		int activeIndex = this.getManagedBean().getActiveIndex();
-		ScQt scQt = getManagedBean().getQt();
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser user = facesScopes.getUserSessionBean();
-		
+		StringBuilder reportName = new StringBuilder();
+		StringBuilder downloadFileName = new StringBuilder();
+		Map<String, String> paramMap = new HashMap<>();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
-		StringBuilder fileName = new StringBuilder(this.getManagedBean().getReportDownloadFileName());
-		fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
-		reportAttachment.setFileName(fileName.toString());
-		reportAttachment.setDocNo(scQt.getQtNo());
-		this.getManagedBean().setScoreAttachment(reportAttachment);
-		ScAttachment scoreAttachment = reportAttachment;
+		ScQt scQt = getManagedBean().getQt();
 
 		try {
-			populateAttachmentDetails(scoreAttachment);
+			updateDetailsForScoreReport(downloadFileName, reportName, paramMap);
 
-			Map<String, String> paramMap = new HashMap<>();
+			StringBuilder fileName = new StringBuilder(downloadFileName);
+			fileName.append(QTConstants.FILE_EXTENSION_TYPE_PDF);
+			
+			reportAttachment.setFileName(fileName.toString());
+			reportAttachment.setDocNo(scQt.getQtNo());
+			this.getManagedBean().setScoreAttachment(reportAttachment);
 
-			paramMap.put(QtReportConst.PARAM_MAP_P_QTID, scQt.getQtId().toString());
-			paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
-			paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
-			switch (activeIndex) {
-			case QTConstants.ACTIVE_INDEX_4:
-				ScQtScoreSetting techScoreSetting = this.getManagedBean().getTechnicalScoreSetting();
-				paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, techScoreSetting.isWeightageReq() ? "1" : "0");
-				break;
-			case QTConstants.ACTIVE_INDEX_5:
-				ScQtScoreSetting finScoreSetting = this.getManagedBean().getFinancialScoreSetting();
-				paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, finScoreSetting.isWeightageReq() ? "1" : "0");
-				break;
-			case QTConstants.ACTIVE_INDEX_6:
-				
-				break;
-			default:
-				break;
-			}
+			populateAttachmentDetails(reportAttachment);
 
-			previewScoreDetails(reportName, paramMap, scoreAttachment);
+			previewScoreDetails(reportName.toString(), paramMap, reportAttachment);
 
 		} catch (IOException e) {
 			String qtNo = scQt.getQtNo() != null ? scQt.getQtNo() : "";
@@ -23821,37 +23802,94 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 	// #10141 Start Vinod
 	/**
-	 * This method to update report file name and report name for score report.
+	 * This method to update report file name, report name and parameters for
+	 * score report.
 	 * 
-	 * @param
-	 * @return String will return file name based on active index to download
-	 *         report.
+	 * @param downloadFileName
+	 *            update file name for the report.
+	 * @param reportName
+	 *            update report name to call.
+	 * @param paramMap
+	 *            update params values.
+	 * 
+	 * @return
 	 * 
 	 */
-	private String updateFileNameAndReportNameForScoreReport() {
+	private void updateDetailsForScoreReport(StringBuilder downloadFileName, StringBuilder reportName,
+			Map<String, String> paramMap) {
 		int activeIndex = this.getManagedBean().getActiveIndex();
-		String fileName = null;
-		String reportName = null;
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = facesScopes.getUserSessionBean();
+		ScQt scQt = getManagedBean().getQt();
+		
+		paramMap.put(QtReportConst.PARAM_MAP_P_QTID, scQt.getQtId().toString());
+		paramMap.put(QtReportConst.PARAM_MAP_P_LANGUAGE, user.getPreferredLanguage());
+		paramMap.put(QtReportConst.PARAM_USER_ID, user.getUserId().toString());
 
 		switch (activeIndex) {
 		case QTConstants.ACTIVE_INDEX_4:
-			fileName = QTConstants.LBL_SC_SPEC_TECHNICAL_SCORE_REPORT;
-			reportName = ReportConst.SC_PVW_TECH_SCORING_JSP;
+			downloadFileName.append(getMessageCommon(QTConstants.LBL_SC_SPEC_TECHNICAL_SCORE_REPORT));
+			reportName.append(ReportConst.SC_PVW_TECH_SCORING_JSP);
+			prepareTechnicalScoreParamValues(paramMap);
+
 			break;
 		case QTConstants.ACTIVE_INDEX_5:
-			fileName = QTConstants.LBL_SC_SPEC_FINANCIAL_SCORE_REPORT;
-			reportName = ReportConst.SC_PVW_FIN_SCORING_JSP;
+			downloadFileName.append(getMessageCommon(QTConstants.LBL_SC_SPEC_FINANCIAL_SCORE_REPORT));
+			reportName.append(ReportConst.SC_PVW_FIN_SCORING_JSP);
+			prepareFinancialScoreParamValues(paramMap);
+
 			break;
 		case QTConstants.ACTIVE_INDEX_6:
-			fileName = QTConstants.LBL_SC_SPEC_OVERALL_SCORE_REPORT;
-			reportName = ReportConst.SC_PVW_OVERALL_SCORING_JSP;
+			downloadFileName.append(getMessageCommon(QTConstants.LBL_SC_SPEC_OVERALL_SCORE_REPORT));
+			reportName.append(ReportConst.SC_PVW_OVERALL_SCORING_JSP);
+			
 			break;
 		default:
 			break;
 		}
-		this.getManagedBean().setReportDownloadFileName(getMessageCommon(fileName));
+	}
 
-		return reportName;
+	// #10141 End Vinod
+	
+	// #10141 Start Vinod
+	/**
+	 * This method to update Technical Score Param Values. preparation screen
+	 * 
+	 * @param paramMap
+	 * 
+	 * @return
+	 */
+	private void prepareTechnicalScoreParamValues(Map<String, String> paramMap) {
+		ScQtScoreSetting techScoreSetting = this.getManagedBean().getTechnicalScoreSetting();
+		paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, techScoreSetting.isWeightageReq() ? "1" : "0");
+	}
+
+	// #10141 End Vinod
+	// #10141 Start Vinod
+	/**
+	 * This method to update Financial Score Param Values. preparation screen
+	 * 
+	 * @param paramMap
+	 * 
+	 * @return
+	 */
+	private void prepareFinancialScoreParamValues(Map<String, String> paramMap) {
+		ScQt scQt = getManagedBean().getQt();
+		ScQtScoreSetting finScoreSetting = this.getManagedBean().getFinancialScoreSetting();
+		paramMap.put(QtReportConst.PARAM_MAP_P_WEIGHTAGE, finScoreSetting.isWeightageReq() ? "1" : "0");
+
+		boolean isZonal = scQt.isZonal();
+		if (isZonal) {
+			List<TplSpecZoneDtl> zones = getManagedBean().getZones();
+			TplSpecZoneDtl activeZone = zones.get(getManagedBean().getSpecZoneTabIndex());
+			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, activeZone.getSpecZoneId().toString());
+		} else {
+			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, "");
+		}
+
+		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
+
+		paramMap.put(QtReportConst.PARAM_MAP_P_SCORE_TYPE, scoreType);
 	}
 
 	// #10141 End Vinod
@@ -23901,7 +23939,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * 
 	 */
 	public void validateAtleastOneChecklistSelected(String actualButtonId, boolean isTechnical) {
-		List<ScQtCheckList> scQtChecklistListLocal = new ArrayList<>();
+		List<ScQtCheckList> scQtChecklistListLocal;
 		int selectedCount = 0;
 
 		if (isTechnical) {
