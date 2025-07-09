@@ -1111,7 +1111,7 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		// 26247, 31061 - end
-		return null;
+		return awardedSupplier;
 	}
 	
 	private void generateZoneMenuModel() {
