@@ -163,7 +163,6 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCategoryFacility;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.entity.sm.SmSupplierSystem;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
@@ -1689,7 +1688,7 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
-				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
+				/*setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);*/ //#32617
 			}
 
 			if (getManagedBean().isApproverUser()) {
@@ -3852,6 +3851,11 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					displayBumiRecommendNote();
 					getHqFacility();
 					
+					//#31130 -start
+					SmApplicationUtil.validatePersonnelBeforeSave(true, -1,getManagedBean());
+					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
+					//#31130 -end
+					
 					//#32236 start
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
 					SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());
@@ -3911,6 +3915,10 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 					}//#31461-End
 					SmApplicationUtil.checkAllowedToApprove(getManagedBean());
 					displayBumiRecommendNote();
+					//#31130-start
+					SmApplicationUtil.validatePersonnelBeforeSave(true, -1,getManagedBean());
+					SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), -1);
+					//#31130 -end
 					
 					//#32236 - start
 					SmApplicationUtil.setBusinessAndHadApprovedSpecialCatcode(getManagedBean());
@@ -4239,8 +4247,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
-			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+					&& !getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) { //#31130 	
 				validSave = SmApplicationUtil.validatePersonnelAcademics(
 						validSave, getManagedBean(), currentTab);
 			}
@@ -4406,6 +4414,12 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 			SmApplicationUtil.validateSpecialAndNormalCategoryCapital(getManagedBean());	
 		}
 		//#32236 - End
+		
+		//#31130- start
+		if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+			SmApplicationUtil.validatePersonnelAcademics(true, getManagedBean(), currentTab);
+			}
+	    //#31130- end
 		
 		// #37779 - Start
 		if (getManagedBean().isSupplierUser()) {
@@ -7572,22 +7586,33 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 							getManagedBean().getSelectedShareHolder()
 									.getBumiFlgTrans());
 		}
+		//#31130 --START 040725 -set bumi flg to 0 when country other than Malaysia
+		if(!getManagedBean().getSelectedShareHolder().getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+			getManagedBean().getSelectedShareHolder().setBumiFlg(0);
+			} //#31130 --END 040725	
 
 		// set muslim flg
 		//#29856 - start
-		if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase
+		/*if(ParameterConst.IDENTIFICATION_TYPES_PASSPORT.equalsIgnoreCase
 				(getManagedBean().getSelectedShareHolder().getIdentificationType().getParameterCode())){
-			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);*/ //Commented for #31130 -040725
 		//#29856 - end
-		} else{
-			if(getManagedBean().getSelectedShareHolder().getMuslimFlgTrans()== null){
-				getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
-			}else{
-				getManagedBean().getSelectedShareHolder().setMuslimFlg(
-						getManagedBean().getSelectedShareHolder()
+		
+		//#31130 --START 040725 -set muslim flg to null when country other than Malaysia
+		if(!getManagedBean().getSelectedShareHolder().getPmCountry().getCountryCode()
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
+			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);
+		//#31130 --END 040725
+			} else{
+				if(getManagedBean().getSelectedShareHolder().getMuslimFlgTrans()== null){
+					getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
+				}else{
+					getManagedBean().getSelectedShareHolder().setMuslimFlg(
+							getManagedBean().getSelectedShareHolder()
 								.getMuslimFlgTrans());
-			}	
-		}
+					}	
+				}
 		
 		//31749 - start
 		/*
