@@ -176,7 +176,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		this.getManagedBean().getSelectedDraft().setContractStatus(null);
 
 		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)
-				&& this.getManagedBean().getSelectedDraft().getRecordStatusFlg().toString().equals(ParameterConst.RECORD_STATUS_INACTIVE)) {
+				&& this.getManagedBean().getSelectedDraft().getRecordStatusFlg().equals(ParameterConst.RECORD_STATUS_INACTIVE)) {
 			this.getManagedBean().getSelectedDraft().setContractStatus(ParameterConst.CONTRACT_STATUS_TERMINATED);
 		} else if (null != this.getManagedBean().getSelectedDraft().getContractExpDate() && null != this.getManagedBean().getContractEffDateTemp()) {
 			if (curDate.before(this.getManagedBean().getContractEffDateTemp())) {
@@ -525,7 +525,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
 				reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
 				if (getSmCompExpSo().checkDuplicateExist(reqDTO)) {
-					compareDuplicate();
+					RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
 				} else {
 					declareSmComExp();
 				}
@@ -533,35 +533,6 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				declareSmComExp();
 			}
 		}
-	}
-
-	private void compareDuplicate() {
-		SmCompExpDraft draft = this.getManagedBean().getSelectedDraft();
-		if (draft.getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
-			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-			reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
-			reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
-			reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
-			SmCompExpMaster master = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO).getSmCompExpMaster();
-			if(master.getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)){
-				deactivateMaster(master.getCompExpMasterId());
-				declareSmComExp();
-			} else {
-				RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
-			}
-		} else {
-			RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
-		}
-	}
-
-	/**
-	 * Delete selected Draft
-	 * @param masterId 
-	 */
-	public void deactivateMaster(Long masterId) {
-		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
-		reqDTO.setCompExpMasterId(masterId);
-		getSmCompExpSo().deactivateMaster(reqDTO);
 	}
 
 	private boolean validateDetail(boolean err) {
