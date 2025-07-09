@@ -44,8 +44,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 */
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(SearchPMUserOrgAuditBackingBean.class);
-	private IPagingDataModel<VAuditPMDTO> searchMaster = new SearchMasterPagingDataModel();
-	private IPagingDataModel<VAuditPMDTO> searchDetail = new SearchDetailPagingDataModel();
+	private transient IPagingDataModel<VAuditPMDTO> searchMaster = new SearchMasterPagingDataModel();
+	private transient IPagingDataModel<VAuditPMDTO> searchDetail = new SearchDetailPagingDataModel();
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "userOrgAuditMain";
 	public static final String NAV_TO_MAINTAIN = "userOrgAuditDetailMain";
@@ -63,7 +63,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	private ProfileManagementSearchBackingBean profileManagementSearchBackingBean;
 
 	public SearchPMUserOrgAuditBackingBean() {
-
+		/*
+		 * This constructor is intentionally empty. Initialization is handled
+		 * via dependency injection or setter methods.
+		 */
 	}
 
 	public String getSelectionRoleCode() {
@@ -128,7 +131,11 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 * @throws Exception
 	 */
 	public String redirectToDetails(String paramLevel3, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
-			BigDecimal docGroupId) throws Exception {
+			BigDecimal docGroupId) throws AuditPMException {
+		if (paramLevel3 == null || pmParameterLvlId == null || roleCode == null) {
+			throw new AuditPMException("Missing required parameters for redirectToDetails SecondUI Audit PM. : "
+					+ " <paramLevel3>:" + paramLevel3 + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
+		}
 		getManagedBean().setParamLevel3(paramLevel3);
 		getManagedBean().getSearchBean().setPmParameterLvlId(pmParameterLvlId);
 		log.info("pmParameterLvlId.intValue() :::::  " + pmParameterLvlId.intValue());
@@ -145,7 +152,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean searching(boolean search) throws Exception {
+	public boolean searching(boolean search) throws AuditPMException {
 		getManagedBean().getSearchBean().setSearching(search);
 		return getManagedBean().getSearchBean().isSearching();
 	}
@@ -501,16 +508,20 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					getManagedBean().getSelectedOrgType().setParameterCode(orgTypeObj.getMasterLabel3());
 					getManagedBean().getSelectedOrgType().setParameterId(orgTypeObj.getLevelId().longValue());
 					getManagedBean().getCurrentActiveOrg().setOrgProfileId(orgTypeObj.getLevelId().longValue());
-					if (ParameterConst.ORG_TYPE_PTJ == orgTypeObj.getMasterLabel3()
-							|| ParameterConst.ORG_TYPE_PTJ_GROUP == orgTypeObj.getMasterLabel3()) {
-						getManagedBean().setDisableFields(true);
-					}
+					isDisableFields(orgTypeObj);
 				}
 			}
 		}
 
 		if (this.getManagedBean().getSelectedOrgProfile() != null) {
 			getManagedBean().setSelectedOrgProfile(null);
+		}
+	}
+
+	void isDisableFields(VAuditPMDTO orgTypeObj) {
+		if (ParameterConst.ORG_TYPE_PTJ == orgTypeObj.getMasterLabel3()
+				|| ParameterConst.ORG_TYPE_PTJ_GROUP == orgTypeObj.getMasterLabel3()) {
+			getManagedBean().setDisableFields(true);
 		}
 	}
 
@@ -524,17 +535,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		this.getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(orgProfile.getOrgProfileId());
 
 		log.info("getFinOrgName() :::: " + this.getManagedBean().getSelectedOrgProfile());
-		if (null != orgProfile.getPmOrgValidity()) {
-			this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
-		}
-		if (null != orgProfile.getPmFinancialOrg()) {
-			this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
-		}
-		if (null != orgProfile.getSmSupplier()) {
-			this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
-		}
-		log.info("getSearchBean().getMasterLabel4( ::::  " + this.getManagedBean().getSearchBean().getMasterLabel4());
 
+		this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
+
+		log.info("getSearchBean().getMasterLabel4( ::::  " + this.getManagedBean().getSearchBean().getMasterLabel4());
 	}
 
 	/**
