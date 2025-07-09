@@ -173,12 +173,14 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
 								newSpecQuestion.setTplSpecScorings(null);
-								
-								newSpecQuestion.setSampleQuantity(null);//11104-start
+
+								// 11104-start
+								newSpecQuestion.setSampleQuantity(null);
 								newSpecQuestion.setSampleScoreTypeCode(null);
 								newSpecQuestion.setSampleScore(null);
-								newSpecQuestion.setSampleReq(Boolean.FALSE);//11104-End
-								
+								newSpecQuestion.setSampleReq(Boolean.FALSE);
+								// 11104-End
+
 								if (isTechnicalSpec) {
 									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(quesType)){
 										newSpecQuestion.setAnswerTypeCode(null);
