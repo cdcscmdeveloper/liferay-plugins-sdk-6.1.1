@@ -2556,6 +2556,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION));
 
+		getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.RN_PENDING_SUBMISSION)); //#38538
+
 		// clear the justification type, price type and justification remarks
 		getManagedBean().setPriceType("");
 		getManagedBean().setJustificationType("");
