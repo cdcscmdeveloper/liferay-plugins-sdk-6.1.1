@@ -226,6 +226,10 @@
 								value="/css/images/design/tooltips.png" />
 							<p:tooltip for="contractStatusExpiredToolTipsId"
 								value="#{lbl['lbl.sm.comp.exp.update.contract.status.expired.toolptip']}" />
+						</c:if> <c:if
+							test="#{smCompExpMB.selectedDraft.contractStatus eq ParameterConst.contractStatusTerminated}">
+							<p:outputLabel styleClass="outputLabel-view"
+								value="#{lbl['lbl.sm.comp.exp.update.contract.status.terminated']}" />
 						</c:if></td>
 				</tr>
 				<p:outputPanel

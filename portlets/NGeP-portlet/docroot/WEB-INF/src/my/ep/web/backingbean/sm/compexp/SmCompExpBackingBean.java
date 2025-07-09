@@ -130,7 +130,10 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			this.getManagedBean().setContractEffDateTemp(null);
 		}
 
-		dateChange();
+		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
+			dateChange();
+		}
+		
 		initDraftDoc();
 		initCatDraft();
 
@@ -524,11 +527,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 				reqDTO.setPtjId(this.getManagedBean().getSelectedDraft().getOrgProfile().getOrgProfileId());
 				reqDTO.setFileReferenceNo(this.getManagedBean().getSelectedDraft().getFileReferenceNo());
 				reqDTO.setFileExtensionNo(this.getManagedBean().getSelectedDraft().getFileExtensionNo());
-				if (getSmCompExpSo().checkDuplicateExist(reqDTO)) {
-					RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
-				} else {
-					declareSmComExp();
-				}
+				checkDuplicate(getSmCompExpSo().checkDuplicate(reqDTO));
 			} else {
 				declareSmComExp();
 			}
@@ -641,7 +640,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		master.setContractEffDate(draft.getContractEffDate());
 		master.setContractExpDate(draft.getContractExpDate());
 		master.setContractStatus(draft.getContractStatus());
-		master.setSourceType(SmApplicationUtil.retrievePmParameterById(ParameterConst.SOURCE_TYPE_ID_SM));
+		master.setSourceType(SmApplicationUtil.retrievePmParameterById(draft.getSourceType().getParameterId()));
 		for (SmCompExpMasterDoc doc : this.getManagedBean().getSmCompExpDocList()) {
 			doc.setCompExpMaster(master);
 		}
@@ -702,8 +701,35 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		resDTO = getSmCompExpSo().deactivateDraft(reqDTO);
 		if (resDTO.isSuccessful()) {
 			this.getManagedBean().getDraftSmDataModel().reloadData();
+			this.getManagedBean().getDraftCtDataModel().reloadData();
 			redirectToDraft();
 		}
+	}
+	
+	private void checkDuplicate(Long masterId) {
+		if(null != masterId){
+			if(this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)){
+				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+				reqDTO.setMasterId(masterId);
+				SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+				if(resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)){
+					RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
+				} else {
+					deactivateMaster(resDTO.getMaster().getCompExpMasterId());
+					declareSmComExp();
+				}
+			} else {
+				RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
+			}
+		} else {
+			declareSmComExp();
+		}
+	}
+	
+	private void deactivateMaster(Long compExpMasterId) {
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(compExpMasterId);
+		getSmCompExpSo().deactivateMaster(reqDTO);
 	}
 
 }
