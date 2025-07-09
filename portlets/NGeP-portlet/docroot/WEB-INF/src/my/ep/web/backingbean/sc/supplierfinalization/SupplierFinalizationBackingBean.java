@@ -4297,6 +4297,7 @@ public class SupplierFinalizationBackingBean extends
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		    // #28834 - End.
 		} else {
+			// #38526 Start Vinod 09/07/2025
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 			// #28834 - Start. 
@@ -4304,6 +4305,7 @@ public class SupplierFinalizationBackingBean extends
 				saveGeneraratedReport(scQtFinalizationReport);
 			}
 			// #28834 - End. 
+			// #38526 End Vinod 09/07/2025
 		}
 		downloadFile(reportAttachment);
 	}
