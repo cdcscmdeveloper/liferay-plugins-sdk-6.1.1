@@ -755,19 +755,35 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * dialog pop up and for new personnel redirect to new personnel info page
 	 */
 	private void executeDecision() {
+
+		hideShowRoleByBusinessTypeAndSupplierType(this.getManagedBean()
+				.getSmSupplier().getSmAppl().getSupplierType(), this
+				.getManagedBean().getSmSupplier().getBusinessType());
 		// replace with new personnel
+		// #33589 - Start
 		if (!getManagedBean().isExistingUser()) {
-			RequestContext.getCurrentInstance().execute(
-					"replaceNewAdminConfirm.show()");
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				checkingBeforeDeclare();
+			} else {
+				RequestContext.getCurrentInstance().execute(
+						"replaceNewAdminConfirm.show()");
+			}
 		}
 		// replace with existing personnel
 		else {
-			setShowOrHideEmail();
-			initDefaultNewAdmin();
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml", "",
-					null, null);
+			if (getManagedBean().getSmSupplier().getRecordStatusFlg()
+					.equals(DbValueConst.RECORD_STATUS_IN_PROGRESS)) {
+				checkingBeforeDeclare();
+			} else {
+				setShowOrHideEmail();
+				initDefaultNewAdmin();
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/forcereplaceadmin/addNewAdminInfo.xhtml",
+						"", null, null);
+			}
 		}
+		// #33589 - End
 	}
 
 	/**
