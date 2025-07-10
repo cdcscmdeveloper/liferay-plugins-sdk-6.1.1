@@ -280,7 +280,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		if(getManagedBean().getSmSupplier().getTypeDisciplinaryAction() != null){//26238 :Disciplinary Action - bug fix
 			getManagedBean().setAllowedToDoMaintenance(false);
 		}else {
-			setLoginUserAllowedToDoMaintenance();
+			setLoginUserAllowedToDoMaintenance(mofStatus);	//#26238 - 38417
 		}
 		//28273: Disciplinary Action  - end - <26238>
 		checkIfSupplierHasActiveTransaction(false);
@@ -403,7 +403,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				SmApplicationUtil.getSmSupplierBasicInfoVO(getManagedBean()
 						.getBasicInfo(), getManagedBean().getSmSupplier(),
 						getManagedBean().getSmAppl()));
-		setLoginUserAllowedToDoMaintenance();
+		setLoginUserAllowedToDoMaintenance("");	//#26238 - 38417
 		checkIfSupplierHasActiveTransaction(true);
 
 		SmCommonUtil
@@ -1837,10 +1837,18 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * Set whether the login user is allowed to do data maintenance
 	 */
-	private void setLoginUserAllowedToDoMaintenance() {
+	private void setLoginUserAllowedToDoMaintenance(String mofStatus) {
 		getManagedBean().setAllowedToDoMaintenance(false);
 		if (isLoginUserAllowedToEdit()) {
 			getManagedBean().setAllowedToDoMaintenance(true);
+		}
+		//#26238 - 38417
+		SmSupplier supplier = getManagedBean().getSmSupplier();
+		boolean hasPending = supplier.isPendingBlacklist() || supplier.isPendingCancel()
+				|| supplier.isPendingSuspend();
+		if (!hasPending && StringUtils.isNotEmpty(mofStatus) 
+				&& mofStatus.equals(SupplierManagementConst.MOF_STATUS_DELETED)){
+			getManagedBean().setAllowedToDoMaintenance(false);
 		}
 	}
 
@@ -2859,7 +2867,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	//13320-end
 	
 	
-	//32618 - Start
+	//32618 - Start, 38391
 	//#26238
 	/**
 	 * Removed selected cancel bumi categories from the list.
@@ -2867,7 +2875,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	 */
 	public void unSelectCancelBumiCategories() {
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
-				|| getManagedBean().getSelectedPendingApprovedCategories() == null){
+				|| getManagedBean().getSelectedPendingApprovedCategories() == null
+				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
 			return;
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();

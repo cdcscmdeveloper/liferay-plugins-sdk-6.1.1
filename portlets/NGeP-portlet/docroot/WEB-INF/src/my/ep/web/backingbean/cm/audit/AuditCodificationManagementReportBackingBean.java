@@ -149,6 +149,19 @@ public class AuditCodificationManagementReportBackingBean extends
 	}
 
 	/**
+	 * Reload item code and extension code data on selected tab
+	 */
+	public void onTabChange() {
+		int activeIndex = getManagedBean().getActiveIndex();
+
+		if (activeIndex == 0) {
+			loadCIDetails();
+		} else {
+			loadCEDetails();
+		}
+	}
+
+	/**
 	 * Data table for Code Item data
 	 * 
 	 */
