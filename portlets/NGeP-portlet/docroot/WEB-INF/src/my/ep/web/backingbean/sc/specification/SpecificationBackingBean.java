@@ -17903,17 +17903,17 @@ public class SpecificationBackingBean extends
 		}
 		// #29732(#232) - End
 
+		retriveTechnicalCheckList(); // 1873 - note 52
+		// 11104_start
+		this.getManagedBean().setSampleShowHide(
+				checkSampleRadioShowHideInSpecPrepareAndMaintenance());
+		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(),
+				this.getManagedBean().getQt());
+		// 11104_end
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
-
-		// 11104WIP -start-
-		this.getManagedBean().setSampleShowHide(checkSampleRadioShowHideInSpecPrepareAndMaintenance());
-
-		retriveTechnicalCheckList();
-
-		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(), this.getManagedBean().getQt());
-		// 11104WIP -end-
-
+		
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
