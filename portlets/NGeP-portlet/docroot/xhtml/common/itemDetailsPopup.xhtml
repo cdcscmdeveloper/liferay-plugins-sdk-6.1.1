@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="itemDescDialogId"
-		header="#{lbl['lbl.sc.item.details']}" widgetVar="itemDescDialogId"
-		width="1000" resizable="false" closable="true">
+	<p:dialog id="itemDescDialogId" header="#{lbl['lbl.sc.item.details']}"
+		widgetVar="itemDescDialogId" width="1000" resizable="false"
+		closable="true">
 
 		<table style="border: hidden;">
 			<tr>
@@ -40,37 +40,46 @@
 			</p:dataTable>
 
 			<table
-				style="width: 100%; margin-bottom: 4px; margin-bottom: 6px; border: hidden !important;">
+				style="width: 100%; margin-bottom: 4px; margin-bottom: 6px; border: 10px !important;">
 				<tr style="border: hidden !important;">
 					<td width="15%" style="border: hidden !important; padding: 0;">
 						<p:outputLabel style="font-weight: bold;"
 							value="#{lbl['lbl.cm.commodity.code']}" />
 					</td>
-					<td width="30%" style="border: hidden !important; padding: 0;">
-						<h:outputText style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.commodityCode}" />
+					<td width="30%" style="border: 10px !important; padding: 0;">
+						<p:inputText id="commodityCodeId"
+							value="#{codificationBackingBean.managedBean.commodityCode}"
+							style="width:300px;" disabled="true" />
 					</td>
 					<td width="15%" style="border: hidden !important; padding: 0;">
 						<p:outputLabel style="font-weight: bold;"
 							value="#{lbl['lbl.cm.commodity.title']}" />
 					</td>
-					<td style="border: hidden !important; padding: 0;"><h:outputText
-							style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.commodityTitle}" /></td>
+					<td style="border: 10px !important; padding: 0;"><p:inputText
+							id="commodityTitleId"
+							value="#{codificationBackingBean.managedBean.commodityTitle}"
+							style="width:300px;" disabled="true" /></td>
 				</tr>
 				<tr style="border: hidden !important;">
-					<td width="15%" style="border: hidden !important; padding: 0;"><p:outputLabel
-							style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.code']}" /></td>
-					<td width="30%" style="border: hidden !important; padding: 0;"><h:outputText
-							style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.segmentCode}" /></td>
-					<td width="15%" style="border: hidden !important; padding: 0;"><p:outputLabel
-							style="font-weight: bold;"
-							value="#{lbl['lbl.sc.qt.extension.title']}" /></td>
-					<td style="border: hidden !important; padding: 0;"><h:outputText
-							style="white-space: normal!important;"
-							value="#{codificationBackingBean.managedBean.segmentTitle}" /></td>
+					<td width="15%" style="border: hidden !important; padding: 0;">
+						<p:outputLabel style="font-weight: bold;"
+							value="#{lbl['lbl.sc.qt.extension.code']}" />
+					</td>
+					<td width="30%" style="border: 10px !important; padding: 0;">
+						<p:inputText id="segmentCodeId"
+							value="#{codificationBackingBean.managedBean.segmentCode}"
+							style="width:300px;" disabled="true" />
+					</td>
+					<td width="15%" style="border: hidden !important; padding: 0;">
+						<p:outputLabel style="font-weight: bold;"
+							value="#{lbl['lbl.sc.qt.extension.title']}" />
+					</td>
+					<td><p:inputText id="segmentTitleId"
+							value="#{codificationBackingBean.managedBean.segmentTitle}"
+							style="width:300px;" disabled="true" /></td>
+
+
+
 				</tr>
 			</table>
 		</p:panel>
