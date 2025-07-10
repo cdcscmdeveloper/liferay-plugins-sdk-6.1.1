@@ -9028,9 +9028,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				sortBondWaiverDefermentHistory();
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaivedAttachment",
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_AMENDMENTBACKINGBEAN,
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
-					"chkBondWaivedAttachment", getUserIdSessionFromLoginId(), e);
+					ContractConst.SLA_CHK_BOND_WAIVED_ATTACHMENT, getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
