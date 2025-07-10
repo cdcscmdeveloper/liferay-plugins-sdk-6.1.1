@@ -1658,18 +1658,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposalLstClone = new ArrayList<ScQtCheckList>();
 	private List<ScQtCheckList> scQtCheckSt2financeProposalLstClone = new ArrayList<ScQtCheckList>();
 	// Bug #35219@Syazani 07/11/2023 -- End
-	//#11104-start
+
+	// #11104-start
 	private ScQtCheckList sampleCheckList;
 	private TplSpecQuestion sampleSpecQuestion;
 	private String sampleItemName;
 	private int sampleTotalScore;
 	private List<ScQtCheckList> sampleSpecCheckList;
 	private List<BriefingZoneBean> sampleAddressBean;
-	private Map<Long,SampleQuestionBean> existingSampleSpecQuestions;
-	//#11104-End
-	
-	private boolean isSampleShowHide;//11104wip
-	
+	private Map<Long, SampleQuestionBean> existingSampleSpecQuestions;
+	private boolean isSampleShowHide; // 11104wip
+	// #11104-End
+
 	// 25037 - start
 	private boolean showHistory;
 	private Paginator committeeHistories;
@@ -10448,8 +10448,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtCheckSt2financeProposalLstClone = scQtCheckSt2financeProposalLstClone;
 	}
 	// Bug #35219@Syazani 07/11/2023 -- End
-	
-	/**11104-start
+
+	// 11104-start
+	/**
 	 * @return the sampleCheckList
 	 */
 	public ScQtCheckList getSampleCheckList() {
@@ -10457,7 +10458,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleCheckList the sampleCheckList to set
+	 * @param sampleCheckList
+	 *            the sampleCheckList to set
 	 */
 	public void setSampleCheckList(ScQtCheckList sampleCheckList) {
 		this.sampleCheckList = sampleCheckList;
@@ -10471,7 +10473,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleSpecQuestion the sampleSpecQuestion to set
+	 * @param sampleSpecQuestion
+	 *            the sampleSpecQuestion to set
 	 */
 	public void setSampleSpecQuestion(TplSpecQuestion sampleSpecQuestion) {
 		this.sampleSpecQuestion = sampleSpecQuestion;
@@ -10485,7 +10488,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleItemName the sampleItemName to set
+	 * @param sampleItemName
+	 *            the sampleItemName to set
 	 */
 	public void setSampleItemName(String sampleItemName) {
 		this.sampleItemName = sampleItemName;
@@ -10499,11 +10503,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleTotalScore the sampleTotalScore to set
+	 * @param sampleTotalScore
+	 *            the sampleTotalScore to set
 	 */
 	public void setSampleTotalScore(int sampleTotalScore) {
 		this.sampleTotalScore = sampleTotalScore;
 	}
+
 	/**
 	 * @return the sampleSpecCheckList
 	 */
@@ -10512,13 +10518,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleSpecCheckList the sampleSpecCheckList to set
+	 * @param sampleSpecCheckList
+	 *            the sampleSpecCheckList to set
 	 */
 	public void setSampleSpecCheckList(List<ScQtCheckList> sampleSpecCheckList) {
 		this.sampleSpecCheckList = sampleSpecCheckList;
 	}
+
 	/**
-	 * 11104-start
+	 * 
 	 * @return the sampleAddressBean
 	 */
 	public List<BriefingZoneBean> getSampleAddressBean() {
@@ -10526,13 +10534,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleAddressBean the sampleAddressBean to set
+	 * @param sampleAddressBean
+	 *            the sampleAddressBean to set
 	 */
 	public void setSampleAddressBean(List<BriefingZoneBean> sampleAddressBean) {
 		this.sampleAddressBean = sampleAddressBean;
 	}
+
 	/**
-	 * 11104-StartReendose
+	 * 
 	 * @return the existingSampleSpecQuestions
 	 */
 	public Map<Long, SampleQuestionBean> getExistingSampleSpecQuestions() {
@@ -10540,15 +10550,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param existingSampleSpecQuestions the existingSampleSpecQuestions to set
+	 * @param existingSampleSpecQuestions
+	 *            the existingSampleSpecQuestions to set
 	 */
-	public void setExistingSampleSpecQuestions(
-			Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
+	public void setExistingSampleSpecQuestions(Map<Long, SampleQuestionBean> existingSampleSpecQuestions) {
 		this.existingSampleSpecQuestions = existingSampleSpecQuestions;
-	}//11104-End
+	}
 
 	/**
-	 * 11104-Start
+	 * 
 	 * @return the isSampleShowHide
 	 */
 	public boolean isSampleShowHide() {
@@ -10556,12 +10566,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isSampleShowHide the isSampleShowHide to set
+	 * @param isSampleShowHide
+	 *            the isSampleShowHide to set
 	 */
 	public void setSampleShowHide(boolean isSampleShowHide) {
 		this.isSampleShowHide = isSampleShowHide;
-	}//11104-End
-	
+	}
+	// 11104-End
+
 	// 25037 - start
 	public boolean isShowHistory() {
 		return showHistory;
