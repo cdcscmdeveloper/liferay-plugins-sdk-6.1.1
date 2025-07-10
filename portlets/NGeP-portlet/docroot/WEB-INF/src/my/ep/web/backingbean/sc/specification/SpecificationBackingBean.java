@@ -17977,15 +17977,19 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		// #29732(#232) - End
-		
+
+		retriveTechnicalCheckList(); // 1873 - note 52
+		// 11104_start
+		this.getManagedBean().setSampleShowHide(
+				checkSampleRadioShowHideInSpecPrepareAndMaintenance());
+		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(),
+				this.getManagedBean().getQt());
+		// 11104_end
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
-		this.getManagedBean().setSampleShowHide(checkSampleRadioShowHideInSpecPrepareAndMaintenance());// 11104WIP
-			retriveTechnicalCheckList();
-			checkSampleWipData(this.getManagedBean()
-					.getScQtCheckSt2techProposal(), this.getManagedBean()
-					.getQt());// 11104WIP
-				fc.getApplication()
+		
+		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
