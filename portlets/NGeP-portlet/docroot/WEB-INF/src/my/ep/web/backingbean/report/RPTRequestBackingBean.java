@@ -66,7 +66,7 @@ public class RPTRequestBackingBean extends BaseBackingBean<RPTRequestManagedBean
 	 */
 	private static final long serialVersionUID = 1L;
 
-	protected static final Logger logger = EpLogger
+	private static final Logger logger = EpLogger
 			.getLogger(RPTRequestBackingBean.class);
 
 	private IPagingDataModel<RPTRequest> rptRequestDataModel = new RPTRequestDataModel();
