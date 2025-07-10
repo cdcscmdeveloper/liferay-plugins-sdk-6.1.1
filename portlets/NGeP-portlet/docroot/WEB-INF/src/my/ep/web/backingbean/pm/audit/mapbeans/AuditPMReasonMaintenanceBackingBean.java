@@ -10,7 +10,6 @@ import my.ep.constant.pm.AuditConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
-import my.ep.helper.EntityHelper;
 import my.ep.persistence.entity.pm.common.PmPIDReason;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -215,7 +214,7 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		/** contract or circular criteria */
 		contractOrCircularCriteria(oldReason, existingReason);
 		/** sourcing method */
-//		sourcingMethod(oldReason, existingReason);
+		sourcingMethod(oldReason, existingReason);
 
 	}
 
@@ -236,8 +235,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 
 		if ( (existingReason.getConditionField() != null && existingReason.getConditionField().getParameterId() == null) && 
 				(oldReason.getConditionField() != null && oldReason.getConditionField().getParameterId() != null)) {
-			System.out.println(" ********* Start ********************************** 1 ");
-
 			contractOrCircular.setOldValue(checkPmParameterDesc(oldReason.getConditionField()));
 			contractOrCircular.setOldValueId(BigInteger.valueOf(oldReason.getConditionField().getParameterId()));
 			contractOrCircular.setNewValue(null);
@@ -245,8 +242,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 		}
 		else if ((existingReason.getConditionField() != null && existingReason.getConditionField().getParameterId() != null) && 
 				(oldReason.getConditionField() == null)) {
-			System.out.println(" ********* Start ********************************** 2 ");
-
 			contractOrCircular.setOldValue(null);
 			contractOrCircular.setNewValue(checkPmParameterDesc(existingReason.getConditionField()));
 			contractOrCircular.setNewValueId(BigInteger.valueOf(existingReason.getConditionField().getParameterId()));
@@ -255,8 +250,6 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 				&& (oldReason.getConditionField() != null && oldReason.getConditionField().getParameterId() != null)
 				&& !existingReason.getConditionField().getParameterId()
 						.equals(oldReason.getConditionField().getParameterId())) {
-			System.out.println(" ********* Start ********************************** 3 ");
-
 			contractOrCircular.setOldValue(checkPmParameterDesc(oldReason.getConditionField()));
 			contractOrCircular.setNewValue(checkPmParameterDesc(existingReason.getConditionField()));
 			objList.add(contractOrCircular);
@@ -266,34 +259,46 @@ public class AuditPMReasonMaintenanceBackingBean extends AuditPMBackingBeanTempl
 	
 	private void sourcingMethod(PmReason oldReason, PmReason existingReason){
 		
-		PmParameter existingSourcingMethod = existingReason.getSourceMethod()!=null? existingReason.getSourceMethod() : new PmParameter();
-		PmParameter oldSourcingMethod = oldReason.getSourceMethod()!=null? oldReason.getSourceMethod() : new PmParameter();
+		PmParameter existingSourcingMethod = existingReason.getSourceMethod();
+		PmParameter oldSourcingMethod = oldReason.getSourceMethod();
+		AuditPMSPDTO sourcingMethod = new AuditPMSPDTO();
 		
-		if (!oldSourcingMethod.getParameterId().equals(existingSourcingMethod.getParameterId())) {
-			
-			AuditPMSPDTO sourcingMethod = new AuditPMSPDTO();
-			sourcingMethod.setRoleCode(roleCode);
-			sourcingMethod.setDocType(docType);
-			sourcingMethod.setDocNo(existingReason.getReasonCode());
-			sourcingMethod.setDocGroupId(docId);
-			sourcingMethod.setPmParameterLvlId(parameterLevelId);
-			sourcingMethod.setLvlCode1(AuditConst.PM_LVL_CODE_1);
-			sourcingMethod.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
-			sourcingMethod.setLvlCode3(parameterCode);
-			sourcingMethod.setDocId(BigInteger.valueOf(existingReason.getReasonId()));
-			sourcingMethod.setFieldLabelCode(AuditConst.PM_AUD_RC_SOURCE_METHOD_FIELDLABELCODE);
-			sourcingMethod.setOldValue(oldReason.getSourceMethod().getParameterId() != null ? checkPmParameterDesc(oldReason
-					.getSourceMethod()) : null);
-			sourcingMethod.setNewValue(existingReason.getSourceMethod().getParameterId() != null ? checkPmParameterDesc(existingReason
-					.getSourceMethod()) : null);
-			sourcingMethod.setOldValueId(oldReason.getSourceMethod().getParameterId() != null ? BigInteger.valueOf(oldReason
-					.getSourceMethod().getParameterId()) : null);
-			sourcingMethod.setNewValueId(existingReason.getSourceMethod().getParameterId() != null ? BigInteger.valueOf(existingReason
-					.getSourceMethod().getParameterId()) : null);
-			sourcingMethod.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		sourcingMethod.setRoleCode(roleCode);
+		sourcingMethod.setDocType(docType);
+		sourcingMethod.setDocNo(existingReason.getReasonCode());
+		sourcingMethod.setDocGroupId(docId);
+		sourcingMethod.setPmParameterLvlId(parameterLevelId);
+		sourcingMethod.setLvlCode1(AuditConst.PM_LVL_CODE_1);
+		sourcingMethod.setLvlCode2(AuditConst.PM_LVL_CODE_2_RC);
+		sourcingMethod.setLvlCode3(parameterCode);
+		sourcingMethod.setDocId(docId);
+		sourcingMethod.setFieldLabelCode(AuditConst.PM_AUD_RC_SOURCE_METHOD_FIELDLABELCODE);
+		sourcingMethod.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
+		
+		if ( (existingSourcingMethod != null && existingSourcingMethod.getParameterId() == null) && 
+				(oldSourcingMethod != null && oldSourcingMethod.getParameterId() != null)) {
+			sourcingMethod.setOldValue(checkPmParameterDesc(oldSourcingMethod));
+			sourcingMethod.setOldValueId(BigInteger.valueOf(oldSourcingMethod.getParameterId()));
+			sourcingMethod.setNewValue(null);
 			objList.add(sourcingMethod);
 		}
-		
+		else if ((existingSourcingMethod != null && existingSourcingMethod.getParameterId() != null) && 
+				(oldSourcingMethod == null)) {
+			sourcingMethod.setOldValue(null);
+			sourcingMethod.setNewValue(checkPmParameterDesc(existingSourcingMethod));
+			sourcingMethod.setNewValueId(BigInteger.valueOf(existingSourcingMethod.getParameterId()));
+			objList.add(sourcingMethod);
+			
+		} else if ((existingSourcingMethod != null && existingSourcingMethod.getParameterId() != null)
+				&& (oldSourcingMethod != null && oldSourcingMethod.getParameterId() != null)
+				&& !existingSourcingMethod.getParameterId()
+						.equals(oldSourcingMethod.getParameterId())) {
+			sourcingMethod.setOldValue(checkPmParameterDesc(oldSourcingMethod));
+			sourcingMethod.setNewValue(checkPmParameterDesc(existingSourcingMethod));
+			objList.add(sourcingMethod);
+
+		}
+			
 	}
 
 	// create new SRR
