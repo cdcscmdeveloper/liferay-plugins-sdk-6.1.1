@@ -352,6 +352,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     	//38255-End	
 	private String backToNtf; //35357
 	
+	// 29555 start
+	private String preparedBy;
+	// 29555 end
     
 	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
 		
@@ -3364,4 +3367,18 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.backToNtf = backToNtf;
 	}
 	//35357-End
+
+	/**
+	 * @return the preparedBy
+	 */
+	public String getPreparedBy() {
+		return preparedBy;
+	}
+
+	/**
+	 * @param preparedBy the preparedBy to set
+	 */
+	public void setPreparedBy(String preparedBy) {
+		this.preparedBy = preparedBy;
+	}
 }
