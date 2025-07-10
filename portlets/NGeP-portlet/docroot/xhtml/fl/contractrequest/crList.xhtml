@@ -206,7 +206,7 @@
                         							<h:outputText value="#{contractExpansion.crNo}"
 								style="display: block; width:100%; text-align:center;" />
 
-							    <h:outputText value="#{contractExpansion.crNoStatus=='(null)' ? '' : contractExpansion.crNoStatus}"
+				<!-- 38255 --><h:outputText value="#{contractExpansion.crNoStatus=='()' ? '' : contractExpansion.crNoStatus}"
 								style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 								
                         </p:column>
@@ -215,7 +215,7 @@
                           <h:outputText value="#{contractExpansion.coNo}"
 								style="display: block; width:100%; text-align:center;" />
 			
-						  <h:outputText value="#{contractExpansion.coNoStatus=='(null)' ? '' : contractExpansion.coNoStatus}"
+			<!-- 38255 --><h:outputText value="#{contractExpansion.coNoStatus=='()' ? '' : contractExpansion.coNoStatus}"
 							style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
                         </p:column>
 					</p:dataTable>
@@ -271,9 +271,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}" style="width:58px;text-align:center">
-			    <!--# 24956 -->
-				<p:commandLink id="crBasepageLink" rendered="#{ (vCtActiveContract.fulfilmentType ne ParameterConst.fulfilmentTypeScheduled )
-				and (vCtActiveContract.fulfilmentType ne ParameterConst.fulfilmentTypeNonPeriodicScheduled) }"
+				<p:commandLink id="crBasepageLink" rendered="#{vCtActiveContract.fulfilmentType ne ParameterConst.fulfilmentTypeScheduled}"
 					onclick="procure([{name:'contractId',value:'#{vCtActiveContract.contractId}'},{name:'scheduleNo',value:'#{vCtActiveContract.scheduleNo == null ? vCtActiveContract.phaseNo : vCtActiveContract.scheduleNo}'}])">
 					<p:graphicImage value="/css/images/design/ico-view.png"
 						title="#{lbl['lbl.fl.contract.request']}" />

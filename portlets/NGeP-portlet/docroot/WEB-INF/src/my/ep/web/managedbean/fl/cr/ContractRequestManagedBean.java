@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -31,6 +32,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -64,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sc.common.ScRequestItemSpecOffer;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.cm.catalogue.ScheduleInfo;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.GlAccountSearchBean;
@@ -72,7 +76,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.FLCtSupplierItemVO;
-
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -342,7 +346,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
  // 28855 - End
  	
     //24956 start
-    private boolean CtTypeMinistry;
+    private boolean ctTypeMinistry;
     //24956 end
     
   //11076 - start
@@ -357,6 +361,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
     private int deleteOverallItem;
   //11076 - end
     private boolean bondIncomplete = false;//35024
+    //38255-Start
+    private List<ScheduleInfo> schInfo;
+    //38255-End
     
     public ContractRequestManagedBean(){
 
@@ -465,20 +472,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 										"fulfilment_type",
 										SearchOperator.OPERATOR_EQUALS.value(), 
 										searchTypesDD));
-					//start 24956
-					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_AS_AND_WHEN)){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"fulfilment_type",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										searchTypesDD));
-					}else if(searchTypesDD.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)){
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean(
-										"fulfilment_type",
-										SearchOperator.OPERATOR_EQUALS.value(), 
-										searchTypesDD));	
-				//end 24956	
 					}
 				}
 				
@@ -519,62 +512,43 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-				FulfilmentResDTO resfDTO;
+				//FulfilmentResDTO resfDTO; -remove #38255
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
-						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-								|| vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED)) { //24956
+						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 							/*13984 Schedule/ Phase info List BEGINNING*/
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
 							contractReqDTO.setOrgProfileId(orgProfileId);//28469
 							flReqDTO.setContractId(vCtActiveContract.getContractId());
 
 							flReqDTO.setOrgProfileId(orgProfileId);
-							resfDTO = requestSO.retrieveFulfilmentRequestDocNosByContractId(flReqDTO);//all CR under this contract filter by contractId,profile id -#28469
+							//38255-Start
+							List<FulfilmentResDTO> scheduleDetails = requestSO.getFulfilmentScheduleDetails(flReqDTO);
 
-							List<VCtActiveContract> InfoActiveContractList = contractSO
+							List<VCtActiveContract> infoActiveContractList = contractSO
 									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();//all schedule list under this contract
-									
-							List<VCtActiveContract> activeContractScheduleList = requestSO
-									.retrieveTotalFulfilmentRequestForThisContract(flReqDTO).getActiveContractList();//total CR under this contract filter by contractId,profile id -#28469	
-						
-							for (int i = 0; i < resfDTO.getDocNos().size(); i++) {
+										
+							List<VCtActiveContract> convertedScheduleList = new ArrayList<>();
 
-								int j = i + 1;
-								if (j > resfDTO.getDocNos().size()) {
+							for (FulfilmentResDTO detail : scheduleDetails) {
+							    VCtActiveContract contract = new VCtActiveContract();
 
-									resfDTO.getDocNos().add("");
-								}
-								if (j > resfDTO.getFlOrderDocNos().size()) {
+							    contract.setScheduleNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
+							    contract.setCrNo(detail.getDocNo());
+							    contract.setCrNoStatus("("+getPmStatusDesc(detail.getDocStatus())+")");
+							    contract.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
+							    contract.setCoNoStatus("("+getPmStatusDesc(detail.getFlOrderDocStatus())+")");
 
-									resfDTO.getFlOrderDocNos().add("");
-								}
-								if (j > resfDTO.getFlOrderDocNoStatus().size()) {
-
-									resfDTO.getFlOrderDocNoStatus().add("");
-								}
-								if (j > resfDTO.getDocNoStatus().size()) {
-
-									resfDTO.getDocNoStatus().add("");
-								}
-								
-								
-								activeContractScheduleList.get(i).setScheduleNo(resfDTO.getFlSchNos().get(i));
-								activeContractScheduleList.get(i).setCrNo(resfDTO.getDocNos().get(i));
-								activeContractScheduleList.get(i).setCrNoStatus(resfDTO.getDocNoStatus().get(i));
-								activeContractScheduleList.get(i).setCoNo(resfDTO.getFlOrderDocNos().get(i));
-								activeContractScheduleList.get(i).setCoNoStatus(resfDTO.getFlOrderDocNoStatus().get(i));
-								
+							    convertedScheduleList.add(contract);
 							}
-							
-							vCtActiveContract.setActiveContractSubList(InfoActiveContractList);
-							
-							if(resfDTO.getDocNos().size()>0){
-								vCtActiveContract.setActiveContractScheduleList(activeContractScheduleList);
-							}
-							
-							setOrgCode(orgCode);
-							setOrgName(orgName);
+
+							vCtActiveContract.setActiveContractScheduleList(convertedScheduleList);
+
+					        vCtActiveContract.setActiveContractSubList(infoActiveContractList);
+
+					        setOrgCode(orgCode);
+					        setOrgName(orgName);
+					        //38255-End
 							/*13984 Schedule/ Phase info List ENDING*/
 						}
 					}
@@ -584,6 +558,27 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				e.printStackTrace();
 			}
 			return null;
+		}
+		
+		/**
+		 * #38255
+		 * Retrieves the PM status description based on the given statusId
+		 *
+		 * @param statusId 
+		 * @return statusDesc
+		 */
+		private String getPmStatusDesc(Long statusId) {
+			IStatusSO statusSO;
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			String statusDesc = StringUtils.EMPTY;
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(statusId);
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
+			if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+				statusDesc = resDTO.getPmStatusDesc().getStatusName();
+			}
+			return statusDesc;
 		}
 	}
 	
@@ -3320,11 +3315,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	//24956 - start
 	public boolean isCtTypeMinistry() {
-		return CtTypeMinistry;
+		return ctTypeMinistry;
 	}
 
 	public void setCtTypeMinistry(boolean ctTypeMinistry) {
-		CtTypeMinistry = ctTypeMinistry;
+		this.ctTypeMinistry = ctTypeMinistry;
 	}
 	//24956 - end
 	//11076 -start
@@ -3410,6 +3405,19 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			this.bondIncomplete = bondIncomplete;
 		}
 		
-		//35024-End		
+		//35024-End	
+		
+		// 38255-Start
+		public List<ScheduleInfo> getSchInfo() {
+			if (schInfo == null)
+				schInfo = new ArrayList<>();
+	
+			return schInfo;
+		}
+	
+		public void setSchInfo(List<ScheduleInfo> schInfo) {
+			this.schInfo = schInfo;
+		}
+		// 38255-End
 		
 }

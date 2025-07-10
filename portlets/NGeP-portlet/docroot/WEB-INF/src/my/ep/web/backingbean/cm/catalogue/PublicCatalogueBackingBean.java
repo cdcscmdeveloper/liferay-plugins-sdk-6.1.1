@@ -290,7 +290,8 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		// #10747 - Soo - End
 		this.getManagedBean().setBrandId(0L);
 		// #10747- Start
-        this.getManagedBean().setConverterVisible(true);		
+        this.getManagedBean().setConverterVisible(true);
+        this.getManagedBean().setBrandCriteria(null);
 		RequestContext.getCurrentInstance().reset("form:catalogueTabId:resultpl");
 		
 		this.getManagedBean().getSearchDataModel().reloadData();

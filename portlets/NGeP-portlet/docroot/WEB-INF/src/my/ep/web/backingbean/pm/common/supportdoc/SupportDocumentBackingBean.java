@@ -54,6 +54,7 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -67,7 +68,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.logging.LogKey;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -887,7 +887,7 @@ public class SupportDocumentBackingBean extends
 				if (this.getManagedBean().getDeleteSuppTypeRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteSuppTypeRestrictionsAudit(new ArrayList<PmDocumentRestr>());
 				}
-				;
+				
 				getManagedBean().getDeleteSuppTypeRestrictionsAudit().add(pmDocRestr);
 				getManagedBean().getSuppTypeRestrictions().remove(pmDocRestr);
 
@@ -898,7 +898,7 @@ public class SupportDocumentBackingBean extends
 				if (this.getManagedBean().getDeleteCategoryRestrictionsAudit() == null) {
 					this.getManagedBean().setDeleteCategoryRestrictionsAudit(new ArrayList<PmDocumentRestr>());
 				}
-				;
+				
 				getManagedBean().getDeleteCategoryRestrictionsAudit().add(pmDocRestr);
 				getManagedBean().getCategoryRestrictions().remove(pmDocRestr);
 
@@ -1418,7 +1418,7 @@ public class SupportDocumentBackingBean extends
 	}
 
 	/**
-	 * get record status options //TODO: to load dynamically
+	 * get record status options
 	 * 
 	 * @return SelectItem[]
 	 */
@@ -1428,7 +1428,7 @@ public class SupportDocumentBackingBean extends
 	}
 
 	/**
-	 * get YES & NO options //TODO: to load dynamically
+	 * get YES & NO options
 	 * 
 	 * @return SelectItem[]
 	 */
@@ -2195,6 +2195,14 @@ public class SupportDocumentBackingBean extends
 			}
 			/************ AUDIT #28895_35509 - START *************/
 			if (resDTO.isSuccessful()) {
+				IZoneSO zoneSo = (IZoneSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IZoneSO.class);
+				ZoneReqDTO zoneReqDto = new ZoneReqDTO();
+				if (null != resDTO.getDocument().getPmZone()) {
+					zoneReqDto.setZoneId(resDTO.getDocument().getPmZone().getZoneId());
+					this.getManagedBean().setAuditPmZone(zoneSo.retriveZoneByID(zoneReqDto).getPmZone());
+				}
 				getManagedBean().setUpdatedPmDocumentRestrList(resDTO.getUpdatedPmDocumentRestrList());
 				if (createAction) {
 					PmCommonUtil.showFacesMsg(
@@ -2416,20 +2424,17 @@ public class SupportDocumentBackingBean extends
 	 * 
 	 * @return ISearchBean<PmDocument>
 	 */
-	private ISearchBean<PmDocument> getSearchBeanData(
-			ISearchBean<PmDocument> searchBean) {
+	/*
+	private ISearchBean<PmDocument> getSearchBeanData(ISearchBean<PmDocument> searchBean) {
 		log.info("getSearchBeanData - Start");
 
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
-		SupportDocumentSearchBean sdSearchBean = this.getManagedBean()
-				.getSupportDocSearchBean();
+		SupportDocumentSearchBean sdSearchBean = this.getManagedBean().getSupportDocSearchBean();
 
 		// Doc Category
-		if (sdSearchBean.getDocCategoryParamCode() != null
-				&& !"".equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
-			log.info("+ docCategoryParamCode "
-					+ sdSearchBean.getDocCategoryParamCode());
+		if (sdSearchBean.getDocCategoryParamCode() != null && !"".equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
+			log.info("+ docCategoryParamCode " + sdSearchBean.getDocCategoryParamCode());
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("docCategoryCode.parameterCode");
@@ -2438,22 +2443,18 @@ public class SupportDocumentBackingBean extends
 			isEmpty = false;
 		}
 		// Document Name
-		if (sdSearchBean.getDocName() != null
-				&& !"".equalsIgnoreCase(sdSearchBean.getDocName())) {
+		if (sdSearchBean.getDocName() != null && !"".equalsIgnoreCase(sdSearchBean.getDocName())) {
 			log.info("+ docName " + sdSearchBean.getDocName());
-			SearchFilterBean bean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
+			SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 			bean.setCaseInsensitive(true);
 			bean.setSearchField("docName");
 			bean.setSearchValue(sdSearchBean.getDocName());
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
-		if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT
-				.equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
+		if (ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equalsIgnoreCase(sdSearchBean.getDocCategoryParamCode())) {
 			// App Type
-			if (sdSearchBean.getAppTypeParam() != null
-					&& sdSearchBean.getAppTypeParam() > 0L) {
+			if (sdSearchBean.getAppTypeParam() != null && sdSearchBean.getAppTypeParam() > 0L) {
 				log.info("+ appTypeParam " + sdSearchBean.getAppTypeParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -2464,8 +2465,7 @@ public class SupportDocumentBackingBean extends
 				isEmpty = false;
 			}
 			// Comp Type
-			if (sdSearchBean.getComTypeParam() != null
-					&& sdSearchBean.getComTypeParam() > 0L) {
+			if (sdSearchBean.getComTypeParam() != null && sdSearchBean.getComTypeParam() > 0L) {
 				log.info("+ comTypeParam " + sdSearchBean.getComTypeParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -2476,8 +2476,7 @@ public class SupportDocumentBackingBean extends
 				isEmpty = false;
 			}
 			// Supp Type
-			if (sdSearchBean.getSuppTypeParam() != null
-					&& sdSearchBean.getSuppTypeParam() > 0L) {
+			if (sdSearchBean.getSuppTypeParam() != null && sdSearchBean.getSuppTypeParam() > 0L) {
 				log.info("+ suppTypeParam " + sdSearchBean.getSuppTypeParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -2489,12 +2488,9 @@ public class SupportDocumentBackingBean extends
 			}
 
 			// Business Category
-			if (sdSearchBean.getBusinessCategory() != null
-					&& !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
-				log.info("+ businessCategory "
-						+ sdSearchBean.getBusinessCategory());
-				SearchFilterBean bean = new SearchFilterBean(
-						SearchOperator.OPERATOR_LIKE.value());
+			if (sdSearchBean.getBusinessCategory() != null && !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
+				log.info("+ businessCategory " + sdSearchBean.getBusinessCategory());
+				SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 				bean.setCaseInsensitive(true);
 				bean.setSearchField("pmDocumentRestrs.pmCategoryL3.categoryName");
 				bean.setSearchValue(sdSearchBean.getBusinessCategory());
@@ -2512,14 +2508,12 @@ public class SupportDocumentBackingBean extends
 				searchBean.getDataFilterBeans().add(bean);
 
 				if (sdSearchBean.getPmZone() > 0L) {
-					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
-							.value());
+					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 					bean.setSearchValue(sdSearchBean.getPmZone());
 
 				} else {
 					// if zone selected is All.
-					bean.setSearchOperator(SearchOperator.OPERATOR_IS_NULL
-							.value());
+					bean.setSearchOperator(SearchOperator.OPERATOR_IS_NULL.value());
 				}
 
 				isEmpty = false;
@@ -2527,10 +2521,8 @@ public class SupportDocumentBackingBean extends
 
 		} else {
 			// Procurement Category
-			if (sdSearchBean.getProcureCatParam() != null
-					&& sdSearchBean.getProcureCatParam() > 0L) {
-				log.info("+ procureCatParam "
-						+ sdSearchBean.getProcureCatParam());
+			if (sdSearchBean.getProcureCatParam() != null && sdSearchBean.getProcureCatParam() > 0L) {
+				log.info("+ procureCatParam " + sdSearchBean.getProcureCatParam());
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchField("pmDocumentRestrs.procurementCatCode.parameterId");
@@ -2553,6 +2545,7 @@ public class SupportDocumentBackingBean extends
 		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
+	*/
 
 	/**
 	 * @return the pmDocumentDataModel

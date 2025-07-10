@@ -142,7 +142,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeState(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity" />
+						update="branchState,divisionBranchTbleLabelPanelId,divisionBranchTbleDropdownPanelId,branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
@@ -185,7 +185,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeDistrictByDivision(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchDist,branchCity" />
+						update="branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu>
 				<!-- #34159 - END -->
 				<!-- #35086 -->
@@ -222,7 +222,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeDistrict(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchDist,branchCity" />
+						update="branchDist,branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<ac:smFieldChangeAlert 
@@ -252,7 +252,7 @@
 					<!-- #36718 - process panel when change address dropdown -->
 					<p:ajax event="change" process="@this @([id$=supBrnAddrPanelId])"
 						listener="#{backingBean.onChangeCity(backingBean.managedBean.selectedBranch.smAddress,SupplierManagementConst.SM_BRANCH_PANEL)}"
-						update="branchCity" />
+						update="branchCity,postCodeBranchPanelId" />
 				</p:selectOneMenu>
 			<!-- #34159 - END --> 
 				<ac:smFieldChangeAlert 
@@ -267,16 +267,15 @@
 				<p:message id="branchCityMsg" for="branchCity" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
-		</p:panel>
-		<!-- #36718 - END -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<td><p:outputPanel id="postCodeBranchPanelId">
 					<p:outputPanel
 						rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+						<!-- #36718 - change required condition -->
 						<p:inputText maxlength="5"
-							required="#{backingBean.managedBean.valueReqd}"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeMy"
 							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
 							disabled="#{backingBean.managedBean.upsCannotEdit
@@ -299,8 +298,9 @@
 					</p:outputPanel>
 					<p:outputPanel
 						rendered="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+						<!-- #36718 - change required condition -->
 						<p:inputText maxlength="10"
-							required="#{backingBean.managedBean.valueReqd}"
+							required="#{backingBean.managedBean.valueReqd and !empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
 							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
 							size="35">
@@ -318,6 +318,8 @@
 					</p:outputPanel>
 				</p:outputPanel></td>
 		</tr>
+		</p:panel>
+		<!-- #36718 - END -->
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 			<td>

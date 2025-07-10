@@ -46,6 +46,7 @@ public class LovBean implements Serializable {
 	/* #28895_35509 PM AUDIT */
 	private String roleCode;
 	private boolean storeProc;
+	private String orgType;
 
 	/* #28895_35509 PM AUDIT */
 	
@@ -231,4 +232,11 @@ public class LovBean implements Serializable {
 		this.storeProc = storeProc;
 	}
 	/* #28895_35509 PM AUDIT */
+	public String getOrgType() {
+		return orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
 }
