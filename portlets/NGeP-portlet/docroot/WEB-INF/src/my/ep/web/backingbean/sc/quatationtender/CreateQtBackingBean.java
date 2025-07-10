@@ -4156,22 +4156,25 @@ public class CreateQtBackingBean extends
 			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
 			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
-			for (ScQtCheckList checklist : scQtTechChecklist) {
-				if (checklist.getDefinationType().getParameterCode()
-						.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-					if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired){
-//							&& checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-
-					} else if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER)){
-//							&& checklist.getQtChecklistId() != null) {
-						RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
-						break;
-					}
-				}
-			} 
-			
+			//28748 - 38426 - start
+			if (this.isStatusLessThanOrEquals(status,
+					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
+					QTStatusConst.QT_ORDERED_STATUSES)
+					&& CollectionUtils.isNotEmpty(scQtTechChecklist)) {
+				for (ScQtCheckList checklist : scQtTechChecklist) {
+					if (checklist.getDefinationType().getParameterCode()
+							.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
+						boolean twoTierAndDemoRequired = type
+								.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && demoRequired;
+						boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER);
+						if (twoTierAndDemoRequired || oneTier) {
+							RequestContext.getCurrentInstance().execute("demoEvalDialogConfirm.show()");
+							break;
+						}
+					} 
+				} 
+			}
+			//28748 - 38426 - end
 			
 			if (type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_TWO_TIER) && !status.equals(QTStatusConst.QT_PENDING_QT_SUBMISSION)) {
 				this.getManagedBean().setDemoType(true);
@@ -4284,6 +4287,7 @@ public class CreateQtBackingBean extends
 		this.getManagedBean().getQt().setEvaluationType(ParameterConst.EVALUATION_TYPES_TWO_TIER);
 		this.getManagedBean().setDemoType(true);
 		this.getManagedBean().getQt().setDemoRequired(true);
+		this.getManagedBean().setDemoEvalDisabled(false);//#28784 disable evaluation method during sc maintenance
 	}
 	
 	//#29521 - start

@@ -364,9 +364,11 @@
 															</h:panelGroup></td>
 													</tr>
 													<tr>
-														<td align="center"
-															style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px; overflow-wrap: break-word;"><h:outputText
-																value="#{pCatalogueBackingBean.convertString(supplierItem[8], 20)}"  /></td>
+													    <!-- Enhancement #31245 - start -->
+														<td align="center" style="text-align: center; width: 100%; height: 100%; padding-left: 20px; padding-right: 20px; overflow-wrap: break-word;">
+															<h:outputText value="#{pCatalogueBackingBean.convertString(supplierItem[8].replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', ''), 20)}"  />
+														</td>
+														<!-- Enhancement #31245 - end -->
 													</tr>
 													<tr>
 														<td align="center"
@@ -444,11 +446,12 @@
 													<!-- #10747 - Soo - End -->
 											</h:panelGroup>
 										</p:column>
+										<!-- Enhancement #31245 - start -->
 										<p:column style="width :30%;white-space:normal">
-											<h:commandLink value="#{supplierItem[8]}"
-						    				styleClass="blue_font"
-						    				action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem[12])}" />
+											<h:commandLink value="#{supplierItem[8].replaceAll('N/A', '').replaceAll(' NA NA NA NA', '').replaceAll(' N A', '').replaceAll('(^|\\s|\\W)(NA)(\\s|\\W|$)', '')}"
+						    					styleClass="blue_font" action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem[12])}" />
 										</p:column>
+										<!-- Enhancement #31245 - end -->
 										<p:column style="width :40%;white-space:normal">
 											<h:outputText value="#{supplierItem[3]}"/>
 										</p:column>

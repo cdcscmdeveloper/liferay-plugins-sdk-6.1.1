@@ -40,9 +40,21 @@
 			<tr>
 				<td width="18%"><p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 				</td>
-				<td><p:inputText size="40"
+				<td width="32%"><p:inputText size="40"
 						value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 						disabled="true" /></td>
+				<ui:remove>26247 - start</ui:remove>
+				<ui:param name="loaDocType" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType}"/>
+				<ui:fragment rendered="#{loaDocType eq ParameterConst.getDoctypeQuotation() or loaDocType eq ParameterConst.getDoctypeDirectNego()}">
+					<td width="18%"><p:outputLabel
+							value="#{lbl['lbl.sc.discipline.action']}" /></td>
+					<td width="32%">
+						<ac:disciplinaryActionYesNo
+							supplier="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"
+							showTooltip="true" />
+					</td>
+				</ui:fragment>
+				<ui:remove>26247 - end</ui:remove>
 			</tr>
 
 			<tr>

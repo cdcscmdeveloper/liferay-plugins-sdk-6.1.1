@@ -2211,8 +2211,10 @@ public class SmApplicationUtil {
 		managedBean.setPoApproverAcedemicErr(false);//#31130
 		SmAppl appl = managedBean.getSmAppl();
 		for (SmPersonnel per : appl.getSmPersonnels()) {
-			if (per.getSmStaffAcademics() == null
-					|| per.getSmStaffAcademics().isEmpty()) {
+			//#31130 --START 210525
+			if ((per.getPmUser() != null || per.getEpRole() != null) && (per.getSmStaffAcademics() == null
+					|| per.getSmStaffAcademics().isEmpty())) {
+				//#31130 --END 210525
 				sb.append("<br/>");
 				sb.append(++i + ". ");
 				sb.append(per.getName());
@@ -2323,7 +2325,7 @@ public class SmApplicationUtil {
 			}
 			//#30444 --END--25082021--
 			//#31130 --START--050525--
-			if(per.getPmUser() != null && per.getEpRole() != null
+			if((per.getPmUser() != null || per.getEpRole() != null)
 					&&(!validPersonnel || (appl.getSupplierType().equalsIgnoreCase(
 					SupplierManagementConst.STYPE_CONSULTANT) 
 					&& ((per.getSmStaffAcademics() == null || per.getSmStaffAcademics().isEmpty())
@@ -7477,7 +7479,7 @@ public class SmApplicationUtil {
 		
 		//28775 - Site Visit Grouping Enhancement - 28775 - start
 		if(!bean.getSmAppl().getApplType().equals(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
-				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr)){
+				&& checkAddressAndParamSvTask(bean.getSvTaskList(), facVO, addr, siteType)){
 			return;
 		}
 		//28775 - Site Visit Grouping Enhancement - 28775 - end
@@ -7536,14 +7538,15 @@ public class SmApplicationUtil {
 	
 	//28775 - Site Visit Grouping Enhancement - 28775 - start
 	/**
-	 * Create SmSvTaskGroup if the address and catcode type is the same with one of the SmSvTask(s)
+	 * Create SmSvTaskGroup if the address, facility type, and catcode type is the same with one of the SmSvTask(s)
 	 * @param svTaskList
 	 * @param facVO
 	 * @param addr
+	 * @param siteType
 	 * @return true if SmSvTaskGroup has been created
 	 */
 	private static boolean checkAddressAndParamSvTask(List<SmSvTask> svTaskList, 
-			SmSiteVisitFacilityVO facVO, SmAddress addr){
+			SmSiteVisitFacilityVO facVO, SmAddress addr, String siteType){
 		
 		if(facVO.getL3() == null || facVO.getL3().getCategoryTypeCode() == null){
 			return false;
@@ -7555,7 +7558,8 @@ public class SmApplicationUtil {
 		for(SmSvTask task : svTaskList){
 			String addr2 = AddressUtils.getSmFullFormattedAddress(task.getSmSvAddress().getAddress());
 			String param2 = task.getSmSvTemplate().getPmParameter().getParameterCode();
-			if(addr1.equals(addr2) && param1.equals(param2)){
+			String siteType2 = task.getSmSvAddress().getSiteType();
+			if(addr1.equals(addr2) && param1.equals(param2) && siteType.equals(siteType2)){
 				addSmSvTaskGroup(task, facVO);
 				return true;
 			}
@@ -7697,7 +7701,10 @@ public class SmApplicationUtil {
 							SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 						managedBean.setShowFactoryPanel(true);
 					} else if (facility.getFacilityType().equalsIgnoreCase(
-							SupplierManagementConst.SM_FACILITY_TYPE_STORE)) {
+							SupplierManagementConst.SM_FACILITY_TYPE_STORE)
+							//#28775 - 38380
+							|| facility.getFacilityType().equalsIgnoreCase(
+								SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
 						managedBean.setShowStorePanel(true);
 					} else if (facility.getFacilityType().equalsIgnoreCase(
 							SupplierManagementConst.SM_FACILITY_TYPE_WORKSHOP)) {
@@ -15779,4 +15786,35 @@ public class SmApplicationUtil {
 	    }
 	}
 	//#37605 END
+	// #37784 -STRAT
+	/**
+	 * Checks the application record status. If it is either DELETED or
+	 * CANCELLED, redirects the user to the application error page with an
+	 * appropriate message.
+	 * 
+	 * @param appl
+	 *            the application object to check
+	 */
+	public static void checkAndRedirectIfInvalid(SmAppl appl) {
+		if (appl != null) {
+			Long statusId = appl.getPmStatus().getStatusId();
+			boolean isDeletedOrCancelled = appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED
+					|| appl.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED;
+
+			boolean isPendingVerificationStatus = SupplierManagementConst.PM_STATUS_PENDING_SUPPORTING_DOCUMENT_VERIFICATION
+					.equals(String.valueOf(statusId));
+
+			boolean isPendingPaymentStatus = statusId == SupplierManagementConst.PM_STATUS_PENDING_PROCESS_FEE;
+
+			if (isDeletedOrCancelled || isPendingVerificationStatus
+					|| isPendingPaymentStatus) {
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.ERROR_760600, null,
+						FacesMessage.SEVERITY_INFO);
+				return;
+			}
+		}
+	}
+	// #37784- END
 }
