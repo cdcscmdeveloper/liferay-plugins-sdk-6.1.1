@@ -191,6 +191,7 @@ import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAtta
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -7241,7 +7242,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}
 		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
-		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
+		boolean isDirectDiciplinaryAction = false;
+		if(CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())){
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(), 
+					disciplinaryAction.isCancelRegistration(),
+					disciplinaryAction.isSuspendRegistration()).contains(true);
+		}
+				
+
+		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
 		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
 		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
 		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
