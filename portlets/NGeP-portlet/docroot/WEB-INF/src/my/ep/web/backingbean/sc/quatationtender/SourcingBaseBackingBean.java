@@ -5147,7 +5147,7 @@ ATTACHMENT scAttachment, String contentType)
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
 							// #25025 - End fixing sonarlint
-
+							
 							/** This code is for LOA with Single Item Details **/
 							if (items.size() == 1) {
 								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())

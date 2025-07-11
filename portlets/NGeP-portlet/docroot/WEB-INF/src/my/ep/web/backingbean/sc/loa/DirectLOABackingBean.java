@@ -276,6 +276,13 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			String bpmVersionNo = this.getManagedBean().getBpmVersionNo();
 			// #29007 End Vinod
 			
+			// Bug #38049@Syazani 29/04/2025 -- Start
+			PmParameter selectedOrgType = null != this.getManagedBean().getSelectedOrgType() ? (PmParameter) this
+					.getManagedBean().getSelectedOrgType().cloneEntity() : null;
+			PmOrgProfile selectedPtj = null != this.getManagedBean().getSelectedPtj() ? (PmOrgProfile) this
+					.getManagedBean().getSelectedPtj().cloneEntity() : null;
+			// Bug #38049@Syazani 29/04/2025 -- End
+			
 			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 					.equals(statusId)) {
 				validateSupplierWitnessDetails(scLoa, loaSupplierWitness, outcome);
@@ -346,6 +353,15 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				this.getManagedBean().setPayLoad(awardSupplierDataType);
 				this.getManagedBean().setValidatewitness(validateWitness); //#17376
 				this.getManagedBean().setIconForDL(directLoa); //#29007
+				
+				// Bug #38049@Syazani 29/04/2025 -- Start
+				if (null != selectedOrgType) {
+					this.getManagedBean().setSelectedOrgType(selectedOrgType);
+				}
+				if (null != selectedPtj) {
+					this.getManagedBean().setSelectedPtj(selectedPtj);
+				}
+				// Bug #38049@Syazani 29/04/2025 -- End
 
 				if (!QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(scLoa.getPmStatus().getStatusId())) {
@@ -8316,8 +8332,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		}
 		
 		// #26770 Note-#548 - Start
-		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		fileNo = fileNo.trim().replaceAll("Ã©", SSTConstant.PROTEGE_LOWERCASE_E);
+		fileNo = fileNo.trim().replaceAll("Ã‰", SSTConstant.PROTEGE_UPPERCASE_E);
 		// #26770 Note-#548 - End
 				
 		context.put("fileNo", fileNo + "-" + scLoa.getFileExtNo());
@@ -8388,8 +8404,8 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		title = title.replaceAll("<", SSTConstant.LESS_THAN_SYMBOL);
 		title = title.replaceAll(">", SSTConstant.GREATER_THAN_SYMBOL);
 		title = title.replaceAll("\r\n", SSTConstant.BREAKLINE);
-		title = title.replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
-		title = title.replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
+		title = title.replaceAll("Ã©", SSTConstant.PROTEGE_LOWERCASE_E);
+		title = title.replaceAll("Ã‰", SSTConstant.PROTEGE_UPPERCASE_E);
 		// 26770 - end
 		context.put("loaTitle", title);
 		context.put("hasLoi", false); 

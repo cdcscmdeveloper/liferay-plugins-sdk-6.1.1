@@ -5084,9 +5084,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									.multiply(zonalSubTotalAmount));
 						}
 					}
-				}
-
-				else {
+				} else {
 					for (ScSupplierItemPrice spItemPrice : requestSupplierItem.getSupplierItemPrices()) {
 						subTotalAmount.add(spItemPrice.getItemPrice().multiply(zonalSubTotalAmount));
 					}
