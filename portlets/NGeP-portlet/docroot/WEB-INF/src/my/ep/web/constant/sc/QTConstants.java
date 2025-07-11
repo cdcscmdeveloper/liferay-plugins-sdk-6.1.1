@@ -265,9 +265,9 @@ public interface QTConstants {
 	public static final long PM_STATUS_INACTIVE_CODE = 0L;
 	// 19287#91, 17376#104 -end-
 
-	// #15391 -start-
+	// #15391,#11104 -start-
 	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_MAINTENANCE = "scSpecCommitteeMaintenance_WAR_NGePportlet";
-	// #15391 -end-
+	// #15391,#11104 -end-
 
 	// 9019 - Start (Harun) WIP transaction Pending QT Submission
 	public static final String SC_WFTASK_COMPOSITENAME = "SourcingQT";
@@ -311,7 +311,16 @@ public interface QTConstants {
 	public static final String TAB_SC_FULFILMENT_SCHEDULE = "8";
 	public static final String TAB_SC_SPECIFICATION_ENDORSEMENT_STATUS = "9";
 	// Bug #35688@Syazani 10/07/2024 -- End
-	
+
+	// #11104 -start-
+	public static final String PORTLET_NAME_QT_SPEC_COMMITTEE_MAINTENANCE = "scQTPrepareSpec_WAR_NGePportlet";
+	public static final String PORTLET_NAME_QT_SPEC_ENDORSMENT_TASKLIT = "scSpecificationCommitteeEndorsement_WAR_NGePportlet";
+	public static final int COMPLIANCE_SAMPLE_FINANCIAL_ACTIVE_INDEX = 1;// 35148&11104
+	public static final int COMPLIANCE_FINANCIAL_ACTIVE_INDEX = 2;
+	public static final int EVALUATION_MAIN_ACTIVE_INDEX = 7;// 35148&11104
+	public static final String SAMPLE_PENDING_SUBMISSION = "lbl.sc.qt.sample.proposal.checklist.status.pending.submission";
+	// #11104 -end-
+
 	// 6906 - start
 	public static final String SELECTION_MODE_MULTIPLE = "multiple";
 	public static final String SELECTION_MODE_SINGLE = "single";
