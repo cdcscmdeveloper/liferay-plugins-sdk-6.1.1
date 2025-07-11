@@ -13815,7 +13815,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				contractReqDTO.setvCtContractSearchBean(contractSearchBean);
 
 				contractResDTO = contractSO
-						.retrieveContractDtlsByLoa(contractReqDTO);
+						.retrieveContractDtlsByLOA(contractReqDTO);
 
 				if (null != contractResDTO.getvCtContractResultBean()
 						&& CollectionUtils.isNotEmpty(contractResDTO
@@ -14060,7 +14060,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				contractReqDTO.setvCtContractSearchBean(searchBean);
 
 				ContractResDTO contractResDTO = contractSO
-						.retrieveContractDtlsByLoa(contractReqDTO);
+						.retrieveContractDtlsByLOA(contractReqDTO);
 
 				return contractResDTO.getvCtContractResultBean();
 			} catch (Exception e) {
