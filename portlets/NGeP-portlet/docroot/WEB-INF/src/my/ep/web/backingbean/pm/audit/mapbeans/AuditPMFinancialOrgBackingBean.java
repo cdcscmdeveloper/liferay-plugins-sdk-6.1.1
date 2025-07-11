@@ -143,49 +143,48 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		String oldAddressAppend = "";
 		
 		if (editedAddress != null) {
-			if(editedAddress.getAddress1() != null && !editedAddress.getAddress1().isEmpty()){
-				address += editedAddress.getAddress1();
-			}
-			if(editedAddress.getAddress2() != null && !editedAddress.getAddress2().isEmpty()){
-			    if (!address.isEmpty()) address += ", ";
-				address += editedAddress.getAddress2();
-			}
-			if(editedAddress.getAddress3() != null && !editedAddress.getAddress3().isEmpty()){
-			    if (!address.isEmpty()) address += ", ";
-				address += editedAddress.getAddress3();
-			}
-			
-
-			if (managedBean.getFinancialOrg().isBrandNew()) {
-				actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-				
-				detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, "", address);
-				
-				if(managedBean.getContactPerson() != null ){
-					setNewContactPerson(managedBean.getContactPerson());
-				}
-			} else {
-				actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-
-				if(oldPmAddress.getAddress1() != null && !oldPmAddress.getAddress1().isEmpty()){
-					oldAddressAppend += oldPmAddress.getAddress1();
-				}
-				if(oldPmAddress.getAddress2() != null && !oldPmAddress.getAddress2().isEmpty()){
-				    if (!oldAddressAppend.isEmpty()) oldAddressAppend += ", ";
-				    oldAddressAppend += oldPmAddress.getAddress2();
-				}
-				if(oldPmAddress.getAddress3() != null && !oldPmAddress.getAddress3().isEmpty()){
-				    if (!oldAddressAppend.isEmpty()) oldAddressAppend += ", ";
-				    oldAddressAppend += oldPmAddress.getAddress3();
-				}
-				
-				if (!address.equals(oldAddressAppend)){
-					detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, oldAddressAppend, address);
-				}
-
-				setContact(managedBean.getContactPerson(), managedBean.getOldContactPerson());
-			}
+			address = getAddress(editedAddress);
 		}
+		
+		if(oldPmAddress != null){
+			oldAddressAppend = getAddress(oldPmAddress);
+		}
+			
+		if (managedBean.getFinancialOrg().isBrandNew()) {
+			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			
+			detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, "", address);
+			
+			if(managedBean.getContactPerson() != null ){
+				setNewContactPerson(managedBean.getContactPerson());
+			}
+		} else {
+			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			
+			if (!address.equals(oldAddressAppend)){
+				detailObj(AuditConst.PM_AUD_OFO_MAIN_ADDRESS_FIELDLABELID, oldAddressAppend, address);
+			}
+
+			setContact(managedBean.getContactPerson(), managedBean.getOldContactPerson());
+		}
+	}
+	
+	//sonarlint. to get full address from current and/or edited address
+	private String getAddress(PmAddress pmAddress){
+		String address = "";
+		if(pmAddress.getAddress1() != null && !pmAddress.getAddress1().isEmpty()){
+			address += pmAddress.getAddress1();
+		}
+		if(pmAddress.getAddress2() != null && !pmAddress.getAddress2().isEmpty()){
+		    if (!address.isEmpty()) address += ", ";
+			address += pmAddress.getAddress2();
+		}
+		if(pmAddress.getAddress3() != null && !pmAddress.getAddress3().isEmpty()){
+		    if (!address.isEmpty()) address += ", ";
+			address += pmAddress.getAddress3();
+		}
+		
+		return address;
 	}
 
 	/**
@@ -270,26 +269,35 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 			detailObj(AuditConst.PM_AUD_OFO_PAYMENT_BANK_NAME_FIELDLABELID, null, newFinancialAcc.getPmPaymentBankOrg().getFinOrgName());
 			detailObj(AuditConst.PM_AUD_OFO_BANK_CODE_FIELDLABELID, null, newFinancialAcc.getBankCode());
 			detailObj(AuditConst.PM_AUD_OFO_ACCT_NO_FIELDLABELID, null, newFinancialAcc.getAccountNo());
-			detailObj(AuditConst.PM_AUD_OFO_BANK_STATUS_FIELDLABELID, null, newFinancialAcc.getRecordStatusFlg() == 1? AuditConst.PM_AUD_ACTIVE
-					: AuditConst.PM_AUD_INACTIVE);
+			detailObj(AuditConst.PM_AUD_OFO_BANK_STATUS_FIELDLABELID, null, getActiveOrInactive(newFinancialAcc.getRecordStatusFlg()));
 		}
 		
 		if(managedBean.getOldFinancialOrg() != null){
-			for(PmFinancialAcc oldFinancialAcc : managedBean.getOldFinancialOrg().getPmFinancialAccs()){
-				for(PmFinancialAcc currentFinancialAcc : managedBean.getFinancialOrg().getPmFinancialAccs()){
-					if(oldFinancialAcc.getFinancialAccId().equals(currentFinancialAcc.getFinancialAccId()) &&
-							!oldFinancialAcc.getRecordStatusFlg().equals(currentFinancialAcc.getRecordStatusFlg())){
-						actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-						
-						detailObj(AuditConst.PM_AUD_OFO_BANK_STATUS_FIELDLABELID, 
-								oldFinancialAcc.getRecordStatusFlg() == 1? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
-								currentFinancialAcc.getRecordStatusFlg() == 1? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
-						
-						break;
-					}
-				}			
-			}
+			editedFactoringDetail(managedBean.getOldFinancialOrg().getPmFinancialAccs(), 
+					managedBean.getFinancialOrg().getPmFinancialAccs());
 		}
+	}
+	
+	//sonarlint. sets comparison value for edited factoring details
+	private void editedFactoringDetail(List<PmFinancialAcc> oldFinancialList, List<PmFinancialAcc> currentFinancialList){
+		for(PmFinancialAcc oldFinancialAcc : oldFinancialList){
+			for(PmFinancialAcc currentFinancialAcc : currentFinancialList){
+				if(oldFinancialAcc.getFinancialAccId().equals(currentFinancialAcc.getFinancialAccId()) &&
+						!oldFinancialAcc.getRecordStatusFlg().equals(currentFinancialAcc.getRecordStatusFlg())){
+					actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+					
+					detailObj(AuditConst.PM_AUD_OFO_BANK_STATUS_FIELDLABELID, 
+							getActiveOrInactive(oldFinancialAcc.getRecordStatusFlg()), 
+							getActiveOrInactive(currentFinancialAcc.getRecordStatusFlg()));
+					break;
+				}
+			}			
+		}
+	}
+	
+	//sonarlint. gets String value of Active/Inactive
+	private String getActiveOrInactive(Integer value){
+		return value == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE;
 	}
 	
 	/**
@@ -302,26 +310,39 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 		
 		if(managedBean.getFinancialOrg().isBrandNew()){
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
-			for(PmParameterDesc edited : bankServicesList){
-				detailObj(serviceTypeMap.get(edited.getPmParameter().getParameterId()), null, 
-								edited.isSelected() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-			}
+			newFinancialService(bankServicesList);
 		} else {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
-			
-			for(PmParameterDesc current : oldBankServicesList){
-				for(PmParameterDesc edited : bankServicesList){
-					if(current.getParameterDescId().equals(edited.getParameterDescId()) && 
-							current.isSelected() != edited.isSelected()){
-						detailObj(serviceTypeMap.get(edited.getPmParameter().getParameterId()), 
-								current.isSelected() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO, 
-										edited.isSelected() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
-						break;
-					}
-				}
-			}	
+			editedFinancialService(bankServicesList,oldBankServicesList);
 		}
 		
+	}
+	
+	//sonarlint. get String value of Yes/No
+	private String getYesOrNo(boolean value){
+		return value ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO;
+	}
+	
+	//sonarlint. sets new values for newly added bank payment details
+	private void newFinancialService(List<PmParameterDesc> bankServicesList){
+		for(PmParameterDesc edited : bankServicesList){
+			detailObj(serviceTypeMap.get(edited.getPmParameter().getParameterId()), null, 
+					getYesOrNo(edited.isSelected()));
+		}
+	}
+	
+	//sonarlint. sets edited comparison values for bank payment details
+	private void editedFinancialService(List<PmParameterDesc> bankServicesList, List<PmParameterDesc> oldBankServicesList){
+		for(PmParameterDesc current : oldBankServicesList){
+			for(PmParameterDesc edited : bankServicesList){
+				if(current.getParameterDescId().equals(edited.getParameterDescId()) && 
+						current.isSelected() != edited.isSelected()){
+					detailObj(serviceTypeMap.get(edited.getPmParameter().getParameterId()), 
+							getYesOrNo(current.isSelected()), getYesOrNo(edited.isSelected()));
+					break;
+				}
+			}
+		}
 	}
 	
 	/**
@@ -336,7 +357,7 @@ public class AuditPMFinancialOrgBackingBean extends AuditPMBackingBeanTemplate{
 	}
 	
 	/**
-	 * retrieve service type into mapper
+	 * retrieve service type into map
 	 */
 	private void retrieveServiceType(){
 		List<PmParameterDesc> parameterDescs = managedBean.getBankServicesList();

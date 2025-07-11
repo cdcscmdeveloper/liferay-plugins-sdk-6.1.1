@@ -1138,39 +1138,13 @@ public class FinancialOrgBackingBean extends
 				}
 			}
 			
-			for(PmFinancialAcc financialAcc : getManagedBean().getFinancialOrg().getPmFinancialAccs()){
-				if(financialAcc.getFinancialAccId() == null){
-					for(PmFinancialOrg finOrg: getPaymentBankList()){
-						if(finOrg.getFinancialOrgId().equals(financialAcc.getPmPaymentBankOrg().getFinancialOrgId())){
-							financialAcc.getPmPaymentBankOrg().setFinOrgName(finOrg.getFinOrgName());
-							getManagedBean().getNewFinancialAccList().add(financialAcc);
-							break;
-						}
-					}
-				}
-			}
-			
+			getFinancialAccs();
+
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_FINANCIALORGANISATION) && financialOrg.getFinancialOrgId() != null) {
 				reqDTO.setFinancialOrgId(financialOrg.getFinancialOrgId());
 				PmFinancialOrg oldFinancialOrg = financialOrgSO.retrieveFinancialOrgDtlById(reqDTO).getPmFinancialOrg();
-				//get old data
-//				oldFinancialOrg.getRecordStatusFlg();
-				getManagedBean().setOldFinancialOrg(oldFinancialOrg != null ? oldFinancialOrg : 
-					this.getManagedBean().getFinancialOrg());
 				
-				for (PmFinancialSvc financialSvc : this.getManagedBean().getOldFinancialOrg().getPmFinancialSvcs()) {
-					for(PmParameterDesc desc : getManagedBean().getOldBankServicesList()){
-						PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
-						if(desc.getPmParameter().getParameterId().equals(pmParameter.getParameterId()) 
-								&& DbValueConst.RECORD_STATUS_ACTIVE == financialSvc.getRecordStatusFlg()){
-							desc.setSelected(true);
-							break;
-						} 
-				 	}
-				}
-				
-				getManagedBean().setOldPmAddress(offAddressResDTO.getPmAddress() == null ?
-						getManagedBean().getPmAddress() : offAddressResDTO.getPmAddress());
+				setOldFinancialSvcs(oldFinancialOrg, offAddressResDTO);
 			}
 			/************ AUDIT #28895-35509 *************/
 			
@@ -1226,6 +1200,44 @@ public class FinancialOrgBackingBean extends
 		}
 		return redirectUrl;
 	}
+	
+	/********************************AUDIT 35509 - shaqimi start - backlog SIT #18************************/
+	//sonarlint. to add new financial accs for audit
+	private void getFinancialAccs(){
+		for(PmFinancialAcc financialAcc : getManagedBean().getFinancialOrg().getPmFinancialAccs()){
+			if(financialAcc.getFinancialAccId() == null){
+				for(PmFinancialOrg finOrg: getPaymentBankList()){
+					if(finOrg.getFinancialOrgId().equals(financialAcc.getPmPaymentBankOrg().getFinancialOrgId())){
+						financialAcc.getPmPaymentBankOrg().setFinOrgName(finOrg.getFinOrgName());
+						getManagedBean().getNewFinancialAccList().add(financialAcc);
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	//sonarlint. to set old financial svcs to use for checking in audit
+	private void setOldFinancialSvcs(PmFinancialOrg oldFinancialOrg, AddressResDTO offAddressResDTO){
+		//get old data
+		getManagedBean().setOldFinancialOrg(oldFinancialOrg != null ? oldFinancialOrg : 
+			this.getManagedBean().getFinancialOrg());
+		
+		for (PmFinancialSvc financialSvc : this.getManagedBean().getOldFinancialOrg().getPmFinancialSvcs()) {
+			for(PmParameterDesc desc : getManagedBean().getOldBankServicesList()){
+				PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
+				if(desc.getPmParameter().getParameterId().equals(pmParameter.getParameterId()) 
+						&& DbValueConst.RECORD_STATUS_ACTIVE == financialSvc.getRecordStatusFlg()){
+					desc.setSelected(true);
+					break;
+				} 
+		 	}
+		}
+		
+		getManagedBean().setOldPmAddress(offAddressResDTO.getPmAddress() == null ?
+				getManagedBean().getPmAddress() : offAddressResDTO.getPmAddress());
+	}
+	/********************************AUDIT 35509 - shaqimi end - backlog SIT #18  ************************/
 	
 	/**
 	 * save pmOrgProfile if financial org contains factoring org
