@@ -14159,7 +14159,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
-			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
+			constructBiddingSearchBean(qtnTenderSearchBean, searchBean);
 			// Order by created date
 			searchBean.getSortColumns().add(
 					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
@@ -14198,7 +14198,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * @param bidSearchBean
 		 * @return ISearchBean<ScBidScheduleForQT> searchBean details
 		 */
-		private ISearchBean<ScBidScheduleForQT> constructBiddingSerachBean(
+		private ISearchBean<ScBidScheduleForQT> constructBiddingSearchBean(
 				QtnTenderSearchBean qtnTenderSearchBean,
 				ISearchBean<ScBidScheduleForQT> bidSearchBean) {
 
@@ -14247,7 +14247,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 
 		
-			constructDocNumer(qtnTenderSearchBean, bidSearchBean);
+			constructDocNumber(qtnTenderSearchBean, bidSearchBean);
 			constructCreatedDate(qtnTenderSearchBean, bidSearchBean);
 			constructPublishedDate(qtnTenderSearchBean, bidSearchBean);
 			constructCloseDate(qtnTenderSearchBean, bidSearchBean);
@@ -14265,7 +14265,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * @param bidSearchBean
 		 * @return
 		 */
-		private ISearchBean<ScBidScheduleForQT> constructDocNumer(
+		private ISearchBean<ScBidScheduleForQT> constructDocNumber(
 				QtnTenderSearchBean qtnTenderSearchBean,
 				ISearchBean<ScBidScheduleForQT> bidSearchBean) {
 			// Filter By - docNo&BidNo
