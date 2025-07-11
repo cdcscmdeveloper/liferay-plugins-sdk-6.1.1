@@ -10,22 +10,32 @@ import my.ep.biz.service.ct.ICtSchedulerSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+/**
+ * @author shaqimi
+ *
+ * REST endpoint for schedular to handling contract performance bond notifications.
+ */
 @Path("/ct")
 public class ContractPerformanceBondRest {
 
-	public static Logger log = Logger.getLogger(ContractPerformanceBondRest.class);
+	private static final Logger log = Logger.getLogger(ContractPerformanceBondRest.class);
 	//#13847 start
+
+	/**
+     * Calls the performance bond notification service.
+     *
+     * @return HTTP response indicating success or failure.
+     */
     @GET
     @Path("/callPerformanceBondNotifications/")
     public Response callPerformanceBondNotifications() {
-        log.info("Before success calling callPerformanceBondNotifications rest api....");
-        ICtSchedulerSO tmpSO = (ICtSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
+        ICtSchedulerSO tmpSO = BusinessDelegate.getInstance().getServiceObject(
                 ModuleCodeConst.CONTRACT_MANAGEMENT, ICtSchedulerSO.class);
         try {
             tmpSO.performanceBondNotification();
             return Response.status(200).entity("success calling callPerformanceBondNotifications!!").build();
         } catch (Exception ex) {
-            log.info("callNotifications -  Exception>>>> " + ex.getMessage() );
+            log.error("callNotifications -  Exception>>>> " + ex);
             return Response.status(406).entity(ex.getMessage()).build();
         }
     }

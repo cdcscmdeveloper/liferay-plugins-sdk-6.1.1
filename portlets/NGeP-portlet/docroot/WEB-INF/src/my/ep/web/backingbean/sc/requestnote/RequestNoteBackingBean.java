@@ -398,13 +398,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		Boolean isAssignedState = getManagedBean().isAssignedState();
 		
 		try {
-
-			// 26284 - Start
-			if (outcome != null && BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) && requestNote != null) {
-			    checkSupplierDisciplinaryAction(requestNote);
-			}
-			// 26284 - End
-
 			parseRequestNote(requestNote, outcome);
 
 			setUserDetails(requestNote);
@@ -1405,9 +1398,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	private void validateRequestNote(ScRequestNote requestNote, String outcome) {//#26059 - add outcome
 		debugLogger("validateRequestNote");
-		// Temp(#34274 - Start)
-		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
-		// Temp(#34274 - End)
 		// show message for first submission, skip the message for second time
 		// submission
 		//#26059 - start
@@ -1545,6 +1535,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(true);
+					resetBpkDecision(outcome, scRequestNoteDtl);
 				}
 
 				if (outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
@@ -1563,6 +1554,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls()) {
 					scRequestNoteDtl.setExceedThreshold(null);
+					scRequestNoteDtl.setBpkThresholdDecision(null);
 				}
 				
 				updateScRequestNoteDtl(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls());
@@ -1585,6 +1577,15 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
 	//#26059 - start
+	/**
+	 * Reset BPK decision if outcome is not approval.
+	 */
+	private void resetBpkDecision(String outcome, ScRequestNoteDtl scRequestNoteDtl) {
+		if (!outcome.equals(BpmOutcomeConst.BPM_APPROVE)) {
+			scRequestNoteDtl.setBpkThresholdDecision(null);
+		}
+	}
+	
 	/**
 	 * Triggers an info message alert on first submission if threshold exceeded.
 	 * @param thresholdItems Exceeded items.
@@ -1615,11 +1616,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setContainRejectDecision(false);
 		
 		if (!isBpkAprovalCompleted(requestNoteResDTO.getRequestNoteDetail().getRequestNoteDtls())) {
-			throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName,
-					thresholdValue.toString(), thresholdItems.toString(), });
-		} else {
 			if (getManagedBean().isContainRejectDecision()) {
 				throw new EpException(MessageConst.ERROR_760563, new String[] { ptjName, thresholdValue.toString(),
+						thresholdItems.toString(), });
+			} else {
+				throw new EpException(MessageConst.ERROR_760562, new String[] { ptjName, thresholdValue.toString(),
 						thresholdItems.toString(), });
 			}
 		}
@@ -2565,6 +2566,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setJustRequired(Boolean.FALSE);
 
 		getCurrentStatus(getPmStatusByStatusId(DPStatusConstants.RN_PENDING_SUBMISSION));
+
+		getManagedBean().setDocStatus(getStatusDescById(DPStatusConstants.RN_PENDING_SUBMISSION)); //#38538
 
 		// clear the justification type, price type and justification remarks
 		getManagedBean().setPriceType("");

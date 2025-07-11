@@ -214,16 +214,6 @@
 				<h:outputText
 					value="#{(priceDis.scBidSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
-			<ui:remove>26247 - start</ui:remove>
-			<p:column style="white-space:normal;width:18%;">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
-				</f:facet>
-				<ac:disciplinaryActionYesNo
-					supplier="#{priceDis.scBidSupplier.smSupplier}" index="#{rowIndex}"/>
-			</p:column>
-			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}"
 				style="width:10%; white-space:normal; text-align:right;">
 				<h:outputText value="#{priceDis.scBidSupplier.packageStartPrice}">
