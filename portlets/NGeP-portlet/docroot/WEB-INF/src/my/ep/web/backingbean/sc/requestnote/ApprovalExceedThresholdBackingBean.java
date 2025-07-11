@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.naming.NamingException;
 
 import my.ep.bean.application.NgepApplicationBean;
 import my.ep.biz.bean.search.ISearchBean;
@@ -18,21 +17,16 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.DPStatusConstants;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
@@ -41,19 +35,17 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
-import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.trackingdiary.TrackingDiarySearchBackingBean;
 import my.ep.web.managedbean.sc.requestnote.ApprovalExceedThresholdManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -77,7 +69,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * List of allowed role code
 	 */
 	private static final List<String> ALLOWED_ROLES = Arrays.asList(RoleCode.BPK_APPROVER.value(),
-			RoleCode.BPK_APPROVER_SA.value(), RoleCode.BPK_APPROVER_SK.value(), RoleCode.BPK_CC_APPROVER.value(),
+			RoleCode.BPK_CC_APPROVER.value(),
 			RoleCode.BPK_CQ_APPROVER.value(), RoleCode.BPK_PQ_APPROVER.value());
 
 	
@@ -100,67 +92,13 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	 * @return true, if is BPK Approver
 	 */
 	public boolean isBPKApprover() {
+		FacesScopes scopes = new FacesScopes();
 		for (String role : ALLOWED_ROLES) {
-			if (getFacesScopes().hasRoleUser(role)) {
+			if (scopes.hasRoleUser(role)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Search status desc.
-	 *
-	 * @return the list
-	 * @throws NamingException the naming exception
-	 */
-	public SelectItem[] searchStatusDesc() throws NamingException {
-		if(isSupplier() && getManagedBean().getSearchDocumentType() != null){
-			if(getManagedBean().getSearchDocumentType().equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
-				FacesScopes face = new FacesScopes();
-				List<PmStatusDesc> statusDescsTemp = new ArrayList<>();
-				
-				List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
-						.getStatusDescList(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-								getManagedBean().getSearchDocumentType(), null);
-
-				for (PmStatusDesc statusDesc : statusDescs) {
-					if(statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUPPLIER_RESPONSE)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_SUBMISSION)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_COMPLETED)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_CANCELLED_DUE_TO_PID_VALIDITY_EXPIRED)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_RESPONSE_SUBMITTED)
-							|| statusDesc.getPmStatus().getStatusId().equals(DPStatusConstants.SQ_PENDING_ITEM_CODE_ASSIGNMENT)){
-						
-						statusDescsTemp.add(statusDesc);
-					}
-				}
-				
-				int i = 1;
-				SelectItem[] items = new SelectItem[statusDescsTemp.size() + 1];
-				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
-						"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						face.getUserLocale()));
-				
-				for (PmStatusDesc statusDescr : statusDescsTemp) {
-					items[i++] = new SelectItem(statusDescr.getPmStatus()
-							.getStatusId(), statusDescr.getStatusName());
-				}
-				return items;
-			}else{
-				return super.getStatusDropdownValues(
-						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-						getManagedBean().getSearchDocumentType());
-			}
-		}else{
-			if(StringUtils.isNotBlank(getManagedBean().getSearchDocumentType())){
-				return super.getStatusDropdownValues(
-						ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), 
-						getManagedBean().getSearchDocumentType());
-			}
-				return null;
-		}
 	}
 
 	/**
@@ -243,7 +181,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 	public String getUserName(long userId){
 		String userName = "";
 		UserReqDTO userReqDTO  = new UserReqDTO();
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		userReqDTO.setUserId(userId);
 		PmUser pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
@@ -251,15 +189,6 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 			userName = pmUser.getUserName();
 		}
 		return userName;
-	}
-
-	/**
-	 * Creates and returns a new instance of {@link FacesScopes}.
-	 *
-	 * @return A new {@code FacesScopes} object.
-	 */
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
 	}
 
 	/**
@@ -313,8 +242,8 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
 					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
 			if (minLevel != null && ptjGrpLevel != null) {
-				int ministryLevel = Integer.valueOf(minLevel);
-				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int ministryLevel = Integer.parseInt(minLevel);
+				int ptjGroupLevel = Integer.parseInt(ptjGrpLevel);
 				int orgLevel = ministryLevel - ptjGroupLevel;
 
 				condition.append(SourcingConstants.LOV_FIELD_SEPARATOR);
@@ -366,13 +295,11 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 
 		getManagedBean().setCounter(0);
 
-		PmOrgProfile currentProcessingProfile = null;
+		if (!(orgProfile instanceof PmOrgProfile)) {
+	        return;
+	    }
 
-		if (orgProfile instanceof PmOrgProfile) {
-			currentProcessingProfile = (PmOrgProfile) orgProfile;
-		} else {
-			return;
-		}
+	    PmOrgProfile currentProcessingProfile = (PmOrgProfile) orgProfile;
 
 		while (currentProcessingProfile != null) {
 			String orgType = currentProcessingProfile.getOrgTypeCode().getParameterCode();
@@ -393,40 +320,47 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 				nextProfileToProcess = ministryOrgProfile;
 
 			} else {
-				if (getManagedBean().getSearchMinistryProfile() == null
-						|| getManagedBean().getSearchMinistryProfile().getOrgProfileId() == null) {
-					getManagedBean().setSearchMinistryProfile(
-							retrieveMinistryOrgProfile(currentProcessingProfile.getOrgProfileId()));
-					getManagedBean().setDisablePtjGroupLov(false);
-					getManagedBean().setDisablePtjLov(true);
-				}
-
-				if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
-					getManagedBean().setSearchPtjProfile(new PmOrgProfile());
-					getManagedBean().setDisablePtjGroupLov(false);
-					getManagedBean().setDisablePtjLov(false);
-
-					if (getManagedBean().getCounter() == 1) {
-						getManagedBean().setDisablePtjLov(true);
-					}
-					getManagedBean().setCounter(0);
-
-				} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
-					getManagedBean().setDisablePtjGroupLov(false);
-					getManagedBean().setDisablePtjLov(false);
-					if (getManagedBean().getSearchPtjGroupProfile() == null
-							|| getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == null) {
-						getManagedBean().setSearchPtjGroupProfile(
-								retrieveJabatanOrgProfile(currentProcessingProfile.getOrgProfileId()));
-					}
-					getManagedBean().setCounter(0);
-				}
+				configureSearchFilter(currentProcessingProfile, orgType);
 			}
 
 			currentProcessingProfile = nextProfileToProcess;
 		}
 
 		debugLogger("postUpdateOrgProfileListener end");
+	}
+
+	/**
+	 * Configure search filters and UI states based on organization type and current profile.
+	 */
+	private void configureSearchFilter(PmOrgProfile currentProcessingProfile, String orgType) {
+		if (getManagedBean().getSearchMinistryProfile() == null
+				|| getManagedBean().getSearchMinistryProfile().getOrgProfileId() == null) {
+			getManagedBean().setSearchMinistryProfile(
+					retrieveMinistryOrgProfile(currentProcessingProfile.getOrgProfileId()));
+			getManagedBean().setDisablePtjGroupLov(false);
+			getManagedBean().setDisablePtjLov(true);
+		}
+
+		if (ParameterConst.ORG_TYPE_PTJ_GROUP.equals(orgType)) {
+			getManagedBean().setSearchPtjProfile(new PmOrgProfile());
+			getManagedBean().setDisablePtjGroupLov(false);
+			getManagedBean().setDisablePtjLov(false);
+
+			if (getManagedBean().getCounter() == 1) {
+				getManagedBean().setDisablePtjLov(true);
+			}
+			getManagedBean().setCounter(0);
+
+		} else if (ParameterConst.ORG_TYPE_PTJ.equals(orgType)) {
+			getManagedBean().setDisablePtjGroupLov(false);
+			getManagedBean().setDisablePtjLov(false);
+			if (getManagedBean().getSearchPtjGroupProfile() == null
+					|| getManagedBean().getSearchPtjGroupProfile().getOrgProfileId() == null) {
+				getManagedBean().setSearchPtjGroupProfile(
+						retrieveJabatanOrgProfile(currentProcessingProfile.getOrgProfileId()));
+			}
+			getManagedBean().setCounter(0);
+		}
 	}
     
     /**
@@ -438,7 +372,7 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
    	 *         false, if login user is not ministry contract administrator/internal auditor
 	 */
     public boolean disableMinistryLov() {
-    	return (isReqOrApprover() || isContractAdminOrInternalAudit());
+    	return isReqOrApprover() || isContractAdminOrInternalAudit();
     }
      
   
@@ -448,9 +382,11 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
      * @return true, if is requisitioner or approver
      */
     public boolean isReqOrApprover() {
-		return (getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.RN_APPROVER.value()));
-	}
+        FacesScopes scopes = new FacesScopes();
+        return scopes.hasRoleUser(RoleCode.REQUISITIONER.value()) 
+            || scopes.hasRoleUser(RoleCode.RN_APPROVER.value());
+    }
+
    
    
     /**
@@ -459,9 +395,10 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
      * @return true, if is contract admin or internal audit
      */
     public boolean isContractAdminOrInternalAudit() {
-		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()));
-	}
+        FacesScopes scopes = new FacesScopes();
+        return scopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+            || scopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value());
+    }
     
     /**
      * Checks if is search all.
@@ -469,11 +406,12 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
      * @return true, if is search all
      */
     public boolean isSearchAll() {
-		return (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()) 
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.BPK_AUDITOR.value())
-				|| getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()));
-	}
+        FacesScopes scopes = new FacesScopes();
+        return scopes.hasRoleUser(RoleCode.BPK_CCA.value()) 
+            || scopes.hasRoleUser(RoleCode.BPK_PCA.value())
+            || scopes.hasRoleUser(RoleCode.BPK_AUDITOR.value())
+            || scopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
+    }
     
     /**
 	 * Gets the default ptj and ministry search values based on user role.
@@ -508,122 +446,47 @@ public class ApprovalExceedThresholdBackingBean extends SourcingBaseBackingBean<
 		getManagedBean().setSearchPtjProfile(ptjProfile);
 	}
 	
+	/**
+	 * Retrieves user's organization profile based on login session user ID.
+	 */
 	private PmOrgProfile getOrgProfileByLoginUser() {
 		PmOrgProfile pmOrgProfile = null;
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
 		
 		if (userId != null) {
-			IUserSO userSO = null;
 			try {
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(userId);
-				userSO = BusinessDelegate.getInstance().getServiceObject(
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
-				if (resDTO.getUserOrgList() != null
-						&& !resDTO.getUserOrgList().isEmpty()) {
-					for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
-						if (pmUserOrg.getPmOrgProfile() != null) {
-							pmOrgProfile = pmUserOrg.getPmOrgProfile();
-							break;
-						}
-					}
-				}
-			} finally {
-				userSO = null;
-			}	
+				pmOrgProfile = loadPmOrgProfile(resDTO);
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("DP", "ApprovalExceedThresholdBackingBean",
+						getManagedBean().getRequestNoteNo(), "getOrgProfileByLoginUser",
+						getUserIdSessionFromLoginId(), e);
+		    }
 		}
 		
 		return pmOrgProfile;
 	}
-	
+
 	/**
-	 * 
-	 * @param dpObj
-	 * @return boolean
+	 * Loads the first available PmOrgProfile from the user organization list.
 	 */
-	public boolean checkStatusSqExpired(Object[] dpObj){
-		
-		Long docId = null;
-		String docNo = null;
-		Long docStatusId = null;
-		String docType = null;
-		
-		if(dpObj[0] != null){
-			docId = (Long) dpObj[0];
+	private PmOrgProfile loadPmOrgProfile(UserResDTO resDTO) {
+		PmOrgProfile pmOrgProfile = null;
+		if (resDTO.getUserOrgList() != null
+				&& !resDTO.getUserOrgList().isEmpty()) {
+			for (PmUserOrg pmUserOrg : resDTO.getUserOrgList()) {
+				if (pmUserOrg.getPmOrgProfile() != null) {
+					pmOrgProfile = pmUserOrg.getPmOrgProfile();
+					break;
+				}
+			}
 		}
-		if(dpObj[1] != null){
-			docNo = (String) dpObj[1];
-		}
-		if(dpObj[4] != null){
-			docStatusId = (Long) dpObj[4];
-		}
-		if(dpObj[3] != null){
-			docType = (String) dpObj[3];
-		}
-			
- 	    QuoteResDTO quoteResDTO = null;
-	    Long currentStatusId = docStatusId;
-	    Boolean sqExpired = false;
-	    
-	    if(docType.equals(ParameterConst.DOCTYPE_SIMPLE_QUOTE)){
-	    	if(currentStatusId.equals(DPStatusConstants.SQ_PENDING_RN_CREATION)){
-	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
-	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
-	    				sqExpired = true;
-				    }
-	    		}
-			}								   
-	    }else if(docType.equals(ParameterConst.DOCTYPE_REQUEST_NOTE)){
-	    	if(currentStatusId.equals(DPStatusConstants.RN_PENDING_ITEM_CODIFICATION)
-	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_APPROVAL)
-	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION) 
-	    	   || currentStatusId.equals(DPStatusConstants.RN_PENDING_REVISION_APPROVAL)
-	    	   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_PURCHASE_REQUEST_CREATION)){
-	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
-	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
-	    				sqExpired = true;
-				    }
-	    		}
-	    	}  	
-	    }else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-	    	if(currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_APPROVAL)
-	 		   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION)
-			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_REVISION_APPROVAL)
-			   || currentStatusId.equals(FulfilmentStatusConst.PR_PENDING_QUERY_VERIFICATION)){
-	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
-	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
-	    				sqExpired = true;
-				    }
-	    		}
-	    	}
-	    }else if(docType.equals(ParameterConst.DOCTYPE_LETTER_OF_AWARD)){
-	    	if(currentStatusId.equals(QTStatusConst.LOA_PENDING_SUBMISSION)
-			   || currentStatusId.equals(QTStatusConst.LOA_PENDING_APPROVAL)
-		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION)
-		       || currentStatusId.equals(QTStatusConst.LOA_PENDING_REVISION_APPROVAL)){
-	    		IQuoteSO quoteSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQuoteSO.class);
-	    		quoteResDTO = quoteSO.getQuoteInfoFromOtherDocIdDocNo(docId, docNo, docStatusId, docType, false);	
-	    		if(quoteResDTO.getEndDate() != null && quoteResDTO.getPid() == null){
-	    			if(!isSqStillValid(quoteResDTO.getEndDate())){
-	    				sqExpired = true;
-				    }
-	    		}
-	    	}
-	    }
-	    
-		return sqExpired;
+		return pmOrgProfile;
 	}
 	
 	/**
