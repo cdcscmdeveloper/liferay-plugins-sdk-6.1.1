@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import my.ep.factory.EpLogger;
+import my.ep.helper.EntityHelper; //#38514
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -195,8 +196,8 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	private static final Map<String, String> months;
 	
 	//added for 28827 to check list of filter value
-	private List<CtAgency> filteredAgencies;	
-
+	private List<CtAgency> filteredAgencies;
+	
 	static
 	{
 		months = new HashMap<String, String>();
@@ -2408,30 +2409,32 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 		// Recalculate the performance bond amount
 		// Start - Fix - #32663
-		String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+		//Fix - #36708
+		//String proc_type = getManagedBean().getContractVer().getCtContract().getLoa().getQtType().getParameterCode();
+		ContractBackingBean contractBackingB = new ContractBackingBean(); //#38514
+		String  proc_type =  EntityHelper.getStringNestedProperty(contractBackingB.getManagedBean(), "contractVer.ctContract.loa.qtType.parameterCode"); //#38514
 
 		if (!getManagedBean().isDirectPurchase() && !getManagedBean().getCtContractAmount().isBondExempted()) {
-				if(proc_type != null){
-					if(proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
-						//pk7 contract with bond from LOA
+			if (StringUtils.isNotEmpty(proc_type) && proc_type != null) {
+				if (proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+					// pk7 contract with bond from LOA
+					calculateNewBondAmount();
+					// Start Fix - #33491
+				} else if (StringUtils.isNotEmpty(proc_type) && !proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) { //#38514
+					if (isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa())&& getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()) {
+						// To carry over whatever setting regarding is_bond_req
+						// from LOA to set in CT
+						getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
+						if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+							// recalculate the bond and set into
+							// CtcontractAmount
+							getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(),new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
+						}
+					} else {
 						calculateNewBondAmount();
-					  } else if(!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-						// except pk7 and DP
-						calculateNewBondAmount();
-					  }
+					}
+				}
 			}
-		// Start Fix - #33491 
-		} else if (!proc_type.equalsIgnoreCase(ParameterConst.PROC_TYPE_PK7)) {
-	   		if(isQtCategoryExemptedCheck(getManagedBean().getContractVer().getCtContract().getLoa()) && getManagedBean().getContractVer().getCtContract().getLoa().isBondReq()){
-	   		   //To carry over whatever setting regarding is_bond_req from LOA to set in CT	
-	   		   getManagedBean().getContractVer().getCtContractAmount().setBondReq(getManagedBean().getContractVer().getCtContract().getLoa().isBondReq());
-	   		        if(getManagedBean().getContractVer().getCtContractAmount().isBondReq()){
-	   		        	//recalculate the bond and set into CtcontractAmount 
-	   		        	getManagedBean().getCtContractAmount().setTotalBondAmt(PerformanceBondUtil.calculatePerformanceBondAmt(getManagedBean().getGstTotalAmount(), new BigDecimal(getManagedBean().getContractVer().getCtContractValue().getContractPeriod())));
-	   		        }
-	   		  }else{
-					calculateNewBondAmount(); 
-	   		  }
 		}
 		// End Fix - #33491
 		// End - Fix - #32663
@@ -4490,11 +4493,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * @return the navigate URL 
 	 */
 	public void goToOriginalLoaView(ScLoa scLoa) {
+		//#38198 start
+		if (scLoa.getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) { //Direct Nego
+			DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
+			directLoaBackingBean.getManagedBean().setIconForDL(true); 
+			directLoaBackingBean.viewLOA(scLoa.getLoaId());
+		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
-			loaDetailBackingBean.viewLOA(scLoa.getLoaId());			
+			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
+		}
+		//#38198 end		
 	}
 	//Enhancement 15851 - End
 }  

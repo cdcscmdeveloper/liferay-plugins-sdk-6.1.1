@@ -42,6 +42,22 @@
 				</c:choose>
 				<!-- 25138,34876 -end- -->
 			</tr>
+			<ui:remove>#29187 Start Vinod</ui:remove>
+			<c:if test="#{!empty evaluationBackingBean.managedBean.tplSpecZoneDtl.zoneName}">
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.zone']}" /></td>
+				<td style="font-size: 12px;">:
+				<p:commandLink id="zoneName"
+					oncomplete="zoneLocPopup.show();"
+					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
+					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{evaluationBackingBean.managedBean.tplSpecZoneDtl}" />
+					<h:outputText value="#{evaluationBackingBean.managedBean.tplSpecZoneDtl.zoneName}" />
+				</p:commandLink>
+				</td>
+			</tr>
+			</c:if>
+			<ui:remove>#29187 End Vinod</ui:remove>
 		</table>
 	</div>
 

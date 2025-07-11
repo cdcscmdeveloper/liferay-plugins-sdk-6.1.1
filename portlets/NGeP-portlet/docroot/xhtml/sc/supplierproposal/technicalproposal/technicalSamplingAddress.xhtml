@@ -152,6 +152,11 @@
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.sampletosubmit']}" toggleable="true">
+	<ui:remove>#29187 Start Vinod</ui:remove>
+	<h:outputText styleClass="instruction"  
+			value="#{lbl['lbl.tpl.spec.content.scoring.settings.mandatory.specification.sample.instruction']}"
+			escape="false" />
+	<ui:remove>#29187 End Vinod</ui:remove>
 		<p:dataTable id="sampleitemid" var="sampleitemdtl"
 			style="width : 100%" editable="true" rowIndexVar="rowIndex"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"

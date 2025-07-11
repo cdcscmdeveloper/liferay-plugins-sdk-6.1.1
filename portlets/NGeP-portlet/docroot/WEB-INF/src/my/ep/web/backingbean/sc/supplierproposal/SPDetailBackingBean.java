@@ -1133,26 +1133,43 @@ public class SPDetailBackingBean extends
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
-
 		// #21695 - Start - fix completed financial proposal still ticked after
 		// technical proposal updated
+		ScQtProposalChecklist completedFinSpec = null;
+		for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equals(finProposalChecklist
+					.getScQtCheckList().getDefinationType().getParameterCode())
+					&& finProposalChecklist.isSubmitted() && !finProposalChecklist.equals(scQtProposalChecklist)) {
+				completedFinSpec = finProposalChecklist;
+				break;
+			}
+		}
 		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
 			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
 				if (finProposalChecklist.getScQtCheckList().getTitle()
 						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
 						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
-								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
-					
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)
+						&& null != completedFinSpec) {
+					// #34726 start - flag to define process from technical,
+					// save technical spec proposal is sending
+					// financialproposalchecklist(preparefinancialaction)
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
+					// #34726 start
 					prepareFinancialAction(finProposalChecklist);
 					saveFinancialSpecificationAction(false, true);
+					// #34726 start
+					// need to setback to false, because at financial proposal
+					// prepare button is trigger prepare financialaction
+					// this flag is needed in prepareFinancialAction during save technical proposal spec or click prepare at financial proposal
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(false);
+					// #34726 end
 					break;
 				}
 			}
 		}
-		// #21695 - End - fix completed financial proposal still ticked after technical proposal updated
-
+		// #21695 - End - fix completed financial proposal still ticked after
+		// technical proposal updated
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
 			encryptTechFinTemplateSpecDtls(scQtProposalChecklist, proposalResDTO.getProposalChecklist(), isCompleted);

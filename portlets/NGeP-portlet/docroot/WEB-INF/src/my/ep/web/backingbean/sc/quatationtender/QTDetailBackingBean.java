@@ -237,6 +237,7 @@ import my.ep.util.SLAUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
+import my.ep.web.backingbean.ct.circular.CircularBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.bidding.BiddingBackingBean;
 import my.ep.web.backingbean.sc.bidding.ScheduleBiddingBackingBean;
@@ -3444,7 +3445,15 @@ public class QTDetailBackingBean extends
 		if (null == this.getManagedBean().getSupplierCriteria()) {
 			retrieveSuppQualificationTabDtl();
 		}
-		
+		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
+
+		if (this.getManagedBean().isPcbProcess()) {
+			qtReqDTO.setPcbProcess(true);
+		}
+
+		FacesScopes facesScopes = new FacesScopes();
+		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		String taskName = this.getManagedBean().getTaskName();
 		// Start Reopen 9019 #note-317
 		boolean emptyRemarksExist = false;
 
@@ -3487,16 +3496,6 @@ public class QTDetailBackingBean extends
 			}
 		}
 		// End Reopen 9019 #note-317
-
-		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
-
-		if (this.getManagedBean().isPcbProcess()) {
-			qtReqDTO.setPcbProcess(true);
-		}
-
-		FacesScopes facesScopes = new FacesScopes();
-		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		String taskName = this.getManagedBean().getTaskName();
 
 		qtReqDTO.setOutcome(outcome);
 		IQTDetailSO detailSO;
@@ -10803,7 +10802,13 @@ public class QTDetailBackingBean extends
 		scWorkFlowreqDTO.setDocId(scQt.getQtId());
 		ScWorkFlowStatus currentWorkFlowStatus = workFlowStatusSO.retrieveStatusByTypeAndId(scWorkFlowreqDTO)
 				.getWorkFlowStatus();
-		
+		// Start - #30866
+		CircularBackingBean circularBB = new CircularBackingBean();
+		if (circularBB.getManagedBean().isContinuityCircularAuditSearch()) {
+			currentWorkFlowStatus = null;
+			bpmExistFlag = true;
+		}
+		// End - #30866
 		if (null != currentWorkFlowStatus) {
 			if (currentWorkFlowStatus.getPmStatus().getStatusId().equals(QTStatusConst.QT_PENDING_QT_SUBMISSION_WIP)) {
 				bpmExistFlag = false;

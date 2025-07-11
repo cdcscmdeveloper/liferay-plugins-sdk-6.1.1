@@ -612,8 +612,7 @@ public class CommonApplBackingBean extends
 			}			
 			//27641,27736 : Disciplinary Action - 26238 - end
 			setNavigationForDraftAppl(appl.getApplType());
-			// }
-
+			SmApplicationUtil.checkAndRedirectIfInvalid(appl);//#37784
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				SMProcessNameConst.DRAFT_MAINTAIN_ACCOUNT)) {
 			//log.info(" ******* The selected process name is  Draft Maintain Account******"

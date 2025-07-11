@@ -613,12 +613,18 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
+	
+	private boolean poApproverPersonnelErr;//#31130-start
+	private String msgPersonnelErr;
+	private boolean poApproverAcedemicErr;//#31130-end
 	
 	//#30691 - START - 26112021
 	private boolean poApproverChgBusiness;
@@ -4594,6 +4600,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
@@ -4658,6 +4673,32 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.checkBranch = checkBranch;
 	}
 	//#32968 END
+	
+	//31130-start
+	public boolean isPoApproverPersonnelErr() {
+		return poApproverPersonnelErr;
+	}
+
+	public void setPoApproverPersonnelErr(boolean poApproverPersonnelErr) {
+		this.poApproverPersonnelErr = poApproverPersonnelErr;
+	}
+
+	public String getMsgPersonnelErr() {
+		return msgPersonnelErr;
+	}
+
+	public void setMsgPersonnelErr(String msgPersonnelErr) {
+		this.msgPersonnelErr = msgPersonnelErr;
+	}
+
+	public boolean isPoApproverAcedemicErr() {
+		return poApproverAcedemicErr;
+	}
+
+	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
+		this.poApproverAcedemicErr = poApproverAcedemicErr;
+	}
+	//31130-end
 	
 	//Start 32008
 	public boolean isUpsCannotEdit() {
@@ -4756,3 +4797,4 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.showDifferenceRejection = showDifferenceRejection;
 	}
 }
+
