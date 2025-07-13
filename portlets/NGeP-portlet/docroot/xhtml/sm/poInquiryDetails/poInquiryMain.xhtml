@@ -28,13 +28,16 @@
 				<!-- #12483 - START -->
 				<h:outputText value="#{lbl['lbl.sm.revise.reason']} : #{backingBean.currentReviseReason()}" rendered="#{backingBean.renderRevisedReason()}" styleClass="splNotesFonts" escape="false" />
 				<!-- #12483 - END -->
+				<!--#34392 Start -->
 				<div style="width: 100%" align="right">
 					<p:commandButton value="#{lbl['lbl.sm.button.send.enquiry']}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignMissingDocsList(true,'sendInqDialog')}"
-						update=":#{p:component('sendInqDialog')}" />
+						update=":#{p:component('sendInqDialog')}" 
+						rendered="#{backingBean.managedBean.inquirySiteVisitAfter}" />
 				</div>
+				<!--#34392 End -->
 				<ui:include src="poInquiryDetails.xhtml" />
 			</td>
 		</tr>
@@ -47,35 +50,163 @@
 		<p:outputPanel layout="block" id="inquiryBlockPanel">
 			
 			<p:messages id="poInquirySecMsg" showSummary="false" showDetail="true" autoUpdate="true" closable="true" />
-				
+
 			<p:panel header="#{lbl['lbl.sm.enquiry.supporting.documents.list']}"
 				id="inquiryMainSuppDocPanel">
-		
-				<p:dataTable var="onTable" id="inquiryMainSdList" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{backingBean.managedBean.missinDocs}">
-					<ac:paginator for="inquiryMainSdList" />
-		
-					<p:column headerText="#{lbl['lbl.sm.enquiry.document.description']}"
-						style="width : 60%">
-						<p:outputLabel value="#{onTable.pmDocument.docName}"
+				<!--#34392 Start -->
+				<p:dataTable var="table"
+					value="#{backingBean.managedBean.missinDocsMandatory}"
+					id="onlineMandatoryListMain" rowIndexVar="index"
+					rendered="#{not empty backingBean.managedBean.missinDocsMandatory}"
+					style="width:1000px !important; table-layout: fixed !important;"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}"
+								colspan="5"
+								style="background-color:PeachPuff !important;text-align: center !important;color:black !important" />
+						</p:row>
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+								style="width : 3% !important;text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+								style="width : 70% !important;overflow: hidden !important;" />
+							<p:column headerText="#{lbl['lbl.sm.remarks']}"
+								style="width : 27% !important;overflow: hidden !important;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 3% !important;"
+						rendered="#{table.pmDocument.mandatory}">
+						<h:outputText value="#{sdoReviewBackingBean.mandatoryCounter}"
+							style="float: left;white-space: normal;font-weight:bold;" />
+					</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+						style="width : 70% !important;"
+						rendered="#{table.pmDocument.mandatory}">
+						<h:outputText value="#{table.pmDocument.docName}"
 							style="float: left;white-space: normal;" />
 					</p:column>
-		
-					<p:column headerText="#{lbl['lbl.sm.enquiry.document.status']}"
-						style="width : 20%">
-						<p:outputLabel
-							value="#{lbl['lbl.sm.enquiry.document.status.missinginvalid']}"
-							style="float: left;white-space: normal;" />
+					<p:column headerText="#{lbl['lbl.sm.remarks']}"
+						style="width : 27% !important;"
+						rendered="#{table.pmDocument.mandatory}">
+						<p:inputTextarea value="#{table.inquiryRemark}"
+							style="float: left;white-space: normal;width:97% !important;"
+							maxlength="2500" />
 					</p:column>
-		
-					<p:column headerText="#{lbl['lbl.sm.enquiry.remarks.to.supplier']}"
-						style="width : 20%">
-						<p:inputTextarea value="#{onTable.poRemarks}" maxlength="100" />
-					</p:column>
-		
 				</p:dataTable>
+				<!-- datatable for mandatory support doc with no record to display(fix bug in primeface version) -->
+				<p:dataTable var="" value="" id="EmptyOnlineMandatoryListMain"
+					rendered="#{empty backingBean.managedBean.missinDocsMandatory}"
+					rowIndexVar="index"
+					style="width:1000px !important; table-layout: fixed !important;"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.mandatory.suppdoc']}"
+								colspan="5"
+								style="background-color:PeachPuff !important;text-align: center !important;color:black !important" />
+						</p:row>
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+								style="width : 3% !important;text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+								style="width : 70% !important;overflow: hidden !important;" />
+							<p:column headerText="#{lbl['lbl.sm.remarks']}"
+								style="width : 27% !important;overflow: hidden !important;" />
+						</p:row>
+						<p:row>
+							<p:column
+								headerText="#{lbl['lbl.datatable.msg.no.records.found']}"
+								colspan="5"
+								style="background-color:white !important; color:black; font-weight:normal !important; text-align:left !important;">
+
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+				<!-- datatable for non-mandatory support doc with record to display -->
+				<p:dataTable var="table"
+					value="#{backingBean.managedBean.missinDocsNonMandatory}"
+					id="onlineNonMandatoryListMain" rowIndexVar="index"
+					rendered="#{not empty backingBean.managedBean.missinDocsNonMandatory}"
+					style="width:1000px !important; table-layout: fixed !important;"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}"
+								colspan="5"
+								style="background-color:PaleGreen !important;text-align: center !important;color:black !important" />
+						</p:row>
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+								style="width : 3% !important;text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+								style="width : 70% !important;overflow: hidden !important;" />
+							<p:column headerText="#{lbl['lbl.sm.remarks']}"
+								style="width : 27% !important;overflow: hidden !important;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+						style="width : 3% !important;"
+						rendered="#{!table.pmDocument.mandatory}">
+						<h:outputText value="#{sdoReviewBackingBean.nonMandatoryCounter}"
+							style="float: left;white-space: normal;font-weight:bold;" />
+					</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+						style="width : 70% !important;"
+						rendered="#{!table.pmDocument.mandatory}">
+						<h:outputText value="#{table.pmDocument.docName}"
+							style="float: left;white-space: normal;" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.remarks']}"
+						style="width : 27% !important;"
+						rendered="#{!table.pmDocument.mandatory}">
+						<p:inputTextarea value="#{table.inquiryRemark}"
+							style="float: left;white-space: normal;width:97% !important;"
+							maxlength="2500" />
+					</p:column>
+				</p:dataTable>
+				<!-- datatable for non-mandatory support doc with no record to display(fix bug in primeface version) -->
+				<p:dataTable var="" value="" id="EmptyOnlineNonMandatoryListMain"
+					rendered="#{empty backingBean.managedBean.missinDocsNonMandatory}"
+					rowIndexVar="index"
+					style="width:1000px !important; table-layout: fixed !important;"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.nonmandatory.suppdoc']}"
+								colspan="5"
+								style="background-color:PaleGreen !important;text-align: center !important;color:black !important" />
+						</p:row>
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+								style="width : 3% !important;text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+								style="width : 70% !important;overflow: hidden !important;" />
+							<p:column headerText="#{lbl['lbl.sm.remarks']}"
+								style="width : 27% !important;overflow: hidden !important;" />
+						</p:row>
+						<p:row>
+							<p:column
+								headerText="#{lbl['lbl.datatable.msg.no.records.found']}"
+								colspan="5"
+								style="background-color:white !important; color:black; font-weight:normal !important; text-align:left !important;">
+
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+				</p:dataTable>
+				<!--#34392 End -->
 			</p:panel>
-			
+
 			<p:panel header="#{lbl['lbl.sm.other.application.inquiry']}" id="inquiryOtherMainPanelId" 
 				rendered="#{backingBean.managedBean.poUser and backingBean.managedBean.poToSupplierInquiry ne null}">
 				<h:outputText value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.valueReqd}"/>&#160;

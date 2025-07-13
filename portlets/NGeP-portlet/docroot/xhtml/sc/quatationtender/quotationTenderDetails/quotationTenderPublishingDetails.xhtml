@@ -6,6 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:remove> #11104 - start </ui:remove>
+	<ui:param name="isSampleExist"
+		value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(qTScheduleDetailBackingBean.managedBean.qt)}"></ui:param>
+	<ui:remove> #11104 - end </ui:remove>
+
+
 	<ui:include src="quotationTenderScheduleDetails.xhtml" />
 	<ui:include src="quotationTenderScheduleAddress.xhtml" />
 </ui:composition>

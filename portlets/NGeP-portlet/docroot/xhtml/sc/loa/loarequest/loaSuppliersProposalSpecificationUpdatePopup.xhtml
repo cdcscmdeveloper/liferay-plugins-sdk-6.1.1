@@ -1,4 +1,4 @@
-<!-- * @author vinod #29007 -->
+ <!-- * @author vinod #29007 -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -8,174 +8,175 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-
+	
 	<ui:include src="../shared/loaInstructionHeader.xhtml" />
-
+	
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 
-	<ui:define name="contentSection">
-		<p:messages id="loaSuppliersProposalSpecificationUpdateMsg"
-			showDetail="true" autoUpdate="true" closable="true"
-			showSummary="false" severity="error, info" />
-
-		<table style="width: 100%;">
+<ui:define name="contentSection">
+<p:messages id="loaSuppliersProposalSpecificationUpdateMsg" showDetail="true"
+					autoUpdate="true" closable="true" showSummary="false"
+					severity="error, info" />
+					
+	<table style="width: 100%;">
 			<tr>
-				<td colspan="4" style="text-align: left"><p:commandButton
-						value="#{lbl['lbl.btn.back']}" immediate="true"
+				<td colspan="4" style="text-align: left">
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
 						action="#{lOADetailBackingBean.onBackToZoneItemDetailsTab}">
-					</p:commandButton></td>
-				<td colspan="4" style="text-align: right"><p:commandButton
-						id="resetAll" value="#{lbl['lbl.btn.reset.all']}"
+					</p:commandButton>
+				</td>
+				<td colspan="4" style="text-align: right">
+					<p:commandButton id="resetAll" value="#{lbl['lbl.btn.reset.all']}"
+					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
+					action="#{lOADetailBackingBean.resetAllNewOfferedSpecification}" process="@form"
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();" />
+					<p:tooltip id="toolResetAll" for="resetAll" value="#{lbl['lbl.btn.reset.all.mouseover']}" trackMouse="true" />
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
-						action="#{lOADetailBackingBean.resetAllNewOfferedSpecification}"
-						process="@form" onstart="blockWidget.show();"
-						oncomplete="blockWidget.hide();" /> <p:tooltip id="toolResetAll"
-						for="resetAll" value="#{lbl['lbl.btn.reset.all.mouseover']}"
-						trackMouse="true" /> <p:commandButton
-						value="#{lbl['lbl.btn.save']}"
-						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
-						action="#{lOADetailBackingBean.saveSupplierSpecification(false)}">
-					</p:commandButton> <p:commandButton value="#{lbl['lbl.btn.complete']}"
+						action="#{lOADetailBackingBean.saveSupplierSpecification(false)}"
+						update="@([id$=suppliersProposalSpecificationUpdateId])">
+					</p:commandButton> <p:commandButton
+						value="#{lbl['lbl.btn.complete']}"
 						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
 						action="#{lOADetailBackingBean.saveSupplierSpecification(true)}">
-					</p:commandButton></td>
+					</p:commandButton>
+				</td>
+			</tr>
+	</table>
+	<p:panel id="itemNameSearchCriteriaId" header="#{lbl['lbl.btn.search']}" toggleable="true">
+
+		<table>
+			<tr>
+				<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.loiloa.specification.keyword']}" /></td>
+				<td colspan="3">
+					<p:inputText id="specKeyword" value="#{lOADetailBackingBean.managedBean.specKeyword}"
+					size="30" />
+				</td>
 			</tr>
 		</table>
-		<p:panel id="itemNameSearchCriteriaId"
-			header="#{lbl['lbl.btn.search']}" toggleable="true">
-
-			<table>
-				<tr>
-					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.loiloa.specification.keyword']}"></h:outputLabel></td>
-					<td colspan="3"><p:inputText id="specKeyword"
-							value="#{lOADetailBackingBean.managedBean.specKeyword}" size="30" />
-					</td>
-				</tr>
-			</table>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					partialSubmit="true" update="specList"
-					action="#{lOADetailBackingBean.searchSupplierSpecification(lOADetailBackingBean.managedBean.scLoiLoaItem,false)}"
-					styleClass="BtnSpacing" process="@this,specKeyword" />
-			</div>
-		</p:panel>
-		<p:panel id="suppliersProposalSpecificationUpdateId"
-			header="#{lbl['lbl.sc.suppliers.proposal.specification.update']}"
-			toggleable="true">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.search']}" partialSubmit="true" update="specList"
+				action="#{lOADetailBackingBean.searchSupplierSpecification(lOADetailBackingBean.managedBean.scLoiLoaItem,false)}"
+				styleClass="BtnSpacing" process="@this,specKeyword"  />
+		</div>
+</p:panel>
+<p:panel id="suppliersProposalSpecificationUpdateId"
+		header="#{lbl['lbl.sc.suppliers.proposal.specification.update']}"
+		toggleable="true">
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.loiloa.newoffered.specification.instructions1']}" />
-			<br />
-			<h:outputText styleClass="instruction"
-				value="#{lbl['lbl.sc.loiloa.newoffered.specification.instructions2']}" />
-			<p:graphicImage value="/css/images/design/ico-refresh.png"
-				id="supplierUpdateInstructionIcon"
+			<p:graphicImage value="/css/images/design/add.png"
+				id="supplierUpdateInstructionAddIcon"
 				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
 			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.loiloa.newoffered.specification.instructions12']}" />
+			<br />
+		<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.loiloa.newoffered.specification.instructions2']}" />
+			<p:graphicImage value="/css/images/design/ico-refresh.png"
+				id="supplierUpdateInstructionRefreshIcon"
+				style="max-width: 16px; padding-right: 7px; padding-left: 7px;" />
+		<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.loiloa.newoffered.specification.instructions3']}" />
-			<table>
-				<tr>
-					<br />
-					<br />
-					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.price.inquiry.item.name']}"></h:outputLabel></td>
-					<td colspan="3"><h:outputText
-							style="width:24%;white-space: normal;"
-							value="#{lOADetailBackingBean.managedBean.itemNamePopup}" /></td>
-				</tr>
-				<tr>
-					<td valign="top"><h:outputLabel
-							value="#{lbl['lbl.sc.justification']}"></h:outputLabel> <p:outputLabel
-							value="* " styleClass="mandatory" /></td>
-					<td colspan="3"><p:inputTextarea
-							label="#{lbl['lbl.sc.justification']}" id="justification"
-							disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
-							value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
-							style="width:800px; margin-bottom:5px;" maxlength="1000" rows="5"
-							autoResize="false">
-							<p:ajax event="change" process="@this" update="@this"></p:ajax>
-						</p:inputTextarea> <ac:iconTooltip
-							value="#{lbl['lbl.sc.loiloa.justification.tooltip']}" /> <p:message
-							id="justificationMsg" for="justification" display="icon" /></td>
-				</tr>
-			</table>
-			<p:dataTable id="specList"
+		<table>
+			<tr>
+				<td valign="top">
+					<br /><br />
+					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.item.name']}" />
+				</td>
+				<td colspan="3">
+					<br /><br />
+					<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false"
+					value="#{lOADetailBackingBean.replaceAllSpecialCharactersAndNewline(lOADetailBackingBean.managedBean.itemNamePopup)}" />
+				</td>
+			</tr>
+			<tr>
+				<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.justification']}" />
+				<p:outputLabel value="* " styleClass="mandatory" />
+				</td>
+				<td colspan="3">
+					<p:inputTextarea label="#{lbl['lbl.sc.justification']}" id="justification" 		
+					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
+					value="#{lOADetailBackingBean.managedBean.newSupplierJustification}"
+					style="width:800px; margin-bottom:5px;" onmouseout="limitTextArea(this,1000);" rows="5" autoResize="false">
+						<p:ajax event="change" process="@this" update="@this" />
+						<f:validateLength for="justification" maximum="1000" />		
+					</p:inputTextarea>
+					<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.justification.tooltip']}" />
+					<p:message id="justificationMsg" for="justification" display="icon" />
+				</td>
+			</tr>
+		</table>
+		<p:dataTable id="specList"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{lOADetailBackingBean.managedBean.tplSpecAnswerList}"
 				var="spec" rowIndexVar="rowIndex" rowKey="#{spec}" rows="10"
 				width="100%">
-
-				<p:columnGroup type="header">
-					<p:row>
-						<p:column headerText="#{lbl['lbl.sc.specification']}"
-							style="width:30%;white-space:normal; text-align: center">
-						</p:column>
-						<p:column style="text-align: center;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.offer']}" />
-								<ac:iconTooltip
-									value="#{lbl['lbl.sc.loiloa.newoffered.specification.supplier.offered.tooltip']}" />
-							</f:facet>
-						</p:column>
-						<p:column style="text-align: center;">
-							<f:facet name="header">
-								<h:outputText
-									value="#{lbl['lbl.sc.loiloa.newoffered.specification']}" />
-								<ac:iconTooltip
-									value="#{lbl['lbl.sc.loiloa.newoffered.specification.tooltip']}" />
-							</f:facet>
-						</p:column>
-					</p:row>
-				</p:columnGroup>
-
-				<p:column style="width:30%; text-align: left;">
-					<h:outputText style="width:24%;white-space: normal;"
-						value="#{spec.tplSpecQuestion.clSpecDetail}" />
-					<br />
-					<p:commandLink id="addNewSpec" update="specList"
+				
+		<p:columnGroup type="header">
+			<p:row>
+				<p:column headerText="#{lbl['lbl.sc.specification']}" style="width:30%;white-space:normal; text-align: center" >
+				</p:column>
+				<p:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.supplier.offer']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.newoffered.specification.supplier.offered.tooltip']}" />
+					</f:facet>
+				</p:column>
+				<p:column style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.loiloa.newoffered.specification']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.newoffered.specification.tooltip']}" />
+					</f:facet>
+				</p:column>
+			</p:row>
+		</p:columnGroup>
+		
+		<p:column style="width:30%; text-align: left;">
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" value="#{lOADetailBackingBean.replaceAllSpecialCharactersAndNewline(spec.tplSpecQuestion.clSpecDetail)}" /><br/>
+			<p:commandLink id="addNewSpec" update="specList"
 						action="#{lOADetailBackingBean.addNewOfferedSpec(spec)}"
 						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage value="/css/images/design/add.png" />
-					</p:commandLink>
-					<p:tooltip id="toolTipADDnewSupplierOffer" for="addNewSpec"
-						value="#{lbl['lbl.sc.loiloa.newoffered.specification.add.mouseover']}"
-						trackMouse="true" />
-					<p:commandLink id="refreshNewSpec" update="specList"
+			</p:commandLink>
+			<p:tooltip id="toolTipADDnewSupplierOffer"
+						for="addNewSpec"
+						value="#{lbl['lbl.sc.loiloa.newoffered.specification.add.mouseover']}" trackMouse="true" />
+			<p:commandLink id="refreshNewSpec" update="specList"
 						action="#{lOADetailBackingBean.refreshNewOfferedSpec(spec)}"
 						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
 						partialSubmit="true" process="@this">
-						<p:spacer style="width:5%;white-space:normal;"></p:spacer>
+						<p:spacer style="width:5%;white-space:normal;" />
 						<p:graphicImage value="/css/images/design/ico-refresh.png" />
-					</p:commandLink>
-				</p:column>
-				<p:column style="width:30%; text-align: left;">
-					<h:outputText style="width:24%;white-space: normal;"
-						value="#{lOADetailBackingBean.supplierRemarks(spec.answerRemark)}" />
-				</p:column>
-				<p:column style="width:40%; text-align: center;">
-					<p:inputTextarea id="newOfferedSpec"
-						label="#{lbl['lbl.sc.loiloa.newoffered.specification']}"
-						style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}"
-						disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
-						rows="5" onkeyup="limitTextArea(this,1000);"
-						onkeydown="limitTextArea(this,1000);"
-						rendered="#{spec.renderNewSpec}" autoResize="false"
-						onmouseout="limitTextArea(this,1000);">
-						<p:ajax event="change" process="@this" update="@this" />
-						<f:validateLength for="newOfferedSpec" maximum="1000" />
-					</p:inputTextarea>
-					<p:message id="newOfferedSpecMsg" for="newOfferedSpec"
-						display="icon" />
-				</p:column>
-
-			</p:dataTable>
-		</p:panel>
-		<p:dialog id="resetAllConfirmId" widgetVar="resetAllConfirmPopUp"
-			header="#{lbl['lbl.sc.loiloa.newoffered.specification.reset.all.confirmation.header']}"
-			resizable="false" width="35%" height="100" closable="false">
+			</p:commandLink>
+		</p:column>
+		<p:column style="width:30%; text-align: left;">
+			<h:outputText style="width:24%;white-space: normal;word-break:break-all;" escape="false" value="#{lOADetailBackingBean.supplierRemarks(spec.answerRemark)}" />
+		</p:column>
+		<p:column style="width:40%; text-align: center;">
+			<p:inputTextarea id="newOfferedSpec"
+					label="#{lbl['lbl.sc.loiloa.newoffered.specification']}"
+					style="width:calc(100% - 30px);" value="#{spec.newSupplierOffer}"
+					disabled="#{lOADetailBackingBean.managedBean.supPropSpecDisable}"
+					rows="5" 
+					rendered="#{spec.renderNewSpec}" autoResize="false"
+					onmouseout="limitTextArea(this,1000);">
+					<p:ajax event="change" process="@this" update="@this" />
+					<f:validateLength for="newOfferedSpec" maximum="1000" />
+			</p:inputTextarea>
+			<p:message id="newOfferedSpecMsg" for="newOfferedSpec"
+					display="icon" />
+		</p:column>
+				
+		</p:dataTable>
+</p:panel>
+<p:dialog id="resetAllConfirmId" widgetVar="resetAllConfirmPopUp"
+			header="#{lbl['lbl.sc.loiloa.newoffered.specification.reset.all.confirmation.header']}" resizable="false"
+			width="35%" height="100" closable="false">
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -184,15 +185,14 @@
 			</table>
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					onclick="blockWidget.show();"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
+				    onclick="blockWidget.show();"
 					oncomplete="resetAllConfirmPopUp.hide(); blockWidget.hide();"
-					partialSubmit="true" process="@form" update="@form"
+					 partialSubmit="true" process="@form" update="@form" 
 					action="#{lOADetailBackingBean.resetAllNewOfferedSpecificationSubmit}" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}"
-					onclick="resetAllConfirmPopUp.hide();" type="button"
-					partialSubmit="true" process="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
+					onclick="resetAllConfirmPopUp.hide();" type="button" partialSubmit="true"  process="@this"/>
 			</div>
-		</p:dialog>
-	</ui:define>
+</p:dialog>
+</ui:define>
 </ui:composition>

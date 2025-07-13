@@ -24,9 +24,14 @@
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
 				<!--#12492-END-->
-				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
-					action="#{registrationBackingBean.returnToTermAndCondition}">
+				<!--#36710 START-->
+				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="float:left;" rendered="#{registrationBackingBean.managedBean.ssmIntegrationActive}"
+					action="#{registrationBackingBean.returnToCompanyValidation}"> 
 				</p:commandButton>
+				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="float:left;" rendered="#{!registrationBackingBean.managedBean.ssmIntegrationActive}"
+					action="#{registrationBackingBean.returnToTermAndCondition}"> 
+				</p:commandButton>
+				<!--#36710 END-->
 		</div>
 		<div style="clear: both;"></div>
 	</c:if>

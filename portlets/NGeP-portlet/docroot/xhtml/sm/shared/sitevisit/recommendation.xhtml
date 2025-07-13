@@ -11,20 +11,28 @@
 			<tr>
 				<td valign="top" width="35%"><p:outputLabel value="#{lbl['lbl.sm.comments']}" /></td>
 				<td>
+					<!-- #34166 - Start  -->
 					<p:inputTextarea rows="8" id="commentId"  style="width:70%;" autoResize="false"  label="#{lbl['lbl.sm.comments']}"
-					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}">
+					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.officerComment}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}" validator="#{svoSiteVisitBackingBean.validateText}">
+						<f:attribute name="param" value="#{lbl['lbl.sm.comments']}" />
+						<f:ajax event="blur" execute="@this" />
 						<f:validateLength maximum="1000" />
 					</p:inputTextarea>
+					<!-- #34166 - End  -->
 				</td>
 			</tr>
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" /></td>
 				<td>
+					<!-- #34166 - Start  -->
 					<p:inputTextarea rows="8" id="compInfoId"  style="width:70%;" autoResize="false" label="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}"
-					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}">
+					maxlength="1000" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.companyInfoUpdate}" disabled="#{svoSiteVisitBackingBean.managedBean.viewMode}" validator="#{svoSiteVisitBackingBean.validateText}">
+						<f:attribute name="param" value="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}" />
+						<f:ajax event="blur" execute="@this" />
 						<f:validateLength maximum="1000" />
 					</p:inputTextarea>
+					<!-- #34166 - End  -->
 				</td>
 			</tr>
 

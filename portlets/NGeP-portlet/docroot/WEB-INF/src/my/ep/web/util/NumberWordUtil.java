@@ -4,6 +4,9 @@
 package my.ep.web.util;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
+
+import my.ep.util.ResourceBundleUtils;
 
 public class NumberWordUtil {
 
@@ -135,4 +138,50 @@ public class NumberWordUtil {
 		String s = convert("1111111111.67");
 		System.out.println(s);
 	}
+	
+	// #36594 - Start
+	public static String changeNumberToWord(int number, Locale locale) {
+
+		if (number == 0) {
+			return "zero";
+		}
+
+		String[] units = { "", "one", "two", "three", "four", "five", "six",
+				"seven", "eight", "nine" };
+		String[] tens = { "", "", "twenty", "thirty", "forty", "fifty",
+				"sixty", "seventy", "eighty", "ninety" };
+		String[] teens = { "", "ten", "eleven", "twelve", "thirten",
+				"fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
+				"nineteen" };
+
+		StringBuilder words = new StringBuilder();
+
+		// Handle hundreds
+		if (number >= 100) {
+			words.append(units[number / 100]).append(" hundred ");
+			number %= 100;
+		}
+
+		// Handle tens and teens
+		if (number >= 20) {
+			words.append(tens[number / 10]).append(" ");
+			number %= 10;
+		} else if (number >= 10) {
+			words.append(teens[number - 10]).append(" ");
+			return words.toString().trim();
+		}
+
+		// Handle units
+		if (number > 0) {
+			words.append(units[number]).append(" ");
+		}
+
+		return changeNumberToWordLabel(words.toString().trim(), locale);
+	}
+
+	private static String changeNumberToWordLabel(String label, Locale locale) {
+		return ResourceBundleUtils.getMessage("lbl.sm.words." + label,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+	}
+	// #36594 - End
 }

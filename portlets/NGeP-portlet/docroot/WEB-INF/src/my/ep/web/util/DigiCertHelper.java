@@ -13,15 +13,10 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import my.ep.constant.MessageConst;
-import my.ep.constant.sm.SupplierManagementConst;
-import my.ep.dto.sm.personnel.PersonnelReqDTO;
-import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.SPKIConst;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
 import org.apache.commons.lang3.StringUtils;
@@ -139,25 +134,7 @@ public class DigiCertHelper {
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder
 					.getChallengeQuestions(identificationNo, 1));
 			
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setUserId(pmUser.getUserId());
-			PersonnelResDTO resDTO = SmServiceLookup.getPersonnelSO().retrievePersonnelByUserId(reqDTO);
-			//log.info("getPersonnelId:: " + resDTO.getSmPersonnel().getPersonnelId());
-			//log.info("getSoftcertFlg:: " + resDTO.getSmPersonnel().getSoftcertFlg());
-			
-			/*#29228 - Start*/
-			if (!(resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED)) {
-			/*#29228 - End	*/
-				//log.info("#25061 getSoftcertFlg:: if log 1");
-				if (resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
-						|| resDTO.getSmPersonnel().getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
-					//log.info("getSoftcertFlg|776063 1 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					throw new EpException(MessageConst.ERROR_DIGICERT_776063);
-				} else {
-					//log.info("getSoftcertFlg|776064 2 :: " + resDTO.getSmPersonnel().getSoftcertFlg());
-					//#29630 - start
+					//#30425 - remove all validation to spkibackingBean
 					if (res.getStatusCode() == SPKIConst.ERROR_PIN_BLOCKED) {
 						log.info("51; " + MessageConst.ERROR_DIGICERT_776059);
 					} else if (res.getStatusCode() == SPKIConst.ERROR_INVALID_PIN) {
@@ -167,10 +144,7 @@ public class DigiCertHelper {
 					} else {
 						log.info("99; " + MessageConst.ERROR_TRUSTGATE_776063);
 					}
-					//#29630 - end
-					throw new EpException(MessageConst.ERROR_DIGICERT_776064);
-				}
-			}
+					//#30425 - end
 
 			switch (res.getStatusCode()) {
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:

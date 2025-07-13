@@ -140,21 +140,23 @@
 		<p:dataTable id="dtInquiryResponse" selectionMode="single" 
 			selection="#{viewSmApplBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
 			value="#{viewSmApplBackingBean.managedBean.smAppl.smApplInquiries}" var="applInq">
+			<!-- #34392 - Start -->
 			<p:column headerText="#{lbl['lbl.sm.supportingdoc.subject']}">
-				<h:outputText value="#{applInq.inquirySubject}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}"/>
+				<h:outputText value="#{applInq.inquirySubject}"/>
 			</p:column>
 			<p:ajax event="rowSelect" listener="#{viewSmApplBackingBean.inquiryRowSelect('online')}"  update=":#{p:component('resOutPanelId')}" oncomplete="responseDlg.show();" />
 			
-			<p:column headerText="#{lbl['lbl.sm.supportingdoc.inquirydate']}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+			<p:column headerText="#{lbl['lbl.sm.supportingdoc.inquirydate']}">
 				<h:outputText value="#{applInq.createdDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.supportingdoc.responsedate']}">
-				<h:outputText value="#{applInq.responseDate}" rendered="#{applInq.inquirySubject ne 'INQUIRY_PO_SUPPLIER'}">
+				<h:outputText value="#{applInq.responseDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
+			<!-- #34392 - End -->
 		</p:dataTable>
 	</p:panel>
 	
@@ -229,7 +231,18 @@
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 18% !important;" rendered="#{inquiryHistoryOnlineMandatoryTable.pmDocument.mandatory}">
-									<h:inputTextarea value="#{inquiryHistoryOnlineMandatoryTable.sdoRemarks}" style="float: left;white-space: normal; width:100% !important;" disabled="true"/>
+									<!-- #34392 - Start -->
+									<h:inputTextarea
+										value="#{inquiryHistoryOnlineMandatoryTable.sdoRemarks}"
+										style="float: left;white-space: normal; width:100% !important;"
+										disabled="true"
+										rendered="#{not empty inquiryHistoryOnlineMandatoryTable.sdoRemarks}" />
+									<h:inputTextarea
+										value="#{inquiryHistoryOnlineMandatoryTable.poRemarks}"
+										style="float: left;white-space: normal; width:100% !important;"
+										disabled="true"
+										rendered="#{not empty inquiryHistoryOnlineMandatoryTable.poRemarks}" />
+									<!-- #34392 - End -->
 								</p:column>
 							</p:dataTable>
 							<p:dataTable var="emptyMandatory" value="" id="mandatoryEmptyForApplStatus" 
@@ -289,7 +302,18 @@
 									</ui:repeat>
 								</p:column>
 								<p:column headerText="#{lbl['lbl.sm.remarks']}" style="width : 18% !important;" rendered="#{!inquiryHistoryOnlineNonMandatoryTable.pmDocument.mandatory}">
-									<h:inputTextarea value="#{inquiryHistoryOnlineNonMandatoryTable.sdoRemarks}" style="float:left; white-space:normal; width:100% !important;" disabled="true"/>
+									<!-- #34392 - Start -->
+									<h:inputTextarea
+										value="#{inquiryHistoryOnlineNonMandatoryTable.sdoRemarks}"
+										style="float:left; white-space:normal; width:100% !important;"
+										disabled="true"
+										rendered="#{not empty inquiryHistoryOnlineNonMandatoryTable.sdoRemarks}" />
+									<h:inputTextarea
+										value="#{inquiryHistoryOnlineNonMandatoryTable.poRemarks}"
+										style="float:left; white-space:normal; width:100% !important;"
+										disabled="true"
+										rendered="#{not empty inquiryHistoryOnlineNonMandatoryTable.poRemarks}" />
+									<!-- #34392 - End -->
 								</p:column>
 							</p:dataTable>
 							<p:dataTable var="emptyNonMandatory" value="" id="nonMandatoryEmptyForApplHistory" 

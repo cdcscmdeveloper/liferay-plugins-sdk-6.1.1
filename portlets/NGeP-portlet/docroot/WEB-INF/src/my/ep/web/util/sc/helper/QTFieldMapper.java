@@ -214,6 +214,12 @@ public class QTFieldMapper {
 		QT_CONSOLIDATION_REPORT(QTStatusConst.QT_CONSOLIDATION_REPORT,
 						QT_CLOSED.value() ),
 
+		// #28834 -start-
+		// Pending Recommendation (Revise Briefing Paper)
+		QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER(QTStatusConst.QT_PENDING_RECOMMENDATION_REVISE_BRIEFING_PAPER,
+				QT_CLOSED.value()),
+		// #28834 -end-
+
 		// Supplier Finalization
 		QT_SUPPLIER_FINALIZATION(QTStatusConst.QT_SUPPLIER_FINALIZATION,
 				QT_CLOSED.value() ),
@@ -265,17 +271,17 @@ public class QTFieldMapper {
 			return null;
 		}
 		
-		// #25037 - start
-		private static String[] merge(String[] arr1, String[] arr2){
-			List<String> merged = new ArrayList<String>(Arrays.asList(arr1));
+		// 25037 - start
+		private static String[] merge(String[] arr1, String[] arr2) {
+			List<String> merged = new ArrayList<>(Arrays.asList(arr1));
 			merged.addAll(Arrays.asList(arr2));
 			String[] mergedArr = new String[merged.size()];
-			for(int i=0;i<mergedArr.length;i++){
+			for (int i = 0; i < mergedArr.length; i++) {
 				mergedArr[i] = merged.get(i);
 			}
 			return mergedArr;
 		}
-		// #25037 - end
+		// 25037 - end
 	}
 
 	/**

@@ -16,21 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmMofCert;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.report.ReportConst;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -101,6 +94,7 @@ public class SmVirtualCertHelper {
 	 * @param mofAccountNo
 	 * @return SmSupplier
 	 */
+	/*
 	private SmSupplier getSmSupplier() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		log.info("******getSmSupplier******" + pmUser.getUserId());
@@ -121,6 +115,7 @@ public class SmVirtualCertHelper {
 		
 		return smSupp;
 	}
+	*/
 	
 	/**
 	 * Generate Report
@@ -158,7 +153,6 @@ public class SmVirtualCertHelper {
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					log.info(">>>>> Error when delay>>>>>" + e.getMessage());
 				}
 				
@@ -238,10 +232,12 @@ public class SmVirtualCertHelper {
 		}
 	}
 	
-	public Map<String, String> getReportParam(SmMofCert cert){
+	public Map<String, String> getReportParam(SmMofCert cert) {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("PAPPLID", cert.getSmAppl().getApplId().toString());
-		
+		// #36401 - Start
+		paramMap.put("P_MOF_CERT_ID", Long.toString(cert.getMofCertId()));
+		// #36401 - End
 		return paramMap;
 	}
 	

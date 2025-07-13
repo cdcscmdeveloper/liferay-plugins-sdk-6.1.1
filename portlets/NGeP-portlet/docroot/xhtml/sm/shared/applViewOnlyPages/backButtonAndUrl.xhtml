@@ -29,7 +29,8 @@
 						process="@this" partialSubmit="true" update=":form"
 						value="#{lbl['lbl.sm.resubmit']}" />&#160;&#160;
 				</p:outputPanel>
-				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'}">
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType ne 'N'
+				and viewSmApplBackingBean.managedBean.smAppl.applType ne 'C'}">    <!-- #38273 -->
 					<p:commandLink onclick="blockWidget.show()" rendered="#{viewSmApplBackingBean.isApplPORejectedAfterApprovelSV()}"
 							action="#{viewSmApplBackingBean.redirectToResubmit()}"
 							process="@this" partialSubmit="true" update=":form"
@@ -55,12 +56,12 @@
 			message="#{lbl['lbl.sm.resubmit.url.expired.inprogress.msg']}"
 			header="#{lbl['lbl.sm.resubmit.url.expired.inprogress.header']}" severity="alert"
 			widgetVar="confirmDialog">
-			<div align="right">
+			<div align="right"> <!-- # 29956 Start -->
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="confirmDialog.hide();" update="@form"
-					action="#{viewSmApplBackingBean.redirectToReapplyNewAppl()}" process="@this" partialSubmit="true"
+					action="#{viewSmApplBackingBean.redirectToReapplyNewAppl(false)}" process="@this" partialSubmit="true"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="confirmDialog.hide();" />
-			</div>
+			</div><!-- # 29956 Start -->
 	
 		</p:confirmDialog>
 		<!-- START 27951 -->

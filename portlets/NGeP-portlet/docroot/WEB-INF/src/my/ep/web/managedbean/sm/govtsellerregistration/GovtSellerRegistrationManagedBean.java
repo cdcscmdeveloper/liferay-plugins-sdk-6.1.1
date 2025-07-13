@@ -50,6 +50,10 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 	private boolean showSst;
 	private boolean showBranchPointOfContact;
 	private Long divisionIds;//13320
+	
+	//#34319 - Start
+	private boolean cancelApp;
+	//#34319 - End
 
 	private class OrgProfilePagingDataModel extends PagingDataModel<Object[]> {
 		/**
@@ -253,6 +257,14 @@ public class GovtSellerRegistrationManagedBean extends RegistrationManagedBean {
 
 	public void setBranchCompanyDivisions(List<SelectItem> branchCompanyDivisions) {
 		this.branchCompanyDivisions = branchCompanyDivisions;
+	}
+
+	public boolean isCancelApp() {
+		return cancelApp;
+	}
+
+	public void setCancelApp(boolean cancelApp) {
+		this.cancelApp = cancelApp;
 	}
 
 }

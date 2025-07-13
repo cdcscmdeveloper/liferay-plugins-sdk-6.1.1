@@ -407,13 +407,22 @@ public class PpCommonUtil implements Serializable{
 		log.info("retrieveUserListByRole - End");
 		return pmUsers;
 	}
-
-	public static List <PmUser>  getUserRolesByUserIdAndOrg(Long userId, Long profileOrgId, String roleCode) {
-		List<PmUser> pmUsers = new ArrayList<PmUser>();
+	
+	// #36107: fixing SonarLint issue - Start
+	/**
+	 * retrieve user role by user id and org id
+	 * 
+	 * @param userId
+	 * @param profileOrgId
+	 * @param roleCode
+	 * @return @return List<PmUser>
+	 */
+	public static List<PmUser> getUserRolesByUserIdAndOrg(Long userId, Long profileOrgId, String roleCode) {
+		List<PmUser> pmUsers = new ArrayList<>();
 		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = new UserResDTO();
+			UserResDTO resDTO;
 			reqDTO.setOrgProfileId(profileOrgId);
 			reqDTO.setRoleCode(roleCode);
 			reqDTO.setIncludeUserIds(new ArrayList<Long>());
@@ -431,11 +440,13 @@ public class PpCommonUtil implements Serializable{
 			if (resDTO.isSuccessful() && resDTO.getUserList() != null) {
 				pmUsers = resDTO.getUserList();
 			}
-		} finally {
-			userSO = null;
+		} catch (Exception e) {
+			log.error("Catch Exception : ", e);
 		}
 		return pmUsers;
 	}
+	// #36107 - End
+	
 	/**
 	 * retrieve org profile dtl
 	 * 

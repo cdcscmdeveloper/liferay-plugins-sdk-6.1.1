@@ -47,6 +47,7 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplRevise;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmApplSupportDocInquiry;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmAttachment;
@@ -604,18 +605,26 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String searchRecommendRejectReason;
 	//#15629 - END
 	
-	// 31043 START
-	private boolean showFacilityMachine;
-	// 31043 END
+	// #30974 && 37896 - START
+	private List<PmReasonDesc> selectedRecommendRejectReasonDescs;
+	private List<PmReasonDesc> selectedRejectReasonDescs;
+	private boolean showDifferenceRejection;
+	// #30974 && 37896 - END
 	
 	private boolean poApproverEquityErr;//#31461-start
 	private String msgEquityErr;//#31461-end
+	//13362
+	private List<SmBulkApplOverlapCatVO> overlapCategoryListMalay;
 	
 	//#11641 - START
 	private SmApplInquiry selectedInquiryResponse;
 	private boolean emptyMandatoryDocHistory;
 	private boolean emptyNonMandatoryDocHistory;
 	//#11641 - END
+	
+	private boolean poApproverPersonnelErr;//#31130-start
+	private String msgPersonnelErr;
+	private boolean poApproverAcedemicErr;//#31130-end
 	
 	//#30691 - START - 26112021
 	private boolean poApproverChgBusiness;
@@ -631,6 +640,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	
 	//32008
 	private boolean upsCannotEdit;
+	
+	// 31043 START
+	private boolean showFacilityMachine;
+	
+	private boolean allowedToSiteVisit;
+	// 31043 END
+	
+	// #34392 - start
+	private List<SmApplSupportDocInquiry> mandatoryDocsInquiry;
+	private List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry;
+	private List<SmApplSupportDoc> missinDocsMandatory;
+	private List<SmApplSupportDoc> missinDocsNonMandatory;
+	private boolean inquirySiteVisitAfter;
+	//#34392 - end
+	
 	private class RejectReasonPagingDataModel extends PagingDataModel<PmReasonDesc> {
 		/**
 		 * 
@@ -4202,6 +4226,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setPersonnelsSsm(List<SmPersonnel> personnelsSsm) {
 		this.personnelsSsm = personnelsSsm;
 	}
+	
 	//26238 - start 
 	public Long getDisabledCategoryL3Id() {
 		return disabledCategoryL3Id;
@@ -4209,7 +4234,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisabledCategoryL3Id(Long disabledCategoryL3Id) {
 		this.disabledCategoryL3Id = disabledCategoryL3Id;
-	} //26238 - end
+	} 
+	//26238 - end
 
 	public List<SmEquityCompany> getSmEquityCompaniesSsm() {
 		return smEquityCompaniesSsm;
@@ -4546,6 +4572,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.searchRecommendRejectReason = searchRecommendRejectReason;
 	}
 	//#15629 - END
+	
 	// #31461-start
 	public boolean isPoApproverEquityErr() {
 		return poApproverEquityErr;
@@ -4573,6 +4600,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.displayBranches = displayBranches;
 	}
 	//#34135 END
+	//13362 START
+	public List<SmBulkApplOverlapCatVO> getOverlapCategoryListMalay() {
+		return overlapCategoryListMalay;
+	}
+
+	public void setOverlapCategoryListMalay(List<SmBulkApplOverlapCatVO> overlapCategoryListMalay) {
+		this.overlapCategoryListMalay = overlapCategoryListMalay;
+	}
+	//13362 END
 	
 	//#11641 - START
 	public SmApplInquiry getSelectedInquiryResponse() {
@@ -4582,15 +4618,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedInquiryResponse(SmApplInquiry selectedInquiryResponse) {
 		this.selectedInquiryResponse = selectedInquiryResponse;
 	}
-	
-	public boolean isShowFacilityMachine() {
-		return showFacilityMachine;
-	}
 
-	public void setShowFacilityMachine(boolean showFacilityMachine) {
-		this.showFacilityMachine = showFacilityMachine;
-	}
-	
 	public boolean isEmptyMandatoryDocHistory() {
 		return emptyMandatoryDocHistory;
 	}
@@ -4645,13 +4673,128 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.checkBranch = checkBranch;
 	}
 	//#32968 END
-	//Start 32008
-		public boolean isUpsCannotEdit() {
-			return upsCannotEdit;
-		}
+	
+	//31130-start
+	public boolean isPoApproverPersonnelErr() {
+		return poApproverPersonnelErr;
+	}
 
-		public void setUpsCannotEdit(boolean upsCannotEdit) {
-			this.upsCannotEdit = upsCannotEdit;
-		}
-		//end 32008
+	public void setPoApproverPersonnelErr(boolean poApproverPersonnelErr) {
+		this.poApproverPersonnelErr = poApproverPersonnelErr;
+	}
+
+	public String getMsgPersonnelErr() {
+		return msgPersonnelErr;
+	}
+
+	public void setMsgPersonnelErr(String msgPersonnelErr) {
+		this.msgPersonnelErr = msgPersonnelErr;
+	}
+
+	public boolean isPoApproverAcedemicErr() {
+		return poApproverAcedemicErr;
+	}
+
+	public void setPoApproverAcedemicErr(boolean poApproverAcedemicErr) {
+		this.poApproverAcedemicErr = poApproverAcedemicErr;
+	}
+	//31130-end
+	
+	//Start 32008
+	public boolean isUpsCannotEdit() {
+		return upsCannotEdit;
+	}
+
+	public void setUpsCannotEdit(boolean upsCannotEdit) {
+		this.upsCannotEdit = upsCannotEdit;
+	}
+	//end 32008
+		
+	//#31043 START	
+	public boolean isShowFacilityMachine() {
+		return showFacilityMachine;
+	}
+
+	public void setShowFacilityMachine(boolean showFacilityMachine) {
+		this.showFacilityMachine = showFacilityMachine;
+	}
+
+	public boolean isAllowedToSiteVisit() {
+		return allowedToSiteVisit;
+	}
+
+	public void setAllowedToSiteVisit(boolean allowedToSiteVisit) {
+		this.allowedToSiteVisit = allowedToSiteVisit;
+	}
+	//#31043 END
+	
+	//#34392 - start
+	public List<SmApplSupportDocInquiry> getMandatoryDocsInquiry() {
+		return mandatoryDocsInquiry;
+	}
+
+	public void setMandatoryDocsInquiry(List<SmApplSupportDocInquiry> mandatoryDocsInquiry) {
+		this.mandatoryDocsInquiry = mandatoryDocsInquiry;
+	}
+
+	public List<SmApplSupportDocInquiry> getNonMandatoryDocsInquiry() {
+		return nonMandatoryDocsInquiry;
+	}
+
+	public void setNonMandatoryDocsInquiry(List<SmApplSupportDocInquiry> nonMandatoryDocsInquiry) {
+		this.nonMandatoryDocsInquiry = nonMandatoryDocsInquiry;
+	}
+	
+	public List<SmApplSupportDoc> getMissinDocsMandatory() {
+		return missinDocsMandatory;
+	}
+
+	public void setMissinDocsMandatory(List<SmApplSupportDoc> missinDocsMandatory) {
+		this.missinDocsMandatory = missinDocsMandatory;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocsNonMandatory() {
+		return missinDocsNonMandatory;
+	}
+
+	public void setMissinDocsNonMandatory(
+			List<SmApplSupportDoc> missinDocsNonMandatory) {
+		this.missinDocsNonMandatory = missinDocsNonMandatory;
+	}
+	
+	public boolean isInquirySiteVisitAfter() {
+		return inquirySiteVisitAfter;
+	}
+
+	public void setInquirySiteVisitAfter(boolean inquirySiteVisitAfter) {
+		this.inquirySiteVisitAfter = inquirySiteVisitAfter;
+	}
+	//#34392 - end
+
+	public List<PmReasonDesc> getSelectedRecommendRejectReasonDescs() {
+		return selectedRecommendRejectReasonDescs;
+	}
+
+	public void setSelectedRecommendRejectReasonDescs(
+			List<PmReasonDesc> selectedRecommendRejectReasonDescs) {
+		this.selectedRecommendRejectReasonDescs = selectedRecommendRejectReasonDescs;
+	}
+
+	public List<PmReasonDesc> getSelectedRejectReasonDescs() {
+		return selectedRejectReasonDescs;
+	}
+
+	public void setSelectedRejectReasonDescs(
+			List<PmReasonDesc> selectedRejectReasonDescs) {
+		this.selectedRejectReasonDescs = selectedRejectReasonDescs;
+	}
+
+	public boolean isShowDifferenceRejection() {
+		return showDifferenceRejection;
+	}
+
+	public void setShowDifferenceRejection(boolean showDifferenceRejection) {
+		this.showDifferenceRejection = showDifferenceRejection;
+	}
 }
+

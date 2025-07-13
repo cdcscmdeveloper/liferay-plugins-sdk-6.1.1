@@ -57,7 +57,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputTextarea id="title1"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_TITLE) or isReadOnly}"
+						disabled="true"
 						label="#{lbl['lbl.sc.title']}"
 						required="#{empty param['skipvalidation']}"
 						value="#{scQt.qtTitle}" cols="110" rows="3"
@@ -88,7 +88,7 @@
 						label="#{lbl['lbl.sc.qt.fileno']}"
 						required="#{empty param['skipvalidation']}" value="#{scQt.fileNo}"
 						style="width:653px;" maxlength="50"
-						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FIELD_QT_FILE_NO) or isReadOnly}">
+						disabled="true">
 						<p:ajax event="blur" partialSubmit="true" update="@this"
 							listener="#{createQtBB.setFileNo(scQt)}"></p:ajax>
 					</p:inputText> <p:message id="filenoMsg" for="fileno" display="icon" /></td>
@@ -299,7 +299,7 @@
 									label="#{lbl['lbl.sc.qt.publishing.period']}"
 									required="#{empty param['skipvalidation']}"
 									value="#{scQt.publishPeriod}"
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_PUBLISH_PERIOD) or  (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
+									disabled="true"
 									valueChangeListener="#{createQtBB.publishPeriodDaysChanged}"
 									style="text-align:right; width:195px;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"
@@ -324,7 +324,7 @@
 									label="#{lbl['lbl.sc.qt.proposal.validity']}"
 									required="#{empty param['skipvalidation']}"
 									value="#{scQt.qtValidityPeriod}"
-									disabled="#{qTDetailBB.enableFieldByStatus(QTFieldConst.FIELD_QT_VALIDITY_PERIOD) or (scQt.procurementMode.parameterCode == ParameterConst.procurementModeQuotation and qTDetailBB.isQTStatusPublished(scQt.qtStatus.statusId)) or (!empty qTDetailBB.managedBean.amendMentBean and !qTDetailBB.managedBean.amendMentBean.brandNew) or isReadOnly}"
+									disabled="true"
 									valueChangeListener="#{createQtBB.proposalValidityChanged}"
 									style="text-align:right; width:200px;">
 									<p:ajax event="blur" process="@this" partialSubmit="true"

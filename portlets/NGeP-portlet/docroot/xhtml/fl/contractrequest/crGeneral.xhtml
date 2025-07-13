@@ -225,7 +225,8 @@
 					
 				</td>
 				<td>
-					<!-- BEGINNING FOR #13984 Dialog Box for schedule and phase -->
+					<!-- BEGINNING FOR #13984 Dialog Box for schedule and phase --> <h:form
+						id="commands">
 						<table style="width: 100%">
 							
 								<td>&#160;<p:commandLink
@@ -241,10 +242,11 @@
 							<h3></h3>
 							<p></p>
 
+							<!-- 38255 --> 
 							<p:dataTable
 								emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-								value="#{contractRequestBackingBean.schInfo}" id="contractRequestIdd"
-								rowIndexVar="rowIndex" var="contractObjj" width="100%">
+								value="#{contractRequestBackingBean.managedBean.schInfo}" id="contractRequestIdd"
+								rowIndexVar="rowIndex" var="contractObjj" width="100%"><!-- 38255 --> 
 
 								<ac:paginator for="contractRequestIdd"></ac:paginator>
 				
@@ -278,7 +280,7 @@
 								<p:column>
 									<h:outputText value="#{contractObjj.crNo}"
 										style="display: block; width:100%; text-align:center;" />
-									<h:outputText value="#{contractObjj.crNoStatus=='(null)' ? '' : contractObjj.crNoStatus}"
+					<!-- 38255 --><h:outputText value="#{contractObjj.crNoStatus=='()' ? '' : contractObjj.crNoStatus}"
 										style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 								</p:column>
@@ -287,7 +289,7 @@
 									<h:outputText value="#{contractObjj.coNo}"
 										style="display: block; width:100%; text-align:center;" />
 
-								<h:outputText value="#{contractObjj.coNoStatus=='(null)' ? '' : contractObjj.coNoStatus}"
+					<!-- 38255 --><h:outputText value="#{contractObjj.coNoStatus=='()' ? '' : contractObjj.coNoStatus}"
 										style="display: block; width:100%; text-align:center;white-space: pre-wrap;" />
 
 								</p:column>
@@ -304,6 +306,7 @@
 								</tr>
 							</table>
 						</p:dialog>
+					</h:form> 
 					<!-- ENDING FOR #13984 Dialog Box for schedule and phase -->
 
 
@@ -385,11 +388,15 @@
 						disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>
 			</tr>
+			<!-- 29982 start -->
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.business.registration.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.gstRegNo}" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.smSupplier.ssmNewRegNo ==null ? lbl['lbl.fl.business.registration.no.empty'] : contractRequestBackingBean.managedBean.flRequest.smSupplier.ssmNewRegNo}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.business.registration.no']}"/>
+					<br/>
+					<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.business.registration.no.note']}" style="float:left;margin-bottom: 5px;" />
+					</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.gstDeclaredDate}">
@@ -398,6 +405,13 @@
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ep.declared.date']}"/></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.gstRegNo}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gst.reg.no']}"/></td>
+			</tr>
+			<!-- 29982 end -->
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"

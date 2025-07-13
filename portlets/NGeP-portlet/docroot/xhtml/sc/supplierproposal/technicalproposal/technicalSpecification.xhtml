@@ -62,12 +62,20 @@
 		</ui:include>
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.readOnly}" />
-		<!-- #33278, #33144, #21695 -start- -->
+		<!-- #33278, #33144, #36100, #21695 -start- -->
 		<br/>
 		<h:outputText styleClass="instruction"
 			value="#{lbl['lbl.sc.sp.prop.instruction']}" escape="false"
 			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />
-		<!-- #33278, #33144, #21695 -end- -->
+		<br />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.prop.instruction.Points']}" escape="false"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />
+		<br />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.prop.instruction.two']}" escape="false"
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.partial ne null and supplierProposalDetailBackingBean.managedBean.qt.partial}" />
+		<!-- #33278, #33144, #36100, #21695 -end- -->
 		<ac:templateSpec
 			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" editable="#{!supplierProposalDetailBackingBean.managedBean.readOnly}"/>
 	</h:panelGroup>

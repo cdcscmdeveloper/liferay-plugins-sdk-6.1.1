@@ -45,7 +45,7 @@
 				<c:when test="#{isSecretaryUser}">
 					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:inputText value="#{meetingAttDtl.name}" maxlength="50"
-							size="50" style="color:black;"
+							size="50" style="color:black"
 							required="#{!meetingAttDtl.selected}"
 							label="#{lbl['lbl.sc.name']}"
 							disabled="#{!isSecretaryUser or 

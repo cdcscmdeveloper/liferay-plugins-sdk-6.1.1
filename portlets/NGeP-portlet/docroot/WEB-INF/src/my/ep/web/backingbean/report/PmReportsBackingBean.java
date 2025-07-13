@@ -1,6 +1,3 @@
-/*
- * 
- */
 package my.ep.web.backingbean.report;
 
 import java.util.ArrayList;
@@ -101,13 +98,6 @@ public class PmReportsBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
-	// public List<SelectItem> retrieveReportListByAuthorization() {
-	// log.info("ReportBackingBean-retrieveReportListByAuthorization");
-	// return
-	// this.retrieveReportListByAuthorization(ModuleCodeConst.PROFILE_MANAGEMENT
-	// .toUpperCase());
-	// }
 
 	public void onChangeReportName() {
 		log.info("onChangeReportName");
@@ -260,16 +250,20 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_SERVICE_TYPE, getManagedBean()
 					.getServiceType());
 		}
-
-		if (getManagedBean().getSelectedOrgProfile() != null
-				&& getManagedBean().getSelectedOrgProfile().getPmFinancialOrg() != null) {
-			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean()
-					.getSelectedOrgProfile().getPmFinancialOrg()
-					.getFinOrgName());
-			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean()
-					.getSelectedOrgProfile().getPmFinancialOrg()
-					.getBizRegNumber());
+		
+        //#36719 - Start
+		if (getManagedBean().getSelectedFinancialOrg() != null &&
+				getManagedBean().getSelectedFinancialOrg().getFinOrgName() != null) {
+			map.put(PmReportConst.PARAM_PM_FINORG_NAME, getManagedBean().
+					getSelectedFinancialOrg().getFinOrgName());
 		}
+		
+		if (getManagedBean().getSelectedFinancialOrg() != null &&
+				getManagedBean().getSelectedFinancialOrg().getBizRegNumber() != null) {
+			map.put(PmReportConst.PARAM_PM_BIZREG_NO, getManagedBean().
+					getSelectedFinancialOrg().getBizRegNumber());
+		}
+		//#36719 - End
 
 		if (getManagedBean().getStatus() != null) {
 			map.put(PmReportConst.PARAM_PM_SUPP_PROFILE_STATUS,
@@ -294,7 +288,14 @@ public class PmReportsBackingBean extends
 			map.put(PmReportConst.PARAM_PM_ORG_CODE, getManagedBean()
 					.getSelectedOrgProfile().getPmOrgValidity().getOrgCode());
 		}
-
+		
+		//29991--start
+		if (getManagedBean().getSelectedSupplier() != null) {
+			map.put(PmReportConst.PARAM_PM_BUSINESS_REGNO, getManagedBean()
+					.getSelectedSupplier().getSmSupplier().getRegNo());
+		}
+		//29991--end
+		
 		if (getManagedBean().getStatus() != null) {
 			map.put(PmReportConst.PARAM_PM_STATUS, getManagedBean().getStatus()
 					.toString());
@@ -707,9 +708,11 @@ public class PmReportsBackingBean extends
 		getManagedBean().setSelectedKumpulanPTJ(null);
 		getManagedBean().setSelectedPTJ(null);
 		//shafie - #28833 - end
+		getManagedBean().setSelectedSupplier(null); //29991
 		//#29486 - START
 		getManagedBean().setMonthlyDate(null);
 		//#29486 - END
+		getManagedBean().setSelectedFinancialOrg(null); //#36719
 	}
 
 	public void autoSelectOrgType() {
@@ -725,6 +728,7 @@ public class PmReportsBackingBean extends
 		log.info("resetOrgSearchBean");
 		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedOrgType(null);
+		this.getManagedBean().setSelectedSupplier(null); //#29991
 		getManagedBean().setNotFirstRun(false);
 	}
 
@@ -788,6 +792,16 @@ public class PmReportsBackingBean extends
 					.getManagedBean().getSelectedOrgType().getParameterId());
 			this.getManagedBean().getSelectedOrgType()
 					.setParameterCode(pmParameter.getParameterCode());
+			//#29991 start--
+			if(getManagedBean().getReportCode().equals(PmReportConst.PM_LIST_OF_ORGANIZATION_RPT_VAL)) {
+				if(pmParameter.getParameterId() == PmReportConst.ORG_TYPE_SUPPLIER){
+					hideOrgCodeName();
+				}else{
+					this.getManagedBean().setSelectedSupplier(null);
+					showOrgCodeName();
+				}
+			}
+			//#29991 end--
 		} else {
 			this.getManagedBean().getSelectedOrgType().setParameterCode(null);
 		}
@@ -1427,4 +1441,64 @@ public class PmReportsBackingBean extends
 		}
 		return items;
 	}
+	
+	//#29991 start---
+	public void hideOrgCodeName() {
+		RequestContext.getCurrentInstance().execute("hideOrgCodeName();");
+	}
+	
+	public void showOrgCodeName() {
+		RequestContext.getCurrentInstance().execute("showOrgCodeName();");
+	}
+	
+	/**
+	 * On company name change for lov.
+	 */
+	public void onCompanyNameChangeForLOVPMReport() {
+		if (this.getManagedBean().getSelectedSupplier() != null
+				&& this.getManagedBean().getSelectedSupplier()
+						.getSmSupplier() != null) {
+			this.getManagedBean().setCmCompanyName(this.getManagedBean().getSelectedSupplier()
+					.getSmSupplier().getCompanyName());
+			this.getManagedBean().setPmCompanyName(this.getManagedBean().getSelectedSupplier()
+					.getSmSupplier().getCompanyName());
+			this.getManagedBean().setSmCompanyName(this.getManagedBean().getSelectedSupplier()
+					.getSmSupplier().getCompanyName());
+			this.getManagedBean().setSmSupplierName(this.getManagedBean()
+					.getSelectedSupplier().getSmSupplier().getCompanyName());
+		}
+		hideOrgCodeName();
+	}
+	
+	public String constructConditionFieldsSupplierList() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterCode^");
+		sb.append(PmReportConst.SUPPLIER_PARAM_CODE);
+		sb.append("|orgTypeCode.parameterType^");
+		sb.append(ParameterTypeConst.ORGANISATION_TYPES);
+		sb.append("|smSupplier.recordStatus^1*smSupplier.recordStatus^0");
+		return sb.toString();
+	}
+	//#29991 end---
+	
+	// #36719 - Start
+	/**
+	 * filter services Type
+	 * 
+	 * @return sb.toString()
+	 */
+	public String constructConditionFieldForFinSvc() {
+		StringBuilder sb = new StringBuilder();
+
+		if (this.getManagedBean().getServiceType() == null) {
+			sb.append("pmFinancialSvcs.serviceTypeCode.parameterCode^");
+			sb.append(ParameterConst.BANK_SERVICES_FACTORING_COMPANY);
+		} else {
+			sb.append("pmFinancialSvcs.serviceTypeCode.parameterCode^");
+			sb.append(this.getManagedBean().getServiceType());
+		}
+
+		return sb.toString();
+	}
+	// #36719 - End
 }

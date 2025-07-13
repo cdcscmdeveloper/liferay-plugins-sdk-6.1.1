@@ -56,7 +56,7 @@
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
-				rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
+				style="text-wrap : wrap;" rowKey="#{equiBean}" rowIndexVar="index" id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 				<p:ajax event="rowSelect" listener="#{backingBean.unSelectEquityCompany}"
 					update=":form:tt:eqiComDt"></p:ajax>
@@ -70,9 +70,11 @@
 					update=":form:tt:eqiComDt"></p:ajax>
 
 				<p:column selectionMode="multiple" width="1%" rendered="#{(not empty backingBean.managedBean.smAppl.smEquityCompanies) and (!backingBean.managedBean.upsCannotEdit)}" disabledSelection="#{equiBean.ssmData}" />
-				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}">
+				<!-- #34600 start -->
+				<p:column headerText="#{lbl['lbl.sm.equiComp.compName']}" style="white-space: break-spaces;">
 					<h:outputText value="#{equiBean.companyName}" />
 				</p:column>
+				<!-- #34600 end -->
 
 				<p:column headerText="#{lbl['lbl.sm.equiComp.addr']}" style="white-space:normal;word-break:break-all;">
 					<h:outputText

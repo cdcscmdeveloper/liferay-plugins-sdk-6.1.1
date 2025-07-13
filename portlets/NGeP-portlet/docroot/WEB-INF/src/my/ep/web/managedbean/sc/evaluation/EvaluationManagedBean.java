@@ -12,7 +12,9 @@ package my.ep.web.managedbean.sc.evaluation;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -537,6 +539,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean isSupplierItemExist; // 32453
 	private boolean isAllItemAutoScore; // #33252
 	private boolean noSupplierPackageExist; // #33178
+	/*#29187 Start Vinod*/
+	private TplSpecZoneDtl tplSpecZoneDtl;
+	private boolean isComplianceCnfrm;
+	private boolean isComplianceOldNull;
+	private boolean isComplianceOldNo;
+	/*#29187 End Vinod*/
 	/** The total user score. */
 	private String totalUserScore;
 	/** The total auto score. */
@@ -622,6 +630,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean noProposalSubmitted;
 	private boolean supplierRejected;
 	//#6906 end
+	
+	private transient Map<String, Object> evaluationContext = new HashMap<>();//34748
+
 	/**
 	 * Gets the today.
 	 * 
@@ -4032,6 +4043,40 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 	// #25138, #21695 -end-
 	
+	/* #29187 Start Vinod */
+	public TplSpecZoneDtl getTplSpecZoneDtl() {
+		return tplSpecZoneDtl;
+	}
+
+	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+	}
+
+	public boolean isComplianceCnfrm() {
+		return isComplianceCnfrm;
+	}
+
+	public void setComplianceCnfrm(boolean isComplianceCnfrm) {
+		this.isComplianceCnfrm = isComplianceCnfrm;
+	}
+
+	public boolean isComplianceOldNull() {
+		return isComplianceOldNull;
+	}
+
+	public void setComplianceOldNull(boolean isComplianceOldNull) {
+		this.isComplianceOldNull = isComplianceOldNull;
+	}
+
+	public boolean isComplianceOldNo() {
+		return isComplianceOldNo;
+	}
+
+	public void setComplianceOldNo(boolean isComplianceOldNo) {
+		this.isComplianceOldNo = isComplianceOldNo;
+	}
+
+	/* #29187 End Vinod */
 	//34528-uat 4serangkai - start
 	public Paginator getFinancialPackagePaginator() {
 		return financialPackagePaginator;
@@ -4325,4 +4370,12 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.demoWip = demoWip;
 	}
 	// #28784 - end
+
+	public Map<String, Object> getEvaluationContext() {
+		return evaluationContext;
+	}
+
+	public void setEvaluationContext(Map<String, Object> evaluationContext) {
+		this.evaluationContext = evaluationContext;
+	}
 }
