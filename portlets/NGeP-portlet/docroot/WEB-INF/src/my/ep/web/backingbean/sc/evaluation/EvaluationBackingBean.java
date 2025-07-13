@@ -8818,7 +8818,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 					retriveFinancialEvaluationStage();
 					
 					financialCheckListStatusCheck();
-					financialCheckListStatusCheckPackage();
+					// #38213, #10542 - Start
+					if (!this.getManagedBean().getSingleSpecQuestion()) {
+						financialCheckListStatusCheckPackage();
+					}
+					// #38213, #10542 - End
 				}
 				// #35286, #10542 -end-
 
