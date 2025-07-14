@@ -47,6 +47,7 @@ import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.pm.audit.mapbeans.AuditPMException;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.LovBean;
@@ -94,6 +95,7 @@ public class LovAuditBackingBean implements Serializable {
 		}
 		log.info(message);
 	}
+
 	private class SearchPmUserPagingDataModel extends PagingDataModel<PmUser> {
 		private static final long serialVersionUID = 1L;
 
@@ -183,17 +185,18 @@ public class LovAuditBackingBean implements Serializable {
 
 			reqDTO.setRoleCode(lovBean.getRoleCode());
 
-			lovSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					ILovAuditSO.class);
+			lovSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ILovAuditSO.class);
 
 			debugLogger("reqDTO: " + reqDTO);
 			debugLogger("reqDTO.getSearchBean(): " + reqDTO.getSearchBean());
 
 			LovResDTO resDTO = lovSO.getSearchListSP(reqDTO);
 			return resDTO.getResultBean();
-		} finally {
-			lovSO = null;
+		} catch (Exception e) {
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.PROFILE_MANAGEMENT, "searchActionByList", "resDTO",
+					"searchResult", Long.valueOf(searchBean.getUserId()), e);
 		}
+		return null;
 	}
 
 	/**
@@ -648,8 +651,8 @@ public class LovAuditBackingBean implements Serializable {
 		if (lovBean != null) {
 			String autoUpdateValue = lovBean.getAutoUpdateValue();
 			if (StringUtils.isNotBlank(autoUpdateValue)) {
-				String enableAutoUpdate = FacesContext.getCurrentInstance().getExternalContext()
-						.getRequestParameterMap().get("enableAutoUpdate");
+				String enableAutoUpdate = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+						.get("enableAutoUpdate");
 
 				if (StringUtils.isNotBlank(enableAutoUpdate)) {
 					if (!FacesScopes.isValueReference(autoUpdateValue)) {

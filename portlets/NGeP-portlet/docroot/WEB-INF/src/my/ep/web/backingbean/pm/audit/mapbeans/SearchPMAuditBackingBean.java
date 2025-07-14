@@ -411,18 +411,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		this.searchMaster = searchMaster;
 	}
 
-	/**
-	 * resetLocationDetailSearchBean()
-	 */
-	public void resetLocationDetailSearchBean() {
-		log.info("resetLocationDetailSearchBean");
-		getManagedBean().setLazy(false);
-		AuditPMSearchBean searchBean = new AuditPMSearchBean();
-		this.getManagedBean().setSearchBean(searchBean);
-		searchDetail = new SearchDetailPagingDataModel();
-		getManagedBean().setSelectedType(null);
-	}
-
 	public IPagingDataModel<VAuditPMDTO> getSearchDetail() {
 		return searchDetail;
 	}
