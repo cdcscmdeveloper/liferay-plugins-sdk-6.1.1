@@ -967,7 +967,7 @@
 			</list>
 		</property>
 	</bean>
-	
+	<!-- 35509 PM Audit Start -->
 	<bean id="PM_USER_AUDIT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="userId" />
 		<property name="daoClass"
@@ -997,7 +997,7 @@
 			</list>
 		</property>
 	</bean>
-
+	<!-- 35509 PM Audit End -->
 	<bean id="PM_USER_ID" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="userId" />
 		<property name="daoClass"
