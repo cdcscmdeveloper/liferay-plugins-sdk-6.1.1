@@ -32,7 +32,8 @@
 				disabled="#{backingBean.managedBean.upsCannotEdit}">
 				<f:selectItems 
 					value="#{cc.attrs.backingBean.managedBean.addrSameAsItems}" />
-				<p:ajax event="change" process="@this"
+				<!-- #36718 - ajax refresh address panel -->
+				<p:ajax event="change" process="@this @([id$=facilityAddrPanel])"
 					listener="#{cc.attrs.backingBean.onChangeFacAddrSameAs(cc.attrs.facility,cc.attrs.facilityPanel)}"
 					update="addr1LabelId,addr1InputId,addr2InputId,addr3InputId,
 					countryLabelId,countryInputId,stateLabelId,stateInputId,divisionLabelPanelId,divisionDropdownPanelId,districtLabelId,districtInputId,
@@ -47,8 +48,8 @@
 			</p:tooltip>
 		</td>
 	</tr>
-	
-	
+	<!-- #36718 - START - add panel for refresh -->
+	<p:panel id="facilityAddrPanel" style="border: none;">
 	<tr>
 		<td>
 			<p:outputPanel id="addr1LabelId">
@@ -58,7 +59,8 @@
 		</td>
 		<td>
 			<p:outputPanel id="addr1InputId">
-				<p:inputText maxlength="100" required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+				<!-- #36718 - change required condition to trigger mandatory when click save -->
+				<p:inputText maxlength="100" required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 					label="#{lbl['lbl.sm.address']}" id="addr1Id"
 					value="#{cc.attrs.facility.smAddress.address1}" size="35"
 					disabled="#{backingBean.managedBean.upsCannotEdit}" /> 
@@ -106,9 +108,10 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.countryItems}" />
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - ajax refresh address panel, update coordinate -->
+					<p:ajax event="change" process="@this @([id$=facilityAddrPanel])"
 						listener="#{cc.attrs.backingBean.onChangeCountry(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="stateId,divisionLabelPanelId,divisionDropdownPanelId,divisionId,districtId,cityId,postCodeInputId" />
+						update="stateId,divisionLabelPanelId,divisionDropdownPanelId,divisionId,districtId,cityId,postCodeInputId,coordinateInputId" />
 				</p:selectOneMenu> 
 				<!-- #34159 - END -->
 				<p:message id="countryIdMsg" for="countryId" showSummary="true" showDetail="false" display="icon" />
@@ -135,10 +138,10 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.stateItems}" />
-					<!-- #36718 - add more id to process in ajax -->
-					<p:ajax event="change" process="@this @([id$=divisionId])"
+					<!-- #36718 - add more id to process in ajax, update coordinate -->
+					<p:ajax event="change" process="@this @([id$=facilityAddrPanel])"
 						listener="#{cc.attrs.backingBean.onChangeState(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="divisionLabelPanelId,divisionDropdownPanelId,districtId,cityId" />
+						update="divisionLabelPanelId,divisionDropdownPanelId,districtId,cityId,postCodeInputId,coordinateInputId" />
 				</p:selectOneMenu> 
 				<!-- #34159 - END -->
 				<p:message id="stateIdMsg" for="stateId" showSummary="true" showDetail="false" display="icon" />
@@ -167,10 +170,10 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.divisionItems}" />
-					<!-- #36718 - add more id to process in ajax -->
-					<p:ajax event="change" process="@this @([id$=districtId])"
+					<!-- #36718 - add more id to process in ajax, update postode,coordinate -->
+					<p:ajax event="change" process="@this @([id$=facilityAddrPanel])"
 					listener="#{cc.attrs.backingBean.onChangeDistrictByDivision(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"				
-	                 update="districtId,cityId"/>
+	                 update="districtId,cityId,postCodeInputId,coordinateInputId"/>
 				</p:selectOneMenu>
 				<p:message id="divisionIdMsg" for="divisionId" showSummary="true" showDetail="false" display="icon" />
 				<!-- #34159 - END -->
@@ -198,10 +201,10 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems 
 						value="#{cc.attrs.districtItems}" />
-					<!-- #36718 - add more id to process in ajax -->
-					<p:ajax event="change" process="@this @([id$=cityId])"
+					<!-- #36718 - add more id to process in ajax, update postcode,coordinate -->
+					<p:ajax event="change" process="@this @([id$=facilityAddrPanel])"
 						listener="#{cc.attrs.backingBean.onChangeDistrict(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="cityId" />
+						update="cityId,postCodeInputId,coordinateInputId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<p:message id="districtIdMsg" for="districtId" showSummary="true" showDetail="false" display="icon" />
@@ -226,10 +229,10 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{cc.attrs.cityItems}" />
-					<!-- #36718 - add more id to process in ajax -->
-					<p:ajax event="change" process="@this"
+					<!-- #36718 - add more id to process in ajax, update postcode,coordinate -->
+					<p:ajax event="change" process="@this @([id$=facilityAddrPanel])"
 						listener="#{cc.attrs.backingBean.onChangeCity(cc.attrs.facility.smAddress,cc.attrs.facilityPanel)}"
-						update="cityId" />
+						update="cityId,postCodeInputId,coordinateInputId" />
 				</p:selectOneMenu> 
 			<!-- #34159 - END -->
 				<p:message id="cityIdMsg" for="cityId" showSummary="true" showDetail="false" display="icon" />
@@ -247,8 +250,9 @@
 			<p:outputPanel id="postCodeInputId">
 				<p:outputPanel
 					rendered="#{cc.attrs.facility.smAddress.countryId==cc.attrs.backingBean.managedBean.myCountryId}">
+					<!-- #36718 - change required condition to trigger mandatory when click save -->
 					<p:inputText maxlength="5"
-						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 						label="#{lbl['lbl.sm.postcode']}" id="posCodeMyId"
 						value="#{cc.attrs.facility.smAddress.postcode}"
 						validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
@@ -261,8 +265,9 @@
 				</p:outputPanel>
 				<p:outputPanel
 					rendered="#{cc.attrs.facility.smAddress.countryId!=cc.attrs.backingBean.managedBean.myCountryId}">
+					<!-- #36718 - change required condition to trigger mandatory when click save -->
 					<p:inputText maxlength="10"
-						required="#{cc.attrs.backingBean.managedBean.valueReqd}"
+						required="#{cc.attrs.backingBean.managedBean.valueReqd and !empty cc.attrs.disableValidation}"
 						label="#{lbl['lbl.sm.postcode']}" id="posCodeForeignId"
 						value="#{cc.attrs.facility.smAddress.postcode}"
 						size="35"
@@ -275,6 +280,7 @@
 			</p:outputPanel>
 		</td>
 	</tr>
+	
 	<tr>
 			<td><p:outputPanel id="coordinateLabelId">
 					<p:outputLabel value="#{lbl['lbl.sm.coordinate']}" />
@@ -305,5 +311,7 @@
 						<!-- Disable for UPS 32008 - END -->
 				</p:outputPanel></td>
 		</tr>
+	</p:panel>
+	<!-- #36718 - END -->
 	</cc:implementation>
 </ui:composition>

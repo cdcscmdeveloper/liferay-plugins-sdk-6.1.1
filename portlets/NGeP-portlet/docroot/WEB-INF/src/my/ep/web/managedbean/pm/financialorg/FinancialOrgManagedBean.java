@@ -65,6 +65,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	public boolean facCompanyInformation = false;
 	// #29487 - View bank details by factoring user_endorsed - End
 
+	/************ AUDIT #28895-35509 *************/
+	private PmFinancialOrg oldFinancialOrg;
+	private PmFinancialOrg savedFinancialOrg;
+	/************ AUDIT #28895-35509 *************/
+	
 	public FinancialOrgManagedBean(){}
 
 	/**
@@ -338,5 +343,23 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 		this.facCompanyInformation = facCompanyInformation;
 	}
 	// #29487 - View bank details by factoring user_endorsed - End
+	
+	/************ AUDIT START #28895-35509 *************/
+	public PmFinancialOrg getOldFinancialOrg() {
+		return oldFinancialOrg;
+	}
+
+	public void setOldFinancialOrg(PmFinancialOrg oldFinancialOrg) {
+		this.oldFinancialOrg = oldFinancialOrg;
+	}
+	
+	public PmFinancialOrg getSavedFinancialOrg() {
+		return savedFinancialOrg;
+	}
+
+	public void setSavedFinancialOrg(PmFinancialOrg savedFinancialOrg) {
+		this.savedFinancialOrg = savedFinancialOrg;
+	}
+	/************ AUDIT END #28895-35509 *************/
 	
 }

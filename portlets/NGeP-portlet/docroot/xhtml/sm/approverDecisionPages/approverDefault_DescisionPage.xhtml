@@ -154,15 +154,16 @@
 		</tr>
 	</table>
 	<!-- 30615 : Increase dialog box size from 350px to 400px -->
-	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}" height="400px"
+	<p:dialog width="1000px" header="#{lbl['lbl.sm.approve.application']}" height="480px"
 		closable="false" id="approverAppDialog" widgetVar="approverAppDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 		
 		<p:outputPanel layout="block" id="approverApprovedBlockPanel">
 			<ui:include src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="approverApprovedBlockWidget.show()" oncomplete="approverApprovedBlockWidget.hide();" 
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="approverApprovedBlockWidget.show()" 
+					oncomplete="approverApprovedBlockWidget.hide();if (!args.validationFailed) confirmApproveDlg.show();" 
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','APPROVE')}"
 					partialSubmit="true" process="approverApprovedBlockPanel" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
@@ -179,9 +180,10 @@
 			closable="false" id="approverRejDialog" widgetVar="approverRejDialog"
 			resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 		<ac:smSearchRejectReasons>
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				onclick="rejectBlockPanelWidget.show()" oncomplete="rejectBlockPanelWidget.hide();" 
-				partialSubmit="true" process="rejectBlockPanel"
+			<!-- #34400 -->
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectBlockPanelWidget.show()" 
+				oncomplete="rejectBlockPanelWidget.hide(); if (!args.validationFailed) confirmRejectDlg.show();" 
+				partialSubmit="true" process="@([id$=approverRejDialog])"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"
@@ -219,10 +221,11 @@
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"
-					onclick="approverReviseBlockWidget.show()" oncomplete="approverReviseBlockWidget.hide();" 
+				<!-- #34400 -->
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="approverReviseBlockWidget.show()" 
+					oncomplete="approverReviseBlockWidget.hide(); if (!args.validationFailed) confirmReviseDlg.show();" 
 					action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','REVISE')}"
-					partialSubmit="true" process="approverReviseBlockPanel, approverRevDialog" update="@([id$=Msg])"/>
+					partialSubmit="true" process="approverReviseBlockPanel" update="reviseReasonDialogMsg" />
 				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					action="#{backingBean.cancelFinalApproveOrReject('approverRevDialog')}"
 					partialSubmit="true" process="@this" />
@@ -242,4 +245,29 @@
 		content="#{lbl['lbl.msg.confirmation.deletebranch.qt.pending']}"
 		update=":form:tt:approverAppDialog"/>
 	<!-- END #29727 -->
+	<!-- 13362 START -->
+	<ac:smOverlapCategoryDialog voList="#{backingBean.managedBean.overlapCategoryVOList}" bBean="#{backingBean}" showButton="true"/>
+	<!-- 13362 END -->
+	<!-- #34400 - start -->
+	<ac:confirmationPopupSM id="confirmApproveDlg" widget="confirmApproveDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}"
+		hasParam="true"
+		content="#{lbl['lbl.sm.confirm.approve']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+		
+	<ac:confirmationPopupSM id="confirmRejectDlg" widget="confirmRejectDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}"
+		hasParam="true"
+		content="#{lbl['lbl.sm.confirm.reject']}" 
+		update="@([id$=Msg])"
+		loadingWidget="blockWidget" />
+		
+	<ac:confirmationPopupSM id="confirmReviseDlg" widget="confirmReviseDlg"
+		okParam="#{backingBean.submitPOorApproverReviewToBPM('REVISE')}"
+		hasParam="true"
+		content="#{lbl['lbl.sm.confirm.revise']}" 
+		update="@([id$=Msg])"
+		loadingWidget="approverReviseBlockWidget" />
+	<!-- #34400 - end -->
 </ui:composition>

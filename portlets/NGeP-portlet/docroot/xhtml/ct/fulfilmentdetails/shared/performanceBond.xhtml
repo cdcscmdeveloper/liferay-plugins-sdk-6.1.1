@@ -25,7 +25,7 @@
 			
 			<p:outputLabel id="overallContractAmount" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.loaAmt}"  disabled="true">
+	  			value="#{ctBackingBean.calculateOriginalOverallAmount()}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 	   	
@@ -37,7 +37,7 @@
 			
 			<p:outputLabel id="bondAmount" value="#{lbl['lbl.ct.bond.bondamount']}" />
 			<p:inputText for="bondAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-	  			value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondAmt}"  disabled="true">
+	  			value="#{ctBackingBean.managedBean.ctContractAmount.totalBondAmt}"  disabled="true">
 		 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 			<p:outputLabel />
@@ -160,7 +160,7 @@
 						style="float:left;" styleClass="blue_font"
 						action="#{ctBackingBean.commonDownload(varBond.filePath, varBond.fileName)}" />
 					<p:commandLink rendered="#{varBond.fileName != null and (!ctBackingBean.managedBean.viewContract 
-						or ctBackingBean.managedBean.ctContractAmount.bondReq) and !ctBackingBean.managedBean.disableOriginalBond and !ctBackingBean.managedBean.notificationSetting}" style="float:left;" 
+						and ctBackingBean.managedBean.ctContractAmount.bondReq) and !ctBackingBean.managedBean.disableOriginalBond and !ctBackingBean.managedBean.notificationSetting}" style="float:left;" 
 					  	action="#{ctBackingBean.setIndexProperty(index)}"
 					   	process="@this" partialSubmit="true"  onsuccess="deleteBondAttachmentDlg.show();">
 			   			<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1"/>
@@ -173,7 +173,7 @@
 			<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@this" 
 			  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
-			  	and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.managedBean.disableOriginalBond}" 
+			  	and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.isContractExtendOrIsBond()}" 
 			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBond" partialSubmit="true"
 			     oncomplete="tableBondWidget.paginator.endLink.click();">
 				<p:tooltip for="addPdBtn">
@@ -189,7 +189,7 @@
 		          disabled="#{ctBackingBean.managedBean.buttonHideActive}"
 			      rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
 			      	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
-			      	and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.managedBean.disableOriginalBond}" >
+			      	and ctBackingBean.managedBean.ctContractAmount.bondReq and !ctBackingBean.isContractExtendOrIsBond()}" >
 				<p:tooltip for="delPdBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
 				</p:tooltip>
@@ -198,10 +198,12 @@
 		
 		<p:spacer width="2" />	
 		
-		<p:panel  id="bondSpl" toggleable="true" rendered="#{(ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate
+		<p:panel  id="bondSpl" toggleable="true" rendered="#{(ctBackingBean.managedBean.viewContract and 
+		ctBackingBean.managedBean.contractVer.status.statusId == CtStatusConst.faLoaCompleted)
+		or (ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeContractUpdate
 		or ctBackingBean.managedBean.contractVer.docType eq ParameterConst.doctypeAmendmentWithoutSupplement
 		or ctBackingBean.managedBean.notificationSetting)
-		and ctBackingBean.isAlreadyAmendment()}" toggleSpeed="500">
+		and ctBackingBean.isAlreadyAmendment() and ctBackingBean.isContractExtendOrIsBond()}" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.ct.panel.performance.spl.bond']}"/>
 	   	</f:facet>
@@ -210,10 +212,10 @@
 	   	position = "left" styleClass="red_font" />
 	   	</h:panelGrid>
 	   	<p:spacer width="1" />	-->
-	   	<p:dataTable id="tableBondsupplemental" var="varBondsupplemental" rowIndexVar="index" widgetVar="tableBondWidget"
+	   	<p:dataTable id="tableBondsupplemental" var="varBondsupplemental" rowIndexVar="index" widgetVar="tableBondSplWidget"
 			value="#{ctBackingBean.managedBean.ctContractAmount.ctPerformanceBondsNew}"  rowKey="#{rowKeyObj}">
 			<ac:paginator for="tableBondsupplemental" />
-			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.viewContract and !ctBackingBean.managedBean.notificationSetting
+			<p:column style="width:2%;"  rendered="#{!ctBackingBean.managedBean.notificationSetting
 				and ctBackingBean.managedBean.ctContractAmount.bondReq}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.selectAll}">
@@ -333,7 +335,7 @@
 			  	and ctBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractAmendment
 			  	and ctBackingBean.managedBean.ctContractAmount.bondReq}" 
 			     action="#{ctBackingBean.addBondDetails}" update=":form:tableBondsupplemental" partialSubmit="true"
-			     oncomplete="tableBondWidget.paginator.endLink.click();">
+			     oncomplete="tableBondSplWidget.paginator.endLink.click();">
 				<p:tooltip for="addPdBtnSpl">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
 				</p:tooltip>
@@ -353,18 +355,18 @@
 				
 		</div>
 		<p:spacer width="1" />
-		<p:panel width="700px" height="350px" rendered="#{ctBackingBean.isContractExtendOrIsBond() and ctBackingBean.managedBean.ctContractAmount.bondReq}">
+		<!-- START LOG : 24333, by Putra -->	
+		<p:panel width="700px" height="350px" rendered="#{ctBackingBean.isContractExtendOrIsBond() and ctBackingBean.managedBean.ctContractAmount.bondReq
+		and ctBackingBean.isAlreadyAmendment()}">
 	   	<h:panelGrid columns="1">
 	    <h:outputText value="#{lbl['lbl.ct.bond.spl.alert']}" 
 	   	position = "left" style="color:red;" />
 	   	</h:panelGrid>
 	   	</p:panel>
+	   	<!-- END LOG : 24333, by Putra  -->	
 	   	</p:panel>
-
-
 	   	<p:spacer width="2" />	
-		<!-- END LOG : 24333, by Putra 08082019 -->	
-				
+						
 		<!-- START LOG : 13847, by Fahmi 22032019 -->
 		<!-- START TABLE WAIVER -->
 		<ui:include	src="defermentBond.xhtml" />
