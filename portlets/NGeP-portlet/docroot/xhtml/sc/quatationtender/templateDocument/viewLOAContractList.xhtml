@@ -16,7 +16,7 @@
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
-						action="#{qTDetailBB.backToPreviousQtAuditORMaintenance()}"
+						action="#{qTDetailBB.backToPreviousQTAuditMaintenance()}"
 						partialSubmit="true" process="@this" update="@this" /></td>
 			</tr>
 		</table>
@@ -93,7 +93,7 @@
 
 				<p:column style="width:25%;white-space: normal;">
 					<h:outputText
-						value="#{qTDetailBB.getStatusDescById(qTDetailBB.getLoaStatusIdToDisplay(qtLoaTrack.scLoaWorkFlowStatuses))}" />
+						value="#{qTDetailBB.getStatusDescById(qTDetailBB.getLOAStatusIdToDisplay(qtLoaTrack.scLoaWorkFlowStatuses))}" />
 
 				</p:column>
 
@@ -117,7 +117,7 @@
 				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 					style="width:15%;" styleClass="column-align-center">
 					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
-						action="#{qTDetailBB.viewLoaContractDetailsPage(loaContractTracking,view.viewId)}">
+						action="#{qTDetailBB.viewLOAContractDetailsPage(loaContractTracking,view.viewId)}">
 						<h:outputText value="#{loaContractTracking.contractNo}"
 							escape="false" />
 					</p:commandLink>

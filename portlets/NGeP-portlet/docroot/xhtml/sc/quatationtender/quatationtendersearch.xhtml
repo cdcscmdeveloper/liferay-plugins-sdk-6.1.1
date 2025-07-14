@@ -161,7 +161,7 @@
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
 								icon="ui-icon-view" styleClass="commandLink_link"
-								action="#{qTDetailBB.viewQtLoaContractDtls(scQt, view.viewId)}"
+								action="#{qTDetailBB.viewQTLOAContractDtls(scQt, view.viewId)}"
 								partialSubmit="true" process="@this" />
 							<ui:remove> #25791 end </ui:remove>
 							<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}" onstart="blockWidget.show();"
@@ -335,7 +335,7 @@
 								<p:menuitem value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									icon="ui-icon-view" styleClass="commandLink_link"
-									action="#{qTDetailBB.viewLoaContractTrackingDtls(listItem, view.viewId)}"
+									action="#{qTDetailBB.viewLOAContractTrackingDtls(listItem, view.viewId)}"
 									rendered="#{listType eq 'loaList' and QTStatusConst.LOA_COMPLETED eq qTDetailBB.getStatusIdToDisplay(listItem.scLoaWorkFlowStatuses) and !qTDetailBB.isMofSupplier()}"
 									partialSubmit="true" process="@this" />
 								<ui:remove> #25791 end </ui:remove>

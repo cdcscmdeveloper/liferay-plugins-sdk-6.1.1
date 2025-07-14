@@ -55,13 +55,13 @@ public class SLALogConstant {
 	
 	// 25791-start
 	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
-	public static final String QT_RETRIVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLoa";
-	public static final String QT_VIEW_LOA_CONTRACT_PAGING_MODEL = "ViewLoaContractPagingDataModel";
+	public static final String QT_RETRIVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLOA";
+	public static final String QT_VIEW_LOA_CONTRACT_PAGING_MODEL = "ViewLOAContractPagingDataModel";
 	public static final String QT_VIEW_CONTRACT_PAGING_MODEL = "ViewContractPagingDataModel";
-	public static final String QT_VIEW_NORMAL_LOA_TRACKING_DTLS_PAGE = "viewNormalLoaTrackingDetailsPage";
-	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLoaContractDetailsPage";
-	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLoaContractTrackingDtls";
-	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQtLoaContractDtls";
+	public static final String QT_VIEW_NORMAL_LOA_TRACKING_DTLS_PAGE = "viewNormalLOATrackingDetailsPage";
+	public static final String VIEW_LOA_CONTRACT_DETAILS_PAGE = "viewLOAContractDetailsPage";
+	public static final String VIEW_DL_LOA_CONTRACT_TRACKING_DETAILS = "viewLOAContractTrackingDtls";
+	public static final String VIEW_QT_LOA_CONTRACT_DTLS = "viewQTLOAContractDtls";
 	public static final String VIEW_QT_BID_SCHEDULES_DATA_MODEL = "ScheduleBiddingPagingDataModel";
 	
 	// 25791-end

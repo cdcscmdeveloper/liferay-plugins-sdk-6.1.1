@@ -11609,7 +11609,7 @@ public class QTDetailBackingBean extends
 	 * @param backUrl
 	 * @return String
 	 */
-	public String viewQtLoaContractDtls(ScQt scQt, String backUrl) {
+	public String viewQTLOAContractDtls(ScQt scQt, String backUrl) {
 		try {
 			this.getManagedBean().setViewTrackingDiaryQTDL(scQt);
 			this.getManagedBean().setQtTrackingdiaryView(new ArrayList<ScQt>());
@@ -11647,7 +11647,7 @@ public class QTDetailBackingBean extends
 	 * This method is used to view the original QT maintenance or audit search
 	 * screens.
 	 */
-	public void backToPreviousQtAuditORMaintenance() {
+	public void backToPreviousQTAuditMaintenance() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.SEARCH_PAGE);
 	}
@@ -11660,7 +11660,7 @@ public class QTDetailBackingBean extends
 	 * @param loa
 	 * @return VCtContract
 	 */
-	public VCtContract retrieveContractDtlsByLoa(ScLoa loa) {
+	public VCtContract retrieveContractDtlsByLOA(ScLoa loa) {
 		IContractSO contractSO = null;
 		ContractResDTO contractResDTO = null;
 		VCtContract contract = new VCtContract();
@@ -11717,7 +11717,7 @@ public class QTDetailBackingBean extends
 	 * @param loaWorkFlowStatusList
 	 * @return statusId
 	 */
-	public Long getLoaStatusIdToDisplay(List<ScWorkFlowStatus> loaWorkFlowStatusList) {
+	public Long getLOAStatusIdToDisplay(List<ScWorkFlowStatus> loaWorkFlowStatusList) {
 		if (CollectionUtils.isNotEmpty(loaWorkFlowStatusList)) {
 			return loaWorkFlowStatusList.get(0).getPmStatus().getStatusId();
 		}
@@ -11736,7 +11736,7 @@ public class QTDetailBackingBean extends
 	 * @return loaPagedetails
 	 * 
 	 */
-	public String viewNormalLoaTrackingDetailsPage(ScQt scQt, ScLoa scLoa, String previousPageUrl) {
+	public String viewNormalLOATrackingDetailsPage(ScQt scQt, ScLoa scLoa, String previousPageUrl) {
 		try {
 			EnumMap<MapKeyEnum, Object> loaArgs = new EnumMap<>(MapKeyEnum.class);
 			ScLoaForQt scLoaForQt = new ScLoaForQt();
@@ -11771,7 +11771,7 @@ public class QTDetailBackingBean extends
 	 * @return contractDetailsPage
 	 * 
 	 */
-	public String viewLoaContractDetailsPage(VCtContract contract, String previousPageUrl) {
+	public String viewLOAContractDetailsPage(VCtContract contract, String previousPageUrl) {
 		Long contractId = 0L;
 		Long contractVersionId = 0L;
 
@@ -11809,7 +11809,7 @@ public class QTDetailBackingBean extends
 	 * @param previousPageUrl
 	 * @return LOAContractDetailsPage
 	 */
-	public String viewLoaContractTrackingDtls(ScLoaForQt loaForQtDl, String previousPageUrl) {
+	public String viewLOAContractTrackingDtls(ScLoaForQt loaForQtDl, String previousPageUrl) {
 		try {
 			this.getManagedBean().setLoaContractTrackingDtls(new ArrayList<ScLoaForQt>());
 			this.getManagedBean().setLoaContractListTracking(new ArrayList<VCtContract>());

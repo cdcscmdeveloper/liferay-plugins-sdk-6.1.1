@@ -19,7 +19,7 @@
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
-						action="#{qTDetailBB.backToPreviousQtAuditORMaintenance()}"
+						action="#{qTDetailBB.backToPreviousQTAuditMaintenance()}"
 						partialSubmit="true" process="@this" update="@this" /></td>
 			</tr>
 		</table>
@@ -104,7 +104,7 @@
 				<p:column headerText="#{lbl['lbl.sc.qt.view.loiloa.loa.no']}"
 					style="width:10%;white-space: normal;">
 					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
-						action="#{qTDetailBB.viewNormalLoaTrackingDetailsPage(qTDetailBB.managedBean.viewTrackingDiaryQTDL, scLoaTracking, view.viewId)}"
+						action="#{qTDetailBB.viewNormalLOATrackingDetailsPage(qTDetailBB.managedBean.viewTrackingDiaryQTDL, scLoaTracking, view.viewId)}"
 						rendered="#{!isQtDirectNego}">
 						<h:outputText value="#{scLoaTracking.loaNo}" escape="false" />
 					</p:commandLink>
@@ -119,15 +119,15 @@
 				<p:column headerText="#{lbl['lbl.sc.status']}"
 					style="width:20%;white-space: normal;">
 					<h:outputText
-						value="#{qTDetailBB.getStatusDescById(qTDetailBB.getLoaStatusIdToDisplay(scLoaTracking.scLoaWorkFlowStatuses))}" />
+						value="#{qTDetailBB.getStatusDescById(qTDetailBB.getLOAStatusIdToDisplay(scLoaTracking.scLoaWorkFlowStatuses))}" />
 				</p:column>
 
 				<ui:param name="vCtContract"
-					value="#{qTDetailBB.retrieveContractDtlsByLoa(scLoaTracking)}"></ui:param>
+					value="#{qTDetailBB.retrieveContractDtlsByLOA(scLoaTracking)}"></ui:param>
 				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 					style="width:10%;" styleClass="column-align-center">
 					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
-						action="#{qTDetailBB.viewLoaContractDetailsPage(vCtContract,view.viewId)}">
+						action="#{qTDetailBB.viewLOAContractDetailsPage(vCtContract,view.viewId)}">
 						<h:outputText value="#{vCtContract.contractNo}" escape="false" />
 					</p:commandLink>
 				</p:column>
