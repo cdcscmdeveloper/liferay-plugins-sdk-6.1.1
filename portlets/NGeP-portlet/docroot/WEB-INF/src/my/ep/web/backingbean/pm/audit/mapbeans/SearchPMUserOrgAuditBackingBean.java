@@ -504,6 +504,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	public void selectPtjAction(PmOrgProfile orgProfile) {
 		this.getManagedBean().getSearchBean().setPmOrgValidity(orgProfile.getPmOrgValidity());
 		this.getManagedBean().getUserProfileSearchBean().setSelectedOrgProfileId(orgProfile.getOrgProfileId());
+		this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
+		log.info("getMasterLabel4 PTJ/KUMPTJ ::: " + this.getManagedBean().getSearchBean().getMasterLabel4());
 	}
 
 	/**
