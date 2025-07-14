@@ -5587,6 +5587,7 @@ public class SpecificationBackingBean extends
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
+		this.getManagedBean().setDemoSpecTemplateList(null);//#28784
 		try {
 
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -14239,7 +14240,7 @@ if (null != checklist && !checklist.isEmpty()) {
 			this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
 
 			// #11104-start
-			if (this.getManagedBean().getQt().isSampleReq()) {
+			if (this.getManagedBean().getQt().isSampleReq() && this.getManagedBean().getDemoSpecTemplateList() == null) {
 				sampleDetailsPendingTemplateSpec();
 			}
 			// #11104-End
@@ -17977,15 +17978,19 @@ if (null != checklist && !checklist.isEmpty()) {
 			}
 		}
 		// #29732(#232) - End
-		
+
+		retriveTechnicalCheckList(); // 1873 - note 52
+		// 11104_start
+		this.getManagedBean().setSampleShowHide(
+				checkSampleRadioShowHideInSpecPrepareAndMaintenance());
+		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(),
+				this.getManagedBean().getQt());
+		// 11104_end
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
-		this.getManagedBean().setSampleShowHide(checkSampleRadioShowHideInSpecPrepareAndMaintenance());// 11104WIP
-			retriveTechnicalCheckList();
-			checkSampleWipData(this.getManagedBean()
-					.getScQtCheckSt2techProposal(), this.getManagedBean()
-					.getQt());// 11104WIP
-				fc.getApplication()
+		
+		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
 						QTConstants.SPECIFICICATON_COMM_PREPARATION);
