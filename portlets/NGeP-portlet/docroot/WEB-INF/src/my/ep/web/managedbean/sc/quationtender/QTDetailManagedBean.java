@@ -1703,6 +1703,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> toBeRemoveEPVAttachments;
 	private List<ScQtEpvApprovalReqAttachment> allEPVAttachments;
 	private boolean noSupplierExistForEPV;
+	private boolean userAbleToChangePBSecretary;
 	//#21692 - End
 	
 	private ScQtApprovalRequest scQtApprovalDtls;
@@ -1922,6 +1923,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Map<Long, VCtContract> checkLoaContract;
 	private IPagingDataModel<ScBidScheduleForQt> searchBidScheduleDataModel;
 	// 25791-End
+	// #33787 Start Vinod
+	private boolean minPaidUpCapitalWIP;
+	// #33787 End Vinod
 
 	//28895 - 35500 start
 	/** The newly added sc qt committee */
@@ -12209,6 +12213,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
 	}
 
+	// #33787 Start Vinod
+	public boolean isMinPaidUpCapitalWIP() {
+		return minPaidUpCapitalWIP;
+	}
+
+	public void setMinPaidUpCapitalWIP(boolean minPaidUpCapitalWIP) {
+		this.minPaidUpCapitalWIP = minPaidUpCapitalWIP;
+	}
+
+	// #33787 End Vinod
 	/**
 	 * @return the loaContractTrackingDtls
 	 */
@@ -12380,4 +12394,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	//37813,35384 -end
+
+	//#21692 - End
+	public boolean isUserAbleToChangePBSecretary() {
+		return userAbleToChangePBSecretary;
+	}
+
+	public void setUserAbleToChangePBSecretary(boolean userAbleToChangePBSecretary) {
+		this.userAbleToChangePBSecretary = userAbleToChangePBSecretary;
+	}
+	//#21692 - End
 }
