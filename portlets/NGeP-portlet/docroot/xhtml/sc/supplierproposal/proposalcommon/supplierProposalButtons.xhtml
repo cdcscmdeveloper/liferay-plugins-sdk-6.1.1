@@ -16,12 +16,18 @@
 					immediate="true"
 					action="#{supplierProposalDetailBackingBean.backAction}"
 					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
-					
-	    <ui:remove>#25791 start </ui:remove></td>
+			</td>
+			<td align="right"><p:commandLink
+					value="#{lbl['lbl.td.doc.trackingDiary']}" style="float:right;"
+					action="#{pmTrackingDiaryBackingBean.redirectToSupplierTrackingDiary(ParameterConst.doctypeQuotation, supplierProposalDetailBackingBean.managedBean.qt.qtId, true)}"
+					immediate="true"
+					rendered="#{!empty supplierProposalDetailBackingBean.managedBean.previousPageUrl}" />
+			<ui:remove>#25791 start </ui:remove>
+			</td>
 		</tr>
 	</table>
 	<div class="ppRightBtn">
-		<ui:remove>#25791 end </ui:remove>
+	<ui:remove>#25791 end </ui:remove>
 				<ui:remove>
 					Bug #27412 #75 : START
 				</ui:remove>	
@@ -44,7 +50,7 @@
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed}"
 					update="@this" process="@this" partialSubmit="true"/>
-			
+	<ui:remove>#25791 start </ui:remove>
 	</div>
 	<ui:remove> #25791 end </ui:remove>
 
