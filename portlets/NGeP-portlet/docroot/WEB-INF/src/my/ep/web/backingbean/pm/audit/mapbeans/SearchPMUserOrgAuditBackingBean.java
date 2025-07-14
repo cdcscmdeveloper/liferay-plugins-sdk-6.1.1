@@ -434,15 +434,38 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setDateTo(null);
 		getManagedBean().getSearchBean().setDateFrom(null);
 		getManagedBean().getSearchBean().setRoleCode(null);
-		searchMaster = new SearchMasterPagingDataModel();
+		getManagedBean().getSearchBean().setMasterLabel3(null);
+		getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setOrgTypeParamId(null);
+		getManagedBean().getSearchBean().setPmUser(null);
+		getManagedBean().setSelectedOrgProfile(null);
+		getManagedBean().getSearchBean().setPmOrgValidity(null);
 	}
 
 	/**
-	 * search()
+	 * changeServiceType()
 	 */
-	public void search() {
-		log.info("changeLocationType!!!");
-		searchMaster = new SearchMasterPagingDataModel();
+	public void changeServiceType() {
+		log.info("changeServiceType!!!");
+		getManagedBean().getSearchBean().setDateTo(null);
+		getManagedBean().getSearchBean().setDateFrom(null);
+		getManagedBean().getSearchBean().setRoleCode(null);
+		getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setOrgTypeParamId(null);
+		getManagedBean().getSearchBean().setPmUser(null);
+	}
+
+	/**
+	 * changeGroupRole()
+	 */
+	public void changeGroupRole() {
+		log.info("changeGroupRole!!!");
+		getManagedBean().getSearchBean().setDateTo(null);
+		getManagedBean().getSearchBean().setDateFrom(null);
+		getManagedBean().getSearchBean().setRoleCode(null);
+		getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setOrgTypeParamId(null);
+		getManagedBean().getSearchBean().setPmUser(null);
 	}
 
 	/**
@@ -516,6 +539,9 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		if (this.getManagedBean().getSelectedOrgProfile() != null) {
 			getManagedBean().setSelectedOrgProfile(null);
 		}
+		this.getManagedBean().getSearchBean().setMasterLabel4(null);
+		this.getManagedBean().getSearchBean().setRoleCode(null);
+		this.getManagedBean().getSearchBean().setPmUser(null);
 	}
 
 	void isDisableFields(VAuditPMDTO orgTypeObj) {
@@ -539,6 +565,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		this.getManagedBean().getSearchBean().setMasterLabel4(orgProfile.getOrgProfileId().toString());
 
 		log.info("getSearchBean().getMasterLabel4( ::::  " + this.getManagedBean().getSearchBean().getMasterLabel4());
+
+		this.getManagedBean().getSearchBean().setRoleCode(null);
+
+		this.getManagedBean().getSearchBean().setPmUser(null);
 	}
 
 	/**
@@ -578,7 +608,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().setLazy(false);
 		getManagedBean().getSearchBean().setOrgCategory(String.valueOf(this.getManagedBean().getSearchOrgCategory()));
 		searchBean.setMasterLabel2(masterLabel2);
-		searchMaster = new SearchMasterPagingDataModel();
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
@@ -613,6 +642,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		if (getManagedBean().getSearchBean().getRoleCode() != null) {
 			roleCode = getManagedBean().getSearchBean().getRoleCode();
 		}
+		getManagedBean().getSearchBean().getMasterLabel3();
 		return roleCode;
 	}
 
