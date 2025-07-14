@@ -24,8 +24,9 @@
 			</tr>
 		</table>
 
-		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}" style="width:100% !important;"
-			toggleable="true" id="qtsearchCtLoaTrackingdtlsid">
+		<p:panel header="#{lbl['lbl.sc.qt.loa.search.results']}"
+			style="width:100% !important;" toggleable="true"
+			id="qtsearchCtLoaTrackingdtlsid">
 
 			<p:dataTable id="qtCtLoa" var="scQtTrack"
 				value="#{qTDetailBB.managedBean.qtTrackingdiaryView}"
@@ -103,7 +104,8 @@
 
 				<p:column headerText="#{lbl['lbl.sc.qt.view.loiloa.loa.no']}"
 					style="width:10%;white-space: normal;">
-					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
+					<p:commandLink process="@this" partialSubmit="true"
+						styleClass="commandLink_link"
 						action="#{qTDetailBB.viewNormalLOATrackingDetailsPage(qTDetailBB.managedBean.viewTrackingDiaryQTDL, scLoaTracking, view.viewId)}"
 						rendered="#{!isQtDirectNego}">
 						<h:outputText value="#{scLoaTracking.loaNo}" escape="false" />
@@ -126,7 +128,8 @@
 					value="#{qTDetailBB.retrieveContractDtlsByLOA(scLoaTracking)}"></ui:param>
 				<p:column headerText="#{lbl['lbl.ct.contract.no']}"
 					style="width:10%;" styleClass="column-align-center">
-					<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
+					<p:commandLink process="@this" partialSubmit="true"
+						styleClass="commandLink_link"
 						action="#{qTDetailBB.viewLOAContractDetailsPage(vCtContract,view.viewId)}">
 						<h:outputText value="#{vCtContract.contractNo}" escape="false" />
 					</p:commandLink>

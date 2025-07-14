@@ -4962,7 +4962,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End	
-	
+
 	// 25791-start
 	/**
 	 * The method used to retrieve the contract status of the contract.
@@ -5014,7 +5014,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean> extends
 		return "";
 	}
 	// 25791-End
-    
+
 	// #26226 - Start
 	/**
 	 * @param context
