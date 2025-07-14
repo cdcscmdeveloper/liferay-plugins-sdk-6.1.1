@@ -7059,21 +7059,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().getCommodityGroups().clear();
 
 		for (ScRequestNoteDtl dtl : dtlsToGroup) {
-			Long unspscId =  dtl.getRequestItem().getRequestNoteItemId();
-			CmUnspsc unspsc = dtl != null && dtl.getRequestItem() != null && dtl.getRequestItem().getCmItem() != null ? dtl
-					.getRequestItem().getCmItem().getCmUnspsc()
-					: null;
-
-			if (unspsc != null && unspsc.getUnspscId() != null) {
-				unspscId = unspsc.getUnspscId();
-			}
-
-			List<ScRequestNoteDtl> listForUnspsc = groupedByUnspscId.get(unspscId);
-			if (listForUnspsc == null) {
-				listForUnspsc = new ArrayList<>();
-				groupedByUnspscId.put(unspscId, listForUnspsc);
-			}
-			listForUnspsc.add(dtl);
+			populateListForUnspsc(groupedByUnspscId, dtl);
 		}
 
 		for (Map.Entry<Long, List<ScRequestNoteDtl>> entry : groupedByUnspscId.entrySet()) {
@@ -7098,23 +7084,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			String unspscCode = SSTConstant.EMPTY_STRING;
-			if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null
-					&& firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc() != null) {
-				unspscCode = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode();
-
-				if (firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode() != null) {
-					FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
-					flReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-					flReqDTO.setExtensionCode(firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode());
-					flReqDTO.setYear(cal.get(Calendar.YEAR));
-					IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
-
-					BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
-
-					group.setAccumulativeAmountPerItemGroup(totalAmt);
-				}
-			}
+			unspscCode = populateAccumulativeAmountPerItemGroup(group, firstDtlInGroup, cal, unspscCode);
 
 			String cmItemName = firstDtlInGroup.getRequestItem().getItemName();
 
@@ -7143,6 +7113,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().getCommodityGroups().add(group);
 		}
 
+		sortCommodityGroup();
+	}
+
+	/**
+	 * Groups request note detail into map by UNSPSC ID.
+	 */
+	private void populateListForUnspsc(Map<Long, List<ScRequestNoteDtl>> groupedByUnspscId, ScRequestNoteDtl dtl) {
+		Long unspscId = dtl.getRequestItem().getRequestNoteItemId();
+		CmUnspsc unspsc = dtl.getRequestItem() != null && dtl.getRequestItem().getCmItem() != null ? dtl
+				.getRequestItem().getCmItem().getCmUnspsc() : null;
+
+		if (unspsc != null && unspsc.getUnspscId() != null) {
+			unspscId = unspsc.getUnspscId();
+		}
+
+		List<ScRequestNoteDtl> listForUnspsc = groupedByUnspscId.get(unspscId);
+		if (listForUnspsc == null) {
+			listForUnspsc = new ArrayList<>();
+			groupedByUnspscId.put(unspscId, listForUnspsc);
+		}
+		listForUnspsc.add(dtl);
+	}
+
+	/**
+	 * Sorts commodity groups by item code name in ascending order.
+	 */
+	private void sortCommodityGroup() {
 		Collections.sort(getManagedBean().getCommodityGroups(), new Comparator<CommodityGroup>() {
 			@Override
 			public int compare(CommodityGroup group1, CommodityGroup group2) {
@@ -7161,6 +7158,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				return name1.compareTo(name2);
 			}
 		});
+	}
+
+	/**
+	 * Calculates and sets total accumulated amount for grouped item using extension code.
+	 */
+	private String populateAccumulativeAmountPerItemGroup(CommodityGroup group, ScRequestNoteDtl firstDtlInGroup,
+			Calendar cal, String unspscCode) {
+		String unspsCode = unspscCode;
+		if (firstDtlInGroup.getRequestItem() != null && firstDtlInGroup.getRequestItem().getCmItem() != null
+				&& firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc() != null) {
+			unspsCode = firstDtlInGroup.getRequestItem().getCmItem().getCmUnspsc().getUnspscCode();
+
+			if (firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode() != null) {
+				FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+				flReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+				flReqDTO.setExtensionCode(firstDtlInGroup.getRequestItem().getCmItem().getExtensionCode());
+				flReqDTO.setYear(cal.get(Calendar.YEAR));
+				IFlItemSummarySO itemSummarySO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+
+				BigDecimal totalAmt = itemSummarySO.retrieveAccumulatedAmountByItemExtensionCode(flReqDTO);
+
+				group.setAccumulativeAmountPerItemGroup(totalAmt);
+			}
+		}
+		return unspsCode;
 	}
 
 	/**
