@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,10 +13,8 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
-import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -26,8 +23,6 @@ import my.ep.constants.SpecialCharacter;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
 import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -46,12 +41,12 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -74,6 +69,7 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
+	private LogKey logKey = new LogKey();
 	
 	/** The search document type. */
 	private String searchDocumentType; 
@@ -87,11 +83,8 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	/** The search status id. */
 	private Long searchStatusId;
 		
-	/** The dp obj. */
-	private Object[] dpObj = new Object[6];
-	
 	/** The dp document data model. */
-	private IPagingDataModel<Object[]> dpDocumentDataModel = new DocumentPagingDataModel();
+	private transient IPagingDataModel<Object[]> dpDocumentDataModel = new DocumentPagingDataModel();
 	
 	/** The document types. */
 	private List<SelectItem> documentTypes;
@@ -152,9 +145,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	/** The approval users. */
 	private	DualListModel<PmUser>	approvalUsers = new DualListModel<>();
 	
-	/** The fulfillment type. */
-	private	String	fulfillmentType;
-	
 	/** The supplier id. */
 	private Long supplierId;
 	
@@ -183,7 +173,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     private ScRequestNoteDtl oriSequestNoteDtl = new ScRequestNoteDtl();
     
     /** The prepared bys. */
-    private List<PmUser> preparedBys = new ArrayList<PmUser>();
+    private List<PmUser> preparedBys = new ArrayList<>();
     
     /** The price type code. */
     private String priceTypeCode;
@@ -267,9 +257,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	/** The pricing list. */
 	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<>();
     
-    /** The req note data model. */
-    private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
-    
     /** The compare supplier items. */
     private List<CmSupplierItem> compareSupplierItems = new ArrayList<>();
     
@@ -316,10 +303,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     /** The back to previous page. */
     private String backToPreviousPage;
     
-    /** The end loa token. */
-    private Object endLoaToken;
-    
-	/** The end loa task id. */
+    /** The end loa task id. */
 	private String endLoaTaskId;
 	
 	/** The end loa outcome. */
@@ -377,16 +361,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	/** The ful fillment type. */
 	private boolean fulFillmentType;
 	
-	/** The recommended supplier */
-	private List<Object[]> recommendSupplierList;
-	
-	/** The selected Spec Question List. */
-	private	List<TplSpecQuestion> specificationList = null;
-	
-	/** The map of specification list */
-	private Map<Long, List<TplSpecQuestion>> specificationMap = new HashMap<Long, List<TplSpecQuestion>>();
-	
-    /** The Clone and Re-Quote btn. */
+	/** The Clone and Re-Quote btn. */
     private boolean cloneReQuote = Boolean.FALSE;	
     	
 	private boolean cancel = Boolean.FALSE; 
@@ -395,8 +370,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	private Calendar sqEndDate;
 	
 	private String selectedCondition;
-	
-	private	Object[] selectedPrDtls;
 	
 	private boolean pidValidityExpired = false;
 	
@@ -430,12 +403,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
     
     /** The continuity page session */
     private String continuityPageSession = "";
-    
-    /** The purchase request map list */
-    private List<Map<String,String>> purchaseRequestMapList;
-    
-    /** The loa map list */
-    private List<Map<String,String>> loaMapList;
     
     /** The pid flag */
     private boolean showPurchaseInDefault = Boolean.FALSE;
@@ -543,24 +510,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 */
 	public DualListModel<PmUser> getApprovalUsers() {
 		return approvalUsers;
-	}
-
-	/**
-	 * Gets the fulfillment type.
-	 *
-	 * @return the fulfillmentType
-	 */
-	public String getFulfillmentType() {
-		return fulfillmentType;
-	}
-	
-	/**
-	 * Sets the fulfillment type.
-	 *
-	 * @param fulfillmentType the fulfillmentType to set
-	 */
-	public void setFulfillmentType(String fulfillmentType) {
-		this.fulfillmentType = fulfillmentType;
 	}
 	
 	/**
@@ -914,20 +863,45 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 *
 	 * @return true, if is pr inquiry
 	 */
-	public	boolean	isPrInquiry(){
-		boolean result	= false;
-		if(requestNote != null){
-			for(ScRequestItem requestNoteItem: requestNote.getRequestNoteItems()){
-				for(ScRequestSupplierItem supplierItem: requestNoteItem.getSupplierItems()){
-					if(supplierItem.getScPrInquiy() != null){
-						result	=	true;
-						return result;
-					}
-				}
-			}
-		}
-		return result;
+	public boolean isPrInquiry() {
+	    if (requestNote == null || isEmpty(requestNote.getRequestNoteItems())) {
+	        return false;
+	    }
+
+	    for (ScRequestItem requestNoteItem : requestNote.getRequestNoteItems()) {
+	        if (hasInquiry(requestNoteItem)) {
+	            return true;
+	        }
+	    }
+
+	    return false;
 	}
+
+	/**
+	 * Checks if any supplier item under the request note item has PR inquiry.
+	 */
+	private boolean hasInquiry(ScRequestItem requestNoteItem) {
+	    List<ScRequestSupplierItem> supplierItems = requestNoteItem.getSupplierItems();
+	    if (isEmpty(supplierItems)) {
+	        return false;
+	    }
+
+	    for (ScRequestSupplierItem supplierItem : supplierItems) {
+	        if (supplierItem.getScPrInquiy() != null) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+
+	/**
+	 * Utility method to check for null or empty list.
+	 */
+	private boolean isEmpty(List<?> list) {
+	    return list == null || list.isEmpty();
+	}
+
 	
 	/**
 	 * Gets the request note items.
@@ -1139,100 +1113,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 */
 	public void setStatusDescs(List<PmStatusDesc> statusDescs) {
 		this.statusDescs = statusDescs;
-	}
-	
-	/**
-	 * Gets the req note data model.
-	 *
-	 * @return the reqNoteDataModel
-	 */
-	public IPagingDataModel<ScRequestNote> getReqNoteDataModel() {
-		return reqNoteDataModel;
-	}
-	
-	/**
-	 * Sets the req note data model.
-	 *
-	 * @param reqNoteDataModel the reqNoteDataModel to set
-	 */
-	public void setReqNoteDataModel(IPagingDataModel<ScRequestNote> reqNoteDataModel) {
-		this.reqNoteDataModel = reqNoteDataModel;
-	}
-
-	/**
-	 * The Class RequestNotePagingDataModel.
-	 */
-	private class RequestNotePagingDataModel extends PagingDataModel<ScRequestNote> {
-		
-		/** The Constant serialVersionUID. */
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Instantiates a new request note paging data model.
-		 */
-		public RequestNotePagingDataModel() {
-			super("reqNoteTbl");
-		}
-
-		/* (non-Javadoc)
-		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
-		 */
-		@Override
-		public ISearchResultBean<ScRequestNote> pageChangeListener(ISearchBean<ScRequestNote> searchBean) {
-			IRequestNoteSO requestNoteSO;
-			try {
-				requestNoteSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-				
-				if(StringUtils.isNotBlank(getSearchReqNoteNo())) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("requestNoteNo",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getSearchReqNoteNo()));
-				}
-				
-				if(StringUtils.isNotBlank(getSearchSrcMethod())) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("sourceMethod",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getSearchSrcMethod()));
-				}
-				
-				if(getSearchStatus() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("workFlowStatuses.pmStatus.statusId",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getSearchStatus()));
-					
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("workFlowStatuses.current",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									true));
-				}
-				
-				if(getSearchCreatedDateFrom() != null && getSearchCreatedDateTo() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("createdDate",
-									SearchOperator.OPERATOR_BETWEEN.value(),
-									new SearchBetweenValue<Date>(
-											getSearchCreatedDateFrom(), 
-											getSearchCreatedDateTo())));
-				}
-				
-				RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-				reqDTO.setRequestNoteSearchBean(searchBean);
-				
-				RequestNoteResDTO resDTO = requestNoteSO.searchRequestNoteList(reqDTO);
-				
-				if(resDTO.isSuccessful()) {
-					return resDTO.getRequestNoteResultBean();
-				}
-			} finally {
-				requestNoteSO = null;
-			}
-			
-			return null;
-		}
 	}
 
 	/**
@@ -1565,6 +1445,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 *
 	 * @return true, if is auto update
 	 */
+	@Override
 	public boolean isAutoUpdate() {
 		return autoUpdate;
 	}
@@ -1574,6 +1455,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 *
 	 * @param autoUpdate the new auto update
 	 */
+	@Override
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 	}
@@ -1648,23 +1530,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 */
 	public void setBackToPreviousPage(String backToPreviousPage) {
 		this.backToPreviousPage = backToPreviousPage;
-	}
-	/**
-	 * Gets the end loa token.
-	 *
-	 * @return the end loa token
-	 */
-	public Object getEndLoaToken() {
-		return endLoaToken;
-	}
-
-	/**
-	 * Sets the end loa token.
-	 *
-	 * @param endLoaToken the new end loa token
-	 */
-	public void setEndLoaToken(Object endLoaToken) {
-		this.endLoaToken = endLoaToken;
 	}
 
 	/**
@@ -1966,50 +1831,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the recommendSupplierList
-	 */
-	public List<Object[]> getRecommendSupplierList() {
-		return recommendSupplierList;
-	}
-
-	/**
-	 * @param recommendSupplierList the recommendSupplierList to set
-	 */
-	public void setRecommendSupplierList(List<Object[]> recommendSupplierList) {
-		this.recommendSupplierList = recommendSupplierList;
-	}
-
-	/**
-	 * @return the specificationList
-	 */
-	public List<TplSpecQuestion> getSpecificationList() {
-		return specificationList;
-	}
-
-	/**
-	 * @param specificationList the specificationList to set
-	 */
-	public void setSpecificationList(List<TplSpecQuestion> specificationList) {
-		this.specificationList = specificationList;
-	}
-
-	/**
-	 * @return the specificationMap
-	 */
-	public Map<Long, List<TplSpecQuestion>> getSpecificationMap() {
-		return specificationMap;
-	}
-
-	/**
-	 * @param specificationMap the specificationMap to set
-	 */
-	public void setSpecificationMap(
-			Map<Long, List<TplSpecQuestion>> specificationMap) {
-		this.specificationMap = specificationMap;
-	}
-
-	
-	/**
 	 * @return the cloneReQuote
 	 */
 	public boolean isCloneReQuote() {
@@ -2054,20 +1875,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 */
 	public void setSqEndDate(Calendar sqEndDate) {
 		this.sqEndDate = sqEndDate;
-	}
-
-	/**
-	 * @return the selectedPrDtls
-	 */
-	public Object[] getSelectedPrDtls() {
-		return selectedPrDtls;
-	}
-
-	/**
-	 * @param selectedPrDtls the selectedPrDtls to set
-	 */
-	public void setSelectedPrDtls(Object[] selectedPrDtls) {
-		this.selectedPrDtls = selectedPrDtls;
 	}
 
 	/**
@@ -2357,44 +2164,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	public void setContinuityPageSession(String continuityPageSession) {
 		this.continuityPageSession = continuityPageSession;
 	}
-
-	/**
-	 * @return the purchaseRequestMapList
-	 */
-	public List<Map<String, String>> getPurchaseRequestMapList() {
-		if (purchaseRequestMapList == null) {
-			purchaseRequestMapList = new ArrayList<> ();
-		}
-		return purchaseRequestMapList;
-	}
-
-	/**
-	* Sets the purchase Request Map List.
-	*
-	* @param purchaseRequestMapList the purchase Request Map List
-	*/
-	public void setPurchaseRequestMapList(List<Map<String, String>> purchaseRequestMapList) {
-		this.purchaseRequestMapList = purchaseRequestMapList;
-	}
-
-	/**
-	 * @return the loaMapList
-	 */
-	public List<Map<String, String>> getLoaMapList() {
-		if (loaMapList == null) {
-			loaMapList = new ArrayList<> ();
-		}
-		return loaMapList;
-	}
-
-	/**
-	* Sets the loa Map List.
-	*
-	* @param loaMapList the loa Map List
-	*/
-	public void setLoaMapList(List<Map<String, String>> loaMapList) {
-		this.loaMapList = loaMapList;
-	}
 	
 	/**
 	 * @return the showPurchaseInDefault
@@ -2460,8 +2229,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 				log.debug("pageChangeListener");
 			}
 			try {
-				ISourcingIntegrationSO sourcingIntegrationSO = (ISourcingIntegrationSO) EpEjbBusinessDelegate
-						.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				ISourcingIntegrationSO sourcingIntegrationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ISourcingIntegrationSO.class);
 				SourcingIntegrationReqDTO reqDTO = new SourcingIntegrationReqDTO();
 
@@ -2522,56 +2290,58 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	            searchBean.getDataFilterBeans().add(new SearchFilterBean("requestNoteDtls.bpkThresholdDecision", SearchOperator.OPERATOR_IS_NULL.value(), null));
 	            // --- END NEW FILTER ---
 
-	            if (isReqOrApprover()) {
-					// Removed the restriction condition
-					if (CollectionUtils.isNotEmpty(searchBean.getDataFilterMetadatas())) {
-						searchBean.getDataFilterMetadatas().clear();
-					}
+				if (isReqOrApprover() && CollectionUtils.isNotEmpty(searchBean.getDataFilterMetadatas())) {
+					searchBean.getDataFilterMetadatas().clear();
+
 				}
 
 				if (!isGovernment()) {
-					// Filter By - supplierId
-					ISupplierSearchSO supplierSearchSO = null;
-					try {
-						supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-
-						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-						supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-						List<SmSupplier> smSuppliers = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO)
-								.getResultBean().getResultList();
-
-						if (CollectionUtils.isNotEmpty(smSuppliers)) {
-							List<Long> supplierIds = new ArrayList<Long>();
-							for (SmSupplier smSupplier : smSuppliers) {
-								supplierIds.add(smSupplier.getSupplierId());
-							}
-							reqDTO.setSupplierIds(supplierIds);
-						}else {
-							if (isViewAsSupplier()) {
-								List<Long> supplierIds = new ArrayList<>();
-								supplierIds.add(supplierSearchReqDTO.getUserId());
-								reqDTO.setSupplierIds(supplierIds);
-							}
-						}
-
-					} finally {
-						supplierSearchSO = null;
-					}
+					loadSupplierId(reqDTO);
 				}
 
 				reqDTO.setSourcingDocSearchBean(searchBean);
-				SourcingIntegrationResDTO resDTO = null;
-
-				resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
+				SourcingIntegrationResDTO resDTO = sourcingIntegrationSO.searchSourcingDocument(reqDTO);
 
 				if (null != resDTO) {
 					return resDTO.getSourcingDocSearchResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError("DP", "ApprovalExceedThresholdManagedBean",
+						getRequestNoteNo(), "DocumentPagingDataModel", logKey.getUserId(), e);
 			}
 			return null;
+		}
+
+		private void loadSupplierId(SourcingIntegrationReqDTO reqDTO) {
+			// Filter By - supplierId
+			ISupplierSearchSO supplierSearchSO = null;
+			try {
+				supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+
+				SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+				supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				List<SmSupplier> smSuppliers = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO)
+						.getResultBean().getResultList();
+
+				if (CollectionUtils.isNotEmpty(smSuppliers)) {
+					List<Long> supplierIds = new ArrayList<>();
+					for (SmSupplier supplier : smSuppliers) {
+						supplierIds.add(supplier.getSupplierId());
+					}
+					reqDTO.setSupplierIds(supplierIds);
+				}else {
+					if (isViewAsSupplier()) {
+						List<Long> supplierIds = new ArrayList<>();
+						supplierIds.add(supplierSearchReqDTO.getUserId());
+						reqDTO.setSupplierIds(supplierIds);
+					}
+				}
+
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("DP", "ApprovalExceedThresholdManagedBean",
+						getRequestNoteNo(), "DocumentPagingDataModel", logKey.getUserId(), e);
+			}
 		}
 	}
 
@@ -2582,8 +2352,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
      */
     public boolean isReqOrApprover() {
     	FacesScopes fc = new FacesScopes();
-		return (fc.hasRoleUser(RoleCode.REQUISITIONER.value()) 
-				|| fc.hasRoleUser(RoleCode.RN_APPROVER.value()));
+		return fc.hasRoleUser(RoleCode.REQUISITIONER.value())|| fc.hasRoleUser(RoleCode.RN_APPROVER.value());
 	}
 
 	/**
@@ -2620,20 +2389,6 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 */
 	public void resetDocumentDataModel() {
 		this.dpDocumentDataModel = new DocumentPagingDataModel();
-	}
-
-	/**
-	 * @return the dpObj
-	 */
-	public Object[] getDpObj() {
-		return dpObj;
-	}
-
-	/**
-	 * @param dpObj the dpObj to set
-	 */
-	public void setDpObj(Object[] dpObj) {
-		this.dpObj = dpObj;
 	}
 
 	/**
