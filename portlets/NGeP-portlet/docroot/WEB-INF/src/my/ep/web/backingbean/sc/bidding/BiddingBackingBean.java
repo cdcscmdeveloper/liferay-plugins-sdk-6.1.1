@@ -1321,7 +1321,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
         this.getManagedBean().setPreviousPageUrl(previousPageUrl);
 		getManagedBean().setRendered(false);	
 
-		return QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW; //25791
+		return QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW; //25791
 
 	}
 

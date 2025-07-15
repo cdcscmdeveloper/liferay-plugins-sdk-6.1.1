@@ -101,12 +101,12 @@
 
 			<br />
 
-			<p:dataTable id="laCtdvd" var="loaContractTracking" rows="10"
+			<p:dataTable id="loaCTDetail" var="loaContractTracking" rows="10"
 				lazy="true"
 				value="#{qTDetailBB.managedBean.viewLoaContractDataModel}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="rowIndex" rowKey="#{loaContractTracking}">
-				<ac:paginator for="laCtdvd" />
+				<ac:paginator for="loaCTDetail" />
 
 				<p:column style="width:5%;text-align:center;"
 					headerText="#{lbl['lbl.sc.qt.loa.seq.number']}">

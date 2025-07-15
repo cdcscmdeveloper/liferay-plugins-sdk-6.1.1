@@ -368,7 +368,7 @@ public class PmTrackingDiaryBackingBean extends
 		
 		// 25791 -start-
 		if (this.getManagedBean().isBiddingUrl()) {
-			this.getManagedBean().setBackURL(QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW);
+			this.getManagedBean().setBackURL(QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW);
 			this.getManagedBean().setBiddingUrl(Boolean.FALSE);
 		}
 		// 25791 -end-

@@ -10119,7 +10119,7 @@ public class QTDetailBackingBean extends
 		biddingBB.renewSesionObject();
 		biddingBB.bidManagementQuotationTenderAction(scBidSchedule, previousPageUrl);
 
-		return QTConstants.QT_MAINTENACE_BIDDING_MANAGEMENT_VIEW;
+		return QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW;
 		// 25791 -end-
 	}
 	// #17376-End onlineBiddingcodes
@@ -11612,9 +11612,9 @@ public class QTDetailBackingBean extends
 	public String viewQTLOAContractDtls(ScQt scQt, String backUrl) {
 		try {
 			this.getManagedBean().setViewTrackingDiaryQTDL(scQt);
-			this.getManagedBean().setQtTrackingdiaryView(new ArrayList<ScQt>());
-			this.getManagedBean().getQtTrackingdiaryView().add(scQt);
-			this.getManagedBean().setQtAuditORMaintenanceView(backUrl);
+			this.getManagedBean().setQtTrackingDiaryView(new ArrayList<ScQt>());
+			this.getManagedBean().getQtTrackingDiaryView().add(scQt);
+			this.getManagedBean().setQtAuditMaintenanceView(backUrl);
 
 			AwardSupplierReqDTO awardReqDTO = new AwardSupplierReqDTO();
 			Long qtId = scQt.getQtId();
@@ -11627,10 +11627,10 @@ public class QTDetailBackingBean extends
 
 			awardReqDTO.setDocType(docType);
 
-			this.getManagedBean().setViewQtDlLoaContractTrackingDtls(
+			this.getManagedBean().setViewQTDLLOAContractTrackingDtls(
 					new ViewLoaContractPagingDataModel(QTConstants.DATATABLE_QT_DL_LOA_CT_COMPONENT_ID, awardReqDTO));
-			this.getManagedBean().getViewQtDlLoaContractTrackingDtls().reloadData();
-			this.getManagedBean().setCheckLoaContract(new HashMap<Long, VCtContract>());
+			this.getManagedBean().getViewQTDLLOAContractTrackingDtls().reloadData();
+			this.getManagedBean().setCheckLOAContract(new HashMap<Long, VCtContract>());
 		} catch (Exception e) {
 			Long qtId = scQt.getQtId();
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN,
@@ -11666,7 +11666,7 @@ public class QTDetailBackingBean extends
 		VCtContract contract = new VCtContract();
 
 		try {
-			Map<Long, VCtContract> checkContractExist = this.getManagedBean().getCheckLoaContract();
+			Map<Long, VCtContract> checkContractExist = this.getManagedBean().getCheckLOAContract();
 
 			if (null == checkContractExist) {
 				checkContractExist = new HashMap<>();
@@ -11704,7 +11704,7 @@ public class QTDetailBackingBean extends
 			String loaNo = loa.getLoaNo();
 
 			SLAUtils.getInstance().logSLAError(SLALogConstant.QT_MODULE, SLALogConstant.QT_DETAIL_BACKING_BEAN, loaNo,
-					SLALogConstant.QT_RETRIVE_CONTRACT_DETAILS_LOA, getUserIdSessionFromLoginId(), e);
+					SLALogConstant.QT_RETRIEVE_CONTRACT_DETAILS_LOA, getUserIdSessionFromLoginId(), e);
 		}
 		return contract;
 	}
@@ -11814,10 +11814,10 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setLoaContractTrackingDtls(new ArrayList<ScLoaForQt>());
 			this.getManagedBean().setLoaContractListTracking(new ArrayList<VCtContract>());
 			this.getManagedBean().getLoaContractTrackingDtls().add(loaForQtDl);
-			this.getManagedBean().setQtAuditORMaintenanceView(previousPageUrl);
-			this.getManagedBean().setViewLoaContractDataModel(
+			this.getManagedBean().setQtAuditMaintenanceView(previousPageUrl);
+			this.getManagedBean().setViewLOAContractDataModel(
 					new ViewContractPagingDataModel(QTConstants.DATATABLE_LOA_CT_COMPONENT_ID, loaForQtDl));
-			this.getManagedBean().getViewLoaContractDataModel().reloadData();
+			this.getManagedBean().getViewLOAContractDataModel().reloadData();
 		} catch (Exception e) {
 			Long loaId = loaForQtDl.getLoaId();
 

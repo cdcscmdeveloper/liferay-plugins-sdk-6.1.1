@@ -55,7 +55,7 @@ public class SLALogConstant {
 	
 	// 25791-start
 	public static final String QT_DETAIL_BACKING_BEAN = "QTDetailBackingBean";
-	public static final String QT_RETRIVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLOA";
+	public static final String QT_RETRIEVE_CONTRACT_DETAILS_LOA = "retrieveContractDtlsByLOA";
 	public static final String QT_VIEW_LOA_CONTRACT_PAGING_MODEL = "ViewLOAContractPagingDataModel";
 	public static final String QT_VIEW_CONTRACT_PAGING_MODEL = "ViewContractPagingDataModel";
 	public static final String QT_VIEW_NORMAL_LOA_TRACKING_DTLS_PAGE = "viewNormalLOATrackingDetailsPage";
