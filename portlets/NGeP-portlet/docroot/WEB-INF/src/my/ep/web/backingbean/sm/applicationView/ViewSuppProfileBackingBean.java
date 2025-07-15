@@ -15,6 +15,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.SLAUtils;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
@@ -23,6 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
+//#28895_35501 Start - AUDIT TRAIL SM
+import com.liferay.compat.portal.util.PortalUtil;
+import javax.servlet.http.HttpServletRequest;
+//#28895_35501 End
 @ManagedBean(name = "viewSuppProfileBackingBean")
 @RequestScoped
 public class ViewSuppProfileBackingBean extends
@@ -45,6 +50,16 @@ public class ViewSuppProfileBackingBean extends
 		long subStartTime = 0L;
 		renewSesionObject();
 		initLogin();
+		// #28895_35501 Start - AUDIT TRAIL SM
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String isAudit = originalServletRequest.getParameter("isAudit");
+		if (SmCommonUtil.md5("true").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(true);
+		} else if (SmCommonUtil.md5("false").equals(isAudit)) {
+			this.getManagedBean().setAuditAccess(false);
+		}
+		// #28895_35501 End
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);
 		getManagedBean().setViewApplicationHistory(false);
