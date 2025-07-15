@@ -223,7 +223,8 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Submit supplier maintenance
 	 */
 	public void submitSupplierDataMaintenance() {
-		
+		log.info("LOG INFO START MAIN TB 35501:");
+		System.out.println("SYSO START MAIN TB 35501:");
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
 		validateAddedCategory(getManagedBean().getActiveCategoryList());
@@ -393,6 +394,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			if(resDTO.isSuccessful()){
 				// #28895_35501 Start - AUDIT TRAIL SM
 				log.info("START TB 35501:"+resDTO.isSuccessful());
+				System.out.println("SYSO START TB 35501:"+resDTO.isSuccessful());
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
@@ -406,6 +408,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 				// #28895_35501 End				
 			}else{
+				System.out.println("SYSO END TB 35501:"+resDTO.isSuccessful());
 				log.info("ENDS TB 35501:"+resDTO.isSuccessful());
 			}
 		} catch (OptimisticLockException opt) {
