@@ -392,6 +392,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			//26238 - start
 			if(resDTO.isSuccessful()){
 				// #28895_35501 Start - AUDIT TRAIL SM
+				log.info("START TB 35501:"+resDTO.isSuccessful());
 				IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 				if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 					AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementSupplierInformationBackingBean();
@@ -404,7 +405,9 @@ public class SupplierDataMaintenanceBackingBean extends
 					auditSmBackingBean.saveAuditData(getManagedBean(), getUserIdSessionFromLoginId());
 				}
 				// #28895_35501 End				
-			} 			
+			}else{
+				log.info("ENDS TB 35501:"+resDTO.isSuccessful());
+			}
 		} catch (OptimisticLockException opt) {
 			throw new EpException(opt.getMessage());
 		} catch (PersistenceException pers) {
