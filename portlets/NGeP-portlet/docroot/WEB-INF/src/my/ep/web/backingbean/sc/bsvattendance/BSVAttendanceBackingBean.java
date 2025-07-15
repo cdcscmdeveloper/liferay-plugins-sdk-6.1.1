@@ -697,7 +697,10 @@ public class BSVAttendanceBackingBean extends
 				.setBsvAttendance(null);
 		this.getManagedBean().setSelectedbriefRegistrationEnableDisable(null);
 		//28895-35500 start
-		List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList();
+		// Bug #38635 - Start
+		List<ScQtBsvRegistration> newBriefingRegistrationList = this.getManagedBean().getNewBriefingRegistrationList() != null ? this
+				.getManagedBean().getNewBriefingRegistrationList() : new ArrayList<ScQtBsvRegistration>();
+		// Bug #38635 - End
 		if (newBriefingRegistrationList.contains(selectedReqistration)){
 			newBriefingRegistrationList.remove(selectedReqistration);
 			this.getManagedBean().setNewBriefingRegistrationList(newBriefingRegistrationList);
