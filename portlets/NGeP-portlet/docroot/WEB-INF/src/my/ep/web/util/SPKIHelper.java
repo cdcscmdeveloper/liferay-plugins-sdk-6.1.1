@@ -11,6 +11,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SpkiVO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 public class SPKIHelper {
@@ -76,6 +77,9 @@ public class SPKIHelper {
 		reqDTO.setSoftCertProvider(provider);
 		try {
 			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO().generateSecurityToken(reqDTO);
+			if(!StringUtils.isBlank(resDTO.getErrorMessage())){
+				throw new EpException(resDTO.getErrorMessage());
+			}
 			tok = resDTO.getToken();
 		} catch (Exception ex) {
 			log.info("Error call generateSecurityToken for:" + identificationNo + "||" + epNo + "||" + " ERROR MSG:" + ex.getMessage());
@@ -95,6 +99,9 @@ public class SPKIHelper {
 		List<String> retVal = new ArrayList<String>();
 		try {
 			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO().retrieveChallengeQuestions(reqDTO);
+			if (!StringUtils.isBlank(resDTO.getErrorMessage())) {
+				throw new EpException(resDTO.getErrorMessage());
+			}
 			retVal = resDTO.getChallQuestions();
 		} catch (Exception ex) {
 			log.info("Error call chall question for:" + identificationNo + "||" + epNo + "||" + selectedQuest + " ERROR MSG:" + ex.getMessage());
