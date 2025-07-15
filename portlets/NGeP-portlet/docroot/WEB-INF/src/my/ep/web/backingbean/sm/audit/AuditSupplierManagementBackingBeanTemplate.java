@@ -5,6 +5,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
+
 import my.ep.biz.service.sm.audit.IAuditSupplierManagementSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sm.AuditSupplierManagementConst;
@@ -31,6 +33,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBackingBean<BaseManagedBean> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(AuditSupplierManagementBackingBeanTemplate.class);
 
 	public AuditSupplierManagementBackingBeanTemplate() {
 	}
@@ -43,15 +46,18 @@ public abstract class AuditSupplierManagementBackingBeanTemplate extends BaseBac
 	 */
 	public final void saveAuditData(BaseManagedBean manageBean, Long loginUserId) {
 		try {
+			log.info("START TB 35501: saveAuditData");
 			String roleCode = getRoleCode();
 			PmOrgProfile org = retriveUserOrg(loginUserId);
 			AuditSupplierManagementDTO auObj = prepareAuditData(manageBean, roleCode, org, loginUserId);
 			if (!auObj.getAuditDetails().isEmpty()) {
 				auditSmSo(auObj, loginUserId);
 			}
+			log.info("END TB 35501: saveAuditData");
 		} catch (Exception ex) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "insert", null, "AuditSupplierManagementSO", loginUserId, ex);
 		}
+		log.info("END TRY TB 35501: saveAuditData");
 	}
 
 	private String getRoleCode() {
