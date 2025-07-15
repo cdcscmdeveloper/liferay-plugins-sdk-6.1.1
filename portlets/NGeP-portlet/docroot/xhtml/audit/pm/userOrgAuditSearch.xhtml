@@ -11,27 +11,45 @@
 	</p:blockUI>
 	<script>
 		function autoSelectOrgType() {
-			if ($("input[id$=':form:sorSearchOrgTypeId:0']").is(':disabled')) {
+			if ($("input[id$=':form:sorSearchOrgTypeId:0']").is(':disabled') || $("input[id$=':form:sorSearchOrgTypeIdUser:0']").is(':disabled')) {
 				console.log("0");
 				$("input[id$=':form:sorSearchOrgTypeId:1']").prop('checked',
 						true);
 				$("input[id$=':form:sorSearchOrgTypeId:1']").change();
+				
+				//sorSearchOrgTypeIdUser
+				$("input[id$=':form:sorSearchOrgTypeIdUser:1']").prop('checked',
+						true);
+				$("input[id$=':form:sorSearchOrgTypeIdUser:1']").change();
+				
 			} else if ($("input[id$=':form:sorSearchOrgTypeId:1']").is(
+					':disabled') || $("input[id$=':form:sorSearchOrgTypeIdUser:1']").is(
 					':disabled')) {
 				console.log("1");
 				$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked',
 						true);
 				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
+				
+				//sorSearchOrgTypeIdUser
+				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").prop('checked',
+						true);
+				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").change();
+				
 			} else {
 				console.log("2");
 				$("input[id$=':form:sorSearchOrgTypeId:0']").prop('checked',
 						true);
 				$("input[id$=':form:sorSearchOrgTypeId:0']").change();
+				
+				//sorSearchOrgTypeIdUser
+				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").prop('checked',
+						true);
+				$("input[id$=':form:sorSearchOrgTypeIdUser:0']").change();
 			}
 		}
 	</script>
 	<p:remoteCommand name="selectTypeAutoRun" id="remoteId"
-		update=":form:userOrgAuditPMSearchPanel"
+		update="userOrgAuditPMSearchPanel"
 		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}"
 		autoRun="#{not searchPMUserOrgAuditBackingBean.managedBean.notFirstRun}" />
 	<p:panel id="userOrgAuditPMSearchPanel"
@@ -51,16 +69,14 @@
 						styleClass="ppDropDownWidthM" required="true"
 						label="#{lbl['lbl.pm.audit.orgUser.type']}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2}"
-						style="width: 275px;margin-bottom: 5px;">
-						<!--  <f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />-->
+						style="width: 265px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{searchPMUserOrgAuditBackingBean.getDropdownMainOrgUser()}"
 							var="lvlType" itemLabel="#{lvlType.codeName}"
 							itemValue="#{lvlType.levelCode}" />
 						<p:ajax onstart="blkPanelSearchTable.show()"
 							oncomplete="blkPanelSearchTable.hide()" event="change"
-							update="userOrgAuditPMSearchPanel" 
+							update="userOrgAuditPMSearchPanel,:form:searchMasters"
 							listener="#{searchPMUserOrgAuditBackingBean.changeType()}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="dropdownMainOrgUser"
@@ -69,7 +85,7 @@
 			</tr>
 			<!-- *** OPM START ORGANIZATION PROFILE MGT *** -->
 			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM' or searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
+				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
 				<tr>
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
@@ -117,7 +133,7 @@
 							styleClass="ppDropDownWidthM"
 							required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.pm.organisation.orgType']}"
-							style="margin-bottom: 5px;"
+							style="width: 265px;margin-bottom: 5px;"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -133,7 +149,7 @@
 							styleClass="ppDropDownWidthM"
 							required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.pm.organisation.orgType']}"
-							style="margin-bottom: 5px;"
+							style="width: 265px;margin-bottom: 5px;"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
@@ -148,9 +164,6 @@
 					<th>&#160;</th>
 					<td>&#160;</td>
 				</tr>
-			</c:if>
-			<c:if
-				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OPM'}">
 				<tr>
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.organisation.orgCode']}" /></th>
@@ -176,6 +189,85 @@
 			<!-- *** OUSR START - USER *** -->
 			<c:if
 				test="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 eq 'OUSR'}">
+				<tr>
+					<th width="22%"><p:outputLabel
+							value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></th>
+					<td><p:selectOneRadio id="sorSearchOrgTypeIdUser" layout="custom"
+							styleClass="commonLabel" widgetVar="myCheckbox"
+							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory}">
+							<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}"
+								itemValue="#{searchPMUserOrgAuditBackingBean.getFederalGovt()}" />
+							<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}"
+								itemValue="#{searchPMUserOrgAuditBackingBean.getOthers()}" />
+							<p:ajax
+								process="@this,orgCategoryMaintainPGUser,orgTypeFederalListUser,orgTypeOthersListUser"
+								onstart="blkPanelSearchTable.show()"
+								oncomplete="blkPanelSearchTable.hide()" event="change"
+								partialSubmit="true"
+								update="userOrgAuditPMSearchPanel,orgTypeFederalListUser,orgTypeOthersListUser"
+								listener="#{searchPMUserOrgAuditBackingBean.changeType()}" />
+						</p:selectOneRadio> <h:panelGrid id="orgCategoryMaintainPGUser" columns="7">
+							<p:radioButton id="sorSearchGovnUser" for="sorSearchOrgTypeIdUser"
+								itemIndex="0" />
+							<h:outputLabel styleClass="commonLabel" for="sorSearchGovnUser"
+								value="#{lbl['lbl.pm.org.federal.government']}" />
+							<p:radioButton id="sorSearchOthersUser" for="sorSearchOrgTypeIdUser"
+								itemIndex="1" />
+							<h:outputLabel styleClass="commonLabel" for="sorSearchOthersUser"
+								value="#{lbl['lbl.pm.org.others']}" />	
+					     &#160; <p:graphicImage id="giOthersOrgUser"
+								style="vertical-align:top;"
+								value="/css/images/design/tooltips.png" />
+							<p:tooltip id="ttOthersOrgUser" for="giOthersOrgUser">
+								<h:outputText escape="false"
+									value="#{lbl['lbl.pm.org.others.tooltip']}" />
+							</p:tooltip>
+						</h:panelGrid></td>
+					<th></th>
+					<td>&#160;</td>
+				</tr>
+				<tr>
+					<th width="22%"><p:outputLabel
+							value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></th>
+					<td><p:selectOneMenu id="orgTypeFederalListUser"
+							rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getFederalGovt()}"
+							styleClass="ppDropDownWidthM"
+							required="#{!empty param['disableValidation']}"
+							label="#{lbl['lbl.pm.organisation.orgType']}"
+							style="width: 265px;margin-bottom: 5px;"
+							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
+								var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
+								itemValue="#{orgTypeItem.levelId}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
+								update=":form:userOrgAuditPMSearchPanel" />
+						</p:selectOneMenu> <p:selectOneMenu id="orgTypeOthersListUser"
+							rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgCategory eq searchPMUserOrgAuditBackingBean.getOthers()}"
+							styleClass="ppDropDownWidthM"
+							required="#{!empty param['disableValidation']}"
+							label="#{lbl['lbl.pm.organisation.orgType']}"
+							style="width: 265px;margin-bottom: 5px;"
+							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.orgTypeParamId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="#{null}" />
+							<f:selectItems
+								value="#{searchPMUserOrgAuditBackingBean.getOrgTypeDropdownValues()}"
+								var="orgTypeItem" itemLabel="#{orgTypeItem.codeName}"
+								itemValue="#{orgTypeItem.levelId}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{searchPMUserOrgAuditBackingBean.changeOrgType()}"
+								update=":form:userOrgAuditPMSearchPanel" />
+						</p:selectOneMenu></td>
+					<th>&#160;</th>
+					<td>&#160;</td>
+				</tr>				
+				
 				<tr>
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.orgName']}" /></th>
@@ -276,7 +368,7 @@
 							styleClass="ppDropDownWidthM" required="true"
 							label="#{lbl['lbl.pm.audit.serviceType']}"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
-							style="width: 275px;margin-bottom: 5px;">
+							style="width: 265px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{searchPMUserOrgAuditBackingBean.getServiceTypeDropdownValues()}"
@@ -295,7 +387,7 @@
 							value="#{lbl['lbl.pm.audit.businessRegNo']}" /></th>
 					<td><p:inputText id="businessRegNoId"
 							styleClass="ppDisplayTextM" maxlength="10" size="40"
-							style="width:12%"
+							style="width: 265px;"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}" /></td>
 					<th>&#160;</th>
 					<td>&#160;</td>
@@ -304,7 +396,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.financialOrgName']}" /></th>
 					<td><p:inputText id="financialOrgNameId"
-							styleClass="ppDisplayTextM" size="40"
+							styleClass="ppDisplayTextM" size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
 							maxlength="255" /></td>
 					<th>&#160;</th>
@@ -326,7 +418,7 @@
 							styleClass="ppDropDownWidthM" required="true"
 							label="#{lbl['lbl.pm.audit.grpRole']}"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel3}"
-							style="width: 275px;margin-bottom: 5px;">
+							style="width: 265px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{searchPMUserOrgAuditBackingBean.getGroupRoleDropdownValues()}"
@@ -344,7 +436,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.grpCode']}" /></th>
 					<td><p:inputText id="grpCodeId" styleClass="ppDisplayTextM"
-							size="40"
+							size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}"
 							maxlength="255" /></td>
 					<th>&#160;</th>
@@ -354,7 +446,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.grpName']}" /></th>
 					<td><p:inputText id="grpNameId" styleClass="ppDisplayTextM"
-							size="40"
+							size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
 							maxlength="255" /></td>
 					<th>&#160;</th>
@@ -364,7 +456,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.ptjCode']}" /></th>
 					<td><p:inputText id="ptjCodeId" styleClass="ppDisplayTextM"
-							size="40"
+							size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel6}"
 							maxlength="255" /></td>
 					<th>&#160;</th>
@@ -374,7 +466,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.ptjName']}" /></th>
 					<td><p:inputText id="ptjNameId" styleClass="ppDisplayTextM"
-							size="40"
+							size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel7}"
 							maxlength="255" /></td>
 					<th>&#160;</th>
@@ -389,7 +481,7 @@
 				<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM"
 						required="false" label="#{lbl['lbl.pm.audit.Role']}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode}"
-						style="width: 275px;margin-bottom: 5px;">
+						style="width: 265px;margin-bottom: 5px;">
 						<p:ajax event="change" partialSubmit="true" process="@this" listener="#{searchPMUserOrgAuditBackingBean.getRoleCode()}"
 							update="userOrgAuditPMSearchPanel" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -432,7 +524,7 @@
 						<p:ajax event="dateSelect" update="toDate" />
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.pm.audit.actiondateTo']}" /></td>
-				<td><p:calendar showOn="button" size="25"
+				<td><p:calendar showOn="button" size="32"
 						label="#{lbl['lbl.pm.audit.actiondateTo']}"
 						required="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom ne null or !searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom eq ''}"
 						mindate="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.dateFrom}"
