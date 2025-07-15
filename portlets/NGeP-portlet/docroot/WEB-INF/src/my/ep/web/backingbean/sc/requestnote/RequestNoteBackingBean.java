@@ -668,7 +668,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getCurrentStatus(getPmStatusByStatusId(statusId));
 			}
 		}
-
+		getDocStatus(requestNote); //#38692
 		getManagedBean().setTitleChecker(true);
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
