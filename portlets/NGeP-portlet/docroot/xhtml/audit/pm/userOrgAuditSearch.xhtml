@@ -49,7 +49,7 @@
 		}
 	</script>
 	<p:remoteCommand name="selectTypeAutoRun" id="remoteId"
-		update=":form:userOrgAuditPMSearchPanel"
+		update="userOrgAuditPMSearchPanel"
 		actionListener="#{searchPMUserOrgAuditBackingBean.autoSelectOrgType()}"
 		autoRun="#{not searchPMUserOrgAuditBackingBean.managedBean.notFirstRun}" />
 	<p:panel id="userOrgAuditPMSearchPanel"
@@ -70,15 +70,13 @@
 						label="#{lbl['lbl.pm.audit.orgUser.type']}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2}"
 						style="width: 265px;margin-bottom: 5px;">
-						<!--  <f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />-->
 						<f:selectItems
 							value="#{searchPMUserOrgAuditBackingBean.getDropdownMainOrgUser()}"
 							var="lvlType" itemLabel="#{lvlType.codeName}"
 							itemValue="#{lvlType.levelCode}" />
 						<p:ajax onstart="blkPanelSearchTable.show()"
 							oncomplete="blkPanelSearchTable.hide()" event="change"
-							update="userOrgAuditPMSearchPanel" 
+							update="userOrgAuditPMSearchPanel,:form:searchMasters"
 							listener="#{searchPMUserOrgAuditBackingBean.changeType()}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="dropdownMainOrgUser"
