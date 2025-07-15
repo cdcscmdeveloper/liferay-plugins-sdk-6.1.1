@@ -577,6 +577,7 @@ public class CategoryCodeSearchBackingBean extends BaseBackingBean<CategoryCodeS
 		
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		for(PmCategoryL1 l1 : resDTO.getCategoryL1List()) {
+			log.info("NEW LOG: " + l1.getCategoryName());
 			log.info("l1.getCategoryName(): " + l1.getCategoryName());
 			selectItems.add(new SelectItem(l1.getCategoryL1Id(), l1.getCategoryL1Code() + " - " + l1.getCategoryName()));
 		}		
