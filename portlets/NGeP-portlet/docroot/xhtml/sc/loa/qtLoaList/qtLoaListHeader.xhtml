@@ -17,9 +17,10 @@
 						<ui:remove>#25791 start </ui:remove>
 							<p:commandLink process="@this" partialSubmit="true" styleClass="commandLink_link"
 							action="#{qTDetailBB.editQuationTenderDetails(qtLOABackingBean.managedBean.qt, false, true, view.viewId)}">
-					<h:outputText value="#{qtLOABackingBean.managedBean.qt.qtNo}" escape="false" />
-						</p:commandLink>
 						<ui:remove>#25791 end </ui:remove>
+					<ui:remove> #25201 - end </ui:remove>
+				<h:outputText value="#{qtLOABackingBean.managedBean.qt.qtNo}" escape="false" />
+					</p:commandLink>
 					</td>
 					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>

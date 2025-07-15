@@ -127,11 +127,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	// #25790 - start
 	private transient List<Map<String, String>> purchaseRequestMapList;
 	// #25790 - end
-	
-	// 25791 -start-
-	private boolean isBiddingUrl = Boolean.FALSE;
-	// 25791 -end-
-	
+
+	private boolean isBiddingUrl = Boolean.FALSE; // 25791
+
 	private String selectedDocNo;//Fix - #36608
 
 	public String getBackURL() {
@@ -1239,8 +1237,18 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void setSupplierRole(String supplierRole) {
 		this.supplierRole = supplierRole;
 	}
-	//end - #25396
+
+	//Start Fix - #36608
+	public String getSelectedDocNo() {
+		return selectedDocNo;
+	}
+
+	public void setSelectedDocNo(String selectedDocNo) {
+		this.selectedDocNo = selectedDocNo;
+	}
+	//End Fix - #36608
 	
+	//end - #25396
 	// #25790 - start
 	/**
 	 * @return the purchaseRequestMapList
@@ -1262,7 +1270,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.purchaseRequestMapList = purchaseRequestMapList;
 	}
 	// #25790 - end
-	
+
 	// 25791 -start-
 	/**
 	 * 
@@ -1280,15 +1288,4 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.isBiddingUrl = isBiddingUrl;
 	}
 	// 25791-end
-	
-	//Start Fix - #36608
-	public String getSelectedDocNo() {
-		return selectedDocNo;
-	}
-
-	public void setSelectedDocNo(String selectedDocNo) {
-		this.selectedDocNo = selectedDocNo;
-	}
-	//End Fix - #36608
-	
 }

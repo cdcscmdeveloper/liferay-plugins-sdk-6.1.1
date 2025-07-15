@@ -407,7 +407,7 @@ public interface QTConstants {
 	public static final int QT_VM_SPLIT_MAXLENGTH = 20;	// Bug #36702@Syazani 28/11/2024
 	
 	public static final RoundingMode QT_ROUNDING_MODE = RoundingMode.HALF_UP;	//Bug #35600@Syazani 19/09/2024
-	
+
 	// 25791 -start-
 	public static final String QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW = "/xhtml/sc/bidding/bidManagement/bidManagementMain.xhtml?faces-redirect=true";
 	public static final String QT_CT_LOA_DETAILS_VIEW = "/xhtml/sc/quatationtender/viewQTCTLOADetails.xhtml";
@@ -426,9 +426,8 @@ public interface QTConstants {
 	public static final String QT_SEARCH_BID_SCHEDULE_ID = "searchQTBidSchedules";
 	public static final String QT_SEARCH_DETAILS_ID = "searchQTs";
 	public static final String QT_SEARCH_LOI_LOA_DETAILS_ID = "searchQTLoaLois";
-			
 	// 25791-End
-	
+
 	//36678
 	public static final String SPEC_COMMITTEE_MAIN_PAGE = "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 	
