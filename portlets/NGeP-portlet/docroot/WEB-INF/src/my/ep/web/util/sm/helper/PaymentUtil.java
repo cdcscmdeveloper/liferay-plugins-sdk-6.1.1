@@ -22,6 +22,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.util.AESEncryptor;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -184,7 +185,7 @@ public class PaymentUtil {
 		String payload = "";
 		StringBuilder sb = new StringBuilder();
 		sb.append("merchantCode#").append(merchantCode).append(";");
-		sb.append("clientSecret#").append(clientKey).append(";");
+//		sb.append("clientSecret#").append(clientKey).append(";");
 		sb.append("orderId#").append(orderId).append(";");
 		sb.append("amount#").append(amount.setScale(2, RoundingMode.HALF_UP))
 				.append(";");
@@ -195,7 +196,8 @@ public class PaymentUtil {
 		sb.append("country#").append(country).append(";");
 		sb.append("cancelUrl#").append(cancelUrl);
 		try {
-			payload = encryptTextUsingAES(sb.toString(), clientKey);
+			payload = AESEncryptor.encrypt(sb.toString(), clientKey);
+//			payload = encryptWithAES(sb.toString(), clientKey);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
