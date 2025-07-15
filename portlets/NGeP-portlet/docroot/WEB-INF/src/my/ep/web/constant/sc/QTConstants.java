@@ -415,7 +415,7 @@ public interface QTConstants {
 	public static final int TAB_MAIN_INDEX = 0;
 	public static final String CONTRACT_PAGE_DETAILS_VIEW = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml";
 	public static final String DATATABLE_QT_DL_LOA_CT_COMPONENT_ID = "ctLoaId";
-	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "laCtdvd";
+	public static final String DATATABLE_LOA_CT_COMPONENT_ID = "loaCTDetail";
 	public static final String CONTRACT_STATUS_EFFECTIVE = "lbl.ct.effective";
 	public static final String CONTRACT_STATUS_INACTIVE = "lbl.ct.inactive";
 	public static final String CONTRACT_STATUS_EXPIRED = "lbl.ct.expired";
