@@ -56,7 +56,6 @@ import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 import my.ep.persistence.entity.sc.common.ScAddress;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
@@ -135,6 +134,12 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
+
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
+
+//25791 -end-
+
 
 /**
  * The Class QTDetailManagedBean.

@@ -16,7 +16,7 @@
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.btn.back']}" style="float:left;"
 						immediate="true"
-						action="#{qTDetailBB.backToPreviousQTAuditMaintenance()}"
+						action="#{qTDetailBB.backToPreviousQTAuditMaintenance() { ()}"
 						partialSubmit="true" process="@this" update="@this" /></td>
 			</tr>
 		</table>
@@ -104,7 +104,7 @@
 
 			<p:dataTable id="loaCTDetail" var="loaContractTracking" rows="10"
 				lazy="true"
-				value="#{qTDetailBB.managedBean.viewLoaContractDataModel}"
+				value="#{qTDetailBB.managedBean.viewLOAContractDataModel}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				rowIndexVar="rowIndex" rowKey="#{loaContractTracking}">
 				<ac:paginator for="loaCTDetail" />

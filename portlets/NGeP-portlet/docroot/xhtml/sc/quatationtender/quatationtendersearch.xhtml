@@ -47,6 +47,7 @@
 				<c:set var="listType" value="loiList" scope="view" /> 
 				<c:set var="dataModelLoiLoa" value="#{qTDetailBB.searchQtLoiDataModel}" scope="view" />
 			</c:when>
+			
 			<ui:remove> #25791 start </ui:remove>
 			<c:when
 				test="#{ParameterConst.doctypeBidding  eq qTDetailBB.managedBean.qtnTenderSearchBean.docType}">
@@ -57,6 +58,7 @@
 					value="#{qTDetailBB.searchBidScheduleDataModel}" scope="view" />
 			</c:when>
 			<ui:remove> #25791 end </ui:remove>
+			
 			<c:otherwise>
 				<c:set var="tableHeader" value="#{lbl['lbl.sc.qtn.list']}" scope="view" />
 				<c:set var="listType" value="default" scope="view" />
@@ -132,9 +134,11 @@
 								rendered="#{ParameterConst.doctypeSupplierFinalization eq qTDetailBB.managedBean.qtnTenderSearchBean.docType || qTDetailBB.managedBean.bdSfFlow}" />
 						</p:column>
 						<ui:remove>Bug #27412,30451,17376 END</ui:remove>
+					
 					<ui:remove> ***17376#55 - start </ui:remove> 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%;text-align: center;">
 						<p:menuButton value="#{lbl['lbl.btn.option']}">
+						
 								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="menuItem1" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -142,13 +146,20 @@
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.editQuationTenderDetails(scQt, false)}"
 									partialSubmit="true" process="@this" />
+								<ui:remove> #25791 end </ui:remove>
+								
+							<ui:remove>
+								BUG 32050, reinsert back code START
+							</ui:remove>
+								<ui:remove> #25791 start </ui:remove>
 								<p:menuitem id="mItmAwd" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[0] and QTStatusConst.QT_AWARDED eq scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQTLOAContractDtls(scQt,view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<!-- 32050,32209 -start- -->
+								<ui:remove> #25791 end </ui:remove>
+								
 								<p:menuitem id="menuItem2" value="#{lbl['lbl.btn.update']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									styleClass="commandLink_link"
@@ -156,19 +167,25 @@
 									icon="ui-icon-edit"
 									action="#{qTDetailBB.editQuationTenderDetails(scQt, true)}"
 									partialSubmit="true" process="@this" />
-								<!-- 32050,32209 -end- -->
-								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view']}"
+							<ui:remove>
+								Bug 32050, reinsert back code END
+							</ui:remove>
+								
+								<ui:remove> #25791 start </ui:remove>
+								<p:menuitem id="menuItem3" value="#{lbl['lbl.btn.view'].concat(' lol A ')}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED ne scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewDirectLOADetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
+	                        	<p:menuitem id="meI3Com" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{scQt.actionRender[2] and QTStatusConst.LOA_COMPLETED eq scQt.qtStatus.statusId}"
 									icon="ui-icon-view" styleClass="commandLink_link"
 									action="#{qTDetailBB.viewQTLOAContractDtls(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
+								<ui:remove> #25791 end </ui:remove>
+								
 								<p:menuitem id="menuItem4" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									styleClass="commandLink_link"
@@ -199,20 +216,19 @@
 									rendered="#{scQt.actionRender[7]}" icon="ui-icon-view"
 									action="#{qTDetailBB.viewFinalizationSupplierDetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
-								<ui:remove>#25791 end</ui:remove>
 								<p:menuitem id="menuItem9" value="#{lbl['lbl.btn.publish']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[8]}"
-								action="#{qTDetailBB.publishQT(scQt)}"
-								partialSubmit="true" process="@this" update="searchQTs"/>
-							<p:menuitem id="menuItem10" value="#{lbl['lbl.btn.close']}" onstart="blockWidget.show();"
-								oncomplete="blockWidget.hide();" 
-								rendered="#{scQt.actionRender[9]}"
-								action="#{qTDetailBB.closeProposal(scQt)}"
-								partialSubmit="true" process="@this" update="searchQTs"/>
-							<ui:remove>
-								Bug #27412 START
-							</ui:remove>
+									oncomplete="blockWidget.hide();" 
+									rendered="#{scQt.actionRender[8]}"
+									action="#{qTDetailBB.publishQT(scQt)}"
+									partialSubmit="true" process="@this" update="searchQTs"/>
+								<p:menuitem id="menuItem10" value="#{lbl['lbl.btn.close']}" onstart="blockWidget.show();"
+									oncomplete="blockWidget.hide();" 
+									rendered="#{scQt.actionRender[9]}"
+									action="#{qTDetailBB.closeProposal(scQt)}"
+									partialSubmit="true" process="@this" update="searchQTs"/>
+								<ui:remove>
+									Bug #27412 START
+								</ui:remove>
 								<ui:remove>#25791 start</ui:remove>
 								<p:menuitem id="menuItem12" value="#{lbl['lbl.btn.view']}"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -221,8 +237,8 @@
 									action="#{qTDetailBB.viewSupplierProposalDetails(scQt, view.viewId)}"
 									partialSubmit="true" process="@this" />
 								<ui:remove>
-								Bug #27412 END
-							</ui:remove>
+								    Bug #27412 END
+							    </ui:remove>
 								<!-- #25635 -start- -->
 								<p:menuitem id="menuItem11" value="#{lbl['lbl.btn.clone']}"
 									styleClass="commandLink_link"
