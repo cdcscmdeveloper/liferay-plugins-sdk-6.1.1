@@ -7532,8 +7532,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param action 
 	 */
 	private void validateBondRequirement(FlFulfilmentRequest flRequest, String action) {
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+				IContractSO.class);
 		ContractReqDTO contractReqDTO = new ContractReqDTO();
 		contractReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		contractReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
@@ -7541,8 +7541,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		contractReqDTO.setScLoa(flRequest.getCtContract().getLoa());// #25296
 		CtContractAmount ctContractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount();
 
-		if(ctContractAmount!=null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()){
-			if(!ctContractAmount.isBondWaived()){
+		if (ctContractAmount != null && ctContractAmount.isBondReq() && !ctContractAmount.isBondExempted()) {
+			if (!ctContractAmount.isBondWaived()) {
 				validateBondWithoutWaiver(action, contractReqDTO);
 			} else {
 				validateBondWithWaiver(action, contractReqDTO);
