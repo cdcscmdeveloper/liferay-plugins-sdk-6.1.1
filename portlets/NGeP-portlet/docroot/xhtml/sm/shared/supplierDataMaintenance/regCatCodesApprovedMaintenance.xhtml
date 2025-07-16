@@ -55,11 +55,8 @@
 				<p:column headerText="#{lbl['lbl.sm.status']}" />
 			</p:row>
 		</p:columnGroup>
-		<!-- #37605, #38391 -->
-		<p:column selectionMode="multiple" disabledSelection="#{!aprvdCatBean.selectable}" style="width:2%;vertical-align: top;" 
-			rendered="#{!aprvdCatBean.suspendCategory}"/>
-		<p:column rendered="#{aprvdCatBean.suspendCategory}" style="width:2%;vertical-align: top;" />
-		<!-- #38391 - end -->
+		<!-- #37605 -->
+		<p:column selectionMode="multiple" disabledSelection="#{!aprvdCatBean.selectable}" style="width:2%;vertical-align: top;" />
 		<p:column style="width : 2%;vertical-align: top;">
 			<p:outputLabel value="#{index + 1}"
 				style="float: left;white-space: normal;" />
