@@ -1089,7 +1089,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
 					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
 					finProposalChecklist.setSubmitted(false);
-					 saveFinancialSpecificationAction(finProposalChecklist.isSubmitted());
 					break;
 				}
 			}
