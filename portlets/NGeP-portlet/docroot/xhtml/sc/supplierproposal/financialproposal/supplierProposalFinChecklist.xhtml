@@ -7,7 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<p:panel header="#{lbl['lbl.sc.financial.proposal']}" toggleable="true">
+	<ui:remove> #25791 start </ui:remove>
+	<p:panel header="#{lbl['lbl.sc.financial.proposal']}" toggleable="true"
+		style="width:100% !important;">
+		<ui:remove> #25791 end </ui:remove>
+		
 		<ac:instructionText value="#{lbl['lbl.sc.sp.ubat.instruction']}"
 			rendered="#{supplierProposalDetailBackingBean.managedBean.procCategoryMedicine}" />
 
