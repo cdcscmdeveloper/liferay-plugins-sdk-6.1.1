@@ -77,7 +77,7 @@
 						<p:ajax onstart="blkPanelSearchTable.show()"
 							oncomplete="blkPanelSearchTable.hide()" event="change"
 							update="userOrgAuditPMSearchPanel,:form:searchMasters"
-							listener="#{searchPMUserOrgAuditBackingBean.changeType()}"/>
+							listener="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="dropdownMainOrgUser"
 						id="dropdownMainOrgUserMsg" display="icon" /></td>
@@ -168,7 +168,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.organisation.orgCode']}" /></th>
 					<td><p:inputText id="orgCodeId" styleClass="ppDisplayTextM"
-							maxlength="10" size="40" style="width:12%"
+							maxlength="10" size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}" /></td>
 					<th>&#160;</th>
 					<td>&#160;</td>
@@ -177,7 +177,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.organisation.orgName']}" /></th>
 					<td><p:inputText id="orgNameId" styleClass="ppDisplayTextM"
-							size="40"
+							size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
 							maxlength="255" /></td>
 					<th>&#160;</th>
@@ -474,45 +474,37 @@
 				</tr>
 			</c:if>
 			<!-- *** OUSRG END *** -->
-
 			<tr>
-				<th width="22%"><p:outputLabel
+				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.Role']}" /></th>
-				<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM"
+				<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM" rendered="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel2 ne null}"
 						required="false" label="#{lbl['lbl.pm.audit.Role']}"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode}"
 						style="width: 265px;margin-bottom: 5px;">
-						<p:ajax event="change" partialSubmit="true" process="@this" listener="#{searchPMUserOrgAuditBackingBean.getRoleCode()}"
-							update="userOrgAuditPMSearchPanel" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
 							value="#{searchPMUserOrgAuditBackingBean.getDropdownRoleList()}"
 							var="roleItem" itemLabel="#{roleItem.roleName}"
-							itemValue="#{roleItem.roleCode}" />						
+							itemValue="#{roleItem.roleCode}" />
+						<p:ajax event="change" update="roles,searchActionBylist,@form" process="userOrgAuditPMSearchPanel"/>
 					</p:selectOneMenu> <ac:iconTooltip value="#{lbl['lbl.pm.audit.tooltip.role']}" /></td>
 				<td><p:message for="roles" id="rolesMsg" display="icon" /></td>
 				<td>&#160;</td>
 			</tr>
 			<tr>
-				<th width="22%"><p:outputLabel
+				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.audit.actionBy']}" /></th>
-				<td>
-				<p:outputPanel id="searchActionById">
-				<ac:lovAudit
-						disabled="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.roleCode == null}"
-						isStoreProc="true" id="searchActionBylist" lovId="PM_USER_AUDIT"
-						size="32" readonly="true"
-						roleCode="searchPMUserOrgAuditBackingBean.roleCode"
+				<td><ac:lovAudit isStoreProc="true" id="searchActionBylist"
+						lovId="PM_USER" size="32" readonly="true"
+						roleCode="searchPMUserOrgAuditBackingBean.getRoleCode()"
 						headerText="#{lbl['lbl.pm.audit.actionBy']}" process="@this"
 						value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser.userName}"
 						postUpdateListener="searchPMUserOrgAuditBackingBean.resetGetActionBy()"
-						update="@form,:form:userOrgAuditPMSearchPanel"
+						update="@form"					
 						saveObject="searchPMUserOrgAuditBackingBean.managedBean.searchBean.pmUser"
 						tooltip="#{lbl['lbl.pm.audit.tooltip.actionby']}">
-					</ac:lovAudit>
-					</p:outputPanel>
-					</td>
+					</ac:lovAudit></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
