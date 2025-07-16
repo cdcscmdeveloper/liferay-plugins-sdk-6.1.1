@@ -1092,6 +1092,20 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		//Bug #30073 End
 		*/
 		//Bug #31725 End
+		// #21695 - Start - fix completed financial proposal still ticked after technical proposal updated
+		if (CollectionUtils.isNotEmpty(getManagedBean().getFinanceCheckDetailsList())) {
+			for (ScQtProposalChecklist finProposalChecklist : getManagedBean().getFinanceCheckDetailsList()) {
+				if (finProposalChecklist.getScQtCheckList().getTitle()
+						.equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList().getTitle())
+						&& finProposalChecklist.getScQtCheckList().getDefinationType().getParameterCode()
+								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION)) {
+					this.getManagedBean().getTechnicalQtProposalChecklist().setFromTechnicalProposal(true);
+					finProposalChecklist.setSubmitted(false);
+					 saveFinancialSpecificationAction(finProposalChecklist.isSubmitted());
+					break;
+				}
+			}
+		}
 
 		if (proposalResDTO.isSuccessful()) {
 			//Bug #31725 Start
