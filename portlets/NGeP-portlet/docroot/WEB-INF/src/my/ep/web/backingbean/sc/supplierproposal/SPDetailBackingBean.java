@@ -1424,7 +1424,8 @@ public class SPDetailBackingBean extends
             		super.setUserDetails(answer);
             	}
             }
-            if(!this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){
+            //#21695 check null
+            if(null != this.getManagedBean().getTechnicalQtProposalChecklist() && !this.getManagedBean().getTechnicalQtProposalChecklist().isFromTechnicalProposal()){
             	TemplateSpecHelper tplHelper = TemplateSpecHelper.getInstance();
     			boolean isPriceTypeTier = tplHelper.isPriceTypeTier(answers.get(0)
     					.getTplSpecQuestion().getClPriceTypeCode()
