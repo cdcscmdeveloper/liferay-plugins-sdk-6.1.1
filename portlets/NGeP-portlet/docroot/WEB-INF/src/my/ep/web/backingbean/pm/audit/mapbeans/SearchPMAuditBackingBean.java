@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.audit.mapbeans;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -165,7 +164,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 * search Master Location
 	 * 
 	 */
-	private class SearchMasterPagingDataModel extends PagingDataModel<VAuditPMDTO> implements Serializable {
+	private class SearchMasterPagingDataModel extends PagingDataModel<VAuditPMDTO> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -246,7 +245,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 	 * search Details Location
 	 * 
 	 */
-	private class SearchDetailPagingDataModel extends PagingDataModel<VAuditPMDTO> implements Serializable {
+	private class SearchDetailPagingDataModel extends PagingDataModel<VAuditPMDTO> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -366,7 +365,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		IAuditPMSO auditPMSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
-		return auditPMSO.getDropdownRoleList(languageCode);
+		return auditPMSO.getDropdownRoleList(languageCode, "null");
 	}
 
 	/**
@@ -410,18 +409,6 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 
 	public void setSearchMaster(IPagingDataModel<VAuditPMDTO> searchMaster) {
 		this.searchMaster = searchMaster;
-	}
-
-	/**
-	 * resetLocationDetailSearchBean()
-	 */
-	public void resetLocationDetailSearchBean() {
-		log.info("resetLocationDetailSearchBean");
-		getManagedBean().setLazy(false);
-		AuditPMSearchBean searchBean = new AuditPMSearchBean();
-		this.getManagedBean().setSearchBean(searchBean);
-		searchDetail = new SearchDetailPagingDataModel();
-		getManagedBean().setSelectedType(null);
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchDetail() {
