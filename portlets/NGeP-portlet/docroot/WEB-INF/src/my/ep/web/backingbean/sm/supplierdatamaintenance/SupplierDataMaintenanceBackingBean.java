@@ -225,7 +225,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void submitSupplierDataMaintenance() {
 		log.info("LOG INFO START MAIN TB 35501:");
 		System.out.println("SYSO START MAIN TB 35501:");
-		Integer.parseInt("AA");
 		PmUser user = new FacesScopes().getUserSessionBean();
 		validateDisciplinaryAction();
 		validateAddedCategory(getManagedBean().getActiveCategoryList());
