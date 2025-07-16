@@ -365,7 +365,7 @@ public class SearchPMAuditBackingBean extends BaseBackingBean<AuditPMManagedBean
 		IAuditPMSO auditPMSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
-		return auditPMSO.getDropdownRoleList(languageCode);
+		return auditPMSO.getDropdownRoleList(languageCode, "null");
 	}
 
 	/**

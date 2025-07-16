@@ -399,7 +399,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		IAuditPMSO auditPMSO;
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
-		return auditPMSO.getDropdownRoleList(languageCode);
+		return auditPMSO.getDropdownRoleList(languageCode, getManagedBean().getSearchBean().getMasterLabel2());
 	}
 
 	public List<VAuditPMDTO> getOrgTypeDropdownValues() {
@@ -436,6 +436,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setRoleCode(null);
 		getManagedBean().getSearchBean().setMasterLabel3(null);
 		getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setMasterLabel5(null);
+		getManagedBean().getSearchBean().setMasterLabel6(null);
 		getManagedBean().getSearchBean().setOrgTypeParamId(null);
 		getManagedBean().getSearchBean().setPmUser(null);
 		getManagedBean().setSelectedOrgProfile(null);
@@ -632,7 +634,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		if (getManagedBean().getSearchBean().getRoleCode() != null) {
 			roleCode = getManagedBean().getSearchBean().getRoleCode();
 		}
-		getManagedBean().getSearchBean().getMasterLabel3();
 		return roleCode;
 	}
 
