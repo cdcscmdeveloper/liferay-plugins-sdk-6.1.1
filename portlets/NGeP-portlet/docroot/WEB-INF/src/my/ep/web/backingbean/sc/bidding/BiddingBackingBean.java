@@ -72,7 +72,7 @@ import org.primefaces.model.chart.LineChartSeries;
 
 
 //25791 -start-
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 
 //25791 -end-
 
@@ -1268,7 +1268,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	 * @param previousPageUrl
 	 * @return Bidding screen.
 	 */
-	public String bidManagementQuotationTenderAction(ScBidScheduleForQt bid, String previousPageUrl) {//25791 
+	public String bidManagementQuotationTenderAction(ScBidScheduleForQT bid, String previousPageUrl) {//25791 
 		//25791 - remove bidding codes start -
 	
 		//25791 - remove bidding codes end -
