@@ -1012,6 +1012,13 @@ public class QTDetailBackingBean extends
 		} else if (this.getManagedSearchBeanDocumentTypeIsLOI()) {
 			getManagedBean().getSearchLoiForQtDataModel().reloadData();
 		}
+		
+		// 25791 -start-
+		else if (this.getManagedSearchBeanDocumentTypeIsBidding()) {
+			getManagedBean().getSearchBidScheduleDataModel().reloadData();
+		}
+		// 25791 -end-
+		
 		else;
 		// #19336, #25201, #17376, #19287 - end
 

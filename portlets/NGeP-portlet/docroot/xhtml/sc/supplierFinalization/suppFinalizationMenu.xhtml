@@ -64,13 +64,6 @@
 		</table>
 		<ui:remove> #25791 end </ui:remove>
 
-		<ui:remove> #18685 - start </ui:remove>
-		<div class="BtnSpacing" style="display: inline-block; width: 30%">
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-						immediate="true"
-						action="#{suppFinalizationBackingBean.backAction}"
-						rendered="#{!empty suppFinalizationBackingBean.managedBean.previousPageUrl}" />
-		</div>
 		<div align="right" class="BtnSpacing" style="display: inline-block; width: 100%">
 			<ui:decorate
 				template="/WEB-INF/facelets/templates/claim_template.xhtml">
@@ -111,7 +104,6 @@
 						</h:panelGroup>
 						<!-- ***28834 ends -->
 					</ui:repeat>
-					<ui:remove> #18685 - end </ui:remove>
 				</ui:define>
 			</ui:decorate>
 		</div>
