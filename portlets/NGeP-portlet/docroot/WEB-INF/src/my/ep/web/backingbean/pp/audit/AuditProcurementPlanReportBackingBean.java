@@ -22,6 +22,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pp.AuditPPConst;
 import my.ep.constant.rpt.ReportExcelAuditConstant;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pp.audit.AuditProcurementPlanSPDTO;
 import my.ep.exception.EpException;
 import my.ep.type.pm.RoleCode;
@@ -64,7 +65,6 @@ public class AuditProcurementPlanReportBackingBean extends BaseBackingBean<Audit
 	private transient IPagingDataModel<AuditProcurementPlanSPDTO> searchPlan = new SearchPPPagingDataModel();
 	private transient IAuditProcurementPlanSO auditPPSO = BusinessDelegate.getInstance().getServiceObject(
 			ModuleCodeConst.PROCUREMENT_PLAN, IAuditProcurementPlanSO.class);
-	private static final Map<Character, String> ESCAPE_MAP = createEscapeMap();
 
 	/**
 	 * Only this role is accessible for Audit Trail hyperlink
@@ -341,53 +341,21 @@ public class AuditProcurementPlanReportBackingBean extends BaseBackingBean<Audit
 
 		generateReport(AuditReportConst.RPT_AUDIT_TRAIL_PP, paramMap);
 	}
-	
-	/**
-	 * Map the character
-	 */
-	private static Map<Character, String> createEscapeMap() {
-	    Map<Character, String> map = new HashMap<>();
-	    map.put('&', "&amp;");
-	    map.put('<', "&lt;");
-	    map.put('>', "&gt;");
-	    map.put('"', "&quot;");
-	    map.put('\'', "&#39;");
-	    map.put('/', "&#x2F;");
-	    map.put('`', "&#96;");
-	    map.put('=', "&#61;");
-	    map.put('\n', "<br/>");
-	    map.put('\t', "&nbsp;&nbsp;&nbsp;&nbsp;");
-	    return map;
-	}
-	
+
 	/**
 	 * Reformat the break line
 	 * 
-	 * @param value
-	 * @return value
+	 * @param itemName
+	 * @return formattedItemName
 	 */
-	public String getFormattedValue(String value) {
-		if (value == null)
-			return "";
-
-		StringBuilder escaped = new StringBuilder();
-
-		for (char c : value.toCharArray()) {
-			if (c == '\r') {
-				continue; // skip carriage return
-			} else if (c == ' ') {
-				escaped.append(' ');
-			} else {
-				String replacement = ESCAPE_MAP.get(c);
-				if (replacement != null) {
-					escaped.append(replacement);
-				} else {
-					escaped.append(c);
-				}
-			}
-		}
-
-		return escaped.toString();
+	public String getFormattedValue(String itemName) {
+		String formattedItemName = itemName.replaceAll(TemplateSpecConst.LESS_THEN_SYMBOL,
+				TemplateSpecConst.LESS_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.GREATER_THEN_SYMBOL,
+				TemplateSpecConst.GREATER_THEN_HTML_ENTITY);
+		formattedItemName = formattedItemName.replaceAll(TemplateSpecConst.NEW_LINE_CHARACTER,
+				TemplateSpecConst.HTML_NEW_LINE_CHARACTER);
+		return formattedItemName;
 	}
 
 	/**
