@@ -198,6 +198,10 @@ public class ContractManagedBean extends BaseManagedBean {
 	private String supplierOffer;
 	private List<ScRequestItemSpecOffer> scRequestItemSpecOfferList;
 	//#28854 - end
+
+	//#13847 - start
+	private boolean disableDeferment = false;
+	//13847 end
 	
 	//#29983 start
 	private String businessRegNoNew;
@@ -1485,6 +1489,16 @@ public class ContractManagedBean extends BaseManagedBean {
 		this.scRequestItemSpecOfferList = scRequestItemSpecOfferList;
 	}	
 	/* #28854 end*/
+	
+	//#13847 start
+	public boolean isDisableDeferment() {
+		return disableDeferment;
+	}
+
+	public void setDisableDeferment(boolean disableDeferment) {
+		this.disableDeferment = disableDeferment;
+	}
+	//#13847 end
 	
 	//#29983 start
 	/**
