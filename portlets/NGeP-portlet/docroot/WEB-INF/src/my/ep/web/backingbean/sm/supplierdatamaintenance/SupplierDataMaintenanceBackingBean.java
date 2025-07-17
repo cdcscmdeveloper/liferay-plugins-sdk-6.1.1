@@ -300,10 +300,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
 			
 			//38697 - START
-			for (Object[] appl : applList) {
-				if(appl[3] != null){
-					appl[2] = appl[3];
-					break;
+			if (applList != null) {
+				for (Object[] appl : applList) {
+					if(appl[3] != null){
+						appl[2] = appl[3];
+						break;
+					}
 				}
 			}
 			//38697 - END
@@ -614,7 +616,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
 			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());	
-			
+			// #38592 - START
+			reqDTO.setEditDisciplinaryAction(getManagedBean()
+					.isEditDisciplinaryAction());
+			// #38592 - END
 			//#26238
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, activeAppl)); 
