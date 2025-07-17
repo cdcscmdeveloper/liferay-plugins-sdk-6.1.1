@@ -4503,12 +4503,14 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			directLoaBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			directLoaBackingBean.getManagedBean().setTrackingDairyView(true);
 			directLoaBackingBean.getManagedBean().setIconForDL(true); 
+			directLoaBackingBean.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX); //#25791
 			directLoaBackingBean.viewLOA(scLoa.getLoaId());
 		} else {
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			loaDetailBackingBean.getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
 			loaDetailBackingBean.getManagedBean().setTrackingDairyView(true);
+			loaDetailBackingBean.getManagedBean().setSelectedTabIndex(QTConstants.TAB_MAIN_INDEX); //#25791
 			loaDetailBackingBean.viewLOA(scLoa.getLoaId());
 		}
 		//#38198 end		
