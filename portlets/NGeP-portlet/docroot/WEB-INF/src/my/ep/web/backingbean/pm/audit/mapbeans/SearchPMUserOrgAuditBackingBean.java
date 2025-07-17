@@ -384,13 +384,6 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		return auditPMSO.getOrgTypeOther(languageCode, getManagedBean().getSearchBean().getMasterLabel2());
 	}
 
-	public List<VAuditPMDTO> getDropdownRoleOrgUser() {
-		IAuditPMSO auditPMSO;
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-		auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
-		return auditPMSO.getDropdownRoleOrgUser(languageCode);
-	}
-
 	/**
 	 * Retrieve Dropdown Role List
 	 * 
