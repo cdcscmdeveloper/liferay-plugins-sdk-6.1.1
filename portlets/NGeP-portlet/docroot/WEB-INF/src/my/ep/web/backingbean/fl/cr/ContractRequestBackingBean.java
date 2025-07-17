@@ -7383,7 +7383,8 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	
 	//35024-Start
 	/**
-	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not
+	 * validate Bond for Fulfilment type One-Off whether Bond is Complete or Not 
+	 * message show while pre render
 	 * @param flRequest
 	 */
 	private void validateBondComplete(FlFulfilmentRequest flRequest){
@@ -7582,7 +7583,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 		if(!contractBondWaiver.isBondWaiverPeriod()){
 			ContractResDTO contractResp=contractSO.validateBondComplete(contractReqDTO);
 			if(!contractResp.isBondComplete()){
-				throwBondWaiverValidationError(action, contractBondWaiver);
+				displayBondWaiverValidationError(action, contractBondWaiver);
 			}
 		}
 	}
@@ -7594,7 +7595,7 @@ public class ContractRequestBackingBean extends FulfilmentBaseBackingBean<Contra
 	 * @param action 
 	 * @param contractBondWaiver
 	 */
-	private void throwBondWaiverValidationError(String action, ContractResDTO contractBondWaiver) {
+	private void displayBondWaiverValidationError(String action, ContractResDTO contractBondWaiver) {
 		//25296 - asyraf - to handle WIP transaction
 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
 			if(contractBondWaiver.getCtBondWaiverDetailList() == null || contractBondWaiver.getCtBondWaiverDetailList().isEmpty()) {
