@@ -1382,6 +1382,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				}
 			}
 			// #28895_35501 Start - AUDIT TRAIL SM
+			log.info("START TB 35501: Audit Force Replace Admin");
+			System.out.println("START TB 35501: Audit Force Replace Admin");
 			IAuditTrailSO auditSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.AUDIT, IAuditTrailSO.class);
 			if (auditSo.isAuditConfig(AuditSupplierManagementConst.AU_SM_CONF)) {
 				getManagedBean().setForceReplace(true);
@@ -1390,6 +1392,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 				AuditSupplierManagementBackingBeanTemplate auditSmBackingBean = new AuditSupplierManagementAdminInformationBackingBean();
 				auditSmBackingBean.saveAuditData(getManagedBean(), null);
 			}
+			System.out.println("END TB 35501: Audit Force Replace Admin");
+			log.info("END TB 35501: Audit Force Replace Admin");
 			// #28895_35501 End
 		} else {
 			throw new EpException(MessageConst.ERROR_721113);
