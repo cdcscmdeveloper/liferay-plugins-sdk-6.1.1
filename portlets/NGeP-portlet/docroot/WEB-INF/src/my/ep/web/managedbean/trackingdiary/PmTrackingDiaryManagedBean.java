@@ -127,7 +127,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	// #25790 - start
 	private transient List<Map<String, String>> purchaseRequestMapList;
 	// #25790 - end
-	
+
+	private boolean isBiddingUrl = Boolean.FALSE; // 25791
+
 	private String selectedDocNo;//Fix - #36608
 
 	public String getBackURL() {
@@ -1268,4 +1270,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.purchaseRequestMapList = purchaseRequestMapList;
 	}
 	// #25790 - end
+
+	// 25791 -start-
+	/**
+	 * 
+	 * @return the isBiddingUrl
+	 */
+	public boolean isBiddingUrl() {
+		return isBiddingUrl;
+	}
+
+	/**
+	 * @param isBiddingUrl
+	 *            the isBiddingUrl to set
+	 */
+	public void setBiddingUrl(boolean isBiddingUrl) {
+		this.isBiddingUrl = isBiddingUrl;
+	}
+	// 25791-end
 }

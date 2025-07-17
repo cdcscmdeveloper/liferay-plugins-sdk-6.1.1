@@ -23,12 +23,13 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
-import my.ep.biz.bean.sc.QtCommitteeMemberBean; // #25037
+import my.ep.biz.bean.sc.QtCommitteeMemberBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.factory.EpLogger;
-import my.ep.helper.Paginator; // #25037
+import my.ep.helper.Paginator;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -67,7 +68,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiForQt;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReverseRemark;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory; // #25037
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMemberHistory;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -95,7 +96,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent; // #25037
+import my.ep.persistence.entity.sc.quationtender.ScQtRequestContent;
 import my.ep.persistence.entity.sc.quationtender.ScQtReverse;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -111,7 +112,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion; // #25037
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.util.CustomUtils;	// Bug #35219@Syazani 07/11/2023
@@ -133,6 +134,12 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
+
+//25791 -start-
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
+
+//25791 -end-
+
 
 /**
  * The Class QTDetailManagedBean.
@@ -1825,7 +1832,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//#25426 - Start
 	private boolean firstViewPageCAUsers = false; 
 	//#25426 - End
-	
+
+	// 25791-start
+	private List<ScQt> qtTrackingDiaryView;
+	private String qtAuditMaintenanceView;
+	private ScQt viewTrackingDiaryQTDL;
+	private List<ScLoaForQt> loaContractTrackingDtls;
+	private ScLoaForQt loaContractTrackingDtl;
+	private List<VCtContract> loaContractListTracking;
+	private IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls;
+	private IPagingDataModel<VCtContract> viewLOAContractDataModel;
+	private Map<Long, VCtContract> checkLOAContract;
+	private IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel;
+	// 25791-End
+
 	public boolean isFieldProcurementJustification = false; //#36678 related to #35061
 	
 	/**
@@ -11418,6 +11438,158 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#25426 - End
 
+	// 25791-start
+	/**
+	 * @return the qtTrackingDiaryView
+	 */
+	public List<ScQt> getQtTrackingDiaryView() {
+		return qtTrackingDiaryView;
+	}
+
+	/**
+	 * @param qtTrackingDiaryView
+	 *            the qtTrackingDiaryView to set
+	 */
+	public void setQtTrackingDiaryView(List<ScQt> qtTrackingDiaryView) {
+		this.qtTrackingDiaryView = qtTrackingDiaryView;
+	}
+
+	/**
+	 * @return the qtAuditMaintenanceView
+	 */
+	public String getQtAuditMaintenanceView() {
+		return qtAuditMaintenanceView;
+	}
+
+	/**
+	 * @param qtAuditMaintenanceView
+	 *            the qtAuditMaintenanceView to set
+	 */
+	public void setQtAuditMaintenanceView(String qtAuditMaintenanceView) {
+		this.qtAuditMaintenanceView = qtAuditMaintenanceView;
+	}
+
+	/**
+	 * @return the viewTrackingDiaryQTDL
+	 */
+	public ScQt getViewTrackingDiaryQTDL() {
+		return viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @param viewTrackingDiaryQTDL
+	 *            the viewTrackingDiaryQTDL to set
+	 */
+	public void setViewTrackingDiaryQTDL(ScQt viewTrackingDiaryQTDL) {
+		this.viewTrackingDiaryQTDL = viewTrackingDiaryQTDL;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtls
+	 */
+	public List<ScLoaForQt> getLoaContractTrackingDtls() {
+		return loaContractTrackingDtls;
+	}
+
+	/**
+	 * @param loaContractTrackingDtls
+	 *            the loaContractTrackingDtls to set
+	 */
+	public void setLoaContractTrackingDtls(List<ScLoaForQt> loaContractTrackingDtls) {
+		this.loaContractTrackingDtls = loaContractTrackingDtls;
+	}
+
+	/**
+	 * @return the loaContractTrackingDtl
+	 */
+	public ScLoaForQt getLoaContractTrackingDtl() {
+		return loaContractTrackingDtl;
+	}
+
+	/**
+	 * @param loaContractTrackingDtl
+	 *            the loaContractTrackingDtl to set
+	 */
+	public void setLoaContractTrackingDtl(ScLoaForQt loaContractTrackingDtl) {
+		this.loaContractTrackingDtl = loaContractTrackingDtl;
+	}
+
+	/**
+	 * @return the loaContractListTracking
+	 */
+	public List<VCtContract> getLoaContractListTracking() {
+		return loaContractListTracking;
+	}
+
+	/**
+	 * @param loaContractListTracking
+	 *            the loaContractListTracking to set
+	 */
+	public void setLoaContractListTracking(List<VCtContract> loaContractListTracking) {
+		this.loaContractListTracking = loaContractListTracking;
+	}
+
+	/**
+	 * @return the viewQTDLLOAContractTrackingDtls
+	 */
+	public IPagingDataModel<ScLoa> getViewQTDLLOAContractTrackingDtls() {
+		return viewQTDLLOAContractTrackingDtls;
+	}
+
+	/**
+	 * @param viewQTDLLOAContractTrackingDtls
+	 *            the viewQTDLLOAContractTrackingDtls to set
+	 */
+	public void setViewQTDLLOAContractTrackingDtls(IPagingDataModel<ScLoa> viewQTDLLOAContractTrackingDtls) {
+		this.viewQTDLLOAContractTrackingDtls = viewQTDLLOAContractTrackingDtls;
+	}
+
+	/**
+	 * @return the viewLOAContractDataModel
+	 */
+	public IPagingDataModel<VCtContract> getViewLOAContractDataModel() {
+		return viewLOAContractDataModel;
+	}
+
+	/**
+	 * @param viewLOAContractDataModel
+	 *            the viewLOAContractDataModel to set
+	 */
+	public void setViewLOAContractDataModel(IPagingDataModel<VCtContract> viewLOAContractDataModel) {
+		this.viewLOAContractDataModel = viewLOAContractDataModel;
+	}
+
+	/**
+	 * @return the checkLOAContract
+	 */
+	public Map<Long, VCtContract> getCheckLOAContract() {
+		return checkLOAContract;
+	}
+
+	/**
+	 * @param checkLOAContract
+	 *            the checkLOAContract to set
+	 */
+	public void setCheckLOAContract(Map<Long, VCtContract> checkLOAContract) {
+		this.checkLOAContract = checkLOAContract;
+	}
+
+	/**
+	 * @return the searchBidScheduleDataModel
+	 */
+	public IPagingDataModel<ScBidScheduleForQT> getSearchBidScheduleDataModel() {
+		return searchBidScheduleDataModel;
+	}
+
+	/**
+	 * @param searchBidScheduleDataModel
+	 *            the searchBidScheduleDataModel to set
+	 */
+	public void setSearchBidScheduleDataModel(IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel) {
+		this.searchBidScheduleDataModel = searchBidScheduleDataModel;
+	}
+	// 25791-End
+
 	/** #36678 related to #35061
 	 * 
 	 * @return
@@ -11448,4 +11620,5 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.techPoints = techPoints;
 	}
 	//37813,35384 -end
+
 }
