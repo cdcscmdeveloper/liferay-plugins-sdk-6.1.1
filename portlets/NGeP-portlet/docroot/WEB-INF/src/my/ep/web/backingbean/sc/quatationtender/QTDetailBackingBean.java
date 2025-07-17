@@ -2159,42 +2159,22 @@ public class QTDetailBackingBean extends
 			if (CollectionUtils.isNotEmpty(qtSearchBean.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
-			
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>(); // 25791
 
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
 			
 			if (StringUtils.isNotEmpty(docType)) {
-				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)
-				// ***19336#99 - start
-						&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_INTENT)
-				// ***19336#99 - end
-				) {
-					if (!StringUtils.isBlank(docNo)) {
-						SearchFilterBean bean = new SearchFilterBean();
-						bean.setSearchField("loiNo");
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);
-					}
+				// 25791-start-
+				if (ParameterConst.DOCTYPE_LETTER_OF_INTENT.equals(docType)) {
+					searchFilterBean = setDocNumBean(docNo, searchFilterBean, SourcingConstants.LOI_NO);
+					// 25791-end-
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
 				}
 			}
-
-			// replaced by subquery at DAO
-			/*
-			 * if(!qtnTenderSearchBean.isQtStatusForQt() &&
-			 * StringUtils.isNotBlank(qtnTenderSearchBean.getQtStatus())){
-			 * searchFilterBean.add( new
-			 * SearchFilterBean("scLoiWorkFlowStatuses.pmStatus.statusId",
-			 * SearchOperator.OPERATOR_EQUALS.value(),
-			 * qtnTenderSearchBean.getQtStatus())); searchFilterBean.add( new
-			 * SearchFilterBean("scLoiWorkFlowStatuses.current",
-			 * SearchOperator.OPERATOR_EQUALS.value(), Boolean.TRUE)); }
-			 */
 
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 
@@ -2210,48 +2190,32 @@ public class QTDetailBackingBean extends
 			if (CollectionUtils.isNotEmpty(qtSearchBean.getDataFilterBeans())) {
 				qtSearchBean.getDataFilterBeans().clear();
 			}
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+
+			List<SearchFilterBean> searchFilterBean = new ArrayList<>(); // 25791
 
 			String docType = qtnTenderSearchBean.getDocType();
 			String docNo = qtnTenderSearchBean.getDocNo();
+
 			if (StringUtils.isNotEmpty(docType)) {
+				// 25791 -start-
 				if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(docType)) {
-					if (!StringUtils.isBlank(docNo)
-					// ***19336#99 - start
-							&& checkSearchBeanDocTypePrefix(ParameterConst.DOCTYPE_LETTER_OF_AWARD)
-					// ***19336#99 - end
-					) {
-						SearchFilterBean bean = new SearchFilterBean();
-						bean.setSearchField("loaNo");
-						bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-						bean.setSearchValue(docNo);
-						searchFilterBean.add(bean);
-					}
+					searchFilterBean = setDocNumBean(docNo, searchFilterBean, SourcingConstants.LOA_NUMBER);
+					// 25791-end-
 				} else {
 					reqDTO.setDocType(docType);
 					reqDTO.setDocNo(docNo);
 				}
 			}
 
-			//replaced by subquery in DAO
-			/*if(!qtnTenderSearchBean.isQtStatusForQt() && StringUtils.isNotBlank(qtnTenderSearchBean.getQtStatus())){
-				searchFilterBean.add(
-						new SearchFilterBean("scLoaWorkFlowStatuses.pmStatus.statusId", 
-								SearchOperator.OPERATOR_EQUALS.value(), 
-								qtnTenderSearchBean.getQtStatus()));
-				searchFilterBean.add(
-						new SearchFilterBean("scLoaWorkFlowStatuses.current", 
-								SearchOperator.OPERATOR_EQUALS.value(), 
-								Boolean.TRUE));
-			}*/
-
 			// 30418, #25201-START
 			// Special Case for LOA Doctype QT Maintenance Search, procurement mode is search against SC_LOA instead of SC_QT
 			if (StringUtils.isNotEmpty(qtnTenderSearchBean.getProcurementMode())) {
+				// 25791 -start-
 				searchFilterBean.add(new SearchFilterBean(
-						"procurementMode.parameterCode",
+						SourcingConstants.LOA_PROCUREMENT_MODE,
 						SearchOperator.OPERATOR_EQUALS.value(),
 						qtnTenderSearchBean.getProcurementMode()));
+				// 25791 -end-
 			}
 			// 30418, #25201-END
 
@@ -11735,7 +11699,7 @@ public class QTDetailBackingBean extends
 
 	// 25791 -start-
 	/**
-	 * This method is used to get the current active Loas status workflow.
+	 * This method is used to get the current active LOAs status workflow.
 	 * 
 	 * @param loaWorkFlowStatusList
 	 * @return statusId
@@ -11752,7 +11716,7 @@ public class QTDetailBackingBean extends
 
 	// 25791 -start-
 	/**
-	 * This method is used to view the Loa Details page.
+	 * This method is used to view the LOA Details page.
 	 * 
 	 * @param scQt
 	 * @param scLoa
@@ -11836,8 +11800,8 @@ public class QTDetailBackingBean extends
 
 	// 25791 -start-
 	/**
-	 * This method is used to view Direct and Normal Loa contract details based
-	 * on LoaDetails.
+	 * This method is used to view Direct and Normal LOA contract details based
+	 * on LOA Details.
 	 * 
 	 * @param loaForQtDl
 	 * @param previousPageUrl
@@ -12008,17 +11972,16 @@ public class QTDetailBackingBean extends
 	 * @return
 	 */
 	public boolean getManagedSearchBeanDocumentTypeIsBidding() {
-		String documentType = getManagedBean().getQtnTenderSearchBean()
-				.getDocType();
-		boolean isBidding = StringUtils.isNotBlank(documentType)
-				&& StringUtils.isNotEmpty(documentType)
-				&& ParameterConst.DOCTYPE_BIDDING
-						.equalsIgnoreCase(documentType);
-		if (isBidding)
+		String documentType = getManagedBean().getQtnTenderSearchBean().getDocType();
+		boolean isBidding = StringUtils.isNotBlank(documentType) && StringUtils.isNotEmpty(documentType)
+				&& ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(documentType);
+
+		if (isBidding) {
 			return true;
+		}
+
 		return false;
 	}
-
 	// 25791 -end-
 
 	// 25791 -start-
@@ -12052,7 +12015,7 @@ public class QTDetailBackingBean extends
 
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
-			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
+			constructBiddingSearchBean(qtnTenderSearchBean, searchBean);
 			// Order by created date
 			searchBean.getSortColumns().add(
 					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
@@ -12092,7 +12055,7 @@ public class QTDetailBackingBean extends
 		 * @param bidSearchBean
 		 * @return ISearchBean<ScBidScheduleForQT> searchBean details
 		 */
-		private ISearchBean<ScBidScheduleForQT> constructBiddingSerachBean(
+		private ISearchBean<ScBidScheduleForQT> constructBiddingSearchBean(
 				QtnTenderSearchBean qtnTenderSearchBean,
 				ISearchBean<ScBidScheduleForQT> bidSearchBean) {
 
@@ -12252,7 +12215,7 @@ public class QTDetailBackingBean extends
 
 		// 25791 -start-
 		/**
-		 * construct publishd date for Bidding Details Search.
+		 * construct published date for Bidding Details Search.
 		 * 
 		 * @param qtnTenderSearchBean
 		 * @param bidSchedulesBean
@@ -12432,21 +12395,22 @@ public class QTDetailBackingBean extends
 	 * 
 	 * @param docNum
 	 * @param searchFilterBean
-	 * @param serachField
+	 * @param searchField
 	 * @return List<SearchFilterBean>
 	 */
 	private List<SearchFilterBean> setDocNumBean(String docNum,
-			List<SearchFilterBean> searchFilterBean, String serachField) {
+			List<SearchFilterBean> searchFilterBean, String searchField) {
 		if (StringUtils.isNotBlank(docNum) || StringUtils.isNotEmpty(docNum)) {
 			SearchFilterBean docNumBean = new SearchFilterBean();
-			docNumBean.setSearchField(serachField);
+			docNumBean.setSearchField(searchField);
 			docNumBean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 			docNumBean.setSearchValue(docNum);
+
 			searchFilterBean.add(docNumBean);
 		}
+
 		return searchFilterBean;
 	}
-
 	// 25791 -end-
 
 	// 29732 start
