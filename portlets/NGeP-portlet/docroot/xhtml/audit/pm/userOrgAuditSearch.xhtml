@@ -75,8 +75,8 @@
 							var="lvlType" itemLabel="#{lvlType.codeName}"
 							itemValue="#{lvlType.levelCode}" />
 						<p:ajax onstart="blkPanelSearchTable.show()"
-							oncomplete="blkPanelSearchTable.hide()" event="change"
-							update="userOrgAuditPMSearchPanel,:form:searchMasters"
+							oncomplete="blkPanelSearchTable.hide()" event="change" process="@this"
+							update=":form:userOrgAuditPMSearchPanel,:form:searchMasters"
 							listener="#{searchPMUserOrgAuditBackingBean.resetOrganisationSearchBean}"/>
 					</p:selectOneMenu></td>
 				<td><p:message for="dropdownMainOrgUser"
@@ -336,7 +336,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.identificationNo']}" /></th>
 					<td><p:inputText id="identificationNoId"
-							styleClass="ppDisplayTextM" size="40"
+							styleClass="ppDisplayTextM" size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel5}"
 							maxlength="255" /> <ac:iconTooltip
 							value="#{lbl['lbl.pm.audit.tooltip.identificationNo']}" /></td>
@@ -347,7 +347,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.userName']}" /></th>
 					<td><p:inputText id="userNameId" styleClass="ppDisplayTextM"
-							size="40"
+							size="36"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel6}"
 							maxlength="255" /> <ac:iconTooltip
 							value="#{lbl['lbl.pm.audit.tooltip.userName']}" /></td>
@@ -386,7 +386,7 @@
 					<th width="22%"><p:outputLabel
 							value="#{lbl['lbl.pm.audit.businessRegNo']}" /></th>
 					<td><p:inputText id="businessRegNoId"
-							styleClass="ppDisplayTextM" maxlength="10" size="40"
+							styleClass="ppDisplayTextM" maxlength="10" size="36"
 							style="width: 265px;"
 							value="#{searchPMUserOrgAuditBackingBean.managedBean.searchBean.masterLabel4}" /></td>
 					<th>&#160;</th>
