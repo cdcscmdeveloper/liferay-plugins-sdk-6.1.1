@@ -9092,7 +9092,6 @@ public class QTDetailBackingBean extends
 																							   
 	// #Enhancement 9 CRs - end
 	
-	// 25791 -start-
 	/**
 	 * This method is used to fetch staus dropdown details based on docType.
 	 * 
@@ -9121,7 +9120,6 @@ public class QTDetailBackingBean extends
 
 		return getStatusDropdownValuesBySearchBean(moduleCode, docType, searchBean);
 		// 25791 -end-
-
 	}
 	
 	private void checkForPublishperiodAndValidityDays(ScQt scQt, FacesContext fc){
