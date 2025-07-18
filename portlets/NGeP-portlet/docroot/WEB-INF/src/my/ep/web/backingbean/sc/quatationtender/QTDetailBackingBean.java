@@ -9988,9 +9988,22 @@ public class QTDetailBackingBean extends
 	}
 	/* ***19336#73 - end */
 	
-	/* ***19287#86 - start */
+	//25791-start
+	/**
+	 * 
+	 * 19287#86 - start
+	 * Redirect to mainPage.
+	 */
 	public void backToPrevious() {
 		debugLogger("backToPrevious");
+		
+		// 25791-start
+		if (ParameterConst.DOCTYPE_BIDDING.equalsIgnoreCase(getManagedBean().getQtnTenderSearchBean()
+				.getResultDocType())) {
+			getManagedBean().setViewOriginalUrl(QTConstants.QT_MAINTENANCE_BIDDING_MANAGEMENT_VIEW);
+		}
+		// 25791-end
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
