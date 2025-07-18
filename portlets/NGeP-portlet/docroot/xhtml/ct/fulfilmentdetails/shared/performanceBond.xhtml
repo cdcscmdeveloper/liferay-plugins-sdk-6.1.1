@@ -220,37 +220,6 @@
 		</div>
 		</p:confirmDialog>
 	</p:panel>
-		
-	<p:dialog id="uploadWaiverDlg" widgetVar="uploadWaiverDlg" modal="true"  resizable="false"
-	     width="700px" height="350px" styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-	     	onShow="singleUploadListener(uploadWaiverFile);">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{ctBackingBean.ComonFileUpload}" showButtons="false"
-			mode="advanced" id="uploadWaiver" multiple="false"  dragDropSupport="false"
-			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
-			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}" widgetVar="uploadWaiverFile"
-			invalidSizeMessage="#{lbl['lbl.txt.upload.sizeExceed20Mb']}"
-			label="#{lbl['lbl.btn.choose']}" uploadLabel="#{lbl['lbl.btn.upload.all']}" cancelLabel="#{lbl['lbl.btn.remove.all']}" 
-			update="dataGridId" >
-		</p:fileUpload>
-		<f:facet name="footer">
-		<div class="ppRightBtn">
-		    <p:commandButton value="#{lbl['lbl.btn.close']}" type="button" ajax="false" onclick="uploadWaiverDlg.hide();" />
-	 		</div>
-	  		</f:facet>
-	</p:dialog>	
-		
-	<p:confirmDialog id="deleteWaiverAttachDlg" widgetVar="deleteWaiverAttachDlg" message="#{lbl['lbl.msg.confirm.delete']}" 	
-		severity="alert"  closable="true" appendToBody="true" header="#{lbl['lbl.msg.confirm.delete.header']}">
-		<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.yes']}"  process="@this"  partialSubmit="true"
-	 		update=":form:dataGridId" 
-			action="#{ctBackingBean.deleteBondWaiverAttach()}" oncomplete="deleteWaiverAttachDlg.hide();"/>
-		<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="deleteWaiverAttachDlg.hide();" type="button" />
-		</div>
-	</p:confirmDialog>
 	
 	
 </ui:composition>
