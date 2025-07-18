@@ -9092,66 +9092,36 @@ public class QTDetailBackingBean extends
 																							   
 	// #Enhancement 9 CRs - end
 	
-	public SelectItem[] getQTStatusDropdownValues(String moduleCode,
-			String docType, String screenName) {
+	// 25791 -start-
+	/**
+	 * This method is used to fetch staus dropdown details based on docType.
+	 * 
+	 * @param moduleCode
+	 * @param docType
+	 * @param screenName
+	 * @return list of statuses.
+	 */
+	public SelectItem[] getQTStatusDropdownValues(String moduleCode, String docType, String screenName) {
 
-		SelectItem[] statusList = null;
+		// 25791 -start-
+		SearchBean<PmStatusDesc> searchBean = new SearchBean<>();
+		List<Long> nonStatusList = new ArrayList<>();
+		// 25791 -end-
+
 		if (QTConstants.SPEC_MAINTENANCE.equalsIgnoreCase(screenName)) {
-			
-			SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmStatus.statusId",
-							SearchOperator.OPERATOR_NOT_IN.value(),
-							nonRecommendedStatusesForSpecMaint()));
+			nonStatusList = nonRecommendedStatusesForSpecMaint(); // 25791
+		}
 
-			statusList = getStatusDropdownValuesBySearchBean(moduleCode,
-					docType, searchBean);
-		// #30451-Start.
-		} else if ((isQTMaintenanceScreen() || isQTSearchScreen()) && docType.equals(ParameterConst.DOCTYPE_BIDDING)) {
-			SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
-			// Filter By - statusId
-			List<Long> statusIds = new ArrayList<Long>();
-			statusIds.add(QTStatusConst.SF_PENDING_SCHEDULE_BIDDING);
-			statusIds.add(QTStatusConst.SF_PENDING_BIDDING);
-			statusIds.add(QTStatusConst.SF_PENDING_BIDDING_ESCALATION);
-			
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmStatus.statusId", SearchOperator.OPERATOR_IN.value(), statusIds));
-			
-			docType = ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION;
-			statusList = super.getStatusDropdownValuesBySearchBean(moduleCode, docType, searchBean);
-		}
-		// #30451-End.
-		else {
-			statusList = getStatusDropdownValues(moduleCode, docType);
-		}		
-		
-		
-		// ***17376#32
-		/**
-		 * 17376#32 temporary fix
-		 */		
-		if(statusList != null && statusList.length>0){
-			List<SelectItem> t = new ArrayList<SelectItem>(Arrays.asList(statusList));
-			for(int i = 0; t!=null && i<t.size(); i++){
-				try{
-					if(t.get(i).getValue()!=null && Long.parseLong(t.get(i).getValue().toString()) == 60039L){
-						t.remove(i);
-						i--;
-					}
-				}
-				catch(ClassCastException ex){}
-			}
-			statusList = new SelectItem[t.size()];
-			for(int i = 0; i < statusList.length; i++){
-				statusList[i] = t.get(i);
-			}
-		}
-		/** end of 17376#32 temporary fix **/
-		
-		
-		
-		return statusList;
+		// 25791 -start-
+		nonStatusList.add(QTStatusConst.QT_PENDING_DOCUMENT_REVISION);
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean(SourcingConstants.QT_PMSTATUS_STATUS_ID, SearchOperator.OPERATOR_NOT_IN.value(),
+						nonStatusList));
+
+		return getStatusDropdownValuesBySearchBean(moduleCode, docType, searchBean);
+		// 25791 -end-
+
 	}
 	
 	private void checkForPublishperiodAndValidityDays(ScQt scQt, FacesContext fc){
