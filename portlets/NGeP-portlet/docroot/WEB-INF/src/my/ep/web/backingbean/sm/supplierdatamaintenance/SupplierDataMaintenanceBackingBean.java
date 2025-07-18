@@ -302,10 +302,12 @@ public class SupplierDataMaintenanceBackingBean extends
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
 
 			//38697 - START
-			for (Object[] appl : applList) {
-				if(appl[3] != null){
-					appl[2] = appl[3];
-					break;
+			if (applList != null) {
+				for (Object[] appl : applList) {
+					if(appl[3] != null){
+						appl[2] = appl[3];
+						break;
+					}
 				}
 			}
 			//38697 - END
