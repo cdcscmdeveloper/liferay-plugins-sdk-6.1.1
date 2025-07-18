@@ -446,6 +446,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setDateFrom(null);
 		getManagedBean().getSearchBean().setRoleCode(null);
 		getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setMasterLabel5(null);
 		getManagedBean().getSearchBean().setOrgTypeParamId(null);
 		getManagedBean().getSearchBean().setPmUser(null);
 	}
@@ -459,6 +460,9 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setDateFrom(null);
 		getManagedBean().getSearchBean().setRoleCode(null);
 		getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setMasterLabel5(null);
+		getManagedBean().getSearchBean().setMasterLabel6(null);
+		getManagedBean().getSearchBean().setMasterLabel7(null);
 		getManagedBean().getSearchBean().setOrgTypeParamId(null);
 		getManagedBean().getSearchBean().setPmUser(null);
 	}
@@ -537,6 +541,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 			getManagedBean().setSelectedOrgProfile(null);
 		}
 		this.getManagedBean().getSearchBean().setMasterLabel4(null);
+		getManagedBean().getSearchBean().setMasterLabel5(null);
+		getManagedBean().getSearchBean().setMasterLabel6(null);
 		this.getManagedBean().getSearchBean().setRoleCode(null);
 		this.getManagedBean().getSearchBean().setPmUser(null);
 	}
@@ -566,6 +572,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		this.getManagedBean().getSearchBean().setRoleCode(null);
 
 		this.getManagedBean().getSearchBean().setPmUser(null);
+
+		this.getManagedBean().getSearchBean().setMasterLabel5(null);
+
+		this.getManagedBean().getSearchBean().setMasterLabel6(null);
 	}
 
 	/**
@@ -598,16 +608,24 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	public void resetOrganisationSearchBean() {
 		log.info("resetOrgSearchBean");
 		String masterLabel2 = this.getManagedBean().getSearchBean().getMasterLabel2();
+		String orgCategory = String.valueOf(this.getManagedBean().getSearchOrgCategory());
 		AuditPMUserOrgSearchBean searchBean = new AuditPMUserOrgSearchBean();
 		getManagedBean().setSearchBean(searchBean);
+
 		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedOrgType(null);
 		getManagedBean().setLazy(false);
-		getManagedBean().getSearchBean().setOrgCategory(String.valueOf(this.getManagedBean().getSearchOrgCategory()));
+
+		getSearchMaster().resetData();
+		this.getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
+		getManagedBean().getSearchBean().setOrgCategory(orgCategory);
 		searchBean.setMasterLabel2(masterLabel2);
 	}
 
 	public IPagingDataModel<VAuditPMDTO> getSearchMaster() {
+		if (searchMaster == null) {
+			searchMaster = new SearchMasterPagingDataModel();
+		}
 		return searchMaster;
 	}
 
