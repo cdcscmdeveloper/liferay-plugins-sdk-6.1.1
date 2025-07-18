@@ -655,4 +655,8 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	public void setProfileManagementSearchBackingBean(ProfileManagementSearchBackingBean profileManagementSearchBackingBean) {
 		this.profileManagementSearchBackingBean = profileManagementSearchBackingBean;
 	}
+
+	public AuditPMReqDTO getReqDTO() {
+		return auditPMReqDTO;
+	}
 }
