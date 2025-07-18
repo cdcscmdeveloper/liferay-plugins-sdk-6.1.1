@@ -300,6 +300,18 @@ public class SupplierDataMaintenanceBackingBean extends
 				|| (getManagedBean().getSmAppl().getPmStatus() != null && (statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED)
 				|| statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {//29943: Disciplinary Action - 26238
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
+
+			//38697 - START
+			if (applList != null) {
+				for (Object[] appl : applList) {
+					if(appl[3] != null){
+						appl[2] = appl[3];
+						break;
+					}
+				}
+			}
+			//38697 - END
+			
 			getManagedBean().setActiveApplList(applList);
 		}
 		//27437 : Disciplinary Action - start
