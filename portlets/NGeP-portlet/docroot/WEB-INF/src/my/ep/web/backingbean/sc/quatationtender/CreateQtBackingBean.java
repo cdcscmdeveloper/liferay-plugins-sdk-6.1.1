@@ -4155,12 +4155,10 @@ public class CreateQtBackingBean extends
 			//reqDTO.setScQt(this.getManagedBean().getQt());
 			//reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
 			//SpecificationResDTO resDTO = specSo.retrieveCheckLists(reqDTO);
-			List<ScQtCheckList> scQtTechChecklist = this.getManagedBean().getScQtCheckSt2techProposal();
 			//28748 - 38426 - start
 			if (this.isStatusLessThanOrEquals(status,
 					QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH,
-					QTStatusConst.QT_ORDERED_STATUSES)
-					&& CollectionUtils.isNotEmpty(scQtTechChecklist)) {
+					QTStatusConst.QT_ORDERED_STATUSES)) {
 				//note937 Issue 2 - Start
 				boolean oneTier = type.equalsIgnoreCase(ParameterConst.EVALUATION_TYPES_ONE_TIER) && demoRequired;
 				if (oneTier) {
