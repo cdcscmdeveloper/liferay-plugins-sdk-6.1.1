@@ -2912,6 +2912,9 @@ public class SupplierDataMaintenanceBackingBean extends
 	
 	//32618 - Start, 38391
 	private void unSelectSuspendCategories(){
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
+			return;
+		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		for (SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
 			cat.setSelectable(!cat.isSuspendCategory());
@@ -2927,9 +2930,6 @@ public class SupplierDataMaintenanceBackingBean extends
 	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
 	public void unSelectCancelBumiCategories() {
-		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
-			return;
-		}
 		unSelectSuspendCategories();
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
 				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
@@ -2937,6 +2937,9 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
 		List<SmSupplierCategory> prevSelect = getManagedBean().getSelectedApprovedCategories();
+		if (prevSelect == null){
+			prevSelect = new ArrayList<SmSupplierCategory>();
+		}
 		Iterator<SmSupplierCategory> it = getManagedBean().getApprovedCategoryList().iterator();
 		while (it.hasNext()) {
 			SmSupplierCategory cat = it.next();
