@@ -5568,6 +5568,7 @@ public class SpecificationBackingBean extends
 				new ArrayList<ScQtCheckListScore>());
 		this.getManagedBean().setScQtCheckListScore(null);
 		this.getManagedBean().setScQtContractScore(null);
+		this.getManagedBean().setDemoSpecTemplateList(null);//#28784
 		try {
 
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -14234,7 +14235,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
 
 			// #11104-start
-			if (this.getManagedBean().getQt().isSampleReq()) {
+			if (this.getManagedBean().getQt().isSampleReq() && this.getManagedBean().getDemoSpecTemplateList() == null) {//#28784
 				sampleDetailsPendingTemplateSpec();
 			}
 			// #11104-End
@@ -17902,17 +17903,17 @@ public class SpecificationBackingBean extends
 		}
 		// #29732(#232) - End
 
+		retriveTechnicalCheckList(); // 1873 - note 52
+		// 11104_start
+		this.getManagedBean().setSampleShowHide(
+				checkSampleRadioShowHideInSpecPrepareAndMaintenance());
+		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(),
+				this.getManagedBean().getQt());
+		// 11104_end
+
 		committeSO = null;
 		this.getManagedBean().setLoginRoleType("SC");
-
-		// 11104WIP -start-
-		this.getManagedBean().setSampleShowHide(checkSampleRadioShowHideInSpecPrepareAndMaintenance());
-
-		retriveTechnicalCheckList();
-
-		checkSampleWipData(this.getManagedBean().getScQtCheckSt2techProposal(), this.getManagedBean().getQt());
-		// 11104WIP -end-
-
+		
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
@@ -21645,24 +21646,24 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 				//update demo weightage	
 				reqDTO1.setTobeRemoveList(demoTemplateList);
 				SpecificationResDTO resDTO = specSO.updateDemoScoreWeightage(reqDTO1);
-				ScQtCheckList demo = null;
+				ScQtCheckList demo = resDTO.getSavedCheckLists().get(0);
+				int demoIndex = 0;
+				int index = 0;
 				List<ScQtCheckList> demoUpdateList = new ArrayList<>();				
 				specCommitteeResetData();
 				
 					for (ScQtCheckList t : st2technicalproposalList) {
 						if (t.getDefinationType().getParameterCode()
 								.equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_PRESENTATION_DEMO)) {
-							t.setPmStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-							t.setPmEvalStatus(getPmStatusByStatusId(QTStatusConst.TS_PENDING_SUBMISSION));
-							demo = t;
 							demoUpdateList.add(t);
+							demoIndex = index;
 							break;
 						}
+						index++;
 					}				
 				
 				if (demoUpdateList != null) {					
-					this.getManagedBean().getScQtCheckSt2techProposal().set(this.getManagedBean().getScQtCheckSt2techProposal().indexOf(demo)
-							, resDTO.getSavedCheckLists().get(0));
+					this.getManagedBean().getScQtCheckSt2techProposal().set(demoIndex, demo);
 				}
 				return "/xhtml/sc/specification/specificationCommittee/specificationCommitteeMain.xhtml?faces-redirect=true";
 			}

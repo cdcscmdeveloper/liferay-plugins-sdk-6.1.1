@@ -1285,6 +1285,17 @@ public class OrganisationBackingBean extends
 			IPersonnelSO personnelSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT, IPersonnelSO.class);
 			
+			getManagedBean().setAuditContactPerson(new PmContact());
+			getManagedBean().setAuditBillingAddress(new PmAddress());
+			getManagedBean().setNewReceivingAddressList(new ArrayList<PmAddressType>());
+			getManagedBean().setEditedReceivingAddressList(new ArrayList<PmAddressType>());
+			getManagedBean().setAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+			getManagedBean().setNewAuditSmSupplierBanks(new ArrayList<SmSupplierBank>());
+			getManagedBean().setAuditSmPersonnels(new ArrayList<SmPersonnel>());
+			getManagedBean().setNewAuditSmPersonnels(new ArrayList<SmPersonnel>());
+			getManagedBean().setAuditProfileGroup(new ArrayList<PmProfileGroup>());
+			getManagedBean().setNewAuditProfileGroup(new ArrayList<PmProfileGroup>());
+			
 			if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)){
 				// retrieve old data
 				OrgProfileReqDTO offReqDTO = new OrgProfileReqDTO();
@@ -1323,7 +1334,7 @@ public class OrganisationBackingBean extends
 						supplierResDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierReqDTO);
 						
 						personnelReqDTO.setSmSupplierId(orgProfile.getSmSupplier().getSupplierId());
-						personnelResDTO = personnelSO.retrievePersonnelBySupplierId(personnelReqDTO);
+						personnelResDTO = personnelSO.retrievePersonnelBySupplierIdWithoutStatus(personnelReqDTO);
 					}
 					
 					if(orgProfile.getMainProfileGroups() != null){
@@ -1371,6 +1382,12 @@ public class OrganisationBackingBean extends
 					}
 				}
 				
+				for(SmPersonnel smPersonnel : this.getManagedBean().getSmPersonnels()){
+					if(smPersonnel.isBrandNew()){
+						getManagedBean().getNewAuditSmPersonnels().add(setManualSmPersonnel(smPersonnel));
+					}
+				}
+				
 				getManagedBean().setAuditContactPerson(auditContactPerson);
 				
 				getManagedBean().setAuditOldPMOrgProfile(offResDTO.getPmOrgProfile() == null ? 
@@ -1386,7 +1403,7 @@ public class OrganisationBackingBean extends
 				getManagedBean().setAuditProfileGroup(auditProfileGroup.size() == 0 ? 
 						new ArrayList<PmProfileGroup>() : auditProfileGroup);
 			}
-			/************ AUDIT 35509 - shaqimi start*************/
+			/************ AUDIT 35509*************/
 			OrgProfileResDTO resDTO = orgProfileSO.saveOrgProfile(reqDTO);
 			/*
 			 * reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -1419,7 +1436,7 @@ public class OrganisationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								message));
-				/************ AUDIT 35509*************/
+				/************ AUDIT 35509 - shaqimi start*************/
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_ORGANIZATION_PROFILE)) {
 					getManagedBean().setNewProfileId(resDTO.getPmOrgProfile().getOrgProfileId());
 					auTemplate.auditSaveData(getManagedBean(), AuditConst.PM_AUD_ORG_PROFILE);
@@ -1832,10 +1849,11 @@ public class OrganisationBackingBean extends
 		SmPersonnel manualsmPersonnel = new SmPersonnel();
 		
 		manualsmPersonnel.setBrandNew(smPersonnel.isBrandNew());
+		manualsmPersonnel.setPersonnelId(smPersonnel.getPersonnelId());
 		manualsmPersonnel.setRecordStatusFlg(smPersonnel.getRecordStatusFlg());
-
-		if (smPersonnel.getSmAppl() != null) {
-			manualsmPersonnel.setSmAppl(smPersonnel.getSmAppl());
+		
+		if(smPersonnel.isBrandNew()){
+			manualsmPersonnel.setPmUser(smPersonnel.getPmUser());
 		}
 		
 		return manualsmPersonnel;
@@ -2559,9 +2577,6 @@ public class OrganisationBackingBean extends
 							personnel
 									.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							addedPersonnelList.add(personnel);
-							/**********************************AUDIT 35509 - shaqimi start******************************************/
-							getManagedBean().getNewAuditSmPersonnels().add(setManualSmPersonnel(personnel));
-							/**********************************AUDIT 35509 - shaqimi end  ******************************************/
 							found = true;
 						}
 					}
@@ -2576,9 +2591,6 @@ public class OrganisationBackingBean extends
 					}
 
 					addedPersonnelList.add(newSmPersonnel);
-					/**********************************AUDIT 35509 - shaqimi start******************************************/
-					getManagedBean().getAuditSmPersonnels().add(setManualSmPersonnel(newSmPersonnel));
-					/**********************************AUDIT 35509 - shaqimi end  ******************************************/
 				}
 			}
 		}
