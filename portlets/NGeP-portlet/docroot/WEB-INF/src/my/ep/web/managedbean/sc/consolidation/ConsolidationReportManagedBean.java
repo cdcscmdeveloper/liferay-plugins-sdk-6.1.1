@@ -652,7 +652,6 @@ public class ConsolidationReportManagedBean extends BaseManagedBean {
 	public boolean isAllSupplierDisagreeEPV() {
 		return allSupplierDisagreeEPV;
 	}
-
 	public void setAllSupplierDisagreeEPV(boolean allSupplierDisagreeEPV) {
 		this.allSupplierDisagreeEPV = allSupplierDisagreeEPV;
 	}
