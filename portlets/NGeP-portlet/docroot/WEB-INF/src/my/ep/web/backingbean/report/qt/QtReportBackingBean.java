@@ -46,6 +46,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.report.ReportBaseBackingBean;
@@ -53,6 +54,7 @@ import my.ep.web.bean.report.ScReportFieldsSearchBean;
 import my.ep.web.constant.report.QtReportConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.qt.QtReportManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -789,4 +791,213 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		}
 		return approverNayakTarafList;
 	}
+
+	//#21692 - End
+	protected void resetSearchBB() {
+		this.getManagedBean().setQuotationNumber(null);
+		this.getManagedBean().setQuotationId(null);
+		ScReportFieldsSearchBean reportFileSearchBean = this.getManagedBean().getScReportSearchBean();
+		String reportCode = this.getManagedBean().getReportCode();
+		if ((QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode) 
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode)) && reportFileSearchBean != null) {
+			this.getManagedBean().setQuotationTitle(null);
+			reportFileSearchBean.setScPtj(null);
+			reportFileSearchBean.setScPtjName(null);
+			reportFileSearchBean.setScStatus(null);//reset status
+			if (!isDeskOfficer()) {
+				reportFileSearchBean.setScDeskOfficer(null);
+				reportFileSearchBean.setPtjProfile(null);
+				reportFileSearchBean.setDoSelectItem(null);
+			}
+			reportFileSearchBean = getDefaultValuesFromAndToDate(reportFileSearchBean);
+			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
+		}
+	}
+	//#21692 - Start
+	/**
+	 * Retrieve the QT Agency by Quotation/Tender Number
+	 * 
+	 * @param scQt
+	 */
+	public void retrieveAgencyByQuotationNumber(ScQt scQt) {
+		String ptjName = "";
+		String ptjCode = "";
+		boolean deskOfficerRoles = retriveUserRoles();
+		String reportCode = this.getManagedBean().getReportCode();
+		if (deskOfficerRoles && (QtReportConst.SC_PROP_VALID_PERIOD_EXT_RPT_VAL.equals(reportCode)
+				|| QtReportConst.SC_PROP_VALID_PERIOD_EXT_LIST_RPT_VAL.equals(reportCode))) {
+			if (scQt != null && scQt.getQtId() != null) {
+				Date date = retriveDatesforOrgProfile(scQt.getPublishDate(), scQt.getCreatedDate());
+
+				log.info("date" + date);
+				ptjCode = scQt.getOrgProfileId().toString();
+				ptjName = retrievePTJByOrgProfileId(scQt.getOrgProfileId(), date);
+			}
+			this.getManagedBean().getScReportSearchBean().setScPtj(ptjCode);
+			this.getManagedBean().getScReportSearchBean().setScPtjName(ptjName);
+		}
+	}
+	//#21692 - End
+	//#21692 - Start
+	/**
+	 * Retrieve List of QT Desk Officer By Quotation/Tender Agency
+	 * 
+	 * @return
+	 */
+	public List<SelectItem> retrieveDescOfficerByAgency() {
+		List<SelectItem> scDescOfficerList = new ArrayList<>();
+		if (isDeskOfficer()) {
+			SelectItem selectItem = new SelectItem();
+			selectItem.setLabel(new FacesScopes().getUserSessionBean().getUserName());
+			selectItem.setValue(getUserIdSessionFromLoginId());
+			getManagedBean().getScReportSearchBean().setDoSelectItem(selectItem);
+			scDescOfficerList.add(selectItem);
+		} else {
+			Long orgProfileId = getManagedBean().getScReportSearchBean().getPtjProfile() != null ?
+					getManagedBean().getScReportSearchBean().getPtjProfile().getOrgProfileId() : null;
+			
+			List<Object[]> reqLst = getPMReportSO().retrieveDeskOfficer(
+					new FacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+			if (CollectionUtils.isNotEmpty(reqLst)) {
+				for (Object[] object : reqLst) {
+					SelectItem selectItem = new SelectItem();
+					selectItem.setLabel(object[0].toString());
+					selectItem.setValue(object[1]);
+					scDescOfficerList.add(selectItem);
+				}
+			}
+		}
+		return scDescOfficerList;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private Date retriveDatesforOrgProfile(Date publishDate, Date createdDate) {
+		if (publishDate == null) {
+			log.info("===========createdDate=====" + createdDate);
+			return createdDate;
+		}
+		log.info("===========publishDate=====" + publishDate);
+		return publishDate;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private ScQt findScQtByQuotationNumber() {
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		if (StringUtils.isNotEmpty(this.getManagedBean().getQuotationNumber())) {
+			tenderReqDTO.setQtTndrNo(this.getManagedBean().getQuotationNumber().toUpperCase());
+
+			QuationTenderResDTO resDTO = getQTDetailSO().retriveQtByQtNumber(tenderReqDTO);
+			return resDTO.getQtDetail();
+		}
+		return null;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private IQTDetailSO getQTDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	private IPMReportSO getPMReportSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/**
+	 * @return
+	 */
+	public boolean isDeskOfficer() {
+		FacesScopes facesScopes = new FacesScopes();
+		boolean procurementBoardSecUser = facesScopes.hasRoleUser(RoleCode.PPB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.PBA_SECRETARY.value())
+				|| facesScopes.hasRoleUser(RoleCode.PBB_SECRETARY.value()) || facesScopes.hasRoleUser(RoleCode.FPB_SECRETARY.value());
+		return facesScopes.hasRoleUser(RoleCode.DESK_OFFICER.value()) && 
+				!(procurementBoardSecUser);
+	}
+	//#21692 - End
+	
+	//#21692 - Start
+	/**
+	 * Generate approval status list.
+	 * 
+	 * @param language
+	 *            the language
+	 * @return the list
+	 */
+	public List<SelectItem> generateApprovalStatusList() {
+		List<SelectItem> statusList = new ArrayList<SelectItem>();
+		if ((strLanguage != null) && (strLanguage.equalsIgnoreCase("en"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ENG_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ENG_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+			//add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ENG_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//add for revise - End
+
+		} else if ((strLanguage != null)
+				&& (strLanguage.equalsIgnoreCase("ms"))) {
+
+			SelectItem selectItem = new SelectItem();
+			selectItem
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_MY_CODE);
+			selectItem.setValue(ParameterConst.EPV_APPROVAL_STATUS_APPROVED_ID);
+			statusList.add(selectItem);
+			SelectItem selectItem1 = new SelectItem();
+			selectItem1
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REJECT_MY_CODE);
+			selectItem1.setValue(ParameterConst.EPV_APPROVAL_STATUS_REJECT_ID);
+			statusList.add(selectItem1);
+			//add for revise - Start
+			SelectItem selectItem2 = new SelectItem();
+			selectItem2
+					.setLabel(ParameterConst.EPV_APPROVAL_STATUS_REVISE_MY_CODE);
+			selectItem2.setValue(ParameterConst.EPV_APPROVAL_STATUS_REVISE_ID);
+			statusList.add(selectItem2);
+			//add for revise - End
+
+		}
+		return statusList;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/*
+	 * set to be a year before today
+	 */
+	public Date handleMinDateForEPV() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1); // to get previous year
+		Date earlyDate = cal.getTime();
+		earlyDate = DateUtils.addDays(earlyDate, 1); // to get a day after
+		
+		return earlyDate;
+	}
+	//#21692 - End
+
+	//#21692 - Start
+	/*
+	 * set to be today
+	 */
+	public Date handleMaxDateForEPV() {
+		
+		return new Date();
+	}
+	//#21692 - End
 }

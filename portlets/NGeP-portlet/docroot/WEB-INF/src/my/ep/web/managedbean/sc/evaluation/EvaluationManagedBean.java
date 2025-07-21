@@ -625,6 +625,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String mainDocumentTitle;
 	private boolean fecIndexPreRender; // #35286
 	// #10542 - end
+	private boolean allSupplierRejectEpv;//#21692
 	
 	//#6906 start
 	private boolean noProposalSubmitted;
@@ -4378,4 +4379,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationContext(Map<String, Object> evaluationContext) {
 		this.evaluationContext = evaluationContext;
 	}
+
+	//#21692 - Start
+	public boolean isAllSupplierRejectEpv() {
+		return allSupplierRejectEpv;
+	}
+
+	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
+		this.allSupplierRejectEpv = allSupplierRejectEpv;
+	}
+	//#21692 - End
 }
