@@ -12111,7 +12111,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 					this.getManagedBean().setQt(qt);
 					this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
 
-					if(null!=this.getManagedBean().getCtContract()){
+					if (null != this.getManagedBean().getCtContract()) {
 						this.getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 					}
 					if (qt.getEstimatedAmount() != null && qt.getEstimatedAmount().intValue() > 0 && SourcingConstants.FINANCIAL_DOCTYPE.equalsIgnoreCase(specType)) {

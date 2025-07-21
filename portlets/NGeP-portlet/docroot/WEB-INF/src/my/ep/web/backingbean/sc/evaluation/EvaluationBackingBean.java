@@ -191,8 +191,12 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "evaluationBackingBean")
 @RequestScoped
-public class EvaluationBackingBean extends
-		SourcingBaseBackingBean<EvaluationManagedBean> {
+public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationManagedBean> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The skip. */
 	private boolean skip;
