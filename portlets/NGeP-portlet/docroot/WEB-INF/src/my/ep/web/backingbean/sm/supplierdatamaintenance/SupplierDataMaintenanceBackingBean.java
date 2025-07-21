@@ -298,6 +298,18 @@ public class SupplierDataMaintenanceBackingBean extends
 				|| (getManagedBean().getSmAppl().getPmStatus() != null && (statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_REPORT_AFTER_APPROVED)
 				|| statusId.equals(SupplierManagementConst.PM_STATUS_PENDING_SITE_VISIT_AFTER_APPROVED)))) {//29943: Disciplinary Action - 26238
 			List<Object[]> applList = SmApplicationUtil.getActiveApplList(getManagedBean().getSmSupplier());		
+			
+			//38697 - START
+			if (applList != null) {
+				for (Object[] appl : applList) {
+					if(appl[3] != null){
+						appl[2] = appl[3];
+						break;
+					}
+				}
+			}
+			//38697 - END
+			
 			getManagedBean().setActiveApplList(applList);
 		}
 		//27437 : Disciplinary Action - start
@@ -604,7 +616,10 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setOverlapCategoryRemarkDocType(ParameterConst.SM_APPLN_RMRK_OVERLAOP_CATEGORY_APPROVER);
 			reqDTO.setRemarkId(getManagedBean().getRemarkId());
 			reqDTO.setRemarkOverlappedId(getManagedBean().getRemarkOverlappedId());	
-			
+			// #38592 - START
+			reqDTO.setEditDisciplinaryAction(getManagedBean()
+					.isEditDisciplinaryAction());
+			// #38592 - END
 			//#26238
 			if (getManagedBean().isEditDisciplinaryAction()) {
 				listSmTrackingDiary.add(setDisciplinaryAction(reqDTO, activeAppl)); 
@@ -1589,7 +1604,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			getManagedBean().setSelectedApprovedCategories(new ArrayList<SmSupplierCategory>());
 			for(SmSupplierCategory cat: getManagedBean().getApprovedCategoryList()){
 				cat.setSelected(false);
-				cat.setSelectable(true);
+				cat.setSelectable(!cat.isSuspendCategory());	//#38391
 			}
 			//28494
 			getManagedBean().setSelectedOwnerAndDirectorList(new ArrayList<SmPersonnel>());
@@ -2867,15 +2882,29 @@ public class SupplierDataMaintenanceBackingBean extends
 	//13320-end
 	
 	
-	//32618 - Start
+	//32618 - Start, 38391
+	private void unSelectSuspendCategories(){
+		List<SmSupplierCategory> selectList = new ArrayList<>();
+		for (SmSupplierCategory cat : getManagedBean().getSelectedApprovedCategories()){
+			cat.setSelectable(!cat.isSuspendCategory());
+			if (!cat.isSuspendCategory()){
+				selectList.add(cat);
+			}
+		}
+		getManagedBean().setSelectedApprovedCategories(selectList);
+	}
 	//#26238
 	/**
 	 * Removed selected cancel bumi categories from the list.
 	 *  Mandatory auto-tick 100% bumi, disable non-bumi, enable 51% bumi for selection
 	 */
 	public void unSelectCancelBumiCategories() {
+		if (EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
+			return;
+		}
+		unSelectSuspendCategories();
 		if (!getManagedBean().getSmSupplier().isBumi() || !getManagedBean().isBumiputeraStatusCancel()
-				|| getManagedBean().getSelectedPendingApprovedCategories() == null){
+				|| !getManagedBean().isEditDisciplinaryActionCheckBox()){
 			return;
 		}
 		List<SmSupplierCategory> selectList = new ArrayList<>();
