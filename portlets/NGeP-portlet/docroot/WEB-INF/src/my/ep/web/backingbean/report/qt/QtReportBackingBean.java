@@ -792,7 +792,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		return approverNayakTarafList;
 	}
 
-	//#21692 - End
+	//#21692 - Start
 	protected void resetSearchBB() {
 		this.getManagedBean().setQuotationNumber(null);
 		this.getManagedBean().setQuotationId(null);
@@ -813,6 +813,8 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 			this.getManagedBean().setScReportSearchBean(reportFileSearchBean);
 		}
 	}
+	//#21692 - End
+	
 	//#21692 - Start
 	/**
 	 * Retrieve the QT Agency by Quotation/Tender Number
@@ -838,6 +840,7 @@ public abstract class QtReportBackingBean<T extends QtReportManagedBean>
 		}
 	}
 	//#21692 - End
+	
 	//#21692 - Start
 	/**
 	 * Retrieve List of QT Desk Officer By Quotation/Tender Agency

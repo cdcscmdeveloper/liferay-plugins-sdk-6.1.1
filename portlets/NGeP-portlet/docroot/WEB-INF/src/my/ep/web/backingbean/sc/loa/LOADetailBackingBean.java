@@ -4469,21 +4469,21 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 		// #11134 -End		
-		//#21692 add supplier remark - start
+		//#21692 - start
 		if(BpmOutcomeConst.BPM_EPV_CANCEL.equals(outcome)
 				&& isSupplierStatusRejectedEPV(scLoa.getScLoiLoa().getSmSupplier().getSupplierId())) {
 
 			// check if remark is empty
 			List<ScLoaRemark> scLoaRemarks = scLoa.getScLoaRemarks();
 			if (CollectionUtils.isNotEmpty(scLoaRemarks)) {
-				addSupplierRemark(scLoaRemarks);//#21692 sonarlint
+				addSupplierRemark(scLoaRemarks);
 			} else {
 				for (ScLoaRemark each : scLoaRemarks) {
 					each.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
 				}
 			}
 		}
-		//#21692 add supplier remark - end
+		//#21692 - end
 
 		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || 
 				QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
@@ -12064,7 +12064,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 	}
 	//#21692 - End
 	
-	//#21692 sonarlint - Start
+	//#21692 - Start
 	private void addSupplierRemark(List<ScLoaRemark> scLoaRemarks) {
 		for (ScLoaRemark each : scLoaRemarks) {
 			if (StringUtils.isEmpty(each.getRemark())) {
@@ -12073,7 +12073,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			}
 		}
 	}
-	//#21692 sonarlint - End
+	//#21692 - End
 	
 	//#21692 - Start
 	private void getSupplierRejectProposalValidityExtensionNotification(ScLoa scLoa) {

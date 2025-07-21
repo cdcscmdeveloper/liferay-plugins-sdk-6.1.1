@@ -343,14 +343,14 @@ public class QtLOAManagedBean extends BaseManagedBean {
 		this.backToPreviousPage = backToPreviousPage;
 	}
 
-	//#36339, #21692 - Start
+	//#21692 - Start
 	public boolean isAbleToCancelLOA() {
 		return ableToCancelLOA;
 	}
 	public void setAbleToCancelLOA(boolean ableToCancelLOA) {
 		this.ableToCancelLOA = ableToCancelLOA;
 	}
-	//#36339, #21692 - End
+	//#21692 - End
 
 	//#21692 - Start
 	public boolean isAbleToCancelLOAWithoutBPM() {

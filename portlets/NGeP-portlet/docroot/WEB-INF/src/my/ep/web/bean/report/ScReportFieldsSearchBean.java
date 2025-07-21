@@ -264,6 +264,7 @@ public class ScReportFieldsSearchBean implements Serializable {
 	public void setScPtj(String scPtj) {
 		this.scPtj = scPtj;
 	}
+	
 	//#21692 - Start
 	public String getScPtjName() {
 		return scPtjName;

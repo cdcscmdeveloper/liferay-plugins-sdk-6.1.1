@@ -1446,7 +1446,7 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 						//#21692 - Start
 						if (null != proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod()
 								&& (proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED
-								|| proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {//#21692 include not qualified
+								|| proposalCheckList.getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {
 							proposalCheckList.setRemark(SourcingConstants.SUPPLIER_COMPLIANCE_REMARK);
 						}
 						//#21692 - End
@@ -1912,11 +1912,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setCompliance(null);
 			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
 			
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			//#21692 - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
 				evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO);
 			}
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			//#21692 - End
 
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
@@ -1983,11 +1983,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
 			reqDTO.setComplaianceProposalChecklist(SourcingConstants.COMPLIANCE_PROPOSAL_CHECKLIST);
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			//#21692 - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
 				evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO);
 			}
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			//#21692 - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 
 			this.getManagedBean().setCompliancefinancialCheckList(
@@ -2240,11 +2240,11 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setScQt(this.getManagedBean().getScQt());//#29187 Added Vinod
 			evaluationSO.preInitializeChecklist(reqDTO); //34496 4serangkai
 			
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			//#21692 - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
 				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
 			}
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			//#21692 - End
 			
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
@@ -2501,12 +2501,12 @@ public class EvaluationBackingBean extends SourcingBaseBackingBean<EvaluationMan
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			reqDTO.setCompliance(null);
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - Start
+			//#21692 - Start
 			if (!new ApprovalBackingBean().isEPVWorkflowStatusNull(this.getManagedBean().getScQt().getQtId())) {
 				evaluationSO.checkChecklistForEPV(reqDTO);
 				this.getManagedBean().setAllSupplierRejectEpv(evaluationSO.saveChecklistEvalStatusIdComplete(reqDTO).isCheckQualifiedSuppliers());
 			}
-			//#21692 Compliance complete if all supplier Reject Extend Proposal Validity - End
+			//#21692 - End
 			resDTO = evaluationSO.retrieveCheckListsByCategory(reqDTO);
 			
 			// #25138 - one item only - start
@@ -10048,7 +10048,7 @@ private void retriveCommitteeRemarksList(){
 				if (null == contract.getUserScore() &&
 						null != this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod()
 						&& (this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED
-								|| this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {//#21692 include not qualified
+								|| this.getManagedBean().getQtProposalChecklist().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED)) {
 					contract.setUserScore(new BigDecimal(0));
 				}
 				//#21692 - end
@@ -13805,7 +13805,7 @@ private void retriveCommitteeRemarksList(){
 
 		} else {
 			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
-					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 //#21692 note-418 issue 6
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 //#21692
 				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(
@@ -13829,7 +13829,7 @@ private void retriveCommitteeRemarksList(){
 
 		} else {
 			if (!this.getManagedBean().isReadOnly() && !this.getManagedBean().isNoProposalSubmitted()
-					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906//#21692
+					&& !this.getManagedBean().isAllSupplierRejectEpv()) {//6906 //#21692
 				this.getManagedBean().setCheckFinancialQualifiedOpenPopup(true);
 				/*
 				 * RequestContext.getCurrentInstance().execute(

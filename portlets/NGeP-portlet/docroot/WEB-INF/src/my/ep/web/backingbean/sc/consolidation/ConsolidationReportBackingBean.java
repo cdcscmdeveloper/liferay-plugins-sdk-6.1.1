@@ -2599,7 +2599,7 @@ public class ConsolidationReportBackingBean extends
 		List<String> instructionList = new ArrayList<>();
 		int condition = SourcingConstants.DEFAULT_INSTRUCTIONS_MESSAGE_NUMBERING;//Initial instruction number, after 3 default (as-is) instructions
 		
-		//#28777#29729 condition
+		//#28777#29729 condition uncomment if released in UAT/PRD
 //		if (checkInstructionSupplierBranchDeleted(qtId)) {
 //			condition = condition + 1;
 //		}

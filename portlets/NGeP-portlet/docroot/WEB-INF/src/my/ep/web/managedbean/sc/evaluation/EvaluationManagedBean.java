@@ -4384,7 +4384,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public boolean isAllSupplierRejectEpv() {
 		return allSupplierRejectEpv;
 	}
-
 	public void setAllSupplierRejectEpv(boolean allSupplierRejectEpv) {
 		this.allSupplierRejectEpv = allSupplierRejectEpv;
 	}

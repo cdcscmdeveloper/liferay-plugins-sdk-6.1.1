@@ -1183,13 +1183,12 @@ public class QTDetailBackingBean extends
 			checkForPublishperiodAndValidityDays(selectedScQt,fc);
 			Long currentStatus = selectedScQt.getQtStatus().getStatusId();
 			this.getManagedBean().setCurrentStatusId(currentStatus);
-			//#21692 05/02/2024 - Start
+			//#21692 - Start
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
-			if (checkProposalValidityExtensionStatus(selectedScQt.getQtId())) {//#21692 note-#418 issue 2/note #469/note-#612 (only using status as checking)
-				//Reopen #452 remove null checking
+			if (checkProposalValidityExtensionStatus(selectedScQt.getQtId())) {
 				selectedScQt.setResponsePeriod(result);
 			}
-			//#21692 05/02/2024 - End
+			//#21692 - End
 			// #25692 -start-
 			if (!isApprovalScreen() || this.getManagedBean().getQt() == null) {
 				this.getManagedBean().setQt(selectedScQt);
@@ -1970,12 +1969,12 @@ public class QTDetailBackingBean extends
 		}	
 		// 9019 end
 		
-		//#21692 - start
+		//#21692 - Start
 		if (null == scQt.getResponsePeriod()) {
 			int result = retrieveResponsePeriod(ParameterConst.RULE_VALUE);
 			scQt.setResponsePeriod(result);
 		} 
-		//#21692 - end
+		//#21692 - End
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setQtCommittes(scQt.getScQtCommittees());
@@ -4020,11 +4019,11 @@ public class QTDetailBackingBean extends
 									|| approvalSettings.isEmpty()) {
 								approvalSettings = new ArrayList<ScQtApproverSettings>();
 								ScQtApproverSettings approverSettings = new ScQtApproverSettings();
-								//#21692 Sync Approval PB with Committee Appointment PB - Start
+								//#21692 - Start
 								approverSettings.setPmUser(scQt.getFinalizationSecratery());
 								approverSettings.setScQtApproval(qtApproval);
 								approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
-								//#21692 Sync Approval PB with Committee Appointment PB - End
+								//#21692 - End
 								approvalSettings.add(approverSettings);
 								qtApproval
 										.setApproverSettings(approvalSettings);
@@ -4032,12 +4031,12 @@ public class QTDetailBackingBean extends
 								for (ScQtApproverSettings approverSettings : approvalSettings) {
 									approverSettings.setScQtApproval(qtApproval);
 									
-									//21692 Sync Approval PB with Committee Appointment PB except for Central Contract note 571 - Start
+									//21692 - Start
 									if (!scQt.getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 										approverSettings.setPmUser(scQt.getFinalizationSecratery());
 										approverSettings.setCommitteeType(scQt.getFinalizationCommitte());
 									}
-									//21692 Sync Approval PB with Committee Appointment PB except for Central Contract note 571 - End
+									//21692 - End
 								}
 							}
 							tabBeans.add(new TabBean(titleName,
@@ -9329,27 +9328,6 @@ public class QTDetailBackingBean extends
 				) return true;
 			return false;
 	}
-	
-	// #31919 & 21692 - Start
-//	public Timestamp getExtensionResponseDueDate(Long qtId) {
-//		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
-//				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
-//		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
-//		reqDTO.setDocId(qtId);
-//		reqDTO.setDocType(ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD);
-//
-//		ScWorkFlowStatus status = workFlowStatusSO.retrieveStatusByTypeAndId(reqDTO).getWorkFlowStatus();
-//		if(status!=null){
-//			if(status.isCurrent() 
-//					&& (status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_APPROVED)
-//					|| status.getPmStatus().getStatusId().equals(QTStatusConst.EPV_PENDING_SUPPLIER_ACCEPTANCE))){
-//				Timestamp extensionRespDate = getQTDetailSO().getExtensionResponseDueDate(qtId);
-//				return extensionRespDate;
-//			}
-//		}
-//		return null;
-//	}
-	// #31919 & 21692 - End
 
 	public String getProcurementMode(ScQt qt) {
 		String method = null;
@@ -12444,7 +12422,7 @@ public class QTDetailBackingBean extends
 	 * @param resPeriod
 	 * @return
 	 */
-	public Timestamp getExtensionResponseDueDate(Long qtId, int resPeriod) {//#21692
+	public Timestamp getExtensionResponseDueDate(Long qtId, int resPeriod) {
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
 		ScWorkFlowStatusReqDTO reqDTO = new ScWorkFlowStatusReqDTO();
@@ -12575,7 +12553,7 @@ public class QTDetailBackingBean extends
 	}
 	//#21692 - end
 	
-	// #21692 add Approval detail at EPV QT Maint - Start
+	//#21692 - Start
 	/**
 	 * 
 	 * get new page for EPV approval details (PTJ details, EPV Type of Request,
@@ -12586,7 +12564,7 @@ public class QTDetailBackingBean extends
 	 */
 	public String getEpvApprovalDtl(ScQtApprovalRequest approvalReq) {
 		this.getManagedBean().setScQtApprovalRequest(approvalReq);
-		//#21692 add attachment - Start
+		//add attachment - Start
 		if (CollectionUtils.isNotEmpty(approvalReq.getEpvApprovalReqAttachment())) {
 			for (ScQtEpvApprovalReqAttachment att : approvalReq.getEpvApprovalReqAttachment()) {
 				if (att.getSubDocType().equalsIgnoreCase(ParameterConst.EPV_TYPE_REQUEST_1)) {
@@ -12598,12 +12576,12 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-		//#21692 add attachment - End
+		//add attachment - End
 		return QTConstants.MAINT_EPV_APPROVAL_DETAIL;
 	}
-	// #21692 add Approval detail at EPV QT Maint - End
+	//#21692 - End
 
-	// #21692 add Approval detail at EPV QT Maint - Start
+	//#21692 - Start
 	/**
 	 * 
 	 * check approval type to be EPV
@@ -12618,9 +12596,9 @@ public class QTDetailBackingBean extends
 		}
 		return false;
 	}
-	// #21692 add Approval detail at EPV QT Maint - End
+	//#21692 - End
 
-	// #21692 add Approval detail at EPV QT Maint - Start
+	//#21692 - Start
 	/**
 	 * 
 	 * Back action for new EPV approval details page
@@ -12631,9 +12609,9 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setScQtApprovalRequest(null);
 		return QTConstants.MAINTANANCE_PAGE_FULL;
 	}
-	// #21692 add Approval detail at EPV QT Maint - End
+	//#21692 - End
 
-	// #21692 add Approval detail at EPV QT Maint - Start
+	//#21692 - Start
 	/**
 	 * Check if Ministry of Finance decision date render
 	 * 
@@ -12657,9 +12635,9 @@ public class QTDetailBackingBean extends
 
 		return enableApprovalDateMOF;
 	}
-	// #21692 add Approval detail at EPV QT Maint - End
+	//#21692 - End
 
-	// #21692 add Approval detail at EPV QT Maint - Start
+	//#21692 - Start
 	/**
 	 * Specific for History usage only since it always shows due date
 	 * 
@@ -12678,7 +12656,7 @@ public class QTDetailBackingBean extends
 		}
 		return ts;
 	}
-	// #21692 add Approval detail at EPV QT Maint - End
+	//#21692 - End
 	
 	//#21692 - Start
 	private void enableChangesToPBSecretary() {

@@ -777,7 +777,7 @@ public class ApprovalBackingBean extends
 		String page = "/xhtml/sc/quatationtender/Approver/approverMain.xhtml";
 		
 		if (SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE.equalsIgnoreCase(taskName)) {
-			// #21692 - Start
+			//#21692 - Start
 			if (this.getManagedBean().getQt().getResponsePeriod() != null) {
 				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -3269,7 +3269,7 @@ return scQt;
 		ScQt scQt = this.getManagedBean().getQt();
 
 		reqDTO.setQtdetail(scQt);
-		//#21692 add data for report/history usage - Start
+		//add data for report/history usage - Start
 		List<ScQtApprovalRequest> scQtApprovalRequests = new ArrayList<>();
 		for (ScQtApprovalRequest approvalRequest : this.getManagedBean().getScQtApprovalRequestList()) {
 			
@@ -3277,7 +3277,7 @@ return scQt;
 			approvalRequest.setProposalValidityEndDateNew(getNewValidityDueDate(this.getManagedBean().getQt(), 
 					Integer.parseInt(approvalRequest.getChangedValue())));
 			approvalRequest.setMofDate(this.getManagedBean().getQt().getMofDate());
-			//#21692 - ensure that is date of FC chairperson less than QT validity, date of MOF = null
+			//ensure that is date of FC chairperson less than QT validity, date of MOF = null
 			if (!scQt.isApprovalPBM()) {
 				approvalRequest.setMofDate(null);
 			}
@@ -3292,18 +3292,16 @@ return scQt;
 				approvalRequest.setDecisionCertPBM(null);
 			}
 
-			//#21692 #note-504 - Start
 			//To remove attachments R1, R2, R3
 			approvalRequest = removeAttachments(approvalRequest);
 			//To add attachments from method epvHandleFileUpload, IF not empty
 			if (CollectionUtils.isNotEmpty(this.getManagedBean().getAllEPVAttachments())) {
 				approvalRequest.setEpvApprovalReqAttachment(this.getManagedBean().getAllEPVAttachments());
 			}
-			//#21692 #note-504 - End
 
 			scQtApprovalRequests.add(approvalRequest);
 		}
-		//#21692 add data for report/history usage - End
+		//add data for report/history usage - End
 		
 		reqDTO.setApprovalRequests(this.getManagedBean().getScQtApprovalRequestList());
 		
@@ -3356,15 +3354,19 @@ return scQt;
 	}
 	//#21692 - End
 
+	//#21692 - Start
 	private void mandatoryByMessage(String message) {
 		throw new EpException(MessageConst.ERROR_770400, new String[] {ResourceBundleUtils.getMessage(message, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())});//#21692
+						new FacesScopes().getUserLocale())});
 	}
-	
+	//#21692 - End
+
+	//#21692 - Start
 	private void dateMandatoryMessage(String message) {
 		throw new EpException(MessageConst.ERROR_770403, new String[] {ResourceBundleUtils.getMessage(message, ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale())});//#21692
 	}
+	//#21692 - End
 
 	//#21692 - Start
 	/**
@@ -3436,7 +3438,7 @@ return scQt;
 	}
 	//#21692 - End
 	
-	//#21692 sonarlint - Start
+	//#21692 - Start
 	private void procurementBoardSecretaryDecision(ScQtApprovalRequest approvalRequest) {
 
 		Long decisionType = approvalRequest.getDecisionType().getParameterId();
@@ -3449,7 +3451,7 @@ return scQt;
 		} else if (QTStatusConst.PCB_RQ1_REJECTED.longValue() == decisionType.longValue()
 				|| QTStatusConst.PCB_RQ3_REJECTED.longValue() == decisionType.longValue()) { //1835L || 1855L
 
-			reviseRemarkMandatory();//#21692 remark is mandatory for reject.
+			reviseRemarkMandatory();//remark is mandatory for reject.
 			approvalBpmTask(BpmOutcomeConst.BPM_REJECT);
 			notifyUsers(approvalRequest);
 			//previously line of code for Tracking Diary, removed to avoid duplication
@@ -3461,7 +3463,7 @@ return scQt;
 			notifyUsers(approvalRequest);
 		}
 	}
-	//#21692 sonarlint - End
+	//#21692 - End
 	
 	//#21692 - Start
 	/**
@@ -3503,6 +3505,7 @@ return scQt;
 		
 	}
 	//#21692 - End
+	
 	//#21692 - Start
 	/**
 	 * Get latest status of Extension of Proposal Validity (EPV) return true if Approved
@@ -3569,22 +3572,16 @@ return scQt;
 			if (requestdetails.getDecisionType().getParameterId() != null) {
 				parameterReqDTO.setParameterId(requestdetails.getDecisionType().getParameterId());
 				requestdetails.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
-				//#21692 note 524 - Start
 				this.getManagedBean().setEpvAttachmentValue(!getManagedBean().getQt().isApprovalPBM() ?
 						ParameterConst.EPV_TYPE_REQUEST_1 : ParameterConst.EPV_TYPE_REQUEST_3);
 				deleteEpvUploadFile();
-				//#21692 note 524 - End
 			}
-			//#21692 note-418 issue 3 - Start
 			else {
 				requestdetails.setDecisionType(new PmParameter());
-				//#21692 note 524 - Start
 				this.getManagedBean().setEpvAttachmentValue(!getManagedBean().getQt().isApprovalPBM() ?
 						ParameterConst.EPV_TYPE_REQUEST_1 : ParameterConst.EPV_TYPE_REQUEST_3);
 				deleteEpvUploadFile();
-				//#21692 note 524 - End
 			}
-			//#21692 note-418 issue 3 - End
 		}
 	}
 	//#21692 - End
@@ -3607,10 +3604,8 @@ return scQt;
 						.setDecisionCertPBM((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
 				requestdetails
 						.setDecisionType(new PmParameter());
-				//#21692 note 524 - Start
 				this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_2);
 				deleteEpvUploadFile();
-				//#21692 note 524 - End
 				if (requestdetails.getEpvApprovalReqAttachmentR3() != null) {
 					this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_3);
 					deleteEpvUploadFile();
@@ -3619,31 +3614,27 @@ return scQt;
 			} else {
 				requestdetails
 						.setDecisionCertPBM(new PmParameter());
-				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//#21692 show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
-				//#21692 note 524 - Start
+				this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//show MOF Date if Chairman hasnt decide EPV (after Proposal Validity Ended)
 				this.getManagedBean().setEpvAttachmentValue(ParameterConst.EPV_TYPE_REQUEST_2);
 				deleteEpvUploadFile();
-				//#21692 note 524 - End
 			}
-			//#21692 - start
 			if (requestdetails.getDecisionCertPBM().getParameterCode() != null) {
 				if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_NOTACKNOWLEDGE)) {
 					parameterReqDTO.setParameterId(ParameterConst.TR3_REJECT);
 					requestdetails
 							.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
-					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
+					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
 					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 				} else if (requestdetails.getDecisionCertPBM().getParameterCode().equals(ParameterConst.TR2_REVISE)) {
 					parameterReqDTO.setParameterId(QTStatusConst.PCB_RQ3_REVISED);
 					requestdetails
 							.setDecisionType((parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
-					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//#21692 hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
+					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.TRUE);//hide MOF Date if Chairman Reject EPV (after Proposal Validity Ended)
 					this.getManagedBean().getQt().setMofDate(null);//Null date after hide
 				} else {
-					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//#21692 show MOF Date if Chairman Accept EPV (after Proposal Validity Ended)
+					this.getManagedBean().setChmnFinalizationRejectEPV(Boolean.FALSE);//show MOF Date if Chairman Accept EPV (after Proposal Validity Ended)
 				}
 			}
-			//#21692 - end
 		}
 	}
 	//#21692 - End
@@ -3662,7 +3653,7 @@ return scQt;
 	}
 	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	private void responsePeriodValidations(Integer responsePeriod) {
 		if (null == responsePeriod) {
 			throw new EpException(MessageConst.ERROR_770243, new String[] { ResourceBundleUtils.getMessage(
@@ -3678,9 +3669,9 @@ return scQt;
 			throw new EpException(MessageConst.ERROR_770245, new String[] { toValue });
 		}
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	private String retrieveResponsePeriod(String value) {
 
 		String result = null;
@@ -3702,9 +3693,9 @@ return scQt;
 
 		return result;
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	private void checkAttachedDocument(QuationTenderReqDTO reqDTO) {
 
 		ScQtApprovalRequest approvalRequest = reqDTO.getApprovalRequests().get(0);
@@ -3721,9 +3712,9 @@ return scQt;
 			}
 		}
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	// doing this to enable date validation
 	/**
 	 * validate html first to make sure no error happen
@@ -3732,8 +3723,9 @@ return scQt;
 		String showDialog = "confirmUpdateValidityExtension.show()";
 		RequestContext.getCurrentInstance().execute(showDialog);
 	}
-	// #21692 - End
-	// #21692 - Start
+	//#21692 - End
+	
+	//#21692 - Start
 	/**
 	 * pop up reject screen with yes or no after use click on button submit
 	 */
@@ -3741,8 +3733,9 @@ return scQt;
 		String showDialog = "supplierRejectConfirmation.show()";
 		RequestContext.getCurrentInstance().execute(showDialog);
 	}
-	// #21692 - End
-	// #21692 - Start
+	//#21692 - End
+	
+	//#21692 - Start
 	/**
 	 * Finalization committee message after use click on submit whether reject
 	 * or accept EPV
@@ -3762,9 +3755,9 @@ return scQt;
 
 		return msgCode;
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	private Timestamp getNewValidityDueDate(ScQt scQt, int newValidityPeriod) {
 		IScWorkFlowStatusSO workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IScWorkFlowStatusSO.class);
@@ -3786,9 +3779,9 @@ return scQt;
 		}
 		return null;
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	/**
 	 * check if FC approve EPV
 	 * 
@@ -3799,9 +3792,9 @@ return scQt;
 		return QTStatusConst.PCB_RQ1_APPROVED.longValue() == apprvReq.getDecisionType().getParameterId()
 				|| QTStatusConst.PCB_RQ3_APPROVED.longValue() == apprvReq.getDecisionType().getParameterId();
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	/**
 	 * enable each Type of Request to has attachment
 	 * 
@@ -3857,9 +3850,9 @@ return scQt;
 		}
 		// HashSet to remove duplicate, clear current list, add list to managedBean - End
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	/**
 	 * Needed to handle decisions if empty/null AFTER file upload/delete
 	 * 
@@ -3873,9 +3866,9 @@ return scQt;
 			apprvRequest.setDecisionCertPBM(new PmParameter());
 		}
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	/**
 	 * overload method without Base Entity
 	 * 
@@ -3884,9 +3877,9 @@ return scQt;
 	public void deleteEpvUploadFile(BaseEntity delEntity) {
 		deleteEpvUploadFile();
 	}
-	// #21692 - End
+	//#21692 - End
 
-	// #21692 - Start
+	//#21692 - Start
 	/**
 	 * delete EPV file update either R1, R2 or R3
 	 * 
@@ -3909,7 +3902,7 @@ return scQt;
 		this.getManagedBean().getToBeRemoveEPVAttachments().add(typeOfRequest);
 		handleDecisionNull(apprvRequest);
 	}
-	// #21692 - End
+	//#21692 - End
 
 	//#21692 - Start
 	/**
@@ -3961,6 +3954,7 @@ return scQt;
 		}
 	}
 	//#21692 - End
+	
 	//#21692 - Start
 	private List<ScQtApprovalRequest> proposalValidityWip(String outcome) {
 
@@ -3983,6 +3977,7 @@ return scQt;
 		return scQtApprovalRequests;
 	}
 	//#21692 - End
+	
 	//#21692 - Start
 	private void checkResponsePeriod() {
 		if (this.getManagedBean().getQt().getResponsePeriod() != this.getManagedBean().getScQtApprovalRequestList()
@@ -3993,7 +3988,6 @@ return scQt;
 			}
 		}
 	}
-
 	//#21692 - End
 
 	//#21692 - Start
@@ -4005,7 +3999,6 @@ return scQt;
 			}
 		}
 	}
-
 	//#21692 - End
 
 	//#21692 - Start
@@ -4019,7 +4012,6 @@ return scQt;
 			throw new EpException(MessageConst.ERROR_770405);
 		}
 	}
-
 	//#21692 - End
 
 	//#21692 - Start
@@ -4076,8 +4068,8 @@ return scQt;
 					scQt.getQtNo(), "notifyUsers", getUserIdSessionFromLoginId(), e);
 		}
 	}
-
 	//#21692 - End
+	
 	//#21692 - Start
 	private void reviseRemarkMandatory() {
 		List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
@@ -4091,8 +4083,8 @@ return scQt;
 			}
 		}
 	}
-
 	//#21692 - End
+	
 	//#21692 - Start
 	private void checkNullRemark() {
 		this.getManagedBean().setNullEPVRemark(false);

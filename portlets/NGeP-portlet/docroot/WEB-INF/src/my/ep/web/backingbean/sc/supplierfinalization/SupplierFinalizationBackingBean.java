@@ -10950,9 +10950,9 @@ public class SupplierFinalizationBackingBean extends
 
 		if (disabledSelection) {
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownAll());
-		} else if (proposalValid || meetingDoneBeforeproposalValidityExpired) {// #21692
+		} else if (proposalValid || meetingDoneBeforeproposalValidityExpired) {//#21692
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDown());
-		} else if (!proposalValid && !meetingDoneBeforeproposalValidityExpired) {// #21692
+		} else if (!proposalValid && !meetingDoneBeforeproposalValidityExpired) {//#21692
 			this.getManagedBean().setDecisionDropdown(this.getDecisionDropDownExpiredProposal());
 		}
 

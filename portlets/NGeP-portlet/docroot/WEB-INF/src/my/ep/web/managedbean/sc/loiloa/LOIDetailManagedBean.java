@@ -2358,14 +2358,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 	//#29007 End Vinod
 
-	//#36339, #21692 - Start
+	//#21692 - Start
 	public boolean isAbleToCancelLOI() {
 		return ableToCancelLOI;
 	}
 	public void setAbleToCancelLOI(boolean ableToCancelLOI) {
 		this.ableToCancelLOI = ableToCancelLOI;
 	}
-	//#36339, #21692 - End
+	//#21692 - End
 
 	//#21692 - Start
 	public boolean isAbleToCancelLOIWithoutBPM() {

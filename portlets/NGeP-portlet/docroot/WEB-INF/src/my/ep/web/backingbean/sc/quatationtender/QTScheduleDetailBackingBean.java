@@ -925,7 +925,7 @@ public class QTScheduleDetailBackingBean extends
 	}
 	//#21692 attachment - End
 	
-	//21692 - Start
+	//#21692 - Start
 	public void handleChmnFinalizationDate(boolean validityDaysExpiredQt) {
 		ScQt scQt = this.getManagedBean().getQt();
 		Date chmnFinalizationDate = scQt.getChmnFinalizationDate();
@@ -944,9 +944,9 @@ public class QTScheduleDetailBackingBean extends
 			deleteEpvAttachments();
 		}
 	}
-	//21692 - End
+	//#21692 - End
 
-	//21692 - Start
+	//#21692 - Start
 	private void resetDecisionCertPBM(Boolean enableDateMOF) {
 		List<ScQtApprovalRequest> approvalRequests = getManagedBean().getScQtApprovalRequestList();
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
@@ -962,9 +962,9 @@ public class QTScheduleDetailBackingBean extends
 			}
 		}
 	}
-	//21692 - End
+	//#21692 - End
 
-	//21692 - Start
+	//#21692 - Start
 	public boolean enableApprovalDateMOF(boolean validityDaysExpiredQt) {
 		ScQt scQt = this.getManagedBean().getQt();
 		boolean enableApprovalDateMOF = Boolean.FALSE;
@@ -983,9 +983,9 @@ public class QTScheduleDetailBackingBean extends
 
 		return enableApprovalDateMOF;
 	}
-	//21692 - End
+	//#21692 - End
 
-	//21692 - Start
+	//#21692 - Start
 	public void handleMofDate() {
 		ScQt scQt = this.getManagedBean().getQt();
 		Date mofDate = scQt.getMofDate();
@@ -993,5 +993,5 @@ public class QTScheduleDetailBackingBean extends
 			scQt.setMofDate(DateUtils.setDefaultDateTime(mofDate));
 		}
 	}
-	//21692 - End
+	//#21692 - End
 }

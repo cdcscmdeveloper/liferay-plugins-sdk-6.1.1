@@ -3023,7 +3023,7 @@ public class LOIDetailBackingBean extends
 		//25638 - End
 		//#21692 - Start
 		if (outcome.equals(BpmOutcomeConst.BPM_ENDORSE)|| outcome.equals(BpmOutcomeConst.BPM_SIGNOFF)) {
-			checkSupplierAwardedRejectValidityExtension();//#21692
+			checkSupplierAwardedRejectValidityExtension();
 		}
 		//#21692 - End
 				
@@ -6752,7 +6752,7 @@ public class LOIDetailBackingBean extends
 				supplierStatus
 						&& null != this.getManagedBean().getScLoi().getScWorkFlowStatus()
 						&& statusEnabledCancel.contains(this.getManagedBean().getScLoi().getScWorkFlowStatus()
-								.getPmStatus().getStatusId()));// #36339, #21692
+								.getPmStatus().getStatusId()));
 		// cancel button during Pending LOI Submission only
 		getManagedBean().setAbleToCancelLOIWithoutBPM(
 				supplierStatus
@@ -6965,7 +6965,9 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
-	//#21692 - End//#21692 - Start
+	//#21692 - End
+	
+	//#21692 - Start
 	private void awardedSupplierRejectEPV(List<ScQtRecommend> scQtRecommendList) {
 		boolean endorseOrSignOff = false;
 		if (ArrayUtils.isEmpty(this.getManagedBean().getOutComes())) {

@@ -11661,7 +11661,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSuppResp(ScQtEpvSupplierResponse suppResp) {
 		this.suppResp = suppResp;
 	}
-	//#21692 - Ebd
+	//#21692 - End
 
 	//#21692 - Start
 	/**
@@ -11716,7 +11716,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 	//#21692 - End
 
-	//#21692 - End
+	//#21692 - Start
 	public boolean isUserAbleToChangePBSecretary() {
 		return userAbleToChangePBSecretary;
 	}
@@ -11729,7 +11729,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public String getEpvAttachmentValue() {
 		return epvAttachmentValue;
 	}
-
 	public void setEpvAttachmentValue(String epvAttachmentValue) {
 		this.epvAttachmentValue = epvAttachmentValue;
 	}
