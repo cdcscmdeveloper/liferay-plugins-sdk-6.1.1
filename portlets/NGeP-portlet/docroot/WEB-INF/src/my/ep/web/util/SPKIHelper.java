@@ -47,6 +47,7 @@ public class SPKIHelper {
 		reqDTO.setSoftCertProvider(provider);
 		reqDTO.setDataForSigning(dataForSigning);
 		reqDTO.setPin(pin);
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 		if (challenges != null && !challenges.isEmpty()) {
 			for (Map.Entry<Object, Object> entry : challenges.entrySet()) {
 				Object question = entry.getKey();
@@ -75,9 +76,10 @@ public class SPKIHelper {
 		reqDTO.setEpNo(epNo);
 		reqDTO.setIdentificationNo(identificationNo);
 		reqDTO.setSoftCertProvider(provider);
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 		try {
 			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO().generateSecurityToken(reqDTO);
-			if(!StringUtils.isBlank(resDTO.getErrorMessage())){
+			if (!StringUtils.isBlank(resDTO.getErrorMessage())) {
 				throw new EpException(resDTO.getErrorMessage());
 			}
 			tok = resDTO.getToken();
@@ -96,6 +98,7 @@ public class SPKIHelper {
 		reqDTO.setIdentificationNo(identificationNo);
 		reqDTO.setSelectedQuestion(selectedQuest);
 		reqDTO.setSoftCertProvider(provider);
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 		List<String> retVal = new ArrayList<String>();
 		try {
 			SpkiResDTO resDTO = SmServiceLookup.getSpkiSO().retrieveChallengeQuestions(reqDTO);
