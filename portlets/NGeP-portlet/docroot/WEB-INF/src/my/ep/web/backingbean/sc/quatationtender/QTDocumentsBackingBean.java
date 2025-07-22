@@ -167,13 +167,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	private static final long serialVersionUID = 1L;
 
 	/** The Constant log. */
-	private static final Logger log = EpLogger
-			.getLogger(QTDocumentsBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(QTDocumentsBackingBean.class);
 
 	/** The Constant DOCUMENT_PAGE. */
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml";
-	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE,
-				  SourcingConstants.MALAYSIA_COUNTRY_CODE);
+	private static final Locale myLocale = new Locale(SourcingConstants.MALAY_LANGUAGE_CODE, SourcingConstants.MALAYSIA_COUNTRY_CODE);
 	
 	
 	/**

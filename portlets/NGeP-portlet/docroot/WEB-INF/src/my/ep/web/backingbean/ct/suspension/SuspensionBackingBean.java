@@ -6,7 +6,6 @@ package my.ep.web.backingbean.ct.suspension;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -21,8 +20,8 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
-import my.ep.comparator.ct.CtContractItemComparator; //#36726 || #33287
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;//#28854
+import my.ep.comparator.ct.CtContractItemComparator; //#36726 || #33287
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -376,7 +375,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		supoendBB.getManagedBean().setSkuno(null);
 		supoendBB.getManagedBean().setTypeofgoods(null);
 	
-		ContractBackingBean ccBB = new ContractBackingBean();
+		//ContractBackingBean ccBB = new ContractBackingBean();
 		ctBB.getManagedBean().setSelectedItem(null);
 		ctBB.getManagedBean().setServiceselectedItem(null);
 		

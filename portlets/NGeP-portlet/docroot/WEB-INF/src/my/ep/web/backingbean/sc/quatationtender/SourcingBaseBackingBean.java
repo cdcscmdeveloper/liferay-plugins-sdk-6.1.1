@@ -73,6 +73,7 @@ import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -125,6 +126,8 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.helper.EntityHelper;
@@ -2424,7 +2427,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
 	// 25037 - end
-
+	
 	/**
 	 * Check if QT Status greater than or equals from status.
 	 * 
@@ -5154,7 +5157,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
 							// #25025 - End fixing sonarlint
-							
+
+							/** This code is for LOA with Single Item Details **/
 							if (items.size() == 1) {
 								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
 										|| (answer.getTplSpecQuestion().getParentSpecQuestion() != null && itemId
@@ -5920,8 +5924,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				masters.add(master);
 			}	// Bug #36438@Syazani - 24/10/2024
 		}
-	}	
+	} 
 	// Bug #36438@Syazani - 24/10/2024
+
+	// #26130 -end-
 
 	// #26130 -start-
 	/**
@@ -6477,6 +6483,105 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return isExist;
 	}
 	// 26130 - end
+
+	// 11104-start
+	/***
+	 * 
+	 * check status for sample Radio buttons.
+	 * 
+	 * @param currentStatusId
+	 * @return status
+	 */
+	public boolean isQTSampleStatus(Long currentStatusId) {
+		List<Long> CheckStatus = new ArrayList<Long>();
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_ENDORSEMENT);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF);
+		CheckStatus.add(QTStatusConst.QT_PENDING_CHECKLIST_SCORING_SIGN_OFF_WITH_REPUBLISH);
+		CheckStatus.add(QTStatusConst.SE_PENDING_ENDORSMENT);
+		CheckStatus.add(QTStatusConst.SE_PENDING_SIGNOFF);
+
+		return CheckStatus.contains(currentStatusId);
+	}
+	// 11104-End
+
+	// 11104_newEndorseStart
+	/***
+	 * 
+	 * get TemplatespecQuestion based on Checklist.
+	 * 
+	 * @param sampleSpecs
+	 * @return List<TplSpecQuestion>
+	 */
+	protected List<TplSpecQuestion> getTemplateSampleQuestions(ScQtCheckList sampleSpecs) {// 11104_newEndorseStart
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+
+		specReqDTO.setSpecMaster(sampleSpecs.getScQtDoc().getTplSpecMaster());
+		specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+		specReqDTO.setQuestionType(TemplateSpecConst.QUESTION_TYPE_ITEM);
+
+		TemplateSpecResDTO tmpresDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+
+		return tmpresDTO.getSpecMaster().getTplSpecQuestions();
+	}
+	// 11104_newEndorseEnd
+
+	// 11104_newEndorseStart
+	/***
+	 * Start check Sample Item exist in the questions for work in progress qt.
+	 * 
+	 * @param scQt
+	 * @return boolean
+	 */
+	public boolean checkISSampleExistWIPChecklist(ScQt scQt) {
+		boolean qtSample = scQt.isSampleReq();
+
+		if (qtSample && !isQTStatusPublished(scQt.getQtStatus().getStatusId())
+				&& SourcingConstants.SAMPLE_WIP_CHECK.equals(scQt.getDemoNotificationCheck())) {
+			return Boolean.TRUE;
+		} else if (qtSample && !isQTStatusPublished(scQt.getQtStatus().getStatusId())
+				&& null == scQt.getDemoNotificationCheck()) {
+
+			return Boolean.FALSE;
+		} else if (qtSample) {
+			IQTSpecSO qtSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IQTSpecSO.class);
+			SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
+			specificationReqDTO.setScQt(scQt);
+			specificationReqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+
+			SpecificationResDTO specificationResDTO = qtSpecSO.retrieveTechnicalService(specificationReqDTO);
+			List<ScQtCheckList> sampleTemplateSpecChecklist = new ArrayList<>();
+
+			for (ScQtCheckList sampleCheckList : specificationResDTO.getTechnicalCheckList()) {
+				if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(sampleCheckList.getDefinationType()
+						.getParameterCode())
+						&& QTStatusConst.TS_COMPLETED.equals(sampleCheckList.getPmStatus().getStatusId())) {
+					sampleTemplateSpecChecklist.add(sampleCheckList);
+				}
+			}
+
+			return checkWiPSampleQuestionExist(sampleTemplateSpecChecklist);
+		}
+
+		return Boolean.FALSE;
+	}
+	// 11104_newEndorseEnd
+
+	// 11104_newEndorseStart
+	private boolean checkWiPSampleQuestionExist(List<ScQtCheckList> sampleTemplateSpecChecklist) {
+		for (ScQtCheckList sampleSpecs : sampleTemplateSpecChecklist) {
+			for (TplSpecQuestion specQuestion : getTemplateSampleQuestions(sampleSpecs)) {
+				if (BooleanUtils.isTrue(specQuestion.isSampleReq())) {
+					return Boolean.TRUE;
+				}
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+	// 11104_newEndorseEnd
 	
 	// 25037 - Start
 	/**

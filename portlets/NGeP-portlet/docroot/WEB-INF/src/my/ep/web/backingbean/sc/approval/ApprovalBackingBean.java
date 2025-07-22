@@ -540,7 +540,7 @@ public class ApprovalBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 			// 25037 - end
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
-			paramTypes = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);//25037 #372 #32615
+			paramTypes = Arrays.asList(ParameterConst.QT_COMMITTEES_ORDERED_LIST);// 25037 #372 #32615
 			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes, null);
 

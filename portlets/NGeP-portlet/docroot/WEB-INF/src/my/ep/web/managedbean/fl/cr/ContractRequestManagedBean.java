@@ -73,8 +73,8 @@ import my.ep.web.bean.pm.GlAccountSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.FLCtSupplierItemVO;
+
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.TreeNode;
 
@@ -492,41 +492,41 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				//FulfilmentResDTO resfDTO; -remove #38255
 				if(resDTO.isSuccessful()) {
 					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
-						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-							/*13984 Schedule/ Phase info List BEGINNING*/
+						if (vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+							/* 13984 Schedule/ Phase info List BEGINNING */
 							contractReqDTO.setContractId(vCtActiveContract.getContractId());
-							contractReqDTO.setOrgProfileId(orgProfileId);//28469
+							contractReqDTO.setOrgProfileId(orgProfileId);// 28469
 							flReqDTO.setContractId(vCtActiveContract.getContractId());
 
 							flReqDTO.setOrgProfileId(orgProfileId);
-							//38255-Start
+							// 38255-Start
 							List<FulfilmentResDTO> scheduleDetails = requestSO.getFulfilmentScheduleDetails(flReqDTO);
 
-							List<VCtActiveContract> infoActiveContractList = contractSO
-									.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();//all schedule list under this contract
-										
+							List<VCtActiveContract> infoActiveContractList = contractSO.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList();// all schedule list under this contract
+
 							List<VCtActiveContract> convertedScheduleList = new ArrayList<>();
 
 							for (FulfilmentResDTO detail : scheduleDetails) {
-							    VCtActiveContract contract = new VCtActiveContract();
+								VCtActiveContract contract = new VCtActiveContract();
 
-							    contract.setScheduleNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
-							    contract.setCrNo(detail.getDocNo());
-							    contract.setCrNoStatus("("+getPmStatusDesc(detail.getDocStatus())+")");
-							    contract.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
-							    contract.setCoNoStatus("("+getPmStatusDesc(detail.getFlOrderDocStatus())+")");
+								contract.setScheduleNo(detail.getFlSchNo() != null ? detail.getFlSchNo().toString() : " ");
+								contract.setCrNo(detail.getDocNo());
+								contract.setCrNoStatus("(" + getPmStatusDesc(detail.getDocStatus()) + ")");
+								contract.setCoNo(detail.getFlOrderDocNo() != null ? detail.getFlOrderDocNo() : " ");
+								contract.setCoNoStatus("(" + getPmStatusDesc(detail.getFlOrderDocStatus()) + ")");
 
-							    convertedScheduleList.add(contract);
+								convertedScheduleList.add(contract);
 							}
 
 							vCtActiveContract.setActiveContractScheduleList(convertedScheduleList);
 
-					        vCtActiveContract.setActiveContractSubList(infoActiveContractList);
+							vCtActiveContract.setActiveContractSubList(infoActiveContractList);
 
-					        setOrgCode(orgCode);
-					        setOrgName(orgName);
-					        //38255-End
-							/*13984 Schedule/ Phase info List ENDING*/
+							setOrgCode(orgCode);
+							setOrgName(orgName);
+							// 38255-End
+
+							/* 13984 Schedule/ Phase info List ENDING */
 						}
 					}
 					return resDTO.getActiveContractResultBean();

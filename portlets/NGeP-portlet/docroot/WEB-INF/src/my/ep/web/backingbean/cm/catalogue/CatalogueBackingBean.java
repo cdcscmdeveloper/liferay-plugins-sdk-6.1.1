@@ -381,7 +381,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//38255-End
 
 	}
-	
 
 	public String getOrgCode() {
 		return orgCode;
