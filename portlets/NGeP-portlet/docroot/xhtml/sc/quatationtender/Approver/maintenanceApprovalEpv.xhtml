@@ -85,7 +85,7 @@
 							cols="170" rows="3" style=" margin-bottom:5px; width:866px;"
 							disabled="true" /></td>
 				</tr>
-				<c:if test="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType != null}">
+				<c:if test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType != null}">
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.qt.old.validity.days']}" /></td>
@@ -108,7 +108,7 @@
 		<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true"
 			id="requestDetailsId">
 			<c:choose>
-			<c:when test="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType != null}">
+			<c:when test="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType != null}">
 			<table
 				style="width: 100%; font-family: arial, sans-serif; border-collapse: collapse;">
 
@@ -229,7 +229,7 @@
 								</c:if></td>
 							<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 									id="decisiontypeid"
-									value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
+									value="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType.parameterId}"
 									label="#{lbl['lbl.sc.decision']}" disabled="true"
 									style="width: 178px;margin-bottom: 5px;">
 									<f:selectItems
@@ -332,7 +332,7 @@
 									</c:if></td>
 								<td style="padding: 5px; border: 1px solid #dddddd;"><p:selectOneMenu
 										id="decisiontypeidRq3"
-										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decessionType.parameterId}"
+										value="#{qTDetailBB.managedBean.scQtApprovalRequest.decisionType.parameterId}"
 										label="#{lbl['lbl.sc.decision']}"
 										disabled="true"
 										style="width: 178px;margin-bottom: 5px;">
