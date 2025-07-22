@@ -2915,15 +2915,18 @@ public class ConsolidationReportBackingBean extends
 		}
 		//#21692 - End
 		
-		//#21692 - Start
-		private void setRankNull(ScQtEvaluationResultDtl qualSupplier) {
-			boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() != null
-					&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED
-					|| qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
-			
-			if (disagreeProposalValidityExtension) {
-				qualSupplier.setDeskOfficerRank(null);
-			}
+	// #21692 - Start
+	private void setRankNull(ScQtEvaluationResultDtl qualSupplier) {
+		boolean disagreeProposalValidityExtension = qualSupplier.getQtEvaluationResult().getScQtProposal()
+				.getIsAgreeQtExtendPeriod() != null
+				&& (qualSupplier.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_NOT_QUALIFIED || qualSupplier
+						.getQtEvaluationResult().getScQtProposal().getIsAgreeQtExtendPeriod() == SourcingConstants.EXTEND_PROPOSAL_VALIDITY_PERIOD_REJECTED);
+		// 26247 - start
+		SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier();
+		if (disagreeProposalValidityExtension || this.disabledQTProcess(supplier)) {
+			qualSupplier.setDeskOfficerRank(null);
 		}
-		//#21692 - End
+		// 26247 - end
+	}
+	// #21692 - End
 }
