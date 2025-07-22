@@ -232,6 +232,10 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				statusL3.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
 				objList.add(statusL3);
 			}
+			
+			// check for update machine
+			updateSpecialEquipment(managedBean);
+			
 		}
 
 		deleteRequiredCategory(managedBean);
@@ -636,6 +640,33 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 		
 		return description;
 
+	}
+	
+	private void updateSpecialEquipment(CategoryManagedBean managedBean) {
+		PmCategoryL3 updatedCategoryL3 = managedBean.getAuditUpdatedCategoryL3();
+		List<PmMachineCategory> savedPmMachines = updatedCategoryL3.getPmMachineCategory();
+		List<PmMachineCategory> oldPmMachines = managedBean.getAuditOldCategoryL3().getPmMachineCategory();
+		this.actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+		
+		if (CollectionUtils.isNotEmpty(savedPmMachines) && CollectionUtils.isNotEmpty(oldPmMachines)) {
+			for (PmMachineCategory savedPmMachine : savedPmMachines) {
+				for (PmMachineCategory oldPmMachine : oldPmMachines) {
+					this.docId = BigInteger.valueOf(savedPmMachine.getMachineCategoryId());
+
+					// check site visit
+					
+					if (!savedPmMachine.getDisplaySeq().equals(oldPmMachine.getDisplaySeq())) {
+						detailObj(AuditConst.PM_AUD_CCR_DISP_SEQ_FIELDLABELCODE,
+								String.valueOf(oldPmMachine.getDisplaySeq()),
+								String.valueOf(savedPmMachine.getDisplaySeq()), null, null);
+						
+						
+						break;
+					}
+				}
+			}
+		}
+		
 	}
 
 }
