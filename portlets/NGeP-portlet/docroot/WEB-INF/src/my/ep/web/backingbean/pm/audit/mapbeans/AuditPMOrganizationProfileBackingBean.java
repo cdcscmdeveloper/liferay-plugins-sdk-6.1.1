@@ -361,16 +361,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			detailObj(AuditConst.PM_AUD_OPM_PTJ_IDENTIFIED_FIELDLABELCODE, null,
 					orgProfile.getEpPtj() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 		}
-		
-		if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() == null) {
-			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
-		} else if (orgProfile.getGroupOrgType() == null && oldOrgProfile.getGroupOrgType() != null) {
-			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), null);
-		} else if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() != null) {
-			if(!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())){
-				detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), orgProfile.getGroupOrgType());
-			}
-		}
+
+		setGroupOrgType();
 
 		if((managedBean.getSmSupplierBanks() != null && managedBean.getSmSupplierBanks().size() > 0)
 				 && orgProfile.isGovtSeller()){
@@ -523,6 +515,18 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		if(orgProfile.getMainProfileGroups().size() > 0){
 			setExistingPTJList(orgProfile.getMainProfileGroups(), 
 					managedBean.getAuditProfileGroup());
+		}
+	}
+	
+	//extracted method. Used to set group org type.
+	private void setGroupOrgType() {
+		if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() == null) {
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
+		} else if (orgProfile.getGroupOrgType() == null && oldOrgProfile.getGroupOrgType() != null) {
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), null);
+		} else if ((orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() != null) &&
+				!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())) {
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), orgProfile.getGroupOrgType());
 		}
 	}
 

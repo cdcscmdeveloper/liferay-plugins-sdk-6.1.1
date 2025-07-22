@@ -458,9 +458,13 @@ public class ViewSuppProfileBackingBean extends
 			messages.add(getCancelRegistrationOrBlacklistMessage(supplier, locale));
 		}
 
-		if (CollectionUtils.isNotEmpty(supplier.getCancelledCategoryCodes())) {
+		List<String> cancelledCategoryCodes = new ArrayList<>();
+		cancelledCategoryCodes.addAll(supplier.getCancelledCategoryCodes());
+		cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
+
+		if (CollectionUtils.isNotEmpty(cancelledCategoryCodes)) {
 			messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
-					new String[] { StringUtils.join(supplier.getCancelledCategoryCodes().toArray(), ", ") },
+					new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
 					MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
 		}
 
