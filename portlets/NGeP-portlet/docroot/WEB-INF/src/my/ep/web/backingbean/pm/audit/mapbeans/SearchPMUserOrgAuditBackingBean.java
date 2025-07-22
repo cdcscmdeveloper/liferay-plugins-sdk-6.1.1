@@ -143,6 +143,9 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		getManagedBean().getSearchBean().setMasterLabel1(AuditConst.PM_AUD_ORGUAD);
 		getManagedBean().getSearchBean().setpDocGroupId(docGroupId);
+		getManagedBean().getSearchBean().setpUserOrgProfileId(
+				new BigDecimal(getManagedBean().getUserProfileSearchBean().getSelectedOrgProfileId()));
+		log.info("getSelectedOrgProfileId :::: " + getManagedBean().getUserProfileSearchBean().getSelectedOrgProfileId());
 
 		return NAV_TO_MAINTAIN;
 	}
@@ -309,6 +312,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					auditPMReqDTO.setPdateTo(lSearchBean.getPdateToOldVal());
 				}
 				auditPMReqDTO.setpDocGroupId(lSearchBean.getpDocGroupId());
+				auditPMReqDTO.setpUserOrgProfileId(lSearchBean.getpUserOrgProfileId());
 				auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 
 				ISearchResultBean<VAuditPMDTO> resDTO;
