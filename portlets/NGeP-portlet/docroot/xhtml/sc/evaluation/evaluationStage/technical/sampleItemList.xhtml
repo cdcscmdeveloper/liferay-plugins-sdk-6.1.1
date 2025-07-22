@@ -22,39 +22,84 @@
 					editable="true" rowIndexVar="index" style="width:100%"
 					rowKey="#{sampleItem}">
 					<ac:paginator for="techSampleEvaluateId" />
-
+					
+                    <ui:remove> #11104 - start </ui:remove>
 					<p:ajax event="rowSelect" process="@this" partialSubmit="true"
-						update="@form"
+						update="@([id$=samplespecLists])"
 						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
-					<p:column headerText="#{lbl['lbl.sc.item.name']}" style="width:70%">
+					<p:column headerText="#{lbl['lbl.sc.item.name']}" style="width:55%;white-space: normal;">
 						<h:outputText
-							value="#{sampleItem.scRequestItem.tplSpecQuestion.clItem}"></h:outputText>
+				value="#{evaluationBackingBean.replaceWithBR(sampleItem.scRequestItem.tplSpecQuestion.clItem)}"
+				escape="false"
+				style="white-space: normal;word-wrap: break-word;" />
 					</p:column>
+					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove> #11104 - start </ui:remove>
+					<p:column headerText="#{lbl['lbl.sc.spec.local.goods']}"
+						style="width:15%;">
+						<h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.local']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.LOCAL_GOODS}"></h:outputText>
+			            <h:outputText value="#{lbl['lbl.sc.qt.sample.type.of.goods.import']}" rendered="#{sampleItem.scRequestItem.tplSpecQuestion.tplSpecMaster.itemOriginCode.parameterCode eq ParameterConst.IMPORTED_GOODS}"></h:outputText>
+					</p:column>
+					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove> #11104 - start </ui:remove>
 					<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}"
-						style="width:30%">
-						<h:outputText value="#{sampleItem.scQtSampleLable.lableNo}"></h:outputText>
+						style="width:15%">
+						#{sampleItem.scQtSampleLable.lableNo} - #{sampleItem.subLableNo}
 					</p:column>
+					<ui:remove> #11104 - end </ui:remove>
+					<ui:remove> #11104 - start </ui:remove>
+						<p:column style="width:15%" rendered="#{evaluationBackingBean.managedBean.itemSampleReq}">
+						<f:facet name="header">
+							<h:outputText value="*" styleClass="mandatory"></h:outputText>
+							<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"></h:outputText>
+						</f:facet>
+						<p:inputText id="sampleaddressmanualScoreEvaluation"
+							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}" 
+							disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
+							size="15" value="#{sampleItem.userScore}" maxlength="3"
+							style="text-align:right">
+							<ac:validateNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
+								maxIntegerDigits="3" integerOnly="true" />
+							<f:attribute name="min" value="0" />
+							<f:attribute name="max"
+								value="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleScore.toString()}" />
+							<p:ajax event="change" process="@this"
+								update="@([id$=sampleTotalScoreGroupId])" partialSubmit="true"
+								listener="#{evaluationBackingBean.sampleScoreCalculate}"></p:ajax>
+						</p:inputText>
+						<p:spacer width="5"></p:spacer>
+						<h:outputText
+							rendered="#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleReq}"
+							value="/#{sampleItem.scRequestItem.tplSpecQuestion.parentSpecQuestion.sampleScore}" />
+						<p:message id="sampleaddressmanualScoreEvaluationMessage"
+							for="sampleaddressmanualScoreEvaluation" display="icon"></p:message>
 
+					</p:column>
+                   <ui:remove> #11104 - end </ui:remove>
 				</p:dataTable>
 				<p:spacer height="7px;"></p:spacer>
+				<h:panelGroup id="sampleTotalScoreGroupId"><ui:remove> #11104 - start </ui:remove>
 				<table>
 
 
 					<tr>
 
 						<td><p:outputLabel
-								value="#{lbl['lbl.tpl.spec.content.user.score']}"
-								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
+								value="#{lbl[evaluationBackingBean.managedBean.itemSampleReq ? 'lbl.sc.spec.total.points' :'lbl.tpl.spec.content.user.score']}"
+								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" /><ui:remove> #11104 - start </ui:remove>
 							<p:outputLabel value="* " styleClass="mandatory"
-								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" />
+								rendered="#{!evaluationBackingBean.managedBean.itemSampleReq}" /><ui:remove> #11104 - end </ui:remove>
 						</td>
 						<td><p:inputText id="sampleaddressUserScoreId"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
 								label="#{lbl['lbl.tpl.spec.content.user.score']}"
-								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired}"
-								required="true"
+								disabled="#{evaluationBackingBean.managedBean.readOnly or evaluationBackingBean.managedBean.technicalOrFinancialReEvaluateRequired
+								or evaluationBackingBean.managedBean.itemSampleReq}"
+								required="#{!evaluationBackingBean.managedBean.itemSampleReq}"
 								value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore.userScore}"
-								maxlength="18" style="text-align:right">
+								maxlength="18" style="text-align:right"><ui:remove> #11104 - start </ui:remove>
 								<ac:validateNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}"
 									maxIntegerDigits="14" integerOnly="true" />
@@ -72,7 +117,7 @@
 
 
 				</table>
-
+				</h:panelGroup><ui:remove> #11104 - end </ui:remove>
 			</p:panel>
 		</h:panelGroup>
 

@@ -1525,8 +1525,8 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().isPoUser()) {
 				setDefaultPoReviewSection();
-				/*setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION); //#31181 & #29944
-*/			}
+				/*setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);*/ //#32617
+			}
 
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
@@ -2530,7 +2530,7 @@ public class SmApplicationBackingBean extends
 		existingBranch.setSsmData(true);
 		// #32725 - end
 	}
-
+	
 	private void addNewBranch(List<SmSupplierBranch> branches,SmSupplierBranch ssmBranch) {
 		ssmBranch.setCopy(true);
 		ssmBranch.setRevNo(SupplierManagementConst.DEFAULT_REV_NO); // #32725
@@ -2538,7 +2538,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	// #31549 end
-
+	
 	/**
 	 * Delete pending mof application.
 	 * 
@@ -3043,7 +3043,7 @@ public class SmApplicationBackingBean extends
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
 	}
-
+	
 	// #34303 - start
 	public void setValueForFacilityHeadquarters() {
 
@@ -4115,7 +4115,7 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 
 			if (getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-					&& !getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) { //#31130) 				
+					&& !getManagedBean().isPoUser() && !getManagedBean().isApproverUser()) { //#31130 	
 				validSave = SmApplicationUtil.validatePersonnelAcademics(
 						validSave, getManagedBean(), currentTab);
 			}
@@ -7467,7 +7467,7 @@ public class SmApplicationBackingBean extends
 		//#31130 --START 050625 -set bumi flg to 0 when country other than Malaysia
 		if(!getManagedBean().getSelectedShareHolder().getPmCountry().getCountryCode()
 				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
-		getManagedBean().getSelectedShareHolder().setBumiFlg(0);
+			getManagedBean().getSelectedShareHolder().setBumiFlg(0);
 		} //#31130 --END 050625	
 
 		// set muslim flg
@@ -7481,8 +7481,8 @@ public class SmApplicationBackingBean extends
 		if(!getManagedBean().getSelectedShareHolder().getPmCountry().getCountryCode()
 				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)){
 			getManagedBean().getSelectedShareHolder().setMuslimFlg(null);
-	    //#31130 --END 050625		
-		} else{
+	    	//#31130 --END 050625		
+		} else {
 			if(getManagedBean().getSelectedShareHolder().getMuslimFlgTrans()== null){
 				getManagedBean().getSelectedShareHolder().setMuslimFlg(0);
 			}else{
@@ -9153,9 +9153,9 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
-			//34392 - Start
+			// 34392 - Start
 			validateMandatoryEnquirySupportingDocs();
-			//34392 - End
+			// 34392 - End
 		}
 		getManagedBean().getSmAppl().setResubmit(true);
 		getManagedBean().setPoInquiryRespond(true);
@@ -9173,7 +9173,7 @@ public class SmApplicationBackingBean extends
 
 	}
 	
-	//#34392 - start
+	// #34392 - start
 	private void replaceNewFile(SmApplSupportDoc smDocu) {
 		
 		smDocu.setSmApplDocFiles(new ArrayList<SmApplDocFile>());
@@ -10852,10 +10852,10 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getBasicInfo(), getManagedBean()
 					.getSupplierRemarks(), getManagedBean()
 					.getApplnRejectionRemarks(), reqDTO);
-			//30766 START
+			//#30766 & #34209 - START
 			//List<SmSupplierCategory> catList = getManagedBean().getSmAppl().getSmSupplierCategories();
 			//setPOorApprDec(catList);
-			//30766 END
+			//#30766 & #34209 - END
 		} else if (res.equalsIgnoreCase(my.ep.constant.sm.SupplierManagementConst.APPROVE)) {
 			PmRegStatus regStatus = null;
 			if (getManagedBean().isPoUser()) {
@@ -11266,7 +11266,6 @@ public class SmApplicationBackingBean extends
 			}
 		}
 	}
-
 	// #34392 - End
 
 	private boolean showPoApprovedOrRecommendButton() {
@@ -15915,7 +15914,7 @@ public class SmApplicationBackingBean extends
 				}
 				
 			}
-			// END : #29956
+			// END : #29956			
 		}
 		//end 28651
 	}
