@@ -41,10 +41,12 @@
 					value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+				<!-- #32418 Start -->
 				<p:inputText value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractDaysPeriod}" style="width:75px;" maxlength="3" disabled="true" >
 				</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				<!-- #32418 End -->
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.effective.date']}" />
 			<p:calendar id="popupButtonCal1" showOn="button" styleClass="calanderWidth" disabled="true"

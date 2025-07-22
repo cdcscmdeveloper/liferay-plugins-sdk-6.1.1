@@ -26,10 +26,12 @@
 		 	</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
+			<!-- #32418 Start -->
 			<p:inputText id="contractPeriodBondDaysId" styleClass="ppRightBtn"  value="#{ctBackingBean.managedBean.contractVer.ctContractValue.contractDaysPeriod}" maxlength="3" disabled="true" >
 			</p:inputText>
 			<p:spacer width="2" />
 			<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+			<!-- #32418 End -->
 			</h:panelGrid>	
 		
 			<p:outputLabel id="overallContractAmountId" value="#{lbl['lbl.ct.bond.overallamount']}" />
