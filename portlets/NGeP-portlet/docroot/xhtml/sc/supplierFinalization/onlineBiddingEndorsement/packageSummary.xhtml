@@ -30,6 +30,10 @@
 			value="#{suppFinalBiddingBackingBean.managedBean.scQt.closingDate}">
 			<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 		</h:outputText>		  
+		<ui:remove>21692 - Start</ui:remove>
+		<br/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.pending.finalization.instruction']} " escape="false" />
+		<ui:remove>21692 - End</ui:remove>
 		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" 
 					 var="price" rowKey="#{price}" rowIndexVar="rowIndex" 
 					 emptyMessage="#{lbl['lbl.sc.supplier.finalization.sorttable.msg.no.records.found']}"
@@ -145,7 +149,8 @@
 					  disabledSelection="#{!isMofSelection and ((suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
 					  							suppFinalBiddingBackingBean.managedBean.readOnly) or 
 					  						 		(!suppFinalBiddingBackingBean.managedBean.onlineBiddingEscalation and 
-					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions)}" />		
+					  									!suppFinalBiddingBackingBean.managedBean.secretaryUser) or price.scBidSupplier.smSupplier.disciplinaryActions) or
+					  									suppFinalBiddingBackingBean.supplierRejectEPV(price.scQtProposal)}" /> <ui:remove>21692</ui:remove>		
 		</p:dataTable>
 	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"

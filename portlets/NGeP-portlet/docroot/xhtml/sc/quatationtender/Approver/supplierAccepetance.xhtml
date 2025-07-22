@@ -12,6 +12,15 @@
 	<ui:define name="contentSection">
 		<ui:param name="scQt" value="#{approvalBackingBean.managedBean.qt}" />
 		<ui:param name="scQtApproval" value="#{approvalBackingBean.managedBean.scQtApproval}" />
+
+		<ui:remove>21692 - Start</ui:remove>
+		<ui:param name="scRemarkWithResponsePeriod" value="#{approvalBackingBean.managedBean.suppResp}" />
+		<ac:confirmationPopup id="supplierRejectConfirmation"
+			widget="supplierRejectConfirmation" loadingWidget="blockWidget"
+			title="#{lbl['lbl.btn.dialog.cofirm.header']}"
+			okAction="approvalBackingBean.supplierAcceptance('REJECT')"
+			content="#{lbl['lbl.sc.qt.supplier.reject.popup']}" />
+		<ui:remove>21692 - End</ui:remove>
 	
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
@@ -27,11 +36,33 @@
 					<ui:define name="outComeSection">
 						<ui:repeat var="bpmAction"
 							value="#{approvalBackingBean.managedBean.outComes}">
+							
+						<ui:remove>21692 - Start</ui:remove>
+						<c:choose>
+							<c:when test="#{approvalBackingBean.managedBean.qt.responsePeriod == null}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();"
 								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" />
+							</c:when>
+							<c:otherwise>
+							<p:commandButton value="#{lbl['lbl.btn.agree']}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{bpmAction eq 'ACCEPT'}"/>
+
+							<p:commandButton value="#{lbl['lbl.btn.disagree']}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								action="#{approvalBackingBean.rejectShowUp}" rendered="#{bpmAction eq 'REJECT'}"/>
+
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+								styleClass="ui-button" onstart="blockWidget.show();"
+								action="#{approvalBackingBean.supplierAcceptance(bpmAction)}" rendered="#{!((bpmAction eq 'ACCEPT') or (bpmAction eq 'REJECT'))}"/>
+							</c:otherwise>
+						</c:choose>
+						<ui:remove>21692 - End</ui:remove>
+						
 						</ui:repeat>
 						<ac:spkiPopup id="spkiPopup"
 												password="#{approvalBackingBean.managedBean.spkiBackingBean.password}"
@@ -47,13 +78,59 @@
 
 		<ui:include src="requestPTJdetails.xhtml" />
 		<ui:include src="FinalaizationCommitteeApproval.xhtml" />
-		<ac:scRemarkAndAttachment
-		remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
-		showAttachment="false"
-		readonly="#{approvalBackingBean.managedBean.readOnly}"
-		fileUploadListener="approvalBackingBean.handleFileUpload"
-		instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
-		autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+		
+		<ui:remove>21692 - Start</ui:remove>
+		<c:choose>
+			<c:when test="#{approvalBackingBean.managedBean.qt.responsePeriod == null}">
+				<ac:scRemarkAndAttachment
+				remarkList="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+				showAttachment="false"
+				readonly="#{approvalBackingBean.managedBean.readOnly}"
+				fileUploadListener="approvalBackingBean.handleFileUpload"
+				instruction="#{approvalBackingBean.isReviceOrReject() ? lbl['lbl.sc.approval.remarks.instruction'] : ''}"
+				autoUpdateValue="#{approvalBackingBean.managedBean.autoUpdate}" />
+			</c:when>
+			<c:otherwise>
+				<p:panel header="#{lbl['lbl.sc.qt.remarks']}" toggleable="true">
+				<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.qt.supplier.accept.remark']}" escape="false"/>
+				<table>
+					<tr>
+						<td class="TableFieldLeft" width="100px">
+							<p:outputLabel value="#{lbl['lbl.sc.remark']}"/>
+						</td>
+						<td>
+							<table>
+								<tr>
+									<td rowspan="2" valign="top">
+										<h:graphicImage
+											value="#{scRemarkAndAttachmentBackingBean.userImagePath(approvalBackingBean.managedBean.pmUser.loginId)}"
+											height="30" width="30" />
+									</td>
+									<td width="5"></td>
+									<td><h:outputText id="remarkCreator"
+										value="#{approvalBackingBean.managedBean.pmUser.userName}" />,
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><p:inputTextarea cols="40" maxlength="1000"
+											onkeyup="limitTextArea(this,1000);"
+											onkeydown="limitTextArea(this,1000);"
+											onmouseout="limitTextArea(this,1000);"
+											value="#{scRemarkWithResponsePeriod.remark}"
+											rendered="true"
+											disabled="#{approvalBackingBean.managedBean.readOnly}">
+										</p:inputTextarea>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				</p:panel>
+			</c:otherwise>
+		</c:choose>
+		<ui:remove>21692 - End</ui:remove>
 
 	</ui:define>
 </ui:composition>
