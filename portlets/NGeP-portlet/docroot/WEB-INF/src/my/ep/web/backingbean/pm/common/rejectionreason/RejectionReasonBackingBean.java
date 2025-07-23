@@ -1575,19 +1575,16 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason.setDeleted(true);
 			getManagedBean().getAppTypeRestrictions().remove(supplierReason);
 			
-//			getManagedBean().getAuditDeleteSuppTypeRestrictions().add(supplierReason); // 35509
 		}else if(restrictionType == RESTR_COMP){
 			supplierReason = getManagedBean().getComTypeRestrictions()
 					.get(rowIndex);
 			supplierReason.setDeleted(true);
 			getManagedBean().getComTypeRestrictions().remove(supplierReason);	
-//			getManagedBean().getAuditDeleteComTypeRestrictions().add(supplierReason); // 35509
 		}else if(restrictionType == RESTR_SUPP){
 			supplierReason = getManagedBean().getSuppTypeRestrictions()
 					.get(rowIndex);
 			supplierReason.setDeleted(true);
 			getManagedBean().getSuppTypeRestrictions().remove(supplierReason);
-//			getManagedBean().getAuditDeleteSuppTypeRestrictions().add(supplierReason); //35509
 		}
 		if(supplierReason != null && !supplierReason.isBrandNew()){
 			if(getManagedBean().getDeleteRestrictions() == null){
@@ -1596,6 +1593,11 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			supplierReason.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 			supplierReason.setDeleted(true);
 			getManagedBean().getDeleteRestrictions().add(supplierReason);
+			
+			if(getManagedBean().getAuditDeleteRestrictions() == null){
+				getManagedBean().setAuditDeleteRestrictions(new ArrayList<PmSupplierReason>());
+			}
+			getManagedBean().getAuditDeleteRestrictions().add(supplierReason);
 		}
 	}
 	
