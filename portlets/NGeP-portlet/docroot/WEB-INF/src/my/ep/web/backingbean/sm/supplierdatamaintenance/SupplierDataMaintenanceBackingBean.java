@@ -1201,13 +1201,14 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void showConfirmDialog() {
 		//27460 : Disciplinary Action, //32827
 		validateUpdateDisciplinaryAction(getManagedBean().getDisciplineVO().getSmDiscplinaryAction());
+		validateCancelManufacturer();	//38742
 		if(getManagedBean().getDisciplineVO().getSmDiscplinaryAction().getDisciplinaryActionId() == null){
 			boolean cancelCategory = getManagedBean().isCancelCategoryCode() || getManagedBean().isManufacturerStatusCancel();
 			if(cancelCategory && !getManagedBean().isCancelCategoryCodeExist()
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedApprovedCategories())){
 				throw new EpException(SmCommonUtil.getMessage("lbl.sm.mandatory.to.select.category",null));
 			}
-			validateCancelManufacturer();
+			
 			//#28147 - start - #28494
 			if (getManagedBean().isBlacklistOwnerOrDirector() 
 					&& EntityHelper.isCollectionEmpty(getManagedBean().getSelectedOwnerAndDirectorList())) {
