@@ -24,6 +24,12 @@ public class CtReportConst implements Serializable {
 	public static final String CT_CONTRACT_MANAGEMENT_RPT_CC_VAL = "CT_036";
 	public static final String CT_CONTRACT_MANAGEMENT_RPT_MC_VAL = "CT_037";
 	//#30918 - end
+		
+	
+	//#34889 - Start 
+	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL = "CT_038";
+	public static final String CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_MC_VAL = "CT_039";
+	//#34889 - End 
 	
 	// Report Parameter Key
 	public static final String PARAM_KEY_REPORT = "report";
@@ -49,10 +55,14 @@ public class CtReportConst implements Serializable {
 	public static final String PARAM_KEY_CIRCULAR_TO_DATE = "PCIRCEFFTODATE";
 	public static final String PARAM_KEY_ITEM_NAME = "PITEMNAME";
 	public static final String PARAM_KEY_USER_ROLE = "PUSERROLE";//Enhancement 32675
+	public static final String PARAM_KEY_ALLMINISTRY_FLAG = "PALLMINISTRY"; //#34899
+	
 	
 	//#30918 -start
 	public static final String PARAM_KEY_FULFILMENT_TYPE = "PFULFILMENTTYPE";
 	//#30918 - end
+	
+	public static final String enableAllMinistrySelection = "1";
 
 	/**
 	 * @return the ctListOfContractMcRptVal
@@ -137,9 +147,18 @@ public class CtReportConst implements Serializable {
 		return CT_CONTRACT_MANAGEMENT_RPT_MC_VAL;
 	}
 
-
-
-
-
+	//#34889 - Start	
+	public String getParamKeyAllministryFlag() {
+		return PARAM_KEY_ALLMINISTRY_FLAG;
+	}
 	
+	public String getCtContractItemUsageMonitoringDtlsRptCcVal() {
+		return CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_CC_VAL;
+	}
+
+	public String getCtContractItemUsageMonitoringDtlsRptMcVal() {
+		return CT_CONTRACT_ITEM_USAGE_MONITORING_DTLS_RPT_MC_VAL;
+	}
+	//#34889 - End 
+              	
 }
