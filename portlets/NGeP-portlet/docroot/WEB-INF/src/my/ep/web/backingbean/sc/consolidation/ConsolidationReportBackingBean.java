@@ -2863,6 +2863,7 @@ public class ConsolidationReportBackingBean extends
 		SmSupplier supplier = qualSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier();
 		if (disagreeProposalValidityExtension || this.disabledQTProcess(supplier)) {
 			qualSupplier.setDeskOfficerRank(null);
+			updateCachedData(qualSupplier);
 		}
 		// 26247 - end
 	}
