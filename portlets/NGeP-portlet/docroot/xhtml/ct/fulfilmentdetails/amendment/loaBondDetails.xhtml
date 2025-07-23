@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+			
 <!-- START LOG : 24333, by Putra 05082019 -->
 	<p:panel id="bondpanelId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
@@ -19,14 +20,10 @@
 	   	<p:spacer width="2" />	
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="contractPeriodId" value="#{lbl['lbl.ct.bond.contractperiod']}" />
-	   		<h:panelGrid columns="6">
 			<p:inputText for="contractPeriodId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
 		 	</p:inputText>
-				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
-			</h:panelGrid>	
-		
+			
 			<p:outputLabel id="overallContractAmountId" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.managedBean.originalOverallAmount}"  disabled="true">
@@ -151,6 +148,12 @@
 					
 			<p:column styleClass="column-align-center"  headerText="#{lbl['lbl.txt.attachment']}" style="width:15%;">			
 				<h:panelGroup id="uploadBondPg" columns="2">
+					<p:commandButton oncomplete="uploadBondDlg.show();return false;" update=":form:uploadBondDlg"
+					   	process="@this" partialSubmit="true" actionListener="#{ctBackingBean.PerformanceBondValue(varBond)}"
+						rendered="#{!ctBackingBean.managedBean.viewContract and varBond.fileName == null
+						and ctBackingBean.managedBean.ctContractAmount.bondReq}"
+						style="float:left;" icon="ui-icon-upload">
+					</p:commandButton>
 					<h:commandLink
 						title="#{varBond.fileName}"
 						value="#{ctBackingBean.getShortFileName(varBond.fileName)}"						
@@ -192,7 +195,8 @@
 				</p:tooltip>
 			</p:commandButton>				
 		</div>
-		</p:panel>					
+		</p:panel>
+	<!-- END LOG : 24333, by Putra 05082019 -->
 	<p:spacer width="1" />
   
 	<p:panel id="bondDetails" toggleable="true" 
@@ -204,15 +208,13 @@
 	   	</f:facet>	
 	<h:panelGrid columns="2" columnClasses="columnWidth225">		
 			<p:outputLabel value="#{lbl['lbl.ct.new.contract.period']}" />
-			<h:panelGrid columns="6">
-				<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
+			<h:panelGrid columns="3">
+				<p:inputText style="width:120px;" disabled="true" styleClass="ppRightBtn"
 					value="#{(ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend)
-						? amendmentBackingBean.calculateNewContractPeriod(true) : ctBackingBean.calculateBondPeriod()}" >
-				</p:inputText>
+						? amendmentBackingBean.calculateNewContractPeriod(true) : ctBackingBean.calculateBondPeriod()}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
-			
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
 			<h:panelGrid columns="4">
 			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
@@ -226,7 +228,6 @@
 						<h:outputText id="amtsLabelSource" escape="false" value="#{lbl['lbl.ct.tooltip.new.overall.contract.amt']}" />
 					</p:tooltip>
 			</h:panelGrid>
-			
 			<p:outputLabel value="#{lbl['lbl.ct.bond.bondpercentage']}" />
 			<p:inputText style="width:200px;" disabled="true" styleClass="ppRightBtn"
 				value="#{ctBackingBean.managedBean.contractVer.ctContract.loa.bondPercentage}">
