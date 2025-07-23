@@ -10,7 +10,6 @@
 		width: 80px;
 	}
 	</style>
-
 <!-- START LOG : 24333, by Putra 05082019 -->
 	<p:panel id="bondId" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
@@ -20,13 +19,10 @@
 	   	<p:spacer width="2" />	
 	   	<h:panelGrid columns="2">
 	   		<p:outputLabel id="contractPeriod" value="#{lbl['lbl.ct.bond.contractperiod']}" />
-	   		<h:panelGrid columns="6">
 			<p:inputText for="contractPeriod" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateBondPeriod()}"  disabled="true">
 			</p:inputText>
-			<p:spacer width="2" />
-			<p:outputLabel value="#{lbl['lbl.ct.months']}" />
-			</h:panelGrid>
+			
 			<p:outputLabel id="overallContractAmount" value="#{lbl['lbl.ct.bond.overallamount']}" />
 			<p:inputText for="overallContractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 	  			value="#{ctBackingBean.calculateOriginalOverallAmount()}"  disabled="true">
@@ -370,7 +366,7 @@
 	   	<!-- END LOG : 24333, by Putra  -->	
 	   	</p:panel>
 	   	<p:spacer width="2" />	
-				
+						
 		<!-- START LOG : 13847, by Fahmi 22032019 -->
 		<!-- START TABLE WAIVER -->
 		<ui:include	src="defermentBond.xhtml" />
