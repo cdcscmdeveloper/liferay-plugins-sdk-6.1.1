@@ -53,12 +53,12 @@
 							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
 								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
 						</p:commandLink>
-						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
-							action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
-							update=":form" process="@this"
-							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
-								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
-						</p:commandLink>
+							<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
+								action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
+								update=":form" process="@this"
+								onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
+									<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
+							</p:commandLink>
 						</h:form>
 						<!-- 38530 - END -->
 						<p:spacer width="2"/>
