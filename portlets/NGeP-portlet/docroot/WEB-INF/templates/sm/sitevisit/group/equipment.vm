@@ -14,7 +14,16 @@
 		#parse("templates/sm/sitevisit/shared/equipmentMaintenanceBeating.vm")
 		<br /><br />
 		#if($templateCode == "B")
-			#parse("templates/sm/sitevisit/shared/workshop_worker.vm")
+			#if($isHQ)
+				#set($workshopName = $smVmUtil.getDescByLabel('lbl.sm.facility.type._H'))
+				#parse("templates/sm/sitevisit/shared/group/workshop_worker.vm")
+			#else
+				#foreach($workshop in $workshops)
+					#set($workshopName = $workshop.facilityName)
+					#parse("templates/sm/sitevisit/shared/group/workshop_worker.vm")
+					<br />
+				#end
+			#end
 			<br /><br />
 		#end
 	#end

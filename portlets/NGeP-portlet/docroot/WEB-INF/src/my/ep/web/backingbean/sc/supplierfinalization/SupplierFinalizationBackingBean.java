@@ -4332,11 +4332,14 @@ return	remarksNotFound;
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
-		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			regenEvaluationDownload(reportAttachment, true);
+		//#28784 - Start
+		if (scQtFinalizationReport.getPmDocument() != null) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(reportAttachment, true);
+			}
 		}
+		//#28784 - End
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
@@ -4466,17 +4469,15 @@ return	remarksNotFound;
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		    // #28834 - End.
 		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				// #28834 - Start. 
-				if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
-					saveGeneraratedReport(scQtFinalizationReport);
-				}
-				// #28834 - End. 
+			// #38526 Start Vinod 09/07/2025
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+			// #28834 - Start. 
+			if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
+				saveGeneraratedReport(scQtFinalizationReport);
 			}
+			// #28834 - End. 
+			// #38526 End Vinod 09/07/2025
 		}
 		downloadFile(reportAttachment);
 	}
@@ -7320,15 +7321,15 @@ return	remarksNotFound;
 				if (CollectionUtils.isNotEmpty(cachedSuppliersList)) {			
 					for (QtEvaluationResultDtlBean recommendedBean : cachedSuppliersList) {
 						if (recommendedBean != null) {
-							if (isAward && recommendedBean.isAwarded()) {
-								item.getSelectedSuppliers().put(
-										recommendedBean.getScQtProposal().getSupplierNo(),
-										recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
-							} else if (!isAward && recommendedBean.isShortlisted()) {
-								item.getSelectedSuppliers().put(
-										recommendedBean.getScQtProposal().getSupplierNo(),
-										recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
-							}
+							// 26247 - start
+							SmSupplier supplier = recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier();
+							boolean isAwardedOrShortlisted = (isAward && recommendedBean.isAwarded())
+									|| (!isAward && recommendedBean.isShortlisted());
+							if (isAwardedOrShortlisted && !this.disabledQTProcess(supplier)) {
+								item.getSelectedSuppliers().put(recommendedBean.getScQtProposal().getSupplierNo(),
+										supplier);
+							} 
+							// 26247 - end
 						}
 					}
 				}
@@ -7972,22 +7973,16 @@ return	remarksNotFound;
 			recommendedBean.setAwarded(isAwarded);	
 		}
 		
-		/*
-		 * BUG 31459 START
-		 * UNCHECK BOOLEANCHECKBOX IN MULTIPLE LOI ITEM
-		 */
-		if(selectedSupplier.getEvaluationResultDtlId()!=null && selectedSupplier.getQtEvaluationResult().getScQtProposal()!=null){
-			if(!selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()
-					// #26247 - #32935 - Start.
-					|| selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier().isWarningDA()
-					// #26247 - #32935 - End.
-					){
-				recommendedBean.setShortlisted(selectedSupplier.isShortListed());				
-			}
-		}		
-		/*
-		 * BUG 31459 END
-		 */
+		// 26247, 31459 - start
+		SmSupplier supplier = selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+				.getSmSupplier();
+		if (selectedSupplier.getEvaluationResultDtlId() != null
+				&& selectedSupplier.getQtEvaluationResult().getScQtProposal() != null
+				&& !this.disabledQTProcess(supplier)) {
+			recommendedBean.setShortlisted(selectedSupplier.isShortListed());
+		}
+		// 26247, 31459 - end
+
 		recommendedBean.setBidRank(
 				selectedSupplier.getBidRank());
 		recommendedBean.setSmSupplier(selectedSupplier.getQtEvaluationResult()
@@ -9109,20 +9104,13 @@ return	remarksNotFound;
 							
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
-							/*
-							 * BUG #31128 - UNSELECT & DIM RADIOBUTTON WHEN THE SAID SUPPLIER IS IMPOSE OF DISCIPLINARY ACTION
-							 * SHAFFUL
-							 */
-							// #32699 - Start.
-							if (recommendationBean.isAwarded() && (!recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()
-							    || recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isWarningDA())) {
-								getManagedBean().setRecommendedSupplier(qualSupplier);
-							}
-							// #32699 - End.
-							/*
-							 * END BUG #31128
-							 */
-
+							// 26247, 31128, #32699 - Start.
+							SmSupplier supplier = recommendationBean.getScQtProposal().getScQtSupplier()
+									.getSmSupplier();
+							if (recommendationBean.isAwarded() && !disabledQTProcess(supplier)) {
+								getManagedBean().setRecommendedSupplier(qualSupplier); 
+							} 
+							// 26247, 31128, #32699 - End.
 							//#21692 - Start
 							awardedSupplierRejectEPV(recommendationBean);
 							//#21692 - End

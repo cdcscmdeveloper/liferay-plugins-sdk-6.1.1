@@ -198,6 +198,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.AddressUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -11327,8 +11328,8 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 				notif.setMofNo(!getManagedBean().getSmSupplier().getSmMofAccounts().isEmpty() 
 						? getManagedBean().getSmSupplier().getSmMofAccounts().get(0).getMofNo() : " ");
 				notif.setCompanyAddr(!this.getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().isEmpty() ? addressFormat(this.getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
+						.getSmCompanyAddresses().isEmpty() ? AddressUtils.getFullAddress(this.getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getSmCompanyAddresses().get(0).getSmAddress()) : " ");
 				notif.setSuppReason(getManagedBean().getSupplierRemarks() != null 
 						? getManagedBean().getSupplierRemarks() : " ");
 				notif.setPoReason(getManagedBean().getApplnRejectionRemarks() != null
@@ -18543,80 +18544,6 @@ public class SmApplicationBackingBean extends BaseBackingBean<SmApplicationManag
 	}
 	//#36587 END
 	//#38195 START
-	/**
-	 * To get full address from substring of address 
-	 * 
-	 * @param SmAddress
-	 * @return String
-	 */
-	public String addressFormat(SmAddress addr) {
-		if (addr == null) {
-	        return "";
-	    }
-		
-		List<String> addrlist = Arrays.asList(
-			    addr.getAddress1(),
-			    addr.getAddress2(),
-			    addr.getAddress3(),
-			    getDivisionName(addr),
-			    getDistrictName(addr),
-			    addr.getPostcode(),
-			    getCityName(addr),
-			    getStateName(addr)
-			);
-        
-        // Catter null address
-        List<String> cleanedAddr = new ArrayList<>();
-        for (String addrs : addrlist) {
-            if (addrs != null && !addrs.trim().isEmpty()) {
-            	cleanedAddr.add(addrs);
-            }
-        }
-        
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < cleanedAddr.size(); i++) {
-            sb.append(cleanedAddr.get(i));
-            if (i < cleanedAddr.size() - 1) {
-                sb.append(", ");
-            }
-        }
-        String address = sb.toString();
-        log.info("Address Name: " + address);
-        return address;
-    }
-	
-	/**
-	 * Safely retrieves the division name from the given address.
-	 * Returns null if the division is not set.
-	 */
-	private String getDivisionName(SmAddress addr) {
-	    return (addr.getPmDivision() != null) ? addr.getPmDivision().getDivisionName() : null;
-	}
-
-	/**
-	 * Safely retrieves the district name from the given address.
-	 * Returns null if the district is not set.
-	 */
-	private String getDistrictName(SmAddress addr) {
-	    return (addr.getPmDistrict() != null) ? addr.getPmDistrict().getDistrictName() : null;
-	}
-
-	/**
-	 * Safely retrieves the city name from the given address.
-	 * Returns null if the city is not set.
-	 */
-	private String getCityName(SmAddress addr) {
-	    return (addr.getPmCity() != null) ? addr.getPmCity().getCityName() : null;
-	}
-
-	/**
-	 * Safely retrieves the state name from the given address.
-	 * Returns null if the state is not set.
-	 */
-	private String getStateName(SmAddress addr) {
-	    return (addr.getPmState() != null) ? addr.getPmState().getStateName() : null;
-	}
-	
 	/**
 	 * This method will compare between old and latest BPM version 
 	 *            .
