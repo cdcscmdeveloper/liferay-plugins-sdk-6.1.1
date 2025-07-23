@@ -6,7 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
- <ui:param name="isSampleExist" value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(supplierProposalDetailBackingBean.managedBean.qt)}"></ui:param><!-- #11104 Reendorse -->
+	<!-- #11104 Reendorse -start- -->
+	<ui:param name="isSampleExist"
+		value="#{qTScheduleDetailBackingBean.checkISSampleExistWIPChecklist(supplierProposalDetailBackingBean.managedBean.qt)}"></ui:param>
+	<!-- #11104 Reendorse -end- -->
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 

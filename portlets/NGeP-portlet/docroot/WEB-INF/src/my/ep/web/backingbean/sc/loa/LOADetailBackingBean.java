@@ -1417,8 +1417,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 					scQtSchedule.setEndYear(endYear);
 				}
 				this.sortFrequentScheduleList(scLoa.getScQtSchedules());
-
-			} catch (ParseException e) {
+			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}
 		} else{
@@ -1803,6 +1802,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 		}
 		if(scLoaReportAttachmentGenerated != null) {
+
 			// #29006 - start
 			String prefixName = scLoaReport.getTitle().contains(lampiranA3SubStr) ? scLoaReport.getTitle().replaceAll(
 					"/", "-") : scLoaReport.getTitle().replaceAll(SourcingConstants.REG_EXP_WHITE_SPACE, "");
@@ -1810,6 +1810,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			// #25025&29006 - start
 			scLoaReportAttachmentGenerated.setTempFileName(setValueLowercase(prefixName, 18).trim());
 			// #25025&29006 - end
+
 		}
 		
 		// #29006 - start
@@ -8582,9 +8583,7 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "/xhtml/sc/loa/loarequest/supplierProposalUpdate.xhtml");
-	}
-	
-	
+	}	
 	
 	// #29007 -start-
 	/**
@@ -11953,8 +11952,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 			scLoiLoaItem.setTplSpecAnswerLampiranA3(listItem);
 		}
 	}
-
 	// 29006 end
+	
 	// #25790 - start
 	/**
 	 * Navigate to RequestNote view page.
@@ -12028,8 +12027,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 
 		}
 	}
-
 	// #26770 - End fix sonarlint.
+	
 	// 26770 start fix sonarlint
 	/**
 	 * Will display 4 Category Code per line. If more than 4, the category code
@@ -12057,8 +12056,8 @@ public class LOADetailBackingBean extends LOABaseBackingBean<LOADetailManagedBea
 		}
 		return categoryCode;
 	}
-
 	// 26770 - end fix sonarlint
+	
 	// #26770 - Start.
 	/**
 	 * @param scQt
