@@ -127,11 +127,12 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 	 * @param createBy
 	 * @param roleCode
 	 * @param docGroupId
+	 * @param paramLevel6
 	 * @return
-	 * @throws Exception
+	 * @throws AuditPMException
 	 */
 	public String redirectToDetails(String paramLevel3, BigDecimal pmParameterLvlId, BigDecimal createBy, String roleCode,
-			BigDecimal docGroupId) throws AuditPMException {
+			BigDecimal docGroupId, String paramLevel6) throws AuditPMException {
 		if (paramLevel3 == null || pmParameterLvlId == null || roleCode == null) {
 			throw new AuditPMException("Missing required parameters for redirectToDetails SecondUI Audit PM. : "
 					+ " <paramLevel3>:" + paramLevel3 + " <pmParameterLvlId>:" + pmParameterLvlId + "<roleCode>:" + roleCode);
@@ -143,9 +144,14 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setCreatedBy(createBy.toString());
 		getManagedBean().getSearchBean().setMasterLabel1(AuditConst.PM_AUD_ORGUAD);
 		getManagedBean().getSearchBean().setpDocGroupId(docGroupId);
-		getManagedBean().getSearchBean().setpUserOrgProfileId(
-				new BigDecimal(getManagedBean().getUserProfileSearchBean().getSelectedOrgProfileId()));
-		log.info("getSelectedOrgProfileId :::: " + getManagedBean().getUserProfileSearchBean().getSelectedOrgProfileId());
+
+		if (null == paramLevel6 || paramLevel6.isEmpty()) {
+			log.info("paramLevel6 :::::  " + paramLevel6);
+			getManagedBean().getSearchBean().setpUserOrgProfileId(null);
+		} else {
+			log.info("paramLevel6 value :::::  " + paramLevel6);
+			getManagedBean().getSearchBean().setpUserOrgProfileId(new BigDecimal(paramLevel6));
+		}
 
 		return NAV_TO_MAINTAIN;
 	}
@@ -312,7 +318,10 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 					auditPMReqDTO.setPdateTo(lSearchBean.getPdateToOldVal());
 				}
 				auditPMReqDTO.setpDocGroupId(lSearchBean.getpDocGroupId());
-				auditPMReqDTO.setpUserOrgProfileId(lSearchBean.getpUserOrgProfileId());
+				if (null != lSearchBean.getpUserOrgProfileId()) {
+					auditPMReqDTO.setpUserOrgProfileId(lSearchBean.getpUserOrgProfileId());
+				}
+
 				auditPMSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAuditPMSO.class);
 
 				ISearchResultBean<VAuditPMDTO> resDTO;
