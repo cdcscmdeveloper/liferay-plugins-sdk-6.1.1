@@ -232,7 +232,7 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_750090, new String[] { ResourceBundleUtils.getMessage(
+							MessageConst.ERROR_750091, new String[] { ResourceBundleUtils.getMessage(
 									"lbl.ct.ministry", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
@@ -243,7 +243,7 @@ public class ContractItemUsageMonitoringDtlsBackingBean extends CtReportBaseBack
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(
-							MessageConst.ERROR_750090, new String[] { ResourceBundleUtils.getMessage(
+							MessageConst.ERROR_750091, new String[] { ResourceBundleUtils.getMessage(
 									"lbl.rpt.crclrnolabel", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) }, MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale())));
