@@ -1748,6 +1748,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @see    Exception
 	 */
 	public String saveContractAmendment(String outcome) throws Exception {
+		log.info("____________________check issue DA 26186 - saveContractAmendment____________________");
 		IContractAmendmentSO contractAmendmentSO = null;
 		ContractReqDTO reqDTO = null;
 		try {
@@ -1791,11 +1792,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					ctBackingBean.getManagedBean().getContractVer().getLoaFileAttachments().add(loaLetters.getLoaAttachments());
 				}
 			}
+			log.info("____________________check issue DA 26186 - saveContractAmendment 1____________________");
 			reqDTO = new ContractReqDTO();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 
+			log.info("____________________check issue DA 26186 - saveContractAmendment 2____________________");
 			contractAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 
@@ -1908,6 +1911,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				//#30879,#31065 remove Code for Max QTY & price -Start	
 		}
 		// for Fixing Enhancement #20997 and #Bug #28339 - End	
+			log.info("____________________check issue DA 26186 - saveContractAmendment 3____________________");
 		log.info("Check Putra CtContractItems :"+ctBackingBean.getManagedBean().getContractVer().getCtContractItems().size());
 
 			// Change Code #20997 End
@@ -1995,6 +1999,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//26753 - end
 
+			log.info("____________________check issue DA 26186 - saveContractAmendment 4____________________");
 			reqDTO.setCtContract(ctBackingBean.getManagedBean().getContractVer().getCtContract());
 			reqDTO.setCtContractVer(ctBackingBean.getManagedBean().getContractVer());
 			reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
@@ -2010,19 +2015,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			reqDTO.setUpdateItemMap(ctBackingBean.getManagedBean().getUpdateItemMap());
 			reqDTO.setContractAdminlist(getManagedBean().getContractAdminlist());
 			
+			log.info("____________________check issue DA 26186 - saveContractAmendment 5____________________");
 			//26186/#32860/#34097 start
 			this.getManagedBean().setValidationDA(false);
 			if(checkValidationDA()){
 				this.getManagedBean().setValidationDA(true);
 				reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+				log.info("____________________check issue DA 26186 - saveContractAmendment 5 return validation true____________________");
 			}
 			if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || 
 					outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))
 					&& getManagedBean().isOldBPMVersion()
 					&& getManagedBean().isWipButtonCancelReject()) {
 				reqDTO.setCancelOldProcess(true);
+				log.info("____________________check issue DA 26186 - saveContractAmendment 5 return old process____________________");
 			}
 			reqDTO.setCancelType(getContractCancelType());
+			log.info("____________________check issue DA 26186 - saveContractAmendment 5 cancelType____________________"+ reqDTO.getCancelType());
 			//26186/#32860/#34097 end
 
 			if (getManagedBean().getPmDigiSign() != null) {
@@ -2031,6 +2040,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			// Start Fix - #30022
 			contractadminstatuschecking();
 			// End Fix - #30022
+			log.info("____________________check issue DA 26186 - saveContractAmendment 6 go to saveContractAmendmentVerDtls____________________");
 			ContractResDTO resDTO = contractAmendmentSO.saveContractAmendmentVerDtls(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.debug("Record saved successfully");
@@ -3263,6 +3273,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		}
 		else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+			log.info("____________________check issue DA 26186 - gpkiSignAction____________________");
 //			validateContractAmendment(outcome);
 			validateRemarkCancel(outcome);
 			if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME)
@@ -7846,6 +7857,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return true if DA is true, PBQC and/or MOF decision is true.
 	 */
 	public boolean checkValidationDA(){
+		log.info("____________________check issue DA 26186 - checkValidationDA() 1____________________");
 		return getManagedBean().isDisciplinaryAction() && !getManagedBean().isDisciplinaryActionCancel()
 				&& (isPbqcAuthorityDA() || isMofAuthorityDA());
 	}
@@ -9428,10 +9440,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return The type of cancellation (e.g., BUMI or DA).
 	 */
 	public String getContractCancelType() {
+		log.info("____________________check issue DA 26186 - getContractCancelType()____________________");
 		acknowledgedValidation();
 		if (this.getManagedBean().isDisciplinaryActionCancel()) {
+			log.info("____________________check issue DA 26186 - getContractCancelType() return CancelDA____________________");
 			return ContractConst.CANCEL_DA;
 		} else if (this.getManagedBean().isSupplierBumiCancel()) {
+			log.info("____________________check issue DA 26186 - getContractCancelType() return CancelBumi____________________");
 			return ContractConst.CANCEL_BUMI;
 		}
 		return null;
@@ -9442,6 +9457,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * after has been cancel by DA/Bumi
 	 */
 	public void acknowledgedValidation() {
+
+		log.info("____________________check issue DA 26186 - acknowledgedValidation()____________________");
 		Long statusId = ctBackingBean.getManagedBean().getContractVer().getStatus().getStatusId();
 		if (!this.getManagedBean().isDisciplinaryActionCancel() && !this.getManagedBean().isSupplierBumiCancel()) {
 			if (statusId.equals(ContractStatusConst.FA_DISCIPLINARY_PENDING_CANCELLATION_ACKNOWLEDGEMENT)) {
