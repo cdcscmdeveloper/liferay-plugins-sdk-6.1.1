@@ -2387,9 +2387,10 @@ public class QTDetailBackingBean extends
 			
 			String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)){
-				// #30451, #17376-Start.
-				if (qtnTenderSearchBean.isQtStatusForQt() || isBidding) {
-					// #30451, #17376-End.
+				// #30451-Start.
+				if (qtnTenderSearchBean.isQtStatusForQt() || !isBidding) // 25791
+				{
+					// #30451-End.
 					SearchMultiFilterBean statusBean = null;
 					SearchMultiFilterBean statusFilterBean = new SearchMultiFilterBean(
 							new SearchFilterBean(
@@ -2425,18 +2426,7 @@ public class QTDetailBackingBean extends
 				}
 				// 19366#40 -end-
 				// #30451, #17376-Start.
-			} else if (isBidding) {
-				List<Long> statusIds = new ArrayList<Long>();
-				statusIds.add(QTStatusConst.SF_PENDING_SCHEDULE_BIDDING);
-				statusIds.add(QTStatusConst.SF_PENDING_BIDDING);
-				statusIds.add(QTStatusConst.SF_PENDING_BIDDING_ESCALATION);
-				
-				SearchMultiFilterBean statusBean = new SearchMultiFilterBean(new SearchFilterBean(
-						"scQtStatus.pmStatus.statusId", SearchOperator.OPERATOR_IN.value(), statusIds, JoinType.LEFT),
-						new SearchFilterBean("scQtStatus.current", SearchOperator.OPERATOR_EQUALS.value(), true,
-								JoinType.LEFT));
-				
-				qtSearchBean.getDataFilterBeans().add(statusBean);
+		        //25791 -remove codes
 				// #30451, #17376-End.
 			}			
 			
@@ -5012,8 +5002,7 @@ public class QTDetailBackingBean extends
 				if ((isQTMaintenanceScreen() || isQTSearchScreen())
 						&& ParameterConst.DOCTYPE_BIDDING.equals(qtnTenderSearchBean.getDocType())) {
 					isBidding = true;
-					
-					qtnTenderSearchBean.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+					//25791 -remove codes
 				}
 				// #30451-End.
 
@@ -9719,28 +9708,44 @@ public class QTDetailBackingBean extends
 	}
 	// 26095@hatta - end
         
-	// Start 19287
+    //Start 19287
+	// 25791 -start-
+	/**
+	 * change doctype reset data table data.
+	 */
 	public void resetSearchDataResults() {
-		if (isQTSearchScreen()) {
-			IPagingDataModel<ScQt> searchQTDataModel = getManagedBean().getSearchQTDataModel();
-			searchQTDataModel = new QTPagingDataModel("searchQTs", getManagedBean().getQtnTenderSearchBean());
-			
-			getManagedBean().setSearchQTDataModel(searchQTDataModel);
-			getManagedBean().getSearchQTDataModel().resetData();
-			
-			IPagingDataModel<ScLoaForQt> searchLoaDataModel = getManagedBean().getSearchLoaForQtDataModel();
-			searchLoaDataModel = new LOAPagingDataModel("searchQTLoaLois", getManagedBean().getQtnTenderSearchBean());
-			
-			getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
-			getManagedBean().getSearchLoaForQtDataModel().resetData();
-			
-			IPagingDataModel<ScLoiForQt> searchLoiDataModel = getManagedBean().getSearchLoiForQtDataModel();
-			searchLoiDataModel = new LOIPagingDataModel("searchQTLoaLois", getManagedBean().getQtnTenderSearchBean());
-			
-			getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
-			getManagedBean().getSearchLoiForQtDataModel().resetData();
-		}
+		
+
+		// 25791 -start-
+				IPagingDataModel<ScQt> searchQTDataModel = new QTPagingDataModel(
+						QTConstants.QT_SEARCH_DETAILS_ID, getManagedBean()
+								.getQtnTenderSearchBean());
+				getManagedBean().setSearchQTDataModel(searchQTDataModel);
+				getManagedBean().getSearchQTDataModel().resetData();
+
+				IPagingDataModel<ScLoaForQt> searchLoaDataModel = new LOAPagingDataModel(
+						QTConstants.QT_SEARCH_LOI_LOA_DETAILS_ID, getManagedBean()
+								.getQtnTenderSearchBean());
+				getManagedBean().setSearchLoaForQtDataModel(searchLoaDataModel);
+				getManagedBean().getSearchLoaForQtDataModel().resetData();
+
+				IPagingDataModel<ScLoiForQt> searchLoiDataModel = new LOIPagingDataModel(
+						QTConstants.QT_SEARCH_LOI_LOA_DETAILS_ID, getManagedBean()
+								.getQtnTenderSearchBean());
+				getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
+				getManagedBean().getSearchLoiForQtDataModel().resetData();
+
+				IPagingDataModel<ScBidScheduleForQT> biddingDataModel = new ScheduleBiddingPagingDataModel(
+						QTConstants.QT_SEARCH_BID_SCHEDULE_ID, getManagedBean()
+								.getQtnTenderSearchBean());
+
+				getManagedBean().setSearchBidScheduleDataModel(biddingDataModel);
+				getManagedBean().getSearchBidScheduleDataModel().resetData();
+
+				// 25791 -end-
+
 	}
+	// 25791 -end-
 	// End 19287
 	
 	// #25692 -start-
