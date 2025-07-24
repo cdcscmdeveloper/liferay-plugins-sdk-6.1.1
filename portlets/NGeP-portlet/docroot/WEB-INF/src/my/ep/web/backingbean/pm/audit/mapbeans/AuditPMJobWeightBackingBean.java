@@ -28,11 +28,7 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 	 */
 	private static final long serialVersionUID = 1L;
 	ArrayList<AuditPMSPDTO> objList = new ArrayList<>();
-	/**AuditPMSPDTO dtlModerate = new AuditPMSPDTO();
-	AuditPMSPDTO dtlHigh = new AuditPMSPDTO();
-	AuditPMSPDTO dtlExtraHigh = new AuditPMSPDTO();
-	*/
-	
+
 	String roleCode;
 	String docType;
 	Long docId;
@@ -73,59 +69,21 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 
 	private void updateDetails(PmPoJobWeight jobWeight, PmPoJobWeight oriJobWeight, String roleCode) {
 		this.docId = jobWeight.getPoJobWeightId();
-		
+
 		if (ParameterConst.JOB_WEIGHT_MODERATE.equals(jobWeight.getWeightType().getParameterCode())) {
-			/**dtlModerate.setRoleCode(roleCode);
-			dtlModerate.setDocType(docType);
-			dtlModerate.setPmParameterLvlId(AuditConst.PM_AUD_JOB_WEIGHT_RATIO_PMPARAMETERLVLID);
-			dtlModerate.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-			dtlModerate.setLvlCode2(AuditConst.PM_LVL_CODE_2_JWR);
-			dtlModerate.setLvlCode3(AuditConst.PM_LVL_CODE_3_JWR);
-			dtlModerate.setDocId(BigInteger.valueOf(jobWeight.getPoJobWeightId()));
-			dtlModerate.setFieldLabelCode(AuditConst.PM_AUD_JOB_WEIGHT_MODERATE_FIELDLABELCODE);
-			dtlModerate.setOldValue(String.valueOf(oriJobWeight.getWeightValue()));
-			dtlModerate.setNewValue(String.valueOf(jobWeight.getWeightValue()));
-			dtlModerate.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(dtlModerate);
-			*/
-			detailObj(AuditConst.PM_AUD_JOB_WEIGHT_MODERATE_FIELDLABELCODE, String.valueOf(oriJobWeight.getWeightValue()), String.valueOf(jobWeight.getWeightValue()));
+			detailObj(AuditConst.PM_AUD_JOB_WEIGHT_MODERATE_FIELDLABELCODE,
+					String.valueOf(oriJobWeight.getWeightValue()), String.valueOf(jobWeight.getWeightValue()));
 
 		} else if (ParameterConst.JOB_WEIGHT_HIGH.equals(jobWeight.getWeightType().getParameterCode())) {
-			/**dtlHigh.setRoleCode(roleCode);
-			dtlHigh.setDocType(docType);
-			dtlHigh.setPmParameterLvlId(AuditConst.PM_AUD_JOB_WEIGHT_RATIO_PMPARAMETERLVLID);
-			dtlHigh.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-			dtlHigh.setLvlCode2(AuditConst.PM_LVL_CODE_2_JWR);
-			dtlHigh.setLvlCode3(AuditConst.PM_LVL_CODE_3_JWR);
-			dtlHigh.setDocId(BigInteger.valueOf(jobWeight.getPoJobWeightId()));
-			dtlHigh.setFieldLabelCode(AuditConst.PM_AUD_JOB_WEIGHT_HIGH_FIELDLABELCODE);
-			dtlHigh.setOldValue(String.valueOf(oriJobWeight.getWeightValue()));
-			dtlHigh.setNewValue(String.valueOf(jobWeight.getWeightValue()));
-			dtlHigh.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(dtlHigh);
-			*/
-			detailObj(AuditConst.PM_AUD_JOB_WEIGHT_HIGH_FIELDLABELCODE, String.valueOf(oriJobWeight.getWeightValue()), String.valueOf(jobWeight.getWeightValue()));
+			detailObj(AuditConst.PM_AUD_JOB_WEIGHT_HIGH_FIELDLABELCODE, String.valueOf(oriJobWeight.getWeightValue()),
+					String.valueOf(jobWeight.getWeightValue()));
 
 		} else if (ParameterConst.JOB_WEIGHT_EXTRA_HIGH.equals(jobWeight.getWeightType().getParameterCode())) {
-			/**dtlExtraHigh.setRoleCode(roleCode);
-			dtlExtraHigh.setDocType(docType);
-			dtlExtraHigh.setPmParameterLvlId(AuditConst.PM_AUD_JOB_WEIGHT_RATIO_PMPARAMETERLVLID);
-			dtlExtraHigh.setLvlCode1(AuditConst.PM_LVL_CODE_1_SPM);
-			dtlExtraHigh.setLvlCode2(AuditConst.PM_LVL_CODE_2_JWR);
-			dtlExtraHigh.setLvlCode3(AuditConst.PM_LVL_CODE_3_JWR);
-			dtlExtraHigh.setDocId(BigInteger.valueOf(jobWeight.getPoJobWeightId()));
-			dtlExtraHigh.setFieldLabelCode(AuditConst.PM_AUD_JOB_WEIGHT_EXTRA_HIGH_FIELDLABELCODE);
-			dtlExtraHigh.setOldValue(String.valueOf(oriJobWeight.getWeightValue()));
-			dtlExtraHigh.setNewValue(String.valueOf(jobWeight.getWeightValue()));
-			dtlExtraHigh.setActionType(AuditConst.PM_AUD_ACTION_TYPE_UPD);
-			objList.add(dtlExtraHigh);
-			*/
-			
-			detailObj(AuditConst.PM_AUD_JOB_WEIGHT_EXTRA_HIGH_FIELDLABELCODE, String.valueOf(oriJobWeight.getWeightValue()), String.valueOf(jobWeight.getWeightValue()));
+			detailObj(AuditConst.PM_AUD_JOB_WEIGHT_EXTRA_HIGH_FIELDLABELCODE,
+					String.valueOf(oriJobWeight.getWeightValue()), String.valueOf(jobWeight.getWeightValue()));
 		}
-
 	}
-	
+
 	private String checkDocType(String parameterCode) {
 
 		PmParameter contractRequestParam = getParameterByTypeAndCode("DT", parameterCode);
@@ -139,7 +97,7 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 		return description;
 
 	}
-	
+
 	/**
 	 * 
 	 * @param fieldLabelId
