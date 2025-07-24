@@ -145,7 +145,7 @@ public class SearchPMUserOrgAuditBackingBean extends BaseBackingBean<AuditPMUser
 		getManagedBean().getSearchBean().setMasterLabel1(AuditConst.PM_AUD_ORGUAD);
 		getManagedBean().getSearchBean().setpDocGroupId(docGroupId);
 		if (getManagedBean().getSearchBean().getMasterLabel2().equalsIgnoreCase(AuditConst.PM_LVL_CODE_2_OUSR)) {
-			if (null == paramLevel6 || paramLevel6.isEmpty()) {
+			if (null == paramLevel6 || paramLevel6.isEmpty() || paramLevel6 == "".trim()) {
 				log.info("paramLevel6 :::::  " + paramLevel6);
 				getManagedBean().getSearchBean().setpUserOrgProfileId(null);
 			} else {
