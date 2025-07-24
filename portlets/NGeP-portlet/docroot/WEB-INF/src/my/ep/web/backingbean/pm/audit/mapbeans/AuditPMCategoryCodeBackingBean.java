@@ -682,20 +682,19 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			else if (oldPmMachine.getDockYardSiteVisit() != null && !oldPmMachine.getDockYardSiteVisit().equals(savedPmMachine.getDockYardSiteVisit()))
 				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_TOOL_FIELDLABELCODE, AuditConst.PM_AUD_YES, AuditConst.PM_AUD_NO, null, null);
 
-			if (savedPmMachine.getWorkshopSiteVisit() != null)
-				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_EQUIPMENT_FIELDLABELCODE, null, AuditConst.PM_AUD_YES, null, null);
+			if (savedPmMachine.getWorkshopSiteVisit() != null && !savedPmMachine.getWorkshopSiteVisit().equals(oldPmMachine.getWorkshopSiteVisit()))
+				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_EQUIPMENT_FIELDLABELCODE, AuditConst.PM_AUD_NO, AuditConst.PM_AUD_YES, null, null);
 
-			else
-				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_EQUIPMENT_FIELDLABELCODE, null, AuditConst.PM_AUD_NO, null, null);
+			else if (oldPmMachine.getWorkshopSiteVisit() != null && !oldPmMachine.getWorkshopSiteVisit().equals(savedPmMachine.getWorkshopSiteVisit()))
+				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_EQUIPMENT_FIELDLABELCODE, AuditConst.PM_AUD_YES, AuditConst.PM_AUD_NO, null, null);
 		}
 
 		if (categoryTypeCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_PRINTING)) {
-			if (savedPmMachine.getPrintingSiteVisit() != null)
-				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE, null, AuditConst.PM_AUD_YES, null, null);
-			else
-				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE, null, AuditConst.PM_AUD_NO, null, null);
+			if (savedPmMachine.getPrintingSiteVisit() != null && !savedPmMachine.getPrintingSiteVisit().equals(oldPmMachine.getPrintingSiteVisit()))
+				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE, AuditConst.PM_AUD_NO, AuditConst.PM_AUD_YES, null, null);
+			else if (oldPmMachine.getPrintingSiteVisit() != null && !oldPmMachine.getPrintingSiteVisit().equals(savedPmMachine.getPrintingSiteVisit()))
+				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE, AuditConst.PM_AUD_YES, AuditConst.PM_AUD_NO, null, null);
 		}
 	}
 	
-
 }
