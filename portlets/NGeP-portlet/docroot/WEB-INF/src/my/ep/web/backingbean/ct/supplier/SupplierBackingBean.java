@@ -997,7 +997,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 						changeAccountActionListener();
 					}
 					//Start Fix - #38748 
-					if (smSupplierBank.getSmAppl().getApplId() != null) {
+					if (smSupplierBank.getSmAppl() != null) {
 						getManagedBean().setApplID(smSupplierBank.getSmAppl().getApplId()); // Fix - #33856
 					}
 					//End Fix - #38748 
