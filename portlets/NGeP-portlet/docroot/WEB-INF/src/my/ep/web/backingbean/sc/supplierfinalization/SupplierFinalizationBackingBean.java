@@ -4433,55 +4433,33 @@ return	remarksNotFound;
 	 * @throws Exception
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-	    // #28834 - Start.
-	    ScQtFinalizationReportAttachment reportAttachment = null;
-		boolean latestBriefingPaper = false;
-		// #28834 - Start.
-		List<ScQtFinalizationReport> briefingPaperList = null;
-		for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
-			  if (report.getTitle().contains("Kertas Taklimat")) {
-				  if (briefingPaperList == null) {
-					  briefingPaperList = new ArrayList<>();
-				  }
-				  briefingPaperList.add(report);
-			  }
-		}
-		if (briefingPaperList != null && CollectionUtils.isNotEmpty(briefingPaperList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-          ScQtFinalizationReport latestScQtFinalizationReport = briefingPaperList.get(briefingPaperList.size() -1);
-          if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-            latestBriefingPaper = true;
-          }
-		}
-		// #28834 - End.
-		if (null != getManagedBean().getCurrentStatusId() && latestBriefingPaper
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
-						// 25638 - Start.
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
-						// 25638 - End.
-						
-						// 28834- Start.
-						|| QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
-						// 28834- End.
-						)) {
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-		    // #28834 - End.
-		} else {
-			// #38526 Start Vinod 09/07/2025
-			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-			// #28834 - Start. 
-			if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
-				saveGeneraratedReport(scQtFinalizationReport);
+		// 38523 - start
+		ScQtFinalizationReport latestBriefingPaper = null;
+		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
+			boolean isLatest = latestBriefingPaper == null
+					|| report.getCreatedDate().after(latestBriefingPaper.getCreatedDate());
+			if (report.getTitle().contains("Kertas Taklimat") && isLatest) {
+				latestBriefingPaper = report;
 			}
-			// #28834 - End. 
-			// #38526 End Vinod 09/07/2025
-		}
+		} 
+		boolean isGenerateReport = false;
+		if (latestBriefingPaper != null) {
+			isGenerateReport = latestBriefingPaper.getTitle().equals(scQtFinalizationReport.getTitle());
+		} 
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
+				.getScQtFinalizationReportAttachment();
+
+		List<Long> allowedStatusIds = Arrays.asList(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
+				QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION, QTStatusConst.QT_SF_MOF_COMMIEEE);
+
+		if ((allowedStatusIds.contains(getManagedBean().getCurrentStatusId()) && isGenerateReport)
+				|| null == reportAttachment) {
+			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
+		} 
 		downloadFile(reportAttachment);
-	}
-	// #18685 - End
+		// 38523 - end
+	} 
 	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
