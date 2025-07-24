@@ -1,6 +1,8 @@
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
@@ -26,7 +28,150 @@
 						value="#{lbl['lbl.sm.comp.exp.draft.link.two']}" /></u>
 			</p:commandLink>
 			<p:spacer width="3" />
-			<h:outputText value="#{lbl['lbl.sm.comp.exp.draft.link.three']}" style="color:blue;" />
+			<h:outputText value="#{lbl['lbl.sm.comp.exp.draft.link.three']}"
+				style="color:blue;" />
 		</p:outputPanel>
+		<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.panel']}"
+			toggleable="false" id="compExpList">
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sm.comp.exp.master.list.instruction']}" />
+			<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.fed.panel']}"
+				toggleable="true">
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sm.comp.exp.master.list.instruction']}" />
+				<p:dataTable
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					id="masterFedDataTable" lazy="true" rowIndexVar="index" rows="10"
+					value="#{smCompExpMB.masterFedDataModel}" var="masterFed">
+					<ac:paginator for="masterFedDataTable" />
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.comp.exp.master.list.no']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.title']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.ref.no']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.contract.eff.date']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.contract.value']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.action']}"
+								style="text-align: center !important;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column>
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterFed.title}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterFed.fileReferenceNo}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{masterFed.contractEffDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputText value="#{masterFed.contractValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<ui:repeat var="catCode" value="#{masterFed.compExpMasterCats}">
+							<h:outputText
+								value="#{catCode.categoryL1.categoryL1Code}#{catCode.categoryL2.categoryL2Code}#{catCode.categoryL3.categoryL3Code}" />
+							<br />
+						</ui:repeat>
+					</p:column>
+					<p:column><p:graphicImage id="actionViewId"
+							value="/css/images/design/ico-view.png" /> <p:tooltip
+								for="actionViewId"
+								value="#{lbl['lbl.sm.comp.exp.master.list.source.type']} #{smCompExpBB.getParameterDesc(ParameterTypeConst.compExpSourceType,masterFed.sourceType.parameterId)}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sm.comp.exp.master.list.non.fed.panel']}"
+				toggleable="true">
+				<p:dataTable
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					id="masterNonFedDataTable" lazy="true" rowIndexVar="index"
+					rows="10" value="#{smCompExpMB.masterNonFedDataModel}"
+					var="masterNonFed">
+					<ac:paginator for="masterNonFedDataTable" />
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column headerText="#{lbl['lbl.sm.comp.exp.master.list.no']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.title']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.ref.no']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.contract.eff.date']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.contract.value']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.cat.code']}"
+								style="text-align: center !important;" />
+							<p:column
+								headerText="#{lbl['lbl.sm.comp.exp.master.list.action']}"
+								style="text-align: center !important;" />
+						</p:row>
+					</p:columnGroup>
+					<p:column>
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterNonFed.title}" />
+					</p:column>
+					<p:column
+						style="word-wrap: break-word;overflow-wrap: break-word;white-space: normal;">
+						<h:outputText value="#{masterNonFed.fileReferenceNo}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{masterNonFed.contractEffDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputText value="#{masterNonFed.contractValue}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<ui:repeat var="catCode" value="#{masterNonFed.compExpMasterCats}">
+							<h:outputText
+								value="#{catCode.categoryL1.categoryL1Code}#{catCode.categoryL2.categoryL2Code}#{catCode.categoryL3.categoryL3Code}" />
+							<br />
+						</ui:repeat>
+					</p:column>
+					<p:column>
+						a
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</p:panel>
 	</ui:define>
 </ui:composition>

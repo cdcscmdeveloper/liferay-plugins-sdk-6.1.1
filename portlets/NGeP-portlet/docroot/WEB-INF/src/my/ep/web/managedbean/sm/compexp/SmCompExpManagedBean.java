@@ -21,6 +21,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmCompExpCatDraft;
 import my.ep.persistence.entity.sm.SmCompExpDraft;
+import my.ep.persistence.entity.sm.SmCompExpMaster;
 import my.ep.persistence.entity.sm.SmCompExpMasterDoc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
@@ -67,6 +68,8 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 	private SmCompExpMasterDoc smCompExpDoc;
 	private transient IPagingDataModel<SmCompExpDraft> draftCtDataModel = new DraftCtPagingDataModel();
 	private List<SelectItem> clientTypeItems = new ArrayList<SelectItem>();
+	private transient IPagingDataModel<SmCompExpMaster> masterFedDataModel = new MasterFedPagingDataModel();
+	private transient IPagingDataModel<SmCompExpMaster> masterNonFedDataModel = new MasterNonFedPagingDataModel();
 
 	public SmSupplier getSupplier() {
 		return supplier;
@@ -320,6 +323,76 @@ public class SmCompExpManagedBean extends BaseManagedBean {
 
 	public void setClientTypeItems(List<SelectItem> clientTypeItems) {
 		this.clientTypeItems = clientTypeItems;
+	}
+
+	private class MasterFedPagingDataModel extends PagingDataModel<SmCompExpMaster> {
+
+		private static final long serialVersionUID = 1L;
+
+		public MasterFedPagingDataModel() {
+			super("masterFedDataTable", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpMaster> pageChangeListener(ISearchBean<SmCompExpMaster> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setClientType(ParameterConst.CLIENT_TYPE_FEDERAL);
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpMasterList(reqDTO, searchBean).getMasterResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
+	public IPagingDataModel<SmCompExpMaster> getMasterFedDataModel() {
+		return masterFedDataModel;
+	}
+
+	public void setMasterFedDataModel(IPagingDataModel<SmCompExpMaster> masterFedDataModel) {
+		this.masterFedDataModel = masterFedDataModel;
+	}
+	
+	private class MasterNonFedPagingDataModel extends PagingDataModel<SmCompExpMaster> {
+
+		private static final long serialVersionUID = 1L;
+
+		public MasterNonFedPagingDataModel() {
+			super("masterNonFedDataTable", true);
+		}
+
+		@Override
+		public ISearchResultBean<SmCompExpMaster> pageChangeListener(ISearchBean<SmCompExpMaster> searchBean) {
+
+			SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+			reqDTO.setSupplierId(supplier.getSupplierId());
+			reqDTO.setClientType(ParameterConst.CLIENT_TYPE_NON_FEDERAL);
+
+			try {
+				ISmCompExpSO smCompExpSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmCompExpSO.class);
+				return smCompExpSo.retriveSmCompExpMasterList(reqDTO, searchBean).getMasterResultBean();
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError(ModuleCodeConst.SUPPLIER_MANAGEMENT, "retrieve", supplier.getSupplierId().toString(),
+						"ISmCompExpSO", logKey.getUserId(), e);
+				throw new EpException(MessageConst.ERROR_000001);
+			}
+		}
+
+	}
+
+	public IPagingDataModel<SmCompExpMaster> getMasterNonFedDataModel() {
+		return masterNonFedDataModel;
+	}
+
+	public void setMasterNonFedDataMode(IPagingDataModel<SmCompExpMaster> masterNonFedDataModel) {
+		this.masterNonFedDataModel = masterNonFedDataModel;
 	}
 
 }
