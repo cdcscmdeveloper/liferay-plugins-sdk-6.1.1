@@ -3469,7 +3469,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
 			}
 			if (isApproverSetting() && !getManagedBean().isPrepareLOA()) {
-				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSetting);
+				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuApprover);
 			}
 		} else if (getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA)) {
 			getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
