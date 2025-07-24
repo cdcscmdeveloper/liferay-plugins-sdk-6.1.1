@@ -86,10 +86,10 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 
 	private String checkDocType(String parameterCode) {
 
-		PmParameter contractRequestParam = getParameterByTypeAndCode("DT", parameterCode);
+		PmParameter pmParameter = getParameterByTypeAndCode("DT", parameterCode);
 		String description = null;
 
-		for (PmParameterDesc desc : contractRequestParam.getPmParameterDescsSpecCallOnly()) {
+		for (PmParameterDesc desc : pmParameter.getPmParameterDescsSpecCallOnly()) {
 			if (desc.getLanguageCode().equalsIgnoreCase(AuditConst.PM_LANGUAGECODE_EN)) {
 				description = desc.getCodeName();
 			}
