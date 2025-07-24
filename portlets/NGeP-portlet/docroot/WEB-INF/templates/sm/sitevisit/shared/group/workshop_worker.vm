@@ -1,4 +1,4 @@
-<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.employee.employee')</u>
+<u class="txtBold">$smVmUtil.getDescByLabel('lbl.sm.employee.employee') ($workshopName)</u>
 <br /><br />
 
 <table  class="descTable" width="100%">
@@ -6,12 +6,12 @@
 			<th width="5%">No</th>
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.specialization')</th>
 			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.employee.name')</th>
-			<th width="10%">$smVmUtil.getDescByLabel('lbl.sm.employee.idtype')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.employee.idtype')</th>
 			<th width="20%">$smVmUtil.getDescByLabel('lbl.sm.worker.icno')</th>
-			<th width="25%">$smVmUtil.getDescByLabel('lbl.sm.worker.experience')</th>
+			<th width="15%">$smVmUtil.getDescByLabel('lbl.sm.worker.experience')</th>
 		</tr>
 		
-		
+		#set($workerLs = $workshop.smSvWorkers)
 		#if($review && $workerLs != $null && $workerLs.size() > 0)
 			#foreach($worker in $workerLs)
 			<tr>
@@ -22,6 +22,7 @@
 				<td>$!worker.identificationNo</td>
 				<td>$!worker.workExpYear</td>
 			</tr>
+			#set($rowCounter = $rowCounter + 1)
 			#end
 		#else
 			<tr>
