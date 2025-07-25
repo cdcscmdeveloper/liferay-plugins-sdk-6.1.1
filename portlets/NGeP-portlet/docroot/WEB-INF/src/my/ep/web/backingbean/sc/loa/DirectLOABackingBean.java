@@ -8236,6 +8236,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				fileNo = splitLongLengthString(fileNo, 29);
 			}
 		}
+		
 		// #26770 Note-#548 - Start
 		fileNo = fileNo.trim().replaceAll("é", SSTConstant.PROTEGE_LOWERCASE_E);
 		fileNo = fileNo.trim().replaceAll("É", SSTConstant.PROTEGE_UPPERCASE_E);
@@ -8861,101 +8862,70 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 		if (!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 			if (scLoa.getSupplierSignDate() == null) {
 				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", 
-						 		ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.loa.supplier.sign.date", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
-			if (StringUtils.isBlank(
-					scLoa.getBankAccNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if (StringUtils.isBlank(scLoa.getBankAccNo())) {
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.account.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 			if (scLoa.getAckBy().getUserId() == null) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.signer.full.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
-			if (StringUtils.isBlank(
-					scLoa.getAckBy().getIdentificationNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if (StringUtils.isBlank(scLoa.getAckBy().getIdentificationNo())) {
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
-			if (StringUtils.isBlank(
-					scLoaWitness.getWitnessName())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if (StringUtils.isBlank(scLoaWitness.getWitnessName())) {
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.loiloa.witness.full.name", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
-			if (StringUtils.isBlank(
-					scLoaWitness.getIdentificationNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+			if (StringUtils.isBlank(scLoaWitness.getIdentificationNo())) {
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.identification.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 			if (StringUtils.isBlank(scLoaWitness.getDesignation())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.designation", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 			if (StringUtils.isBlank(scLoaWitness.getAddress())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.address", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 			if (StringUtils.isBlank(scLoaWitness.getPhoneNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.tel.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 			if (StringUtils.isBlank(scLoaWitness.getFaxNo())) {
-				throw new EpException(MessageConst.ERROR_760400,
-						new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", 
-					 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
+				throw new EpException(MessageConst.ERROR_760400, new String[] { ResourceBundleUtils.getMessage("lbl.sc.fax.no", ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale) });
 			}
 		}
 	}
-		
-	private void validateDuplicateItems(ScQtDoc productScQtDoc,ScQtDoc serviceScQtDoc){
-		log.info("validateDuplicateItems");	
-		List<TplSpecMaster> productServiceDocs=new ArrayList<TplSpecMaster>();
-		if(null!=productScQtDoc){
-			if(null!=productScQtDoc.getTplSpecMaster()){
-				productServiceDocs.add(productScQtDoc.getTplSpecMaster());	
+	
+	private void validateDuplicateItems(ScQtDoc productScQtDoc, ScQtDoc serviceScQtDoc) {
+		log.info("validateDuplicateItems");
+		List<TplSpecMaster> productServiceDocs = new ArrayList<TplSpecMaster>();
+		if (null != productScQtDoc) {
+			if (null != productScQtDoc.getTplSpecMaster()) {
+				productServiceDocs.add(productScQtDoc.getTplSpecMaster());
 			}
 		}
-		if(null!=serviceScQtDoc){
-			if(null!=serviceScQtDoc.getTplSpecMaster()){
-				productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());	
-				}
+		if (null != serviceScQtDoc) {
+			if (null != serviceScQtDoc.getTplSpecMaster()) {
+				productServiceDocs.add(serviceScQtDoc.getTplSpecMaster());
+			}
 		}
 		if (CollectionUtils.isNotEmpty(productServiceDocs)) {
 			List<TplSpecQuestion> FinancialUiSpecQuestions = new ArrayList<TplSpecQuestion>();
-			for(TplSpecMaster itemProdSerSpecMaster: productServiceDocs){
-			
-				if(CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())){
+			for (TplSpecMaster itemProdSerSpecMaster : productServiceDocs) {
+
+				if (CollectionUtils.isNotEmpty(itemProdSerSpecMaster.getTplSpecQuestions())) {
 					for (TplSpecQuestion specQuestion : itemProdSerSpecMaster.getTplSpecQuestions()) {
 						if (TemplateSpecConst.QUESTION_TYPE_ITEM.equalsIgnoreCase(specQuestion.getQuestionType())) {
 							if (FinancialUiSpecQuestions.isEmpty()) {
 								FinancialUiSpecQuestions.add(specQuestion);
 							} else {
 								for (TplSpecQuestion uiQuestions : FinancialUiSpecQuestions) {
-									if (uiQuestions
-											.getClItem()
-											.trim()
-											.replaceAll("\\s", "")
-											.equalsIgnoreCase(
-											specQuestion.getClItem().trim()
-													.replaceAll("\\s", ""))) {
-										throw new EpException(
-												MessageConst.ERROR_760340,
-												new String[] { specQuestion.getClItem() });
+									if (uiQuestions.getClItem().trim().replaceAll("\\s", "").equalsIgnoreCase(specQuestion.getClItem().trim().replaceAll("\\s", ""))) {
+										throw new EpException(MessageConst.ERROR_760340, new String[] { specQuestion.getClItem() });
 									}
 								}
 								FinancialUiSpecQuestions.add(specQuestion);
 							}
 						}
-					
+
 					}
 				}
 			}
@@ -8967,8 +8937,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 	 */
 	public void selectAllSchedule(AjaxBehaviorEvent e) {
 
-		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa()
-				.getScQtSchedules()) {
+		for (ScQtSchedule ScQtSchedule : getManagedBean().getScLoa().getScQtSchedules()) {
 			if (getManagedBean().isSelectAll()) {
 				ScQtSchedule.setSelected(true);
 				if (getManagedBean().isButtonHideSchActive()) {
@@ -9067,12 +9036,12 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 							e.getMessage()));
 		}
 	}
-		
+	
 	//#24540 - start -
 	/**
-	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b>
+	 * To display Performance Bond dropdown when QT Type is <b>Special Item / Item In PK 7</b> 
 	 * and Fulfilment Type is <b>One Off</b>.
-	 *
+	 * 
 	 * @return
 	 */
 	public boolean isPbDropDown() {
@@ -9593,7 +9562,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 			}
 		}
 	}
-
 	// #26130 - End.
 
 	// #26130 - Start.
@@ -9705,7 +9673,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 				lampiranA3Doc.close();
 		}
 	}
-
 	// #26130 - End.
 
 	// #26130 start
@@ -9743,7 +9710,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return specQuestion;
 	}
-
 	// #26130 -end-
 
 	// #26130 -start-
@@ -9781,7 +9747,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return specQuestion;
 	}
-
 	// #26130 -end-
 
 	// #26130 -start-
@@ -9846,7 +9811,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return map;
 	}
-
 	// #26130 -end-
 
 	// #26130 -start-
@@ -9873,8 +9837,7 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						map.put("spesifikasi", whiteSpace);
 
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-							map.put("clPriceTypeCode",
-									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
 
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
@@ -9954,10 +9917,9 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 						map.put("spesifikasi", whiteSpace);
 
 						if (itemType.equalsIgnoreCase("Product") || itemType.equalsIgnoreCase("produk")) {
-							map.put("clPriceTypeCode",
-									getParameterDesc(question.getClPriceTypeCode(), SourcingConstants.MY_LOCALE));
+							map.put("clPriceTypeCode", getParameterDesc(question.getClPriceTypeCode(),SourcingConstants.MY_LOCALE));
 						}
-
+						
 						if (itemType.equalsIgnoreCase("Service") || itemType.equalsIgnoreCase("Perkhidmatan")) {
 							map.put("clUomFrequency", (null != question.getClUomFrequency()) ? question
 									.getClUomFrequency().toString() : getDefaultValue());
@@ -10088,7 +10050,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return listZonalDLSpec;
 	}
-
 	// #26130 -end-
 
 	// #26130 -start-
@@ -10101,7 +10062,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return sb.toString();
 	}
-
 	// #26130 -end-
 
 	// #26130 - start
@@ -10110,7 +10070,6 @@ public class DirectLOABackingBean extends LOABaseBackingBean<DirectLOAManagedBea
 
 		return defaultValue;
 	}
-
 	// #26130 - end
 
 	/**
