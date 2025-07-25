@@ -171,8 +171,8 @@
 		<h:panelGrid id="typesOfAmend"  columns="6" style="width:100%" columnClasses="columnWidth170">
 			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}" styleClass="required"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
-			<h:panelGrid columns="5" style="width:350px;" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
-			
+			<!-- #32418 Start -->	
+			<h:panelGrid columns="5" style="width:350px;" rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">			
 			<h:panelGrid columns="3">
 				<p:inputText id="extendMonthsId" style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
 					value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3"
@@ -192,7 +192,7 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.period.day']}" style="text-align:left"/>
 				</h:panelGrid>
 			</h:panelGrid>
-		
+			<!-- #32418 End -->
 			<p:outputLabel value="#{lbl['lbl.ct.extension.start.date']}"
 				rendered="#{ctBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extStartDate" value="#{ctBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 

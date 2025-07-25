@@ -2,7 +2,6 @@ package my.ep.web.backingbean.pm.audit.mapbeans;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +12,9 @@ import my.ep.dto.pm.common.audit.AuditPMReqDTO;
 import my.ep.dto.pm.common.audit.AuditPMSPDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -25,7 +22,6 @@ import my.ep.web.backingbean.pm.audit.AuditPMBackingBeanTemplate;
 import my.ep.web.backingbean.pm.audit.role.AuditPMRoleBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 /**
@@ -45,6 +41,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	String roleCode;
 	String docType;
 	Long docId;
+	Long docGroupId;
 	String actionType;
 	String docNo;
 
@@ -75,6 +72,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		docNo = orgProfile.getOrgCode();
 		orgType = managedBean.getOrgType();
 		docId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
+		docGroupId = managedBean.getNewProfileId() != null ? managedBean.getNewProfileId() : orgProfile.getOrgProfileId();
 		this.roleCode = roleCode;
 
 		if (!orgProfile.isBrandNew())
@@ -126,6 +124,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private String setStatus() {
+		docId = orgProfile.getOrgProfileId();
+		
 		if (orgProfile.isBrandNew() && !orgType.equalsIgnoreCase(ParameterConst.ORG_TYPE_SYS)) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			detailObj(AuditConst.PM_AUD_OPM_STATUS_FIELDLABELCODE, null,
@@ -147,6 +147,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		PmAddress oldPmAddress = managedBean.getAuditBillingAddress();
 		String address = "";
 		String oldAddressAppend = "";
+
+		docId = pmAddress.getAddressId();
 		
 		if (pmAddress != null) {
 			if(pmAddress.getAddress1() != null && !pmAddress.getAddress1().isEmpty()){
@@ -249,6 +251,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		String officeMobileNo = !pmContact.getMobileNo().isEmpty() ? 
 				pmContact.getMobileCountry() + pmContact.getMobileArea() + pmContact.getMobileNo() : "";
 
+		docId = pmContact.getContactId();
+
 		detailObj(AuditConst.PM_AUD_OPM_CONTACTNAME_FIELDLABELCODE, "", pmContact.getContactName());
 		detailObj(AuditConst.PM_AUD_OPM_CONTACTEMAIL_FIELDLABELCODE, "", pmContact.getEmail());
 		
@@ -267,6 +271,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		String officeMobileNo = "";
 		String auditPhoneNo = "";
 		String auditMobileNo = "";
+
+		docId = officeContactPerson.getContactId();
 
 		if(auditContactPerson.getPhoneNo() != null && !auditContactPerson.getPhoneNo().equals("")){
 			auditPhoneNo = auditContactPerson.getPhoneCountry() + auditContactPerson.getPhoneArea() + 
@@ -319,6 +325,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		oldMinistryName = oldOrgProfile.getParentOrgProfile() != null ?
 				oldOrgProfile.getParentOrgProfile().getPmOrgValidity().getOrgName() : 
 					oldOrgProfile.getPmOrgValidity().getOrgName();
+				
+		docId = orgProfile.getPmOrgValidity().getOrgValidityId();
 		
 		if (!orgProfile.isBrandNew()) {
 			if(!currentMinistryName.equalsIgnoreCase(oldMinistryName)){
@@ -334,6 +342,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setOrgName() {
+		docId = orgProfile.getPmOrgValidity().getOrgValidityId();
 		if (orgProfile.isBrandNew()) {
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			detailObj(AuditConst.PM_AUD_OPM_ORGNAME_FIELDLABELCODE, null, orgProfile.getPmOrgValidity().getOrgName());
@@ -347,6 +356,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 
 	private void setOrganisationDetail() {
 		if (orgProfile.isBrandNew()) {
+			docId = orgProfile.getOrgProfileId();
+			
 			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 			detailObj(AuditConst.PM_AUD_OPM_ORGCATEGORY_FIELDLABELCODE, null, getOrgType()); // 167
 			detailObj(AuditConst.PM_AUD_OPM_ORGTYPE_FIELDLABELCODE, null, checkOrgType()); // 168 
@@ -355,6 +366,9 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 	}
 
 	private void setPTJGroup() {
+		actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+		docId = orgProfile.getOrgProfileId();
+		
 		if (orgProfile.isGovtSeller() != oldOrgProfile.isGovtSeller()) {
 			detailObj(AuditConst.PM_AUD_OPM_G2G_FIELDLABELCODE, null, orgProfile.isGovtSeller() ? AuditConst.PM_AUD_YES
 					: AuditConst.PM_AUD_NO);
@@ -363,9 +377,8 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			detailObj(AuditConst.PM_AUD_OPM_PTJ_IDENTIFIED_FIELDLABELCODE, null,
 					orgProfile.getEpPtj() ? AuditConst.PM_AUD_YES : AuditConst.PM_AUD_NO);
 		}
-		if (!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())) {
-			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
-		}
+
+		setGroupOrgType();
 
 		if((managedBean.getSmSupplierBanks() != null && managedBean.getSmSupplierBanks().size() > 0)
 				 && orgProfile.isGovtSeller()){
@@ -399,6 +412,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		
 		for(PmAddressType addressType : receivingAddress){
+			docId = addressType.getAddressTypeId();
 			detailObj(AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE, null, addressType.getPmAddress()
 					.getAddressName());
 		}
@@ -410,6 +424,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			for(PmAddressType current : oldAddressType){
 				if(current.getAddressTypeId().equals(edited.getAddressTypeId())){
 					if(!current.getPmAddress().getAddressName().equals(edited.getPmAddress().getAddressName())){
+						docId = edited.getAddressTypeId();
 						detailObj(AuditConst.PM_AUD_OPM_RECEIVING_ADDRESS_FIELDLABELCODE, 
 								current.getPmAddress().getAddressName(), 
 								edited.getPmAddress().getAddressName());
@@ -435,6 +450,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		
 		for(SmSupplierBank banks : smSupplierBank){
+			docId = banks.getSupplierBankId();
 			detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, null, banks.getPmFinancialOrg()
 					.getFinOrgName());
 
@@ -450,6 +466,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		for(SmSupplierBank current : oldSmSupplierBank){
 			for(SmSupplierBank edited : smSupplierBank){
 				if(current.getSupplierBankId().equals(edited.getSupplierBankId())){
+					docId = edited.getSupplierBankId();
 					if (!edited.getPmFinancialOrg().getFinOrgName().equals(current.getPmFinancialOrg().getFinOrgName())) {
 						detailObj(AuditConst.PM_AUD_OPM_PAYMENTBANK_FIELDLABELCODE, current.getPmFinancialOrg()
 								.getFinOrgName(), edited.getPmFinancialOrg().getFinOrgName());
@@ -486,6 +503,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 		
 		for(SmPersonnel personnel : smPersonnel){
+			docId = personnel.getPersonnelId();
 			detailObj(AuditConst.PM_AUD_OPM_LOGINID_FIELDLABELCODE, null, personnel.getPmUser().getLoginId());
 			detailObj(AuditConst.PM_AUD_OPM_USERNAME_FIELDLABELCODE, null, personnel.getPmUser().getUserName());
 			detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE, null,
@@ -498,6 +516,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		for(SmPersonnel edited : smPersonnel){
 			for(SmPersonnel current : oldSmPersonnel){
 				if(current.getPersonnelId().equals(edited.getPersonnelId())){
+					docId = edited.getPersonnelId();
 					if (!current.getRecordStatusFlg().equals(edited.getRecordStatusFlg())) {
 						detailObj(AuditConst.PM_AUD_OPM_STATUS_SUPPLIER_FIELDLABELCODE,
 								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
@@ -520,11 +539,29 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 					managedBean.getAuditProfileGroup());
 		}
 	}
+	
+	//extracted method. Used to set group org type.
+	private void setGroupOrgType() {
+		docId = orgProfile.getOrgProfileId();
+		
+		if (orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() == null) {
+			actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, null, orgProfile.getGroupOrgType());
+		} else if (orgProfile.getGroupOrgType() == null && oldOrgProfile.getGroupOrgType() != null) {
+			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), null);
+		} else if ((orgProfile.getGroupOrgType() != null && oldOrgProfile.getGroupOrgType() != null) &&
+				!orgProfile.getGroupOrgType().equals(oldOrgProfile.getGroupOrgType())) {
+			actionType = AuditConst.PM_AUD_ACTION_TYPE_UPD;
+			detailObj(AuditConst.PM_AUD_OPM_AUTHORIZEDTYPE_FIELDLABELCODE, oldOrgProfile.getGroupOrgType(), orgProfile.getGroupOrgType());
+		}
+	}
 
 	private void setNewPTJList(List<PmProfileGroup> profileGroups) {
 		actionType = AuditConst.PM_AUD_ACTION_TYPE_INS;
 
 		for(PmProfileGroup profileGroup : profileGroups){
+			docId = profileGroup.getProfileGroupId();
 			detailObj(AuditConst.PM_AUD_OPM_PTJCODE_FIELDLABELCODE, null, profileGroup.getAuthorizedOrgProfile()
 					.getOrgValidity().getOrgCode());
 			detailObj(AuditConst.PM_AUD_OPM_PTJNAME_FIELDLABELCODE, null, profileGroup.getAuthorizedOrgProfile()
@@ -542,6 +579,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 			for(PmProfileGroup current : oldProfileGroups){
 				if(current.getProfileGroupId().equals(edited.getProfileGroupId())){
 					if (!current.getRecordStatusFlg().equals(edited.getRecordStatusFlg())) {
+						docId = edited.getProfileGroupId();
 						detailObj(AuditConst.PM_AUD_OPM_PTJSTATUS_FIELDLABELCODE,
 								current.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE,
 										edited.getRecordStatusFlg() == 1 ? AuditConst.PM_AUD_ACTIVE : AuditConst.PM_AUD_INACTIVE);
@@ -562,7 +600,7 @@ public class AuditPMOrganizationProfileBackingBean extends AuditPMBackingBeanTem
 		dtlObj.setLvlCode2(AuditConst.PM_LVL_CODE_2_OPM);
 		dtlObj.setLvlCode3(lvl3Code.get(orgType));
 		dtlObj.setDocId(BigInteger.valueOf(docId));
-		dtlObj.setDocGroupId(BigInteger.valueOf(docId));
+		dtlObj.setDocGroupId(BigInteger.valueOf(docGroupId));
 		dtlObj.setFieldLabelCode(fieldLabelId);
 		if (oldValue != null) {
 			dtlObj.setOldValue(oldValue);

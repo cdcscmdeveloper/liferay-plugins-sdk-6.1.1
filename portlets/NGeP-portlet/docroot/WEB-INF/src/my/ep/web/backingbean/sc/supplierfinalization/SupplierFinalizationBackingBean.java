@@ -4332,11 +4332,14 @@ return	remarksNotFound;
 		
 		// Bug #35485@Syazani 08/02/2024 -- Start
 		long downFilesSize = reportAttachment.getFileSize() != null ? reportAttachment.getFileSize() : 0;
-		String docDefinitionKey = scQtFinalizationReport.getPmDocument()
-				.getDocDefinitionKey();
-		if (downFilesSize <= 1000 && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
-			regenEvaluationDownload(reportAttachment, true);
+		//#28784 - Start
+		if (scQtFinalizationReport.getPmDocument() != null) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
+			if (downFilesSize <= SourcingConstants.FILE_SIZE && ArrayUtils.contains(SourcingConstants.DOCUMENT_EVALUATIONS, docDefinitionKey)) {
+				regenEvaluationDownload(reportAttachment, true);
+			}
 		}
+		//#28784 - End
 		// Bug #35485@Syazani 08/02/2024 -- End
 	}
 	
@@ -4430,57 +4433,33 @@ return	remarksNotFound;
 	 * @throws Exception
 	 */
 	public void downloadBriefingPaperReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
-	    // #28834 - Start.
-	    ScQtFinalizationReportAttachment reportAttachment = null;
-		boolean latestBriefingPaper = false;
-		// #28834 - Start.
-		List<ScQtFinalizationReport> briefingPaperList = null;
-		for (ScQtFinalizationReport report: getManagedBean().getDocumentList()) {
-			  if (report.getTitle().contains("Kertas Taklimat")) {
-				  if (briefingPaperList == null) {
-					  briefingPaperList = new ArrayList<>();
-				  }
-				  briefingPaperList.add(report);
-			  }
-		}
-		if (briefingPaperList != null && CollectionUtils.isNotEmpty(briefingPaperList)) {//20230712@asyrafhaziq- SQUBE Bug NullPointer#3 
-          ScQtFinalizationReport latestScQtFinalizationReport = briefingPaperList.get(briefingPaperList.size() -1);
-          if (null != latestScQtFinalizationReport && latestScQtFinalizationReport.getTitle().equals(scQtFinalizationReport.getTitle())) {
-            latestBriefingPaper = true;
-          }
-		}
-		// #28834 - End.
-		if (null != getManagedBean().getCurrentStatusId() && latestBriefingPaper
-				&& (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION.longValue()
-						// 25638 - Start.
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_BIDDING_FINALIZATION_REVISION.longValue()
-						|| getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_MULTIPLE_LOI_RECOMMENDATION_REVISION.longValue()
-						// 25638 - End.
-						
-						// 28834- Start.
-						|| QTStatusConst.QT_SF_MOF_COMMIEEE.longValue() == getManagedBean().getCurrentStatusId().longValue()
-						// 28834- End.
-						)) {
+		// 38523 - start
+		ScQtFinalizationReport latestBriefingPaper = null;
+		for (ScQtFinalizationReport report : getManagedBean().getDocumentList()) {
+			boolean isLatest = latestBriefingPaper == null
+					|| report.getCreatedDate().after(latestBriefingPaper.getCreatedDate());
+			if (report.getTitle().contains("Kertas Taklimat") && isLatest) {
+				latestBriefingPaper = report;
+			}
+		} 
+		boolean isGenerateReport = false;
+		if (latestBriefingPaper != null) {
+			isGenerateReport = latestBriefingPaper.getTitle().equals(scQtFinalizationReport.getTitle());
+		} 
+		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
+				.getScQtFinalizationReportAttachment();
+
+		List<Long> allowedStatusIds = Arrays.asList(QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION,
+				QTStatusConst.QT_SUPPLIER_FINALIZATION_REVISION, QTStatusConst.QT_SF_MOF_COMMIEEE);
+
+		if ((allowedStatusIds.contains(getManagedBean().getCurrentStatusId()) && isGenerateReport)
+				|| null == reportAttachment) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-		    // #28834 - End.
-		} else {
-			reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
-
-			if (reportAttachment == null) {
-				reportAttachment = generateDocumentAttachment(scQtFinalizationReport, false);
-				scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
-				// #28834 - Start. 
-				if (getManagedBean().getCurrentStatusId().longValue() == QTStatusConst.SF_PENDING_ENDORSEMENT.longValue()) {
-					saveGeneraratedReport(scQtFinalizationReport);
-				}
-				// #28834 - End. 
-			}
-		}
+		} 
 		downloadFile(reportAttachment);
-	}
-	// #18685 - End
+		// 38523 - end
+	} 
 	
 	/**
 	 * To download all reports under Briefing Paper/Kertas Taklimat tab
@@ -7320,15 +7299,15 @@ return	remarksNotFound;
 				if (CollectionUtils.isNotEmpty(cachedSuppliersList)) {			
 					for (QtEvaluationResultDtlBean recommendedBean : cachedSuppliersList) {
 						if (recommendedBean != null) {
-							if (isAward && recommendedBean.isAwarded()) {
-								item.getSelectedSuppliers().put(
-										recommendedBean.getScQtProposal().getSupplierNo(),
-										recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
-							} else if (!isAward && recommendedBean.isShortlisted()) {
-								item.getSelectedSuppliers().put(
-										recommendedBean.getScQtProposal().getSupplierNo(),
-										recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier());
-							}
+							// 26247 - start
+							SmSupplier supplier = recommendedBean.getScQtProposal().getScQtSupplier().getSmSupplier();
+							boolean isAwardedOrShortlisted = (isAward && recommendedBean.isAwarded())
+									|| (!isAward && recommendedBean.isShortlisted());
+							if (isAwardedOrShortlisted && !this.disabledQTProcess(supplier)) {
+								item.getSelectedSuppliers().put(recommendedBean.getScQtProposal().getSupplierNo(),
+										supplier);
+							} 
+							// 26247 - end
 						}
 					}
 				}
@@ -7972,22 +7951,16 @@ return	remarksNotFound;
 			recommendedBean.setAwarded(isAwarded);	
 		}
 		
-		/*
-		 * BUG 31459 START
-		 * UNCHECK BOOLEANCHECKBOX IN MULTIPLE LOI ITEM
-		 */
-		if(selectedSupplier.getEvaluationResultDtlId()!=null && selectedSupplier.getQtEvaluationResult().getScQtProposal()!=null){
-			if(!selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()
-					// #26247 - #32935 - Start.
-					|| selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier().isWarningDA()
-					// #26247 - #32935 - End.
-					){
-				recommendedBean.setShortlisted(selectedSupplier.isShortListed());				
-			}
-		}		
-		/*
-		 * BUG 31459 END
-		 */
+		// 26247, 31459 - start
+		SmSupplier supplier = selectedSupplier.getQtEvaluationResult().getScQtProposal().getScQtSupplier()
+				.getSmSupplier();
+		if (selectedSupplier.getEvaluationResultDtlId() != null
+				&& selectedSupplier.getQtEvaluationResult().getScQtProposal() != null
+				&& !this.disabledQTProcess(supplier)) {
+			recommendedBean.setShortlisted(selectedSupplier.isShortListed());
+		}
+		// 26247, 31459 - end
+
 		recommendedBean.setBidRank(
 				selectedSupplier.getBidRank());
 		recommendedBean.setSmSupplier(selectedSupplier.getQtEvaluationResult()
@@ -9109,20 +9082,13 @@ return	remarksNotFound;
 							
 							recommendationBean = updateCachedData(qualSupplier, 
 									zoneId, selectedItemId, null);
-							/*
-							 * BUG #31128 - UNSELECT & DIM RADIOBUTTON WHEN THE SAID SUPPLIER IS IMPOSE OF DISCIPLINARY ACTION
-							 * SHAFFUL
-							 */
-							// #32699 - Start.
-							if (recommendationBean.isAwarded() && (!recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isDisciplinaryActions()
-							    || recommendationBean.getScQtProposal().getScQtSupplier().getSmSupplier().isWarningDA())) {
-								getManagedBean().setRecommendedSupplier(qualSupplier);
-							}
-							// #32699 - End.
-							/*
-							 * END BUG #31128
-							 */
-
+							// 26247, 31128, #32699 - Start.
+							SmSupplier supplier = recommendationBean.getScQtProposal().getScQtSupplier()
+									.getSmSupplier();
+							if (recommendationBean.isAwarded() && !disabledQTProcess(supplier)) {
+								getManagedBean().setRecommendedSupplier(qualSupplier); 
+							} 
+							// 26247, 31128, #32699 - End.
 							//#21692 - Start
 							awardedSupplierRejectEPV(recommendationBean);
 							//#21692 - End

@@ -26,16 +26,16 @@
 						styleClass="ppDropDownWidthM" required="true"
 						label="#{lbl['lbl.pm.audit.config.type']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.systemConfigParamLevel1}"
-						style="width: 275px;margin-bottom: 5px;">
+						style="width: 265px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
 							value="#{searchPMAuditBackingBean.getDropdownLevel1()}"
 							var="lvl1" itemLabel="#{lvl1.codeName}"
 							itemValue="#{lvl1.levelCode}" />
-						<p:ajax event="change" update="paramLevel1,paramLevel2,fromDate,toDate"
+						<p:ajax event="change" update=":form:auditPMSearchPanel,:form:searchMasters"
 							listener="#{searchPMAuditBackingBean.changeType()}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu></td>					
 				<td><p:message for="paramLevel1" id="paramLevel1Msg"
 						display="icon" /></td>
 				<td>&#160;</td>
@@ -48,7 +48,7 @@
 						styleClass="ppDropDownWidthM" required="true"
 						label="#{lbl['lbl.pm.audit.configCategory']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.categoryConfigParamLevel2}"
-						style="width: 275px;margin-bottom: 5px;">
+						style="width: 265px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" 
 							itemValue="#{null}" />
 						<f:selectItems
@@ -56,8 +56,7 @@
 							var="lvl2" itemLabel="#{lvl2.codeName}"
 							itemValue="#{lvl2.levelCode}" />
 						<p:ajax event="change"
-							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate"
-							listener="#{searchPMAuditBackingBean.changeType()}" />
+							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate" />
 					</p:selectOneMenu></td>
 				<td><p:message for="paramLevel2" id="paramLevel2Msg"
 						display="icon" /></td>
@@ -70,7 +69,7 @@
 						styleClass="ppDropDownWidthM" required="false"
 						label="#{lbl['lbl.pm.audit.configItem']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.itemConfigParamLevel3}"
-						style="width: 275px;margin-bottom: 5px;"
+						style="width: 265px;margin-bottom: 5px;"
 						disabled="#{searchPMAuditBackingBean.managedBean.searchBean.categoryConfigParamLevel2 eq null}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -79,8 +78,7 @@
 							var="lvl3" itemLabel="#{lvl3.codeName}"
 							itemValue="#{lvl3.levelCode}" />
 						<p:ajax event="change"
-							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate"
-							listener="#{searchPMAuditBackingBean.changeType()}" />
+							update="paramLevel1,paramLevel2,paramLevel3,fromDate,toDate" />
 					</p:selectOneMenu></td>
 				<td><p:message for="paramLevel3" id="paramLevel3Msg"
 						display="icon" /></td>
@@ -106,7 +104,7 @@
 				<td><p:selectOneMenu id="roles" styleClass="ppDropDownWidthM"
 						required="false" label="#{lbl['lbl.pm.audit.Role']}"
 						value="#{searchPMAuditBackingBean.managedBean.searchBean.roleCode}"
-						style="width: 275px;margin-bottom: 5px;">
+						style="width: 265px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
