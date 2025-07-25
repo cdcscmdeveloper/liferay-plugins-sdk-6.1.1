@@ -139,9 +139,12 @@ import org.primefaces.model.TreeNode;
  */
 @ManagedBean(name = "createQtBB")
 @RequestScoped
-public class CreateQtBackingBean extends
- SourcingBaseBackingBean<QTDetailManagedBean> {
+public class CreateQtBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The Constant log. */
 	private static final Logger log = EpLogger.getLogger(CreateQtBackingBean.class);
 
@@ -151,15 +154,11 @@ public class CreateQtBackingBean extends
 	public CreateQtBackingBean() {
 		log.debug("inside constructor");
 		log.debug("@@@@@@@@@ Managed Bean @@@@@@@@@ = " + this.getManagedBean());
-
 	}
 
-	/**
-	 * Debug logger.
+	/** Debug logger.
 	 * 
-	 * @param message
-	 *            the message
-	 */
+	 * @param message the message */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -885,7 +884,6 @@ public class CreateQtBackingBean extends
 					} else {
 						scQt.setOpenFor(ParameterConst.OPEN_FOR_ALL);
 					}
-
 				}
 			}
 		}
@@ -3591,5 +3589,4 @@ public class CreateQtBackingBean extends
 		}
 	}
 	// Bug #36730@Syazani 07/01/2025 -- End
-
 }

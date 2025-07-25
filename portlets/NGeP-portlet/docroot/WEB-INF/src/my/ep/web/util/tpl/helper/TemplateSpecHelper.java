@@ -378,7 +378,6 @@ public class TemplateSpecHelper {
 				
 				for (TplSpecEstimation specEstimation : specEstimations) {
 					try {
-						// TODO - clone only standard price type.
 						TplSpecEstimation newSpecEstimation = (TplSpecEstimation) BeanUtils.cloneBean(specEstimation);
 						
 						if (newSpecEstimation != null) {
@@ -692,13 +691,14 @@ public class TemplateSpecHelper {
 	 */
 	public BigDecimal calcTotalAmount(TplSpecQuestion specQuestion, BigDecimal unitPrice, BigDecimal quantity) {
 		BigDecimal totalPrice = null;
-		boolean isPriceTypeTier = isPriceTypeTier(
-				specQuestion.getClPriceTypeCode().getParameterCode());
-		BigDecimal unitPriceTemp = null != unitPrice ? unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE) : null; //Bug #35600@Syazani 19/09/2024
-		if (!isPriceTypeTier) {
-			totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);	//Bug #35600@Syazani 19/09/2024
-		}
 		
+		boolean isPriceTypeTier = isPriceTypeTier(specQuestion.getClPriceTypeCode().getParameterCode());
+		BigDecimal unitPriceTemp = null != unitPrice ? unitPrice.setScale(2, QTConstants.QT_ROUNDING_MODE) : null; //Bug #35600@Syazani 19/09/2024
+		
+		if (!isPriceTypeTier) {
+			totalPrice = calulateTotalAmount(specQuestion, unitPriceTemp, quantity);//Bug #35600@Syazani 19/09/2024
+		}
+
 		return totalPrice;
 	}
 	
