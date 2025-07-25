@@ -10438,6 +10438,9 @@ public String editSupplierFinalizationDetails(ScQt scQt, String previousPageUrl,
 		paramMap.put(ReportConst.PARAM_REMARK,
 				ulasan.length() == 0 ? StringUtils.EMPTY : ulasan.toString());
 		paramMap.put(ReportConst.PARAM_REPORT_OUTPUT_FORMAT, "rtf");
+		// #38526 Start Vinod 24/07/2025
+		paramMap.put(ReportConst.PARAM_REPORT_FLOWTYPE, "tasklist");
+		// #38526 End Vinod 24/07/2025
 		generatePdfFromOracle(reportName, paramMap, attachment, false);
 	}
 	
