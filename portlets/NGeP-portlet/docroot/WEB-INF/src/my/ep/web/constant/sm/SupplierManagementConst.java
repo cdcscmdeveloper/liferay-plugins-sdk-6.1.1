@@ -723,6 +723,8 @@ public class SupplierManagementConst {
 	public static final String ROLE_CODE_SM_3 = "CM_USER";
 	public static final String ROLE_CODE_SM_4 = "FL_USER";
 	public static final String ROLE_CODE_SM_5 = "SUPPLIER_TEMP";
+	
+	public static final Long COMPOSITE_VALIDITY_ID_SM_DEL_PEN=38195L;//38195
 		
 	// Getters for panel info
 	public String getSUPP_TYPE_CONTRACTOR() {
