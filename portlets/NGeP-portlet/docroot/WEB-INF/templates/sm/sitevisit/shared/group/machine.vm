@@ -38,6 +38,7 @@
 				<td>$!svmachine.purchaseYear</td>
 				<td>$!svmachine.guarantorName</td>
 			</tr>
+			#set($rowCounter = $rowCounter + 1)
 			#end
 		#else
 			<tr>
