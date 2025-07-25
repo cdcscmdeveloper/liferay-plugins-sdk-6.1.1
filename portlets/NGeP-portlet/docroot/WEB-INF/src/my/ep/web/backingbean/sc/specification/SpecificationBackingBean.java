@@ -23398,6 +23398,8 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 *            this is to check if the action is sumit or opened from spec
 	 *            maintenance screen to show the warning.
 	 * 
+	 * @return boolean
+	 * 
 	 */
 	public boolean checkInactiveChecklistForPopup(boolean isShowInactiveChecklistPopup, String action) {
 		if (!isShowInactiveChecklistPopup) {
@@ -23771,8 +23773,10 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @return
 	 */
 	public void generateSpecScoreReport() throws IOException {
-		log.info("generateSpecScoreReport");
+		int specZoneTabIndex = this.getManagedBean().getSpecZoneTabIndex();
 		validatePrepareQtChecklist();
+		
+		this.getManagedBean().setSpecZoneTabIndex(specZoneTabIndex);
 
 		StringBuilder reportName = new StringBuilder();
 		StringBuilder downloadFileName = new StringBuilder();
@@ -23858,7 +23862,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	
 	// #10141 Start Vinod
 	/**
-	 * This method to update Technical Score Param Values. preparation screen
+	 * This method to update Technical Score Param Values. 
 	 * 
 	 * @param paramMap
 	 * 
@@ -23872,7 +23876,7 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	// #10141 End Vinod
 	// #10141 Start Vinod
 	/**
-	 * This method to update Financial Score Param Values. preparation screen
+	 * This method to update Financial Score Param Values. 
 	 * 
 	 * @param paramMap
 	 * 
@@ -23885,11 +23889,13 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 
 		boolean isZonal = scQt.isZonal();
 		if (isZonal) {
-			List<TplSpecZoneDtl> zones = getManagedBean().getZones();
-			TplSpecZoneDtl activeZone = zones.get(getManagedBean().getSpecZoneTabIndex());
+			List<TplSpecZoneDtl> zones = getManagedBean().getTemplateSpecZoneDtls();
+			int activeZoneIndex = getManagedBean().getSpecZoneTabIndex();
+			TplSpecZoneDtl activeZone = zones.get(activeZoneIndex);
+			
 			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, activeZone.getSpecZoneId().toString());
 		} else {
-			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, "");
+			paramMap.put(QtReportConst.PARAM_MAP_P_ZONEID, null);
 		}
 
 		String scoreType = getManagedBean().getOfferPricePackage().getScoreType().toString();
@@ -23954,9 +23960,12 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		}
 
 		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
+			Long checklistStatus = scQtCheckList.getPmStatus().getStatusId();
+			if(checklistStatus.equals(QTStatusConst.TS_PENDING_SUBMISSION)){
+				return;
+			}
 			if (scQtCheckList.isSelected()) {
 				selectedCount++;
-				break;
 			}
 		}
 		if (selectedCount != 0) {
@@ -23978,6 +23987,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @throws IOException
 	 */
 	public void downloadTechnicalChecklistSummaryReport() throws IOException {
+		List<ScQtCheckList> scQtChecklistTech = this.getManagedBean().getTechChecklistPreview();
+		validatePrepareQtChecklist();
+
+		this.getManagedBean().setTechChecklistPreview(scQtChecklistTech);
+
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
 
@@ -24037,6 +24051,11 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 	 * @throws IOException
 	 */
 	public void downloadFinancialChecklistSummaryReport() throws IOException {
+		List<ScQtCheckList> scQtChecklistFin = this.getManagedBean().getTechChecklistPreview();
+		validatePrepareQtChecklist();
+
+		this.getManagedBean().setFinChecklistPreview(scQtChecklistFin);
+
 		ScQt scQt = getManagedBean().getQt();
 		ScAttachment reportAttachment = new ScQtCheckListAttachment();
 
@@ -24116,17 +24135,6 @@ private void checksampleChecklist(List<ScQtCheckList> allTechnicalChecklist){
 		ScQt scQt = getManagedBean().getQt();
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser user = facesScopes.getUserSessionBean();
-		
-		int selectedCount = 0;
-
-		for (ScQtCheckList scQtCheckList : scQtChecklistListLocal) {
-			if (scQtCheckList.isSelected()) {
-				selectedCount++;
-			}
-		}
-		if (!isSummary && selectedCount == 0) {
-			return;
-		}
 
 		String selectedChecklist = selectedChecklistForReport(scQtChecklistListLocal, isSummary);
 
