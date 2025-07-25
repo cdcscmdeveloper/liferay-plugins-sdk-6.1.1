@@ -350,6 +350,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private boolean disciplinaryActionWarning = false;
 	private boolean disciplinaryActionCancelRegistration = false;
 	private boolean disciplinaryActionBlacklist = false;
+	private boolean disciplinaryActionPendingTransaction = false;
+	private boolean disciplinaryActionDeletedDue = false;
 	private String popupMessage;
 	//26284 - End
 	
@@ -2413,6 +2415,35 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setDisciplinaryActionWarning(boolean disciplinaryActionWarning) {
 		this.disciplinaryActionWarning = disciplinaryActionWarning;
 	}
+	
+	/**
+	 * @return the disciplinaryActionPendingTransaction
+	 */
+	public boolean isDisciplinaryActionPendingTransaction() {
+		return disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @return the disciplinaryActionDeletedDue
+	 */
+	public boolean isDisciplinaryActionDeletedDue() {
+		return disciplinaryActionDeletedDue;
+	}
+
+	/**
+	 * @param disciplinaryActionPendingTransaction the disciplinaryActionPendingTransaction to set
+	 */
+	public void setDisciplinaryActionPendingTransaction(boolean disciplinaryActionPendingTransaction) {
+		this.disciplinaryActionPendingTransaction = disciplinaryActionPendingTransaction;
+	}
+
+	/**
+	 * @param disciplinaryActionDeletedDue the disciplinaryActionDeletedDue to set
+	 */
+	public void setDisciplinaryActionDeletedDue(boolean disciplinaryActionDeletedDue) {
+		this.disciplinaryActionDeletedDue = disciplinaryActionDeletedDue;
+	}
+
 	//#26284 - End
 	// #26059 - start
 	/**
