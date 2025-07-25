@@ -274,8 +274,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	/**
 	 * Logger instance.
 	 */
-	public static Logger log = EpLogger
-			.getLogger(SourcingBaseBackingBean.class);
+	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 	
 	private static final String UTF = "UTF-8";
 	
@@ -815,7 +814,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected IQTDetailSO getQTDetailSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
-
+	
 	/**
 	 * To initialize remarks.
 	 * 
@@ -923,11 +922,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return StreamContent instance
 	 * @throws IOException
 	 */
-	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
-			ATTACHMENT scAttachment, String contentType) throws IOException {
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
 		ByteArrayOutputStream tmpOut = null;
 		FileInputStream in = null;
-		try{
+		try {
 			if (scAttachment != null) {
 				File file = new File(getActualFilePath(scAttachment));
 				tmpOut = new ByteArrayOutputStream();
@@ -941,10 +939,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					}
 					tmpOut.write(buf, 0, len);
 				}
-				in.close();
-				tmpOut.close();
-				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-						tmpOut.size());
+				
+				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0, tmpOut.size());
 
 				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
 
@@ -952,10 +948,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} else {
 				return null;
 			}
-		}finally{
-			//TODO baffled to close tmpOut
+		} finally {
+			in.close();
+			tmpOut.close();
 		}
-		
+
 	}
 
 	protected List<PmParameterDesc> retrieveParametersBySearchBean(
@@ -2415,7 +2412,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public boolean isQTStatusEvaluation(Long currentStatusId) {
 		return isQTStatusGreaterThanOrEquals(currentStatusId, QTStatusConst.QT_EVALUATION_PROPOSAL);
 	}
-
 	// 25037 - end
 	
 	/**
@@ -4115,13 +4111,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			String reportNames = "";
 
 			resetUnSavedReportContent(scQtFinalizationReportList);
-
+			
 			//Bug #33988@Syazani -- Start 27/09/2022 
 			if (taskType.equals(SourcingConstants.SUPPLIER_FINALIZATION_TASK)) {
 				validateDuplicateSets = new HashSet<String>();
 			}
 			//Bug #33988@Syazani -- End 27/09/2022
-			
+
 			for (ScQtFinalizationReport scQtFinalizationReport : scQtFinalizationReportList) {
 				
 				//Bug #33988@Syazani -- Start 27/09/2022 
@@ -4129,7 +4125,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					throw new EpException(MessageConst.ERROR_775190, new String[] { scQtFinalizationReport.getTitle() }); //Bug #33988@Syazani - 06/12/2022
 				}
 				//Bug #33988@Syazani -- End 27/09/2022 
-				
+
 				if (null != scQtFinalizationReport.getPmDocument()) {
 					if (taskType.equals(SourcingConstants.CONSOLIDATION_TASK)) {
 						if (SourcingConstants.DOC_DEF_KEY_LATAR_BELAKANG_REPORT.equals(scQtFinalizationReport.getPmDocument().getDocDefinitionKey())
@@ -5018,6 +5014,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// No need to explicitly close the stream; it's done automatically
 	}
 	// Bug #35485@Syazani 08/02/2024 -- End	
+	
 	// #26226 - Start
 	/**
 	 * @param context
@@ -5139,6 +5136,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 							}
 							answer.getTplSpecQuestion().setSpecList(specList);
 							// #25025 - End fixing sonarlint
+
 							/** This code is for LOA with Single Item Details **/
 							if (items.size() == 1) {
 								if (itemId.equals(answer.getTplSpecQuestion().getSpecQuestionId())
@@ -5860,6 +5858,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			specSO = null;
 		}
 	}
+	// #26130 -end-
 	
 	// Bug #36438@Syazani - 24/10/2024 -- Start
 	private void loopScQtCheckListsConstructSupplierSpecificationAndRemarks(List<ScQtCheckList> scQtCheckLists,
@@ -5868,6 +5867,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		// #26130 #97 - End
 		for (ScQtCheckList scQtCheckList : scQtCheckLists) {
 			List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
+
 			TplSpecMaster master = null;
 			// Bug #36438@Syazani - 24/10/2024 -- Start
 			// Making sure it didn't impact original value
@@ -5903,7 +5903,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				masters.add(master);
 			}	// Bug #36438@Syazani - 24/10/2024
 		}
-	} // Bug #36438@Syazani - 24/10/2024
+	} 
+	// Bug #36438@Syazani - 24/10/2024
 
 	// #26130 -end-
 
@@ -6560,7 +6561,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return Boolean.FALSE;
 	}
 	// 11104_newEndorseEnd
-
+	
 	// 25037 - Start
 	/**
 	 * Validate if current task bpm version is supported by the version
@@ -7111,6 +7112,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return reportList;
 	}
 	// 37622 - end
+	
 	// #29007 Start vinod
 	/**
 	 * This method will check the BPM version and status to insert item spec

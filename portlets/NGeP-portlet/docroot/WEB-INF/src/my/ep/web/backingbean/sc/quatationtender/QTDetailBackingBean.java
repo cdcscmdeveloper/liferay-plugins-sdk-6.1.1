@@ -156,7 +156,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -919,8 +918,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
-			quationTenderReqDTO.setToken(facesScopes
-					.getBPMAuthenticationCtxToken());
+			quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
@@ -1211,6 +1209,8 @@ public class QTDetailBackingBean extends
 	 *            the ScQt instance
 	 * @param previousPageUrl
 	 * 				the previous page url.
+	 * @param scLoaQT
+	 * 				the scLoaQT object
 	 * @return the navigation page
 	 */
 	public String viewDirectLOADetails(ScQt scQt, String previousPageUrl, ScLoaForQt scLoaQT) {	// Bug #37978@Syazani 22/04/2025
@@ -1370,20 +1370,19 @@ public class QTDetailBackingBean extends
 				viewLoiListDetails(scQt, previousPageUrl);
 				
 				return null;
-			} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)){
-				// ***19287#42 , ******17376#55  
-				if(scQt.getLoiLoa()!=null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())){
+			} else if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equalsIgnoreCase(docType)) {
+				// ***19287#42 , ******17376#55
+				if (scQt.getLoiLoa() != null && ParameterConst.DOCTYPE_DIRECT_NEGO.equalsIgnoreCase(scQt.getLoiLoa().getDocType())) {
 					DirectLOABackingBean directLoaBackingBean = new DirectLOABackingBean();
 					directLoaBackingBean.renewSesionObject();
-					
 					return viewDirectLOADetails(scQt, previousPageUrl, null); // Bug #37978@Syazani 22/04/2025
-				} else{	
+				} else {
 					QtLOABackingBean bb = new QtLOABackingBean();
 					bb.preRenderViewForQtMaintenance(scQt, previousPageUrl, null);
-					
+
 					return null;
 				}
-				
+
 			} else {
 				return null;
 			}
@@ -3607,21 +3606,19 @@ public class QTDetailBackingBean extends
 				}
 			}
 		}
-
-		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
+		
+		if (SCProcessNameConst.REVISE_QT_SCHEDULE.equalsIgnoreCase(taskName) || SCProcessNameConst.PREPARE_QT_SCHEDULE.equalsIgnoreCase(taskName)) {
 			// #11299 Start Vinod updated error message
 			ScQtApproval approverPublication = this.getManagedBean().getPublicationApproval();
 
-			if (approverPublication == null 
-					|| CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
+			if (approverPublication == null || CollectionUtils.isEmpty(approverPublication.getApproverSettings())) {
 				this.getManagedBean().setResetBpkCurrentArea(false); // #25077
 				throw new EpException(MessageConst.ERROR_775174);
 			}
 
 			if ((currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_REVISION)
-					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) || currentStatus
-						.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
+					|| currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION) 
+					|| currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT))
 					&& outcome.equals(BpmOutcomeConst.BPM_SUBMIT)) {
 
 				validatePublicationApproverInactive(approverPublication.getApproverSettings());

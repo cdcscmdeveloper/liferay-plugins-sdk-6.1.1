@@ -260,7 +260,8 @@ public class SmSideMenuIconUtil {
 			log.info("31230 Check Bank has difference - start");
 			if (bean.isSupplierUser()) {
 				bean.getEditVO().setSuppEditBank(false);
-				log.info("31230 Check if Supplier edit bank");
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSmAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -274,7 +275,8 @@ public class SmSideMenuIconUtil {
 			} else if (bean.isPoUser()) {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
-				log.info("31230 Check if Supplier edit bank");
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);
@@ -289,7 +291,8 @@ public class SmSideMenuIconUtil {
 				bean.getEditVO().setSuppEditBank(false);
 				bean.getEditVO().setPoEditBank(false);
 				bean.getEditVO().setAppEditBank(false);
-				log.info("31230 Check if Supplier edit bank");
+				// #28895_35501 - AUDIT TRAIL SM
+				bean.getEditVO().setSuppEditAuditTrail(false);
 				if (step5BankHasDifference(true, bean.getLatestApproveAppl(),
 						bean.getSupplierAppl())) {
 					bean.getEditVO().setSuppEditBank(true);

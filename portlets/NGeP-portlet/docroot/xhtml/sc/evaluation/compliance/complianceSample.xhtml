@@ -6,12 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-
-
-
-
 	<ui:fragment
 		rendered="#{evaluationBackingBean.managedBean.countDays gt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime lt 12)}">
 		<h:panelGroup>
@@ -37,8 +31,6 @@
 			</table>
 		</h:panelGroup>
 	</ui:fragment>
-
-
 	<ui:fragment
 		rendered="#{evaluationBackingBean.managedBean.countDays lt 0 or(evaluationBackingBean.managedBean.countDays eq 0 and evaluationBackingBean.managedBean.currentTime ge 12)}">
 		<p:panel
@@ -107,15 +99,8 @@
 						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.complianceSampleItems(complianceSample)}"
 						disabled="#{isRejected}" /><ui:remove><!-- 6906 --></ui:remove>
-
-
 				</p:column>
-
 			</p:dataTable>
-
-
 		</p:panel>
-
 	</ui:fragment>
-
 </ui:composition>

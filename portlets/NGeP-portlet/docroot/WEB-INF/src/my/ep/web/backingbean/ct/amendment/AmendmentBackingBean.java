@@ -190,7 +190,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
 	private List<SelectItem> populateBankAccountList;
-	private IPagingDataModel<PmUser> committeDataModel = new CommittePagingDataModel();	
+	private IPagingDataModel<PmUser> committeDataModel = new CommittePagingDataModel();
 
 	/**
 	 * The constructor used for initializing the variable.
@@ -1921,8 +1921,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						this.ctBackingBean.getManagedBean().getContractVer().getDocType()),
 						this.ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo()};
 
+
 				// Start Fix - #33256, #33287, #34110
 				if (ctBackingBean.getManagedBean().getContractVer().getCtContract().isZonalPricing()) {
+
 					if (getManagedBean().getSelectedChangeItemQuantity() != null
 							&& getManagedBean().getSelectedChangeItemQuantity().size() > 0) {
 						for (CtItemMaxQty itemMaxQty : getManagedBean().getSelectedChangeItemQuantity().values()) {
@@ -1955,7 +1957,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 				if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
-				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {					
+				} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					//#26688 start
 					if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || 
 							getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.CHAIR_PERSON_SIGN_OFF_HT_NAME)){
@@ -5230,10 +5232,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				ctBackingBean.getManagedBean().setApplID(ctBackingBean.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSmAppl().getApplId());
 			}
-		}     
+		}
 		return populateBankAccountList;
 	}
-//End Fix - #33674 
+	//End Fix - #33674 
 	
 	/**
 	 * The method used for generating a list of available display type
@@ -5796,10 +5798,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}			
 			commonDownload(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -5807,7 +5807,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					fileOutputStream.close();
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -5882,7 +5881,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				getManagedBean().setAllowAcknowledge(false);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -6027,7 +6025,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				bondDate.add(Calendar.YEAR, 1);
 				context.put("bondExpDate", dateSDF.format(bondDate.getTime())); 
 
-				//TODO #3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
+				//#3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
 				String bondResDueDays = "30";
 				context.put("bondResDueDays", bondResDueDays);
 			} else {
@@ -6124,7 +6122,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				supplierUserDesignation = getFacesScopes().getUserSessionBean().getDesignation() != null
 						? getFacesScopes().getUserSessionBean().getDesignation(): "";
 						supplierTelNo = getFacesScopes().getUserSessionBean().getPhoneNo() != null 
-								? getFacesScopes().getUserSessionBean().getPhoneNo() : ""; //TODO: Full Phone No
+								? getFacesScopes().getUserSessionBean().getPhoneNo() : ""; //Full Phone No
 								supplierFaxNo = getFacesScopes().getUserSessionBean().getFaxNo() != null
 										? getFacesScopes().getUserSessionBean().getFaxNo() : "";
 										supplierMobileNo = getFacesScopes().getUserSessionBean().getMobileNo() != null
