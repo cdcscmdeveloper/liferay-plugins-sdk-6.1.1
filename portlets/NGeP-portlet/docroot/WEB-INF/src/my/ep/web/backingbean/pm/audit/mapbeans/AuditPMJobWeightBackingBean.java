@@ -57,7 +57,7 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 				if (jobWeight.getPoJobWeightId().equals(oriJobWeight.getPoJobWeightId())
 						&& !jobWeight.getWeightValue().equals(oriJobWeight.getWeightValue())) {
 
-					updateDetails(jobWeight, oriJobWeight, roleCode);
+					updateDetails(jobWeight, oriJobWeight);
 					break;
 				}
 			}
@@ -67,7 +67,7 @@ public class AuditPMJobWeightBackingBean extends AuditPMBackingBeanTemplate {
 		return auditPMReqDTO;
 	}
 
-	private void updateDetails(PmPoJobWeight jobWeight, PmPoJobWeight oriJobWeight, String roleCode) {
+	private void updateDetails(PmPoJobWeight jobWeight, PmPoJobWeight oriJobWeight) {
 		this.docId = jobWeight.getPoJobWeightId();
 
 		if (ParameterConst.JOB_WEIGHT_MODERATE.equals(jobWeight.getWeightType().getParameterCode())) {
