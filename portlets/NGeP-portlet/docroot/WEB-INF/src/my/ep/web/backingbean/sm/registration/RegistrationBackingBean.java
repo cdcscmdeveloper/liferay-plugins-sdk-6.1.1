@@ -4187,7 +4187,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			stateSelectLs = EntityHelper.convertListToSelectItem(stateLs,"stateName", "stateId");
 		}
 		this.getManagedBean().setBusinessStateLs(stateSelectLs);
-		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());		
+		populateLocalAuthority(getManagedBean().getSmSupp(), getManagedBean().getSmBusinessAdd());
+		
+		// #36718 - Start - reset regNo when business type changed
+		if (this.getManagedBean().getSmAppl().isBrandNew() && !this.getManagedBean().getSmAppl().isApplValidWithSsm()) {
+			this.getManagedBean().getSmSupp().setRegNo(null);
+		}
+		// #36718 - End
 	}
 			
 	/**

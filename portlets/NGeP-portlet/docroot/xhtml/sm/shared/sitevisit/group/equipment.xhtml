@@ -26,7 +26,7 @@
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}" disabled="#{viewFlag}">
 					<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipMaint)}" 
-						update="maintTbl#{catCode}" />
+						update="dtlEquipMainQtySetId#{catCode}"/>
 				</p:selectBooleanCheckbox>
 				</div>
 					
@@ -37,13 +37,13 @@
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.equipment.qtty.set']}
 				</f:facet>
-				<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8"
+					<p:inputText value="#{equipMaint.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" 
+						id="dtlEquipMainQtySetId#{catCode}" maxlength="8"
 					converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 					validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
 					disabled="#{viewFlag || !equipMaint.equipmentAvailable}" 
-					required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate'] 
-						and empty param['disabledValidation']}" >
-						<f:validateLongRange minimum="1" />
+						required="#{equipMaint.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}" >
+						<f:validateLongRange minimum="1"  for="dtlEquipMainQtySetId"></f:validateLongRange>
 				</p:inputText>
 			</p:column>
 		</p:dataTable>
@@ -66,7 +66,7 @@
 				<div align="center">
 				<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}" disabled="#{viewFlag}">
 					<p:ajax event="change" listener="#{svoSiteVisitBackingBean.svEquipmentOnChange(equipBinding)}" 
-						update="bindTbl#{catCode}" />
+						update="dtlEquipBeatingQtySetId#{catCode}"/>
 				</p:selectBooleanCheckbox>
 				</div>
 			</p:column>
@@ -76,13 +76,13 @@
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.equipment.qtty.set']}
 				</f:facet>
-				<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" maxlength="8"
+					<p:inputText value="#{equipBinding.equipmentQty}" label="#{lbl['lbl.sm.equipment.qtty.set']}" 
+					maxlength="8" id="dtlEquipBeatingQtySetId#{catCode}"
 					converterMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 					validatorMessage="#{lbl['lbl.sm.equipment.qtty.set']}: #{lbl['lbl.sm.validator.number.min1']}"
 					disabled="#{viewFlag || !equipBinding.equipmentAvailable}" 
-					required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate'] 
-						and empty param['disabledValidation']}">
-						<f:validateLongRange minimum="1" />
+						required="#{equipBinding.equipmentAvailable and empty param['disableMsgAutoUpdate'] and empty param['disabledValidation']}">
+							<f:validateLongRange minimum="1" for="dtlEquipBeatingQtySetId"/>
 				</p:inputText>
 			</p:column>
 		</p:dataTable>
