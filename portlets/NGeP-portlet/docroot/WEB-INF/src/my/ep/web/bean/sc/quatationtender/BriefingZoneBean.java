@@ -369,7 +369,7 @@ public class BriefingZoneBean implements Serializable {
 	public void setSampleAddress(ScQtSampleSubmission sampleAddress) {
 		this.sampleAddress = sampleAddress;
 	}
-	
+
 	// 11104-start
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl, Long stateId, Long divisionId, Long districtId, Long cityId) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
@@ -439,4 +439,5 @@ public class BriefingZoneBean implements Serializable {
 		this.cityId = cityId;
 	}
 	// 11104-End
+
 }

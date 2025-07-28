@@ -5813,6 +5813,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			//#38236 - Start
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
+			//#38236 - End
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			
 			
@@ -5995,6 +5998,9 @@ public class SimpleQuoteBackingBean extends
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			//#38236 - Start
+			reqDTO.setUserLocale(facesScopes.getUserLocale());
+			//#38236 - End
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			
 			if (quoteResDTO.isSuccessful()) {				

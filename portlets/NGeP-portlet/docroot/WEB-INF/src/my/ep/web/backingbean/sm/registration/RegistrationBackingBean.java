@@ -99,7 +99,6 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.govtsellerregistration.GovtSellerRegistrationBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -118,7 +117,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 //#28895_35501 Start - AUDIT TRAIL SM
@@ -1952,11 +1950,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
 		case DbValueConst.RECORD_STATUS_PENDING_ACTIVATION:
 			if (supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-				throw new EpException(MessageConst.ERROR_721061, new String[] {
-						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+				throw new EpException(MessageConst.ERROR_721061,
+						new String[] {SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
 			} else {
-				throw new EpException(MessageConst.ERROR_721065, new String[] {
-						SmCommonUtil.getMessage(supplier.getRegNo(), null), "" });
+				throw new EpException(MessageConst.ERROR_721065,
+						new String[] {
+								SmCommonUtil.getMessage(supplier.getRegNo(),
+										null), "" });
 			}
 
 		case DbValueConst.RECORD_STATUS_EXPIRED:

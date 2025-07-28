@@ -12042,7 +12042,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 
 									finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 									finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-									finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+									// Bug #38208@Syazani 12/06/2025 - line removed
 									
 									localCheckList.setPmStatus(scQtCheckList.getPmStatus());
 
@@ -12769,7 +12769,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 							
 								finSpecMaster.setSpecName(tecSpecMaster.getSpecName());
 								finSpecMaster.setItemOriginCode(tecSpecMaster.getItemOriginCode());
-								finSpecMaster.setWeightageReq(tecSpecMaster.isWeightageReq());
+								// Bug #38208@Syazani 12/06/2025 - line removed
 								
 								scQtCheckList.setEdited(false);
 
@@ -12939,6 +12939,7 @@ checklistSorting(this.getManagedBean().getTechnicalScoring());
 				this.getManagedBean().getQt().setSampleReq(issample); // 11104ReendorseStart728
 
 				saveSpecMaintenanceWorkFlowStatus();
+
 				// 11104-Reendorse794 -start-
 				if (issample && SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
 					sampleDetailsPendingTemplateSpec();

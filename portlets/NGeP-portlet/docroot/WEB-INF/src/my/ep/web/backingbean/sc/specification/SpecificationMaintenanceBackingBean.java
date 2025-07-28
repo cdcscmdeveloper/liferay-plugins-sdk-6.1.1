@@ -549,7 +549,7 @@ public void specCommitteeMaintenancereset() {
 							.getParameterCode());
 		}
 		specBB.retriveTechnicalCheckList();//#11104-start
-		
+
 		// #11104 -start-
 		List<ScQtCheckList> technicalChekclist = this.getManagedBean().getScQtCheckSt2techProposal();
 		boolean isSampleWip = specBB.checkSampleRadioShowHideInSpecPrepareAndMaintenance(); // 11104Wip
