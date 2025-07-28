@@ -65,7 +65,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.update']}"
 					styleClass="BtnSpacing"  onstart="updateProposal.show()"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.readOnly and !supplierProposalDetailBackingBean.managedBean.qtClosed and !supplierProposalDetailBackingBean.managedBean.supplierBranchDeleted}"
-					update="@this" process="@this" partialSubmit="true"/> 
+					update="@this" process="@this" partialSubmit="true"/> <ui:remove> #28777#29729 </ui:remove>
 					
 	</div>
 	<ui:remove> #25791 end </ui:remove>
