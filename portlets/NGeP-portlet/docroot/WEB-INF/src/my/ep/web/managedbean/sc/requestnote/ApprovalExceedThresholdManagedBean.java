@@ -42,14 +42,15 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.SLAUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.managedbean.sc.requestnote.ApprovalExceedThresholdManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -67,6 +68,7 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
+	private LogKey logKey = new LogKey();
 	
 	/** The search document type. */
 	private String searchDocumentType; 
@@ -81,7 +83,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	private Long searchStatusId;
 		
 	/** The dp document data model. */
-	private IPagingDataModel<Object[]> dpDocumentDataModel = new DocumentPagingDataModel();
+	private transient IPagingDataModel<Object[]> dpDocumentDataModel = new DocumentPagingDataModel();
 	
 	/** The document types. */
 	private List<SelectItem> documentTypes;
@@ -860,20 +862,45 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 	 *
 	 * @return true, if is pr inquiry
 	 */
-	public	boolean	isPrInquiry(){
-		boolean result	= false;
-		if(requestNote != null){
-			for(ScRequestItem requestNoteItem: requestNote.getRequestNoteItems()){
-				for(ScRequestSupplierItem supplierItem: requestNoteItem.getSupplierItems()){
-					if(supplierItem.getScPrInquiy() != null){
-						result	=	true;
-						return result;
-					}
-				}
-			}
-		}
-		return result;
+	public boolean isPrInquiry() {
+	    if (requestNote == null || isEmpty(requestNote.getRequestNoteItems())) {
+	        return false;
+	    }
+
+	    for (ScRequestItem requestNoteItem : requestNote.getRequestNoteItems()) {
+	        if (hasInquiry(requestNoteItem)) {
+	            return true;
+	        }
+	    }
+
+	    return false;
 	}
+
+	/**
+	 * Checks if any supplier item under the request note item has PR inquiry.
+	 */
+	private boolean hasInquiry(ScRequestItem requestNoteItem) {
+	    List<ScRequestSupplierItem> supplierItems = requestNoteItem.getSupplierItems();
+	    if (isEmpty(supplierItems)) {
+	        return false;
+	    }
+
+	    for (ScRequestSupplierItem supplierItem : supplierItems) {
+	        if (supplierItem.getScPrInquiy() != null) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+
+	/**
+	 * Utility method to check for null or empty list.
+	 */
+	private boolean isEmpty(List<?> list) {
+	    return list == null || list.isEmpty();
+	}
+
 	
 	/**
 	 * Gets the request note items.
@@ -2268,34 +2295,7 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 				}
 
 				if (!isGovernment()) {
-					// Filter By - supplierId
-					ISupplierSearchSO supplierSearchSO = null;
-					try {
-						supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-
-						SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-						supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-						List<SmSupplier> smSuppliers = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO)
-								.getResultBean().getResultList();
-
-						if (CollectionUtils.isNotEmpty(smSuppliers)) {
-							List<Long> supplierIds = new ArrayList<>();
-							for (SmSupplier supplier : smSuppliers) {
-								supplierIds.add(supplier.getSupplierId());
-							}
-							reqDTO.setSupplierIds(supplierIds);
-						}else {
-							if (isViewAsSupplier()) {
-								List<Long> supplierIds = new ArrayList<>();
-								supplierIds.add(supplierSearchReqDTO.getUserId());
-								reqDTO.setSupplierIds(supplierIds);
-							}
-						}
-
-					} finally {
-						supplierSearchSO = null;
-					}
+					loadSupplierId(reqDTO);
 				}
 
 				reqDTO.setSourcingDocSearchBean(searchBean);
@@ -2305,9 +2305,42 @@ public class ApprovalExceedThresholdManagedBean extends BaseManagedBean{
 					return resDTO.getSourcingDocSearchResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				SLAUtils.getInstance().logSLAError("DP", "ApprovalExceedThresholdManagedBean",
+						getRequestNoteNo(), "DocumentPagingDataModel", logKey.getUserId(), e);
 			}
 			return null;
+		}
+
+		private void loadSupplierId(SourcingIntegrationReqDTO reqDTO) {
+			// Filter By - supplierId
+			ISupplierSearchSO supplierSearchSO = null;
+			try {
+				supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+
+				SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+				supplierSearchReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				List<SmSupplier> smSuppliers = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO)
+						.getResultBean().getResultList();
+
+				if (CollectionUtils.isNotEmpty(smSuppliers)) {
+					List<Long> supplierIds = new ArrayList<>();
+					for (SmSupplier supplier : smSuppliers) {
+						supplierIds.add(supplier.getSupplierId());
+					}
+					reqDTO.setSupplierIds(supplierIds);
+				}else {
+					if (isViewAsSupplier()) {
+						List<Long> supplierIds = new ArrayList<>();
+						supplierIds.add(supplierSearchReqDTO.getUserId());
+						reqDTO.setSupplierIds(supplierIds);
+					}
+				}
+
+			} catch (Exception e) {
+				SLAUtils.getInstance().logSLAError("DP", "ApprovalExceedThresholdManagedBean",
+						getRequestNoteNo(), "DocumentPagingDataModel", logKey.getUserId(), e);
+			}
 		}
 	}
 
