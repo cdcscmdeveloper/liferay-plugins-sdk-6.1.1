@@ -509,8 +509,7 @@ public class ViewSuppProfileBackingBean extends
 			List<String> cancelledCategoryCodes = new ArrayList<>();
 			cancelledCategoryCodes.addAll(supplier.getDeletedCategoryCodes());
 
-			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes)
-					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledCategories(supplier));
+			boolean noCancelledCategory = CollectionUtils.isNotEmpty(cancelledCategoryCodes);
 			if (noCancelledCategory) {
 				messages.add(MessageUtils.getMessage(MessageConst.INFO_760554,
 						new String[] { StringUtils.join(cancelledCategoryCodes.toArray(), ", ") },
@@ -518,8 +517,7 @@ public class ViewSuppProfileBackingBean extends
 			}
 
 			boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
-					&& !supplier.isBumi()
-					&& (!supplier.isDisciplinaryActions() || !evaluateCancelledBumiAccount(supplier));
+					&& !supplier.isBumi();
 			if (noBumiAccount) {
 				messages.add(MessageUtils.getMessage(MessageConst.ERROR_760559, new String[] {},
 						MessageUtils.BUNDLE_COMMON_MESSAGES, locale));
