@@ -652,9 +652,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 			for (PmMachineCategory savedPmMachine : savedPmMachines) {
 				for (PmMachineCategory oldPmMachine : oldPmMachines) {
 					this.docId = BigInteger.valueOf(savedPmMachine.getMachineCategoryId());
-
 					// check site visit
-					
 					String typeCode = pmCategoryL3.getCategoryTypeCode().getParameterCode();
 					updateSiteVisit(oldPmMachine, savedPmMachine, typeCode);
 					
@@ -675,7 +673,7 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 	private void updateSiteVisit(PmMachineCategory oldPmMachine, PmMachineCategory savedPmMachine, String categoryTypeCode) {
 		// 243, 245, 248
 
-		if (categoryTypeCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_WORKSHOP)
+		/**if (categoryTypeCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_WORKSHOP)
 				|| categoryTypeCode.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_DOCKYARD)) {
 			if (savedPmMachine.getDockYardSiteVisit() != null && !savedPmMachine.getDockYardSiteVisit().equals(oldPmMachine.getDockYardSiteVisit()))
 				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_TOOL_FIELDLABELCODE, AuditConst.PM_AUD_NO, AuditConst.PM_AUD_YES, null, null);
@@ -694,7 +692,40 @@ public class AuditPMCategoryCodeBackingBean extends AuditPMBackingBeanTemplate {
 				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE, AuditConst.PM_AUD_NO, AuditConst.PM_AUD_YES, null, null);
 			else if (oldPmMachine.getPrintingSiteVisit() != null && !oldPmMachine.getPrintingSiteVisit().equals(savedPmMachine.getPrintingSiteVisit()))
 				detailObj(AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE, AuditConst.PM_AUD_YES, AuditConst.PM_AUD_NO, null, null);
+		}*/
+		
+		if (ParameterTypeConst.SPECIAL_CATEGORY_TYPE_WORKSHOP.equals(categoryTypeCode)
+		        || ParameterTypeConst.SPECIAL_CATEGORY_TYPE_DOCKYARD.equals(categoryTypeCode)) {
+
+		    compareAndAuditSiteVisit(
+		        savedPmMachine.getDockYardSiteVisit(),
+		        oldPmMachine.getDockYardSiteVisit(),
+		        AuditConst.PM_AUD_CCR_SITE_VISIT_TOOL_FIELDLABELCODE
+		    );
+
+		    compareAndAuditSiteVisit(
+		        savedPmMachine.getWorkshopSiteVisit(),
+		        oldPmMachine.getWorkshopSiteVisit(),
+		        AuditConst.PM_AUD_CCR_SITE_VISIT_EQUIPMENT_FIELDLABELCODE
+		    );
 		}
+
+		if (ParameterTypeConst.SPECIAL_CATEGORY_TYPE_PRINTING.equals(categoryTypeCode)) {
+		    compareAndAuditSiteVisit(
+		        savedPmMachine.getPrintingSiteVisit(),
+		        oldPmMachine.getPrintingSiteVisit(),
+		        AuditConst.PM_AUD_CCR_SITE_VISIT_ACCESSORIES_FIELDLABELCODE
+		    );
+		}
+
 	}
 	
+	private void compareAndAuditSiteVisit(Object newVal, Object oldVal, BigInteger fieldLabelCode) {
+	    if (newVal != null && !newVal.equals(oldVal)) {
+	        detailObj(fieldLabelCode, AuditConst.PM_AUD_NO, AuditConst.PM_AUD_YES, null, null);
+	    } else if (oldVal != null && !oldVal.equals(newVal)) {
+	        detailObj(fieldLabelCode, AuditConst.PM_AUD_YES, AuditConst.PM_AUD_NO, null, null);
+	    }
+	}
+
 }
