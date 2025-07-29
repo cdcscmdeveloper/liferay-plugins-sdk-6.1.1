@@ -109,8 +109,13 @@
 							<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
 						</f:facet>
-						<h:outputText
-							value="#{newItems.itemCode}" />
+						<!-- #31344 display item details in popup -->				
+						<p:commandLink oncomplete="itemDescDialogId.show();" 
+							value="#{newItems.scRequestItem.cmItem.extensionCode}" 
+							style="color: #009ae5; font-size:12px; font-style:italic; float:right;"
+							action="#{flOrderBB.showItemDescPopup(newItems.scRequestItem.cmItem.itemId)}" 
+							process="@this" 
+							update="@([id$=itemDescDialogId])"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:20%">
 						<!--#31344 filter item name-->
