@@ -1467,22 +1467,29 @@ public class SupplierFinalizationBackingBean extends
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
 						//#28784 - Start
-						if (getManagedBean().isItemize()) {
-							int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
-							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
-								evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-							} else {
-								evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
-								if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
-									selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
-								} else {
-									getManagedBean().setQualifiedSuppliersByEvalStage(null);
-									return;
-								}
-							}
+						boolean isItemize = getManagedBean().isItemize();
+						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
+						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
+
+						if (!isItemize) {
+				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
 						} else {
-							evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+
+				    		if (wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    		} else {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+
+				        		if (isItemRowSelected && selectedItem != null) {
+				            		selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+				        		} else {
+				            		getManagedBean().setQualifiedSuppliersByEvalStage(null);
+				            		return;
+				        		}
+				    		}
 						}
+						// Set evaluation header (always the same regardless of itemize/WIP status)
 						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
 						//#28784 - End
 					 } else {
