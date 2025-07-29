@@ -1354,7 +1354,6 @@ public class SupplierFinalizationBackingBean extends
 									selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
 								} else {
 									getManagedBean().setQualifiedSuppliersByEvalStage(null);
-									log.debug("None of the item(s) has been row selected");
 									return;
 								}
 							}
