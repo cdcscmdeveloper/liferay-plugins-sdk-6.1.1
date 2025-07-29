@@ -16,6 +16,7 @@
 		dynamic="true" resizable="false" width="1000px" closable="true"
 		height="500px" styleClass="pop_up_top">
 		<p:ajax event="close"
+			update="@all"
 			actionListener="#{specScorePreviewBackingBean.closeScoreReport}" />
 		<p:media value="#{specScorePreviewBackingBean.getScoreReport()}" width="100%"
 			height="450px" player="pdf" />

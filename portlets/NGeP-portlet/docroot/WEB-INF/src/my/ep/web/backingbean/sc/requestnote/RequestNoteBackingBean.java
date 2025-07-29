@@ -6930,8 +6930,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			getManagedBean().setDisciplinaryActionBlacklist(resDto.isDisciplinaryActionBlackListOwner());
 			getManagedBean().setDisciplinaryActionCancelRegistration(resDto.isDisciplinaryActionCancelRegistration());
-			getManagedBean().setDisciplinaryActionDeletedDue(resDto.isDisciplinaryActionPendingTransaction());
-			getManagedBean().setDisciplinaryActionPendingTransaction(resDto.isDisciplinaryActionDeletedDue());
+			getManagedBean().setDisciplinaryActionDeletedDue(resDto.isDisciplinaryActionDeletedDue());
+			getManagedBean().setDisciplinaryActionPendingTransaction(resDto.isDisciplinaryActionPendingTransaction());
 
 			return resDto.isDisciplinaryActionBlackListOwner() || resDto.isDisciplinaryActionCancelRegistration();
 

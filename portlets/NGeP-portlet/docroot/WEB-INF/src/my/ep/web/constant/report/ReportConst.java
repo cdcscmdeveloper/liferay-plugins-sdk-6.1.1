@@ -1194,6 +1194,9 @@ public class ReportConst implements Serializable{
 	public static final String SC_PVW_FIN_SCORING_JSP = "SC_PVW_FIN_SCORING.jsp";
 	public static final String SC_PVW_OVERALL_SCORING_JSP = "SC_PVW_OVERALL_SCORING.jsp";
 	// #10141 End Vinod
+	// #38526 Start Vinod 24/07/2025
+	public static final String PARAM_REPORT_FLOWTYPE = "flowType";
+	// #38526 End Vinod 24/07/2025
 	
 	public ReportConst(){}
 	
