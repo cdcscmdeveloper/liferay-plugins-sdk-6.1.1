@@ -74,7 +74,14 @@
 				</f:facet>
 				<h:panelGroup rendered="#{chargeLineNode.parent == 'true'}">
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" style="text-align:left; float:left;"/>
-				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" style="text-align:left; float:left;"/>
+				<!-- #31344 display item details in popup -->	
+				<p:commandLink rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" 
+					oncomplete="itemDescDialogId.show();" 
+					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
+					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left; "
+					action="#{purchaseRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
+					process="@this" 
+					update="@([id$=itemDescDialogId])"/>
 				<h:outputText value="(" rendered="#{chargeLineNode.parent == 'true'}" />
 					<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}" 
 					rendered="#{chargeLineNode.parent == 'true'}" style="white-space:pre-wrap;"/>
@@ -96,7 +103,14 @@
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" style="float:right;"/>
-				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" style="float:right;"/>			
+				<!-- #31344 display item details in popup -->	
+				<p:commandLink rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" 
+					oncomplete="itemDescDialogId.show();" 
+					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" 
+					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left; "
+					action="#{purchaseRequestBackingBean.showItemDescPopup(chargeLineNode.scRequestItem.cmItem.itemId)}" 
+					process="@this" 
+					update="@([id$=itemDescDialogId])"/>		
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center">
 				<f:facet name="footer">

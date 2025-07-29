@@ -43,7 +43,14 @@
             </p:row>
           </p:columnGroup>    
              <p:column>
-            	<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.itemCode}" />
+             	<!-- #31344 display item details in popup -->	
+            	<p:commandLink rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem!=null}" 
+					oncomplete="itemDescDialogId.show();" 
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}" 
+					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+					action="#{receivedNoteBackingBean.showItemDescPopup(item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.itemId)}" 
+					process="@this" 
+					update="@([id$=itemDescDialogId])"/>
         	</p:column>
         	<p:column style="white-space:normal;">
         	<!--#31344 filter item name-->

@@ -56,7 +56,14 @@
 					<h:outputText value="#{lbl['lbl.fl.item.code']}" />
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
-				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.itemCode}" />
+				<!-- #31344 display item details in popup -->	
+            	<p:commandLink rendered="#{danItem.level == 1}" 
+					oncomplete="itemDescDialogId.show();" 
+					value="#{danItem.flAdjustmentItem.flItem.itemCode}" 
+					style="color: #009ae5; font-size:12px; font-style:italic; text-align:left; float:left;"
+					action="#{danBackingBean.showItemDescPopup(danItem.flAdjustmentItem.flItem.cmItem.itemId)}" 
+					process="@this" 
+					update="@([id$=itemDescDialogId])"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item']}" style="white-space:normal;text-align:center;width:35%;">
 			<!--#31344 filter item name-->
