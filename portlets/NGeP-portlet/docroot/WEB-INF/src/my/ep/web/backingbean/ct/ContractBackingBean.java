@@ -4426,7 +4426,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333 - Start
-		if ((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
+		if (getManagedBean().getCtContractAmount().isBondReq()
 				&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 				&& !getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!getManagedBean().isCommonView() || getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
