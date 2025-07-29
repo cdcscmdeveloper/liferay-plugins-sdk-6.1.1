@@ -264,9 +264,8 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					scQtDemo = resDto.getScQtDemo();
 					//#28784 reeval bug - Start
 					boolean isReEvaluateDemo = false;
-					if (scQtDemo != null && scQtDemo.getDemoId() != null) {
-						isReEvaluateDemo = checkExistingDemoSupplier(scQtDemo.getScQtDemoSupplierList());
-					}
+					//No need to check if demo exist or not since already check above
+					isReEvaluateDemo = checkExistingDemoSupplier(scQtDemo.getScQtDemoSupplierList());
 					if (isReEvaluateDemo) {
 						
 						DemoReqDTO demoReqDTO = new DemoReqDTO();
@@ -304,11 +303,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					}
 
 					List<ScQtDemoContact> ct = scQtDemo.getScQtDemoContactList();
-					for (ScQtDemoContact c : ct) {
-						if (c.isDeskofficer()) {
-							c.setDisableRowSelection(true);
-						}
-					}
+					Collections.sort(scQtDemo.getScQtDemoContactList(), new PresentationDemoContactListComparator());//sort contact list
 					// log.info("*****contact list = " + ct.size());
 					this.getManagedBean().setScQtDemoContactList(ct);
 					this.getManagedBean().setDemoRemark(scQtDemo.getDemoInvRemark());
@@ -664,8 +659,11 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					this.getManagedBean().setByItemList(resDto.getScQtDemo().getScQtDemoItemList());
 				}
 				qtDemo = resDto.getScQtDemo();
+				Collections.sort(resDto.getScQtDemo().getScQtDemoContactList(), new PresentationDemoContactListComparator());//sort contact list
 				this.getManagedBean().setScQtDemoContactList(resDto.getScQtDemo().getScQtDemoContactList());
 				this.getManagedBean().setDemoRemark(resDto.getScQtDemo().getDemoInvRemark());
+				demoSuppList = resDto.getScQtDemo().getScQtDemoSupplierList();
+				demoItemList = resDto.getScQtDemo().getScQtDemoItemList();
 
 			} else if (!savedData) {
 				if (this.getManagedBean().getDemoInvBy().equalsIgnoreCase(SourcingConstants.ALL_ITEM)) {
@@ -697,6 +695,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 
 					qtDemo.setQtId(this.getManagedBean().getQt());
 					qtDemo.setDemoCategoryId(pmParam);
+					Collections.sort(qualifiedSupp, new QualifiedSupplierComparator());//sort supplier list
 
 					for (ScQtProposal p : qualifiedSupp) {
 						scQtDemoSchedule = new ScQtDemoSchedule();
@@ -767,6 +766,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 					qualifiedSupp = checkQualifiedSupplier();
 					
 					qualifiedSupp = checkQualifiedSupplierZoneAndItem(qualifiedSupp, specQuestionList);//#28784 remove supplier without spec answer
+					Collections.sort(qualifiedSupp, new QualifiedSupplierComparator());//sort supplier list
 
 					for (ScQtProposal p : qualifiedSupp) {
 						demoSupplier = new ScQtDemoSupplier();
@@ -820,10 +820,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 				demoCtc.setTelephoneNo(resDTO.getPmUser().getPhoneNo());
 				demoCtc.setFaxNo(resDTO.getPmUser().getFaxNo());
 				demoCtc.setEmail(resDTO.getPmUser().getEmail());
-				demoCtc.setDisableRowSelection(true);
 				demoCtc.setDeskofficer(true);
 				demoCtc.setScQtDemo(qtDemo);
 				demoContactList.add(demoCtc);
+				Collections.sort(demoContactList, new PresentationDemoContactListComparator());//sort contact list
 				this.getManagedBean().setScQtDemoContactList(demoContactList);
 				this.getManagedBean().setCurrentOfficer(resDTO.getPmUser().getUserName());
 
@@ -891,6 +891,7 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			
 			qtDemo.setScQtDemoSupplierList(demoSuppList);
 			qtDemo.setScQtDemoItemList(demoItemList);
+			Collections.sort(demoContactList, new PresentationDemoContactListComparator());//sort contact list
 			qtDemo.setScQtDemoContactList(demoContactList);
 			qtDemo.setDemoCategoryId(pmParam);
 			this.getManagedBean().setScQtDemo(qtDemo);
@@ -1038,6 +1039,10 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 			demoConList.remove(c);
 		}
 		this.getManagedBean().setScQtDemoContactList(demoConList);
+		if (this.getManagedBean().getScQtDemoContactList().size() == 1) {
+			this.getManagedBean().setSelectedContactList(null);
+			this.getManagedBean().setSelectAll(false);
+		}
 	}
 
 	public DemoResDTO saveDemoInvitation() {
@@ -1526,4 +1531,60 @@ public class DemoInvitationBackingBean extends SourcingBaseBackingBean<DemoInvit
 		return qualifiedSupp;
 	}
 	//#28784 remove supplier without spec answer - End
+	
+	private static class PresentationDemoContactListComparator implements Comparator<ScQtDemoContact> {
+		public int compare(ScQtDemoContact s1, ScQtDemoContact s2) {
+			return s1.getDemoContactId().compareTo(s2.getDemoContactId());
+		}
+	}
+	
+	private static class QualifiedSupplierComparator implements Comparator<ScQtProposal> {
+		public int compare(ScQtProposal s1, ScQtProposal s2) {
+			return s1.getSupplierNo().compareTo(s2.getSupplierNo());
+		}
+	}
+	
+	/**
+	 * Update list of contact person to be delete
+	 * 
+	 * @param cont
+	 * @param selectAll
+	 */
+	public void addToBeRemoveContactPerson(ScQtDemoContact cont, boolean selectAll) {
+		List<ScQtDemoContact> selectedDemoContact = new ArrayList<>();
+		List<ScQtDemoContact> demoConList = this.getManagedBean().getScQtDemoContactList();
+		if (this.getManagedBean().getSelectedContactList() == null) {
+			this.getManagedBean().setSelectedContactList(new ArrayList<ScQtDemoContact>());
+		}
+		if (selectAll && this.getManagedBean().isSelectAll()) {
+			setSelectAllSupplier(demoConList, selectedDemoContact);
+		} else if (selectAll && !this.getManagedBean().isSelectAll()) {
+			setUnselectAllSupplier(demoConList, selectedDemoContact);
+		} else {
+			if (cont.isDisableRowSelection()) {
+				this.getManagedBean().getSelectedContactList().add(cont);
+			} else {
+				this.getManagedBean().getSelectedContactList().remove(cont);
+			}
+		}
+	}
+	
+	private void setSelectAllSupplier(List<ScQtDemoContact> demoConList, List<ScQtDemoContact> selectedDemoContact) {
+		for (ScQtDemoContact c : demoConList) {
+			if (c.getPmUser() == null) {
+				c.setDisableRowSelection(true);
+				selectedDemoContact.add(c);
+			}
+		}
+		this.getManagedBean().setSelectedContactList(selectedDemoContact);
+	}
+	
+	private void setUnselectAllSupplier(List<ScQtDemoContact> demoConList, List<ScQtDemoContact> selectedDemoContact) {
+		for (ScQtDemoContact c : demoConList) {
+			if (c.getPmUser() == null) {
+				c.setDisableRowSelection(false);
+			}
+		}
+		this.getManagedBean().setSelectedContactList(selectedDemoContact);
+	}
 }

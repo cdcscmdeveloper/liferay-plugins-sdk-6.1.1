@@ -2323,6 +2323,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void errorMessageSSM(SmSupplier supp){
 		//IF MOF CHECK MOF EXPIRED FIRST
 		if(supp.getSmAppl() != null){
+			//#38143 - Start
 			if(supp.getSmAppl().getApplType()
 					.equalsIgnoreCase(SupplierManagementConst.ACC_MOF)
 					|| supp.getSmAppl()
@@ -2337,6 +2338,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 							.getSupplierType()
 							.equalsIgnoreCase(
 									SupplierManagementConst.STYPE_CONSULTANT)){
+				//#38143 - End
 				if(supp.getSmAppl().getSmMofCerts() != null){
 					boolean expiredBelowOneYear = false;
 					//boolean expiredMoreOneYear = false;
@@ -4115,6 +4117,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 			getManagedBean().setBusinessDistrictLs(null);
 			getManagedBean().setBusinessCityLs(null);
+			getManagedBean().getSmBusinessAdd().setMapLatitude("");
+			getManagedBean().getSmBusinessAdd().setMapLongitude("");
+			getManagedBean().getSmBusinessAdd().setPostcode("");
+			getManagedBean().getSmSupp().setLocalAuthorityId(null);
 		}
 		//#36718 - END
 				
@@ -4153,6 +4159,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 									this.getManagedBean().getSmBusinessAdd().getPmDivision().setDivisionId(null);
 									getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 									getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+									//#36718 - START
+									getManagedBean().getSmBusinessAdd().setMapLatitude("");
+									getManagedBean().getSmBusinessAdd().setMapLongitude("");
+									getManagedBean().getSmBusinessAdd().setPostcode("");
+									//#36718 - END
 								//} 
 																
 								List<SelectItem> divisionLs = SmCommonUtil.getDivisionList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
@@ -4189,6 +4200,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
 					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 					getManagedBean().getSmSupp().setLocalAuthorityId(null);
+					//#36718 - START
+					getManagedBean().getSmBusinessAdd().setMapLatitude("");
+					getManagedBean().getSmBusinessAdd().setMapLongitude("");
+					getManagedBean().getSmBusinessAdd().setPostcode("");
+					//#36718 - END
 				}
 			}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) ||
 					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
@@ -4216,6 +4232,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 					getManagedBean().setBusinessDistrictLs(null);
 					getManagedBean().setBusinessCityLs(null);
+					//#36718 - START
+					getManagedBean().getSmBusinessAdd().setMapLatitude("");
+					getManagedBean().getSmBusinessAdd().setMapLongitude("");
+					//#36718 - END
 				}
 			}else{
 				
@@ -4231,6 +4251,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 					getManagedBean().setBusinessDistrictLs(null);
 					getManagedBean().setBusinessCityLs(null);
+					getManagedBean().getSmBusinessAdd().setMapLatitude("");
+					getManagedBean().getSmBusinessAdd().setMapLongitude("");
+					getManagedBean().getSmBusinessAdd().setPostcode("");
 				}
 				//#36718 - START
 			}

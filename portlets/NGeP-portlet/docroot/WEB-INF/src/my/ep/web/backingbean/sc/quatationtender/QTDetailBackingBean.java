@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -325,7 +326,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.constant.sc.SLALogConstant;
-import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQt;
+import my.ep.persistence.entity.sc.bidding.ScBidScheduleForQT;
 //25791-end
 
 /**
@@ -3068,23 +3069,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					supplierSearchSO = null;
 				}
 			} else {
-				if (isDeskOfficer()) {
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					
-					// Only DO Actor with edit access right. 
-					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if ((isQTMaintenanceScreen() || isQTSearchScreen()) && !isPbbSecretary()) { //#27668
-						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-					}
-				}				
-				//Bug_33484 - start
-				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
-						|| isFpbSecretary() || isApprover()){
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-				}
-				//Bug_33484 - end
+				/*
+				 * 38524 - start 
+				 * Update codes with caution! 
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
+				 */
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
+
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
+					reqDTO.setPmUser(null);
+				} else if (isDeskOfficer() && isMaintenanceScreen
+						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				} else {
+					// last fallback
+					reqDTO.setRoleCode(null);
+				} 
+				// 38524 - end
 					
 				 /* Enhancement #27668
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -4728,6 +4733,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									}
 									//21692 Sync Approval PB with Committee Appointment PB except for Central Contract note 571 - End
 								}
+							}
+							if (CollectionUtils.isNotEmpty(qtApproval.getHistoryApprovalRequests())) {
+								LinkedHashSet<ScQtApprovalRequest> removeDuplicate = new LinkedHashSet<>(qtApproval.getHistoryApprovalRequests());
+								List<ScQtApprovalRequest> noDuplicate = new ArrayList<>(removeDuplicate);
+								qtApproval.setHistoryApprovalRequests(noDuplicate);
 							}
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
@@ -9330,6 +9340,15 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
 	
+	// 38524 - start
+	private boolean isAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SUPPORT_TECHNICAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.SUPPORT_APPL.value())
+				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+
+	// 38524 - end
 	/**
 	 * BUG 32050, BUG 32209
 	 * Checks if QT/DL is UPDATABLE or NOT.
@@ -11289,7 +11308,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		getManagedBean().setSearchLoiForQtDataModel(searchLoiDataModel);
 		getManagedBean().getSearchLoiForQtDataModel().resetData();
 
-		IPagingDataModel<ScBidScheduleForQt> biddingDataModel = new ScheduleBiddingPagingDataModel(
+		IPagingDataModel<ScBidScheduleForQT> biddingDataModel = new ScheduleBiddingPagingDataModel(
 				QTConstants.QT_SEARCH_BID_SCHEDULE_ID, getManagedBean()
 						.getQtnTenderSearchBean());
 
@@ -11325,7 +11344,7 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 	 * @param previousPageUrl
 	 * @return BiddingDetailsScreen
 	 */
-	public String viewOnlineBidding(ScBidScheduleForQt scBidSchedule,
+	public String viewOnlineBidding(ScBidScheduleForQT scBidSchedule,
 			String previousPageUrl) {
 		
 
@@ -13796,7 +13815,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				contractReqDTO.setvCtContractSearchBean(contractSearchBean);
 
 				contractResDTO = contractSO
-						.retrieveContractDtlsByLoa(contractReqDTO);
+						.retrieveContractDtlsByLOA(contractReqDTO);
 
 				if (null != contractResDTO.getvCtContractResultBean()
 						&& CollectionUtils.isNotEmpty(contractResDTO
@@ -13989,7 +14008,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				awardSuppReqDTO.setScLoaSearchBean(searchBean);
 
 				AwardSupplierResDTO awardSupplierResDTO = awardSO
-						.retrieveLoaTrackingDtlsByIdAndType(awardSuppReqDTO);
+						.retrieveLOATrackingDtlsByIdAndType(awardSuppReqDTO);
 
 				return awardSupplierResDTO.getLoaResultBean();
 			} catch (Exception e) {
@@ -14041,7 +14060,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 				contractReqDTO.setvCtContractSearchBean(searchBean);
 
 				ContractResDTO contractResDTO = contractSO
-						.retrieveContractDtlsByLoa(contractReqDTO);
+						.retrieveContractDtlsByLOA(contractReqDTO);
 
 				return contractResDTO.getvCtContractResultBean();
 			} catch (Exception e) {
@@ -14065,8 +14084,8 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 * @return the search schedule bidding model
 	 */
-	public IPagingDataModel<ScBidScheduleForQt> getSearchBidScheduleDataModel() {
-		IPagingDataModel<ScBidScheduleForQt> searchBidScheduleDataModel = getManagedBean()
+	public IPagingDataModel<ScBidScheduleForQT> getSearchBidScheduleDataModel() {
+		IPagingDataModel<ScBidScheduleForQT> searchBidScheduleDataModel = getManagedBean()
 				.getSearchBidScheduleDataModel();
 		if (searchBidScheduleDataModel == null) {
 			searchBidScheduleDataModel = new ScheduleBiddingPagingDataModel(
@@ -14118,7 +14137,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 	 * 
 	 */
 	private class ScheduleBiddingPagingDataModel extends
-			PagingDataModel<ScBidScheduleForQt> {
+			PagingDataModel<ScBidScheduleForQT> {
 
 		private static final long serialVersionUID = 1L;
 		/** The qtn tender search bean. */
@@ -14135,12 +14154,12 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 
 		@Override
-		protected ISearchResultBean<ScBidScheduleForQt> pageChangeListener(
-				ISearchBean<ScBidScheduleForQt> searchBean) {
+		protected ISearchResultBean<ScBidScheduleForQT> pageChangeListener(
+				ISearchBean<ScBidScheduleForQT> searchBean) {
 
 			BiddingReqDTO biddingReqDTO = new BiddingReqDTO();
 
-			constructBiddingSerachBean(qtnTenderSearchBean, searchBean);
+			constructBiddingSearchBean(qtnTenderSearchBean, searchBean);
 			// Order by created date
 			searchBean.getSortColumns().add(
 					new SearchOrderBean(SourcingConstants.QT_SEARCH_BID_START_DATE, false));
@@ -14150,13 +14169,13 @@ public void retrieveDemoQtDetails(Long qtId) {
 					biddingReqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
 				}
 			}
-			biddingReqDTO.setQtBidSeheduleSerachDtls(searchBean);
+			biddingReqDTO.setQtBidScheduleSearchDtls(searchBean);
 			try {
 				IBiddingSO biddingSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IBiddingSO.class);
 				BiddingResDTO biddingResDTO = biddingSO
-						.searchScheduleBidDetailsForQt(biddingReqDTO);
+						.searchScheduleBidDetailsForQT(biddingReqDTO);
 				return biddingResDTO.getQtBiddingScheduleResultDtls();
 			} catch (Exception e) {
 				Long loaId = 0L;
@@ -14177,11 +14196,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * 
 		 * @param qtnTenderSearchBean
 		 * @param bidSearchBean
-		 * @return ISearchBean<ScBidScheduleForQt> searchBean details
+		 * @return ISearchBean<ScBidScheduleForQT> searchBean details
 		 */
-		private ISearchBean<ScBidScheduleForQt> constructBiddingSerachBean(
+		private ISearchBean<ScBidScheduleForQT> constructBiddingSearchBean(
 				QtnTenderSearchBean qtnTenderSearchBean,
-				ISearchBean<ScBidScheduleForQt> bidSearchBean) {
+				ISearchBean<ScBidScheduleForQT> bidSearchBean) {
 
 			// Filter By - title
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
@@ -14228,7 +14247,7 @@ public void retrieveDemoQtDetails(Long qtId) {
 			}
 
 		
-			constructDocNumer(qtnTenderSearchBean, bidSearchBean);
+			constructDocNumber(qtnTenderSearchBean, bidSearchBean);
 			constructCreatedDate(qtnTenderSearchBean, bidSearchBean);
 			constructPublishedDate(qtnTenderSearchBean, bidSearchBean);
 			constructCloseDate(qtnTenderSearchBean, bidSearchBean);
@@ -14246,9 +14265,9 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * @param bidSearchBean
 		 * @return
 		 */
-		private ISearchBean<ScBidScheduleForQt> constructDocNumer(
+		private ISearchBean<ScBidScheduleForQT> constructDocNumber(
 				QtnTenderSearchBean qtnTenderSearchBean,
-				ISearchBean<ScBidScheduleForQt> bidSearchBean) {
+				ISearchBean<ScBidScheduleForQT> bidSearchBean) {
 			// Filter By - docNo&BidNo
 			String docNo = qtnTenderSearchBean.getDocNo();
 			if (StringUtils.isNotEmpty(docNo) && StringUtils.isNotBlank(docNo)) {
@@ -14286,11 +14305,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * 
 		 * @param qtnTenderSearchBean
 		 * @param bidSchedulesBean
-		 * @return ISearchBean<ScBidScheduleForQt> data.
+		 * @return ISearchBean<ScBidScheduleForQT> data.
 		 */
-		private ISearchBean<ScBidScheduleForQt> constructCreatedDate(
+		private ISearchBean<ScBidScheduleForQT> constructCreatedDate(
 				QtnTenderSearchBean qtnTenderSearchBean,
-				ISearchBean<ScBidScheduleForQt> bidSchedulesBean) {
+				ISearchBean<ScBidScheduleForQT> bidSchedulesBean) {
 			// Filter By - Created Date
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -14343,11 +14362,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * 
 		 * @param qtnTenderSearchBean
 		 * @param bidSchedulesBean
-		 * @return ISearchBean<ScBidScheduleForQt> data.
+		 * @return ISearchBean<ScBidScheduleForQT> data.
 		 */
-		private ISearchBean<ScBidScheduleForQt> constructPublishedDate(
+		private ISearchBean<ScBidScheduleForQT> constructPublishedDate(
 				QtnTenderSearchBean qtnTenderSearchBean,
-				ISearchBean<ScBidScheduleForQt> bidSchedulesBean) {
+				ISearchBean<ScBidScheduleForQT> bidSchedulesBean) {
 			// Filter By - publish date
 			Date fromPublishDate = qtnTenderSearchBean.getFromPublishDate();
 			Date toPublishDate = qtnTenderSearchBean.getToPublishDate();
@@ -14400,11 +14419,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * 
 		 * @param qtnTenderSearchBean
 		 * @param bidSchedulesBean
-		 * @return ISearchBean<ScBidScheduleForQt> data.
+		 * @return ISearchBean<ScBidScheduleForQT> data.
 		 */
-		private ISearchBean<ScBidScheduleForQt> constructCloseDate(
+		private ISearchBean<ScBidScheduleForQT> constructCloseDate(
 				QtnTenderSearchBean qtnTenderSearchBean,
-				ISearchBean<ScBidScheduleForQt> bidSchedulesBean) {
+				ISearchBean<ScBidScheduleForQT> bidSchedulesBean) {
 			// Filter By - closingDate
 			Date fromClosingDate = qtnTenderSearchBean.getFromClosingDate();
 			Date toClosingDate = qtnTenderSearchBean.getToClosingDate();
@@ -14454,11 +14473,11 @@ public void retrieveDemoQtDetails(Long qtId) {
 		 * 
 		 * @param qtnTenderSearchBean
 		 * @param bidSchedulesBean
-		 * @return ISearchBean<ScBidScheduleForQt> data.
+		 * @return ISearchBean<ScBidScheduleForQT> data.
 		 */
-		private ISearchBean<ScBidScheduleForQt> constructOrgProfileData(
+		private ISearchBean<ScBidScheduleForQT> constructOrgProfileData(
 				QtnTenderSearchBean qtnTenderSearchBean,
-				ISearchBean<ScBidScheduleForQt> bidSchedulesBean) {
+				ISearchBean<ScBidScheduleForQT> bidSchedulesBean) {
 			PmOrgProfile ptjProfiles = qtnTenderSearchBean.getPtjProfile();
 			if (ptjProfiles != null && ptjProfiles.getOrgProfileId() != null) {
 				// Filter By - PTJ

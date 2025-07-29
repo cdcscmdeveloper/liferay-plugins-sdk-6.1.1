@@ -81,7 +81,7 @@
 			<ui:param name="supplier" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}"/>
 			<c:if test="#{not empty supplier.scQt}">
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" />
+					<p:outputLabel value="#{lbl['lbl.sc.discipline.action']}" />
 				</td>
 				<td>
 					<ac:disciplinaryActionYesNo supplier="#{supplier}" showTooltip="true" />
@@ -770,8 +770,9 @@
 	<p:dialog id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
 		resizable="false" width="700px" height="350px" modal="true" 
 		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}"
-		onShow="singleUploadListener(approvalLetterUploadWV);">
-		<p:ajax event="close" />
+		onShow="singleUploadListener(approvalLetterUploadWV);"
+		rendered="#{isEditableStatus and (((lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter) and lOADetailBackingBean.managedBean.above500K and isNonPeriodic and (!isPK7 || reasonPK2 || reasonSpecialItem) and !isDocTypeQuotation) || (((isNonPeriodic || isOneOff) and (!isPK7 || reasonPK2 || reasonSpecialItem))  and isDocTypeQuotation and (lOADetailBackingBean.showApprovalLetter() || lOADetailBackingBean.managedBean.showApprovalLetter)))}"> <!-- #38711  -->
+		<p:ajax event="close" />	
 		<p:fileUpload style="display:inline;" mode="advanced" dragDropSupport="false"
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}" showButtons="false"
 			fileUploadListener="#{lOADetailBackingBean.fileUpload}" multiple="false"
@@ -787,12 +788,6 @@
   		</f:facet>
 	</p:dialog>
 	
-	<!--ac:scSingleFileUploadPopup id="uploadApprovalLetterDlg" widgetVar="uploadApprovalLetterDlg"
-			fileUploadListener="lOADetailBackingBean.fileUpload"			
-			update=":form:uploadedPage" 
-			fileType="#{lOADetailBackingBean.managedBean.fileTypePdf}"
-			invalidFileMessage="#{lbl['lbl.txt.upload.pdf.file']}"
-			label="#{lbl['lbl.btn.choose']}" oncomplete="uploadApprovalLetterDlg.hide();"/-->
 	
 	<p:confirmDialog id="deleteApprovalLetterDlg" widgetVar="deleteApprovalLetterDlg"  appendToBody="true" 
 		message="#{lbl['lbl.msg.confirm.delete']}" 	severity="alert"  closable="true" header="#{lbl['lbl.msg.confirm.delete.header']}">

@@ -45,19 +45,22 @@
 					<td colspan="2" valign="top" style="color:red;">
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
 							value="#{profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"/>
-						
+						<!-- 38530 - START -->
+						<h:form id="disciplinaryActionForm">
 						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier eq null}"			
 							action="#{viewSuppProfileBackingBean.onViewDisciplinaryAction}" 
 							update=":form" process="@this"
 							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
 								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
 						</p:commandLink>
-						<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
-							action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
-							update=":form" process="@this"
-							onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
-								<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
-						</p:commandLink>
+							<p:commandLink rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg and profilePersonalizationBackingBean.managedBean.smSupplier ne null}"			
+								action="#{viewSuppProfileBackingBean.onViewDisciplinaryActionSupp(profilePersonalizationBackingBean.managedBean.smSupplier)}" 
+								update=":form" process="@this"
+								onclick="blockWidgetDA.show()" onsuccess="blockWidgetDA.hide()">
+									<h:outputText value="#{lbl['lbl.sm.disciplinary.here']}" style="text-decoration: underline; font-weight: bold; color:red;" />
+							</p:commandLink>
+						</h:form>
+						<!-- 38530 - END -->
 						<p:spacer width="2"/>
 						
 						<h:outputText rendered="#{not empty profilePersonalizationBackingBean.managedBean.disciplinaryActionMsg}"
