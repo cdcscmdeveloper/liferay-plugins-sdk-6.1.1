@@ -1137,12 +1137,8 @@ public class SmApplicationUtil {
 				// #32237 --START--
 				if ((fac.getSmAddress().getMapLatitude() != null || fac.getSmAddress().getMapLongitude() != null)
 				 //#29718 --START--
-					&& ((!fac.getOwnershipType().equals("O") && (fac.getFacilityType().equals("H") || fac.getFacilityType().equals("B")) 
-							&& managedBean.getCurrentPageType() != null //#38705
-							&& managedBean.getCurrentPageType().equalsIgnoreCase("BASICINFO")) //Basic Info
-						|| ((fac.getFacilityType().equals("F") || fac.getFacilityType().equals("W") || fac.getFacilityType().equals("D") || fac.getFacilityType().equals("S")) 
-								&& managedBean.getCurrentPageType() != null  //#38705
-								&& managedBean.getCurrentPageType().equalsIgnoreCase("FACTORYINFO")))) { //Factory Info
+					&& ((!fac.getOwnershipType().equals("O") && (fac.getFacilityType().equals("H") || fac.getFacilityType().equals("B")) && managedBean.getCurrentPageType().equalsIgnoreCase("BASICINFO")) //Basic Info
+						|| ((fac.getFacilityType().equals("F") || fac.getFacilityType().equals("W") || fac.getFacilityType().equals("D") || fac.getFacilityType().equals("S")) && managedBean.getCurrentPageType().equalsIgnoreCase("FACTORYINFO")))) { //Factory Info
 				//#29718, #32237 --END-- 
 					if (StringUtils.isBlank(fac.getSmAddress().getMapLatitude())
 							|| StringUtils.isBlank(fac.getSmAddress().getMapLongitude())) {

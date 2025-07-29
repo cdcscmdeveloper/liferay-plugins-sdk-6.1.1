@@ -394,6 +394,28 @@ public class LovAuditBackingBean implements Serializable {
 	 * Reset all.
 	 */
 	@SuppressWarnings("rawtypes")
+	public void resetAll() {
+
+		this.getSearchPmUserDataModel().resetData(); // #29416
+		this.setLovSearchBean(new SearchBean());
+		this.setLovBean(new LovBean());
+
+		persistedEntities.clear();
+
+		if (this.getSelectedEntities() != null) {
+			this.getSelectedEntities().clear();
+
+		}
+
+		if (selectedEntities != null && !selectedEntities.isEmpty()) {
+			selectedEntities.clear();
+		}
+	}
+
+	/**
+	 * Reset all.
+	 */
+	@SuppressWarnings("rawtypes")
 	public void resetAllSP() {
 		this.getSearchPmUserDataModel().resetData();
 		this.setLovSearchBean(new SearchBean());
