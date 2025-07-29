@@ -123,13 +123,23 @@
 				<h:outputText value="#{(itemSupplier.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			<ui:remove>26247 - start</ui:remove>
-			<p:column>
+			<ui:param name="supplier" value="#{itemSupplier.supplier}" />
+			<ui:param name="mofExpired"
+				value="#{supplier.smMofAccount == null or supplier.smMofAccount.recordStatusFlg eq ParameterConst.getRecordStatusExpired()}" />
+			<p:column styleClass="#{mofExpired ? 'red-background':''}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.mof.status']}" />
+				</f:facet>
+				<h:outputText
+					value="#{suppFinalBiddingBackingBean.evaluateMOFStatus(supplier.smMofAccount)}" />
+			</p:column>
+			<p:column style="white-space:normal;width:18%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.discipline.action.taken.tooltip']}" />
 				</f:facet>
 				<ac:disciplinaryActionYesNo
-					supplier="#{itemSupplier.supplier}" index="#{rowIndex}"/>
+					supplier="#{supplier}" index="#{rowIndex}"/>
 			</p:column>
 			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.starting.price']}" style="text-align: right;">
@@ -214,16 +224,6 @@
 				<h:outputText
 					value="#{(itemSupplierDis.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
-			<ui:remove>26247 - start</ui:remove>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.discipline.action.taken']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.disciplinaryAction.tooltip']}" />
-				</f:facet>
-				<ac:disciplinaryActionYesNo supplier="#{itemSupplierDis.supplier}"
-					index="#{rowIndex}" />
-			</p:column>
-			<ui:remove>26247 - end</ui:remove>
 			<p:column headerText="#{lbl['lbl.sc.starting.price']}"
 				style="text-align: right;">
 				<h:outputText

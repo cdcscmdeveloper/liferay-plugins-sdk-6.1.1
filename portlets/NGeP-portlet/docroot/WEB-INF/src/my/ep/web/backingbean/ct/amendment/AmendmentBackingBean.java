@@ -56,6 +56,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.bpm.ICompositeValiditySO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO; //#26186
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.EpPropertiesConst;
@@ -3402,8 +3403,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			//#25002 - add new rules for schedule
 			if(ctBackingBean.getManagedBean().getContractVer().getCtAmendment().isOtherChange() && 
-					(ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
-							|| ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_NON_PERIODIC_SCHEDULED))
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)
 					&& ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuSchedule);
 			}
@@ -9295,9 +9295,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				sortBondWaiverDefermentHistory();
 			}
 		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "chkBondWaivedAttachment",
+			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT,
+					ContractConst.SLA_AMENDMENTBACKINGBEAN,
 					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
-					"chkBondWaivedAttachment", getUserIdSessionFromLoginId(), e);
+					ContractConst.SLA_CHK_BOND_WAIVED_ATTACHMENT, getUserIdSessionFromLoginId(), e);
 		}
 	}
 	
@@ -9533,12 +9534,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public void checkSupplierBumiputera(SmSupplier supplier) {
 		ISupplierDataMaintenanceSO suppDataSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierDataMaintenanceSO.class);
+		IQTDetailSO iQtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
 		try {
 			boolean suppBumiputera = suppDataSO.nonDisciplinaryActionCancelBumiputera(supplier.getSupplierId());
-			
-			if (!suppBumiputera) {
+			boolean openFor = iQtDetailSO.getQTOpenForBumiByContractNo(ctBackingBean.getManagedBean().getContractVer().getCtContract()
+					.getContractNo());
+
+			if (!suppBumiputera && openFor) {
 				this.getManagedBean().setSupplierBumiCancel(true);
-				if(StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())){
+				if (StringUtils.isNotEmpty(this.getManagedBean().getDisciplinaryActionMsg())) {
 					this.getManagedBean().setDisciplinaryActionMsg(StringUtils.EMPTY);
 				}
 				handleMessageSupplierMaintenance();
@@ -9546,8 +9551,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 
 		} catch (Exception e) {
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "checkSupplierBumiputera",
-					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(), "checkSupplierBumiputera",
-					getUserIdSessionFromLoginId(), e);
+					ctBackingBean.getManagedBean().getContractVer().getCtContract().getContractNo(),
+					"checkSupplierBumiputera", getUserIdSessionFromLoginId(), e);
 		}
 	}
 	

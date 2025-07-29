@@ -10,7 +10,8 @@
 		id="smWorkShopDtPanel" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 		<p:outputPanel id="workShopPan" rendered="#{backingBean.managedBean.showWorkShopPanel}">
 			<br />
-			<ui:repeat var="workshopCatVar" value="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
+			<!-- #28775 - 38500 -->
+			<c:forEach var="workshopCatVar" items="#{backingBean.managedBean.workshopFacilitiesVOList}" varStatus="workshopCatVarStatus">
 				<table style="width: 100%;">
 					<tr>
 						<td>
@@ -26,8 +27,8 @@
 				<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
 					value="#{workshopCatVar.facilityList}"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					rowKey="#{work}" rowIndexVar="index" id="workDt">
-					<ac:paginator for="workDt" />
+					rowKey="#{work}" rowIndexVar="index" id="workDt_#{workshopCatVarStatus.index}">
+					<ac:paginator for="workDt_#{workshopCatVarStatus.index}" /><!-- #28775 - 38498 -->
 					
 					<p:column style="width: 5% !important;" rendered="#{not empty workshopCatVar.facilityList and !backingBean.managedBean.upsCannotEdit}" >
 						<f:facet name="header">
@@ -93,7 +94,7 @@
 					</p:column>
 	
 				</p:dataTable><br />
-			</ui:repeat>
+			</c:forEach><!-- #28775 - 38500 -->
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
@@ -101,9 +102,10 @@
 					action="#{backingBean.assignNewWorkshopBean}"
 					update=":form:tt:workShopDialog" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<!-- #28775 - 38498 -->
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" rendered="#{!backingBean.managedBean.upsCannotEdit}"
 					partialSubmit="true" process="workShopPan"
-					id="delWorkshopBtnId" disabled="#{backingBean.disableDeleteBtn(workshopCatVar.facilityList)}"
+					id="delWorkshopBtnId" disabled="#{backingBean.disableDeleteBtnFacility(backingBean.managedBean.workshopFacilitiesVOList)}"
 					update=":#{p:component('smWorkShopDtPanel')},@this" oncomplete="workshopDeletePopUp.show()" />
 			</div>
 			<br />

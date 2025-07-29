@@ -56,6 +56,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private String actionBy;
 	private BigDecimal actionById;
 	private String orgTypeParamId;
+	private Long orgValidityId;
 
 	private Integer levelId1;
 	private Integer levelId2;
@@ -69,6 +70,7 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 	private Date pDatefrom;
 	private Date pDateto;
 	private BigDecimal pDocGroupId;
+	private BigDecimal pUserOrgProfileId;
 	private BigDecimal userId;
 	private BigDecimal userIdOldVal;
 	private List<PmUser> searchPmUserList;
@@ -626,6 +628,22 @@ public class AuditPMUserOrgSearchBean implements Serializable {
 
 	public void setOrgTypeParamId(String orgTypeParamId) {
 		this.orgTypeParamId = orgTypeParamId;
+	}
+
+	public Long getOrgValidityId() {
+		return orgValidityId;
+	}
+
+	public void setOrgValidityId(Long orgValidityId) {
+		this.orgValidityId = orgValidityId;
+	}
+
+	public BigDecimal getpUserOrgProfileId() {
+		return pUserOrgProfileId;
+	}
+
+	public void setpUserOrgProfileId(BigDecimal pUserOrgProfileId) {
+		this.pUserOrgProfileId = pUserOrgProfileId;
 	}
 
 }
