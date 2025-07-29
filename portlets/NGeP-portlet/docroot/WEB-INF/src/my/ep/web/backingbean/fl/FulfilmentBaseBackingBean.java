@@ -20,7 +20,6 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.gst.ISupplierGstSO;
@@ -31,7 +30,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -46,7 +44,6 @@ import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.fl.FlAddress;
@@ -70,11 +67,8 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.SLAUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -835,6 +829,13 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	}
 	//29728 - end
 	
+	//21416 start
+	public String filterItemNameNA(String itemName) {
+		String filteredItemName = itemName.replaceAll("\\s(NA|N/A|N A)\\b", "");
+		return filteredItemName;
+	}
+	//21416 end
+	
 	//36386 -Start
 	/**
 	 * Checks if is Government User Role
@@ -872,52 +873,5 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		return Boolean.TRUE;
 	}
 	//36386 -End
-	// #31344 -start-
-	/**
-	 * Show Details Items in popup
-	 * 
-	 * @param cmItemId
-	 * @return void
-	 */
-	public void showItemDescPopup(Long cmItemId) {
 
-		try {
-			CommonUtils common = new CommonUtils();
-			CodificationReqDTO cReqDTO = new CodificationReqDTO();
-			cReqDTO.setItemId(cmItemId);
-			
-			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-			
-			CmItem item = codificationSO.searchItemObj(cReqDTO).getCmItem();
-			
-			CodificationBackingBean cdbb = new CodificationBackingBean();
-			
-			String typeName = item.getCmType().getTypeName();
-			String brandName = item.getCmBrand().getBrandName();
-			String measurementName = item.getCmMeasurement().getMeasurementName();
-			String colorName = item.getCmColor().getColorName();
-			String unspscTitle = item.getCmUnspsc().getUnspscTitle();
-
-			String familyTitle = unspscTitle + " " + typeName + " " + brandName + " " + measurementName + " " + colorName;
-			String segmentTitle = typeName + " " + brandName + " " + measurementName + " " + colorName;
-			
-			String segmentCode = item.getCmType().getTypeCode() + 
-					item.getCmBrand().getBrandCode() + 
-					item.getCmMeasurement().getMeasurementCode() + 
-					item.getCmColor().getColorCode();
-			
-			cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
-			cdbb.getManagedBean().setFamilyTitle(common.removeItemNameNA(familyTitle));
-			cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
-			cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-			cdbb.getManagedBean().setSegmentCode(segmentCode);
-			cdbb.getManagedBean().setSegmentTitle(common.removeItemNameNA(segmentTitle));
-
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
-					getUserIdSessionFromLoginId(), e);
-		}
-	}
-	// #31344 -end-
 }
