@@ -20,7 +20,7 @@
 								lbl['lbl.sc.system.generated'] :
 								lOACancelDetailBackingBean.managedBean.scLoa.loaNo}" 
 					       			process="@this" partialSubmit="true" styleClass="blue_font"
-					       			action="#{ctBackingBean.goToLoaView(lOACancelDetailBackingBean.managedBean.scLoa)}"/>
+					       			action="#{lOADetailBackingBean.viewLOA(lOACancelDetailBackingBean.managedBean.scLoa.loaId)}"/>
 				       		</c:if>
 				       		<c:if test="#{!lOACancelDetailBackingBean.managedBean.isDpMaintenanceSource()}">						
 					  			#{lOACancelDetailBackingBean.managedBean.scLoa.loaNo}
