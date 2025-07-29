@@ -67,6 +67,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -2080,18 +2081,16 @@ public class SupplierFinalizationBackingBean extends
 	
 	private void validateByPackage() {
 		log.info("validateByPackage");
-		boolean toBeValidated = false;
-		boolean isSubmit = this.getManagedBean().isSubmit();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-		String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
-
-		if ( (ParameterConst.DECISION_RECOMMEND_SUPPLIER
-					.equals(decisionTypeCode) || 
-				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-						.equals(decisionTypeCode) ) && isSubmit) {
-			toBeValidated = true;
-		}
-		
+		// 26247 - start
+		boolean allowValidation = Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION,
+				SCProcessNameConst.SIGNOFF_FC_SELECTION).contains(this.getManagedBean().getTaskName())
+				|| this.getManagedBean().isSubmit();
+		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
+				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
+				scQtFinalization.getDecision().getParameterCode())
+				&& allowValidation;
+		// 26247 - end
 		PmParameter finalizationMethod = scQtFinalization.getFinalizationMethod();
 		TplSpecZoneDtl currentZone = this.getManagedBean().getCurrentZone();
 
@@ -2338,43 +2337,30 @@ public class SupplierFinalizationBackingBean extends
 	private void validateByItem() {
 		log.info("validateByItem");
 		int cancelledItemsCount = 0;
-		ScQtFinalization scQtFinalization = 
-						 getManagedBean().getScQtFinalization();
-		String decisionTypeCode = scQtFinalization.getDecision()
-									.getParameterCode();
-		boolean isSubmit = this.getManagedBean().isSubmit();
-		boolean isDecRecommendSupplier = false;
-		boolean isDecFwdToHighAuthority = false;
-		
-		if (ParameterConst.DECISION_RECOMMEND_SUPPLIER
-						  .equals(decisionTypeCode)) {
-			isDecRecommendSupplier = true;
-		} else if (ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-								 .equals(decisionTypeCode)) {
-			isDecFwdToHighAuthority = true;
-		}
-		
-		// to set the recommend details for each recommend
-		for (ScQtRecommend scQtRecommend :
-					scQtFinalization.getScQtRecommends()) {
-			if (scQtRecommend.isCancelled()) {
-				++cancelledItemsCount;
-			}
-			if (!isSubmit) {
-				continue;
-			}
-			
-			if (isSubmit && 
-					(isDecRecommendSupplier || 
-						isDecFwdToHighAuthority)) {
-				if (!(scQtRecommend.isAwardedItem() ||
-						scQtRecommend.isCancelled() || 
-							scQtRecommend.isDisabled())) {
-					validateAwardOfItem(scQtRecommend);
-				}
-			}
-		}
-		
+		// 26247 - start
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		boolean allowValidation = Arrays.asList(SCProcessNameConst.ENDORSE_FC_SELECTION,
+				SCProcessNameConst.SIGNOFF_FC_SELECTION).contains(this.getManagedBean().getTaskName())
+				|| this.getManagedBean().isSubmit();
+		boolean toBeValidated = Arrays.asList(ParameterConst.DECISION_RECOMMEND_SUPPLIER,
+				ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY).contains(
+				scQtFinalization.getDecision().getParameterCode())
+				&& allowValidation;
+		for (ScQtRecommend scQtRecommend : scQtFinalization.getScQtRecommends()) {
+			if (scQtRecommend.isCancelled()) { 
+				++cancelledItemsCount; 
+			} 
+			if (!this.getManagedBean().isSubmit()) {
+				continue; 
+			} 
+
+			boolean allowToAward = !(scQtRecommend.isAwardedItem() || scQtRecommend.isCancelled()
+					|| scQtRecommend.isDisabled());
+			if (toBeValidated && allowToAward) {
+				validateAwardOfItem(scQtRecommend);
+			} 
+		} 
+		// 26247 - end
 		if (cancelledItemsCount == 
 				scQtFinalization.getScQtRecommends().size()) {
 			throw new EpException(MessageConst.ERROR_760341);
