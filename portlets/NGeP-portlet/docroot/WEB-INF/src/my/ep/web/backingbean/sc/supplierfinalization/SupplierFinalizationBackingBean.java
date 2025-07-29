@@ -1465,8 +1465,26 @@ public class SupplierFinalizationBackingBean extends
 		//35087
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.presentation.demo.stage";
+						//#28784 - Start
+						if (getManagedBean().isItemize()) {
+							int wipstatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+							if (wipstatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+								evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+							} else {
+								evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+								if (getManagedBean().isItemRowSelect() && getManagedBean().getSelectedItem() != null) {
+									selectedItemId = getManagedBean().getSelectedItem().getRequestItem().getRequestNoteItemId();
+								} else {
+									getManagedBean().setQualifiedSuppliersByEvalStage(null);
+									log.debug("None of the item(s) has been row selected");
+									return;
+								}
+							}
+						} else {
+							evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+						}
+						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
+						//#28784 - End
 					 } else {
 						//#21695 tec by itemize result pop up farid - start
 						 if (getManagedBean().isItemize()) {
