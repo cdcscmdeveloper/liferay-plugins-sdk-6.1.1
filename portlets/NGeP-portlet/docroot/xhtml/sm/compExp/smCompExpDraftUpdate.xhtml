@@ -72,7 +72,7 @@
 							size="60" value="#{smCompExpMB.selectedDraft.agencyName}" /> <p:outputPanel
 							rendered="#{smCompExpMB.selectedDraft.clientType eq ParameterConst.clientTypeFederal
 							and smCompExpMB.selectedDraft.sourceType.parameterId ne ParameterConst.sourceTypeCt}">
-							<p:commandLink action="#{smPtjPopupBB.initPopup}"
+							<p:commandLink action="#{smPtjPopupBB.initPtjPopup}"
 								oncomplete="blockWidget.hide(),smPtjPopupWV.show()"
 								onclick="blockWidget.show()" update=":form" process="@form">
 								<p:graphicImage value="/css/images/design/search.png" />

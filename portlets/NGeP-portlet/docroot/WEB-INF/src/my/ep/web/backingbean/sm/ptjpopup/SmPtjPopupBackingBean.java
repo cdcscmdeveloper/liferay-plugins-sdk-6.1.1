@@ -32,7 +32,7 @@ public class SmPtjPopupBackingBean extends BaseBackingBean<SmPtjPopupManagedBean
 	/**
 	 * Initialize PTJ popup dialog
 	 */
-	public void initPopup() {
+	public void initPtjPopup() {
 		reset();
 	}
 
