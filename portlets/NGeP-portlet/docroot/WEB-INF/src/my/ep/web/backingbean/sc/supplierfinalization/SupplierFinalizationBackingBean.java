@@ -1343,8 +1343,31 @@ public class SupplierFinalizationBackingBean extends
 		//35087
 		switch (evaluationStageId) {
 			case 1 : if (getManagedBean().getScQt().isDemoRequired()) {
-						 evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
-						 evaluationHeader = "lbl.sc.eva.qualified.supplier.list.presentation.demo.stage";
+						//#28784 - Start
+						boolean isItemize = getManagedBean().isItemize();
+						boolean isItemRowSelected = getManagedBean().isItemRowSelect();
+						ScQtRecommend selectedItem = getManagedBean().getSelectedItem();
+						if (!isItemize) {
+				    		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+						} else {
+				    		int wipStatus = evaluationSO.checkWipScoreSetting(req4SerDTO);
+
+				    		if (wipStatus <= ParameterConst.FLAG_WIP_STATUS_3SERANGKAI_BEFORE) {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO;
+				    		} else {
+				        		evaluationStage = SourcingConstants.EVAL_STAGE_TECHNICAL_ITEM;
+
+				        		if (isItemRowSelected && selectedItem != null) {
+				            		selectedItemId = selectedItem.getRequestItem().getRequestNoteItemId();
+				        		} else {
+				            		getManagedBean().setQualifiedSuppliersByEvalStage(null);
+				            		return;
+				        		}
+				    		}
+						}
+						// Set evaluation header (always the same regardless of itemize/WIP status)
+						evaluationHeader = SourcingConstants.EVAL_QUALIFIED_SUP_LIST_DEMO_EVAL_STAGE;
+						//#28784 - End
 					 } else {
 						//#21695 tec by itemize result pop up farid - start
 						 if (getManagedBean().isItemize()) {
