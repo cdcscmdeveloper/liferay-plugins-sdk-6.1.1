@@ -133,7 +133,7 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 		if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_SM)) {
 			dateChange();
 		}
-		
+
 		initDraftDoc();
 		initCatDraft();
 
@@ -705,14 +705,14 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			redirectToDraft();
 		}
 	}
-	
+
 	private void checkDuplicate(Long masterId) {
-		if(null != masterId){
-			if(this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)){
+		if (null != masterId) {
+			if (this.getManagedBean().getSelectedDraft().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
 				SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 				reqDTO.setMasterId(masterId);
 				SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
-				if(resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)){
+				if (resDTO.getMaster().getSourceType().getParameterId().equals(ParameterConst.SOURCE_TYPE_ID_CT)) {
 					RequestContext.getCurrentInstance().execute("delDuplicateDialogWV.show();");
 				} else {
 					deactivateMaster(resDTO.getMaster().getCompExpMasterId());
@@ -725,11 +725,23 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 			declareSmComExp();
 		}
 	}
-	
+
 	private void deactivateMaster(Long compExpMasterId) {
 		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
 		reqDTO.setMasterId(compExpMasterId);
 		getSmCompExpSo().deactivateMaster(reqDTO);
+	}
+
+	/**
+	 * Initialize Master view popup dialog
+	 */
+	public void initViewPopup(SmCompExpMaster selectedMaster) {
+		this.getManagedBean().setSelectedCompExpMaster(selectedMaster);
+		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
+		SelectItem clientTypeFederalItem = new SelectItem();
+		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.client.type.federal", null));
+		clientTypeFederalItem.setValue(ParameterConst.CLIENT_TYPE_FEDERAL);
+		this.getManagedBean().getClientTypeItems().add(clientTypeFederalItem);
 	}
 
 }
