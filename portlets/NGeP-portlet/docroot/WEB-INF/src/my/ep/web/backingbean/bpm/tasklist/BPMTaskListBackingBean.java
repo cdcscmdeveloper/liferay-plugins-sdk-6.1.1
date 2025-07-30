@@ -333,8 +333,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.BPK_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.FC_APPROVE_QT_CHANGE,
-			//					SourcingConstants.NAV_PAGE_APPL_PROPOSAL_VALID_PERIOD_EXTENSION); // #31919 & 21692
-					SourcingConstants.NAV_PAGE_QT_APPROVAL);
+								SourcingConstants.NAV_PAGE_APPL_PROPOSAL_VALID_PERIOD_EXTENSION); // #31919 & 21692
+//					SourcingConstants.NAV_PAGE_QT_APPROVAL);//change from this to 21692
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.PUBLICATION_APPROVE_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_APPROVAL);
 
 			temp.put(SCProcessNameConst.QT_MAINTENANCE_PROCESS_NAME + SCProcessNameConst.SUPPLIER_ACCEPT_QT_CHANGE, SourcingConstants.NAV_PAGE_QT_SUPPLIER_ACCEPTANCE);
