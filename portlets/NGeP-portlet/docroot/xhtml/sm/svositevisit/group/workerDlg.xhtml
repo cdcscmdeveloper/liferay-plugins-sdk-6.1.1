@@ -27,7 +27,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.worker.name']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:inputText value="#{svWorker.name}" label="#{lbl['lbl.sm.worker.name']}" maxlength="50" 
+					<p:inputText value="#{svWorker.name}" label="#{lbl['lbl.sm.worker.name']}" maxlength="80" 
 						required="#{!empty param['disableMsgAutoUpdate']}"/>
 					<ac:smFieldChangeAlert 
 						isShow="true"
