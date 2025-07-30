@@ -60,7 +60,9 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean showRobExpiredDateMesej = false;
 	//26238
 	private String disciplinaryActionMsg; 
-	
+	//26247 - start
+	private String qtDisciplinaryActionMsg; 
+	//26247 - end
 	// #28895_35501 - AUDIT TRAIL SM
 	private PmUser oldSelectedUser;
 	public ProfilePersonalizationManagedBean(){}
@@ -388,7 +390,17 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setDisciplinaryActionMsg(String disciplinaryActionMsg) {
 		this.disciplinaryActionMsg = disciplinaryActionMsg;
 	}
-	
+
+	// 26247 - start
+	public String getQtDisciplinaryActionMsg() {
+		return qtDisciplinaryActionMsg;
+	}
+
+	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
+		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
+	}
+	// 26247 - end
+
 	// #28895_35501 Start - AUDIT TRAIL SM
 	public PmUser getOldSelectedUser() {
 		return oldSelectedUser;
