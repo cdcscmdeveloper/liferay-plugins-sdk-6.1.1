@@ -1720,9 +1720,10 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			//26247 - start
 			String qtId = originalServletRequest.getParameter("qtId");
 			if (null != supplier && null != qtId) {
-				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance()
-						.getServiceObject("sm", ISupplierSearchSO.class);
-				supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), Long.valueOf(qtId));
+				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				supplier = supplierSearchSO
+						.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), Long.valueOf(qtId));
 
 				ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
 				String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
