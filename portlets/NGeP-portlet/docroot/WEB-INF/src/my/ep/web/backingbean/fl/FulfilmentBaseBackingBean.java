@@ -919,7 +919,7 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 		String brandCode = "";
 		if(item.getCmBrand() != null) {
 			brandName = item.getCmBrand().getBrandName();
-			brandCode = item.getCmBrand().getBrandName();
+			brandCode = item.getCmBrand().getBrandCode();
 		}
 		
 		String measurementName = "";
