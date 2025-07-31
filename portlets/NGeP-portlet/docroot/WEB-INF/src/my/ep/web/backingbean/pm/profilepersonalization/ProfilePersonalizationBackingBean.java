@@ -1677,6 +1677,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
+		Long qtId = this.getManagedBean().getQtId();// 26247
 		renewSesionObject(); 
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();  
@@ -1718,12 +1719,16 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			}
 			
 			//26247 - start
-			String qtId = originalServletRequest.getParameter("qtId");
+			String qtIdParam = originalServletRequest.getParameter("qtId");
+			this.getManagedBean().setQtId(qtId);
+			if (qtIdParam != null) {
+				qtId = Long.valueOf(qtIdParam);
+			}
 			if (null != supplier && null != qtId) {
+				this.getManagedBean().setQtId(qtId);
 				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-				supplier = supplierSearchSO
-						.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), Long.valueOf(qtId));
+				supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
 
 				ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
 				String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
@@ -1733,7 +1738,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				}
 				getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
 			}
-			//26247 - end
+			// 26247 - end
 			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {

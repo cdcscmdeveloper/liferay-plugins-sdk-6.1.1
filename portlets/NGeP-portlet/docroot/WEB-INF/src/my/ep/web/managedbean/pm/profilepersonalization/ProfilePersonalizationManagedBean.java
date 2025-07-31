@@ -62,6 +62,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private String disciplinaryActionMsg; 
 	//26247 - start
 	private String qtDisciplinaryActionMsg; 
+	private Long qtId; 
 	//26247 - end
 	
 	// #28895_35501 - AUDIT TRAIL SM
@@ -409,6 +410,14 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 
 	public void setQtDisciplinaryActionMsg(String qtDisciplinaryActionMsg) {
 		this.qtDisciplinaryActionMsg = qtDisciplinaryActionMsg;
+	}
+
+	public Long getQtId() {
+		return qtId;
+	}
+
+	public void setQtId(Long qtId) {
+		this.qtId = qtId;
 	}
 	//26247 - end
 }
