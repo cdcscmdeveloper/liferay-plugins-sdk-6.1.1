@@ -1542,11 +1542,17 @@ public class ConsolidationReportBackingBean extends
 		}
 		
 		// #28777 & #29729 - Start
-		if ((checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId()) || checkListZonesDisqualifiedSupplierBranchDeleted(
-				scQt.getQtId(), specZoneDtl.getSpecZoneId())) && resDTO != null) {
+		if (scQt.isZonal() && specZoneDtl != null
+				&& checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneDtl.getSpecZoneId())
+				&& resDTO != null) {
 			qualifiedSuppliers = resDTO.getListQualifiedSuppliersBranchDeleted();
 			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 		}
+		if (!scQt.isZonal() && checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId()) && resDTO != null) {
+			qualifiedSuppliers = resDTO.getListQualifiedSuppliersBranchDeleted();
+			totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
+		}
+
 		// #28777 & #29729 - End
 		
 		// 26247 - start
@@ -1596,8 +1602,13 @@ public class ConsolidationReportBackingBean extends
 				}
 				
 				// #28777 & #29729 - Start
-				if ((checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId()) || checkListZonesDisqualifiedSupplierBranchDeleted(
-						scQt.getQtId(), specZoneDtl.getSpecZoneId())) && resDTO != null) {
+				if (scQt.isZonal() && specZoneDtl != null
+						&& checkListZonesDisqualifiedSupplierBranchDeleted(scQt.getQtId(), specZoneDtl.getSpecZoneId())
+						&& resDTO != null) {
+					itemQualifiedSuppliers = resDTO.getListQualifiedSuppliersBranchDeleted();
+					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
+				}
+				if (!scQt.isZonal() && checkListDisqualifiedSupplierBranchDeleted(scQt.getQtId()) && resDTO != null) {
 					itemQualifiedSuppliers = resDTO.getListQualifiedSuppliersBranchDeleted();
 					totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliersBranchDeleted();
 				}
@@ -2599,10 +2610,9 @@ public class ConsolidationReportBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails)) {
-			if (zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
-				return true;
-			}
+		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+			return true;
 		}
 		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
 	}
@@ -2621,10 +2631,9 @@ public class ConsolidationReportBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
 		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
 		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
-		if (CollectionUtils.isNotEmpty(zoneDetails)) {
-			if (zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
-				return true;
-			}
+		if (CollectionUtils.isNotEmpty(zoneDetails) && zoneActiveIndex != -1
+				&& zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+			return true;
 		}
 		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
 	}
