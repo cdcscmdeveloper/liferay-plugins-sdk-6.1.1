@@ -2597,9 +2597,12 @@ public class ConsolidationReportBackingBean extends
 	public Boolean checkInstructionSupplierBranchDeleted(Long qtId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		if (this.getManagedBean().getZoneDetails().get(this.getManagedBean().getZoneActiveIndex())
-				.isBranchDeactivated()) {
-			return true;
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		if (CollectionUtils.isNotEmpty(zoneDetails)) {
+			if (zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				return true;
+			}
 		}
 		return sourcingIntegrationSO.checkInstructionDisqualifiedSupplierBranchDeleted(qtId);
 	}
@@ -2616,9 +2619,12 @@ public class ConsolidationReportBackingBean extends
 	public Boolean checkListDisqualifiedSupplierBranchDeleted(Long qtId) {
 		ISourcingIntegrationSO sourcingIntegrationSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, ISourcingIntegrationSO.class);
-		if (this.getManagedBean().getZoneDetails().get(this.getManagedBean().getZoneActiveIndex())
-				.isBranchDeactivated()) {
-			return true;
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
+		int zoneActiveIndex = this.getManagedBean().getZoneActiveIndex();
+		if (CollectionUtils.isNotEmpty(zoneDetails)) {
+			if (zoneDetails.get(zoneActiveIndex).isBranchDeactivated()) {
+				return true;
+			}
 		}
 		return sourcingIntegrationSO.checkListDisqualifiedSupplierBranchDeleted(qtId);
 	}
