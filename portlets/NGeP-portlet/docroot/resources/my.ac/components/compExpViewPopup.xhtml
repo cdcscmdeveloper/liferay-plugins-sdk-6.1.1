@@ -6,7 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<cc:interface>
 		<cc:attribute name="mBean" required="true" />
 		<cc:attribute name="bBean" required="true" />
@@ -132,98 +133,27 @@
 							</c:if></td>
 					</tr>
 				</table>
-				<!--p:panel header="#{lbl['lbl.sm.comp.exp.update.project.cat.code']}"
+				<p:panel header="#{lbl['lbl.sm.comp.exp.master.popup.cat.code']}"
 					toggleable="true">
 					<p:dataTable id="smCompExpCatCodes" rows="10" rowIndexVar="index"
-						value="#{smCompExpMB.smCompExpCatDraftList}"
+						value="#{cc.attrs.mBean.selectedCompExpMaster.compExpMasterCats}"
 						var="smCompExpCatCode" widgetVar="smCompExpCatCodesWV">
 						<ac:paginator for="smCompExpCatCodes" />
-						<c:if test="#{smCompExpMB.smCompExpCatDraftListEmpty}">
-							<p:column style="width:2%">
-								<f:facet name="header">
-									<p:selectBooleanCheckbox value="#{smCompExpMB.selectedAll}">
-										<p:ajax listener="#{smCompExpBB.selectAllCatCodes}"
-											update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
-									</p:selectBooleanCheckbox>
-								</f:facet>
-								<p:selectBooleanCheckbox value="#{smCompExpCatCode.selected}">
-									<p:ajax listener="#{smCompExpBB.selectCatCode(index)}"
-										update=":#{p:component('smCompExpCatCodes')}, :#{p:component('delCatBtn')}" />
-								</p:selectBooleanCheckbox>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-								<h:outputText styleClass="mandatory" value="*" />
-								<p:selectOneMenu id="mainDDId"
-									label="#{lbl['lbl.sm.projDtls.mainCat']}"
-									value="#{smCompExpCatCode.categoryL1.categoryL1Id}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems itemLabel="#{main.categoryName}"
-										itemValue="#{main.categoryL1Id}"
-										value="#{smCompExpMB.supplierMainCatList}" var="main" />
-									<p:ajax event="change" update="subDDId,subDivDDId"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										listener="#{smCompExpBB.getSupplierSubCatList(smCompExpCatCode.categoryL1.categoryL1Id, index)}" />
-								</p:selectOneMenu>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-								<h:outputText styleClass="mandatory" value="*" />
-								<p:selectOneMenu id="subDDId"
-									label="#{lbl['lbl.sm.projDtls.subCat']}"
-									value="#{smCompExpCatCode.categoryL2.categoryL2Id}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems itemLabel="#{sub.categoryName}"
-										itemValue="#{sub.categoryL2Id}"
-										value="#{smCompExpMB.supplierSubCatList}" var="sub" />
-									<p:ajax event="change" update="subDivDDId"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										listener="#{smCompExpBB.getSupplierSubDivCatList(smCompExpCatCode.categoryL2.categoryL2Id, index)}" />
-								</p:selectOneMenu>
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-								<h:outputText styleClass="mandatory" value="*" />
-								<p:selectOneMenu id="subDivDDId"
-									label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-									value="#{smCompExpCatCode.categoryL3.categoryL3Id}">
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems itemLabel="#{subDiv.categoryName}"
-										itemValue="#{subDiv.categoryL3Id}"
-										value="#{smCompExpMB.supplierSubDivCatList}" var="subDiv" />
-									<p:ajax event="change"
-										update=":#{p:component('smCompExpCatCodes')}, :#{p:component('addCatBtn')}"
-										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										listener="#{smCompExpBB.checkDuplicateCatCode(smCompExpCatCode.categoryL3.categoryL3Id, index)}" />
-								</p:selectOneMenu>
-							</p:column>
-						</c:if>
-						<c:if test="#{!smCompExpMB.smCompExpCatDraftListEmpty}">
-							<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
-								<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
-								<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
-							</p:column>
-							<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
-								<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
-							</p:column>
-						</c:if>
+						<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+							<h:outputText value="#{smCompExpCatCode.categoryL1Name}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+							<h:outputText value="#{smCompExpCatCode.categoryL2Name}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+							<h:outputText value="#{smCompExpCatCode.categoryL3Name}" />
+						</p:column>
 					</p:dataTable>
-					<div align="right">
-						<p:commandButton id="addCatBtn"
-							action="#{smCompExpBB.addSmCompExpCatDraft}"
-							disabled="#{smCompExpMB.smCompExpCatDrafNotComplete}"
-							onclick="blockWidget.show()" oncomplete="blockWidget.hide()"
-							rendered="#{smCompExpMB.smCompExpCatDraftListEmpty}"
-							update=":#{p:component('smCompExpCatCodes')}, @this"
-							value="#{lbl['lbl.sm.button.add']}">
-						</p:commandButton>
-						<p:commandButton id="delCatBtn"
-							disabled="#{empty smCompExpMB.selectedSmCompExpCatDraft}"
-							onclick="confirmDelSelectedCatDialogWV.show()" process="@this"
-							rendered="#{smCompExpMB.smCompExpCatDraftListEmpty}"
-							value="#{lbl['lbl.sm.button.delete']}">
-						</p:commandButton>
-					</div>
-				</p:panel -->
+				</p:panel>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.sm.comp.exp.master.popup.btn.ok']}"
+						oncomplete="compExpViewPopupWV.hide()" process="@this" />
+				</div>
 			</div>
 		</p:dialog>
 	</cc:implementation>
