@@ -76,6 +76,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 	
 	String roleCode;
 	BigInteger docId;
+	BigInteger docGroupId;
 	String docType;
 	String docNo;
 	int lvl3CodeIndex;
@@ -118,7 +119,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		this.roleCode = roleCode;
 		this.docType = managedBeans.getSelectedUser().isBrandNew() ? 
 				managedBeans.getNewAuditPmUser().getUserName() : managedBeans.getSelectedUser().getUserName();
-		this.docId = managedBeans.getSelectedUser().isBrandNew() ? 
+		this.docId = BigInteger.valueOf(managedBeans.getOldAuditPmUserOrg().getUserOrgId());
+		this.docGroupId = managedBeans.getSelectedUser().isBrandNew() ? 
 				BigInteger.valueOf(managedBeans.getNewAuditPmUser().getUserId()) : 
 					BigInteger.valueOf(managedBeans.getSelectedUser().getUserId());
 		this.docNo = managedBeans.getSelectedUser().isBrandNew() ? 
@@ -252,23 +254,27 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 						managedBeans.getNewAuditPmUserOrg().getEmail() != null ? managedBeans.getNewAuditPmUserOrg().getEmail() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_TEL_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null ? 
-								managedBeans.getOldAuditPmUserOrg().getPhoneCountry() + 
+						(managedBeans.getOldAuditPmUserOrg().getPhoneNo() != null &&
+						!managedBeans.getOldAuditPmUserOrg().getPhoneNo().isEmpty()) ? 
+								managedBeans.getOldAuditPmUserOrg().getPhoneCountry() + 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																					
 								managedBeans.getOldAuditPmUserOrg().getPhoneArea() + 
 								managedBeans.getOldAuditPmUserOrg().getPhoneNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getPhoneNo() != null &&
+						!managedBeans.getNewAuditPmUserOrg().getPhoneNo().isEmpty()) ? 
 								managedBeans.getNewAuditPmUserOrg().getPhoneCountry() +
 								managedBeans.getNewAuditPmUserOrg().getPhoneArea() +
 								managedBeans.getNewAuditPmUserOrg().getPhoneNo() : "";
 			} else if (obj.equals(AuditConst.PM_AUD_OUSR_MOBILE_FIELDLABELID)) {
 				oldValue = managedBeans.getOldAuditPmUserOrg() != null &&
-						managedBeans.getOldAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getOldAuditPmUserOrg().getMobileNo() != null &&
+						!managedBeans.getOldAuditPmUserOrg().getMobileNo().isEmpty()) ? 
 								managedBeans.getOldAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getOldAuditPmUserOrg().getMobileArea() +
 								managedBeans.getOldAuditPmUserOrg().getMobileNo() : "";
 				newValue = managedBeans.getNewAuditPmUserOrg() != null &&
-						managedBeans.getNewAuditPmUserOrg().getMobileNo() != null ? 
+						(managedBeans.getNewAuditPmUserOrg().getMobileNo() != null &&
+						!managedBeans.getNewAuditPmUserOrg().getMobileNo().isEmpty()) ? 
 								managedBeans.getNewAuditPmUserOrg().getMobileCountry() +
 								managedBeans.getNewAuditPmUserOrg().getMobileArea() +
 								managedBeans.getNewAuditPmUserOrg().getMobileNo() : "";
@@ -398,6 +404,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			for(PmUserRole newPmUserRole : managedBeans.getNewAuditPmUserRoles()){
 				PmUserRole oldPmUserRole = null;
 				
+				docId = BigInteger.valueOf(newPmUserRole.getUserRoleId());
+				
 				if(managedBeans.getOldAuditPmUserRoles() != null){
 					for(PmUserRole old : managedBeans.getOldAuditPmUserRoles()){
 						if(old.getUserRoleId().equals(newPmUserRole.getUserRoleId())){
@@ -448,6 +456,8 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 			for(PmAddressType newPmAddressType : managedBeans.getNewAuditPmAddressTypes()){
 				PmAddressType oldPmAddressType = null;
 				
+				docId = BigInteger.valueOf(newPmAddressType.getAddressTypeId());
+				
 				if(managedBeans.getOldAuditPmAddressTypes() != null){
 					for(PmAddressType old : managedBeans.getOldAuditPmAddressTypes()){
 						if(old.getAddressTypeId().equals(newPmAddressType.getAddressTypeId())){
@@ -480,7 +490,7 @@ public class AuditPMConfigUserBackingBean extends AuditPMBackingBeanTemplate {
 		dtlObj = new AuditPMSPDTO();
 		dtlObj.setRoleCode(roleCode);
 		dtlObj.setDocNo(docNo);
-		dtlObj.setDocGroupId(docId);
+		dtlObj.setDocGroupId(docGroupId);
 		dtlObj.setDocType(docType);
 		dtlObj.setPmParameterLvlId(pmParameterLevelId.get(lvl3CodeIndex));
 		dtlObj.setLvlCode1(AuditConst.PM_LVL_CODE_1_ORGUAD);

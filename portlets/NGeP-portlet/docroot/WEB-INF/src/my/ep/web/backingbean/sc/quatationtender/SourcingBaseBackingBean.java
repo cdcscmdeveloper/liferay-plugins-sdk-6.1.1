@@ -72,6 +72,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.biz.service.sc.workflowstatus.IScWorkFlowStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -192,6 +193,7 @@ import my.ep.persistence.entity.sc.quationtender.ScTechnicalEvaluationReportAtta
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalReportAttachment;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -914,6 +916,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				IQTBriefingSO.class);
 	}
 
+	protected IScheduleBiddingSO getScheduleBiddingSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IScheduleBiddingSO.class);
+	}
 	// 26247 - end
 	// 12471 - start
 	protected IScWorkFlowStatusSO getScWorkflowStatusSO() {
@@ -7381,11 +7387,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		for (ScQtFinalizationReport briefingPaperReport : briefingPaperList) {
 			String definitionKey = null != briefingPaperReport.getPmDocument() ? briefingPaperReport.getPmDocument()
 					.getDocDefinitionKey() : "";
+			String subStringDemoReport = SourcingConstants.DEMO_EVALUATION_REPORT.substring(0, 30);//#28784
 			if (!Arrays.asList(SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT,
 					SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT,
 					SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT,
-					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT,
-					SourcingConstants.DEMO_EVALUATION_REPORT).contains(definitionKey)) {
+					SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT).contains(definitionKey)
+					&& !briefingPaperReport.getTitle().contains(subStringDemoReport)) {//#28784
 				reportList.add(briefingPaperReport);
 			}
 		}
@@ -7478,7 +7485,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}
 		ViewSuppProfileBackingBean viewSuppProfileBean = new ViewSuppProfileBackingBean();
-		boolean isDisciplinaryAction = supplier.isDisciplinaryActions() && !supplier.isWarningDA();
+		boolean isDirectDiciplinaryAction = false;
+		if (CollectionUtils.isNotEmpty(supplier.getSmDisciplinaryActions())) {
+			SmDisciplinaryAction disciplinaryAction = supplier.getSmDisciplinaryActions().get(0);
+			isDirectDiciplinaryAction = Arrays.asList(disciplinaryAction.isBlacklistOwner(),
+					disciplinaryAction.isCancelRegistration(), disciplinaryAction.isSuspendRegistration()).contains(
+					true);
+		}
+		
+		boolean isDisciplinaryAction = isDirectDiciplinaryAction && supplier.isDisciplinaryActions() && !supplier.isWarningDA();
 		boolean isCancelledOrBlacklisted = viewSuppProfileBean.evaluateCancellationBlacklist(supplier);
 		int mofRecordStatus = supplier.getSmMofAccount().getRecordStatusFlg();
 		boolean noBumiAccount = ParameterConst.OPEN_FOR_BUMI.equals(supplier.getScQt().getOpenFor())
@@ -7497,4 +7512,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 						mofRecordStatus);
 	}
 	// 26247 - end
+	// #33787 Start Vinod
+	/**
+	 * This method is added to display title if the checklist is
+	 * "Modal Berbayar" then display the title from lable.
+	 * 
+	 * @param scQtCheckList
+	 * 
+	 * @return String
+	 * 
+	 */
+	public String getChecklistTitle(ScQtCheckList scQtCheckList) {
+		return null != scQtCheckList.getPmDocument()
+				&& null != scQtCheckList.getPmDocument().getDocDefinitionKey()
+				&& scQtCheckList.getPmDocument().getDocDefinitionKey()
+						.equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL) ? getMessageCommon(QTConstants.LBL_SC_SPEC_PAID_UP_CAPITAL_INITIAL_FUND)
+				: scQtCheckList.getTitle();
+
+	}
+	// #33787 End Vinod
 }

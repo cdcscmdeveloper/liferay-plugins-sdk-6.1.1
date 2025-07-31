@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -188,6 +189,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmAppVersion;
 //#29732 End
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -1380,7 +1382,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				}
 			}
 			// #29732 End
-			
+
+			//#21692 - Start
+			if (this.getManagedBean().getActiveIndex() == 3
+					&& this.getManagedBean().getTabList() != null
+					&& this.getManagedBean().getTabList().get(this.getManagedBean().getSelectedApprovalTabIndex())
+							.getTabType().equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
+				retrieveApprovalTabDtl();
+			}
+			enableChangesToPBSecretary();
+			//#21692 - End
 			// 25037 - start
 			boolean isValidFor25037 = this.validateSupportedTask(scQt.getQtNo(),
 					QTConstants.ALLOW_COMMITTEE_REASSIGNMENT);
@@ -3130,23 +3141,27 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					supplierSearchSO = null;
 				}
 			} else {
-				if (isDeskOfficer()) {
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-					
-					// Only DO Actor with edit access right. 
-					// Otherwise (Audit Search), user can view QT based on user roles match with actor.
-					if ((isQTMaintenanceScreen() || isQTSearchScreen()) && !isPbbSecretary()) { //#27668
-						reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
-					}
-				}				
-				//Bug_33484 - start
-				else if (isQcaSecretary() || isQcbSecretary() || isPbbSecretary() 
-						|| isFpbSecretary() || isApprover()){
-					// Filter By - actor user id
-					reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				/*
+				 * 38524 - start 
+				 * Update codes with caution! 
+				 * 1. For uncatered roles(bounded as an actor only), please add roleCodes in SourcingConstants.QT_MAINTENANCE_ALLOWED_ACTOR 
+				 * 2. To prevent unauthorize access from multi-role user, only roles listed was allowed for the last fallback scenario
+				 * 3. Any new role that requires global search can be added at the first "if"
+				 */
+				reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+				boolean isMaintenanceScreen = isQTMaintenanceScreen() || isQTSearchScreen();
+
+				if (isAuditor() || isAdmin()) {
+					// Auditor/Admin got previlidge for global search
+					reqDTO.setPmUser(null);
+				} else if (isDeskOfficer() && isMaintenanceScreen
+						&& reqDTO.getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+					reqDTO.setRoleCode(RoleCode.DESK_OFFICER.value());
+				} else {
+					// last fallback
+					reqDTO.setRoleCode(null);
 				}
-				//Bug_33484 - end
+				// 38524 - end
 					
 				 /* Enhancement #27668
 				 * TO INCLUDE QT WHICH PPB SECRETARY INVOLVE IN IT, IF HIGHER_AUTHORITY LINK ALSO
@@ -4796,6 +4811,11 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 									//21692 Sync Approval PB with Committee Appointment PB except for Central Contract note 571 - End
 								}
 							}
+							if (CollectionUtils.isNotEmpty(qtApproval.getHistoryApprovalRequests())) {
+								LinkedHashSet<ScQtApprovalRequest> removeDuplicate = new LinkedHashSet<>(qtApproval.getHistoryApprovalRequests());
+								List<ScQtApprovalRequest> noDuplicate = new ArrayList<>(removeDuplicate);
+								qtApproval.setHistoryApprovalRequests(noDuplicate);
+							}
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
 									retrieveFinalizationCommitteeType()));
@@ -5299,6 +5319,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 					retriveZonesByCircularNo();
 				}
 			}
+			// #33787 Start Vinod
+			checkMinPaidUpCapitalWIP();
+			// #33787 End Vinod
 		} finally {
 			QtDetailsSO=null;
 		}
@@ -9459,6 +9482,16 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 				|| facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 				|| facesScopes.hasRoleUser(RoleCode.BPK_AUDITOR.value());
 	}
+
+	// 38524 - start
+	private boolean isAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.SUPPORT_TECHNICAL.value())
+				|| facesScopes.hasRoleUser(RoleCode.SUPPORT_APPL.value())
+				|| facesScopes.hasRoleUser(RoleCode.EP_ADMIN.value());
+	}
+
+	// 38524 - end
 	
 	/**
 	 * BUG 32050, BUG 32209
@@ -13971,6 +14004,42 @@ public void retrieveDemoQtDetails(Long qtId) {
 		return bpmExistFlag;
 	}
 	//9019 - End (Harun)
+	// #33787 Start Vinod
+	private void checkMinPaidUpCapitalWIP() {
+		IQTDetailSO qtDetailsSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+				IQTDetailSO.class);
+		ScQt qt = this.getManagedBean().getQt();
+		Date publishDate = qt.getPublishDate();
+
+		if (null != publishDate) {
+			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+			qtReqDTO.setRedmineNo(QTConstants.APP_VERSION_REDMINE_NO_33787);
+
+			PmAppVersion appVerDtls = qtDetailsSO.getAppVersionDetailsWithRedmineNo(qtReqDTO);
+
+			Date effDate = appVerDtls.getEffDate();
+
+			if (publishDate.before(effDate) && !isApprovalScreenToHideMinPaidUpCapitalWIP()) {
+				this.getManagedBean().setMinPaidUpCapitalWIP(true);
+			}
+		}
+	}
+
+	// #33787 End Vinod
+	// #33787 Start Vinod
+	/**
+	 * This method is to check if it is accessed from approval screen.
+	 * 
+	 * @param 
+	 * @return boolean
+	 */
+	private boolean isApprovalScreenToHideMinPaidUpCapitalWIP() {
+		boolean isApproval = getUserTaskIsCommitteeAppointmentApprovalEcOcTecFec() || getUserTaskIsBPKApproval()
+				|| getUserTaskIsPublicationApproval();
+		return isApprovalScreen() && isApproval ? true : false;
+	}
+
+	// #33787 End Vinod
 	//12471 - start
 	/**
 	 * Validate selected approver from picklist
@@ -14859,5 +14928,21 @@ public void retrieveDemoQtDetails(Long qtId) {
 		}
 	}
 	// 37892,25635 -end-
+	
+	//#21692 - Start
+	private void enableChangesToPBSecretary() {
+		if (this.getManagedBean().getQt() != null && this.getManagedBean().getQt().getQtId() != null) {
+			IScWorkFlowStatusSO workFlowStatusSO;
+			ScWorkFlowStatusReqDTO scWreqDTO = new ScWorkFlowStatusReqDTO();
+			workFlowStatusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+					IScWorkFlowStatusSO.class);
+			scWreqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION);
+			scWreqDTO.setDocId(this.getManagedBean().getQt().getQtId());
+
+			this.getManagedBean().setUserAbleToChangePBSecretary(
+					workFlowStatusSO.retrieveStatusByTypeAndId(scWreqDTO).getWorkFlowStatus() == null);
+		}
+	}
+	//#21692 - End
 
 }

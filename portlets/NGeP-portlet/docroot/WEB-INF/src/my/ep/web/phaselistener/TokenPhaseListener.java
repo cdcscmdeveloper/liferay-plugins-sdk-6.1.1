@@ -36,6 +36,7 @@ public class TokenPhaseListener implements PhaseListener {
 		if (!context.isPostback())
 			return;
 
+		TokenManager tokenManager = new TokenManager();
 		String submittedToken = StringUtils.EMPTY;
 		Map<String, String> params = context.getExternalContext()
 				.getRequestParameterMap();
@@ -46,28 +47,37 @@ public class TokenPhaseListener implements PhaseListener {
 			}
 		}
 
-		String tokenSession = TokenManager.getTokenSession();
+		String tokenSession = tokenManager.getTokenSession();
 		String loginId = new FacesScopes().getUserScreenName();
 		loginId = (loginId == null || loginId.isEmpty()) ? "anonymous"
 				: loginId;
-		boolean isValid = TokenManager.isValidToken(submittedToken);
-		String viewId = context.getViewRoot().getViewId();
+		boolean isValid = tokenManager.isValidToken(submittedToken);
+		String viewId = "N/A";
+		if (context.getViewRoot() != null) {
+			viewId = context.getViewRoot().getViewId();
+		}
+		PhaseId currentPhaseId = event.getPhaseId();
 
-		log.info("#38229||" + isValid + "||"
-				+ TokenManager.getPartialToken(submittedToken) + "||"
-				+ TokenManager.getPartialToken(tokenSession) + "||" + loginId
+		log.info("#38229||" + isValid + "||" + currentPhaseId + "||"
+				+ tokenManager.getPartialToken(submittedToken) + "||"
+				+ tokenManager.getPartialToken(tokenSession) + "||" + loginId
 				+ "||" + viewId);
 
-		if (!isValid) {
+		if (!isValid && currentPhaseId != PhaseId.RESTORE_VIEW) {
 			String message = ResourceBundleUtils.getMessage(
-					"lbl.sc.procurementtype.tooltip",
+					"lbl.back.btn.err.msg",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					new FacesScopes().getUserLocale());
-			context.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, null, message));
+			String header = ResourceBundleUtils.getMessage(
+					"lbl.back.btn.err.header",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale());
+			// context.addMessage(null, new FacesMessage(
+			// FacesMessage.SEVERITY_ERROR, null, message));
 			// Show error message
-//			RequestContext.getCurrentInstance().execute(
-//					CommonConstants.GLOBAL_MESSAGE_ID + ".show()");
+			RequestContext.getCurrentInstance().execute(
+					"showCustomDialog('" + header + "', '" + message + "')");
+			log.info("#38229 after blocking for " + loginId);
 			context.renderResponse(); // Block further processing
 		}
 
