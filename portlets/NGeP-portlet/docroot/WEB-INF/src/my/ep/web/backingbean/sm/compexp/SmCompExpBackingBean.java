@@ -736,7 +736,11 @@ public class SmCompExpBackingBean extends BaseBackingBean<SmCompExpManagedBean> 
 	 * Initialize Master view popup dialog
 	 */
 	public void initViewPopup(SmCompExpMaster selectedMaster) {
-		this.getManagedBean().setSelectedCompExpMaster(selectedMaster);
+		SmCompExpReqDTO reqDTO = new SmCompExpReqDTO();
+		reqDTO.setMasterId(selectedMaster.getCompExpMasterId());
+		SmCompExpResDTO resDTO = getSmCompExpSo().retrieveSmCompExpMaster(reqDTO);
+		this.getManagedBean().setSelectedCompExpMaster(resDTO.getMaster());
+		
 		this.getManagedBean().setClientTypeItems(new ArrayList<SelectItem>());
 		SelectItem clientTypeFederalItem = new SelectItem();
 		clientTypeFederalItem.setLabel(SmCommonUtil.getMessage("lbl.sm.comp.exp.update.client.type.federal", null));
