@@ -1,0 +1,169 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<cc:interface>
+		<cc:attribute name="bBean" required="true" default="" />
+		<cc:attribute name="required" default="true" />
+	</cc:interface>
+
+	<cc:implementation>
+<style type="text/css">
+
+/* for Common allignement for all screens */
+.columnGenClass {
+	width: 15%;
+}
+
+.columnDateFromClass {
+	width: 13%;
+}
+
+.columnDateToClass {
+	width: 1%;
+}
+</style>
+		<h:outputText styleClass="instruction"
+			style="float:left;margin-left:20px;"
+			value="#{lbl['lbl.instruction.mandatory']}" />
+
+		<ui:param name="deskofficerEnableDisable"
+			value="#{cc.attrs.bBean.retriveUserRoles()}"></ui:param>
+		<ui:param name="ptjEnableDisable"
+			value="#{cc.attrs.bBean.getPtjValues()}"></ui:param>
+		<table style="width: 100%; margin-top: 30px;">
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.rpt.tender.no']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="rptQuotation" label="#{lbl['lbl.rpt.tender.no']}" 
+						maxlength="17" size="17" required="#{cc.attrs.required}"
+						value="#{cc.attrs.bBean.managedBean.quotationNumber}"
+						style="margin-top:5px;width:115px;">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{cc.attrs.bBean.quotationNumberValidation()}"
+							update="@form" />
+					</p:inputText>
+				</td>
+			</tr>
+			
+			<c:if test="#{ptjEnableDisable}">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.rpt.agency']}"
+							style="margin-top:5px;width:130px;" />
+					</td>
+					<td>
+						<p:selectOneMenu label="#{lbl['lbl.rpt.agency']}" 
+							value="#{cc.attrs.bBean.managedBean.scReportSearchBean.ptjProfile.orgName}" 
+							style="margin-top:5px;width:672px;" disabled="true">
+							<f:selectItem itemLabel="#{cc.attrs.bBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
+								itemValue="#{cc.attrs.bBean.managedBean.scReportSearchBean.ptjProfile.orgName}"></f:selectItem>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.rpt.deskOfficer']}"
+							style="margin-top:5px;width:160px;" />
+					</td>
+					<td>
+						<p:selectOneMenu
+							value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scDeskOfficer}"
+							style="margin-top:5px;width:672px;" disabled="true">
+							<f:selectItem itemLabel="#{cc.attrs.bBean.managedBean.scReportSearchBean.doSelectItem.label}"
+								itemValue="#{cc.attrs.bBean.managedBean.scReportSearchBean.doSelectItem.value}"></f:selectItem>
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</c:if>
+			
+			<c:if test="#{!ptjEnableDisable}">
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.rpt.agency']}"
+							style="margin-top:5px;width:130px;" />
+					</td>
+					
+					<td>
+					<c:if test="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile eq null}">
+					<ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						headerText="#{lbl['lbl.rpt.agency']}"
+						selectionMode="single"
+						saveObject="scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile"
+						size="106"
+						label="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
+						readonly="true"
+						update="@form"
+						conditionField="#{cc.attrs.bBean.constuctConditionFields()}" 
+						/>
+					</c:if>
+					<c:if test="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile ne null}">
+					<ac:lov id="ptjProfile" lovId="PM_ORG_PROFILE"
+						headerText="#{lbl['lbl.rpt.agency']}"
+						selectionMode="single"
+						saveObject="scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile"
+						size="106"
+						value="#{scPropValidPeriodExtReportBackingBean.managedBean.scReportSearchBean.ptjProfile.orgName}"
+						readonly="true"
+						update="@form"
+						conditionField="#{cc.attrs.bBean.constuctConditionFields()}" 
+						/>
+					</c:if>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.rpt.deskOfficer']}"
+							style="margin-top:10px;width:160px;" />
+					</td>
+					<td>
+						<p:selectOneMenu
+							value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scDeskOfficer}"
+							style="margin-top:10px;width:300px;">
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+								itemValue="#{null}"></f:selectItem>
+
+							<f:selectItems value="#{cc.attrs.bBean.retrieveDescOfficerByAgency()}" var="item" itemLabel="${item.label}" itemValue="#{item.value}"></f:selectItems>
+							<p:ajax event="change" partialSubmit="true" immediate="true" update="@this" disabled="#{ptjEnableDisable}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</c:if>
+		</table>
+		<ac:lovPopup />
+		<ui:remove><!-- #21692 - start -->
+		<TABLE style="width: 100%; margin-top: 10px;">
+			<TR>
+				<TD class="columnGenClass"><p:outputLabel
+						value="#{lbl['lbl.rpt.proposal.validity.extension.request.date']}" style="width:232px;" /></TD>
+				<TD class="columnDateFromClass"><p:calendar showOn="button"
+						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPublishFromDate}"
+						navigator="true" display="inline" readonlyInput="true" size="9"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						partialSubmit="true" process="@form">
+
+					</p:calendar></TD>
+				<TD class="columnDateToClass"><p:outputLabel
+						value="#{lbl['lbl.rpt.dtRangeTo']}" style="width:25px;" /></TD>
+				<TD><p:calendar showOn="button" navigator="true"
+						value="#{cc.attrs.bBean.managedBean.scReportSearchBean.scPublishToDate}"
+						display="inline" readonlyInput="true" size="9"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						partialSubmit="true" process="@form">
+					</p:calendar></TD>
+			</TR>
+		</TABLE><!-- #21692 - end -->
+		</ui:remove>
+
+	</cc:implementation>
+</ui:component>
