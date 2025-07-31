@@ -32,6 +32,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -887,44 +888,74 @@ public abstract class FulfilmentBaseBackingBean<T extends BaseManagedBean> exten
 	 * @return void
 	 */
 	public void showItemDescPopup(Long cmItemId) {
+		
+		if (cmItemId == null) {
+            return;
+        }
+		
+		CommonUtils common = new CommonUtils();
+		CodificationReqDTO cReqDTO = new CodificationReqDTO();
+		cReqDTO.setItemId(cmItemId);
+		
+		ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+		
+		CodificationResDTO codificationResDTO = codificationSO.searchItemObj(cReqDTO);
 
-		try {
-			CommonUtils common = new CommonUtils();
-			CodificationReqDTO cReqDTO = new CodificationReqDTO();
-			cReqDTO.setItemId(cmItemId);
+		if (codificationResDTO == null || codificationResDTO.getCmItem() == null) {
+            return;
+        }
+		
+		CmItem item = codificationResDTO.getCmItem();
 			
-			ICodificationSO codificationSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
-			
-			CmItem item = codificationSO.searchItemObj(cReqDTO).getCmItem();
-			
-			CodificationBackingBean cdbb = new CodificationBackingBean();
-			
-			String typeName = item.getCmType().getTypeName();
-			String brandName = item.getCmBrand().getBrandName();
-			String measurementName = item.getCmMeasurement().getMeasurementName();
-			String colorName = item.getCmColor().getColorName();
-			String unspscTitle = item.getCmUnspsc().getUnspscTitle();
-
-			String familyTitle = unspscTitle + " " + typeName + " " + brandName + " " + measurementName + " " + colorName;
-			String segmentTitle = typeName + " " + brandName + " " + measurementName + " " + colorName;
-			
-			String segmentCode = item.getCmType().getTypeCode() + 
-					item.getCmBrand().getBrandCode() + 
-					item.getCmMeasurement().getMeasurementCode() + 
-					item.getCmColor().getColorCode();
-			
-			cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
-			cdbb.getManagedBean().setFamilyTitle(common.removeItemNameNA(familyTitle));
-			cdbb.getManagedBean().setCommodityCode(item.getCmUnspsc().getUnspscCode());
-			cdbb.getManagedBean().setCommodityTitle(item.getCmUnspsc().getUnspscTitle());
-			cdbb.getManagedBean().setSegmentCode(segmentCode);
-			cdbb.getManagedBean().setSegmentTitle(common.removeItemNameNA(segmentTitle));
-
-		} catch (Exception e) {
-			SLAUtils.getInstance().logSLAError("FL", "showItemDescPopup", "showItemDescPopup", null,
-					getUserIdSessionFromLoginId(), e);
+		String typeName = "";
+		String typeCode = "";
+		if(item.getCmType() != null) {
+			typeName = item.getCmType().getTypeName();
+			typeCode = item.getCmType().getTypeCode();
 		}
+		
+		String brandName = "";
+		String brandCode = "";
+		if(item.getCmBrand() != null) {
+			brandName = item.getCmBrand().getBrandName();
+			brandCode = item.getCmBrand().getBrandName();
+		}
+		
+		String measurementName = "";
+		String measurementCode = "";
+		if(item.getCmMeasurement() != null){
+			measurementName = item.getCmMeasurement().getMeasurementName();
+			measurementCode = item.getCmMeasurement().getMeasurementCode();
+		}
+		
+		String colorName = "";
+		String colorCode = "";
+		if(item.getCmColor() != null){
+			colorName = item.getCmColor().getColorName();
+			colorCode = item.getCmColor().getColorCode();
+		}
+		
+		String unspscTitle = "";
+		String unspscCode = "";
+		if(item.getCmUnspsc() != null){
+			unspscTitle = item.getCmUnspsc().getUnspscTitle();
+			unspscCode = item.getCmUnspsc().getUnspscCode();
+		}
+
+		String familyTitle = unspscTitle + " " + typeName + " " + brandName + " " + measurementName + " " + colorName;
+		String segmentTitle = typeName + " " + brandName + " " + measurementName + " " + colorName;
+		
+		String segmentCode = typeCode + brandCode + measurementCode + colorCode;
+		
+		CodificationBackingBean cdbb = new CodificationBackingBean();
+		cdbb.getManagedBean().setFamilyCode(item.getExtensionCode());
+		cdbb.getManagedBean().setFamilyTitle(common.removeItemNameNA(familyTitle));
+		cdbb.getManagedBean().setCommodityCode(unspscCode);
+		cdbb.getManagedBean().setCommodityTitle(unspscTitle);
+		cdbb.getManagedBean().setSegmentCode(segmentCode);
+		cdbb.getManagedBean().setSegmentTitle(common.removeItemNameNA(segmentTitle));
 	}
+		
 	// #31344 -end-
 }
