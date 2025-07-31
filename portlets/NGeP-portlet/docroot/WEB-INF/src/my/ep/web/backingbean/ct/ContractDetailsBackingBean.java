@@ -3568,7 +3568,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtContractAmount contractAmt : ctBB.getManagedBean().getContractVer().getCtContractAmounts()) {
 			if (getManagedBean().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
 					&& getManagedBean().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()){
-				contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds()); //#24333
+				processPerformanceBonds(contractAmt, docType, isAmendment); //#24333
 				ctBB.getManagedBean().setCtContractAmount(contractAmt);
 			}
 
@@ -4479,7 +4479,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 
 		// Check if the document is relevant for bond processing
 		if (!isAmendment
-				|| !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
+				&& !(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 						|| docType.equalsIgnoreCase(ParameterConst.DOCTYPE_AMENDMENT_WITHOUT_SUPPLEMENT) || docType
 							.equalsIgnoreCase(ParameterConst.DOCTYPE_NOTIFICATION_SETTING))) {
 			contractAmt.setCtPerformanceBondsOriginal(contractAmt.getCtPerformanceBonds());
@@ -4495,10 +4495,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		for (CtPerformanceBond bond : contractAmt.getCtPerformanceBonds()) {
 			if (bond.isBondNew()) {
 				hasNewBond = true;
-				if (bond.isBrandNew()) {
-					bond.setFileName(null);
-					bond.setFilePath(null);
-				}
 				bondNew.add(bond);
 			} else {
 				bondOriginal.add(bond);
