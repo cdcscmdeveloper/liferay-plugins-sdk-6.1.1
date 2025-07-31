@@ -668,7 +668,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				getCurrentStatus(getPmStatusByStatusId(statusId));
 			}
 		}
-
+		getDocStatus(requestNote); //#38692
 		getManagedBean().setTitleChecker(true);
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
@@ -6930,6 +6930,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			getManagedBean().setDisciplinaryActionBlacklist(resDto.isDisciplinaryActionBlackListOwner());
 			getManagedBean().setDisciplinaryActionCancelRegistration(resDto.isDisciplinaryActionCancelRegistration());
+			getManagedBean().setDisciplinaryActionDeletedDue(resDto.isDisciplinaryActionDeletedDue());
+			getManagedBean().setDisciplinaryActionPendingTransaction(resDto.isDisciplinaryActionPendingTransaction());
 
 			return resDto.isDisciplinaryActionBlackListOwner() || resDto.isDisciplinaryActionCancelRegistration();
 
@@ -6958,22 +6960,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void supplierDisciplinaryActionStatus() {
 
 		try {
-
-			String[] parameter = new String[0];
 			String status = StringUtils.EMPTY;
-
+			String reasonType = StringUtils.EMPTY;
+			String reasonLabel = StringUtils.EMPTY;
+			String detailLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", new String[0]); // base
+																										// message
 			if (getManagedBean().isDisciplinaryActionCancelRegistration()) {
-				status = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", parameter) + DPConstants.SPACE
-						+ getMessageLabelPutParam("lbl.sm.disciplinary.jktt.cancel.registration", parameter);
+				reasonType = getMessageLabelPutParam("lbl.sm.disciplinary.jktt.cancel.registration", new String[0]);
+			} else if (getManagedBean().isDisciplinaryActionBlacklist()) {
+				reasonType = getMessageLabelPutParam("lbl.sm.disciplinary.jktt.blacklist.owner", new String[0]);
 			}
 
-			if (getManagedBean().isDisciplinaryActionBlacklist()) {
-				status = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail", parameter) + DPConstants.SPACE
-						+ getMessageLabelPutParam("lbl.sm.disciplinary.jktt.blacklist.owner", parameter);
+			if (getManagedBean().isDisciplinaryActionPendingTransaction()) {
+				reasonLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail.pending", new String[] { reasonType });
+			} else if (getManagedBean().isDisciplinaryActionDeletedDue()) {
+				reasonLabel = getMessageLabelPutParam("lbl.sc.rn.da.popup.detail.deleted.due",
+						new String[] { reasonType });
 			}
-			
+
+			status = detailLabel + DPConstants.SPACE + reasonLabel;
+
 			getManagedBean().setPopupMessage(status);
-
 			RequestContext.getCurrentInstance().execute("disciplinaryActionRequestNoteDlg.show();");
 
 		} catch (Exception e) {

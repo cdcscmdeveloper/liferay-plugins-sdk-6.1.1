@@ -4443,7 +4443,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 * */
 	public boolean isPerformanceBond(){
 		//#24333 - Start
-		if ((getManagedBean().getContractVer().getCtContract().getLoa().isBondReq() || getManagedBean().getCtContractAmount().isBondReq())
+		if (getManagedBean().getCtContractAmount().isBondReq()
 				&& (!getManagedBean().isDirectPurchase() || getManagedBean().isNewPk7())
 				&& !getManagedBean().getCtContractAmount().isBondExempted()
 				&& (!getManagedBean().isCommonView() || getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode()
@@ -4863,19 +4863,22 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	//#25002 - start
 		
 	public List<ScAttachment> getApprovalLetter(){
-		List<ScAttachment> listAttachments = new ArrayList<>();
 		IQTAwardSO awardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 		Long loaid = getManagedBean().getContractVer().getCtContract().getLoa().getLoaId();
-		listAttachments = awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
-		return listAttachments;
+		return awardSO.retrieveScAttachmentByDocID(loaid,ParameterConst.EP_DOC_LOA);
 	}
-
+	
+	/**
+	 * Downloads the selected SC attachment file.
+	 * This method is invoked from the UI via a command link in the XHTML page.
+	 *
+	 * @param scAttachment The attachment to download.
+	 */
 	public void downloadScAttachmentFile(ScAttachment scAttachment){
 		LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 		try {
 			loaDetailBackingBean.downloadFile(scAttachment);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			//Sonarqube #G29 - start
 			SLAUtils.getInstance().logSLAError(ModuleCodeConst.CONTRACT_MANAGEMENT, "downloadScAttachmentFile", scAttachment.getDocNo(), "scAttachment", getUserIdSessionFromLoginId(), e);
 			//Sonarqube #G29 - end

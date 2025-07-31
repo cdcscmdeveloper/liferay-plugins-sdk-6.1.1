@@ -13,7 +13,7 @@
 		header="#{lbl['lbl.sc.spec.header.checklist.preview']}" width="650"
 		height="650">
 		<p:ajax event="close" oncomplete="blockWidget.hide()"
-			update="@([id$=stageTwotechProposal])"
+			update="@all"
 			actionListener="#{specificationBackingBean.closeTechChecklistPreview()}" />
 
 		<p:panel id="technicalChecklistPreviewPanel1Id"
