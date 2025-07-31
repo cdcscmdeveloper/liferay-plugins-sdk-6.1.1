@@ -22,6 +22,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -89,6 +90,7 @@ import my.ep.biz.service.IAuditTrailSO;
 import my.ep.constant.sm.AuditSupplierManagementConst;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.CustomUtils;
+import my.ep.web.backingbean.sm.applicationView.ViewSuppProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementUserProfileBackingBean;
 import my.ep.web.backingbean.sm.audit.AuditSupplierManagementBackingBeanTemplate;
 //#28895_35501 End
@@ -1628,6 +1630,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String docNo = originalServletRequest.getParameter("docNo");
+		Long qtId = this.getManagedBean().getQtId();// 26247
 		renewSesionObject(); 
 		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();  
@@ -1667,6 +1670,29 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				startTime = System.currentTimeMillis();
 				//end 32229
 			}
+			
+			//26247 - start
+			String qtIdParam = originalServletRequest.getParameter("qtId");
+			this.getManagedBean().setQtId(qtId);
+			if (qtIdParam != null) {
+				qtId = Long.valueOf(qtIdParam);
+			}
+			if (null != supplier && null != qtId) {
+				this.getManagedBean().setQtId(qtId);
+				ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				supplier = supplierSearchSO.getSupplierForDisciplinaryInfo(supplier.getSupplierId(), qtId);
+
+				ViewSuppProfileBackingBean viewSuppProfileBB = new ViewSuppProfileBackingBean();
+				String qtWarningMessage = viewSuppProfileBB.evaluateQTWarningMessage(supplier);
+				String message = getManagedBean().getDisciplinaryActionMsg();
+				if (StringUtils.isNotEmpty(message) && StringUtils.isNotEmpty(qtWarningMessage)) {
+					qtWarningMessage = "<br/>" + qtWarningMessage;
+				}
+				getManagedBean().setQtDisciplinaryActionMsg(qtWarningMessage);
+			}
+			// 26247 - end
+
 			SLAUtils.getInstance().logSLAInfo("SM","DA-5", log, startTime);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_INFO_DISC_ACTION);
 		} catch (Exception e) {
