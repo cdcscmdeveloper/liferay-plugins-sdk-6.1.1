@@ -4886,6 +4886,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getManagedBean().getSmAppl().setSupplierType(null);
 		getManagedBean().getSmAppl().setApplValidWithSsm(false);
 		getManagedBean().setRegIcCheckSSM(null);
+		getManagedBean().getSmAppl().setSmCompanyBasic(new SmCompanyBasic());
+		getManagedBean().getSmAppl().getSmSupplierBanks().clear();
+		getManagedBean().getSmSupp().getSmSupplierBusinesses().clear();
+		getManagedBean().getSmBusinessAdd().setAddress1("");
+		getManagedBean().getSmBusinessAdd().setAddress2("");
+		getManagedBean().getSmBusinessAdd().setAddress3("");
 		// #37900 -end
 		return termAndCondition;
 
