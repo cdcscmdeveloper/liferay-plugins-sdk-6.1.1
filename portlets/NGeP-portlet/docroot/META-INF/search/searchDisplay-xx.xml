@@ -2586,6 +2586,7 @@
 		</property>
 	</bean>
 	<!-- #36125 - End -->
+	<!-- #32521 - Start -->
 	<bean id="PM_USER_ID_RPT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="userId" />
 		<property name="daoClass"
@@ -2609,4 +2610,5 @@
 			</list>
 		</property>
 	</bean>
+	<!-- #32521 - End -->
 </beans>
