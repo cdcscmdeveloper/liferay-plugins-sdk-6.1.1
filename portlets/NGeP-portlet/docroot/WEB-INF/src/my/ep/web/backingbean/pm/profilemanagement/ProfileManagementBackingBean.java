@@ -3308,30 +3308,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				
 				/************ START AUDIT #28895_35509 START *************/
+				Map<String, PmUserRole> pmUserRoles = new HashMap<>();
+				Map<String, PmAddressType> pmAddressTypes = new HashMap<>();
+				
+				for(PmUserRole pur : getManagedBean().getPmUserOrgOriginal().getPmUserRoles()){
+					pmUserRoles.put(pur.getPmRole().getRoleCode(), pur);
+				}
+				
+				for(PmAddressType pat : getManagedBean().getPmUserOriginal().getPmAddressTypes()){
+					pmAddressTypes.put(pat.getPmAddress().getAddress1() + pat.getPmAddress().getAddress2() + 
+							pat.getPmAddress().getAddress3(), pat);
+				}
+				
 				for(PmUserRole userRole : this.getManagedBean().getNewAuditPmUserRoles()){
-					if(userRole.getUserRoleId() == null){
-						for(PmUserRole currentUserRole : getManagedBean().getPmUserOrgOriginal().getPmUserRoles()){
-							if(userRole.getPmRole().getRoleCode().equals(currentUserRole.getPmRole().getRoleCode())){
-								userRole.setUserRoleId(currentUserRole.getUserRoleId());
-								break;
-							}
-						}
-					}
+					PmUserRole currentUserRole = pmUserRoles.get(userRole.getPmRole().getRoleCode());
+					userRole.setUserRoleId(currentUserRole.getUserRoleId());
 				}
 				
 				for(PmAddressType addressType : this.getManagedBean().getNewAuditPmAddressTypes()){
 					String address = addressType.getPmAddress().getAddress1() + addressType.getPmAddress().getAddress2() + 
 							addressType.getPmAddress().getAddress3(); 
-					if(addressType.getAddressTypeId() == null){
-						for(PmAddressType currentAddressType : getManagedBean().getPmUserOriginal().getPmAddressTypes()){
-							String currentAddress = currentAddressType.getPmAddress().getAddress1() + currentAddressType.getPmAddress().getAddress2() + 
-									currentAddressType.getPmAddress().getAddress3();
-							if(address.equals(currentAddress)){
-								addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
-								break;
-							}
-						}
-					}
+					PmAddressType currentAddressType = pmAddressTypes.get(address);
+					addressType.setAddressTypeId(currentAddressType.getAddressTypeId());
 				}
 				
 				if (pmauditSO.isAuditConfig(AuditConst.PM_AUD_CONF_USER)) {
@@ -3364,9 +3362,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 		for(PmUserRole current : currentPmUserRole){
 			PmUserRole newUserRole = new PmUserRole();
-			PmRole newRole = new PmRole();
-			
-			newRole = current.getPmRole();
+			PmRole newRole = current.getPmRole();
 
 			newUserRole.setPmRole(newRole);
 			newUserRole.setUserRoleId(current.getUserRoleId());
